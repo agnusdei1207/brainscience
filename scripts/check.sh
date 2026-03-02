@@ -77,8 +77,10 @@ else
 
   if [ $? -eq 0 ]; then
     log "Zola 빌드 성공!"
-    # 빌드 결과물(public/) 정리
-    rm -rf "$REPO_ROOT/public"
+    # Docker(root)가 만든 public/ 디렉토리를 같은 컨테이너로 삭제
+    docker run --rm -v "$REPO_ROOT:/site" -w /site \
+      "ghcr.io/getzola/zola:v${ZOLA_VERSION}" \
+      /bin/sh -c "rm -rf /site/public" 2>/dev/null || true
   else
     fail "Zola 빌드 실패 — 위 오류 메시지를 확인하세요"
   fi
