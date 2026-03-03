@@ -1,14 +1,14 @@
 +++
-title = "기술사 시험 (Professional Engineer Exam)"
-description = "정보처리기술사 / 정보관리기술사 9과목 핵심 정리"
+title = "PE 시험 (Professional Engineer Exam)"
+description = "PE 9과목 핵심 정리"
 sort_by = "weight"
 +++
 
-# 🏆 기술사 시험
+# 🏆 PE 시험
 
-정보처리기술사 / 정보관리기술사 9과목 체계적 정리입니다.
+PE 9과목 체계적 정리입니다.
 
-> ⚠️ 이 공간은 **기술사 시험 전용**입니다. 일반 CS 공부나 AI 심화 학습은 별도 공간을 이용하세요.
+> ⚠️ 이 공간은 **PE 시험 전용**입니다. 일반 CS 공부나 AI 심화 학습은 별도 공간을 이용하세요.
 
 ## 9과목 체계
 
