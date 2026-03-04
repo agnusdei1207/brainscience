@@ -1,5 +1,6 @@
 +++
 title = "RAID (Redundant Array of Independent Disks)"
+date = 2024-05-24
 description = "복수의 디스크를 결합하여 성능 향상과 데이터 가용성을 동시에 달성하는 RAID 레벨별 아키텍처, 패리티 연산 알고리즘 및 복구 메커니즘"
 weight = 30
 +++

@@ -1,5 +1,6 @@
 +++
 title = "디자인 패턴 (Design Patterns)"
+date = 2024-05-24
 description = "소프트웨어 설계 시 발생하는 공통적인 문제들에 대한 재사용 가능한 최적의 해결책, GoF 패턴의 분류, SOLID 원칙 및 실무 적용 가이드"
 weight = 20
 +++

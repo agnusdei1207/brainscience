@@ -1,5 +1,6 @@
 +++
 title = "ITIL v4 (Information Technology Infrastructure Library version 4)"
+date = 2024-05-24
 description = "IT 서비스 관리의 글로벌 표준, ITIL v4의 서비스 가치 시스템(SVS), 4차원 모델, 핵심 프랙티스 및 현대적 IT 서비스 관리 전략의 모든 것"
 weight = 10
 +++

@@ -1,5 +1,6 @@
 +++
 title = "캐시 메모리 (Cache Memory)"
+date = 2024-05-24
 description = "CPU와 주기억장치 간의 속도 차이를 극복하기 위한 캐시 메모리의 구조, 매핑 방식, 교체 알고리즘, 캐시 일관성(MESI) 및 최적화 기법"
 weight = 20
 +++
