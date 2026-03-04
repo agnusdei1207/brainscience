@@ -225,11 +225,11 @@ SDN은 사용자가 "어떻게(How)" 트래픽을 보낼지(IP, Port 등)를 정
 ---
 
 ### 📌 관련 개념 맵 (Knowledge Graph)
-- [`@/studynotes/03_network/05_wireless_communication/wireless_5g_6g.md`](@/studynotes/03_network/05_wireless_communication/wireless_5g_6g.md): 5G 코어망(5GC)의 근간을 이루는 Network Slicing 기술이 바로 SDN/NFV를 바탕으로 구현됨.
-- [`@/studynotes/03_network/01_network_fundamentals/osi_7_layer.md`](@/studynotes/03_network/01_network_fundamentals/osi_7_layer.md): 전통적 L2(MAC 기반), L3(IP 기반) 라우팅 개념과 SDN의 L2~L4 통합 플로우 매칭 개념의 차이.
-- [`@/studynotes/13_cloud_architecture/01_cloud_native/_index.md`](@/studynotes/13_cloud_architecture/01_cloud_native/_index.md): VNF에서 한 단계 더 진화한 컨테이너 기반 네트워크 기능(CNF, Cloud-Native Network Function) 아키텍처.
+- [`@/studynotes/03_network/05_wireless/wireless_5g_6g.md`](@/studynotes/03_network/05_wireless/wireless_5g_6g.md): 5G 코어망(5GC)의 근간을 이루는 Network Slicing 기술이 바로 SDN/NFV를 바탕으로 구현됨.
+- [`@/studynotes/03_network/01_fundamentals/osi_7_layer.md`](@/studynotes/03_network/01_fundamentals/osi_7_layer.md): 전통적 L2(MAC 기반), L3(IP 기반) 라우팅 개념과 SDN의 L2~L4 통합 플로우 매칭 개념의 차이.
+- [`@/studynotes/13_cloud_architecture/01_native/_index.md`](@/studynotes/13_cloud_architecture/01_native/_index.md): VNF에서 한 단계 더 진화한 컨테이너 기반 네트워크 기능(CNF, Cloud-Native Network Function) 아키텍처.
 - [`@/studynotes/15_devops_sre/03_automation/_index.md`](@/studynotes/15_devops_sre/03_automation/_index.md): SDN 환경에서 Ansible이나 Terraform을 활용한 Infrastructure as Code (IaC) 기반 네트워크 자동화 운영 방안.
-- [`@/studynotes/02_operating_system/02_memory_management/virtual_memory.md`](@/studynotes/02_operating_system/02_memory_management/virtual_memory.md): NFV 성능 병목 해결을 위한 DPDK, SR-IOV 기술 적용 시 OS 메모리 관리(Hugepage) 메커니즘의 최적화 원리.
+- [`@/studynotes/02_operating_system/07_virtual_memory/_index.md`](@/studynotes/02_operating_system/07_virtual_memory/_index.md): NFV 성능 병목 해결을 위한 DPDK, SR-IOV 기술 적용 시 OS 메모리 관리(Hugepage) 메커니즘의 최적화 원리.
 
 ---
 

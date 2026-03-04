@@ -158,8 +158,8 @@ public class OrderService {
 ---
 
 ## 📌 관련 개념 맵 (Knowledge Graph)
-- [쿠버네티스 (K8s)](@/studynotes/13_cloud_architecture/01_cloud_native/kubernetes.md) : 관측 가능성 시스템이 배포되고 운영되는 핵심 플랫폼.
-- [마이크로서비스 아키텍처(MSA)](@/studynotes/04_software_engineering/01_sdlc_methodology/msa.md) : 관측 가능성이 선택이 아닌 필수가 된 근본적인 아키텍처 배경.
+- [쿠버네티스 (K8s)](@/studynotes/13_cloud_architecture/01_native/kubernetes.md) : 관측 가능성 시스템이 배포되고 운영되는 핵심 플랫폼.
+- [마이크로서비스 아키텍처(MSA)](@/studynotes/04_software_engineering/01_sdlc/msa.md) : 관측 가능성이 선택이 아닌 필수가 된 근본적인 아키텍처 배경.
 - [eBPF 프로그래밍](@/studynotes/15_devops_sre/_index.md) : 애플리케이션 수정 없이 깊은 수준의 관측을 가능하게 하는 차세대 커널 기술.
 - [Prometheus & Grafana](@/studynotes/15_devops_sre/_index.md) : 메트릭 수집 및 시각화를 위한 가장 대중적인 오픈소스 조합.
 - [사이트 신뢰성 공학 (SRE)](@/studynotes/15_devops_sre/_index.md) : 관측 가능성을 도구 삼아 안정적인 서비스를 운영하는 방법론.

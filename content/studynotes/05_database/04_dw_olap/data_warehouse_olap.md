@@ -181,10 +181,10 @@ GROUP BY CUBE(Time_Year, Store_Region, Product_Category);
 
 ### 📌 관련 개념 맵 (Knowledge Graph)
 - [`@/studynotes/05_database/03_optimization/query_optimization.md`](@/studynotes/05_database/03_optimization/query_optimization.md): DW 환경에서 Fact 테이블과 Dimension 테이블을 조인할 때 대규모 데이터 처리를 위해 필수적인 Hash Join 및 실행 계획 원리.
-- [`@/studynotes/14_data_engineering/01_data_architecture/_index.md`](@/studynotes/14_data_engineering/01_data_architecture/_index.md): Data Warehouse에서 Data Lake, Data Lakehouse로 이어지는 전사적 데이터 아키텍처의 진화 흐름.
-- [`@/studynotes/14_data_engineering/03_data_pipelines/_index.md`](@/studynotes/14_data_engineering/03_data_pipelines/_index.md): 원천 시스템에서 DW로 데이터를 밀어 넣는 ETL/ELT 파이프라인(Airflow 등) 오케스트레이션 구성.
-- [`@/studynotes/05_database/01_relational_model/_index.md`](@/studynotes/05_database/01_relational_model/_index.md): 제3정규형(3NF) 기반의 OLTP 관계형 모델 설계와 DW의 반정규화 스타 스키마 설계의 트레이드오프 비교.
-- [`@/studynotes/16_bigdata/02_distributed_computing/_index.md`](@/studynotes/16_bigdata/02_distributed_computing/_index.md): MPP(Massively Parallel Processing) 아키텍처 기반 클라우드 DW(Snowflake, BigQuery)의 분산 컴퓨팅 원리.
+- [`@/studynotes/14_data_engineering/01_data_arch/_index.md`](@/studynotes/14_data_engineering/01_data_arch/_index.md): Data Warehouse에서 Data Lake, Data Lakehouse로 이어지는 전사적 데이터 아키텍처의 진화 흐름.
+- [`@/studynotes/14_data_engineering/03_pipelines/_index.md`](@/studynotes/14_data_engineering/03_pipelines/_index.md): 원천 시스템에서 DW로 데이터를 밀어 넣는 ETL/ELT 파이프라인(Airflow 등) 오케스트레이션 구성.
+- [`@/studynotes/05_database/01_relational/_index.md`](@/studynotes/05_database/01_relational/_index.md): 제3정규형(3NF) 기반의 OLTP 관계형 모델 설계와 DW의 반정규화 스타 스키마 설계의 트레이드오프 비교.
+- [`@/studynotes/16_bigdata/02_distributed/_index.md`](@/studynotes/16_bigdata/02_distributed/_index.md): MPP(Massively Parallel Processing) 아키텍처 기반 클라우드 DW(Snowflake, BigQuery)의 분산 컴퓨팅 원리.
 
 ---
 

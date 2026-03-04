@@ -149,11 +149,11 @@ tags = ["CRM", "BPM", "RPA", "Process Mining", "Enterprise Architecture", "Hyper
 ---
 
 ### 📌 관련 개념 맵 (Knowledge Graph)
-- [@/studynotes/07_enterprise_systems/01_it_strategy/ea_framework.md](엔터프라이즈 아키텍처): CRM과 BPM이 기업 전반의 IT 전략 및 비즈니스 목적과 어떻게 정렬되는지 정의하는 프레임워크.
-- [@/studynotes/10_ai/01_deep_learning/nlp_basics.md](자연어 처리 NLP): CRM에서 수집된 고객의 음성과 텍스트 리뷰의 감정을 분석하기 위한 핵심 AI 기술.
-- [@/studynotes/04_software_engineering/01_sdlc_methodology/msa.md](마이크로서비스 아키텍처): 현대적인 BPM이 코레오그래피 패턴과 결합하여 분산 트랜잭션(SAGA 패턴)을 제어하는 구조.
-- [@/studynotes/08_algorithm_stats/02_graph_theory/directed_graphs.md](방향 그래프): 프로세스 마이닝의 페트리 넷과 활동 간 인과 관계를 모델링하는 근본 수학 이론.
-- [@/studynotes/13_cloud_architecture/01_cloud_native/serverless.md](서버리스 아키텍처): BPM 엔진의 이벤트 트리거를 확장성 있게 처리하기 위한 최신 클라우드 실행 환경.
+- [@/studynotes/07_enterprise_systems/01_strategy/ea_framework.md](엔터프라이즈 아키텍처): CRM과 BPM이 기업 전반의 IT 전략 및 비즈니스 목적과 어떻게 정렬되는지 정의하는 프레임워크.
+- [@/studynotes/10_ai/01_dl/nlp_basics.md](자연어 처리 NLP): CRM에서 수집된 고객의 음성과 텍스트 리뷰의 감정을 분석하기 위한 핵심 AI 기술.
+- [@/studynotes/04_software_engineering/01_sdlc/msa.md](마이크로서비스 아키텍처): 현대적인 BPM이 코레오그래피 패턴과 결합하여 분산 트랜잭션(SAGA 패턴)을 제어하는 구조.
+- [@/studynotes/08_algorithm_stats/02_graph/directed_graphs.md](방향 그래프): 프로세스 마이닝의 페트리 넷과 활동 간 인과 관계를 모델링하는 근본 수학 이론.
+- [@/studynotes/13_cloud_architecture/01_native/serverless.md](서버리스 아키텍처): BPM 엔진의 이벤트 트리거를 확장성 있게 처리하기 위한 최신 클라우드 실행 환경.
 
 ---
 

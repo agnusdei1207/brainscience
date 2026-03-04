@@ -159,11 +159,11 @@ $$ \text{Cost}_{Index} = \text{BTree Level} + (\text{Index Leaf Blocks} \times \
 ---
 
 ### 📌 관련 개념 맵 (Knowledge Graph)
-- [`[RAID 아키텍처]`](@/studynotes/01_computer_architecture/03_storage_system/raid.md): 옵티마이저가 Full Table Scan의 비용을 계산할 때 스토리지의 디스크 스트라이핑(RAID 0)으로 인한 순차 I/O 성능 향상을 고려함.
-- [`@/studynotes/02_operating_system/02_memory_management/page_replacement_algorithms.md`](@/studynotes/02_operating_system/02_memory_management/page_replacement_algorithms.md): DB 엔진이 인덱스 블록을 메모리(Buffer Cache)에 적재할 때 사용하는 LRU 알고리즘 원리.
-- [`@/studynotes/08_algorithm_stats/01_sorting_searching/_index.md`](@/studynotes/08_algorithm_stats/01_sorting_searching/_index.md): B+Tree 인덱스의 탐색 복잡도(O(log N))와 Hash Join에서의 해시 맵 검색 복잡도(O(1)) 비교.
+- [`[RAID 아키텍처]`](@/studynotes/01_computer_architecture/08_storage/_index.md): 옵티마이저가 Full Table Scan의 비용을 계산할 때 스토리지의 디스크 스트라이핑(RAID 0)으로 인한 순차 I/O 성능 향상을 고려함.
+- [`@/studynotes/02_operating_system/07_virtual_memory/_index.md`](@/studynotes/02_operating_system/07_virtual_memory/_index.md): DB 엔진이 인덱스 블록을 메모리(Buffer Cache)에 적재할 때 사용하는 LRU 알고리즘 원리.
+- [`@/studynotes/08_algorithm_stats/01_sorting/_index.md`](@/studynotes/08_algorithm_stats/01_sorting/_index.md): B+Tree 인덱스의 탐색 복잡도(O(log N))와 Hash Join에서의 해시 맵 검색 복잡도(O(1)) 비교.
 - [`@/studynotes/05_database/04_dw_olap/data_warehouse_olap.md`](@/studynotes/05_database/04_dw_olap/data_warehouse_olap.md): DW 환경에서의 대량 데이터 분석을 위해 Hash Join이 어떻게 활용되는지 연계.
-- [`@/studynotes/10_ai/01_deep_learning/_index.md`](@/studynotes/10_ai/01_deep_learning/_index.md): 향후 머신러닝 기반 쿼리 옵티마이저(Learned Optimizer)로의 발전 방향.
+- [`@/studynotes/10_ai/01_dl/_index.md`](@/studynotes/10_ai/01_dl/_index.md): 향후 머신러닝 기반 쿼리 옵티마이저(Learned Optimizer)로의 발전 방향.
 
 ---
 

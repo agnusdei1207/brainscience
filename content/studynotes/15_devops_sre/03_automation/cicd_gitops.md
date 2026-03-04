@@ -207,8 +207,8 @@ spec:
 ---
 
 ## 📌 관련 개념 맵 (Knowledge Graph)
-- [`[MSA (Microservices Architecture)]`](@/studynotes/04_software_engineering/01_sdlc_methodology/msa.md) : CI/CD 자동화가 없으면 운영이 불가능한 아키텍처 스타일.
-- [`[Kubernetes (K8s)]`](@/studynotes/13_cloud_architecture/01_cloud_native/_index.md) : GitOps가 가장 강력한 힘을 발휘하는 선언적 운영 플랫폼.
+- [`[MSA (Microservices Architecture)]`](@/studynotes/04_software_engineering/01_sdlc/msa.md) : CI/CD 자동화가 없으면 운영이 불가능한 아키텍처 스타일.
+- [`[Kubernetes (K8s)]`](@/studynotes/13_cloud_architecture/01_native/_index.md) : GitOps가 가장 강력한 힘을 발휘하는 선언적 운영 플랫폼.
 - [`[IaC (Infrastructure as Code)]`](@/studynotes/15_devops_sre/03_automation/_index.md) : 인프라를 코드로 관리하여 GitOps의 대상이 되게 하는 기술(Terraform, Ansible).
 - [`[Observability]`](@/studynotes/15_devops_sre/02_observability/_index.md) : 배포 후 시스템 상태를 감시하여 자동 롤백 여부를 판단하는 근거.
 

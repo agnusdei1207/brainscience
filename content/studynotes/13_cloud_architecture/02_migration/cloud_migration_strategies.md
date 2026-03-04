@@ -177,10 +177,10 @@ print(result)
 ---
 
 ## 📌 관련 개념 맵 (Knowledge Graph)
-- [`[Cloud Native Architecture]`](@/studynotes/13_cloud_architecture/01_cloud_native/_index.md) : 마이그레이션의 최종 지향점이 되는 아키텍처 스타일.
-- [`[MSA (Microservices Architecture)]`](@/studynotes/04_software_engineering/01_sdlc_methodology/msa.md) : Refactor 전략 시 주로 채택되는 서비스 분할 방식.
-- [`[FinOps]`](@/studynotes/13_cloud_architecture/01_cloud_native/_index.md) : 클라우드 전환 후 비용을 효율적으로 관리하기 위한 재무-운영 협업 모델.
-- [`[SRE (Site Reliability Engineering)]`](@/studynotes/15_devops_sre/01_sre_fundamentals/_index.md) : 클라우드 환경에서 시스템의 안정성을 보장하기 위한 운영 방법론.
+- [`[Cloud Native Architecture]`](@/studynotes/13_cloud_architecture/01_native/_index.md) : 마이그레이션의 최종 지향점이 되는 아키텍처 스타일.
+- [`[MSA (Microservices Architecture)]`](@/studynotes/04_software_engineering/01_sdlc/msa.md) : Refactor 전략 시 주로 채택되는 서비스 분할 방식.
+- [`[FinOps]`](@/studynotes/13_cloud_architecture/01_native/_index.md) : 클라우드 전환 후 비용을 효율적으로 관리하기 위한 재무-운영 협업 모델.
+- [`[SRE (Site Reliability Engineering)]`](@/studynotes/15_devops_sre/01_sre/_index.md) : 클라우드 환경에서 시스템의 안정성을 보장하기 위한 운영 방법론.
 
 ---
 
