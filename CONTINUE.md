@@ -12,11 +12,11 @@
 
 | 과목 | 완료 | 다음 키워드 |
 |------|------|------|
-| 컴퓨터구조 | 123 | 123. NUMA (Translation Lookaside Buffer) |
-| 운영체제 | 108 | 108. 문맥 교환 (Thread Safety) |
-| 네트워크 | 29 | 29. SNMP (Simple Mail Transfer Protocol) |
-| 소프트웨어공학 | 34 | 34. 문서화 도구 시스템 (Version Control System) |
-| 데이터베이스 | 26 | 26. 샤딩 (Transaction Isolation) |
+| 컴퓨터구조 | 124 | 124. 인터커넥트 (Translation Lookaside Buffer) |
+| 운영체제 | 109 | 109. CPU 스케줄링 (Thread Safety) |
+| 네트워크 | 30 | 30. IPSec (Simple Mail Transfer Protocol) |
+| 소프트웨어공학 | 35 | 35. 컨테이너 시스템 (Version Control System) |
+| 데이터베이스 | 27 | 27. CAP 정리 (Transaction Isolation) |
 | ICT융합 | 0 | - |
 | 기업시스템 | 0 | - |
 | 알고리즘 | 0 | - |
@@ -30,7 +30,7 @@
 | 빅데이터 | 0 | - |
 
 ## 최근 작업 로그
-- 2026-03-06: CA(123. NUMA, OS(108. 문맥 교환, NW(29. SNMP, SE(32) VCS, DB(26. 샤딩 작성 완료 (310 files)
+- 2026-03-06: CA(124. 인터커넥트, OS(109. CPU 스케줄링, NW(30. IPSec, SE(32) VCS, DB(27. CAP 정리 작성 완료 (310 files)
 - 2026-03-06: CA(120) 캐시, OS(94) 가상 메모리, NW(26) FTP, SE(31) 포매터, DB(23) 인덱스 작성 완료
 - 2026-03-06: CA(115) VLIW, OS(101) 뮤텍스, NW(21) DNS 보안, SE(26) 테스트 도구, DB(18) 로드 밸런싱 작성 완료
 - 2026-03-06: CA(114) CISC, OS(100) 공유 메모리, NW(20) MIME, SE(25) 보안 도구, DB(17) 장애 조치 작성 완료
