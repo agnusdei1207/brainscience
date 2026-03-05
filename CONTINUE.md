@@ -3,7 +3,7 @@
 ## 📋 작업 개요
 - **목표**: PE_GUIDELINE.md 기준으로 모든 콘텐츠 재작성
 - **시작일**: 2026-03-05
-- **진행상태**: 3차 작성 완료 (30개 파일)
+- **진행상태**: 4차 작성 완료 (47개 파일)
 
 ---
 
@@ -12,7 +12,7 @@
 ### 과목별 진행률
 | 과목 | 키워드 수 | 완료 | 진행중 | 진행률 |
 |------|----------|------|--------|--------|
-| 1. 컴퓨터구조 | 802 | 30 | 0 | 3.7% |
+| 1. 컴퓨터구조 | 802 | 47 | 0 | 5.9% |
 | 2. 운영체제 | - | 0 | 0 | 0% |
 | 3. 네트워크 | - | 0 | 0 | 0% |
 | 4. 소프트웨어공학 | - | 0 | 0 | 0% |
@@ -95,6 +95,24 @@
   28. 28_buffer.md (버퍼)
   29. 29_tristate_buffer.md (3상태 버퍼)
   30. 30_encoder.md (인코더)
+- [x] 4차 작성 완료 (17개 파일):
+  31. 31_decoder.md (디코더)
+  32. 32_multiplexer.md (멀티플렉서)
+  33. 33_latch.md (래치)
+  34. 34_flipflop.md (플립플롭)
+  35. 35_counter.md (카운터)
+  36. 36_register.md (레지스터)
+  37. 37_shift_register.md (시프트 레지스터)
+  38. 38_half_adder.md (하프 가산기)
+  39. 39_full_adder.md (풀 가산기)
+  40. 40_ripple_carry_adder.md (리플 캐리 가산기)
+  41. 41_carry_lookahead_adder.md (캐리 룩어헤드 가산기)
+  42. 42_carry_select_adder.md (캐리 셀렉트 가산기)
+  43. 43_carry_save_adder.md (캐리 세이브 가산기)
+  44. 44_subtracter.md (뺄셈기)
+  45. 45_comparator.md (비교기)
+  46. 46_alu.md (ALU)
+  47. 47_multiplier.md (곱셈기)
 
 ---
 
@@ -103,16 +121,16 @@
 ### 작업 대기열 (다음 10개)
 | 번호 | 과목 | 키워드 | 상태 |
 |------|------|--------|------|
-| 31 | 컴퓨터구조 | 디코더 (Decoder) | 대기 |
-| 32 | 컴퓨터구조 | 멀티플렉서 (Multiplexer) | 대기 |
-| 33 | 컴퓨터구조 | 래치 (Latch) | 대기 |
-| 34 | 컴퓨터구조 | 플립플롭 (Flip-Flop) | 대기 |
-| 35 | 컴퓨구조 | 카운터 (Counter) | 대기 |
-| 36 | 컴퓨구조 | 레지스터 (Register) | 대기 |
-| 37 | 컴퓨구조 | 시프 레지스터 (Shift Register) | 대기 |
-| 38 | 컴퓨구조 | 가산기 (Adder) | 대기 |
-| 39 | 컴퓨터구조 | 감산기 (Subtractor) | 대기 |
-| 40 | 컴퓨구조 | 승산기 (Multiplier) | 대기 |
+| 48 | 컴퓨터구조 | 디멀티플렉서 (Demultiplexer) | 대기 |
+| 49 | 컴퓨터구조 | SR 래치 | 대기 |
+| 50 | 컴퓨터구조 | D 래치 | 대기 |
+| 51 | 컴퓨터구조 | SR 플립플롭 | 대기 |
+| 52 | 컴퓨터구조 | D 플립플롭 | 대기 |
+| 53 | 컴퓨터구조 | JK 플립플롭 | 대기 |
+| 54 | 컴퓨터구조 | T 플립플롭 | 대기 |
+| 55 | 컴퓨터구조 | 마스터-슬레이브 플립플롭 | 대기 |
+| 56 | 컴퓨터구조 | 동기식 카운터 | 대기 |
+| 57 | 컴퓨터구조 | 비동기식 카운터 | 대기 |
 
 ---
 
@@ -144,45 +162,33 @@
 
 ## 📝 작성 완료된 문서
 
-### 컴퓨터구조 (30/802)
+### 컴퓨터구조 (47/802)
 - **1_logic 폴더** (기초 전자전자 논리회로):
-  - 1_voltage.md (전압) ✅
-  - 2_current.md (전류) ✅
-  - 3_resistance.md (저항) ✅
-  - 4_impedance.md (임피던스) ✅
-  - 5_capacitor.md (커패시터) ✅
-  - 6_capacitance.md (정전용량) ✅
-  - 7_inductor.md (인덕터) ✅
-  - 8_conductor.md (도체) ✅
-  - 9_semiconductor.md (반도체) ✅
-  - 10_insulator.md (절연체) ✅
-  - 11_diode.md (다이오드) ✅
-  - 12_rectifier.md (정류기) ✅
-  - 13_led.md (발광 다이오드) ✅
-  - 14_transistor.md (트랜지스터) ✅
-  - 15_bjt.md (바이폴라 접합 트랜지스터) ✅
-  - 16_fet.md (전계 효과 트랜지스터) ✅
-  - 17_mosfet.md (MOSFET) ✅
-  - 18_cmos.md (CMOS) ✅
-  - 19_ttl.md (TTL) ✅
-  - 20_ecl.md (ECL) ✅
-  - 21_and_gate.md (AND 게이트) ✅
-  - 22_or_gate.md (OR 게이트) ✅
-  - 23_not_gate.md (NOT 게이트/인버터) ✅
-  - 24_nand_gate.md (NAND 게이트) ✅
-  - 25_nor_gate.md (NOR 게이트) ✅
-  - 26_xor_gate.md (XOR 게이트) ✅
-  - 27_xnor_gate.md (XNOR 게이트) ✅
-  - 28_buffer.md (버퍼) ✅
-  - 29_tristate_buffer.md (3상태 버퍼) ✅
-  - 30_encoder.md (인코더) ✅
+  - 1~30 ✅
+  - 31_decoder.md (디코더) ✅
+  - 32_multiplexer.md (멀티플렉서) ✅
+  - 33_latch.md (래치) ✅
+  - 34_flipflop.md (플립플롭) ✅
+  - 35_counter.md (카운터) ✅
+  - 36_register.md (레지스터) ✅
+  - 37_shift_register.md (시프트 레지스터) ✅
+  - 38_half_adder.md (하프 가산기) ✅
+  - 39_full_adder.md (풀 가산기) ✅
+  - 40_ripple_carry_adder.md (리플 캐리 가산기) ✅
+  - 41_carry_lookahead_adder.md (캐리 룩어헤드 가산기) ✅
+  - 42_carry_select_adder.md (캐리 셀렉트 가산기) ✅
+  - 43_carry_save_adder.md (캐리 세이브 가산기) ✅
+  - 44_subtracter.md (뺄셈기) ✅
+  - 45_comparator.md (비교기) ✅
+  - 46_alu.md (ALU) ✅
+  - 47_multiplier.md (곱셈기) ✅
 
 ---
 
 ## 📊 작업 통계
 
 ### 작성 속도
-- 현재: 30개 완료
+- 현재: 47개 완료
 - 목표: 802개 (컴퓨터구조만)
 - 전체 목표: 약 10,000개 추정
 
@@ -207,7 +213,11 @@ Initial Commit (2026-03-05):
 - 파일: 10개 생성
 - 경로: content/PE/1_computer_architecture/1_logic/
 - SHA: e720fee
-```
+
+4차 커밋 (2026-03-05):
+- 파일: 17개 생성
+- 경로: content/PE/1_computer_architecture/1_logic/
+- SHA: cb8bbf3
 
 ---
 
