@@ -41,7 +41,7 @@ weight = [번호]
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **시작**: `1_basic_electronics_logic/` **#62 (다음 주제)**
+- **시작**: `2_data_representation_arithmetic/` **#73 (다음 주제)**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -50,9 +50,9 @@ weight = [번호]
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 61 | ~1,000 | 6.1% |
+| CA | 72 | ~1,000 | 7.2% |
 | OS | 0 | ~800 | 0% |
 | NW | 0 | ~1,200 | 0% |
 | SE | 0 | ~800 | 0% |
 | DB | 0 | ~800 | 0% |
-| **합계** | **61** | **~4,800** | **1.27%** |
+| **합계** | **72** | **~4,800** | **1.5%** |
