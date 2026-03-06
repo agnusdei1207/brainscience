@@ -1,7 +1,7 @@
 # 📋 CONTINUE.md — AI 인계 문서
 
 > 이 파일을 읽고 즉시 이어서 작업하세요.
-> 완료 파일 확인은 파일시스템 직접 확인 (`ls content/studynotes/...`)
+> 완료 파일 확인은 파일시스템 직접 확인 (`ls content/studynote/...`)
 
 ---
 
@@ -27,7 +27,7 @@
 ## 경로 & 파일명
 
 ```
-content/studynotes/[과목폴더]/[서브폴더]/[번호]_[영문_소문자].md
+content/studynote/[과목폴더]/[서브폴더]/[번호]_[영문_소문자].md
 
 +++
 title = "[번호]. [한글] ([영문])"
@@ -40,9 +40,9 @@ weight = [번호]
 ## 📍 현재 위치
 
 ### ⚡ 다음 작업
-- **과목**: CA (컴퓨터구조) — `content/studynotes/1_computer_architecture/`
+- **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
 - **시작**: `1_basic_electronics_logic/` **#62 (다음 주제)**
-- **참조**: `content/studynotes/1_computer_architecture/_keyword_list.md`
+- **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
 
