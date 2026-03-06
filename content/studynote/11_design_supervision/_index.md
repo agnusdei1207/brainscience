@@ -1,5 +1,5 @@
 +++
-title = "도메인 11: IT 디자인 및 감리 (Design & Supervision)"
+title = "11: IT 디자인 및 감리 (Design & Supervision)"
 render = true
 paginate_by = 10
 sort_by = "weight"

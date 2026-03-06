@@ -1,5 +1,5 @@
 +++
-title = "도메인 05: 데이터베이스 (Database)"
+title = "5: 데이터베이스 (Database)"
 render = true
 paginate_by = 10
 sort_by = "weight"

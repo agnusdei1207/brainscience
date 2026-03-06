@@ -1,5 +1,5 @@
 +++
-title = "도메인 08: 알고리즘 및 통계 (Algorithm & Stats)"
+title = "8: 알고리즘 및 통계 (Algorithm & Stats)"
 render = true
 paginate_by = 10
 sort_by = "weight"

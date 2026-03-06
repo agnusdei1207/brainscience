@@ -1,5 +1,5 @@
 +++
-title = "도메인 04: 소프트웨어 공학 (Software Engineering)"
+title = "4: 소프트웨어 공학 (Software Engineering)"
 render = true
 paginate_by = 10
 sort_by = "weight"

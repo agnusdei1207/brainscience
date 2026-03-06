@@ -1,5 +1,5 @@
 +++
-title = "도메인 02: 운영체제 (Operating System)"
+title = "2: 운영체제 (Operating System)"
 render = true
 paginate_by = 10
 sort_by = "weight"

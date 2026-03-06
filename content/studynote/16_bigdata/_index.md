@@ -1,5 +1,5 @@
 +++
-title = "도메인 16: 빅데이터 (Big Data)"
+title = "16: 빅데이터 (Big Data)"
 render = true
 paginate_by = 10
 sort_by = "weight"

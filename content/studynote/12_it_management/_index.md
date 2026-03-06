@@ -1,5 +1,5 @@
 +++
-title = "도메인 12: IT 경영 및 관리 (IT Management)"
+title = "12: IT 경영 및 관리 (IT Management)"
 render = true
 paginate_by = 10
 sort_by = "weight"

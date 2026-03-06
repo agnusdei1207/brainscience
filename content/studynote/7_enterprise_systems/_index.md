@@ -1,5 +1,5 @@
 +++
-title = "도메인 07: 엔터프라이즈 시스템 (Enterprise Systems)"
+title = "7: 엔터프라이즈 시스템 (Enterprise Systems)"
 render = true
 paginate_by = 10
 sort_by = "weight"

@@ -1,5 +1,5 @@
 +++
-title = "도메인 14: 데이터 엔지니어링 (Data Engineering)"
+title = "14: 데이터 엔지니어링 (Data Engineering)"
 render = true
 paginate_by = 10
 sort_by = "weight"

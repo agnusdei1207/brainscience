@@ -1,5 +1,5 @@
 +++
-title = "도메인 13: 클라우드 아키텍처 (Cloud Architecture)"
+title = "13: 클라우드 아키텍처 (Cloud Architecture)"
 render = true
 paginate_by = 10
 sort_by = "weight"

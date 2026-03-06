@@ -1,5 +1,5 @@
 +++
-title = "도메인 15: 데브옵스 및 SRE (DevOps & SRE)"
+title = "15: 데브옵스 및 SRE (DevOps & SRE)"
 render = true
 paginate_by = 10
 sort_by = "weight"

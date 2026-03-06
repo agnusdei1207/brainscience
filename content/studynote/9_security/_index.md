@@ -1,5 +1,5 @@
 +++
-title = "도메인 09: 정보 보안 (Security)"
+title = "9: 정보 보안 (Security)"
 render = true
 paginate_by = 10
 sort_by = "weight"

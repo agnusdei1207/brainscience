@@ -1,5 +1,5 @@
 +++
-title = "도메인 10: 인공지능 (Artificial Intelligence)"
+title = "10: 인공지능 (Artificial Intelligence)"
 render = true
 paginate_by = 10
 sort_by = "weight"
