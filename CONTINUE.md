@@ -1,4 +1,5 @@
 # BrainScience PE 콘텐츠 작업 추적
+- 2026-03-06: CA(131) 추측 실행, OS(116) 데드락 감지, NW(37) NFV, SE(42) 리팩토링, DB(34) 멀티모델 DB 작성 완료 (360 files)
 - 2026-03-06: CA(130) 분기 예측, OS(115) 동기화 기법, NW(36) CDN, SE(41) 코드 리뷰, DB(33) NewSQL 작성 완료 (355 files)
 
 ## ⚠️ 작업 원칙 (Rule)
@@ -13,11 +14,11 @@
 
 | 과목 | 완료 | 다음 키워드 |
 |------|------|------|
-| 컴퓨터구조 | 130 | 130. 분기 예측 (BTB, 2-bit Counter) |
-| 운영체제 | 115 | 115. 동기화 기법 (Mutex, RWLock) |
-| 네트워크 | 36 | 36. CDN (Anycast, Edge Caching) |
-| 소프트웨어공학 | 41 | 41. 코드 리뷰 (Pull Request) |
-| 데이터베이스 | 33 | 33. NewSQL (Spanner, CockroachDB) |
+| 컴퓨터구조 | 131 | 131. 추측 실행 (Spectre, Meltdown) |
+| 운영체제 | 116 | 116. 데드락 감지 (Resource Allocation Graph) |
+| 네트워크 | 37 | 37. NFV (VNF, Service Chaining) |
+| 소프트웨어공학 | 42 | 42. 리팩토링 (Extract Method) |
+| 데이터베이스 | 34 | 34. 멀티모델 DB (ArangoDB, Couchbase) |
 | ICT융합 | 0 | - |
 | 기업시스템 | 0 | - |
 | 알고리즘 | 0 | - |
