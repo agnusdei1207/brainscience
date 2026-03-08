@@ -41,7 +41,7 @@ weight = [번호]
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **다음**: `13_reliability_power/` **#471 (전력 게이팅 (Power Gating))**
+- **다음**: `13_reliability_power_management/` **#472 (열 설계 전력 (TDP, Thermal Design Power))**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -50,7 +50,7 @@ weight = [번호]
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 650 | ~1,000 | 65.0% |
+| CA | 462 | ~1,000 | 46.2% |
 | OS | 0 | ~800 | 0% |
 | NW | 0 | ~1,200 | 0% |
 | SE | 0 | ~800 | 0% |
