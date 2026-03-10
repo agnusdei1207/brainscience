@@ -1,6 +1,6 @@
 +++
-title = "413. 다중 프로그래밍 정도 (Degree of Multiprogramming)와 CPU 이용률 관계 그래프"
 weight = 413
+title = "413. 다중 프로그래밍 정도 (Degree of Multiprogramming)와 CPU 이용률 관계 그래프"
 +++
 
 # 413. 페이지 캐시 (Page Cache)

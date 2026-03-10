@@ -1,6 +1,6 @@
 +++
-title = "214. 동적 우선순위 승급 (Priority Boost) - I/O 완료 시, GUI 전경 프로세스"
 weight = 214
+title = "214. 동적 우선순위 승급 (Priority Boost) - I/O 완료 시, GUI 전경 프로세스"
 +++
 
 # 214. 스케줄링 클래스 (Scheduling Classes)

@@ -1,6 +1,6 @@
 +++
-title = "167. 상태 레지스터 (Status Register / Flag Register)"
 weight = 167
+title = "167. 상태 레지스터 (Status Register / Flag Register)"
 +++
 
 # 167. 상태 레지스터 (Status Register / Flag Register)

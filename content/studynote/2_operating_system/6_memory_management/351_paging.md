@@ -1,6 +1,6 @@
 +++
-title = "351. 페이징 (Paging) - 물리 메모리를 프레임(Frame), 논리 메모리를 페이지(Page)로 고정 크기 분할"
 weight = 351
+title = "351. 페이징 (Paging) - 물리 메모리를 프레임(Frame), 논리 메모리를 페이지(Page)로 고정 크기 분할"
 +++
 
 # 391. 페이징 (Paging)

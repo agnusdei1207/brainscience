@@ -1,6 +1,6 @@
 +++
-title = "45. 래치 (Latch)"
 weight = 45
+title = "45. 래치 (Latch)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

@@ -1,6 +1,6 @@
 +++
-title = "538. 동기화 I/O (O_SYNC / fsync)"
 weight = 538
+title = "538. 동기화 I/O (O_SYNC / fsync)"
 +++
 
 # 538. I/O 프로파일링 (I/O Profiling)

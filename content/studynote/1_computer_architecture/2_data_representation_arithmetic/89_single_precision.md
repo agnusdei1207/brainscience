@@ -1,6 +1,6 @@
 +++
-title = "89. 단정밀도 (Single Precision, FP32)"
 weight = 89
+title = "89. 단정밀도 (Single Precision, FP32)"
 +++
 
 # 단정밀도 (Single Precision, FP32)

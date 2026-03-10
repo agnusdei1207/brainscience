@@ -1,6 +1,6 @@
 +++
-title = "320. 버스트 모드 (Burst Mode)"
 weight = 320
+title = "320. 버스트 모드 (Burst Mode)"
 +++
 
 # 320. 버스트 모드 (Burst Mode)

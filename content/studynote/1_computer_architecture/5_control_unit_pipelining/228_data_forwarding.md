@@ -1,6 +1,6 @@
 +++
-title = "228. 데이터 포워딩 (Data Forwarding)"
 weight = 228
+title = "228. 데이터 포워딩 (Data Forwarding)"
 +++
 
 # 228. 데이터 포워딩 (Data Forwarding)

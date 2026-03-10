@@ -1,6 +1,6 @@
 +++
-title = "183. 데이터 전송 명령어 (Data Transfer Instruction)"
 weight = 183
+title = "183. 데이터 전송 명령어 (Data Transfer Instruction)"
 +++
 
 # 183. 데이터 전송 명령어 (Data Transfer Instruction)

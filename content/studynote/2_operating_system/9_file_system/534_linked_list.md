@@ -1,6 +1,6 @@
 +++
-title = "534. 연결 리스트 (Linked List) 빈 공간 관리"
 weight = 534
+title = "534. 연결 리스트 (Linked List) 빈 공간 관리"
 +++
 
 # 534. Scatter/Gather I/O (벡터화 I/O)

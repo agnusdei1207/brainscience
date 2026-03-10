@@ -1,6 +1,6 @@
 +++
-title = "331. RAID (Redundant Array of Independent Disks)"
 weight = 331
+title = "331. RAID (Redundant Array of Independent Disks)"
 +++
 
 # 331. RAID (Redundant Array of Independent Disks)

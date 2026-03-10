@@ -1,6 +1,6 @@
 +++
-title = "420. 메모리 맵 I/O (Memory-Mapped I/O) - 디바이스 레지스터 매핑"
 weight = 420
+title = "420. 메모리 맵 I/O (Memory-Mapped I/O) - 디바이스 레지스터 매핑"
 +++
 
 # 420. FIFO 페이지 교체 (FIFO Page Replacement)

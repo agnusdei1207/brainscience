@@ -1,6 +1,6 @@
 +++
-title = "172. 반환 시간 (Turnaround Time) / 대기 시간 (Waiting Time) / 응답 시간 (Response Time)"
 weight = 172
+title = "172. 반환 시간 (Turnaround Time) / 대기 시간 (Waiting Time) / 응답 시간 (Response Time)"
 +++
 
 # 172. 처리량 (Throughput)

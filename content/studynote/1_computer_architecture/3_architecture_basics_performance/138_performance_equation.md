@@ -1,6 +1,6 @@
 +++
-title = "138. 성능 방정식 (Performance Equation)"
 weight = 138
+title = "138. 성능 방정식 (Performance Equation)"
 +++
 
 # 138. 성능 방정식 (Performance Equation)

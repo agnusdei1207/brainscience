@@ -1,6 +1,6 @@
 +++
-title = "512. 심볼릭 링크 (Symbolic Link / Soft Link) - 경로명을 값으로 가짐, 윈도우의 바로가기"
 weight = 512
+title = "512. 심볼릭 링크 (Symbolic Link / Soft Link) - 경로명을 값으로 가짐, 윈도우의 바로가기"
 +++
 
 # 597. 심볼릭 링크 (Symbolic Link / Soft Link)

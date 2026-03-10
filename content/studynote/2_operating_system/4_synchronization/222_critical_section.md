@@ -1,6 +1,6 @@
 +++
-title = "222. 임계 구역 (Critical Section) - 공유 데이터 접근 코드 영역"
 weight = 222
+title = "222. 임계 구역 (Critical Section) - 공유 데이터 접근 코드 영역"
 +++
 
 # 222. 임계 영역 (Critical Section)

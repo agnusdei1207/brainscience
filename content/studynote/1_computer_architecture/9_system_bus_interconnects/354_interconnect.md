@@ -1,6 +1,6 @@
 +++
-title = "354. 인터커넥트 (Interconnect)"
 weight = 354
+title = "354. 인터커넥트 (Interconnect)"
 +++
 
 # 354. 인터커넥트 (Interconnect)

@@ -1,6 +1,6 @@
 +++
-title = "290. 역페이지 테이블 (Inverted Page Table)"
 weight = 290
+title = "290. 역페이지 테이블 (Inverted Page Table)"
 +++
 
 # 290. 역페이지 테이블 (Inverted Page Table)

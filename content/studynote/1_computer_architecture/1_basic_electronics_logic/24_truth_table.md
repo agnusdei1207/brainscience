@@ -1,6 +1,6 @@
 +++
-title = "24. 진리표 (Truth Table)"
 weight = 24
+title = "24. 진리표 (Truth Table)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

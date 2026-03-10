@@ -1,6 +1,6 @@
 +++
-title = "471. 전력 게이팅 (Power Gating)"
 weight = 471
+title = "471. 전력 게이팅 (Power Gating)"
 +++
 
 # 471. 전력 게이팅 (Power Gating)

@@ -1,6 +1,6 @@
 +++
-title = "303. LFU 알고리즘 (Least Frequently Used)"
 weight = 303
+title = "303. LFU 알고리즘 (Least Frequently Used)"
 +++
 
 # 303. LFU 알고리즘 (Least Frequently Used)

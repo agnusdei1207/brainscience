@@ -1,6 +1,6 @@
 +++
-title = "7. 인덕터 (Inductor)"
 weight = 7
+title = "7. 인덕터 (Inductor)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

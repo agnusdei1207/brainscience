@@ -1,11 +1,11 @@
 +++
+weight = 614
 title = "614. 시스템 DTrace 선언적 동적 트레이싱 엔진 메커니즘"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "DTrace", "동적 트레이싱", "D 언어", "관측성", "Observability"]
 series = "운영체제 800제"
-weight = 614
 +++
 
 # 시스템 DTrace 선언적 동적 트레이싱 엔진 메커니즘

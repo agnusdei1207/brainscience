@@ -1,6 +1,6 @@
 +++
-title = "400. 캐시 일관성 (Cache Coherence)"
 weight = 400
+title = "400. 캐시 일관성 (Cache Coherence)"
 +++
 
 # 400. 캐시 일관성 (Cache Coherence)

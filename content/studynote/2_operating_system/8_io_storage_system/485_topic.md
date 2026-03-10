@@ -1,6 +1,6 @@
 +++
-title = "485. RAID 1 (미러링, Mirroring) - 데이터 중복 복사, 신뢰성 최고, 용량 효율 50%"
 weight = 485
+title = "485. RAID 1 (미러링, Mirroring) - 데이터 중복 복사, 신뢰성 최고, 용량 효율 50%"
 +++
 
 # 485. 중복 제거 (Deduplication)

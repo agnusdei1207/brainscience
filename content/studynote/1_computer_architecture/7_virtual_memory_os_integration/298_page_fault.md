@@ -1,6 +1,6 @@
 +++
-title = "298. 페이지 폴트 (Page Fault)"
 weight = 298
+title = "298. 페이지 폴트 (Page Fault)"
 +++
 
 # 298. 페이지 폴트 (Page Fault)

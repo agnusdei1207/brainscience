@@ -1,6 +1,6 @@
 +++
-title = "57. SSI, MSI, LSI, VLSI, ULSI"
 weight = 57
+title = "57. SSI, MSI, LSI, VLSI, ULSI"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

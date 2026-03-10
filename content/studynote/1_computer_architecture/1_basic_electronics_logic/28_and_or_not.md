@@ -1,6 +1,6 @@
 +++
-title = "28. AND, OR, NOT 게이트"
 weight = 28
+title = "28. AND, OR, NOT 게이트"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

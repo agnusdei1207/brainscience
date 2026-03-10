@@ -1,6 +1,6 @@
 +++
-title = "156. 전력-성능 트레이드오프 (Power-Performance Tradeoff)"
 weight = 156
+title = "156. 전력-성능 트레이드오프 (Power-Performance Tradeoff)"
 +++
 
 # 156. 전력-성능 트레이드오프 (Power-Performance Tradeoff)

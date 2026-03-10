@@ -1,6 +1,6 @@
 +++
-title = "348. 버디 시스템 (Buddy System) 할당기 - 2의 승수로 분할 및 병합 (외부 단편화 절충)"
 weight = 348
+title = "348. 버디 시스템 (Buddy System) 할당기 - 2의 승수로 분할 및 병합 (외부 단편화 절충)"
 +++
 
 # 437. 버디 시스템 (Buddy System)

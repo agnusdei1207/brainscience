@@ -1,6 +1,6 @@
 +++
-title = "543. 양자 내성 암호 가속기 (PQC Accelerator)"
 weight = 543
+title = "543. 양자 내성 암호 가속기 (PQC Accelerator)"
 +++
 
 # 543. 양자 내성 암호 가속기 (PQC Accelerator)

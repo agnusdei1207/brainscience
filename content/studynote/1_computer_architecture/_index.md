@@ -1,9 +1,9 @@
 +++
-title = "01: 컴퓨터 구조 (Computer Architecture)"
+weight = 1
+title = "1: 컴퓨터 구조 (Computer Architecture)"
 render = true
 paginate_by = 10
 sort_by = "weight"
-weight = 1
 insert_anchor_links = "right"
 [extra]
 category = "studynote-computer-architecture"

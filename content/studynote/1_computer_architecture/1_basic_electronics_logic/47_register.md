@@ -1,6 +1,6 @@
 +++
-title = "47. 레지스터 (Register)"
 weight = 47
+title = "47. 레지스터 (Register)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

@@ -1,6 +1,6 @@
 +++
-title = "87. 부동소수점 (Floating Point)"
 weight = 87
+title = "87. 부동소수점 (Floating Point)"
 +++
 
 # 부동소수점 (Floating Point)

@@ -1,6 +1,6 @@
 +++
-title = "270. 3C 모델 (3C Model)"
 weight = 270
+title = "270. 3C 모델 (3C Model)"
 +++
 
 # 270. 3C 모델 (3C Model)

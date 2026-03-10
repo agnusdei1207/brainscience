@@ -1,6 +1,6 @@
 +++
-title = "390. 토러스 (Torus)"
 weight = 390
+title = "390. 토러스 (Torus)"
 +++
 
 # 390. 토러스 (Torus)

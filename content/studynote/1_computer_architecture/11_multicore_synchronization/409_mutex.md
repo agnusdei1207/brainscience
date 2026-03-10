@@ -1,6 +1,6 @@
 +++
-title = "409. 뮤텍스 (Mutex)"
 weight = 409
+title = "409. 뮤텍스 (Mutex)"
 +++
 
 # 409. 뮤텍스 (Mutex)

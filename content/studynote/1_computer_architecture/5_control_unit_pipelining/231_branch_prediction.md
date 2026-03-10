@@ -1,6 +1,6 @@
 +++
-title = "231. 분기 예측 (Branch Prediction)"
 weight = 231
+title = "231. 분기 예측 (Branch Prediction)"
 +++
 
 # 231. 분기 예측 (Branch Prediction)

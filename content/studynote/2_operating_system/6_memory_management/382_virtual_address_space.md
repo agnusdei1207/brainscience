@@ -1,6 +1,6 @@
 +++
-title = "382. 가상 주소 공간 (Virtual Address Space)"
 weight = 382
+title = "382. 가상 주소 공간 (Virtual Address Space)"
 +++
 
 # 415. 가상 주소 공간 (Virtual Address Space)

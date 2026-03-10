@@ -1,6 +1,6 @@
 +++
-title = "244. 우선순위 올림 (Priority Ceiling Protocol)"
 weight = 244
+title = "244. 우선순위 올림 (Priority Ceiling Protocol)"
 +++
 
 # 244. 락 프리 (Lock-Free)

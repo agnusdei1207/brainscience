@@ -1,6 +1,6 @@
 +++
-title = "384. 그리드 컴퓨팅 (Grid Computing)"
 weight = 384
+title = "384. 그리드 컴퓨팅 (Grid Computing)"
 +++
 
 # 384. 그리드 컴퓨팅 (Grid Computing)

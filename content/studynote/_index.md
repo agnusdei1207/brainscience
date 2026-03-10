@@ -1,9 +1,9 @@
 +++
+weight = 0
 title = "Study Note"
 description = "PE 16과목 핵심 정리 — 정보통신기술사·컴퓨터응용시스템기술사"
 
 sort_by = "weight"
-weight = 0
 insert_anchor_links = "right"
 +++
 

@@ -1,6 +1,6 @@
 +++
-title = "148. 데나드 스케일링 (Dennard Scaling)"
 weight = 148
+title = "148. 데나드 스케일링 (Dennard Scaling)"
 +++
 
 # 148. 데나드 스케일링 (Dennard Scaling)

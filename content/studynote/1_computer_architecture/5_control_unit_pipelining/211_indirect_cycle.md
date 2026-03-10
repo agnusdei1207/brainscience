@@ -1,6 +1,6 @@
 +++
-title = "211. 간접 사이클 (Indirect Cycle)"
 weight = 211
+title = "211. 간접 사이클 (Indirect Cycle)"
 +++
 
 # 211. 간접 사이클 (Indirect Cycle)

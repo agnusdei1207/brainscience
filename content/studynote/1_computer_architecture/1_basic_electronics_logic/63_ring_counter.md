@@ -1,6 +1,6 @@
 +++
-title = "63. 링 카운터 (Ring Counter)"
 weight = 63
+title = "63. 링 카운터 (Ring Counter)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

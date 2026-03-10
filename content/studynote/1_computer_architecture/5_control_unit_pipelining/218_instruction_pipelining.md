@@ -1,6 +1,6 @@
 +++
-title = "218. 명령어 파이프라이닝 (Instruction Pipelining)"
 weight = 218
+title = "218. 명령어 파이프라이닝 (Instruction Pipelining)"
 +++
 
 # 218. 명령어 파이프라이닝 (Instruction Pipelining)

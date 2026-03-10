@@ -1,11 +1,11 @@
 +++
+weight = 653
 title = "653. 엣지 컴퓨팅 OS (초경량/고속 부팅 최적화된 리눅스 환경 구성 기술망)"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "엣지 컴퓨팅", "경량 OS", "고속 부팅", "Unikernel", "Container OS"]
 series = "운영체제 800제"
-weight = 653
 +++
 
 # 엣지 컴퓨팅 OS (Edge Computing OS)

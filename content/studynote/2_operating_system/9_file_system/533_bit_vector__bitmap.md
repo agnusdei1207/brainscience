@@ -1,6 +1,6 @@
 +++
-title = "533. 비트 벡터 (Bit Vector / Bitmap) - 0과 1로 표현, 1워드 크기 연속 빈 공간 탐색 최적"
 weight = 533
+title = "533. 비트 벡터 (Bit Vector / Bitmap) - 0과 1로 표현, 1워드 크기 연속 빈 공간 탐색 최적"
 +++
 
 # 533. 메모리 맵핑 파일 (Memory-Mapped File)

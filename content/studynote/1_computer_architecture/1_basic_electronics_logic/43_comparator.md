@@ -1,6 +1,6 @@
 +++
-title = "43. 비교기 (Comparator)"
 weight = 43
+title = "43. 비교기 (Comparator)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

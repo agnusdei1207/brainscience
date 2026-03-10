@@ -1,6 +1,6 @@
 +++
-title = "171. 고정 길이 명령어 (Fixed Length Instruction)"
 weight = 171
+title = "171. 고정 길이 명령어 (Fixed Length Instruction)"
 +++
 
 # 171. 고정 길이 명령어 (Fixed Length Instruction)

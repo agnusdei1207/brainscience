@@ -1,6 +1,6 @@
 +++
-title = "154. TPC 벤치마크 (TPC Benchmark)"
 weight = 154
+title = "154. TPC 벤치마크 (TPC Benchmark)"
 +++
 
 # 154. TPC 벤치마크 (TPC Benchmark)

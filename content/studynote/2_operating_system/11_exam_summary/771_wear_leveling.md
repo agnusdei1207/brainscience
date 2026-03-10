@@ -1,6 +1,6 @@
 +++
-title = "771. 플래시 메모리 마모 평준화 (Wear Leveling)"
 weight = 771
+title = "771. 플래시 메모리 마모 평준화 (Wear Leveling)"
 +++
 
 # 608. Wear Leveling (마모 평준화)

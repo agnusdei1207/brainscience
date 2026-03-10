@@ -1,6 +1,6 @@
 +++
-title = "93. 정규화 (Normalization)"
 weight = 93
+title = "93. 정규화 (Normalization)"
 +++
 
 # 정규화 (Normalization)

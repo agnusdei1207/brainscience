@@ -1,6 +1,6 @@
 +++
-title = "205. 데이터패스 (Datapath)"
 weight = 205
+title = "205. 데이터패스 (Datapath)"
 +++
 
 # 205. 데이터패스 (Datapath)

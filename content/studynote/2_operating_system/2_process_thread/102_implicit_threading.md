@@ -1,11 +1,11 @@
 +++
+weight = 102
 title = "102. 암묵적 스레딩 (Implicit Threading) - 스레드 풀, OpenMP, Grand Central Dispatch(GCD)"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "macOS", "iOS", "GCD", "Grand Central Dispatch", "Concurrency", "Dispatch Queue"]
 series = "운영체제 800제"
-weight = 102
 +++
 
 # Grand Central Dispatch (GCD) 블록 및 디스패치 큐 기반 동시성 구조

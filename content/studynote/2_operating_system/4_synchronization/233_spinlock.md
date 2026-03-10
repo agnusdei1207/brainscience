@@ -1,6 +1,6 @@
 +++
-title = "233. 스핀락 (Spinlock) - 바쁜 대기(Busy Waiting), 다중 코어에서 문맥 교환 오버헤드 없음"
 weight = 233
+title = "233. 스핀락 (Spinlock) - 바쁜 대기(Busy Waiting), 다중 코어에서 문맥 교환 오버헤드 없음"
 +++
 
 # 230. 스핀락 (Spinlock)

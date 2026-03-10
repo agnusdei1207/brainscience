@@ -1,6 +1,6 @@
 +++
-title = "94. 편향 지수 (Bias / Biased Exponent)"
 weight = 94
+title = "94. 편향 지수 (Bias / Biased Exponent)"
 +++
 
 # 편향 지수 (Bias / Biased Exponent)

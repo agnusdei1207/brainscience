@@ -1,6 +1,6 @@
 +++
-title = "147. 황의 법칙 (Hwang's Law)"
 weight = 147
+title = "147. 황의 법칙 (Hwang's Law)"
 +++
 
 # 147. 황의 법칙 (Hwang's Law)

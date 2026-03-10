@@ -1,6 +1,6 @@
 +++
-title = "348. 버스 타이밍 (Bus Timing)"
 weight = 348
+title = "348. 버스 타이밍 (Bus Timing)"
 +++
 
 # 348. 버스 타이밍 (Bus Timing)

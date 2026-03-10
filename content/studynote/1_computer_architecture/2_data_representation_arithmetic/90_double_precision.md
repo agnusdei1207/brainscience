@@ -1,6 +1,6 @@
 +++
-title = "90. 배정밀도 (Double Precision, FP64)"
 weight = 90
+title = "90. 배정밀도 (Double Precision, FP64)"
 +++
 
 # 배정밀도 (Double Precision, FP64)

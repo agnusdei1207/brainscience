@@ -1,6 +1,6 @@
 +++
-title = "356. HyperTransport/Infinity Fabric"
 weight = 356
+title = "356. HyperTransport/Infinity Fabric"
 +++
 
 # 356. HyperTransport/Infinity Fabric

@@ -1,6 +1,6 @@
 +++
-title = "515. MBR (Master Boot Record) vs GPT (GUID Partition Table)"
 weight = 515
+title = "515. MBR (Master Boot Record) vs GPT (GUID Partition Table)"
 +++
 
 # 515. I/O 캐싱 (I/O Caching)

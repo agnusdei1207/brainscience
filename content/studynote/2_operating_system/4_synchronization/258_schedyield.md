@@ -1,6 +1,6 @@
 +++
-title = "258. 스케줄러 일드 (sched_yield) - 락 경합 시 자발적 CPU 양보"
 weight = 258
+title = "258. 스케줄러 일드 (sched_yield) - 락 경합 시 자발적 CPU 양보"
 +++
 
 # 258. 락 스트라이핑 (Lock Striping)

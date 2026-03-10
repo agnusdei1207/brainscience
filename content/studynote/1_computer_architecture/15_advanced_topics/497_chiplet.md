@@ -1,6 +1,6 @@
 +++
-title = "497. 칩렛 (Chiplet) 아키텍처"
 weight = 497
+title = "497. 칩렛 (Chiplet) 아키텍처"
 +++
 
 # 497. 칩렛 (Chiplet) 아키텍처

@@ -1,6 +1,6 @@
 +++
-title = "401. 페이지 교체 알고리즘 (Page Replacement Algorithms)"
 weight = 401
+title = "401. 페이지 교체 알고리즘 (Page Replacement Algorithms)"
 +++
 
 # 401. 페이지 폴트 빈도 (Page Fault Frequency)

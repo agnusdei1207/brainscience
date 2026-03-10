@@ -1,11 +1,11 @@
 +++
+weight = 669
 title = "669. 하드웨어 기반 무작위 난수 생성기 (TRNG) 커널 엔트로피 풀 주입 방식"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "난수 생성기", "TRNG", "PRNG", "엔트로피", "Entropy Pool", "보안"]
 series = "운영체제 800제"
-weight = 669
 +++
 
 # 하드웨어 기반 무작위 난수 생성기 (TRNG)와 커널 엔트로피 주입

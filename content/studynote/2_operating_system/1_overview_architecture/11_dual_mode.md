@@ -1,6 +1,6 @@
 +++
-title = "11. 듀얼 모드 (Dual Mode) - 사용자 모드(User Mode)와 커널 모드(Kernel Mode)"
 weight = 11
+title = "11. 듀얼 모드 (Dual Mode) - 사용자 모드(User Mode)와 커널 모드(Kernel Mode)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

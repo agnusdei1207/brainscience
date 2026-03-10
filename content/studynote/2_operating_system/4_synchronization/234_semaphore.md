@@ -1,6 +1,6 @@
 +++
-title = "234. 세마포어 (Semaphore) - S 정수 변수, wait(P), signal(V) 원자적 연산"
 weight = 234
+title = "234. 세마포어 (Semaphore) - S 정수 변수, wait(P), signal(V) 원자적 연산"
 +++
 
 # 231. 세마포어 (Semaphore)

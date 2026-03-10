@@ -1,6 +1,6 @@
 +++
-title = "391. 하이퍼큐브 (Hypercube)"
 weight = 391
+title = "391. 하이퍼큐브 (Hypercube)"
 +++
 
 # 391. 하이퍼큐브 (Hypercube)

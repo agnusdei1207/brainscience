@@ -1,11 +1,11 @@
 +++
+weight = 668
 title = "668. 부채널 공격 (Side-channel Attack, Meltdown/Spectre) 마이크로아키텍처 취약점 대응 소프트웨어 패치(KPTI, Retpoline)"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "Side-channel Attack", "Meltdown", "Spectre", "KPTI", "Retpoline", "비순차 실행"]
 series = "운영체제 800제"
-weight = 668
 +++
 
 # 부채널 공격(Side-channel Attack) 및 OS 대응 패치(KPTI, Retpoline)

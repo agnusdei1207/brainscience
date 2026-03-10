@@ -1,6 +1,6 @@
 +++
-title = "518. VFS 객체 - 슈퍼블록 (Superblock), 아이노드 (inode), 덴트리 (dentry), 파일 객체 (file object)"
 weight = 518
+title = "518. VFS 객체 - 슈퍼블록 (Superblock), 아이노드 (inode), 덴트리 (dentry), 파일 객체 (file object)"
 +++
 
 # 518. 블로킹/논블로킹 I/O (Blocking/Non-blocking I/O)

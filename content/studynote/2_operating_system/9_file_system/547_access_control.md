@@ -1,6 +1,6 @@
 +++
-title = "547. 파일 시스템 접근 제어 (Access Control) - 소유자, 그룹, 기타(Other)의 rwx 권한 (r=4, w=2, x=1)"
 weight = 547
+title = "547. 파일 시스템 접근 제어 (Access Control) - 소유자, 그룹, 기타(Other)의 rwx 권한 (r=4, w=2, x=1)"
 +++
 
 # 547. 오디오 코덱 (Audio Codec)

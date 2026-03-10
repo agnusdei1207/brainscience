@@ -1,6 +1,6 @@
 +++
-title = "275. 캐시 쓰기 정책 (Cache Write Policy)"
 weight = 275
+title = "275. 캐시 쓰기 정책 (Cache Write Policy)"
 +++
 
 # 275. 캐시 쓰기 정책 (Cache Write Policy)

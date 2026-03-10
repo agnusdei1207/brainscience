@@ -1,6 +1,6 @@
 +++
-title = "153. Linpack"
 weight = 153
+title = "153. Linpack"
 +++
 
 # 153. Linpack

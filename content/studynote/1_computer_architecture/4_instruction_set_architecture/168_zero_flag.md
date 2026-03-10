@@ -1,6 +1,6 @@
 +++
-title = "168. 제로 플래그 (Zero Flag)"
 weight = 168
+title = "168. 제로 플래그 (Zero Flag)"
 +++
 
 # 168. 제로 플래그 (Zero Flag)

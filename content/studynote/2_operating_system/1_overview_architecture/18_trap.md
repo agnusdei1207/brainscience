@@ -1,6 +1,6 @@
 +++
-title = "18. 소프트웨어 인터럽트 / 트랩 (Trap) / 예외 (Exception)"
 weight = 18
+title = "18. 소프트웨어 인터럽트 / 트랩 (Trap) / 예외 (Exception)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

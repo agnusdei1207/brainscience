@@ -1,6 +1,6 @@
 +++
-title = "401. MESI 프로토콜 (MESI Protocol)"
 weight = 401
+title = "401. MESI 프로토콜 (MESI Protocol)"
 +++
 
 # 401. MESI 프로토콜 (MESI Protocol)

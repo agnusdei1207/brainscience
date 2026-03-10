@@ -1,6 +1,6 @@
 +++
-title = "81. 부호 없는 정수 (Unsigned Integer)"
 weight = 81
+title = "81. 부호 없는 정수 (Unsigned Integer)"
 +++
 
 # 부호 없는 정수 (Unsigned Integer)

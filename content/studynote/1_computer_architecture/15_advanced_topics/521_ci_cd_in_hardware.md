@@ -1,6 +1,6 @@
 +++
-title = "521. 하드웨어 민첩성 설계 (Hardware Agile/CI-CD)"
 weight = 521
+title = "521. 하드웨어 민첩성 설계 (Hardware Agile/CI-CD)"
 +++
 
 # 521. 하드웨어 민첩성 설계 (Hardware Agile/CI-CD)

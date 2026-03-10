@@ -1,6 +1,6 @@
 +++
-title = "447. 메모리 맵 I/O (Memory-mapped I/O) vs 분리된 I/O (Isolated I/O / Port I/O)"
 weight = 447
+title = "447. 메모리 맵 I/O (Memory-mapped I/O) vs 분리된 I/O (Isolated I/O / Port I/O)"
 +++
 
 # 447. 아이노드 (Inode)

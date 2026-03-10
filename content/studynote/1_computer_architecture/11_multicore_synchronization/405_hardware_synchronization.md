@@ -1,6 +1,6 @@
 +++
-title = "405. 하드웨어 동기화 (Hardware Synchronization)"
 weight = 405
+title = "405. 하드웨어 동기화 (Hardware Synchronization)"
 +++
 
 # 405. 하드웨어 동기화 (Hardware Synchronization)

@@ -1,6 +1,6 @@
 +++
-title = "232. acquire() / release() 함수"
 weight = 232
+title = "232. acquire() / release() 함수"
 +++
 
 # 232. 뮤텍스 (Mutex)

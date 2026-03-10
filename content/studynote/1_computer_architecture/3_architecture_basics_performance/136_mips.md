@@ -1,6 +1,6 @@
 +++
-title = "136. MIPS (Million Instructions Per Second)"
 weight = 136
+title = "136. MIPS (Million Instructions Per Second)"
 +++
 
 # 136. MIPS (Million Instructions Per Second)

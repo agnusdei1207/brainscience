@@ -1,6 +1,6 @@
 +++
-title = "158. 명령어 (Instruction)"
 weight = 158
+title = "158. 명령어 (Instruction)"
 +++
 
 # 158. 명령어 (Instruction)

@@ -1,6 +1,6 @@
 +++
-title = "288. 페이지 테이블 (Page Table)"
 weight = 288
+title = "288. 페이지 테이블 (Page Table)"
 +++
 
 # 288. 페이지 테이블 (Page Table)

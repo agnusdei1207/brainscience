@@ -1,6 +1,6 @@
 +++
-title = "23. 모놀리식 커널 (Monolithic Kernel) - 리눅스, 고성능"
 weight = 23
+title = "23. 모놀리식 커널 (Monolithic Kernel) - 리눅스, 고성능"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

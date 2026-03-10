@@ -1,6 +1,6 @@
 +++
-title = "545. 인터럽트 지연 시간 (Interrupt Latency) 최소화"
 weight = 545
+title = "545. 인터럽트 지연 시간 (Interrupt Latency) 최소화"
 +++
 
 # 545. 인터럽트 지연 시간 (Interrupt Latency) 최소화

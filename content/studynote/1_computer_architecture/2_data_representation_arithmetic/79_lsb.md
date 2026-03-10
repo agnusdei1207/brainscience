@@ -1,6 +1,6 @@
 +++
-title = "79. LSB (Least Significant Bit)"
 weight = 79
+title = "79. LSB (Least Significant Bit)"
 +++
 
 # LSB (Least Significant Bit)

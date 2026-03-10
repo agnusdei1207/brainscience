@@ -1,6 +1,6 @@
 +++
-title = "440. eBPF 기반 메모리 할당 트레이싱"
 weight = 440
+title = "440. eBPF 기반 메모리 할당 트레이싱"
 +++
 
 # 440. 메모리 벌루닝 (Memory Ballooning)

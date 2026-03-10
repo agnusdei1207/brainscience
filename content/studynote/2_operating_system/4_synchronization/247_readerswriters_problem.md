@@ -1,6 +1,6 @@
 +++
-title = "247. 독자-저자 문제 (Readers-Writers Problem) - 제1유형(독자 우선), 제2유형(저자 우선)"
 weight = 247
+title = "247. 독자-저자 문제 (Readers-Writers Problem) - 제1유형(독자 우선), 제2유형(저자 우선)"
 +++
 
 # 247. 퓌텍스 (Futex)

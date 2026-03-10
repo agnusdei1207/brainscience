@@ -1,6 +1,6 @@
 +++
-title = "146. 무어의 법칙 (Moore's Law)"
 weight = 146
+title = "146. 무어의 법칙 (Moore's Law)"
 +++
 
 # 146. 무어의 법칙 (Moore's Law)

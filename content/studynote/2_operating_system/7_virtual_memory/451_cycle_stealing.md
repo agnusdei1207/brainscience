@@ -1,6 +1,6 @@
 +++
-title = "451. 사이클 스틸링 (Cycle Stealing) - DMA 컨트롤러가 CPU의 버스 사용을 일시 중지시키고 전송"
 weight = 451
+title = "451. 사이클 스틸링 (Cycle Stealing) - DMA 컨트롤러가 CPU의 버스 사용을 일시 중지시키고 전송"
 +++
 
 # 451. 디스크 구조 (Disk Structure)

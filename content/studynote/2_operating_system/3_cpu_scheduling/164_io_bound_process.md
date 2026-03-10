@@ -1,6 +1,6 @@
 +++
-title = "164. I/O 바운드 프로세스 (I/O Bound Process)"
 weight = 164
+title = "164. I/O 바운드 프로세스 (I/O Bound Process)"
 +++
 
 # 164. I/O 바운드 프로세스 (I/O Bound Process)

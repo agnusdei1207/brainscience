@@ -1,11 +1,11 @@
 +++
+weight = 657
 title = "657. 가상화 I/O 패스스루 (Passthrough) VFIO 프레임워크"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "가상화", "Passthrough", "VFIO", "IOMMU", "Direct I/O"]
 series = "운영체제 800제"
-weight = 657
 +++
 
 # 가상화 I/O 패스스루 (Passthrough) VFIO 프레임워크

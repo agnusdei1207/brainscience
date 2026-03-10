@@ -1,6 +1,6 @@
 +++
-title = "487. RAID 5 (블록 단위 스트라이핑 + 분산 패리티) - 성능/신뢰성 절충, 가장 대중적, 디스크 1개 고장 허용"
 weight = 487
+title = "487. RAID 5 (블록 단위 스트라이핑 + 분산 패리티) - 성능/신뢰성 절충, 가장 대중적, 디스크 1개 고장 허용"
 +++
 
 # 473. RAID 5 (Block-Level Striping with Distributed Parity)

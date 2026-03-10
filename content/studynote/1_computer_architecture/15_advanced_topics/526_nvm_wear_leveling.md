@@ -1,6 +1,6 @@
 +++
-title = "526. 비휘발성 메모리 마모 평준화 (NVM Wear Leveling)"
 weight = 526
+title = "526. 비휘발성 메모리 마모 평준화 (NVM Wear Leveling)"
 +++
 
 # 526. 비휘발성 메모리 마모 평준화 (NVM Wear Leveling)

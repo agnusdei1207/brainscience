@@ -1,6 +1,6 @@
 +++
-title = "510. RDMA (Remote Direct Memory Access)"
 weight = 510
+title = "510. RDMA (Remote Direct Memory Access)"
 +++
 
 # 510. RDMA (Remote Direct Memory Access)

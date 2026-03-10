@@ -1,6 +1,6 @@
 +++
-title = "96. 언더플로우 (Underflow)"
 weight = 96
+title = "96. 언더플로우 (Underflow)"
 +++
 
 # 언더플로우 (Underflow)

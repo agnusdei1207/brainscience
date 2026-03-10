@@ -1,6 +1,6 @@
 +++
-title = "561. 암호화 파일 시스템 (eCryptfs / Windows EFS)"
 weight = 561
+title = "561. 암호화 파일 시스템 (eCryptfs / Windows EFS)"
 +++
 
 # 561. CAN 버스 (Controller Area Network)

@@ -1,6 +1,6 @@
 +++
-title = "41. 자원 할당 (Resource Allocation)"
 weight = 41
+title = "41. 자원 할당 (Resource Allocation)"
 +++
 
 # 311. 자원 할당 (Resource Allocation)

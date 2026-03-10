@@ -1,11 +1,11 @@
 +++
+weight = 590
 title = "590. 웜 (Worm) - 자가 복제 네트워크 전파 독자 실행"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "웜", "악성코드", "자가 복제", "자가 전파"]
 series = "운영체제 800제"
-weight = 590
 +++
 
 # 웜 (Worm)

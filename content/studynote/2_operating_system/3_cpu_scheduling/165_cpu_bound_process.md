@@ -1,6 +1,6 @@
 +++
-title = "165. CPU 바운드 프로세스 (CPU Bound Process)"
 weight = 165
+title = "165. CPU 바운드 프로세스 (CPU Bound Process)"
 +++
 
 # 165. CPU 바운드 프로세스 (CPU Bound Process)

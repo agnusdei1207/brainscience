@@ -1,6 +1,6 @@
 +++
-title = "19. 핀펫 (FinFET)"
 weight = 19
+title = "19. 핀펫 (FinFET)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

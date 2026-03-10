@@ -1,6 +1,6 @@
 +++
-title = "226. 메모리 장벽 (Memory Barrier / Memory Fence) - 메모리 연산 순서 보장 명령어"
 weight = 226
+title = "226. 메모리 장벽 (Memory Barrier / Memory Fence) - 메모리 연산 순서 보장 명령어"
 +++
 
 # 226. 메모리 모델 (Memory Model)

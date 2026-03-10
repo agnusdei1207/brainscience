@@ -1,6 +1,6 @@
 +++
-title = "522. 파일 할당 방법 (File Allocation Methods)"
 weight = 522
+title = "522. 파일 할당 방법 (File Allocation Methods)"
 +++
 
 # 522. 프로미스 (Promise)

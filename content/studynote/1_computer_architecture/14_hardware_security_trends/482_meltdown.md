@@ -1,6 +1,6 @@
 +++
-title = "458. 보안 부팅 (Secure Boot)"
 weight = 458
+title = "458. 보안 부팅 (Secure Boot)"
 +++
 
 # 458. 보안 부팅 (Secure Boot)

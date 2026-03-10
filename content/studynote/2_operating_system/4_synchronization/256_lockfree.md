@@ -1,6 +1,6 @@
 +++
-title = "256. 락-프리 (Lock-free) 자료구조 - CAS 연산 적극 활용"
 weight = 256
+title = "256. 락-프리 (Lock-free) 자료구조 - CAS 연산 적극 활용"
 +++
 
 # 229. 락 (Lock)

@@ -1,6 +1,6 @@
 +++
-title = "535. 그룹화 (Grouping) / 계수 (Counting) 기법"
 weight = 535
+title = "535. 그룹화 (Grouping) / 계수 (Counting) 기법"
 +++
 
 # 535. Zero-Copy (Zero-copy)

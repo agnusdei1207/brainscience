@@ -1,6 +1,6 @@
 +++
-title = "449. 핫 스왑 (Hot Swap/Hot Plug)"
 weight = 449
+title = "449. 핫 스왑 (Hot Swap/Hot Plug)"
 +++
 
 # 449. 핫 스왑 (Hot Swap/Hot Plug)

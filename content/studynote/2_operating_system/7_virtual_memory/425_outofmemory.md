@@ -1,6 +1,6 @@
 +++
-title = "425. OOM Killer (Out-of-Memory) 작동 우선순위 점수 (oom_score) 매커니즘"
 weight = 425
+title = "425. OOM Killer (Out-of-Memory) 작동 우선순위 점수 (oom_score) 매커니즘"
 +++
 
 # 425. 참조 비트 (Reference Bit)

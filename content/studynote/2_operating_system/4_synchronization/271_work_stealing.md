@@ -1,6 +1,6 @@
 +++
-title = "271. 스레드 풀 스케줄링 락 경합 (Work Stealing)"
 weight = 271
+title = "271. 스레드 풀 스케줄링 락 경합 (Work Stealing)"
 +++
 
 # 271. 락 홀더 (Lock Holder)

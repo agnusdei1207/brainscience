@@ -1,11 +1,11 @@
 +++
+weight = 670
 title = "670. 소프트웨어 오류 주입 (Fault Injection) 카오스 테스팅 시스템 커널 모듈 활용법"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "Fault Injection", "오류 주입", "Chaos Engineering", "커널 모듈", "회복력", "Resilience"]
 series = "운영체제 800제"
-weight = 670
 +++
 
 # 소프트웨어 오류 주입(Fault Injection)과 커널 카오스 테스팅

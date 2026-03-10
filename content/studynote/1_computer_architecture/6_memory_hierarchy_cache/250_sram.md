@@ -1,6 +1,6 @@
 +++
-title = "250. SRAM (Static RAM)"
 weight = 250
+title = "250. SRAM (Static RAM)"
 +++
 
 # 250. SRAM (Static RAM)

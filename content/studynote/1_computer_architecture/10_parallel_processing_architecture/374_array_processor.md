@@ -1,6 +1,6 @@
 +++
-title = "374. 배열 프로세서 (Array Processor)"
 weight = 374
+title = "374. 배열 프로세서 (Array Processor)"
 +++
 
 # 374. 배열 프로세서 (Array Processor)

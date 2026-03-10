@@ -1,6 +1,6 @@
 +++
-title = "213. 윈도우 스케줄링 - 디스패처 (Dispatcher), 우선순위 기반 선점형, 32단계 우선순위"
 weight = 213
+title = "213. 윈도우 스케줄링 - 디스패처 (Dispatcher), 우선순위 기반 선점형, 32단계 우선순위"
 +++
 
 # 213. 선점 모델 (Preemption Models)

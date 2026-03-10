@@ -1,6 +1,6 @@
 +++
-title = "370. SIMD (Single Instruction, Multiple Data)"
 weight = 370
+title = "370. SIMD (Single Instruction, Multiple Data)"
 +++
 
 # 370. SIMD (Single Instruction, Multiple Data)

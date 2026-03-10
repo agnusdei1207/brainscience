@@ -1,6 +1,6 @@
 +++
-title = "500. 이중 경로 (Multipath) I/O 페일오버 및 로드밸런싱 구조"
 weight = 500
+title = "500. 이중 경로 (Multipath) I/O 페일오버 및 로드밸런싱 구조"
 +++
 
 # 500. 파일 시스템 트러블슈팅 (File System Troubleshooting)

@@ -1,6 +1,6 @@
 +++
-title = "448. 락스텝 아키텍처 (Lockstep Architecture)"
 weight = 448
+title = "448. 락스텝 아키텍처 (Lockstep Architecture)"
 +++
 
 # 448. 락스텝 아키텍처 (Lockstep Architecture)

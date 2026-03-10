@@ -1,6 +1,6 @@
 +++
-title = "343. NVMe-oF (NVMe over Fabrics)"
 weight = 343
+title = "343. NVMe-oF (NVMe over Fabrics)"
 +++
 
 # 343. NVMe-oF (NVMe over Fabrics)

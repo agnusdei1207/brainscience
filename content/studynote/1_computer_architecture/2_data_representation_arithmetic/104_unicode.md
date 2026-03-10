@@ -1,6 +1,6 @@
 +++
-title = "104. 유니코드 (Unicode)"
 weight = 104
+title = "104. 유니코드 (Unicode)"
 +++
 
 # 유니코드 (Unicode)

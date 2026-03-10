@@ -1,6 +1,6 @@
 +++
-title = "242. 토마술로 알고리즘 (Tomasulo's Algorithm)"
 weight = 242
+title = "242. 토마술로 알고리즘 (Tomasulo's Algorithm)"
 +++
 
 # 242. 토마술로 알고리즘 (Tomasulo's Algorithm)

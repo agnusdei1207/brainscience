@@ -1,6 +1,6 @@
 +++
-title = "457. 스풀링 (Spooling, Simultaneous Peripheral Operation On-Line) - 디스크를 대형 버퍼로 사용 (프린터 큐)"
 weight = 457
+title = "457. 스풀링 (Spooling, Simultaneous Peripheral Operation On-Line) - 디스크를 대형 버퍼로 사용 (프린터 큐)"
 +++
 
 # 457. LOOK 스케줄링

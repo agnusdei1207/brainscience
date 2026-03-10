@@ -1,11 +1,11 @@
 +++
+weight = 603
 title = "603. 루트킷 (Rootkit) 커널 모듈 감염 방식 (시스템 콜 테이블 후킹)"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "루트킷", "보안", "커널", "백도어"]
 series = "운영체제 800제"
-weight = 603
 +++
 
 # 루트킷 (Rootkit)

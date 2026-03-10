@@ -1,6 +1,6 @@
 +++
-title = "10. 절연체 (Insulator)"
 weight = 10
+title = "10. 절연체 (Insulator)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

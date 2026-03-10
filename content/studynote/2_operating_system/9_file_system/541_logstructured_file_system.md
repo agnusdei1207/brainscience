@@ -1,6 +1,6 @@
 +++
-title = "541. LFS (Log-structured File System) - 모든 쓰기를 순차적 로그 형태로만 디스크에 기록 (플래시 메모리에 적합)"
 weight = 541
+title = "541. LFS (Log-structured File System) - 모든 쓰기를 순차적 로그 형태로만 디스크에 기록 (플래시 메모리에 적합)"
 +++
 
 # 541. USB (Universal Serial Bus)

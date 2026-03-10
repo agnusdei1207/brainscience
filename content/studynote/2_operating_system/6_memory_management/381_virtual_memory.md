@@ -1,6 +1,6 @@
 +++
-title = "381. 가상 메모리 (Virtual Memory) 개념 - 물리 메모리보다 큰 프로그램 실행 가능"
 weight = 381
+title = "381. 가상 메모리 (Virtual Memory) 개념 - 물리 메모리보다 큰 프로그램 실행 가능"
 +++
 
 # 396. 가상 메모리 (Virtual Memory)

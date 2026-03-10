@@ -1,6 +1,6 @@
 +++
-title = "462. 뉴로모픽 컴퓨팅 (Neuromorphic Computing)"
 weight = 462
+title = "462. 뉴로모픽 컴퓨팅 (Neuromorphic Computing)"
 +++
 
 # 462. 뉴로모픽 컴퓨팅 (Neuromorphic Computing)

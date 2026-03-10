@@ -1,6 +1,6 @@
 +++
-title = "149. 벤치마크 프로그램 (Benchmark)"
 weight = 149
+title = "149. 벤치마크 프로그램 (Benchmark)"
 +++
 
 # 149. 벤치마크 프로그램 (Benchmark)

@@ -1,6 +1,6 @@
 +++
-title = "302. Clock 알고리즘 (Second Chance)"
 weight = 302
+title = "302. Clock 알고리즘 (Second Chance)"
 +++
 
 # 302. Clock 알고리즘 (Second Chance)

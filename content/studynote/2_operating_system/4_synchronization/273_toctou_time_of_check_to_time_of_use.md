@@ -1,6 +1,6 @@
 +++
-title = "273. 세큐어 코딩에서의 동기화 약점 (TOCTOU: Time of Check to Time of Use)"
 weight = 273
+title = "273. 세큐어 코딩에서의 동기화 약점 (TOCTOU: Time of Check to Time of Use)"
 +++
 
 # 273. 락 큐 (Lock Queue)

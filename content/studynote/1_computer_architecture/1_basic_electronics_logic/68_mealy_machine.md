@@ -1,6 +1,6 @@
 +++
-title = "68. 밀리 머신 (Mealy Machine)"
 weight = 68
+title = "68. 밀리 머신 (Mealy Machine)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

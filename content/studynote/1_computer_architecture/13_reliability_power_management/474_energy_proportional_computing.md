@@ -1,6 +1,6 @@
 +++
-title = "474. 에너지 비례 컴퓨팅 (Energy Proportional Computing)"
 weight = 474
+title = "474. 에너지 비례 컴퓨팅 (Energy Proportional Computing)"
 +++
 
 # 474. 에너지 비례 컴퓨팅 (Energy Proportional Computing)

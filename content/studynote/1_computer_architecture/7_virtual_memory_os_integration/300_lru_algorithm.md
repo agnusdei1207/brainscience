@@ -1,6 +1,6 @@
 +++
-title = "300. LRU 알고리즘 (Least Recently Used)"
 weight = 300
+title = "300. LRU 알고리즘 (Least Recently Used)"
 +++
 
 # 300. LRU 알고리즘 (Least Recently Used)

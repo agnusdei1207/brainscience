@@ -1,11 +1,11 @@
 +++
+weight = 658
 title = "658. Virtio - 반가상화 I/O 백엔드/프론트엔드 링버퍼(Vring) 디바이스 드라이버 구조"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "가상화", "Virtio", "반가상화", "Vring", "링버퍼"]
 series = "운영체제 800제"
-weight = 658
 +++
 
 # Virtio - 반가상화 I/O 백엔드/프론트엔드 링버퍼(Vring) 구조

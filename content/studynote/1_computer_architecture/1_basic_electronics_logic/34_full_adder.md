@@ -1,6 +1,6 @@
 +++
-title = "34. 전가산기 (Full Adder)"
 weight = 34
+title = "34. 전가산기 (Full Adder)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

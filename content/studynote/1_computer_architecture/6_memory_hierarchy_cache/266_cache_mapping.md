@@ -1,6 +1,6 @@
 +++
-title = "266. 캐시 맵핑 방식 (Cache Mapping)"
 weight = 266
+title = "266. 캐시 맵핑 방식 (Cache Mapping)"
 +++
 
 # 266. 캐시 맵핑 방식 (Cache Mapping)

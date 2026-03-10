@@ -1,6 +1,6 @@
 +++
-title = "97. NaN (Not a Number)"
 weight = 97
+title = "97. NaN (Not a Number)"
 +++
 
 # NaN (Not a Number)

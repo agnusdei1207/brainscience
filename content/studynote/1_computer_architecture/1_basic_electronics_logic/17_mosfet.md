@@ -1,6 +1,6 @@
 +++
-title = "17. MOSFET"
 weight = 17
+title = "17. MOSFET"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

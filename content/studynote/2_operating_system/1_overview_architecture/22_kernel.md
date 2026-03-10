@@ -1,6 +1,6 @@
 +++
-title = "22. 커널 (Kernel)의 역할"
 weight = 22
+title = "22. 커널 (Kernel)의 역할"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

@@ -1,6 +1,6 @@
 +++
-title = "142. 이벤트 루프 (Event Loop) 기반 비동기 처리 (Node.js)"
 weight = 142
+title = "142. 이벤트 루프 (Event Loop) 기반 비동기 처리 (Node.js)"
 +++
 
 # 520. 이벤트 루프 (Event Loop)

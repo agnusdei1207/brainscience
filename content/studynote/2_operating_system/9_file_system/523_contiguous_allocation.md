@@ -1,6 +1,6 @@
 +++
-title = "523. 연속 할당 (Contiguous Allocation) - 시작 블록과 길이 저장, 속도 빠름, 외부 단편화 심각"
 weight = 523
+title = "523. 연속 할당 (Contiguous Allocation) - 시작 블록과 길이 저장, 속도 빠름, 외부 단편화 심각"
 +++
 
 # 523. async/await (Asynchronous Await)

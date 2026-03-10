@@ -1,6 +1,6 @@
 +++
-title = "468. 도메인 특화 아키텍처 (Domain-Specific Architecture / DSA)"
 weight = 468
+title = "468. 도메인 특화 아키텍처 (Domain-Specific Architecture / DSA)"
 +++
 
 # 468. 도메인 특화 아키텍처 (Domain-Specific Architecture / DSA)

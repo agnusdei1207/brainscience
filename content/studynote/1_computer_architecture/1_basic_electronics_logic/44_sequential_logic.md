@@ -1,6 +1,6 @@
 +++
-title = "44. 순차 논리회로 (Sequential Logic)"
 weight = 44
+title = "44. 순차 논리회로 (Sequential Logic)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

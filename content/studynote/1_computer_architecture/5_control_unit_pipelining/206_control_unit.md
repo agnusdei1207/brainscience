@@ -1,6 +1,6 @@
 +++
-title = "206. 제어 유닛 (Control Unit)"
 weight = 206
+title = "206. 제어 유닛 (Control Unit)"
 +++
 
 # 206. 제어 유닛 (Control Unit)

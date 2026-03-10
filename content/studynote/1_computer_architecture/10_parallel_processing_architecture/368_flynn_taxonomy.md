@@ -1,6 +1,6 @@
 +++
-title = "368. 플린의 분류법 (Flynn's Taxonomy)"
 weight = 368
+title = "368. 플린의 분류법 (Flynn's Taxonomy)"
 +++
 
 # 368. 플린의 분류법 (Flynn's Taxonomy)

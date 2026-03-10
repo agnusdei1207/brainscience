@@ -1,6 +1,6 @@
 +++
-title = "225. 피터슨의 해결책 (Peterson's Algorithm) - 플래그(flag)와 턴(turn) 변수 활용, 2 프로세스 한정"
 weight = 225
+title = "225. 피터슨의 해결책 (Peterson's Algorithm) - 플래그(flag)와 턴(turn) 변수 활용, 2 프로세스 한정"
 +++
 
 # 225. 원자성 (Atomicity)

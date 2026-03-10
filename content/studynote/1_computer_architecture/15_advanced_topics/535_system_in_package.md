@@ -1,6 +1,6 @@
 +++
-title = "535. 시스템 온 패키지 (SiP, System in Package)"
 weight = 535
+title = "535. 시스템 온 패키지 (SiP, System in Package)"
 +++
 
 # 535. 시스템 온 패키지 (SiP, System in Package)

@@ -1,6 +1,6 @@
 +++
-title = "219. 실시간 리눅스 (PREEMPT_RT 패치)"
 weight = 219
+title = "219. 실시간 리눅스 (PREEMPT_RT 패치)"
 +++
 
 # 219. 워크로드 보존 스케줄링 (Workload-Conserving Scheduling)

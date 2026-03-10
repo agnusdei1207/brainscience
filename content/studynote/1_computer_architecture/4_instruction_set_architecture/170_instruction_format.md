@@ -1,6 +1,6 @@
 +++
-title = "170. 명령어 형식 (Instruction Format)"
 weight = 170
+title = "170. 명령어 형식 (Instruction Format)"
 +++
 
 # 170. 명령어 형식 (Instruction Format)

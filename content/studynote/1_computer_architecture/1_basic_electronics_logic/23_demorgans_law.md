@@ -1,6 +1,6 @@
 +++
-title = "23. 드모르간의 법칙 (De Morgan's Law)"
 weight = 23
+title = "23. 드모르간의 법칙 (De Morgan's Law)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

@@ -1,6 +1,6 @@
 +++
-title = "473. 서멀 스로틀링 (Thermal Throttling)"
 weight = 473
+title = "473. 서멀 스로틀링 (Thermal Throttling)"
 +++
 
 # 473. 서멀 스로틀링 (Thermal Throttling)

@@ -1,6 +1,6 @@
 +++
-title = "673. 다중 프로그래밍 (Multiprogramming) 한계 자원"
 weight = 673
+title = "673. 다중 프로그래밍 (Multiprogramming) 한계 자원"
 +++
 ## 핵심 인사이트 (3줄 요약)
 > 1. **본질**: 다중 프로그래밍(Multiprogramming)은 메모리에 여러 개의 프로그램을 동시에 적재하여, 하나의 프로그램이 입출력(I/O)을 대기하는 동안 다른 프로그램에 CPU를 할당하는 기법이다.

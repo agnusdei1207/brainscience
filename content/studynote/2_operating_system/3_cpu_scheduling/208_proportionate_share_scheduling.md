@@ -1,6 +1,6 @@
 +++
-title = "208. 비례 배분 스케줄링 (Proportionate Share Scheduling)"
 weight = 208
+title = "208. 비례 배분 스케줄링 (Proportionate Share Scheduling)"
 +++
 
 # 208. 스케줄링 도메인 (Scheduling Domains)

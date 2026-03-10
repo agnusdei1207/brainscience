@@ -1,6 +1,6 @@
 +++
-title = "534. 무어의 법칙 이후 (More than Moore)"
 weight = 534
+title = "534. 무어의 법칙 이후 (More than Moore)"
 +++
 
 # 534. 무어의 법칙 이후 (More than Moore)

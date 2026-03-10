@@ -1,6 +1,6 @@
 +++
-title = "257. NAND 플래시 (NAND Flash)"
 weight = 257
+title = "257. NAND 플래시 (NAND Flash)"
 +++
 
 # 257. NAND 플래시 (NAND Flash)

@@ -1,6 +1,6 @@
 +++
-title = "32. 펌웨어 (Firmware)"
 weight = 32
+title = "32. 펌웨어 (Firmware)"
 +++
 
 # 569. 펌웨어 (Firmware)

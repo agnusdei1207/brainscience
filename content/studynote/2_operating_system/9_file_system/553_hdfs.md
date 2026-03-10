@@ -1,6 +1,6 @@
 +++
-title = "553. 분산 파일 시스템 (HDFS, Ceph, GlusterFS) 네임노드 및 데이터노드 구조"
 weight = 553
+title = "553. 분산 파일 시스템 (HDFS, Ceph, GlusterFS) 네임노드 및 데이터노드 구조"
 +++
 
 # 553. 스캐너 (Scanner)

@@ -1,6 +1,6 @@
 +++
-title = "4. 다중 처리 시스템 (Multiprocessing System)"
 weight = 4
+title = "4. 다중 처리 시스템 (Multiprocessing System)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

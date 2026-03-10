@@ -1,6 +1,6 @@
 +++
-title = "258. NOR 플래시 (NOR Flash)"
 weight = 258
+title = "258. NOR 플래시 (NOR Flash)"
 +++
 
 # 258. NOR 플래시 (NOR Flash)

@@ -1,6 +1,6 @@
 +++
-title = "353. 칩셋 (Chipset: Northbridge/Southbridge)"
 weight = 353
+title = "353. 칩셋 (Chipset: Northbridge/Southbridge)"
 +++
 
 # 353. 칩셋 (Chipset: Northbridge/Southbridge)

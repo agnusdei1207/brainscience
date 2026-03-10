@@ -1,6 +1,6 @@
 +++
-title = "193. 다중 처리기 스케줄링 (Multiprocessor Scheduling)"
 weight = 193
+title = "193. 다중 처리기 스케줄링 (Multiprocessor Scheduling)"
 +++
 
 # 193. 로드 밸런싱 (Load Balancing)

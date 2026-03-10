@@ -1,6 +1,6 @@
 +++
-title = "203. 경성 실시간 (Hard Real-time) 시스템"
 weight = 203
+title = "203. 경성 실시간 (Hard Real-time) 시스템"
 +++
 
 # 203. 스케줄러 튜닝 (Scheduler Tuning)

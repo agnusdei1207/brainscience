@@ -1,6 +1,6 @@
 +++
-title = "515. 텐서 코어 (Tensor Core)"
 weight = 515
+title = "515. 텐서 코어 (Tensor Core)"
 +++
 
 # 515. 텐서 코어 (Tensor Core)

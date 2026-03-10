@@ -1,6 +1,6 @@
 +++
-title = "64. 존슨 카운터 (Johnson Counter)"
 weight = 64
+title = "64. 존슨 카운터 (Johnson Counter)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

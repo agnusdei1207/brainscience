@@ -1,6 +1,6 @@
 +++
-title = "216. 제어 메모리 (Control Memory)"
 weight = 216
+title = "216. 제어 메모리 (Control Memory)"
 +++
 
 # 216. 제어 메모리 (Control Memory)

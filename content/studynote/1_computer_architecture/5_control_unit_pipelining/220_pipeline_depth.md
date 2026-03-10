@@ -1,6 +1,6 @@
 +++
-title = "220. 파이프라인 깊이 (Pipeline Depth)"
 weight = 220
+title = "220. 파이프라인 깊이 (Pipeline Depth)"
 +++
 
 # 220. 파이프라인 깊이 (Pipeline Depth)

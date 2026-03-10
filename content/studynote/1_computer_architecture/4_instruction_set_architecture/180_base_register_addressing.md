@@ -1,6 +1,6 @@
 +++
-title = "180. 베이스 레지스터 주소 지정 (Base Register Addressing)"
 weight = 180
+title = "180. 베이스 레지스터 주소 지정 (Base Register Addressing)"
 +++
 
 # 180. 베이스 레지스터 주소 지정 (Base Register Addressing)

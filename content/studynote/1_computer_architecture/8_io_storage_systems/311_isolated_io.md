@@ -1,6 +1,6 @@
 +++
-title = "311. 분리형 I/O (Isolated I/O)"
 weight = 311
+title = "311. 분리형 I/O (Isolated I/O)"
 +++
 
 # 311. 분리형 I/O (Isolated I/O)

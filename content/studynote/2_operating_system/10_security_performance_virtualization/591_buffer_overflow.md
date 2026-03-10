@@ -1,6 +1,6 @@
 +++
-title = "591. 버퍼 오버플로우 (Buffer Overflow) 원리 - C언어 취약 함수 악용 리턴 주소 덮어쓰기"
 weight = 591
+title = "591. 버퍼 오버플로우 (Buffer Overflow) 원리 - C언어 취약 함수 악용 리턴 주소 덮어쓰기"
 +++
 
 # 591. ZFS (Zettabyte File System)

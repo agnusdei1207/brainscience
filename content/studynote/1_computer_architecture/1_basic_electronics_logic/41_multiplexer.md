@@ -1,6 +1,6 @@
 +++
-title = "41. 멀티플렉서 (Multiplexer, MUX)"
 weight = 41
+title = "41. 멀티플렉서 (Multiplexer, MUX)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

@@ -1,11 +1,11 @@
 +++
+weight = 404
 title = "404. FIFO (First-In, First-Out) 교체 - 가장 먼저 들어온 페이지 교체 (벨라디 모순 발생)"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "비밀번호", "솔트", "해시", "보안"]
 series = "운영체제 800제"
-weight = 404
 +++
 
 # 비밀번호 솔트 (Password Salting)

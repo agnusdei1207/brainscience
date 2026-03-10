@@ -1,6 +1,6 @@
 +++
-title = "218. 컨테이너 스케줄링 (cgroups cpu.shares, cpu.cfs_quota_us)"
 weight = 218
+title = "218. 컨테이너 스케줄링 (cgroups cpu.shares, cpu.cfs_quota_us)"
 +++
 
 # 218. CPU 격리 (CPU Isolation)

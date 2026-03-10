@@ -1,6 +1,6 @@
 +++
-title = "345. 주소/데이터/제어 버스 (Address/Data/Control Bus)"
 weight = 345
+title = "345. 주소/데이터/제어 버스 (Address/Data/Control Bus)"
 +++
 
 # 345. 주소/데이터/제어 버스 (Address/Data/Control Bus)

@@ -1,6 +1,6 @@
 +++
-title = "347. 버스 프로토콜 (Bus Protocol)"
 weight = 347
+title = "347. 버스 프로토콜 (Bus Protocol)"
 +++
 
 # 347. 버스 프로토콜 (Bus Protocol)

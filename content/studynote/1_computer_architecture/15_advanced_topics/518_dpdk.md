@@ -1,6 +1,6 @@
 +++
-title = "518. DPDK (Data Plane Development Kit)"
 weight = 518
+title = "518. DPDK (Data Plane Development Kit)"
 +++
 
 # 518. DPDK (Data Plane Development Kit)

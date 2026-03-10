@@ -1,6 +1,6 @@
 +++
-title = "73. 비트 (Bit)"
 weight = 73
+title = "73. 비트 (Bit)"
 +++
 
 # 비트 (Bit)

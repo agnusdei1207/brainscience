@@ -1,6 +1,6 @@
 +++
-title = "139. 암달의 법칙 (Amdahl's Law)"
 weight = 139
+title = "139. 암달의 법칙 (Amdahl's Law)"
 +++
 
 # 139. 암달의 법칙 (Amdahl's Law)

@@ -1,6 +1,6 @@
 +++
-title = "33. 반가산기 (Half Adder)"
 weight = 33
+title = "33. 반가산기 (Half Adder)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

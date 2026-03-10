@@ -1,6 +1,6 @@
 +++
-title = "27. 논리 게이트 (Logic Gates)"
 weight = 27
+title = "27. 논리 게이트 (Logic Gates)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

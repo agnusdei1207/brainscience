@@ -1,6 +1,6 @@
 +++
-title = "595. 카나리 (Canary) / 스택 스매싱 가드 (Stack Smashing Protector) - 컴파일러 수준 버퍼 변조 탐지"
 weight = 595
+title = "595. 카나리 (Canary) / 스택 스매싱 가드 (Stack Smashing Protector) - 컴파일러 수준 버퍼 변조 탐지"
 +++
 
 # 595. iSCSI (Internet Small Computer System Interface)

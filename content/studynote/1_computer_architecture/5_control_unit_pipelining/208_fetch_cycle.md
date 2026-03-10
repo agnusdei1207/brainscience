@@ -1,6 +1,6 @@
 +++
-title = "208. 인출 사이클 (Fetch Cycle)"
 weight = 208
+title = "208. 인출 사이클 (Fetch Cycle)"
 +++
 
 # 208. 인출 사이클 (Fetch Cycle)

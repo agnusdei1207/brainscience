@@ -1,6 +1,6 @@
 +++
-title = "161. 단기 스케줄러 (Short-term Scheduler) / CPU 스케줄러"
 weight = 161
+title = "161. 단기 스케줄러 (Short-term Scheduler) / CPU 스케줄러"
 +++
 
 # 161. 단기 스케줄러 (Short-term Scheduler)

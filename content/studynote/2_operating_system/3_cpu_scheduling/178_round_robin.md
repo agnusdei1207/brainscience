@@ -1,6 +1,6 @@
 +++
-title = "178. 라운드 로빈 (Round Robin, RR) 스케줄링 - 시분할 시스템, 선점형"
 weight = 178
+title = "178. 라운드 로빈 (Round Robin, RR) 스케줄링 - 시분할 시스템, 선점형"
 +++
 
 # 178. 타임 퀀텀 (Time Quantum)

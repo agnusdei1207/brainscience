@@ -1,6 +1,6 @@
 +++
-title = "98. BCD 코드 (Binary Coded Decimal)"
 weight = 98
+title = "98. BCD 코드 (Binary Coded Decimal)"
 +++
 
 # BCD 코드 (Binary Coded Decimal)

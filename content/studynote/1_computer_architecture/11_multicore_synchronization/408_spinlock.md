@@ -1,6 +1,6 @@
 +++
-title = "408. 스핀락 (Spinlock)"
 weight = 408
+title = "408. 스핀락 (Spinlock)"
 +++
 
 # 408. 스핀락 (Spinlock)

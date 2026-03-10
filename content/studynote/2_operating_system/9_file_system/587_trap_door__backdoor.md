@@ -1,6 +1,6 @@
 +++
-title = "587. 트랩 도어 (Trap Door / Backdoor)"
 weight = 587
+title = "587. 트랩 도어 (Trap Door / Backdoor)"
 +++
 
 # 587. LVM (Logical Volume Manager)

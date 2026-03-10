@@ -1,6 +1,6 @@
 +++
-title = "278. 통합 캐시 (Unified Cache)"
 weight = 278
+title = "278. 통합 캐시 (Unified Cache)"
 +++
 
 # 278. 통합 캐시 (Unified Cache)

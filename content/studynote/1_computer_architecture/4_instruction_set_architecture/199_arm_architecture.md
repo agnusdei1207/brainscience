@@ -1,6 +1,6 @@
 +++
-title = "199. ARM 아키텍처 (ARM Architecture)"
 weight = 199
+title = "199. ARM 아키텍처 (ARM Architecture)"
 +++
 
 # 199. ARM 아키텍처 (ARM Architecture)

@@ -1,6 +1,6 @@
 +++
-title = "25. 하이브리드 커널 (Hybrid Kernel) - Windows NT, macOS(XNU)"
 weight = 25
+title = "25. 하이브리드 커널 (Hybrid Kernel) - Windows NT, macOS(XNU)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

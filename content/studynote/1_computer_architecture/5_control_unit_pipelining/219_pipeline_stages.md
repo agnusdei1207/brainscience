@@ -1,6 +1,6 @@
 +++
-title = "219. 파이프라인 단계 (Pipeline Stages)"
 weight = 219
+title = "219. 파이프라인 단계 (Pipeline Stages)"
 +++
 
 # 219. 파이프라인 단계 (Pipeline Stages)

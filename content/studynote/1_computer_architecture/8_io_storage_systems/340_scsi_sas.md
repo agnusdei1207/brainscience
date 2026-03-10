@@ -1,6 +1,6 @@
 +++
-title = "340. SCSI & SAS (Small Computer System Interface / Serial Attached SCSI)"
 weight = 340
+title = "340. SCSI & SAS (Small Computer System Interface / Serial Attached SCSI)"
 +++
 
 # 340. SCSI & SAS (Small Computer System Interface / Serial Attached SCSI)

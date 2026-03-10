@@ -1,6 +1,6 @@
 +++
-title = "542. COW (Copy-On-Write) 파일 시스템 (ZFS, Btrfs) - 스냅샷 및 롤백 기능 내장"
 weight = 542
+title = "542. COW (Copy-On-Write) 파일 시스템 (ZFS, Btrfs) - 스냅샷 및 롤백 기능 내장"
 +++
 
 # 542. 블루투스 (Bluetooth)

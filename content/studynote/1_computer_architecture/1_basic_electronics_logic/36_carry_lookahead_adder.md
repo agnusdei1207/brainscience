@@ -1,6 +1,6 @@
 +++
-title = "36. 캐리 예측 가산기 (Carry Look-ahead Adder)"
 weight = 36
+title = "36. 캐리 예측 가산기 (Carry Look-ahead Adder)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

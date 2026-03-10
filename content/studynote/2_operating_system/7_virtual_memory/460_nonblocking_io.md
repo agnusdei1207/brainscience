@@ -1,6 +1,6 @@
 +++
-title = "460. 논블로킹 I/O (Non-blocking I/O) - 데이터가 없어도 즉시 반환 (오류/0 바이트 반환)"
 weight = 460
+title = "460. 논블로킹 I/O (Non-blocking I/O) - 데이터가 없어도 즉시 반환 (오류/0 바이트 반환)"
 +++
 
 # 460. 디스크 성능 (Disk Performance)

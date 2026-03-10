@@ -1,6 +1,6 @@
 +++
-title = "691. 다단계 피드백 큐 (MLFQ) 천이"
 weight = 691
+title = "691. 다단계 피드백 큐 (MLFQ) 천이"
 +++
 
 # 183. 다단계 피드백 큐 (Multilevel Feedback Queue)

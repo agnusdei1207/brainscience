@@ -1,6 +1,6 @@
 +++
-title = "570. 리눅스 inotify 시스템 - 파일/디렉터리 변경 이벤트 모니터링 API"
 weight = 570
+title = "570. 리눅스 inotify 시스템 - 파일/디렉터리 변경 이벤트 모니터링 API"
 +++
 
 # 570. BIOS/UEFI

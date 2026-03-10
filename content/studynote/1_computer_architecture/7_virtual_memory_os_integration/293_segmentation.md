@@ -1,6 +1,6 @@
 +++
-title = "293. 세그멘테이션 (Segmentation)"
 weight = 293
+title = "293. 세그멘테이션 (Segmentation)"
 +++
 
 # 293. 세그멘테이션 (Segmentation)

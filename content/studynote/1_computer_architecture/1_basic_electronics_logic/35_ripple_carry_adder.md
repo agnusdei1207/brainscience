@@ -1,6 +1,6 @@
 +++
-title = "35. 리플 캐리 가산기 (Ripple Carry Adder)"
 weight = 35
+title = "35. 리플 캐리 가산기 (Ripple Carry Adder)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

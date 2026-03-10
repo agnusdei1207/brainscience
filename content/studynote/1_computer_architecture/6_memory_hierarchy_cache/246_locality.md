@@ -1,6 +1,6 @@
 +++
-title = "246. 참조의 지역성 (Locality of Reference)"
 weight = 246
+title = "246. 참조의 지역성 (Locality of Reference)"
 +++
 
 # 246. 참조의 지역성 (Locality of Reference)

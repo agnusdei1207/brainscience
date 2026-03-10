@@ -1,6 +1,6 @@
 +++
-title = "314. 인터럽트 구동 I/O (Interrupt-driven I/O)"
 weight = 314
+title = "314. 인터럽트 구동 I/O (Interrupt-driven I/O)"
 +++
 
 # 314. 인터럽트 구동 I/O (Interrupt-driven I/O)

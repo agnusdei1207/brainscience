@@ -1,6 +1,6 @@
 +++
-title = "78. 진법 변환 (Base Conversion)"
 weight = 78
+title = "78. 진법 변환 (Base Conversion)"
 +++
 
 # 진법 변환 (Base Conversion)

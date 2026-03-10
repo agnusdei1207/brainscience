@@ -1,6 +1,6 @@
 +++
-title = "112. 체크섬 (Checksum)"
 weight = 112
+title = "112. 체크섬 (Checksum)"
 +++
 
 # 112. 체크섬 (Checksum)

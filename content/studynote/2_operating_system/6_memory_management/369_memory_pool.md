@@ -1,6 +1,6 @@
 +++
-title = "369. 메모리 풀 (Memory Pool) 기법"
 weight = 369
+title = "369. 메모리 풀 (Memory Pool) 기법"
 +++
 
 # 434. 메모리 풀 (Memory Pool)

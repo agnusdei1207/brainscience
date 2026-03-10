@@ -1,6 +1,6 @@
 +++
-title = "74. 바이트 (Byte)"
 weight = 74
+title = "74. 바이트 (Byte)"
 +++
 
 # 바이트 (Byte)

@@ -1,6 +1,6 @@
 +++
-title = "313. 폴링 (Polling)"
 weight = 313
+title = "313. 폴링 (Polling)"
 +++
 
 # 313. 폴링 (Polling)

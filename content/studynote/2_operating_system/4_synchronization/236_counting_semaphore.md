@@ -1,6 +1,6 @@
 +++
-title = "236. 카운팅 세마포어 (Counting Semaphore) - 유한한 자원 풀 관리"
 weight = 236
+title = "236. 카운팅 세마포어 (Counting Semaphore) - 유한한 자원 풀 관리"
 +++
 
 # 236. 순차적 락 (Seqlock)

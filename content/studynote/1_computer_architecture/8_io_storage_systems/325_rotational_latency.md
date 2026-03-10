@@ -1,6 +1,6 @@
 +++
-title = "325. 회전 지연 (Rotational Latency)"
 weight = 325
+title = "325. 회전 지연 (Rotational Latency)"
 +++
 
 # 325. 회전 지연 (Rotational Latency)

@@ -1,6 +1,6 @@
 +++
-title = "501. 슈퍼스칼라 (Superscalar) 아키텍처"
 weight = 501
+title = "501. 슈퍼스칼라 (Superscalar) 아키텍처"
 +++
 
 # 501. 슈퍼스칼라 (Superscalar) 아키텍처

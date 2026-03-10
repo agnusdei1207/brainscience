@@ -1,6 +1,6 @@
 +++
-title = "65. 상태도 (State Diagram)"
 weight = 65
+title = "65. 상태도 (State Diagram)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

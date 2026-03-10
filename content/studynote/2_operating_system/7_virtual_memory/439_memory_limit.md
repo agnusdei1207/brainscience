@@ -1,6 +1,6 @@
 +++
-title = "439. Cgroups 메모리 서브시스템의 자원 제한 (Memory Limit) 동작"
 weight = 439
+title = "439. Cgroups 메모리 서브시스템의 자원 제한 (Memory Limit) 동작"
 +++
 
 # 439. OOM 킬러 (OOM Killer)

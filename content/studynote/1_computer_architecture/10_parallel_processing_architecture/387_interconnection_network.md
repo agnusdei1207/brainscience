@@ -1,6 +1,6 @@
 +++
-title = "387. 상호 연결망 (Interconnection Network)"
 weight = 387
+title = "387. 상호 연결망 (Interconnection Network)"
 +++
 
 # 387. 상호 연결망 (Interconnection Network)

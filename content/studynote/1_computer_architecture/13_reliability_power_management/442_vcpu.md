@@ -1,6 +1,6 @@
 +++
-title = "442. vCPU (Virtual CPU)"
 weight = 442
+title = "442. vCPU (Virtual CPU)"
 +++
 
 # 442. vCPU (Virtual CPU)

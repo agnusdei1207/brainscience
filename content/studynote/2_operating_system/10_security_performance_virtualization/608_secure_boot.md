@@ -1,11 +1,11 @@
 +++
+weight = 608
 title = "608. 보안 부팅 (Secure Boot) 인증서 체인 로딩 검증"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "보안 부팅", "Secure Boot", "UEFI", "부트로더"]
 series = "운영체제 800제"
-weight = 608
 +++
 
 # 보안 부팅 (Secure Boot)

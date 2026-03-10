@@ -1,6 +1,6 @@
 +++
-title = "397. 멀티스레딩 (Multithreading)"
 weight = 397
+title = "397. 멀티스레딩 (Multithreading)"
 +++
 
 # 397. 멀티스레딩 (Multithreading)

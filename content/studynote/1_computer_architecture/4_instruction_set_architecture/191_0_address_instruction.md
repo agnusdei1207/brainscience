@@ -1,6 +1,6 @@
 +++
-title = "191. 0-주소 명령어 (0-Address Instruction)"
 weight = 191
+title = "191. 0-주소 명령어 (0-Address Instruction)"
 +++
 
 # 191. 0-주소 명령어 (0-Address Instruction)

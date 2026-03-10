@@ -1,6 +1,6 @@
 +++
-title = "432. 캐시 컬러링 (Cache Coloring)에 의한 페이지 매핑 최적화"
 weight = 432
+title = "432. 캐시 컬러링 (Cache Coloring)에 의한 페이지 매핑 최적화"
 +++
 
 # 432. 메모리 단편화 (Memory Fragmentation)

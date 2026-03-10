@@ -1,6 +1,6 @@
 +++
-title = "527. 색인 블록 크기 한계 해결 - 연결 색인, 다중 수준 색인 (Multilevel Index)"
 weight = 527
+title = "527. 색인 블록 크기 한계 해결 - 연결 색인, 다중 수준 색인 (Multilevel Index)"
 +++
 
 # 527. 프로액터 패턴 (Proactor Pattern)

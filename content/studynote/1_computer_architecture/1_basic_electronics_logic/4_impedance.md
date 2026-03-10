@@ -1,6 +1,6 @@
 +++
-title = "4. 임피던스 (Impedance)"
 weight = 4
+title = "4. 임피던스 (Impedance)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

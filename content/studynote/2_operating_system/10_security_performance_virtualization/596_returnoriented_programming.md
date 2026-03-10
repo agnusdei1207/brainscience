@@ -1,11 +1,11 @@
 +++
+weight = 596
 title = "596. ROP (Return-Oriented Programming) 기법 - ASLR/DEP 우회를 위해 코드 가젯 체이닝"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "ROP", "Return-Oriented Programming", "DEP 우회"]
 series = "운영체제 800제"
-weight = 596
 +++
 
 # ROP (Return-Oriented Programming)

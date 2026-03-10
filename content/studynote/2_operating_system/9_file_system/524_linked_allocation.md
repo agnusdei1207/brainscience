@@ -1,6 +1,6 @@
 +++
-title = "524. 연결 할당 (Linked Allocation) - 블록들이 포인터로 연결됨, 외부 단편화 없음, 랜덤 접근 불가, 포인터 오버헤드"
 weight = 524
+title = "524. 연결 할당 (Linked Allocation) - 블록들이 포인터로 연결됨, 외부 단편화 없음, 랜덤 접근 불가, 포인터 오버헤드"
 +++
 
 # 524. 인터럽트 처리 지연 (Interrupt Latency)

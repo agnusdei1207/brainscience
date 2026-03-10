@@ -1,6 +1,6 @@
 +++
-title = "447. 메모리 미러링 (Memory Mirroring)"
 weight = 447
+title = "447. 메모리 미러링 (Memory Mirroring)"
 +++
 
 # 447. 메모리 미러링 (Memory Mirroring)

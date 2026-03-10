@@ -1,6 +1,6 @@
 +++
-title = "16. 인터럽트 (Interrupt) 메커니즘"
 weight = 16
+title = "16. 인터럽트 (Interrupt) 메커니즘"
 +++
 
 # 507. 인터럽트 (Interrupt)

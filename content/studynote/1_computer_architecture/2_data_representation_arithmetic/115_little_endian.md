@@ -1,6 +1,6 @@
 +++
-title = "115. 리틀 엔디안 (Little-Endian)"
 weight = 115
+title = "115. 리틀 엔디안 (Little-Endian)"
 +++
 
 # 115. 리틀 엔디안 (Little-Endian)

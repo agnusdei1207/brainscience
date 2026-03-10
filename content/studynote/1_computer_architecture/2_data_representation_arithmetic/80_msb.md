@@ -1,6 +1,6 @@
 +++
-title = "80. MSB (Most Significant Bit)"
 weight = 80
+title = "80. MSB (Most Significant Bit)"
 +++
 
 # MSB (Most Significant Bit)

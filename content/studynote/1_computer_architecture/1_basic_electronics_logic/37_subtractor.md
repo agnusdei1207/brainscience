@@ -1,6 +1,6 @@
 +++
-title = "37. 감산기 (Subtractor)"
 weight = 37
+title = "37. 감산기 (Subtractor)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

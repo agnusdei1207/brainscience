@@ -1,6 +1,6 @@
 +++
-title = "242. 우선순위 역전 (Priority Inversion) - 하위 프로세스가 락을 쥐고 있어 상위 프로세스 대기"
 weight = 242
+title = "242. 우선순위 역전 (Priority Inversion) - 하위 프로세스가 락을 쥐고 있어 상위 프로세스 대기"
 +++
 
 # 242. Double-Checked Locking (이중 확인 잠금)

@@ -1,6 +1,6 @@
 +++
-title = "177. SRTF (Shortest Remaining Time First) 스케줄링 - SJF의 선점형 버전"
 weight = 177
+title = "177. SRTF (Shortest Remaining Time First) 스케줄링 - SJF의 선점형 버전"
 +++
 
 # 176. SRTF (최단 잔여 시간 우선, Shortest Remaining Time First)

@@ -1,6 +1,6 @@
 +++
-title = "114. 빅 엔디안 (Big-Endian)"
 weight = 114
+title = "114. 빅 엔디안 (Big-Endian)"
 +++
 
 # 114. 빅 엔디안 (Big-Endian)

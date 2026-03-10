@@ -1,6 +1,6 @@
 +++
-title = "282. 가상 메모리 (Virtual Memory)"
 weight = 282
+title = "282. 가상 메모리 (Virtual Memory)"
 +++
 
 # 282. 가상 메모리 (Virtual Memory)

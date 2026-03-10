@@ -1,6 +1,6 @@
 +++
-title = "494. 오브젝트 스토리지 (Object Storage) - 플랫 네임스페이스, REST API 기반 클라우드 (Amazon S3)"
 weight = 494
+title = "494. 오브젝트 스토리지 (Object Storage) - 플랫 네임스페이스, REST API 기반 클라우드 (Amazon S3)"
 +++
 
 # 498. 오브젝트 스토리지 (Object Storage)

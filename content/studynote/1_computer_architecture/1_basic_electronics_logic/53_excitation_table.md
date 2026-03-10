@@ -1,6 +1,6 @@
 +++
-title = "53. 여기표 (Excitation Table)"
 weight = 53
+title = "53. 여기표 (Excitation Table)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

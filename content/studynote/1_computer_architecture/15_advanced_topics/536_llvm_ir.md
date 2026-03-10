@@ -1,6 +1,6 @@
 +++
-title = "536. LLVM IR 변환 (컴파일러-HW 인터페이스)"
 weight = 536
+title = "536. LLVM IR 변환 (컴파일러-HW 인터페이스)"
 +++
 
 # 536. LLVM IR 변환 (컴파일러-HW 인터페이스)

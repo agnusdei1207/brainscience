@@ -1,6 +1,6 @@
 +++
-title = "196. CISC (Complex Instruction Set Computer)"
 weight = 196
+title = "196. CISC (Complex Instruction Set Computer)"
 +++
 
 # 196. CISC (Complex Instruction Set Computer)

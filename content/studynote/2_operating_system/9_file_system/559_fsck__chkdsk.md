@@ -1,6 +1,6 @@
 +++
-title = "559. 파일 시스템 일관성 검사 (fsck / chkdsk)"
 weight = 559
+title = "559. 파일 시스템 일관성 검사 (fsck / chkdsk)"
 +++
 
 # 559. UART (Universal Asynchronous Receiver-Transmitter)

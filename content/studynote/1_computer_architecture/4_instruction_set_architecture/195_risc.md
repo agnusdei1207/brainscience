@@ -1,6 +1,6 @@
 +++
-title = "195. RISC (Reduced Instruction Set Computer)"
 weight = 195
+title = "195. RISC (Reduced Instruction Set Computer)"
 +++
 
 # 195. RISC (Reduced Instruction Set Computer)

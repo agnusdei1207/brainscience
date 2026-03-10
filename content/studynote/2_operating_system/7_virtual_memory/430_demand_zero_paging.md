@@ -1,6 +1,6 @@
 +++
-title = "430. 수요 페이지 제로화 (Demand Zero Paging) - BSS 영역 보안 할당"
 weight = 430
+title = "430. 수요 페이지 제로화 (Demand Zero Paging) - BSS 영역 보안 할당"
 +++
 
 # 430. 프리페칭 (Prefetching)

@@ -1,6 +1,6 @@
 +++
-title = "543. NFS (Network File System) - 원격 디렉터리 마운트 프로토콜 (상태 비저장, UDP/TCP 지원)"
 weight = 543
+title = "543. NFS (Network File System) - 원격 디렉터리 마운트 프로토콜 (상태 비저장, UDP/TCP 지원)"
 +++
 
 # 543. 썬더볼트 (Thunderbolt)

@@ -1,6 +1,6 @@
 +++
-title = "173. 주소 지정 방식 (Addressing Mode)"
 weight = 173
+title = "173. 주소 지정 방식 (Addressing Mode)"
 +++
 
 # 173. 주소 지정 방식 (Addressing Mode)

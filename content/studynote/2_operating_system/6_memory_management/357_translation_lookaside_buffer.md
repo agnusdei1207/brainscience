@@ -1,6 +1,6 @@
 +++
-title = "357. TLB (Translation Look-aside Buffer) - 주소 변환 캐시(SRAM 연관 메모리 하드웨어)"
 weight = 357
+title = "357. TLB (Translation Look-aside Buffer) - 주소 변환 캐시(SRAM 연관 메모리 하드웨어)"
 +++
 
 # 394. TLB (Translation Lookaside Buffer)

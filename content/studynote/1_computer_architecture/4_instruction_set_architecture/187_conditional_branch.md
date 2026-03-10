@@ -1,6 +1,6 @@
 +++
-title = "187. 조건부 분기 (Conditional Branch)"
 weight = 187
+title = "187. 조건부 분기 (Conditional Branch)"
 +++
 
 # 187. 조건부 분기 (Conditional Branch)

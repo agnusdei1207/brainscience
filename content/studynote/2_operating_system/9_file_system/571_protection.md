@@ -1,6 +1,6 @@
 +++
-title = "571. 보호 (Protection) vs 보안 (Security)의 개념 차이"
 weight = 571
+title = "571. 보호 (Protection) vs 보안 (Security)의 개념 차이"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

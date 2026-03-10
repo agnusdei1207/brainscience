@@ -1,6 +1,6 @@
 +++
-title = "180. 우선순위 스케줄링 (Priority Scheduling) - 무한 대기 문제 발생 가능"
 weight = 180
+title = "180. 우선순위 스케줄링 (Priority Scheduling) - 무한 대기 문제 발생 가능"
 +++
 
 # 179. 우선순위 스케줄링 (Priority Scheduling)

@@ -1,6 +1,6 @@
 +++
-title = "316. 인터럽트 벡터 (Interrupt Vector)"
 weight = 316
+title = "316. 인터럽트 벡터 (Interrupt Vector)"
 +++
 
 # 316. 인터럽트 벡터 (Interrupt Vector)

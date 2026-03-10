@@ -1,11 +1,11 @@
 +++
+weight = 656
 title = "656. 하드웨어 트랜잭셔널 메모리 활용 Lock-Free 자료구조 시스템 구현 사례"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "HTM", "Hardware Transactional Memory", "Lock-Free", "Intel TSX", "Atomic"]
 series = "운영체제 800제"
-weight = 656
 +++
 
 # 하드웨어 트랜잭셔널 메모리 활용 Lock-Free 자료구조 시스템 구현 사례

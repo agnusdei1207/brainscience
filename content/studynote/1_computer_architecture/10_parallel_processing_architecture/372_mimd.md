@@ -1,6 +1,6 @@
 +++
-title = "372. MIMD (Multiple Instruction, Multiple Data)"
 weight = 372
+title = "372. MIMD (Multiple Instruction, Multiple Data)"
 +++
 
 # 372. MIMD (Multiple Instruction, Multiple Data)

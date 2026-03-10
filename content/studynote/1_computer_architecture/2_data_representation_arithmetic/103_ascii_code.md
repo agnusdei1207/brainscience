@@ -1,6 +1,6 @@
 +++
-title = "103. ASCII 코드 (American Standard Code for Information Interchange)"
 weight = 103
+title = "103. ASCII 코드 (American Standard Code for Information Interchange)"
 +++
 
 # ASCII 코드 (American Standard Code for Information Interchange)

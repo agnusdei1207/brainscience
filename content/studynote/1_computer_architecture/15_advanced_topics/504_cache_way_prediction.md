@@ -1,6 +1,6 @@
 +++
-title = "504. 캐시 웨이 예측 (Cache Way Prediction)"
 weight = 504
+title = "504. 캐시 웨이 예측 (Cache Way Prediction)"
 +++
 
 # 504. 캐시 웨이 예측 (Cache Way Prediction)

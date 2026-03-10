@@ -1,6 +1,6 @@
 +++
-title = "169. 디스패치 지연 (Dispatch Latency)"
 weight = 169
+title = "169. 디스패치 지연 (Dispatch Latency)"
 +++
 
 # 169. 디스패치 지연 (Dispatch Latency)

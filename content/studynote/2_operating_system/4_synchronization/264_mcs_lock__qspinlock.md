@@ -1,6 +1,6 @@
 +++
-title = "264. 큐잉 스핀락 (MCS Lock / qspinlock) - NUMA 환경 스핀락 최적화"
 weight = 264
+title = "264. 큐잉 스핀락 (MCS Lock / qspinlock) - NUMA 환경 스핀락 최적화"
 +++
 
 # 264. 락 스래싱 (Lock Thrashing)

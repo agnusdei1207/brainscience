@@ -1,11 +1,11 @@
 +++
+weight = 667
 title = "667. 제로 트러스트(Zero Trust) 철학 하의 운영체제 레벨 런타임 무결성 검증망 설계"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "Zero Trust", "무결성 검증", "Runtime Integrity", "IMA", "EVM", "보안"]
 series = "운영체제 800제"
-weight = 667
 +++
 
 # 제로 트러스트(Zero Trust) 기반 운영체제 런타임 무결성 검증망 설계

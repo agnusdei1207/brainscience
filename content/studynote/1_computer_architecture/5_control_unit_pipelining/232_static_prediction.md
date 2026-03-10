@@ -1,6 +1,6 @@
 +++
-title = "232. 정적 분기 예측 (Static Prediction)"
 weight = 232
+title = "232. 정적 분기 예측 (Static Prediction)"
 +++
 
 # 232. 정적 분기 예측 (Static Prediction)

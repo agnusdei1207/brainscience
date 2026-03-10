@@ -1,6 +1,6 @@
 +++
-title = "155. 다크 실리콘 (Dark Silicon)"
 weight = 155
+title = "155. 다크 실리콘 (Dark Silicon)"
 +++
 
 # 155. 다크 실리콘 (Dark Silicon)

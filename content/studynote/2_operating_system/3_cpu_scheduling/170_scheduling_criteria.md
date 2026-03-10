@@ -1,6 +1,6 @@
 +++
-title = "170. 스케줄링 기준 (Scheduling Criteria) - CPU 이용률, 처리량, 반환시간, 대기시간, 응답시간"
 weight = 170
+title = "170. 스케줄링 기준 (Scheduling Criteria) - CPU 이용률, 처리량, 반환시간, 대기시간, 응답시간"
 +++
 
 # 170. 스케줄링 기준 (Scheduling Criteria)

@@ -1,6 +1,6 @@
 +++
-title = "214. 하드와이어드 제어 (Hardwired Control)"
 weight = 214
+title = "214. 하드와이어드 제어 (Hardwired Control)"
 +++
 
 # 214. 하드와이어드 제어 (Hardwired Control)

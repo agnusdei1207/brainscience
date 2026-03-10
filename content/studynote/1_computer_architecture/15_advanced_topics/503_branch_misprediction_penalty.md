@@ -1,6 +1,6 @@
 +++
-title = "503. 분기 예측 실패 페널티 (Branch Misprediction Penalty)"
 weight = 503
+title = "503. 분기 예측 실패 페널티 (Branch Misprediction Penalty)"
 +++
 
 # 503. 분기 예측 실패 페널티 (Branch Misprediction Penalty)

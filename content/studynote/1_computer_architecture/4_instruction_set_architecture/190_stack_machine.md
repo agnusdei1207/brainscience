@@ -1,6 +1,6 @@
 +++
-title = "190. 스택 머신 (Stack Machine)"
 weight = 190
+title = "190. 스택 머신 (Stack Machine)"
 +++
 
 # 190. 스택 머신 (Stack Machine)

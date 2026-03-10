@@ -1,6 +1,6 @@
 +++
-title = "554. FUSE (Filesystem in Userspace) - 커널 수정 없이 유저 공간에서 커스텀 파일시스템 구현 (SSHFS 등)"
 weight = 554
+title = "554. FUSE (Filesystem in Userspace) - 커널 수정 없이 유저 공간에서 커스텀 파일시스템 구현 (SSHFS 등)"
 +++
 
 # 554. 센서 (Sensor)

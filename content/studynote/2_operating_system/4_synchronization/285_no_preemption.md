@@ -1,6 +1,6 @@
 +++
-title = "285. 비선점 (No Preemption) - 다른 프로세스의 자원을 강제로 뺏을 수 없음"
 weight = 285
+title = "285. 비선점 (No Preemption) - 다른 프로세스의 자원을 강제로 뺏을 수 없음"
 +++
 
 # 299. 비선점 (No Preemption)

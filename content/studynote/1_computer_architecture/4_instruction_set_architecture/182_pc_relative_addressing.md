@@ -1,6 +1,6 @@
 +++
-title = "182. PC 상대 주소 지정 (PC-Relative Addressing)"
 weight = 182
+title = "182. PC 상대 주소 지정 (PC-Relative Addressing)"
 +++
 
 # 182. PC 상대 주소 지정 (PC-Relative Addressing)

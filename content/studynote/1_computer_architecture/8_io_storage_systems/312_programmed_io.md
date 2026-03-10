@@ -1,6 +1,6 @@
 +++
-title = "312. 프로그램 제어 I/O (Programmed I/O)"
 weight = 312
+title = "312. 프로그램 제어 I/O (Programmed I/O)"
 +++
 
 # 312. 프로그램 제어 I/O (Programmed I/O)

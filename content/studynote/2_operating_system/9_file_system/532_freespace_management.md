@@ -1,6 +1,6 @@
 +++
-title = "532. 빈 공간 관리 (Free-Space Management) 알고리즘"
 weight = 532
+title = "532. 빈 공간 관리 (Free-Space Management) 알고리즘"
 +++
 
 # 532. 직접 I/O (Direct I/O)

@@ -1,6 +1,6 @@
 +++
-title = "237. 명령어 발급 폭 (Issue Width)"
 weight = 237
+title = "237. 명령어 발급 폭 (Issue Width)"
 +++
 
 # 237. 명령어 발급 폭 (Issue Width)

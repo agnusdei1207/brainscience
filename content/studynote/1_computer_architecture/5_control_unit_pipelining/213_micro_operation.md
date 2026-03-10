@@ -1,6 +1,6 @@
 +++
-title = "213. 마이크로 오퍼레이션 (Micro-operation)"
 weight = 213
+title = "213. 마이크로 오퍼레이션 (Micro-operation)"
 +++
 
 # 213. 마이크로 오퍼레이션 (Micro-operation)

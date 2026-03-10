@@ -1,6 +1,6 @@
 +++
-title = "7. 강결합 시스템 (Tightly Coupled System)"
 weight = 7
+title = "7. 강결합 시스템 (Tightly Coupled System)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

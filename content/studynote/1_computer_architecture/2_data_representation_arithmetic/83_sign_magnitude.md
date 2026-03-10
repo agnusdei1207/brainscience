@@ -1,6 +1,6 @@
 +++
-title = "83. 부호와 절댓값 (Sign-Magnitude)"
 weight = 83
+title = "83. 부호와 절댓값 (Sign-Magnitude)"
 +++
 
 # 부호와 절댓값 (Sign-Magnitude)

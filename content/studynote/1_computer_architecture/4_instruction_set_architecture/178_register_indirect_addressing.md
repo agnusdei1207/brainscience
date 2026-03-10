@@ -1,6 +1,6 @@
 +++
-title = "178. 레지스터 간접 주소 지정 (Register Indirect Addressing)"
 weight = 178
+title = "178. 레지스터 간접 주소 지정 (Register Indirect Addressing)"
 +++
 
 # 178. 레지스터 간접 주소 지정 (Register Indirect Addressing)

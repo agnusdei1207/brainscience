@@ -1,6 +1,6 @@
 +++
-title = "581. 비바 모델 (Biba Model) - 무결성 위주 정책 (No Read Down, No Write Up)"
 weight = 581
+title = "581. 비바 모델 (Biba Model) - 무결성 위주 정책 (No Read Down, No Write Up)"
 +++
 
 # 581. 저널링 (Journaling)

@@ -1,6 +1,6 @@
 +++
-title = "505. 색인 접근 (Indexed Access)"
 weight = 505
+title = "505. 색인 접근 (Indexed Access)"
 +++
 
 # 505. 메모리 맵드 I/O (Memory-Mapped I/O)

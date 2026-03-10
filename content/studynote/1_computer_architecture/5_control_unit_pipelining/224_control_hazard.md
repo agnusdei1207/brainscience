@@ -1,6 +1,6 @@
 +++
-title = "224. 제어 해저드 (Control Hazard)"
 weight = 224
+title = "224. 제어 해저드 (Control Hazard)"
 +++
 
 # 224. 제어 해저드 (Control Hazard)

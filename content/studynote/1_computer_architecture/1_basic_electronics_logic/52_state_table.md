@@ -1,6 +1,6 @@
 +++
-title = "52. 상태표 (State Table)"
 weight = 52
+title = "52. 상태표 (State Table)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

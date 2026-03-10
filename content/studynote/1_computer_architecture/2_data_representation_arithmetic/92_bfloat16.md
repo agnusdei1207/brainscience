@@ -1,6 +1,6 @@
 +++
-title = "92. bfloat16 (Brain Floating Point)"
 weight = 92
+title = "92. bfloat16 (Brain Floating Point)"
 +++
 
 # bfloat16 (Brain Floating Point)

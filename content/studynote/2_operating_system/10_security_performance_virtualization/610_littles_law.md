@@ -1,11 +1,11 @@
 +++
+weight = 610
 title = "610. 리틀의 법칙 (Little's Law) - L = λW (대기 큐 성능 분석)"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "리틀의 법칙", "Little's Law", "대기 행렬", "성능 분석"]
 series = "운영체제 800제"
-weight = 610
 +++
 
 # 리틀의 법칙 (Little's Law)

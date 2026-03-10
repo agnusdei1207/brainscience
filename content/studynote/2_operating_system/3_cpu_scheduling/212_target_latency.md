@@ -1,6 +1,6 @@
 +++
-title = "212. 대상 지연 시간 (Target Latency) / 최소 입자 (Minimum Granularity)"
 weight = 212
+title = "212. 대상 지연 시간 (Target Latency) / 최소 입자 (Minimum Granularity)"
 +++
 
 # 212. 스탑 머신 (Stop Machine)

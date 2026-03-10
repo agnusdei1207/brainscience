@@ -1,6 +1,6 @@
 +++
-title = "277. 분리형 캐시 (Split Cache)"
 weight = 277
+title = "277. 분리형 캐시 (Split Cache)"
 +++
 
 # 277. 분리형 캐시 (Split Cache)

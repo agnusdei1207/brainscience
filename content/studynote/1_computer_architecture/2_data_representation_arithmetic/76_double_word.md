@@ -1,6 +1,6 @@
 +++
-title = "76. 더블 워드 (Double Word)"
 weight = 76
+title = "76. 더블 워드 (Double Word)"
 +++
 
 # 더블 워드 (Double Word)

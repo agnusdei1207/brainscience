@@ -1,6 +1,6 @@
 +++
-title = "435. TLB 슛다운 (TLB Shootdown) - 멀티코어 환경에서 타 코어의 TLB 무효화 오버헤드"
 weight = 435
+title = "435. TLB 슛다운 (TLB Shootdown) - 멀티코어 환경에서 타 코어의 TLB 무효화 오버헤드"
 +++
 
 # 435. 고정 페이지 (Pinned Page)

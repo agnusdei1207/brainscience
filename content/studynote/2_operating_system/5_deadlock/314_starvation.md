@@ -1,6 +1,6 @@
 +++
-title = "314. 기아 상태 (Starvation) 발생 방지 (희생자 선택에 횟수 제한)"
 weight = 314
+title = "314. 기아 상태 (Starvation) 발생 방지 (희생자 선택에 횟수 제한)"
 +++
 
 # 314. 타임아웃 기반 복구 (Timeout-based Recovery)

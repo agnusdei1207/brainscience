@@ -1,6 +1,6 @@
 +++
-title = "272. 더블 체크드 락킹 (Double-Checked Locking) 안티패턴 및 해결 (volatile)"
 weight = 272
+title = "272. 더블 체크드 락킹 (Double-Checked Locking) 안티패턴 및 해결 (volatile)"
 +++
 
 # 272. 락 웨이터 (Lock Waiter)

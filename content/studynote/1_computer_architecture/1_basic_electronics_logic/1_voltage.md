@@ -1,6 +1,6 @@
 +++
-title = "1. 전압 (Voltage)"
 weight = 1
+title = "1. 전압 (Voltage)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

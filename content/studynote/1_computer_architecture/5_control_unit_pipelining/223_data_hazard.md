@@ -1,6 +1,6 @@
 +++
-title = "223. 데이터 해저드 (Data Hazard)"
 weight = 223
+title = "223. 데이터 해저드 (Data Hazard)"
 +++
 
 # 223. 데이터 해저드 (Data Hazard)

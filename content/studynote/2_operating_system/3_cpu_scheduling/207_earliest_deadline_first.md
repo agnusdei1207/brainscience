@@ -1,6 +1,6 @@
 +++
-title = "207. EDF (Earliest Deadline First) 스케줄링 - 마감시간이 빠를수록 높은 우선순위 (동적 우선순위)"
 weight = 207
+title = "207. EDF (Earliest Deadline First) 스케줄링 - 마감시간이 빠를수록 높은 우선순위 (동적 우선순위)"
 +++
 
 # 207. CPU 선호도 (CPU Affinity)

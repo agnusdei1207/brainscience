@@ -1,6 +1,6 @@
 +++
-title = "512. 이기종 집적 (Heterogeneous Integration)"
 weight = 512
+title = "512. 이기종 집적 (Heterogeneous Integration)"
 +++
 
 # 512. 이기종 집적 (Heterogeneous Integration)

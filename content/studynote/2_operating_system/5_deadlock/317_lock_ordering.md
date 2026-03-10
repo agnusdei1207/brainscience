@@ -1,6 +1,6 @@
 +++
-title = "317. 락 오더링 (Lock Ordering) 다이나믹 검증 도구 (Lockdep in Linux)"
 weight = 317
+title = "317. 락 오더링 (Lock Ordering) 다이나믹 검증 도구 (Lockdep in Linux)"
 +++
 
 # 317. 교착상태 무시 (Deadlock Ignorance)

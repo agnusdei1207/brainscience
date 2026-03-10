@@ -1,6 +1,6 @@
 +++
-title = "32. 조합 논리회로 (Combinational Logic)"
 weight = 32
+title = "32. 조합 논리회로 (Combinational Logic)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

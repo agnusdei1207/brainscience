@@ -1,6 +1,6 @@
 +++
-title = "542. 포인터 인증 (Pointer Authentication, ARM PAC)"
 weight = 542
+title = "542. 포인터 인증 (Pointer Authentication, ARM PAC)"
 +++
 
 # 542. 포인터 인증 (Pointer Authentication, ARM PAC)

@@ -1,6 +1,6 @@
 +++
-title = "491. 핫 스페어 (Hot Spare) 디스크 자동 재구성"
 weight = 491
+title = "491. 핫 스페어 (Hot Spare) 디스크 자동 재구성"
 +++
 
 # 491. 파일 시스템 복구 (File System Recovery)

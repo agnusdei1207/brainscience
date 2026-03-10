@@ -1,6 +1,6 @@
 +++
-title = "99. 팩드 BCD (Packed BCD)"
 weight = 99
+title = "99. 팩드 BCD (Packed BCD)"
 +++
 
 # 팩드 BCD (Packed BCD)

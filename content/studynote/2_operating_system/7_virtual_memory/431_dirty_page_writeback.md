@@ -1,6 +1,6 @@
 +++
-title = "431. 더티 페이지 쓰기 (Dirty Page Writeback) 메커니즘 (pdflush / flusher 스레드)"
 weight = 431
+title = "431. 더티 페이지 쓰기 (Dirty Page Writeback) 메커니즘 (pdflush / flusher 스레드)"
 +++
 
 # 431. 메모리 압축 (Memory Compression)

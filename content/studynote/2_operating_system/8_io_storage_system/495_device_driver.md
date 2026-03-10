@@ -1,6 +1,6 @@
 +++
-title = "495. 장치 드라이버 (Device Driver) 커널 인터페이스 구현"
 weight = 495
+title = "495. 장치 드라이버 (Device Driver) 커널 인터페이스 구현"
 +++
 
 # 512. 장치 드라이버 (Device Driver)

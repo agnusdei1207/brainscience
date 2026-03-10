@@ -1,6 +1,6 @@
 +++
-title = "323. 트랙, 섹터, 실린더 (Track, Sector, Cylinder)"
 weight = 323
+title = "323. 트랙, 섹터, 실린더 (Track, Sector, Cylinder)"
 +++
 
 # 323. 트랙, 섹터, 실린더 (Track, Sector, Cylinder)

@@ -1,6 +1,6 @@
 +++
-title = "169. 캐리 플래그 (Carry Flag)"
 weight = 169
+title = "169. 캐리 플래그 (Carry Flag)"
 +++
 
 # 169. 캐리 플래그 (Carry Flag)

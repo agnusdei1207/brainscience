@@ -1,6 +1,6 @@
 +++
-title = "252. 이벤트 객체 (Event Object) - 스레드 간 신호 전달"
 weight = 252
+title = "252. 이벤트 객체 (Event Object) - 스레드 간 신호 전달"
 +++
 
 # 252. 페이즈 배리어 (Phase Barrier)

@@ -1,6 +1,6 @@
 +++
-title = "101. 두 수준 (Two-level) 모델"
 weight = 101
+title = "101. 두 수준 (Two-level) 모델"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

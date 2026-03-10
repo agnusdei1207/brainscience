@@ -1,6 +1,6 @@
 +++
-title = "202. 명령어 집합 확장 (ISA Extensions)"
 weight = 202
+title = "202. 명령어 집합 확장 (ISA Extensions)"
 +++
 
 # 202. 명령어 집합 확장 (ISA Extensions)

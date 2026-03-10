@@ -1,6 +1,6 @@
 +++
-title = "168. 디스패처 (Dispatcher) - 문맥 교환 수행 모듈"
 weight = 168
+title = "168. 디스패처 (Dispatcher) - 문맥 교환 수행 모듈"
 +++
 
 # 168. 디스패처 (Dispatcher)

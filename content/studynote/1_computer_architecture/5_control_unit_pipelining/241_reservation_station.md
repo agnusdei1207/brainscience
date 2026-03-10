@@ -1,6 +1,6 @@
 +++
-title = "241. 예약 스테이션 (Reservation Station)"
 weight = 241
+title = "241. 예약 스테이션 (Reservation Station)"
 +++
 
 # 241. 예약 스테이션 (Reservation Station)

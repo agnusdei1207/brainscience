@@ -1,6 +1,6 @@
 +++
-title = "517. VFS (Virtual File System) - 다양한 파일 시스템(ext4, NTFS, FAT)을 추상화하는 공통 인터페이스 객체 모델"
 weight = 517
+title = "517. VFS (Virtual File System) - 다양한 파일 시스템(ext4, NTFS, FAT)을 추상화하는 공통 인터페이스 객체 모델"
 +++
 
 # 476. VFS (Virtual File System)

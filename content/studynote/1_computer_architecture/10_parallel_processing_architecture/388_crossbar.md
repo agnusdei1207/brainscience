@@ -1,6 +1,6 @@
 +++
-title = "388. 크로스바 스위치 (Crossbar Switch)"
 weight = 388
+title = "388. 크로스바 스위치 (Crossbar Switch)"
 +++
 
 # 388. 크로스바 스위치 (Crossbar Switch)

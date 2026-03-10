@@ -1,6 +1,6 @@
 +++
-title = "444. 이중화 전원 공급 (Redundant Power Supply)"
 weight = 444
+title = "444. 이중화 전원 공급 (Redundant Power Supply)"
 +++
 
 # 444. 이중화 전원 공급 (Redundant Power Supply)

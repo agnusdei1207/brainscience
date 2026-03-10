@@ -1,6 +1,6 @@
 +++
-title = "280. Victim Cache"
 weight = 280
+title = "280. Victim Cache"
 +++
 
 # 280. Victim Cache

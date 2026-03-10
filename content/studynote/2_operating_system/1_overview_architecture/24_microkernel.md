@@ -1,6 +1,6 @@
 +++
-title = "24. 마이크로 커널 (Microkernel) - Mach, Minix, 높은 확장성과 신뢰성"
 weight = 24
+title = "24. 마이크로 커널 (Microkernel) - Mach, Minix, 높은 확장성과 신뢰성"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

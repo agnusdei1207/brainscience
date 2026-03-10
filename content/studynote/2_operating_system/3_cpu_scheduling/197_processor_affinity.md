@@ -1,6 +1,6 @@
 +++
-title = "197. 프로세서 친화성 (Processor Affinity) - 캐시 최적화"
 weight = 197
+title = "197. 프로세서 친화성 (Processor Affinity) - 캐시 최적화"
 +++
 
 # 197. 레이트 모노토닉 (Rate Monotonic)

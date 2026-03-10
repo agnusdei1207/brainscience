@@ -1,6 +1,6 @@
 +++
-title = "20. GAA (Gate-All-Around)"
 weight = 20
+title = "20. GAA (Gate-All-Around)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

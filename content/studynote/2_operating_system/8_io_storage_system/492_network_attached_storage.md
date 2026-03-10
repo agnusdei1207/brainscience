@@ -1,6 +1,6 @@
 +++
-title = "492. NAS (Network Attached Storage) - 파일 단위 접근 (NFS, SMB/CIFS)"
 weight = 492
+title = "492. NAS (Network Attached Storage) - 파일 단위 접근 (NFS, SMB/CIFS)"
 +++
 
 # 492. 파일 시스템 성능 튜닝 (File System Performance Tuning)

@@ -1,11 +1,11 @@
 +++
+weight = 666
 title = "666. 보안 엔클레이브 (TrustZone, SGX)와 OS TEE (Trusted Execution Environment) 연동 구조"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "TEE", "TrustZone", "SGX", "Enclave", "보안", "Trusted Execution Environment"]
 series = "운영체제 800제"
-weight = 666
 +++
 
 # 보안 엔클레이브 (TrustZone, SGX)와 OS TEE 연동 구조

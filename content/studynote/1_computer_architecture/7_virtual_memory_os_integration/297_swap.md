@@ -1,6 +1,6 @@
 +++
-title = "297. 스와핑 (Swapping)"
 weight = 297
+title = "297. 스와핑 (Swapping)"
 +++
 
 # 297. 스와핑 (Swapping)

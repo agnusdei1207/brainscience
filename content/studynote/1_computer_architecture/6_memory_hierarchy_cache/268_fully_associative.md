@@ -1,6 +1,6 @@
 +++
-title = "268. 완전 연관 사상 (Fully Associative Mapping)"
 weight = 268
+title = "268. 완전 연관 사상 (Fully Associative Mapping)"
 +++
 
 # 268. 완전 연관 사상 (Fully Associative Mapping)

@@ -1,11 +1,11 @@
 +++
+weight = 615
 title = "615. eBPF 네트워크/보안/모니터링 이벤트 커널 안전 훅 매커니즘"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "eBPF", "커널 훅", "JIT 컴파일", "샌드박스", "XDP"]
 series = "운영체제 800제"
-weight = 615
 +++
 
 # eBPF 네트워크/보안/모니터링 이벤트 커널 안전 훅 매커니즘

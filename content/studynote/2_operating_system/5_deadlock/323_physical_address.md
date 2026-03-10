@@ -1,6 +1,6 @@
 +++
-title = "323. 물리 주소 (Physical Address) - 메모리 장치가 보는 주소"
 weight = 323
+title = "323. 물리 주소 (Physical Address) - 메모리 장치가 보는 주소"
 +++
 
 # 417. 물리 주소 (Physical Address)

@@ -1,6 +1,6 @@
 +++
-title = "166. 선점형 스케줄링 (Preemptive Scheduling)"
 weight = 166
+title = "166. 선점형 스케줄링 (Preemptive Scheduling)"
 +++
 
 # 166. 선점형 스케줄링 (Preemptive Scheduling)

@@ -1,6 +1,6 @@
 +++
-title = "77. 기수 (Radix)"
 weight = 77
+title = "77. 기수 (Radix)"
 +++
 
 # 기수 (Radix)

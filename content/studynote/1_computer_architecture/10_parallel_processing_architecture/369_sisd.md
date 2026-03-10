@@ -1,6 +1,6 @@
 +++
-title = "369. SISD (Single Instruction, Single Data)"
 weight = 369
+title = "369. SISD (Single Instruction, Single Data)"
 +++
 
 # 369. SISD (Single Instruction, Single Data)

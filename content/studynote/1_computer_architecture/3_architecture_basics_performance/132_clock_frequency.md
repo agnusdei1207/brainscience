@@ -1,6 +1,6 @@
 +++
-title = "132. 클럭 주파수 (Clock Frequency)"
 weight = 132
+title = "132. 클럭 주파수 (Clock Frequency)"
 +++
 
 # 132. 클럭 주파수 (Clock Frequency)

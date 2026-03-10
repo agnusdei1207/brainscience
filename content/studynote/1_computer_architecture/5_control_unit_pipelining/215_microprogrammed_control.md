@@ -1,6 +1,6 @@
 +++
-title = "215. 마이크로프로그래밍 (Microprogrammed Control)"
 weight = 215
+title = "215. 마이크로프로그래밍 (Microprogrammed Control)"
 +++
 
 # 215. 마이크로프로그래밍 (Microprogrammed Control)

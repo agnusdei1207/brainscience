@@ -1,6 +1,6 @@
 +++
-title = "405. LRU (Least Recently Used) 교체 - 가장 오랫동안 사용되지 않은 페이지 교체 (타임스탬프, 스택 하드웨어 지원 필요)"
 weight = 405
+title = "405. LRU (Least Recently Used) 교체 - 가장 오랫동안 사용되지 않은 페이지 교체 (타임스탬프, 스택 하드웨어 지원 필요)"
 +++
 
 # 405. 메모리 사상 파일 (Memory-Mapped File)

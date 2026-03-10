@@ -1,6 +1,6 @@
 +++
-title = "315. 라이브락 (Livelock)과 교착 상태의 차이점"
 weight = 315
+title = "315. 라이브락 (Livelock)과 교착 상태의 차이점"
 +++
 
 # 288. 라이브락 (Livelock)

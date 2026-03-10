@@ -1,6 +1,6 @@
 +++
-title = "479. 마모 평준화 (Wear Leveling) - 수명 연장을 위해 쓰기 작업을 전체 블록에 고르게 분산"
 weight = 479
+title = "479. 마모 평준화 (Wear Leveling) - 수명 연장을 위해 쓰기 작업을 전체 블록에 고르게 분산"
 +++
 
 # 479. 파일 시스템 조각 모음 (Defragmentation)

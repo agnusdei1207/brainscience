@@ -1,6 +1,6 @@
 +++
-title = "101. 3초과 코드 (Excess-3 Code)"
 weight = 101
+title = "101. 3초과 코드 (Excess-3 Code)"
 +++
 
 # 3초과 코드 (Excess-3 Code)

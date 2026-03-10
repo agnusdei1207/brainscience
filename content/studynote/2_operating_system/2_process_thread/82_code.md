@@ -1,11 +1,11 @@
 +++
+weight = 82
 title = "82. 프로세스 메모리 구조 - Text(Code), Data, BSS, Heap, Stack"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "NX Bit", "DEP", "메모리 보호"]
 series = "운영체제 800제"
-weight = 82
 +++
 
 # NX Bit / DEP (Data Execution Prevention)

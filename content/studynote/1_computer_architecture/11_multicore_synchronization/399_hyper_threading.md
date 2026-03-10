@@ -1,6 +1,6 @@
 +++
-title = "399. 하이퍼스레딩 (Hyper-Threading)"
 weight = 399
+title = "399. 하이퍼스레딩 (Hyper-Threading)"
 +++
 
 # 399. 하이퍼스레딩 (Hyper-Threading)

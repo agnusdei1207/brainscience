@@ -1,6 +1,6 @@
 +++
-title = "319. 사이클 스틸링 (Cycle Stealing)"
 weight = 319
+title = "319. 사이클 스틸링 (Cycle Stealing)"
 +++
 
 # 319. 사이클 스틸링 (Cycle Stealing)

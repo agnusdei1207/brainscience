@@ -1,6 +1,6 @@
 +++
-title = "187. HRN (Highest Response Ratio Next) 스케줄링 - (대기시간+서비스시간)/서비스시간"
 weight = 187
+title = "187. HRN (Highest Response Ratio Next) 스케줄링 - (대기시간+서비스시간)/서비스시간"
 +++
 
 # 187. 가상 런타임 (vruntime)

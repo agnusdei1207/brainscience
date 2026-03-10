@@ -1,6 +1,6 @@
 +++
-title = "319. 교착 상태 예방 메커니즘을 위한 타임아웃 (Timeout) 활용"
 weight = 319
+title = "319. 교착 상태 예방 메커니즘을 위한 타임아웃 (Timeout) 활용"
 +++
 
 # 319. 교착상태 모델링 (Deadlock Modeling)

@@ -1,11 +1,11 @@
 +++
+weight = 611
 title = "611. CPU 유휴 (Idle) 대기 루프 최적화"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "CPU 유휴", "Idle Loop", "C-States", "전력 관리", "Tickless Kernel"]
 series = "운영체제 800제"
-weight = 611
 +++
 
 # CPU 유휴 (Idle) 대기 루프 최적화

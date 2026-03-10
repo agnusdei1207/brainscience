@@ -1,6 +1,6 @@
 +++
-title = "228. Test-and-Set 명령어 - 원자적(Atomic) 읽기-수정"
 weight = 228
+title = "228. Test-and-Set 명령어 - 원자적(Atomic) 읽기-수정"
 +++
 
 # 228. 메모리 배리어 (Memory Barrier)

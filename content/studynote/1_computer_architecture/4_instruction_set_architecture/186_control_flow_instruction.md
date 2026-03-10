@@ -1,6 +1,6 @@
 +++
-title = "186. 제어 흐름 명령어 (Control Flow Instruction)"
 weight = 186
+title = "186. 제어 흐름 명령어 (Control Flow Instruction)"
 +++
 
 # 186. 제어 흐름 명령어 (Control Flow Instruction)

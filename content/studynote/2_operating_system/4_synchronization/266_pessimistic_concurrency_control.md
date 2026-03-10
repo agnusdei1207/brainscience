@@ -1,6 +1,6 @@
 +++
-title = "266. 비관적 병행성 제어 (Pessimistic Concurrency Control)"
 weight = 266
+title = "266. 비관적 병행성 제어 (Pessimistic Concurrency Control)"
 +++
 
 # 266. 지수 백오프 (Exponential Backoff)

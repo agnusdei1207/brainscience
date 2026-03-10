@@ -1,6 +1,6 @@
 +++
-title = "249. 자바 동기화 - synchronized 키워드, 모니터 락, wait()/notify()"
 weight = 249
+title = "249. 자바 동기화 - synchronized 키워드, 모니터 락, wait()/notify()"
 +++
 
 # 249. 메모리 순서 (Memory Ordering)

@@ -1,6 +1,6 @@
 +++
-title = "22. 부울 대수 (Boolean Algebra)"
 weight = 22
+title = "22. 부울 대수 (Boolean Algebra)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

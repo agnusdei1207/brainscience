@@ -1,6 +1,6 @@
 +++
-title = "395. 이종 멀티코어 (Heterogeneous Multicore)"
 weight = 395
+title = "395. 이종 멀티코어 (Heterogeneous Multicore)"
 +++
 
 # 395. 이종 멀티코어 (Heterogeneous Multicore)

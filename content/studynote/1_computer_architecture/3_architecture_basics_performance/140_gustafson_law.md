@@ -1,6 +1,6 @@
 +++
-title = "140. 구스타프손의 법칙 (Gustafson's Law)"
 weight = 140
+title = "140. 구스타프손의 법칙 (Gustafson's Law)"
 +++
 
 # 140. 구스타프손의 법칙 (Gustafson's Law)

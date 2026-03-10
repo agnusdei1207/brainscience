@@ -1,6 +1,6 @@
 +++
-title = "395. 페이지 교체 (Page Replacement)의 필요성 - 프레임 가용 공간 부족 시 (Over-allocation)"
 weight = 395
+title = "395. 페이지 교체 (Page Replacement)의 필요성 - 프레임 가용 공간 부족 시 (Over-allocation)"
 +++
 
 # 392. 페이지 교체 (Page Replacement)

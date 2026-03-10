@@ -1,6 +1,6 @@
 +++
-title = "602. 샌드박싱 (Sandboxing) 기술 커널 래퍼"
 weight = 602
+title = "602. 샌드박싱 (Sandboxing) 기술 커널 래퍼"
 +++
 
 # 602. SATA (Serial ATA)

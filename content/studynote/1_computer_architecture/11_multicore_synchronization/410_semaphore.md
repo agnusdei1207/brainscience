@@ -1,6 +1,6 @@
 +++
-title = "410. 세마포어 (Semaphore)"
 weight = 410
+title = "410. 세마포어 (Semaphore)"
 +++
 
 # 410. 세마포어 (Semaphore)

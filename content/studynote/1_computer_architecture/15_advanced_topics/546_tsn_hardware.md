@@ -1,6 +1,6 @@
 +++
-title = "546. 결정론적 이더넷 (TSN, Time-Sensitive Networking) 하드웨어"
 weight = 546
+title = "546. 결정론적 이더넷 (TSN, Time-Sensitive Networking) 하드웨어"
 +++
 
 # 546. 결정론적 이더넷 (TSN, Time-Sensitive Networking) 하드웨어

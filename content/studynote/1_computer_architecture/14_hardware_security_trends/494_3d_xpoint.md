@@ -1,6 +1,6 @@
 +++
-title = "470. CXL (Compute Express Link)"
 weight = 470
+title = "470. CXL (Compute Express Link)"
 +++
 
 # 470. CXL (Compute Express Link)

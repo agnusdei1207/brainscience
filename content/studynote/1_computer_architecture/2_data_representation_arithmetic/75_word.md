@@ -1,6 +1,6 @@
 +++
-title = "75. 워드 (Word)"
 weight = 75
+title = "75. 워드 (Word)"
 +++
 
 # 워드 (Word)

@@ -1,11 +1,11 @@
 +++
+weight = 613
 title = "613. 프로파일링 (Profiling) 도구 Gprof 커널 후킹 작동 원리"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "프로파일링", "Profiling", "Gprof", "Instrumentation", "Call Graph"]
 series = "운영체제 800제"
-weight = 613
 +++
 
 # 프로파일링 (Profiling) 도구 Gprof 작동 원리

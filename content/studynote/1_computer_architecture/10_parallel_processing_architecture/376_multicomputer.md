@@ -1,6 +1,6 @@
 +++
-title = "376. 다중 컴퓨터 (Multicomputer)"
 weight = 376
+title = "376. 다중 컴퓨터 (Multicomputer)"
 +++
 
 # 376. 다중 컴퓨터 (Multicomputer)

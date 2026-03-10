@@ -1,6 +1,6 @@
 +++
-title = "458. 예약 및 단독 장치 접근 제어"
 weight = 458
+title = "458. 예약 및 단독 장치 접근 제어"
 +++
 
 # 458. 회전 지연 (Rotational Latency)

@@ -1,6 +1,6 @@
 +++
-title = "2. 전류 (Current)"
 weight = 2
+title = "2. 전류 (Current)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

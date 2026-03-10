@@ -1,11 +1,11 @@
 +++
+weight = 598
 title = "598. 스푸핑 (Spoofing) - IP/MAC 등 신분 위장"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "스푸핑", "인증 위장", "보안"]
 series = "운영체제 800제"
-weight = 598
 +++
 
 # 스푸핑 (Spoofing)

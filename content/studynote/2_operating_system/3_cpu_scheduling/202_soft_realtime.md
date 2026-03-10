@@ -1,6 +1,6 @@
 +++
-title = "202. 연성 실시간 (Soft Real-time) 시스템"
 weight = 202
+title = "202. 연성 실시간 (Soft Real-time) 시스템"
 +++
 
 # 202. BCET (최선 실행 시간, Best-Case Execution Time)

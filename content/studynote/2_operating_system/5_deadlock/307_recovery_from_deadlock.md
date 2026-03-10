@@ -1,6 +1,6 @@
 +++
-title = "307. 교착 상태 복구 (Recovery from Deadlock) - 데드락 해소 조치"
 weight = 307
+title = "307. 교착 상태 복구 (Recovery from Deadlock) - 데드락 해소 조치"
 +++
 
 # 307. 재사용 자원 (Reusable Resources)

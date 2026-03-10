@@ -1,6 +1,6 @@
 +++
-title = "145. 속도 향상도 (Speedup)"
 weight = 145
+title = "145. 속도 향상도 (Speedup)"
 +++
 
 # 145. 속도 향상도 (Speedup)

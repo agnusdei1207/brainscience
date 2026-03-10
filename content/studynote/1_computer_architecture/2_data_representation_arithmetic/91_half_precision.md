@@ -1,6 +1,6 @@
 +++
-title = "91. 반정밀도 (Half Precision, FP16)"
 weight = 91
+title = "91. 반정밀도 (Half Precision, FP16)"
 +++
 
 # 반정밀도 (Half Precision, FP16)

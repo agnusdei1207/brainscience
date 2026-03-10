@@ -1,6 +1,6 @@
 +++
-title = "189. 복권 스케줄링 (Lottery Scheduling) - 확률적 스케줄링"
 weight = 189
+title = "189. 복권 스케줄링 (Lottery Scheduling) - 확률적 스케줄링"
 +++
 
 # 189. 레드블랙트리 (Red-Black Tree)

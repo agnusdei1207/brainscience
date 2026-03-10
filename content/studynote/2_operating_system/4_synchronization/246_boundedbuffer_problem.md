@@ -1,6 +1,6 @@
 +++
-title = "246. 유한 버퍼 문제 (Bounded-Buffer Problem) / 생산자-소비자 (Producer-Consumer) 문제"
 weight = 246
+title = "246. 유한 버퍼 문제 (Bounded-Buffer Problem) / 생산자-소비자 (Producer-Consumer) 문제"
 +++
 
 # 246. 배리어 (Barrier)

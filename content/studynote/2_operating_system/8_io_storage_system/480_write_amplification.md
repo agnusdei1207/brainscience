@@ -1,6 +1,6 @@
 +++
-title = "480. 쓰기 증폭 (Write Amplification) 현상"
 weight = 480
+title = "480. 쓰기 증폭 (Write Amplification) 현상"
 +++
 
 # 480. 디스크 쿼터 (Disk Quota)

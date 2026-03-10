@@ -1,6 +1,6 @@
 +++
-title = "539. 저널링 파일 시스템 (Journaling File System) - 시스템 크래시 시 일관성 복구 (ext3, ext4, NTFS)"
 weight = 539
+title = "539. 저널링 파일 시스템 (Journaling File System) - 시스템 크래시 시 일관성 복구 (ext3, ext4, NTFS)"
 +++
 
 # 539. I/O 가상화 (I/O Virtualization)

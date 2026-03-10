@@ -1,6 +1,6 @@
 +++
-title = "456. 사이드 채널 공격 (Side-Channel Attack)"
 weight = 456
+title = "456. 사이드 채널 공격 (Side-Channel Attack)"
 +++
 
 # 456. 사이드 채널 공격 (Side-Channel Attack)

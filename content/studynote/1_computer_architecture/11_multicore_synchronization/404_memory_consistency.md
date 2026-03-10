@@ -1,6 +1,6 @@
 +++
-title = "404. 메모리 일관성 모델 (Memory Consistency Model)"
 weight = 404
+title = "404. 메모리 일관성 모델 (Memory Consistency Model)"
 +++
 
 # 404. 메모리 일관성 모델 (Memory Consistency Model)

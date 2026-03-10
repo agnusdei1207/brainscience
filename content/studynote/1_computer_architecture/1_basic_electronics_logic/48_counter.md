@@ -1,6 +1,6 @@
 +++
-title = "48. 카운터 (Counter)"
 weight = 48
+title = "48. 카운터 (Counter)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

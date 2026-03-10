@@ -1,6 +1,6 @@
 +++
-title = "326. 전송 시간 (Transfer Time)"
 weight = 326
+title = "326. 전송 시간 (Transfer Time)"
 +++
 
 # 326. 전송 시간 (Transfer Time)

@@ -1,11 +1,11 @@
 +++
+weight = 655
 title = "655. CPU 캐시 일관성 정책 (MESI 프로토콜) 이 커널 락(Lock)에 미치는 캐시라인 핑퐁(Ping-pong) 문제"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "캐시 일관성", "MESI 프로토콜", "Cache Coherence", "Snooping", "Directory-based"]
 series = "운영체제 800제"
-weight = 655
 +++
 
 # CPU 캐시 일관성 정책 (MESI 프로토콜)

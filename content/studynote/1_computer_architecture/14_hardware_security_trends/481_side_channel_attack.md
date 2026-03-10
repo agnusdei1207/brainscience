@@ -1,6 +1,6 @@
 +++
-title = "457. 하드웨어 방화벽 (Hardware Firewall)"
 weight = 457
+title = "457. 하드웨어 방화벽 (Hardware Firewall)"
 +++
 
 # 457. 하드웨어 방화벽 (Hardware Firewall)

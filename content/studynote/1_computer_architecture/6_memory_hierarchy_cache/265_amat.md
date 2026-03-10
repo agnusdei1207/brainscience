@@ -1,6 +1,6 @@
 +++
-title = "265. AMAT (Average Memory Access Time)"
 weight = 265
+title = "265. AMAT (Average Memory Access Time)"
 +++
 
 # 265. AMAT (Average Memory Access Time)

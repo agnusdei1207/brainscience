@@ -1,6 +1,6 @@
 +++
-title = "753. 우선순위 역전 (Priority Inversion) 방지"
 weight = 753
+title = "753. 우선순위 역전 (Priority Inversion) 방지"
 +++
 
 # 276. 우선순위 역전 (Priority Inversion)

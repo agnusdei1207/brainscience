@@ -1,6 +1,6 @@
 +++
-title = "455. 보안 엔클레이브 (Secure Enclave / TEE)"
 weight = 455
+title = "455. 보안 엔클레이브 (Secure Enclave / TEE)"
 +++
 
 # 455. 보안 엔클레이브 (Secure Enclave / TEE)

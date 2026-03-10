@@ -1,6 +1,6 @@
 +++
-title = "588. 로직 밤 (Logic Bomb) / 타이머 밤"
 weight = 588
+title = "588. 로직 밤 (Logic Bomb) / 타이머 밤"
 +++
 
 # 588. 스왑 (Swap)

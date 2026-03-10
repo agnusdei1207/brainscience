@@ -1,6 +1,6 @@
 +++
-title = "306. 스래싱 (Thrashing)"
 weight = 306
+title = "306. 스래싱 (Thrashing)"
 +++
 
 # 306. 스래싱 (Thrashing)

@@ -1,6 +1,6 @@
 +++
-title = "210. 실행 사이클 (Execute Cycle)"
 weight = 210
+title = "210. 실행 사이클 (Execute Cycle)"
 +++
 
 # 210. 실행 사이클 (Execute Cycle)

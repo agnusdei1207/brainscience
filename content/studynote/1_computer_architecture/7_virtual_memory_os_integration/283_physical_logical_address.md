@@ -1,6 +1,6 @@
 +++
-title = "283. 물리 주소와 논리 주소 (Physical & Logical Address)"
 weight = 283
+title = "283. 물리 주소와 논리 주소 (Physical & Logical Address)"
 +++
 
 # 283. 물리 주소와 논리 주소 (Physical & Logical Address)

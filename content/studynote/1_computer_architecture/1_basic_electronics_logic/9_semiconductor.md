@@ -1,6 +1,6 @@
 +++
-title = "9. 반도체 (Semiconductor)"
 weight = 9
+title = "9. 반도체 (Semiconductor)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

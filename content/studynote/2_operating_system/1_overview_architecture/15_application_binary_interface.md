@@ -1,6 +1,6 @@
 +++
-title = "15. ABI (Application Binary Interface)"
 weight = 15
+title = "15. ABI (Application Binary Interface)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

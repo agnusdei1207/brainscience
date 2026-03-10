@@ -1,6 +1,6 @@
 +++
-title = "209. 해독 사이클 (Decode Cycle)"
 weight = 209
+title = "209. 해독 사이클 (Decode Cycle)"
 +++
 
 # 209. 해독 사이클 (Decode Cycle)

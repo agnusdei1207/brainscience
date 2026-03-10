@@ -1,6 +1,6 @@
 +++
-title = "222. 구조적 해저드 (Structural Hazard)"
 weight = 222
+title = "222. 구조적 해저드 (Structural Hazard)"
 +++
 
 # 222. 구조적 해저드 (Structural Hazard)

@@ -1,6 +1,6 @@
 +++
-title = "406. LRU 근사 알고리즘 (LRU Approximation) - 참조 비트 (Reference Bit) 사용"
 weight = 406
+title = "406. LRU 근사 알고리즘 (LRU Approximation) - 참조 비트 (Reference Bit) 사용"
 +++
 
 # 406. 메모리 보호 (Memory Protection)

@@ -1,6 +1,6 @@
 +++
-title = "500. 폰 노이만 병목 (Von Neumann Bottleneck)"
 weight = 500
+title = "500. 폰 노이만 병목 (Von Neumann Bottleneck)"
 +++
 
 # 500. 폰 노이만 병목 (Von Neumann Bottleneck)

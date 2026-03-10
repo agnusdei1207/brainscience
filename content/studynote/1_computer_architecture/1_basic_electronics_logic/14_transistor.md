@@ -1,6 +1,6 @@
 +++
-title = "14. 트랜지스터 (Transistor)"
 weight = 14
+title = "14. 트랜지스터 (Transistor)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

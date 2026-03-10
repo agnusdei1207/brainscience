@@ -1,6 +1,6 @@
 +++
-title = "175. 레지스터 주소 지정 (Register Addressing)"
 weight = 175
+title = "175. 레지스터 주소 지정 (Register Addressing)"
 +++
 
 # 175. 레지스터 주소 지정 (Register Addressing)

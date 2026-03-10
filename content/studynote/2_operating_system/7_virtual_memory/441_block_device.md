@@ -1,6 +1,6 @@
 +++
-title = "441. I/O 장치의 분류 - 블록 장치 (Block Device) vs 문자 장치 (Character Device)"
 weight = 441
+title = "441. I/O 장치의 분류 - 블록 장치 (Block Device) vs 문자 장치 (Character Device)"
 +++
 
 # 441. 파일 시스템 (File System)

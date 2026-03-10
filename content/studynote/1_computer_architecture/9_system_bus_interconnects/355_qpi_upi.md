@@ -1,6 +1,6 @@
 +++
-title = "355. QPI/UPI (QuickPath/UltraPath Interconnect)"
 weight = 355
+title = "355. QPI/UPI (QuickPath/UltraPath Interconnect)"
 +++
 
 # 355. QPI/UPI (QuickPath/UltraPath Interconnect)

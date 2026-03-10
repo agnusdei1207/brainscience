@@ -1,6 +1,6 @@
 +++
-title = "418. 메모리 매핑 파일 (Memory-Mapped Files, mmap)"
 weight = 418
+title = "418. 메모리 매핑 파일 (Memory-Mapped Files, mmap)"
 +++
 
 # 418. 주소 변환 (Address Translation)

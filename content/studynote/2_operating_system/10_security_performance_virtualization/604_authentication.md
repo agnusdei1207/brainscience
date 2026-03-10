@@ -1,11 +1,11 @@
 +++
+weight = 604
 title = "604. 사용자 인증 (Authentication) 요소 - Something you know, have, are"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "인증", "Authentication", "보안", "MFA"]
 series = "운영체제 800제"
-weight = 604
 +++
 
 # 사용자 인증 (Authentication)

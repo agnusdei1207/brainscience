@@ -1,6 +1,6 @@
 +++
-title = "116. 바이트 오더링 (Byte Ordering)"
 weight = 116
+title = "116. 바이트 오더링 (Byte Ordering)"
 +++
 
 # 116. 바이트 오더링 (Byte Ordering)

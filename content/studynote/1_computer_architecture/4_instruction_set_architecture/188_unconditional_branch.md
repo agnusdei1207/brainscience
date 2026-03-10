@@ -1,6 +1,6 @@
 +++
-title = "188. 무조건 분기 (Unconditional Branch)"
 weight = 188
+title = "188. 무조건 분기 (Unconditional Branch)"
 +++
 
 # 188. 무조건 분기 (Unconditional Branch)

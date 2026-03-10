@@ -1,6 +1,6 @@
 +++
-title = "463. 멤리스터 (Memristor)"
 weight = 463
+title = "463. 멤리스터 (Memristor)"
 +++
 
 # 463. 멤리스터 (Memristor)

@@ -1,6 +1,6 @@
 +++
-title = "243. 우선순위 상속 (Priority Inheritance Protocol) - 락을 쥔 프로세스에 임시로 우선순위 부여"
 weight = 243
+title = "243. 우선순위 상속 (Priority Inheritance Protocol) - 락을 쥔 프로세스에 임시로 우선순위 부여"
 +++
 
 # 243. 생산자-소비자 (Producer-Consumer)

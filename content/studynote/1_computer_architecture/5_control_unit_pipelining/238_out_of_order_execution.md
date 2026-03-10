@@ -1,6 +1,6 @@
 +++
-title = "238. 비순차 실행 (Out-of-Order Execution)"
 weight = 238
+title = "238. 비순차 실행 (Out-of-Order Execution)"
 +++
 
 # 238. 비순차 실행 (Out-of-Order Execution)

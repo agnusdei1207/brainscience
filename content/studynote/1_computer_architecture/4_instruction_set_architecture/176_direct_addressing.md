@@ -1,6 +1,6 @@
 +++
-title = "176. 직접 주소 지정 (Direct Addressing)"
 weight = 176
+title = "176. 직접 주소 지정 (Direct Addressing)"
 +++
 
 # 176. 직접 주소 지정 (Direct Addressing)

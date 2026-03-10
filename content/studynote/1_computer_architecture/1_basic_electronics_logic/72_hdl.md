@@ -1,6 +1,6 @@
 +++
-title = "72. 하드웨어 기술 언어 (VHDL, Verilog)"
 weight = 72
+title = "72. 하드웨어 기술 언어 (VHDL, Verilog)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

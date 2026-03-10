@@ -1,6 +1,6 @@
 +++
-title = "530. 하이퍼바이저 트랩 (Trap-and-Emulate)"
 weight = 530
+title = "530. 하이퍼바이저 트랩 (Trap-and-Emulate)"
 +++
 
 # 530. 하이퍼바이저 트랩 (Trap-and-Emulate)

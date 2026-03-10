@@ -1,6 +1,6 @@
 +++
-title = "198. x86 아키텍처 (x86 Architecture)"
 weight = 198
+title = "198. x86 아키텍처 (x86 Architecture)"
 +++
 
 # 198. x86 아키텍처 (x86 Architecture)

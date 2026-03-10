@@ -1,6 +1,6 @@
 +++
-title = "12. 정류 회로 (Rectifier)"
 weight = 12
+title = "12. 정류 회로 (Rectifier)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

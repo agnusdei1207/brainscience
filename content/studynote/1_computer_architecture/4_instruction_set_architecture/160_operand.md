@@ -1,6 +1,6 @@
 +++
-title = "160. 피연산자 (Operand)"
 weight = 160
+title = "160. 피연산자 (Operand)"
 +++
 
 # 160. 피연산자 (Operand)

@@ -1,6 +1,6 @@
 +++
-title = "287. 자원 할당 그래프 (Resource-Allocation Graph) - 정점(프로세스, 자원)과 간선(요청, 할당)"
 weight = 287
+title = "287. 자원 할당 그래프 (Resource-Allocation Graph) - 정점(프로세스, 자원)과 간선(요청, 할당)"
 +++
 
 # 301. 자원 할당 그래프 (Resource Allocation Graph)

@@ -1,11 +1,11 @@
 +++
+weight = 612
 title = "612. 메모리 누수 (Memory Leak) 탐지 도구 구조 (Valgrind 등)"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "메모리 누수", "Memory Leak", "Valgrind", "AddressSanitizer", "Shadow Memory"]
 series = "운영체제 800제"
-weight = 612
 +++
 
 # 메모리 누수 (Memory Leak) 탐지 도구 구조

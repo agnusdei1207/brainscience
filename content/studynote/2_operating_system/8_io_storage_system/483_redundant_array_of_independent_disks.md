@@ -1,6 +1,6 @@
 +++
-title = "483. RAID (Redundant Array of Independent Disks) - 성능 향상 및 신뢰성(중복성) 확보"
 weight = 483
+title = "483. RAID (Redundant Array of Independent Disks) - 성능 향상 및 신뢰성(중복성) 확보"
 +++
 
 # 584. RAID (Redundant Array of Independent Disks)

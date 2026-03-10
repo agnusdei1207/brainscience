@@ -1,6 +1,6 @@
 +++
-title = "30. XOR, XNOR 게이트"
 weight = 30
+title = "30. XOR, XNOR 게이트"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

@@ -1,6 +1,6 @@
 +++
-title = "151. Dhrystone (Dhrystone)"
 weight = 151
+title = "151. Dhrystone (Dhrystone)"
 +++
 
 # 151. Dhrystone (Dhrystone)

@@ -1,6 +1,6 @@
 +++
-title = "528. SR-IOV (Single Root I/O Virtualization)"
 weight = 528
+title = "528. SR-IOV (Single Root I/O Virtualization)"
 +++
 
 # 528. SR-IOV (Single Root I/O Virtualization)

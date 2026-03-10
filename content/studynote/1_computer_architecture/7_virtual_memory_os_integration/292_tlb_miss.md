@@ -1,6 +1,6 @@
 +++
-title = "292. TLB 미스 (TLB Miss)"
 weight = 292
+title = "292. TLB 미스 (TLB Miss)"
 +++
 
 # 292. TLB 미스 (TLB Miss)

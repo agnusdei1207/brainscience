@@ -1,6 +1,6 @@
 +++
-title = "171. CPU 이용률 (CPU Utilization) / 처리량 (Throughput)"
 weight = 171
+title = "171. CPU 이용률 (CPU Utilization) / 처리량 (Throughput)"
 +++
 
 # 171. CPU 이용률 (CPU Utilization)

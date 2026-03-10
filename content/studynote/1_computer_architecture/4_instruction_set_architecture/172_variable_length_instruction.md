@@ -1,6 +1,6 @@
 +++
-title = "172. 가변 길이 명령어 (Variable Length Instruction)"
 weight = 172
+title = "172. 가변 길이 명령어 (Variable Length Instruction)"
 +++
 
 # 172. 가변 길이 명령어 (Variable Length Instruction)

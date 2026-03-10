@@ -1,6 +1,6 @@
 +++
-title = "107. 패리티 비트 (Parity Bit)"
 weight = 107
+title = "107. 패리티 비트 (Parity Bit)"
 +++
 
 # 107. 패리티 비트

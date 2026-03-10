@@ -1,6 +1,6 @@
 +++
-title = "163. 장기 스케줄러 (Long-term Scheduler) - 다중 프로그래밍 정도 조절"
 weight = 163
+title = "163. 장기 스케줄러 (Long-term Scheduler) - 다중 프로그래밍 정도 조절"
 +++
 
 # 163. 장기 스케줄러 (Long-term Scheduler)

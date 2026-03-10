@@ -1,6 +1,6 @@
 +++
-title = "20. 인터럽트 서비스 루틴 (ISR, Interrupt Service Routine)"
 weight = 20
+title = "20. 인터럽트 서비스 루틴 (ISR, Interrupt Service Routine)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

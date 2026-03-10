@@ -1,6 +1,6 @@
 +++
-title = "436. 커널 페이지 테이블 격리 (KPTI, Kernel Page-Table Isolation) - Meltdown 취약점 대응망"
 weight = 436
+title = "436. 커널 페이지 테이블 격리 (KPTI, Kernel Page-Table Isolation) - Meltdown 취약점 대응망"
 +++
 
 # 436. 슬랩 할당자 (Slab Allocator)

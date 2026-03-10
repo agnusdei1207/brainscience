@@ -1,6 +1,6 @@
 +++
-title = "205. 주기적 태스크 (Periodic Task) - 주기(p), 마감시간(d), 실행시간(t)"
 weight = 205
+title = "205. 주기적 태스크 (Periodic Task) - 주기(p), 마감시간(d), 실행시간(t)"
 +++
 
 # 205. 스케줄링 데드락 (Scheduling Deadlock)

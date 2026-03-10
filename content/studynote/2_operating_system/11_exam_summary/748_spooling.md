@@ -1,6 +1,6 @@
 +++
-title = "748. 스풀링 (Spooling) 버퍼"
 weight = 748
+title = "748. 스풀링 (Spooling) 버퍼"
 +++
 
 # 514. 스풀링 (Spooling)

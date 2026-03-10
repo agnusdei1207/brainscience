@@ -1,6 +1,6 @@
 +++
-title = "162. 중기 스케줄러 (Medium-term Scheduler) - 스와핑 (Swapping)"
 weight = 162
+title = "162. 중기 스케줄러 (Medium-term Scheduler) - 스와핑 (Swapping)"
 +++
 
 # 162. 중기 스케줄러 (Medium-term Scheduler)

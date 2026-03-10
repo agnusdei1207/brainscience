@@ -1,6 +1,6 @@
 +++
-title = "529. 가상 머신 제어 구조 (VMCS, Virtual Machine Control Structure)"
 weight = 529
+title = "529. 가상 머신 제어 구조 (VMCS, Virtual Machine Control Structure)"
 +++
 
 # 529. 가상 머신 제어 구조 (VMCS, Virtual Machine Control Structure)

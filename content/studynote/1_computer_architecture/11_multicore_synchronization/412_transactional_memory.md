@@ -1,6 +1,6 @@
 +++
-title = "412. 트랜잭셔널 메모리 (Transactional Memory)"
 weight = 412
+title = "412. 트랜잭셔널 메모리 (Transactional Memory)"
 +++
 
 # 412. 트랜잭셔널 메모리 (Transactional Memory)

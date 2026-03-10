@@ -1,6 +1,6 @@
 +++
-title = "322. 논리 주소 (Logical/Virtual Address) - CPU가 생성하는 주소"
 weight = 322
+title = "322. 논리 주소 (Logical/Virtual Address) - CPU가 생성하는 주소"
 +++
 
 # 416. 논리 주소 (Logical Address)

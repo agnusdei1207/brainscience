@@ -1,6 +1,6 @@
 +++
-title = "294. 페이지 공유 (Page Sharing)"
 weight = 294
+title = "294. 페이지 공유 (Page Sharing)"
 +++
 
 # 294. 페이지 공유 (Page Sharing)

@@ -1,6 +1,6 @@
 +++
-title = "407. 메모리 배리어 (Memory Barrier)"
 weight = 407
+title = "407. 메모리 배리어 (Memory Barrier)"
 +++
 
 # 407. 메모리 배리어 (Memory Barrier)

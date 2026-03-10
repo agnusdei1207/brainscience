@@ -1,6 +1,6 @@
 +++
-title = "46. 플립플롭 (Flip-Flop)"
 weight = 46
+title = "46. 플립플롭 (Flip-Flop)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

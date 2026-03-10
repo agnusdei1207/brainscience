@@ -1,6 +1,6 @@
 +++
-title = "438. 파일시스템 버퍼 캐시(Buffer Cache)와 가상 메모리 페이지 캐시(Page Cache)의 통합 원리"
 weight = 438
+title = "438. 파일시스템 버퍼 캐시(Buffer Cache)와 가상 메모리 페이지 캐시(Page Cache)의 통합 원리"
 +++
 
 # 438. 메모리 압력 (Memory Pressure)

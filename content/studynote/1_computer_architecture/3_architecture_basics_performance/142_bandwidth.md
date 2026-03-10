@@ -1,6 +1,6 @@
 +++
-title = "142. 대역폭 (Bandwidth)"
 weight = 142
+title = "142. 대역폭 (Bandwidth)"
 +++
 
 # 142. 대역폭 (Bandwidth)

@@ -1,6 +1,6 @@
 +++
-title = "55. 상태 할당 (State Assignment)"
 weight = 55
+title = "55. 상태 할당 (State Assignment)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

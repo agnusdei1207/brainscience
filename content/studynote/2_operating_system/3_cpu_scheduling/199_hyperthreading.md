@@ -1,6 +1,6 @@
 +++
-title = "199. 하이퍼스레딩 (Hyper-threading) / SMT (Simultaneous Multithreading) 스케줄링"
 weight = 199
+title = "199. 하이퍼스레딩 (Hyper-threading) / SMT (Simultaneous Multithreading) 스케줄링"
 +++
 
 # 199. 데드라인 (Deadline)

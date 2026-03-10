@@ -1,6 +1,6 @@
 +++
-title = "239. 조건 변수 (Condition Variable) - x.wait(), x.signal()"
 weight = 239
+title = "239. 조건 변수 (Condition Variable) - x.wait(), x.signal()"
 +++
 
 # 239. 원자적 연산 (Atomic Operations)

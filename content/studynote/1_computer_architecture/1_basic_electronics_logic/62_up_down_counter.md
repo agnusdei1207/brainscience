@@ -1,6 +1,6 @@
 +++
-title = "62. 업/다운 카운터 (Up/Down Counter)"
 weight = 62
+title = "62. 업/다운 카운터 (Up/Down Counter)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

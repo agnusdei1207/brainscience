@@ -1,6 +1,6 @@
 +++
-title = "201. MIPS (Microprocessor without Interlocked Pipeline Stages)"
 weight = 201
+title = "201. MIPS (Microprocessor without Interlocked Pipeline Stages)"
 +++
 
 # 201. MIPS (Microprocessor without Interlocked Pipeline Stages)

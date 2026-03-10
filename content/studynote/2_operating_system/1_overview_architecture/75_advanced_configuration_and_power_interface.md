@@ -1,6 +1,6 @@
 +++
-title = "75. ACPI (Advanced Configuration and Power Interface)"
 weight = 75
+title = "75. ACPI (Advanced Configuration and Power Interface)"
 +++
 
 # 566. ACPI (Advanced Configuration and Power Interface)

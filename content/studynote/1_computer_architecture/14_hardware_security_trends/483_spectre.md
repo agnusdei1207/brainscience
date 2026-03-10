@@ -1,6 +1,6 @@
 +++
-title = "459. 하드웨어 인증 (Hardware Authentication)"
 weight = 459
+title = "459. 하드웨어 인증 (Hardware Authentication)"
 +++
 
 # 459. 하드웨어 인증 (Hardware Authentication)

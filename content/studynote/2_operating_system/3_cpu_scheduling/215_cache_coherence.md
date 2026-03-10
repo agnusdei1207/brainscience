@@ -1,6 +1,6 @@
 +++
-title = "215. 태스크 스케줄링의 캐시 일관성 (Cache Coherence) 문제"
 weight = 215
+title = "215. 태스크 스케줄링의 캐시 일관성 (Cache Coherence) 문제"
 +++
 
 # 215. 에너지 인식 스케줄링 (Energy-Aware Scheduling)

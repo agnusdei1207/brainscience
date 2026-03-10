@@ -1,6 +1,6 @@
 +++
-title = "257. 웨이트-프리 (Wait-free) 알고리즘"
 weight = 257
+title = "257. 웨이트-프리 (Wait-free) 알고리즘"
 +++
 
 # 257. 락 세분성 (Lock Granularity)

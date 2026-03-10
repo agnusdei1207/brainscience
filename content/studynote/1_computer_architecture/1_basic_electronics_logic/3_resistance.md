@@ -1,6 +1,6 @@
 +++
-title = "3. 저항 (Resistance)"
 weight = 3
+title = "3. 저항 (Resistance)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

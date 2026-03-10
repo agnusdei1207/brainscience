@@ -1,6 +1,6 @@
 +++
-title = "281. 희생 캐시 (Victim Cache)"
 weight = 281
+title = "281. 희생 캐시 (Victim Cache)"
 +++
 
 # 281. 희생 캐시 (Victim Cache)

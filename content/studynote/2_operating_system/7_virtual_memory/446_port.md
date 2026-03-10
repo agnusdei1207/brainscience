@@ -1,6 +1,6 @@
 +++
-title = "446. 포트 (Port) / 버스 (Bus) - PCIe, USB, SATA, NVMe"
 weight = 446
+title = "446. 포트 (Port) / 버스 (Bus) - PCIe, USB, SATA, NVMe"
 +++
 
 # 446. 파일 권한 (File Permission)

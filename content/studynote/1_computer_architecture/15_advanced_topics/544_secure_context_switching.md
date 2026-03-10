@@ -1,6 +1,6 @@
 +++
-title = "544. 안전한 컨텍스트 스위칭 (Secure Context Switching)"
 weight = 544
+title = "544. 안전한 컨텍스트 스위칭 (Secure Context Switching)"
 +++
 
 # 544. 안전한 컨텍스트 스위칭 (Secure Context Switching)

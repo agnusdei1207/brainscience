@@ -1,6 +1,6 @@
 +++
-title = "460. JTAG / 디버그 보안 (JTAG / Debug Security)"
 weight = 460
+title = "460. JTAG / 디버그 보안 (JTAG / Debug Security)"
 +++
 
 # 460. JTAG / 디버그 보안 (JTAG / Debug Security)

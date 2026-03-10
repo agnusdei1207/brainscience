@@ -1,6 +1,6 @@
 +++
-title = "58. 팬인(Fan-in)과 팬아웃(Fan-out)"
 weight = 58
+title = "58. 팬인(Fan-in)과 팬아웃(Fan-out)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

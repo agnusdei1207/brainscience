@@ -1,6 +1,6 @@
 +++
-title = "511. 하드 링크 (Hard Link) - 동일한 물리 데이터(i-node) 가리킴, 디렉터리 링크 불가"
 weight = 511
+title = "511. 하드 링크 (Hard Link) - 동일한 물리 데이터(i-node) 가리킴, 디렉터리 링크 불가"
 +++
 
 # 511. 예외 처리 (Exception Handling)

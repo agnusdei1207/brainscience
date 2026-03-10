@@ -1,6 +1,6 @@
 +++
-title = "402. MOESI 프로토콜 (MOESI Protocol)"
 weight = 402
+title = "402. MOESI 프로토콜 (MOESI Protocol)"
 +++
 
 # 402. MOESI 프로토콜 (MOESI Protocol)

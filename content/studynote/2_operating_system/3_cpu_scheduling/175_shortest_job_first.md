@@ -1,6 +1,6 @@
 +++
-title = "175. SJF (Shortest Job First) 스케줄링 - 최적의 평균 대기 시간"
 weight = 175
+title = "175. SJF (Shortest Job First) 스케줄링 - 최적의 평균 대기 시간"
 +++
 
 # 175. SJF (최단 작업 우선, Shortest Job First)

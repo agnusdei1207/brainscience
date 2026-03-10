@@ -1,6 +1,6 @@
 +++
-title = "86. 고정소수점 (Fixed Point)"
 weight = 86
+title = "86. 고정소수점 (Fixed Point)"
 +++
 
 # 고정소수점 (Fixed Point)

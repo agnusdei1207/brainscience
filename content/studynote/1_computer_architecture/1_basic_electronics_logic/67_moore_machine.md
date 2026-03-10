@@ -1,6 +1,6 @@
 +++
-title = "67. 무어 머신 (Moore Machine)"
 weight = 67
+title = "67. 무어 머신 (Moore Machine)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

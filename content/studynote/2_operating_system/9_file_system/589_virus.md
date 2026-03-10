@@ -1,6 +1,6 @@
 +++
-title = "589. 바이러스 (Virus) - 호스트 프로그램 기생"
 weight = 589
+title = "589. 바이러스 (Virus) - 호스트 프로그램 기생"
 +++
 
 # 589. 디스크 파티션 (Disk Partition)

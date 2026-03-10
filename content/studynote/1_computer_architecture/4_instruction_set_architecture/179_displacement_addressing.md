@@ -1,6 +1,6 @@
 +++
-title = "179. 변위 주소 지정 (Displacement Addressing)"
 weight = 179
+title = "179. 변위 주소 지정 (Displacement Addressing)"
 +++
 
 # 179. 변위 주소 지정 (Displacement Addressing)

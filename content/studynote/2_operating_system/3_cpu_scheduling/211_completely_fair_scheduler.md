@@ -1,6 +1,6 @@
 +++
-title = "211. 리눅스 CFS (Completely Fair Scheduler) - 가상 실행 시간 (vruntime) 기반, 레드-블랙 트리 사용"
 weight = 211
+title = "211. 리눅스 CFS (Completely Fair Scheduler) - 가상 실행 시간 (vruntime) 기반, 레드-블랙 트리 사용"
 +++
 
 # 211. BFS 스케줄러 (Brain Fuck Scheduler)

@@ -1,6 +1,6 @@
 +++
-title = "564. 데이터 파손 (Data Corruption / Bit Rot) 대응 Btrfs 자가 치유(Self-healing) 기능"
 weight = 564
+title = "564. 데이터 파손 (Data Corruption / Bit Rot) 대응 Btrfs 자가 치유(Self-healing) 기능"
 +++
 
 # 564. PCIe (PCI Express)

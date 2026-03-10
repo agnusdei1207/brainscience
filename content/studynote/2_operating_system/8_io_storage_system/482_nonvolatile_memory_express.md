@@ -1,6 +1,6 @@
 +++
-title = "482. NVMe (Non-Volatile Memory Express) - PCIe 버스 기반 고속 플래시 프로토콜 (다중/깊은 큐 지원)"
 weight = 482
+title = "482. NVMe (Non-Volatile Memory Express) - PCIe 버스 기반 고속 플래시 프로토콜 (다중/깊은 큐 지원)"
 +++
 
 # 540. NVMe (Non-Volatile Memory Express)

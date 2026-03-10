@@ -1,6 +1,6 @@
 +++
-title = "768. CAS (Compare And Swap) 명령어 기초"
 weight = 768
+title = "768. CAS (Compare And Swap) 명령어 기초"
 +++
 
 # 240. CAS (Compare-And-Swap)

@@ -1,11 +1,11 @@
 +++
+weight = 660
 title = "660. 커널 덤프 (Kdump) 시스템 크래시 원인 분석 커널 구조"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "Kdump", "커널 덤프", "Kexec", "시스템 크래시", "장애 분석"]
 series = "운영체제 800제"
-weight = 660
 +++
 
 # 커널 덤프 (Kdump) 시스템 크래시 원인 분석 커널 구조

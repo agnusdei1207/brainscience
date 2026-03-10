@@ -1,6 +1,6 @@
 +++
-title = "250. Pthreads 동기화 - pthread_mutex_t, pthread_cond_t, 스핀락, 배리어"
 weight = 250
+title = "250. Pthreads 동기화 - pthread_mutex_t, pthread_cond_t, 스핀락, 배리어"
 +++
 
 # 250. 락 엘리션 (Lock Elision)

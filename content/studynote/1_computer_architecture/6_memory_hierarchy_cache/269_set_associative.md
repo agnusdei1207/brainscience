@@ -1,6 +1,6 @@
 +++
-title = "269. 집합 연관 사상 (Set Associative Mapping)"
 weight = 269
+title = "269. 집합 연관 사상 (Set Associative Mapping)"
 +++
 
 # 269. 집합 연관 사상 (Set Associative Mapping)

@@ -1,6 +1,6 @@
 +++
-title = "280. 읽기-쓰기 락 (Read-Write Lock) - 다중 읽기 허용, 쓰기 배타적"
 weight = 280
+title = "280. 읽기-쓰기 락 (Read-Write Lock) - 다중 읽기 허용, 쓰기 배타적"
 +++
 
 # 280. 락 통계 (Lock Statistics)

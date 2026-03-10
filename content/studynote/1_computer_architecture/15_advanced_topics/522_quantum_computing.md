@@ -1,6 +1,6 @@
 +++
-title = "522. 양자 컴퓨팅 (Quantum Computing)과 아키텍처"
 weight = 522
+title = "522. 양자 컴퓨팅 (Quantum Computing)과 아키텍처"
 +++
 
 # 522. 양자 컴퓨팅 (Quantum Computing)과 아키텍처

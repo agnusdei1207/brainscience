@@ -1,6 +1,6 @@
 +++
-title = "10. 임베디드 시스템 (Embedded System)"
 weight = 10
+title = "10. 임베디드 시스템 (Embedded System)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

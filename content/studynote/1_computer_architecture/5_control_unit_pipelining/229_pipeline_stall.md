@@ -1,6 +1,6 @@
 +++
-title = "229. 파이프라인 스톨 (Pipeline Stall)"
 weight = 229
+title = "229. 파이프라인 스톨 (Pipeline Stall)"
 +++
 
 # 229. 파이프라인 스톨 (Pipeline Stall)

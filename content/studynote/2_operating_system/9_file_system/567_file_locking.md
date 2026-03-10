@@ -1,6 +1,6 @@
 +++
-title = "567. 파일 잠금 (File Locking) - 공유 잠금(Shared lock) vs 배타적 잠금(Exclusive lock)"
 weight = 567
+title = "567. 파일 잠금 (File Locking) - 공유 잠금(Shared lock) vs 배타적 잠금(Exclusive lock)"
 +++
 
 # 567. 플러그 앤 플레이 (Plug and Play)

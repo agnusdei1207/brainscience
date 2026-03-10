@@ -1,6 +1,6 @@
 +++
-title = "144. 처리량 (Throughput)"
 weight = 144
+title = "144. 처리량 (Throughput)"
 +++
 
 # 144. 처리량 (Throughput)

@@ -1,6 +1,6 @@
 +++
-title = "450. 펌웨어 / BIOS / UEFI"
 weight = 450
+title = "450. 펌웨어 / BIOS / UEFI"
 +++
 
 # 450. 펌웨어 / BIOS / UEFI

@@ -1,6 +1,6 @@
 +++
-title = "286. 페이지와 프레임 (Page & Frame)"
 weight = 286
+title = "286. 페이지와 프레임 (Page & Frame)"
 +++
 
 # 286. 페이지와 프레임 (Page & Frame)

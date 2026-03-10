@@ -1,6 +1,6 @@
 +++
-title = "514. 파티션 (Partition) / 슬라이스 / 볼륨 (Volume)"
 weight = 514
+title = "514. 파티션 (Partition) / 슬라이스 / 볼륨 (Volume)"
 +++
 
 # 495. 파티션 (Partition)

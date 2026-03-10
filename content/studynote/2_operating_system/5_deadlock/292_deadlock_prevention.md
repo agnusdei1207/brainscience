@@ -1,6 +1,6 @@
 +++
-title = "292. 교착 상태 예방 (Deadlock Prevention) - 4조건 중 하나를 원천적 부정 (효율성 매우 낮음)"
 weight = 292
+title = "292. 교착 상태 예방 (Deadlock Prevention) - 4조건 중 하나를 원천적 부정 (효율성 매우 낮음)"
 +++
 
 # 292. 교착상태 조건 (Deadlock Conditions)

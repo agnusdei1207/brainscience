@@ -1,6 +1,6 @@
 +++
-title = "445. IPMI (Intelligent Platform Management Interface)"
 weight = 445
+title = "445. IPMI (Intelligent Platform Management Interface)"
 +++
 
 # 445. IPMI (Intelligent Platform Management Interface)

@@ -1,6 +1,6 @@
 +++
-title = "519. CXL (Compute Express Link)과 메모리 풀링"
 weight = 519
+title = "519. CXL (Compute Express Link)과 메모리 풀링"
 +++
 
 # 519. CXL (Compute Express Link)과 메모리 풀링

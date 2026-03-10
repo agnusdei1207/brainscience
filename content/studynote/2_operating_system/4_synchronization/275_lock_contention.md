@@ -1,6 +1,6 @@
 +++
-title = "275. 락 경합 (Lock Contention) 모니터링 도구"
 weight = 275
+title = "275. 락 경합 (Lock Contention) 모니터링 도구"
 +++
 
 # 275. 락 그래프 (Lock Graph)

@@ -1,6 +1,6 @@
 +++
-title = "201. 실시간 스케줄링 (Real-time Scheduling)"
 weight = 201
+title = "201. 실시간 스케줄링 (Real-time Scheduling)"
 +++
 
 # 201. WCET (최악 실행 시간, Worst-Case Execution Time)

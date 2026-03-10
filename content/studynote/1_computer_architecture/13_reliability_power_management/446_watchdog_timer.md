@@ -1,6 +1,6 @@
 +++
-title = "446. 와치독 타이머 (Watchdog Timer)"
 weight = 446
+title = "446. 와치독 타이머 (Watchdog Timer)"
 +++
 
 # 446. 와치독 타이머 (Watchdog Timer)

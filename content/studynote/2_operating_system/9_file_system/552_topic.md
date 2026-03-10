@@ -1,6 +1,6 @@
 +++
-title = "552. B-Tree / B+Tree 기반 디렉터리 색인 (대규모 디렉터리 검색 최적화)"
 weight = 552
+title = "552. B-Tree / B+Tree 기반 디렉터리 색인 (대규모 디렉터리 검색 최적화)"
 +++
 
 # 552. 프린터 (Printer)

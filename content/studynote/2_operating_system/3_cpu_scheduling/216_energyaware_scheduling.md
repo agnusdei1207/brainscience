@@ -1,6 +1,6 @@
 +++
-title = "216. 에너지 인지 스케줄링 (Energy-Aware Scheduling, EAS)"
 weight = 216
+title = "216. 에너지 인지 스케줄링 (Energy-Aware Scheduling, EAS)"
 +++
 
 # 216. 인터럽트 스케줄링 (Interrupt Scheduling)

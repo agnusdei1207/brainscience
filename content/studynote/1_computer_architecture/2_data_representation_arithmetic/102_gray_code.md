@@ -1,6 +1,6 @@
 +++
-title = "102. 그레이 코드 (Gray Code)"
 weight = 102
+title = "102. 그레이 코드 (Gray Code)"
 +++
 
 # 그레이 코드 (Gray Code)

@@ -1,6 +1,6 @@
 +++
-title = "606. 감사 (Auditing) 로깅 프레임워크 (Linux Auditd)"
 weight = 606
+title = "606. 감사 (Auditing) 로깅 프레임워크 (Linux Auditd)"
 +++
 
 # 606. TRIM (Trim Command)

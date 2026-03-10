@@ -1,6 +1,6 @@
 +++
-title = "143. 응답 시간 (Response Time)"
 weight = 143
+title = "143. 응답 시간 (Response Time)"
 +++
 
 # 143. 응답 시간 (Response Time)

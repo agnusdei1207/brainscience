@@ -1,6 +1,6 @@
 +++
-title = "166. 스택 포인터 (SP, Stack Pointer)"
 weight = 166
+title = "166. 스택 포인터 (SP, Stack Pointer)"
 +++
 
 # 166. 스택 포인터 (SP, Stack Pointer)

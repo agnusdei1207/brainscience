@@ -1,6 +1,6 @@
 +++
-title = "364. 노스브리지와 사우스브리지 (Northbridge & Southbridge)"
 weight = 364
+title = "364. 노스브리지와 사우스브리지 (Northbridge & Southbridge)"
 +++
 
 # 노스브리지 (Northbridge)와 사우스브리지 (Southbridge)

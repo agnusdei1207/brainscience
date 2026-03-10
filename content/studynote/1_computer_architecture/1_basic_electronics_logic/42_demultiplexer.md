@@ -1,6 +1,6 @@
 +++
-title = "42. 디멀티플렉서 (Demultiplexer, DEMUX)"
 weight = 42
+title = "42. 디멀티플렉서 (Demultiplexer, DEMUX)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

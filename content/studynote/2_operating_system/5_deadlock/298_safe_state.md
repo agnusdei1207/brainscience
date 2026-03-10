@@ -1,6 +1,6 @@
 +++
-title = "298. 안전 상태 (Safe State) - 모든 프로세스가 정상 종료될 수 있는 안전 순서(Safe Sequence)가 존재"
 weight = 298
+title = "298. 안전 상태 (Safe State) - 모든 프로세스가 정상 종료될 수 있는 안전 순서(Safe Sequence)가 존재"
 +++
 
 # 303. 안전 상태 (Safe State)

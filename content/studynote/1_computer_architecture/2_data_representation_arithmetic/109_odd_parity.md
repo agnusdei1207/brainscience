@@ -1,6 +1,6 @@
 +++
-title = "109. 홀수 패리티 (Odd Parity)"
 weight = 109
+title = "109. 홀수 패리티 (Odd Parity)"
 +++
 
 # 109. 홀수 패리티 (Odd Parity)

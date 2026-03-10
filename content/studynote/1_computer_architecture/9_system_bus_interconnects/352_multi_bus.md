@@ -1,6 +1,6 @@
 +++
-title = "352. 멀티 버스 구조 (Multi-Bus Architecture)"
 weight = 352
+title = "352. 멀티 버스 구조 (Multi-Bus Architecture)"
 +++
 
 # 352. 멀티 버스 구조 (Multi-Bus Architecture)

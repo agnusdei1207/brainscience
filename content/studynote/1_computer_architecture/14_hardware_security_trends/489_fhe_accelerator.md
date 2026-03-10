@@ -1,6 +1,6 @@
 +++
-title = "465. DNA 저장 (DNA Storage)"
 weight = 465
+title = "465. DNA 저장 (DNA Storage)"
 +++
 
 # 465. DNA 저장 (DNA Storage)

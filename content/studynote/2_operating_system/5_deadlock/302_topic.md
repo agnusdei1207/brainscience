@@ -1,6 +1,6 @@
 +++
-title = "302. 은행원 알고리즘 자료구조 - Available, Max, Allocation, Need 행렬"
 weight = 302
+title = "302. 은행원 알고리즘 자료구조 - Available, Max, Allocation, Need 행렬"
 +++
 
 # 302. 은행원 알고리즘 (Banker's Algorithm)

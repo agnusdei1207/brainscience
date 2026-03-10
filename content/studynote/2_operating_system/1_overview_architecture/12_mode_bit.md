@@ -1,6 +1,6 @@
 +++
-title = "12. 모드 비트 (Mode Bit)"
 weight = 12
+title = "12. 모드 비트 (Mode Bit)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

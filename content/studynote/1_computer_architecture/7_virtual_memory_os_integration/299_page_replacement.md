@@ -1,6 +1,6 @@
 +++
-title = "299. 페이지 교체 (Page Replacement)"
 weight = 299
+title = "299. 페이지 교체 (Page Replacement)"
 +++
 
 # 299. 페이지 교체 (Page Replacement)

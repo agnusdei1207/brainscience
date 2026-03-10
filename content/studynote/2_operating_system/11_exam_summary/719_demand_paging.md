@@ -1,6 +1,6 @@
 +++
-title = "719. 요구 페이징 (Demand Paging)"
 weight = 719
+title = "719. 요구 페이징 (Demand Paging)"
 +++
 
 # 397. 요구 페이징 (Demand Paging)

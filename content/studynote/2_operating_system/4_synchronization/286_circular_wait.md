@@ -1,6 +1,6 @@
 +++
-title = "286. 순환 대기 (Circular Wait) - 대기 그래프가 사이클(Cycle)을 형성"
 weight = 286
+title = "286. 순환 대기 (Circular Wait) - 대기 그래프가 사이클(Cycle)을 형성"
 +++
 
 # 300. 순환 대기 (Circular Wait)

@@ -1,6 +1,6 @@
 +++
-title = "276. 더티 비트 (Dirty Bit)"
 weight = 276
+title = "276. 더티 비트 (Dirty Bit)"
 +++
 
 # 276. 더티 비트 (Dirty Bit)

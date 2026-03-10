@@ -1,6 +1,6 @@
 +++
-title = "528. 유닉스 i-node (Index Node) 매커니즘 - 파일 메타데이터 및 다중 접근 포인터 보유"
 weight = 528
+title = "528. 유닉스 i-node (Index Node) 매커니즘 - 파일 메타데이터 및 다중 접근 포인터 보유"
 +++
 
 # 528. 완료 포트 (Completion Port)

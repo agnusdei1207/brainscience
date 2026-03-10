@@ -1,6 +1,6 @@
 +++
-title = "505. 캐시 라인 프리패치 (Cache Line Prefetching)"
 weight = 505
+title = "505. 캐시 라인 프리패치 (Cache Line Prefetching)"
 +++
 
 # 505. 캐시 라인 프리패치 (Cache Line Prefetching)

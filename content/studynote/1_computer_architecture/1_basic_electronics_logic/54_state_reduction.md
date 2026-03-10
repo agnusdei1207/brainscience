@@ -1,6 +1,6 @@
 +++
-title = "54. 상태 축소 (State Reduction)"
 weight = 54
+title = "54. 상태 축소 (State Reduction)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

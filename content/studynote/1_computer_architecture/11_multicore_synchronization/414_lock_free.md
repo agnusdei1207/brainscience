@@ -1,6 +1,6 @@
 +++
-title = "414. 락 프리 자료구조 (Lock-Free Data Structure)"
 weight = 414
+title = "414. 락 프리 자료구조 (Lock-Free Data Structure)"
 +++
 
 # 414. 락 프리 자료구조 (Lock-Free Data Structure)

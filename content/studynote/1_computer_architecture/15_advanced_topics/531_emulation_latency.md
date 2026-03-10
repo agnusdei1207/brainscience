@@ -1,6 +1,6 @@
 +++
-title = "531. 에뮬레이션 지연 (Emulation Latency)"
 weight = 531
+title = "531. 에뮬레이션 지연 (Emulation Latency)"
 +++
 
 # 531. 에뮬레이션 지연 (Emulation Latency)

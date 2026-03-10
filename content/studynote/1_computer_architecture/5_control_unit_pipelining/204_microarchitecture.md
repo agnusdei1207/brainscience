@@ -1,6 +1,6 @@
 +++
-title = "204. 마이크로아키텍처 (Microarchitecture)"
 weight = 204
+title = "204. 마이크로아키텍처 (Microarchitecture)"
 +++
 
 # 204. 마이크로아키텍처 (Microarchitecture)

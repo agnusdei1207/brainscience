@@ -1,6 +1,6 @@
 +++
-title = "181. 인덱스 주소 지정 (Indexed Addressing)"
 weight = 181
+title = "181. 인덱스 주소 지정 (Indexed Addressing)"
 +++
 
 # 181. 인덱스 주소 지정 (Indexed Addressing)

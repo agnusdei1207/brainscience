@@ -1,6 +1,6 @@
 +++
-title = "5. 커패시터 (Capacitor, 축전기)"
 weight = 5
+title = "5. 커패시터 (Capacitor, 축전기)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

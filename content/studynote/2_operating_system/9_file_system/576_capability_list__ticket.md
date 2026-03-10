@@ -1,6 +1,6 @@
 +++
-title = "576. 자격 증명 리스트 (Capability List / Ticket) - 주체 중심 (주체가 가진 권한 리스트 토큰 방식)"
 weight = 576
+title = "576. 자격 증명 리스트 (Capability List / Ticket) - 주체 중심 (주체가 가진 권한 리스트 토큰 방식)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

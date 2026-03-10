@@ -1,6 +1,6 @@
 +++
-title = "167. 비선점형 스케줄링 (Non-preemptive Scheduling)"
 weight = 167
+title = "167. 비선점형 스케줄링 (Non-preemptive Scheduling)"
 +++
 
 # 167. 비선점형 스케줄링 (Non-preemptive Scheduling)

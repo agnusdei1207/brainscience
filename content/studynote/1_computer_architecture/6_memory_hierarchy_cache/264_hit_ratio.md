@@ -1,6 +1,6 @@
 +++
-title = "264. 적중률 (Hit Ratio)"
 weight = 264
+title = "264. 적중률 (Hit Ratio)"
 +++
 
 # 264. 적중률 (Hit Ratio)

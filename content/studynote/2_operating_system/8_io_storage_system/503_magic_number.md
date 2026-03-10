@@ -1,6 +1,6 @@
 +++
-title = "503. 매직 넘버 (Magic Number) - 파일 확장자 외 내용 식별자"
 weight = 503
+title = "503. 매직 넘버 (Magic Number) - 파일 확장자 외 내용 식별자"
 +++
 
 # 503. I/O 컨트롤러 (I/O Controller)

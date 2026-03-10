@@ -1,6 +1,6 @@
 +++
-title = "427. 캐시 친화적 가상 메모리 관리 배치"
 weight = 427
+title = "427. 캐시 친화적 가상 메모리 관리 배치"
 +++
 
 # 427. NUR 페이지 교체 (NUR Page Replacement)

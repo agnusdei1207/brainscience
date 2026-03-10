@@ -1,6 +1,6 @@
 +++
-title = "133. 클럭 주기 (Clock Cycle)"
 weight = 133
+title = "133. 클럭 주기 (Clock Cycle)"
 +++
 
 # 133. 클럭 주기 (Clock Cycle)

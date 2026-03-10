@@ -1,6 +1,6 @@
 +++
-title = "14. API (Application Programming Interface), POSIX 표준"
 weight = 14
+title = "14. API (Application Programming Interface), POSIX 표준"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

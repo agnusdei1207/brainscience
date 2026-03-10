@@ -1,6 +1,6 @@
 +++
-title = "233. 동적 분기 예측 (Dynamic Prediction)"
 weight = 233
+title = "233. 동적 분기 예측 (Dynamic Prediction)"
 +++
 
 # 233. 동적 분기 예측 (Dynamic Prediction)

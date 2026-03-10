@@ -1,6 +1,6 @@
 +++
-title = "230. 분기 지연 (Delayed Branch)"
 weight = 230
+title = "230. 분기 지연 (Delayed Branch)"
 +++
 
 # 230. 분기 지연 (Delayed Branch)

@@ -1,6 +1,6 @@
 +++
-title = "207. 명령어 사이클 (Instruction Cycle)"
 weight = 207
+title = "207. 명령어 사이클 (Instruction Cycle)"
 +++
 
 # 207. 명령어 사이클 (Instruction Cycle)

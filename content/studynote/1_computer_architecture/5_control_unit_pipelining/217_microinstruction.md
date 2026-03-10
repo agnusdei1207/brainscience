@@ -1,6 +1,6 @@
 +++
-title = "217. 마이크로명령어 (Microinstruction)"
 weight = 217
+title = "217. 마이크로명령어 (Microinstruction)"
 +++
 
 # 217. 마이크로명령어 (Microinstruction)

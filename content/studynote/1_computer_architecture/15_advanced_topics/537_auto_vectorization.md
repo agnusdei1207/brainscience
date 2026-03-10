@@ -1,6 +1,6 @@
 +++
-title = "537. 오토 벡터라이제이션 (Auto-vectorization)"
 weight = 537
+title = "537. 오토 벡터라이제이션 (Auto-vectorization)"
 +++
 
 # 537. 오토 벡터라이제이션 (Auto-vectorization)

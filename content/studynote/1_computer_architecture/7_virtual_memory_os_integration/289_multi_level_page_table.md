@@ -1,6 +1,6 @@
 +++
-title = "289. 다단계 페이지 테이블 (Multi-Level Page Table)"
 weight = 289
+title = "289. 다단계 페이지 테이블 (Multi-Level Page Table)"
 +++
 
 # 289. 다단계 페이지 테이블 (Multi-Level Page Table)

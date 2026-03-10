@@ -1,6 +1,6 @@
 +++
-title = "108. 짝수 패리티 (Even Parity)"
 weight = 108
+title = "108. 짝수 패리티 (Even Parity)"
 +++
 
 # 108. 짝수 패리티 (Even Parity)

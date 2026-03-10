@@ -1,6 +1,6 @@
 +++
-title = "184. 산술 연산 명령어 (Arithmetic Instruction)"
 weight = 184
+title = "184. 산술 연산 명령어 (Arithmetic Instruction)"
 +++
 
 # 184. 산술 연산 명령어 (Arithmetic Instruction)

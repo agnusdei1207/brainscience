@@ -1,6 +1,6 @@
 +++
-title = "291. 타조 알고리즘 (Ostrich Algorithm) - 대부분의 OS가 채택하는 무시 전략"
 weight = 291
+title = "291. 타조 알고리즘 (Ostrich Algorithm) - 대부분의 OS가 채택하는 무시 전략"
 +++
 
 # 291. 교착상태 (Deadlock)

@@ -1,6 +1,6 @@
 +++
-title = "26. 최소항 (Minterm)과 최대항 (Maxterm)"
 weight = 26
+title = "26. 최소항 (Minterm)과 최대항 (Maxterm)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

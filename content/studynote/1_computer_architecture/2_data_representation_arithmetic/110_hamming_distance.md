@@ -1,6 +1,6 @@
 +++
-title = "110. 해밍 거리 (Hamming Distance)"
 weight = 110
+title = "110. 해밍 거리 (Hamming Distance)"
 +++
 
 # 110. 해밍 거리 (Hamming Distance)

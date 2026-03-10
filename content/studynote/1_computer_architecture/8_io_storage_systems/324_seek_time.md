@@ -1,6 +1,6 @@
 +++
-title = "324. 탐색 시간 (Seek Time)"
 weight = 324
+title = "324. 탐색 시간 (Seek Time)"
 +++
 
 # 324. 탐색 시간 (Seek Time)

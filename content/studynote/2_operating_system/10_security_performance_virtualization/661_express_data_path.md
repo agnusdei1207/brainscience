@@ -1,11 +1,11 @@
 +++
+weight = 661
 title = "661. eBPF 기반 XDP (eXpress Data Path) 커널 네트워크 스택 우회 초고속 패킷 드롭/전달 프레임워크"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "eBPF", "XDP", "eXpress Data Path", "네트워크 성능", "Kernel Bypass"]
 series = "운영체제 800제"
-weight = 661
 +++
 
 # eBPF 기반 XDP (eXpress Data Path) 커널 네트워크 우회 기술

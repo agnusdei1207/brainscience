@@ -1,6 +1,6 @@
 +++
-title = "287. 내부 단편화 (Internal Fragmentation)"
 weight = 287
+title = "287. 내부 단편화 (Internal Fragmentation)"
 +++
 
 # 287. 내부 단편화 (Internal Fragmentation)

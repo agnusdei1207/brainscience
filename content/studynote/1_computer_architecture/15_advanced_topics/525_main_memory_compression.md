@@ -1,6 +1,6 @@
 +++
-title = "525. 메인 메모리 압축 기술 (Main Memory Compression)"
 weight = 525
+title = "525. 메인 메모리 압축 기술 (Main Memory Compression)"
 +++
 
 # 525. 메인 메모리 압축 기술 (Main Memory Compression)

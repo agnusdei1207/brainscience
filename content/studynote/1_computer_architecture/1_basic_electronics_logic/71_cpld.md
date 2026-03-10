@@ -1,6 +1,6 @@
 +++
-title = "71. CPLD (Complex Programmable Logic Device)"
 weight = 71
+title = "71. CPLD (Complex Programmable Logic Device)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

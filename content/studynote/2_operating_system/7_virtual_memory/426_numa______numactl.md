@@ -1,6 +1,6 @@
 +++
-title = "426. NUMA 환경의 가상 메모리 스케줄링 (NUMA 노드 별 페이지 할당 / numactl)"
 weight = 426
+title = "426. NUMA 환경의 가상 메모리 스케줄링 (NUMA 노드 별 페이지 할당 / numactl)"
 +++
 
 # 426. 수정 비트 (Dirty Bit)

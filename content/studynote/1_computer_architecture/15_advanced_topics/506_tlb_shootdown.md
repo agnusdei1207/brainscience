@@ -1,6 +1,6 @@
 +++
-title = "506. TLB 슛다운 (TLB Shootdown)"
 weight = 506
+title = "506. TLB 슛다운 (TLB Shootdown)"
 +++
 
 # 506. TLB 슛다운 (TLB Shootdown)

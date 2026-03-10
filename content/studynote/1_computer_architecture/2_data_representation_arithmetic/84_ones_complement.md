@@ -1,6 +1,6 @@
 +++
-title = "84. 1의 보수 (1's Complement)"
 weight = 84
+title = "84. 1의 보수 (1's Complement)"
 +++
 
 # 1의 보수 (1's Complement)

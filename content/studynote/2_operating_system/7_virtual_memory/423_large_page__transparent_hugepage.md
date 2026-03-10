@@ -1,6 +1,6 @@
 +++
-title = "423. 대형 페이지 (Large Page / Transparent Hugepage)의 가상 메모리 성능 이점"
 weight = 423
+title = "423. 대형 페이지 (Large Page / Transparent Hugepage)의 가상 메모리 성능 이점"
 +++
 
 # 423. Clock 페이지 교체 (Clock Page Replacement)

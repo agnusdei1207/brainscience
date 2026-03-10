@@ -1,6 +1,6 @@
 +++
-title = "301. FIFO 알고리즘 (First-In First-Out)"
 weight = 301
+title = "301. FIFO 알고리즘 (First-In First-Out)"
 +++
 
 # 301. FIFO 알고리즘 (First-In First-Out)

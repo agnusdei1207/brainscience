@@ -1,6 +1,6 @@
 +++
-title = "152. Whetstone"
 weight = 152
+title = "152. Whetstone"
 +++
 
 # 152. Whetstone

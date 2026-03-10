@@ -1,6 +1,6 @@
 +++
-title = "428. VMA (Virtual Memory Area) 구조체 (리눅스 커널 프로세스 주소 공간 매핑)"
 weight = 428
+title = "428. VMA (Virtual Memory Area) 구조체 (리눅스 커널 프로세스 주소 공간 매핑)"
 +++
 
 # 428. Aging 알고리즘 (Aging Algorithm)

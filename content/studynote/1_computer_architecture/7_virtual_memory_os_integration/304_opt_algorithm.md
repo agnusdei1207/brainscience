@@ -1,6 +1,6 @@
 +++
-title = "304. OPT 알고리즘 (Optimal Page Replacement)"
 weight = 304
+title = "304. OPT 알고리즘 (Optimal Page Replacement)"
 +++
 
 # 304. OPT 알고리즘 (Optimal Page Replacement)

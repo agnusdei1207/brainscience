@@ -1,6 +1,6 @@
 +++
-title = "435. 재해 복구 (Disaster Recovery)"
 weight = 435
+title = "435. 재해 복구 (Disaster Recovery)"
 +++
 
 # 435. 재해 복구 (Disaster Recovery)

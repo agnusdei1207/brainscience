@@ -1,6 +1,6 @@
 +++
-title = "497. SR-IOV (Single Root I/O Virtualization) - 가상 머신에 물리적 PCIe 장치 직접 매핑"
 weight = 497
+title = "497. SR-IOV (Single Root I/O Virtualization) - 가상 머신에 물리적 PCIe 장치 직접 매핑"
 +++
 
 # 497. 클라우드 스토리지 (Cloud Storage)

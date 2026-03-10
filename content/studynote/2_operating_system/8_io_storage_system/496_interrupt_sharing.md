@@ -1,6 +1,6 @@
 +++
-title = "496. 인터럽트 공유 (Interrupt Sharing) 및 MSI/MSI-X (Message Signaled Interrupts)"
 weight = 496
+title = "496. 인터럽트 공유 (Interrupt Sharing) 및 MSI/MSI-X (Message Signaled Interrupts)"
 +++
 
 # 496. 디스크 포맷팅 (Disk Formatting)

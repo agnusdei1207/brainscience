@@ -1,6 +1,6 @@
 +++
-title = "265. 낙관적 병행성 제어 (Optimistic Concurrency Control)"
 weight = 265
+title = "265. 낙관적 병행성 제어 (Optimistic Concurrency Control)"
 +++
 
 # 265. 락 순서 규칙 (Lock Ordering)

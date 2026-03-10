@@ -1,6 +1,6 @@
 +++
-title = "29. NAND, NOR 게이트"
 weight = 29
+title = "29. NAND, NOR 게이트"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

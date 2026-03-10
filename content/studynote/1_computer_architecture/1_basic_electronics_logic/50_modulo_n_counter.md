@@ -1,6 +1,6 @@
 +++
-title = "50. 모듈로 N 카운터 (Modulo-n Counter)"
 weight = 50
+title = "50. 모듈로 N 카운터 (Modulo-n Counter)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

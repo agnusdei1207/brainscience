@@ -1,6 +1,6 @@
 +++
-title = "221. 경쟁 조건 (Race Condition) - 실행 순서에 따라 결과가 달라지는 현상"
 weight = 221
+title = "221. 경쟁 조건 (Race Condition) - 실행 순서에 따라 결과가 달라지는 현상"
 +++
 
 # 221. 동기화 개요 (Synchronization Overview)

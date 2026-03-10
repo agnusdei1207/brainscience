@@ -1,6 +1,6 @@
 +++
-title = "283. 상호 배제 (Mutual Exclusion) - 자원은 비공유 모드로만 사용 가능"
 weight = 283
+title = "283. 상호 배제 (Mutual Exclusion) - 자원은 비공유 모드로만 사용 가능"
 +++
 
 # 297. 상호 배제 (Mutual Exclusion)

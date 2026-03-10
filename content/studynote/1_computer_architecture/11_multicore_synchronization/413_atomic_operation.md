@@ -1,6 +1,6 @@
 +++
-title = "413. 원자적 연산 (Atomic Operation)"
 weight = 413
+title = "413. 원자적 연산 (Atomic Operation)"
 +++
 
 # 413. 원자적 연산 (Atomic Operation)

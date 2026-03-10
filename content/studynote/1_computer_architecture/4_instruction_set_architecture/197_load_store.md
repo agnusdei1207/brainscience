@@ -1,6 +1,6 @@
 +++
-title = "197. 로드/스토어 아키텍처 (Load/Store Architecture)"
 weight = 197
+title = "197. 로드/스토어 아키텍처 (Load/Store Architecture)"
 +++
 
 # 197. 로드/스토어 아키텍처 (Load/Store Architecture)

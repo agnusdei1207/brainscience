@@ -1,6 +1,6 @@
 +++
-title = "344. 시스템 버스 (System Bus)"
 weight = 344
+title = "344. 시스템 버스 (System Bus)"
 +++
 
 # 344. 시스템 버스 (System Bus)

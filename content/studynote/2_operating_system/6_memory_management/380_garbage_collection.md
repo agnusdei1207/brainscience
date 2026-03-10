@@ -1,6 +1,6 @@
 +++
-title = "380. 가비지 컬렉션 (Garbage Collection) 기초 - 참조 카운팅, Mark-and-Sweep"
 weight = 380
+title = "380. 가비지 컬렉션 (Garbage Collection) 기초 - 참조 카운팅, Mark-and-Sweep"
 +++
 
 # 607. Garbage Collection (GC)

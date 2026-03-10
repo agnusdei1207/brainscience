@@ -1,6 +1,6 @@
 +++
-title = "381. COMA (Cache-Only Memory Access)"
 weight = 381
+title = "381. COMA (Cache-Only Memory Access)"
 +++
 
 # 381. COMA (Cache-Only Memory Access)

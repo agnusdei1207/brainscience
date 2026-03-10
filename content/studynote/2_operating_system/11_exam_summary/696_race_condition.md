@@ -1,6 +1,6 @@
 +++
-title = "696. 경쟁 조건 (Race Condition)"
 weight = 696
+title = "696. 경쟁 조건 (Race Condition)"
 +++
 
 # 224. 경쟁 조건 (Race Condition)

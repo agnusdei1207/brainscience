@@ -1,6 +1,6 @@
 +++
-title = "204. 지연 시간 (Latency) - 인터럽트 지연 (Interrupt Latency) + 디스패치 지연 (Dispatch Latency)"
 weight = 204
+title = "204. 지연 시간 (Latency) - 인터럽트 지연 (Interrupt Latency) + 디스패치 지연 (Dispatch Latency)"
 +++
 
 # 204. CPU 그룹 스케줄링 (CPU Cgroup Scheduling)

@@ -1,6 +1,6 @@
 +++
-title = "203. SIMD 명령어 확장 (SIMD Extensions)"
 weight = 203
+title = "203. SIMD 명령어 확장 (SIMD Extensions)"
 +++
 
 # 203. SIMD 명령어 확장 (SIMD Extensions)

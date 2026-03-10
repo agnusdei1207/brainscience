@@ -1,6 +1,6 @@
 +++
-title = "150. SPEC 벤치마크 (SPEC Benchmark)"
 weight = 150
+title = "150. SPEC 벤치마크 (SPEC Benchmark)"
 +++
 
 # 150. SPEC 벤치마크 (SPEC Benchmark)

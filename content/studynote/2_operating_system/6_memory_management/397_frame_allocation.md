@@ -1,6 +1,6 @@
 +++
-title = "397. 프레임 할당 (Frame Allocation) 알고리즘"
 weight = 397
+title = "397. 프레임 할당 (Frame Allocation) 알고리즘"
 +++
 
 # 419. 프레임 할당 (Frame Allocation)

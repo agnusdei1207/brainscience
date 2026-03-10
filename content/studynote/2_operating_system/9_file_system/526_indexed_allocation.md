@@ -1,6 +1,6 @@
 +++
-title = "526. 색인 할당 (Indexed Allocation) - 모든 블록 포인터를 색인 블록(Index Block) 하나에 모아 저장"
 weight = 526
+title = "526. 색인 할당 (Indexed Allocation) - 모든 블록 포인터를 색인 블록(Index Block) 하나에 모아 저장"
 +++
 
 # 526. 리액터 패턴 (Reactor Pattern)

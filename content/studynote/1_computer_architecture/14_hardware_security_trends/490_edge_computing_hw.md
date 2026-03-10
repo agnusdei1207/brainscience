@@ -1,6 +1,6 @@
 +++
-title = "466. 3D XPoint / Optane"
 weight = 466
+title = "466. 3D XPoint / Optane"
 +++
 
 # 466. 3D XPoint / Optane

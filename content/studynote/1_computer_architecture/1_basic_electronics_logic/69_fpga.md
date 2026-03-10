@@ -1,6 +1,6 @@
 +++
-title = "69. FPGA (Field Programmable Gate Array)"
 weight = 69
+title = "69. FPGA (Field Programmable Gate Array)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

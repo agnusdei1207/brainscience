@@ -1,6 +1,6 @@
 +++
-title = "185. 논리 연산 명령어 (Logical Instruction)"
 weight = 185
+title = "185. 논리 연산 명령어 (Logical Instruction)"
 +++
 
 # 185. 논리 연산 명령어 (Logical Instruction)

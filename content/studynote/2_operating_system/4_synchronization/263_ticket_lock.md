@@ -1,6 +1,6 @@
 +++
-title = "263. 티켓 락 (Ticket Lock) - FIFO 보장 스핀락"
 weight = 263
+title = "263. 티켓 락 (Ticket Lock) - FIFO 보장 스핀락"
 +++
 
 # 267. 티켓 락 (Ticket Lock)

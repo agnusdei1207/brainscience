@@ -1,6 +1,6 @@
 +++
-title = "18. CMOS (Complementary MOS)"
 weight = 18
+title = "18. CMOS (Complementary MOS)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

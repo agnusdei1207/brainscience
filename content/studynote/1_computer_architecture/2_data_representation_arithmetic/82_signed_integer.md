@@ -1,6 +1,6 @@
 +++
-title = "82. 부호 있는 정수 (Signed Integer)"
 weight = 82
+title = "82. 부호 있는 정수 (Signed Integer)"
 +++
 
 # 부호 있는 정수 (Signed Integer)

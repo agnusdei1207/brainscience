@@ -1,6 +1,6 @@
 +++
-title = "398. 균등 할당 (Equal Allocation) vs 비례 할당 (Proportional Allocation)"
 weight = 398
+title = "398. 균등 할당 (Equal Allocation) vs 비례 할당 (Proportional Allocation)"
 +++
 
 # 398. 세그먼테이션 (Segmentation)

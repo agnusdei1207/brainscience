@@ -1,6 +1,6 @@
 +++
-title = "212. 인터럽트 사이클 (Interrupt Cycle)"
 weight = 212
+title = "212. 인터럽트 사이클 (Interrupt Cycle)"
 +++
 
 # 212. 인터럽트 사이클 (Interrupt Cycle)

@@ -1,6 +1,6 @@
 +++
-title = "375. 다중 프로세서 (Multiprocessor)"
 weight = 375
+title = "375. 다중 프로세서 (Multiprocessor)"
 +++
 
 # 375. 다중 프로세서 (Multiprocessor)

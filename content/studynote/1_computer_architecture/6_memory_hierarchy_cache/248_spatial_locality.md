@@ -1,6 +1,6 @@
 +++
-title = "248. 공간적 지역성 (Spatial Locality)"
 weight = 248
+title = "248. 공간적 지역성 (Spatial Locality)"
 +++
 
 # 248. 공간적 지역성 (Spatial Locality)

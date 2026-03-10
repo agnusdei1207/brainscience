@@ -1,6 +1,6 @@
 +++
-title = "239. 레지스터 리네이밍 (Register Renaming)"
 weight = 239
+title = "239. 레지스터 리네이밍 (Register Renaming)"
 +++
 
 # 239. 레지스터 리네이밍 (Register Renaming)

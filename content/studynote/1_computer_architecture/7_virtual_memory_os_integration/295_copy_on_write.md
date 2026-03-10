@@ -1,6 +1,6 @@
 +++
-title = "295. Copy-on-Write (COW)"
 weight = 295
+title = "295. Copy-on-Write (COW)"
 +++
 
 # 295. Copy-on-Write (COW)

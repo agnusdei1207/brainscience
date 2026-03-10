@@ -1,6 +1,6 @@
 +++
-title = "468. 디스크 스케줄링 (Disk Scheduling) 목적 - 탐색 시간 최소화, 처리량 극대화"
 weight = 468
+title = "468. 디스크 스케줄링 (Disk Scheduling) 목적 - 탐색 시간 최소화, 처리량 극대화"
 +++
 
 # 468. 언마운트 (Unmount)

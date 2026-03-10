@@ -1,6 +1,6 @@
 +++
-title = "795. 틱리스 커널(Tickless) 모바일 배터리 보존"
 weight = 795
+title = "795. 틱리스 커널(Tickless) 모바일 배터리 보존"
 +++
 
 # 209. 틱리스 커널 (Tickless Kernel)

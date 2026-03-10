@@ -1,6 +1,6 @@
 +++
-title = "422. 페이지 고정 (Page Pinning / Locking) - I/O 대기 중인 페이지가 스왑아웃되지 않게 고정 (mlock)"
 weight = 422
+title = "422. 페이지 고정 (Page Pinning / Locking) - I/O 대기 중인 페이지가 스왑아웃되지 않게 고정 (mlock)"
 +++
 
 # 422. Optimal 페이지 교체 (Optimal Page Replacement)

@@ -1,6 +1,6 @@
 +++
-title = "190. 공평 몫 스케줄링 (Fair-share Scheduling)"
 weight = 190
+title = "190. 공평 몫 스케줄링 (Fair-share Scheduling)"
 +++
 
 # 190. 로드 평균 (Load Averages)

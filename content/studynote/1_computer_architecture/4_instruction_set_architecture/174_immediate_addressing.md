@@ -1,6 +1,6 @@
 +++
-title = "174. 즉시 주소 지정 (Immediate Addressing)"
 weight = 174
+title = "174. 즉시 주소 지정 (Immediate Addressing)"
 +++
 
 # 174. 즉시 주소 지정 (Immediate Addressing)

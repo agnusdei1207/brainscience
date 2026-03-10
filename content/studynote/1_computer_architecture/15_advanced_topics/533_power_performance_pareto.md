@@ -1,6 +1,6 @@
 +++
-title = "533. 전력-성능 트레이드오프 파레토 곡선 (Power-Performance Pareto Curve)"
 weight = 533
+title = "533. 전력-성능 트레이드오프 파레토 곡선 (Power-Performance Pareto Curve)"
 +++
 
 # 533. 전력-성능 트레이드오프 파레토 곡선

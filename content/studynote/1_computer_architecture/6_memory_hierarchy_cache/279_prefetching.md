@@ -1,6 +1,6 @@
 +++
-title = "279. 프리패칭 (Prefetching)"
 weight = 279
+title = "279. 프리패칭 (Prefetching)"
 +++
 
 # 279. 프리패칭 (Prefetching)

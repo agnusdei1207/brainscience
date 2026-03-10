@@ -1,6 +1,6 @@
 +++
-title = "39. 디코더 (Decoder)"
 weight = 39
+title = "39. 디코더 (Decoder)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

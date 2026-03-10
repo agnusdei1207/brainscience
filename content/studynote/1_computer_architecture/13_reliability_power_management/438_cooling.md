@@ -1,6 +1,6 @@
 +++
-title = "438. 발열 관리 및 냉각 (Thermal Management & Cooling)"
 weight = 438
+title = "438. 발열 관리 및 냉각 (Thermal Management & Cooling)"
 +++
 
 # 438. 발열 관리 및 냉각 (Thermal Management & Cooling)

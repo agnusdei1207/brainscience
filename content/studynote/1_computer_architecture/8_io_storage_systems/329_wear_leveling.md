@@ -1,6 +1,6 @@
 +++
-title = "329. 마모 평준화 (Wear Leveling)"
 weight = 329
+title = "329. 마모 평준화 (Wear Leveling)"
 +++
 
 # 329. 마모 평준화 (Wear Leveling)

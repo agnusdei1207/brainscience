@@ -1,6 +1,6 @@
 +++
-title = "254. RCU (Read-Copy-Update) - 리눅스 고성능 동기화 (읽기는 락 프리, 쓰기는 복사 후 갱신)"
 weight = 254
+title = "254. RCU (Read-Copy-Update) - 리눅스 고성능 동기화 (읽기는 락 프리, 쓰기는 복사 후 갱신)"
 +++
 
 # 254. 비관적 락 (Pessimistic Locking)

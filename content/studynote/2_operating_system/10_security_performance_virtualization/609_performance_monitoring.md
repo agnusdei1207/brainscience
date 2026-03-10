@@ -1,11 +1,11 @@
 +++
+weight = 609
 title = "609. 성능 모니터링 (Performance Monitoring) 및 튜닝 방법론"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "성능 모니터링", "터닝", "프로파일링"]
 series = "운영체제 800제"
-weight = 609
 +++
 
 # 성능 모니터링 (Performance Monitoring)

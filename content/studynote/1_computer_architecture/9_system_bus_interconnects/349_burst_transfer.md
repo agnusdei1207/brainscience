@@ -1,6 +1,6 @@
 +++
-title = "349. 버스트 전송 (Burst Transfer)"
 weight = 349
+title = "349. 버스트 전송 (Burst Transfer)"
 +++
 
 # 349. 버스트 전송 (Burst Transfer)

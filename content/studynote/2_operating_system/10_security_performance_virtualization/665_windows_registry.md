@@ -1,11 +1,11 @@
 +++
+weight = 665
 title = "665. 시스템 레지스트리 (Windows Registry) 및 구성 데이터베이스 관리 구조"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "Windows Registry", "Registry", "Hive", "Configuration", "Database"]
 series = "운영체제 800제"
-weight = 665
 +++
 
 # 시스템 레지스트리 (Windows Registry) 및 구성 데이터베이스 관리 구조

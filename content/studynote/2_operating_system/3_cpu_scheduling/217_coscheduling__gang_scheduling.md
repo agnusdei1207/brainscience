@@ -1,6 +1,6 @@
 +++
-title = "217. 코-스케줄링 (Co-scheduling / Gang Scheduling) - 밀접한 스레드 동시 스케줄링"
 weight = 217
+title = "217. 코-스케줄링 (Co-scheduling / Gang Scheduling) - 밀접한 스레드 동시 스케줄링"
 +++
 
 # 217. 스케줄링 지연 (Scheduling Latency)

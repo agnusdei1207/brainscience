@@ -1,6 +1,6 @@
 +++
-title = "251. DRAM (Dynamic RAM)"
 weight = 251
+title = "251. DRAM (Dynamic RAM)"
 +++
 
 # 251. DRAM (Dynamic RAM)

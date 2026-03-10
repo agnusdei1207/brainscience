@@ -1,6 +1,6 @@
 +++
-title = "448. 폴링 (Polling / Programmed I/O) - 상태 비트를 지속적으로 호스트가 읽음 (바쁜 대기)"
 weight = 448
+title = "448. 폴링 (Polling / Programmed I/O) - 상태 비트를 지속적으로 호스트가 읽음 (바쁜 대기)"
 +++
 
 # 506. 폴링 (Polling)

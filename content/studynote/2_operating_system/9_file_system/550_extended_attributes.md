@@ -1,6 +1,6 @@
 +++
-title = "550. 리눅스 확장 속성 (Extended Attributes, xattr)"
 weight = 550
+title = "550. 리눅스 확장 속성 (Extended Attributes, xattr)"
 +++
 
 # 550. 터치스크린 (Touchscreen)

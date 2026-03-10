@@ -1,6 +1,6 @@
 +++
-title = "31. 범용 게이트 (Universal Gate)"
 weight = 31
+title = "31. 범용 게이트 (Universal Gate)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

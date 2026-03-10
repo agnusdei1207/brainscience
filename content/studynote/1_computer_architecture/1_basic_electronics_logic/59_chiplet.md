@@ -1,6 +1,6 @@
 +++
-title = "59. 칩렛 (Chiplet)"
 weight = 59
+title = "59. 칩렛 (Chiplet)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

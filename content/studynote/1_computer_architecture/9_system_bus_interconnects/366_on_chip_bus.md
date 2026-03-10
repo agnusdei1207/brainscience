@@ -1,6 +1,6 @@
 +++
-title = "366. 온칩 버스 (AMBA, AXI, AHB, APB)"
 weight = 366
+title = "366. 온칩 버스 (AMBA, AXI, AHB, APB)"
 +++
 
 # 온칩 버스 (AMBA, AXI, AHB, APB)

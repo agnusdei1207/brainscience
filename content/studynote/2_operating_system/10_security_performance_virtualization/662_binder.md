@@ -1,11 +1,11 @@
 +++
+weight = 662
 title = "662. 안드로이드 바인더(Binder) IPC 스레드 풀 및 객체 참조 매핑 메커니즘"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "Android", "Binder", "IPC", "RPC", "스레드 풀", "참조 매핑"]
 series = "운영체제 800제"
-weight = 662
 +++
 
 # 안드로이드 바인더(Binder) IPC 스레드 풀 및 객체 참조 매핑 메커니즘

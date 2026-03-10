@@ -1,6 +1,6 @@
 +++
-title = "469. FCFS (First-Come, First-Served) 스케줄링"
 weight = 469
+title = "469. FCFS (First-Come, First-Served) 스케줄링"
 +++
 
 # 469. 자동 마운트 (Auto Mount)

@@ -1,6 +1,6 @@
 +++
-title = "346. 버스 중재 (Bus Arbitration)"
 weight = 346
+title = "346. 버스 중재 (Bus Arbitration)"
 +++
 
 # 346. 버스 중재 (Bus Arbitration)

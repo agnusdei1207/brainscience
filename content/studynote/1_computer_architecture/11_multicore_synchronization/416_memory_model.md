@@ -1,6 +1,6 @@
 +++
-title = "416. 메모리 모델 (Memory Model)"
 weight = 416
+title = "416. 메모리 모델 (Memory Model)"
 +++
 
 # 416. 메모리 모델 (Memory Model)

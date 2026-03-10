@@ -1,6 +1,6 @@
 +++
-title = "161. 누산기 (Accumulator)"
 weight = 161
+title = "161. 누산기 (Accumulator)"
 +++
 
 # 161. 누산기 (Accumulator)

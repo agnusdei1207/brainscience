@@ -1,6 +1,6 @@
 +++
-title = "454. 버퍼링 (Buffering) - 송수신자 간 데이터 전송 속도 차이, 전송 단위 차이 극복"
 weight = 454
+title = "454. 버퍼링 (Buffering) - 송수신자 간 데이터 전송 속도 차이, 전송 단위 차이 극복"
 +++
 
 # 454. SSTF 스케줄링 (Shortest Seek Time First)

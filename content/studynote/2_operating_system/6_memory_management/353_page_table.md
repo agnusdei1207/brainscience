@@ -1,6 +1,6 @@
 +++
-title = "353. 페이지 테이블 (Page Table) - 페이지 번호를 프레임 번호로 매핑"
 weight = 353
+title = "353. 페이지 테이블 (Page Table) - 페이지 번호를 프레임 번호로 매핑"
 +++
 
 # 395. 페이지 테이블 (Page Table)

@@ -1,11 +1,11 @@
 +++
+weight = 597
 title = "597. 제로 데이 (Zero-Day) 취약점 / 익스플로잇 (Exploit)"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "제로데이", "익스플로잇", "보안 취약점"]
 series = "운영체제 800제"
-weight = 597
 +++
 
 # 제로 데이 (Zero-Day) 취약점 / 익스플로잇 (Exploit)

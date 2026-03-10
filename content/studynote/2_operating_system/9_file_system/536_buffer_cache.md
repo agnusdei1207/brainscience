@@ -1,6 +1,6 @@
 +++
-title = "536. 버퍼 캐시 (Buffer Cache) / 페이지 캐시 (Page Cache) 통합 아키텍처"
 weight = 536
+title = "536. 버퍼 캐시 (Buffer Cache) / 페이지 캐시 (Page Cache) 통합 아키텍처"
 +++
 
 # 470. 버퍼 캐시 (Buffer Cache)

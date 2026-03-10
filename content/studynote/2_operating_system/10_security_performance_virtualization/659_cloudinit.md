@@ -1,11 +1,11 @@
 +++
+weight = 659
 title = "659. 클라우드 게스트 OS (Cloud-init 기반 부트스트랩 인스턴스 자동 초기화 스크립트)"
 date = "2026-03-10"
 [extra]
 categories = "studynote-operating-system"
 keywords = ["운영체제", "클라우드", "Cloud-init", "부트스트랩", "게스트 OS", "자동화"]
 series = "운영체제 800제"
-weight = 659
 +++
 
 # 클라우드 게스트 OS (Cloud-init 기반 부트스트랩 인스턴스 자동 초기화)

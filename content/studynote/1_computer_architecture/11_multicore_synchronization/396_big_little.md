@@ -1,6 +1,6 @@
 +++
-title = "396. big.LITTLE"
 weight = 396
+title = "396. big.LITTLE"
 +++
 
 # 396. big.LITTLE

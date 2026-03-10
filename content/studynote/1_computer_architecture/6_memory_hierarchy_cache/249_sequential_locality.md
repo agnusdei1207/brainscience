@@ -1,6 +1,6 @@
 +++
-title = "249. 순차적 지역성 (Sequential Locality)"
 weight = 249
+title = "249. 순차적 지역성 (Sequential Locality)"
 +++
 
 # 249. 순차적 지역성 (Sequential Locality)

@@ -1,6 +1,6 @@
 +++
-title = "504. 파일 접근 방법 - 순차 접근 (Sequential Access), 직접 접근 (Direct Access / Random Access)"
 weight = 504
+title = "504. 파일 접근 방법 - 순차 접근 (Sequential Access), 직접 접근 (Direct Access / Random Access)"
 +++
 
 # 504. I/O 포트 (I/O Port)

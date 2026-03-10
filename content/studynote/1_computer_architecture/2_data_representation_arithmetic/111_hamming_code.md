@@ -1,6 +1,6 @@
 +++
-title = "111. 해밍 코드 (Hamming Code)"
 weight = 111
+title = "111. 해밍 코드 (Hamming Code)"
 +++
 
 # 111. 해밍 코드 (Hamming Code)

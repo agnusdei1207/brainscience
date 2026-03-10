@@ -1,6 +1,6 @@
 +++
-title = "459. 블로킹 I/O (Blocking I/O) - I/O 완료 시까지 프로세스 대기"
 weight = 459
+title = "459. 블로킹 I/O (Blocking I/O) - I/O 완료 시까지 프로세스 대기"
 +++
 
 # 459. 탐색 시간 (Seek Time)

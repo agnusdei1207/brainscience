@@ -1,6 +1,6 @@
 +++
-title = "547. 실시간 시스템 타이머 (Real-Time System Timer)"
 weight = 547
+title = "547. 실시간 시스템 타이머 (Real-Time System Timer)"
 +++
 
 # 547. 실시간 시스템 타이머 (Real-Time System Timer)

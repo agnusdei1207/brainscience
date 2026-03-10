@@ -1,6 +1,6 @@
 +++
-title = "541. 스택 스매싱 프로텍터 (Stack Smashing Protector, SSP / Canary)"
 weight = 541
+title = "541. 스택 스매싱 프로텍터 (Stack Smashing Protector, SSP / Canary)"
 +++
 
 # 541. 스택 스매싱 프로텍터 (SSP / Canary)

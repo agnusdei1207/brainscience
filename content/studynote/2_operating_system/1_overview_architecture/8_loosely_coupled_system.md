@@ -1,6 +1,6 @@
 +++
-title = "8. 약결합 시스템 (Loosely Coupled System) / 분산 시스템"
 weight = 8
+title = "8. 약결합 시스템 (Loosely Coupled System) / 분산 시스템"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

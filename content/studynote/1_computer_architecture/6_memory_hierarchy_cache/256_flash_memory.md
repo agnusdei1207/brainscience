@@ -1,6 +1,6 @@
 +++
-title = "256. 플래시 메모리 (Flash Memory)"
 weight = 256
+title = "256. 플래시 메모리 (Flash Memory)"
 +++
 
 # 256. 플래시 메모리 (Flash Memory)

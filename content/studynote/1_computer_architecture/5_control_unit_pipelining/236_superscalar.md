@@ -1,6 +1,6 @@
 +++
-title = "236. 수퍼스칼라 (Superscalar)"
 weight = 236
+title = "236. 수퍼스칼라 (Superscalar)"
 +++
 
 # 236. 수퍼스칼라 (Superscalar)

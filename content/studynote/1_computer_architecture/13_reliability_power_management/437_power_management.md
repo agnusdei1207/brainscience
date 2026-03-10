@@ -1,6 +1,6 @@
 +++
-title = "437. 전력 관리 (Power Management)"
 weight = 437
+title = "437. 전력 관리 (Power Management)"
 +++
 
 # 437. 전력 관리 (Power Management)

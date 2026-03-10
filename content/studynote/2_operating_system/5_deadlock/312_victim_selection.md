@@ -1,6 +1,6 @@
 +++
-title = "312. 희생자 선택 (Victim Selection) 최소 비용 기준"
 weight = 312
+title = "312. 희생자 선택 (Victim Selection) 최소 비용 기준"
 +++
 
 # 312. 자원 해제 (Resource Release)

@@ -1,6 +1,6 @@
 +++
-title = "244. EPIC (Explicitly Parallel Instruction Computing)"
 weight = 244
+title = "244. EPIC (Explicitly Parallel Instruction Computing)"
 +++
 
 # 244. EPIC (Explicitly Parallel Instruction Computing)

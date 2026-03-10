@@ -1,6 +1,6 @@
 +++
-title = "196. 부하 균등화 (Load Balancing) - Push Migration vs Pull Migration"
 weight = 196
+title = "196. 부하 균등화 (Load Balancing) - Push Migration vs Pull Migration"
 +++
 
 # 196. 실시간 스케줄링 개요

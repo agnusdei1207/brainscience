@@ -1,6 +1,6 @@
 +++
-title = "25. 카르노 맵 (Karnaugh Map)"
 weight = 25
+title = "25. 카르노 맵 (Karnaugh Map)"
 +++
 
 ## 핵심 인사이트 (3줄 요약)

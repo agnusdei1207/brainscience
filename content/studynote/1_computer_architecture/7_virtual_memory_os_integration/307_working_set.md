@@ -1,6 +1,6 @@
 +++
-title = "307. 워킹셋 (Working Set)"
 weight = 307
+title = "307. 워킹셋 (Working Set)"
 +++
 
 # 307. 워킹셋 (Working Set)
