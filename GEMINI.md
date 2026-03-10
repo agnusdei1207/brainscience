@@ -42,6 +42,7 @@ weight = [번호]
 ### ⚡ 다음 작업
 - **과목**: OS (운영체제) — `content/studynote/2_operating_system/`
 - **완료**: `10_security_virtualization/` **#639 (샌드박싱)**
+- **다음**: `10_security_virtualization/` **#640 (루트킷)**
 - **참조**: `content/studynote/2_operating_system/_keyword_list.md`
 
 ---
