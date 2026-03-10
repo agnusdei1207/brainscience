@@ -1,13 +1,19 @@
 +++
 weight = 753
-title = "753. 우선순위 역전 (Priority Inversion) 방지"
+title = "753. 우선순위 역전 (Priority Inversion) 현상과 해결 방안 (Inheritance, Ceiling)"
+date = "2026-03-10"
+[extra]
+categories = "studynote-operating-system"
+keywords = ["운영체제", "Priority Inversion", "우선순위 역전", "실시간 시스템", "Priority Inheritance", "Priority Ceiling", "동기화", "Mars Pathfinder"]
+series = "운영체제 800제"
 +++
 
-# 276. 우선순위 역전 (Priority Inversion)
+# 753. 우선순위 역전 (Priority Inversion)
 
 #### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 낮은 우선순위가 높은 우선순위를 간접적으로 블록
-> 2. **가치**: 실시간 시스템의 치명적 문제
+> 1. **본질**: 높은 우선순위의 프로세스가 낮은 우선순위의 프로세스가 점유한 자원을 기다리는 동안, 중간 우선순위의 프로세스에게 CPU를 뺏겨 **실행이 무한히 지연되는 현상**.
+> 2. **가치**: 실시간 시스템(RTOS)의 결정론적 수행(Determinism)을 파괴하는 치명적인 위협이며, 화성 탐사선 패스파인더의 시스템 리셋 사건을 통해 그 위험성이 널리 알려졌다.
+> 3. **융합**: 우선순위 기반 스케줄링과 자원 동기화(Mutex)가 충돌하는 지점이며, **우선순위 상속(Inheritance)**이나 **우선순위 올림(Ceiling)** 기법을 통해 해결한다.
 > 3. **융합**: 우선순위 상속, 우선순위 상한과 연관
 
 ---
