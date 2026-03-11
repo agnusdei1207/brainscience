@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `9_system_bus_interconnects/` **#306 (PCI (Peripheral Component Interconnect))**
-- **다음**: `9_system_bus_interconnects/` **#307 (PCIe (PCI Express))**
+- **완료**: `9_system_bus_interconnects/` **#312 (인피니밴드 (InfiniBand))**
+- **다음**: `9_system_bus_interconnects/` **#313 (RDMA (Remote Direct Memory Access))**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,9 +40,9 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 462 | ~1,000 | 46.2% |
+| CA | 468 | ~1,000 | 46.8% |
 | OS | 107 | ~800 | 13.4% |
 | NW | 14 | ~1,200 | 1.1% |
 | SE | 14 | ~800 | 1.7% |
 | DB | 14 | ~800 | 1.7% |
-| **합계** | **503** | **~4,800** | **10.5%** |
+| **합계** | **509** | **~4,800** | **10.6%** |
