@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `2_data_representation_arithmetic/` **#111 (Hamming Code)**
-- **다음**: `2_data_representation_arithmetic/` **#112 (Checksum)**
+- **완료**: `2_data_representation_arithmetic/` **#116 (Byte Ordering)**
+- **다음**: `2_data_representation_arithmetic/` **#117 (ALU)**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,7 +40,7 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 272 | ~1,000 | 27.2% |
+| CA | 277 | ~1,000 | 27.7% |
 | OS | 107 | ~800 | 13.4% |
 | NW | 14 | ~1,200 | 1.1% |
 | SE | 14 | ~800 | 1.7% |
