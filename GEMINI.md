@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `3_architecture_basics_performance/` **#141 (Latency)**
-- **다음**: `3_architecture_basics_performance/` **#142 (Performance Equation)**
+- **완료**: `3_architecture_basics_performance/` **#146 (Moore's Law)**
+- **다음**: `3_architecture_basics_performance/` **#147 (Hwang's Law)**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
