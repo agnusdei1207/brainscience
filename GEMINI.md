@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `15_advanced_topics/` **#625 (SLA 하드웨어 가용성)**
-- **다음**: `15_advanced_topics/` **#626 (DRS 스토리지 미러링)**
+- **완료**: `15_advanced_topics/` **#626 (재해 복구 시스템 (DRS) 스토리지 미러링)**
+- **다음**: `15_advanced_topics/` **#627 (RPO, Recovery Point Objective)**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
