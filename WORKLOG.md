@@ -25,7 +25,21 @@
   - `SE #2` Software Crisis
   - `DB #2` Database Definition
 - Updated `GEMINI.md` current position to next CA topic `#628`.
-- Pending:
-  - Regenerate number tracking files after Batch 2
-  - Re-run audit and Zola pre-check
-  - Commit and push Batch 2
+- Regenerated `existing_nums.txt` and `missing_nums.txt` after CA progress update.
+- Validation:
+  - `python3 scripts/audit_studynote.py 1_computer_architecture 3_network 4_software_engineering 5_database`
+  - `bash scripts/check.sh`
+- Commit / push:
+  - `2261b65` `feat: add second cross-subject study batch`
+
+### Current State
+- Latest completed topics:
+  - `CA #627`
+  - `NW #88`
+  - `SE #2`
+  - `DB #2`
+- Latest next topics:
+  - `CA #628`
+  - `NW #89`
+  - `SE #3`
+  - `DB #3`
