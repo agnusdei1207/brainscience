@@ -29,10 +29,10 @@
 ## 📍 현재 위치
 
 ### ⚡ 다음 작업
-- **과목**: NW (네트워크) — `content/studynote/3_network/`
-- **완료**: `2_multiplexing/` **#86 (CP/GI)**
-- **다음**: `2_multiplexing/` **#87 (다중 접속 Multiple Access 개념)**
-- **참조**: `content/studynote/3_network/_keyword_list.md`
+- **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
+- **완료**: `15_advanced_topics/` **#625 (SLA 하드웨어 가용성)**
+- **다음**: `15_advanced_topics/` **#626 (DRS 스토리지 미러링)**
+- **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
 
@@ -40,9 +40,9 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 551 | ~1,000 | 55.1% |
-| OS | 486 | ~800 | 60.8% |
+| CA | 675 | ~1,000 | 67.5% |
+| OS | 600 | ~800 | 75.0% |
 | NW | 86 | ~1,200 | 7.2% |
 | SE | 0 | ~800 | 0% |
 | DB | 0 | ~800 | 0% |
-| **합계** | **1,123** | **~4,800** | **23.4%** |
+| **합계** | **1,361** | **~4,800** | **28.3%** |
