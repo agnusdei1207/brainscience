@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `11_multicore_synchronization/` **#354 (갱신 정책 (Write-Update))**
-- **다음**: `11_multicore_synchronization/` **#355 (MESI 프로토콜)**
+- **완료**: `11_multicore_synchronization/` **#360 (완화된 일관성 (Relaxed Consistency))**
+- **다음**: `11_multicore_synchronization/` **#361 (하드웨어 동기화 (Hardware Synchronization))**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,9 +40,9 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 510 | ~1,000 | 51.0% |
+| CA | 516 | ~1,000 | 51.6% |
 | OS | 107 | ~800 | 13.4% |
 | NW | 14 | ~1,200 | 1.1% |
 | SE | 14 | ~800 | 1.7% |
 | DB | 14 | ~800 | 1.7% |
-| **합계** | **545** | **~4,800** | **11.3%** |
+| **합계** | **551** | **~4,800** | **11.4%** |
