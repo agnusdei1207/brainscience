@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `10_parallel_processing_architecture/` **#336 (스레드 레벨 병렬성 (TLP, Thread-Level Parallelism))**
-- **다음**: `10_parallel_processing_architecture/` **#337 (데이터 레벨 병렬성 (DLP, Data-Level Parallelism))**
+- **완료**: `10_parallel_processing_architecture/` **#342 (하이퍼큐브 (Hypercube))**
+- **다음**: `10_parallel_processing_architecture/` **#343 (다단 연결망 (MIN))**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,9 +40,9 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 492 | ~1,000 | 49.2% |
+| CA | 498 | ~1,000 | 49.8% |
 | OS | 107 | ~800 | 13.4% |
 | NW | 14 | ~1,200 | 1.1% |
 | SE | 14 | ~800 | 1.7% |
 | DB | 14 | ~800 | 1.7% |
-| **합계** | **527** | **~4,800** | **11.0%** |
+| **합계** | **533** | **~4,800** | **11.1%** |
