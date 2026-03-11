@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `5_control_unit_pipelining/` **#222 (파이프라인 해저드 (Pipeline Hazards))**
-- **다음**: `5_control_unit_pipelining/` **#223 (구조적 해저드 (Structural Hazard))**
+- **완료**: `5_control_unit_pipelining/` **#228 (데이터 포워딩 (Data Forwarding / Bypassing))**
+- **다음**: `5_control_unit_pipelining/` **#229 (분기 예측 (Branch Prediction))**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,9 +40,9 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 378 | ~1,000 | 37.8% |
+| CA | 384 | ~1,000 | 38.4% |
 | OS | 107 | ~800 | 13.4% |
 | NW | 14 | ~1,200 | 1.1% |
 | SE | 14 | ~800 | 1.7% |
 | DB | 14 | ~800 | 1.7% |
-| **합계** | **449** | **~4,800** | **9.3%** |
+| **합계** | **455** | **~4,800** | **9.5%** |
