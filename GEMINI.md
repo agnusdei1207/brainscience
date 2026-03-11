@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `4_instruction_set_architecture/` **#193 (스택 머신 (Stack Machine))**
-- **다음**: `4_instruction_set_architecture/` **#194 (0-주소 명령어)**
+- **완료**: `4_instruction_set_architecture/` **#204 (SIMD 명령어 확장 (AVX, NEON))**
+- **다음**: `5_control_unit_pipelining/` **#205 (마이크로아키텍처 (Microarchitecture))**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,7 +40,7 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 349 | ~1,000 | 34.9% |
+| CA | 360 | ~1,000 | 36.0% |
 | OS | 107 | ~800 | 13.4% |
 | NW | 14 | ~1,200 | 1.1% |
 | SE | 14 | ~800 | 1.7% |
