@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `3_architecture_basics_performance/` **#136 (MIPS)**
-- **다음**: `3_architecture_basics_performance/` **#137 (FLOPS)**
+- **완료**: `3_architecture_basics_performance/` **#141 (Latency)**
+- **다음**: `3_architecture_basics_performance/` **#142 (Performance Equation)**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,7 +40,7 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 297 | ~1,000 | 29.7% |
+| CA | 302 | ~1,000 | 30.2% |
 | OS | 107 | ~800 | 13.4% |
 | NW | 14 | ~1,200 | 1.1% |
 | SE | 14 | ~800 | 1.7% |
