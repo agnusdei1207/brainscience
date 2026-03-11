@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `2_data_representation_arithmetic/` **#91 (BCD)**
-- **다음**: `2_data_representation_arithmetic/` **#92 (Excess-3 Code)**
+- **완료**: `2_data_representation_arithmetic/` **#93 (Complement)**
+- **다음**: `2_data_representation_arithmetic/` **#94 (Arithmetic Shift)**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,9 +40,9 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 269 | ~1,000 | 26.9% |
-| OS | 94 | ~800 | 11.7% |
-| NW | 9 | ~1,200 | 0.7% |
-| SE | 9 | ~800 | 1.1% |
-| DB | 9 | ~800 | 1.1% |
-| **합계** | **390** | **~4,800** | **8.1%** |
+| CA | 270 | ~1,000 | 27.0% |
+| OS | 95 | ~800 | 11.9% |
+| NW | 10 | ~1,200 | 0.8% |
+| SE | 10 | ~800 | 1.3% |
+| DB | 10 | ~800 | 1.3% |
+| **합계** | **395** | **~4,800** | **8.2%** |
