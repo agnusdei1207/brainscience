@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `11_multicore_synchronization/` **#348 (멀티스레딩 (Multithreading))**
-- **다음**: `11_multicore_synchronization/` **#349 (거친 멀티스레딩 (Coarse-grained))**
+- **완료**: `11_multicore_synchronization/` **#354 (갱신 정책 (Write-Update))**
+- **다음**: `11_multicore_synchronization/` **#355 (MESI 프로토콜)**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,9 +40,9 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 504 | ~1,000 | 50.4% |
+| CA | 510 | ~1,000 | 51.0% |
 | OS | 107 | ~800 | 13.4% |
 | NW | 14 | ~1,200 | 1.1% |
 | SE | 14 | ~800 | 1.7% |
 | DB | 14 | ~800 | 1.7% |
-| **합계** | **539** | **~4,800** | **11.2%** |
+| **합계** | **545** | **~4,800** | **11.3%** |
