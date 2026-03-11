@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `2_data_representation_arithmetic/` **#106 (UTF-16)**
-- **다음**: `2_data_representation_arithmetic/` **#107 (Floating Point Multiplication)**
+- **완료**: `2_data_representation_arithmetic/` **#111 (Hamming Code)**
+- **다음**: `2_data_representation_arithmetic/` **#112 (Checksum)**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,9 +40,9 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 267 | ~1,000 | 26.7% |
-| OS | 99 | ~800 | 12.3% |
+| CA | 272 | ~1,000 | 27.2% |
+| OS | 107 | ~800 | 13.4% |
 | NW | 14 | ~1,200 | 1.1% |
 | SE | 14 | ~800 | 1.7% |
 | DB | 14 | ~800 | 1.7% |
-| **합계** | **408** | **~4,800** | **8.5%** |
+| **합계** | **421** | **~4,800** | **8.8%** |
