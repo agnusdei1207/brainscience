@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: OS (운영체제) — `content/studynote/2_operating_system/`
-- **완료**: `1_overview_architecture/` **#74 (틱리스 커널 (Tickless Kernel) - 전력 소모 감소)**
-- **다음**: `1_overview_architecture/` **#75 (ACPI (Advanced Configuration and Power Interface))**
+- **완료**: `1_overview_architecture/` **#77 (프로세서 전원 상태 (C-States))**
+- **다음**: `1_overview_architecture/` **#78 (프로세서 성능 상태 (P-States))**
 - **참조**: `content/studynote/2_operating_system/_keyword_list.md`
 
 ---
