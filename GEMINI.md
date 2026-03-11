@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: OS (운영체제) — `content/studynote/2_operating_system/`
-- **완료**: `1_overview_architecture/` **#47 (DLM (Distributed Lock Manager))**
-- **다음**: `1_overview_architecture/` **#48 (스토리지 영역 네트워크 (SAN) 연동)**
+- **완료**: `1_overview_architecture/` **#59 (하드웨어 보조 가상화 (Intel VT-x, AMD-V))**
+- **다음**: `1_overview_architecture/` **#60 (컨테이너 (Container) 기술 기반 - OS 수준 가상화)**
 - **참조**: `content/studynote/2_operating_system/_keyword_list.md`
 
 ---
