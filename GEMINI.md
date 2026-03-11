@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `6_memory_hierarchy_cache/` **#264 (디렉토리 기반 프로토콜 (Directory-based Protocol))**
-- **다음**: `7_virtual_memory_os_integration/` **#265 (가상 메모리 (Virtual Memory))**
+- **완료**: `7_virtual_memory_os_integration/` **#270 (세그먼테이션 (Segmentation))**
+- **다음**: `7_virtual_memory_os_integration/` **#271 (TLB (Translation Lookaside Buffer))**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,9 +40,9 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 420 | ~1,000 | 42.0% |
+| CA | 426 | ~1,000 | 42.6% |
 | OS | 107 | ~800 | 13.4% |
 | NW | 14 | ~1,200 | 1.1% |
 | SE | 14 | ~800 | 1.7% |
 | DB | 14 | ~800 | 1.7% |
-| **합계** | **473** | **~4,800** | **9.8%** |
+| **합계** | **479** | **~4,800** | **10.0%** |
