@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `2_data_representation_arithmetic/` **#116 (Byte Ordering)**
-- **다음**: `2_data_representation_arithmetic/` **#117 (ALU)**
+- **완료**: `2_data_representation_arithmetic/` **#121 (Arithmetic Shift)**
+- **다음**: `2_data_representation_arithmetic/` **#122 (Rotate)**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,7 +40,7 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 277 | ~1,000 | 27.7% |
+| CA | 282 | ~1,000 | 28.2% |
 | OS | 107 | ~800 | 13.4% |
 | NW | 14 | ~1,200 | 1.1% |
 | SE | 14 | ~800 | 1.7% |
