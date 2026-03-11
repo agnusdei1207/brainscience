@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `2_data_representation_arithmetic/` **#84 (1's Complement)**
-- **다음**: `2_data_representation_arithmetic/` **#85 (2's Complement)**
+- **완료**: `2_data_representation_arithmetic/` **#86 (Integer Arithmetic)**
+- **다음**: `2_data_representation_arithmetic/` **#87 (Integer Multiplication)**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,9 +40,9 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 267 | ~1,000 | 26.7% |
-| OS | 92 | ~800 | 11.5% |
-| NW | 7 | ~1,200 | 0.6% |
-| SE | 7 | ~800 | 0.9% |
-| DB | 7 | ~800 | 0.9% |
-| **합계** | **380** | **~4,800** | **7.9%** |
+| CA | 268 | ~1,000 | 26.8% |
+| OS | 93 | ~800 | 11.6% |
+| NW | 8 | ~1,200 | 0.7% |
+| SE | 8 | ~800 | 1.0% |
+| DB | 8 | ~800 | 1.0% |
+| **합계** | **385** | **~4,800** | **8.0%** |
