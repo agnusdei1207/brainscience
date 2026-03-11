@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `7_virtual_memory_os_integration/` **#276 (메모리 보호 (Memory Protection))**
-- **다음**: `8_io_storage_systems/` **#277 (I/O 서브시스템 (I/O Subsystem))**
+- **완료**: `8_io_storage_systems/` **#282 (버스트 모드 (Burst Mode))**
+- **다음**: `8_io_storage_systems/` **#283 (스풀링 (Spooling))**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,9 +40,9 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 432 | ~1,000 | 43.2% |
+| CA | 438 | ~1,000 | 43.8% |
 | OS | 107 | ~800 | 13.4% |
 | NW | 14 | ~1,200 | 1.1% |
 | SE | 14 | ~800 | 1.7% |
 | DB | 14 | ~800 | 1.7% |
-| **합계** | **485** | **~4,800** | **10.1%** |
+| **합계** | **491** | **~4,800** | **10.2%** |
