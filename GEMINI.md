@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `9_system_bus_interconnects/` **#312 (인피니밴드 (InfiniBand))**
-- **다음**: `9_system_bus_interconnects/` **#313 (RDMA (Remote Direct Memory Access))**
+- **완료**: `10_parallel_processing_architecture/` **#324 (벡터 프로세서 (Vector Processor))**
+- **다음**: `10_parallel_processing_architecture/` **#325 (배열 프로세서 (Array Processor))**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,9 +40,9 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 468 | ~1,000 | 46.8% |
+| CA | 480 | ~1,000 | 48.0% |
 | OS | 107 | ~800 | 13.4% |
 | NW | 14 | ~1,200 | 1.1% |
 | SE | 14 | ~800 | 1.7% |
 | DB | 14 | ~800 | 1.7% |
-| **합계** | **509** | **~4,800** | **10.6%** |
+| **합계** | **515** | **~4,800** | **10.7%** |
