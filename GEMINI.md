@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `12_accelerators_ai_hardware/` **#378 (PIM (Processing-In-Memory))**
-- **다음**: `12_accelerators_ai_hardware/` **#379 (PNM (Processing-Near-Memory))**
+- **완료**: `12_accelerators_ai_hardware/` **#384 (DPU (Data Processing Unit / SmartNIC))**
+- **다음**: `12_accelerators_ai_hardware/` **#385 (IPU (Intelligence Processing Unit))**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,7 +40,7 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 534 | ~1,000 | 53.4% |
+| CA | 540 | ~1,000 | 54.0% |
 | OS | 107 | ~800 | 13.4% |
 | NW | 14 | ~1,200 | 1.1% |
 | SE | 14 | ~800 | 1.7% |
