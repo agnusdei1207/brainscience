@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: CA (컴퓨터구조) — `content/studynote/1_computer_architecture/`
-- **완료**: `5_control_unit_pipelining/` **#240 (재주문 버퍼 (ROB: Reorder Buffer))**
-- **다음**: `6_memory_hierarchy_cache/` **#241 (메모리 계층 구조 (Memory Hierarchy))**
+- **완료**: `6_memory_hierarchy_cache/` **#246 (L1, L2, L3 캐시)**
+- **다음**: `6_memory_hierarchy_cache/` **#247 (명령어 캐시 / 데이터 캐시)**
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
@@ -40,7 +40,7 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 396 | ~1,000 | 39.6% |
+| CA | 402 | ~1,000 | 40.2% |
 | OS | 107 | ~800 | 13.4% |
 | NW | 14 | ~1,200 | 1.1% |
 | SE | 14 | ~800 | 1.7% |
