@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: OS (운영체제) — `content/studynote/2_operating_system/`
-- **완료**: `8_io_storage_system/` **#441-450 (I/O 기본 및 DMA)**
-- **다음**: `4_synchronization/` **#221 (경쟁 조건, Race Condition)**
+- **완료**: `8_io_storage_system/` **#450 (직접 메모리 접근 (DMA, Direct Memory Access))**
+- **다음**: `8_io_storage_system/` **#451 (사이클 스틸링 (Cycle Stealing))**
 - **참조**: `content/studynote/2_operating_system/_keyword_list.md`
 
 ---
@@ -40,9 +40,9 @@
 
 | 과목 | 완료 | 전체 | 비율 |
 |:---:|:---:|:---:|:---:|
-| CA | 563 | ~851 | 66.2% |
-| OS | 187 | ~841 | 22.2% |
+| CA | 568 | ~851 | 66.7% |
+| OS | 210 | ~841 | 25.0% |
 | NW | 14 | ~1,200 | 1.1% |
 | SE | 14 | ~800 | 1.7% |
 | DB | 14 | ~800 | 1.7% |
-| **합계** | **792** | **~4,800** | **16.5%** |
+| **합계** | **820** | **~4,800** | **17.1%** |
