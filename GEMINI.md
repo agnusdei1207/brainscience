@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: OS (운영체제) — `content/studynote/2_operating_system/`
-- **완료**: `9_file_system/` **#570 (Ceph - 분산 객체 스토리지 및 파일 시스템)**
-- **다음**: `9_file_system/` **#571 (파일 시스템 암호화 및 보안)**
+- **완료**: `9_file_system/` **#580 (파일 시스템 모니터링 및 eBPF 기반 관측성 (Observability))**
+- **다음**: `10_security_performance_virtualization/` **#581 (운영체제 보안 (OS Security) 목표 - CIA)**
 - **참조**: `content/studynote/2_operating_system/_keyword_list.md`
 
 ---
