@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: OS (운영체제) — `content/studynote/2_operating_system/`
-- **완료**: `7_virtual_memory/` **#390 (스왑 공간 (Swap Space) / 베이킹 스토어 (Backing Store))**
-- **다음**: `7_virtual_memory/` **#391 (익명 메모리 (Anonymous Memory))**
+- **완료**: `7_virtual_memory/` **#400 (지역 교체 (Local Replacement))**
+- **다음**: `7_virtual_memory/` **#401 (페이지 교체 알고리즘 (Page Replacement Algorithms))**
 - **참조**: `content/studynote/2_operating_system/_keyword_list.md`
 
 ---
