@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: OS (운영체제) — `content/studynote/2_operating_system/`
-- **완료**: `9_file_system/` **#530 (연결 할당의 문제점 - 직접 접근 불가, 신뢰성)**
-- **다음**: `9_file_system/` **#531 (파일 할당 테이블 (FAT, File Allocation Table))**
+- **완료**: `9_file_system/` **#540 (그룹화 (Grouping) 및 계수 (Counting) 방식)**
+- **다음**: `9_file_system/` **#541 (디렉터리 구현 - 효율적인 탐색 기법)**
 - **참조**: `content/studynote/2_operating_system/_keyword_list.md`
 
 ---
