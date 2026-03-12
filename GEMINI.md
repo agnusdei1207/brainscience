@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: OS (운영체제) — `content/studynote/2_operating_system/`
-- **완료**: `5_deadlock/` **#310 (자원 선점 (Resource Preemption) 방식)**
-- **다음**: `5_deadlock/` **#311 (희생자 선택 (Victim Selection) 최소 비용 기준)**
+- **완료**: `5_deadlock/` **#320 (실전 교착 상태 트러블슈팅 가이드)**
+- **다음**: `6_memory_management/` **#321 (메모리 계층 구조 (Memory Hierarchy)와 레지스터-캐시-메인메모리 접근)**
 - **참조**: `content/studynote/2_operating_system/_keyword_list.md`
 
 ---
