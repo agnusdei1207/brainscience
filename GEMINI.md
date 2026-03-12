@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: OS (운영체제) — `content/studynote/2_operating_system/`
-- **완료**: `11_exam_summary/` **#650 (실전 답안 작성을 위한 OS 기술 프레임워크 요약)**
-- **다음**: `11_exam_summary/` **#651 (OS 핵심 메커니즘 통합 다이어그램)**
+- **완료**: `11_exam_summary/` **#660 (운영체제 보안 및 안정성 확보를 위한 체크리스트)**
+- **다음**: `11_exam_summary/` **#661 (최신 운영체제 트렌드 요약 - 클라우드, AI, 보안)**
 - **참조**: `content/studynote/2_operating_system/_keyword_list.md`
 
 ---
