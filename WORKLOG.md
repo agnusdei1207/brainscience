@@ -32,4 +32,5 @@
 - [x] Populate OS Section 5 (Deadlock) #281-290.
 - [x] Populate OS Section 5 (Deadlock) #291-300.
 - [x] Populate OS Section 8 (I/O) #441-450.
+- [x] Populate OS Section 8 (I/O) #481-490.
 - [ ] Populate OS Section 4 (Synchronization) #221-230.
