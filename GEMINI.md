@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: OS (운영체제) — `content/studynote/2_operating_system/`
-- **완료**: `8_io_storage_system/` **#500 (이중 경로 (Multipath) I/O 페일오버 및 로드밸런싱)**
-- **다음**: `9_file_system/` **#501 (파일 (File) 개념 - 이름, 식별자, 타입, 위치, 크기, 보호)**
+- **완료**: `9_file_system/` **#510 (디렉터리 (Directory) 논리적 구조)**
+- **다음**: `9_file_system/` **#511 (1단계 디렉터리 (Single-level Directory))**
 - **참조**: `content/studynote/2_operating_system/_keyword_list.md`
 
 ---
