@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: OS (운영체제) — `content/studynote/2_operating_system/`
-- **완료**: `8_io_storage_system/` **#490 (소프트웨어 RAID vs 하드웨어 RAID)**
-- **다음**: `8_io_storage_system/` **#491 (핫 스페어 (Hot Spare) 디스크 자동 재구성)**
+- **완료**: `8_io_storage_system/` **#500 (이중 경로 (Multipath) I/O 페일오버 및 로드밸런싱)**
+- **다음**: `9_file_system/` **#501 (파일 (File) 개념 - 이름, 식별자, 타입, 위치, 크기, 보호)**
 - **참조**: `content/studynote/2_operating_system/_keyword_list.md`
 
 ---
