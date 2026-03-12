@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: OS (운영체제) — `content/studynote/2_operating_system/`
-- **완료**: `3_cpu_scheduling/` **#193 (대칭 다중 처리 (SMP, Symmetric Multiprocessing))**
-- **다음**: `3_cpu_scheduling/` **#196 (프로세서 친화성 (Processor Affinity) - Soft vs Hard Affinity)**
+- **완료**: `5_deadlock/` **#290 (교착 상태 처리 방법 3가지)**
+- **다음**: `5_deadlock/` **#291 (안전 상태 (Safe State)와 불안전 상태)**
 - **참조**: `content/studynote/2_operating_system/_keyword_list.md`
 
 ---
