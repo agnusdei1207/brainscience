@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: OS (운영체제) — `content/studynote/2_operating_system/`
-- **완료**: `3_cpu_scheduling/` **#190 (Earliest Deadline First 스케줄링 (EDF) - 동적 우선순위)**
-- **다음**: `3_cpu_scheduling/` **#191 (다중 처리기 스케줄링 (Multiple-Processor Scheduling))**
+- **완료**: `3_cpu_scheduling/` **#193 (대칭 다중 처리 (SMP, Symmetric Multiprocessing))**
+- **다음**: `3_cpu_scheduling/` **#196 (프로세서 친화성 (Processor Affinity) - Soft vs Hard Affinity)**
 - **참조**: `content/studynote/2_operating_system/_keyword_list.md`
 
 ---
