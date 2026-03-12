@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: OS (운영체제) — `content/studynote/2_operating_system/`
-- **완료**: `7_virtual_memory/` **#440 (eBPF 기반 메모리 할당 트레이싱)**
-- **다음**: `8_io_storage_system/` **#441 (I/O 장치의 분류 - 블록 장치 vs 문자 장치)**
+- **완료**: `8_io_storage_system/` **#441-450 (I/O 기본 및 DMA)**
+- **다음**: `4_synchronization/` **#221 (경쟁 조건, Race Condition)**
 - **참조**: `content/studynote/2_operating_system/_keyword_list.md`
 
 ---
