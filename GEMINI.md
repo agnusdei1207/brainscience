@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: OS (운영체제) — `content/studynote/2_operating_system/`
-- **완료**: `10_security_performance_virtualization/` **#590 (이중 인증 (2FA) 및 다중 인증 (MFA))**
-- **다음**: `10_security_performance_virtualization/` **#591 (커널 보안 패치 및 취약점 관리)**
+- **완료**: `10_security_performance_virtualization/` **#600 (능력 기반 보안 (Capability-based Security))**
+- **다음**: `10_security_performance_virtualization/` **#601 (성능 측정 지표 - CPU 이용률, 처리량, 지연 시간)**
 - **참조**: `content/studynote/2_operating_system/_keyword_list.md`
 
 ---
