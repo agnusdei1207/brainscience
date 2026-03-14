@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: NW (네트워크) — `content/studynote/3_network/`
-- **완료**: NW **#75 (체크섬 Checksum)**
-- **다음**: NW **#76 (다중화 Multiplexing - FDM, TDM, WDM, CDM)**
+- **완료**: NW **#75 (시분할 다중화 TDM)**
+- **다음**: NW **#76 (동기식 시분할 다중화 Synchronous TDM)**
 - **참조**: `content/studynote/3_network/_keyword_list.md`
 
 ---
