@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: SE (소프트웨어 공학) — `content/studynote/4_software_engineering/`
-- **완료**: SE **#675 (프로젝트 관리 WBS, CPM, PERT)**
-- **다음**: SE **#676 (EVM (Earned Value Management) SPI, CPI 계산)**
+- **완료**: SE **#676 (EVM (Earned Value Management) SPI, CPI 계산)**
+- **다음**: SE **#677 (CMMI 성숙도 5단계 (초기-관리-정의-정량-최적))**
 - **참조**: `content/studynote/4_software_engineering/_keyword_list.md`
 
 ---
@@ -43,6 +43,6 @@
 | CA | 802 | ~802 | 100% ✅ |
 | OS | 800 | ~800 | 100% ✅ |
 | NW | 1,120 | ~1,120 | 100% ✅ |
-| SE | 675 | ~800 | 84.4% |
+| SE | 676 | ~800 | 84.5% |
 | DB | 14 | ~800 | 1.7% |
-| **합계** | **3,411** | **~4,402** | **77.5%** |
+| **합계** | **3,412** | **~4,402** | **77.5%** |
