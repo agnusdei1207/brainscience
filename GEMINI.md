@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: DB (데이터베이스) — `content/studynote/5_database/`
-- **완료**: DB **#202 (분산 데이터 처리와 합의 알고리즘 - MapReduce, Raft, Paxos)**
-- **다음**: DB **#203 (NewSQL과 분산 데이터베이스의 진화 - Google Spanner, TiDB)**
+- **완료**: DB **#203 (NewSQL과 분산 데이터베이스의 진화 - Google Spanner, TiDB, HTAP)**
+- **다음**: DB **#204 (특수 목적 데이터베이스 - Time Series DB, Graph DB, Vector DB)**
 - **참조**: `content/studynote/5_database/_keyword_list.md`
 
 ---
