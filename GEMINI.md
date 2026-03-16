@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: DB (데이터베이스) — `content/studynote/5_database/`
-- **완료**: DB **#203 (NewSQL과 분산 데이터베이스의 진화 - Google Spanner, TiDB, HTAP)**
-- **다음**: DB **#204 (특수 목적 데이터베이스 - Time Series DB, Graph DB, Vector DB)**
+- **완료**: DB **#206 (문서 저장소와 와이드 컬럼 스토어 - MongoDB, Cassandra, LSM-Tree)**
+- **다음**: DB **#207 (Elasticsearch와 역색인 구조 - 전문 검색 엔진 아키텍처)**
 - **참조**: `content/studynote/5_database/_keyword_list.md`
 
 ---
@@ -44,8 +44,8 @@
 | OS | 800 | ~800 | 100% ✅ |
 | NW | 1,248 | ~1,248 | 100% ✅ |
 | SE | 384 | ~800 | 48.0% |
-| DB | 203 | ~800 | 25.4% |
-| **합계** | **3,455** | **~4,468** | **77.3%** |
+| DB | 206 | ~800 | 25.8% |
+| **합계** | **3,458** | **~4,468** | **77.4%** |
 
 
 
