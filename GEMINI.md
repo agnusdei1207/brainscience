@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: 엔터프라이즈 시스템 (Enterprise Systems) — `content/studynote/7_enterprise_systems/`
-- **완료**: Enterprise **#1~#118** 작성 완료
-- **다음**: Enterprise **#119** (MES)
+- **완료**: Enterprise **#1~#121** 작성 완료
+- **다음**: Enterprise **#122** (PLM)
 - **참조**: `content/studynote/7_enterprise_systems/_keyword_list.md`
 
 ---
@@ -46,8 +46,8 @@
 | SE | 800 | ~800 | 100% ✅ |
 | DB | 600 | ~600 | 100% ✅ |
 | ICT | 300 | ~800 | 37.5% |
-| Enterprise | 118 | 482 | 24.5% |
-| **합계** | **4,686** | **~5,550** | **84.4%** |
+| Enterprise | 121 | 482 | 25.1% |
+| **합계** | **4,689** | **~5,550** | **84.5%** |
 
 
 
