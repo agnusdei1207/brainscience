@@ -1,10 +1,10 @@
----
++++
 title = "286. 멀티모달 (Multimodal) AI"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "Multimodal_GPT-4o_Gemini_CrossModal_LatentSpace_Alignment"
----
++++
 
 # 멀티모달 AI (Multimodal AI): 텍스트를 넘어 보고, 듣고, 느끼는 인공지능의 오감 통합
 

@@ -1,10 +1,10 @@
----
++++
 title = "296. 캐시 스탬피드 (Cache Stampede) - 분산 시스템의 압사 사고"
 date = "2026-03-16"
 [extra]
 categories = "studynote-database"
 id = 296
----
++++
 
 # 296. 캐시 스탬피드 (Cache Stampede) - 분산 시스템의 압사 사고
 

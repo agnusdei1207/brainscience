@@ -1,10 +1,10 @@
----
++++
 title = "299. 피처 스토어 (Feature Store)"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "FeatureStore_DataPipeline_FeatureReuse_OnlineStore_OfflineStore_MLOps"
----
++++
 
 # 피처 스토어 (Feature Store): AI 모델의 원재료를 표준화하고 재사용하는 데이터 지능 공장
 

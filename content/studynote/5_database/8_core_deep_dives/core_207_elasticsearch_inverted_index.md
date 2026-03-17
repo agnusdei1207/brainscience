@@ -153,10 +153,10 @@ categories = "studynote-database"
 +++
 
 ## 📌 관련 개념 맵 (Knowledge Graph)
-- **[NoSQL 아키텍처 - 분산 데이터 모델](./201_nosql_architecture_sharding.md)**: ES 역시 분산 스토리지로서 Document 기반 NoSQL 아키텍처의 사상을 공유함.
-- **[문서 저장소와 와이드 컬럼 스토어](./206_document_and_wide_column_stores.md)**: MongoDB와 ES 모두 JSON 포맷을 사용하지만, 쿼리와 인덱스 설계 철학이 정반대.
-- **[B-Tree 인덱스](../3_sql_optimizer/156_btree_indexes.md)**: 역색인(Inverted Index)과 대비되는 관계형 데이터베이스의 근본 인덱스 구조.
-- **[로그 기반 회복 기법](../4_transaction_concurrency_recovery/197_database_recovery_techniques.md)**: ES의 데이터 유실을 막기 위해 사용하는 Translog(WAL) 메커니즘.
+- **NoSQL 아키텍처 - 분산 데이터 모델**: ES 역시 분산 스토리지로서 Document 기반 NoSQL 아키텍처의 사상을 공유함.
+- **문서 저장소와 와이드 컬럼 스토어**: MongoDB와 ES 모두 JSON 포맷을 사용하지만, 쿼리와 인덱스 설계 철학이 정반대.
+- **B-Tree 인덱스**: 역색인(Inverted Index)과 대비되는 관계형 데이터베이스의 근본 인덱스 구조.
+- **로그 기반 회복 기법**: ES의 데이터 유실을 막기 위해 사용하는 Translog(WAL) 메커니즘.
 
 +++
 

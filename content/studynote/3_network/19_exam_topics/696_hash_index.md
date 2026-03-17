@@ -98,6 +98,6 @@ Hash Index는 해시 함수로 키를 매핑합니다.
 ---
 
 ### 📌 관련 개념 링크**:
-- [Indexing](./693_indexing.md)
-- [Hash Table](./695_hashtable.md)
-- [B-Tree](./694_btree.md)
+- Indexing
+- Hash Table
+- B-Tree

@@ -1,4 +1,3 @@
----
 +++
 title = "271. 마스터-슬레이브 (Master-Slave) 복제 - 읽기 분산의 정석"
 date = "2026-03-16"
@@ -14,7 +13,7 @@ id = 271
 > 2. **가치**: **RDBMS (Relational Database Management System)**의 무결성(Acid)을 유지하면서도, **Read Intensive**한 웹 서비스 환경에서 **Horizontal Scaling (수평 확장)**을 통해 조회 처리량(Read TPS)을 선형적으로 늘릴 수 있는 가장 확실한 동시성 제어 기법입니다.
 > 3. **융합**: **HA (High Availability)** 클러스터링의 핵심 기반이며, 장애 조치(Failover) 시 **Raft** 또는 **Paxos** 알고리즘과 연계하여 새로운 Master 선출(Promotion)을 자동화하는 분산 시스템의 기초가 됩니다.
 
----
++++
 
 ### Ⅰ. 개요 (Context & Background)
 

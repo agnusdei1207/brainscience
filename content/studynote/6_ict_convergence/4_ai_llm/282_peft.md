@@ -1,10 +1,10 @@
----
++++
 title = "282. PEFT (파라미터 효율적 미세 조정)"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "PEFT_ParameterEfficientFineTuning_LoRA_Adapter_PrefixTuning_PromptTuning"
----
++++
 
 # PEFT (Parameter-Efficient Fine-Tuning): 거대 모델의 뇌는 동결하고 '보조 뇌'만 가르치는 효율 극대화 기술
 

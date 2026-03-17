@@ -1,10 +1,10 @@
----
++++
 title = "293. AI 에이전트 (AI Agents) 및 에이전틱 AI"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "AIAgents_AgenticAI_Planning_ToolUse_Memory_ReAct_Autonomy"
----
++++
 
 # AI 에이전트 (AI Agents): 챗봇의 한계를 넘어 스스로 계획하고 도구를 사용하는 자율적 AI
 

@@ -1,4 +1,3 @@
----
 +++
 title = "263. 위치 투명성 (Location Transparency) - 논리적 명칭의 힘"
 date = "2026-03-16"
@@ -14,7 +13,7 @@ id = 263
 > 2. **가치**: 물리적인 데이터 이전(Data Migration)이나 재구성(Reorganization) 발생 시 애플리케이션 코드의 수정을 배제하여 **유지보수성(Maintainability)**을 획기적으로 높이고, 비즈니스 연속성을 보장한다.
 > 3. **융합**: DDBMS의 **네임 서버(Name Server)** 및 **전역 데이터 사전(Global Data Dictionary)** 기술과 결합하여, 네트워크 라우팅과 복제 관리(Replication Management)를 추상화하는 고가용성 아키텍처의 기반이 된다.
 
----
++++
 
 ### Ⅰ. 개요 (Context & Background)
 

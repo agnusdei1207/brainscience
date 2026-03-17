@@ -1,10 +1,10 @@
----
++++
 title = "297. LLMOps (Large Language Model Operations)"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "LLMOps_RAG_PromptOps_VectorDB_ModelEvaluation_RLHF"
----
++++
 
 # LLMOps: 초거대 모델의 환각을 통제하고 비즈니스 가치를 창출하는 LLM 전용 운영 체계
 

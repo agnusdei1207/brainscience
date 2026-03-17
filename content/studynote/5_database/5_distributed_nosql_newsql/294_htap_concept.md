@@ -1,10 +1,10 @@
----
++++
 title = "294. HTAP - 트랜잭션과 분석의 경계를 허물다"
 date = "2026-03-16"
 [extra]
 categories = "studynote-database"
 id = 294
----
++++
 
 # 294. HTAP (Hybrid Transactional/Analytical Processing) - 트랜잭션과 분석의 경계를 허물다
 

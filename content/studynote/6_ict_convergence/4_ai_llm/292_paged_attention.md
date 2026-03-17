@@ -1,10 +1,10 @@
----
++++
 title = "292. 페이즈드 어텐션 (PagedAttention / vLLM)"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "PagedAttention_vLLM_KVCache_MemoryFragmentation_VirtualMemory_OS_Convergence"
----
++++
 
 # 페이즈드 어텐션 (PagedAttention): 운영체제의 지혜로 LLM의 메모리 낭비를 해결한 혁신적 서빙 아키텍처
 

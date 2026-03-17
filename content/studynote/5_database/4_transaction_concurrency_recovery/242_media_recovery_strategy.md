@@ -1,4 +1,3 @@
----
 +++
 title = "242. 미디어 회복 (Media Recovery) - 최악의 상황을 위한 대비"
 date = "2026-03-16"
@@ -14,7 +13,7 @@ id = 242
 > 2. **가치**: 데이터베이스의 **ACID 특성 중 내구성(Durability)**을 최후의 수단에서 보장하며, **RPO (Recovery Point Objective, 복구 목표 시점)**를 '0(최소 손실)'에 근접하게 유지하여 비즈니스 연속성을 확보한다.
 > 3. **융합**: OS의 파일 시스템 체크sum, 스토리지 계층의 **RAID (Redundant Array of Independent Disks)** 기술, 그리고 클라우드 환경의 스냅샷 기술과 상호 보완적으로 작동하는 데이터 보호의 최종 방어선이다.
 
----
++++
 
 ### Ⅰ. 개요 (Context & Background)
 

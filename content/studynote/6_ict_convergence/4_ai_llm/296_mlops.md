@@ -1,10 +1,10 @@
----
++++
 title = "296. MLOps (Machine Learning Operations)"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "MLOps_CICD_CT_ContinuousTraining_ModelMonitoring_DataPipeline"
----
++++
 
 # MLOps: 실험실의 모델을 비즈니스의 전장으로 이끄는 AI 지속 운영 체계
 

@@ -1,11 +1,10 @@
-
----
++++
 title = "256. 결과적 일관성 (Eventual Consistency) - 기다림의 미학"
 date = "2026-03-16"
 [extra]
 categories = "studynote-database"
 id = 256
----
++++
 
 # 256. 결과적 일관성 (Eventual Consistency) - 기다림의 미학
 

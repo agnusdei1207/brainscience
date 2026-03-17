@@ -1,10 +1,10 @@
----
++++
 title = "283. 로라 (LoRA, Low-Rank Adaptation)"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "LoRA_LowRankAdaptation_PEFT_MatrixDecomposition_Backpropagation_VRAM"
----
++++
 
 # 로라 (LoRA): 거대 행렬을 쪼개어 학습의 족쇄를 푼 AI 튜닝의 혁명
 

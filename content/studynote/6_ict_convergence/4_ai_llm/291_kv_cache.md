@@ -1,10 +1,10 @@
----
++++
 title = "291. KV 캐시 (Key-Value Cache)"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "KVCache_KeyVector_ValueVector_AttentionOptimization_InferenceAcceleration_LLM"
----
++++
 
 # KV 캐시 (Key-Value Cache): 지치지 않는 암기력으로 문장 생성의 병목을 뚫는 메모리 가속기
 

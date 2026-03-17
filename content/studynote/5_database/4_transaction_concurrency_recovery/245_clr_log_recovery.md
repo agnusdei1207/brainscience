@@ -1,4 +1,3 @@
----
 +++
 title = "245. Compensation Log Record (CLR) - 복구의 반복 방지권"
 date = "2026-03-16"
@@ -14,7 +13,7 @@ id = 245
 > 2. **가치**: 복구(Recovery) 도중 2차 장애(Crash)가 발생하더라도, 이미 완료된 Undo 작업을 재실행하지 않음으로써 **복구의 Idempotency (멱등성)**을 보장하고, 데이터베이스의 Consistency (일관성)가 깨지는 것을 방지합니다.
 > 3. **융합**: OS의 체크포인팅(Checkpointing) 기법과 결합하여 복구 속도를 최적화하며, 분산 데이터베이스 환경에서의 2단계 커밋(2PC, Two-Phase Commit) 프로토콜 안정성에 기여합니다.
 
----
++++
 
 ### Ⅰ. 개요 (Context & Background) - [500자+]
 

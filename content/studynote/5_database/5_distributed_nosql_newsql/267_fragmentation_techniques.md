@@ -1,10 +1,10 @@
----
++++
 title = "267. 데이터 분할 기법 (Fragmentation) - 물리적 최적화의 기술"
 date = "2026-03-16"
 [extra]
 categories = "studynote-database"
 id = 267
----
++++
 
 # 267. 데이터 분할 기법 (Fragmentation) - 물리적 최적화의 기술
 

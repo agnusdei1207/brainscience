@@ -1,10 +1,10 @@
----
++++
 title = "240. 그림자 페이징 (Shadow Paging) 기법 - 로그 없는 복구의 예술"
 date = "2026-03-16"
 [extra]
 categories = "studynote-database"
 id = 240
----
++++
 
 # 240. 그림자 페이징 (Shadow Paging) 기법 - 로그 없는 복구의 예술
 

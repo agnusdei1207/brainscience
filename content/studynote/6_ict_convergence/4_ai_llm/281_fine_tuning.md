@@ -1,10 +1,10 @@
----
++++
 title = "281. 파인튜닝 (Fine-Tuning) 및 전이 학습"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "FineTuning_TransferLearning_PreTraining_DomainAdaptation_SFT"
----
++++
 
 # 파인튜닝 (Fine-Tuning): 범용 천재를 특정 분야 전문가로 길들이는 지식 전이 기술
 

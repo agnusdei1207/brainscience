@@ -1,10 +1,10 @@
----
++++
 title = "290. 오토레그레시브 (Autoregressive) 생성"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "Autoregressive_NextTokenPrediction_TransformerDecoder_CausalMasking_LLM"
----
++++
 
 # 오토레그레시브 (Autoregressive) 생성: 꼬리에 꼬리를 무는 단어 예측으로 완성되는 인공지능의 문장력
 

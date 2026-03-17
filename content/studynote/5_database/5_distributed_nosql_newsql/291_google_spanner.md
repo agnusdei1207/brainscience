@@ -1,10 +1,10 @@
----
++++
 title = "291. 구글 스패너 (Google Cloud Spanner) - 글로벌 일관성의 정점"
 date = "2026-03-16"
 [extra]
 categories = "studynote-database"
 id = 291
----
++++
 
 # 291. 구글 스패너 (Google Cloud Spanner) - 글로벌 일관성의 정점
 

@@ -1,10 +1,10 @@
----
++++
 title = "251. 3단계 커밋 (3PC, Three-Phase Commit) - 블로킹의 해법"
 date = "2026-03-16"
 [extra]
 categories = "studynote-database"
 id = 251
----
++++
 
 # 251. 3단계 커밋 (3PC, Three-Phase Commit) - 블로킹의 해법
 

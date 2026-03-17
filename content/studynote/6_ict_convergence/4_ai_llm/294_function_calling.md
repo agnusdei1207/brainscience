@@ -1,10 +1,10 @@
----
++++
 title = "294. 함수 호출 (Function Calling / Tool Use)"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "FunctionCalling_ToolUse_API_JSON_StructuredOutput_AgenticAI"
----
++++
 
 # 함수 호출 (Function Calling): 인공지능이 '말' 대신 '코드'로 도구를 조작하는 인터페이스 기술
 

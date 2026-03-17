@@ -1,4 +1,3 @@
----
 +++
 title = "257. BASE 속성 - NoSQL의 철학적 뿌리"
 date = "2026-03-16"
@@ -14,7 +13,7 @@ id = 257
 > 2. **가치**: 대규모 트래픽 처리 및 클라우드 환경에서의 무중단 서비스를 가능하게 하며, 하드웨어 확장성(Linear Scalability)을 보장하여 TPS(Transactions Per Second)를 기하급수적으로 향상시키는 토대가 된다.
 > 3. **융합**: CAP 정리(CAP Theorem)에서 CP(Consistency, Partition Tolerance) 혹은 AP(Availability, Partition Tolerance) 지향의 선택지 중, 주로 AP 지향 시스템의 구현 원리로 쓰이며, 최종적 일관성 모델을 통해 RDBMS의 ACID 특성과 상호 보완적인 관계를 형성한다.
 
----
++++
 
 ### Ⅰ. 개요 (Context & Background) - [500자+]
 

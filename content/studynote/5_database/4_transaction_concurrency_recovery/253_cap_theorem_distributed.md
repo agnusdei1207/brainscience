@@ -1,4 +1,3 @@
----
 +++
 title = "253. CAP 정리 (CAP Theorem) - 분산 시스템의 삼자 대립"
 date = "2026-03-16"
@@ -15,7 +14,7 @@ id = 253
 > 2. **가치**: **RDBMS (Relational Database Management System)**의 한계를 극복한 **NoSQL (Not Only SQL)**의 등장을 이론적으로 뒷받침하며, 비즈니스의 특성(금융 vs SNS)에 따라 **CP** 계열(데이터 정합성 중시) 또는 **AP** 계열(서비스 연속성 중시) 시스템을 선택하는 핵심 설계 지침을 제공합니다.
 > 3. **융합**: 클라우드 네이티브 아키텍처에서 **고가용성 (High Availability, HA)** 요구사항과 데이터 무결성 제약 사이의 타협점(Trade-off)을 설계하는 데 필수적인 원리이며, **PACELC** 이론 등과 연계됩니다.
 
----
++++
 
 ### Ⅰ. 개요 (Context & Background)
 

@@ -1,10 +1,10 @@
----
++++
 title = "298. 모델 드리프트 (Model Drift / Data Drift)"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "ModelDrift_DataDrift_ConceptDrift_ModelDecay_Retraining_Monitoring"
----
++++
 
 # 모델 드리프트 (Model Drift): 살아있는 생물처럼 늙고 변하는 인공지능의 성능 노후화 현상
 

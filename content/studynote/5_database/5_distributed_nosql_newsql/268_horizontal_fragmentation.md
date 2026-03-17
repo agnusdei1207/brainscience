@@ -1,4 +1,3 @@
----
 +++
 title = "268. 수평 분할 (Horizontal Fragmentation) - 행 단위의 분산"
 date = "2026-03-16"
@@ -14,7 +13,7 @@ id = 268
 > 2. **가치**: **관계 대수(Relational Algebra)**의 선택(Selection, $\sigma$) 연산을 물리적 저장 단계에서 수행하여, 불필요한 데이터 액세스를 최소화하고 질의 처리 성능(Query Processing Performance)을 획기적으로 향상시킨다.
 > 3. **융합**: 분산 데이터베이스(Distributed DB)의 기본이자 현대 클라우드 환경의 **샤딩(Sharding)** 및 **파티셔닝(Partitioning)** 기술의 이론적 근간이 되며, 대용량 처리를 위한 필수 아키텍처이다.
 
----
++++
 
 ### Ⅰ. 개요 (Context & Background)
 

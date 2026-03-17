@@ -1,10 +1,10 @@
----
++++
 title = "289. 디퓨전(Diffusion) vs GAN 기술 비교"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "Diffusion_vs_GAN_GenerativeAI_ModelComparison_ModeCollapse_TrainingStability"
----
++++
 
 # 디퓨전(Diffusion) vs GAN: 생성형 AI의 왕좌를 둔 '안정성'과 '속도'의 격돌
 

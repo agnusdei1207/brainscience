@@ -1,4 +1,3 @@
----
 +++
 title = "260. 스플릿 브레인 (Split Brain) 현상 - 분산 시스템의 뇌 분리"
 date = "2026-03-16"
@@ -14,7 +13,7 @@ id = 260
 > 2. **가치**: 이 현상은 데이터 양방향 충돌(Write Conflict)을 유발하여 **복구 불가능한 데이터 훼손(Data Corruption)**을 초래하므로, 쿼럼(Quorum) 기반의 투표 메커니즘과 펜싱(Fencing) 기술을 통해 반드시 방지해야 한다.
 > 3. **융합**: 분산 시스템의 **CAP 정리**(Consistency, Availability, Partition Tolerance)에서 P(분단 내성)가 발생할 때 C(일관성)와 A(가용성) 중 무엇을 선택할 것인가를 결정하는 핵심적인 아키텍처 문제이다.
 
----
++++
 
 ### Ⅰ. 개요 (Context & Background)
 

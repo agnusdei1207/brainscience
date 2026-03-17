@@ -1,10 +1,10 @@
----
++++
 title = "284. 양자화 (Quantization) 및 QLoRA"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "Quantization_QLoRA_NF4_INT8_OnDeviceAI_ModelCompression"
----
++++
 
 # 양자화 (Quantization): 32비트의 무거운 숫자를 4비트의 가벼운 정수로 압축하는 마법
 

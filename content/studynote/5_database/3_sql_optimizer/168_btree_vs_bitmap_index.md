@@ -148,10 +148,10 @@ keywords = ["B-Tree Index", "비트맵 인덱스", "Bitmap Index", "카디널리
 +++
 
 ### 📌 관련 개념 맵 (Knowledge Graph)
-- **[B-Tree 인덱스](./51_index_structure_btree.md)**: 인덱스의 표준 물리 구조.
-- **[카디널리티 (Cardinality)](./167_index_selection_criteria.md)**: 인덱스 선택의 결정적 지표.
-- **[Lock 메커니즘](./194_concurrency_control_locking.md)**: 비트맵 사용 시 가장 주의할 점.
-- **[데이터 웨어하우스 (DW)](@/studynote/5_database/_index.md)**: 비트맵 인덱스의 주 서식지.
+- **B-Tree 인덱스**: 인덱스의 표준 물리 구조.
+- **카디널리티 (Cardinality)**: 인덱스 선택의 결정적 지표.
+- **Lock 메커니즘**: 비트맵 사용 시 가장 주의할 점.
+- **데이터 웨어하우스 (DW)**: 비트맵 인덱스의 주 서식지.
 
 +++
 

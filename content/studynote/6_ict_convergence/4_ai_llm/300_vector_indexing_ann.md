@@ -1,10 +1,10 @@
----
++++
 title = "300. 벡터 인덱싱 (ANN: Approximate Nearest Neighbor)"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "ANN_ApproximateNearestNeighbor_VectorIndexing_HNSW_IVF_ProductQuantization"
----
++++
 
 # 벡터 인덱싱 (ANN): 정확도와 속도의 등가 교환으로 거대 지식을 초고속 탐색하는 기술
 

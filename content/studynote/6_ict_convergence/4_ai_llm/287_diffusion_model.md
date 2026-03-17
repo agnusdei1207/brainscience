@@ -1,10 +1,10 @@
----
++++
 title = "287. 디퓨전 모델 (Diffusion Model)"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "DiffusionModel_Denoising_GaussianNoise_GenerativeAI_ForwardProcess_ReverseProcess"
----
++++
 
 # 디퓨전 모델 (Diffusion Model): 노이즈의 혼돈 속에서 질서를 찾아내는 이미지 생성의 예술
 

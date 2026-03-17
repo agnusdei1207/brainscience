@@ -1,10 +1,10 @@
----
++++
 title = "244. LSN (Log Sequence Number) - 데이터의 시간표"
 date = "2026-03-16"
 [extra]
 categories = "studynote-database"
 id = 244
----
++++
 
 # 244. LSN (Log Sequence Number) - 데이터의 시간표
 

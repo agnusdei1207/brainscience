@@ -1,10 +1,10 @@
----
++++
 title = "285. 지식 증류 (Knowledge Distillation)"
 date = "2026-03-17"
 [extra]
 subject = "ICT Convergence"
 keyword = "KnowledgeDistillation_TeacherStudentModel_DarkKnowledge_ModelCompression_Logits"
----
++++
 
 # 지식 증류 (Knowledge Distillation): 거인의 지혜를 작은 아이에게 전수하는 모델 경량화의 정수
 
