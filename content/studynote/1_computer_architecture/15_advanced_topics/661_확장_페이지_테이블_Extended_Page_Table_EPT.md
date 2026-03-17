@@ -3,84 +3,177 @@ title = "확장 페이지 테이블 (Extended Page Table, EPT)"
 weight = 661
 +++
 
-> 💡 **핵심 인사이트 (3-Line Insight)**
-> - 확장 페이지 테이블 (Extended Page Table, EPT)은 하드웨어 지원 가상화에서 메모리 주소 변환의 오버헤드를 획기적으로 줄이는 핵심 기술입니다.
-> - 소프트웨어적인 그림자 페이지 테이블 (Shadow Page Table, SPT)의 한계를 극복하고, 게스트 물리 주소 (Guest Physical Address, GPA)를 호스트 물리 주소 (Host Physical Address, HPA)로 직접 변환합니다.
-> - 이중 페이징 (Two-Dimensional Paging) 구조를 통해 가상 머신 (Virtual Machine, VM)의 성능을 네이티브 환경에 가깝게 끌어올립니다.
+# 확장 페이지 테이블 (Extended Page Table, EPT)
 
-## Ⅰ. 확장 페이지 테이블 (Extended Page Table, EPT)의 개요
-확장 페이지 테이블 (Extended Page Table, EPT)은 인텔 (Intel)의 하드웨어 가상화 기술인 가상화 기술 (Virtualization Technology, VT-x)의 핵심 기능 중 하나로, 가상 머신 (Virtual Machine, VM) 내부의 메모리 접근을 효율적으로 처리하기 위한 하드웨어 기반의 메모리 주소 변환 메커니즘입니다. 가상화 환경에서는 주소 변환이 두 단계로 이루어져야 합니다. 첫째, 게스트 운영체제 (Guest OS)가 게스트 가상 주소 (Guest Virtual Address, GVA)를 게스트 물리 주소 (Guest Physical Address, GPA)로 변환합니다. 둘째, 하이퍼바이저 (Hypervisor) 또는 가상 머신 모니터 (Virtual Machine Monitor, VMM)가 이 GPA를 실제 시스템의 호스트 물리 주소 (Host Physical Address, HPA)로 변환합니다.
+## # 확장 페이지 테이블 (Extended Page Table, EPT)
+### 핵심 인사이트 (3-Line Summary)
+> 1. **본질**: 하드웨어 지원 가상화(Hardware-Assisted Virtualization) 환경에서 게스트 운영체제(Guest OS)가 관리하는 **게스트 물리 주소(Guest Physical Address, GPA)**를 호스트(Hypervisor)가 관리하는 실제 **호스트 물리 주소(Host Physical Address, HPA)**로 변환하는 하드웨어 기반의 2차원 주소 변환(2-Dimensional Paging) 메커니즘입니다.
+> 2. **가치**: 기존 소프트웨어 기반의 그림자 페이지 테이블(Shadow Page Table, SPT) 방식에서 발생하던 빈번한 **VM Exit(Virtual Machine Exit)** 오버헤드를 근본적으로 제거하여, 가상 머신(Virtual Machine, VM)의 메모리 액세스 성능을 네이티브(Native) 수준으로 끌어올립니다.
+> 3. **융합**: TLB(Translation Lookaside Buffer) 가상화 기술인 VPID(Virtual Processor Identifier)와 결합하여 캐시 일관성을 유지하며, 최근에는 TDX(Trust Domain Extensions) 및 SEV-SNP(Secure Encrypted Virtualization-Secure Nested Paging) 등의 **기밀 컴퓨팅(Confidential Computing)** 아키텍처의 핵심 요소로 진화하고 있습니다.
 
-과거에는 이러한 이중 주소 변환을 소프트웨어 방식인 그림자 페이지 테이블 (Shadow Page Table, SPT)을 통해 처리했으나, 빈번한 가상 머신 출구 (Virtual Machine Exit, VM Exit)와 동기화 오버헤드로 인해 심각한 성능 저하가 발생했습니다. EPT는 두 번째 변환 단계(GPA -> HPA)를 하드웨어 메모리 관리 장치 (Memory Management Unit, MMU)가 직접 수행하도록 지원함으로써, 하이퍼바이저의 개입을 최소화하고 메모리 집약적인 가상화 작업의 성능을 대폭 향상시킵니다. AMD에서는 이를 빠른 가상화 인덱싱 (Rapid Virtualization Indexing, RVI) 또는 중첩 페이지 테이블 (Nested Page Tables, NPT)이라고 부르며, 동일한 원리로 작동합니다.
+---
 
-> 📢 **섹션 요약 비유**
-> - **건물 주소 체계:** EPT는 건물의 가상 호수(게스트 주소)를 건물 자체의 설계도(게스트 물리 주소)로 바꾸고, 이를 다시 실제 도시의 토지 번호(호스트 물리 주소)로 한 번에 찾아주는 스마트 내비게이션 시스템과 같습니다. 이전에는 경비원(하이퍼바이저)에게 매번 물어봐야 했지만, 이제는 스마트 기기(하드웨어 MMU)가 바로 알려줍니다.
+### Ⅰ. 개요 (Context & Background) - [600자+]
 
-## Ⅱ. EPT의 아키텍처 및 동작 원리
-EPT의 구조는 기존의 x86-64 아키텍처에서 사용되는 4단계 페이지 테이블 구조와 유사하지만, 변환 대상이 GVA가 아닌 GPA라는 점에서 차이가 있습니다.
+확장 페이지 테이블(Extended Page Table, EPT)은 x86 아키텍처에서의 가상화 성능 병목을 해결하기 위해 Intel VT-x(Virtualization Technology for x86)와 함께 도입된 하드웨어 기반 메모리 가상화 솔루션입니다. 가상화 환경의 주소 변환은 본질적으로 '이중(Double)' 구조를 가집니다. 게스트 운영체제(Guest OS)는 가상 주소(GVA, Guest Virtual Address)를 게스트 물리 주소(GPA)로 변환하고, 하이퍼바이저(Hypervisor)는 이 GPA를 다시 실제 물리 메모리 주소인 호스트 물리 주소(HPA)로 변환해야 합니다.
+
+EPT가 등장하기 전에는 그림자 페이지 테이블(Shadow Page Table, SPT)이라는 소프트웨어적 기법이 사용되었습니다. SPT는 하이퍼바이저가 Guest OS의 페이지 테이블을 감시하고, 변경될 때마다 실제 물리 주소로 매핑된 '가짜(SHADOW)' 테이블을 동기화하는 방식입니다. 이 방식은 Guest OS가 페이지 테이블을 수정할 때마다 하이퍼바이저로 제어권이 넘어가는 트랩(Trap), 즉 **VM Exit**를 유발하여 막대한 컨텍스트 스위칭 오버헤드를 초래했습니다.
+
+EPT는 이러한 소프트웨어의 개입을 배제하고, CPU의 MMU(Memory Management Unit)가 GPA $\rightarrow$ HPA 변환을 자체적으로 수행하도록 설계되었습니다. 이를 통해 Guest OS는 자신의 페이지 테이블을 자유롭게 수정하면서도 하이퍼바이저의 개입 없이 메모리에 액세스할 수 있게 되었습니다. AMD의 경우 이를 NPT(Nested Page Table) 또는 RVI(Rapid Virtualization Indexing)라고 명명하며 동일한 개념을 적용합니다.
+
+#### 💡 개념 비유
+국제 회의에서 통역사가 필요 없는 '실시간 번역 이어폰'을 생각하면 됩니다.
+*   **SPT (구조)**: 발표자(Guest OS)가 말을 할 때마다 통역사(Hypervisor)가 개입하여 통역을 번역하고 대본을 수정(Sync)하느라 발표가 자주 끊김. (느림)
+*   **EPT (구조)**: 발표자와 참가자가 모두 '실시간 번역 이어폰(Hardware)'을 착용하여, 발표자의 말(High-level language)이 즉시 상대방의 언어(Low-level machine code)로 변환되어 전달됨. (빠름)
 
 ```text
-[ GVA (Guest Virtual Address) ]
-       |
-       v  <-- Guest CR3 (Guest Page Table)
-[ GPA (Guest Physical Address) ]
-       |
-       v  <-- EPTP (EPT Pointer)
-[ HPA (Host Physical Address) ]
+       [ Memory Virtualization Evolution ]
+┌─────────────────────────────────────────────────────────────┐
+│ 1. Software Shadowing (SPT)                                 │
+│                                                             │
+│    Guest OS:  "Change Page Table Entry"                    │
+│          ↓                                                  │
+│    CPU TRAP (VM Exit) ⚠️                                    │
+│          ↓                                                  │
+│    Hypervisor:  "Okay, let me calculate & update shadow..." │
+│          ↓ (High Overhead)                                  │
+│    Resume Execution                                         │
+└─────────────────────────────────────────────────────────────┘
+                        ▼ Evolution
+┌─────────────────────────────────────────────────────────────┐
+│ 2. Hardware Assisted (EPT)                                  │
+│                                                             │
+│    Guest OS:  "Change Page Table Entry"                    │
+│          ↓                                                  │
+│    CPU MMU:  "Automatically check GPA -> HPA Mapping"      │
+│          ↓ (No Trap, Pure Hardware Speed) ✅                │
+│    Resume Execution (Instantaneous)                         │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### 1. 이중 주소 변환 구조 (Two-Dimensional Address Translation)
-- **게스트 변환 (Guest Translation):** Guest OS는 자신의 CR3 레지스터를 사용하여 GVA를 GPA로 변환합니다.
-- **호스트 변환 (Host Translation):** 하드웨어 MMU는 확장 페이지 테이블 포인터 (Extended Page Table Pointer, EPTP)를 참조하여 GPA를 HPA로 변환합니다.
-
-### 2. EPT 계층 구조 (4-Level EPT)
-EPT는 4KB 페이지 크기를 기준으로 4단계 계층 구조를 가집니다:
-1. **페이지 맵 레벨 4 엔트리 (Page Map Level 4 Entry, PML4E):** EPT의 최상위 디렉토리.
-2. **페이지 디렉토리 포인터 테이블 엔트리 (Page Directory Pointer Table Entry, PDPTE)**
-3. **페이지 디렉토리 엔트리 (Page Directory Entry, PDE):** 2MB 대형 페이지 (Large Page) 지원 가능.
-4. **페이지 테이블 엔트리 (Page Table Entry, PTE):** 최종적으로 4KB HPA를 가리킴.
-
 > 📢 **섹션 요약 비유**
-> - **다중 번역기:** 외국어(GVA)를 공용어(GPA)로 번역하는 첫 번째 번역기(Guest OS)와, 공용어(GPA)를 모국어(HPA)로 번역하는 두 번째 하드웨어 자동 번역기(EPT)가 직렬로 연결된 구조입니다.
+> 마치 복잡한 세관 통과 절차에서, 매번 직원(소프트웨어)이 여권을 확인하고 도장을 찍는 방식(SPT)에서, 사전 등록된 전용 차선을 통해 센서(하드웨어)가 자동으로 인식하여 통과시키는 '하이패스(EPT)' 시스템으로 업그레이드한 것과 같습니다.
 
-## Ⅲ. EPT의 주요 기술적 특징 및 장점
-1. **가상 머신 출구 (VM Exit) 감소:** SPT 방식에서는 Guest OS가 페이지 테이블을 수정할 때마다 하이퍼바이저로 제어권이 넘어가는 VM Exit가 발생하지만, EPT 환경에서는 Guest OS가 자신의 페이지 테이블을 자유롭게 수정할 수 있어 VM Exit가 급격히 감소합니다.
-2. **변환 색인 버퍼 (Translation Lookaside Buffer, TLB) 효율성:** 최신 프로세서는 가상 프로세서 식별자 (Virtual Processor ID, VPID)를 지원하여, 여러 VM의 TLB 엔트리를 동시에 캐싱할 수 있습니다. 이는 EPT와 결합하여 컨텍스트 스위칭 시 TLB 플러시 (Flush) 오버헤드를 줄입니다.
-3. **대형 페이지 (Large Pages) 지원:** EPT는 2MB 또는 1GB 크기의 대형 페이지를 지원하여 EPT 탐색 (Walk) 횟수를 줄이고 TLB 히트율을 높입니다.
-4. **메모리 절약:** SPT는 각 프로세스마다 별도의 그림자 테이블을 유지해야 하지만, EPT는 각 VM당 하나의 EPT 구조만 유지하면 되므로 시스템 메모리 소모가 적습니다.
+---
 
-> 📢 **섹션 요약 비유**
-> - **프리패스 시스템:** 놀이공원에서 기구를 탈 때마다 관리자(하이퍼바이저)의 승인을 받는 대신, 한 번 발급받은 스마트 패스(EPT)로 모든 기구를 자유롭게 이용하는 것과 같습니다. 대기 시간(VM Exit)이 사라져 훨씬 빠릅니다.
+### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive) - [1,200자+]
 
-## Ⅳ. EPT의 성능 오버헤드 (EPT Walk)
-EPT는 매우 효율적이지만, TLB 미스 (Miss) 발생 시 심각한 페널티 (Penalty)를 동반합니다. 
-일반적인 네이티브 환경에서는 TLB 미스 시 4번의 메모리 접근 (Page Walk)이 필요하지만, 이중 페이징 (Two-Dimensional Paging) 환경에서는 최악의 경우 다음과 같은 접근 횟수가 필요합니다:
-- GVA를 변환하기 위해 4단계 Guest Page Table을 탐색합니다.
-- 이때 Guest Page Table의 각 단계(GPA)를 HPA로 변환하기 위해 다시 4단계 EPT 탐색이 필요합니다.
-- 따라서, 최악의 경우 **$4 \times 4 + 4 = 20$번** (또는 그 이상)의 메모리 접근이 발생할 수 있습니다 (2D Page Walk).
-이러한 문제를 완화하기 위해 하드웨어는 페이지 워크 캐시 (Page Walk Cache)와 대형 페이지 (Large Pages)를 적극적으로 활용합니다.
+EPT의 핵심은 기존 x86의 4단계 페이징 구조(CR3 $\rightarrow$ PML4 $\rightarrow$ PDPT $\rightarrow$ PD $\rightarrow$ PT) 위에 또 다른 4단계 페이징 구조를 '중첩(Nested)'시키는 것입니다. 이를 통해 CPU는 메모리 접근 시 두 번의 Walk 과정을 수행합니다.
 
-> 📢 **섹션 요약 비유**
-> - **지도 속의 지도:** 길을 찾기 위해 지도를 보는데, 그 지도 안의 특정 건물을 찾으려면 또 다른 상세 지도를 4번씩 더 찾아봐야 하는 복잡한 상황입니다. 그래서 자주 가는 길은 굵은 펜(대형 페이지)으로 표시해 두거나 머릿속(캐시)에 외워둡니다.
+#### 1. 구성 요소 상세 분석
 
-## Ⅴ. 확장 페이지 테이블의 발전 방향 (응용 분야)
-EPT의 기능은 단순한 주소 변환을 넘어 시스템 보안 및 메모리 모니터링 영역으로 확장되고 있습니다.
-- **가상 머신 인트로스펙션 (Virtual Machine Introspection, VMI):** 하이퍼바이저가 EPT 권한 제어(읽기/쓰기/실행 권한 분리)를 통해 Guest OS 내부의 악성코드 실행을 감지하고 차단합니다.
-- **하위 페이지 보호 (Sub-Page Protection, SPP):** 인텔의 최신 기술로, 4KB 페이지 내부의 128바이트 단위로 쓰기 권한을 제어하여 더욱 세밀한 메모리 보호를 제공합니다.
-- **소프트웨어 가드 익스텐션 (Software Guard Extensions, SGX) / 트러스트 도메인 익스텐션 (Trust Domain Extensions, TDX):** 기밀 컴퓨팅 (Confidential Computing) 환경에서 EPT는 게스트의 메모리를 암호화하고 호스트(하이퍼바이저 포함)의 무단 접근을 차단하는 핵심 격리 수단으로 작용합니다.
+| 모듈 (Module) | 전체 명칭 (Full Name) | 역할 (Role) | 내부 동작 메커니즘 (Internal Mechanism) | 비고 |
+|:---|:---|:---|:---|:---|
+| **EPT PML4** | EPT Page Map Level 4 | EPT의 최상위 루트 | **EPTP(EPT Pointer)** 레지스터가 가리키는 테이블로, GPA의 비트 47~39를 인덱스로 사용 | 1개의 EPT는 VM 전체 또는 vCPU에 할당 |
+| **EPT PDPT** | EPT Page Directory Pointer Table | 2단계 계층 | 1GB 페이지 매핑 지원 시 PS(Page Size) 비트 사용 | GPA 비트 38~30 사용 |
+| **EPT PD** | EPT Page Directory | 3단계 계층 | 2MB Large Page 매핑 지원 | GPA 비트 29~21 사용 |
+| **EPT PT** | EPT Page Table | 4단계 계층 (최하위) | 4KB 기본 페이지 단위 매핑, 실제 HPA 프레임 주소 저장 | GPA 비트 20~12 사용 |
+| **EPT TLB** | EPT Translation Lookaside Buffer | EPT 전용 캐시 | GPA $\rightarrow$ HPA 변환 결과를 캐싱하여 메모리 접근(Walk) 회수 최소화 | **VPID**와 연동하여 캐시 일관성 유지 |
+| **VMCS** | Virtual Machine Control Structure | 제어 상태 저장소 | **EPTP** 값, EPT 활성화 비트('Enable EPT') 등을 저장 | 가상 머신 상태 정의 |
 
-> 📢 **섹션 요약 비유**
-> - **다목적 보안 요원:** 단순한 길 안내(주소 변환)를 넘어서, 방문객이 위험한 행동을 하는지 감시하고(VMI), 특정 구역의 출입을 철저히 통제하는(TDX) 보안 책임자의 역할을 수행하고 있습니다.
+#### 2. 이중 주소 변환 (2-Dimensional Paging) 아키텍처
 
-### 🧠 지식 그래프 및 하위 비유 (Knowledge Graph & Child Analogy)
-```mermaid
-graph TD
-    A[Hardware Virtualization] --> B(EPT / NPT)
-    A --> C(Shadow Page Table)
-    B --> D[Address Translation: GPA to HPA]
-    B --> E[Reduced VM Exits]
-    B --> F[VMI / Security]
-    D --> G(2D Page Walk Overhead)
-    G --> H(Large Pages / Page Walk Cache)
+EPT 환경에서의 메모리 접근은 **논리적 주소 $\rightarrow$ 선형 주소 $\rightarrow$ 물리 주소** 변환 과정이 두 계층에 걸쳐 이루어집니다. 아래 다이어그램은 이 과정을 시각화한 것입니다.
+
+```text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         [ Logical Address (48-bit) ]                        │
+│                             │                                                │
+│                             ▼ (Segmentation - rarely used now)              │
+│ ┌───────────────────────────────────────────────────────────────────────┐   │
+│ │                     [ Linear Address (VA) ]                           │   │
+│ │                                                                       │   │
+│ │  ┌─── Stage 1 Walk: Guest Paging (Hosted by Guest OS) ────┐          │   │
+│ │  │                                                            │          │   │
+│ │  │  1. CPU checks Guest CR3 (pointing to Guest PML4)       │          │   │
+│ │  │  2. Walks Guest Page Tables (PML4 -> PDPT -> PD -> PT)  │          │   │
+│ │  │  3. Result: Guest Physical Address (GPA)                │          │   │
+│ │  │                                                            │          │   │
+│ │  └────────────────────────────────────────────────────────────┘          │   │
+│ │                                  │                                        │   │
+│ └──────────────────────────────────┼────────────────────────────────────────┘   │
+│                                    ▼                                            │
+│ ┌───────────────────────────────────────────────────────────────────────┐   │
+│ │                     [ Guest Physical Address (GPA) ]                  │   │
+│ │                                                                       │   │
+│ │  ┌─── Stage 2 Walk: Extended Paging (Hardware Assisted) ────┐        │   │
+│ │  │                                                            │        │   │
+│ │  │  1. CPU checks EPTP (pointing to EPT PML4)               │        │   │
+│ │  │  2. Walks EPT Tables (EPT PML4 -> EPT PDPT -> EPT PD -> EPT PT) │   │   │
+│ │  │  3. Result: Host Physical Address (HPA) / SP (System Physical)  │   │   │
+│ │  │                                                            │        │   │
+│ │  └────────────────────────────────────────────────────────────┘        │   │
+│ │                                  │                                        │   │
+│ └──────────────────────────────────┼────────────────────────────────────────┘   │
+│                                    ▼                                            │
+│ ┌───────────────────────────────────────────────────────────────────────┐   │
+│ │                     [ Host Physical Address (HPA) ]                   │   │
+│ │                         (Actual DRAM Location)                         │   │
+│ └───────────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
-- **하위 비유:** EPT는 **"스마트폰의 내장 GPS 칩"**과 같습니다. 과거에는 기지국 삼각측량(소프트웨어 방식 SPT)으로 느리고 복잡하게 위치를 찾았지만, 이제는 전용 하드웨어 칩(EPT)이 위성 신호를 직접 받아 빠르고 정확하게 현재 위치(HPA)를 계산해냅니다.
+
+**[다이어그램 심층 해설]**
+1.  **Guest Walk (1단계)**: Guest OS 입장에서는 자신이 CR3 레지스터를 통해 페이지 테이블을 관리한다고 생각합니다. 이 과정에서 GPA가 도출됩니다. 이때 사용하는 페이지 테이블은 실제 HPA 공간에 존재하지만, Guest OS는 이를 GPA 연속 공간으로 착각합니다.
+2.  **EPT Walk (2단계)**: MMU는 도출된 GPA를 기반으로 하이퍼바이저가 설정한 EPT 구조를 순회합니다. 이때 모든 엔트리는 물리 메모리(HPA)에 위치하므로, 메모리 접근이 발생합니다.
+3.  **결과**: 최종적으로 HPA가 획득되면 실제 DRAM에 있는 데이터를 읽거나 씁니다. **중요한 점은 이 모든 과정이 하드웨어 파이프라인에 의해 자동으로 수행된다는 점**입니다.
+
+#### 3. EPT 엔트리 구조 및 EPT Violation 처리
+
+EPT 엔트리는 64비트 구조이며, 단순 매핑 정보를 넘어 메모리 보호(Memory Protection)와 성능 최적화 비트를 포함합니다.
+
+```c
+/* Intel SDM (Software Developer's Manual) 기반 EPT Entry 구조체 정의 */
+struct EPT_Entry {
+    uint64_t Read        : 1;    // [Bit 0] 읽기 권한 (0=Block, 1=Allow)
+    uint64_t Write       : 1;    // [Bit 1] 쓰기 권한
+    uint64_t Execute     : 1;    // [Bit 2] 실행 권한 (NX Bit 기반)
+    uint64_t Reserved1   : 5;    // [Bit 3~7] 시스템 예약 영역 (Must be 0)
+    uint64_t Accessed    : 1;    // [Bit 8] 접근 비트 (A-bit, HW set)
+    uint64_t Dirty       : 1;    // [Bit 9] 수정 비트 (D-bit, HW set)
+    uint64_t UserExec    : 1;    // [Bit 10] User Mode 실행 허용 (Ignored in some modes)
+    uint64_t PageSize    : 1;    // [Bit 11] 페이지 크기 (0=4KB, 1=2MB/1GB)
+    uint64_t Reserved2   : 4;    // [Bit 12~15] Reserved
+    uint64_t PFN         : 40;   // [Bit 12~51] HPA Physical Frame Number (Page Base Addr)
+    uint64_t Reserved3   : 12;   // [Bit 52~63] 예약 및 소프트웨어 비트
+} __attribute__((packed));
+
+/* EPT 위반(EPT Violation) 발생 시 하이퍼바이저 처리 의사코드 */
+void handle_ept_violation(uint64_t gpa, uint64_t gva, uint32_t exit_qualification) {
+    // 1. EPT 엔트리 조회
+    EPT_Entry* entry = walk_ept(gpa);
+    
+    if (entry == NULL) {
+        // Case 1: 페이지가 할당되지 않음 (Demand Paging 시나리오)
+        allocate_host_memory_frame(HPA_FRAME);
+        map_ept_entry(gpa, HPA_FRAME, READ_WRITE_ACCESS);
+        resume_guest_execution();
+    } 
+    else if (is_write_violation(exit_qualification) && !entry->Write) {
+        // Case 2: 쓰기 권한 위반 (Copy-on-Write 또는 보안 훅)
+        if (is_cow_page(gpa)) {
+            // CoW: 익명 페이지 분리
+            private_hpa = copy_page(entry->PFN);
+            entry->PFN = private_hpa;
+            entry->Write = 1; // 새 페이지에는 쓰기 권한 부여
+            flush_ept_tlb();
+        } else {
+            // 보안 위반 (VM Introspection)
+            inject_exception(GUEST_PAGE_FAULT);
+        }
+    }
+}
+```
+
+> 📢 **섹션 요약 비유**
+> 마치 '이중 잠금장치가 있는 금고'와 같습니다. 첫 번째 잠금(Guest Page Table)은 사용자(Guest OS)가 열 수 있지만, 두 번째 잠금(EPT)은 건물 관리자(Hypervisor)가 보유합니다. EPT는 사용자가 열쇠(Guest PTE)를 돌릴 때마다 관리자가 와서 확인하는 것이 아니라, 열쇠를 돌리면 기계적으로 내부 잠금이 풀리도록 설계된 '전자 금고 시스템'과 같습니다.
+
+---
+
+### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy) - [800자+]
+
+EPT는 단순한 가상화 기능을 넘어 운영체제(OS), 컴퓨터 구조(Computer Arch), 보안(Security) 영역과 깊이게 연결됩니다.
+
+#### 1. 심층 기술 비교: SPT vs EPT (정량적 분석)
+
+| 비교 항목 (Criteria) | 그림자 페이지 테이블 (Shadow Page Table, SPT) | 확장 페이지 테이�

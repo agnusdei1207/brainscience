@@ -3,101 +3,140 @@ title = "651. 서버 랙 PDU (Power Distribution Unit)"
 weight = 651
 +++
 
-> 1. 서버 랙 PDU(Power Distribution Unit)는 단순한 멀티탭을 넘어 데이터센터의 안정적 전력 분배와 모니터링을 담당하는 핵심 인프라입니다.
-> 2. Basic부터 Switched PDU까지 다양한 지능형 기능이 탑재되어, 전원 관리의 자동화와 에너지 효율 극대화를 지원합니다.
-> 3. 고밀도 컴퓨팅 환경에서 PDU(Power Distribution Unit)의 실시간 모니터링은 장애 예방 및 물리적 서버 가용성 확보에 직결됩니다.
+# 651. 서버 랙 PDU (Power Distribution Unit)
 
-## Ⅰ. 서버 랙 PDU의 개념 및 아키텍처
-
-서버 랙 PDU(Power Distribution Unit)는 데이터센터 내 서버, 스토리지, 네트워크 장비 등에 전력을 안정적으로 분배하고 관리하는 지능형 전원 분배 장치입니다. PDU(Power Distribution Unit)는 UPS(Uninterruptible Power Supply) 및 CRAC(Computer Room Air Conditioning)와 함께 데이터센터 물리 인프라(DCIM, Data Center Infrastructure Management)의 핵심을 구성합니다. 현대의 데이터센터는 고밀도(High-Density) 서버 구성이 일반화됨에 따라 전원 부하 관리가 필수적이며, 지능형 PDU(Intelligent Power Distribution Unit)를 통해 과부하(Overload) 모니터링, 포트 단위 전원 제어, 환경 센서 연동 등의 기능을 수행합니다.
-
-이러한 PDU(Power Distribution Unit) 시스템은 단상(Single-Phase) 및 3상(Three-Phase) 전원을 수용하며, 장비의 요구 사항에 맞춰 교류(AC, Alternating Current) 전압을 랙 내부 장비로 분배합니다. 입력 전원의 분기를 통해 각 콘센트(Receptacle) 레벨에서 전압, 전류, 피상 전력, 유효 전력을 계측함으로써 에너지 사용 효율성(PUE, Power Usage Effectiveness)을 최적화하는 데 기여합니다.
-
-> 📢 **섹션 요약 비유:** PDU는 복잡한 빌딩(데이터센터)의 각 호실(서버)마다 정확하고 안전하게 수돗물(전력)을 공급하고 계량하는 '지능형 수도 분배기'와 같습니다.
-
-## Ⅱ. PDU 분류 및 동작 메커니즘
-
-서버 랙 PDU(Power Distribution Unit)는 제공하는 관리 기능과 지능화 수준에 따라 여러 가지 등급으로 분류됩니다.
-
-```ascii
-[ Main Power Source ] ---> [ UPS (Uninterruptible Power Supply) ]
-                                      |
-                                      v
-                            [ Floor PDU / RPP ]
-                                      |
-         +----------------------------+----------------------------+
-         |                                                         |
-[ Basic PDU ]                                         [ Intelligent PDU ]
- - 전원 단순 분배                                        - 네트워크 모니터링 (SNMP/HTTP)
- - 보호 회로(Breaker) 내장                                - 실시간 전력 계측
-                                                           |
-                                  +------------------------+------------------------+
-                                  |                        |                        |
-                           [ Metered PDU ]        [ Switched PDU ]     [ Switched Metered-by-Outlet ]
-                           (총 전력 모니터링)        (포트별 전원 제어)       (포트별 제어 및 모니터링)
-```
-
-1. **Basic PDU (기본형 전원 분배 장치):**
-   순수하게 전원 분배 기능만 제공하며, 네트워크 통신 기능이 없습니다. 과전류 보호기(Circuit Breaker)를 통해 장비를 보호하지만 실시간 데이터 수집은 불가능합니다.
-2. **Metered PDU (계측형 전원 분배 장치):**
-   PDU(Power Distribution Unit) 전체 또는 뱅크(Bank) 단위의 전력 소비량(Ampere, Voltage, Watt)을 로컬 LED 디스플레이 및 네트워크(SNMP, Simple Network Management Protocol)를 통해 원격으로 제공합니다.
-3. **Switched PDU (스위치형 전원 분배 장치):**
-   Metered PDU(계측형 전원 분배 장치) 기능에 더하여 개별 콘센트의 전원을 원격으로 켜고(On) 끄거나(Off), 재부팅(Reboot)할 수 있는 제어 릴레이(Relay)가 탑재되어 있습니다.
-4. **Switched Metered-by-Outlet PDU (개별 제어 및 계측형 전원 분배 장치):**
-   가장 진보된 형태로, 개별 포트 단위의 전력 모니터링과 전원 제어가 동시에 가능하여 가장 세밀한 인프라 관리를 지원합니다.
-
-> 📢 **섹션 요약 비유:** Basic PDU가 단순한 '일반 멀티탭'이라면, Switched PDU는 스마트폰 앱으로 콘센트마다 전기를 끊거나 켜고, 전기 요금까지 확인하는 'IoT 스마트 멀티탭'입니다.
-
-## Ⅲ. PDU의 핵심 기술 및 프로토콜
-
-PDU(Power Distribution Unit)는 안정성과 관리 효율성을 위해 다양한 통신 프로토콜과 센서 기술을 활용합니다.
-
-1. **네트워크 관리 기술:**
-   대부분의 지능형 PDU는 관리 모듈(Network Management Card, NMC)을 내장하고 있으며, SNMP(Simple Network Management Protocol)를 이용하여 NMS(Network Management System) 또는 DCIM(Data Center Infrastructure Management) 소프트웨어와 연동됩니다. 또한 HTTP/HTTPS 웹 인터페이스, SSH(Secure Shell)를 통한 CLI(Command Line Interface), API(Application Programming Interface) 연동(RESTful API)을 지원합니다.
-2. **환경 모니터링 센서 연동:**
-   PDU(Power Distribution Unit)는 자체 온도(Temperature) 및 습도(Humidity) 센서 포트를 제공하여 랙 내부의 미시적 환경 변화를 실시간 감지합니다. 연기(Smoke), 누수(Water leak), 도어 열림(Door open) 센서와 결합하여 물리적 보안을 강화합니다.
-3. **Daisy Chaining (데이지 체인 연결):**
-   다수의 PDU(Power Distribution Unit)를 하나의 IP(Internet Protocol) 주소로 묶어 관리할 수 있도록 스위치 포트를 내장하여 네트워크 케이블링의 복잡성을 줄이고 관리 효율성을 높입니다.
-
-> 📢 **섹션 요약 비유:** PDU의 통신 기능은 전력 공급기가 스스로 관제 센터와 무전기로 대화하며 "지금 3번 서버 전기가 끊겼습니다!"라고 보고하는 '스마트 보고 시스템'입니다.
-
-## Ⅳ. 고가용성(HA) 환경에서의 전원 이중화 구성
-
-데이터센터에서 단일 장애점(SPOF, Single Point of Failure)을 제거하기 위해 PDU(Power Distribution Unit) 레벨에서도 전원 이중화가 필수적으로 적용됩니다.
-
-1. **A/B Power Feed 구성:**
-   서버는 일반적으로 이중화된 전원 공급 장치(Dual PSU, Power Supply Unit)를 가집니다. 이를 활용하기 위해 랙 내부에는 서로 다른 전력원(A 전원 라인, B 전원 라인)에 연결된 두 개의 독립된 PDU(Power Distribution Unit)를 배치합니다. 한 라인의 상위 배전반이나 PDU 장애 시에도 다른 PDU가 무중단으로 전력을 공급합니다.
-2. **ATS (Automatic Transfer Switch) PDU:**
-   단일 PSU(Power Supply Unit)만을 가진 구형 장비나 저가형 스위치를 위해 사용됩니다. 두 개의 입력 전원 중 Primary(주 전원)에 문제가 생기면 밀리초(ms) 단위로 Secondary(보조 전원)로 자동 절체(Failover)되어 연결된 장비의 전원 꺼짐을 방지합니다.
-
-> 📢 **섹션 요약 비유:** 전원 이중화는 비행기의 엔진 2개처럼, 한쪽 엔진(PDU A)이 고장나더라도 다른 엔진(PDU B)으로 목적지까지 무사히 날아갈 수 있게 해주는 '보험 장치'입니다.
-
-## Ⅴ. 기술 도입 시 고려사항 및 최신 트렌드
-
-PDU(Power Distribution Unit) 시스템 도입 시에는 데이터센터의 규모, 부하량, 그리고 관리 요구사항을 종합적으로 평가해야 합니다. 최근 AI(Artificial Intelligence) 및 HPC(High-Performance Computing) 환경의 등장으로 랙당 전력 밀도가 급격히 상승함에 따라 고용량 PDU의 수요가 증가하고 있습니다.
-
-* **온도 내구성 (High Temperature Rating):** 고집적 랙 환경에서는 열 발생이 심하므로, 최대 60도 이상의 고온에서도 안정적으로 동작할 수 있는 산업용 등급의 PDU가 요구됩니다.
-* **보안 기능 강화:** 제어권이 탈취될 경우 대규모 서비스 장애를 유발할 수 있으므로, SNMPv3, RADIUS/TACACS+ 인증, TLS(Transport Layer Security) 암호화 등의 엔터프라이즈 보안 기능 지원 여부가 중요합니다.
-* **컬러 코딩 (Color Coding):** 시각적 직관성을 위해 A/B 라인을 색상(예: 빨간색, 파란색)으로 구분하여 휴먼 에러를 방지하는 디자인이 선호됩니다.
-
-> 📢 **섹션 요약 비유:** 최신 PDU를 고르는 것은 단순히 튼튼한 멀티탭을 사는 것을 넘어, 한여름 찜통 같은 차 안에서도 터지지 않고 해킹까지 막아내는 '초정밀 산업용 로봇'을 고르는 것과 같습니다.
+#### 핵심 인사이트 (3줄 요약)
+> 1. **본질**: 데이터센터의 전망 단위인 랙(Rack) 내에서 안정적인 전력 분배와 실시간 모니터링을 수행하는 지능형 전력 인프라의 핵심 허브이며, 단순 멀티탭과는 물리적/논리적으로 구분되는 고밀도 전력 솔루션임.
+> 2. **가치**: PUE(Power Usage Effectiveness) 최적화와 예지 보전(Predictive Maintenance)을 통해 데이터센터의 에너지 효율을 개선하고, 장비 가용성(Availability)을 99.999% 이상으로 유지하는 데 직접적인 기여를 수행함.
+> 3. **융합**: DCIM(Data Center Infrastructure Management), OSI 3계층 네트워크 관리(SNMP), 및 전기 회로 이론(3상 전력)이 융합된 IT/OT(Information Technology/Operational Technology) 융합의 정점에 있는 장비임.
 
 ---
 
-### 💡 Knowledge Graph & Child Analogy
+### Ⅰ. 개요 (Context & Background)
 
-```mermaid
-graph TD
-    A[PDU (Power Distribution Unit)] --> B(Basic PDU)
-    A --> C(Intelligent PDU)
-    C --> D(Metered PDU: 계측 기능)
-    C --> E(Switched PDU: 제어 기능)
-    C --> F(Network Interface)
-    F --> G[SNMP / HTTPS]
-    A --> H(이중화 구성)
-    H --> I[A/B Feed Architecture]
-    H --> J[ATS PDU]
+**개념 및 정의**
+PDU (Power Distribution Unit)는 데이터센터의 랙(Rack) 또는 인클로저(Enclosure) 내에 장착된 IT 장비(서버, 스위치, 스토리지)에 안정적인 교류 전력(AC Power)을 분배하고, 상태를 모니터링하며 제어하는 지능형 전력 분배 장치입니다. 일반 가정용 멀티탭과 달리, PDU는 수천 와트(Watt) 이상의 고부하를 연속으로 처리할 수 있는 산업용 등급의 내구성을 가지며, 서킷 브레이커(Circuit Breaker)를 통한 과전류 보호 기능과 네트워크 연동을 통한 원격 관리 기능을 필수적으로 포함합니다.
+
+**등장 배경 및 기술적 패러다임**
+1.  **기존 한계 (전력 밀도의 증가)**: 과거 랙당 전력 소모가 2kW~3kW 수준이었으나, AI(Artificial Intelligence) 학습용 GPU 서버, 고밀도 블레이드 서버 등장으로 랙당 20kW~30kW를 초과하는 초고밀도 컴퓨팅 환경이 도래함. 일반 멀티탭으로는 이러한 고전류 및 열 발생을 처리할 수 없음.
+2.  **혁신적 패러다임 (지능형 전력 관리)**: 단순한 전원 공급을 넘어, 전압(V), 전류(A), 유효 전력(W), 피상 전력(VA), 역률(PF)을 실시간 측정하는 '계측' 기능과, 원격으로 전원을 On/Off하는 '제어' 기능이 추가됨.
+3.  **현재의 비즈니스 요구 (DCIM 연동)**: 데이터센터의 물리적 자원을 통합 관리하는 DCIM(Data Center Infrastructure Management) 솔루션과 연동하여, 실시간 전력 사용량 추적, 냉각 효율 분석, 용량 계획(Capacity Planning) 수립이 필수적이 되었음.
+
+> **💡 비유**: 마치 거대한 빌딩의 각 가구에 전기를 공급하는 '변전실'을 랙 하나 안에 축소해 넣은 것과 같습니다.
+
+> **📢 섹션 요약 비유**: PDU는 데이터센터라는 거대한 몸체에 흐르는 혈액(전력)을 심장에서 각 기관(서버)로 막힘 없이 나누어 주고, 혈액의 양과 흐름을 24시간 감시하는 '지능형 혈액 순환 펌프'입니다.
+
+### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+
+**1. 하드웨어 구성 요소 상세 분석**
+PDU는 전력의 흐름을 제어하는 메인 부품과 이를 관리하는 제어 부품으로 크게 나뉩니다.
+
+| 요소명 (Component) | 역할 (Role) | 내부 동작 및 기술 (Internal Operation) | 주요 프로토콜/규격 (Protocol/Spec) |
+|:---|:---|:---|:---|
+| **입력 커넥터 (Input Plug)** | 상위 전원으로부터 전력 수급 | IEC 60309 (국제 표준) 커넥터 사용 (예: 16A, 32A, 63A 단자) | 3상 4선식 (L1, L2, L3, N, PE) 또는 단상 |
+| **서킷 브레이커 (Circuit Breaker)** | 과부하 및 합선(Short Circuit) 보호 | MCCB(Molded Case Circuit Breaker) 또는 MCB(Miniature Circuit Breaker) 사용 | 열-자기 트립 방식, 정격 전류(Ampere) 설정 |
+| **계측 CT (Current Transformer)** | 전류 감지 | 부하에 직접 연결되지 않고 전자기 유도를 통해 전류를 감지하여 계측 회로로 전달 | - |
+| **릴레이 (Relay/Solid-State)** | 개별 포트 전원 제어 | 제어 신호에 따라 물리적 접점을 개폐하여 전원 공급 차단 또는 복구 | latching Relay 유지 방식 |
+| **NMC (Network Management Card)** | 네트워크 통신 및 제어 | 내장 임베디드 MCU가 수집 데이터를 패킷화하여 외부로 전송 | IPv4/v6, ARP, TCP/UDP |
+
+**2. PDU 유형별 아키텍처 및 ASCII 다이어그램**
+
+PDU는 지능화(Intelligence) 수준과 제어 기능에 따라 Basic, Metered, Switched, Switched Metered-by-Outlet 등으로 분류됩니다.
+
+```ascii
+          [ 3-Phase Power Source (L1, L2, L3, N, GND) ]
+                           |
+               +-----------+-----------+
+               |   Main Breaker (CB)   |
+               +-----------+-----------+
+                           |
+      +----------------------------------------------+
+      |       INTELLIGENT PDU CONTROLLER (NMC)       |
+      |  - CPU / Memory / Flash / Network Interfaces |
+      +----------------------------------------------+
+           |            |               |
+      +----+----+ +----+----+ +----+----+----+
+      |  Bank 1  | |  Bank 2  | |  Bank 3     |
+      | (L1 Ph)  | | (L2 Ph)  | | (L3 Ph)     |
+      +----------+ +----------+ +-------------+
+           |            |               |
+    +------+------+------+------+------+------+
+    |  Outlet 1   |  Outlet 2   |  Outlet 3   |
+    | (Server A)  | (Server B)  | (Switch)    |
+    +-------------+-------------+-------------+
+
+    [ Arrow Logic: Power Flow ]
+    Source -> Breaker -> Controller -> Bank (Per Phase) -> Outlet -> Load
+
+    [ Data Flow (Feedback) ]
+    CT Sensor -> Controller -> Network (SNMP/HTTP) -> Admin
 ```
 
-**👧 어린이를 위한 비유 (Child Analogy):**
-PDU는 집에서 쓰는 '엄청 똑똑한 멀티탭'이에요! 그냥 전기만 나눠주는 게 아니라, 스마트폰 앱으로 "게임기 콘센트는 끄고, TV 콘센트는 켜 줘!"라고 명령할 수 있어요. 또 "지금 컴퓨터가 전기를 얼마나 먹고 있지?"하고 물어보면 숫자로 딱 알려주기도 한단다.
+**다이어그램 심층 해설**
+1.  **입부(Input Stage)**: 외부로부터 3상 교류 전원을 공급받습니다. 3상 전원은 평형 부하(Balanced Load)를 위해 PDU 내부에서 각 뱅크(Bank)로 분배됩니다.
+2.  **보호 단계(Protection Stage)**: 서킷 브레이커(CB)는 하위 장비의 합선이나 과부하 발생 시 전체 회로를 물리적으로 차단하여 화재를 예방합니다.
+3.  **지능형 제어(Intelligence Stage)**: NMC는 각 뱅크별, 혹은 개별 콘센트별로 부착된 CT(Current Transformer) 센서로부터 전류값을 샘플링(Sampling)합니다. 이를 RMS(Root Mean Square) 값으로 변환하여 실제 소비 전력을 연산합니다.
+4.  **제어 기능(Control Logic)**: Switched PDU의 경우, 관리자의 명령(Off/Reboot)을 수신하면 내부 릴레이 코일에 전류를 흘려 접점을 여닫습니다.
+
+**3. 심층 동작 원리: 3상 전력 분배**
+데이터센터에서는 효율성을 위해 3상 전원(3-Phase Power)을 주로 사용합니다.
+*   **상 전압(Phase Voltage)**: 상과 중성선(N) 사이의 전압 (예: 230V)
+*   **선간 전압(Line Voltage)**: 상과 상 사이의 전압 (예: 400V)
+*   PDU는 입력된 3상 전원(L1, L2, L3)을 뱅크별로 나누어 연결하여, 1개의 케이블이 3배의 전력 용량을 공급할 수 있게 하며, 3상 평형을 이루도록 장비를 배치해야 중성선 부하가 걸리지 않습니다.
+
+> **📢 섹션 요약 비유**: Basic PDU가 말 그대로 '파이프' 역할만 한다면, Intelligent PDU는 파이프를 통과하는 물의 양을 계량기(Metered)로 재고, 필요할 때 특정 수도꼭지(Switched)를 잠글 수 있게 한 '스마트 상수도 시설'입니다.
+
+### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+
+**1. PDU 기술 비교 분석표**
+
+| 구분 | Basic PDU | Metered PDU | Switched PDU | Switched Metered-by-Outlet PDU |
+|:---|:---|:---|:---|:---|
+| **주요 기능** | 전원 분배 및 과전류 보호 | 전체(Bank) 단위 전력 계측 | 개별 콘센트 전원 제어 (On/Off) | 개별 콘센트 제어 + 실시간 계측 |
+| **데이터 가시성** | 없음 (LED 인디케이터만) | Wh, A, V (Bank 단위) | 상태(On/Off) 확인 | Wh, A, V (Outlet 단위) |
+| **관리 복잡도** | 낮음 (Low) | 중간 (Medium) | 중간 (Medium) | 높음 (High) |
+| **비용 (TCO)** | 저가 | 중가 | 중고가 | 고가 |
+| **용도** | 엣지(Edge) 컴퓨팅, 사무실 | 일반 서버 랙 | 업데이트, 리부팅이 잦은 환경 | 고밀도 클라우드/코로케이션 센터 |
+
+**2. 과목 융합 관점: 네트워크와의 연계 (SNMP & Alerting)**
+PDU는 전기 전자(Electrical) 장치이지만, 성격상 네트워크(Network) 장치로 분류됩니다.
+*   **Network Convergence**: PDU는 관리를 위해 IP 주소를 할당받습니다. NMS(Network Management System)는 SNMP(Simple Network Management Protocol)를 사용하여 PDU의 OID(Object Identifier)를 폴링(Polling)합니다.
+*   **트랩(Trap) 메커니즘**: PDU 내부 임계치(Threshold, 예: 30A)를 초과하거나 서킷 브레이커가 트립(Trip)되면, PDU는 Trap 메시지를 NMS 서버로 즉시 발송하여 관리자에게 경고(Alert)를 전송합니다. 이는 IT 장비와 물리적 전력 장비의 완벽한 융합 지점입니다.
+
+**3. 과목 융합 관점: 운영체제(OS) 및 고가용성(HA)**
+*   서버의 OS(Application Layer)에서는 서비스가 중단되었을 때, 자동 복구가 불가능하면 IPMI(Intelligent Platform Management Interface)를 통해 PDU의 특정 포트를 제어하여 'Cold Reboot'를 시도합니다.
+
+> **📢 섹션 요약 비유**: 운전대와 계기판이 합쳐진 자동차처럼, PDU는 단순한 전선(전기)과 통신선(네트워크)이 결합되어 데이터센터 관제실의 '시신경'과 같은 역할을 수행합니다.
+
+### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+
+**1. 실무 시나리오: 고밀도 랙 전원 설계**
+
+**상황**: AI 서버 랙(랙당 22kW) 구축 프로젝트.
+**문제점**: 기존 30A Basic PDU를 사용할 경우, 3상 전원을 사용해도 공급 용량이 부족하거나 안전 여유(Margin)가 부족함.
+**의사결정 과정**:
+1.  **용량 계산**: $P = \sqrt{3} \times V \times I \times PF$ 공식을 통해 필요 전류량 산출.
+2.  **기술 선정**: 단순한 On/Off를 넘어, 과부하 경보 및 발열 모니터링이 필수적이므로 **Metered-by-Outlet PDU** 선택.
+3.  **안정성 확보**: 이중화(Dual Cord)된 서버를 위해 A/B 전원 PDU를 각각 다른 UPS 및 정전 판넬에서 공급받도록 설계(SPOF 제거).
+
+**2. 도입 체크리스트 (Technical & Operational)**
+
+*   [ ] **전기적 호환성**: 입력 플러그 타입(IEC 60309 등)이 상위 배전반에 맞는가?
+*   [ ] **콘센트 호환성**: 서버의 전원 케이블(C13, C19) 타입 지원 여부.
+*   [ ] **네트워크 보안**: Telnet/HTTP 대신 SSH/HTTPS 프로토콜만 지원하는가? (계정 탈취 방지)
+*   [ ] **레거시 장비 지원**: 단일 전원을 가진 구형 장비를 위한 ATS PDU 포함 여부.
+
+**3. 안티패턴 (Anti-Pattern) 및 치명적 결함**
+*   **부하 분배 실패**: 3상 PDU의 L1, L2, L3에 장비를 편중되게 연결하면 특정 상(Line)만 과부하가 걸려 트립(Trip)되어 랙 전체가 멈추는 **단상 과부하(Single Phase Overload)** 사고 발생.
+
+> **📢 섹션 요약 비유**: PDU를 도입하는 것은 고속도로를 건설하는 것과 같습니다. 단순히 도로를 넓게 레이아웃하는 것(용량 산정)을 넘어, CCTV와 안전 센터를 연동하여 사고를 실시간 대응하는 스마트 고속도로 시스템(Metered/Switched)을 구축해야 합니다.
+
+### Ⅴ. 기대효과 및 결론 (Future & Standard)
+
+**1. 정량/정성 기대효과 (ROI)**
+
+| 항목 | 도입 전 (Basic PDU) | 도입 후 (Intelligent PDU) | 효과 |
+|:---|:---|:---|:---|
+| **장애 대응 시간** | 담당자가 현장까지 이동하여 장비 교체/리부팅 (30분~1시간) | NMC를 통한 원격 전원 제어 (1분 이내) | MTTR(Mean Time To Repair) 획기적 단축 |
+| **전력 효율** | 전력 사용량을 정확히 파악 못 함 (추정) | 실시간 계측으로 최적의 냉각/전력 용량 배분 | 전력 낭비 약 15~20% 감소 |
+| **보안성** | 물리적 접근에 의존 |

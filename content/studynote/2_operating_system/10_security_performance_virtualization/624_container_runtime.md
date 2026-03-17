@@ -3,102 +3,190 @@ weight = 624
 title = "624. 컨테이너 런타임 (Container Runtime) - Docker, containerd, CRI-O"
 +++
 
-### 💡 핵심 인사이트 (Insight)
-1. **컨테이너 실행의 중추**: 컨테이너 런타임(Container Runtime)은 컨테이너 이미지를 관리하고, 실제 실행을 위해 OS 커널의 네임스페이스와 cgroups를 조작하는 소프트웨어 계층입니다.
-2. **역할의 분업화**: 초기 Docker라는 거대 모놀리식 구조에서, 현재는 이미지를 관리하는 고수준(High-level) 런타임과 실제 프로세스를 실행하는 저수준(Low-level) 런타임으로 분화되었습니다.
-3. **표준화의 승리**: OCI(Open Container Initiative) 표준과 CRI(Container Runtime Interface) 규격을 통해 벤더에 종속되지 않는 유연한 인프라 구성이 가능해졌습니다.
+### # 컨테이너 런타임 (Container Runtime)
+
+#### 핵심 인사이트 (3줄 요약)
+> 1. **본질**: 컨테이너 런타임은 애플리케이션을 OS 수준에서 가상화하여 격리된 프로세스로 실행하는 '엔진'이며, Linux Kernel의 Namespace(격리)와 Cgroups(자원 제어) 기능을 API화하여 제공하는 핵심 계층입니다.
+> 2. **가치**: Monolithic인 Docker에서 분리된 표준화된 아키텍처(containerd, CRI-O)를 통해, 운영체제 독립적인 컨테이너 관리가 가능해졌으며, 이는 Kubernetes (K8s) 클러스터의 안정성과 유지보수성을 획기적으로 향상시켰습니다.
+> 3. **융합**: 단순한 실행 도구를 넘어, 클라우드 네이티브(Cloud Native) 생태계의 표준 인터페이스인 CRI (Container Runtime Interface)와 OCI (Open Container Initiative) 규격을 준수하여 DevOps 파이프라인과 보안 시스템과의 긴밀한 통합을 가능하게 합니다.
 
 ---
 
-## Ⅰ. 컨테이너 런타임의 정의 및 분류
-### 1. 정의
-애플리케이션 컨테이너를 실행하기 위해 필요한 이미지 추출, 네트워크 설정, 프로세스 격리 등을 담당하는 실행 환경 소프트웨어입니다.
+### Ⅰ. 개요 (Context & Background) - 컨테이너 실행 환경의 진화
 
-### 2. 계층별 분류
-- **Low-level Runtime (실행)**: OCI 규격에 맞춰 실제로 컨테이너를 생성하고 실행함. (예: runc)
-- **High-level Runtime (관리)**: 이미지 전송, 관리, 네트워크 연결 등을 담당하며 저수준 런타임을 호출함. (예: containerd, CRI-O)
+**1. 개념 및 정의**
+컨테이너 런타임(Container Runtime)은 컨테이너 이미지(Image)를 저장소에서 내려받아 압축을 해제(Unpack)하고, 호스트 운영체제의 커널 기능을 호출하여 격리된 프로세스를 생성 및 관리하는 소프트웨어 계층입니다. 이는 단순히 `run` 명령어를 실행하는 것을 넘어, 이미지 라이프사이클 관리, 네트워크 설정, 스토리지 할당, 보안 정책 적용까지 포괄하는 복잡한 시스템입니다.
 
-📢 **섹션 요약 비유**: 런타임은 '무대 감독'과 같습니다. 저수준 런타임이 무대 위에 배우를 세우는 사람이라면, 고수준 런타임은 대본(이미지)을 가져오고 배경 음악(네트워크)을 트는 전체 관리자입니다.
+**2. 등장 배경과 진화 과정**
+초기 컨테이너 기술은 LXC (Linux Containers)와 같은 커널 기능을 직접 사용하는 형태였으나, 사용의 복잡성과 이식성 문제가 있었습니다. 이를 해결하기 위해 Docker가 등장하여 모든 기능(이미지 빌드, 배포, 실행)을 하나로 묶은 'All-in-One' 툴로 시장을 장악했습니다. 하지만 Kubernetes (K8s)와 같은 오케스트레이션 도구가 등장하면서, Docker의 무겁고 Monolithic한 아키텍처는 관리의 부담으로 작용했습니다. 이에 따라 **CNR (Container Native Runtime)**이라 불리는 경량화되고 표준화된 런타임(containerd, CRI-O)이 등장하여, 역할 분담(Attention Separation)이 이루어지게 되었습니다.
 
----
+**💡 비유**
+컨테이너 런타임은 **'레고 조립 로봇 팔'**과 같습니다. 사용자(개발자)가 완성된 레고 설계도(이미지)를 제공하면, 로봇 팔(런타임)이 블록을 꺼내고 차근차근 조립하여 실제 작동하는 모형(컨테이너)을 완성해줍니다.
 
-## Ⅱ. 런타임 아키텍처 및 표준 규격
-### 1. OCI & CRI 관계도 (ASCII Diagram)
+**3. 역할 분담의 필요성**
+현대의 컨테이너 런타임은 크게 두 가지 계층으로 나뉩니다.
+*   **High-level Runtime (고수준)**: 사용자와 가까운 계층으로 이미지 전송, 볼륨 관리, 네트워크 설정 등의 복잡한 로직을 처리합니다. (예: containerd, CRI-O)
+*   **Low-level Runtime (저수준)**: 실제로 커널 시스템 콜(System Call)을 실행하여 프로세스를 격리시키는 실행부입니다. (예: runc, crun)
 
 ```text
-    [ Kubernetes (Kubelet) ]
-             |
-             | <--- CRI (Container Runtime Interface)
-             |
-    +--------v--------+         +------------------+
-    |  High-level RT  |         |  Image Registry  |
-    | (containerd/    | <-----> | (Docker Hub 등)   |
-    |  CRI-O)         |         +------------------+
-    +--------+--------+
-             |
-             | <--- OCI (Open Container Initiative)
-             |
-    +--------v--------+
-    |  Low-level RT   | ----> [ Linux Kernel ]
-    |  (runc)         |       (Namespaces, Cgroups)
-    +-----------------+
++-----------------------+       +----------------------+       +-------------------+
+|   User / Developer    | ----> | Docker CLI / Kubectl | ----> |   Image Registry  |
++-----------------------+       +----------------------+       +-------------------+
+                                         |
+                                         v
++--------------------------------------------------------------------------------------------+
+|                         HIGH-LEVEL RUNTIME (Management Layer)                             |
+|  (Pulls Image, Manages Network, Volumes, Security Context)                                |
+|  +-------------------------+              +----------------------+                        |
+|  |      Docker Engine      |              | containerd / CRI-O   |                        |
+|  | (Legacy: Monolithic)    |              | (Modern: Modular)    |                        |
+|  +-------------------------+              +----------------------+                        |
+|             |                                     |                                       |
++--------------------------------------------------------------------------------------------+
+              |                                     |
+              |                                     | exec / create
+              v                                     v
++--------------------------------------------------------------------------------------------+
+|                         LOW-LEVEL RUNTIME (Execution Layer)                                |
+|  (Creates Namespaces, Cgroups, Mounts)                                                     |
+|  +------------------------------------------------------------------+                      |
+|  |                           runc / crun                            |                      |
+|  |   "I just follow the OCI spec and fork() the process."           |                      |
+|  +------------------------------------------------------------------+                      |
++--------------------------------------------------------------------------------------------+
+              |
+              | libcontainer / libnsenter
+              v
++--------------------------------------------------------------------------------------------+
+|                      LINUX KERNEL (System Call Interface)                                  |
+|   Namespace (IPC, NET, PID...) | Cgroups (CPU, Memory...) | Capabilities | Seccomp         |
++--------------------------------------------------------------------------------------------+
 ```
 
-### 2. 주요 표준
-- **OCI (Open Container Initiative)**: 컨테이너 이미지 형식과 런타임(runc) 실행에 대한 표준.
-- **CRI (Container Runtime Interface)**: 쿠버네티스가 다양한 런타임을 지원하기 위해 만든 플러그인 인터페이스.
-
-📢 **섹션 요약 비유**: 표준 규격은 '모든 가전제품이 똑같이 쓰는 220V 콘센트'와 같습니다. 모양만 맞으면 어떤 제조사의 런타임이든 꽂아서 쓸 수 있습니다.
+**📢 섹션 요약 비유**: 런타임의 계층 분리는 **'레스토랑 주방 시스템'**과 같습니다. 고수준 런타임은 주문서를 받아 재료를 손질하고 플레이팅하는 '쉐프(Chef)'이고, 저수준 런타임은 실제 불을 피우고 요리하는 '쿡(Cook)'입니다. 쉐프가 바뀌어도 쿡의 요리법(표준)은 똑같으니 주방이 혼란스럽지 않습니다.
 
 ---
 
-## Ⅲ. 주요 컨테이너 런타임 비교
-### 1. Docker (Moby)
-- **특징**: 컨테이너 기술을 대중화시킨 주인공. 빌드, 공유, 실행이 모두 포함된 올인원 도구.
-- **현황**: 쿠버네티스 1.24 이후 Dockershim이 제거되며, 쿠버네티스 내부에서는 직접 쓰이기보다 containerd로 대체되는 추세.
+### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
 
-### 2. containerd
-- **특징**: Docker에서 분리된 산업 표준 고수준 런타임. 안정성이 높고 가벼움.
-- **현황**: 현재 쿠버네티스의 가장 대표적인 기본 런타임.
+**1. 표준 규격: OCI와 CRI의 상호작용**
+컨테이너 생태계의 유연성은 두 가지 핵심 표준에서 나옵니다.
+*   **OCI (Open Container Initiative)**: 런타임 사양(Runtime Spec)과 이미지 사양(Image Spec)을 정의합니다. 어떤 런타임이든 OCI 호환 이미지를 실행할 수 있어야 합니다.
+*   **CRI (Container Runtime Interface)**: Kubernetes의 kubelet이 컨테이너 런타임과 통신하기 위한 gRPC 기반 인터페이스입니다. 더 이상 Docker에 직접 의존하지 않고 플러그인 방식으로 런타임을 교체 가능하게 합니다.
 
-### 3. CRI-O
-- **특징**: 오직 쿠버네티스만을 위해 만들어진 경량 런타임. 불필요한 기능을 제거하여 보안성이 뛰어남.
-- **현황**: Red Hat OpenShift 등에서 주력으로 사용.
+**2. 아키텍처 상세 구조 및 데이터 흐름**
+쿠버네티스 환경에서 컨테이너가 생성되는 과정을 도식화하면 다음과 같습니다. 이 과정에서 `shim`이라는 중요한 컴포넌트가 데몬(Daemon)이 없는 구조를 유지합니다.
 
-📢 **섹션 요약 비유**: Docker가 '모든 기능이 다 들어있는 스위스 아미 나이프'라면, containerd나 CRI-O는 '요리할 때 꼭 필요한 칼만 골라놓은 전문 쉐프의 세트'입니다.
+```text
+[ Kubernetes Control Plane ]
+            |
+            | kube-apiserver (YAML Manifest)
+            v
+    +---------------+
+    |    Kubelet    | <--- Orchestrator (Pod Lifecycle Manager)
+    +-------+-------+
+            |
+            | gRPC (CRI Protocol: CreatePod/RunPodSandbox)
+            v
++---------------------------------------------------------------+
+|                   CRI (Interface Layer)                       |
+|  +-------------------+          +-------------------+          |
+|  |      CRI-O        |          |    containerd     |          |
+|  | (RedHat Focus)    |          | (CNCF / Docker)   |          |
+|  +-------------------+          +---------+---------+          |
++---------------------------------------------------------------+
+                                          |
+                                          | Container Start
+                                          v
++---------------------------------------------------------------+
+|                 containerd (High-Level Runtime)                |
+|  +---------------------------------------------------------+  |
+|  |  1. Image Pull & Unpack (OverlayFS)                       |  |
+|  |  2. Network Namespace Creation (CNI Plugin Interaction)   |  |
+|  |  3. Metadata Management                                   |  |
+|  +-------------------------+-------------------------------+  |
+|                            | exec $container_id               |
++----------------------------+----------------------------------+
+                             |
+                             | fork & exec
+                             v
++---------------------------------------------------------------+
+|                 containerd-shim (The Daemonless Layer)         |
+|  Role: 1. Keep STDIO open (FIFO Pipes)                         |
+|        2. Report exit status back to containerd                |
+|        3. Allows containerd to restart (upgrades) w/o killing  |
++----------------------------+----------------------------------+
+                             |
+                             | libcontainer (Go)
+                             v
++---------------------------------------------------------------+
+|                   runc (Low-Level Runtime)                     |
+|  "Creates a new process, clones namespaces, sets cgroups..."   |
++---------------------------------------------------------------+
+```
+
+**3. 심층 동작 원리: runc와 Shim의 역할**
+*   **runc**: OCI 표준 구현체로, 단순한 CLI 툴입니다. `runc run` 명령어를 받으면 `fork()` 시스템 콜을 호출하여 자식 프로세스를 생성하고, 여기에 `clone()`, `unshare()`, `setns()` 시스템 콜을 통해 Namespace를 격리합니다. 이 과정이 완료되면 runc 프로세스는 종료되어야 합니다.
+*   **containerd-shim**: runc가 종료된 후에도 컨테이너 프로세스(부모 프로세스가 init이 됨)가 살아있어야 하며, 그 컨테이너의 표준 입출력(stdout/stderr)을 로그 수집기(Fluentd 등)로 전달해야 합니다. Shim은 이 '고아(Orphan)' 컨테이너의 부모 역할을 대신 수행하는 매개체입니다.
+
+**4. 핵심 설정 및 코드 스니펙**
+containerd 설정(`/etc/containerd/config.toml`) 예시입니다.
+```toml
+[plugins."io.containerd.grpc.v1.cri"]
+  # CRI 플러그인 활성화
+  systemd_cgroup = false
+
+[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+  # 런타임 이름 및 버전
+  runtime_type = "io.containerd.runc.v2"
+  
+  # Base Runtime Spec (OCI) 수정
+  [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+    SystemdCgroup = true
+```
+
+**📢 섹션 요약 비유**: 아키텍처 구조는 **'식당 주문 시스템과 배달원'**과 같습니다. Kubelet은 '손님'이고, CRI는 '주문서(표준 양식)'입니다. containerd는 '주방장'이고, Shim은 '배달 기사'입니다. 주방장이 휴식을 가하거나 교체되더라도(런타임 업데이트), 배달 기사(Shim)가 음식(컨테이너)을 안전하게 배달하는 동안 손님은 서비스 중단을 느끼지 못합니다.
 
 ---
 
-## Ⅳ. 런타임의 작동 매커니즘 (Internal)
-### 1. runc (The Standard)
-OCI 런타임의 표준 구현체로, 커널의 기능을 호출하여 격리된 실행 환경을 만드는 실제 "작업자"입니다. 컨테이너 프로세스가 실행되면 runc는 종료됩니다.
+### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
 
-### 2. Shim (The Watcher)
-컨테이너 프로세스와 런타임 사이의 얇은 계층입니다. 런타임이 재시작되어도 컨테이너가 죽지 않게 유지(Daemonless)하고, 표준 입출력 및 로그를 관리합니다.
+**1. 핵심 런타임 기술 비교 (Docker vs. containerd vs. CRI-O)**
 
-📢 **섹션 요약 비유**: runc는 '출발 신호를 주는 심판'이고, Shim은 '선수가 뛰는 동안 옆에서 계속 체크하며 기록을 재는 코치'입니다.
+| 비교 항목 | Docker Engine (Legacy) | containerd (Industry Std) | CRI-O (Optimized) |
+|:---|:---|:---|:---|
+| **구조 (Architecture)** | Monolithic (Daemon 중심) | Modular (Layered) | Microkernel (Lightweight) |
+| **대상 사용자 (Target User)** | Developers, Desktop Ops | Cloud Vendors, General K8s | OpenShift/RedHat Ecosystem |
+| **CRI 지원 (Native)** | X (Dockershim 필요했음) | O (Built-in Plugin) | O (Built-in) |
+| **의존성 (Dependencies)** | 자체적인 라이브러리 중복 | OCI 표준 준수, 경량 | systemd, podman 등 RH 기술과 융합 |
+| **주요 장점** | 빌드 및 개발툴 생태계 우수 | 안정성과 범용성 | 보안성(RHCOS)과 경량화 |
+| **주요 단점** | 무거운 오버헤드 | 설정 복잡성 상승 | RH 이외 생태계에서의 지연 |
+
+**2. 성능 및 효율성 메트릭스**
+*   **Footprint**: Docker Engine은 Python 스크립트와 다중 데몬으로 구성되어 메모리 점유율이 상대적으로 높습니다. containerd와 CRI-O는 단일 바이너리에 가까운 형태로 구성되어 메모리 사용량이 최소화됩니다(약 30~40% 절감 효과).
+*   **Startup Latency**: `runc` 실행 속도는 거의 동일하나, High-level 런타임의 오버헤드에 따라 전체 파드 생성 시간 차이가 발생할 수 있습니다.
+
+**3. 타 영역(보안/OS)과의 융합**
+*   **보안 (Security)**: Kata Containers나 gVisor와 같은 'Sandboxed Runtime'은 Low-level 런타임 계층에서 VM 기반 격리를 제공합니다. containerd는 이러한 런타임을 플러그인으로 교체하여 Multi-tenant 환경의 보안을 강화할 수 있습니다.
+*   **OS 융합**: CRI-O는 Red Hat의 **CoreOS (Red Hat CoreOS - RHCOS)**와 깊게 통합되어 있어, `ignition` 부팅 프로세스와 연계되어 불변(Immutable) 인프라를 구현하는 데 최적화되어 있습니다.
+
+**📢 섹션 요약 비유**: 이들의 차이는 **'자동차와 부품'**의 관계와 유사합니다. Docker는 소비자가 바로 타고 가는 **'완성차'**입니다(편리하지만 무겁습니다). containerd와 CRI-O는 자동차 제조사가 사용하는 **'엔진/섀시 플랫폼'**입니다. 자신이 레이싁 카를 만들건지, 트럭을 만들건지(Kata Containers 등 보안 런타임 연동)에 따라 플랫폼을 골라 쓸 수 있습니다.
 
 ---
 
-## Ⅴ. 런타임 선택 시 고려사항 (Governance)
-### 1. 목적에 따른 선택
-- **개발 환경**: 빌드와 실행이 쉬운 Docker Desktop 선호.
-- **운영 환경 (K8s)**: 가볍고 검증된 containerd나 보안이 강화된 CRI-O 선택.
+### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
 
-### 2. 보안과 성능
-- 하이퍼바이저 수준의 격리가 필요하다면 **Kata Containers**와 같은 특수한 런타임 연동 고려.
-- 서버리스 환경이라면 기동 속도가 극도로 빠른 런타임 최적화 필요.
+**1. 실무 시나리오 및 의사결정 트리**
+*   **상황 A (Public Cloud 클러스터 운영)**
+    *   **환경**: AWS EKS, Azure EKS, Google GKE 사용
+    *   **결정**: 클라우드 제공사가 최적화한 Managed Runtime(예: AWS EKS `containerd`)을 그대로 사용한다. Customizing을 시도하면 지원받기 어려울 수 있다.
+*   **상황 B (On-Premise / Bare-metal K8s 구축)**
+    *   **환경**: 자체 데이터 센터에 물리 서버를 나란히 두어 구축
+    *   **결정**: **containerd**를 선택한다. 범용성이 가장 좋고 문서가 풍부하여 트러블슈팅이 유리하다.
+*   **상황 C (Red Hat / OpenShift 기반 구축)**
+    *   **환경**: RHEL (Red Hat Enterprise Linux) 기반의 OS 사용
+    *   **결정**: **CRI-O**를 선택한다. OS의 보안 기능(SElinux, 현재는 Kernel 기능)과 가장 밀접하게 통합되어 있고, Red Hat 지원을 받기에 유리하다.
 
-📢 **섹션 요약 비유**: 런타임 선택은 '자동차 엔진을 고르는 것'과 같습니다. 경주용(고성능)을 쓸지, 트럭용(안정성)을 쓸지 목적에 맞춰 골라야 합니다.
-
----
-
-### 📌 지식 그래프 (Knowledge Graph)
-- [컨테이너 가상화 개념](./621_container_virtualization.md) ← 런타임의 존재 이유
-- [리눅스 네임스페이스 (Namespaces)](./622_linux_namespaces.md) ← 런타임이 조작하는 대상
-- [쿠버네티스 아키텍처](./627_kubernetes_architecture.md) ← 런타임을 관리하는 상위 시스템
-
-### 👶 아이를 위한 3줄 비유 (Child Analogy)
-1. **상황**: 레고 성을 만들고 싶은데, 레고 조각들을 모으고 설명서를 보고 실제로 조립해주는 로봇이 필요해요.
-2. **원리**: 런타임은 바로 그 '조립 로봇'이에요. 상자에서 조각(이미지)을 꺼내고, 설계도대로 딱딱 맞춰서 멋진 성(컨테이너)을 완성해줘요.
-3. **결과**: 나는 로봇에게 "성 만들어줘!"라고 한마디만 하면, 로봇이 알아서 척척 만들어주니 아주 편리하답니다!
+**2. 도입 체크리스트 (Technical/Operational)**
+*   **[ ] CRI 호환성 확인**: 설치하려는 런타임이 사용하는 Kubernetes 버전의 CRI 버전을 지원하는가? (예: K8s 1.24+는 Dockershim 제거)
+*   **[ ] cgroup Driver 일치**: 런타임의 `cgroup

@@ -3,89 +3,152 @@ title = "VFIO 프레임워크"
 weight = 666
 +++
 
-> 💡 **핵심 인사이트 (3-Line Insight)**
-> - 가상 기능 입출력 (Virtual Function I/O, VFIO)은 호스트 시스템의 물리적 하드웨어 디바이스를 가상 머신(VM)이나 사용자 공간 (User-space) 애플리케이션에 안전하고 직접적으로 할당 (Passthrough)하기 위한 리눅스 커널 프레임워크입니다.
-> - 입출력 메모리 관리 장치 (I/O Memory Management Unit, IOMMU)를 기반으로 디바이스의 직접 메모리 접근 (Direct Memory Access, DMA)과 인터럽트를 하드웨어적으로 철저히 격리 (Isolation)하여 시스템 보안과 안정성을 보장합니다.
-> - 데이터 평면 개발 키트 (Data Plane Development Kit, DPDK) 패킷 처리나 그래픽 처리 장치 (Graphics Processing Unit, GPU) 패스스루 등, 제로 오버헤드 (Zero-Overhead) 베어메탈급 성능이 필수적인 환경에서 핵심적인 역할을 수행합니다.
+# VFIO (Virtual Function I/O) 프레임워크 심화 분석
 
-## Ⅰ. 가상 기능 입출력 (Virtual Function I/O, VFIO) 프레임워크 개요
-디바이스 패스스루 (Device Passthrough) 또는 직접 할당 (Direct Assignment)은 가상 머신 (Guest OS)이 하이퍼바이저의 에뮬레이션이나 반가상화 계층을 거치지 않고, 물리적인 하드웨어 장치(네트워크 인터페이스 카드 (NIC), GPU, 비휘발성 메모리 익스프레스 (NVMe) 등)를 독점적으로 직접 제어하는 기술입니다. 이를 통해 I/O 지연을 베어메탈 (Bare-metal) 수준으로 낮출 수 있습니다.
-과거에는 KVM 전용 디바이스 할당 모듈을 사용했으나, 이는 리눅스 커널의 권한 통제 모델을 훼손하고 KVM 하이퍼바이저에 너무 강하게 결합되어 있다는 단점이 있었습니다. 이를 범용적이고 안전하게 대체하기 위해 등장한 것이 **가상 기능 입출력 (VFIO)**입니다. VFIO는 KVM뿐만 아니라 일반적인 리눅스 사용자 공간 애플리케이션에서도 IOMMU의 보호 아래 안전하게 물리 디바이스 드라이버를 개발하고 접근할 수 있도록 해주는 범용 커널 프레임워크입니다.
+### 핵심 인사이트 (3줄 요약)
+> 1. **본질**: VFIO (Virtual Function I/O)는 호스트 커널의 개입 없이 사용자 공간(User-space) 프로세스나 가상 머신(VM)이 물리적 디바이스를 안전하게 직접 제어(Passthrough)할 수 있게 해주는 리눅스 커널 기반의 보안 프레임워크입니다.
+> 2. **가치**: IOMMU (Input-Output Memory Management Unit) 하드웨어 격리 기술을 기반으로 DMA (Direct Memory Access) 공격을 원천 차단하여, 베어메탈(Bare-metal) 수준의 **제로 카피(Zero-copy)** 성능과 시스템 무결성을 동시에 달성합니다.
+> 3. **융합**: 고성능 컴퓨팅(HPC), 클라우드 네이티브 네트워킹(DPDK), AI 가속화(GPU Passthrough) 및 SR-IOV (Single Root I/O Virtualization) 환경의 핵심 인프라 기술로 작용합니다.
 
-> 📢 **섹션 요약 비유**
-> - **특급 전용 차선 (Passthrough)과 안전 펜스 (VFIO):** 장치 패스스루가 대중교통(하이퍼바이저)을 타지 않고 목적지까지 한 번에 가는 'VIP 전용 차선'이라면, VFIO는 이 전용 차선을 달리는 차가 다른 일반 차선(호스트 OS 메모리)으로 돌진하지 못하게 막아주는 '견고한 안전 펜스 및 통행 관리 시스템'입니다.
+---
 
-## Ⅱ. VFIO의 보안 핵심: IOMMU와 DMA 격리
-사용자 공간의 프로세스가 물리 디바이스를 직접 제어한다는 것은, 프로세스가 디바이스의 직접 메모리 접근 (DMA) 기능을 조작하여 호스트 커널 등 시스템 전체 메모리를 마음대로 읽고 쓸 수 있다는 치명적인 보안 위협을 의미합니다. VFIO는 이를 **입출력 메모리 관리 장치 (IOMMU)** 하드웨어를 통해 완벽히 차단합니다.
+### Ⅰ. 개요 (Context & Background)
 
-### 1. IOMMU의 역할
-일반적인 MMU가 CPU의 가상 주소를 물리 주소로 변환한다면, IOMMU는 **디바이스(하드웨어)가 요청하는 DMA 주소(입출력 가상 주소, IOVA)를 호스트 물리 주소 (Host Physical Address, HPA)로 변환**합니다. IOMMU는 각 디바이스가 접근할 수 있는 물리 메모리 영역을 페이지 단위로 엄격히 제한(격리)할 수 있습니다.
+#### 개념 및 정의
+**VFIO (Virtual Function I/O)**는 리눅스 커널에서 제공하는 사용자 공간 드라이버 프레임워크로, 안전한 디바이스 패스스루(Device Passthrough)를 구현하기 위해 설계되었습니다. 기존의 가상화 환경에서는 하이퍼바이저(Hypervisor)가 하드웨어를 에뮬레이션(Emulation)하거나 반가상화(Paravirtualization) 방식을 통해 I/O 요청을 중계했습니다. 이는 소프트웨어적인 오버헤드가 발생하여 성능 저하의 주원인이 되었습니다.
 
-### 2. IOMMU 그룹 (IOMMU Group)
-특정 디바이스들은 독립적으로 DMA 격리가 불가능하고 물리적인 버스를 공유할 수 있습니다. VFIO는 안전한 격리를 보장하는 최소 단위인 **IOMMU Group** 단위로 디바이스를 묶어서 관리합니다. 특정 디바이스를 패스스루하려면, 그 디바이스가 속한 IOMMU Group 전체를 동시에 VFIO로 넘겨야만 보안이 보장됩니다.
+VFIO는 이러한 소프트웨어 계층을 제거하고, **물리적 디바이스(Pysical Device)의 메모리 맵(Memory Map)과 레지스터(Register)를 가상 머신이나 사용자 프로세스의 가상 주소 공간에 직접 매핑(Direct Mapping)**합니다. 이를 통해 CPU 개입 없이 데이터가 전송되는 DMA (Direct Memory Access)의 장점을 그대로 유지하면서도, 보안은 IOMMU라는 하드웨어적 장벽을 통해 완벽하게 보장합니다.
 
-> 📢 **섹션 요약 비유**
-> - **출입 통제 게이트(IOMMU):** 외주 직원(하드웨어 디바이스)이 회사 건물(물리 메모리)을 자유롭게 돌아다니게 두는 대신, IOMMU라는 스마트 게이트를 설치하여 사전에 허가된 특정 사무실(가상 머신의 메모리 영역)에만 들어갈 수 있도록 물리적으로 차단하는 보안 시스템입니다.
+#### 기술적 배경과 발전
+과거 KVM (Kernel-based Virtual Machine) 초기에는 `kvm.ko` 모듈 내부에 디바이스 할당을 위한 전용 코드가 존재했습니다. 그러나 이는 유지보수가 어렵고, 특정 하이퍼바이저에 종속되며, 무엇보다 보안 검증이 어렵다는 문제가 있었습니다. 이를 해결하기 위해 **디바이스와 독립적인 보안 계층**을 만들고, I/O 디바이스의 접근 제어를 커널의 표준 메커니즘(파일 시스템 노드, `ioctl` 인터페이스)으로 관리하고자 VFIO가 개발되었습니다.
 
-## Ⅲ. VFIO 프레임워크의 동작 아키텍처
-VFIO는 리눅스 커널 내에서 디바이스 자원을 사용자 공간으로 안전하게 노출하는 API를 제공합니다.
+> 💡 **비유**
+> VFIO는 마치 도심의 복잡한 신호 체계(하이퍼바이저 에뮬레이션)를 거치지 않고, **고속도로 입구부터 목적지까지 연결되는 전용 특급 차선(Passthrough)**을 제공하는 것과 같습니다. 하지만 이 차선이 일반 도로(호스트 메모리)로 무단 진입하여 사고(DMA 공격)를 내지 않도록, **진입 지점마다 철저한 출입구 검문소(IOMMU)**를 설치한 시스템입니다.
 
+#### ASCII 다이어그램: 전통적인 가상화 I/O vs VFIO Passthrough
 ```text
-[ 사용자 공간 (User-Space) ]
-  (QEMU/KVM 프로세스) 또는 (DPDK 애플리케이션)
-      |  (1. VFIO API 호출: /dev/vfio/vfio, ioctl 등)
-      v
-[ 호스트 OS 커널 공간 (Host OS Kernel) ]
-  [ VFIO Core (vfio.ko) ]  <-- IOMMU 그룹 관리, 권한 검증
-      |
-  [ VFIO 버스 드라이버 (vfio-pci) ] <-- 실제 물리 디바이스 바인딩
-      |
-  [ IOMMU API (iommu.ko) ] <-- 하드웨어 IOMMU (VT-d/AMD-Vi) 설정
-      |
-[ 물리적 하드웨어 디바이스 (PCIe NIC, GPU 등) ]
++---------------------+  Context Switch (Expensive)  +------------------+
+| Guest OS Application| <---------------------------> | Host OS Driver   |
+| (User Space)        |   Emulation / Trap & Emulate | (Kernel Space)   |
++---------------------+                               +------------------+
+       |                                                      |
+       | (1) Traditional I/O (High Latency)                    | (2) Hardware Access
+       v                                                      v
++---------------------+                               +------------------+
+| Virtual Device       |                               | Physical Device  |
++---------------------+                               +------------------+
+
+(With VFIO: Direct Path)
++---------------------+  DMA (Zero Copy, Fast)        +------------------+
+| Guest VM / DPDK App  | ============================> | Physical Device  |
+| (User Space Driver)  |   (Through IOMMU Protection)  | (Passthrough)    |
++---------------------+                               +------------------+
 ```
+**(해설)** 위 다이어그램은 기존의 에뮬레이션 방식(상단)과 VFIO 방식(하단)의 데이터 경로를 비교합니다. 기존 방식은 I/O 요청마다 호스트 커널과의 문맥 교환(Context Switch)과 트랩(Trap)이 발생하여 병목이 생기지만, VFIO는 IOMMU를 통해 보안성을 유지하면서도 DMA를 통해 장치로 직행하는 구조를 보여줍니다.
 
-### 동작 과정
-1. **바인딩 해제/재바인딩:** 호스트 OS가 사용 중이던 디바이스를 커널에서 분리(Unbind)하고, VFIO 전용 드라이버에 바인딩(Bind)합니다.
-2. **IOMMU 매핑:** 프로세스는 VFIO ioctl 명령을 통해 메모리 공간을 IOMMU에 매핑합니다.
-3. **직접 접근:** 이제 디바이스는 DMA 작업을 수행할 때 IOMMU를 거쳐 가상 머신의 메모리에 직접 접근하며, 인터럽트는 하이퍼바이저 개입 없이 KVM으로 전달됩니다.
+> 📢 **섹션 요약 비유**: VFIO는 도심을 통과하는 느린 시내버스(소프트웨어 에뮬레이션) 대신, **요금소를 통과하는 즉시 고속도로에 진입하여 목적지까지 방해물 없이 달리는 특급 고속버스(Direct Passthrough)** 시스템입니다. 다만, 진입 전 요금소(IOMMU)에서 승객과 짐을 안전하게 검사하는 절차가 필수적입니다.
 
-> 📢 **섹션 요약 비유**
-> - **소유권 이전 등기:** 호스트 OS가 사용하던 장비의 소유권을 완전히 말소시킨 뒤, VFIO라는 신탁 기관(안전장치)을 통해 새로운 주인(VM 프로세스)에게 소유권과 리모컨(제어권)을 안전하게 넘겨주는 법적, 물리적 양도 절차입니다.
+---
 
-## Ⅳ. 주요 유스케이스: DPDK와 GPU 패스스루
-VFIO는 성능 타협이 불가능한 엔터프라이즈 환경의 필수 요소입니다.
+### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
 
-1. **데이터 평면 개발 키트 (DPDK):** 네트워크 패킷 처리 속도를 극대화하기 위해 리눅스 커널의 네트워크 스택을 완전히 우회합니다. 애플리케이션(DPDK)이 물리 네트워크 카드를 직접 제어할 때 보안이 강화된 VFIO를 표준으로 사용합니다.
-2. **GPU 패스스루 (GPU Passthrough):** 인공지능 딥러닝 연산이나 가상 데스크톱 인프라 (Virtual Desktop Infrastructure, VDI) 환경을 위해 가상 머신 내부에서 물리적인 GPU를 100% 네이티브 성능으로 사용해야 할 때 VFIO 프레임워크가 필수적으로 사용됩니다.
-3. **단일 루트 I/O 가상화 (Single Root I/O Virtualization, SR-IOV) 결합:** 단일 물리 장치를 논리적으로 분할한 가상 기능(Virtual Function)들을 IOMMU 그룹으로 묶어 여러 VM에 각각 패스스루합니다.
+VFIO는 단순한 드라이버가 아니라, 커널의 보안 모델을 준수하며 디바이스 접근을 관리하는 계층형 아키텍처입니다.
 
-> 📢 **섹션 요약 비유**
-> - **슈퍼컴퓨터 직결:** 고사양 그래픽 작업이나 초고속 통신이 필요한 전문가(VM)에게, 일반적인 사무용 네트워크망(가상화 I/O)이 아닌 전용 광케이블과 워크스테이션(물리 GPU)을 책상에 직접 꽂아주는(패스스루) 가장 강력한 지원 방식입니다.
+#### 1. 구성 요소 및 역할 (Component Breakdown)
+VFIO를 구성하는 핵심 요소들은 각각 격리, 관리, 제어의 책임을 분담합니다.
 
-## Ⅴ. 장점과 한계 (Live Migration 문제)
-**장점:**
-- 가상화 오버헤드가 제로(0)에 수렴하는 궁극의 I/O 및 컴퓨팅 성능.
-- 하드웨어 고유의 특수 기능을 100% 활용 가능.
+| 구성 요소 (Component) | 전체 명칭 (Full Name) | 역할 및 내부 동작 | 비유 |
+|:---|:---|:---|:---|
+| **VFIO Core** | VFIO Core Module | `/dev/vfio/vfio` 디바이스 노드를 관리하며, 그룹 관리와 전역 API(`ioctl`) 제공 | 총괄 관리 본부 |
+| **VFIO PCI Driver** | VFIO PCI Bus Driver | PCI (Peripheral Component Interconnect) 디바이스를 vfio 모듈에 바인딩(Bind)하고, BAR (Base Address Register) 공간 노출 | 디바이스 관리자 |
+| **IOMMU Driver** | IOMMU (Input-Output MMU) Driver | IOVA (I/O Virtual Address)를 HPA (Host Physical Address)로 변환하고 페이지 테이블 설정하여 접근 권한 제어 | 출입 통제 게이트 |
+| **Container** | VFIO Container | IOMMU 도메인(Address Space)을 논리적으로 그룹화하는 객체. 여러 디바이스가 동일한 주소 공간을 공유할 수 있게 함 | 안전한 울타리 |
+| **Group** | IOMMU Group | PCI 토폴로지 상에서 DMA 격리가 불가능한 최소 물리적 단위. 이 단위로 묶여서만 패스스루 가능 | 최소 할당 단위 |
 
-**한계 및 단점:**
-- **자원의 독점:** 패스스루된 장치는 해당 VM이 독점하므로 다른 VM과 공유할 수 없습니다.
-- **실시간 마이그레이션 (Live Migration) 불가:** 가상 머신이 특정 물리 서버의 고유 하드웨어에 직접 결합되어 버립니다. 따라서 VM을 중단 없이 다른 호스트로 이동시키는 라이브 마이그레이션이 원칙적으로 불가능해지며, 클라우드의 유연성이 훼손됩니다.
+#### 2. 아키텍처 구조 및 데이터 흐름
+VFIO의 핵심은 **커널 공간(Kernel Space)의 VFIO 드라이버**가 사용자 공간(User Space)에 디바이스 자원을 안전하게 노출하는 방식에 있습니다. 이 과정은 `mmap()` 시스템 콜과 IOMMU 페이지 테이블 조작이 결합하여 이루어집니다.
 
-> 📢 **섹션 요약 비유**
-> - **집터의 딜레마:** 텐트(가상 머신)는 언제든 다른 곳으로 쉽게 이사(마이그레이션)할 수 있지만, 성능을 위해 텐트 안에 무거운 지하 암반수 펌프(패스스루 디바이스)를 직접 박아버리면 더 이상 텐트를 다른 곳으로 옮길 수 없게 되는 딜레마와 같습니다.
-
-### 🧠 지식 그래프 및 하위 비유 (Knowledge Graph & Child Analogy)
-```mermaid
-graph TD
-    A[Direct Device Assignment] --> B(VFIO Framework)
-    B --> C[IOMMU Hardware Isolation]
-    B --> D[User-Space Device Drivers]
-    C --> E[IOMMU Groups: Secure DMA]
-    D --> F[DPDK: Kernel Bypass Networking]
-    D --> G[QEMU/KVM: GPU Passthrough]
-    B --> H{Drawbacks / Trade-offs}
-    H --> I[Breaks Live Migration]
-    H --> J[Hardware Tied]
+#### ASCII 다이어그램: VFIO 스택 구조 및 메모리 매핑
+```text
++-----------------------------------------------------------------------+
+|                          User Space (QEMU/DPDK)                       |
+|                                                                       |
+|  +------------------+        mmap(Region)       +------------------+ |
+|  |  App / Guest OS  |  <----------------------  | VFIO Client Lib  | |
+|  +------------------+   Mapping Device Memory  +------------------+ |
+|         | Access (DMA)                                           ^  |
+|         |                                                        |  |
++---------|--------------------------------------------------------|--+
+          | | ioctl(IOMMU_MAP)                                      |
+          v |                                                      | |
++------------------------------------------------------------------+|+
+|                    Kernel Space (Host OS)                         | |
+|                                                                  | |
+|  +------------------+    vfio_pci.ko   +------------------+      | |
+|  |   Physical Dev   | <--------------  |  VFIO PCI Driver |      | |
+|  |    (NIC/GPU)     |   Bind/Unbind   |   (vfio-pci)      |      | |
+|  +------------------+                  +------------------+      | |
+|         |                                      |                  | |
+|         | DMA Request                          | API Call         | |
+|         v                                      v                  | |
+|  +--------------------------------------------------------------+ | |
+|  |                       IOMMU Driver (iommu.ko)                | | |
+|  |   +------------------------------------------------------+   | | |
+|  |   | IOMMU Page Table: [IOVA] ---> [Host Physical Address] |   | | |
+|  |   +------------------------------------------------------+   | | |
+|  +--------------------------------------------------------------+ | |
++-------------------------------------------------------------------+
+          |                                                  ^
+          | DMA Transaction (With IOVA)                        |
+          v                                                  | Trap/Interruption
++-------------------------------------------------------------------+
+|                     Hardware Layer                               |
+|  +------------------+        +------------------+                  |
+|  |   IOMMU Unit     |------->|   Physical RAM   |                  |
+|  | (VT-d / AMD-Vi)  | Translate |                 |                  |
+|  +------------------+        +------------------+                  |
++-------------------------------------------------------------------+
 ```
-- **하위 비유:** VFIO는 맹수(물리 하드웨어)를 다루기 위해 서커스단(호스트)이 설치한 **"투명한 특수 방탄 유리벽 (IOMMU)"**입니다. 관객(유저 프로세스/VM)은 방탄유리 덕분에 맹수와 교감(직접 I/O)할 수 있는 엄청난 성능을 즐기면서도, 맹수가 관람석(호스트 메모리)으로 튀어 오르는 사고(DMA 공격)로부터 완벽히 보호받습니다.
+**(해설)** 위 다이어그램은 VFIO의 계층 구조를 보여줍니다.
+1. **사용자 공간**: 애플리케이션은 `/dev/vfio/X` 디바이스를 열고 `ioctl`을 통해 설정을 요청하며, `mmap`을 통해 디바이스의 메모리 공간(레지스터, BAR)과 DMA 버퍼를 자신의 가상 주소 공간에 직접 매핑합니다.
+2. **VFIO 드라이버**: 요청을 받아 커널의 표준 인터페이스를 통해 디바이스를 소유하고, 사용자 공간의 접근을 허용합니다.
+3. **IOMMU 드라이버**: 핵심 보안 계층입니다. 사용자가 정의한 가상 주소(IOVA)를 실제 물리 주소(HPA)로 변환하는 테이블을 설정합니다. 디바이스가 자신에게 할당되지 않은 메모리 영역을 DMA로 건드리려 하면 IOMMU가 이를 하드웨어적으로 차단(Fault)합니다.
+
+#### 3. 핵심 메커니즘: IOMMU Group 및 격리
+VFIO의 보안 철학은 **"보안을 확신할 수 없다면, 접근을 허용하지 않는다"**입니다.
+리눅스 커널은 부팅 시 PCI 토폴로지를 분석하여 **IOMMU Group**을 생성합니다. 만약 두 디바이스가 동일한 BDF (Bus-Device-Function) 루트 포트를 공유하여 DMA 요청을 구분할 수 없는 경우, 이들은 하나의 IOMMU Group으로 묶입니다. VFIO는 이 **Group 단위로만 디바이스를 점유(Passthrough)**할 수 있도록 강제합니다. 즉, 패스스루를 원하는 디바이스가 다른 필수 시스템 디바이스(예: 키보드 컨트롤러 등)와 같은 그룹에 있다면, 패스스루는 불가능하거나 시스템이 불안정해질 수 있으므로 작업을 중단해야 합니다.
+
+> 📢 **섹션 요약 비유**: VFIO 아키텍처는 **고압전기 케이블(Physical Device)**을 다루는 작업장과 같습니다. 아마추어(User Process)가 케이블을 직접 다루게 하려면, **전도성이 없는 특수 장갑과 절연된 도구(Secure API)**를 제공해야 합니다. 그리고 작업 구역(IOMMU Domain) 밖으로 전기(신호)가 새어 나가지 않도록, 작업장 벽 전체를 **두꺼운 고무 절연체(IOMMU Hardware)**로 감싸야 합니다. 디바이스끼리 서로 전기가 합선되지 않도록 개별 보호함(Group)에 넣는 것이 원칙입니다.
+
+---
+
+### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+
+VFIO는 단독으로 존재하기보다 다양한 가상화 및 성능 최적화 기술과 결합하여 그 가치를 극대화합니다.
+
+#### 1. 심층 기술 비교: VFIO vs 전통적 Emulation
+
+| 비교 항목 | 전통적 Emulation (QEMU Virtio) | VFIO Passthrough |
+|:---|:---|:---|
+| **CPU 오버헤드** | 매 I/O 요청마다 VM Exit 발생. Context Switch 비용 큼. | DMA 및 Interrupt 직접 처리. VM Exit 최소화. |
+| **네트워크 성능** | 수 ~수십 만pps (Packets Per Second) 제한. | 수백 만 ~ 천만pps 이상 (DPDK 결합 시). |
+| **메모리 접근** | Guest Physical → Host Physical 변환 과정 필요. | 1:1 Direct Mapping 또는 IOMMU Translation. |
+| **유연성** | 라이브 마이그레이션(Live Migration) 가능. | 물리 장치 종속으로 마이그레이션 불가능. |
+| **하드웨어 지원** | 소프트웨어 구현, 하드웨어 무관. | IOMMU 지원 하드웨어 필수 (Intel VT-d, AMD-Vi). |
+
+#### 2. 과목 융합 관점
+
+**A. 운영체제(OS)와 컴퓨터 구조(Computer Architecture)**
+VFIO의 기반은 **MMU (Memory Management Unit)**의 개념을 I/O 장치로 확장한 **IOMMU**입니다. CPU가 가상 주소를 물리 주소로 변환하는 Page Table을 가지듯이, IOMMU는 Device의 DMA 요청이 가상 주소(IOVA)를 사용할 수 있게 하고 이를 변환합니다. 이는 페이지 폴트(Page Fault) 처리 메커니즘을 장치 단위로 확장하는 것으로, 시스템의 메모리 관리 아키텍처를 완성하는 핵심 요소입니다.
+
+**B. 네트워크(Networking)와 가상화(Virtualization)**
+데이터 센터의 SDN (Software Defined Networking) 환경에서 VFIO는 **DPDK (Data Plane Development Kit)**와 결합하여 **Kernel Bypass** 네트워킹을 실현합니다. 일반적인 리눅스 네트워크 스택(Interrupt → Softirq → Socket Copy)을 우회하고, VFIO를 통해 NIC를 애플리케이션에 직접 연결하여 마이크로초(µs) 단위의 지연 시간을 구현합니다. 이는 고주파 트레이딩(HFT)이나 5G 코어 네트워크 등 필수적인 기술입니다.
+
+#### ASCII 다이어그램: SR-IOV와 VFIO의 결합
+```text
+[ Physical NIC (PF) ]
+   |
+   | +-- VF0 (Passthrough to VM1 via VFIO) ... [IOMMU Group A]
+   | +-- VF1 (Passthrough to VM2 via VFIO) ... [IOMMU Group B]
+   | +-- VF3 (Host Kernel Driver) ............. [Standard Driver]
+   +-- VF (Virtual Function

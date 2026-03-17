@@ -3,116 +3,130 @@ title = "인터럽트 (Interrupt)"
 weight = 315
 +++
 
-> **3-line Insight**
-> - 인터럽트(Interrupt)는 CPU가 현재 실행 중인 프로세스를 잠시 중단하고 시스템에 발생한 비동기적(Asynchronous) 이벤트나 예외 상황을 즉각적으로 처리하도록 강제하는 하드웨어 및 소프트웨어 메커니즘이다.
-> - 폴링(Polling) 방식의 치명적인 비효율성을 극복하여 다중 프로그래밍(Multiprogramming)과 효율적인 입출력(I/O) 제어를 가능하게 만든 현대 운영체제 아키텍처의 근간이다.
-> - 하드웨어 장치가 보내는 외부 인터럽트, 프로그램 오류 시 발생하는 내부 인터럽트(Trap/Exception), 운영체제 서비스를 호출하는 소프트웨어 인터럽트(SVC) 등으로 세분화된다.
+# # [Interrupt] 인터럽트 시스템 아키텍처
 
-## Ⅰ. 인터럽트의 개념과 탄생 배경
-
-인터럽트(Interrupt)는 컴퓨터 아키텍처에서 중앙 처리 장치(CPU)의 정상적인 명령어 실행 흐름(Execution Flow)을 가로채고, 긴급하게 처리해야 할 다른 작업의 주소로 실행 지점을 일시적으로 옮기는 하드웨어 신호(Signal) 또는 소프트웨어 명령어이다. 
-초기의 프로그램 제어 I/O(Programmed I/O) 방식에서는 CPU가 I/O 장치의 상태를 계속해서 확인(Polling)해야 했으므로 엄청난 사이클 낭비가 발생했다. 이러한 문제를 해결하기 위해 고안된 것이 인터럽트 기반 시스템(Interrupt-driven System)이다. CPU는 I/O 작업을 명령한 후 자신의 본래 연산을 수행하고, I/O 장치가 작업을 완료하면 CPU에 "작업 끝났습니다"라는 전기적 신호(Interrupt Request, IRQ)를 보내어 CPU가 개입하도록 한다.
-인터럽트는 단순히 입출력을 넘어, 타이머(Timer)를 통한 프로세스 선점(Preemption), 0으로 나누기 같은 치명적 연산 오류(Fault) 처리, 시스템 콜(System Call) 구현 등 현대 운영체제(OS)가 하드웨어를 제어하고 다중 작업을 조율하는 핵심 '심장 박동(Heartbeat)'과도 같다.
-
-> 📢 **섹션 요약 비유**
-> 식당 요리사(CPU)가 오븐 앞을 계속 지켜보는 대신(폴링), 타이머나 오븐의 알람 소리(인터럽트)가 울리면 하던 칼질을 잠깐 멈추고 요리를 꺼낸 뒤 다시 원래 하던 칼질로 돌아오는 매우 효율적인 주방 관리 시스템입니다.
-
-## Ⅱ. 인터럽트 처리 메커니즘의 아키텍처 (아키텍처)
-
-인터럽트가 발생하면 하드웨어와 운영체제가 협력하여 현재 상태를 보존(Context Saving)하고, 인터럽트 핸들러(Interrupt Handler / ISR)를 실행한 뒤 다시 원래 상태로 복귀(Restore)하는 정교한 루틴을 수행한다.
-
-```text
-[CPU Execution Timeline]
-
-User Process Executing  --> Instruction i
-                             |
-                   [Hardware Interrupt Signal occurs via IRQ Line]
-                             v
-Context Saving          -->  CPU Completes Instruction i.
-                             Saves Processor State (PC, Registers) to Control Stack (or TCB).
-                             v
-Interrupt Vector        -->  Reads Interrupt Vector Table using IRQ number
-                             to find address of the ISR.
-                             v
-Interrupt Service       -->  Jump to Interrupt Service Routine (ISR) in OS Kernel.
-Routine (ISR)                Execute OS code to handle the device/error.
-                             v
-Context Restoring       -->  Load saved Processor State from Stack.
-                             v
-User Process Resumes    -->  Return from Interrupt (IRET instruction).
-                             Resume at Instruction i + 1.
-```
-
-**수행 단계 요약:**
-1. **발생 및 인지:** CPU의 명령어 사이클 마지막(Fetch-Decode-Execute 다음의 Interrupt Check 단계)에 인터럽트 라인이 활성화되었는지 확인한다.
-2. **컨텍스트 저장 (Context Save):** 현재 프로세스의 프로그램 카운터(PC)와 주요 레지스터 값을 메모리 스택(Stack)이나 프로세스 제어 블록(PCB)에 백업한다.
-3. **벡터 테이블 참조 (Vectoring):** 인터럽트 컨트롤러(PIC)가 전달한 인터럽트 번호를 기반으로, 메모리 상의 인터럽트 벡터 테이블(Interrupt Vector Table, IVT)을 조회하여 해당 인터럽트를 처리할 코드의 시작 주소를 찾는다.
-4. **ISR 실행 (Interrupt Service Routine):** 커널 모드(Kernel Mode)로 전환되어 인터럽트 핸들러(ISR) 코드를 실행해 실질적인 요구사항(데이터 수신 등)을 처리한다.
-5. **상태 복원 및 복귀 (Context Restore & IRET):** 처리가 끝나면 백업해 둔 레지스터 값을 복원하고, 중단되었던 명령어의 다음 주소로 되돌아가 프로세스 실행을 재개한다.
-
-> 📢 **섹션 요약 비유**
-> 책을 읽다가 전화가 오면, 지금 읽던 페이지에 책갈피를 꽂아두고(상태 저장), 전화번호부를 찾아 누군지 확인한 뒤(벡터 테이블 참조), 전화를 받고(ISR 실행), 전화가 끝나면 다시 책갈피를 편 곳부터 책을 이어서 읽는(복원 및 복귀) 자연스러운 과정입니다.
-
-## Ⅲ. 인터럽트의 분류 (Classification of Interrupts)
-
-인터럽트는 그 발생 원인과 주체에 따라 크게 외부, 내부, 소프트웨어 인터럽트 3가지로 명확히 분류된다.
-
-- **외부 인터럽트 (External Interrupt / Hardware Interrupt):** 
-  - CPU 외부의 하드웨어 장치에서 전기적 신호로 발생한다. 타이머(Timer) 만료, I/O 장치(키보드 입력, 디스크 완료 등) 신호, 전원 공급 이상(Power Fail) 등이 이에 속한다. 비동기적(Asynchronous)으로 발생한다.
-- **내부 인터럽트 (Internal Interrupt / Trap / Exception):**
-  - CPU가 명령어(Instruction)를 실행하는 도중에 내부 연산 장치에서 발생한 예외 상황이다. 0으로 나누기(Divide by Zero), 페이지 부재(Page Fault), 잘못된 메모리 주소 참조(Segmentation Fault) 등이 포함되며, 명령어 실행 결과로 생기는 동기적(Synchronous) 이벤트이다.
-- **소프트웨어 인터럽트 (Software Interrupt / System Call / SVC):**
-  - 사용자 프로그램이 운영체제의 커널 서비스(파일 쓰기, 프로세스 생성 등)를 요청하기 위해 의도적으로 프로그래밍 코드 안에 삽입한 특수 명령어(예: x86의 `INT 0x80` 또는 `SYSCALL`)를 실행할 때 발생한다. 
-
-> 📢 **섹션 요약 비유**
-> 밖에서 택배 기사님이 벨을 누르는 건 '외부 인터럽트', 내가 요리하다 손을 베여서 아플 때 멈추는 건 '내부 인터럽트', 내가 직접 콜센터에 전화를 걸어 도움을 요청하는 건 '소프트웨어 인터럽트'에 해당합니다.
-
-## Ⅳ. 인터럽트 우선순위 (Priority)와 마스킹 (Masking)
-
-시스템에서는 여러 개의 인터럽트가 동시에 발생하거나, 하나의 인터럽트를 처리하는 중에 다른 인터럽트 신호가 들어오는 상황(중첩 인터럽트, Nested Interrupts)이 빈번하게 발생한다. 이를 제어하기 위해 하드웨어적인 우선순위 체계가 필요하다.
-
-- **우선순위 부여:** 전원 이상(가장 높음) > 타이머 인터럽트 > 디스크 I/O > 프린터 I/O(가장 낮음)와 같이 시스템의 치명도와 속도 요구사항에 따라 하드웨어 인터럽트 컨트롤러(PIC, APIC)가 우선순위를 결정한다. 동시에 발생하면 우선순위가 높은 것부터 CPU에 전달된다.
-- **마스커블 vs 논-마스커블 (Maskable vs Non-Maskable):**
-  - **Maskable Interrupt (INTR):** CPU가 플래그 레지스터(Interrupt Enable 플래그 등)를 설정하여 '무시(Mask)'하거나 지연시킬 수 있는 일반적인 인터럽트다. 중요한 작업을 하는 도중 방해받고 싶지 않을 때 끈다.
-  - **Non-Maskable Interrupt (NMI):** CPU가 어떤 상황에서도 절대 무시할 수 없는 초고도 우선순위의 인터럽트다. 시스템 전원 장애(Power Failure)나 심각한 하드웨어 에러 시 발생하며, 시스템 붕괴를 막기 위한 긴급 조치 코드만을 실행한다.
-
-> 📢 **섹션 요약 비유**
-> 회의 중에 친구에게서 오는 카톡 알림은 무음으로 꺼둘 수 있지만(마스커블 인터럽트), 건물에 불이 났다는 화재경보기 소리는 절대 끄거나 무시할 수 없고 무조건 튀어나가야 하는(논-마스커블 인터럽트) 것과 같습니다.
-
-## Ⅴ. 인터럽트의 한계 보완: DMA (Direct Memory Access)
-
-인터럽트 방식이 폴링(Polling)보다 월등히 우수하지만, 대량의 데이터(예: 기가바이트 단위의 디스크 파일)를 메모리로 전송할 때 1바이트마다 인터럽트가 발생한다면, CPU는 계속 하던 일을 멈추고 짐을 옮기느라 또 다른 병목(Interrupt Storm)에 시달리게 된다.
-
-- **DMA의 등장:** 이를 해결하기 위해 메모리와 I/O 장치 간의 데이터 전송만을 전담하는 별도의 특수 하드웨어 컨트롤러인 **DMA(Direct Memory Access)**가 등장했다.
-- **인터럽트와의 협업:** CPU는 DMA 컨트롤러에게 "디스크의 A 주소부터 데이터 100MB를 메모리 B 주소로 옮겨놔라"라고 명령만 내리고 작업을 완전히 위임한다. DMA 컨트롤러가 CPU의 개입 없이 버스(Bus)를 장악하여 메모리로 데이터를 다 옮기고 나면, 전송이 모두 "완료된 시점에 딱 한 번" CPU에게 인터럽트(완료 보고)를 발생시킨다. 
-이를 통해 CPU는 단순 데이터 복사 작업에서 완전히 해방되어 인터럽트의 횟수를 극적으로 줄이면서도 시스템 성능을 극대화할 수 있다.
-
-> 📢 **섹션 요약 비유**
-> 사장님(CPU)이 택배 박스가 하나씩 올 때마다 인터럽트를 받아 직접 창고로 나르는 대신, 지게차 전문 기사(DMA 컨트롤러)를 고용하여 수백 개의 상자를 다 옮기도록 시킨 뒤, 기사가 "작업 다 끝났습니다!" 하고 한 번만 보고(종료 인터럽트)하게 만들어 사장님은 편하게 다른 결재 업무를 보는 완벽한 분업 시스템입니다.
+#### 핵심 인사이트 (3줄 요약)
+> 1. **본질**: 인터럽트(Interrupt)는 **CPU (Central Processing Unit)**의 정상 명령어 실행 흐름을 비동기적(Asynchronous) 또는 동기적(Synchronous) 이벤트에 의해 강제로 중단시키고, 제어를 커널 모드로 전환하여 우선 처리를 수행하는 하드웨어 및 소프트웨어 제어 메커니즘이다.
+> 2. **가치**: 폴링(Polling) 방식의 **CPU (Central Processing Unit)** 사이클 낭비를 근본적으로 제거하여 시스템 응답성(Response Time)을 최적화하고, 다중 프로그래밍(Multiprogramming) 환경에서 **I/O (Input/Output)** 장치와의 병행 처리(Concurrency)를 가능하게 하는 현대 운영체제의 핵심 인프라이다.
+> 3. **융합**: **DMA (Direct Memory Access)**와 연계하여 대용량 데이터 전송 시의 오버헤드를 최소화하고, **ISR (Interrupt Service Routine)** 내에서의 스케줄링(Scheduling) 및 가상 메모리(Virtual Memory) 페이징(Paging) 기능을 트리거하는 소프트웨어적인 트리거 역할을 수행한다.
 
 ---
 
-### 💡 Knowledge Graph 및 Child Analogy
+### Ⅰ. 개요 (Context & Background) - [500자+]
 
-```mermaid
-graph TD
-    A[인터럽트 <br> Interrupt] --> B(발생 주체별 분류)
-    A --> C(처리 메커니즘)
-    A --> D(우선순위 제어)
-    B --> B1[외부 하드웨어 인터럽트 <br> Timer, I/O]
-    B --> B2[내부 예외 / Trap <br> Error, Page Fault]
-    B --> B3[소프트웨어 / SVC <br> System Call]
-    C --> C1[Context Saving <br> 레지스터 백업]
-    C --> C2[Vector Table <br> ISR 주소 매핑]
-    C --> C3[ISR 실행 및 Restore]
-    D --> D1[PIC / APIC <br> 중첩 인터럽트 제어]
-    D --> D2[Maskable INTR <br> 무시 가능]
-    D --> D3[Non-Maskable NMI <br> 무시 절대 불가]
+**개념 및 정의**
+인터럽트(Interrupt)는 **CPU (Central Processing Unit)**가 프로그램을 실행하는 도중에 긴급한 일이 발생하여 현재 수행 중인 명령어의 처리를 중단하고, 발생한 이벤트를 먼저 처리한 뒤 복귀하는 시스템 제어 기법이다. 이는 마치 직장인이 업무 중에 긴급 전화를 받기 위해 자리를 비웠다가 다시 업무로 복귀하는 것과 유사하다. 하지만 컴퓨터 시스템에서 이 동작은 나노초(ns) 단위의 매우 정교한 하드웨어 신호와 소프트웨어 로직에 의해 수행된다.
+
+**등장 배경: 폴링(Polling)의 한계와 비효율**
+초기의 컴퓨터 시스템은 **PIO (Programmed I/O)** 방식을 사용했다. **CPU (Central Processing Unit)**가 데이터 입출력을 위해 **I/O (Input/Output)** 컨트롤러의 상태 레지스터(Status Register)를 반복적으로 읽어(Retry Loop) "작업이 완료되었는가?"를 묻는 방식이었다. 이를 폴링(Polling) 또는 바쁜 대기(Busy Waiting)라고 한다. 이 방식은 데이터가 준비되지 않았을 때도 **CPU (Central Processing Unit)**가 무의미한 사이클을 소모하여 시스템 전체의 처리량(Throughput)을 급격히 떨어뜨리는 치명적인 결함이 있었다. 이를 해결하기 위해 **I/O (Input/Output)** 장치가 준비되었을 때 **CPU (Central Processing Unit)**에게 능동적으로 신호를 보내는 인터럽트 기반 시스템(Interrupt-driven System)이 도입되었다.
+
+**기술적 파급 효과**
+인터럽트의 도입은 단순히 **CPU (Central Processing Unit)**의 효율성을 높이는 것을 넘어, 현대 운영체제(OS)의 시분할(Time Sharing) 시스템을 가능하게 했다. **OS (Operating System)**는 타이머 인터럽트를 이용해 프로세스를 강제로 전환(Preemption)하여 다중 사용자에게 서비스를 제공하며, **MMU (Memory Management Unit)**의 페이지 부(Page Fault) 인터럽트를 통해 가상 메모리를 구현한다. 즉, 인터럽트 없이는 현대의 멀티태스킹(Multitasking) 환경 자체가 성립될 수 없다.
+
+> 📢 **섹션 요약 비유**
+> 요리사(CPU)가 오븐 앞에서 빵이 다 익었는지 1초에 한 번씩 계속 확인하느라 다른 요리를 못 하는(폴링 방식) 대신, 오븐에서 '띠동' 알람(인터럽트)이 울릴 때까지 다른 요리를 하다가 알람이 울리면 재빨리 달려가 빵을 꺼내는(인터럽트 기반) 것이 식당의 업무 효율을 극대화하는 방식입니다.
+
+---
+
+### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive) - [1,000자+]
+
+인터럽트 처리 과정은 하드웨어적인 신호 감지와 소프트웨어적인 문맥 교환(Context Switching)이 결합된 정교한 루틴이다. 이 과정은 크로스바 스위치(Crossbar Switch)나 **PIC (Programmable Interrupt Controller)**와 같은 컨트롤러, **CPU (Central Processing Unit)**의 명령어 사이클, 그리고 커널의 **ISR (Interrupt Service Routine)**이 유기적으로 작동한다.
+
+#### 1. 구성 요소 상세 분석
+인터럽트 시스템을 구성하는 핵심 요소는 최소 5가지 이상의 모듈로 세분화된다.
+
+| 요소명 (Component) | 역할 (Role) | 내부 동작 (Internal Operation) | 프로토콜/버스 (Protocol/Bus) | 비유 (Analogy) |
+|:---|:---|:---|:---|:---|
+| **Interrupt Source** | 이벤트 발생 주체 | 하드웨어 신호 전송(상승 에지), 소프트웨어 `INT` 명령어 실행 | IRQ Line, SW Instruction | 벨을 누르는 손님 |
+| **PIC (Programmable Interrupt Controller)** | 중재 및 우선순위 판정 | 다중 IRQ를 수집하여 우선순위 인코딩, CPU에 단일 INTR 신호 송신 | APIC Bus, IRQ Vector Assignment | 전화 교환기(교환원) |
+| **CPU (Central Processing Unit)** | 명령어 흐름 제어 | 명령어 사이클 종료 시 인터럽트 플래그(IF) 체크, 인터럽트 확인(ACK) 신호 전송 | System Bus, Control Signals | 업무 중인 사장님 |
+| **IVT (Interrupt Vector Table)** | 주소 매핑 테이블 | 인터럽트 벡터 번호를 인덱스로 하여 해당 ISR의 메모리 주소 반환 | Memory Read (Physical Address) | 긴급 연락처 주소록 |
+| **ISR (Interrupt Service Routine)** | 실제 처리 로직 | 레지스터 백업(PUSH), I/O 처리, 레지스터 복구(POP), IRET 명령어로 복귀 | Kernel Code Execution | 긴급 상황 처리반 |
+
+#### 2. 인터럽트 처리 파이프라인 (ASCII 구조 다이어그램)
+
+아래 다이어그램은 하드웨어 인터럽트가 발생했을 때, 사용자 모드(User Mode)의 프로세스가 커널 모드(Kernel Mode)로 전환되었다가 다시 복귀하기까지의 전체적인 흐름을 도식화한 것이다.
+
+```text
+[TIME FLOW]      User Process (Task A)                     Hardware/Kernel (Interrupt Context)
+                  (Status: Running)                         (Status: Ready/Handled)
+  ------------------------------------------------------------------------------------------
+  1. Normal Exec  [Instruction i-1] --> [Instruction i] --> [Fetch Next Instruction]
+                                                       |
+                                          | [HARDWARE SIGNAL: IRQ Line asserted by Device]
+                                          v
+  2. Check Cycle  <--- [Interrupt Check Phase (End of Instruction Cycle)]
+                  |
+                  |--- CPU sends INTA (Interrupt Acknowledge) to PIC --->
+                  |                                                              |
+                  |<-- PIC returns Vector Number (e.g., 0x21) -------------------+
+                  v
+  3. Context Save [Implicit Context Switch by Hardware]
+                  - CPU automatically saves PC (EIP), CS (Code Segment), Flags (EFLAGS)
+                  - CPU switches to Kernel Stack (using Task State Segment or Stack Switch)
+                  v
+  4. Vectoring    [Lookup IVT/IDT] --> (Vector 0x21) --> Find ISR Address (e.g., 0xKERN_0821)
+                                                                          |
+                  -------------------------------------------------------->
+                                                                    v
+  6. ISR Exec     (Waiting...)                                [ISR: Keyboard Handler]
+                                                                      - PUSH All Registers (General)
+                                                                      - Read Scan Code from I/O Port
+                                                                      - Convert to ASCII & Buffer to OS
+                                                                      - EOI (End of Interrupt) to PIC
+                                                                      - POP All Registers
+                                                                      - IRET (Interrupt Return) Instruction
+                  <-------------------------------------------------------
+                  v
+  7. Restore      [Implicit Context Restore by Hardware via IRET]
+                  - Restore PC, CS, Flags
+                  - Switch back to User Stack
+                  v
+  8. Resume       [Instruction i+1] --> [Instruction i+2] ...
+                  (User Process continues exactly as if nothing happened)
 ```
 
-**👧 Child Analogy:**
-네가 방에서 아주 집중해서 레고 조립(CPU의 명령어 실행)을 하고 있어.
-- 갑자기 엄마가 "밥 먹어라~" 하고 부르셔. 이건 밖에서 신호가 온 거니까 **외부 인터럽트**야. 
-- 조립하다가 실수로 레고 설명서가 찢어져서 어쩔 줄 모르고 멈췄어. 이건 네 안에서 문제가 생긴 거니까 **내부 인터럽트(예외)**야.
-- 부품이 모자라서 네가 직접 엄마한테 "엄마, 새 블록 좀 찾아주세요!" 하고 소리쳤어. 이건 네가 스스로 도움을 요청한 **소프트웨어 인터럽트**야!
-어떤 경우든 네가 레고 조립을 잠깐 멈추고 상황을 해결한 다음, 아까 조립하던 위치를 정확히 기억(Context Saving)했다가 그 부분부터 다시 조립을 이어나가는 과정이 바로 컴퓨터의 '인터럽트' 메커니즘이란다.
+#### 3. 심층 동작 원리 및 데이터 흐름
+1.  **신호 발생 및 인지 (Interrupt Request & Check)**: 외부 장치(키보드 등)가 **PIC (Programmable Interrupt Controller)**의 핀에 신호를 보내면, **PIC (Programmable Interrupt Controller)**는 이를 우선순위에 따라 큐에 넣고 **CPU (Central Processing Unit)**의 INTR 핀을 활성화한다. **CPU (Central Processing Unit)**는 현재 실행 중인 명령어(Instruction)가 완전히 수행된 직후, 다음 명령어를 인출(Fetch)하기 전에 매 사이클마다 인터럽트 요청이 있는지 확인한다.
+2.  **벡터 테이블 매핑 (Vectoring)**: **CPU (Central Processing Unit)**가 인터럽트를 승인(Acknowledge)하면, **PIC (Programmable Interrupt Controller)**는 데이터 버스를 통해 '인터럽트 벡터 번호(Interrupt Vector Number)'를 **CPU (Central Processing Unit)**에 전달한다. **CPU (Central Processing Unit)**는 이 번호를 인덱스로 하여 메모리(보통 0번지 혹은 **IDT (Interrupt Descriptor Table)**)에 위치한 **IVT (Interrupt Vector Table)**를 참조하여, 해당 이벤트를 처리하는 **ISR (Interrupt Service Routine)**의 메모리 주소를 로드한다.
+3.  **문맥 교환 및 커널 진입 (Context Switch & Mode Switch)**: 하드웨어는 자동으로 현재의 **PC (Program Counter)**, 레지스터 상태(**EFLAGS**) 등을 **PCB (Process Control Block)**나 커널 스택(Kernel Stack)에 저장한다. 이때 권한 레벨(Ring 3 -> Ring 0)이 변경되며 사용자 모드에서 커널 모드로 전환된다.
+4.  **서비스 루틴 실행 (Execution)**: **ISR (Interrupt Service Routine)**이 실행된다. 이때 하드웨어가 자동으로 저장하지 않는 범용 레지스터들(AX, BX 등)은 소프트웨어적으로 명시히 스택에 저장(PUSH)해야 한다. 실제 작업(데이터 읽기, 페이지 테이블 갱신 등)을 수행한 후 **EOI (End of Interrupt)** 명령어를 **PIC (Programmable Interrupt Controller)**에 보내 인터럽트 처리가 끝났음을 알린다.
+5.  **복귀 (Return)**: `IRET` (Interrupt Return) 명령어가 실행되면, 저장해 두었던 **PC (Program Counter)**와 레지스터를 복원하고 원래의 명령어 흐름으로 되돌아간다.
+
+> 📢 **섹션 요약 비유**
+> 책을 읽다가(실행 중인 프로세스) 긴급 전화(인터럽트 요청)가 오면, 나는 지금 읽던 페이지 번호와 책갈피 위치를 메모장에 적어두고(상태 저장 Context Saving), 전화번호부(벡터 테이블)를 보고 해당 상담원(ISR)의 번호로 연결하여 상담을 받습니다. 상담이 끝나면 적어둔 메모장(스택)을 보고 다시 그 페이지로 돌아가 책을 읽는(복귀 Restore) 것과 같습니다. 이 모든 과정이 순식간에 일어나지만, 긴급 전화를 못 받으면(인터럽트 불능) 큰 일이 생기듯 시스템은 항상 대기 상태를 유지합니다.
+
+---
+
+### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy) - [비교표 2개+]
+
+인터럽트는 단순히 "신호"라는 개념을 넘어, 시스템의 다양한 계층(Layer)에서 발생하는 이벤트를 어떻게 분류하고 처리할지에 대한 철학이 담겨 있다. 이를 발생 시점과 주체에 따라 정량적으로 비교 분석한다.
+
+#### 1. 인터럽트의 분류 및 상세 비교표
+
+| 구분 (Classification) | 하드웨어 인터럽트 (Hardware Interrupt) | 소프트웨어 인터럽트 (Software Interrupt) / 예외 (Exception) |
+|:---|:---|:---|
+| **별칭 (Alias)** | 외부 인터럽트 (External Interrupt) | 내부 인터럽트 (Internal), Trap, SVC (Supervisor Call) |
+| **발생 주체 (Source)** | **I/O (Input/Output)** 장치, 타이머, 전원 회로 등 외부 HW | 실행 중인 명령어(Instruction) 자체, 프로그램 코드 |
+| **발생 시점 (Timing)** | 명령어 실행과 무관하게 비동기적(Asynchronous) 발생 가능 | 명령어 실행 중 동기적(Synchronous) 발생 (정확히 지점이 존재) |
+| **주요 예시 (Examples)** | 키보드 입력, 마우스 클릭, 네트워크 패킷 수신, 디스크 I/O 완료 | 0으로 나누기(Divide Error), 페이지 부재(Page Fault), 시스템 콜(`INT 0x80`) |
+| **CPU 개입(CPU Intervention)** | 현재 명령어가 끝난 직후 즉시 반응 | 예외는 명령어 실패 시 즉시, 시스템 콜은 명시적 호출 시 |
+| **처리 소프트웨어 (Handler)** | **ISR (Interrupt Service Routine)** (Device Driver 영역) | Exception Handler, System Call Handler (Kernel 영역) |
+| **제어 가능성 (Control)** | **PIC (Programmable Interrupt Controller)**를 통해 우선순위 제어, 마스킹 가능 | 치명적 에류(Fault)는 불가항, 시스템 콜은 의도적 호출 |
+
+#### 2. 폴링(Polling) 대비 인터럽트(Interrupt) 방식의 융합 분석
+OS 및 컴퓨터 구조 관점에서 인터럽트와 폴링은 상호 배타적이며, 상황에 따른 트레이드오프(Trade-off)가 존재한다.
+
+```text
++------------------+---------------------------+---------------------------+
+|    Metric        |  Polling (Busy Waiting)   |  Interrupt (Event Driven) |
++------------------+---------------------------+---------------------------+
+| CPU Utilization | Low (데이터 없을 때 Loop)  | High (다른 작업 가능)      |
+|                 |                           |                           |
+| Latency         | Deterministic (Loop 주기) | Variable (처리 우선순위    |
+|                 |                           | 및 ISR 로딩에 따라 달라짐) |
+|                 |                           |                           |
+| Throughput      | Low (CPU 낭비)            | High (최적화된 처리)       |
+|                 |                           |                           |
+| Implementation  | Simple (Loop only)        | Complex (HW support, ISR) |
+|                 |

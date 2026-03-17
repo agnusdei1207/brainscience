@@ -1,100 +1,155 @@
+# NVMe-oF (NVMe over Fabrics)
+
 +++
 title = "NVMe-oF (NVMe over Fabrics)"
 weight = 343
 +++
 
-> **Insight**
-> - NVMe-oF(NVMe over Fabrics)는 로컬 PCIe 버스에 국한되었던 NVMe 프로토콜을 이더넷(Ethernet), 파이버 채널(Fibre Channel), 인피니밴드(InfiniBand) 등의 네트워크 패브릭(Network Fabric)으로 확장한 기술입니다.
-> - 서버와 스토리지 간의 네트워크 통신 오버헤드를 극적으로 줄여, 원격 스토리지를 마치 로컬 NVMe SSD처럼 초저지연(Ultra-low Latency)과 고대역폭으로 사용할 수 있게 합니다.
-> - 데이터센터의 스토리지 자원을 중앙 집중화하고 유연하게 풀링(Pooling)하는 컴포저블 인프라(Composable Infrastructure) 구현의 핵심 기반 기술입니다.
-
-## Ⅰ. NVMe-oF의 개요 및 등장 배경
-
-### 1. NVMe-oF(NVMe over Fabrics)의 정의
-NVMe-oF는 NVMe(Non-Volatile Memory Express) 프로토콜의 캡슐화(Encapsulation) 표준으로, NVMe 명령어와 데이터를 네트워크 패브릭을 통해 전송할 수 있도록 정의한 규격입니다. 이를 통해 호스트(Host) 시스템은 네트워크를 통해 연결된 원격 스토리지 타겟(Target) 내의 NVMe 네임스페이스에 투명하게 접근할 수 있습니다.
-
-### 2. 등장 배경
-기존의 iSCSI(Internet Small Computer Systems Interface)나 FCP(Fibre Channel Protocol)와 같은 네트워크 스토리지 프로토콜은 SCSI 명령어 셋을 기반으로 하여 프로토콜 변환 오버헤드와 지연 시간이 발생했습니다. 로컬 스토리지가 HDD에서 초고속 NVMe SSD로 전환됨에 따라, 네트워크 프로토콜 자체가 스토리지 병목(Bottleneck)의 원인이 되었습니다. 이를 해결하기 위해 NVMe의 효율적인 명령어 구조와 다중 큐 아키텍처를 네트워크 상에서 그대로 유지하려는 목적으로 NVMe-oF가 탄생했습니다.
-
-> 📢 **섹션 요약 비유:**
-> 서울(CPU)에서 부산(스토리지)까지 택배를 보낼 때, 중간에 여러 물류센터(iSCSI 등 프로토콜 변환)를 거치며 지연되던 것을, 서울에서 부산까지 직통으로 뚫린 KTX 전용선(NVMe-oF)을 놓아 로컬 배송처럼 빠르게 만든 것입니다.
-
-## Ⅱ. NVMe-oF의 아키텍처 및 전송 기술
-
-### 1. NVMe-oF 아키텍처 개념
-NVMe-oF는 호스트의 NVMe Submission Queue(SQ)에서 생성된 명령을 네트워크 패브릭 캡슐에 담아 타겟으로 전송하고, 타겟의 NVMe 컨트롤러가 이를 실행한 후 결과를 다시 네트워크를 통해 호스트의 Completion Queue(CQ)로 반환하는 구조를 가집니다.
-
-```ascii
-[ Host System ]                                 [ Target Storage Array ]
-+---------------+                               +----------------------+
-| Applications  |                               |   NVMe Subsystem     |
-|-------------  |                               |----------------------|
-| NVMe Driver   |                               | NVMe Driver/Control  |
-| (SQ / CQ)     |                               | (SQ / CQ)            |
-|-------------  |                               |----------------------|
-| Fabric Trans- | <====== Network Fabric =====> | Fabric Trans-        |
-| port (RDMA/FC)|       (RoCE, iWARP, FC,       | port (RDMA/FC)       |
-|               |         TCP/IP)               |                      |
-+---------------+                               +----------------------+
-                                                         | |
-                                                  [ NVMe SSDs ]
-```
-
-### 2. 주요 패브릭 전송 기술 (Transport Bindings)
-NVMe-oF는 네트워크 인프라에 따라 다양한 전송 방식을 지원합니다.
-
-* **NVMe over RDMA (RoCE, iWARP, InfiniBand):** RDMA(Remote Direct Memory Access) 기술을 활용하여 CPU 개입 없이 메모리 간 데이터를 직접 복사합니다. 가장 지연 시간이 낮고 성능이 뛰어납니다. (주로 RoCEv2 사용)
-* **NVMe over Fibre Channel (FC-NVMe):** 기존의 스토리지 전용 네트워크인 파이버 채널(FC) 인프라를 그대로 활용하면서 NVMe의 성능 이점을 누릴 수 있는 방식입니다. 기존 SAN(Storage Area Network) 환경의 업그레이드에 유리합니다.
-* **NVMe over TCP (NVMe/TCP):** 가장 보편적인 이더넷 네트워크와 TCP/IP 프로토콜을 사용합니다. 별도의 특수 하드웨어(RDMA NIC 등) 없이 기존 인프라에 쉽게 적용할 수 있어 확장성과 도입 용이성이 매우 높습니다.
-
-> 📢 **섹션 요약 비유:**
-> 목적지(NVMe SSD)로 가는 직통 화물 열차(NVMe 명령어)를, 최첨단 자기부상열차 궤도(RDMA), 기존 철도망(Fibre Channel), 또는 일반 고속도로(TCP) 등 다양한 인프라 위에 얹어서 달릴 수 있게 하는 기술입니다.
-
-## Ⅲ. NVMe-oF의 핵심 장점 및 기대 효과
-
-1. **초저지연 (Ultra-low Latency):** 프로토콜 변환(SCSI to NVMe)이 없고 패브릭을 통한 오버헤드가 추가로 10마이크로초(µs) 미만으로 발생하므로, DAS(Direct Attached Storage)와 거의 동일한 응답 속도를 제공합니다.
-2. **높은 대역폭 및 확장성 (High Throughput & Scalability):** 다중 큐 아키텍처를 네트워크로 확장하여 수백, 수천 개의 노드가 스토리지 풀에 동시 접근해도 성능 저하가 적습니다.
-3. **CPU 부하 감소 (Reduced CPU Utilization):** 특히 RDMA를 사용할 경우 호스트와 타겟 서버의 CPU 개입을 최소화하여 시스템 리소스를 애플리케이션 처리에 더 많이 할당할 수 있습니다.
-4. **스토리지 자원 풀링 (Storage Pooling):** 서버에 종속된 스토리지(DAS)의 한계를 벗어나, 전체 스토리지 자원을 네트워크 상에 공유 풀(Pool)로 구성하고 필요에 따라 동적으로 할당할 수 있습니다.
-
-> 📢 **섹션 요약 비유:**
-> 직원(서버)마다 개인 책상 서랍(로컬 SSD)을 쓰다가 남거나 부족해지는 문제를 해결하기 위해, 사무실 한가운데에 누구나 1초 만에 물건을 넣고 뺄 수 있는 초대형 마법의 공용 서랍장(스토리지 풀링)을 만든 것과 같습니다.
-
-## Ⅳ. NVMe-oF의 활용 사례 (Use Cases)
-
-1. **컴포저블 디스어그리게이티드 인프라 (CDI, Composable Disaggregated Infrastructure):** 컴퓨팅 노드와 스토리지 노드를 물리적으로 분리(Disaggregation)하고, 소프트웨어를 통해 논리적으로 결합하여 유연한 인프라를 구성합니다.
-2. **고성능 데이터베이스 및 빅데이터 분석:** Oracle, SAP HANA, Hadoop 등 대량의 I/O와 초저지연이 요구되는 애플리케이션의 스토리지 티어로 활용됩니다.
-3. **AI/ML 모델 학습:** GPU 기반 서버들이 방대한 학습 데이터에 동시에 빠르게 접근할 수 있도록 고성능 공유 스토리지를 제공합니다. 고가의 GPU가 데이터 대기(I/O Wait)로 인해 낭비되는 것을 방지합니다.
-
-> 📢 **섹션 요약 비유:**
-> 마치 레고 블록처럼, 필요할 때마다 CPU 블록과 스토리지 블록을 네트워크라는 튼튼한 조인트로 순식간에 조립해서 맞춤형 슈퍼컴퓨터를 만들어내는 기술 기반입니다.
-
-## Ⅴ. NVMe-oF 구현 시 고려사항 및 미래
-
-* **네트워크 인프라 요구사항:** RDMA 기반(RoCE) 구현 시 무손실 네트워크(Lossless Network) 구성을 위해 PFC(Priority Flow Control) 등을 지원하는 고성능 스위치와 호환성 검증이 필요합니다.
-* **보안 및 접근 제어:** 공유 스토리지 모델이므로 타겟 및 네임스페이스 레벨에서의 강력한 인증과 데이터 암호화(In-flight, At-rest)가 필수적입니다.
-* **미래 동향:** NVMe/TCP의 채택이 급증하며 클라우드 환경의 표준 스토리지 프로토콜로 자리잡고 있으며, DPU(Data Processing Unit) / SmartNIC과의 결합을 통해 네트워크 처리 부하를 오프로딩(Offloading)하는 아키텍처가 대세가 되고 있습니다.
-
-> 📢 **섹션 요약 비유:**
-> 최고급 스포츠카(NVMe-oF)를 온전히 즐기려면 그에 걸맞은 매끄러운 전용 도로(고품질 네트워크 스위치)와 확실한 톨게이트 보안 시스템(접근 제어)이 뒷받침되어야 합니다.
+> **핵심 인사이트 (3줄 요약)**
+> 1. **본질**: NVMe-oF는 로컬 PCIe 버스의 고성능 프로토콜을 네트워크 패브릭(Fabric)으로 확장하여, 스토리지 네트워크의 병목을 제거하는 표준화된 캡슐화 기술입니다.
+> 2. **가치**: 기존 SAN(Storage Area Network) 대비 **지연 시간(Latency)을 최대 90% 이ward 절감**하고, CPU 오버헤드를 획기적으로 낮추어 데이터센터의 에너지 효율과 처리량을 극대화합니다.
+> 3. **융합**: 컴포저블 인프라(Composable Infrastructure)와 AI/ML 워크로드의 필수 인프라로, TCP/IP, RDMA(Remote Direct Memory Access), FC(Fibre Channel) 등 기존 네트워크 계층과 융합하여 스토리지의 유연성을 보장합니다.
 
 ---
 
-### 💡 Knowledge Graph & Child Analogy
+### Ⅰ. 개요 (Context & Background)
 
-```mermaid
-graph TD
-    A[NVMe-oF] --> B(Fabric Transport)
-    A --> C(Disaggregated Storage)
-    A --> D(Low Latency)
-    B --> E[RDMA: RoCE, InfiniBand]
-    B --> F[Fibre Channel: FC-NVMe]
-    B --> G[TCP/IP: NVMe/TCP]
-    C --> H[Storage Pooling]
-    C --> I[Composable Infrastructure]
-    E --> J[Lowest Latency]
-    G --> K[Highest Versatility]
+NVMe-oF(NVMe over Fabrics)는 NVMe(Non-Volatile Memory Express) 프로토콜의 범용성을 서버 내부의 PCIe 버스 한계로부터 네트워크 전체로 확장하기 위해 NVM Express Inc.가 표준화한 기술 specification입니다. 기존의 스토리지 네트워크 프로토콜들이 SAS(Serial Attached SCSI)나 SCSI(Small Computer System Interface) 명령어 계층을 기반으로 하여, 호스트(Host)와 타겟(Target) 간에 불필요한 명령어 변환(Translation)과 복잡한 에뮬레이션 과정을 거쳐야 했던 반면, NVMe-oF는 NVMe 명령어 셋 자체를 네트워크 패킷 안에 캡슐화(Encapsulation)하여 전송합니다.
+
+이 기술의 등장 배경에는 **'CPU 속도와 스토리지 I/O 속도의 격차(Gap)'**라는 근본적인 문제가 자리하고 있습니다. Flash Memory 기반의 SSD(Solid State Drive)가 급격히 보급됨에 따라, 병목 구간은 디스크(Device)에서 네트워크(Network)와 프로토콜(Protocol) 처리 소프트웨어로 이동했습니다. 데이터센터는 수천 개의 코어를 가진 최신 서버(CPU)와 마이크로초(µs) 단위로 반응하는 NVMe SSD 간의 데이터 교환에서, 기존 iSCSI(Internet Small Computer System Interface)나 FC(Fibre Channel) 같은 SCSI 기반 프로토콜이 발생시키는 수만 사이클의 컨텍스트 스위칭(Context Switching)과 인터럽트(Interrupt)를 감당할 수 없게 된 것입니다. 따라서 **'로컬 메모리 접근과 유사한 수준의 원격 접근'**을 실현하기 위해 개발된 것이 NVMe-oF입니다.
+
+> **📢 섹션 요약 비유:**
+> 서울(서버 CPU)에서 부산(스토리지)까지 화물을 보낼 때, 중간에 여러 번 하역하고 포장을 바꾸는 물류 센터(SCSI 레이어 변환)를 거치느라 며칠이 걸리던 것을, 화물을 그대로 싣고 고속도로 위에서 역주행(직행)하듯이 내보내는 **KTX 직통 열차(NVMe-oF)**로 바꾸어, 1시간 만에 배송을 완료하는 것과 같습니다.
+
+#### ASCII 다이어그램: 진화하는 스토리지 패러다임
+
+```ascii
++--------------------------+       +---------------------------+       +--------------------------+
+|       [Legacy Era]        |       |      [Transition Era]     |       |      [NVMe-oF Era]       |
++--------------------------+       +---------------------------+       +--------------------------+
+|                          |       |                           |       |                          |
+|  [App]      [App]         |       |  [App]      [App]         |       |  [App]      [App]        |
+|    |          |           |       |    |          |           |       |    |          |           |
+|  [OS]       [OS]          |       |  [OS]       [OS]          |       |  [OS]       [OS]         |
+|    |          |           |       |    |          |           |       |    |          |           |
+| [SCSI Driver]             |       | [AHCI/SATA]  [NVMe Driver]|       | [NVMe Driver]            |
+|    | (High Latency)       |       |    |          | (Low Lat) |       |    | (Ultra Low Lat)       |
+| [HBA] ------ Network ---- |       | [SATA/PCIe]  [PCIe]      |       | [NVMe-oF] --- Fabric ---- |
+| (FC/iSCSI)  (Bottleneck) |       |                          |       | (RDMA/TCP)  (Efficient) |
+|                          |       |                           |       |                          |
++--------------------------+       +---------------------------+       +--------------------------+
+
+💡 해설:
+기존 Legacy 환경에서는 Host와 Storage 사이에 복잡한 SCSI 계층이 존재하여 병목이 발생했습니다.
+NVMe-oF 시대에는 이 계층을 평탄화(Flattening)하여, 마치 로컬 버스에 연결된 것처럼 네트워크를 통해 직접 제어합니다.
 ```
 
-> **👶 Child Analogy (어린이 비유):**
-> 예전에는 장난감을 찾으려면 내 방 서랍(로컬 연결)에서만 금방 찾을 수 있고, 거실 서랍(기존 네트워크 연결)에 있는 걸 가져오려면 시간이 오래 걸렸어요. 하지만 NVMe-oF는 내 방 서랍과 거실 서랍을 연결하는 '마법의 텔레포트 파이프'예요. 거실에 있는 장난감도 내 방에 있는 것처럼 1초 만에 쏙 꺼내서 놀 수 있게 해준답니다!
+---
+
+### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+
+NVMe-oF의 핵심 설계 철학은 **'Host Software Transparency(호스트 소프트웨어 투명성)'**입니다. 호스트 입장에서는 자신의 로컬 NVMe 컨트롤러에 접속하는 것과 동일한 드라이버 인터페이스를 유지하면서, 물리적인 전송 매체만 네트워크 패브릭으로 교체하는 구조를 가집니다. 이를 위해 NVMe-oF는 **FABRICS 명령어 세트**를 정의하여, 컨트롤러 연결(Connect), 연결 해제(Disconnect), 인증(Authenticate) 등 네트워크 특유의 작업을 표준 NVMe 명령어와 별도로 처리합니다.
+
+#### 1. 핵심 구성 요소 (Component Table)
+
+| 구성 요소 (Component) | 전체 명칭 (Full Name) | 역할 (Role) | 내부 동작 (Internal Operation) | 프로토콜/기술 (Protocol) | 비유 (Analogy) |
+|:---|:---|:---|:---|:---|:---|
+| **Host** | N/A | 스토리지를 사용하는 클라이언트 서버 | NVMe Driver를 통해 I/O 요청 생성 및 SQ/CQ 관리 | NVMe Queue I/O | 송장을 작성하는 발송인 |
+| **Controller** | NVMe Controller | I/O 요청을 처리하는 엔진 | Submission Queue(SQ)의 명령을 해석하여 Execution | NVMe Admin & I/O Cmd | 택배 물류 센터의 분류기 |
+| **Subsystem** | NVM Subsystem | 하나 이상의 컨트롤러와 네임스페이스의 집합 | 논리적인 스토리지 도메인을 형성 | NVMe Spec | 전체 택배 영업소 |
+| **Transport** | Fabric Transport | 네트워크상의 데이터 전달 층 | NVMe Q Pair를 패킷에 캡슐화하여 전송/수신 | RDMA, FC, TCP | 도로 및 차량 |
+| **Queue Pair** | Submission & Completion Queue | 명령과 완료 상태를 저장하는 큐 | 호스트는 SQ에 쓰고, 컨트롤러는 CQ에 씀 (Doorbell registers) | PCIe Memory Mapped I/O | 주문서와 영수증 상자 |
+| **CAP** | Controller Attributes | 컨트롤러의 성능 특성 레지스터 | 최대 큐 개수, 입출력 큐 사이즈 등 정의 | HW Register | 공장의 하루 생산량 명시 |
+
+#### 2. NVMe-oF 동작 시퀀스 및 아키텍처
+
+NVMe-oF의 데이터 전송은 크게 **Capsule Management(캡슐 관리)** 단계와 **Data Transfer(데이터 전송)** 단계로 나뉩니다. 호스트는 네트워크를 통해 원격 컨트롤러의 메모리에 직접 접근하거나, 데이터를 In-Band 방식으로 전송합니다. 특히 RDMA(Remote Direct Memory Access) 환경에서는 호스트 CPU가 데이터를 복사(Copy)하지 않고, 타겟의 메모리 영역에 직접 쓰기(Direct Write)를 수행하여 오버헤드를 제거합니다.
+
+```ascii
+<< Host System >>                                          << Target Storage >>
++-----------------------+                                  +-----------------------+
+|  Application Layer    |                                  |  NVMe Device          |
++-----------------------+                                  +-----------------------+
+|  NVMe Driver          |                                  |  NVMe Controller      |
+|  (Creates I/O Command)|                                  |  (Processes I/O)      |
++----------+------------+                                  +-----------+-----------+
+|  NVMe Transport       |                                  |  NVMe Transport       |
+|  [Encapsulation]      |                                  |  [Decapsulation]      |
+|  - SQ(Submit Queue)   |                                  |  - CQ(Comp Queue)     |
++----------+------------+                                  +-----------+-----------+
+           |                                                     ^
+           | 1. Capsule Cmd (NVMe Cmd in Transport Pkt)         | 4. Capsule Comp
+           v                                                     |
++-----------------------+      Network Fabric      +-----------------------+
+|  NIC / HBA            | <=======================> |  Port / NIC           |
+|  (RNIC / CNA)         |   (RoCEv2 / FC / TCP)   |  (Target Port)        |
++-----------------------+                          +-----------------------+
+           |                                                     ^
+           | 2. RDMA Write / Read (Data Direct Placement)        | 3. Data Ack
+           |    (Zero-copy, Bypassing CPU)                       |
+           +-----------------------------------------------------+
+
+💡 해설:
+1. 호스트의 NVMe 드라이버가 SQ에 I/O 명령어를 쓰면, Transport 계층이 이를 캡슐화하여 네트워크로 전송(1).
+2. RDMA 환경에서는 데이터가 호스트 CPU를 거치지 않고 RNIC을 통해 타겟 메모리로 직접 쓰임(2). 이를 'Zero-Copy'라 함.
+3. 타겟은 데이터 전송 완료 후 RDMA 작업 완료 신호를 보냄(3).
+4. 마지막으로 타겟은 CQ(Completion Queue)에 완료 엔트리를 쓰고 호스트에게 인터럽트를 알림(4).
+```
+
+#### 3. 핵심 알고리즘 및 코드 구조
+
+NVMe-oF의 핵심은 **IO Queue Pair(QP)**의 매핑과 **Submission Queue Entry(SQE)**의 구조입니다.
+
+```c
+/* [가상코드] NVMe-oF Submission Queue Entry 구조 및 전송 */
+// NVM Express Specification, Figure 88 (Command Dword 0/1)
+
+struct nvme_command {
+    /* DW0 : Command Dword 0 */
+    uint32_t CDW0 : 16;  // Opcode(CREATE IO SQ, READ, WRITE 등)
+    uint32_t FUSE : 2;   // Fused Operation support
+    uint32_t RSVD : 4;
+    uint32_t PSDT : 2;   // PRP or SGL for Data Transfer
+    uint32_t CID  : 16;  // Command Identifier (Unique per I/O)
+
+    /* DW1~DW5 : Metadata / PRP / Data Pointers */
+    uint64_t PRP1;       // Phys Region Page 1 (시점 주소)
+    uint64_t PRP2;       // Phys Region Page 2 (연속 주소 or SGL)
+    
+    /* DW10~DW11 : Logical Block Address & Length */
+    uint64_t SLBA;       // Starting LBA (읽기/쓰기 시작 위치)
+    uint32_t NLB : 16;   // Number of Logical Blocks (0's based value)
+    /* ... 상세 필드 생략 ... */
+};
+
+// [동작 원리]
+// 1. Host Driver는 위 구조체를 메모리에 채움.
+// 2. RDMA Send 작업을 통해 Remote Target의 Submission Queue 메모리 영역으로 전송.
+// 3. Target Controller가 이를 파싱하여 NAND 플래시에 명령을 전달.
+```
+
+> **📢 섹션 요약 비유:**
+> 마치 고속 도로 톨게이트에서 하이패스 차로를 별도로 운영하여, 요금 정산(프로토콜 처리)을 위해 차량(CPU)이 멈추지 않고 시속 100km로 통과할 수 있게 하는 것과 같습니다. NVMe-oF는 복잡한 네트워크 '톨게이트'를 넘어 스토리지 데이터를 위한 전용 고속 철도(RDMA)를 깔아 놓은 것입니다.
+
+---
+
+### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+
+NVMe-oF의 가치는 기존 스토리지 프로토콜과의 정량적 비교를 통해 명확해집니다. 특히 OS/컴퓨터 구조 측면에서의 **CPU 사이클 절약**과 네트워크 측면의 **대역폭 활용 효율성**이 핵심입니다.
+
+#### 1. 심층 기술 비교 (NVMe-oF vs Legacy)
+
+| 비교 항목 | Legacy SCSI (iSCSI/FCP) | NVMe-oF (RDMA/TCP) | 분석 (Analysis) |
+|:---|:---|:---|:---|
+| **명령어 세트** | SCSI (Serial Attached SCSI) | NVMe (Non-Volatile Memory Express) | SCSI는 회전식 디스크(HDD) 중심 설계. NVMe는 병렬성 극대화 설계. |
+| **큐 구조** | Single Queue (Per Target) | Multi-Queue (65,535 Queues) | 멀티코어 CPU에서 Lock Contention을 거의 제거하여 성능 선형적 확보 가능. |
+| **지연 시간 (Latency)** | ~50µs ~ 100µs (이론상) | **< 10µs** (RDMA 기반) | 네트워크 왕복 지연(RTT)과 프로토콜 변환 비용이 획기적 절감됨. |
+| **CPU 오버헤드** | High (Interrupt + Copy) | Low (Kernel Bypass/Offload) | 데이터 처리를 위해 CPU가 수행해야 하는 Context Switch가 획기적 감소. |
+| **최대 전송 크기** | 제한적 (Block Limit) | 매우 큼 (Up to 64KB PRP entry) | 대용량 데이터 전송 시 효율이 높음. |
+| **전송 매체** | TCP/IP 또는 FC | RDMA, FC, TCP | 기존 이더넷(LOSSLESS) 및 FC 인프라 호환 가능. |
+
+#### 2. 융합 관점 시너지 및 오버헤드 분석
+
+1.  **융합 1: OS 및 컴퓨터 구조 (System Architecture)**
+    *   **Synergy**: 멀티코어 환경에서 NVMe-oF는 각 코어가 독립적인 I/O 큐(CPU Pinning)를 가질 수 있게 하여, 메모리 버스와 캐시 라인(Cache Line) 경합을 줄입니다. NUMA(Non-Uniform Memory Access) 아키텍처와 결합하여 로컬 소켓에 연결된 RNIC(RDMA NIC)를 통해 원격 메모리에 접근하면, 이를 **'리모트 메모리(Remote Memory)'**처럼 사용할 수 있는 가능성이 열립니다.
+    *   **Overhead**: RDMA 설정(Memory Registration, Page Table Locking)을 위한 초기 설정 비용이 발생하나, 장시간 유지되는 연결에서는 무시할

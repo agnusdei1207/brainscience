@@ -3,86 +3,170 @@ title = "339. DAS (Direct Attached Storage)"
 weight = 339
 +++
 
-> **Insight**
-> - DAS(Direct Attached Storage)는 네트워크를 거치지 않고 서버나 클라이언트 시스템의 전용 인터페이스(USB, SATA, SAS 등)에 1:1로 직접 연결되는 가장 전통적이고 원초적인 스토리지 아키텍처이다.
-> - 서버와 스토리지 사이에 전용 고속 케이블만 존재하므로, 네트워크 오버헤드가 전혀 없는 순수한 원시 I/O 성능(Raw Performance)과 최저 지연 시간(Ultra-low Latency)을 제공한다.
-> - 확장성(Scalability)과 다른 서버와의 스토리지 공유(Sharing)가 불가능하다는 구조적 한계로 인해, 현대 엔터프라이즈 통합 인프라보다는 개별 서버의 독립적인 고속 처리 영역에 국한되어 사용된다.
+# [DAS] Direct Attached Storage (직결 저장소)
 
-## Ⅰ. DAS의 개요
-### 1. 정의
-DAS(Direct Attached Storage)는 스토리지 디바이스(내장형 하드디스크, 외장형 RAID 인클로저 등)를 네트워크 인프라나 스위치를 통하지 않고, 호스트 컴퓨터(서버 또는 PC)의 메인보드 인터페이스 호스트 버스 어댑터(HBA) 포트에 직접 케이블로 직결하는 스토리지 시스템이다. 
-
-### 2. 필요성
-데이터 저장소가 외부에 분리되기 전인 PC의 태동기부터 가장 자연스럽게 사용된 방식이다. 네트워크 스토리지(NAS/SAN)가 도입된 이후에도 1대의 서버가 극단적인 처리 속도로 전용 스토리지 리소스를 독점해야 하는 데이터베이스 환경, 혹은 가장 경제적으로 대용량 외장 스토리지를 확보해야 하는 환경에서 여전히 강력한 필요성을 가진다.
-
-📢 **섹션 요약 비유:** 도서관(네트워크 스토리지)에 걸어가서 책을 빌려오는 대신, 내 개인 책상 바로 옆에 전용 책장(DAS)을 딱 붙여 놓고 팔만 뻗어서 빛의 속도로 책을 꺼내보는 가장 원초적인 구조입니다.
-
-## Ⅱ. 핵심 아키텍처 및 동작 원리
-### 1. 동작 메커니즘
-서버의 운영체제(OS)가 메인보드에 장착된 HBA(Host Bus Adapter) 카드를 통해 스토리지 장치를 제어한다. 스토리지는 스스로 파일 시스템이나 OS를 가지지 않은 단순한 디스크 배열(JBOD, Just a Bunch Of Disks) 깡통이거나 하드웨어 RAID 박스이며, 파일 관리 및 시스템 포맷은 연결된 호스트 서버의 OS가 독점적으로 전담하여 블록 레벨(Block-Level) I/O 통신을 한다.
-
-```text
-+-------------------+                    +-----------------------+
-|  Host Server (OS) |                    |  DAS Storage Box      |
-|                   |  <-- SAS Cable --> |                       |
-| File System (NTFS)|  <-- USB 3.x ----> |  [ HDD / SSD Array ]  |
-| HBA/RAID Card     |  <-- PCIe / NVMe-> |                       |
-+-------------------+                    +-----------------------+
-(통신 경로: CPU -> PCIe Bus -> HBA -> Cable -> DAS 디스크 컨트롤러)
-```
-
-### 2. 세부 기술 요소
-- **직접 연결 인터페이스:** 
-  - **내부 연결:** 메인보드 내부의 SATA, NVMe M.2 슬롯, PCIe 확장 카드
-  - **외부 연결:** 외장 스토리지를 연결하기 위한 SAS (Serial Attached SCSI), USB-C, Thunderbolt 3/4 등 초고속 전용 규격 사용.
-- **블록 레벨 데이터 전송:** 네트워크 프로토콜 캡슐화(TCP/IP, iSCSI 등) 과정이 생략되므로 SCSI 또는 NVMe 명령어가 호스트에서 디스크로 거의 다이렉트로 꽂혀 CPU 사이클 소모와 I/O 지연을 극한으로 줄인다.
-
-📢 **섹션 요약 비유:** 사장님(호스트 서버)과 비서(스토리지) 사이에 통신망이나 결재 라인(네트워크 프로토콜) 없이, 사무실 문 하나만 열면 비서가 대기하고 있어 다이렉트로 서류를 주고받는 숨막히는 초고속 업무 환경과 같습니다.
-
-## Ⅲ. 주요 기술적 특징
-### 1. 장점
-- **최고의 성능 대비 비용 (Best Cost/Performance):** 스위치나 고가의 네트워크 장비, 전용 스토리지 운영체제 라이선스가 필요 없으므로 초기 구축 비용이 매우 저렴하다. 그럼에도 불구하고 물리적 케이블 대역폭(예: Thunderbolt 4의 40Gbps)을 온전히 혼자 사용하므로 성능은 가장 강력하다.
-- **간단한 구조와 설정 (Simplicity):** 복잡한 네트워크 라우팅, IP 서브넷, LUN(Logical Unit Number) 매핑 등의 설정 없이 그냥 케이블을 꽂고 서버에서 포맷하면 즉시 단일 드라이브처럼 인식된다.
-
-### 2. 한계점 및 해결방안
-- **고립된 리소스(Silo) 및 비효율성 (Resource Isolation):** 특정 서버에만 종속되므로(Dedicated), A 서버의 DAS 스토리지 공간이 90% 비어있어도 용량이 부족한 B 서버가 네트워크를 통해 이 공간을 빌려 쓸 수 없다. 기업 전체의 스토리지 리소스 파편화(Fragmentation)를 유발한다.
-- **가용성 한계 (SPOF):** 스토리지가 연결된 호스트 서버 자체가 다운되면 스토리지 안의 데이터는 멀쩡하더라도 다른 서버에서 접근할 수 없어 서비스가 완전히 정지된다.
-- **해결방안:** 이 고질적인 한계를 극복하기 위해 엔터프라이즈 환경에서는 스토리지를 서버 뒷단에 통합하여 여러 서버가 공유할 수 있도록 분리해내는 SAN(Storage Area Network) 아키텍처로 진화하게 되었다.
-
-📢 **섹션 요약 비유:** 전용 책장이 텅텅 비어 있어도 옆 자리 직원이 빌려 쓸 수가 없어서 사무실 전체 공간 효율이 엉망이 되고, 책장 주인이 결근(서버 다운)하면 책장 자물쇠를 열 사람이 없어 책을 전혀 볼 수 없는 구조적 단점이 있습니다.
-
-## Ⅳ. 구현 및 응용 사례
-### 1. 산업 적용 분야
-- **초고성능 단일 노드 DB 서버:** 응답 시간(Latency)이 0.1밀리초 수준이어야 하는 초고빈도 주식 거래 시스템(HFT)의 로컬 DB 캐시 데이터 영역.
-- **미디어 크리에이터 워크스테이션:** 8K 해상도 이상의 무거운 영상 소스를 실시간으로 스크러빙(Scrubbing)해야 하는 전문 영상 편집자 데스크탑의 Thunderbolt 외장 RAID 스토리지 랙.
-
-### 2. 실제 활용 시나리오
-한 영상 프로덕션의 메인 컬러리스트(Colorist)는 100TB 규모의 대용량 영상 프로젝트를 작업하기 위해, 자신의 Mac Studio에 썬더볼트(Thunderbolt) 케이블로 8베이 DAS 랙을 다이렉트로 연결하여 사용한다. 네트워크로 연결된 NAS 속도(100MB/s)로는 작업이 불가능하지만, DAS(2000MB/s)를 통해 끊김 없이 방대한 원본 데이터를 로컬 드라이브처럼 실시간 편집한다.
-
-📢 **섹션 요약 비유:** 여러 사람이 나눠 쓰는 공용 작업실(네트워크 환경)에서는 집중하기 힘든 천재 아티스트(영상 작업자)가 자신만의 방음 스튜디오(DAS)에 틀어박혀 혼자만의 최고 속도로 작업에 몰두하는 세팅입니다.
-
-## Ⅴ. 발전 동향 및 미래 전망
-### 1. 최신 트렌드
-- **NVMe 기반 초고속 DAS의 대중화:** 과거 거대한 랙 형태였던 DAS 장비가 M.2 NVMe SSD와 USB4 / Thunderbolt 인터페이스의 발전으로 인해, 명함 크기만 한 외장 장치가 3,000MB/s 이상의 읽기/쓰기 속도를 내며 전문가 시장의 이동형 로컬 스토리지 한계를 파괴하고 있다.
-- **가상화 환경 내 vSAN 구조의 기반 (SDS 회귀):** 거대한 중앙 집중형 SAN 스토리지 대신, 각각의 가상화 호스트 서버들이 로컬로 꽂고 있는 DAS(주로 NVMe/SAS SSD 배열) 자원들을 소프트웨어(vSAN, Nutanix 등)로 묶어 거대한 가상 공유 스토리지 플를 형성하는 HCI(Hyper-Converged Infrastructure) 트렌드의 가장 핵심적인 물리적 하부 구조로 DAS가 화려하게 부활하고 있다.
-
-### 2. 차세대 기술 연계
-PCIe 5.0과 CXL(Compute Express Link) 기술의 등장으로, 서버 메인보드에 직접 꽂히는 DAS 개념이 디스크 스토리지를 넘어 메모리 모듈 영역까지 다이렉트로 확장되어 거대 AI 모델의 파라미터 캐싱 공간으로 융합되는 아키텍처로 진화 중이다.
-
-📢 **섹션 요약 비유:** 옛날에 유행 지나 창고에 처박아 두었던 내 전용 책장(DAS)이, 최근 클라우드와 소프트웨어 가상화라는 마법을 만나 다른 친구들의 책장과 투명 터널로 연결(HCI)되면서 다시 가장 사랑받는 첨단 가구로 재평가받고 있는 상황입니다.
+#### 핵심 인사이트 (3줄 요약)
+> 1. **본질**: 스토리지 장치를 네트워크(Network) 프로토콜 없이 호스트(Host)의 I/O 인터페이스에 전용 케이블로 1:1로 직접 연결하여, 운영체제(OS)가 로컬 디스크(Local Disk)처럼 관리하는 가장 원초적이고 고성능을 보장하는 스토리지 아키텍처이다.
+> 2. **가치**: 프로토콜 오버헤드(Protocol Overhead)가 배제된(Block-Level) 원시 I/O 성능(Raw Performance)을 제공하여, 단일 서버가 처리해야 하는 초대용량 데이터베이스나 멀티미디어 처리 환경에서 **초저지연(Ultra-low Latency)**을 실현한다.
+> 3. **융합**: SAS/SATA/PCIe(NVMe) 등의 인터페이스 발전과 더불어 최근에는 HCI(Hyper-Converged Infrastructure)의 로컬 스토리지 자원으로 활용되며, 소프트웨어 정의 스토리지(SDS, Software Defined Storage)와 결합하여 분산 시스템의 기반 물리 계층을 구성한다.
 
 ---
 
-### 💡 Knowledge Graph & Child Analogy
-```mermaid
-graph TD
-  A[DAS: Direct Attached Storage] --> B(Direct Cable Connection)
-  A --> C(Block-Level Access)
-  A --> D(Host OS Dependent)
-  B --> E[USB, Thunderbolt, SAS, PCIe]
-  C --> F[Highest Raw Performance]
-  C --> G[Zero Network Overhead]
-  D --> H[Silo Effect: Cannot Share via Network directly]
-  D --> I[Low Scalability]
+### Ⅰ. 개요 (Context & Background)
+
+#### 1. 기술적 정의 및 철학
+**DAS (Direct Attached Storage)**는 데이터를 저장하는 외부 스토리지 장치를 서버의 인터페이스 포트(HBA)에 네트워크 스위치나 라우터를 거치지 않고 직접 케이블링(Direct Cabling)하여 연결하는 방식이다. 호스트 입장에서는 내장 하드디스크와 차이가 없는 **블록 레벨(Block-Level)** 장치로 인식되며, 파일 시스템(File System)의 생성, 관리, 권한 부여 등 모든 권한이 연결된 호스트 서버에게 독점적으로 귀속된다.
+
+#### 2. 기술적 배경 및 진화
+데이터 스토리지의 초창기에는 PC나 서버의 내부 버스(Internal Bus)인 **IDE (Integrated Drive Electronics)**나 **SCSI (Small Computer System Interface)**에 디스크를 직접 장착하는 것이 유일한 방법이었다. 이후 데이터 양이 폭발하면서 서버 섀시(Chassis) 내부의 물리적 공간 한계를 극복하기 위해 외장형 인클로저(Enclosure)를 꽂아 쓰는 형태로 발전하였다. **NAS (Network Attached Storage)**나 **SAN (Storage Area Network)**과 같은 네트워크 기반 스토리지가 등장했음에도 불구하고, DAS는 네트워크 패킷 처리에 따른 지연(Latency)이 허용되지 않는 **고성능 컴퓨팅(HPC, High-Performance Computing)** 영역에서 여전히 그 유효성을 유지하고 있다.
+
+```text
+[ Storage Evolution Context ]
+
++-----------+      +-----------+      +----------------------+
+|   Internal|      | External  |      |   Network (SAN/NAS)  |
+|   (DAS)   | --> |   (DAS)   | --> |   (Shared Storage)   |
++-----------+      +-----------+      +----------------------+
+   (1대1)             (1대1)              (N대 : N 공유)
+   Local Bus         Cable(SAS/USB)      Fabric(Switch)
 ```
-- **Child Analogy**: 컴퓨터 책상 옆에 바로 USB 선을 꽂아서 나 혼자만 쓸 수 있는 외장 하드디스크가 DAS야. 와이파이를 타고 뱅글뱅글 돌아갈 필요 없이 나랑 전선으로 직빵 연결되어 있어서 세상에서 가장 빠르게 게임 파일을 복사할 수 있지만, 옆 방에 있는 내 동생이 그 게임 파일을 맘대로 빌려 갈 수는 없다는 단점이 있지!
+
+📢 **섹션 요약 비유**: 거대한 도서관(네트워크 스토리지)을 이용하려면 카드를 찍고 분실물 센터를 거쳐야 하지만, 내 집 서재(DAS)는 굳이 신발을 신지 않아도 가장 가까운 거리에서 책을 꺼내 읽을 수 있는 가장 원초적이고 빠른 저장 방식입니다.
+
+---
+
+### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+
+#### 1. 핵심 구성 요소 (Component Architecture)
+DAS는 크게 호스트의 **HBA (Host Bus Adapter)**, 전송을 위한 **케이블링**, 그리고 **디스크 배열(Disk Array)**로 구성된다. 운영체제(OS)는 파일 시스템 계층에서 직접 볼륨을 관리하며, 스토리지 장치 자체는 단순한 블록 저장소 역할만 수행한다.
+
+| 구성 요소 (Component) | 기술적 역할 (Role) | 주요 프로토콜/규격 (Protocol) | 세부 동작 메커니즘 (Deep Dive) |
+|:---:|:---|:---|:---|
+| **HBA (Host Bus Adapter)** | 호스트와 스토리지 간의 물리적/논리적 연결을 담당하는 bridge 역할 | PCIe, SATA, SCSI, Fibre Channel(FC) | 호스트의 메모리와 스토리지 간의 **DMA (Direct Memory Access)** 제어 및 명령어 큐(Command Queue) 관리 수행 |
+| **Interface Cable** | 고속 직렬 데이터 전송을 위한 물리적 매체 | SAS, SATA, Thunderbolt, USB 3.x/4, NVMe-over-Fabrics(가상) | 전송 거리가 짧아 신호 감쇠가 적고, 프로토콜 오버헤드(Header/Packet)가 최소화된 'Raw' 신호 전달 |
+| **DAS Enclosure** | 다수의 디스크를 수납하고 전원/냉각을 제공하는 케이싱 | JBOD (Just a Bunch Of Disks), RAID Controller | 디스크의 핫스왑(Hot-swap)을 지원하며, 내부적으로 **Hardware RAID (Redundant Array of Independent Disks)** 기능을 통해 성능 및 안정성 제공 |
+| **Host OS File System** | 블록 디바이스를 논리적 파일 단위로 관리 | NTFS, EXT4, ZFS, APFS | 스토리지를 직접 소유하므로, 권한 관리(Access Control)와 캐싱(Caching)을 OS가 독점적으로 수행 |
+
+#### 2. 상세 아키텍처 및 데이터 흐름 (Data Flow)
+DAS 환경에서의 I/O 경로는 네트워크 계층(Layer 3~4)을 완전히 생략하고 물리적 계층(Layer 1)과 데이터 링크 계층(Layer 2)만을 거친다.
+
+```text
++------------------+             +-----------------------------------+
+|   Host Server    |             |           DAS Subsystem           |
+|                  |  Direct I/O |                                   |
+|  +------------+  |             |  +-----------------------------+  |
+|  | Application|  |             |  |    RAID Controller / HBA    |  |
+|  +------|------+  |             |  +-------------|---------------+  |
+|         |         |             |                | (SATA/SAS/FC)    |
+|  +------v------+  |             |  +-------------v---------------+  |
+|  | File System |  |             |  |    Physical Disk Drives     |  |
+|  | (NTFS/EXT)  |  |             |  |  [HDD] [HDD] [SSD] [SSD]    |  |
+|  +------|------+  |             |  +-----------------------------+  |
+|         |         |             |                                   |
+|  +------v------+  |             |  (No separate OS/Processor for     |
+|  |  Volume Mgr |  |             |   File System logic exists here)  |
+|  |   / LVM     |  |             +-----------------------------------+
+|  +------|------+  |
+|         |         |
+|  +------v------+  |
+|  |  Block I/O  |  |
+|  |  Filter     |  |
+|  +------|------+  |
++---------|--------+
+          |
++---------v--------+
+| HBA (SAS/FC/USB)|
++---------|--------+
+          |
+<------------------------------------------------->
+        Point-to-Point Cable (No Switching)
+```
+
+**[데이터 흐름 해설]**
+1.  **I/O Request**: 애플리케이션이 파일 시스템에 `Write` 요청을 생성.
+2.  **Block Translation**: 파일 시스템이 이를 논리 블록 주소(LBA, Logical Block Address)로 변환.
+3.  **HBA Transfer**: **HBA (Host Bus Adapter)**가 CPU의 개입 없이 DMA를 사용하여 메모리 데이터를 읽어 전용 케이블로 전송.
+4.  **Direct Write**: 외장형 DAS 컨트롤러가 데이터를 받아 물리적 디스크 플래터(Platter)나 셀(Cell)에 기록.
+5.  **ACK**: 확인 신호가 없는 네트워크 통신이 아닌, 하드웨어 인터럽트(Interrupt) 방식으로 완료 신호를 호스트에게 전달.
+
+#### 3. 핵심 알고리즘 및 인터페이스 기술
+-   **SAS (Serial Attached SCSI)**: DAS의 가장 대표적인 엔터프라이즈 인터페이스로, 기존 병렬 방식의 SCSI를 직렬화하여 대역폭을 획기적으로 높였으며, 포트 멀티플렉싱을 통해 하나의 포트로 여러 디스크를 연결(Expander)할 수 있다.
+-   **NCQ (Native Command Queuing)**: 호스트가 한 번에 여러 명령어를 전달하고, 디스크가 이를 재정렬하여 헤드 이동을 최소화하는 알고리즘. SATA 및 SAS에서 DAS의 성능을 극대화하는 핵심 기술이다.
+
+```c
+/* Pseudo-code: DAS I/O Logic vs Network I/O */
+// [DAS / SAN Block Mode]
+// Direct Hardware Command, No Network Stack Overhead
+void das_write_block(int lba, void* data) {
+    HBA->COMMAND_REG = WRITE_CMD;
+    HBA->LBA_REG     = lba;
+    HBA->DATA_PTR    = data; // DMA Address
+    HBA->START       = 1;
+    while(HBA->STATUS != DONE); // Polling or Interrupt
+}
+```
+
+📢 **섹션 요약 비유**: 회사 내에서 결재를 위로 올렸다가 내려오는 지루한 행정 절차(네트워크 프로토콜) 없이, 사장님(Host OS)이 옆자리 비서(DAS)에게 말을 걸면 즉시 서류를 전달받는 방식처럼 중간 단계가 없는 '원샷(One-shot)' 업무 처리가 가능합니다.
+
+---
+
+### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+
+#### 1. 스토리지 아키텍처 심층 비교 (DAS vs NAS vs SAN)
+
+| 비교 항목 (Criteria) | DAS (Direct Attached Storage) | NAS (Network Attached Storage) | SAN (Storage Area Network) |
+|:---:|:---|:---|:---|
+| **접속 방식 (Access)** | 직접 연결 (1:1) | 이더넷(LAN)을 통한 공유 (N:N) | 전용 Fiber Channel/iSCSI 망 (N:N) |
+| **데이터 단위 (Unit)** | **Block Level (Raw)** | File Level (NFS, SMB/CIFS) | **Block Level (Raw)** |
+| **주인 소유권 (Owner)** | 호스트 OS 독점 | 스토리지 OS(Embedded)가 관리 | 공유 플랫폼, LUN 매핑으로 할당 |
+| **성능 (Performance)** | **최고 (Native Speed)** | 네트워크 대역폭 제한 | 고성능이나 네트워크 지연 존재 |
+| **확장성 (Scalability)** | 낮음 (포트/케이블 물리적 한계) | 중간 (LAN 스위치 포트 증설) | 매우 높음 (스위칭 구조) |
+| **비용 (Cost)** | 낮음 (단순 케이블 연결) | 낮음~중간 | 매우 높음 (스위치, HBA, 라이선스) |
+
+#### 2. 타 영역(시스템 아키텍처)과의 융합 분석
+-   **OS 및 DB (Operating System & Database)**:
+    데이터베이스 관리 시스템(DBMS)은 주기적으로 **Checkpoint**나 **Recovery**를 수행하며, 이때 발생하는 대규모 순차 I/O(Sequential I/O)는 네트워크 대역폭 병목을 유발하기 쉽다. DAS는 이러한 **Latency-sensitive**한 워크로드에 최적화되어 있어, **Oracle RAC**와 같은 클러스터링 환경이 아닌 단일 독립형 DB 서버에는 여전히 DAS가 선호되기도 한다. 단, OS가 죽으면 데이터에 접근할 수 없는 **SPOF (Single Point of Failure)** 리스크가 공존한다.
+
+-   **가상화 (Virtualization)**:
+    전통적인 **VMware ESXi**나 **Hyper-V** 환경에서 여대 호스트가 공유된 스토리지를 통해 라이브 마이그레이션(vMotion)을 수행하려면 SAN/NAS가 필수적이다. 그러나 **HCI (Hyper-Converged Infrastructure)**는 각 노드에 붙은 DAS를 가상화 소프트웨어 계층(vSAN 등)으로 논리적으로 묶어 분산 스토리지 풀을 생성함으로써, DAS의 **저렴한 비용**과 **고성능**을 유지하면서 SAN의 **공유성**을 확보하는 융합 형태로 진화했다.
+
+```text
+       [ Convergence Flow: DAS to Distributed Storage ]
+
+      Node 1                 Node 2                 Node 3
+   +-------+              +-------+              +-------+
+   | DAS   |              | DAS   |              | DAS   |
+   | (1TB) |              | (1TB) |              | (1TB) |
+   +---+---+              +---+---+              +---+---+
+       |                      |                      |
+       | (Software Layer)     |                      |
+       +----------------------+----------------------+
+                   |
+             [ Distributed Storage Pool (3TB) ]
+                   (vSAN / Ceph / GlusterFS)
+```
+
+📢 **섹션 요약 비유**: 각자 전용 화장실(DAS)을 가지고 있으면 사용할 때는 편하지만, 다른 방 친구가 내 화장실을 쓰지 못하는 단점이 있습니다. 이를 해결하기 위해 각 방의 화장실 문을 헐어버리고 복도로 연결(HCI/Sw-defined)하여, 실제로는 각 방의 화장실(DAS)을 쓰면서 겉으로는 하나의 거대한 공용 화장실(SAN)처럼 쓰게 만든 기술입니다.
+
+---
+
+### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+
+#### 1. 실무 도입 시나리오 및 의사결정 트리
+기술사는 다음의 상황에서 DAS 도입을 고려하여야 한다.
+-   **고립된 고성능 워크로드 (Isolated HPC)**: 렌더링 팜(Rendering Farm)의 각 노드, 초고속(HFT) 트레이딩 서버. 타 서버와 데이터를 공유할 필요가 없고, 오로지 디스크의 IOPS와 대역폭만 필요한 경우.
+-   **비용 제약이 심한 소규모 구축**: 중소기업의 백업 서버, CCTV 녹화용 서버. 수만 달러의 SAN 스위치를 도입할 예산이 없으며, 단일 서버 장애 시 가용성 중단이 허용되는 환경.
+
+```text
+[ Decision Matrix ]
+             +-----------------+
+   Start     | Need Storage?   |
+             +--------+--------+
+                      | Yes
+                      v
+             +--------+--------+
+             | Data Sharing    |---- Yes ---> Use NAS/SAN
+             | required?       |
+             +--------+--------+
+                      | No (Dedicated)
+                      v

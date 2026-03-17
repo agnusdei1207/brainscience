@@ -1,88 +1,150 @@
-+++
-title = "592. 오픈 채널 SSD 구조"
-weight = 592
-+++
-
-> **Insight**
-> - 기존 SSD(Solid State Drive) 내부에서 감춰져 있던 FTL(Flash Translation Layer)의 핵심 제어 권한을 호스트 운영체제(OS)로 개방한 차세대 스토리지 아키텍처
-> - 클라우드 및 하이퍼스케일 데이터센터에서 워크로드별 I/O 패턴에 맞춰 데이터를 물리적 플래시 메모리에 직접 배치함으로써 꼬리 지연 시간(Tail Latency) 문제를 혁신적으로 해결
-> - 데이터 배치 제어권의 이동을 통해 SSD의 수명을 연장하고 성능의 예측 가능성(Predictability)을 확보
-
-## Ⅰ. 오픈 채널 SSD (Open-Channel SSD)의 개요
-
-전통적인 SSD는 호스트(서버의 CPU/OS)에게 자신을 기존 하드디스크(HDD)와 동일한 논리적 블록 인터페이스(LBA, Logical Block Address)로 노출합니다. SSD 내부의 컨트롤러는 FTL(Flash Translation Layer)이라는 소프트웨어를 구동하여, 덮어쓰기가 불가능한 NAND 플래시의 특성을 숨기기 위해 논리-물리 주소 변환, 가비지 컬렉션(GC, Garbage Collection), 웨어 레벨링(Wear Leveling) 등을 은밀하게 수행합니다.
-그러나 멀티 테넌트(Multi-tenant) 클라우드 환경에서는 SSD 내부에서 갑작스럽게 발생하는 GC 작업으로 인해 I/O 지연 시간이 튀는 '꼬리 지연 시간(Tail Latency)' 현상이 심각한 문제로 대두되었습니다. **오픈 채널 SSD**는 블랙박스였던 SSD 내부의 물리적 구조(채널, 칩, 블록, 페이지)를 호스트에게 투명하게 공개(Open)하고, FTL의 복잡한 관리 권한을 호스트 OS가 직접 제어하도록 만든 혁신적인 스토리지 구조입니다.
-
-📢 **섹션 요약 비유**: 여행사(호스트)가 호텔(SSD)의 빈방을 예약할 때, 기존에는 프론트 데스크(FTL)가 임의로 방을 배정했다면, 오픈 채널 SSD는 여행사가 호텔의 전체 층별 도면(물리적 채널/블록)을 보고 일행을 원하는 방에 직접 지정하여 배치할 수 있는 권한을 가진 것과 같습니다.
-
-## Ⅱ. 오픈 채널 SSD의 아키텍처 비교
-
-기존 SSD와 오픈 채널 SSD는 FTL의 위치와 호스트-디바이스 간의 책임 분담에서 확연한 차이를 보입니다.
-
-```text
-[Traditional SSD Architecture]         [Open-Channel SSD Architecture]
-
-   Host OS (File System)                   Host OS (File System / App)
-             |                                         |
-             | (LBA: Logical Block)                    | (LightNVM / Host-based FTL)
-             v                                         v
-+-----------------------------+          +-----------------------------+
-|        SSD Controller       |          |        SSD Controller       |
-|                             |          |                             |
-|  +-----------------------+  |          |  +-----------------------+  |
-|  | Device FTL (Blackbox) |  |          |  | Minimal FTL (ECC/BBM) |  |
-|  | - LBA to PBA Mapping  |  |   ==>    |  | - Error Correction    |  |
-|  | - Garbage Collection  |  |          |  | - Bad Block Management|  |
-|  | - Wear Leveling       |  |          |  +-----------------------+  |
-|  +-----------------------+  |          |                             |
-+-----------------------------+          +-----------------------------+
-             |                                         ^
-             | (PBA: Physical Block)                   | (PPA: Physical Page Address)
-             v                                         v
-   [ NAND Flash Memory Array ]             [ NAND Flash Memory Array ]
-```
-
-1. **기존 SSD:** FTL이 무거운 연산을 도맡아 하며, 호스트는 물리적 매체 상태를 전혀 알지 못합니다.
-2. **오픈 채널 SSD:** 무거운 FTL 로직(주소 변환, GC, 웨어 레벨링)은 호스트 OS(Linux의 LightNVM 서브시스템 등)로 이동합니다. 디바이스의 컨트롤러는 미디어 보호에 필수적인 오류 정정(ECC)과 불량 블록 관리(BBM) 같은 최소한의 기능만 수행합니다. 호스트는 LBA 대신 물리적 페이지 주소(PPA)를 직접 사용하여 데이터를 기록합니다.
-
-📢 **섹션 요약 비유**: 식당에서 주방장(FTL)에게 알아서 요리해 달라고 맡기는 '오마카세(기존 SSD)' 방식에서, 손님(호스트)이 직접 신선한 재료(물리적 블록)를 골라 요리법까지 지정하는 'DIY 셀프 식당(오픈 채널 SSD)' 방식으로 구조가 바뀐 것입니다.
-
-## Ⅲ. 오픈 채널 SSD의 핵심 기술적 이점
-
-1. **I/O 성능의 예측 가능성 (Predictable Performance):**
-   * 기존 SSD는 백그라운드에서 언제 가비지 컬렉션(GC)이 터질지 몰라 응답 시간이 불안정했습니다.
-   * 오픈 채널 SSD는 호스트가 애플리케이션의 여유 시간에 맞춰 명시적으로 GC를 스케줄링하므로 성능의 일관성을 완벽히 통제할 수 있습니다.
-2. **I/O 격리 (I/O Isolation) 및 채널 병렬성 극대화:**
-   * 여러 가상 머신(VM)이 하나의 SSD를 공유할 때, 호스트는 VM마다 SSD 내부의 물리적 채널(Channel)이나 다이(Die)를 독립적으로 할당하여 이웃 노이즈(Noisy Neighbor) 문제를 하드웨어 수준에서 차단할 수 있습니다.
-3. **쓰기 증폭(WAF, Write Amplification Factor) 감소:**
-   * 데이터베이스(RocksDB 등)의 LSM-Tree 구조나 호스트의 파일 시스템이 데이터를 기록하는 패턴을 물리적 블록 크기에 정확히 맞춰 정렬(Alignment)할 수 있어, 불필요한 내부 복사 작업(WAF)이 대폭 줄어들고 수명이 연장됩니다.
-
-📢 **섹션 요약 비유**: 도서관에서 사서(SSD 내부 FTL)가 마음대로 책을 정리해서 가끔 책을 빌리려는 학생(앱)들이 무작정 기다려야 했다면, 이제는 도서관장이 직접 시간표를 짜서 밤에만(앱 유휴 시간) 책을 정리하게 하여 낮에는 책을 빌리는 속도가 항상 일정하게 유지되는 효과입니다.
-
-## Ⅳ. 구현의 한계와 호스트 시스템의 부담
-
-이러한 혁신적인 장점에도 불구하고 오픈 채널 SSD는 치명적인 한계점들을 가지고 있습니다.
-
-* **호스트 CPU 및 메모리 오버헤드:** 수 테라바이트(TB) SSD의 맵핑 테이블을 호스트 RAM에 상주시켜야 하며, 복잡한 GC 알고리즘을 CPU가 연산해야 하므로 시스템 자원 소모가 매우 큽니다.
-* **벤더 종속성 및 표준화 부족:** 낸드 플래시의 물리적 특성(페이지 크기, 지우기 블록 크기 등)이 제조사마다 다르고 심지어 세대별로도 달라서, 호스트의 FTL 소프트웨어를 매번 맞춤형으로 수정해야 하는 호환성 문제가 극심했습니다.
-* **에코시스템 부재:** 리눅스 커널 수준(LightNVM)에서 지원이 이루어졌으나, 일반 파일 시스템이나 애플리케이션 코드를 수정해야 하는 높은 진입 장벽이 존재했습니다.
-
-📢 **섹션 요약 비유**: 수동 변속기 자동차(오픈 채널 SSD)가 카레이서(호스트 OS)에게는 최상의 성능을 낼 수 있게 해주지만, 기어 조작(FTL 관리)에 신경 쓰느라 피곤하고, 차종이 바뀔 때마다 기어 조작법을 새로 배워야 하는 번거로움과 같습니다.
-
-## Ⅴ. 오픈 채널 SSD의 진화: Zoned Storage (ZNS) 로의 발전
-
-오픈 채널 SSD의 '너무 과도한 권한 개방'으로 인한 표준화 실패와 호스트 부담을 해결하기 위해, 업계(NVMe 표준 기구)는 오픈 채널의 장점은 살리면서 단점을 보완한 **ZNS (Zoned Namespace) SSD**라는 새로운 표준 아키텍처로 방향을 선회했습니다.
-
-ZNS는 SSD를 물리적인 특성 그대로 노출하는 대신, 일정한 크기의 논리적 '존(Zone)' 단위로 나누어 호스트에 제공합니다. 각 존은 "순차적 쓰기(Sequential Write)만 가능하고, 덮어쓰려면 존 전체를 초기화(Erase)해야 한다"는 단순한 규칙만 호스트에 강제합니다. 이로써 호스트의 복잡한 물리 맵핑 부담을 덜고, SSD 컨트롤러가 다시 맵핑을 담당하되 성능 간섭(GC) 문제는 해결하는 이상적인 절충안(Zoned Storage)으로 오픈 채널 SSD의 유산이 이어지고 있습니다.
-
-📢 **섹션 요약 비유**: 도면 전체를 주고 직접 벽돌을 쌓으라던 방식(오픈 채널)이 너무 어려워서 포기하려 하자, "구역(Zone)만 나눠줄 테니 그 구역 안에서는 차례대로 짐을 쌓기만 하라"는 쉬운 규칙(ZNS)으로 타협을 본 것입니다.
 
 ---
-**Knowledge Graph & Child Analogy**
+title = "592. 오픈 채널 SSD 구조"
+weight = 592
+---
 
-* **지식 그래프 (Knowledge Graph):**
-  * `오픈 채널 SSD` --> `권한 이관` --> `호스트 기반 FTL (LightNVM)`
-  * `오픈 채널 SSD` --> `장점` --> `예측 가능한 지연 시간, I/O 격리, WAF 감소`
-  * `오픈 채널 SSD` --> `한계 및 진화` --> `표준화 어려움` --> `ZNS (Zoned Storage)로 발전`
-* **어린이 비유 (Child Analogy):**
-  * 예전 장난감 상자(일반 SSD)는 동생(FTL)이 자기 맘대로 정리를 해서 내가 찾는 장난감이 어디 있는지 몰라 답답했어요. 그래서 '투명 장난감 상자(오픈 채널 SSD)'를 가져와서 내가 직접 어디에 무엇을 넣을지 완벽하게 정해두었더니, 눈 감고도 1초 만에 장난감을 찾을 수 있게 되었답니다!
+# # [오픈 채널 SSD 구조]
+
+## 핵심 인사이트 (3줄 요약)
+> 1. **본질**: 블랙박스였던 SSD(Solid State Drive) 내부의 플래시 관리 권한(FTL)을 호스트(HOST)로 이전하여, 물리적 특성(Paral lelism, Erase-before-Write)을 그대로 노출하는 하드웨어 추상화 계층의 혁신
+> 2. **가치**: 클라우드 및 엔터프라이즈 환경에서 `꼬리 지연 시간(Tail Latency)`을 제거하고 `I/O 격리(Isolation)`를 통해 예측 가능한 성능(Predictable Performance)을 확보, QoS(Quality of Service)를 보장
+> 3. **융합**: OS/DB(데이터베이스)와 스토리지가 긴밀 결합하여 `쓰기 증폭(Write Amplification)`을 최소화하며, 이는 NVMe ZNS(Zoned Namespace) 등 차세대 스토리지 표준의 이론적 토대가 됨
+
+---
+
+### Ⅰ. 개요 (Context & Background)
+
+**개념 및 정의**
+**오픈 채널 SSD (Open-Channel SSD, OC-SSD)**는 호스트(Host OS)가 NAND 플래시 메모리의 물리적 레이아웃(Plane, Die, Channel, LUN)과 데이터 배치(Data Placement)를 직접 제어할 수 있도록 설계된 스토리지 디바이스입니다. 기존 SSD가 내부적인 FTL(Flash Translation Layer)을 통해 매체의 특성을 추상화(Abstraction)하고 논리 주소(LBA)를 제공하는 방식(Blackbox Approach)과 대조적으로, OC-SSD는 물리적 주소(PPA, Physical Page Address)를 호스트에 직접 노출하여 제어의 투명성을 확보합니다.
+
+**💡 비유**
+여행사(호스트)가 대형 호텔(SSD)에 객실을 예약할 때, 기존 방식은 프론트 데스크(FTL)에게 "방 2개 주세요"라고만 요청하면, 내부 빈방에 알아서 배정받는 방식이었습니다. 반면, 오픈 채널 SSD는 여행사가 호텔의 건물 도면을 보고 "101호는 신혼부부, 201호는 비즈니스 손님"과 같이 객실의 용도와 위치를 직접 지정하여 배정할 수 있는 권한을 가진 것과 같습니다.
+
+**등장 배경**
+1.  **기존 한계 (Performance Wall)**: 기존 SSD의 FTL은 호스트의 I/O 패턴을 예측하지 못해 불필요한 데이터 복사와 가비지 컬렉션(GC, Garbage Collection)을 수행합니다. 이는 특히 멀티테넌트(Multi-tenant) 클라우드 환경에서 `이웃 노이즈(Noisy Neighbor)` 문제를 유발하여 99.99백분위수 지연 시간(P99 Latency)을 급격히 악화시켰습니다.
+2.  **혁신적 패러다임 (Host-ownership)**: 하드웨어의 병렬성(Parallelism)을 극대화하기 위해, 애플리케이션의 수명 주기(Life Cycle)를 가장 잘 이해하고 있는 호스트 시스템(또는 데이터베이스 엔진)이 데이터를 물리적 매체에 직접 기록하도록 설계가 변경되었습니다.
+3.  **현재의 비즈니스 요구**: 하이퍼스케일러(Hyperscaler)들은 스토리지 비용 절감과 수명 연장을 위해 불필요한 `쓰기 증폭(Write Amplification Factor, WAF)`을 제거하고, 하드웨어 자원을 소프트웨어적으로 완벽히 관리하고자 합니다.
+
+📢 **섹션 요약 비유**: 기존 SSD가 "자동 변속기"가 장착되어 운전자가 엔진 회전수(RPM)에 신경 쓰지 않아도 편하지만 연비가 떨어지는 포인트가 있었다면, 오픈 채널 SSD는 운전자가 기어비와 엔진 토크 특성을 완벽히 이해하고 직접 조작하는 "F1 레이싱 카의 시퀀셜 변속기"와 같아서, 조작 난이도는 높지만 최고의 효율과 성능을 끌어낼 수 있는 구조입니다.
+
+---
+
+### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+
+**구성 요소 (표)**
+
+| 요소명 (Component) | 역할 (Role) | 내부 동작 (Internal Operation) | 프로토콜/인터페이스 | 비유 (Analogy) |
+|:---|:---|:---|:---|:---|
+| **Host FTL** | 논리-물리 주소 변환 및 데이터 배치 | 파일 시스템/DB로부터 요청을 받아 NAND의 물리적 특성에 맞춰 `PPA(Physical Page Address)`를 생성 | Linux Kernel (LightNVM), blk-layer | 건물주 (공간 배치 관리자) |
+| **Device Controller** | 미디어 접근 제어 및 신호 처리 | 호스트의 명령을 해석하여 NAND에 전기적 신호를 전송. ECC 등 최소한의 에러 처리만 담당 | NVMe (Vendor Specific Commands) | 정비공 (엘리베이터 기계실) |
+| **NAND Flash Array** | 데이터 비휘발성 저장 | 페이지(Page) 단위 쓰기/읽기, 블록(Block) 단위 소거(Erase) 수행 | ONFI / Toggle | 호텔 객실 (실제 공간) |
+| **Communication Bus** | 병렬 데이터 전송 채널 | 여러 채널/웨이(Way)를 동시에 활용하여 대역폭 확보 | PCIe | 고속도로 (다차선 도로) |
+
+**ASCII 구조 다이어그램: 기존 SSD vs 오픈 채널 SSD**
+
+아래 다이어그램은 논리적 주소가 물리적 매체에 도달하기까지의 흐름과 제어 권한의 차이를 도식화한 것입니다.
+
+```text
+┌─────────────────────────────┐        ┌───────────────────────────────┐
+│      [Traditional SSD]      │        │      [Open-Channel SSD]       │
+├─────────────────────────────┤        ├───────────────────────────────┤
+│                             │        │                               │
+│  Host OS (Ext4 / XFS)       │        │  Host OS (File System +       │
+│        ↓                    │        │           Host-based FTL)     │
+│  Logical Block Address(LBA) │        │        ↓                      │
+├─────────────────────────────┤        │  Physical Page Address (PPA)  │
+│                             │        │                               │
+│  [ SSD Controller ]         │        │  [ SSD Controller ]           │
+│  ┌─────────────────────┐    │        │  ┌─────────────────────┐      │
+│  │ Device FTL (Blackbox)│    │        │  │   Minimal FTL       │      │
+│  │ - Mapping Table     │    │        │  │ - ECC / Bad Block   │      │
+│  │ - GC Logic          │    │        │  │ - Scheduler         │      │
+│  │ - Wear Leveling     │    │        │  │ (No Mapping Logic)  │      │
+│  └─────────────────────┘    │        │  └─────────────────────┘      │
+│        ↓ (Translation)      │        │        ↓ (Passthrough)        │
+│                             │        │                               │
+│  [ NAND Flash Channels ]    │        │  [ NAND Flash Channels ]      │
+│  CH0, CH1, CH2... (Hidden)  │        │  CH0, CH1, CH2... (Exposed)   │
+└─────────────────────────────┘        └───────────────────────────────┘
+```
+
+**(다이어그램 해설)**
+1.  **기존 SSD (좌측)**: 호스트는 `LBA(Logical Block Address)`만 전달합니다. SSD 컨트롤러 내부의 FTL이 이 LBA를 실제 데이터 위치인 `PBA`로 변환합니다. 호스트는 데이터가 어느 채널(CH)이나 다이(Die)에 기록되는지 전혀 알 수 없으며, GC와 같은 내부 동작으로 인해 지연 시간(Latency)이 예측 불가능해집니다.
+2.  **오픈 채널 SSD (우측)**: 호스트의 FTL이 복잡한 맵핑 테이블과 할당 알고리즘을 직접 수행합니다. 따라서 `PPA(Physical Page Address)` 단위로 명령을 내립니다. SSD 컨트롤러는 단순히 명령을 전달하는 역할(Passthrough)에 가까우며, 물리적 채널의 병렬성을 호스트가 직접 제어할 수 있게 됩니다.
+
+**심층 동작 원리**
+오픈 채널 SSD의 핵심 동작은 '소거 전 기좌제(Erase-before-Write)'라는 NAND 플래시의 물리적 한계를 소프트웨어가 어떻게 극복하는가에 있습니다.
+1.  **논리적 영역(Logical Block)을 물리적 영역(Physical Zone)으로 매핑**: 호스트는 파일 시스템의 로그 구조(Log-structured)를 NAND의 블록 단위와 1:1로 매핑합니다.
+2.  **순차 쓰기(Sequential Append) 최적화**: 랜덤 쓰기(Random Write) 요청이 들어와도, 호스트 FTL은 이를 버퍼링하여 물리적으로는 항상 순차적으로 기록(Sequential Write)되도록 조작합니다. 이는 `쓰기 증폭(WAF)`을 1에 근접하게 만듭니다.
+3.  **명시적 상태 관리**: 데이터의 유효/무효(Valid/Invalid) 상태를 호스트가 추적하므로, 불필요한 블록 이동(Read-Modify-Write)이 발생하지 않습니다.
+
+**핵심 알고리즘 및 의사 코드 (Host FTL의 매핑 로직)**
+
+```c
+// Host-based FTL Mapping Logic (Conceptual)
+// struct PhysicalPageAddress { int channel; int lun; int block; int page; };
+
+struct PhysicalPageAddress ftl_map_write(long logical_lba) {
+    // 1. 논리 주소에 해당하는 논리 블록(LBA) 확인
+    int logical_block_id = logical_lba / PAGES_PER_BLOCK;
+
+    // 2. 쓰기 포인터(Write Pointer)를 통해 기록할 물리적 블록 선정
+    // 채널 간 부하 분산(Load Balancing)을 고려하여 채널 선택
+    int target_channel = hash(logical_block_id) % NUM_CHANNELS;
+    int target_block = get_next_free_block(target_channel);
+
+    // 3. 물리적 페이지 주소(PPA) 생성
+    struct PhysicalPageAddress ppa;
+    ppa.channel = target_channel;
+    ppa.block = target_block;
+    ppa.page = current_page_offset[target_block];
+
+    // 4. 매핑 테이블 업데이트 (In-memory & Persistent Log)
+    update_mapping_table(logical_lba, ppa);
+
+    // 5. 페이지 오프셋 증가
+    current_page_offset[target_block]++;
+
+    return ppa;
+}
+```
+*(해설: 이 코드는 호스트가 데이터를 기록할 때 가용 채널을 분산하여 선정하고, 매핑 테이블을 갱신하는 과정을 보여줍니다. 핵심은 `target_channel`을 결정하는 로직을 통해 하드웨어의 병렬성을 보장한다는 점입니다.)*
+
+📢 **섹션 요약 비유**: 마치 복잡한 항공 관제 시스템에서, 각 항공사(애플리케이션)가 자신의 비행기(데이터)가 활주로(채널)에 착륙할 시간과 위치를 직접 협의하여 결정함으로써, 관제소(SSD 컨트롤러)의 혼잡을 막고 모든 비행기가 지연 없이 이착륙하는 것과 같습니다.
+
+---
+
+### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+
+**심층 기술 비교 (정량적 분석표)**
+
+| 비교 항목 (Metric) | 기존 SSD (Traditional SSD) | 오픈 채널 SSD (Open-Channel SSD) | 기술적 파급 (Impact) |
+|:---|:---|:---|:---|
+| **지연 시간 예측성** | 낮음 (Unpredictable) <br> *GC 발생 시 급증* | 높음 (Predictable) <br> *호스트가 I/O 스케줄링 주도* | Tail Latency 최대 90% 감소 |
+| **쓰기 증폭 (WAF)** | 3 ~ 30 (높음) <br> *내부 복사 빈번* | 1.0 ~ 1.2 (낮음) <br> *Log-structured Alignment* | SSD 수명 3~5배 연장 |
+| **아키텍처 복잡도** | Device (High) <br> *Host (Low)* | Device (Low) <br> *Host (High)* | 스토리지 HW 간소화 |
+| **I/O 격리 (Isolation)** | 불가능 <br> *공유 큐(Queue) 간 간섭* | 완벽 가능 <br> *채널/LUN 단위 물리적 분리* | Cloud Multi-tenancy QoS 보장 |
+
+**과목 융합 관점 (시너지 및 오버헤드)**
+1.  **OS & 파일 시스템 (Kernel)**:
+    *   **시너지**: 리눅스 커널의 **LightNVM**과 같은 서브시스템을 통해, 파일 시스템(ex: F2FS)이 블록 할당기(Allocator)를 통해 물리적 위치를 인식합니다. 이를 통해 FS 수준에서 데이터의 `삭제 예측`이 가능해져 비동기 삭제(Trim) 명령의 오버헤드를 제거합니다.
+    *   **오버헤드**: 기존 블록 디바이스 드라이버보다 복잡한 페이지 관리 로직이 커널 공간에 상주하야 하므로, 커널 메모리(RAM) 소모가 증가합니다.
+2.  **데이터베이스 (DBMS)**:
+    *   **시너지**: RocksDB와 같은 **LSM-Tree(Log-Structured Merge-Tree)** 기반 데이터베이스는 기본적으로 데이터를 순차적으로 기록(SST 파일)합니다. 오픈 채널 SSD의 순차 쓰기 특성과 완벽하게 정렬(Align)되어, DB의 Compaction 작업과 SSD의 GC 작업이 중복되는 현상을 방지하여 성능을 극대화합니다.
+
+**표준화 진화 과정**
+
+```text
+[ Evolution of SSD Interfaces ]
+
+SATA / AHCI (Legacy HDD Interface)
+      ↓
+NVMe (High Performance, Logical Interface)
+      ↓
+Open-Channel SSD (Physical Interface, Custom Proprietary)
+      ↓
+ZNS / Zoned Storage (Standardized Physical Interface, NVMe 2.0)
+```
+
+📢 **섹션 요약 비유**: 피자 가게와 배달 앱(애플리케이션)의 관계와 같습니다. 기존 SSD는 "피자를 맛있게 만들어주세요"라고 주문만 걸면, 가게가 알아서 재료를 관리했습니다(블랙박스). 오�

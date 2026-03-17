@@ -3,110 +3,177 @@ title = "페이지 교체 알고리즘 (Page Replacement)"
 weight = 300
 +++
 
-> **3-line Insight**
-> - 페이지 교체 알고리즘(Page Replacement Algorithm)은 가상 메모리 관리에서 물리 메모리의 여유 공간이 부족할 때 디스크로 내보낼 희생 페이지(Victim Page)를 결정하는 최적화 전략이다.
-> - 최적의 알고리즘은 미래의 메모리 참조 패턴을 예측하여 페이지 폴트율(Page Fault Rate)을 최소화함으로써 시스템의 처리량(Throughput)을 극대화하는 것을 목표로 한다.
-> - FIFO의 벨라디의 모순(Belady's Anomaly)과 같은 한계를 극복하기 위해 지역성(Locality) 원칙에 기반한 LRU(Least Recently Used) 및 이를 근사하는 클럭(Clock) 알고리즘 등으로 발전해 왔다.
+# 페이지 교체 알고리즘 (Page Replacement)
 
-## Ⅰ. 페이지 교체의 필요성과 목표
-
-페이지 교체(Page Replacement)는 운영체제(OS, Operating System)가 요구 페이징(Demand Paging) 환경에서 새로운 페이지를 메모리에 적재해야 하지만, 주 메모리(Main Memory) 내에 가용한 빈 프레임(Free Frame)이 없을 때 발생하는 필수적인 프로세스이다. 
-메모리는 한정된 자원이므로, 모든 프로그램의 코드를 동시에 올려둘 수 없다. 따라서 현재 가장 덜 중요하거나 나중에 사용될 가능성이 가장 낮은 페이지를 식별하여 보조 기억 장치(Backing Store)인 디스크의 스왑 영역(Swap Space)으로 내보내고(Swap-out), 그 자리에 새로운 페이지를 들여와야(Swap-in) 한다.
-페이지 교체 알고리즘의 핵심 목표는 **페이지 폴트(Page Fault) 발생 횟수를 최소화**하는 것이다. 디스크 I/O 작업은 CPU 처리 속도에 비해 매우 느리기 때문에, 잘못된 페이지를 교체하면 스래싱(Thrashing, 잦은 페이지 교체로 인한 심각한 성능 저하)이 발생하여 시스템이 마비될 수 있다.
-
-> 📢 **섹션 요약 비유**
-> 한정된 크기의 진열장(물리 메모리)에 새로운 신상품(새로운 페이지)을 전시하려면, 어떤 기존 상품(희생 페이지)을 창고(디스크)로 뺄지 결정하는 매니저의 선택 전략과 같습니다.
-
-## Ⅱ. 페이지 교체 메커니즘과 아키텍처 (아키텍처)
-
-페이지 교체는 페이지 폴트 처리 과정의 일부로서, 희생 페이지를 선정하고 디스크의 스왑 영역과 데이터를 교환하는 일련의 과정이다. 이 과정에서 변경(Modify) 비트(또는 Dirty Bit)가 활용되어 I/O 비용을 최적화한다.
-
-```text
-[Main Memory (Physical Frames)]         [Disk (Swap Space / Backing Store)]
-  +-------+-------+-------+               +-----------------------+
-  | Page A| Page B| Page C|               |                       |
-  +-------+-------+-------+               |       [Page D]        |
-          |       |                       |                       |
-          v       v                       +-----------------------+
-   [Victim Page Selection]
-   (Page Replacement Algorithm)
-             |
-             +-- 1. Select 'Page B' as Victim
-             |
-             +-- 2. Check Modify (Dirty) Bit of 'Page B'
-             |      - If Dirty (1): Write Page B to Disk (Swap-out) ----> (Disk I/O)
-             |      - If Clean (0): Discard Page B (No Write needed)
-             |
-             +-- 3. Read 'Page D' from Disk to the freed Frame (Swap-in) <---- (Disk I/O)
-             |
-             +-- 4. Update Page Tables (Invalidate B, Validate D)
-```
-
-**수행 단계 요약:**
-1. **희생자 선정:** 알고리즘을 통해 쫓아낼 프레임(희생 페이지)을 선택한다.
-2. **디스크 쓰기(필요시):** 선택된 페이지의 수정 비트(Dirty Bit)를 확인하여, 메모리에 올라온 이후 내용이 변경되었다면 디스크에 변경된 내용을 기록한다. (Dirty Page 쓰기)
-3. **새 페이지 읽기:** 요구된 새로운 페이지를 디스크에서 읽어 확보된 프레임에 로드한다.
-4. **테이블 업데이트:** 기존 페이지의 페이지 테이블(Page Table) 유효 비트를 무효(Invalid)로, 새 페이지를 유효(Valid)로 갱신한다.
-
-> 📢 **섹션 요약 비유**
-> 진열장에서 뺄 상품을 고른 후(희생자 선정), 그 상품에 손때가 묻었으면 닦아서 창고에 넣고(Dirty Bit 확인 및 스왑 아웃), 새 상품을 그 자리에 채워 넣는(스왑 인) 과정입니다.
-
-## Ⅲ. 주요 페이지 교체 알고리즘의 분류
-
-페이지 폴트율을 낮추기 위해 다양한 알고리즘이 연구되었으며, 크게 과거의 사용 이력을 바탕으로 하는 방식과 단순 큐 기반, 그리고 이상적인 모델로 나눌 수 있다.
-
-- **OPT (Optimal Replacement):** 앞으로 가장 오랫동안 사용되지 않을 페이지를 교체한다. 미래의 메모리 참조 패턴을 알아야 하므로 현실적으로 구현이 불가능(Unimplementable)하지만, 다른 알고리즘들의 성능을 평가하는 이상적인 기준(Upper Bound)으로 사용된다.
-- **FIFO (First-In First-Out):** 메모리에 가장 먼저 들어온 페이지를 먼저 내보내는 방식이다. 큐(Queue)로 간단히 구현되지만, 자주 사용되는 페이지가 교체될 위험이 있으며, 할당된 프레임 수가 늘어나도 오히려 페이지 폴트가 증가하는 **벨라디의 모순(Belady's Anomaly)**이 발생할 수 있다.
-- **LRU (Least Recently Used):** 최근에 가장 오랫동안 사용되지 않은 페이지를 교체한다. 시간 지역성(Temporal Locality) 원칙에 기반하며, 벨라디의 모순이 발생하지 않는 스택 알고리즘(Stack Algorithm)이다. 성능은 우수하나, 매 참조마다 시간(Timestamp)이나 리스트 구조를 업데이트해야 하므로 하드웨어 오버헤드가 크다.
-- **LFU (Least Frequently Used) & MFU (Most Frequently Used):** 참조 횟수를 기반으로 교체하는 알고리즘. LFU는 참조 횟수가 가장 적은 것을 교체하고, MFU는 오히려 많이 참조된 것이 과거의 것이라고 판단해 교체한다. 구현이 복잡하고 초기 적재된 후 사용되지 않는 페이지 처리가 어려워 실무에서는 잘 쓰이지 않는다.
-
-> 📢 **섹션 요약 비유**
-> OPT는 미래를 보는 예언자, FIFO는 무조건 먼저 온 사람부터 쫓아내는 수위, LRU는 방명록을 보고 제일 오래전에 방문한 사람을 내보내는 똑똑한 관리자라 할 수 있습니다.
-
-## Ⅳ. LRU 근사 알고리즘과 현실적 대안
-
-순수한 LRU 알고리즘은 구현 비용이 너무 크기 때문에, 현대 운영체제는 하드웨어의 지원을 받는 LRU 근사 알고리즘(LRU Approximation Algorithm)을 주로 채택한다. 이는 참조 비트(Reference Bit)라는 하드웨어 플래그 하나만을 추가하여 오버헤드를 줄인다.
-
-- **2차 기회 알고리즘 (Second-Chance Algorithm) / 클럭 알고리즘 (Clock Algorithm):** 기본적으로 FIFO 큐를 원형 큐(Circular Queue) 형태로 구성하며, 각 페이지에 참조 비트(Reference Bit)를 둔다. 페이지를 참조할 때 비트가 1로 설정되며, 교체 대상을 찾을 때 포인터(시계바늘)가 순회하면서 참조 비트가 1인 것은 0으로 바꾸어 한 번의 '기회'를 더 주고, 참조 비트가 0인 페이지를 찾아 교체한다.
-- **NUR (Not Used Recently):** 클럭 알고리즘의 확장판으로, 참조 비트(Reference Bit)와 변형 비트(Modified/Dirty Bit) 두 개를 조합하여 페이지를 분류한다. (0,0) 즉 최근에 참조되지도 않고 수정되지도 않은 페이지를 1순위로 교체하여, 디스크 쓰기 비용(I/O Cost)까지 최적화하는 실용적인 접근법이다.
-
-이러한 근사 알고리즘들은 완벽한 LRU와 거의 유사한 성능을 내면서도 하드웨어 구현이 매우 간단하여, Windows, Linux 등 대부분의 상용 OS에서 가상 메모리 관리의 핵심 로직으로 차용하고 있다.
-
-> 📢 **섹션 요약 비유**
-> 완벽한 장부 정리(순수 LRU)가 너무 힘드니, 관리자가 순찰을 돌면서 깃발이 꽂힌 상품은 깃발만 뽑아 한 번 봐주고, 깃발이 없는 상품을 발견하면 바로 빼버리는(클럭 알고리즘) 효율적인 순찰 방식입니다.
-
-## Ⅴ. 페이지 프레임 할당(Allocation)과 스래싱(Thrashing)
-
-훌륭한 페이지 교체 알고리즘을 사용하더라도, 프로세스에 할당된 절대적인 물리 프레임(Physical Frame)의 수가 부족하면 페이지 폴트가 급증하는 스래싱(Thrashing) 현상이 발생한다. 따라서 교체 알고리즘은 프레임 할당 정책과 맞물려 동작해야 한다.
-
-- **지역 교체(Local Replacement) vs 전역 교체(Global Replacement):** 
-  - **지역 교체:** 프로세스 자신에게 할당된 프레임 집합 안에서만 교체 대상을 찾는 방식이다. 다른 프로세스에 영향을 주지 않지만 메모리 낭비가 생길 수 있다.
-  - **전역 교체:** 시스템 전체의 프레임을 대상으로 교체 대상을 선정한다. 한 프로세스가 다른 프로세스의 프레임을 빼앗아 올 수 있어 전체 메모리 효율은 좋으나, 특정 프로세스의 실행 시간이 예측 불가능해진다. 대부분의 OS는 전역 교체를 선호한다.
-- **워킹 셋(Working Set) 모델 및 PFF(Page Fault Frequency):** 스래싱을 방지하기 위해 프로세스가 현재 활발하게 사용하는 페이지들의 집합(워킹 셋)을 추적하여 이만큼의 프레임을 동적으로 보장해 주거나, 페이지 폴트 빈도(PFF)를 모니터링하여 상한/하한선에 따라 프레임 할당량을 조절하는 메커니즘이 함께 사용되어야만 교체 알고리즘이 정상적으로 성능을 발휘할 수 있다.
-
-> 📢 **섹션 요약 비유**
-> 아무리 매니저(교체 알고리즘)가 똑똑해도 매장의 전체 공간(할당된 프레임)이 너무 좁으면 물건을 계속 창고에서 넣고 빼느라 장사를 망치게 되는데(스래싱), 이를 막기 위해 최소한의 적정 매장 크기를 보장해 주는 정책이 반드시 필요합니다.
+> **핵심 인사이트 (3줄 요약)**
+> 1. **본질**: 운영체제(OS, Operating System)의 가상 메모리(Virtual Memory) 관리 핵심 기술로, 한정된 물리 메모리(Physical Memory) 자원을 초과하여 요청된 페이지(Page)를 디스크(Swap Area)와 교환하는 Swapping 메커니즘이다.
+> 2. **가치**: 적절한 교체 정책 선정을 통해 디스크 I/O 병목을 완화하여 전체 시스템의 처리량(Throughput)을 극대화하고, 지역성(Locality)을 활용하여 페이지 폴트율(Page Fault Rate)을 최소화한다.
+> 3. **융합**: 계산 이론(Computing Theory)의 최적화 문제와 컴퓨터 구조(Computer Architecture)의 하드웨어 지원(Reference Bit 등)이 결합된 분야로, 최근 DBMS의 버퍼 관리(Buffer Replacement)와 캐싱(Caching) 전략으로 응용된다.
 
 ---
 
-### 💡 Knowledge Graph 및 Child Analogy
+## Ⅰ. 개요 (Context & Background)
 
-```mermaid
-graph TD
-    A[페이지 교체 알고리즘 <br> Page Replacement] --> B(기본 알고리즘)
-    A --> C(LRU 근사 알고리즘)
-    A --> D(할당 및 성능 관리)
-    B --> B1[FIFO: First-In First-Out <br> 벨라디 모순]
-    B --> B2[OPT: 최적 교체 <br> 구현 불가, 기준]
-    B --> B3[LRU: 최근 최소 사용 <br> 시간 지역성]
-    C --> C1[Clock Algorithm <br> 원형 큐, 참조 비트]
-    C --> C2[NUR <br> 참조 비트 + 변경 비트]
-    D --> D1[Global vs Local Replacement]
-    D --> D2[Thrashing 방지 <br> Working Set, PFF]
+페이지 교체(Page Replacement)는 운영체제(OS, Operating System)가 요구 페이징(Demand Paging) 환경에서 가상 메모리의 페이지를 물리 메모리의 프레임(Frame)에 로드하려 할 때, 가용한 빈 프레임(Free Frame)이 존재하지 않을 경우 기존 페이지 중 하나를 선택하여 보조 기억 장치(Backing Store)로 내보내고(Swap-out), 그 자리에 새로운 페이지를 로드(Swap-in)하는 핵심 관리 기법이다.
+
+현대 컴퓨터 시스템은 주기억장치(Main Memory)의 용량 한계로 인해 모든 프로세스의 이미지를 상주시킬 수 없다. 따라서 OS는 프로세스를 페이지(Page)라는 고정 크기 단위로 분할하고, 필요할 때만 메모리에 적재하는 전략을 취한다. 문제는 메모리가 가득 찼을 때 발생한다. 어떤 페이지를 내보낼지 결정하는 알고리즘의 품질에 따라 시스템의 성능이 결정된다. 잘못된 페이지 교체는 자주 참조되는 페이지를 디스크로 내쫓게 만들어, 결과적으로 디스크 I/O가 빈번히 발생하고 CPU가 데이터를 기다리며 놀게 되는 '스래싱(Thrashing)' 현상을 초래할 수 있다.
+
+### 💡 기술적 배경 및 발전
+1.  **기존 한계 (Overlays & Swapping)**: 초기에는 전체 프로세스를 통째로 디스크와 교환하는 Swapping 방식을 사용했으나, 메모리 낭비가 심하고 Context Switching 비용이 컸다.
+2.  **혁신적 패러다임 (Paging & Virtual Memory)**: 프로그램의 논리적 주소 공간(Logical Address Space)과 물리적 주소 공간(Physical Address Space)을 분리하여, 불연속적인 메모리 할당을 가능하게 하고 물리 메모리보다 큰 프로그램 실행을 지원하게 되었다.
+3.  **현재의 비즈니스 요구 (Performance)**: 빅데이터 및 AI 워크로드의 등장으로 메모리 압박이 심해짐에 따라, 단순한 교체 알고리즘을 넘어 Learning-based Replacement 등 지능형 접근이 연구되고 있다.
+
+> 📢 **섹션 요약 비유**
+> 한정된 크기의 서재 책장(물리 메모리)에 새로운 책(새 페이지)을 꽂으려면, 가장 덜 중요하거나 다시 읽을 일이 없을 것 같은 책을 골라창고(디스크)로 옮겨야 하는 공간 관리 전략과 같습니다.
+
+---
+
+## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+
+페이지 교체는 OS의 메모리 관리자(Memory Manager)와 MMU(Memory Management Unit) 하드웨어가 긴밀히 협력하여 수행된다. 페이지 폴트(Page Fault) 트랩(Trap)이 발생하면 OS는 인터럽트 처리 루틴(Interrupt Service Routine)을 통해 교체 과정을 주도한다.
+
+### 1. 시스템 구성 요소 분석
+| 요소명 (Component) | 역할 (Role) | 내부 동작 및 프로토콜 (Internal Operation) | 비유 (Analogy) |
+|:---|:---|:---|:---|
+| **PMAT (Page Map Address Table)** | 논리-물리 주소 매핑 | TLB(Translation Lookaside Buffer) 캐시 미스 시 참조되며, Valid/Invalid 비트와 Frame 번호 관리 | 서재의 도서 대장 (책이 어디 있는지 위치표) |
+| **Modify Bit (Dirty Bit)** | 쓰기 여부 플래그 | CPU가 해당 프레임에 **Store** 명령을 실행할 때 HW에 의해 **1**로 Set. Swap-out 시 디스크 기록 여부 결정 | 책에 필기가 있는지 확인 (필기 있으면 그대로 두면 안됨) |
+| **Reference Bit** | 사용 여부 플래그 | 주기적인 인터럽트 또는 클럭 알고리즘 순회 시 참조 여부를 **0**으로 Reset하며, **1**이면 최근 사용됨 | 책장을 스쳐본 흔지 확인 (최근에 손이 갔는지) |
+| **Swap Space** | 보조 기억 장치 | 디스크(Disk) 내의 독립된 영역으로, 메모리 페이지가 저장되는 Backing Store 역할 수행 | 지하 창고 (본창고에 못 넣은 책 보관함) |
+
+### 2. 페이지 교체 프로세스 상세 (ASCII 다이어그램)
+
+아래 다이어그램은 페이지 폴트(Page Fault) 발생 시 OS가 수행하는 Swap-out/Swap-in의 전체 흐름을 도식화한 것이다.
+
+```text
+       CPU (User Process)                      OS Kernel (Memory Manager)
+         |                                                 |
+    1. Access Logical Addr 'X'                            |
+         |                                                 |
+         v                                                 |
+    [ MMU : TLB Lookup ]                                  |
+         | (Not Found)                                     |
+         v                                                 |
+    [ Page Table Check ] --(Valid Bit: 0)--> Page Fault Trap---+
+         |                                                 |   |
+         |                                                 |   v
+         |                                         +---------------+
+         |                                         | Page Fault    |
+         |                                         | Handler ISR   |
+         |                                         +---------------+
+         |                                                 |
+         |                        --------------------------+--------------------------
+         |                        |                          |                        |
+         |                        v                          v                        |
+         |                2. Find Victim Frame      3. Check Dirty Bit    4. Find Free Page on Disk
+         |                [Replacement Algorithm]    (Swap-out Decision)    [Backing Store Scan]
+         |                        |                          |                        |
+         |                        |                          +----+                    |
+         |                        |                               |                    |
+         |                        |                               v                    |
+         |                        |                    (If Dirty=1) Write Back to Disk  |
+         |                        |                          (Disk I/O Write)          |
+         |                        |                               |                    |
+         |                        v                               v                    v
+         |                 (Evict Victim) <--- Wait --- (Disk Write Complete)
+         |                        |
+         |                        +------------------------------------> |
+         |                                                             |
+         |                        5. Read Target Page from Disk (Swap-in)
+         |                        |                                         |
+         |                        v                                         |
+         |                 [Disk I/O Read]                                  |
+         |                        |                                         |
+         |                        v                                         v
+         |             [Load to Free Frame] <-- Physical Memory Update
+         |                        |
+         |                        v
+         |                6. Update Page Table
+         |                        |
+         +------------------------+--------------------------> Restart Instruction
 ```
 
-**👧 Child Analogy:**
-네가 필통(메모리)에 색연필을 딱 5개만 넣을 수 있다고 생각해보자. 그림을 그리다 새로운 색연필이 필요한데 필통이 꽉 찼어. 그럼 어떤 걸 빼고 새 걸 넣을지 결정해야겠지?
-- **FIFO:** 그냥 필통에 제일 먼저 들어온 색연필을 빼버리는 거야. (근데 그게 제일 좋아하는 검은색일 수도 있어!)
-- **OPT:** 네가 앞으로 그릴 그림을 완벽하게 예상해서, 다 그릴 때까지 절대 안 쓸 색연필을 빼는 거야. (이건 마법사가 아니면 불가능하지.)
-- **LRU:** 제일 오랫동안 손이 안 간 색연필을 빼는 거야. 보통 오랫동안 안 쓴 색깔은 당분간 안 쓸 확률이 높거든. 컴퓨터도 LRU 같은 방법을 가장 좋아하고 자주 쓴단다!
+**[해설]**
+1.  **Trap 발생**: CPU가 유효하지 않은 페이지에 접근하면 MMU는 OS에 Page Fault 예외를 발생시킨다.
+2.  **희생자 선정 (Victim Selection)**: 메모리에 빈 공간이 없으므로, 교체 알고리즘(FIFO, LRU 등)에 따라 희생 페이지(Victim Page)를 선정한다.
+3.  **Dirty Check 및 Swap-out**: 선정된 프레임의 Dirty Bit를 확인한다. 값이 1이면 메모리 내용이 변경된 상태이므로 디스크에 기록(Swap-out)해야 데이터 손실을 막을 수 있다. 0이면 디스크에 이미 최신본이 있으므로 기록을 생략한다. 이는 디스크 쓰기 연산을 줄여 성능을 높이는 핵심 최적화 로직이다.
+4.  **Swap-in 및 매핑 갱신**: 디스크에서 요청된 페이지를 읽어 해제된 프레임에 적재하고, 페이지 테이블을 갱신(Valid Bit=1, Frame Number 업데이트)한 뒤 명령어를 재시작한다.
+
+### 3. 핵심 알고리즘 코드 및 수식
+페이지 폴트율(Page Fault Rate)은 아래와 같이 정의되며, 이를 최소화하는 것이 알고리즘의 목적함수(Objective Function)이다.
+
+$$ \text{Page Fault Rate} = \frac{\text{Total Page Faults}}{\text{Total Memory Accesses}} $$
+
+```c
+// [Pseudo-code: Second-Chance Clock Algorithm Logic]
+// 하드웨어 지원을 받는 가장 대중적인 LRU 근사 알고리즘
+
+void page_replacement() {
+    while (true) {
+        // 현재 Clock Hand가 가리키는 페이지 확인
+        Page current_page = frames[clock_hand];
+
+        if (current_page.ref_bit == 1) {
+            // 1단계: 최근 참조됨 -> 기회 부여 (Bit를 0으로 초기화 후 통과)
+            current_page.ref_bit = 0;
+            clock_hand = (clock_hand + 1) % total_frames;
+        } else {
+            // 2단계: 참조되지 않음 -> 희생자 선정 (Swap-out 진입)
+            if (current_page.dirty_bit == 1) {
+                disk_write(current_page); // Dirty Page면 디스크에 기록
+            }
+            swap_in(new_page, current_page.frame_index); // 새 페이지 로드
+            current_page.ref_bit = 1; // 새 페이지는 당연히 참조됨
+            break;
+        }
+    }
+}
+```
+
+> 📢 **섹션 요약 비유**
+> 진열장(메모리) 정리 과정이다. 관리자(OS)는 손님(CPU)이 요청한 물건이 없으면 창고에서 가져온다. 그런데 진열장이 꽉 차 있다면, '방금 손님이 만졌던 상품(Ref Bit=1)'은 아직 필요할 수 있으니 표시만 해두고 넘어가고, '아무도 안 만진 상품(Ref Bit=0)'을 골라내어 만약 상품에 손때가 묻었다면(Dirty=1) 닦아서 포장한 뒤 창고로 보낸다.
+
+---
+
+## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+
+페이지 교체 알고리즘은 "Stack Algorithm" 성질을 가지느냐에 따라 성능 보장성이 달라지며, 계산 이론적으로 Belady's Anomaly 현상 유무로 구분된다.
+
+### 1. 심층 기술 비교 분석표
+| 비교 항목 | FIFO (First-In First-Out) | OPT (Optimal Algorithm) | LRU (Least Recently Used) |
+|:---|:---|:---|:---|
+| **동작 원리** | 메모리에 먼저 적재된 페이지를 교체. Queue 구조. | 미래에 참조되지 않을 시간이 가장 긴 페이지를 교체. | 과거에 가장 오랫동안 참조되지 않은 페이지를 교체. |
+| **필요 정보** | 적재 시간(Load Time). | 미래의 참조 패턴(Future Reference String). | 최근 참조 이력(Past Reference History). |
+| **Belady's Anomaly** | **발생함** (프레임 수를 늘려도 Page Fault 증가 가능). | 발생하지 않음 (Stack Algo). | 발생하지 않음 (Stack Algo). |
+| **구현 난이도** | 매우 쉬움 (단순 포인터 이동). | 불가능함 (Offline Algorithm). | 어려움 (Counter나 List 구조 필요). |
+| **주요 용도** | 단순한 시스템, 버퍼 캐시의 일부. | 성능 비교의 상한선(Benchmark). | 범용 OS 메모리 관리 (Linux, Windows). |
+
+### 2. Belady's Anomaly 시각화 (ASCII)
+벨라디의 모순은 페이지 프레임 수를 늘렸음에도 불구하고 페이지 폴트가 증가하는 역설적인 현상을 말한다. FIFO에서 주로 발생한다.
+
+```text
+[Scenario] Reference String: 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5
+
+[Case 1: Frames = 3 (FIFO)]
+Ref:  1    2    3    4    1    2    5    1    2    3    4    5
+F1:   [1]  [1]  [1]  [4]  [4]  [4]  [5]  [5]  [5]  [3]  [3]  [3]
+F2:        [2]  [2]  [2]  [1]  [1]  [1]  [1]  [1]  [1]  [4]  [4]
+F3:             [3]  [3]  [3]  [2]  [2]  [2]  [2]  [2]  [2]  [5]
+Fault: ^    ^    ^    ^    ^    ^    ^         ^    ^    ^    ^
+Total Faults: 9
+
+[Case 2: Frames = 4 (FIFO)] <-- Memory Increased!
+Ref:  1    2    3    4    1    2    5    1    2    3    4    5
+F1:   [1]  [1]  [1]  [1]  [1]  [1]  [5]  [5]  [5]  [5]  [4]  [4]
+F2:        [2]  [2]  [2]  [2]  [2]  [2]  [1]  [1]  [1]  [1]  [5]
+F3:             [3]  [3]  [3]  [3]  [3]  [3]  [2]  [2]  [2]  [2]
+F4:                  [4]  [4]  [4]  [4]  [4]  [4]  [3]  [3]  [3]
+Fault: ^    ^    ^    ^              ^    ^    ^    ^    ^    ^
+Total Faults: 10 (Increased!) <-- Belady's Anomaly Detected
+```
+
+### 3. 과목 융합 관점
+*   **OS & 컴퓨터 구조 (Architecture)**: LRU를 완벽하게 구현하기 위해서는 매 메모리 접근마다 시간스탬프를 기록해야 하므로 하드웨어 오버헤드가 크다. 따라서 TLB의 Hit Ratio를 높이기 위해 참조 비트(Reference Bit)와 같은 하드웨어적 지원을 받는 'Approximate LRU'가 설계된다.
+*   **데이터베이스 (DB)**: DBMS의 Buffer Management에서도 동일한 교체 알고리즘이 사용된다. 다만 DB는 데이터 일관성이 중요하므로 Dirty Page를 비우는(Checkpoint) 전략이 로그(Log)와 결합하여 더 복잡하게 설계된다.
+
+> 📢 **섹션 요약 비유**
+> FIFO는 아무리 진열장을 더 사와도(Frames 증가

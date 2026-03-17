@@ -1,128 +1,172 @@
-+++
-title = "메모리 풀링 (Memory Pooling)"
-weight = 442
-+++
+---
+title: "메모리 풀링 (Memory Pooling)"
+description: "메모리 자원의 분리(Disaggregation)와 동적 할당을 통한 데이터 센터 효율 극대화 아키텍처"
+weight: 1
+---
 
 # 메모리 풀링 (Memory Pooling)
 
 ## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 메모리 풀링 (Memory Pooling)은 개별 서버 노드에 종속되어 있던 물리적 메모리 자원을 분리(Disaggregation)하여 공통의 자원 풀로 구성하고, 이를 여러 호스트가 필요에 따라 동적으로 할당받아 사용하는 기술이다.
-> 2. **가치**: 특정 서버에 할당되었으나 사용되지 않는 '스트랜디드 메모리(Stranded Memory)' 문제를 해결하여 데이터 센터 전체의 메모리 활용률을 극대화하고 TCO(Total Cost of Ownership)를 획기적으로 절감한다.
-> 3. **융합**: CXL (Compute Express Link) 프로토콜의 성숙과 함께 하드웨어 수준에서 낮은 지연 시간의 공유 메모리 환경을 구축함으로써, 컴포저블 인프라(Composable Infrastructure)의 핵심 요소가 되었다.
+> 1. **본질**: 메모리 풀링 (Memory Pooling)은 서버 개별 노드에 종속되어 유휴 상태로 방치되는 물리 메모리 자원을 **분리(Disaggregation)**하여, 데이터 센터 전체 차원에서 논리적인 거대 풀(Pool)로 구성하고 필요 시 호스트에 동적으로 할당하는 아키텍처이다.
+> 2. **가치**: **DRAM (Dynamic Random Access Memory)** 가격 상승과 워크로드 변동성에 대응하여, **스트랜디드 메모리(Stranded Memory)** 를 제거함으로써 메모리 구매 비용(CAPEX)을 30% 이상 절감하고 자원 활용률을 극대화한다.
+> 3. **융합**: **CXL (Compute Express Link)** 인터커넥트 기술을 기반으로 CPU와 메모리의 팹리스(Fabrics)화를 가속화하여, 컴포저블(Composable) 인프라와 AI 학습 클러스터 등 고성능 컴퓨팅 환경의 표준 패러다임으로 자리 잡고 있다.
 
 ---
 
 ### Ⅰ. 개요 (Context & Background)
 
-기존의 데이터 센터 아키텍처는 서버마다 CPU 성능에 맞추어 고정된 용량의 메모리를 장착하는 방식이었다. 그러나 워크로드의 특성이 다양해짐에 따라 어떤 서버는 CPU가 남고 메모리가 부족한 반면, 어떤 서버는 메모리가 절반 이상 놀고 있는 자원 불균형 문제가 심화되었다. 메모리 풀링은 이러한 '자원의 파편화'를 해결하기 위해 메모리를 '독립적인 공유 자원'으로 격상시키는 패러다임이다.
+**1. 기술적 정의 및 철학**
+메모리 풀링은 폰 노이만 구조의 근본적인 결함인 '메모리 결속성(Memory Coupling)'을 해소하는 기술이다. 전통적인 서버는 메모리가 메인보드에 직결됨으로써, 특정 프로세스가 메모리를 다 쓰고 있지 않아도 다른 서버가 이를 활용할 수 없는 '자원 격리(Island)' 문제를 내재하고 있다. 메모리 풀링은 이를 **철도 분기점**처럼 만들어, 물리적 위치와 무관하게 어느 호스트든 메모리 자원에 접근하고 할당받을 수 있게 하는 **Resource Disaggregation** 기술의 집합체이다.
 
-💡 **비유**: 각 가정마다 세탁기(메모리)를 사서 가끔씩만 사용하는 대신, 아파트 단지 공용 세탁실(Memory Pool)에 고성능 세탁기들을 모아두고 주민들이 필요할 때마다 예약해서 사용하는 것과 같습니다.
+**2. 등장 배경 (Context)**
+- **① 기존 한계**: AI/빅데이터 시대로 접어들며 **IMDB (In-Memory Database)**나 **LLM (Large Language Model)** 추론 등 메모리 요구량이 급증함에 따라, 서버별 메모리 과잉 설계(Over-provisioning)로 인한 비용 효율 악화.
+- **② 혁신적 패러다임**: **NVMe (Non-Volatile Memory express)**가 스토리지를 분리했듯이, 메모리 또한 네트워크화하여 분리하자는 'Composable Memory' 개념의 등장.
+- **③ 비즈니스 요구**: 클라우드 제공자(CSP) 입장에서 물리 서버 증설 없이 메모리 용량만 유연하게 늘려주는 'Scale-out'이 아닌 'Scale-up'의 효율성 달성 필요.
 
-- **등장 배경**:
-    1. **메모리 비용 급증**: 데이터 센터 서버 비용 중 메모리가 차지하는 비중이 40~50%까지 상승.
-    2. **워크로드 가변성**: 실시간 분석, AI 학습 등 메모리 요구량이 급격히 변하는 워크로드 증가.
-    3. **스케일 아웃의 한계**: 단순히 서버 대수를 늘리는 방식으로는 유휴 메모리 낭비 문제를 해결할 수 없음.
+**3. 구조적 개요 (ASCII)**
+기존의 'Silos' 구조에서 풀링된 'Lake' 구조로의 변화를 시각화한다. 아래 다이어그램은 고립된 자원(Islands)이 어떻게 통합된 풀(Pool)로 변화하는지를 보여준다.
 
-📢 **섹션 요약 비유**: 각자 자기 물통의 물만 마시던 방식에서, 커다란 공동 저수지를 만들어 필요한 만큼 호스로 끌어다 쓰는 방식으로의 진화입니다.
+```text
+[ Legacy Architecture ]          [ Memory Pooling Architecture ]
++----------------+               +---------------------------+
+| Server A (CPU) |               |         Compute Nodes      |
+| [Mem: 512GB]   |               |  +---+  +---+  +---+      |
++----------------+               |  | A |  | B |  | C |      |
++----------------+               |  +---+  +---+  +---+      |
+| Server B (CPU) |               |         |      |           |
+| [Mem: 512GB]   |               |         |      |           |
++----------------+               | (Low Latency Interconnect |
++----------------+               |  CXL/Gen-Z Fabric)        |
+| Server C (CPU) |               |         |      |           |
+| [Mem: 512GB]   |               |         v      v           |
++----------------+               | +---------------------+   |
+(Silos: Independent)             | |    MEMORY POOL       |   |
+      [ Stranded ]               | |  (Disaggregated)    |   |
+                                 | | [ DRAM ] [ CXL ]    |   |
+                                 | +---------------------+   |
+```
+*도해 1. 구조적 패러다임 변화: Silos에서 Pool로*
+*해설: 기존 구조는 서버별로 메모리가 갇혀 있어(Server B가 부족해도 Server A의 여유분 사용 불가), Stranded Memory가 발생한다. 반면 메모리 풀링은 Fabric을 통해 중앙의 자원 풀을 유연하게 분배하여 자원 낭비를 제거한다.*
+
+📢 **섹션 요약 비유**: 각 가정마다 거대한 물탱크(메모리)를 따로 설치하여 물이 남아도 다른 집에 공유할 수 없던 '수도권 배수 시스템'을, 거대한 정수장(메모리 풀)에서 필요한 만큼만 파이프로 끌어와 쓰는 '상수도 시스템'으로 개선하는 것과 같습니다.
 
 ---
 
 ### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
 
-메모리 풀링은 물리적인 인터커넥트 계층, 자원을 관리하는 소프트웨어 계층, 그리고 이를 사용하는 호스트 계층으로 구성된다.
+**1. 구성 요소 상세 분석 (Table)**
+메모리 풀링 시스템을 구성하는 핵심 계층(Layer)과 모듈의 동작 메커니즘을 분석한다.
 
-| 요소명 | 역할 | 내부 동작 | 핵심 기술 | 비유 |
-|:---:|:---:|:---:|:---:|:---:|
-| **Memory Appliance** | 물리 메모리 집합소 | 수 테라바이트의 DRAM을 슬롯 형태로 보유 | CXL Type 3 Device | 대형 물류 창고 |
-| **CXL Switch** | 데이터 경로 제어 | 여러 호스트와 메모리 장치 간의 고속 스위칭 | Port Binding, Multi-head | 복잡한 지하철 노선망 |
-| **Fabric Manager** | 자원 할당 제어 | 호스트별 메모리 할당 및 회수 스케줄링 | Resource Discovery | 관리 사무소 |
-| **HDM (Host-managed Device Memory)** | 호스트 주소 매핑 | 가속기 메모리를 시스템 주소 공간에 통합 | Address Translation | 개인별 전용 보관함 번호 |
-| **Coherent Interconnect** | 캐시 일관성 유지 | 여러 호스트 간 데이터 불일치 방지 | CXL.mem | 실시간 동기화 시스템 |
+| 요소명 (Component) | 계층 | 역할 (Role) | 내부 동작 메커니즘 (Mechanism) | 관련 프로토콜/기술 |
+|:---:|:---:|:---|:---|:---|
+| **Host CPU (Root)** | Compute | 메모리 요청자 및 초기화 | **PCIe (Peripheral Component Interconnect Express)** / CXL 인터페이스를 통해 메모리 공간을 매핑(Mapping)하고 Load/Store 명령어 전송 | CXL.io, CXL.mem |
+| **CXL Switch** | Fabric | 동적 라우팅 및 다중 접속 | 호스트와 메모리 장치 간의 트래픽을 스위칭하며, 포트 분리(Port Isolation) 및 바인딩 수행 | CXL Standard Switch |
+| **Memory Expander** | Resource | 물리적 메모리 제공 | CPU가 없이 순수하게 메모리 용량만 제공하는 CXL Type 3 장치로, 호스트의 Address Space에 포함됨 | CXL.mem, ATA |
+| **Fabric Manager (FM)** | Control (SW) | 자원 발견 및 할당 관리 | 전체 토폴로지를 관리하며, 호스트의 부팅 시점이나 런타임에 논리적 메모리 영역(LD)을 할당/회수 | CXL.fm, Software API |
+| **Cache Coherent Home** | Logic | 데이터 일관성 보장 | 분리된 메모리에 대한 원자적 연산(Atomic Operation) 및 캐시 일관성(Coherency) 유지 관리 | MOESI Protocol |
 
-**메모리 풀링 시스템 구조**
-CXL 스위치를 중심으로 다수의 호스트가 거대한 메모리 박스(Appliance)에 연결된 구조를 가진다.
+**2. 시스템 아키텍처 및 데이터 흐름 (ASCII)**
+다음은 **CXL** 기반의 메모리 풀링이 이루어지는 하이브리드 메모리 풀링(Hybrid Memory Pooling) 시나리오이다. 각 호스트는 스위치를 통해 중앙의 메모리 리소스에 접속한다.
 
+```text
+       [ Host A ]          [ Host B ]          [ Host C ]
+      (Root Complex)      (Root Complex)      (Root Complex)
+          | ^                | ^                | ^
+          v |                v |                v |
+      +-----------------------------------------------------+
+      |             CXL Switch / Fabric Manager             |
+      +-----------------------------------------------------+
+          | ^                | ^                | ^
+          v |                v |                v |
+      +--------+         +--------+         +--------+
+      | Mem Bk1 |         | Mem Bk2 |         | Mem Bk3 |
+      | (DRAM)  |         | (DRAM)  |         | (HBM-P) |
+      +--------+         +--------+         +--------+
+      
+[ Flow 1: Discovery ] FM이 호스트 요청을 수신 → 사용 가능한 메모리 블록 탐색
+[ Flow 2: Binding ]   Switch가 Host A의 포트를 Mem Bk1과 물리적으로 논리적 연결
+[ Flow 3: Access ]    Host A의 CPU가 Mem Bk1을 로컬 메모리처럼 접근 (Load/Store)
 ```
-[ Host A ] [ Host B ] [ Host C ]
-    |          |          |
-+-----------------------------+
-|      CXL Fabric Switch      |
-+-----------------------------+
-    |          |          |
-[ Pool 1 ] [ Pool 2 ] [ Pool 3 ]
-   (DRAM)     (DRAM)     (HBM)
+*도해 2. CXL 기반 메모리 풀링의 동적 연결 구조*
+*해설: Fabric Manager는 중앙 통제실 역할을 하여, 호스트의 요청이 있을 때마다 스위치 fabric을 통해 특정 메모리 뱅크를 논리적으로 할당한다. 이때 호스트는 네트워크 비용을 거의 느끼지 못하고(Latency < 200ns), 마치 로컬 **DIMM (Dual Inline Memory Module)** 처럼 사용한다.*
+
+**3. 심층 동작 원리 (Deep Dive)**
+- **단계 1: Enumeration & Configuration**
+  시스템 부팅 시, **Fabric Manager**는 **CXL** Switch를 스캔하여 연결된 메모리 장치(Memory Expander)의 용량, 대역폭, 지연 시간(Latency) 정보를 수집한다.
+- **단계 2: Dynamic Capacity Attachment (DCA)**
+  호스트 **OS (Operating System)** 또는 하이퍼바이저는 메모리 부족 상황이 발생하면 Fabric Manager에 추가 메모리 요청을 전송한다. FM은 풀(Pool)에서 유휴 메모리 리전(Region)을 찾아 해당 호스트에 동적으로 할당하고, **ATS (Address Translation Services)** 를 통해 호스트의 물리 주소 공간에 매핑한다.
+- **단계 3: Coherent Cache Access**
+  데이터 접근 시, 호스트의 CPU는 원격 메모리 위치를 인식하지 못한 채 표준 메모리 명령어를 사용한다. **CXL** 인터커넥트 계층에서 이를 패킷으로 변환하여 전송하며, 캐시 일관성 프로토콜에 따라 다른 호스트의 캐시와 데이터 동기화를 수행한다.
+
+**4. 핵심 알고리즘: 메모리 분산 할당 (Pseudo-Code)**
+효율적인 메모리 풀링을 위한 간단한 자원 할당 로직이다.
+
+```python
+# Memory Pool Allocation Logic (Fabric Manager)
+def allocate_memory(host_id: str, size_gb: int, latency_requirement_ns: int):
+    # 1. 전체 풀 스캔 및 필터링
+    candidates = []
+    for pool in global_memory_pools:
+        if pool.available >= size_gb and pool.avg_latency <= latency_requirement_ns:
+            candidates.append(pool)
+    
+    # 2. 최적의 풀 선정 (Least Loaded Strategy)
+    if not candidates:
+        raise MemoryAllocationError("Insufficient Resource in Pool")
+    
+    # 단편화(Fragmentation)가 가장 적은 풀을 선정
+    target_pool = min(candidates, key=lambda p: p.fragmentation_ratio)
+    
+    # 3. 논리적 장치(LD) 생성 및 호스트 바인딩
+    logical_device = target_pool.create_logical_device(size_gb)
+    fabric_manager.bind_port(host_port=host_id, device_port=logical_device.port_id)
+    
+    return logical_device.device_id
 ```
 
-1. **자원 분리 (Disaggregation)**: 메모리 컨트롤러를 CPU 외부로 분리하여 독립적인 장치로 구성.
-2. **동적 구성 (Dynamic Composition)**: 서버 부팅 시 또는 런타임에 소프트웨어를 통해 메모리 용량을 "128GB -> 512GB"로 즉시 확장 가능.
-3. **공유 및 격리 (Sharing & Isolation)**: 같은 풀 안의 메모리를 여러 서버가 동시에 읽기 전용으로 공유하거나, 특정 영역을 특정 서버에만 독점적으로 할당하여 보안 유지.
-
-📢 **섹션 요약 비유**: 건물 전체에 중앙 냉난방 시스템을 갖추고, 각 방의 온도 요구에 맞춰 냉기를 동적으로 배분하는 스마트 빌딩과 같습니다.
+📢 **섹션 요약 비유**: 건물 내 각 사무실마다 별도의 보일러를 두는 것이 아니라, 지하 센터에 거대한 열원(메모리 풀)을 설치하고 필요한 온수만 펌프(CXL Switch)를 통해 각 호스(Host)로 공급하는 **지역 난방 시스템**과 같습니다.
 
 ---
 
 ### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
 
-메모리 풀링은 기존의 가상 메모리나 소프트웨어 정의 스토리지와는 차원이 다른 하드웨어적 접근이다.
+**1. 기술 스택별 심층 비교 (Deep Comparison)**
+메모리 풀링은 단순한 원격 접근(**RDMA**)과는 근본적으로 다르다. 하드웨어 레벨에서 지원하는 캐시 일관성이 핵심 차별점이다.
 
-**[자원 관리 방식 비교]**
-| 구분 | 서버 내부 메모리 확장 | 소프트웨어 기반 공유 (RDMA) | 하드웨어 기반 풀링 (CXL) |
-|:---:|:---|:---|:---|
-| **지연 시간** | 최저 (수십 ns) | 높음 (수 us) | 낮음 (100~200 ns) |
-| **데이터 단위** | 캐시 라인 (64B) | 메시지/페이지 단위 | 캐시 라인 (Load/Store) |
-| **CPU 부하** | 없음 | 높음 (Software Stack) | 없음 (Hardware Path) |
-| **주요 특징** | 확장 제한적 | 원격 접근 오버헤드 | 하드웨어적 캐시 일관성 |
+| 비교 항목 | 기존 서버 로컬 메모리 | 소프트웨어 원격 메모 (**RDMA over Converged Ethernet**) | **하드웨어 메모리 풀링 (CXL Pooling)** |
+|:---:|:---:|:---:|:---:|
+| **접근 방식** | Load/Store 명령어 | Send/Recv (Library 호출) | Load/Store 명령어 (Native) |
+| **지연 시간** | ~100ns (Local) | ~1~5us (Network Hop) | ~150~200ns (1-hop) |
+| **CPU 오버헤드** | 없음 | 높음 (Kernel Bypass 필요) | 없음 (Managed by HW) |
+| **캐시 일관성** | 하드웨어 보장 | 불가능 (SW 동기화 필요) | **하드웨어 보장 (Coherent)** |
+| **메모리 세밀성** | Byte 단위 | Page/Object 단위 | Cache Line (64B) 단위 |
+| **주요 용도** | 일반 연산 | 분산 스토리지/캐시 | **가상화/컨테이너/메모리 확장** |
 
-**[과목 융합 관점]**
-- **운영체제**: 페이지 테이블 관리와 가상 주소 매핑이 더 복잡해지며, OS 수준에서의 CXL 메모리 계층 인식(Tiering)이 중요해진다.
-- **클라우드 컴퓨팅**: 가상 머신(VM) 마이그레이션 시 메모리 데이터를 복사할 필요 없이, 메모리 풀의 소유권만 넘기면 되는 'Instant Migration'이 가능해진다.
+**2. 타 과목 융합 분석 (Synergy)**
 
-📢 **섹션 요약 비유**: 개인용 보조 배터리를 들고 다니는 것(내부 확장)과 카페 곳곳에 설치된 무선 충전 구역을 이용하는 것(풀링)의 차이와 같습니다.
+- **[운영체제(OS)와의 융합] 페이지 폴트(Page Fault) 처리 변화**
+  기존 **OS**는 Swap 장치(HDD/SSD)로 데이터를 보냈지만, 메모리 풀링 환경에서는 'Cold Page'를 원격 메모리 풀(Tier 2)로 **Eject**했다가 다시 필요할 때 로드하는 **2-Tier Memory Management** 기술이 필요하다. Linux Kernel의 `madvise()`나 `cgroups` 정책이 메모리 풀의 품질(**QoS (Quality of Service)**)에 맞춰 세밀하게 조정되어야 한다.
 
----
+- **[네트워크와의 융합] Topology of Death**
+  메모리 풀링을 위해 모든 호스트가 하나의 스위치에 연결되면 스위치 대역폭이 병목이 된다. 따라서 **Leaf-Spine** 구조를 채택하거나, 메모리 액세스 패턴을 분석하여 **Locality**를 보장하는 네트워크 토폴로지 설계가 병행되어야 한다.
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+**3. 성능 의사결정 매트릭스 (Decision Matrix)**
+메모리 풀링 도입 시 워크로드별 성능 영향도를 정량적으로 분석한다.
 
-실무에서는 메모리 풀링을 통해 인프라 효율성을 획기적으로 개선할 수 있으나, 설계 시 고려사항이 많다.
+| 워크로드 유형 | 로컬 메모리 대비 성능 저하율 | 메모리 풀링 적용 타당성 |
+|:---:|:---:|:---:|
+| High-Frequency Trading (HFT) | 10~15% (**Latency** Sensitive) | ❌ 낮음 (로컬 선호) |
+| In-Memory DB (Analytic) | 2~5% (Capacity Sensitive) | ✅ 매우 높음 |
+| AI Inference (Batch) | 5~8% (Memory Bound) | ✅ 높음 (모델 크기 확장) |
+| Virtual Desktop Infrastructure (**VDI**) | < 1% (I/O Bound) | ✅ 높음 (밀도 증가) |
 
-- **실무 시나리오**:
-    1. **메모리 집약적 DB 가속**: 대규모 그래프 DB나 인메모리 DB에서 데이터 세트가 커질 때, 물리 서버 증설 없이 메모리 풀에서 추가 용량 할당.
-    2. **서버리스 컴퓨팅 효율화**: 짧게 실행되고 사라지는 서버리스 함수들을 위해 메모리를 미리 확보해두지 않고, 실행 시점에만 풀에서 할당하여 낭비 제거.
-    3. **테스트 및 개발 환경**: 고사양 메모리가 필요한 테스트를 위해 일시적으로 메모리 풀을 연결하여 사용 후 반납.
+```text
+[ Performance vs. Cost Matrix ]
 
-- **안티패턴**:
-    - **Latency-Critical 워크로드 무분별 적용**: 극도로 낮은 지연 시간이 필요한 L1/L2 캐시 수준의 작업에 풀링된 원격 메모리를 사용하면 성능 저하 발생.
-    - **관리 소프트웨어 부재**: 하드웨어만 풀링으로 구성하고 이를 제어할 오케스트레이션 툴이 없으면 오히려 자원 관리가 더 어려워짐.
-
-📢 **섹션 요약 비유**: 주차 공간이 부족하다고 무작정 주차타워를 짓기보다, 비어 있는 옆 건물의 주차장을 실시간으로 공유받아 사용하는 지혜와 같습니다.
-
----
-
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
-
-메모리 풀링은 미래 데이터 센터의 표준 아키텍처로 자리 잡을 것이 확실시된다.
-
-**[도입 기대효과 분석]**
-| 항목 | 정량적 효과 | 정성적 효과 |
-|:---:|:---|:---|
-| **CAPEX** | 서버 메모리 구매 비용 20~30% 절감 | 과잉 투자(Over-provisioning) 방지 |
-| **OPEX** | 전력 및 냉각 효율 개선 (PUE 저하) | 하드웨어 업그레이드 유연성 |
-| **가용성** | 특정 노드 메모리 고장 시 즉시 교체 가능 | 시스템 복구 시간(MTTR) 단축 |
-
-- **미래 전망**: 단순 DRAM 풀링을 넘어, 차세대 비휘발성 메모리(NVDIMM)나 컴퓨팅 기능이 포함된 PIM(Processor-In-Memory) 장치들이 풀링된 형태로 제공되는 '지능형 메모리 패브릭'으로 진화할 것이다.
-
-📢 **섹션 요약 비유**: 각자 자기가 마실 물을 병에 담아 다니던 군인들이, 이제는 등 뒤의 수로를 통해 언제든 물을 공급받으며 행군하는 변화와 같습니다.
-
----
-
-### 📌 관련 개념 맵 (Knowledge Graph)
-1. **[CXL (Compute Express Link)](./441_cxl.md)**: 메모리 풀링을 가능하게 하는 물리적 인터커넥트 표준.
-2. **[Memory Wall (메모리 벽)](./433_memory_wall.md)**: 메모리 풀링이 해결하고자 하는 근본적인 성능 병목 문제.
-3. **[Composable Infrastructure](../16_bigdata/1601_composable_infra.md)**: 메모리 풀링을 포함한 자원 통합 아키텍처.
-4. **[NUMA (Non-Uniform Memory Access)](../11_multicore_synchronization/1102_numa.md)**: 풀링된 메모리의 비대칭적 접근 특성 관리.
-5. **[SmartNIC / DPU](./436_dpu.md)**: 메모리 풀링 자원을 호스트에 연결하고 관리하는 제어 평면.
-
-### 👶 어린이를 위한 3줄 비유 설명
-- 친구들이 각자 자기 필통에 연필을 5자루씩 가지고 있는데, 어떤 친구는 연필을 하나도 안 쓰고 어떤 친구는 연필이 모자라서 공부를 못 해요.
-- 그래서 선생님이 커다란 연필꽂이(Memory Pool)를 만들어서 모든 연필을 거기에 모아두고, 필요한 친구가 그때그때 꺼내 쓰게 했어요.
-- 이제는 연필이 남아서 버리는 일도 없고, 연필이 없어서 공부를 못 하는 친구도 없게 되었답니다!
+  ^
+  |       [ High Latency Sensitivity ]
+  |       (HFT, HPC Analytics)
+  |             ❌ Avoid Pooling
+  |
+  |-------[ Balanced Zone ]-------
+  |       (AI Training, Batch)

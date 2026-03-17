@@ -3,86 +3,142 @@ title = "653. ARM Cortex-A 시리즈 특징"
 weight = 653
 +++
 
-> 1. ARM Cortex-A(Application) 시리즈는 스마트폰, 태블릿, 서버 등 복잡한 운영체제와 고성능 애플리케이션 구동을 위해 설계된 고성능 애플리케이션 프로세서 코어입니다.
-> 2. 가상 메모리 관리(MMU)와 향상된 파이프라인 구조를 지원하여 Linux, Android 등의 풍부한 OS 환경을 완벽히 실행합니다.
-> 3. big.LITTLE 아키텍처와 NEON SIMD 명령어 셋을 통해 고성능 연산과 초저전력 효율성을 동시에 달성한 모바일 혁명의 핵심 기술입니다.
+# 653. ARM Cortex-A 시리즈 특징
 
-## Ⅰ. ARM Cortex-A 시리즈의 철학과 포지셔닝
-
-ARM Holdings의 Cortex-A(Application Profile) 시리즈는 고도의 컴퓨팅 성능이 요구되는 디바이스를 위해 설계된 최상위 마이크로아키텍처(Microarchitecture) 라인업입니다. 임베디드 실시간 제어를 위한 Cortex-R(Real-time)이나 마이크로컨트롤러용 Cortex-M(Microcontroller)과 달리, Cortex-A는 복잡한 애플리케이션(Application) 실행과 다중 사용자 환경의 운영 체제(OS, Operating System) 구동에 초점이 맞춰져 있습니다.
-
-스마트폰의 AP(Application Processor), 스마트 TV, 차량용 인포테인먼트(IVI, In-Vehicle Infotainment), 그리고 최근의 클라우드 서버(Server)용 프로세서(예: AWS Graviton, Apple Silicon M 시리즈)에 이르기까지 폭넓게 활용됩니다. 이 아키텍처의 핵심은 **성능 대 전력비(Performance-per-Watt)**를 극대화하는 것에 있으며, RISC(Reduced Instruction Set Computer) 기반의 간결한 명령어 셋(ISA, Instruction Set Architecture)을 바탕으로 복잡한 파이프라인(Pipeline)과 캐시(Cache) 계층 구조를 최적화하여 구현됩니다.
-
-> 📢 **섹션 요약 비유:** Cortex-A 시리즈는 스마트폰이라는 작은 우주를 통치하는 '천재적인 종합 행정관'으로, 복잡한 앱과 게임, 운영체제라는 방대한 문서를 동시에 처리할 수 있는 최고급 두뇌입니다.
-
-## Ⅱ. 핵심 아키텍처 기능: MMU와 가상화
-
-Cortex-A(Application) 코어가 복잡한 운영체제를 구동할 수 있는 가장 큰 이유는 MMU(Memory Management Unit, 메모리 관리 유닛)를 탑재하고 있기 때문입니다.
-
-```ascii
-[ Application A ]  [ Application B ]  [ Operating System (Linux/Android) ]
-       |                  |                        |
-       +------------------+------------------------+
-                               |
-                    [ MMU (Memory Management Unit) ]
-                     - 가상 주소(Virtual Address) -> 물리 주소(Physical Address) 변환
-                     - 페이지 테이블(Page Table) 탐색 (TLB 지원)
-                     - 프로세스 간 메모리 보호 (Memory Protection)
-                               |
-                   [ L1 / L2 Cache Memory ]
-                               |
-                   [ Main Memory (DRAM) ]
-```
-
-1. **MMU와 가상 메모리 (Virtual Memory):**
-   MMU(Memory Management Unit)는 물리적인 메모리 한계를 극복하고 여러 애플리케이션이 독립된 가상 주소 공간(Virtual Address Space)을 갖도록 해줍니다. 이를 통해 애플리케이션 간의 메모리 침범을 막고(Protection), 페이징(Paging) 기법을 통한 효율적인 메모리 관리가 가능합니다. 이는 Linux, Windows, Android와 같은 풀 스케일(Full-scale) OS를 구동하기 위한 필수 전제 조건입니다.
-2. **하드웨어 가상화 (Hardware Virtualization):**
-   ARMv7-A 아키텍처 후반부터 도입되고 ARMv8-A에서 강화된 가상화 확장(Virtualization Extensions)은 하이퍼바이저(Hypervisor) 모드(EL2, Exception Level 2)를 지원하여 하나의 칩에서 여러 개의 Guest OS를 오버헤드 없이 구동할 수 있게 합니다.
-
-> 📢 **섹션 요약 비유:** MMU는 도서관(메모리)에서 수백 명의 학생(앱)들이 서로 싸우지 않고 자신만의 전용 책상(가상 메모리)에서 공부할 수 있도록 투명한 벽을 세워주고 책을 갖다주는 '마법의 도서관 사서'입니다.
-
-## Ⅲ. 성능 극대화 기술: 슈퍼스칼라와 파이프라이닝
-
-Cortex-A(Application) 코어는 높은 클록 주파수(Clock Frequency)와 IPC(Instructions Per Clock, 클록당 명령어 처리 수)를 달성하기 위해 발전된 마이크로아키텍처 기술을 적용합니다.
-
-초기 ARM11 수준을 넘어 Cortex-A8부터는 본격적인 슈퍼스칼라(Superscalar) 아키텍처가 적용되었습니다. 슈퍼스칼라는 프로세서 내부에 여러 개의 실행 유닛(Execution Unit, ALU, FPU 등)을 배치하여 한 클록 사이클에 여러 개의 명령어를 동시에 스케줄링하고 실행(Issue and Execute)하는 기술입니다.
-또한, 비순차적 명령어 처리(Out-of-Order Execution, OoO) 기법을 도입하여 파이프라인(Pipeline)의 지연 현상(Stall)을 최소화합니다. 명령어 간의 데이터 의존성(Data Dependency)이 없는 경우, 코어가 스스로 판단하여 나중에 들어온 명령어를 먼저 실행함으로써 실행 유닛의 유휴 시간(Idle time)을 없애고 처리량을 극대화합니다.
-
-> 📢 **섹션 요약 비유:** 슈퍼스칼라와 비순차적 처리는 피자 가게에서 요리사 여러 명이 분업을 하면서, 치즈 피자 주문이 오븐(실행 유닛)에서 밀려있을 때 샐러드 주문부터 먼저 뚝딱 처리해내는 '초고효율 주방 시스템'입니다.
-
-## Ⅳ. 전력 효율성 혁신: big.LITTLE 아키텍처
-
-모바일 디바이스에서 배터리 수명은 가장 중요한 지표입니다. ARM은 고성능과 저전력이라는 딜레마를 해결하기 위해 big.LITTLE 처리 기술을 도입했습니다.
-
-big.LITTLE 아키텍처는 하나의 SoC(System on Chip) 안에 성능은 높지만 전력 소모가 큰 코어 클러스터(big cores, 예: Cortex-A78)와 성능은 낮지만 전력 효율이 극도로 뛰어난 코어 클러스터(LITTLE cores, 예: Cortex-A55)를 결합하는 방식입니다.
-웹 서핑, 음악 재생, 대기 상태 등 낮은 연산력이 필요한 작업은 LITTLE 코어가 담당하여 배터리를 절약하고, 고사양 3D 게임이나 비디오 인코딩 등 무거운 작업이 감지되면 CCI(Cache Coherent Interconnect)를 통해 즉각적으로 big 코어로 작업을 이관(Migration)합니다. 운영체제 스케줄러(Scheduler) 수준에서 이를 조율하여 사용자는 매끄러운 성능과 긴 배터리 타임을 동시에 경험합니다.
-
-> 📢 **섹션 요약 비유:** big.LITTLE 기술은 평소 시내 주행이나 정체 구간에서는 전기 모터(LITTLE 코어)로 조용하고 알뜰하게 달리다가, 고속도로에서 추월할 때는 스포츠카의 가솔린 엔진(big 코어)을 폭발적으로 가동하는 '하이브리드 자동차'와 같습니다.
-
-## Ⅴ. 미디어 및 병렬 연산 가속: NEON SIMD
-
-멀티미디어 처리 능력을 비약적으로 향상시키기 위해 Cortex-A(Application) 시리즈는 NEON(Advanced SIMD, Single Instruction Multiple Data) 기술을 내장하고 있습니다.
-
-SIMD(Single Instruction Multiple Data)는 단일 명령어 하나로 여러 개의 데이터 조각을 동시에 병렬로 계산하는 아키텍처입니다. NEON은 전용 128비트 벡터 레지스터(Vector Register)를 활용하여 오디오 및 비디오 코덱 디코딩(Codec decoding), 2D/3D 그래픽 연산, 디지털 신호 처리(DSP, Digital Signal Processing), 그리고 최근의 머신러닝(Machine Learning) 추론(Inference) 연산 성능을 크게 높입니다. 이는 CPU(Central Processing Unit) 메인 파이프라인과 독립적으로 동작하여 프로세서의 부하를 줄이면서도 미디어 처리량을 기하급수적으로 늘려줍니다.
-
-> 📢 **섹션 요약 비유:** NEON 기술은 100개의 사과를 하나씩 깎는 대신, 커다란 특수 칼날을 한 번 휘둘러 10개의 사과를 동시에 깎아버리는 '다중 사과 깎기 머신'입니다.
+## 핵심 인사이트 (3줄 요약)
+> 1. **본질**: ARM (Advanced RISC Machines)의 Cortex-A 시리즈는 **MMU (Memory Management Unit)** 탑재와 고성능 **아키텍처 (Superscalar/OoO)**를 통해 Linux/Android와 같은 복잡한 **OS (Operating System)**와 풍부한 사용자 경험 앱을 구동하는 최상위 **AP (Application Processor)** 라인업입니다.
+> 2. **가치**: **big.LITTLE (Heterogeneous Multiprocessing)** 기술과 **NEON (Advanced SIMD)** 명령어 셋을 통해 서버급 성능과 모바일 완구급 전력 효율을 동시에 달성하여, 현대 모바일 컴퓨팅 및 초저전력 **HPC (High-Performance Computing)**의 패러다임을 전환했습니다.
+> 3. **융합**: 단순한 임베디드 코어를 넘어, **SoC (System on Chip)** 설계의 중심에서 가상화 기술과 **AI (Artificial Intelligence)** 추론 가속을 위한 통합 플랫폼으로 진화하고 있습니다.
 
 ---
 
-### 💡 Knowledge Graph & Child Analogy
+## Ⅰ. 개요 (Context & Background)
 
-```mermaid
-graph TD
-    A[Cortex-A Series (Application)] --> B(OS 지원)
-    B --> C[MMU 탑재: Linux/Android 실행]
-    A --> D(아키텍처 최적화)
-    D --> E[Superscalar & Out-of-Order Execution]
-    A --> F(전력 관리)
-    F --> G[big.LITTLE / DynamIQ Architecture]
-    A --> H(확장 기술)
-    H --> I[NEON SIMD: 미디어/AI 가속]
-    H --> J[TrustZone: 보안 영역 격리]
+### 개념 및 정의
+ARM Holdings의 Cortex-A(Application) 시리즈는 고성능 컴퓨팅과 풍부한 사용자 환경(Rich UI)을 제공하기 위해 설계된 **RISC (Reduced Instruction Set Computer)** 기반의 마이크로프로세서 코어 계열입니다. 마이크로컨트롤러용 Cortex-M이나 실시간 제어용 Cortex-R과 달리, Cortex-A는 **가상 메모리 (Virtual Memory)** 시스템을 필수적으로 요구하는 복잡한 **OS (Operating System)**(Linux, Android, iOS 등)를 구동하는 것이 핵심 목적입니다. 이를 위해 **ISA (Instruction Set Architecture)**는 32비트인 ARMv7-A 계열과 64비트 확장을 지원하는 ARMv8-A, ARMv9-A 계열로 발전해왔습니다.
+
+### 등장 배경
+1.  **기존 한계**: 초기 임베디드 시장은 성능보다 저전력과 단일 기능 수행에 집중했습니다. 그러나 스마트폰의 등장과 함께 PC 수준의 멀티태스킹, 3D 그래픽, 고해상도 멀티미디어 처리가 요구되면서 기존 구조로는 전력 소모를 억제하면서 성능을 높이는 데 한계가 있었습니다.
+2.  **혁신적 패러다임**: ARM은 **CISC (Complex Instruction Set Computer)** 대비 효율적인 RISC 설계를 유지하면서, 명령어 파이프라인을 깊게 하고(Deep Pipeline), **SIMD (Single Instruction Multiple Data)** 및 **Out-of-Order Execution (비순차적 실행)** 같은 고성능 CPU 기법을 도입했습니다. 특히 x86 아키텍처가 지배하던 서버 시장에 RISC의 효율성을 입증하며 **CSP (Cloud Service Provider)**의 데이터 센터에 진입하는 계기를 마련했습니다.
+3.  **현재의 비즈니스 요구**: IoT(사물인터넷)부터 엣지 컴퓨팅, AI 가속기까지, 전력 제약이 있는 환경에서 최대의 연산 성능을 내는 **Performance-per-Watt (성능 대 전력비)**의 최적화가 현대 IT 인프라의 핵심 요구사항이 되었습니다.
+
+> 📢 **섹션 요약 비유**: Cortex-A 시리즈는 연필 하나로 장부를 기록하던 계산원(Cortex-M) 시절을 지나, 슈퍼컴퓨터가 들어있는 판박이 두뇌를 가지고 스마트폰이라는 작은 우주를 통제하는 '만능 총괄 행정관'과 같습니다.
+
+---
+
+## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+
+### 구성 요소 (Components)
+Cortex-A 코어는 단순한 연산 장치가 아니라, 복잡한 시스템을 제어하기 위한 여러 하위 시스템의 집합체입니다.
+
+| 요소명 | 역할 | 내부 동작 및 프로토콜 | 관련 기술 |
+|:---|:---|:---|:---|
+| **MMU** | 메모리 관리 및 보호 | **TLB (Translation Lookaside Buffer)**를 이용한 가상 주소(VA) → 물리 주소(PA) 빠른 변환 | Page Table Walk, MPU |
+| **Pipeline** | 명령어 처리 흐름 | Fetch(인출) → Decode(해석) → Dispatch(배포) → Execute(실행) → Writeback(기록)의 단계 처리 | Superscalar, OoO |
+| **Branch Predictor** | 분기 예측 | 조건문 실행 이전에 결과를 예측하여 파이프라인 스톨(Stall) 방지 | Static/Dynamic Prediction |
+| **NEON Engine** | 멀티미디어/벡터 연산 | 128비트 레지스터(Q0~Q15)를 사용하여 단일 명령어로 다량 데이터(SIMD) 처리 | Floating Point, DSP |
+| **Cache Controller** | 캐시 일관성 유지 | L1 I/D Cache, L2 Cache 통제 및 **MESI 프로토콜** 기반 멀티코어 간 데이터 동기화 | ACE, CHI |
+
+### 시스템 메모리 맵 및 MMU 동작 구조 (ASCII Diagram)
+
+Cortex-A의 가장 큰 특징은 **MMU (Memory Management Unit)**를 내장하여 **Virtual Memory System**을 완벽히 지원한다는 점입니다. 이는 OS가 프로세스마다 독립된 메모리 공간을 부여하여 보안과 안정성을 확보하게 합니다.
+
+```ascii
++-----------------------------------------------------------------------+
+|  Software Layer (OS & Apps)                                           |
+| +-------------------+       +-------------------+                      |
+| |  App Process A    |       |  App Process B    |                      |
+| | (Virtual Addr 0x0)|       | (Virtual Addr 0x0)|                      |
+| +--------+----------+       +-----------+-------+                      |
+|          |                              |                             |
+|          | (System Call / Context Switch)|                             |
+|          +--------------+---------------+                             |
+|                         |                                             |
+| +-----------------------v-------------------------------------------+ |
+| |  Kernel Space (OS Memory Manager)                                  | |
+| |    - Page Table Management (CR3 Register equivalent)               | |
+| +-----------------------+-------------------------------------------+ |
++-------------------------+---------------------------------------------+
+                          |
+          +---------------v----------------+
+          |   Cortex-A Core Hardware       |
+          | +---------------------------+  |
+          | |    MMU (Memory Mgmt Unit)  |  |
+          | | +-----------------------+  |  |
+          | | |  TLB (Translation     |  |  | 1. VA → PA 변환 시도
+          | | |   Lookaside Buffer)   |  |  | 2. TLB Miss 시 Page Walk
+          | | +-----------+-----------+  |  |
+          | +-------------|--------------+  |
+          +---------------|-----------------+
+                          |  Physical Addr
+          +---------------v----------------+
+          |   Interconnect (ACE/CHI)       |  <-- Cache Coherency Traffic
+          +---------------|----------------+
+                          |
++-------------------------v-----------------------------+
+|  Physical Memory Hierarchy                           |
+| +--------+     +-------+     +--------+     +-------+ |
+| | L1 I$  | <-- | L2 $  | <-- | L3 $   | <-- | DRAM  | |
+| +--------+     +-------+     +--------+     +-------+ |
++------------------------------------------------------+
 ```
 
-**👧 어린이를 위한 비유 (Child Analogy):**
-Cortex-A는 스마트폰 공장의 '만능 총괄 공장장님'이에요. 어려운 서류 작업(운영체제)도 척척 해내고, 에너지가 빵빵 넘치는 큰형 로봇(big 코어)과 밥을 적게 먹는 꼬마 로봇(LITTLE 코어)에게 번갈아가며 일을 시켜서 배터리가 오래가게 만들어요. 스마트폰이 똑똑한 건 다 이 공장장님 덕분이랍니다!
+**[다이어그램 해설]**
+1.  **가상 주소 공간의 격리**: 그림과 같이 프로세스 A와 B는 서로 동일한 가상 주소(예: 0x0000)를 사용하지만, **MMU**가 이를 서로 다른 물리 주소로 매핑하여 충돌을 방지합니다.
+2.  **TLB (Translation Lookaside Buffer)**: 매 번 Page Table을 참조하는 것은 느리기 때문에, 최근 사용한 변환 정보를 캐싱하는 **TLB**를 사용합니다. Cortex-A의 성능은 이 TLB의 Miss율에 따라 크게 좌우됩니다.
+3.  **페이지 테이블 워크(Page Table Walk)**: TLB에 정보가 없을 경우, 하드웨어적으로 메모리에 있는 페이지 테이블을 순회(Walk)하여 주소를 찾습니다.
+
+### 심층 동작 원리: Out-of-Order Execution (OoO)
+Cortex-A53 이상의 고성능 코어(특히 Performance 코어)는 **비순차적 실행(Out-of-Order Execution)**을 채택하여 파이프라인 효율을 극대화합니다.
+*   **의존성 분석**: 이전 명령어가 메모리 로드를 대기할 때, 후속 명령어 중 데이터 의존성(Data Dependency)이 없는 명령어(예: 레지스터 간 덧셈)를 찾습니다.
+*   **재배치 및 실행**: 이를 앞당겨 실행하여 **ALU (Arithmetic Logic Unit)**가 유휴 상태에 머무르는 것을 방지합니다.
+*   **Retire (완료)**: 실행 결과를 원래 프로그램 순서대로 반영하여, 외부적으로는 순차적 실행처럼 보이게 합니다.
+
+> 📢 **섹션 요약 비유**: Cortex-A의 처리 방식은 복잡한 레스토랑 주방과 같습니다. 요리사(코어)는 스테이크(오래 걸리는 작업)가 굽는 동안 기다리지 않고, 스프(빠른 작업)를 먼저 완성해서 내보내는 비순차적(OoO) 조리를 통해 손님(OS)을 기다리게 하지 않습니다. MMU는 각 손님에게 전용 테이블(메모리)을 배정해주는 호스트 역할을 수행합니다.
+
+---
+
+## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+
+### 1. ARM 프로필 비교 (Cortex-A vs R vs M)
+
+Cortex-A는 ARM의 고성능 제품군이지만, 용도에 따라 명확히 구분되는 다른 계열과 융합적으로 설계되기도 합니다.
+
+| 비교 항목 | **Cortex-A (Application)** | **Cortex-R (Real-time)** | **Cortex-M (Microcontroller)** |
+|:---|:---|:---|:---|
+| **주 목적** | 고성능 OS 구동, 복잡한 멀티태스킹 | 하드 리얼타임 응답, 제어 시스템 | 저전력, 단순 제어, 마이크로컨트롤러 |
+| **OS 지원** | Linux, Android, Windows (Full-featured OS) | RTOS (VxWorks, RT-Thread) | Bare Metal, Keil RTOS |
+| **MMU 존재** | **필수** (MPU 선택적 사용) | 선택적 (MPU 메인) | 없음 (MPU만 존재) |
+| **Pipeline** | 슈퍼스칼라, 깊은 파이프라인 (10~15단계) | 짧은 파이프라인 예측 가능성 강조 | 3~5단계 매우 짧은 파이프라인 |
+| **Interrupt** | 복잡한 GIC (Generic Interrupt Controller) | 저지연 인터럽트 컨트롤러 | NVIC (Nested Vectored IC) |
+| **사례** | 스마트폰 AP, 서버 CPU (Graviton) | 자동차 브레이크 시스템, 하드디스크 컨트롤러 | 웨어러블 기기, 가전제어 MCU |
+
+### 2. 타 과목 융합 관점: 전력 vs 성능 (OS 스케줄링)
+Cortex-A 아키텍처는 하드웨어만의 문제가 아닙니다. **전력 관리(Power Management)** 측면에서 OS 커널과 밀접하게 융합됩니다.
+*   **DVFS (Dynamic Voltage and Frequency Scaling)**: OS의 CPUFreq governor가 부하(Load)를 모니터링하여 전압과 클럭을 동적으로 조절합니다.
+*   **CPU Idle (Deep Sleep)**: 코어가 아무런 작업을 하지 않을 때, OS는 WFI(Wait For Interrupt) 명령어를 코어에 전송하여 전력을 차단합니다.
+*   **Cluster Power Down**: big.LITTLE 구성에서 특정 클러스터 전체가 사용되지 않으면 전원을 완전히 차단하여 누설 전류(Leakage Current)를 차단합니다.
+
+> 📢 **섹션 요약 비유**: 이는 고속철도 시스템과 같습니다. Cortex-A는 항상 최고 속도로만 달리는 열차가 아니라, **운영제어시스템(OS)**의 지시에 따라 역에 정차해 있을 때는 엔진을 끄고(Idle), 승객이 많을 때는 배차 간격을 조밀하게(DVFS) 운행하는 지능형 교통 시스템입니다.
+
+---
+
+## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+
+### 1. 실무 시나리오: 웹 서버 구축 (x86 vs ARM)
+대규모 웹 서비스를 구축하는 기업에서 범용 **x86 (Intel Xeon)** 기반 서버와 **ARM Cortex-A (예: AWS Graviton)** 기반 서버 중 선택해야 하는 상황입니다.
+
+*   **의사결정 과정**:
+    1.  **워크로드 분석**: 해당 서비스가 주로 수행하는 작업이 **I/O 위주(웹 서버, 캐시 서버)**인지, **부동소수점 연산 위주(과학적 계산, 렌더링)**인지 분석합니다.
+    2.  **전력 비용 분석**: 데이터 센터의 전력 제약과 냉각 비용을 고려합니다. ARM은 **Performance-per-Watt**에서 월등히 유리합니다.
+    3.  **SW 생태계 확인**: 사용하는 소프트웨어(컨테이너, 라이브러리)가 ARM64(AArch64) 아키텍처를 완벽히 지원하는지 확인합니다. (최근 Docker 등 대부분의 도구가 지원)
+    4.  **결과**: I/O 위주의 오토스케일링 웹 서버라면 **Cortex-A 기반 인스턴스**를 선택하여 **TCO (Total Cost of Ownership)**를 20~30% 절감합니다.
+
+### 2. 기술적 체크리스트: ARM 기반 시스템 설계 시
+*   **Memory Coherency**: 멀티코어 환경에서 데이터 일관성을 유지하기 위해 **CCI (Cache Coherent Interconnect)**나 **CMN (Coherent Mesh Network)** 같은 인터커넥트를 적절히 구성했는가?
+*   **Security**: **TrustZone** 기술을 활용하여 보안 키와 지문 정보 같은 민감 데이터가 일반 애플리케이션 영역(Normal World)과 격리된 보안 영역(Secure World)에 존재하는지 확인해야 합니다.
+*   **Toolchain**: 컴파일러(GCC, LLVM)의 플래그 설정(`-march=armv8-a` 등)이 타겟 하드웨어의 명령어 셋에 최적화되어 있는지 확인해야 합니다.
+
+### 3. 안티패턴 (Anti-Pattern)
+*   **실수**: 저전력 IoT 장치에 Cortex-A 코어를 사용하는 경우.
+*   **결과**: 불필요한 MMU 오버헤드, 높은 다이 면적(Die Area), 복잡한 **BSP (Board Support Package)** 포팅으로 인한 개발 비용 폭증 및 배터

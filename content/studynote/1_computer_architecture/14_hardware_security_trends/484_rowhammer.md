@@ -1,3 +1,4 @@
+---
 +++
 title = "로우해머 공격 (Rowhammer)"
 weight = 484
@@ -6,121 +7,153 @@ weight = 484
 # 로우해머 공격 (Rowhammer)
 
 ## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 로우해머 공격 (Rowhammer)은 DRAM의 특정 행(Row)을 고속으로 반복 접근하여 발생하는 전자기적 간섭(Disturbance)을 이용해, 인접한 행의 데이터 비트를 강제로 반전(Bit-flip)시키는 하드웨어 결함 기반 공격이다.
-> 2. **가치**: 소프트웨어의 논리적 보안 장벽(권한 격리, 커널 보호 등)을 거치지 않고 하드웨어의 물리적 취약점을 직접 공략함으로써, 메모리 보호 기법을 원천적으로 무력화한다.
-> 3. **융합**: 운영체제의 페이지 테이블 관리, 가상화 환경의 메모리 격리, 그리고 하드웨어 수준의 신뢰 실행 환경(TEE) 보안 설계와 밀접하게 연계된 현대 컴퓨팅 보안의 중대 위협이다.
+> 1. **본질**: 로우해머 공격 (Rowhammer)은 DRAM (Dynamic Random Access Memory)의 미세 공정화로 인해 발생하는 전자기적 결함을 악용하여, 물리적으로 인접한 메모리 셀의 데이터를 비자발적으로 반전(Bit-flip)시키는 하드웨어 채널 보안 공격 기법이다.
+> 2. **가치**: 소프트웨어적 논리 영역(메모리 격리, 가상화)을 완전히 우회하여 시스템의 최고 권한(Privilege Escalation)을 탈취할 수 있으며, 이는 현대 클라우드 및 가상화 환경의 신뢰 모델을 근본적으로 위협한다.
+> 3. **융합**: 컴퓨터 구조(CPU 캐시 코히어런스), 운영체제(메모리 관리 유닛), 그리고 보안(부채널 공격)의 경계를 허물며, ECC (Error Correction Code)와 TRR (Target Row Refresh) 같은 하드웨어-소프트웨어 협력 방어 기술의 발전을 촉진하는 핵심 기제다.
 
 ---
 
 ### Ⅰ. 개요 (Context & Background)
 
-반도체 공정이 미세화됨에 따라 DRAM 칩 내부의 셀 간격이 좁아지고, 각 셀이 보유하는 전하량(Charge)은 감소했다. 이로 인해 인접한 셀 사이의 전기적 결합(Coupling) 현상이 심화되었는데, 특정 메모리 행을 아주 빠르게 반복해서 읽으면(Activate/Precharge) 인접한 행의 전하가 누설되어 데이터가 0에서 1로, 혹은 1에서 0으로 바뀌는 현상이 발견되었다. 이것이 바로 로우해머(Rowhammer) 현상이다.
+**1. 기술적 배경 및 정의**
+DRAM (Dynamic Random Access Memory)은 데이터를 저장하기 위해 캐패시터에 전하를 축전하는 방식을 사용한다. 반도체 공정 미세화(Nanometer Scale)에 따라 메모리 셀의 면적이 축소되고 셀 간 간격이 좁아지면서, 특정 행(Row)을 고속으로 반복 접근(Activate)할 때 발생하는 전기적 노이즈가 인접한 셀의 전하 상태에 영향을 주는 **Crosstalk (크로스토크)** 현상이 심화되었다. 
 
-💡 **비유**: 아파트 벽이 너무 얇아져서 옆집 사람이 벽을 아주 세게, 반복적으로 두드리면(Row hammering) 그 진동 때문에 우리 집 선반에 올려둔 물건이 떨어지는(Bit flip) 것과 같습니다.
+**Rowhammer**는 이러한 물리적 취약점을 악용하여, 공격자가 의도적으로 특정 행(Aggressor Row)에 대해 초당 수십만 번 이상의 접근 명령을 발생시킴으로써, 물리적으로 인접한 행(Victim Row)의 데이터 비트를 0→1 또는 1→0으로 뒤바꾸는 공격을 의미한다. 이는 소프트웨어의 논리적 결함이 아닌 하드웨어의 물리적 한계를 공격한다는 점에서 기존 해킹 기법과 근본적으로 차별화된다.
+
+💡 **비유**: 공동주택에서 경계벽을 사이에 두고 lived-in 벽을 양옆에서 이웃이 아주 빠르고 세게 연타해대면, 벽의 진동으로 인해 중간에 있는 집의 책장이 쓰러지거나 물건이 바뀌는 것과 유사하다. 아무리 내 집 문을 잠그(Software 보안) 해도, 벽 자체가 무너지면 소용이 없는 것이다.
 
 - **등장 배경**:
-    1. **DRAM 미세화의 역설**: 집적도는 높아졌으나 물리적 간섭(Crosstalk) 차단은 어려워짐.
-    2. **리프레시 한계**: DRAM의 자연 전하 감소를 막기 위한 리프레시 주기보다 공격 속도가 더 빠름.
-    3. **권한 상승의 새로운 통로**: 소프트웨어 취약점이 없어도 하드웨어를 통해 커널 권한 탈취 가능성이 입증됨.
+    1. **고집적화의 딜레마**: 2010년대 중반 이후, DDR3/DDR4 메모리의 집적도가 높아지며 셀 간 간격이 수 나노미터 수준으로 좁아져 **Coupling Effect (결합 효과)**가 증폭됨.
+    2. **캐시 아키텍처의 변화**: CPU의 L3 캐시(Last Level Cache)가 커지면서 캐시 라인 교체 정책이 복잡해졌고, 이를 캐시 플러시(Cache Flush) 기법으로 우회하며 DRAM에 직접 부하를 주는 것이 가능해짐.
+    3. **보안 패러다임의 전환**: Spectre/Meltdown 등과 함께 "Transient Execution"과 더불어, 정상적인 명령어를 이용해 하드웨어적 부작용(Side-effect)을 유발하는 **Hardware Exploit (하드웨어 익스플로잇)** 시대의 개막.
 
-📢 **섹션 요약 비유**: 튼튼한 금고 문(소프트웨어 보안)을 따는 대신, 금고가 놓인 바닥을 흔들어 내부의 잠금 장치를 오작동하게 만드는 교묘한 공격 방식입니다.
+📢 **섹션 요약 비유**: 튼튼한 금고의 잠금장치(SW 보안)을 시도하는 것이 아니라, 금고가 설치된 건물의 기둥을 무한히 흔들어 구조적 결함을 유발하여 여는 것과 같은 지진 진동 공격입니다.
 
 ---
 
 ### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
 
-로우해머 공격은 DRAM의 구조적 특성인 '행(Row) 단위 접근'과 '전하 축적' 원리를 악용한다.
+로우해머 공격의 성공은 메모리 컨트롤러의 명령어 스케줄링, DRAM 셀의 물리적 배치, 그리고 가상 메모리 매핑 기제의 정교한 결합에 달려 있다.
 
-| 요소명 | 역할 | 공격 메커니즘 | 대응 기술 | 비유 |
-|:---:|:---:|:---:|:---:|:---:|
-| **Aggressor Row** | 공격 대상 행 | 고속 반복 접근을 통해 전자기 간섭 발생 | TRR (Target Row Refresh) | 망치질하는 손 |
-| **Victim Row** | 피해 행 | 인접한 행으로서 비트 반전이 일어나는 곳 | ECC (Error Correction) | 흔들리는 선반 |
-| **Memory Controller** | 메모리 제어 | 행 활성화(ACT) 및 충전(PRE) 명령 하달 | 리프레시 속도 가속 | 작업 지시자 |
-| **Page Table** | 주소 매핑 정보 | 비트 반전을 유도하여 관리자 권한 획득의 타겟 | 격리(Isolation) | 아파트 호수 명부 |
-| **Crosstalk/Coupling** | 물리적 간섭 현상 | 인접 셀 간 전하 이동을 유발하는 물리 작용 | 차폐 기술 강화 | 벽면 진동 전달 |
+**1. 주요 구성 요소 및 기능 분석**
 
-**로우해머 공격의 주요 기법 (Double-Sided Hammering)**
-피해 행(Victim)을 사이에 둔 두 개의 행(Aggressor)을 동시에 공격하여 성공률을 극대화한다.
+| 요소명 (Element) | 역할 (Role) | 내부 동작 메커니즘 (Internal Mechanism) | 프로토콜/기술 | 비유 (Analogy) |
+|:---:|:---:|:---|:---:|:---:|
+| **Aggressor Row** | 공격 유발 행 | Memory Controller로부터 고빈도의 `ACT` (Activate) 명령을 받아 전하 충방전을 반복 | DDR3/DDR4 Commands | 망치질하는 손 |
+| **Victim Row** | 피해 행 | Aggressor와 인접하며, 전자기장 간섭으로 인해 전하 누설(Leakage)이 발생하여 비트 반전 | None | 흔들리는 선반 |
+| **Memory Controller** | 명령어 제어 | CPU의 요청을 받아 DRAM에 `ACT`, `PRE` (Precharge), `REF` (Refresh) 명령을 전달 | DDR Spec, JEDEC | 작업 지시자 |
+| **Row Buffer** | 행 데이터 임시 저장 | 활성화된 Row의 데이터를 일시 저장하며, 이 과정에서 전압 변동이 발생 | Sense Amplifier | 증폭기 |
+| **Page Table Entry** | 권한 타겟 | Virtual Address를 Physical Address로 매핑하는 정보로, 여기서 Bit-flip 발생 시 권한 상승 가능 | x86_64 Paging | 호수 관리 대장 |
 
+**2. DRAM 내부 물리 구조 및 공격 원리 다이어그램**
+아래 다이어그램은 DRAM의 행(Row) 배열 구조와 공격자의 메모리 접근 패턴이 물리적 비트 반전을 유도하는 과정을 도식화한 것이다.
+
+```text
+[ Physical DRAM Layout View ]
+
++---------------------+  ^  (Aggressor Row A)
+| Row Address (N)     |  |  <-- REPEATED ACCESS (Hammering)
+| [ 1 | 0 | 1 | 1 ... ]|  |     (ACT -> PRE -> ACT -> PRE ...)
++---------------------+  |
+ |    Electromagnetic |  |  <-- Coupling Effect (Crosstalk)
+ |    Field Interference|
++---------------------+  |
+| Row Address (N+1)   |  |  <-- TARGET (Victim Row)
+| [ 1 | 0 | 0 | 1 ... ]|  |     (Data Corruption: 1 -> 0)
++---------------------+  |
+ |    Electromagnetic |  |
+ |    Field Interference|
++---------------------+  v
+| Row Address (N+2)   |  (Aggressor Row B)
+| [ 0 | 1 | 1 | 0 ... ]|  <-- REPEATED ACCESS (Hammering)
++---------------------+
 ```
-[ Aggressor Row A ]  <-- Rapid Activate/Precharge
--------------------
-[   Victim Row    ]  <-- Bit Flip Occurs (0 -> 1)
--------------------
-[ Aggressor Row B ]  <-- Rapid Activate/Precharge
+
+**3. 심층 동작 원리 및 공격 프로세스**
+
+**단계 1: 캐시 우회 (Cache Bypassing)**
+CPU는 데이터를 읽을 때 먼저 캐시(L1/L2/L3)를 확인한다. 로우해머는 명령어가 캐시에서 히트(Hit)되어 DRAM까지 내려가지 않으면 실패한다. 따라서 공격자는 `CLFLUSH` (Cache Line Flush) 명령어나 `Non-temporal` 접근 방식을 사용하여 캐시를 비우고, 매번 CPU가 메인 메모리까지 내려가서 데이터를 읽도록 강제한다.
+
+**단계 2: 이중 망치질 (Double-Sided Hammering)**
+단일 행을 공격하는 것보다, 피해 행(Victim)을 사이에 둔 두 개의 행(Aggressor)을 동시에 공격할 때 비트 반전 확률이 비약적으로 높아진다. 이를 **Double-Sided Rowhammer**라 한다.
+
+**단계 3: 비트 반전 및 권한 상승 (Bit-flip & Privilege Escalation)**
+공격자는 `Malloc` 등을 통해 메모리를 할당받은 후, 페이지 테이블의 물리적 위치가 Aggressor 행 옆에 위치하도록 유도한다(Prime+Probe 기법 활용). 이후 비트 반전이 발생하면, 해당 영역에 매핑된 페이지 테이블 엔트리(PTE)의 물리 주소 비트를 변경하여, 일반 사용자 프로세스가 커널 메모리 영역에 접근할 수 있도록 설정을 변조한다.
+
+**4. 핵심 알고리즘 (Pseudo Code)**
+
+```c
+// Simplified Rowhammer Loop Concept
+// p_vaddr: Virtual address pointing to Aggressor Row A
+// q_vaddr: Virtual address pointing to Aggressor Row B
+// Assumption: p and q are physically adjacent to a Victim Row
+
+void rowhammer_attack(volatile char *p, volatile char *q) {
+    // 1. Ensure Cache Bypass: Flush caches before accessing
+    _mm_clflush(p); // Intrinsic for CLFLUSH instruction
+    _mm_clflush(q);
+
+    // 2. Rapid Reading (Hammering)
+    // Triggering ACTIVATE/PRECHARGE cycles repeatedly
+    for (int i = 0; i < 1000000; i++) {
+        // Read access forces Row Activation
+        volatile char x = *p; 
+        volatile char y = *q;
+        
+        // (Optional) Memory Fence to prevent compiler optimization
+        _mm_mfence();
+    }
+    
+    // 3. Check Victim Row (omitted for simplicity)
+    // If bit-flip occurred in Victim Page Table Entry -> Kernel Access granted
+}
 ```
 
-1. **캐시 플러시 (Cache Flush)**: CPU 캐시를 우회하여 직접 DRAM에 명령이 전달되도록 `CLFLUSH` 명령 등을 사용한다.
-2. **반복 활성화 (Hammering)**: 초당 수백만 번 이상의 행 활성화 명령을 수행하여 인접 셀의 전하 누설을 가속한다.
-3. **권한 탈취 (Exploitation)**: 비트 반전이 일어날 위치를 예측하여, 그곳에 운영체제의 페이지 테이블 엔트리(PTE)가 놓이게 유도한다. 비트가 바뀌면 일반 사용자가 커널 메모리에 접근할 수 있게 된다.
-
-📢 **섹션 요약 비유**: 두 사람이 벽 양쪽에서 박자에 맞춰 벽을 치면, 가운데 낀 방의 벽지가 훨씬 더 빨리 떨어지는 것과 같은 원리입니다.
+📢 **섹션 요약 비유**: 두 사람이 양쪽에서 벽을 동시에 리듬에 맞춰 두드리면(Double-sided Hammering), 가운데 걸린 액자가 단순히 흔들리는 것을 넘어 훅 하고 떨어져 나가듯, 인접한 데이터의 물리적 상태를 강제로 '새로고침' 시켜버리는 원리입니다.
 
 ---
 
 ### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
 
-로우해머는 전통적인 소프트웨어 해킹과 비교했을 때 매우 독특한 위치를 차지한다.
+로우해머는 단순한 하드웨어 버그가 아니라, 컴퓨터 시스템의 전 계층(Layer)에 영향을 미치는 융합적 보안 이슈다.
 
-**[보안 공격 유형별 비교]**
-| 구분 | 버퍼 오버플로우 (SW) | 부채널 공격 (Side-channel) | 로우해머 공격 (HW) |
-|:---:|:---|:---|:---|
-| **공격 지점** | 프로그램 로직/메모리 경계 | 전력 소모, 전자기파, 시간 | DRAM 셀 간 물리적 간섭 |
-| **수행 주체** | 잘못 설계된 코드 악용 | 정보 유출 관찰 | 물리적 비트 반전 유도 |
-| **권한 필요** | 프로그램 실행 권한 | 물리적 접근 또는 인접 실행 | 일반 사용자 권한으로 충분 |
-| **방어 주체** | 개발자 (시큐어 코딩) | 하드웨어/OS 설계자 | 칩 제조사/OS 커널 |
+**1. 기술적 비교 분석: 공격 유형별 특성 차이**
 
-**[과목 융합 관점]**
-- **운영체제**: 메모리 할당 시 물리적 인접성을 고려하지 않도록 주소 공간 배치 난독화(ASLR)의 확장이 필요하다.
-- **컴퓨터 구조**: ECC(Error Correction Code) 메모리는 단일 비트 반전을 교정할 수 있어 로우해머 방어의 1차 저지선이 된다.
+| 구분 | 소프트웨어 공격 (버퍼 오버플로우 등) | 사이드 채널 공격 (Spectre 등) | 하드웨어 결함 공격 (Rowhammer) |
+|:---|:---|:---|:---|
+| **공격 레이어** | Application / Logic Layer | Microarchitecture (CPU Pipeline) | Physical Layer (DRAM Cell) |
+| **핵심 메커니즘** | 잘못된 메모리 복사 / 포인터 오용 | 추론 실행(Execution) 시간차 공유 | 전기적 간섭(Electromagnetic) 유도 |
+| **결과** | 비정상적 코드 실행 (Code Injection) | 민감 데이터 유출 (Data Leak) | 데이터 무결성 파괴 (Integrity Failure) |
+| **주요 방어책** | DEP, ASLR, Stack Canary | RSB, Retpoline, Isolation | ECC, TRR, Memory Scrambling |
 
-📢 **섹션 요약 비유**: 자물쇠의 구조를 파악해 따는 것이 'SW 해킹'이라면, 자물쇠를 아주 차갑게 얼려서 부러뜨리는 것이 '로우해머'와 같은 물리적 공격입니다.
+**2. 타 과목 융합 분석**
+
+- **운영체제 (OS)와의 융합**:
+    OS의 메모리 할당자(Allocator)는 일반적으로 **Spatial Locality (공간적 지역성)**을 고려하여 인접한 페이지를 할당한다. 이는 Rowhammer 공격에 있어 '취약한 행(Aggressor)과 타겟 행(Victim)이 인접할 확률'을 높여주는 부작용을 낳는다. 따라서 최신 OS 커널(리눅스 등)은 메모리 할당 시 물리적 인접성을 고려하여 **Page Coloring (페이지 컬러링)** 기법을 적용하거나 공격자가 특정 주소를 유추하지 못하도록 **ASLR (Address Space Layout Randomization)**을 강화하는 방향으로 발전하고 있다.
+
+- **컴퓨터 구조 (Architecture)와의 융합**:
+    CPU 캐시 정책은 Rowhammer의 필수 요소다. 최근 캐시 일관성(Cache Coherinency)을 유지하기 위한 프로토콜이나 Non-Uniform Memory Access (NUMA) 아키텍처 환경에서의 메모리 접근 패턴은 Rowhammer 효율에 지대한 영향을 미친다. 또한, DRAM 리프레시 명령어(`REF`)는 성능(Peformance) 저하를 유발하므로, 성능과 보안의 트레이드오프(Trade-off) 관계를 설계하는 중요한 요소가 된다.
+
+**3. 정량적 지표 비교 (DDR3 vs DDR4)**
+
+| 메모리 규격 | 공격 난이도 | 공격 주파수 (Threshold) | ECC 적용 시 효과 |
+|:---:|:---:|:---:|:---:|
+| **DDR3** | 쉬움 (접근성 높음) | 낮음 (~50k accesses) | 방어 가능하지만 완벽하지 않음 |
+| **DDR4** | 어려움 (TRR 등장) | 높음 (~200k+ accesses) | ECC-Odd/Even 등 고도화된 기술 필요 |
+
+📢 **섹션 요약 비유**: 자물쇠의 구조를 분석해 여는 '지능형 범죄(SW 공격)'나, 전시 주변을 기웃거리며 정보를 수집하는 '첩보 활동(Side-channel)'과 달리, Rowhammer는 금고 제작사의 설계 미스를 이용해 금고 재질 자체를 녹여버리는 '물리적 타격'에 가깝습니다.
 
 ---
 
 ### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
 
-실무 환경에서는 로우해머 방어를 위해 하드웨어와 소프트웨어의 협력적 방어가 필요하다.
+보안 설계자나 시스템 아키텍트는 Rowhammer의 위협을 고려하여 하드웨어 선정부터 소프트웨어 구성까지 종합적인 방어 전략을 수립해야 한다.
 
-- **실무 시나리오**:
-    1. **서버 인프라 보안**: 클라우드 가상 머신(VM) 사용자가 로우해머를 통해 하이퍼바이저 권한을 획득하고 다른 VM의 데이터를 훔쳐보는 'Cross-VM' 공격 시나리오 대응.
-    2. **웹 브라우저 보안**: JavaScript를 이용한 로우해머 공격(Rowhammer.js) 방지를 위해 타이머 정밀도 제한 및 캐시 제어 명령 차단.
-    3. **DRAM 제조**: TRR(Target Row Refresh) 기술을 내장하여, 특정 행의 접근 횟수가 많아지면 인접 행을 미리 리프레시하도록 설계.
+**1. 실무 시나리오 및 의사결정 매트릭스**
 
-- **방어 체크리스트 (Decision)**:
-    - **ECC 메모리 사용**: 서버급에서는 필수로 채택하여 비트 오류 자동 탐지 및 수정.
-    - **리프레시 주기 단축**: DRAM 리프레시 속도를 2배로 높여 전하 누설 시간을 단축 (전력 소모 증가 트레이드오프).
-    - **격리 (Isolation)**: 민감한 데이터 주위에 '가드 로우(Guard Row)'라 불리는 빈 행을 두어 간섭 차단.
+- **시나리오 A: 대규모 클라우드 데이터센터 (Public Cloud)**
+    - **위협**: 악의적인 테넌트(Tenant)가 가상 머신(VM) 내에서 Rowhammer 스크립트를 실행하여 호스트의 Hypervisor를 탈취하고 다른 테넌트의 데이터 유출.
+    - **기술사적 판단**: 일반적인 DRAM 대신 **ECC Registered DIMM**을 사용하고, CPU의 **MCE (Machine Check Exception)** 기능을 활성화하여 비트 반전 발생 시 즉시 인터럽트를 발생시키도록 설계해야 한다. 또한, Hypervisor 레벨에서 메모리 접근 패턴을 모니터링하는 행위 기반 탐지(Behavior-based Detection) 솔루션을 도입해야 한다.
 
-📢 **섹션 요약 비유**: 옆집 소음이 너무 심하면 벽을 두껍게 하거나(격리), 방음재를 붙이거나(ECC), 자주 환기를 시켜(리프레시) 피해를 최소화하는 전략과 같습니다.
-
----
-
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
-
-로우해머는 하드웨어와 소프트웨어 보안의 경계가 무너졌음을 보여주는 상징적인 사례이다.
-
-**[방어 기술 도입 전후 분석]**
-| 항목 | 도입 전 (취약) | 도입 후 (보호) | 개선 지표 |
-|:---:|:---|:---|:---:|
-| **공격 성공률** | 높음 (수 분 내 성공) | 매우 낮음 | 보안 신뢰도 향상 |
-| **시스템 오버헤드** | 없음 | 1~5% (Refresh 증가 시) | 가용성과 보안의 균형 |
-| **DRAM 비용** | 낮음 (일반 메모리) | 중간 (ECC/High-end) | TCO 소폭 상승 |
-
-- **미래 전망**: DDR5 표준에서는 'On-die ECC'와 향상된 리프레시 관리 기능을 통해 로우해머를 하드웨어 수준에서 완벽히 차단하려 노력 중이다. 그러나 공격자들 또한 'TRRespass'와 같이 방어 기법을 우회하는 새로운 변종 공격을 지속적으로 개발할 것으로 예상된다.
-
-📢 **섹션 요약 비유**: 창과 방패의 싸움이 이제는 눈에 보이지 않는 원자 수준의 전기 알갱이(전하)를 두고 벌어지는 첨단 전쟁이 된 것입니다.
-
----
-
-### 📌 관련 개념 맵 (Knowledge Graph)
-1. **[ECC Memory (오류 교정 메모리)](../6_memory_hierarchy_cache/601_ecc.md)**: 로우해머의 비트 반전을 탐지하고 수정하는 기술.
-2. **[DRAM Refresh (리프레시)](../6_memory_hierarchy_cache/602_refresh.md)**: 전하 누설을 막기 위한 DRAM의 기본 동작.
-3. **[Side-channel Attack (부채널 공격)](../9_security/902_side_channel.md)**: 물리적 정보를 이용한 보안 공격 범주.
-4. **[Page Table (페이지 테이블)](../7_virtual_memory_os_integration/701_page_table.md)**: 로우해머 공격의 주요 타겟이 되는 데이터 구조.
-5. **[ASLR (주소 공간 배치 난독화)](../9_security/903_aslr.md)**: 소프트웨어 측면의 방어 보조 수단.
-
-### 👶 어린이를 위한 3줄 비유 설명
-- 아주 얇은 벽을 사이에 두고 옆집 사람이 벽을 쿵쿵쿵! 하고 계속 치면, 우리 집 벽에 걸린 시계가 흔들리다가 땅으로 떨어질 수 있어요.
-- 나쁜 사람이 일부러 벽을 쳐서 우리 집 물건(데이터)을 망가뜨리거나 훔쳐보려는 게 바로 로우해머 공격이에요.
-- 그래서 요즘은 벽을 더 튼튼하게 만들거나, 물건이 떨어지면 다시 제자리에 가져다 놓는 똑똑한 로봇(ECC)을 집 안에 두고 있답니다!
+- **시나리오 B: 임베디드/엣지 디바이스 (IoT/Edge)**
+    - **위협**: 전력 소모를 줄이기

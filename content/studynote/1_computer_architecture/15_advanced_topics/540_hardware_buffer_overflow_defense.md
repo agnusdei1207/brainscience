@@ -5,144 +5,155 @@ title = "540. 버퍼 오버플로우 하드웨어 방어 (Intel CET 등)"
 
 # 540. 버퍼 오버플로우 하드웨어 방어 (Intel CET 등)
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 해커가 버퍼 오버플로우를 통해 프로그램의 실행 흐름(제어 흐름)을 탈취하는 ROP/JOP/COP 같은 고급 해킹 기법을 원천 차단하기 위해, CPU 하드웨어 단에 추적 및 방어 회로를 심어놓은 보안 아키텍처다.
-> 2. **가치**: 기존의 소프트웨어적인 방어 기법(ASLR, Stack Canary)이 우회당하거나 심각한 성능 저하를 유발하던 한계를 극복하고, CPU가 마이크로초 단위로 함수의 반환 주소(Return Address)와 점프 위치가 변조되었는지 감시한다.
-> 3. **융합**: 인텔의 CET(Control-flow Enforcement Technology)와 AMD의 Shadow Stack 기술로 대표되며, OS(Windows 10, Linux 커널)와 결합하여 '하드웨어 지원 제어 흐름 무결성(CFI)'이라는 현대 보안의 핵심 축을 이룬다.
+### # [버퍼 오버플로우 하드웨어 방어]
+#### 핵심 인사이트 (3줄 요약)
+> 1. **본질**: 소프트웨어적 방어(ASLR, Stack Canary)만으로는 방어가 불가능해진 고급 코드 재사용 공격(ROP, JOP)을 차단하기 위해, CPU (Central Processing Unit) 명령어 세트 아키텍처(ISA) 차원에서 제어 흐름 무결성(CFI: Control-Flow Integrity)을 하드웨어적으로 강제하는 보안 설계다.
+> 2. **가치**: SW (Software) 에뮬레이션 방식은 10~20%의 성능 저하를 유발했으나, HW (Hardware) CFI(Indirect Branch Tracking, Shadow Stack) 방식은 성능 손실을 1~2% 이하로 억제하면서도 메모리 손상 공격의 90% 이상을 원천 봉쇄한다.
+> 3. **융합**: MSVC, GCC (GNU Compiler Collection), LLVM (Low Level Virtual Machine) 같은 최신 컴파일러 툴체인과 연동되며, OS (Operating System) 커널의 스케줄러 및 메모리 관리자(MMU: Memory Management Unit)와 밀접하게 결합하여 '하드웨어 강제 스택 보호' 생태계를 구축한다.
 
 ---
 
-## Ⅰ. 개요 (Context & Background)
+### Ⅰ. 개요 (Context & Background)
 
-- **개념**: 버퍼 오버플로우 하드웨어 방어는 프로그램이 함수를 호출(Call)하고 반환(Return)하거나 함수 포인터를 통해 간접 점프(Indirect Jump)할 때, 그 목적지 주소가 원래 프로그래머가 의도한 합법적인 주소가 맞는지 CPU 하드웨어가 실시간으로 검증하는 기술(Hardware CFI)이다.
-- **💡 비유**: 회사에서 직원이 출장(함수 호출)을 갈 때, 기존에는 '종이 출장 지시서(메모리 스택)'에 복귀 장소를 적어두었다. 해커가 몰래 종이를 '해적선'으로 바꿔치기하면 직원은 해적선으로 복귀해 버린다(버퍼 오버플로우). 이를 막기 위해 사장님(CPU 하드웨어)이 **'절대 위조할 수 없는 전자 금고(Shadow Stack)'**를 만들어 그 안에 복귀 장소를 하나 더 복사해 두고, 직원이 돌아올 때 종이와 금고의 기록을 100% 대조하게 만든 것이다.
-- **등장 배경 및 발전 과정**:
-  1. **Stack Smashing의 유행**: 1990년대 해커들은 스택 메모리에 악성 코드를 쑤셔 넣고 반환 주소를 그곳으로 덮어씌우는 방식으로 시스템을 장악했다.
-  2. **SW 방어의 등장과 무력화**: 이를 막기 위해 ASLR(주소 무작위화), DEP/NX(데이터 실행 방지), Stack Canary 같은 소프트웨어 방어막이 생겼다. 그러나 해커들은 메모리에 이미 올라가 있는 정상 코드 조각(Gadget)들의 끝부분(Return)만 교묘하게 엮어서 실행하는 **ROP(Return-Oriented Programming)** 기법을 발명해 이 방어막들을 모두 뚫어버렸다.
-  3. **하드웨어 CFI의 등장**: 더 이상 소프트웨어 레벨에서는 ROP를 막을 수 없자, 2020년경 Intel은 11세대 CPU부터 하드웨어 회로 자체로 제어 흐름을 강제하는 CET(Control-flow Enforcement Technology)를 도입하며 해커와의 전쟁 2막을 열었다.
-
----
-
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
-
-### 구성 요소 (Intel CET의 두 가지 핵심 기술)
-
-Intel CET는 ROP(Return 조작)와 JOP/COP(Jump/Call 조작)를 막기 위해 두 가지 무기를 사용한다.
-
-| 방어 기술 | 방어 대상 공격 | 동작 원리 | 비유 |
-|:---|:---|:---|:---|
-| **Shadow Stack (섀도 스택)** | ROP (Return-Oriented Programming) | 일반 스택(Data Stack) 외에 반환 주소만 몰래 저장하는 **보이지 않는 하드웨어 통제 스택**을 추가 운용 | 이중 장부 (대조용 원본) |
-| **IBT (Indirect Branch Tracking)**| JOP/COP (Jump/Call-Oriented Programming) | 함수 포인터를 통해 점프할 때, 착지하는 곳에 반드시 **합법적 착지 마커(ENDBR)**가 있는지 검사 | 지정된 헬기 착륙장 마커 확인 |
-| **#CP (Control Protection Exception)**| - | 섀도 스택 대조 실패나 IBT 마커가 없으면 CPU가 즉시 발생시키는 하드웨어 인터럽트 | 침입자 경보 사이렌 |
-
----
-
-### Shadow Stack 작동 아키텍처 (ROP 방어 메커니즘)
-
-해커가 버퍼 오버플로우를 통해 일반 스택(Data Stack)의 반환 주소를 변조했을 때, 하드웨어가 이를 어떻게 잡아내는지 보여주는 흐름이다.
+- **개념**: 버퍼 오버플로우 하드웨어 방어는 프로그램의 실행 흐름을 가로채는 공격(CWE-120, CWE-128)을 막기 위해, CPU 내부에 '정상적인 제어 흐름(CFG: Control Flow Graph)'에 대한 위변조 검증 로직을 탑재한 기술이다. 기존 OS 레벨의 페이지 보호(DEP: Data Execution Prevention)나 주소 난수화(ASLR: Address Space Layout Randomization)가 우회당함에 따라, 명령어 실행 주기(Fetch-Decode-Execute) 사이에 하드웨어적 체크점을 추가하여 악의적인 분기(Branch)를 실행 즉시 차단한다.
+- **💡 비유**: 마치 보안이 철저한 금고 회사의 출입 시스템과 같다. 종이 출입부(일반 스택)에 위조된 도장(악성 코드 주소)을 찍는다 해도, 입구에 설치된 생체 인식기(하드웨어 검증기)가 대조용 DB(Shadow Stack)와 실시간으로 교차 검증하여, 일치하지 않으면 즉시 방범 창을 닫아버리는 방식이다.
+- **등장 배경**:
+  1. **고급 공격의 등장**: 해커들이 코드를 직접 삽입하는 것에서 벗어나, 이미 메모리에 존재하는 정상 명령어 조각(Gadget)을 사슬처럼 엮어 실행하는 ROP (Return-Oriented Programming)가 대두되었다.
+  2. **SW 방어의 한계**: 소프트웨어적으로 모든 간접 분기(Indirect Branch)를 추적하는 것은 명확한 성능 저하를 초래했다. 이를 해결하기 위해 Intel과 AMD가 CPU 자체에 보안 논리를 내장한 CET (Control-flow Enforcement Technology)와 Shadow Stack을 도입했다.
+  3. **사이버 보안 패러다임 변화**: 'Zero Trust' 및 'Defense in Depth(심층 방어)' 전략에 따라, 커널 드라이버부터 사용자 영역 애플리케이션까지 하드웨어 보안 루트 of Trust를 적용하려는 산업적 요구가 반영되었다.
 
 ```text
-  ┌─────────────────────────────────────────────────────────────┐
-  │         일반적인 ROP 공격 vs Shadow Stack 하드웨어 방어 흐름        │
-  ├─────────────────────────────────────────────────────────────┤
-  │                                                             │
-  │ [1] 함수 호출 시 (CALL 명령어 실행)                              │
-  │   - CPU는 반환 주소(Return Addr: 0x4000)를 두 군데에 동시에 PUSH 함. │
-  │                                                             │
-  │     [ Data Stack (일반 스택) ]         [ Shadow Stack (하드웨어 통제) ] │
-  │     | ...                    |         | ...                          | │
-  │     | 반환 주소: 0x4000      |         | 반환 주소: 0x4000            | │
-  │     | 지역 변수 (버퍼)       |         | (해커 접근 절대 불가)        | │
-  │     └────────────────────────┘         └──────────────────────────────┘ │
-  │                                                             │
-  │ [2] 해커의 버퍼 오버플로우 공격 (버퍼를 넘치게 써서 주소 덮어쓰기)       │
-  │                                                             │
-  │     [ Data Stack (해킹당함!) ]         [ Shadow Stack (안전함!) ]     │
-  │     | ...                    |         | ...                          | │
-  │     | 반환 주소: 0xDEAD (악성)◀(오염)  | 반환 주소: 0x4000            | │
-  │     | AAAAAAAAAAAAAAAAAAAAAA |         |                              | │
-  │     └────────────────────────┘         └──────────────────────────────┘ │
-  │                                                             │
-  │ [3] 함수 반환 시 (RET 명령어 실행) - "하드웨어의 교차 검증"            │
-  │   - CPU가 RET를 실행할 때, 양쪽 스택에서 주소를 모두 POP 하여 비교(CMP)함.│
-  │                                                             │
-  │   [ Data Stack (0xDEAD) ]  <--- 불일치! --->  [ Shadow Stack (0x4000) ] │
-  │                                                             │
-  │   * 결과: 값이 다르므로 CPU는 제어권을 넘기지 않고 #CP (Control       │
-  │           Protection Exception) 예외를 발생시켜 프로세스를 즉각 강제 종료! │
-  └─────────────────────────────────────────────────────────────┘
+   [일반적인 보안 기술의 진화 계보]
+
+      1990s                  2000s                    2020s
+ +------------------+  +-----------------------+  +------------------------------+
+ | Stack Smashing   |  | Exploit Mitigation    |  | Hardware-Enforced Security   |
+ | (Shellcode)      |  | (ASLR, DEP, Canary)   |  | (Intel CET, AMD Shadow Stack)|
+ +------------------+  +-----------------------+  +------------------------------+
+       |                        |                          |
+       v                        v                          v
+ [코드 삽입]                 [주소 변조]               [흐름 무결성 검증]
+ "악성 코드를 넣어라"        "주소를 섞어라"           "흐름이 맞는지 HW로 확인해라"
 ```
 
-**[다이어그램 해설]** 일반적인 메모리 스택은 데이터(지역 변수)와 제어 정보(반환 주소)가 한 공간에 섞여 있는 치명적인 구조적 결함을 안고 있다. 해커는 문자열 버퍼를 넘치게 입력해 그 위의 제어 정보를 악성 주소(0xDEAD)로 덮어씌운다(ROP 공격의 시작).
-하지만 인텔 CET가 켜지면, CPU 하드웨어는 OS에 요청해 **섀도 스택(Shadow Stack)**이라는 비밀 공간을 하나 더 만든다. 이 공간은 일반적인 `MOV` 나 `WRITE` 명령어로는 절대 값을 수정할 수 없고, 오직 `CALL` 명령어를 칠 때만 CPU가 하드웨어적으로 값을 밀어 넣는다. 해커가 데이터 스택을 난장판으로 만들어 놔도 섀도 스택은 원본을 유지하고 있으므로, 함수가 끝날 때(`RET`) CPU가 두 스택의 값을 대조하여 변조를 완벽하게 잡아내고 프로그램을 즉사시킨다.
+- **📢 섹션 요약 비유**: 마치 복잡한 고속도로 톨게이트에서 하이패스 차선(고속 패스)을 별도로 운영하여 위조된 티켓으로 진입을 시도하더라도 차단기가 내려가 병목을 해결하는 것과 같습니다.
 
 ---
 
-### 심층 동작 원리: IBT (Indirect Branch Tracking)
-ROP를 막자 해커들은 반환(Return) 대신, C++의 가상 함수 테이블(vtable)이나 함수 포인터(Indirect Call)를 덮어씌워 점프하는 JOP(Jump-Oriented Programming)로 눈을 돌렸다. 
-이를 막기 위해 도입된 IBT 기술은, 컴파일러가 코드를 짤 때 **'합법적으로 외부에서 점프해 들어올 수 있는 함수의 첫 줄'에 무조건 `ENDBR64` (End Branch)라는 4바이트짜리 특수 깡통 명령어(마커)**를 박아 넣는다.
-CPU가 간접 점프(Indirect Jump/Call)를 뛰었을 때, 착지한 곳에 이 `ENDBR64` 마커가 없으면 "여긴 헬기 착륙장이 아니야! 해커가 이상한 코드 중간으로 나를 납치했어!"라고 판단하고 즉시 #CP 예외를 발생시켜 프로세스를 죽여버린다.
+### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+
+- **구성 요소**: Intel CET는 크게 Shadow Stack(SS)과 Indirect Branch Tracking(IBT) 두 가지 축으로 구성된다.
+
+| 구성 요소 (Component) | 약어 (Abbreviation) | 역할 (Role) | 내부 동작 (Mechanism) | 프로토콜/명령어 | 비유 |
+|:---|:---|:---|:---|:---|:---|
+| **Shadow Stack** | SS | 반환 주소 Return Address의 무결성 보장 | 일반 스택과 분리된 전용 메모리 공간에 CPU가 반환 주소를 암호화된 형태로 저장 및 검증 | `SAVEPREVSSP`, `RSTORSSP`, `WRSS` | 이중 장부(원본 영수증) |
+| **Indirect Branch Tracker** | IBT | 간접 분기(JMP/CALL)의 타겟 검증 | 간접 분기 실행 시 목적지가 `ENDBR` 명령어로 시작하는지 확인, 아니면 Exception 발생 | `ENDBR32`, `ENDBR64` | 헬기장 착륙 마커 확인 |
+| **Control Protection Exception** | #CP | 위반 시 예외 처리 발생 | Shadow Stack 미스매치나 IBT 위반 시 CPU가 즉시 발생시키는 인터럽트 (Bug Check 0x109) | Exception Vector | 침입 경보 사이렌 |
+| **Supervisor Mode Access Prevention**| SMAP | 커널 모드에서의 데이터 접근 제한 | CPL (Current Privilege Level)이 0일 때도 사용자 공간 페이지 접근 제한 | `AC` flag, `CR4` | 행정실에서 직원 서랍 함부로 못 열게 함 |
+
+#### 1. Shadow Stack 아키텍처 (ROP 차단)
+Shadow Stack은 기존 데이터 스택(Data Stack)과 독립적인 제어 스택(Control Stack)을 운용하여, 함수 호출 시 반환 주소(Return Address)를 두 곳에 동시에 기록한다.
+
+```text
+   [Memory Layout Comparison: Normal vs. Intel CET]
+
+   < CPU Privilege & Memory Space >
+   +-----------------------------------------------------------------------+
+   | User Space (Ring 3)                                                   |
+   |                                                                       |
+   |  [ Normal Data Stack (RSP) ]          [ Shadow Stack (SSP) ]          |
+   |  +------------------------+          +------------------------+       |
+   |  | ...                    |          | ...                    |       |
+   |  | Local Variables        |          | Return Address (Enc)   |       |
+   |  | [ Buffer (0x20 bytes) ]|          | 0x004000A0 (Hash)      | <--- HW 저장 |
+   |  | Saved RBP              |          | Return Address         |       |
+   |  | Return Address (RA)    | <--------| 0x004000A0             |       |
+   |  +------------------------+   PUSH    +------------------------+       |
+   |          ^                           ^                               |
+   |          | (해커 공격 지점)            | (해커 접근 불가 영역)            |
+   |          |                           |                               |
+   |  [해커 버퍼 오버플로우 발생]       [하드웨어에 의해 보호됨]           |
+   |  -> 버퍼를 채우고 RA를 덮어씀    -> CPU만 이곳을 R/W 가능            |
+   |     (RA = 0xDEADBEEF)               (비밀번호 없이 수정 불가)         |
+   |                                                                       |
+   |  [Verification Process on RET Instruction]                           |
+   |  1. POP Data Stack (RSP)  -> Target1 (0xDEADBEEF)                    |
+   |  2. POP Shadow Stack (SSP) -> Target2 (0x004000A0)                   |
+   |  3. CPU Comparator (Target1 == Target2?)                             |
+   |     -> MISMATCH! -> Raise #CP Exception -> Kernel Panic (BSOD)       |
+   +-----------------------------------------------------------------------+
+```
+
+**[다이어그램 해설]**
+일반적인 버퍼 오버플로우 공격은 함수의 로컬 버퍼를 넘쳐흐르게 하여 스택에 저장된 반환 주소(Return Address)를 덮어씌운다. 이로 인해 함수가 종료될 때(Ret) 해커가 원하는 코드(Gadget)로 실행 흐름이 넘어가게 된다(ROP 공격).
+그러나 Intel CET가 활성화되면, 함수 호출 시(`CALL`) CPU는 기존 스택 외에 **OS가 미리 할당해둔 Shadow Stack**이라는 비밀 공간에 반환 주소의 복사본을 추가로 저장한다. 이 Shadow Stack 메모리 페이지는 하드웨어적으로 보호되어 일반 프로그램(해커)은 접근조차 할 수 없다.
+함수 반환 시(`RET`) CPU는 두 스택의 값을 교차 검증한다. 해커가 일반 스택의 주소를 조작하더라도 Shadow Stack의 원본 주소는 바꿀 수 없으므로, 두 값이 불일치하여 CPU는 즉시 `#CP (Control Protection)` 예외를 발생시키고 프로그램을 강제 종료한다. 이는 소프트웨어 개입 없이 CPU 마이크로코드(Microcode) 레벨에서 1클럭 만에 이루어진다.
+
+#### 2. IBT (Indirect Branch Tracking) & ENDBR
+함수 포인터(Function Pointer)나 가상 함수 테이블(V-Table)을 이용한 간접 호출(Indirect Call)은 ROP보다 탐지가 어렵다. 이를 막기 위해 **적법한 분기 목적지(Branch Target)**에는 마커를 새긴다.
+
+```text
+   [Indirect Branch Tracking (IBT) Mechanism]
+
+   Scenario: Attacker tries to jump into the middle of a function (JOP Attack)
+
+   Legitimate Function Code:
+   +---------------------------+
+   | 0x1000:  ENDBR64          | <--- [Marker] (No-Op on Legacy CPU)
+   | 0x1004:  PUSH RBP         |
+   | 0x1005:  MOV RAX, [RDI]   | <--- (Attacker wants to land here!)
+   | ...                        |
+   +---------------------------+
+
+   1. CPU Executing "CALL RAX" (Indirect Call)
+      -> Target Address calculated: 0x1005 (Malicious intent)
+
+   2. Hardware Check before transfer:
+      IF (Target Instruction != ENDBR64 / ENDBR32)
+         THEN Raise #CP Fault (Control Protection Exception)
+
+   3. Result:
+      The jump to 0x1005 is blocked immediately because it lacks the magic byte.
+      Only jumps to 0x1000 (function entry) are allowed.
+```
+
+**[다이어그램 해설]**
+IBT는 C/C++ 같은 고급 언어의 다형성(Polymorphism)을 보장하면서 보안을 강화하기 위해 고안되었다. 컴파일러는 바이너리를 생성할 때 모든 함수의 진입점(Epilogue) 시작 부분에 `ENDBR` (End Branch)이라는 특수 명령어(4바이트 NOP)를 삽입한다.
+해커가 JOP (Jump-Oriented Programming) 공격을 통해 함수 중간의 특정 명령어(Gadget)로 점프하려고 시도하면, CPU는 그 목적지의 첫 번째 명령어가 `ENDBR`인지 확인한다. 만약 마커가 없다면 CPU는 그것을 합법적인 진입점이 아니라고 판단하고 즉시 실행을 중단한다. 이 명령어는 하위 호환성을 위해 구형 CPU에서는 단순 `NOP`으로 작동하도록 설계되었으나, CET 지원 CPU에서는 강력한 보안 검사기로 작동한다.
+
+#### 3. 핵심 알고리즘 및 코드
+- **Shadow Stack Pointer (SSP) Switching**: 컨텍스트 스위칭(Context Switching) 시 스레드마다 할당된 Shadow Stack을 보존하기 위해 `_ssp` 레지스터를 저장/복원한다.
+- **WRSS (WRite to Shadow Stack)**: CPU에서만 사용 가능한 특수 명령어로, Shadow Stack 영역에 반환 주소를 쓸 때 사용한다. 일반 MOV 명령어로는 Shadow Stack 영역에 쓰기가 불가능하다.
+
+```assembly
+; GAS Syntax (Intel CET 내부 동작 예시)
+; 함수 호출 시 (CALL 수행)
+
+sub    rsp, 8              ; 일반 스택 확장
+mov    qword ptr [rsp], rax ; 일반 스택에 반환 주소 저장
+
+; [Hardware Event - Internal Microcode]
+saveprevssp               ; 이전 SSP 상태 저장
+wrss   [sssp], rax        ; Shadow Stack에 반환 주소 저장 (H/W Only)
+incsspd rax               ; Shadow Stack Pointer 증가
+```
+
+- **📢 섹션 요약 비유**: 마치 은행 창구에서 거래를 할 때, 점원이 직원만 쓸 수 있는 '비밀 장부'에 손님의 요청을 몰래 적어두고, 나중에 영수증과 비교하는 절차와 같습니다. 위조한 영수증(일반 스택)으로는 비밀 장부(섀도 스택)의 내용을 바꿀 수 없습니다.
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+### Ⅲ. 융합 비교 및 다각도 분석
 
-### ROP/버퍼 오버플로우 방어 기술의 진화 계보
+- **심층 기술 비교**: 하드웨어 방어 vs 소프트웨어 방어
 
-| 방어 기술 | 도입 시기 | 방어 방식 | 우회 방법 (해커의 반격) |
-|:---|:---|:---|:---|
-| **DEP / NX bit** | 2000년대 | 스택/힙 영역의 데이터는 '실행(Execute) 불가' 처리 | 정상 코드의 끝부분만 모아서 실행 (ROP 등장) |
-| **ASLR** | 2000년대 | 프로그램 실행 시 메모리 주소를 랜덤으로 섞음 | 메모리 릭(Memory Leak) 취약점으로 주소 유출 |
-| **Stack Canary** | 2010년대 | 반환 주소 앞에 랜덤 쓰레기 값(Canary) 삽입 | 카나리아 값을 유출하거나, 카나리아까지 똑같이 덮어씀 |
-| **Intel CET (HW CFI)**| 2020년~ | **Shadow Stack + IBT를 통한 하드웨어 제어 흐름 강제** | (현재까지 가장 강력함. 데이터 자체를 조작하는 Data-Only Attack으로 우회 시도 중) |
+| 비교 항목 | Software CFI (e.g., Clang Sanitizer) | Hardware CFI (Intel CET, Shadow Stack) |
+|:---|:---|:---|
+| **구현 레이어** | Compiler Instrumentation (빌드 시 코드 삽입) | Microcode (CPU 내부 회로) |
+| **성능 오버헤드** | 10% ~ 40% (런타임 체크 비용) | < 1% (Shadow Stack Locking 등) |
+| **방어 완결성** | CFG (Control Flow Graph) 분석 의존적, 우회 가능 | Shadow Stack의 물리적 격리로 우회 매우 어려움 |
+| **호환성** | 모든 아키텍처 가능하나 수정 필요 | Intel Tiger Lake(11세대) 이상 / AMD Zen3 이상 필요 |
+| **주요 우회 경로** | JIT (Just-In-Time) 영역 공격 | Data-Only Attack (변수 조작) |
 
-### 과목 융합 관점
-- **운영체제 (페이지 보호 메커니즘)**: 섀도 스택이 완벽하려면 해커가 일반 포인터로 섀도 스택의 메모리 주소에 접근하는 것을 OS 커널이 막아줘야 한다. 이를 위해 최신 리눅스와 윈도우는 페이지 테이블 엔트리(PTE) 구조를 뜯어고쳐, 기존의 Read/Write/Execute 권한 외에 **"Shadow Stack 전용 페이지 (Write 권한은 없지만 CALL/RET 명령어만 쓸 수 있는 특수 상태)"**라는 새로운 메모리 보호 속성을 하드웨어 MMU에 추가했다.
-- **컴파일러 (역호환성의 예술)**: IBT를 위해 함수 앞에 `ENDBR64`라는 마커를 억지로 넣으면 구형 CPU에서는 에러가 나지 않을까? 놀랍게도 인텔은 이 명령어의 바이트코드(`F3 0F 1E FA`)를 구형 CPU가 읽으면 **아무 일도 하지 않는 NOP(No Operation)**으로 인식하게끔 설계했다. 덕분에 CET용으로 컴파일된 프로그램은 구형 PC에서도 에러 없이 그대로 동작하는 완벽한 역호환성을 확보했다.
-
----
-
-## Ⅳ. 실무 적용 및 기술사적 판단
-
-### 실무 시나리오
-1. **시나리오 — 웹 브라우저(Chrome/Edge)의 렌더링 엔진 보호**: 크롬 브라우저의 V8 자바스크립트 엔진은 JIT 컴파일러 특성상 해커들의 ROP 공격 1순위 타겟이다.
-   - **아키텍처 적용**: 구글과 마이크로소프트는 Windows 10의 'Hardware-enforced Stack Protection' 기능을 켜서 브라우저 탭 프로세스마다 섀도 스택을 적용했다. 그 결과, 자바스크립트 버퍼 오버플로우 취약점이 터지더라도 해커가 쉘코드(Shellcode)를 실행하기 위해 ROP 체인을 구성하는 순간 하드웨어가 즉시 #CP 예외를 띄워 탭을 죽여버린다(Aw, Snap!). 해킹 성공률이 극적으로 떨어졌다.
-2. **시나리오 — 레거시 게임/소프트웨어의 호환성 장애 (Crash)**: 윈도우 서버를 최신 CPU(인텔 12세대 이상)로 교체하고 OS의 보안 설정을 최대로 올렸더니, 옛날 32비트 사내 ERP 프로그램이 실행되다 자꾸 튕기는 현상 발생.
-   - **원인 분석**: 오래된 프로그램 중에는 해킹 목적이 아니라 성능 최적화나 예외 처리(Setjmp/Longjmp 등)를 위해 프로그래머가 고의로 콜 스택(Call Stack)의 반환 주소를 임의로 조작(Stack Unwinding)하는 경우가 있다. CPU의 섀도 스택은 이를 악의적인 ROP 공격으로 오인하여 프로그램을 강제 종료(False Positive)시킨다.
-   - **해결책**: 레거시 프로그램의 경우 Windows Defender 보안 센터에서 해당 프로세스의 **CFG(제어 흐름 보호)** 기능의 예외(Exclusion) 목록에 등록하여 섀도 스택 대조를 무력화시켜야 정상 구동된다.
-
-### 도입 체크리스트
-- **소프트웨어 툴체인(Toolchain)의 지원 여부**: 하드웨어(11세대 Core 이상)와 OS(Windows 10 20H1 이상)가 받쳐주더라도, 프로그램을 빌드할 때 컴파일러(Visual Studio 2019 이상)에서 `/CETCOMPAT` 플래그를 주어 컴파일하지 않으면 IBT 마커(`ENDBR64`)가 생성되지 않아 반쪽짜리 방어가 된다. 풀스택(HW-OS-Compiler)의 삼위일체가 맞아야 한다.
-
----
-
-## Ⅴ. 기대효과 및 결론
-
-### 정량/정성 기대효과
-
-| 구분 | 소프트웨어 기반 CFI (예: MS CFG) | 하드웨어 기반 CFI (Intel CET) | 개선 효과 |
-|:---|:---|:---|:---|
-| **정량 (성능 오버헤드)**| 컴파일러가 검증 코드를 수만 줄 추가 (5~10% 저하) | 하드웨어가 1클럭에 대조 (1~2% 미만 저하) | 보안 강화를 하면서도 성능 저하 사실상 소멸 |
-| **정량 (방어 범위)** | ROP 방어가 매우 까다롭고 한계가 있음 | ROP (Shadow Stack), JOP (IBT) 모두 커버 | 제어 흐름 탈취 공격 표면의 90% 이상 차단 |
-| **정성 (보안 무결성)** | 커널 권한 탈취 시 SW 방어 로직 자체를 꺼버림 | 섀도 스택은 커널조차 임의 조작 불가능 | 악성코드 생태계에 대한 치명적이고 근본적인 타격 |
-
-### 미래 전망
-- **데이터 중심 공격 (Data-Only Attack)으로의 패러다임 전환**: CET 기술로 인해 제어 흐름(Control Flow)을 탈취하는 ROP/JOP가 사실상 막히자, 해커들은 함수 포인터나 반환 주소를 덮어쓰는 대신, 프로그램 로직 내의 **'IsAdmin = 0' 같은 권한 부여 데이터 변수 자체를 버퍼 오버플로우로 '1'로 덮어씌워버리는 데이터 단독 공격**으로 방향을 틀고 있다. 이를 막기 위해서는 포인터 자체에 암호학적 서명을 부여하는 ARM의 PAC(Pointer Authentication Code) 기술로 진화해야 한다.
-- **AMD Shadow Stack의 전면 도입**: 인텔 CET에 맞추어 AMD도 Zen 3 아키텍처부터 동일한 섀도 스택(Shadow Stack) 기능을 하드웨어 레벨에서 완벽히 지원하기 시작했다. 이로써 x86 생태계 전체가 하드웨어 기반 버퍼 오버플로우 방어벽을 기본 탑재하게 되었다.
-
-### 참고 표준
-- **Control-Flow Enforcement Technology (CET) Specification**: 인텔이 발표한 ISA 확장 규격. 새롭게 추가된 `INCSSP`, `RDSSP`, `ENDBR32`, `ENDBR64` 등의 명령어와 MSR 레지스터 조작법을 정의한 하드웨어 보안의 바이블이다.
-
----
-
-## 📌 관련 개념 맵 (Knowledge Graph)
-- **[포인터 인증 (ARM PAC)](./542_pointer_authentication.md)**: 인텔이 섀도 스택이라는 '이중 장부'를 만들었다면, 애플과 ARM 진영은 반환 주소 포인터 자체에 암호학적 사인(서명)을 발라버리는 PAC 기술로 ROP를 방어한다. 두 아키텍처의 철학적 차이가 돋보인다.
-- **[스택 스매싱 프로텍터](./541_stack_smashing_protector.md)**: 하드웨어 CET가 나오기 전, 그리고 지금도 함께 쓰이는 소프트웨어적인 스택 방어 기법(카나리아).
-- **[가상 머신 제어 구조 (VMCS)](./529_vmcs.md)**: 하이퍼바이저가 가상머신을 띄울 때, 이 가상머신 내부에서 CET 섀도 스택을 쓸 수 있도록 권한을 넘겨주는 레지스터 세팅(Guest SSP)이 VMCS에 포함되어 있다.
-
----
-
-## 👶 어린이를 위한 3줄 비유 설명
-1. 영수가 심부름을 갈 때 항상 주머니에 '돌아올 집 주소(스택)'를 적어놨어요. 그런데 나쁜 도둑(해커)이 몰래 쪽지의 주소를 '도둑의 소굴'로 바꿔치기해서 영수를 납치했어요. (버퍼 오버플로우)
-2. 그래서 엄마(하드웨어)는 영수에게 **'절대 열 수 없는 비밀 금고(섀도 스택)'**를 하나 사주고, 거기에 진짜 집 주소를 하나 더 넣어서 목에 걸어줬어요.
-3. 이제 영수는 심부름이 끝나고 주머니의 쪽지를 볼 때, 목에 걸린 비밀 금고의 주소와 똑같은지 무조건 비교해요! 만약 주소가 다르면 도둑의 짓인 걸 알고 바로 경찰(CPU)에 신고한답니다.
+- **과목 융합 관점**:
+  - **OS 및 컴퓨터 구조 (MMU & Paging)**: Shadow Stack을 구현하기 위해 x86_64 아키텍처의 페이지 테이블(Paging Structure)에 **"Shadow Stack Access"**라는 새로운 사용자 플래그(bit 62)가 추가되었다. 이 플래그가 설정된 페이지는 `MOV` 명령어로는 읽기만 가능하고, 쓰기는 특수한 CPU 명령어(`WRSS`)로만 가능하다.
+  - **컴파일러 이론 (SSA & CFG)**: 컴파일러는 최적화 단계에서 CFG(Control Flow Graph)를 생성하는데, CET를 위해서는 모든 함수 진입점에 `ENDBR`을, 함수 종료 시점에 `SAVEPREVSSP` 등을 배

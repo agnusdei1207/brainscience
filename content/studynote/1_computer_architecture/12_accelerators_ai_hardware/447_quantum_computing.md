@@ -1,3 +1,5 @@
+
+```
 +++
 title = "양자 컴퓨터 (Quantum Computer) 기초"
 weight = 447
@@ -6,125 +8,179 @@ weight = 447
 # 양자 컴퓨터 (Quantum Computer) 기초
 
 ## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 양자 컴퓨터 (Quantum Computer)는 양자 역학의 고유 특성인 중첩(Superposition), 얽힘(Entanglement), 간섭(Interference)을 활용하여 정보를 병렬로 처리하는 차세대 컴퓨팅 시스템이다.
-> 2. **가치**: 기존 고전 컴퓨터가 수만 년 걸릴 복잡한 연산(소인수 분해, 신소재 시뮬레이션 등)을 단 몇 분 만에 해결하는 양자 우위(Quantum Supremacy)를 실현한다.
-> 3. **융합**: 암호학, 신약 개발, 최적화 문제 해결 등 다양한 산업 분야의 게임 체인저로 주목받으며, 기존 보안 체계(RSA 등)를 위협하는 동시에 양자 내성 암호(PQC) 발전을 촉진한다.
+> 1. **본질**: 양자 컴퓨터 (Quantum Computer)는 양자역학(Q Mechanics)의 중첩(Superposition), 얽힘(Entanglement), 간섭(Interference)을 활용하여 정보를 확률적으로 처리하는 차세대 컴퓨팅 아키텍처이다.
+> 2. **가치**: 소인수분해(Prime Factorization)나 분자 시뮬레이션(Molecular Simulation) 등 고전 컴퓨터(Classical Computer)로는 해결 불가능한 NP-Hard 문제를 다항 시간(Polynomial Time) 내에 해결하는 양자 우위(Quantum Supremacy)를 달성한다.
+> 3. **융합**: 암호학(Cryptography)의 패러다임을 전환(Shor's Algorithm)하고, 신약 개발(Drug Discovery) 및 최적화(Optimization) 분야의 병목을 해소하는 하드웨어 가속기 역할을 수행한다.
 
 ---
 
 ### Ⅰ. 개요 (Context & Background)
 
-고전 컴퓨터는 정보를 0 또는 1의 비트(Bit) 단위로 처리하며, 한 번에 하나의 상태만 가질 수 있다. 반면 양자 컴퓨터는 0과 1이 동시에 존재하는 중첩 상태의 큐비트(Qubit)를 사용한다. 이는 데이터 처리량을 기하급수적으로 늘려주며, 고전적인 폰노이만 구조의 한계를 뛰어넘는 병렬 연산의 극치를 보여준다.
+**정의 및 철학**
+양자 컴퓨터(Quantum Computer)는 데이터를 0 또는 1의 비트(Bit)가 아닌, 두 상태가 선형 결합된 큐비트(Qubit, Quantum Bit)에 저장하여 연산하는 시스템이다. 고전 컴퓨터가 볼츠만의 통계역학적 확률에 기반하여 결정론적 상태를 다룬다면, 양자 컴퓨터는 슈뢰딩거 방정식(Schrödinger Equation)을 따르는 파동 함수(Wave Function)의 진화를 이용한다. 이는 단순한 계산 속도의 향상이 아니라, **연산 복잡도(Computational Complexity) 계급 자체를 변경**하는 근본적인 패러다임 시프트이다.
 
-💡 **비유**: 미로를 찾을 때, 고전 컴퓨터는 한 사람이 막다른 길을 만날 때까지 가보고 다시 돌아오는 방식이라면, 양자 컴퓨터는 수만 명의 사람이 모든 길로 동시에 흩어져 출구를 찾는 것과 같습니다.
+💡 **비유**: 거대한 미로를 탈출해야 할 때, 고전 컴퓨터는 한 명이 모든 길을 순차적으로 시도하다가 막히면 돌아와야 하지만, 양자 컴퓨터는 물결파가 동시에 모든 통로를 퍼져나가며 출구를 찾는 것과 같습니다.
 
-- **등장 배경**:
-    1. **반도체 미세화의 한계**: 7nm 이하 공정에서 발생하는 양자 터널링 효과 등 물리적 한계 직면.
-    2. **지수적 복잡도 문제**: 빅데이터 분석, 분자 구조 시뮬레이션 등 변수가 너무 많아 고전 컴퓨터로 해결 불가능한 문제의 증가.
-    3. **파인만의 제안**: 리처드 파인만이 "자연은 양자 역학적이므로, 이를 시뮬레이션하려면 양자 역학적 컴퓨터가 필요하다"고 주장하며 시작됨.
+**등장 배경 (기술적 필연성)**
+1.  **무어의 법칙(Moore's Law)의 한계**: 트랜지스터(Transistor) 미세 공정이 원자 단위(수 nm 이하)로 내려가면서, 전자의 양자 터널링(Quantum Tunneling) 현상으로 인해 누설 전류가 발생하여 물리적 한계에 도달함.
+2.  **계산 복잡도의 폭발**: 빅데이터(Big Data) 시대로 접어들며, 변수 간 상호작용이 복잡한 최적화 문제(Optimization Problem)나 시뮬레이션 문제가 기하급수적으로 증가하여 슈퍼컴퓨터(Supercomputer)로도 처리 불가능해짐.
+3.  **리처드 파인만(Richard Feynman)의 제언**: "자연은 고전적이지 않다. 자연을 시뮬레이션하려면 양자 역학을 사용해야 한다"는 철학에 기초하여 양자 시뮬레이션 목적으로 연구가 시작됨.
 
-📢 **섹션 요약 비유**: 동전의 앞면 또는 뒷면만 보던 시각에서, 빠르게 회전하며 앞면과 뒷면이 동시에 존재하는 '회전하는 동전'의 상태를 이용하는 시각으로의 전환입니다.
+```text
+   [High Performance Computing Evolution]
+
+   Classical (Serial)       Parallel (Multi-core)         Quantum (Qubit)
+   +------------------+     +----------------------+     +----------------------+
+   | CPU: 1 Core      | --> | CPU: N Cores (GPU)   | --> | QPU: 2^N States      |
+   | Bit: 0 OR 1      |     | Bit: 0 OR 1 (Each)   |     | Qubit: 0 AND 1       |
+   | Complex: O(N)    |     | Complex: O(N/p)      |     | Complex: O(log N)    |
+   +------------------+     +----------------------+     +----------------------+
+           |                          |                           |
+           v                          v                           v
+    Von Neumann             Moore's Law Limit           Quantum Supremacy
+    Architecture             (Heat, Tunneling)           (Exponential Speedup)
+```
+*도해 1. 컴퓨팅 패러다임의 진화 과정과 복잡도(Class)의 변화*
+
+📢 **섹션 요약 비유**: 전구 하나만 흐릿하게 비추던 촛불(고식적 병렬 처리)에서, 프리즘을 통과해 무지개색 스펙트럼을 동시에 만들어내는 빛(양자 중첩)의 세계로 시야를 확대하는 것입니다.
 
 ---
 
 ### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
 
-양자 컴퓨터는 양자 상태를 유지하고 제어하기 위한 특수한 환경과 논리 게이트 구조를 가진다.
+양자 컴퓨터의 하드웨어는 **QPU (Quantum Processing Unit)**, **제어기(Controller)**, **극저온 냉각 시스템(Cryostat)**으로 구성된다. 이 시스템의 핵심은 결맞음(Coherence)을 유지하며 확률 진폭(Probability Amplitude)을 조작하는 단일 유니터리 변환(Unitary Transformation)에 있다.
 
-| 요소명 | 역할 | 내부 동작 | 핵심 원리 | 비유 |
-|:---:|:---:|:---:|:---:|:---:|
-| **Qubit (Quantum Bit)** | 정보 처리의 기본 단위 | 0과 1의 확률적 중첩 상태 유지 | Superposition | 마법의 구슬 |
-| **Quantum Gate** | 양자 상태 제어 및 연산 | 중첩 및 얽힘 상태를 물리적으로 조작 | Unitary Operation | 조각가의 손 |
-| **Entanglement (얽힘)** | 큐비트 간 강한 상관관계 | 한 큐비트의 상태가 다른 큐비트에 즉각 반영 | Non-locality | 텔레파시 |
-| **Interference (간섭)** | 정답 확률 극대화 | 확률 진폭을 조절하여 오답은 지우고 정답은 강화 | Constructive/Destructive | 파도의 합침 |
-| **Cryostat (희석 냉동기)** | 극저온 환경 유지 | 양자 결맞음(Coherence) 유지를 위해 절대 0도 가깝게 냉각 | Thermal Isolation | 초정밀 아이스박스 |
+| 구성 요소 (Component) | 역할 (Role) | 내부 동작 메커니즘 (Mechanism) | 주요 프로토콜/기술 |
+|:---:|:---|:---|:---|
+| **Qubit (Quantum Bit)** | 정보 저장 및 연산의 최소 단위 | $\ket{\psi} = \alpha\ket{0} + \beta\ket{1}$ 상태 유지 <br> ($\alpha, \beta$: 복소수 확률 진폭) | Superconducting Traps, Ion Traps |
+| **Quantum Gate (Gate)** | 큐비트 상태 변환 및 회전 | 행렬(Matrix) 연산을 통해 큐비트의 위상(Phase)과 확률을 변조 | Hadamard(H), CNOT, Pauli-X/Y/Z |
+| **Quantum Channel (Bus)** | 큐비트 간 정보 전달 | 얽힘(Entanglement) 생성 및 상태 전달(CNOT) | Cavities, Photonic Interconnects |
+| **Cryostat (Cooling)** | 열적 노이즈 억제 | 희석 냉동기(Dilution Refrigerator)를 통해 약 15mK (절대영상 0도 근접) 유지 | Helium-3/Isotope Mixing |
+| **QAC (Error Correction)** | 결함 허용성 확보 | 물리적 큐비트 다수를 묶어 논리적 큐비트(Logical Qubit) 생성 | Surface Code, Shor Code |
 
-**양자 알고리즘 연산 흐름**
-양자 연산은 중첩 상태 생성 → 연산(간섭) → 측정의 단계를 거친다.
+**양자 연산 파이프라인 (Quantum Processing Pipeline)**
+양자 알고리즘은 입력(Input) 초기화 → 중첩(Superposition) 생성 → 오라클(Oracle) 연산(양압 간섭 유도) → 측정(Measurement)의 과정을 거친다.
 
+```text
+   +-----------------------------------------------------------------------+
+   |                    Quantum Algorithm Execution Flow                   |
+   +-----------------------------------------------------------------------+
+   
+   Step 1: Initialization
+   |  [ |0> ] --- All Qubits reset to ground state |0>
+   |
+   v
+   Step 2: Superposition (Hadamard Gate)
+   |  Apply H-Gate:  H|0> = (|0> + |1>) / sqrt(2)
+   |  State:  1/sqrt(N) * sum( |x> )  <-- 모든 가능한 상태 x를 동시에 표현
+   |
+   v
+   Step 3: Oracle / Unitary Transformation (Uf)
+   |  Apply Quantum Gates (CNOT, Rotation, etc.)
+   |  - Entanglement: 큐비트 간 상관관계 형성
+   |  - Interference:  정답이 아닌 상태의 확률 진폭을 상쇄(Phase Cancellation)
+   |                   정답인 상태의 확률 진폭을 보강(Constructive Interference)
+   |
+   v
+   Step 4: Measurement (Collapse)
+   |  Observe State -> Collapse to Classical Bit
+   |  Output: |Result>  (확률적이지만, 정답일 확률이 매우 높음)
+   |
+   v
+   [ Result: 42 ]
 ```
-[ Input: |00...0> ]
-        |
-[ 1. Hadamard Gate ] (모든 가능성의 중첩 상태 생성)
-        |
-[ 2. Oracle / Function ] (문제 해결을 위한 양자 연산 및 간섭)
-        |
-[ 3. Measurement ] (확률적으로 가장 높은 하나의 상태로 붕괴)
-        |
-[ Output: Classical Bits ] (최종 정답 도출)
+*도해 2. 양자 연산의 데이터 흐름 및 확률적 상태 변화 과정*
+
+**심층 원리: 중첩과 얽힘의 수학적 해석**
+1.  **중첩 (Superposition)**: $n$개의 큐비트는 $2^n$개의 상태 벡터(State Vector)를 동시에 저장한다. 예를 들어 300개의 큐비트는 $2^{300}$개의 상태를 가지는데, 이는 우주의 모든 원자 수보다 많은 정보량을 압축적으로 표현하는 셈이다.
+2.  **간섭 (Interference)**: 양자 알고리즘의 핵심은 'Wave Function'의 위상(Phase)을 조절하여, 오답 경로의 파동은 상쇄 간섭(Destructive Interference)으로 소거하고, 정답 경로의 파동은 보강 간섭(Constructive Interference)으로 증폭시키는 과정이다.
+3.  **측정 (Measurement)**: 측숫값은 고전 비트(0 또는 1)로 붕괴(Collapse)한다. 따라서 양자 컴퓨터는 확정적인 답을 바로 주지 않으므로, 여러 번 수행하여 통계적으로 유의미한 결과를 도출하는 방식을 사용한다.
+
+```python
+# Python (Pseudo-code for Quantum Simulation)
+# using Qiskit-like library logic
+
+from quantum_library import QuantumCircuit
+
+def quantum_search_oracle(n_qubits, marked_item):
+    # 1. Initialize Circuit
+    qc = QuantumCircuit(n_qubits)
+    
+    # 2. Apply Hadamard Gate (Create Superposition)
+    qc.h(range(n_qubits))
+    # State is now uniform superposition of all 2^n possibilities
+    
+    # 3. Apply Oracle (Mark the solution)
+    qc.oracle(marked_item) 
+    # The oracle flips the phase of the |marked_item> state
+    # e.g., amplitude: +0.1 -> -0.1 (Phase Kickback)
+    
+    # 4. Apply Diffusion Operator (Amplitude Amplification)
+    qc.diffusion()
+    # Reflects states about the mean, increasing amplitude of marked item
+    
+    # 5. Measurement
+    return qc.measure_all()
 ```
+*코드 1. 양자 알고리즘(그로버 알고리즘 기반)의 핵심 로직 구현 예시*
 
-1. **중첩 (Superposition)**: $n$개의 큐비트는 $2^n$개의 상태를 동시에 가질 수 있어, 한 번의 연산으로 $2^n$개의 경로를 동시에 탐색한다.
-2. **얽힘 (Entanglement)**: 멀리 떨어진 큐비트들이 하나의 상태를 공유하여, 복잡한 데이터 간의 상관관계를 고속으로 처리한다.
-3. **결맞음 유지 (Coherence Time)**: 외부 노이즈로부터 양자 상태가 파괴되지 않도록 유지하는 것이 기술적 핵심이며, 현재는 오류 수정(Error Correction) 기술이 최대 화두이다.
-
-📢 **섹션 요약 비유**: 수만 개의 열쇠를 하나씩 자물쇠에 끼워보는 것이 아니라, 모든 열쇠를 합친 하나의 '마법 열쇠'를 만들어 한 번에 문을 여는 과정과 같습니다.
+📢 **섹션 요약 비유**: 수만 개의 열쇠구멍을 하나씩 대입해보는 기존 방식이 아니라, 열쇠고리 전체를 용액에 담가 정답 열쇠만 자석에 달라붙게 하는 화학 반응과 같습니다.
 
 ---
 
 ### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
 
-양자 컴퓨터는 모든 분야에서 고전 컴퓨터를 대체하는 것이 아니라, 특정 고난도 문제에서 상호 보완적으로 작동한다.
+양자 컴퓨터는 고전 컴퓨터의 완전한 대체재가 아닌, 특정 연산 영역에서 **가속기(Accelerator)** 역할을 수행한다. 이를 **QPU(Quantum Processing Unit) + CPU**의 이종 아키텍처(Heterogeneous Architecture)로 이해해야 한다.
 
-**[고전 컴퓨터 vs 양자 컴퓨터 비교]**
-| 구분 | 고전 컴퓨터 (Classical) | 양자 컴퓨터 (Quantum) |
-|:---:|:---|:---|
-| **기본 단위** | 비트 (Bit, 0 또는 1) | 큐비트 (Qubit, 중첩 상태) |
-| **연산 방식** | 순차적/병렬적 확정론적 연산 | 확률론적/양자 병렬 연산 |
-| **주요 알고리즘** | 소인수분해(현대 암호), 정렬 | 쇼어 알고리즘(암호 해독), 그로버(검색) |
-| **작동 환경** | 상온, 일반 대기 | 극저온, 진공 (노이즈에 극도로 민감) |
-| **적합한 문제** | 일반 사무, 웹 서핑, 간단한 연산 | 최적화, 시뮬레이션, 거대 소인수 분해 |
+**[심층 기술 비교: Classical Bit vs Quantum Qubit]**
 
-**[과목 융합 관점]**
-- **정보 보안**: RSA 등 기존 공개키 암호 체계를 무력화할 수 있어, 양자 내성 암호(PQC)와 양자 키 분배(QKD) 기술과의 융합이 필수적이다.
-- **신소재/바이오**: 단백질 구조 분석 및 촉매제 개발 시 시뮬레이션 비용을 획기적으로 낮추어 신약 개발 속도를 가속화한다.
+| 구분 (Criteria) | 고전 비트 (Classical Bit) | 양자 비트 (Quantum Qubit) |
+|:---|:---|:---|
+| **상태 공간 (State Space)** | 0 또는 1 (Discrete) | $\alpha\ket{0} + \beta\ket{1}$ (Continuous Vector Space) |
+| **정보량** | $n$ 비트 = $n$ 정보 | $n$ 큐비트 = $2^n$ 복소수 정보 저장 가능 |
+| **연산 모델** | 불 대수(Boolean Algebra) | 선형 대수(Linear Algebra) / 텐서 곱(Tensor Product) |
+| **결과 확정성** | 결정론적(Deterministic) | 확률론적(Probabilistic) |
+| **노이즈 민감도** | 낮음 (높은 SW/HWC 안정성) | 극도로 높음 (Decoherence 발생 쉬움) |
 
-📢 **섹션 요약 비유**: 덧셈 뺄셈은 계산기(고전)가 편하지만, 복잡한 기상 예측이나 암호 해독은 슈퍼컴퓨터(양자)가 필요한 것과 같습니다.
+**[과목 융합 및 시너지 분석]**
+
+1.  **암호학 (Cryptography) & 보안 (Security)**
+    *   **Shor's Algorithm (쇼어 알고리즘)**: 양자 컴퓨터를 활용하여 거대 소인수분해를 다항 시간 내에 수행. 이는 현재 인터넷 보안의 기축인 RSA(Rivest-Shamir-Adleman) 암호, ECC(Elliptic Curve Cryptography)를 무력화할 수 있음.
+    *   **대응 전략**: 양자 내성 암호(Post-Quantum Cryptography, PQC)와 양자 키 분배(Quantum Key Distribution, QKD) 기술로의 전환이 시급함.
+
+2.  **신소재 및 바이오 (Material Science & Bio)**
+    *   **시뮬레이션 난제**: 분자의 전자 구조를 정확히 시뮬레이션하려면 $2^N$ 개의 파동 함수를 계산해야 하므로 고현 컴퓨터로는 불가능함(Ex: 페르미온의 역학).
+    *   **양자 효과**: 양자 컴퓨터는 본질적으로 양자역학적 시스템이므로, 질병 관련 단백질 폴딩(Protein Folding)이나 고성능 배터리용 전해질 개발 등을 근본적으로 시뮬레이션 가능.
+
+3.  **인공지능 (AI) & 최적화 (Optimization)**
+    *   **QML (Quantum Machine Learning)**: 고차원(High-dimensional) 데이터 공간에서의 내적(Inner Product) 연산이나 양자 커널(Quantum Kernel) 추정을 통해 학습 속도를 획기적으로 단축.
+
+```text
+   +---------------------------------------------------------------------+
+   |                 Convergence Model: Quantum + Classical               |
+   +---------------------------------------------------------------------+
+
+   Host (Classical Computer)          Coprocessor (Quantum Computer)
+   +-------------------------+         +-----------------------------+
+   | - OS, Network, I/O      |         | - Quantum Kernel Execution |
+   | - Data Pre-processing   | ------> | - Complex Optimization     |
+   | - Post-processing       | <------ | - Simulation of Nature     |
+   +-------------------------+         +-----------------------------+
+             |                                     |
+             v                                     v
+      Business Logic (ERP/CRM)            Quantum Advantage
+      "Control Plane"                      "Data Plane"
+```
+*도해 3. 고전 컴퓨팅과 양자 컴퓨팅의 하이브리드 융합 아키텍처*
+
+📢 **섹션 요약 비유**: 일반 도로(고식적 연산)와 고속열차(양자 연산)가 함께 존재하는 교통망과 같습니다. 모든 차량을 열차에 태울 수는 없지만, 먼 거지와 복잡한 경로(난제)를 이동할 때는 열차가 압도적으로 유리합니다.
 
 ---
 
 ### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
 
-현재 양자 컴퓨터는 NISQ(Noisy Intermediate-Scale Quantum) 시대로, 오류가 있는 중형 양자 시스템 단계에 머물러 있다.
+현재 양자 컴퓨터 기술은 **NISQ (Noisy Intermediate-Scale Quantum)** 시대에 접어들었다. 이는 오류 수정이 완벽하지 않지만(Noisy), 50~100개 이상의 큐비트를 가진 중간 규모(Intermediate-Scale) 장치를 의미한다. 실무에서는 이러한 특성을 고려한 전략적 도입이 필요하다.
 
-- **실무 시나리오**:
-    1. **금융 포트폴리오 최적화**: 수천 개의 주식과 파생상품 간의 상관관계를 분석하여 리스크는 낮추고 수익은 극대화하는 최적 조합 산출.
-    2. **물류 경로 최적화**: 수백 개의 거점을 통과하는 최단 경로를 실시간으로 계산하여 연료비와 배달 시간 절감.
-    3. **탄소 포집 시뮬레이션**: 지구 온난화 해결을 위한 효율적인 탄소 포집 분자 구조를 양자 시뮬레이션으로 설계.
+**[실무 적용 시나리오 및 의사결정]**
 
-- **도입 장벽 및 주의사항**:
-    - **양자 오류(Quantum Noise)**: 주변의 열, 빛, 전자기파 등에 의해 양자 정보가 소실되는 결어긋남(Decoherence) 현상.
-    - **인프라 비용**: 절대 0도(-273.15도)를 유지하기 위한 막대한 유지 비용과 전용 하드웨어 필요.
-
-📢 **섹션 요약 비유**: 아주 강력한 현미경을 얻었지만, 아직은 렌즈가 조금 흐릿해서 완벽하게 보려면 조금 더 닦아야(오류 수정) 하는 상태와 같습니다.
-
----
-
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
-
-양자 컴퓨터는 4차 산업혁명의 종착지이자 새로운 시작점이다.
-
-**[양자 컴퓨터 도입의 파급 효과]**
-| 항목 | 변화 내용 | 기대 가치 |
-|:---:|:---|:---|
-| **컴퓨팅 성능** | 계산 속도의 비약적 향상 | 난제 해결 (NP-hard 문제 등) |
-| **보안 패러다임** | 양자 암호 체계로의 강제 전환 | 데이터 주권 및 국가 안보 강화 |
-| **에너지 효율** | 특정 연산 시 고전 대비 저전력 가능 | 지속 가능한 IT 인프라 구현 |
-
-- **미래 전망**: 향후 5~10년 내에 수천 개의 논리 큐비트를 가진 '결함 허용 양자 컴퓨터(Fault-tolerant Quantum Computer)'가 등장할 것이며, 이는 인류의 기술 수준을 한 단계 끌어올리는 특이점(Singularity)이 될 것이다.
-
-📢 **섹션 요약 비유**: 인류가 불을 발견하고 전기를 사용하게 된 것만큼이나, 정보를 다루는 방식 자체를 완전히 바꾸어 놓는 '제3의 도구'가 될 것입니다.
-
----
-
-### 📌 관련 개념 맵 (Knowledge Graph)
-1. **[Qubit (큐비트)](./448_qubit.md)**: 양자 컴퓨터의 최소 연산 단위.
-2. **[Shor's Algorithm (쇼어 알고리즘)](../8_algorithm_stats/801_shor_algorithm.md)**: 양자 컴퓨터의 암호 해독 알고리즘.
-3. **[Post-Quantum Cryptography (양자 내성 암호)](../9_security/901_pqc.md)**: 양자 위협에 대비하는 새로운 암호 표준.
-4. **[Quantum Supremacy (양자 우위)](../15_advanced_topics/1501_quantum_supremacy.md)**: 양자가 고전을 압도하는 지점.
-5. **[Annealing vs Gate-based](../15_advanced_topics/1502_quantum_types.md)**: 양자 컴퓨터의 주요 구현 방식 비교.
-
-### 👶 어린이를 위한 3줄 비유 설명
-- 일반 컴퓨터는 한 번에 하나의 숙제만 할 수 있는 성실한 친구지만, 양자 컴퓨터는 마법을 써서 수천 명의 분신을 만들어 한꺼번에 숙제를 끝내는 친구예요.
-- 아주 복잡하고 어려운 문제도 "수리수리 마수리!" 하면 순식간에 정답을 찾아낸답니다.
-- 하지만 아주 예민한 친구라서 조금만 시끄럽거나 더워도 마법이 풀려버리기 때문에, 아주 차갑고 조용한 방에서 소중히 다뤄줘야 해요!
+| 시나리오 (Scenario) | 고식적 기술의 한계 | 양자 기술의 해결책 | 도입 �
