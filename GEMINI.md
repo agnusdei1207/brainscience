@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: 엔터프라이즈 시스템 (Enterprise Systems) — `content/studynote/7_enterprise_systems/`
-- **완료**: Enterprise **#1~#141** 작성 완료
-- **다음**: Enterprise **#142** (Web Service / XML / SOAP / REST)
+- **완료**: Enterprise **#1~#144** 작성 완료
+- **다음**: Enterprise **#145** (SOA / SOAP)
 - **참조**: `content/studynote/7_enterprise_systems/_keyword_list.md`
 
 ---
@@ -46,8 +46,8 @@
 | SE | 800 | ~800 | 100% ✅ |
 | DB | 600 | ~600 | 100% ✅ |
 | ICT | 300 | ~800 | 37.5% |
-| Enterprise | 141 | 482 | 29.3% |
-| **합계** | **4,709** | **~5,550** | **84.8%** |
+| Enterprise | 144 | 482 | 29.9% |
+| **합계** | **4,712** | **~5,550** | **84.9%** |
 
 
 
