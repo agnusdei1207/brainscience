@@ -30,8 +30,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: 엔터프라이즈 시스템 (Enterprise Systems) — `content/studynote/7_enterprise_systems/`
-- **완료**: Enterprise **#1~#174** 작성 완료
-- **다음**: Enterprise **#175** (Value Chain Analysis / 5 Forces Model)
+- **완료**: Enterprise **#1~#180** 작성 완료
+- **다음**: Enterprise **#181** (Statelessness / REST의 핵심)
 - **참조**: `content/studynote/7_enterprise_systems/_keyword_list.md`
 
 ---
@@ -46,8 +46,8 @@
 | SE | 800 | ~800 | 100% ✅ |
 | DB | 600 | ~600 | 100% ✅ |
 | ICT | 300 | ~800 | 37.5% |
-| Enterprise | 170 | 482 | 35.3% |
-| **합계** | **4,738** | **~5,550** | **85.4%** |
+| Enterprise | 180 | 482 | 37.3% |
+| **합계** | **4,748** | **~5,550** | **85.5%** |
 
 
 
