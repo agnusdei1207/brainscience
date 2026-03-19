@@ -57,9 +57,9 @@
 
 ### ⚡ 다음 작업
 - **과목**: 컴퓨터구조 (Computer Architecture) — `content/studynote/1_computer_architecture/2_data_representation_arithmetic/`
-- **작업 방식**: 여러 파일을 병렬로 고도화 진행 (현재 2장 73~100번 완료)
+- **작업 방식**: 여러 파일을 병렬로 고도화 진행 (현재 2장 73~113번 완료)
 - **기타**: 데이터베이스(DB) #1 고도화 완료 (`5_database/1_db_basics_architecture/1_dikw_pyramid.md`)
-- **다음**: `#101 3초과 코드` → `101_excess_3.md` 재작성
+- **다음**: `#114 빅 엔디안` → `114_big_endian.md` 재작성
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
