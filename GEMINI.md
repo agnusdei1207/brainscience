@@ -57,8 +57,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: 컴퓨터구조 (Computer Architecture) — `content/studynote/1_computer_architecture/1_basic_electronics_logic/`
-- **작업 방식**: 여러 파일을 병렬로 고도화 진행 (현재 1~22번 완료)
-- **다음**: `#23 논리 게이트` → `23_logic_gate.md` 재작성
+- **작업 방식**: 여러 파일을 병렬로 고도화 진행 (현재 1~34번 완료)
+- **다음**: `#35 리플 캐리 가산기` → `35_ripple_carry_adder.md` 재작성
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
