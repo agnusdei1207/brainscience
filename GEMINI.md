@@ -56,10 +56,10 @@
 ## 📍 현재 위치
 
 ### ⚡ 다음 작업
-- **과목**: 컴퓨터구조 (Computer Architecture) — `content/studynote/1_computer_architecture/2_data_representation_arithmetic/`
-- **작업 방식**: 여러 파일을 병렬로 고도화 진행 (현재 2장 73~113번 완료)
+- **과목**: 컴퓨터구조 (Computer Architecture) — `content/studynote/1_computer_architecture/3_cpu_architecture/`
+- **작업 방식**: 여러 파일을 병렬로 고도화 진행 (현재 1장 #1~72, 2장 #73~122 완료)
 - **기타**: 데이터베이스(DB) #1 고도화 완료 (`5_database/1_db_basics_architecture/1_dikw_pyramid.md`)
-- **다음**: `#114 빅 엔디안` → `114_big_endian.md` 재작성
+- **다음**: 3장 CPU 아키텍처 및 명령어 세트 고도화 시작
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
