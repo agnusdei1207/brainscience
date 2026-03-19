@@ -57,8 +57,8 @@
 
 ### ⚡ 다음 작업
 - **과목**: 컴퓨터구조 (Computer Architecture) — `content/studynote/1_computer_architecture/1_basic_electronics_logic/`
-- **작업 방식**: 여러 파일을 병렬로 고도화 진행 (현재 1~35번 완료)
-- **다음**: `#36 캐리 예측 가산기` → `36_carry_lookahead_adder.md` 재작성
+- **작업 방식**: 여러 파일을 병렬로 고도화 진행 (현재 1~38번 완료)
+- **다음**: `#39 디코더` → `39_decoder.md` 재작성
 - **참조**: `content/studynote/1_computer_architecture/_keyword_list.md`
 
 ---
