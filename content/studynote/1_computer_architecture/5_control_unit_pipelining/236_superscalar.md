@@ -1,3 +1,11 @@
++++
+title = "236. 수퍼스칼라 (Superscalar)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 236. 수퍼스칼라 (Superscalar)
 
 ## 핵심 인사이트 (3줄 요약)

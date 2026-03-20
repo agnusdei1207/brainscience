@@ -1,3 +1,11 @@
++++
+title = "241. 예약역 (Reservation Station)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 241. 예약역 (Reservation Station)
 
 ## 핵심 인사이트 (3줄 요약)

@@ -1,3 +1,11 @@
++++
+title = "247. 시간적 지역성 (Temporal Locality)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 247. 시간적 지역성 (Temporal Locality)
 
 ## 핵심 인사이트 (3줄 요약)

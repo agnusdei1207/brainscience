@@ -1,3 +1,11 @@
++++
+title = "243. VLIW (Very Long Instruction Word)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 243. VLIW (Very Long Instruction Word)
 
 ## 핵심 인사이트 (3줄 요약)

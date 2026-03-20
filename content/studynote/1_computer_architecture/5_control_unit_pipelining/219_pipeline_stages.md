@@ -1,3 +1,11 @@
++++
+title = "219. 파이프라인 단계 (IF, ID, EX, MEM, WB)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 219. 파이프라인 단계 (IF, ID, EX, MEM, WB)
 
 ## 핵심 인사이트 (3줄 요약)

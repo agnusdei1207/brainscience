@@ -1,3 +1,11 @@
++++
+title = "229. 파이프라인 스톨 (Pipeline Stall / Bubble)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 229. 파이프라인 스톨 (Pipeline Stall / Bubble)
 
 ## 핵심 인사이트 (3줄 요약)

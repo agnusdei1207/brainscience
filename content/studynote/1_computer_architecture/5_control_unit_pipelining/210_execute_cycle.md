@@ -1,3 +1,11 @@
++++
+title = "210. 실행 사이클 (Execute Cycle)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 210. 실행 사이클 (Execute Cycle)
 
 ## 핵심 인사이트 (3줄 요약)

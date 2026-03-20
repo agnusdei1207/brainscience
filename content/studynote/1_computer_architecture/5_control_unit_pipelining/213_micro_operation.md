@@ -1,3 +1,11 @@
++++
+title = "213. 마이크로 오퍼레이션 (Micro-operation)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 213. 마이크로 오퍼레이션 (Micro-operation)
 
 ## 핵심 인사이트 (3줄 요약)

@@ -1,3 +1,11 @@
++++
+title = "205. 데이터패스 (Datapath)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 205. 데이터패스 (Datapath)
 
 ## 핵심 인사이트 (3줄 요약)

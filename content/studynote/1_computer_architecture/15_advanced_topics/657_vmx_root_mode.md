@@ -12,7 +12,7 @@ taxonomy:
 > 2. 인텔은 VMX(Virtual Machine Extensions)라는 기술을 도입하여, CPU의 동작 모드를 **VMX Root 모드(진짜 왕)**와 **VMX Non-Root 모드(가짜 왕)**로 쪼개버렸다.
 > 3. 가상 머신(Guest OS)은 자신이 Non-Root 모드에 갇힌 줄도 모른 채 스스로를 Ring 0라고 착각하며 편안하게 코드를 실행한다.
 
-<br>
+
 
 ## Ⅰ. 가상화 이전의 권한 충돌 (Ring Aliasing)
 
@@ -24,7 +24,7 @@ taxonomy:
 
 > 📢 **섹션 요약 비유**: 왕(Hypervisor)이 귀족(Guest OS)에게 "네가 이 동네의 왕인 척해라"라고 시켰지만, 동네 사람들(하드웨어)은 귀족의 옷차림(Ring 1)을 보고 진짜 왕이 아님을 눈치채어 말을 안 듣는 상황입니다.
 
-<br>
+
 
 ## Ⅱ. VMX Root 모드와 Non-Root 모드의 탄생
 
@@ -42,7 +42,7 @@ taxonomy:
 
 > 📢 **섹션 요약 비유**: 귀족에게 가짜 옷(Ring 1)을 입히는 대신, 아예 세트장(Non-Root)을 완벽하게 하나 더 지어주고 그 안에서 진짜 왕의 옷(가상 Ring 0)을 입혀주었습니다. 귀족은 자기가 진짜 왕인 줄 알고 세트장 안에서 미친 듯이 활약합니다.
 
-<br>
+
 
 ## Ⅲ. 세계의 교차: VM Entry와 VM Exit
 

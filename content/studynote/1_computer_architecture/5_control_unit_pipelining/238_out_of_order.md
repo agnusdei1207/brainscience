@@ -1,3 +1,11 @@
++++
+title = "238. 비순차 실행 (Out-of-Order Execution, OoO)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 238. 비순차 실행 (Out-of-Order Execution, OoO)
 
 ## 핵심 인사이트 (3줄 요약)

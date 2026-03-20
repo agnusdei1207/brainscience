@@ -1,3 +1,11 @@
++++
+title = "232. 정적 분기 예측 (Static Prediction)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 232. 정적 분기 예측 (Static Prediction)
 
 ## 핵심 인사이트 (3줄 요약)

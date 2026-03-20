@@ -1,3 +1,11 @@
++++
+title = "204. 마이크로아키텍처 (Microarchitecture)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 204. 마이크로아키텍처 (Microarchitecture)
 
 ## 핵심 인사이트 (3줄 요약)

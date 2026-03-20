@@ -1,3 +1,11 @@
++++
+title = "218. 명령어 파이프라이닝 (Instruction Pipelining)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 218. 명령어 파이프라이닝 (Instruction Pipelining)
 
 ## 핵심 인사이트 (3줄 요약)

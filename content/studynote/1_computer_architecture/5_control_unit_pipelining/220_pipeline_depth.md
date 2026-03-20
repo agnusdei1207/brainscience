@@ -1,3 +1,11 @@
++++
+title = "220. 파이프라인 깊이 (Pipeline Depth)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 220. 파이프라인 깊이 (Pipeline Depth)
 
 ## 핵심 인사이트 (3줄 요약)

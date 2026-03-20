@@ -1,3 +1,11 @@
++++
+title = "224. 제어 해저드 (Control Hazard / Branch Hazard)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 224. 제어 해저드 (Control Hazard / Branch Hazard)
 
 ## 핵심 인사이트 (3줄 요약)

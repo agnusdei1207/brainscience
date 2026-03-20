@@ -1,3 +1,11 @@
++++
+title = "206. 제어 유닛 (Control Unit)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 206. 제어 유닛 (Control Unit)
 
 ## 핵심 인사이트 (3줄 요약)

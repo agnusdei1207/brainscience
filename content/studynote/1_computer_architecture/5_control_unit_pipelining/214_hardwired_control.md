@@ -1,3 +1,11 @@
++++
+title = "214. 하드와이어드 제어 (Hardwired Control)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 214. 하드와이어드 제어 (Hardwired Control)
 
 ## 핵심 인사이트 (3줄 요약)

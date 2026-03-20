@@ -1,3 +1,11 @@
++++
+title = "209. 해독 사이클 (Decode Cycle)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 209. 해독 사이클 (Decode Cycle)
 
 ## 핵심 인사이트 (3줄 요약)

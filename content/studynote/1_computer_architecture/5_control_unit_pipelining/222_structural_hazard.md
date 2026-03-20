@@ -1,3 +1,11 @@
++++
+title = "222. 구조적 해저드 (Structural Hazard)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 222. 구조적 해저드 (Structural Hazard)
 
 ## 핵심 인사이트 (3줄 요약)

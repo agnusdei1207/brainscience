@@ -1,3 +1,11 @@
++++
+title = "223. 데이터 해저드 (Data Hazard)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 223. 데이터 해저드 (Data Hazard)
 
 ## 핵심 인사이트 (3줄 요약)

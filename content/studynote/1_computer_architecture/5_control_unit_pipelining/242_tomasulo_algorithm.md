@@ -1,3 +1,11 @@
++++
+title = "242. 토마술로 알고리즘 (Tomasulo's Algorithm)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 242. 토마술로 알고리즘 (Tomasulo's Algorithm)
 
 ## 핵심 인사이트 (3줄 요약)

@@ -1,3 +1,11 @@
++++
+title = "208. 인출 사이클 (Fetch Cycle)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 208. 인출 사이클 (Fetch Cycle)
 
 ## 핵심 인사이트 (3줄 요약)

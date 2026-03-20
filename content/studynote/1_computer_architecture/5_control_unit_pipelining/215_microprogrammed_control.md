@@ -1,3 +1,11 @@
++++
+title = "215. 마이크로프로그래밍 (Microprogrammed Control)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 215. 마이크로프로그래밍 (Microprogrammed Control)
 
 ## 핵심 인사이트 (3줄 요약)

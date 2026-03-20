@@ -1,3 +1,11 @@
++++
+title = "221. 파이프라인 해저드 (Pipeline Hazards)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 221. 파이프라인 해저드 (Pipeline Hazards)
 
 ## 핵심 인사이트 (3줄 요약)

@@ -1,3 +1,11 @@
++++
+title = "244. EPIC (Explicitly Parallel Instruction Computing)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 244. EPIC (Explicitly Parallel Instruction Computing)
 
 ## 핵심 인사이트 (3줄 요약)

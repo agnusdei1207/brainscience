@@ -1,3 +1,11 @@
++++
+title = "237. 명령어 발급 폭 (Issue Width)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 237. 명령어 발급 폭 (Issue Width)
 
 ## 핵심 인사이트 (3줄 요약)

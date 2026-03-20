@@ -1,3 +1,11 @@
++++
+title = "228. 데이터 포워딩 (Data Forwarding / Bypassing)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 228. 데이터 포워딩 (Data Forwarding / Bypassing)
 
 ## 핵심 인사이트 (3줄 요약)

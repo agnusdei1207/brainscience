@@ -1,3 +1,11 @@
++++
+title = "240. 재주문 버퍼 (ROB, Reorder Buffer)"
+date = 2024-01-01
+[taxonomies]
+categories = ["Computer Architecture"]
+tags = ["CA"]
++++
+
 # 240. 재주문 버퍼 (ROB, Reorder Buffer)
 
 ## 핵심 인사이트 (3줄 요약)
