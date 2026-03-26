@@ -1,5 +1,5 @@
 +++
-weight = 8
+weight = 7001
 title = "8: 알고리즘 및 통계 (Algorithm & Stats)"
 render = true
 paginate_by = 10

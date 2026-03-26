@@ -1,5 +1,5 @@
 +++
-weight = 9
+weight = 8000
 title = "9: 정보 보안 (Security)"
 render = true
 paginate_by = 10
