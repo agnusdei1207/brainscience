@@ -1,5 +1,5 @@
 +++
-weight = 6
+weight = 5001
 title = "6: ICT 융합 기술 (ICT Convergence)"
 render = true
 paginate_by = 10

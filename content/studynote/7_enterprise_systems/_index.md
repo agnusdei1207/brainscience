@@ -1,5 +1,5 @@
 +++
-weight = 7
+weight = 6001
 title = "7: 엔터프라이즈 시스템 (Enterprise Systems)"
 render = true
 paginate_by = 10
