@@ -3,6 +3,7 @@ title = "554. FUSE (Filesystem in Userspace) - 커널 탈옥과 커스텀 마운
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 554
 +++
 
 # FUSE (Filesystem in Userspace) - 두꺼운 시스템 커널 코드를 뚫지 않고도, 유저 레벨에서 내 맘대로 만드는 '탈옥형 가짜 파일 시스템' 아크

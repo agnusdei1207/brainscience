@@ -3,6 +3,7 @@ title = "303. 은행원 알고리즘 한계 - 비현실성 및 오버헤드"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 303
 +++
 
 # 은행원 알고리즘 한계 (Limitations of Banker's)

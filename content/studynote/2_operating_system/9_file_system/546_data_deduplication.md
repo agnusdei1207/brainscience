@@ -3,6 +3,7 @@ title = "546. 데이터 중복 제거 (Data Deduplication) - 스토리지 압축
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 546
 +++
 
 # 데이터 중복 제거 (Data Deduplication) - 수만 개의 동일한 파일 복제본을 단 1개의 블록 포인터로 압살 시키는 스토리지 환상 마법

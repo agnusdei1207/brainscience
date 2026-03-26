@@ -3,6 +3,7 @@ title = "180. 우선순위 스케줄링 (Priority Scheduling)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 180
 +++
 
 # 우선순위 스케줄링 (Priority Scheduling)

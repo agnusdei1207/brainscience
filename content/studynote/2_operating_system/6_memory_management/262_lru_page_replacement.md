@@ -3,6 +3,7 @@ title = "262. LRU (Least Recently Used) 교체"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 262
 +++
 
 # LRU (Least Recently Used) 페이지 교체

@@ -3,6 +3,7 @@ title = "242. 교착 상태 탐지 (Deadlock Detection)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 242
 +++
 
 # 교착 상태 탐지 (Deadlock Detection)

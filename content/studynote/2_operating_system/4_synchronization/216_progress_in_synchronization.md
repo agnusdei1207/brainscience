@@ -3,6 +3,7 @@ title = "216. 진행 (Progress)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 216
 +++
 
 # 진행 (Progress)

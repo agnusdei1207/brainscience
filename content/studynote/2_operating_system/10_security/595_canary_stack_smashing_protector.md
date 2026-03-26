@@ -3,6 +3,7 @@ title = "595. 카나리 (Canary) / 스택 스매싱 가드"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
+weight = 595
 +++
 
 # 카나리 (Canary) / 스택 스매싱 가드 (SSP)

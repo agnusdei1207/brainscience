@@ -3,6 +3,7 @@ title = "365. 세그먼트 테이블 (Segment Table) 가변 크기 주소 번역
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 365
 +++
 
 # 세그먼트 테이블 (Segment Table)

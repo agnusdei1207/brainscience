@@ -3,6 +3,7 @@ title = "464. io_uring 차세대 리눅스 비동기 I/O 프레임워크"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 464
 +++
 
 # io_uring

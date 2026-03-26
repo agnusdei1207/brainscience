@@ -3,6 +3,7 @@ title = "403. 벨라디의 모순 (Belady's Anomaly) 더 큰 램의 배신"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 403
 +++
 
 # 벨라디의 모순 (Belady's Anomaly)

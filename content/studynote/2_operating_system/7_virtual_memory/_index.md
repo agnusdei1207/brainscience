@@ -1,5 +1,5 @@
 +++
-weight = 7
+weight = 1007
 title = "7: 가상 메모리 관리"
 sort_by = "weight"
 +++

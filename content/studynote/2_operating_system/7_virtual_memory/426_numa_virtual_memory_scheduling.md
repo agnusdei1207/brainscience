@@ -3,6 +3,7 @@ title = "426. NUMA 환경의 가상 메모리 스케줄링 (numactl)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 426
 +++
 
 # NUMA 환경의 가상 메모리 스케줄링 (numactl)

@@ -3,6 +3,7 @@ title = "245. 고전적 동기화 문제들 (Classic Synchronization Problems)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 245
 +++
 
 # 고전적 동기화 문제들 (Classic Synchronization Problems)

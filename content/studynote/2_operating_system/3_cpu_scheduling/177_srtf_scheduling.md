@@ -3,6 +3,7 @@ title = "177. SRTF (Shortest Remaining Time First) 스케줄링"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 177
 +++
 
 # SRTF (Shortest Remaining Time First) 스케줄링

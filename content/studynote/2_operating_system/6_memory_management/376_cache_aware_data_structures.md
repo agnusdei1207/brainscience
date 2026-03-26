@@ -3,6 +3,7 @@ title = "376. 캐시 인식 데이터 구조 (Cache-aware Data Structures)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 376
 +++
 
 # 캐시 인식 데이터 구조 (Cache-aware Data Structures)

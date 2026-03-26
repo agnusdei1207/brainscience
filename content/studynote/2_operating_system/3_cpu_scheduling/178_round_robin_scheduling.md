@@ -3,6 +3,7 @@ title = "178. 라운드 로빈 (Round Robin, RR) 스케줄링"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 178
 +++
 
 # 라운드 로빈 (Round Robin, RR) 스케줄링

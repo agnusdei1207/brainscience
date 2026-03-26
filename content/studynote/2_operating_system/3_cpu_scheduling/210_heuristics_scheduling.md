@@ -3,6 +3,7 @@ title = "210. 휴리스틱 (Heuristics) 기반 스케줄링"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 210
 +++
 
 # 휴리스틱 (Heuristics) 기반 스케줄링

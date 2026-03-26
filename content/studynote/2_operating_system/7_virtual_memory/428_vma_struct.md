@@ -3,6 +3,7 @@ title = "428. VMA (Virtual Memory Area) 구조체 리눅스의 가상 우주 지
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 428
 +++
 
 # VMA (Virtual Memory Area) 구조체

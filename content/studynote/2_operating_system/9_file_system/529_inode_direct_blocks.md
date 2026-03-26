@@ -3,6 +3,7 @@ title = "529. i-node 직접 블록 (Direct Blocks)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 529
 +++
 
 # i-node 직접 블록 (Direct Blocks) - 먼지처럼 작은 파일들을 빛의 속도로 삼켜버리는 고속 I/O 차선

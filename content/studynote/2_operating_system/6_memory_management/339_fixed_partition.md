@@ -3,6 +3,7 @@ title = "339. 고정 분할 방식 (Fixed Partition)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 339
 +++
 
 # 고정 분할 방식 (Fixed Partition / Static Partitioning)

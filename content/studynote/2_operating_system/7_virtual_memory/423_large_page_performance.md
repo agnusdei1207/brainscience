@@ -3,6 +3,7 @@ title = "423. 대형 페이지 (Large Page / Transparent Hugepage) TLB 미스의
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 423
 +++
 
 # 대형 페이지 (Large Page / Transparent Hugepage)

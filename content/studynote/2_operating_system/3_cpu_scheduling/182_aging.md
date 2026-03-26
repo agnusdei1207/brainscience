@@ -3,6 +3,7 @@ title = "182. 노화 (Aging)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 182
 +++
 
 # 노화 (Aging) 기법

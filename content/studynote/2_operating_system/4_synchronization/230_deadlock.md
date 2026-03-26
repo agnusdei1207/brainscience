@@ -3,6 +3,7 @@ title = "230. 교착 상태 (Deadlock)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 230
 +++
 
 # 교착 상태 (Deadlock)

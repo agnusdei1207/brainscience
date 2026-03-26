@@ -3,6 +3,7 @@ title = "215. 상호 배제 (Mutual Exclusion, Mutex)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 215
 +++
 
 # 상호 배제 (Mutual Exclusion, Mutex)

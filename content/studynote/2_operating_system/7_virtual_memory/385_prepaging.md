@@ -3,6 +3,7 @@ title = "385. 선행 페이징 (Prepaging) 공간 지역성의 예측"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 385
 +++
 
 # 선행 페이징 (Prepaging)

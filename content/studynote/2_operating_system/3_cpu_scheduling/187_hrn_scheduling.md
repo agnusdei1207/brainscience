@@ -3,6 +3,7 @@ title = "187. HRN (Highest Response Ratio Next) 스케줄링"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 187
 +++
 
 # HRN (Highest Response Ratio Next) 스케줄링

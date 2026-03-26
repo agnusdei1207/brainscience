@@ -3,6 +3,7 @@ title = "545. 윈도우 NTFS - MFT 구조와 ACL, 압축, 암호화 생태계"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 545
 +++
 
 # Windows NTFS (New Technology File System) - 마이크로소프트의 심장, B-Tree MFT와 무결성 ACL 철권 통치의 세계

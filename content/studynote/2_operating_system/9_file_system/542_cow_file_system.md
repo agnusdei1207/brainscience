@@ -3,6 +3,7 @@ title = "542. COW (Copy-On-Write) 파일 시스템 (ZFS, Btrfs) - 원본 불멸 
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 542
 +++
 
 # Copy-On-Write (COW) 파일 시스템 (ZFS, Btrfs) - 덮어쓰기 금지의 미학, 영원히 늙지 않는 스냅샷 타임머신 무결 생태계

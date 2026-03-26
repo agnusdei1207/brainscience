@@ -3,6 +3,7 @@ title = "524. 연결 할당 (Linked Allocation)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 524
 +++
 
 # 연결 할당 (Linked Allocation) - 공간 낭비를 멸절시킨 꼬리잡기 포인터 체인망

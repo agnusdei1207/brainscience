@@ -3,6 +3,7 @@ title = "575. 접근 제어 목록 (ACL, Access Control List)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 575
 +++
 
 # 접근 제어 목록 (ACL, Access Control List) - 접근 제어 행렬을 객체 기준으로 분할한 구현 방식

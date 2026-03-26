@@ -3,6 +3,7 @@ title = "541. LFS (Log-structured File System) - SSD 최적화 순차 로그 파
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 541
 +++
 
 # LFS (Log-structured File System) - 디스크 모터 회전(Seek) 늪을 박살 내고 '일기장(Log)' 자체가 본진이 되어버린 플래시 시대 돌파 아키텍처

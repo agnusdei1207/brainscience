@@ -3,6 +3,7 @@ title = "335. 스와핑 (Swapping)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 335
 +++
 
 # 스와핑 (Swapping)

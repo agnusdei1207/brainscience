@@ -3,6 +3,7 @@ title = "263. LFU (Least Frequently Used) 교체"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 263
 +++
 
 # LFU (Least Frequently Used) 페이지 교체

@@ -3,6 +3,7 @@ title = "393. 쓰기 시 복사 (COW, Copy-on-Write) 게으름의 기적"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 393
 +++
 
 # 쓰기 시 복사 (COW, Copy-on-Write)

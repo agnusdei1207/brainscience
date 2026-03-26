@@ -3,6 +3,7 @@ title = "251. 윈도우 동기화 (Windows Synchronization)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 251
 +++
 
 # 윈도우 동기화 (Windows Synchronization)

@@ -3,6 +3,7 @@ title = "494. 오브젝트 스토리지 (Object Storage)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 494
 +++
 
 # 오브젝트 스토리지 (Object Storage) - 플랫 네임스페이스, REST API

@@ -3,6 +3,7 @@ title = "347. 메모리 압축 (Compaction) 외부 단편화의 극약 처방"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 347
 +++
 
 # 압축 (Compaction / Defragmentation)

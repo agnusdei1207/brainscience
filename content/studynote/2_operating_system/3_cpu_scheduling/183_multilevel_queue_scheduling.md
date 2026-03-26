@@ -3,6 +3,7 @@ title = "183. 다단계 큐 스케줄링 (Multilevel Queue Scheduling)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 183
 +++
 
 # 다단계 큐 스케줄링 (Multilevel Queue Scheduling)

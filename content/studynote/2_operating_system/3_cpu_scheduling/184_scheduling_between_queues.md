@@ -3,6 +3,7 @@ title = "184. 큐 간 스케줄링 (고정 우선순위 vs 시간 할당)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 184
 +++
 
 # 큐 간 스케줄링 (Scheduling between Queues)

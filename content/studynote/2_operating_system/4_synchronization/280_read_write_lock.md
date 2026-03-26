@@ -3,6 +3,7 @@ title = "280. 읽기-쓰기 락 (Read-Write Lock)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 280
 +++
 
 # 읽기-쓰기 락 (Read-Write Lock)

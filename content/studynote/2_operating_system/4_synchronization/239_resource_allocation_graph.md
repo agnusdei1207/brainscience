@@ -3,6 +3,7 @@ title = "239. 자원 할당 그래프 (Resource Allocation Graph, RAG)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 239
 +++
 
 # 자원 할당 그래프 (Resource Allocation Graph, RAG)

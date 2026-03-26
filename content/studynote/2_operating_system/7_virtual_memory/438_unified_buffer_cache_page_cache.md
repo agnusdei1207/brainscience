@@ -3,6 +3,7 @@ title = "438. 파일시스템 버퍼 캐시와 가상 메모리 페이지 캐시
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 438
 +++
 
 # 파일시스템 버퍼 캐시(Buffer Cache)와 가상 메모리 페이지 캐시(Page Cache)의 통합 원리

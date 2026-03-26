@@ -3,6 +3,7 @@ title = "430. 수요 페이지 제로화 (Demand Zero Paging) 게으른 보안 �
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 430
 +++
 
 # 수요 페이지 제로화 (Demand Zero Paging)

@@ -3,6 +3,7 @@ title = "170. 스케줄링 기준 (Scheduling Criteria)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 170
 +++
 
 # 스케줄링 기준 (Scheduling Criteria)

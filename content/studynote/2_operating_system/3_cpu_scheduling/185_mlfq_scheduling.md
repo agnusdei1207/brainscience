@@ -3,6 +3,7 @@ title = "185. 다단계 피드백 큐 스케줄링 (Multilevel Feedback Queue, M
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 185
 +++
 
 # 다단계 피드백 큐 스케줄링 (Multilevel Feedback Queue, MLFQ)

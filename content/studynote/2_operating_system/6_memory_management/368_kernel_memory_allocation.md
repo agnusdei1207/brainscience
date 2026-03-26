@@ -3,6 +3,7 @@ title = "368. 커널 메모리 할당 방식 (kmalloc, vmalloc)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 368
 +++
 
 # 커널 메모리 할당 방식 (kmalloc, vmalloc)

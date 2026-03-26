@@ -3,6 +3,7 @@ title = "439. Cgroups 메모리 서브시스템의 자원 제한 (Memory Limit) 
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 439
 +++
 
 # Cgroups 메모리 서브시스템의 자원 제한 (Memory Limit) 동작

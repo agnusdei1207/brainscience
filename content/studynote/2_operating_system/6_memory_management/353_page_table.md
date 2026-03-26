@@ -3,6 +3,7 @@ title = "353. 페이지 테이블 (Page Table) 가상 주소의 번역 장부"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 353
 +++
 
 # 페이지 테이블 (Page Table)

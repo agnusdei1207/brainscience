@@ -3,6 +3,7 @@ title = "354. PTBR / PTLR 하드웨어 매핑의 길잡이"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 354
 +++
 
 # PTBR / PTLR (페이지 테이블 레지스터)

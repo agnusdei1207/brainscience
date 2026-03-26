@@ -3,6 +3,7 @@ title = "301. 은행원 알고리즘 (Banker's Algorithm)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 301
 +++
 
 # 은행원 알고리즘 (Banker's Algorithm)

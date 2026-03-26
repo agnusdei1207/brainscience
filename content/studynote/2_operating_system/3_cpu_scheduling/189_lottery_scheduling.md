@@ -3,6 +3,7 @@ title = "189. 복권 스케줄링 (Lottery Scheduling)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 189
 +++
 
 # 복권 스케줄링 (Lottery Scheduling)

@@ -3,6 +3,7 @@ title = "456. 캐싱 (Caching) 지역성을 훔치는 시간의 마법"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 456
 +++
 
 # 캐싱 (Caching)

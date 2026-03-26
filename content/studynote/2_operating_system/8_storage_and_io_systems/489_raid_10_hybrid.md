@@ -3,6 +3,7 @@ title = "489. RAID 10 (1+0) / RAID 01 (0+1) 혼합형 구조"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 489
 +++
 
 # RAID 10 (1+0) / RAID 01 (0+1) 혼합형 구조

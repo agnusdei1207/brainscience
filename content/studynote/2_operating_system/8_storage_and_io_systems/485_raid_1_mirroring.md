@@ -3,6 +3,7 @@ title = "485. RAID 1 (미러링, Mirroring)"
 date = "2026-03-24"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 485
 +++
 
 # RAID 1 (미러링, Mirroring)

@@ -3,6 +3,7 @@ title = "396. 변경 비트 (Modify Bit / Dirty Bit) 디스크 I/O 절약의 핵
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 396
 +++
 
 # 변경 비트 (Modify Bit / Dirty Bit)

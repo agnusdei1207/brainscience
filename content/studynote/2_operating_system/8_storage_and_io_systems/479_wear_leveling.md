@@ -3,6 +3,7 @@ title = "479. 마모 평준화 (Wear Leveling) 반도체의 수명 연장술"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 479
 +++
 
 # 마모 평준화 (Wear Leveling)

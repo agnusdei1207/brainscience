@@ -3,6 +3,7 @@ title = "199. 인터럽트 스케줄링 (Interrupt Scheduling)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 199
 +++
 
 # 인터럽트 스케줄링 (Interrupt Scheduling)

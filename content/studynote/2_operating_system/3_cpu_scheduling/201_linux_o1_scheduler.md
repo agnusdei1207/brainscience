@@ -3,6 +3,7 @@ title = "201. 리눅스 O(1) 스케줄러"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 201
 +++
 
 # 리눅스 O(1) 스케줄러

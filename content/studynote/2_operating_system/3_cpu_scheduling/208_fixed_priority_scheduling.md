@@ -3,6 +3,7 @@ title = "208. 고정 우선순위 스케줄링 (Fixed-Priority Scheduling)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 208
 +++
 
 # 고정 우선순위 스케줄링 (Fixed-Priority Scheduling)

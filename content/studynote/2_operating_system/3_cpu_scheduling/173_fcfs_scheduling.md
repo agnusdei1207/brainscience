@@ -3,6 +3,7 @@ title = "173. FCFS (First-Come, First-Served) 스케줄링"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 173
 +++
 
 # FCFS (First-Come, First-Served) 스케줄링

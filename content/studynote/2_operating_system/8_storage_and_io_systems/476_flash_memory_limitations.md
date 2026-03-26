@@ -3,6 +3,7 @@ title = "476. 플래시 메모리 한계 덮어쓰기 불가와 수명의 족쇄
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 476
 +++
 
 # 플래시 메모리 한계 (Flash Memory Limitations)

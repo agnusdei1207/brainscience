@@ -3,6 +3,7 @@ title = "336. 스왑 아웃 (Swap Out)과 스왑 인 (Swap In)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 336
 +++
 
 # 스왑 아웃 (Swap Out) / 스왑 인 (Swap In)

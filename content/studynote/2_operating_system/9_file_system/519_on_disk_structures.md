@@ -3,6 +3,7 @@ title = "519. 디스크 상의 구조 (On-Disk Structures)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 519
 +++
 
 # 디스크 상의 구조 - 부팅부터 파일 본체까지, 영구 저장소의 4대 물리 구획

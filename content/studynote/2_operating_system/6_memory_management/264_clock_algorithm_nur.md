@@ -3,6 +3,7 @@ title = "264. 클럭 알고리즘 (Clock Algorithm / NUR)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 264
 +++
 
 # 클럭 알고리즘 (Clock Algorithm / NUR)

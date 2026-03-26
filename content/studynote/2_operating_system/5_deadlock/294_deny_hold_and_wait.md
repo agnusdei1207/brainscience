@@ -3,6 +3,7 @@ title = "294. 점유 대기 부정 - 기아 가능성 및 자원 낭비"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 294
 +++
 
 # 점유 대기 부정 (Deny Hold-and-Wait)

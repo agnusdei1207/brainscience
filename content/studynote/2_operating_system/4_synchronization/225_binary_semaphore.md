@@ -3,6 +3,7 @@ title = "225. 이진 세마포어 (Binary Semaphore)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 225
 +++
 
 # 이진 세마포어 (Binary Semaphore)

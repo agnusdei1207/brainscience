@@ -3,6 +3,7 @@ title = "196. 하드 실시간 (Hard Real-time) vs 소프트 실시간 (Soft Rea
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 196
 +++
 
 # 하드 실시간 (Hard Real-time) vs 소프트 실시간 (Soft Real-time)

@@ -3,6 +3,7 @@ title = "564. 데이터 파손 (Bit Rot) 대응 Btrfs 자가 치유(Self-healing
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 564
 +++
 
 # 데이터 파손 (Data Corruption / Bit Rot) 대응 Btrfs 자가 치유 - 방사선과 자석이 파괴한 1비트를 스스로 꿰매는 불멸의 좀비 파일 시스템 아크

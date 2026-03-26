@@ -3,6 +3,7 @@ title = "412. 스래싱 (Thrashing) CPU의 질식사"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 412
 +++
 
 # 스래싱 (Thrashing)

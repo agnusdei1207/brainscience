@@ -3,6 +3,7 @@ title = "163. 장기 스케줄러 (Long-term Scheduler)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 163
 +++
 
 # 장기 스케줄러 (Long-term Scheduler)와 다중 프로그래밍 조절

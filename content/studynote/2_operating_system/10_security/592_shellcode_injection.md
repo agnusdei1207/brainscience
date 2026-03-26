@@ -3,6 +3,7 @@ title = "592. 셸코드 (Shellcode) 인젝션"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
+weight = 592
 +++
 
 # 셸코드 (Shellcode) 인젝션

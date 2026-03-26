@@ -3,6 +3,7 @@ title = "436. 커널 페이지 테이블 격리 (KPTI, Kernel Page-Table Isolati
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 436
 +++
 
 # 커널 페이지 테이블 격리 (KPTI, Kernel Page-Table Isolation)

@@ -3,6 +3,7 @@ title = "198. EDF (Earliest Deadline First) 스케줄링"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 198
 +++
 
 # EDF (Earliest Deadline First) 스케줄링

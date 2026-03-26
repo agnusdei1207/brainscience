@@ -3,6 +3,7 @@ title = "507. 1단계 디렉터리 / 2단계 디렉터리 (UFD)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 507
 +++
 
 # 1단계 / 2단계 디렉터리 구조 - 네임스페이스 충돌과 사용자별 UFD 격리

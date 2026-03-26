@@ -3,6 +3,7 @@ title = "358. TLB 적중 (TLB Hit)과 TLB 미스 (TLB Miss)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 358
 +++
 
 # TLB 적중 (TLB Hit) / TLB 미스 (TLB Miss)

@@ -3,6 +3,7 @@ title = "577. 역할 기반 접근 제어 (RBAC, Role-Based Access Control)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 577
 +++
 
 # 역할 기반 접근 제어 (RBAC, Role-Based Access Control) - 사용자와 권한 사이에 역할을 매개로插入하는 다층 접근 제어 모델

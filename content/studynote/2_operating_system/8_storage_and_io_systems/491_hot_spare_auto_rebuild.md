@@ -3,6 +3,7 @@ title = "491. 핫 스페어 (Hot Spare) 디스크 자동 재구성"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 491
 +++
 
 # 핫 스페어 (Hot Spare) 디스크 자동 재구성

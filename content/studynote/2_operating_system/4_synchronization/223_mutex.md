@@ -3,6 +3,7 @@ title = "223. 뮤텍스 (Mutex, Mutual Exclusion Object)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 223
 +++
 
 # 뮤텍스 (Mutex, Mutual Exclusion Object)

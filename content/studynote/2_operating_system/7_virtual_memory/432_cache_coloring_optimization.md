@@ -3,6 +3,7 @@ title = "432. 캐시 컬러링 매핑 최적화 (Cache Coloring Optimization) �
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 432
 +++
 
 # 캐시 컬러링 매핑 최적화 (Cache Coloring Optimization)

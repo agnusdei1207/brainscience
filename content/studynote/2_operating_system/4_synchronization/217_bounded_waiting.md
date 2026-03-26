@@ -3,6 +3,7 @@ title = "217. 한정된 대기 (Bounded Waiting)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 217
 +++
 
 # 한정된 대기 (Bounded Waiting)

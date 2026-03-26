@@ -3,6 +3,7 @@ title = "567. 파일 잠금 (File Locking) - 공유 잠금 vs 배타적 잠금"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 567
 +++
 
 # 파일 잠금 (File Locking) - 두 앱이 1개 파일을 동시에 갈가리 찢어발기는 미친 충돌 랙을 차단하는 SRE 신의 자물쇠 아크

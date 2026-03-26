@@ -3,6 +3,7 @@ title = "205. 우선순위 역전 (Priority Inversion)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 205
 +++
 
 # 우선순위 역전 (Priority Inversion)

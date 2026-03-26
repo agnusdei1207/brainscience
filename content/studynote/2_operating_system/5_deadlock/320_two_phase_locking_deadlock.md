@@ -3,6 +3,7 @@ title = "320. 2단계 잠금 (2PL, Two-Phase Locking) 프로토콜과 데드락 
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 320
 +++
 
 # 2단계 잠금 프로토콜 (2PL)과 데드락 상관관계

@@ -3,6 +3,7 @@ title = "324. 주소 바인딩 (Address Binding) 3단계 시점"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 324
 +++
 
 # 주소 바인딩 (Address Binding) 3단계 시점의 진화

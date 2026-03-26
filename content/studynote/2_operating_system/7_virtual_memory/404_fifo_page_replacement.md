@@ -3,6 +3,7 @@ title = "404. FIFO (First-In, First-Out) 교체 맹목적인 시간의 저주"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 404
 +++
 
 # FIFO (First-In, First-Out) 교체 알고리즘

@@ -3,6 +3,7 @@ title = "338. 연속 메모리 할당 (Contiguous Memory Allocation)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 338
 +++
 
 # 연속 메모리 할당 (Contiguous Memory Allocation)

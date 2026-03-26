@@ -3,6 +3,7 @@ title = "495. 장치 드라이버 (Device Driver) 커널 인터페이스 구현"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 495
 +++
 
 # 장치 드라이버 (Device Driver) 커널 인터페이스 구현

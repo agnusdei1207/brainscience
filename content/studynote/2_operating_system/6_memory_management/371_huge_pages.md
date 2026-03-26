@@ -3,6 +3,7 @@ title = "371. 거대 페이지 (Huge Pages / Transparent Huge Pages)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 371
 +++
 
 # 거대 페이지 (Huge Pages / Transparent Huge Pages)

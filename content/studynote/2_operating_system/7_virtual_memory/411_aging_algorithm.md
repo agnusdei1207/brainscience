@@ -3,6 +3,7 @@ title = "411. 에이징 (Aging) 기반 페이지 교체 로직"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 411
 +++
 
 # 에이징 (Aging) 기반 페이지 교체 로직

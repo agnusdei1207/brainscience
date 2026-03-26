@@ -3,6 +3,7 @@ title = "165. CPU 바운드 프로세스 (CPU Bound Process)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 165
 +++
 
 # CPU 바운드 프로세스 (CPU Bound Process)

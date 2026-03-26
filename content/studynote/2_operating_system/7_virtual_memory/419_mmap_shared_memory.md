@@ -3,6 +3,7 @@ title = "419. 파일 I/O 메모리 맵 활용 (버퍼 캐시, 공유 메모리)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 419
 +++
 
 # 파일 I/O 메모리 맵 활용 (버퍼 캐시, 공유 메모리)

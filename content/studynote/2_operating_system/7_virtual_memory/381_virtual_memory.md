@@ -3,6 +3,7 @@ title = "381. 가상 메모리 (Virtual Memory) 개념"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 381
 +++
 
 # 가상 메모리 (Virtual Memory) 개념

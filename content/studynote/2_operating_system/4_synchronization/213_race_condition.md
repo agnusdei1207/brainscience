@@ -3,6 +3,7 @@ title = "213. 경쟁 조건 (Race Condition)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 213
 +++
 
 # 경쟁 조건 (Race Condition)

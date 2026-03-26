@@ -3,6 +3,7 @@ title = "388. 페이지 부재 처리 과정 6단계 (Page Fault Handling 6 Step
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 388
 +++
 
 # 페이지 부재 처리 과정 6단계

@@ -3,6 +3,7 @@ title = "517. VFS (Virtual File System)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 517
 +++
 
 # VFS (Virtual File System) - 세상 모든 파일 시스템을 아우르는 궁극의 추상화 인터페이스

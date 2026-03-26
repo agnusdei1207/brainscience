@@ -3,6 +3,7 @@ title = "373. ARM / x86의 메모리 매핑 아키텍처 차이"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 373
 +++
 
 # ARM / x86의 메모리 매핑 아키텍처 차이

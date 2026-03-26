@@ -3,6 +3,7 @@ title = "580. 벨-라파둘라 모델 (Bell-LaPadula Model)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 580
 +++
 
 # 벨-라파둘라 모델 (Bell-LaPadula Model) - 군사 보안을 위한 기밀성(Confidentiality) 보호 수학적 프레임워크

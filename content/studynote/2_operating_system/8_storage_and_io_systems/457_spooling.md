@@ -3,6 +3,7 @@ title = "457. 스풀링 (Spooling) 독점 장치의 병목 해방"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 457
 +++
 
 # 스풀링 (Spooling, Simultaneous Peripheral Operation On-Line)

@@ -3,6 +3,7 @@ title = "505. 색인 접근 (Indexed Access)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 505
 +++
 
 # 파일 색인 접근 (Indexed Access) - 파일 주소록 맵과 2단계 포인터 탐색

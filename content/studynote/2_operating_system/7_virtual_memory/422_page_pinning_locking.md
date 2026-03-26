@@ -3,6 +3,7 @@ title = "422. 페이지 고정 (Page Pinning / Locking) 디스크 I/O 생존 법
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 422
 +++
 
 # 페이지 고정 (Page Pinning / Locking)

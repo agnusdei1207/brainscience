@@ -3,6 +3,7 @@ title = "543. NFS (Network File System) - 원격 파일 마운트 프로토콜"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 543
 +++
 
 # NFS (Network File System) - 네트워크 파이프를 찢고 로컬 디스크처럼 둔갑시킨 원격 폴더 마운트의 마법

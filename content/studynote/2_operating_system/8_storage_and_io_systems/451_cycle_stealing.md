@@ -3,6 +3,7 @@ title = "451. 사이클 스틸링 (Cycle Stealing) 훔쳐보는 버스 점유의
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 451
 +++
 
 # 사이클 스틸링 (Cycle Stealing)

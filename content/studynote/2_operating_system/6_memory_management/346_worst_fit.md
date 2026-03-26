@@ -3,6 +3,7 @@ title = "346. 최악 적합 (Worst-Fit) 역발상의 메모리 배치"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 346
 +++
 
 # 최악 적합 (Worst-Fit) 알고리즘

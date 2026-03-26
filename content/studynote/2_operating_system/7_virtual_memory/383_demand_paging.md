@@ -3,6 +3,7 @@ title = "383. 요구 페이징 (Demand Paging) 극단적인 게으름의 미학"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 383
 +++
 
 # 요구 페이징 (Demand Paging)

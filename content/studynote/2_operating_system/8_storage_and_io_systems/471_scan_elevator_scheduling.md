@@ -3,6 +3,7 @@ title = "471. SCAN 스케줄링 (엘리베이터 알고리즘) 상식의 승리"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 471
 +++
 
 # SCAN 스케줄링 (엘리베이터 알고리즘)

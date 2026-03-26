@@ -3,6 +3,7 @@ title = "259. 페이징 (Paging)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 259
 +++
 
 # 페이징 (Paging)

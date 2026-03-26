@@ -3,6 +3,7 @@ title = "601. 침입 탐지/방지 시스템 (IDS/IPS) 및 커널 트레이싱"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
+weight = 601
 +++
 
 # 침입 탐지/방지 시스템 (IDS/IPS) 및 시스템 콜 트레이싱 

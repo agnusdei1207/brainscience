@@ -3,6 +3,7 @@ title = "572. 보호 도메인 (Protection Domain)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 572
 +++
 
 # 보호 도메인 (Protection Domain) - 프로세스가 시스템에서 누릴 수 있는 권한 범위를 정의하는 고리

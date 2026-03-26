@@ -3,6 +3,7 @@ title = "343. 동적 메모리 할당 문제 (가변 분할 배치 알고리즘)
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 343
 +++
 
 # 동적 메모리 할당 문제 (Dynamic Storage-Allocation Problem)

@@ -3,6 +3,7 @@ title = "561. 암호화 파일 시스템 (eCryptfs / EFS) - 도둑 디스크 발
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 561
 +++
 
 # 암호화 파일 시스템 (eCryptfs / Windows EFS / BitLocker) - 랩탑 하드디스크가 통째로 도둑맞아도 데이터는 영원히 해독 불가의 쓰레기로 잠그는 투명 무결성 철판 방패 

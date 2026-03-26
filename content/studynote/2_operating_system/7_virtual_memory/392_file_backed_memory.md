@@ -3,6 +3,7 @@ title = "392. 파일 지원 메모리 (File-backed Memory) 디스크와 램의 �
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 392
 +++
 
 # 파일 지원 메모리 (File-backed Memory)

@@ -3,6 +3,7 @@ title = "360. ASID (Address-Space Identifier) TLB 플러시의 종말"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 360
 +++
 
 # ASID (Address-Space Identifier)

@@ -3,6 +3,7 @@ title = "558. 가상 장치 파일 시스템 (sysfs, procfs) - 커널 뇌 구조
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 558
 +++
 
 # 가상 장치 파일 시스템 (sysfs, procfs) - 어둡고 깊은 커널의 뇌(변수)와 신경망(하드웨어)을 투명한 텍스트 파일로 위장하여 유저에게 꺼내 보여주는 해부 마법

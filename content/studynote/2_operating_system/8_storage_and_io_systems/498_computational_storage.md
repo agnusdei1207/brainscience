@@ -3,6 +3,7 @@ title = "498. 컴퓨테이셔널 스토리지 (Computational Storage)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 498
 +++
 
 # 컴퓨테이셔널 스토리지 (Computational Storage / Smart SSD) - I/O 노드 연산 오프로딩

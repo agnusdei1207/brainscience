@@ -3,6 +3,7 @@ title = "474. 리눅스 I/O 스케줄러 - NOOP, CFQ, Deadline, BFQ 진화의 �
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 474
 +++
 
 # 리눅스 I/O 스케줄러 - NOOP, CFQ, Deadline, BFQ

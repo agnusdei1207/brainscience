@@ -3,6 +3,7 @@ title = "593. 데이터 실행 방지 (DEP) 및 NX Bit"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
+weight = 593
 +++
 
 # 데이터 실행 방지 (DEP) 및 NX Bit

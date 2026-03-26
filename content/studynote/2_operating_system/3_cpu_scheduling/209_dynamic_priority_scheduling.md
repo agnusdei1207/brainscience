@@ -3,6 +3,7 @@ title = "209. 동적 우선순위 스케줄링 (Dynamic Priority Scheduling)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 209
 +++
 
 # 동적 우선순위 스케줄링 (Dynamic Priority Scheduling)

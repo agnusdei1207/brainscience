@@ -3,6 +3,7 @@ title = "220. 피터슨 알고리즘 (Peterson's Algorithm)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 220
 +++
 
 # 피터슨 알고리즘 (Peterson's Algorithm)

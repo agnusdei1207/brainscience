@@ -3,6 +3,7 @@ title = "214. 임계 구역 (Critical Section)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 214
 +++
 
 # 임계 구역 (Critical Section)

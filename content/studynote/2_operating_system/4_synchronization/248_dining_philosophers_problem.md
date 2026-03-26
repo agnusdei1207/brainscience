@@ -3,6 +3,7 @@ title = "248. 식사하는 철학자 문제 (Dining-Philosophers Problem)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 248
 +++
 
 # 식사하는 철학자 문제 (Dining-Philosophers Problem)

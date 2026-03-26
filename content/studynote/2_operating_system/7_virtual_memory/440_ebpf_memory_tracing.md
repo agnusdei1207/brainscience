@@ -3,6 +3,7 @@ title = "440. eBPF 기반 메모리 할당 트레이싱 현미경 속의 램 생
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 440
 +++
 
 # eBPF 기반 메모리 할당 트레이싱

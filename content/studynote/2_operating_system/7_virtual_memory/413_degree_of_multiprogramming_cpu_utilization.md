@@ -3,6 +3,7 @@ title = "413. 다중 프로그래밍 정도 (Degree of Multiprogramming)와 CPU 
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 413
 +++
 
 # 다중 프로그래밍 정도와 CPU 이용률 관계

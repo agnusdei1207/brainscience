@@ -3,6 +3,7 @@ title = "502. 파일 속성 (Attributes / Metadata)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 502
 +++
 
 # 파일 속성 (Attributes) - 메타데이터(Metadata)와 OS의 관리 체계

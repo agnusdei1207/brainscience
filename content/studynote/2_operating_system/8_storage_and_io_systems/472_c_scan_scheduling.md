@@ -3,6 +3,7 @@ title = "472. C-SCAN (Circular SCAN) 대기 시간의 평등화"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 472
 +++
 
 # C-SCAN (Circular SCAN)

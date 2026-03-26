@@ -3,6 +3,7 @@ title = "282. 교착 상태 발생 4가지 필요조건"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 282
 +++
 
 # 교착 상태 발생 4가지 필요조건

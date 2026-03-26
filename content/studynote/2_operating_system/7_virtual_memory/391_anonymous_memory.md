@@ -3,6 +3,7 @@ title = "391. 익명 메모리 (Anonymous Memory) 디스크에 고향이 없는 
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 391
 +++
 
 # 익명 메모리 (Anonymous Memory)

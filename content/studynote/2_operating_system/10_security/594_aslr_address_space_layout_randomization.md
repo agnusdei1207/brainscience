@@ -3,6 +3,7 @@ title = "594. 가상 주소 공간 무작위화 (ASLR)"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
+weight = 594
 +++
 
 # 가상 주소 공간 구조 무작위화 (ASLR)

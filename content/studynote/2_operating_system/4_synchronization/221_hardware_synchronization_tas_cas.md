@@ -3,6 +3,7 @@ title = "221. 하드웨어적 동기화 (TAS, CAS)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 221
 +++
 
 # 하드웨어적 동기화 (TAS, CAS)

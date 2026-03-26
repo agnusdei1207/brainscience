@@ -3,6 +3,7 @@ title = "390. 스왑 공간 (Swap Space) 가상 메모리의 저수지"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 390
 +++
 
 # 스왑 공간 (Swap Space) / 베이킹 스토어 (Backing Store)

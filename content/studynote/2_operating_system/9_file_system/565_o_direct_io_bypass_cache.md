@@ -3,6 +3,7 @@ title = "565. Direct I/O (O_DIRECT) - OS 버스 훔쳐 타기 폭주"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 565
 +++
 
 # Direct I/O (O_DIRECT) - 오만방자한 1위 오라클 DB가, 바보 같은 OS 리눅스 커널의 '메모리 캐싱(Page Cache)' 간섭을 쳐내고 디스크 철판에 직접 꽂아 넣는 다이렉트 패스스루 특권 아크

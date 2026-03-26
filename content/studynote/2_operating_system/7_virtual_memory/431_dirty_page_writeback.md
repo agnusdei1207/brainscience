@@ -3,6 +3,7 @@ title = "431. 더티 페이지 쓰기 (Dirty Page Writeback) 메커니즘"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 431
 +++
 
 # 더티 페이지 쓰기 (Dirty Page Writeback) 메커니즘

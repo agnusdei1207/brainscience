@@ -3,6 +3,7 @@ title = "306. 탐지 알고리즘의 오버헤드 - 언제, 얼마나 자주 실
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 306
 +++
 
 # 탐지 알고리즘의 오버헤드 (Detection Overhead)

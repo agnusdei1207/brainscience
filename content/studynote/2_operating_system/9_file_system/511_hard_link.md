@@ -3,6 +3,7 @@ title = "511. 하드 링크 (Hard Link)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 511
 +++
 
 # 하드 링크 (Hard Link) - 단일 물리 데이터를 가리키는 완전한 복제 경로

@@ -3,6 +3,7 @@ title = "243. 교착 상태 복구 (Deadlock Recovery)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 243
 +++
 
 # 교착 상태 복구 (Deadlock Recovery)

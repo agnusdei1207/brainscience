@@ -3,6 +3,7 @@ title = "361. 다단계 페이징 (Hierarchical Paging)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 361
 +++
 
 # 다단계 페이징 (Hierarchical Paging)

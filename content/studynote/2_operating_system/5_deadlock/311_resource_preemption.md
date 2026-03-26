@@ -3,6 +3,7 @@ title = "311. 자원 선점 (Resource Preemption) 방식"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 311
 +++
 
 # 복구 방식 - 자원 선점 (Resource Preemption)

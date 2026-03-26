@@ -3,6 +3,7 @@ title = "318. 분산 시스템에서의 교착 상태 탐지 - 분산 대기 그
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 318
 +++
 
 # 분산 시스템에서의 교착 상태 탐지 (Distributed Deadlock Detection)

@@ -3,6 +3,7 @@ title = "589. 바이러스 (Virus) - 기생적 감염자"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
+weight = 589
 +++
 
 # 바이러스 (Virus) - 기생적 감염자

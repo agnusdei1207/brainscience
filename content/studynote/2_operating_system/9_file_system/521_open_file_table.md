@@ -3,6 +3,7 @@ title = "521. 열린 파일 테이블 (Open File Table)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 521
 +++
 
 # 열린 파일 테이블 (Open File Table) - 파일 입출력 생명 주기를 지배하는 커널의 호적 장부

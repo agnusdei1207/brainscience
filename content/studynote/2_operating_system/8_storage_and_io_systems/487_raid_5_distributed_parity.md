@@ -3,6 +3,7 @@ title = "487. RAID 5 (블록 단위 스트라이핑 + 분산 패리티)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 487
 +++
 
 # RAID 5 (블록 단위 스트라이핑 + 분산 패리티)

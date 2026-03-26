@@ -3,6 +3,7 @@ title = "417. 페이지 부재 빈도 (PFF) 직관적인 램 조절기"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 417
 +++
 
 # 페이지 부재 빈도 (PFF, Page-Fault Frequency) 모델

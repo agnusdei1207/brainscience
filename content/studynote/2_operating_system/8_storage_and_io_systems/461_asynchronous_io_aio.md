@@ -3,6 +3,7 @@ title = "461. 비동기 I/O (Asynchronous I/O, AIO) 기다림의 완전한 종�
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 461
 +++
 
 # 비동기 I/O (Asynchronous I/O, AIO)

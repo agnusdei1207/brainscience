@@ -3,6 +3,7 @@ title = "257. 스래싱 (Thrashing)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 257
 +++
 
 # 스래싱 (Thrashing)

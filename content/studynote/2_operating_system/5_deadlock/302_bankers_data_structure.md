@@ -3,6 +3,7 @@ title = "302. 은행원 알고리즘 자료구조 - Available, Max, Allocation, 
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 302
 +++
 
 # 은행원 알고리즘 자료구조 (Banker's Algorithm Data Structures)

@@ -3,6 +3,7 @@ title = "313. 후퇴 (Rollback)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 313
 +++
 
 # 후퇴 (Rollback)

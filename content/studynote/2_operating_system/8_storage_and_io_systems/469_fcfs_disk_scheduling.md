@@ -3,6 +3,7 @@ title = "469. FCFS (First-Come, First-Served) 스케줄링 무지성 줄서기"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 469
 +++
 
 # FCFS (First-Come, First-Served) 스케줄링

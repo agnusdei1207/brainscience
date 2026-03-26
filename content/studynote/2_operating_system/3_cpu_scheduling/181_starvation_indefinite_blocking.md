@@ -3,6 +3,7 @@ title = "181. 기아 상태 (Starvation / Indefinite Blocking)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 181
 +++
 
 # 기아 상태 (Starvation / Indefinite Blocking)

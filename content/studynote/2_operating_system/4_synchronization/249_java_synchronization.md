@@ -3,6 +3,7 @@ title = "249. 자바 동기화 (Java Synchronization)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 249
 +++
 
 # 자바 동기화 (Java Synchronization)

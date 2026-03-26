@@ -3,6 +3,7 @@ title = "442. 블록 장치 (Block Device) 디스크 I/O의 척추"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 442
 +++
 
 # 블록 장치 - 하드 디스크, SSD (랜덤 액세스와 블록 I/O)

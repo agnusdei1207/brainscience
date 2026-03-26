@@ -3,6 +3,7 @@ title = "549. ACL (Access Control List) - 핀셋형 권한 제어와 SRE 통치 
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 549
 +++
 
 # ACL (Access Control List) - 소유자 9비트의 답답한 한계를 찢고 '무한 정밀 타격(Granularity)' 을 실현한 엔터프라이즈 권한 제어 확장팩

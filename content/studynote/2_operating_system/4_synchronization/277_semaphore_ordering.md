@@ -3,6 +3,7 @@ title = "277. 세마포어를 이용한 순서 제어 (Ordering)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 277
 +++
 
 # 세마포어를 이용한 순서 제어 (Ordering)

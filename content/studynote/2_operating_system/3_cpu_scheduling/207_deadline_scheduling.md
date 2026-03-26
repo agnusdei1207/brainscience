@@ -3,6 +3,7 @@ title = "207. 데드라인 스케줄링 (Deadline Scheduling)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 207
 +++
 
 # 데드라인 스케줄링 (Deadline Scheduling)

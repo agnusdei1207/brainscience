@@ -3,6 +3,7 @@ title = "380. 가비지 컬렉션 (Garbage Collection) 기초 - 참조 카운팅
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 380
 +++
 
 # 가비지 컬렉션 (Garbage Collection) 기초

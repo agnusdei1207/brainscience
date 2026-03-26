@@ -3,6 +3,7 @@ title = "298. 안전 상태와 불안전 상태 (Safe State / Unsafe State)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 298
 +++
 
 # 안전 상태 (Safe State) / 불안전 상태 (Unsafe State)

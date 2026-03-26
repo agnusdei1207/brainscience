@@ -3,6 +3,7 @@ title = "309. 프로세스 순차 종료 방식 (Abort One-by-One)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 309
 +++
 
 # 프로세스 순차 종료 방식 (Abort One-by-One)

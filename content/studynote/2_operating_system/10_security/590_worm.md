@@ -3,6 +3,7 @@ title = "590. 웜 (Worm) - 자율적 침투자"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
+weight = 590
 +++
 
 # 웜 (Worm) - 자율적 침투자

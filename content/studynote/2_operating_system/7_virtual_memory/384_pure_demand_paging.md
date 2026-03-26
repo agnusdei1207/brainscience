@@ -3,6 +3,7 @@ title = "384. 순수 요구 페이징 (Pure Demand Paging) 램 제로의 극한 
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 384
 +++
 
 # 순수 요구 페이징 (Pure Demand Paging)

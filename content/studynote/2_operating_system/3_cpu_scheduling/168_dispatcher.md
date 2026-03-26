@@ -3,6 +3,7 @@ title = "168. 디스패처 (Dispatcher)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 168
 +++
 
 # 디스패처 (Dispatcher)와 문맥 교환의 실행

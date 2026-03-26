@@ -3,6 +3,7 @@ title = "265. 워킹 셋 (Working Set)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 265
 +++
 
 # 워킹 셋 (Working Set)

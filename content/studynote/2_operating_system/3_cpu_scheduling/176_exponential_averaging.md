@@ -3,6 +3,7 @@ title = "176. 지수 평균법 (Exponential Averaging)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 176
 +++
 
 # 지수 평균법 (Exponential Averaging)

@@ -3,6 +3,7 @@ title = "283. 상호 배제 (Mutual Exclusion) - 데드락 관점"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 283
 +++
 
 # 상호 배제 (Mutual Exclusion) - 데드락 관점

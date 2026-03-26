@@ -3,6 +3,7 @@ title = "315. 라이브락 (Livelock)과 교착 상태의 차이점"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 315
 +++
 
 # 라이브락 (Livelock)과 교착 상태(Deadlock)의 차이점

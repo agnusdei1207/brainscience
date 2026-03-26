@@ -3,6 +3,7 @@ title = "420. 메모리 맵 I/O (Memory-Mapped I/O) 하드웨어를 지배하는
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 420
 +++
 
 # 메모리 맵 I/O (Memory-Mapped I/O, MMIO)

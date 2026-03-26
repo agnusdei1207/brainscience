@@ -3,6 +3,7 @@ title = "333. 공유 라이브러리 (Shared Library)와 스터브 (Stub) 코드
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 333
 +++
 
 # 공유 라이브러리와 스터브 (Shared Library & Stub)

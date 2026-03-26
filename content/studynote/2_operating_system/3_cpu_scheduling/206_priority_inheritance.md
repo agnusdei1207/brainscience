@@ -3,6 +3,7 @@ title = "206. 우선순위 상속 (Priority Inheritance, PI)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 206
 +++
 
 # 우선순위 상속 (Priority Inheritance, PI)

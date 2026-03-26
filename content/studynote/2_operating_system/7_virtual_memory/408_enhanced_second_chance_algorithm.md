@@ -3,6 +3,7 @@ title = "408. 개선된 2차 기회 알고리즘 (Enhanced Second-Chance) 디스
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 408
 +++
 
 # 개선된 2차 기회 알고리즘 (Enhanced Second-Chance)

@@ -3,6 +3,7 @@ title = "470. SSTF (Shortest Seek Time First) 가까운 곳의 치명적 유혹"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
+weight = 470
 +++
 
 # SSTF (Shortest Seek Time First) 스케줄링
