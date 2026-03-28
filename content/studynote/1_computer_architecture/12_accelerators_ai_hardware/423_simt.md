@@ -8,7 +8,7 @@ categories = "studynote-computer-architecture"
 
 # SIMT (Single Instruction Multiple Threads)
 
-#### 핵심 인사이트 (3줄 요약)
+## 핵심 인사이트 (3줄 요약)
 > 1. **본질**: 엔비디아(NVIDIA)가 GPU를 범용 계산(GPGPU)으로 뜯어고치면서 창안한 독자적인 실행 모델로, "지휘관(스케줄러) 1명이 내린 **단일 명령어(Single Instruction)를 32개의 스레드(Multiple Threads)가 각자의 레지스터 상태를 가지고 동시에 수행**"하는 융단 폭격 아키텍처다.
 > 2. **가치**: 기존 CPU의 경직된 SIMD(벡터 연산)의 한계를 부수고, 각 스레드에 독립적인 번호표(ID)와 실행 흐름을 부여함으로써, 복잡한 분기문(Branch)이 섞인 C/C++ 코드를 무지막지한 코어 수의 그래픽 카드 위에서 돌릴 수 있게 해 주었다.
 > 3. **융합**: 하지만 스레드들이 `if-else`에서 서로 다른 길을 갈 때 지휘관이 쪼개지지 못해 절반의 스레드를 얼음(정지) 시켜야 하는 **'워프 분기 발산(Warp Divergence)'**의 끔찍한 한계가 있어, 소프트웨어 개발자의 평탄화(Flattening) 코딩 기법과 필수적으로 융합되어야만 생존할 수 있다.
