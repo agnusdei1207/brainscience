@@ -1,8 +1,8 @@
 +++
+weight = 1
 title = "인공지능의 정의"
 description = "인공지능(Artificial Intelligence)의 정의와 핵심 개념, 약인공지능과 강인공지능의 구분"
 category = "10_ai"
-weight = 1
 +++
 
 ## 핵심 인사이트 (3줄 요약)

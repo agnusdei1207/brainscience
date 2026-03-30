@@ -1,9 +1,9 @@
 +++
+weight = 579
 title = "579. 강제적 접근 제어 (MAC, Mandatory Access Control)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 579
 +++
 
 # 강제적 접근 제어 (MAC, Mandatory Access Control) - 시스템 관리자가 보안 등급 라벨을 기반으로 접근을 강제하는 통제 방식

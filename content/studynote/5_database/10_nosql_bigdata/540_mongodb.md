@@ -1,8 +1,8 @@
 +++
+weight = 540
 title = "MongoDB"
 description = "문서 지향적 NoSQL 데이터베이스 MongoDB의 특징과 아키텍처에 대해 설명"
 date = 2024-01-01
-weight = 540
 
 [extra]
 categories = ["studynote-software-engineering"]

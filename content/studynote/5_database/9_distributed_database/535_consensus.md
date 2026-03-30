@@ -1,8 +1,8 @@
 +++
+weight = 35
 title = "분산 Consensus 알고리즘 (Paxos, Raft)"
 description = "분산 시스템에서 합의를 달성하는 Paxos와 Raft 알고리즘에 대해 설명"
 date = 2024-01-01
-weight = 35
 
 [extra]
 categories = ["studynote-software-engineering"]

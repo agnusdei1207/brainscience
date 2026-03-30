@@ -1,8 +1,8 @@
 +++
+weight = 28
 title = "Amazon EBS (Elastic Block Store)"
 description = "EBS의 정의, 볼륨 유형, 스냅샷"
 date = 2026-03-26
-weight = 28
 
 [taxonomies]
 tags = ["cloud", "ebs", "block-storage", "aws", "volume-type"]

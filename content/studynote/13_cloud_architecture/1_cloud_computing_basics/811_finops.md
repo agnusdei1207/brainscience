@@ -1,8 +1,8 @@
 +++
+weight = 811
 title = "FinOps (클라우드 비용 최적화)"
 description = "FinOps의 정의, 비용 최적화 전략, 실무 기법"
 date = 2026-03-26
-weight = 811
 
 [taxonomies]
 tags = ["cloud", "finops", "cost-optimization", "aws-cost", "reserved-instance"]

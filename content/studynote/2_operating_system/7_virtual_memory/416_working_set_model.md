@@ -1,9 +1,9 @@
 +++
+weight = 416
 title = "416. 워킹 셋 모델 (Working-Set Model) 램 할당의 나침반"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 416
 +++
 
 # 워킹 셋 모델 (Working-Set Model)

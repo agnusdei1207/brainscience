@@ -1,9 +1,9 @@
 +++
+weight = 375
 title = "375. 메모리 보호 키 (Memory Protection Keys, MPK)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 375
 +++
 
 # 메모리 보호 키 (Memory Protection Keys, MPK)

@@ -1,9 +1,9 @@
 +++
+weight = 585
 title = "585. 시스템 보안 위협 유형 (기밀성, 무결성, 가용성, 인증 침해)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 585
 +++
 
 # 시스템 보안 위협 유형 - 정보 보안전문(보안의 3대 요소)과 인증 침해를 이해하기

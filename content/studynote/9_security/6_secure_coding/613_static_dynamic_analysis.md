@@ -1,8 +1,8 @@
 +++
+weight = 13
 title = "정적 분석과 동적 분석"
 description = "소스 코드와 실행 중인 애플리케이션을 분석하는 SAST와 DAST 보안 테스팅 기법"
 date = 2024-01-15
-weight = 13
 +++
 
 # 정적 분석과 동적 분석 (SAST & DAST)

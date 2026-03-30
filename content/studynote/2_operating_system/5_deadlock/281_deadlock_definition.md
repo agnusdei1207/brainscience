@@ -1,9 +1,9 @@
 +++
+weight = 281
 title = "281. 교착 상태 (Deadlock) 정의"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 281
 +++
 
 # 교착 상태 (Deadlock)

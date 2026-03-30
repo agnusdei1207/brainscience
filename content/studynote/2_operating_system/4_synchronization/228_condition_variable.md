@@ -1,9 +1,9 @@
 +++
+weight = 228
 title = "228. 조건 변수 (Condition Variable)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 228
 +++
 
 # 조건 변수 (Condition Variable)

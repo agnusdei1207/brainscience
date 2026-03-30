@@ -1,9 +1,9 @@
 +++
+weight = 407
 title = "407. 2차 기회 알고리즘 (Second-Chance / Clock Algorithm)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 407
 +++
 
 # 2차 기회 알고리즘 (Second-Chance / Clock Algorithm)

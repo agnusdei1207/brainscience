@@ -1,9 +1,9 @@
 +++
+weight = 445
 title = "445. I/O 하드웨어 인터페이스 요소 통제의 삼위일체"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 445
 +++
 
 # I/O 하드웨어 인터페이스 요소 - 데이터 레지스터, 상태 레지스터, 제어 레지스터

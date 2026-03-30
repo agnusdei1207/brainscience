@@ -1,9 +1,9 @@
 +++
+weight = 534
 title = "534. 연결 리스트 (Linked List) 빈 공간 관리"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 534
 +++
 
 # 연결 리스트 (Linked List) 빈 공간 관리 - RAM OOM을 없애고 장부를 디스크 지뢰밭에 뿌린 최악의 랙 모터

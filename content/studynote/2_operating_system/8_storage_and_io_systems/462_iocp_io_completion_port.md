@@ -1,9 +1,9 @@
 +++
+weight = 462
 title = "462. I/O 완료 포트 (IOCP, I/O Completion Port) 윈도우 서버의 신화"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 462
 +++
 
 # I/O 완료 포트 (IOCP, I/O Completion Port)

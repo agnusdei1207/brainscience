@@ -1,9 +1,9 @@
 +++
+weight = 523
 title = "523. 연속 할당 (Contiguous Allocation)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 523
 +++
 
 # 연속 할당 (Contiguous Allocation) - 압도적 속도와 맞바꾼 디스크 이빨 빠짐의 비극

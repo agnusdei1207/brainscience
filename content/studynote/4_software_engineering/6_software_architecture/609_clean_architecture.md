@@ -1,8 +1,8 @@
 +++
+weight = 609
 title = "클린 아키텍처"
 description = "클린 아키텍처의 개념, 의존성 규칙,同心円 구조"
 date = 2024-01-22
-weight = 609
 
 [extra]
 categories = ["studynote-software-engineering"]

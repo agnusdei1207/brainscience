@@ -1,9 +1,9 @@
 +++
+weight = 468
 title = "468. ëìí ìììë (Disk Scheduling) ëì ëëì êíìë"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 468
 +++
 
 # ëìí ìììë (Disk Scheduling) ëì

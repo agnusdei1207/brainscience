@@ -1,6 +1,6 @@
 +++
-title = "Leaf-Spine 네트워크 아키텍처 (Leaf-Spine Architecture)"
 weight = 808
+title = "Leaf-Spine 네트워크 아키텍처 (Leaf-Spine Architecture)"
 +++
 
 # Leaf-Spine 네트워크 아키텍처 (Leaf-Spine Architecture)

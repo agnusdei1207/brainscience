@@ -1,6 +1,6 @@
 +++
-title = "메모리 인터리빙 (Memory Interleaving)"
 weight = 254
+title = "메모리 인터리빙 (Memory Interleaving)"
 +++
 
 # 메모리 인터리빙 (Memory Interleaving)

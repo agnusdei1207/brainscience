@@ -1,8 +1,8 @@
 +++
+weight = 32
 title = "클라우드 규정 준수 (Compliance)"
 description = "SOC, ISO 27001, GDPR, PCI-DSS 등 주요 클라우드 규제"
 date = 2026-03-26
-weight = 32
 
 [taxonomies]
 tags = ["cloud", "compliance", "soc", "iso27001", "gdpr", "pci-dss"]

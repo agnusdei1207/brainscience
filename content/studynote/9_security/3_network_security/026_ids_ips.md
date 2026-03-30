@@ -1,8 +1,8 @@
 +++
+weight = 26
 title = "IDS/IPS (침입 탐지/방지 시스템)"
 description = "네트워크 및 호스트에서 침입 활동을 탐지하고 방지하는 시스템"
 date = 2026-03-26
-weight = 26
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,8 +1,8 @@
 +++
+weight = 49
 title = "집합 연산 (SET Operations)"
 description = "UNION, INTERSECT, EXCEPT/MINUS"
 date = 2026-03-26
-weight = 49
 
 [taxonomies]
 tags = ["database", "sql", "union", "intersect", "except"]

@@ -1,8 +1,8 @@
 +++
+weight = 11
 title = "방화벽 (Firewall) 기술"
 description = "방화벽의 종류, 동작 원리, 패킷 필터링, 상태 기반 필터링, 애플리케이션 게이트웨이, 차세대 방화벽을شرح"
 date = 2024-01-25
-weight = 11
 
 [extra]
 categories = ["studynote-software-engineering"]

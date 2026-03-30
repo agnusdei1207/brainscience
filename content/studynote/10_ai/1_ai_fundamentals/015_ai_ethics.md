@@ -1,8 +1,8 @@
 +++
+weight = 15
 title = "인공지능 윤리"
 description = "인공지능 윤리(AI Ethics)의 정의, 주요 쟁점(편향, 공정성, 설명 가능성), 규제와治理"
 category = "10_ai"
-weight = 15
 +++
 
 ## 핵심 인사이트 (3줄 요약)

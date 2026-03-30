@@ -1,9 +1,9 @@
 +++
+weight = 586
 title = "586. 트로이 목마 (Trojan Horse) / 래퍼 (Wrapper)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 586
 +++
 
 # 트로이 목마 (Trojan Horse) / 래퍼 (Wrapper) - 정상 프로그램으로 가장하여 시스템에 침투하는 악성 소프트웨어

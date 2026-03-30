@@ -1,8 +1,8 @@
 +++
+weight = 37
 title = "도메인 (Domain)"
 description = "관계형 데이터베이스에서 도메인의 정의와 역할"
 date = 2026-03-26
-weight = 37
 
 [taxonomies]
 tags = ["database", "relational-model", "domain"]

@@ -1,9 +1,9 @@
 +++
+weight = 467
 title = "467. 디스크 접근 시간 (Disk Access Time) 기계적 한계의 3박자"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 467
 +++
 
 # 디스크 접근 시간 = 탐색 시간(Seek Time) + 회전 지연(Rotational Latency) + 전송 시간(Transfer Time)

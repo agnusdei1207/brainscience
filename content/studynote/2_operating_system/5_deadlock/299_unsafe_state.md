@@ -1,9 +1,9 @@
 +++
+weight = 299
 title = "299. 불안전 상태 (Unsafe State)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 299
 +++
 
 # 불안전 상태 (Unsafe State)

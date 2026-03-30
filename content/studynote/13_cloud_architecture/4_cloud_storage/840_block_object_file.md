@@ -1,8 +1,8 @@
 +++
+weight = 26
 title = "블록 스토리지 vs 객체 스토리지 vs 파일 스토리지"
 description = "3가지 클라우드 스토리지 유형의 정의, 차이, 선택 기준"
 date = 2026-03-26
-weight = 26
 
 [taxonomies]
 tags = ["cloud", "storage", "block", "object", "file", "ebs", "s3"]

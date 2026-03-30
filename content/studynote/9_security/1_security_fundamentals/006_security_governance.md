@@ -1,8 +1,8 @@
 +++
+weight = 8006
 title = "보안 거버넌스 (Security Governance)"
 description = "조직 전체의信息安全을 체계적으로管理하는 프레임워크"
 date = 2026-03-26
-weight = 8006
 
 [extra]
 categories = ["studynote-software-engineering"]

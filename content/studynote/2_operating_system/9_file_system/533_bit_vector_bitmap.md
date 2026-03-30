@@ -1,9 +1,9 @@
 +++
+weight = 533
 title = "533. 비트 벡터 (Bit Vector / Bitmap)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 533
 +++
 
 # 비트 벡터 (Bit Vector) - 수학 1워드 연산으로 1TB 연속 공간을 색출하는 1과 0의 융단폭격

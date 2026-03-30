@@ -1,8 +1,8 @@
 +++
+weight = 604
 title = "ICMP (Internet Control Message Protocol)"
 description = "네트워크 계층의 제어 및 오류 보고 프로토콜 ICMP의 구조와 활용을 다룬다."
 date = 2024-01-18
-weight = 604
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,9 +1,9 @@
 +++
+weight = 256
 title = "256. 락-프리 자료구조 (Lock-Free Data Structures)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 256
 +++
 
 # 락-프리 자료구조 (Lock-Free Data Structures)

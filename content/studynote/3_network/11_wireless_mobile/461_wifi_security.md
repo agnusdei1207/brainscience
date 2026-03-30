@@ -1,8 +1,8 @@
 +++
+weight = 461
 title = "WiFi 보안 프로토콜 (WEP, WPA, WPA2, WPA3)"
 description = "WiFi 보안의 진화 과정과 각 프로토콜의 취약점, 강화된 보안 메커니즘을شرح"
 date = 2024-01-16
-weight = 461
 
 [extra]
 categories = ["studynote-software-engineering"]

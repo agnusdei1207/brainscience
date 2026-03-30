@@ -1,8 +1,8 @@
 +++
+weight = 8604
 title = "SQL 주입"
 description = "데이터베이스 보안 취약점의 대표적 유형인 SQL 주입(SQL Injection) 원리와 방어 기법"
 date = 2024-01-15
-weight = 8604
 +++
 
 # SQL 주입 (SQL Injection)

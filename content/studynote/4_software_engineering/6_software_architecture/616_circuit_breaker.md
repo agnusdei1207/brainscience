@@ -1,8 +1,8 @@
 +++
+weight = 16
 title = "서킷 브레이커 패턴"
 description = "서킷 브레이커(Circuit Breaker) 패턴의 개념, 폴백, 상태 관리"
 date = 2024-01-29
-weight = 16
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,9 +1,9 @@
 +++
+weight = 493
 title = "493. SAN (Storage Area Network)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 493
 +++
 
 # SAN (Storage Area Network) - 블록 단위 전용 네트워크 접근

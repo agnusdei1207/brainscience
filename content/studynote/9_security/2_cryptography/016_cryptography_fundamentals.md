@@ -1,8 +1,8 @@
 +++
+weight = 16
 title = "암호학 기초 (Cryptography Fundamentals)"
 description = "암호학의 기본 개념과 원리"
 date = 2026-03-26
-weight = 16
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,8 +1,8 @@
 +++
+weight = 4
 title = "DHCP (Dynamic Host Configuration Protocol)"
 description = "IP 주소를 동적으로 할당하는 DHCP의 4단계 과정과 중계 에이전트를 다룬다."
 date = 2024-01-31
-weight = 4
 
 [extra]
 categories = ["studynote-software-engineering"]

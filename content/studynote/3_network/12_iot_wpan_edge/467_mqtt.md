@@ -1,8 +1,8 @@
 +++
+weight = 8
 title = "MQTT (Message Queuing Telemetry Transport) 프로토콜"
 description = "MQTT의 구조, QoS 수준, 발행-구독 모델, 브로커 역할, IoT messaging에서의 활약을شرح"
 date = 2024-01-22
-weight = 8
 
 [extra]
 categories = ["studynote-software-engineering"]

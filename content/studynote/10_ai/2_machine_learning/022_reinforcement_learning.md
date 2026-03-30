@@ -1,8 +1,8 @@
 +++
+weight = 22
 title = "강화 학습"
 description = "강화 학습(Reinforcement Learning)의 정의, MDP, Q-Learning, DQN, Policy Gradient"
 category = "10_ai"
-weight = 22
 +++
 
 ## 핵심 인사이트 (3줄 요약)

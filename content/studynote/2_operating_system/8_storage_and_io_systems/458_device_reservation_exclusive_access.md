@@ -1,9 +1,9 @@
 +++
+weight = 458
 title = "458. 예약 및 단독 장치 접근 제어 (Device Reservation & Exclusive Access)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 458
 +++
 
 # 예약 및 단독 장치 접근 제어

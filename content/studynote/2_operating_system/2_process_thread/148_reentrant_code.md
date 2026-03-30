@@ -1,7 +1,7 @@
 +++
+weight = 148
 title = "재진입 가능 코드"
 date = "2026-03-22"
-weight = 148
 [extra]
 categories = "studynote-operating-system"
 +++

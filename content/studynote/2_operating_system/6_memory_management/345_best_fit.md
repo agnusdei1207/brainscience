@@ -1,9 +1,9 @@
 +++
+weight = 345
 title = "345. 최적 적합 (Best-Fit) 완벽주의의 패러독스"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 345
 +++
 
 # 최적 적합 (Best-Fit) 알고리즘

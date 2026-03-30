@@ -1,6 +1,6 @@
 +++
-title = "네트워크 가상화 (Network Virtualization)"
 weight = 809
+title = "네트워크 가상화 (Network Virtualization)"
 +++
 
 # 네트워크 가상화 (Network Virtualization)

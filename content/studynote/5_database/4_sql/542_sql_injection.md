@@ -1,8 +1,8 @@
 +++
+weight = 42
 title = "SQL 인젝션 (SQL Injection)"
 description = "SQL 인젝션 공격과 방지 방법"
 date = 2026-03-26
-weight = 42
 
 [taxonomies]
 tags = ["database", "sql", "security", "injection"]

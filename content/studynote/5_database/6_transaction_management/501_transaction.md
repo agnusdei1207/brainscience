@@ -1,8 +1,8 @@
 +++
+weight = 501
 title = "트랜잭션 (Transaction)"
 description = "데이터베이스 트랜잭션의 기본 개념과 ACID 특성에 대해 설명"
 date = 2024-01-01
-weight = 501
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,8 +1,8 @@
 +++
+weight = 2
 title = "DNS zone transfer와 DNSSEC"
 description = "DNS 존 간의 영역 전송과 DNSSEC의 디지털 서명을 통한 응답 무결성 보장을 다룬다."
 date = 2024-02-02
-weight = 2
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,9 +1,9 @@
 +++
+weight = 612
 title = "612. 메모리 누수 (Memory Leak) 탐지 도구 구조 (Valgrind 등)"
 date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 612
 +++
 
 # 메모리 누수 (Memory Leak) 탐지 도구 구조 (Valgrind 등)

@@ -1,8 +1,8 @@
 +++
+weight = 17
 title = "잠금 기반 동시성 제어 (Lock-Based CC)"
 description = "잠금을 기반으로 한 동시성 제어 기법의 전체적인 개요에 대해 설명"
 date = 2024-01-01
-weight = 17
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,8 +1,8 @@
 +++
+weight = 24
 title = "회귀"
 description = "회귀(Regression)의 정의, 선형 회귀, 손실 함수, 과적합과 정규화"
 category = "10_ai"
-weight = 24
 +++
 
 ## 핵심 인사이트 (3줄 요약)

@@ -1,6 +1,6 @@
 +++
-title = "캐시 메모리 (Cache Memory)"
 weight = 259
+title = "캐시 메모리 (Cache Memory)"
 +++
 
 # 캐시 메모리 (Cache Memory)

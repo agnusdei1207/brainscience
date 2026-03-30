@@ -1,9 +1,9 @@
 +++
+weight = 539
 title = "539. 저널링 파일 시스템 (Journaling File System) - 일관성 복구"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 539
 +++
 
 # 저널링 파일 시스템 (Journaling FS) - 시스템 크래시 시 일관성 복구 (ext3, ext4, NTFS)

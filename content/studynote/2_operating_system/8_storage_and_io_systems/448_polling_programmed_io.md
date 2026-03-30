@@ -1,9 +1,9 @@
 +++
+weight = 448
 title = "448. 폴링 (Polling / Programmed I/O) 바쁜 대기의 고통"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 448
 +++
 
 # 폴링 (Polling / Programmed I/O)

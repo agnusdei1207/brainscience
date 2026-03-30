@@ -1,8 +1,8 @@
 +++
+weight = 809
 title = "소프트웨어 품질"
 description = "Software Quality"
 category = "4_software_engineering"
-weight = 809
 +++
 
 # 소프트웨어 품질 (Software Quality)

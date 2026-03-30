@@ -1,9 +1,9 @@
 +++
+weight = 611
 title = "611. CPU 유휴 (Idle) 대기 루프 최적화"
 date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 611
 +++
 
 # CPU 유휴 (Idle) 대기 루프 최적화

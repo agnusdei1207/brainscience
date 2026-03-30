@@ -1,9 +1,9 @@
 +++
+weight = 573
 title = "573. 접근 제어 행렬 (Access Matrix)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 573
 +++
 
 # 접근 제어 행렬 (Access Matrix) - 주체와 객체 간 접근 권한을 2차원 표로 표현하는 수학적 모델

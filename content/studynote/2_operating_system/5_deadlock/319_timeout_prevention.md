@@ -1,9 +1,9 @@
 +++
+weight = 319
 title = "319. 교착 상태 예방 메커니즘을 위한 타임아웃 (Timeout) 활용"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 319
 +++
 
 # 교착 상태 예방 타임아웃 (Timeout) 활용

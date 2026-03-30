@@ -1,8 +1,8 @@
 +++
+weight = 465
 title = "RF(Radio Frequency) 및 스펙트럼 관리"
 description = "무선 주파수 스펙트럼의 분류, 대역별 특성, 스펙트럼 관리 정책, 주파수 재사용 원리를شرح"
 date = 2024-01-20
-weight = 465
 
 [extra]
 categories = ["studynote-software-engineering"]

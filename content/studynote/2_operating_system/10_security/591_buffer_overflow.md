@@ -1,9 +1,9 @@
 +++
+weight = 591
 title = "591. 버퍼 오버플로우 (Buffer Overflow) 공격"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 591
 +++
 
 # 버퍼 오버플로우 (Buffer Overflow) 공격 - 물컵(버퍼) 이 꽉 차서 넘친 물(해커의 똥) 이 책상(돌아갈 주소 RET) 을 덮어써 버려, 프로그램의 영혼을 강탈하는 C언어 최고의 해킹 렌더

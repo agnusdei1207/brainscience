@@ -1,7 +1,7 @@
 +++
+weight = 106
 title = "Copy-on-Write (COW)"
 date = "2026-03-22"
-weight = 106
 [extra]
 categories = "studynote-operating-system"
 +++

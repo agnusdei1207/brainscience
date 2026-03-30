@@ -1,9 +1,9 @@
 +++
+weight = 415
 title = "415. 지역성 모델 (Locality Model) 캐시 생태계의 절대 법칙"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 415
 +++
 
 # 지역성 모델 (Locality Model)

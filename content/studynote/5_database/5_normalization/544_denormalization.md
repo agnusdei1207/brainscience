@@ -1,8 +1,8 @@
 +++
+weight = 44
 title = "반정규화 (Denormalization)"
 description = "반정규화의 정의와 적용"
 date = 2026-03-26
-weight = 44
 
 [taxonomies]
 tags = ["database", "normalization", "denormalization", "performance"]

@@ -1,8 +1,8 @@
 +++
+weight = 514
 title = "관계 (Relationship)"
 description = "ER 모델에서 관계의 정의와 유형"
 date = 2026-03-26
-weight = 514
 
 [taxonomies]
 tags = ["database", "er-model", "relationship"]

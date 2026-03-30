@@ -1,9 +1,9 @@
 +++
+weight = 582
 title = "582. 리눅스 보안 모듈 (LSM, Linux Security Modules)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 582
 +++
 
 # 리눅스 보안 모듈 (LSM, Linux Security Modules) - 리눅스 커널에 보안 정책 enforcement 기능을 플러그인 방식으로 제공 하는 프레임워크

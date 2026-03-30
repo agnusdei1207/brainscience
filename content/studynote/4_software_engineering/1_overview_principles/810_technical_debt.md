@@ -1,8 +1,8 @@
 +++
+weight = 810
 title = "기술 부채"
 description = "Technical Debt"
 category = "4_software_engineering"
-weight = 810
 +++
 
 # 기술 부채 (Technical Debt)

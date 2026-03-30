@@ -1,7 +1,7 @@
 +++
+weight = 157
 title = "OOM Killer 프로세스 종료 정책"
 date = "2026-03-22"
-weight = 157
 [extra]
 categories = "studynote-operating-system"
 +++

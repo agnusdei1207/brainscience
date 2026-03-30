@@ -1,9 +1,9 @@
 +++
+weight = 195
 title = "195. 실시간 스케줄링 (Real-time Scheduling)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 195
 +++
 
 # 실시간 스케줄링 (Real-time Scheduling)

@@ -1,9 +1,9 @@
 +++
+weight = 608
 title = "608. 보안 부팅 (Secure Boot) 인증서 체인 로딩 검증"
 date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 608
 +++
 
 # 보안 부팅 (Secure Boot) 인증서 체인 로딩 검증

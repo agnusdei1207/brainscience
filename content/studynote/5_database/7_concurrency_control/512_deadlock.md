@@ -1,8 +1,8 @@
 +++
+weight = 512
 title = "교착 상태 (Deadlock)"
 description = "트랜잭션 간 교착 상태의 개념, 탐지 및 해결 방법에 대해 설명"
 date = 2024-01-01
-weight = 512
 
 [extra]
 categories = ["studynote-software-engineering"]

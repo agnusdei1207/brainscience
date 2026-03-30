@@ -1,8 +1,8 @@
 +++
+weight = 511
 title = "데이터베이스 사용자 (Database Users)"
 description = "데이터베이스 사용자의 유형과 역할"
 date = 2026-03-26
-weight = 511
 
 [taxonomies]
 tags = ["database", "users", "roles", "dba"]

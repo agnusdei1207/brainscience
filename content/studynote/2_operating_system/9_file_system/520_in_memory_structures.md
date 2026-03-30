@@ -1,9 +1,9 @@
 +++
+weight = 520
 title = "520. 메모리 내의 구조 (In-Memory Structures) - 마운트 테이블, 오픈 파일 테이블"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 520
 +++
 
 # 메모리 내의 구조 - 초고속 I/O 통치를 위한 커널의 3중 캐싱 장부

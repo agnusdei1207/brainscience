@@ -1,8 +1,8 @@
 +++
+weight = 26
 title = "제1정규형 (1NF)"
 description = "제1정규형의 정의와 조건"
 date = 2026-03-26
-weight = 26
 
 [taxonomies]
 tags = ["database", "normalization", "1nf", "first-normal-form"]

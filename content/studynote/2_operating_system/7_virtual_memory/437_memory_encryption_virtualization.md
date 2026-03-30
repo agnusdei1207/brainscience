@@ -1,9 +1,9 @@
 +++
+weight = 437
 title = "437. 메모리 암호화 가상화 (AMD SME/SEV, Intel SGX)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 437
 +++
 
 # 메모리 암호화 가상화 (AMD SME/SEV, Intel SGX)

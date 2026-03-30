@@ -1,9 +1,9 @@
 +++
+weight = 570
 title = "570. 리눅스 inotify API - 파일 감시 레이더망"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 570
 +++
 
 # 리눅스 inotify 시스템 - 폴링의 저주를 찢고, 파일이 변경되는 찰나의 순간 OS가 직접 귓속말을 꽂아주는 실시간 렌더 레이더망

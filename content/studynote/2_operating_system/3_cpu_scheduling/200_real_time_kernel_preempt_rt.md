@@ -1,9 +1,9 @@
 +++
+weight = 200
 title = "200. 실시간 커널 (Real-time Kernel) / PREEMPT_RT"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 200
 +++
 
 # 실시간 커널 (Real-time Kernel) / PREEMPT_RT

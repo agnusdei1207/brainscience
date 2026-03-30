@@ -1,8 +1,8 @@
 +++
+weight = 520
 title = "로그 기반 복구 (Log-Based Recovery)"
 description = "WAL 프로토콜과 로그 레코드를利用したデータベース복구 메커니즘에 대해 설명"
 date = 2024-01-01
-weight = 520
 
 [extra]
 categories = ["studynote-software-engineering"]

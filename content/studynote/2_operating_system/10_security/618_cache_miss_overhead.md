@@ -1,9 +1,9 @@
 +++
+weight = 618
 title = "618. 캐시 미스 오버헤드 측정 분석망 구조 적용"
 date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 618
 +++
 
 # 캐시 미스 오버헤드 측정 분석망 구조 적용

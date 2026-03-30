@@ -1,6 +1,6 @@
 +++
-title = "271. 캐시 교체 알고리즘 (Replacement Policy)"
 weight = 271
+title = "271. 캐시 교체 알고리즘 (Replacement Policy)"
 +++
 
 # 캐시 교체 알고리즘 (Cache Replacement Policy)

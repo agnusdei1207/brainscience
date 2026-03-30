@@ -1,8 +1,8 @@
 +++
+weight = 35
 title = "함수 종속성 (Functional Dependency)"
 description = "함수 종속성의 정의와 유형"
 date = 2026-03-26
-weight = 35
 
 [taxonomies]
 tags = ["database", "normalization", "functional-dependency"]

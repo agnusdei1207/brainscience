@@ -1,8 +1,8 @@
 +++
+weight = 521
 title = "체크포인트 (Checkpoint)"
 description = "복구 시간 단축을 위한 체크포인트 메커니즘에 대해 설명"
 date = 2024-01-01
-weight = 521
 
 [extra]
 categories = ["studynote-software-engineering"]

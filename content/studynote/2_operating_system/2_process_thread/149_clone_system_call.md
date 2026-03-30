@@ -1,7 +1,7 @@
 +++
+weight = 149
 title = "clone 시스템 콜"
 date = "2026-03-22"
-weight = 149
 [extra]
 categories = "studynote-operating-system"
 +++

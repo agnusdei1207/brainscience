@@ -1,8 +1,8 @@
 +++
+weight = 512
 title = "개체 (Entity)"
 description = "ER 모델에서 개체의 정의와 유형"
 date = 2026-03-26
-weight = 512
 
 [taxonomies]
 tags = ["database", "er-model", "entity"]

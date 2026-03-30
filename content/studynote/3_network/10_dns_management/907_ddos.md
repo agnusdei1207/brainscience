@@ -1,8 +1,8 @@
 +++
+weight = 3
 title = "DDoS (Distributed Denial of Service) 공격"
 description = "DNS 기반 DDoS 공격의 유형, 증상, 그리고 방어 메커니즘을 다룬다."
 date = 2024-02-03
-weight = 3
 
 [extra]
 categories = ["studynote-software-engineering"]

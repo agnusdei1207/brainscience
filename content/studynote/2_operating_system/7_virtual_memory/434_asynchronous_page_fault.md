@@ -1,9 +1,9 @@
 +++
+weight = 434
 title = "434. 비동기식 페이지 폴트 (Asynchronous Page Faults) 핸들링"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 434
 +++
 
 # 비동기식 페이지 폴트 (Asynchronous Page Faults) 핸들링

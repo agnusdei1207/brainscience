@@ -1,9 +1,9 @@
 +++
+weight = 444
 title = "444. 네트워크 장치 (소켓 인터페이스) 파일 시스템 이단아의 독립"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 444
 +++
 
 # 네트워크 장치 (소켓 인터페이스)

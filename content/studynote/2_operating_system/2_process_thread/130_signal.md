@@ -1,7 +1,7 @@
 +++
+weight = 130
 title = "130. 신호 (Signal) - 소프트웨어 인터럽트 방식 IPC"
 date = "2026-03-22"
-weight = 130
 [extra]
 categories = "studynote-operating-system"
 +++

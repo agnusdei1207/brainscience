@@ -1,6 +1,6 @@
 +++
-title = "인텐트 기반 네트워킹 (Intent-Based Networking)"
 weight = 828
+title = "인텐트 기반 네트워킹 (Intent-Based Networking)"
 +++
 
 # 인텐트 기반 네트워킹 (Intent-Based Networking)

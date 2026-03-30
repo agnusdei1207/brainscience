@@ -1,9 +1,9 @@
 +++
+weight = 452
 title = "452. DMA 산란-수집 (Scatter-Gather) 가상 메모리 파편화의 구원자"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 452
 +++
 
 # DMA 산란-수집 (Scatter-Gather)

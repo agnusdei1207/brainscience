@@ -1,8 +1,8 @@
 +++
+weight = 36
 title = "CRDT (Conflict-Free Replicated Data Type)"
 description = "분산 환경에서 충돌 없는 복제 데이터 타입 CRDT에 대해 설명"
 date = 2024-01-01
-weight = 36
 
 [extra]
 categories = ["studynote-software-engineering"]

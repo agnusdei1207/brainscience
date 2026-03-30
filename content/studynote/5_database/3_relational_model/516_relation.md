@@ -1,8 +1,8 @@
 +++
+weight = 516
 title = "관계 (Relation)"
 description = "관계형 데이터베이스에서 관계의 정의와 특성"
 date = 2026-03-26
-weight = 516
 
 [taxonomies]
 tags = ["database", "relational-model", "relation"]

@@ -1,9 +1,9 @@
 +++
+weight = 596
 title = "596. 반환 지향 프로그래밍 (ROP)"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
-weight = 596
 +++
 
 # 반환 지향 프로그래밍 (ROP) 기법

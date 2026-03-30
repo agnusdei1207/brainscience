@@ -1,9 +1,9 @@
 +++
+weight = 518
 title = "518. VFS 4대 객체 (Superblock, Inode, Dentry, File)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 518
 +++
 
 # VFS 4대 핵심 객체 - 파일을 찢고 지배하는 메모리 속 4개의 거대한 기둥

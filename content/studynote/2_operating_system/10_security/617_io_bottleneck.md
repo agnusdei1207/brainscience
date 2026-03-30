@@ -1,9 +1,9 @@
 +++
+weight = 617
 title = "617. I/O ìë ëë (Bottleneck) íìë"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
-weight = 617
 +++
 
 # I/O ìë ëë (Bottleneck) íìë

@@ -1,6 +1,6 @@
 +++
-title = "마이크로컨트롤러 (Microcontroller, MCU)"
 weight = 130
+title = "마이크로컨트롤러 (Microcontroller, MCU)"
 +++
 
 # 마이크로컨트롤러 (Microcontroller, MCU)

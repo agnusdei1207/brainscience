@@ -1,9 +1,9 @@
 +++
+weight = 528
 title = "528. 유닉스 i-node (Index Node) 메커니즘"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 528
 +++
 
 # 유닉스 i-node (Index Node) 메커니즘 - 파일의 모든 영혼과 뼈대를 1개 블록에 응축한 운영체제의 신의 한 수

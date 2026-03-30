@@ -1,9 +1,9 @@
 +++
+weight = 581
 title = "581. 비바 모델 (Biba Model)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 581
 +++
 
 # 비바 모델 (Biba Model) - 데이터 무결성(Integrity) 보호를 위한 보안 모델

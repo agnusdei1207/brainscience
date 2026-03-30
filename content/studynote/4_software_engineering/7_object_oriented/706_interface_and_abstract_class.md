@@ -1,8 +1,8 @@
 +++
+weight = 706
 title = "인터페이스와 추상 클래스"
 description = "인터페이스와 추상 클래스의 차이, 적절한 사용 시점"
 date = 2024-02-08
-weight = 706
 
 [extra]
 categories = ["studynote-software-engineering"]

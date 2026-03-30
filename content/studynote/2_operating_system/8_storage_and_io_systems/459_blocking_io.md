@@ -1,9 +1,9 @@
 +++
+weight = 459
 title = "459. 블로킹 I/O (Blocking I/O) 하드웨어를 기다리는 수면 마취"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 459
 +++
 
 # 블로킹 I/O (Blocking I/O)

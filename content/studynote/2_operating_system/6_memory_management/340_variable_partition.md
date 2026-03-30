@@ -1,9 +1,9 @@
 +++
+weight = 340
 title = "340. 가변 분할 방식 (Variable Partition)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 340
 +++
 
 # 가변 분할 방식 (Variable Partition / Dynamic Partitioning)

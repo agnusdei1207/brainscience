@@ -1,9 +1,9 @@
 +++
+weight = 515
 title = "515. MBR (Master Boot Record) vs GPT (GUID Partition Table)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 515
 +++
 
 # MBR vs GPT - 거대 디스크 시대의 안내 데스크 세대교체

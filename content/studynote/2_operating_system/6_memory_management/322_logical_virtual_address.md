@@ -1,9 +1,9 @@
 +++
+weight = 322
 title = "322. 논리 주소 (Logical/Virtual Address) - CPU가 생성하는 주소"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 322
 +++
 
 # 논리 주소 (Logical / Virtual Address)

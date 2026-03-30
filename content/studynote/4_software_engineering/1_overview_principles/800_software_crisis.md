@@ -1,8 +1,8 @@
 +++
+weight = 800
 title = "소프트웨어 위기"
 description = "Software Crisis"
 category = "4_software_engineering"
-weight = 800
 +++
 
 # 소프트웨어 위기 (Software Crisis)

@@ -1,9 +1,9 @@
 +++
+weight = 578
 title = "578. 임의적 접근 제어 (DAC, Discretionary Access Control)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 578
 +++
 
 # 임의적 접근 제어 (DAC, Discretionary Access Control) - 파일 소유자가 접근 권한을 자발적으로 부여하는 자율적 접근 제어 방식

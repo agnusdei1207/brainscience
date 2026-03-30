@@ -1,9 +1,9 @@
 +++
+weight = 372
 title = "372. 아키텍처 종속적인 MMU 인터페이스 (Architecture Dependent MMU)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 372
 +++
 
 # 아키텍처 종속적인 MMU 인터페이스

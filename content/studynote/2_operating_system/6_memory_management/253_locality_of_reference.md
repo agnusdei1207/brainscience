@@ -1,9 +1,9 @@
 +++
+weight = 253
 title = "253. 참조의 지역성 (Locality of Reference)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 253
 +++
 
 # 참조의 지역성 (Locality of Reference)

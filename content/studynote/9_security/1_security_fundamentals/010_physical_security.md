@@ -1,8 +1,8 @@
 +++
+weight = 8010
 title = "물리적 보안 (Physical Security)"
 description = "정보자산을 물리적 위협으로부터 보호하는 보안 체계"
 date = 2026-03-26
-weight = 8010
 
 [extra]
 categories = ["studynote-software-engineering"]

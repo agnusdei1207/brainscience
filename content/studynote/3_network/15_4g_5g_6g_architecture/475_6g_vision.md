@@ -1,8 +1,8 @@
 +++
+weight = 16
 title = "6G (6세대 통신) 비전 및 핵심 기술"
 description = "6G의 비전, 목표 사양, 주요 기술 (THz, AI-native, 비地面 네트워크, 초저지연), 업계 개발 현황을شرح"
 date = 2024-01-30
-weight = 16
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,9 +1,9 @@
 +++
+weight = 286
 title = "286. 순환 대기 (Circular Wait)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 286
 +++
 
 # 순환 대기 (Circular Wait)

@@ -1,8 +1,8 @@
 +++
+weight = 462
 title = "블루투스 (Bluetooth) 기술"
 description = "블루투스의 발전 과정, 프로토콜 스택, 주파수 호핑 방식, BLE의 저전력 아키텍처를شرح"
 date = 2024-01-17
-weight = 462
 
 [extra]
 categories = ["studynote-software-engineering"]

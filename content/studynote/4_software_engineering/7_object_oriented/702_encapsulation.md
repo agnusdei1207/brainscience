@@ -1,8 +1,8 @@
 +++
+weight = 702
 title = "캡슐화"
 description = "캡슐화의 개념, 정보 은닉, 접근 제어자"
 date = 2024-02-04
-weight = 702
 
 [extra]
 categories = ["studynote-software-engineering"]

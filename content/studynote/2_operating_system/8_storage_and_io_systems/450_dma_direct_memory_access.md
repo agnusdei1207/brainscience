@@ -1,9 +1,9 @@
 +++
+weight = 450
 title = "450. 직접 메모리 접근 (DMA, Direct Memory Access) CPU 독립의 혁명"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 450
 +++
 
 # 직접 메모리 접근 (DMA, Direct Memory Access)

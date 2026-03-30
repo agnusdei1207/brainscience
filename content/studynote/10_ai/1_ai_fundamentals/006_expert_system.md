@@ -1,8 +1,8 @@
 +++
+weight = 6
 title = "전문가 시스템"
 description = "전문가 시스템(Expert System)의 정의, 구성 요소, 작동 원리, 한계와 현대적 의의"
 category = "10_ai"
-weight = 6
 +++
 
 ## 핵심 인사이트 (3줄 요약)

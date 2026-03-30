@@ -1,8 +1,8 @@
 +++
+weight = 508
 title = "병행 제어 (Concurrency Control)"
 description = "병행 제어의 정의, 기법, 문제점"
 date = 2026-03-26
-weight = 508
 
 [taxonomies]
 tags = ["database", "concurrency", "lock", "mvcc"]

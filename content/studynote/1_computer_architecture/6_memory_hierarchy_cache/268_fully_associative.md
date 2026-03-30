@@ -1,6 +1,6 @@
 +++
-title = "완전 연관 매핑 (Fully Associative Mapping)"
 weight = 268
+title = "완전 연관 매핑 (Fully Associative Mapping)"
 +++
 
 # 완전 연관 매핑 (Fully Associative Mapping)

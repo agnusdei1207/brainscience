@@ -1,8 +1,8 @@
 +++
+weight = 612
 title = "API 게이트웨이"
 description = "API 게이트웨이의 개념, Kong, Zuul, AWS API Gateway 활용"
 date = 2024-01-25
-weight = 612
 
 [extra]
 categories = ["studynote-software-engineering"]

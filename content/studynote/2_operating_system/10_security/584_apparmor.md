@@ -1,9 +1,9 @@
 +++
+weight = 584
 title = "584. AppArmor (Application Armor)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 584
 +++
 
 # AppArmor (Application Armor) - 지독한 SELinux 라벨 지옥에 빡친 리눅서들이, "복잡한 라벨 다 버려! 그냥 파일 주소(Path) 이름으로 직관적 차단해!" 라며 만든 실용주의 MAC 렌더

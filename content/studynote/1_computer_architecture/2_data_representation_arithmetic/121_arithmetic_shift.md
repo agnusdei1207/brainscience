@@ -1,6 +1,6 @@
 +++
-title = "산술 시프트 (Arithmetic Shift)"
 weight = 121
+title = "산술 시프트 (Arithmetic Shift)"
 +++
 
 # 산술 시프트 (Arithmetic Shift)

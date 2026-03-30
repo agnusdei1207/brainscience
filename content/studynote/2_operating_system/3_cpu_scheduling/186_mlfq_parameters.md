@@ -1,9 +1,9 @@
 +++
+weight = 186
 title = "186. MLFQ 파라미터"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 186
 +++
 
 # MLFQ 파라미터 (큐 개수, 스케줄링 알고리즘, 승급/강등 기준)

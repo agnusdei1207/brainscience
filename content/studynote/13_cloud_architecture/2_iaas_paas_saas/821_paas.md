@@ -1,8 +1,8 @@
 +++
+weight = 16
 title = "PaaS (Platform as a Service)"
 description = "PaaS의 정의, 서비스 구조, 개발 플랫폼"
 date = 2026-03-26
-weight = 16
 
 [taxonomies]
 tags = ["cloud", "paas", "platform", "app-service", "elastic-beanstalk"]

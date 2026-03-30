@@ -1,9 +1,9 @@
 +++
+weight = 164
 title = "164. I/O 바운드 프로세스 (I/O Bound Process)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 164
 +++
 
 # I/O 바운드 프로세스 (I/O Bound Process)

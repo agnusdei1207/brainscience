@@ -1,7 +1,7 @@
 +++
+weight = 152
 title = "데몬화 절차"
 date = "2026-03-22"
-weight = 152
 [extra]
 categories = "studynote-operating-system"
 +++

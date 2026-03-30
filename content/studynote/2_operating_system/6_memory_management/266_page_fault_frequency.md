@@ -1,9 +1,9 @@
 +++
+weight = 266
 title = "266. 페이지 부재 빈도 (PFF, Page Fault Frequency)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 266
 +++
 
 # 페이지 부재 빈도 (PFF, Page Fault Frequency)

@@ -1,7 +1,7 @@
 +++
+weight = 108
 title = "연쇄적 종료 (Cascading Termination)"
 date = "2026-03-22"
-weight = 108
 [extra]
 categories = "studynote-operating-system"
 +++

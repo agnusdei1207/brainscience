@@ -1,7 +1,7 @@
 +++
+weight = 150
 title = "태스크"
 date = "2026-03-22"
-weight = 150
 [extra]
 categories = "studynote-operating-system"
 +++

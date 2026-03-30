@@ -1,8 +1,8 @@
 +++
+weight = 14
 title = "MITM (중간자 공격) 및 스니핑 (Sniffing)"
 description = "MITM 공격의 원리, ARP 스푸핑, SSL 스트립핑, 세션 하이재킹, 패킷 스니핑 도구를شرح"
 date = 2024-01-28
-weight = 14
 
 [extra]
 categories = ["studynote-software-engineering"]

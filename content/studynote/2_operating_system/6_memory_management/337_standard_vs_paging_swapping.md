@@ -1,9 +1,9 @@
 +++
+weight = 337
 title = "337. 표준 스와핑 vs 페이징 시스템 스와핑"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 337
 +++
 
 # 표준 스와핑 vs 페이징 시스템 스와핑

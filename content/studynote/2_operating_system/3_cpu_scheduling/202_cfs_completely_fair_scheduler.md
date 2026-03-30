@@ -1,9 +1,9 @@
 +++
+weight = 202
 title = "202. 완전 공정 스케줄러 (CFS, Completely Fair Scheduler)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 202
 +++
 
 # 완전 공정 스케줄러 (CFS, Completely Fair Scheduler)

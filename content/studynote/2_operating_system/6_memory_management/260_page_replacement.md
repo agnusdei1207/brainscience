@@ -1,9 +1,9 @@
 +++
+weight = 260
 title = "260. 페이지 교체 (Page Replacement)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 260
 +++
 
 # 페이지 교체 (Page Replacement)

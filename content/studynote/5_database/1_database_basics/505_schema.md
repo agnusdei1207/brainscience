@@ -1,8 +1,8 @@
 +++
+weight = 505
 title = "스키마 (Schema)"
 description = "스키마의 정의, 유형, 수준"
 date = 2026-03-26
-weight = 505
 
 [taxonomies]
 tags = ["database", "schema", "三级模式结构"]

@@ -1,8 +1,8 @@
 +++
+weight = 3
 title = "OAuth 2.0 인가"
 description = "OAuth 2.0의 권한 위임(Delegation) 원리와 보안"
 date = 2024-01-15
-weight = 3
 +++
 
 # OAuth 2.0 인가 (OAuth 2.0 Authorization)

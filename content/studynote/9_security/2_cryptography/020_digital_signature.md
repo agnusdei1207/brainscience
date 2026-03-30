@@ -1,8 +1,8 @@
 +++
+weight = 20
 title = "디지털 서명 (Digital Signature)"
 description = "메시지의 무결성과 송신자 인증을 제공하는 디지털 서명 기술"
 date = 2026-03-26
-weight = 20
 
 [extra]
 categories = ["studynote-software-engineering"]

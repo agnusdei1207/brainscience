@@ -1,8 +1,8 @@
 +++
+weight = 704
 title = "MPLS (Multiprotocol Label Switching)"
 description = "레이블 기반的高速 패킷 전달 기술 MPLS의 동작 원리와 Traffic Engineering을 다룬다."
 date = 2024-01-24
-weight = 704
 
 [extra]
 categories = ["studynote-software-engineering"]

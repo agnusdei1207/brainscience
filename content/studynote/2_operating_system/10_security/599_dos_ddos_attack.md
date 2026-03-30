@@ -1,9 +1,9 @@
 +++
+weight = 599
 title = "599. 서비스 거부 (DoS) 및 분산 서비스 거부 (DDoS)"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
-weight = 599
 +++
 
 # 서비스 거부 (DoS) 및 분산 서비스 거부 (DDoS)

@@ -1,9 +1,9 @@
 +++
+weight = 405
 title = "405. LRU (Least Recently Used) 교체 과거로 미래를 보는 마법"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 405
 +++
 
 # LRU (Least Recently Used) 교체 알고리즘

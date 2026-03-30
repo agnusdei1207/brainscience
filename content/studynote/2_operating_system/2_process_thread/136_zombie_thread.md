@@ -1,7 +1,7 @@
 +++
+weight = 136
 title = "좀비 스레드"
 date = "2026-03-22"
-weight = 136
 [extra]
 categories = "studynote-operating-system"
 +++

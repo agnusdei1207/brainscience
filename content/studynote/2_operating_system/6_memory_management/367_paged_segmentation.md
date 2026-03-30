@@ -1,9 +1,9 @@
 +++
+weight = 367
 title = "367. 세그멘테이션 기반 페이징 (Paged Segmentation) 인텔 x86의 돌연변이"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 367
 +++
 
 # 세그멘테이션 기반 페이징 (Paged Segmentation)

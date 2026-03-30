@@ -1,8 +1,8 @@
 +++
+weight = 803
 title = "하이브리드 클라우드 (Hybrid Cloud)"
 description = "하이브리드 클라우드의 정의, 아키텍처, 활용 전략"
 date = 2026-03-26
-weight = 803
 
 [taxonomies]
 tags = ["cloud", "hybrid-cloud", "multi-cloud", "cloud-burst"]

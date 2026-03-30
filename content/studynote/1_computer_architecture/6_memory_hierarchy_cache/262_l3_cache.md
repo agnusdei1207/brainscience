@@ -1,6 +1,6 @@
 +++
-title = "L3 캐시 (Level 3 Cache)"
 weight = 262
+title = "L3 캐시 (Level 3 Cache)"
 +++
 
 # L3 캐시 (Level 3 Cache)

@@ -1,9 +1,9 @@
 +++
+weight = 234
 title = "234. 교착 상태 예방 (Deadlock Prevention)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 234
 +++
 
 # 교착 상태 예방 (Deadlock Prevention)

@@ -1,9 +1,9 @@
 +++
+weight = 525
 title = "525. FAT (File Allocation Table)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 525
 +++
 
 # FAT (File Allocation Table) - 포인터 꼬리표를 한곳에 모아 랜덤 접근을 뚫어낸 기적의 장부

@@ -1,8 +1,8 @@
 +++
+weight = 26
 title = "복구와 동시성 제어의 상호작용"
 description = "복구 메커니즘과 동시성 제어 사이의 상호작용과 트레이드오프에 대해 설명"
 date = 2024-01-01
-weight = 26
 
 [extra]
 categories = ["studynote-software-engineering"]

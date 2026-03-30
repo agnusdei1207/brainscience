@@ -1,8 +1,8 @@
 +++
+weight = 611
 title = "메시지 큐"
 description = "메시지 큐의 개념, Kafka와 RabbitMQ 비교, 비동기 통신 패턴"
 date = 2024-01-24
-weight = 611
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,8 +1,8 @@
 +++
+weight = 5
 title = "AI와 ML과 DL의 관계"
 description = "인공지능(AI), 머신러닝(ML), 딥러닝(DL)의 계층적 관계와 각 기술의 범위, 차이점"
 category = "10_ai"
-weight = 5
 +++
 
 ## 핵심 인사이트 (3줄 요약)

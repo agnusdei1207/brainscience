@@ -1,9 +1,9 @@
 +++
+weight = 441
 title = "441. I/O 장치의 분류 (블록 장치 vs 문자 장치)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 441
 +++
 
 # I/O 장치의 분류 - 블록 장치 (Block Device) vs 문자 장치 (Character Device)

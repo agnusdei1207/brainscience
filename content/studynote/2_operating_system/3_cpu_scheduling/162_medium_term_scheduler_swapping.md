@@ -1,9 +1,9 @@
 +++
+weight = 162
 title = "162. 중기 스케줄러 (Medium-term Scheduler)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 162
 +++
 
 # 중기 스케줄러 (Medium-term Scheduler)와 스와핑

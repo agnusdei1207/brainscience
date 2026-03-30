@@ -1,9 +1,9 @@
 +++
+weight = 291
 title = "291. 타조 알고리즘 (Ostrich Algorithm)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 291
 +++
 
 # 타조 알고리즘 (Ostrich Algorithm)

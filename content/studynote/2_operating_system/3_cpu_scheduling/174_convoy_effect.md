@@ -1,9 +1,9 @@
 +++
+weight = 174
 title = "174. 호위 효과 (Convoy Effect)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 174
 +++
 
 # 호위 효과 (Convoy Effect)

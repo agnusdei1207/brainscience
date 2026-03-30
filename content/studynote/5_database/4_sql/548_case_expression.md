@@ -1,8 +1,8 @@
 +++
+weight = 48
 title = "CASE 식 (CASE Expression)"
 description = "SQL의 CASE 조건 표현식"
 date = 2026-03-26
-weight = 48
 
 [taxonomies]
 tags = ["database", "sql", "case", "conditional"]

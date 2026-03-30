@@ -1,8 +1,8 @@
 +++
+weight = 7
 title = "중첩 트랜잭션 (Nested Transaction)"
 description = "부모-자식 계층 구조를 가지는 중첩 트랜잭션에 대해 설명"
 date = 2024-01-01
-weight = 7
 
 [extra]
 categories = ["studynote-software-engineering"]

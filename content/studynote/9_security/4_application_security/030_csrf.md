@@ -1,8 +1,8 @@
 +++
+weight = 30
 title = "CSRF (크로스 사이트 요청 위조)"
 description = "사용자의 권한으로 의도치 않은 요청을 실행시키는 공격"
 date = 2026-03-26
-weight = 30
 
 [extra]
 categories = ["studynote-software-engineering"]

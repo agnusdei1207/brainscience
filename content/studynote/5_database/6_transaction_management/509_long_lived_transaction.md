@@ -1,8 +1,8 @@
 +++
+weight = 9
 title = "장기간 트랜잭션 (Long-Lived Transaction)"
 description = "장시간 활성 상태를 유지하는 트랜잭션의 문제점과 대처 방안에 대해 설명"
 date = 2024-01-01
-weight = 9
 
 [extra]
 categories = ["studynote-software-engineering"]

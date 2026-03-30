@@ -1,8 +1,8 @@
 +++
+weight = 25
 title = "방화벽 (Firewall)"
 description = "네트워크 보안의 기본: 트래픽을 필터링하는 방화벽의 구조와 유형"
 date = 2026-03-26
-weight = 25
 
 [extra]
 categories = ["studynote-software-engineering"]

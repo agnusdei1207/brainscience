@@ -1,8 +1,8 @@
 +++
+weight = 1
 title = "RBAC"
 description = "역할 기반 접근 제어(RBAC)의 원리와 보안"
 date = 2024-01-15
-weight = 1
 +++
 
 # RBAC (Role-Based Access Control)

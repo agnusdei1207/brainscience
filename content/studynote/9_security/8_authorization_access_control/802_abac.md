@@ -1,8 +1,8 @@
 +++
+weight = 2
 title = "ABAC"
 description = "속성 기반 접근 제어(ABAC)의 원리와 보안"
 date = 2024-01-15
-weight = 2
 +++
 
 # ABAC (Attribute-Based Access Control)

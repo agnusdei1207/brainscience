@@ -1,9 +1,9 @@
 +++
+weight = 530
 title = "530. i-node 간접 블록 (Indirect Blocks)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 530
 +++
 
 # i-node 간접 블록 (Single/Double/Triple Indirect) - 기가바이트에서 엑사바이트로 팽창하는 대용량 파일 3단 부스트

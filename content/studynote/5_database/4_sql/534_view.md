@@ -1,8 +1,8 @@
 +++
+weight = 34
 title = "뷰 (View)"
 description = "뷰의 정의와 사용법"
 date = 2026-03-26
-weight = 34
 
 [taxonomies]
 tags = ["database", "sql", "view", "virtual-table"]

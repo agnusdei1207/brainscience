@@ -1,9 +1,9 @@
 +++
+weight = 513
 title = "513. 일반 그래프 디렉터리 (General Graph Directory)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 513
 +++
 
 # 일반 그래프 디렉터리 (General Graph Directory) - 순환(Cycle)의 허용과 가비지 컬렉션의 사투

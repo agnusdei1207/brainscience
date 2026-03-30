@@ -1,9 +1,9 @@
 +++
+weight = 484
 title = "484. RAID 0 (ìíëìí, Striping)"
 date = "2026-03-24"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 484
 +++
 
 # RAID 0 (ìíëìí, Striping)

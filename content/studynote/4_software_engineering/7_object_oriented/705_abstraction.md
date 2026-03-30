@@ -1,8 +1,8 @@
 +++
+weight = 705
 title = "추상화"
 description = "추상화(Abstraction)의 개념, 추상 클래스와 인터페이스"
 date = 2024-02-07
-weight = 705
 
 [extra]
 categories = ["studynote-software-engineering"]

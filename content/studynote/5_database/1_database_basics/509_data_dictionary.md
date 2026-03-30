@@ -1,8 +1,8 @@
 +++
+weight = 509
 title = "데이터 딕셔너리 (Data Dictionary)"
 description = "데이터 딕셔너리의 정의, 구성, 역할"
 date = 2026-03-26
-weight = 509
 
 [taxonomies]
 tags = ["database", "data-dictionary", "metadata", "catalog"]

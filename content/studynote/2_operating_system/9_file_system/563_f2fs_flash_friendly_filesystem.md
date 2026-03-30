@@ -1,9 +1,9 @@
 +++
+weight = 563
 title = "563. 플래시 전용 파일 시스템 (F2FS) - 자석 모터의 저주를 깬 반도체 파일 렌더"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 563
 +++
 
 # 플래시 전용 파일 시스템 (F2FS, JFFS2) - 지우기(Erase) 전에는 쓸 수 없는 끔찍한 SSD 반도체의 숙명을 돌파해 낸 쓰기 최적화 $O(1)$ 로그 구조 철벽 마법망

@@ -1,8 +1,8 @@
 +++
+weight = 8001
 title = "CIA 트라이어드 (CIA Triad)"
 description = "정보보안의 세 가지 핵심 원리: 기밀성, 무결성, 가용성"
 date = 2026-03-26
-weight = 8001
 
 [extra]
 categories = ["studynote-software-engineering"]

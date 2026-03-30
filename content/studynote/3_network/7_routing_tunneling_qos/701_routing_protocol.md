@@ -1,8 +1,8 @@
 +++
+weight = 701
 title = "라우팅 프로토콜 (RIP, OSPF, BGP)"
 description = "내부 라우팅 프로토콜(RIP, OSPF)과 외부 라우팅 프로토콜(BGP)의 동작 원리와 차이를 다룬다."
 date = 2024-01-21
-weight = 701
 
 [extra]
 categories = ["studynote-software-engineering"]

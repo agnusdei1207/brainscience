@@ -1,8 +1,8 @@
 +++
+weight = 14
 title = "암호학적 구현 보안"
 description = "효과적인 암호화 구현과 키 관리의 실무 가이드라인"
 date = 2024-01-15
-weight = 14
 +++
 
 # 암호학적 구현 보안 (Cryptographic Implementation Security)

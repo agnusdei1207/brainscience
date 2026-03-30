@@ -1,8 +1,8 @@
 +++
+weight = 24
 title = "UNDO/REDO 복구"
 description = "로그 기반 복구의 핵심인 UNDO와 REDO 연산에 대해 설명"
 date = 2024-01-01
-weight = 24
 
 [extra]
 categories = ["studynote-software-engineering"]

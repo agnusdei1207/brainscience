@@ -1,9 +1,9 @@
 +++
+weight = 342
 title = "342. 외부 단편화 (External Fragmentation) 흩어진 조각들의 비극"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 342
 +++
 
 # 외부 단편화 (External Fragmentation)

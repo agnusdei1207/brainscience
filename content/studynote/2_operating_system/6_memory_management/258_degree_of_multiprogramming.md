@@ -1,9 +1,9 @@
 +++
+weight = 258
 title = "258. 다중 프로그래밍 정도 (Degree of Multiprogramming)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 258
 +++
 
 # 다중 프로그래밍 정도 (Degree of Multiprogramming)

@@ -1,9 +1,9 @@
 +++
+weight = 433
 title = "433. 역 페이지 테이블 탐색 최적화 해시 함수 (Inverted Page Table Hash)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 433
 +++
 
 # 역 페이지 테이블 탐색 최적화 해시 함수 (Inverted Page Table Hash)

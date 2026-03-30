@@ -1,8 +1,8 @@
 +++
+weight = 20
 title = "지도 학습"
 description = "지도 학습(Supervised Learning)의 정의, 분류와 회귀, 주요 알고리즘"
 category = "10_ai"
-weight = 20
 +++
 
 ## 핵심 인사이트 (3줄 요약)

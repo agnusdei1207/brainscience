@@ -1,8 +1,8 @@
 +++
+weight = 46
 title = "INSERT, UPDATE, DELETE"
 description = "데이터 조작 DML 문"
 date = 2026-03-26
-weight = 46
 
 [taxonomies]
 tags = ["database", "sql", "dml", "insert", "update", "delete"]

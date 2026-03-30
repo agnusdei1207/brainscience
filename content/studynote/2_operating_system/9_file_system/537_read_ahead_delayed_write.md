@@ -1,9 +1,9 @@
 +++
+weight = 537
 title = "537. 미리 읽기 (Read-ahead) 및 지연 쓰기 (Delayed-write) 기법"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 537
 +++
 
 # 미리 읽기 (Read-ahead) & 지연 쓰기 (Delayed-write) - 예측 통달과 버티기 마술로 I/O 병목 물리 타임아웃을 파괴한 시간 가불 SRE 시스템

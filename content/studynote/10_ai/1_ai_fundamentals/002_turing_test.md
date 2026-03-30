@@ -1,8 +1,8 @@
 +++
+weight = 2
 title = "튜링 테스트"
 description = "앨런 튜링(Alan Turing)이 제안한 인공지능의 지능 판별 기준, Criticism과 현대적 의의"
 category = "10_ai"
-weight = 2
 +++
 
 ## 핵심 인사이트 (3줄 요약)

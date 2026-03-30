@@ -1,7 +1,7 @@
 +++
+weight = 122
 title = "122. 동기식/비동기식 통신 (Synchronous/Asynchronous Communication)"
 date = "2026-03-22"
-weight = 122
 [extra]
 categories = "studynote-operating-system"
 +++

@@ -1,9 +1,9 @@
 +++
+weight = 310
 title = "310. 종료 대상 선택 (Victim Selection) 기준"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 310
 +++
 
 # 종료 대상 선택(희생자 선택) 기준 (Victim Selection Criteria)

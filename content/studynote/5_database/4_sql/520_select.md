@@ -1,8 +1,8 @@
 +++
+weight = 20
 title = "SELECT 문"
 description = "SQL SELECT 문의 기본 구조와 사용법"
 date = 2026-03-26
-weight = 20
 
 [taxonomies]
 tags = ["database", "sql", "select", "query"]

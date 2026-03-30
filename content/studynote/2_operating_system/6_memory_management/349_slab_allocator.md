@@ -1,9 +1,9 @@
 +++
+weight = 349
 title = "349. 슬랩 할당기 (Slab Allocator) 커널 객체 캐싱"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 349
 +++
 
 # 슬랩 할당기 (Slab Allocator)

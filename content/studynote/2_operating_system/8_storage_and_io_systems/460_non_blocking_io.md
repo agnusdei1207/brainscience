@@ -1,9 +1,9 @@
 +++
+weight = 460
 title = "460. 논블로킹 I/O (Non-blocking I/O) 대기를 거부하는 반항아"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 460
 +++
 
 # 논블로킹 I/O (Non-blocking I/O)

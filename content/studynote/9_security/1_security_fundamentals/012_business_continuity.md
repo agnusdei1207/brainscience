@@ -1,8 +1,8 @@
 +++
+weight = 8012
 title = "사업 연속성 (Business Continuity)"
 description = "재해 및 사고 발생 시 비즈니스의 연속성을 보장하는 체계"
 date = 2026-03-26
-weight = 8012
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,8 +1,8 @@
 +++
+weight = 31
 title = "관계 대수 (Relational Algebra)"
 description = "관계 대수의 연산자와 관계 해석"
 date = 2026-03-26
-weight = 31
 
 [taxonomies]
 tags = ["database", "relational-algebra", "relational-calculus"]

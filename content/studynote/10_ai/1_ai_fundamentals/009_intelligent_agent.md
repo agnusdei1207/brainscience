@@ -1,8 +1,8 @@
 +++
+weight = 9
 title = "지능형 에이전트"
 description = "지능형 에이전트(Intelligent Agent)의 정의, 구조, 종류, 환경과의 상호작용"
 category = "10_ai"
-weight = 9
 +++
 
 ## 핵심 인사이트 (3줄 요약)

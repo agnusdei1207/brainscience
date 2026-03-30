@@ -1,9 +1,9 @@
 +++
+weight = 560
 title = "560. 다중 스트림 (Multi-stream) 파일 / 포크 (Forks) - 데이터 스트림과 리소스 분리"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 560
 +++
 
 # 다중 스트림 파일 (Alternate Data Streams, ADS) / 포크 (Forks) - 하나의 파일 이름표 뒤에 숨겨진 여러 개의 평행 우주 은닉 스토리지 차원

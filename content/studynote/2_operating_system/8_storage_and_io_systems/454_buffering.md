@@ -1,9 +1,9 @@
 +++
+weight = 454
 title = "454. 버퍼링 (Buffering) 속도와 크기 차이의 완충재"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 454
 +++
 
 # 버퍼링 (Buffering)

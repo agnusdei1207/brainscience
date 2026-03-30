@@ -1,9 +1,9 @@
 +++
+weight = 312
 title = "312. 희생자 선택 (Victim Selection) 최소 비용 기준"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 312
 +++
 
 # 희생자 선택 (Victim Selection) - 최소 비용 기준

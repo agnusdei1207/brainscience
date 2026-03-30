@@ -1,8 +1,8 @@
 +++
+weight = 41
 title = "트랜잭션 관리 (Transaction Management)"
 description = "트랜잭션 관리의 핵심 개념"
 date = 2026-03-26
-weight = 41
 
 [taxonomies]
 tags = ["database", "transaction", "commit", "rollback", "savepoint"]

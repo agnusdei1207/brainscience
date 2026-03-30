@@ -1,7 +1,7 @@
 +++
+weight = 144
 title = "CPU 친화성 Soft/Hard Affinity"
 date = "2026-03-22"
-weight = 144
 [extra]
 categories = "studynote-operating-system"
 +++

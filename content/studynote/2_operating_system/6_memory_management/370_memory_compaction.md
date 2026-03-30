@@ -1,9 +1,9 @@
 +++
+weight = 370
 title = "370. 파편화 관리 및 조각 모음 - 리눅스 메모리 컴팩션"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 370
 +++
 
 # 파편화 관리 및 조각 모음 (Memory Compaction)

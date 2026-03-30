@@ -1,9 +1,9 @@
 +++
+weight = 191
 title = "191. 스레드 스케줄링 (PCS vs SCS)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 191
 +++
 
 # 스레드 스케줄링 (Thread Scheduling) - PCS vs SCS

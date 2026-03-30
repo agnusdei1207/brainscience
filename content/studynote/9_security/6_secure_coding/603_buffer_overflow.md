@@ -1,8 +1,8 @@
 +++
+weight = 8603
 title = "버퍼 오버플로우"
 description = "메모리 보안 취약점의 대표적 유형인 버퍼 오버플로우(Buffer Overflow) 원리와 방어 기법"
 date = 2024-01-15
-weight = 8603
 +++
 
 # 버퍼 오버플로우 (Buffer Overflow)

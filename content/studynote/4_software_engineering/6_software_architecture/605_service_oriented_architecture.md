@@ -1,8 +1,8 @@
 +++
+weight = 605
 title = "서비스 지향 아키텍처 (SOA)"
 description = "SOA의 개념, WS-*/ESB와 현대적 변형"
 date = 2024-01-18
-weight = 605
 
 [extra]
 categories = ["studynote-software-engineering"]

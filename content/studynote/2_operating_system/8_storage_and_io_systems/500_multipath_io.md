@@ -1,9 +1,9 @@
 +++
+weight = 500
 title = "500. 이중 경로 (Multipath) I/O"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 500
 +++
 
 # 이중 경로 (Multipath) I/O 페일오버 및 로드밸런싱 구조

@@ -1,8 +1,8 @@
 +++
+weight = 11
 title = "지식 표현"
 description = "지식 표현(Knowledge Representation)의 정의, 종류, 온톨로지, 의미 네트워크"
 category = "10_ai"
-weight = 11
 +++
 
 ## 핵심 인사이트 (3줄 요약)

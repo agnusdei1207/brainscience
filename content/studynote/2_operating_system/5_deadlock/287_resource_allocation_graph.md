@@ -1,9 +1,9 @@
 +++
+weight = 287
 title = "287. 자원 할당 그래프 (Resource-Allocation Graph)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 287
 +++
 
 # 자원 할당 그래프 (Resource-Allocation Graph)

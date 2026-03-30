@@ -1,8 +1,8 @@
 +++
+weight = 18
 title = "공개키 암호화 (Asymmetric Encryption)"
 description = "공개키와 개인키를 사용하는 RSA, ECC 등의 암호화 방식"
 date = 2026-03-26
-weight = 18
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,9 +1,9 @@
 +++
+weight = 274
 title = "274. 임계 구역 크기 최소화 기법"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 274
 +++
 
 # 임계 구역 크기 최소화 기법

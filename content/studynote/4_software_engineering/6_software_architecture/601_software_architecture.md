@@ -1,8 +1,8 @@
 +++
+weight = 601
 title = "소프트웨어 아키텍처"
 description = "소프트웨어 아키텍처의 기본 개념과 중요성"
 date = 2024-01-15
-weight = 601
 
 [extra]
 categories = ["studynote-software-engineering"]

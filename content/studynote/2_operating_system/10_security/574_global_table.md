@@ -1,9 +1,9 @@
 +++
+weight = 574
 title = "574. 전역 테이블 (Global Table) 방식"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 574
 +++
 
 # 전역 테이블 (Global Table) 방식 - 접근 제어 행렬의 희소性问题을 해결하기 위한 연결 리스트 구현

@@ -1,9 +1,9 @@
 +++
+weight = 382
 title = "382. 가상 주소 공간 (Virtual Address Space) 프로세스의 우주"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 382
 +++
 
 # 가상 주소 공간 (Virtual Address Space)

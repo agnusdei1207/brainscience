@@ -1,9 +1,9 @@
 +++
+weight = 378
 title = "378. 로컬 노드 할당 vs 인터리브 할당 (NUMA 정책의 양대 산맥)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 378
 +++
 
 # 로컬 노드 할당 vs 인터리브 할당

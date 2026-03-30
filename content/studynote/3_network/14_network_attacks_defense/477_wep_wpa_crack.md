@@ -1,8 +1,8 @@
 +++
+weight = 18
 title = "무선 보안 공격: WEP/WPA 크래킹"
 description = "WEP의 구조적 결함, WPA의 TKIP 공격, KRACK, 크래킹 도구(aircrack-ng), 무선 보안 강화를شرح"
 date = 2024-02-01
-weight = 18
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,8 +1,8 @@
 +++
+weight = 8003
 title = "공격 벡터 (Attack Vector)"
 description = "시스템 침입의 다양한 경로와 공격手法"
 date = 2026-03-26
-weight = 8003
 
 [extra]
 categories = ["studynote-software-engineering"]

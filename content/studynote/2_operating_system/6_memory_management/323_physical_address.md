@@ -1,9 +1,9 @@
 +++
+weight = 323
 title = "323. 물리 주소 (Physical Address) - 메모리 장치가 보는 주소"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 323
 +++
 
 # 물리 주소 (Physical Address)

@@ -1,8 +1,8 @@
 +++
+weight = 614
 title = "CQRS 패턴"
 description = "CQRS(Command Query Responsibility Segregation)의 개념과 활용"
 date = 2024-01-27
-weight = 614
 
 [extra]
 categories = ["studynote-software-engineering"]

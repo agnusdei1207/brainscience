@@ -1,7 +1,7 @@
 +++
+weight = 154
 title = "스레드 스택 오버플로우 방지 (Guard Page)"
 date = "2026-03-22"
-weight = 154
 [extra]
 categories = "studynote-operating-system"
 +++

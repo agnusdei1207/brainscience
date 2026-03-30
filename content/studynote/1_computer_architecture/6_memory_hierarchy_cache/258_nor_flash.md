@@ -1,6 +1,6 @@
 +++
-title = "NOR 플래시 (NOR Flash Memory)"
 weight = 258
+title = "NOR 플래시 (NOR Flash Memory)"
 +++
 
 # NOR 플래시 (NOR Flash Memory)

@@ -1,8 +1,8 @@
 +++
+weight = 10
 title = "계획 및 추론"
 description = "인공지능에서 계획(Planning)과 추론(Reasoning)의 정의, 계획 알고리즘, STRIPS와 PDDL"
 category = "10_ai"
-weight = 10
 +++
 
 ## 핵심 인사이트 (3줄 요약)

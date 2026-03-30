@@ -1,8 +1,8 @@
 +++
+weight = 17
 title = "바운디드 컨텍스트"
 description = "바운디드 컨텍스트(Bounded Context)의 개념, DDD 전략적 설계"
 date = 2024-01-30
-weight = 17
 
 [extra]
 categories = ["studynote-software-engineering"]

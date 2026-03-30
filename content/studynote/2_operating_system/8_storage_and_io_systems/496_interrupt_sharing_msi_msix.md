@@ -1,9 +1,9 @@
 +++
+weight = 496
 title = "496. 인터럽트 공유 (Interrupt Sharing) 및 MSI/MSI-X"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 496
 +++
 
 # 인터럽트 공유 (Interrupt Sharing) 및 MSI/MSI-X (Message Signaled Interrupts)

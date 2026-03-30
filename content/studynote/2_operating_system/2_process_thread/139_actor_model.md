@@ -1,7 +1,7 @@
 +++
+weight = 139
 title = "139. 액터 모델 (Actor Model) - Erlang, Akka 동시성 모델"
 date = "2026-03-22"
-weight = 139
 [extra]
 categories = "studynote-operating-system"
 +++

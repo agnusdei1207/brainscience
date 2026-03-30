@@ -1,8 +1,8 @@
 +++
+weight = 21
 title = "JOIN 연산"
 description = "SQL JOIN 연산의 유형과 사용법"
 date = 2026-03-26
-weight = 21
 
 [taxonomies]
 tags = ["database", "sql", "join"]

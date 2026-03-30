@@ -1,8 +1,8 @@
 +++
+weight = 8007
 title = "보안 정책 (Security Policy)"
 description = "조직의 정보보안을 규율하는 정책과 표준"
 date = 2026-03-26
-weight = 8007
 
 [extra]
 categories = ["studynote-software-engineering"]

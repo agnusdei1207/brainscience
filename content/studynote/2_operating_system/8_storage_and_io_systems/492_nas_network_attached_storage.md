@@ -1,9 +1,9 @@
 +++
+weight = 492
 title = "492. NAS (Network Attached Storage)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 492
 +++
 
 # NAS (Network Attached Storage) - 파일 단위 접근

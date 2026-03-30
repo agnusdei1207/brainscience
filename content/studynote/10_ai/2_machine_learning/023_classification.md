@@ -1,8 +1,8 @@
 +++
+weight = 23
 title = "분류"
 description = "분류(Classification)의 정의, 이진 분류, 다중 분류, 평가 지표(정확도, 정밀도, 재현율, F1)"
 category = "10_ai"
-weight = 23
 +++
 
 ## 핵심 인사이트 (3줄 요약)

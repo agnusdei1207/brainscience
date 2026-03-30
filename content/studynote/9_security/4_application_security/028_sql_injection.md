@@ -1,8 +1,8 @@
 +++
+weight = 28
 title = "SQL 인젝션 (SQL Injection)"
 description = "웹 애플리케이션의 가장 흔한 보안 취약점: SQL 인젝션의 원리와 방어"
 date = 2026-03-26
-weight = 28
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,8 +1,8 @@
 +++
+weight = 27
 title = "제2정규형 (2NF)"
 description = "제2정규형의 정의와 부분 종속성 제거"
 date = 2026-03-26
-weight = 27
 
 [taxonomies]
 tags = ["database", "normalization", "2nf", "second-normal-form", "partial-dependency"]

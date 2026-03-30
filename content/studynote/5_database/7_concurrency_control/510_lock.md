@@ -1,8 +1,8 @@
 +++
+weight = 510
 title = "잠금 (Lock)"
 description = "데이터베이스 동시성 제어의 기본 메커니즘인 잠금에 대해 설명"
 date = 2024-01-01
-weight = 510
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,9 +1,9 @@
 +++
+weight = 566
 title = "566. mmap 기반 제로 카피 (Zero-copy) 전송 기술 - 데이터 고속도로 패스"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 566
 +++
 
 # mmap 기반 제로 카피 (Zero-copy) 와 sendfile - 넷플릭스가 10만 명에게 영화를 쏠 때, CPU를 완전 기절(Bypass) 시키고 네트워크 랜카드(NIC)에 다이렉트로 영화를 퍼붓는 극한의 스루풋 파이프라인

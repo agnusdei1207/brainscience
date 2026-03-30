@@ -1,8 +1,8 @@
 +++
+weight = 9
 title = "CoAP (Constrained Application Protocol) 프로토콜"
 description = "CoAP의 구조, HTTP/REST 매핑, UDP 기반 동작, DTLS 보안, IoT 환경 최적화를شرح"
 date = 2024-01-23
-weight = 9
 
 [extra]
 categories = ["studynote-software-engineering"]

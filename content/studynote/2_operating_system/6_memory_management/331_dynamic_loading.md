@@ -1,9 +1,9 @@
 +++
+weight = 331
 title = "331. 동적 적재 (Dynamic Loading) 지연 메모리 할당"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 331
 +++
 
 # 동적 적재 (Dynamic Loading)

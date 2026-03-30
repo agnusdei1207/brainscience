@@ -1,9 +1,9 @@
 +++
+weight = 402
 title = "402. 최적 교체 알고리즘 (OPT, Optimal) 신의 영역에 도전하는 벤치마크"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 402
 +++
 
 # 최적 교체 알고리즘 (OPT, Optimal)

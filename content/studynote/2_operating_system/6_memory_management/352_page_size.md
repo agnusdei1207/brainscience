@@ -1,9 +1,9 @@
 +++
+weight = 352
 title = "352. 페이지 크기 (Page Size) 메모리 아키텍처의 트레이드오프"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 352
 +++
 
 # 페이지 크기 (Page Size)

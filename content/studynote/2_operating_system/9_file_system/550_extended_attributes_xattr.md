@@ -1,9 +1,9 @@
 +++
+weight = 550
 title = "550. 리눅스 확장 속성 (Extended Attributes, xattr) - 메타데이터 무한 확장 주머니"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 550
 +++
 
 # 리눅스 확장 속성 (Extended Attributes, xattr) - i-node의 256 바이트 감옥을 찢어 발긴 무한 메타데이터 기생 주머니 아크

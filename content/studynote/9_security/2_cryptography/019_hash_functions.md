@@ -1,8 +1,8 @@
 +++
+weight = 19
 title = "해시 함수 (Hash Functions)"
 description = "데이터 무결성 검증에 사용되는 SHA, MD5 등의 해시 함수"
 date = 2026-03-26
-weight = 19
 
 [extra]
 categories = ["studynote-software-engineering"]

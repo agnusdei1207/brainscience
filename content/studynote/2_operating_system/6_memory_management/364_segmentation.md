@@ -1,9 +1,9 @@
 +++
+weight = 364
 title = "364. 세그멘테이션 (Segmentation) 인간 중심의 메모리 분할"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 364
 +++
 
 # 세그멘테이션 (Segmentation)

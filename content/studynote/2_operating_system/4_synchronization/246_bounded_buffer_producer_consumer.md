@@ -1,9 +1,9 @@
 +++
+weight = 246
 title = "246. 유한 버퍼 문제 (Bounded-Buffer / Producer-Consumer Problem)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 246
 +++
 
 # 유한 버퍼 문제 (Bounded-Buffer Problem) / 생산자-소비자 문제

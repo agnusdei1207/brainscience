@@ -1,9 +1,9 @@
 +++
+weight = 190
 title = "190. 공평 몫 스케줄링 (Fair-share Scheduling)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 190
 +++
 
 # 공평 몫 스케줄링 (Fair-share Scheduling)

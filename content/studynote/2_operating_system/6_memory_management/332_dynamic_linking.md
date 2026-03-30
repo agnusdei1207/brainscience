@@ -1,9 +1,9 @@
 +++
+weight = 332
 title = "332. 동적 연결 (Dynamic Linking) 실행 시간 라이브러리 공유"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 332
 +++
 
 # 동적 연결 (Dynamic Linking)

@@ -1,9 +1,9 @@
 +++
+weight = 188
 title = "188. 보장 스케줄링 (Guaranteed Scheduling)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 188
 +++
 
 # 보장 스케줄링 (Guaranteed Scheduling)

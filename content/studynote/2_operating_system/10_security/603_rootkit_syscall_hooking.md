@@ -1,9 +1,9 @@
 +++
+weight = 603
 title = "603. 루트킷 (Rootkit)과 커널 시스템 콜 후킹"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
-weight = 603
 +++
 
 # 루트킷 (Rootkit) 커널 모듈 감염 및 시스템 콜 후킹

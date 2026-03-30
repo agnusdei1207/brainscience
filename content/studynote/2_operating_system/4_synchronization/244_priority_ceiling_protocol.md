@@ -1,9 +1,9 @@
 +++
+weight = 244
 title = "244. 우선순위 올림 프로토콜 (Priority Ceiling Protocol)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 244
 +++
 
 # 우선순위 올림 프로토콜 (Priority Ceiling Protocol)

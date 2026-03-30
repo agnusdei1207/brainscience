@@ -1,9 +1,9 @@
 +++
+weight = 587
 title = "587. 백도어 (Backdoor) / 트랩도어 (Trapdoor)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 587
 +++
 
 # 백도어 (Backdoor) / 트랩도어 (Trapdoor) - 정상 인증 절차를 우회하여 시스템에 접근하는 숨겨진 통로

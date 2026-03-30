@@ -1,8 +1,8 @@
 +++
+weight = 507
 title = "ACID 속성"
 description = "ACID (원자성, 일관성, 고립성, 영속성) 상세 설명"
 date = 2026-03-26
-weight = 507
 
 [taxonomies]
 tags = ["database", "acid", "transaction"]

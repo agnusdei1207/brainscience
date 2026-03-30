@@ -1,7 +1,7 @@
 +++
+weight = 142
 title = "이벤트 루프 기반 비동기 처리"
 date = "2026-03-22"
-weight = 142
 [extra]
 categories = "studynote-operating-system"
 +++

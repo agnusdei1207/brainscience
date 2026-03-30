@@ -1,9 +1,9 @@
 +++
+weight = 481
 title = "481. TRIM 명령어"
 date = "2026-03-24"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 481
 +++
 
 # TRIM 명령어

@@ -1,7 +1,7 @@
 +++
+weight = 128
 title = "128. ��� (Marshalling) / ���� (Unmarshalling)"
 date = "2026-03-22"
-weight = 128
 [extra]
 categories = "studynote-operating-system"
 +++

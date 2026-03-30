@@ -1,8 +1,8 @@
 +++
+weight = 501
 title = "데이터베이스 (Database)"
 description = "데이터베이스의 정의, 구성 요소, 필요성"
 date = 2026-03-26
-weight = 501
 
 [taxonomies]
 tags = ["database", "db", "data"]

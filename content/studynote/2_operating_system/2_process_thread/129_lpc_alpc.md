@@ -1,7 +1,7 @@
 +++
+weight = 129
 title = "129. 로컬 프로시저 호출 (LPC) / ALPC (Windows)"
 date = "2026-03-22"
-weight = 129
 [extra]
 categories = "studynote-operating-system"
 +++

@@ -1,6 +1,6 @@
 +++
-title = "NAND 플래시 (NAND Flash Memory)"
 weight = 257
+title = "NAND 플래시 (NAND Flash Memory)"
 +++
 
 # NAND 플래시 (NAND Flash Memory)

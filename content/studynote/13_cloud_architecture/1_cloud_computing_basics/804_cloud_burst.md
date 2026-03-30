@@ -1,8 +1,8 @@
 +++
+weight = 804
 title = "클라우드 버스트 (Cloud Burst)"
 description = "클라우드 버스트의 정의, 동작 원리, 활용 시나리오"
 date = 2026-03-26
-weight = 804
 
 [taxonomies]
 tags = ["cloud", "cloud-burst", "hybrid-cloud", "auto-scaling"]

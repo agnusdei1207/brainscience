@@ -1,8 +1,8 @@
 +++
+weight = 22
 title = "GROUP BY와 HAVING"
 description = "SQL GROUP BY와 HAVING 절의 사용법"
 date = 2026-03-26
-weight = 22
 
 [taxonomies]
 tags = ["database", "sql", "group-by", "having", "aggregate"]

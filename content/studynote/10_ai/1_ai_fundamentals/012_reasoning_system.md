@@ -1,8 +1,8 @@
 +++
+weight = 12
 title = "추론 시스템"
 description = "추론 시스템(Reasoning System)의 정의, 추론 방식(연역, 귀납, 연관), 현대 AI 추론 시스템"
 category = "10_ai"
-weight = 12
 +++
 
 ## 핵심 인사이트 (3줄 요약)

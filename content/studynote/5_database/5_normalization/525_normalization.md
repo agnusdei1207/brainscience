@@ -1,8 +1,8 @@
 +++
+weight = 25
 title = "정규화 (Normalization)"
 description = "정규화의 정의, 필요성, 기본 단계"
 date = 2026-03-26
-weight = 25
 
 [taxonomies]
 tags = ["database", "normalization", "anomaly", "redundancy"]

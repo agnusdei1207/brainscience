@@ -1,9 +1,9 @@
 +++
+weight = 386
 title = "386. 유효-무효 비트 (Valid-Invalid Bit) 가상 메모리의 스위치"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 386
 +++
 
 # 유효-무효 비트 (Valid-Invalid Bit)

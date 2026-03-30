@@ -1,9 +1,9 @@
 +++
+weight = 389
 title = "389. 페이지 부재율 (Page Fault Rate)과 실질 접근 시간 (EAT)의 함수 관계"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 389
 +++
 
 # 페이지 부재율 (Page Fault Rate)과 실질 접근 시간 (EAT) 성능 관계

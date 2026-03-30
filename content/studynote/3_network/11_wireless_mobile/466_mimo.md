@@ -1,8 +1,8 @@
 +++
+weight = 466
 title = "MIMO 및 Beamforming 기술"
 description = "다중 안테나 기술의 발전 과정, SISO/MISO/SIMO/MIMO/Massive MIMO 구분, 빔포밍 동작 원리를شرح"
 date = 2024-01-21
-weight = 466
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,8 +1,8 @@
 +++
+weight = 606
 title = "마이크로서비스 아키텍처"
 description = "마이크로서비스 아키텍처의 개념, MSA vs SOA, Decomposition 전략"
 date = 2024-01-19
-weight = 606
 
 [extra]
 categories = ["studynote-software-engineering"]

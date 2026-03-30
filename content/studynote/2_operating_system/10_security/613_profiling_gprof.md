@@ -1,9 +1,9 @@
 +++
+weight = 613
 title = "613. 프로파일링 (Profiling) 도구 Gprof 커널 후킹 작동 원리"
 date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 613
 +++
 
 # 프로파일링 (Profiling) 도구 Gprof 커널 후킹 작동 원리

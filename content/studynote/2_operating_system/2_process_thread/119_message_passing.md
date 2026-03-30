@@ -1,7 +1,7 @@
 +++
+weight = 119
 title = "119. ��� �� (Message Passing)"
 date = "2026-03-22"
-weight = 119
 [extra]
 categories = "studynote-operating-system"
 +++

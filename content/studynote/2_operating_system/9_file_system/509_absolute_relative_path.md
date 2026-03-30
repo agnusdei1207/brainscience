@@ -1,9 +1,9 @@
 +++
+weight = 509
 title = "509. 절대 경로 (Absolute Path) / 상대 경로 (Relative Path)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 509
 +++
 
 # 절대 경로와 상대 경로 - 파일 시스템 항해의 2대 나침반 지표

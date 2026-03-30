@@ -1,8 +1,8 @@
 +++
+weight = 20
 title = "GCP 주요 서비스 (IaaS/PaaS)"
 description = "Google Cloud Platform의 IaaS/PaaS 대표 서비스와 활용"
 date = 2026-03-26
-weight = 20
 
 [taxonomies]
 tags = ["cloud", "gcp", "compute-engine", "cloud-storage", "bigquery", "gke"]

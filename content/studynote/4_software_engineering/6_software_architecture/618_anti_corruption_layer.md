@@ -1,8 +1,8 @@
 +++
+weight = 18
 title = " Anticorruption Layer 패턴"
 description = " Anticorruption Layer(ACL)의 개념, 외부 시스템 Integration"
 date = 2024-01-31
-weight = 18
 
 [extra]
 categories = ["studynote-software-engineering"]

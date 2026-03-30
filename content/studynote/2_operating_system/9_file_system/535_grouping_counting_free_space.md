@@ -1,9 +1,9 @@
 +++
+weight = 535
 title = "535. 그룹화 (Grouping) 및 계수 (Counting) 기법"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 535
 +++
 
 # 그룹화 (Grouping) & 계수 (Counting) - RAM 낭비와 모터 지연을 찢어버린 극한의 장부 압축 스왑 통치

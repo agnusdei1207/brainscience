@@ -1,9 +1,9 @@
 +++
+weight = 557
 title = "557. 임시 파일 시스템 (tmpfs / ramfs) - RAM 메모리 상주 극초음속 환상 디스크"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 557
 +++
 
 # 임시 파일 시스템 (tmpfs / ramfs) - 느려 터진 철판 하드디스크를 버리고, RAM(메인 메모리) 공간을 떼어내 만든 휘발성 $O(1)$ 스루풋 광속 통치 구역

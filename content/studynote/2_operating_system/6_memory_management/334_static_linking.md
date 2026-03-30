@@ -1,9 +1,9 @@
 +++
+weight = 334
 title = "334. 정적 연결 (Static Linking) 단일 바이너리 패키징"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 334
 +++
 
 # 정적 연결 (Static Linking)

@@ -1,7 +1,7 @@
 +++
+weight = 145
 title = "NUMA-인식 스레드 스케줄링"
 date = "2026-03-22"
-weight = 145
 [extra]
 categories = "studynote-operating-system"
 +++

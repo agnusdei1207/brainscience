@@ -1,6 +1,6 @@
 +++
-title = "VXLAN (Virtual Extensible LAN)"
 weight = 800
+title = "VXLAN (Virtual Extensible LAN)"
 +++
 
 # VXLAN (Virtual Extensible LAN)

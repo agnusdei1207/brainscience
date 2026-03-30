@@ -1,6 +1,6 @@
 +++
-title = "SDDC (Software-Defined Data Center)"
 weight = 810
+title = "SDDC (Software-Defined Data Center)"
 +++
 
 # SDDC (Software-Defined Data Center)

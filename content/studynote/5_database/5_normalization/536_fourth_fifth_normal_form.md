@@ -1,8 +1,8 @@
 +++
+weight = 36
 title = "제4정규형과 제5정규형 (4NF, 5NF)"
 description = "제4정규형과 제5정규형의 정의와 적용"
 date = 2026-03-26
-weight = 36
 
 [taxonomies]
 tags = ["database", "normalization", "4nf", "5nf", "multi-valued-dependency"]

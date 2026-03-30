@@ -1,6 +1,6 @@
 +++
-title = "274. FIFO (First In First Out)"
 weight = 274
+title = "274. FIFO (First In First Out)"
 +++
 
 # FIFO (First In First Out)

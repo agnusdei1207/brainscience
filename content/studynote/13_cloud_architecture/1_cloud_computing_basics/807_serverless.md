@@ -1,8 +1,8 @@
 +++
+weight = 807
 title = "서버리스 컴퓨팅 (Serverless Computing)"
 description = "서버리스의 정의, FaaS, Lambda 함수 동작 원리"
 date = 2026-03-26
-weight = 807
 
 [taxonomies]
 tags = ["cloud", "serverless", "faas", "lambda", "function"]

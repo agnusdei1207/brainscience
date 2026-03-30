@@ -1,9 +1,9 @@
 +++
+weight = 516
 title = "516. 마운트 (Mount) 메커니즘"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 516
 +++
 
 # 마운트 (Mount) 메커니즘 - 이질적 우주를 연결하는 공간 융합 통치술

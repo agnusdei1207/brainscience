@@ -1,9 +1,9 @@
 +++
+weight = 290
 title = "290. 교착 상태 처리 방법 (Handling Deadlocks)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 290
 +++
 
 # 교착 상태 처리 방법 (Handling Deadlocks)

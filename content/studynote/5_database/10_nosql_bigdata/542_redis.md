@@ -1,8 +1,8 @@
 +++
+weight = 542
 title = "Redis"
 description = "인메모리 키-값 저장소 Redis의 특징과 활용 사례에 대해 설명"
 date = 2024-01-01
-weight = 542
 
 [extra]
 categories = ["studynote-software-engineering"]

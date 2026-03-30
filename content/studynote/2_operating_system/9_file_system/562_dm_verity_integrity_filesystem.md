@@ -1,9 +1,9 @@
 +++
+weight = 562
 title = "562. 무결성 검증 파일 시스템 (dm-verity) - Android 보안 부팅의 핵심"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 562
 +++
 
 # 무결성 검증 파일 시스템 (dm-verity) - 블록 1개만 해킹돼도 부팅을 거부하는 안드로이드 스마트폰의 극악 무도한 순정 해시 방패 

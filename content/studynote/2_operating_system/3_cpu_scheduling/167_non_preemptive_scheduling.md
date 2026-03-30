@@ -1,9 +1,9 @@
 +++
+weight = 167
 title = "167. 비선점형 스케줄링 (Non-preemptive Scheduling)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 167
 +++
 
 # 비선점형 스케줄링 (Non-preemptive Scheduling)

@@ -1,6 +1,6 @@
 +++
-title = "네트워크 오케스트레이션 (Network Orchestration)"
 weight = 825
+title = "네트워크 오케스트레이션 (Network Orchestration)"
 +++
 
 # 네트워크 오케스트레이션 (Network Orchestration)

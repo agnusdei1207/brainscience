@@ -1,8 +1,8 @@
 +++
+weight = 603
 title = "계층화 아키텍처"
 description = "계층화 아키텍처의 개념, 장단점 및 실무 적용"
 date = 2024-01-16
-weight = 603
 
 [extra]
 categories = ["studynote-software-engineering"]

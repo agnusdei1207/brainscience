@@ -1,9 +1,9 @@
 +++
+weight = 229
 title = "229. 모니터 (Monitor)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 229
 +++
 
 # 모니터 (Monitor)

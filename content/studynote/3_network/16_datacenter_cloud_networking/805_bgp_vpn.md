@@ -1,6 +1,6 @@
 +++
-title = "BGP와 VPN (BGP and VPN)"
 weight = 805
+title = "BGP와 VPN (BGP and VPN)"
 +++
 
 # BGP와 VPN (BGP and VPN)

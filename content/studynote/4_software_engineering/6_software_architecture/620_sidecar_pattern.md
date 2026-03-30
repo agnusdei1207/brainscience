@@ -1,8 +1,8 @@
 +++
+weight = 20
 title = "사이드카 패턴"
 description = "사이카(Sidecar) 패턴의 개념, 프록시 배치, Concern 분리"
 date = 2024-02-02
-weight = 20
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,8 +1,8 @@
 +++
+weight = 608
 title = "도메인 주도의 설계 (DDD)"
 description = "DDD의 개념, 전략적 설계, 전술적 설계, Bounded Context"
 date = 2024-01-21
-weight = 608
 
 [extra]
 categories = ["studynote-software-engineering"]

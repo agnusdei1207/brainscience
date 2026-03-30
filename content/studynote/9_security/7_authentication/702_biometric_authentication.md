@@ -1,8 +1,8 @@
 +++
+weight = 2
 title = "생체 인증"
 description = "지문, 얼굴, 홍채 등 생체 정보를 이용한 인증 방식의 원리와 보안"
 date = 2024-01-15
-weight = 2
 +++
 
 # 생체 인증 (Biometric Authentication)

@@ -1,9 +1,9 @@
 +++
+weight = 602
 title = "602. 샌드박싱 (Sandboxing) 기술 및 커널 래퍼"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
-weight = 602
 +++
 
 # 샌드박싱 (Sandboxing) 기술 및 커널 래퍼

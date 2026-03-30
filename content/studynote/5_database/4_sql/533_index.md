@@ -1,8 +1,8 @@
 +++
+weight = 33
 title = "인덱스 (Index)"
 description = "데이터베이스 인덱스의 정의와 유형"
 date = 2026-03-26
-weight = 33
 
 [taxonomies]
 tags = ["database", "sql", "index", "b-tree"]

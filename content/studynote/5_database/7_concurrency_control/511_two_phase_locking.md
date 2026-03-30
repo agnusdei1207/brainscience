@@ -1,8 +1,8 @@
 +++
+weight = 511
 title = "2단계 잠금 프로토콜 (Two-Phase Locking, 2PL)"
 description = "직렬 가능성을 보장하는 2단계 잠금 프로토콜에 대해 설명"
 date = 2024-01-01
-weight = 511
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,6 +1,6 @@
 +++
-title = "SONET/SDH (Synchronous Optical Network / Synchronous Digital Hierarchy)"
 weight = 841
+title = "SONET/SDH (Synchronous Optical Network / Synchronous Digital Hierarchy)"
 +++
 
 # SONET/SDH (Synchronous Optical Network / Synchronous Digital Hierarchy)

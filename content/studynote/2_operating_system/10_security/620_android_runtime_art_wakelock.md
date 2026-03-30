@@ -1,9 +1,9 @@
 +++
+weight = 620
 title = "620. 안드로이드 리눅스 커널 커스터마이징 (Wakelock 전력 통제 모듈)"
 date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 620
 +++
 
 # 안드로이드 리눅스 커널 커스터마이징 (Wakelock 전력 통제 모듈)

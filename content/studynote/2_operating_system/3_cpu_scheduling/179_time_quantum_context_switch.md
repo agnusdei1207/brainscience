@@ -1,9 +1,9 @@
 +++
+weight = 179
 title = "179. 시간 할당량 (Time Quantum)과 문맥 교환 오버헤드"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 179
 +++
 
 # 시간 할당량 (Time Quantum)과 문맥 교환 오버헤드

@@ -1,9 +1,9 @@
 +++
+weight = 414
 title = "414. 스래싱 원인 (Cause of Thrashing) 물리적 파산"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 414
 +++
 
 # 스래싱 원인 - 최소 프레임 확보 실패

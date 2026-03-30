@@ -1,9 +1,9 @@
 +++
+weight = 348
 title = "348. 버디 시스템 (Buddy System) 할당기"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 348
 +++
 
 # 버디 시스템 (Buddy System) 할당기

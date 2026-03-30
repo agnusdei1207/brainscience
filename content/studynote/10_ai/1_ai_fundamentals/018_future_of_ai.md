@@ -1,8 +1,8 @@
 +++
+weight = 18
 title = "인공지능의 미래"
 description = "인공지능의 미래 발전 방향, AGI 가능성, 슈퍼 인텔리전스, 기술 특이점"
 category = "10_ai"
-weight = 18
 +++
 
 ## 핵심 인사이트 (3줄 요약)

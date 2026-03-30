@@ -1,8 +1,8 @@
 +++
+weight = 10
 title = "엣지 컴퓨팅 (Edge Computing) 기술"
 description = "엣지 컴퓨팅의 정의, 클라우드와의 비교, MEC, 오프로드, 지연 시간 최적화 원리를شرح"
 date = 2024-01-24
-weight = 10
 
 [extra]
 categories = ["studynote-software-engineering"]

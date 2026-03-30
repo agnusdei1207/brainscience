@@ -1,6 +1,6 @@
 +++
-title = "폰 노이만 아키텍처 (Von Neumann Architecture)"
 weight = 124
+title = "폰 노이만 아키텍처 (Von Neumann Architecture)"
 +++
 
 # 폰 노이만 아키텍처 (Von Neumann Architecture)

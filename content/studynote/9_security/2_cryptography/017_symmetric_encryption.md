@@ -1,8 +1,8 @@
 +++
+weight = 17
 title = "대칭키 암호화 (Symmetric Encryption)"
 description = "동일한 키로 암호화와 복호화를 수행하는 AES, DES 등의 암호화 방식"
 date = 2026-03-26
-weight = 17
 
 [extra]
 categories = ["studynote-software-engineering"]

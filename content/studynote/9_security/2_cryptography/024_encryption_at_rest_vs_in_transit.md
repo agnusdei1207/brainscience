@@ -1,8 +1,8 @@
 +++
+weight = 24
 title = "Encryption at Rest vs In Transit"
 description = "저장 데이터 암호화와 전송 중 암호화의 차이와 적용"
 date = 2026-03-26
-weight = 24
 
 [extra]
 categories = ["studynote-software-engineering"]

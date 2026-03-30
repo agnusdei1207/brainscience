@@ -1,8 +1,8 @@
 +++
+weight = 7
 title = "기호 인공지능"
 description = "기호 인공지능(Symbolic AI)의 정의, 논리 기반 추론, 지식 표현, 전문가 시스템과의 관계"
 category = "10_ai"
-weight = 7
 +++
 
 ## 핵심 인사이트 (3줄 요약)

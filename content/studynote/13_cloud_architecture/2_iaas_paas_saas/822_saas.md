@@ -1,8 +1,8 @@
 +++
+weight = 17
 title = "SaaS (Software as a Service)"
 description = "SaaS의 정의, 서비스 구조, 대표 서비스"
 date = 2026-03-26
-weight = 17
 
 [taxonomies]
 tags = ["cloud", "saas", "software", "microsoft-365", "salesforce"]

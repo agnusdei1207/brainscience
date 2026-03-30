@@ -1,8 +1,8 @@
 +++
+weight = 45
 title = "Amazon DynamoDB"
 description = "AWS의 관리형 NoSQL 데이터베이스 DynamoDB의 특징에 대해 설명"
 date = 2024-01-01
-weight = 45
 
 [extra]
 categories = ["studynote-software-engineering"]

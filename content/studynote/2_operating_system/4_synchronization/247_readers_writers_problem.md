@@ -1,9 +1,9 @@
 +++
+weight = 247
 title = "247. 독자-저자 문제 (Readers-Writers Problem)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 247
 +++
 
 # 독자-저자 문제 (Readers-Writers Problem)

@@ -1,9 +1,9 @@
 +++
+weight = 490
 title = "490. 소프트웨어 RAID vs 하드웨어 RAID (컨트롤러 캐시/BBU 장착)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 490
 +++
 
 # 소프트웨어 RAID vs 하드웨어 RAID (컨트롤러 캐시/BBU 장착)

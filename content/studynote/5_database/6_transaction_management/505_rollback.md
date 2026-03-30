@@ -1,8 +1,8 @@
 +++
+weight = 505
 title = "롤백 (Rollback)"
 description = "트랜잭션 롤백의 개념과 UNDO 로그 기반 복구 메커니즘에 대해 설명"
 date = 2024-01-01
-weight = 505
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,9 +1,9 @@
 +++
+weight = 576
 title = "576. 자격 증명 목록 (Capability List / Ticket)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 576
 +++
 
 # 자격 증명 목록 (Capability List / Ticket) - 접근 제어 행렬을 주체 기준으로 분할한 구현 방식

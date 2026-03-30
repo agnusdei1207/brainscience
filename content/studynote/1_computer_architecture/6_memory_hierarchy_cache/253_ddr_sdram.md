@@ -1,6 +1,6 @@
 +++
-title = "DDR SDRAM (Double Data Rate SDRAM)"
 weight = 253
+title = "DDR SDRAM (Double Data Rate SDRAM)"
 +++
 
 # DDR SDRAM (Double Data Rate SDRAM)

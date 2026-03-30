@@ -1,8 +1,8 @@
 +++
+weight = 503
 title = "트랜잭션 상태 (Transaction State)"
 description = "트랜잭션의 생명주기인 상태 전이와 각 상태의 의미에 대해 설명"
 date = 2024-01-01
-weight = 503
 
 [extra]
 categories = ["studynote-software-engineering"]

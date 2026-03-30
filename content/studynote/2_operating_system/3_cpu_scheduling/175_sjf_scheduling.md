@@ -1,9 +1,9 @@
 +++
+weight = 175
 title = "175. SJF (Shortest Job First) 스케줄링"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 175
 +++
 
 # SJF (Shortest Job First) 스케줄링

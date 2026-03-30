@@ -1,6 +1,6 @@
 +++
-title = "로드 밸런싱 (Load Balancing)"
 weight = 802
+title = "로드 밸런싱 (Load Balancing)"
 +++
 
 # 로드 밸런싱 (Load Balancing)

@@ -1,8 +1,8 @@
 +++
+weight = 46
 title = "NewSQL 데이터베이스"
 description = "CAP 이론의 제약을突破하며 ACID와 수평 확장을 동시에 지원하는 NewSQL에 대해 설명"
 date = 2024-01-01
-weight = 46
 
 [extra]
 categories = ["studynote-software-engineering"]

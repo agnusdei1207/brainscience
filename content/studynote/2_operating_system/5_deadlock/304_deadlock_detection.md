@@ -1,9 +1,9 @@
 +++
+weight = 304
 title = "304. 교착 상태 탐지 (Deadlock Detection) - 주기적 감시망"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 304
 +++
 
 # 교착 상태 탐지 (Deadlock Detection) - 주기적 감시망

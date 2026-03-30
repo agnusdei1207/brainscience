@@ -1,7 +1,7 @@
 +++
+weight = 111
 title = "스레드 취소 (Thread Cancellation)"
 date = "2026-03-22"
-weight = 111
 [extra]
 categories = "studynote-operating-system"
 +++

@@ -1,9 +1,9 @@
 +++
+weight = 366
 title = "366. 세그멘테이션과 외부 단편화 (External Fragmentation in Segmentation)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 366
 +++
 
 # 세그멘테이션과 외부 단편화

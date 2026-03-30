@@ -1,8 +1,8 @@
 +++
+weight = 4
 title = "HTTP/3와 QUIC"
 description = "차세대 웹 프로토콜 HTTP/3와 그 기반이 되는 QUIC의 동작 원리를 다룬다."
 date = 2024-02-04
-weight = 4
 
 [extra]
 categories = ["studynote-software-engineering"]

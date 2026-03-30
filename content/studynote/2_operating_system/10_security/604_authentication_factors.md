@@ -1,9 +1,9 @@
 +++
+weight = 604
 title = "604. 사용자 인증 (Authentication) 및 3요소"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
-weight = 604
 +++
 
 # 사용자 인증 (Authentication) 체계 및 3요소

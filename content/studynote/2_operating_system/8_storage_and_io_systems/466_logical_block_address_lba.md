@@ -1,9 +1,9 @@
 +++
+weight = 466
 title = "466. 논리적 블록 주소 (LBA, Logical Block Address) 디스크의 1차원 추상화"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 466
 +++
 
 # 논리적 블록 주소 (LBA, Logical Block Address)

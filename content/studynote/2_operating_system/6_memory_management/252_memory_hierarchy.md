@@ -1,9 +1,9 @@
 +++
+weight = 252
 title = "252. 메모리 계층 구조 (Memory Hierarchy)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 252
 +++
 
 # 메모리 계층 구조 (Memory Hierarchy)

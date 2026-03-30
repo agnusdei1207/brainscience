@@ -1,8 +1,8 @@
 +++
+weight = 24
 title = "DML, DDL, DCL"
 description = "SQL의 세 가지 하위 언어 분류"
 date = 2026-03-26
-weight = 24
 
 [taxonomies]
 tags = ["database", "sql", "dml", "ddl", "dcl"]

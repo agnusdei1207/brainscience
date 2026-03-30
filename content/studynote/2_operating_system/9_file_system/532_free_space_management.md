@@ -1,9 +1,9 @@
 +++
+weight = 532
 title = "532. 빈 공간 관리 (Free-Space Management) 알고리즘"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 532
 +++
 
 # 빈 공간 관리 (Free-Space Management) - 썩어 들어가는 디스크 오아시스를 수색하고 타격하는 탐색 전선

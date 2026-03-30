@@ -1,8 +1,8 @@
 +++
+weight = 19
 title = "SSL/TLS 프로토콜"
 description = "SSL/TLS의 동작 원리, 핸드셰이크 절차, 인증서, 암호화 스위트, TLS 1.3의 개선점을شرح"
 date = 2024-02-02
-weight = 19
 
 [extra]
 categories = ["studynote-software-engineering"]

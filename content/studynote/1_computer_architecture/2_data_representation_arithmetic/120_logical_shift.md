@@ -1,6 +1,6 @@
 +++
-title = "논리 시프트 (Logical Shift)"
 weight = 120
+title = "논리 시프트 (Logical Shift)"
 +++
 
 # 논리 시프트 (Logical Shift)

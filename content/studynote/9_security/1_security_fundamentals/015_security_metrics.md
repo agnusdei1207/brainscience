@@ -1,8 +1,8 @@
 +++
+weight = 8015
 title = "보안 지표 (Security Metrics)"
 description = "보안 성과와リスク posture를 측정하는 지표 체계"
 date = 2026-03-26
-weight = 8015
 
 [extra]
 categories = ["studynote-software-engineering"]

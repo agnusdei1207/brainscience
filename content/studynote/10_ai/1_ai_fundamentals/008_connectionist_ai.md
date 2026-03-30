@@ -1,8 +1,8 @@
 +++
+weight = 8
 title = "연결주의人工智能"
 description = "연결주의人工智能(Connectionist AI)의 정의, 신경망 기반 학습, 딥러닝과의 관계"
 category = "10_ai"
-weight = 8
 +++
 
 ## 핵심 인사이트 (3줄 요약)

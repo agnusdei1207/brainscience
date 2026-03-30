@@ -1,9 +1,9 @@
 +++
+weight = 568
 title = "568. 강제적 잠금 (Mandatory Lock) vs 권고적 (Advisory Lock)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 568
 +++
 
 # 강제적 잠금 (Mandatory Lock) vs 권고적 잠금 (Advisory Lock) - 커널의 철퇴 학살이냐, 유저 앱의 신사협정이냐를 가르는 VFS 종착점 

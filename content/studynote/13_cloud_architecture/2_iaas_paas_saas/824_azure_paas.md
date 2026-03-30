@@ -1,8 +1,8 @@
 +++
+weight = 19
 title = "Azure 주요 서비스 (IaaS/PaaS)"
 description = "Microsoft Azure의 IaaS/PaaS 대표 서비스와 활용"
 date = 2026-03-26
-weight = 19
 
 [taxonomies]
 tags = ["cloud", "azure", "virtual-machines", "azure-sql", "aks", "functions"]

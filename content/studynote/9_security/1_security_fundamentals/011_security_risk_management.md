@@ -1,8 +1,8 @@
 +++
+weight = 8011
 title = "보안 위험 관리 (Security Risk Management)"
 description = "조직의 정보보안 위험을 체계적으로 평가하고管理하는 과정"
 date = 2026-03-26
-weight = 8011
 
 [extra]
 categories = ["studynote-software-engineering"]

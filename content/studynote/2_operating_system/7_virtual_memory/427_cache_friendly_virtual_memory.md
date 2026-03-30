@@ -1,9 +1,9 @@
 +++
+weight = 427
 title = "427. 캐시 친화적 가상 메모리 관리 배치"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 427
 +++
 
 # 캐시 친화적 가상 메모리 관리 배치

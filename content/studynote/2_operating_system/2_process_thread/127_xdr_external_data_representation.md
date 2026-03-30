@@ -1,7 +1,7 @@
 +++
+weight = 127
 title = "127. XDR (External Data Representation)"
 date = "2026-03-22"
-weight = 127
 [extra]
 categories = "studynote-operating-system"
 +++

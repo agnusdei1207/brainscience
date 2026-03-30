@@ -1,9 +1,9 @@
 +++
+weight = 293
 title = "293. 상호 배제 부정 - 모든 자원 공유"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 293
 +++
 
 # 상호 배제 부정 - 모든 자원 공유 (Deny Mutual Exclusion)

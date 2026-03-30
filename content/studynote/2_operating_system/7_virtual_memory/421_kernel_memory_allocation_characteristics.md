@@ -1,9 +1,9 @@
 +++
+weight = 421
 title = "421. 커널 메모리 할당의 특징"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 421
 +++
 
 # 커널 메모리 할당의 특징 (물리적 연속성의 강제)

@@ -1,9 +1,9 @@
 +++
+weight = 296
 title = "296. 순환 대기 부정 (Deny Circular Wait) - 락 순서화"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 296
 +++
 
 # 순환 대기 부정 (Deny Circular Wait) - 락 순서화

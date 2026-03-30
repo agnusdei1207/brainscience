@@ -1,9 +1,9 @@
 +++
+weight = 609
 title = "609. 성능 모니터링 (Performance Monitoring) 및 튜닝 방법론"
 date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 609
 +++
 
 # 성능 모니터링 (Performance Monitoring) 및 튜닝 방법론

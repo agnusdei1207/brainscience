@@ -1,9 +1,9 @@
 +++
+weight = 316
 title = "316. 동기화 결함 (순환 의존성) 코드 레벨 디버깅 기법"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 316
 +++
 
 # 동기화 결함 (순환 의존성) 코드 레벨 디버깅 기법

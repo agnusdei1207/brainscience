@@ -1,7 +1,7 @@
 +++
+weight = 123
 title = "123. 파이프 (Pipe)"
 date = "2026-03-22"
-weight = 123
 [extra]
 categories = "studynote-operating-system"
 +++

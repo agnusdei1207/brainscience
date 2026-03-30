@@ -1,9 +1,9 @@
 +++
+weight = 607
 title = "607. 물리적 보안 및 하드웨어 보안 모듈 (TPM, Trusted Platform Module)"
 date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 607
 +++
 
 # 물리적 보안 및 하드웨어 보안 모듈 (TPM, Trusted Platform Module)

@@ -1,9 +1,9 @@
 +++
+weight = 204
 title = "204. 레드-블랙 트리 (Red-Black Tree)와 CFS"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 204
 +++
 
 # 레드-블랙 트리 (Red-Black Tree)와 CFS

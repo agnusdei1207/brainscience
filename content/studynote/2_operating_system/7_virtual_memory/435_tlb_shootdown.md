@@ -1,9 +1,9 @@
 +++
+weight = 435
 title = "435. TLB 슛다운 (TLB Shootdown) 멀티코어 캐시의 재앙"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 435
 +++
 
 # TLB 슛다운 (TLB Shootdown)

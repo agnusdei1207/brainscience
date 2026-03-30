@@ -1,9 +1,9 @@
 +++
+weight = 569
 title = "569. 스파스 파일 (Sparse File) - 하드 없는 용량 사기 렌더"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 569
 +++
 
 # 스파스 파일 (Sparse File 공간 절약 아크) - 파일 용량은 100GB 로 찍히는데 디스크 쇳덩어리 차지하는 용량은 단 1MB 기적, 커널이 부리는 영원의 무 중력 환각 마법 

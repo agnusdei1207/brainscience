@@ -1,7 +1,7 @@
 +++
+weight = 110
 title = "고아 프로세스 (Orphan Process)"
 date = "2026-03-22"
-weight = 110
 [extra]
 categories = "studynote-operating-system"
 +++

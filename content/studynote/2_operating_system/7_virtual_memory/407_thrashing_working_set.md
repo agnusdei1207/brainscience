@@ -1,9 +1,9 @@
 +++
+weight = 407
 title = "407. 스래싱과 워킹 셋 (Thrashing & Working Set)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 407
 +++
 
 # 스래싱 (Thrashing) & 워킹 셋 (Working Set)

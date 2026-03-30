@@ -1,9 +1,9 @@
 +++
+weight = 527
 title = "527. 색인 블록 크기 한계 해결 - 연결 색인, 다중 수준 색인"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 527
 +++
 
 # 색인 블록 크기 한계 해결 - 오버플로우 장부를 뚫고 엑사바이트 클라우드로 팽창하는 계층 트리

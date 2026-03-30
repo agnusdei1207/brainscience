@@ -1,8 +1,8 @@
 +++
+weight = 3
 title = "TCP 혼잡 제어 (Congestion Control)"
 description = "TCP의 혼잡 제어 메커니즘인 Slow Start, Congestion Avoidance, Fast Retransmit, Fast Recovery를 다룬다."
 date = 2024-01-27
-weight = 3
 
 [extra]
 categories = ["studynote-software-engineering"]

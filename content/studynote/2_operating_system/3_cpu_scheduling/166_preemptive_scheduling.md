@@ -1,9 +1,9 @@
 +++
+weight = 166
 title = "166. 선점형 스케줄링 (Preemptive Scheduling)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 166
 +++
 
 # 선점형 스케줄링 (Preemptive Scheduling)

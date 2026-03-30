@@ -1,8 +1,8 @@
 +++
+weight = 12
 title = "IDS (침입 탐지 시스템) 및 IPS (침입 방지 시스템)"
 description = "IDS/IPS의 차이, 시그니처 기반/비정상 기반 탐지, 네트워크/호스트 기반 분류, 스위치 연동을شرح"
 date = 2024-01-26
-weight = 12
 
 [extra]
 categories = ["studynote-software-engineering"]

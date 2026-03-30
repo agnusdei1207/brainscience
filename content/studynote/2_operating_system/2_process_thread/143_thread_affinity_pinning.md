@@ -1,7 +1,7 @@
 +++
+weight = 143
 title = "스레드 고정 Thread Affinity/Pinning"
 date = "2026-03-22"
-weight = 143
 [extra]
 categories = "studynote-operating-system"
 +++

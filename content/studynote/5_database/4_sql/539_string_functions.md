@@ -1,8 +1,8 @@
 +++
+weight = 39
 title = "문자열 함수 (String Functions)"
 description = "주요 SQL 문자열 함수"
 date = 2026-03-26
-weight = 39
 
 [taxonomies]
 tags = ["database", "sql", "string", "function"]

@@ -1,9 +1,9 @@
 +++
+weight = 526
 title = "526. 색인 할당 (Indexed Allocation)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 526
 +++
 
 # 색인 할당 (Indexed Allocation) - 모든 주소 포인터를 단 1개의 장부에 몰아넣는 최상위 통치

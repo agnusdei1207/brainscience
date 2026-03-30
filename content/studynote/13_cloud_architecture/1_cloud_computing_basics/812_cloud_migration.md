@@ -1,8 +1,8 @@
 +++
+weight = 812
 title = "클라우드 마이그레이션 전략"
 description = "6R 마이그레이션 전략, 리프트 앤 시프트, 재설계"
 date = 2026-03-26
-weight = 812
 
 [taxonomies]
 tags = ["cloud", "migration", "6r", "lift-and-shift", "re-architecting"]

@@ -1,6 +1,6 @@
 +++
-title = "평균 메모리 접근 시간 (AMAT)"
 weight = 265
+title = "평균 메모리 접근 시간 (AMAT)"
 +++
 
 # 평균 메모리 접근 시간 (AMAT)

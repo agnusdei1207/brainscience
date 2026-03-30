@@ -1,8 +1,8 @@
 +++
+weight = 23
 title = "서브쿼리 (Subquery)"
 description = "SQL 서브쿼리의 유형과 사용법"
 date = 2026-03-26
-weight = 23
 
 [taxonomies]
 tags = ["database", "sql", "subquery", "nested-query"]

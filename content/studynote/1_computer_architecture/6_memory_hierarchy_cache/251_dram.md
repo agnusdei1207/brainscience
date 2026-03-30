@@ -1,6 +1,6 @@
 +++
-title = "DRAM (Dynamic Random Access Memory)"
 weight = 251
+title = "DRAM (Dynamic Random Access Memory)"
 +++
 
 # DRAM (Dynamic Random Access Memory)

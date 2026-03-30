@@ -1,8 +1,8 @@
 +++
+weight = 510
 title = "E.F. Codd의 12가지 규칙"
 description = "관계형 데이터베이스의 12가지 규칙과 의미"
 date = 2026-03-26
-weight = 510
 
 [taxonomies]
 tags = ["database", "codd", "relational", "rules"]

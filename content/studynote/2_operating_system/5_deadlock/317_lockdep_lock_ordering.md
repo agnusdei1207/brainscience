@@ -1,9 +1,9 @@
 +++
+weight = 317
 title = "317. 락 오더링 (Lock Ordering) 다이나믹 검증 도구 (Lockdep in Linux)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 317
 +++
 
 # 락 오더링 (Lock Ordering) 다이나믹 검증 도구 (Lockdep in Linux)

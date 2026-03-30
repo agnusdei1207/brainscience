@@ -1,8 +1,8 @@
 +++
+weight = 20
 title = "지그비 (Zigbee) 프로토콜"
 description = "지그비의 구조, 프로토콜 스택, IEEE 802.15.4 관계, 네트워크 구조, 홈 자동화에서의 활용을شرح"
 date = 2024-02-03
-weight = 20
 
 [extra]
 categories = ["studynote-software-engineering"]

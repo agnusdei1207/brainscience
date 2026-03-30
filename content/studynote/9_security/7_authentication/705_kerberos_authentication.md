@@ -1,8 +1,8 @@
 +++
+weight = 5
 title = "Kerberos 인증"
 description = "대규모 네트워크를 위한 통합 인증 프로토콜 Kerberos의 원리와 보안"
 date = 2024-01-15
-weight = 5
 +++
 
 # Kerberos 인증 (Kerberos Authentication)

@@ -1,8 +1,8 @@
 +++
+weight = 515
 title = "다중 버전 동시성 제어 (MVCC)"
 description = "버전 관리를 통해 잠금 없이 동시성을 높이는 MVCC에 대해 설명"
 date = 2024-01-01
-weight = 515
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,8 +1,8 @@
 +++
+weight = 607
 title = "이벤트驱动 아키텍처"
 description = "이벤트驱动 아키텍처(EDA)의 개념과 CQRS, Kafka 활용"
 date = 2024-01-20
-weight = 607
 
 [extra]
 categories = ["studynote-software-engineering"]

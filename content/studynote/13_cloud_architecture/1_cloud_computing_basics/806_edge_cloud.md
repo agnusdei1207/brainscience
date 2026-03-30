@@ -1,8 +1,8 @@
 +++
+weight = 806
 title = "엣지 클라우드 (Edge Cloud)"
 description = "엣지 클라우드의 정의, 컴퓨팅 구조, 활용 사례"
 date = 2026-03-26
-weight = 806
 
 [taxonomies]
 tags = ["cloud", "edge-computing", "iot", "latency", "5g"]

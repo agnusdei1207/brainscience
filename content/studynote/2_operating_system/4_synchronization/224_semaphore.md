@@ -1,9 +1,9 @@
 +++
+weight = 224
 title = "224. 세마포어 (Semaphore)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 224
 +++
 
 # 세마포어 (Semaphore)

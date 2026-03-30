@@ -1,6 +1,6 @@
 +++
-title = "지연 시간 (Latency)"
 weight = 141
+title = "지연 시간 (Latency)"
 +++
 
 # 지연 시간 (Latency)

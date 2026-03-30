@@ -1,8 +1,8 @@
 +++
+weight = 45
 title = "CREATE, ALTER, DROP"
 description = "테이블 생성, 수정, 삭제 DDL 문"
 date = 2026-03-26
-weight = 45
 
 [taxonomies]
 tags = ["database", "sql", "ddl", "create", "alter", "drop"]

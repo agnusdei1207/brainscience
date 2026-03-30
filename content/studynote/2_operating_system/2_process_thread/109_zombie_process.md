@@ -1,7 +1,7 @@
 +++
+weight = 109
 title = "좀비 프로세스 (Zombie Process)"
 date = "2026-03-22"
-weight = 109
 [extra]
 categories = "studynote-operating-system"
 +++

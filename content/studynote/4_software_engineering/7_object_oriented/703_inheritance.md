@@ -1,8 +1,8 @@
 +++
+weight = 703
 title = "상속"
 description = "상속(Inheritance)의 개념, 타입, 오버라이딩"
 date = 2024-02-05
-weight = 703
 
 [extra]
 categories = ["studynote-software-engineering"]

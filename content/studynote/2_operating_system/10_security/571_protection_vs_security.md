@@ -1,9 +1,9 @@
 +++
+weight = 571
 title = "571. 보호(Protection)와 보안(Security)의 개념 차이"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 571
 +++
 
 # 보호(Protection)와 보안(Security)의 개념 차이 - 내부 통제와 외부 방어의 이중 방어 체계

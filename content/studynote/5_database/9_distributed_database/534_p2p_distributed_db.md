@@ -1,8 +1,8 @@
 +++
+weight = 534
 title = "P2P 분산 데이터베이스 (Peer-to-Peer Distributed DB)"
 description = "P2P 아키텍처를 활용한 분산 데이터베이스 시스템에 대해 설명"
 date = 2024-01-01
-weight = 534
 
 [extra]
 categories = ["studynote-software-engineering"]

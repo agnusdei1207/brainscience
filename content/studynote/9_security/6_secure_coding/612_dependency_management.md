@@ -1,8 +1,8 @@
 +++
+weight = 8612
 title = "의존성 보안 관리"
 description = "소프트웨어 의존성의 취약점을 관리하는 SCA와 공급망 보안"
 date = 2024-01-15
-weight = 8612
 +++
 
 # 의존성 보안 관리 (Dependency Security Management)

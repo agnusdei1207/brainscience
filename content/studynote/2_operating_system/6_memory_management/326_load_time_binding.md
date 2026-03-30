@@ -1,9 +1,9 @@
 +++
+weight = 326
 title = "326. 적재 시간 바인딩 (Load Time) - 재배치 가능 코드 생성"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 326
 +++
 
 # 적재 시간 바인딩 (Load Time Binding)과 재배치

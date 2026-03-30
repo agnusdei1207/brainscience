@@ -1,8 +1,8 @@
 +++
+weight = 8608
 title = "오류 처리와 로깅 보안"
 description = "안전하지 않은 오류 처리와 로깅으로 인한 정보 유출 및 방어 전략"
 date = 2024-01-15
-weight = 8608
 +++
 
 # 오류 처리와 로깅 보안 (Error Handling & Logging Security)

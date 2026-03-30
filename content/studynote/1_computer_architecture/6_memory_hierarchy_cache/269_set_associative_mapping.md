@@ -1,6 +1,6 @@
 +++
-title = "세트 연관 매핑 (Set Associative Mapping)"
 weight = 269
+title = "세트 연관 매핑 (Set Associative Mapping)"
 +++
 
 # 세트 연관 매핑 (Set Associative Mapping)

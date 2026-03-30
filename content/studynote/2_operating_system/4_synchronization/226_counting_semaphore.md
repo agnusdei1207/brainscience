@@ -1,9 +1,9 @@
 +++
+weight = 226
 title = "226. 카운팅 세마포어 (Counting Semaphore)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 226
 +++
 
 # 카운팅 세마포어 (Counting Semaphore)

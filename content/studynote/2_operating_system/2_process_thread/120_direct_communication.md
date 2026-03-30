@@ -1,7 +1,7 @@
 +++
+weight = 120
 title = "120. 직접 통신 (Direct Communication)"
 date = "2026-03-22"
-weight = 120
 [extra]
 categories = "studynote-operating-system"
 +++

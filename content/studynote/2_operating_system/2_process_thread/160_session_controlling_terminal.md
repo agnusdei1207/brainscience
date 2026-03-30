@@ -1,7 +1,7 @@
 +++
+weight = 160
 title = "세션 및 제어 터미널"
 date = "2026-03-22"
-weight = 160
 [extra]
 categories = "studynote-operating-system"
 +++

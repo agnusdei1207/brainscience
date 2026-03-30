@@ -1,9 +1,9 @@
 +++
+weight = 254
 title = "254. 가상 메모리 (Virtual Memory)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 254
 +++
 
 # 가상 메모리 (Virtual Memory)

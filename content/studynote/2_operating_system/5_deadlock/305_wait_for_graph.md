@@ -1,9 +1,9 @@
 +++
+weight = 305
 title = "305. 대기 그래프 (Wait-for Graph)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 305
 +++
 
 # 대기 그래프 (Wait-for Graph)

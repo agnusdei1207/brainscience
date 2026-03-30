@@ -1,7 +1,7 @@
 +++
+weight = 104
 title = "104. ���� �� (Process Creation)"
 date = "2026-03-22"
-weight = 104
 [extra]
 categories = "studynote-operating-system"
 +++

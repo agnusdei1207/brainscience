@@ -1,9 +1,9 @@
 +++
+weight = 387
 title = "387. 페이지 부재 (Page Fault) 가상 메모리의 심장 박동"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 387
 +++
 
 # 페이지 부재 (Page Fault)

@@ -1,9 +1,9 @@
 +++
+weight = 552
 title = "552. B-Tree 디렉터리 색인 - 100만 개 파일 폴더의 검색 광속화"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 552
 +++
 
 # 디렉터리 색인 (B-Tree/B+Tree) - 100만 개의 파일이 담긴 폴더에서 0.001초 만에 파일을 찾아내는 트리형 공간 분할 마법

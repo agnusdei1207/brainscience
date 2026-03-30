@@ -1,9 +1,9 @@
 +++
+weight = 540
 title = "540. 저널링 3대 모드 (Data/Ordered/Writeback) - 메타 vs 데이터 저널링"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 540
 +++
 
 # 저널링 3대 모드 (Data vs Ordered vs Writeback) - 성능과 생명 사이 줄타기 조율 

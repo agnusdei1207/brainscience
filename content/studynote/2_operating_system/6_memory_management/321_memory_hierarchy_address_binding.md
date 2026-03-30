@@ -1,9 +1,9 @@
 +++
+weight = 321
 title = "321. 메모리 계층 구조와 주소 바인딩 (Memory Hierarchy & Address Binding)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 321
 +++
 
 # 메모리 계층 구조와 주소 바인딩 (Memory Hierarchy & Address Binding)

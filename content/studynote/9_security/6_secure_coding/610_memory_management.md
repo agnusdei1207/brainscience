@@ -1,8 +1,8 @@
 +++
+weight = 8610
 title = "메모리 관리 보안"
 description = "메모리 할당, 해제, 사용过程中的 보안 취약점과 방어 기법"
 date = 2024-01-15
-weight = 8610
 +++
 
 # 메모리 관리 보안 (Memory Management Security)

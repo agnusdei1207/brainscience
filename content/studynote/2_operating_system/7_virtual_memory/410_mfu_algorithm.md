@@ -1,9 +1,9 @@
 +++
+weight = 410
 title = "410. MFU (Most Frequently Used) 알고리즘 힙스터의 역발상"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 410
 +++
 
 # MFU (Most Frequently Used) 알고리즘

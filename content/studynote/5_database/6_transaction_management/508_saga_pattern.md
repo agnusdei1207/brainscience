@@ -1,8 +1,8 @@
 +++
+weight = 8
 title = "사가 패턴 (Saga Pattern)"
 description = "분산 환경에서 트랜잭션의 일관성을 유지하는 Saga 패턴에 대해 설명"
 date = 2024-01-01
-weight = 8
 
 [extra]
 categories = ["studynote-software-engineering"]

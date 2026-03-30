@@ -1,8 +1,8 @@
 +++
+weight = 19
 title = "머신러닝의 정의"
 description = "머신러닝(Machine Learning)의 정의, 구성 요소, 학습 패러다임"
 category = "10_ai"
-weight = 19
 +++
 
 ## 핵심 인사이트 (3줄 요약)

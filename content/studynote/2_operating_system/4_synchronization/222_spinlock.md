@@ -1,9 +1,9 @@
 +++
+weight = 222
 title = "222. 스핀락 (Spinlock)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 222
 +++
 
 # 스핀락 (Spinlock)

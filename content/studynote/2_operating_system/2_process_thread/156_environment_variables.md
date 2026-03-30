@@ -1,7 +1,7 @@
 +++
+weight = 156
 title = "환경 변수 상속"
 date = "2026-03-22"
-weight = 156
 [extra]
 categories = "studynote-operating-system"
 +++

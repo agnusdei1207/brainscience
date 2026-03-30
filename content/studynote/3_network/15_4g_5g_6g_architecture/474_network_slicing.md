@@ -1,8 +1,8 @@
 +++
+weight = 15
 title = "네트워크 슬라이싱 (Network Slicing)"
 description = "5G 네트워크 슬라이싱의 개념, 동작 원리, 종단간 아키텍처, 네트워크 기능 가상화(NFV)와의 관계를شرح"
 date = 2024-01-29
-weight = 15
 
 [extra]
 categories = ["studynote-software-engineering"]

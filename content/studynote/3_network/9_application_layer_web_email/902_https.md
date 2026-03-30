@@ -1,8 +1,8 @@
 +++
+weight = 2
 title = "HTTPS (HTTP over TLS/SSL)"
 description = "HTTP의 암호화된 버전 HTTPS의 동작 원리, TLS 핸드셰이크, 인증서 체인을 다룬다."
 date = 2024-01-29
-weight = 2
 
 [extra]
 categories = ["studynote-software-engineering"]

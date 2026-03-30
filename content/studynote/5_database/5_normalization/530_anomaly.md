@@ -1,8 +1,8 @@
 +++
+weight = 30
 title = "이상 (Anomaly)"
 description = "데이터베이스 이상 현상의 유형과 원인"
 date = 2026-03-26
-weight = 30
 
 [taxonomies]
 tags = ["database", "normalization", "anomaly", "update-anomaly", "insert-anomaly", "delete-anomaly"]

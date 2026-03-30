@@ -1,7 +1,7 @@
 +++
+weight = 135
 title = "Android Binder"
 date = "2026-03-22"
-weight = 135
 [extra]
 categories = "studynote-operating-system"
 +++

@@ -1,9 +1,9 @@
 +++
+weight = 289
 title = "289. 다중 인스턴스 자원 환경 (Multiple Instance)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 289
 +++
 
 # 다중 인스턴스 자원 환경 (Multiple Instance Resource)

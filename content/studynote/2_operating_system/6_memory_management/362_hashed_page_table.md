@@ -1,9 +1,9 @@
 +++
+weight = 362
 title = "362. 해시 페이지 테이블 (Hashed Page Table) 주소 공간의 압축"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 362
 +++
 
 # 해시 페이지 테이블 (Hashed Page Table)

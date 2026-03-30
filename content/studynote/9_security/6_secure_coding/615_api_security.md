@@ -1,8 +1,8 @@
 +++
+weight = 15
 title = "API 보안"
 description = "REST, GraphQL, gRPC 등 현대 API 아키텍처의 보안 전략"
 date = 2024-01-15
-weight = 15
 +++
 
 # API 보안 (API Security)

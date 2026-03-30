@@ -1,8 +1,8 @@
 +++
+weight = 532
 title = "샤딩 (Sharding)"
 description = "데이터를 여러 노드에 분산 저장하는 샤딩에 대해 설명"
 date = 2024-01-01
-weight = 532
 
 [extra]
 categories = ["studynote-software-engineering"]

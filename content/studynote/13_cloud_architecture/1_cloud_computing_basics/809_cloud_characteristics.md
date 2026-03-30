@@ -1,8 +1,8 @@
 +++
+weight = 809
 title = "클라우드 컴퓨팅의 5대 필수 특성"
 description = "NIST가 정의한 클라우드의 5대 필수 특성"
 date = 2026-03-26
-weight = 809
 
 [taxonomies]
 tags = ["cloud", "nist", "characteristics", "on-demand", "elasticity"]

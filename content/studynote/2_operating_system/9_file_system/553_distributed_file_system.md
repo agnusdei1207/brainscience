@@ -1,9 +1,9 @@
 +++
+weight = 553
 title = "553. 분산 파일 시스템 (HDFS, Ceph) - 무한 확장 클러스터와 네임노드의 굴레"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 553
 +++
 
 # 분산 파일 시스템 (HDFS, Ceph, GlusterFS) - 1대의 컴퓨터 하드디스크의 멸망을 넘어, 1만 대의 컴퓨터를 1개의 영혼(네임노드)으로 묶는 우주적 클러스터 마운트

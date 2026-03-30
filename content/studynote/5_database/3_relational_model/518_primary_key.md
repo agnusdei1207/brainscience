@@ -1,8 +1,8 @@
 +++
+weight = 18
 title = "기본 키 (Primary Key)"
 description = "기본 키의 정의, 특성, 유형"
 date = 2026-03-26
-weight = 18
 
 [taxonomies]
 tags = ["database", "relational-model", "primary-key", "key"]

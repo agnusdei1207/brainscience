@@ -1,8 +1,8 @@
 +++
+weight = 8008
 title = "보안 인식 교육 (Security Awareness)"
 description = "조직 구성원의 보안 인식을 높이는 교육과 훈련 프로그램"
 date = 2026-03-26
-weight = 8008
 
 [extra]
 categories = ["studynote-software-engineering"]

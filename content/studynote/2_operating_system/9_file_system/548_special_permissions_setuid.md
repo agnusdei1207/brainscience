@@ -1,9 +1,9 @@
 +++
+weight = 548
 title = "548. 특수 권한 (SetUID, SetGID, Sticky Bit) - 일시적 신분 탈취와 해킹 게이트"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 548
 +++
 
 # 특수 권한 (SetUID, SetGID, Sticky Bit) - 9비트의 한계를 찢고 '잠시 동안 신(Root)이 되는 마법' 과 공용 폴더의 결속

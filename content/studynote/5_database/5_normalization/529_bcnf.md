@@ -1,8 +1,8 @@
 +++
+weight = 29
 title = "BCNF (보이스-코드 정규형)"
 description = "BCNF의 정의와 적용"
 date = 2026-03-26
-weight = 29
 
 [taxonomies]
 tags = ["database", "normalization", "bcnf", "boyce-codd-normal-form"]

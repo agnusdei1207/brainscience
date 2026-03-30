@@ -1,9 +1,9 @@
 +++
+weight = 615
 title = "615. eBPF ëíìí/ëì/ëëíë ìëí ìë ìì í ëìëì"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
-weight = 615
 +++
 
 # eBPF ëíìí/ëì/ëëíë ìëí ìë ìì í ëìëì

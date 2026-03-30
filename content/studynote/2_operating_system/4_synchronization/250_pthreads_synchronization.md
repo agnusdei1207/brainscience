@@ -1,9 +1,9 @@
 +++
+weight = 250
 title = "250. Pthreads 동기화 (POSIX Threads Synchronization)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 250
 +++
 
 # Pthreads 동기화 (POSIX Threads Synchronization)

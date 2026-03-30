@@ -1,8 +1,8 @@
 +++
+weight = 8607
 title = "안전한 세션 관리"
 description = "세션 하이재킹, 세션 고정 공격 등 세션 관리 취약점과 안전한 세션 설계 기법"
 date = 2024-01-15
-weight = 8607
 +++
 
 # 안전한 세션 관리 (Secure Session Management)

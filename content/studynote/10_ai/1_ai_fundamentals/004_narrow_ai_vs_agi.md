@@ -1,8 +1,8 @@
 +++
+weight = 4
 title = "약인공지능과 강인공지능"
 description = "Narrow AI(약인공지능)와 AGI(강인공지능, Artificial General Intelligence)의 정의, 차이점, 현재 기술 수준"
 category = "10_ai"
-weight = 4
 +++
 
 ## 핵심 인사이트 (3줄 요약)

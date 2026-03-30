@@ -1,9 +1,9 @@
 +++
+weight = 231
 title = "231. 점유 대기 (Hold and Wait)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 231
 +++
 
 # 점유 대기 (Hold and Wait)

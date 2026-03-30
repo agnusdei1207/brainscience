@@ -1,9 +1,9 @@
 +++
+weight = 559
 title = "559. 파일 시스템 일관성 검사 (fsck / chkdsk) - 박살난 장부 꿰매기 수술"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 559
 +++
 
 # 파일 시스템 일관성 검사 (fsck / chkdsk) - 정전 크래시로 찢어진 커널의 슈퍼블록 심장과 i-node 장부를 생사를 걸고 재봉합하는 하드코어 외과 수술 

@@ -1,8 +1,8 @@
 +++
+weight = 8004
 title = "인증과 인가 (Authentication & Authorization)"
 description = "정보보안의 기본 개념: 사용자 확인과 접근 제어"
 date = 2026-03-26
-weight = 8004
 
 [extra]
 categories = ["studynote-software-engineering"]

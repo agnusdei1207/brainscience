@@ -1,9 +1,9 @@
 +++
+weight = 344
 title = "344. 최초 적합 (First-Fit) 가장 빠른 동적 메모리 배치"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 344
 +++
 
 # 최초 적합 (First-Fit) 알고리즘

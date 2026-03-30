@@ -1,8 +1,8 @@
 +++
+weight = 807
 title = "애자일 프레임워크 (Scrum, Kanban, XP)"
 description = "Agile Frameworks (Scrum, Kanban, XP)"
 category = "4_software_engineering"
-weight = 807
 +++
 
 # 애자일 프레임워크 (Scrum, Kanban, XP)

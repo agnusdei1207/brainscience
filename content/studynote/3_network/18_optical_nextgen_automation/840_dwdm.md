@@ -1,6 +1,6 @@
 +++
-title = "DWDM (Dense Wavelength Division Multiplexing)"
 weight = 840
+title = "DWDM (Dense Wavelength Division Multiplexing)"
 +++
 
 # DWDM (Dense Wavelength Division Multiplexing)

@@ -1,9 +1,9 @@
 +++
+weight = 212
 title = "212. 동기화 (Synchronization) 메커니즘"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 212
 +++
 
 # 동기화 (Synchronization) 메커니즘

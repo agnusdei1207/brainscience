@@ -1,6 +1,6 @@
 +++
-title = "Write-Through (동시 쓰기)"
 weight = 276
+title = "Write-Through (동시 쓰기)"
 +++
 
 # Write-Through (동시 쓰기)

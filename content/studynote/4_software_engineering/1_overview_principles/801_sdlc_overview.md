@@ -1,8 +1,8 @@
 +++
+weight = 801
 title = "소프트웨어 개발 생명주기 (SDLC) 개요"
 description = "Software Development Life Cycle Overview"
 category = "4_software_engineering"
-weight = 801
 +++
 
 # 소프트웨어 개발 생명주기 (SDLC) 개요

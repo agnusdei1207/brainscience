@@ -1,8 +1,8 @@
 +++
+weight = 1
 title = "클라우드 컴퓨팅 (Cloud Computing)"
 description = "클라우드 컴퓨팅의 정의, 특성, 발전 과정"
 date = 2026-03-26
-weight = 1
 
 [taxonomies]
 tags = ["cloud", "cloud-computing", "iaas", "paas", "saas"]

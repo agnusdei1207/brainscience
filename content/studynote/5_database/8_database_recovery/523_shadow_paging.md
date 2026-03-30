@@ -1,8 +1,8 @@
 +++
+weight = 23
 title = "섀도 페이지ング (Shadow Paging)"
 description = "페이지 단위 복구 기법인 Shadow Paging에 대해 설명"
 date = 2024-01-01
-weight = 23
 
 [extra]
 categories = ["studynote-software-engineering"]

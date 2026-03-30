@@ -1,8 +1,8 @@
 +++
+weight = 502
 title = "DBMS (Database Management System)"
 description = "DBMS의 정의, 구성 요소, 필수 기능"
 date = 2026-03-26
-weight = 502
 
 [taxonomies]
 tags = ["database", "dbms", "system"]

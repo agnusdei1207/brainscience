@@ -1,6 +1,6 @@
 +++
-title = "메모리 계층 구조 (Memory Hierarchy)"
 weight = 245
+title = "메모리 계층 구조 (Memory Hierarchy)"
 +++
 
 # 메모리 계층 구조 (Memory Hierarchy)

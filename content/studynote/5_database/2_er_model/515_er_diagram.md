@@ -1,8 +1,8 @@
 +++
+weight = 515
 title = "ER 다이어그램 (ER Diagram)"
 description = "ER 다이어그램의 정의, 구성 요소, 작성법"
 date = 2026-03-26
-weight = 515
 
 [taxonomies]
 tags = ["database", "er-model", "er-diagram"]

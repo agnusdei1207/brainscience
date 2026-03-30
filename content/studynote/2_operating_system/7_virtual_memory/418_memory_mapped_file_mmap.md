@@ -1,9 +1,9 @@
 +++
+weight = 418
 title = "418. 메모리 매핑 파일 (Memory-Mapped Files, mmap) 파일 I/O의 흑마술"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 418
 +++
 
 # 메모리 매핑 파일 (Memory-Mapped Files, mmap)

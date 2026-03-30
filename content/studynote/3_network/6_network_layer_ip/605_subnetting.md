@@ -1,8 +1,8 @@
 +++
+weight = 605
 title = "서브넷팅 (Subnetting)"
 description = "IPv4 네트워크를 서브넷으로 분할하는 서브넷팅의 원리와 CIDR, VLSM을 활용한 효율적 주소 관리를 다룬다."
 date = 2024-01-19
-weight = 605
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,9 +1,9 @@
 +++
+weight = 329
 title = "329. 베이스 레지스터 (Base/Relocation Register)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 329
 +++
 
 # 베이스 레지스터 (Base / Relocation Register)

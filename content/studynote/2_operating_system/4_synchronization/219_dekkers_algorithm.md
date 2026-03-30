@@ -1,9 +1,9 @@
 +++
+weight = 219
 title = "219. 데커의 알고리즘 (Dekker's Algorithm)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 219
 +++
 
 # 데커의 알고리즘 (Dekker's Algorithm)

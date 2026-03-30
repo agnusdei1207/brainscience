@@ -1,9 +1,9 @@
 +++
+weight = 401
 title = "401. 페이지 교체 알고리즘 (Page Replacement Algorithms)"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 401
 +++
 
 # 페이지 교체 알고리즘 (Page Replacement Algorithms)

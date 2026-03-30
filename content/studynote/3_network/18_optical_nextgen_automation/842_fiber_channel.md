@@ -1,6 +1,6 @@
 +++
-title = " Fibre Channel (광 Fibre Channel)"
 weight = 842
+title = " Fibre Channel (광 Fibre Channel)"
 +++
 
 # Fibre Channel (광 Fibre Channel)

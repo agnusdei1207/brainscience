@@ -1,9 +1,9 @@
 +++
+weight = 514
 title = "514. 파티션 (Partition) / 슬라이스 (Slice) / 볼륨 (Volume)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 514
 +++
 
 # 파티션(Partition) / 슬라이스(Slice) / 볼륨(Volume) - 거대한 물리 디스크의 논리적 절단과 융합

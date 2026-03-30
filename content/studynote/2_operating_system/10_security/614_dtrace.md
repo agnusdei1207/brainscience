@@ -1,9 +1,9 @@
 +++
+weight = 614
 title = "614. ììí DTrace ììì ëì íëìì ìì ëìëì"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
-weight = 614
 +++
 
 # ììí DTrace ììì ëì íëìì ìì ëìëì

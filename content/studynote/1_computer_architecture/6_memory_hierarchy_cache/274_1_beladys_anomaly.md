@@ -1,6 +1,6 @@
 +++
-title = "벨라디의 모순 (Bélády's Anomaly)"
 weight = 274
+title = "벨라디의 모순 (Bélády's Anomaly)"
 +++
 
 # 벨라디의 모순 (Bélády's Anomaly)

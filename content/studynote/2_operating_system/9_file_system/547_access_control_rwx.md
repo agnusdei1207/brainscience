@@ -1,9 +1,9 @@
 +++
+weight = 547
 title = "547. 파일 시스템 접근 제어 (Access Control) - rwx 권한 체계"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 547
 +++
 
 # 파일 시스템 접근 제어 (Access Control) - 리눅스/유닉스 생태계의 절대 통치, 소유자-그룹-기타(UGO) 3단 rwx 방어막

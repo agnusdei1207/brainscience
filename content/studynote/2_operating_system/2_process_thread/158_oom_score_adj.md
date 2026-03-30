@@ -1,7 +1,7 @@
 +++
+weight = 158
 title = "oom_score_adj"
 date = "2026-03-22"
-weight = 158
 [extra]
 categories = "studynote-operating-system"
 +++

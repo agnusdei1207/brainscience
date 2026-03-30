@@ -1,9 +1,9 @@
 +++
+weight = 399
 title = "399. 전역 교체 (Global Replacement) 약육강식의 메모리 생태계"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 399
 +++
 
 # 전역 교체 (Global Replacement)

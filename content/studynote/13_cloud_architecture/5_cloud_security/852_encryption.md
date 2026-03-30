@@ -1,8 +1,8 @@
 +++
+weight = 31
 title = "클라우드 암호화 (Encryption)"
 description = "저장 시 암호화, 전송 중 암호화, 키 관리"
 date = 2026-03-26
-weight = 31
 
 [taxonomies]
 tags = ["cloud", "encryption", "kms", "tls", "at-rest", "in-transit"]

@@ -1,7 +1,7 @@
 +++
+weight = 153
 title = "좀비 사냥"
 date = "2026-03-22"
-weight = 153
 [extra]
 categories = "studynote-operating-system"
 +++

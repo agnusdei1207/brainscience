@@ -1,9 +1,9 @@
 +++
+weight = 600
 title = "600. 포트 스캐닝 (Port Scanning) 도구 원리"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
-weight = 600
 +++
 
 # 포트 스캐닝 (Port Scanning) 기술 원리

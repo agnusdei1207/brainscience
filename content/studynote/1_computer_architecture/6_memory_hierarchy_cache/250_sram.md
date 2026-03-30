@@ -1,6 +1,6 @@
 +++
-title = "SRAM (Static Random Access Memory)"
 weight = 250
+title = "SRAM (Static Random Access Memory)"
 +++
 
 # SRAM (Static Random Access Memory)

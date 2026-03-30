@@ -1,9 +1,9 @@
 +++
+weight = 325
 title = "325. 컴파일 시간 바인딩 (Compile Time) - 절대 코드 생성"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 325
 +++
 
 # 컴파일 시간 바인딩 (Compile Time)과 절대 코드

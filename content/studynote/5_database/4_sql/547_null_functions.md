@@ -1,8 +1,8 @@
 +++
+weight = 47
 title = "NULL 처리 함수"
 description = "NVL, COALESCE, IFNULL 등 NULL 처리 함수"
 date = 2026-03-26
-weight = 47
 
 [taxonomies]
 tags = ["database", "sql", "null", "coalesce", "nvl"]

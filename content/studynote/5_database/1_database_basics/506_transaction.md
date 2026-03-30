@@ -1,8 +1,8 @@
 +++
+weight = 506
 title = "트랜잭션 (Transaction)"
 description = "트랜잭션의 정의, 특성, 상태 다이어그램"
 date = 2026-03-26
-weight = 506
 
 [taxonomies]
 tags = ["database", "transaction", "acid"]

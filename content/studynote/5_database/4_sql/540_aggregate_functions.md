@@ -1,8 +1,8 @@
 +++
+weight = 40
 title = "집계 함수 (Aggregate Functions)"
 description = "주요 SQL 집계 함수"
 date = 2026-03-26
-weight = 40
 
 [taxonomies]
 tags = ["database", "sql", "aggregate", "count", "sum", "avg"]

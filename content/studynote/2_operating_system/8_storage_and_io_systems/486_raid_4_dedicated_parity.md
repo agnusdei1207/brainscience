@@ -1,9 +1,9 @@
 +++
+weight = 486
 title = "486. RAID 4 (블록 단위 스트라이핑 + 단일 패리티 디스크)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 486
 +++
 
 # RAID 4 (블록 단위 스트라이핑 + 단일 패리티 디스크)

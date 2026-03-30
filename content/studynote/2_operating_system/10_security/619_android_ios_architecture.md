@@ -1,9 +1,9 @@
 +++
+weight = 619
 title = "619. 모바일 OS 특징 (Android vs iOS 아키텍처 비교)"
 date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 619
 +++
 
 # 모바일 OS 특징 (Android vs iOS 아키텍처 비교)

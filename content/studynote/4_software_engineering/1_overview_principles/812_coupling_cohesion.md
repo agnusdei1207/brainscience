@@ -1,8 +1,8 @@
 +++
+weight = 812
 title = "결합도와 응집도"
 description = "Coupling and Cohesion"
 category = "4_software_engineering"
-weight = 812
 +++
 
 # 결합도와 응집도 (Coupling and Cohesion)

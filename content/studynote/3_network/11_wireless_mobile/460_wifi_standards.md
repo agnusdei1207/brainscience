@@ -1,8 +1,8 @@
 +++
+weight = 460
 title = "WiFi 표준 (802.11 a/b/g/n/ac/ax)"
 description = "WiFi 표준의 발전 과정과 각 세대의 성능 비교, 변조 방식, 주파수 대역을شرح"
 date = 2024-01-15
-weight = 460
 
 [extra]
 categories = ["studynote-software-engineering"]

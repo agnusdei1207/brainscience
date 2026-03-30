@@ -1,8 +1,8 @@
 +++
+weight = 516
 title = "격리 수준 (Isolation Level)"
 description = "트랜잭션 격리 수준의 개념과 네 가지 표준 수준에 대해 설명"
 date = 2024-01-01
-weight = 516
 
 [extra]
 categories = ["studynote-software-engineering"]

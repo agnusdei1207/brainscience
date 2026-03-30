@@ -1,9 +1,9 @@
 +++
+weight = 463
 title = "463. epoll / kqueue 리눅스 웹 서버 천하통일의 일등공신"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 463
 +++
 
 # epoll / kqueue

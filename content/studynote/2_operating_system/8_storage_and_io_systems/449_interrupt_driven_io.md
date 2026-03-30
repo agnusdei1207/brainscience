@@ -1,9 +1,9 @@
 +++
+weight = 449
 title = "449. 인터럽트 구동 I/O (Interrupt-driven I/O) 비동기 시대의 개막"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 449
 +++
 
 # 인터럽트 구동 I/O (Interrupt-driven I/O)

@@ -1,8 +1,8 @@
 +++
+weight = 543
 title = "Apache HBase"
 description = "Hadoop 생태계의 칼럼너 NoSQL 데이터베이스 HBase에 대해 설명"
 date = 2024-01-01
-weight = 543
 
 [extra]
 categories = ["studynote-software-engineering"]

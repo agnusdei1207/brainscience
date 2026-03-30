@@ -1,9 +1,9 @@
 +++
+weight = 236
 title = "236. 안전 상태 (Safe State)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 236
 +++
 
 # 안전 상태 (Safe State)

@@ -1,8 +1,8 @@
 +++
+weight = 25
 title = "재해 복구 (Disaster Recovery)"
 description = "데이터베이스 재해 복구의 개념과 전략에 대해 설명"
 date = 2024-01-01
-weight = 25
 
 [extra]
 categories = ["studynote-software-engineering"]

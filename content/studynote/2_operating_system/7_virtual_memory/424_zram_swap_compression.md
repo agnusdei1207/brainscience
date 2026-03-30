@@ -1,9 +1,9 @@
 +++
+weight = 424
 title = "424. ZRAM / 커널 스왑 압축 기술 한계 상황의 연금술"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 424
 +++
 
 # ZRAM / 커널 스왑 압축 기술

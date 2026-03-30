@@ -1,6 +1,6 @@
 +++
-title = "멀티 테넌시 및 네트워크 격리 (Multi-Tenancy and Network Isolation)"
 weight = 806
+title = "멀티 테넌시 및 네트워크 격리 (Multi-Tenancy and Network Isolation)"
 +++
 
 # 멀티 테넌시 및 네트워크 격리 (Multi-Tenancy and Network Isolation)

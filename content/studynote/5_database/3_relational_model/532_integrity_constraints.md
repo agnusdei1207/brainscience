@@ -1,8 +1,8 @@
 +++
+weight = 32
 title = "무결성 제약조건 (Integrity Constraints)"
 description = "무결성 제약조건의 유형과 역할"
 date = 2026-03-26
-weight = 32
 
 [taxonomies]
 tags = ["database", "integrity", "constraints", "referential-integrity"]

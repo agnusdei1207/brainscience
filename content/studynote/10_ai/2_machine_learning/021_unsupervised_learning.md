@@ -1,8 +1,8 @@
 +++
+weight = 21
 title = "비지도 학습"
 description = "비지도 학습(Unsupervised Learning)의 정의, 군집화, 차원 축소, 이상 탐지"
 category = "10_ai"
-weight = 21
 +++
 
 ## 핵심 인사이트 (3줄 요약)

@@ -1,7 +1,7 @@
 +++
+weight = 137
 title = "137. ������ ���� (�� ���� �)"
 date = "2026-03-22"
-weight = 137
 [extra]
 categories = "studynote-operating-system"
 +++

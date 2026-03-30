@@ -1,7 +1,7 @@
 +++
+weight = 155
 title = "동적 링킹 프로세스"
 date = "2026-03-22"
-weight = 155
 [extra]
 categories = "studynote-operating-system"
 +++

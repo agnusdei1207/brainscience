@@ -1,6 +1,6 @@
 +++
-title = "SDN/NFV와 클라우드 통합 (SDN/NFV Cloud Integration)"
 weight = 826
+title = "SDN/NFV와 클라우드 통합 (SDN/NFV Cloud Integration)"
 +++
 
 # SDN/NFV와 클라우드 통합 (SDN/NFV Cloud Integration)

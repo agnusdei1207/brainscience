@@ -1,8 +1,8 @@
 +++
+weight = 30
 title = "공유 책임 모델 (Shared Responsibility Model)"
 description = "CSP와 사용자 간 보안 책임 분담 모델"
 date = 2026-03-26
-weight = 30
 
 [taxonomies]
 tags = ["cloud", "shared-responsibility", "security", "csp", "customer"]

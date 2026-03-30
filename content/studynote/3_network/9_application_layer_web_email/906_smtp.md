@@ -1,8 +1,8 @@
 +++
+weight = 6
 title = "SMTP (Simple Mail Transfer Protocol)"
 description = "이메일 전송의 핵심 프로토콜 SMTP의 동작, POP3/IMAP과의 관계를 다룬다."
 date = 2024-02-06
-weight = 6
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,8 +1,8 @@
 +++
+weight = 19
 title = "라이브락과 스타베이션 (Livelock & Starvation)"
 description = "교착 상태 외의 동시성 문제인 라이브락과 스타베이션에 대해 설명"
 date = 2024-01-01
-weight = 19
 
 [extra]
 categories = ["studynote-software-engineering"]

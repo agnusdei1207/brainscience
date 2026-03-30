@@ -1,9 +1,9 @@
 +++
+weight = 432
 title = "432. 캐시 컬러링 매핑 최적화 (Cache Coloring Optimization) 하드웨어와 OS의 예술적 조율"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 432
 +++
 
 # 캐시 컬러링 매핑 최적화 (Cache Coloring Optimization)

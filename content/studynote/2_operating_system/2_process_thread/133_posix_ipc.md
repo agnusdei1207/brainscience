@@ -1,7 +1,7 @@
 +++
+weight = 133
 title = "133. POSIX IPC"
 date = "2026-03-22"
-weight = 133
 [extra]
 categories = "studynote-operating-system"
 +++

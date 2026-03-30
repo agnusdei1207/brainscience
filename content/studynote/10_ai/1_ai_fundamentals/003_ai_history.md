@@ -1,8 +1,8 @@
 +++
+weight = 3
 title = "인공지능의 역사"
 description = "인공지능의 탄생부터 현재까지, AI 겨울(AI Winter)을 포함한 발전 과정과 주요 breakthrough"
 category = "10_ai"
-weight = 3
 +++
 
 ## 핵심 인사이트 (3줄 요약)

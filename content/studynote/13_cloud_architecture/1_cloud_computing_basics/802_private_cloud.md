@@ -1,8 +1,8 @@
 +++
+weight = 802
 title = "프라이빗 클라우드 (Private Cloud)"
 description = "프라이빗 클라우드의 정의, 특성, 온프레미스との違い"
 date = 2026-03-26
-weight = 802
 
 [taxonomies]
 tags = ["cloud", "private-cloud", "on-premises", "virtualization"]

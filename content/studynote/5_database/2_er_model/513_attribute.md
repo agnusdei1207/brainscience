@@ -1,8 +1,8 @@
 +++
+weight = 513
 title = "속성 (Attribute)"
 description = "ER 모델에서 속성의 정의와 유형"
 date = 2026-03-26
-weight = 513
 
 [taxonomies]
 tags = ["database", "er-model", "attribute"]

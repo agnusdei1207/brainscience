@@ -1,8 +1,8 @@
 +++
+weight = 19
 title = "스트랭글러 핀 패턴"
 description = "스트랭글러 핀(Strangler Fig) 패턴의 개념, 점진적 전환"
 date = 2024-02-01
-weight = 19
 
 [extra]
 categories = ["studynote-software-engineering"]

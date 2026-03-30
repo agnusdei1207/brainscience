@@ -1,9 +1,9 @@
 +++
+weight = 394
 title = "394. vfork() COW조차 사치인 초경량 포크"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 394
 +++
 
 # vfork()

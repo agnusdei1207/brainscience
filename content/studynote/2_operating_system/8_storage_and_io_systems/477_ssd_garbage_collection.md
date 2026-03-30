@@ -1,9 +1,9 @@
 +++
+weight = 477
 title = "477. 가비지 컬렉션 (Garbage Collection in SSD) 찌꺼기 청소의 딜레마"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 477
 +++
 
 # 가비지 컬렉션 (Garbage Collection in SSD)

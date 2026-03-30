@@ -1,9 +1,9 @@
 +++
+weight = 551
 title = "551. 할당량 (Quota) 시스템 - 유저/그룹 디스크 사용량 제한"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 551
 +++
 
 # 할당량 (Quota) 시스템 - 1명의 미친 유저가 100TB 서버를 독식 폭파시키는 'No Space' 재앙을 도살하는 OS 강제 목줄 스로틀 룰

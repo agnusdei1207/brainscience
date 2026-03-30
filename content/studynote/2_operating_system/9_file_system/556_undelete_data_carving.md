@@ -1,9 +1,9 @@
 +++
+weight = 556
 title = "556. 삭제된 파일 복구 (Undelete) 및 포렌식 디스크 이미지 카빙"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 556
 +++
 
 # 삭제된 파일 복구 (Undelete) 및 포렌식 데이터 카빙(Carving) - 휴지통 비우기의 거짓말과 하드디스크 심연의 찌꺼기 추적술

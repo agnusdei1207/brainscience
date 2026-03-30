@@ -1,7 +1,7 @@
 +++
+weight = 151
 title = "네임스페이스 격리 프로세스"
 date = "2026-03-22"
-weight = 151
 [extra]
 categories = "studynote-operating-system"
 +++

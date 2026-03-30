@@ -1,8 +1,8 @@
 +++
+weight = 50
 title = "데이터베이스 분류"
 description = "데이터베이스의 유형 분류"
 date = 2026-03-26
-weight = 50
 
 [taxonomies]
 tags = ["database", "classification", "rdbms", "nosql"]

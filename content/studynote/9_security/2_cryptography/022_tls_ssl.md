@@ -1,8 +1,8 @@
 +++
+weight = 22
 title = "TLS/SSL"
 description = "인터넷 통신 보안을 위한 TLS 프로토콜의 구조와 동작"
 date = 2026-03-26
-weight = 22
 
 [extra]
 categories = ["studynote-software-engineering"]

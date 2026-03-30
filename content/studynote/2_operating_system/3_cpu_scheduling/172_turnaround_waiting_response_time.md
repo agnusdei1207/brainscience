@@ -1,9 +1,9 @@
 +++
+weight = 172
 title = "172. 반환 시간, 대기 시간, 응답 시간"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 172
 +++
 
 # 반환 시간 (Turnaround), 대기 시간 (Waiting), 응답 시간 (Response)

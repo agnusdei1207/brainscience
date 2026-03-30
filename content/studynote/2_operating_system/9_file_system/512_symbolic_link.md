@@ -1,9 +1,9 @@
 +++
+weight = 512
 title = "512. 심볼릭 링크 (Symbolic Link / Soft Link)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 512
 +++
 
 # 심볼릭 링크 (Symbolic Link / Soft Link) - 유연한 주소 껍데기와 바로가기의 철학

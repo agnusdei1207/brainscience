@@ -1,9 +1,9 @@
 +++
+weight = 255
 title = "255. 요구 페이징 (Demand Paging)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 255
 +++
 
 # 요구 페이징 (Demand Paging)

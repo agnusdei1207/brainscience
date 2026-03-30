@@ -1,8 +1,8 @@
 +++
+weight = 4
 title = "다요소 인증"
 description = "다중 인증 요소(MFA)를 활용한 강화된 인증 전략"
 date = 2024-01-15
-weight = 4
 +++
 
 # 다요소 인증 (Multi-Factor Authentication, MFA)

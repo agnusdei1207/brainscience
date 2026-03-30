@@ -1,8 +1,8 @@
 +++
+weight = 506
 title = "세이브포인트 (Savepoint)"
 description = "트랜잭션 내 중간 저장 포인트 설정과 부분 롤백에 대해 설명"
 date = 2024-01-01
-weight = 506
 
 [extra]
 categories = ["studynote-software-engineering"]

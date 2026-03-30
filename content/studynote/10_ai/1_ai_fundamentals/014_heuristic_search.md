@@ -1,8 +1,8 @@
 +++
+weight = 14
 title = "휴리스틱 검색"
 description = "휴리스틱 검색(Heuristic Search)의 정의, A*, Greedy Best-First Search, 휴리스틱 설계"
 category = "10_ai"
-weight = 14
 +++
 
 ## 핵심 인사이트 (3줄 요약)

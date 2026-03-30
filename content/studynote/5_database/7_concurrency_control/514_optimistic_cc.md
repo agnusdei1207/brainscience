@@ -1,8 +1,8 @@
 +++
+weight = 514
 title = "乐观적 동시성 제어 (Optimistic CC)"
 description = "충돌이 редко 가정하고 검증 단계에서만 충돌을 검사하는乐观적 동시성 제어에 대해 설명"
 date = 2024-01-01
-weight = 514
 
 [extra]
 categories = ["studynote-software-engineering"]

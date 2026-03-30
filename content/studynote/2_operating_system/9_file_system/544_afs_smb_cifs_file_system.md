@@ -1,9 +1,9 @@
 +++
+weight = 544
 title = "544. AFS (Andrew File) / SMB/CIFS 파일 공유 시스템"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 544
 +++
 
 # AFS (Andrew FS) & SMB/CIFS - 로컬 캐싱 극대화 방패와 윈도우(Windows) 네트워킹 공유 제국 프로토콜 쌍두마차

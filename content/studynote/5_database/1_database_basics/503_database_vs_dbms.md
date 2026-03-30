@@ -1,8 +1,8 @@
 +++
+weight = 503
 title = "데이터베이스 vs DBMS"
 description = "데이터베이스와 DBMS의 차이와 상호 관계"
 date = 2026-03-26
-weight = 503
 
 [taxonomies]
 tags = ["database", "dbms", "comparison"]

@@ -1,9 +1,9 @@
 +++
+weight = 538
 title = "538. 동기화 I/O (O_SYNC / fsync) 매커니즘"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 538
 +++
 
 # 동기화 I/O (O_SYNC / fsync) - 페이지 캐시 거짓말을 찢어버린 데이터 영구 보존의 철퇴 채찍질

@@ -1,8 +1,8 @@
 +++
+weight = 15
 title = "사가 패턴"
 description = "사가(Saga) 패턴의 개념, 코디네이션, 분산 트랜잭션"
 date = 2024-01-28
-weight = 15
 
 [extra]
 categories = ["studynote-software-engineering"]

@@ -1,8 +1,8 @@
 +++
+weight = 13
 title = "DoS (서비스 거부 공격) 및 DDoS (분산 서비스 거부 공격)"
 description = "DoS/DDoS 공격의 종류, 동작 원리, 봇넷, SYN Flood, UDP Flood, HTTP Flood, 방어 기법을شرح"
 date = 2024-01-27
-weight = 13
 
 [extra]
 categories = ["studynote-software-engineering"]

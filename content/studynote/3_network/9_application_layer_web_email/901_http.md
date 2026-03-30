@@ -1,8 +1,8 @@
 +++
+weight = 1
 title = "HTTP (Hypertext Transfer Protocol)"
 description = "웹의 기반 프로토콜 HTTP의 버전별 발전, 요청/응답 구조, 상태 관리 메커니즘을 다룬다."
 date = 2024-01-28
-weight = 1
 
 [extra]
 categories = ["studynote-software-engineering"]

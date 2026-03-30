@@ -1,8 +1,8 @@
 +++
+weight = 1
 title = "DNS resolution/DDNS"
 description = "DNS 질의 과정의 상세 동작과 동적 DNS(DDNS)의 동작 원리를 다룬다."
 date = 2024-02-01
-weight = 1
 
 [extra]
 categories = ["studynote-software-engineering"]

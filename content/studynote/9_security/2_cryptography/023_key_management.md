@@ -1,8 +1,8 @@
 +++
+weight = 23
 title = "키 관리 (Key Management)"
 description = "암호화 키의 생성, 저장, 순환, 폐기까지의 전 과정 관리"
 date = 2026-03-26
-weight = 23
 
 [extra]
 categories = ["studynote-software-engineering"]

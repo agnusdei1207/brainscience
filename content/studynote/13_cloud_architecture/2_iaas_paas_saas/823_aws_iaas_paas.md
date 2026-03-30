@@ -1,8 +1,8 @@
 +++
+weight = 18
 title = "AWS 주요 서비스 (IaaS/PaaS)"
 description = "AWS의 IaaS/PaaS 대표 서비스와 활용"
 date = 2026-03-26
-weight = 18
 
 [taxonomies]
 tags = ["cloud", "aws", "ec2", "lambda", "s3", "rds", "eks"]

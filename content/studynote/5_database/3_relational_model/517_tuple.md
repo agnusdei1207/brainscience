@@ -1,8 +1,8 @@
 +++
+weight = 17
 title = "투플 (Tuple)"
 description = "관계형 데이터베이스에서 투플의 정의와 특성"
 date = 2026-03-26
-weight = 17
 
 [taxonomies]
 tags = ["database", "relational-model", "tuple", "row"]

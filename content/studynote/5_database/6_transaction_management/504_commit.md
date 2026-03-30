@@ -1,8 +1,8 @@
 +++
+weight = 504
 title = "커밋 (Commit)"
 description = "트랜잭션 커밋의 개념과 내부 동작 메커니즘에 대해 설명"
 date = 2024-01-01
-weight = 504
 
 [extra]
 categories = ["studynote-software-engineering"]

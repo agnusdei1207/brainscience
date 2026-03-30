@@ -1,8 +1,8 @@
 +++
+weight = 37
 title = "네트워크 분단과 파티션 내성 (Network Partition & Tolerance)"
 description = "네트워크 분단의 개념과 CAP 이론에서의 파티션 내성 중요성에 대해 설명"
 date = 2024-01-01
-weight = 37
 
 [extra]
 categories = ["studynote-software-engineering"]

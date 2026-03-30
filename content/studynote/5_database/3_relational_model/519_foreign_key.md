@@ -1,8 +1,8 @@
 +++
+weight = 19
 title = "외래 키 (Foreign Key)"
 description = "외래 키의 정의, 역할, 참조 무결성"
 date = 2026-03-26
-weight = 19
 
 [taxonomies]
 tags = ["database", "relational-model", "foreign-key", "referential-integrity"]

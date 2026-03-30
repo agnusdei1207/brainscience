@@ -1,9 +1,9 @@
 +++
+weight = 522
 title = "522. 파일 할당 방법 (File Allocation Methods)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 522
 +++
 
 # 파일 할당 방법 - 쪼개진 데이터를 디스크의 어느 블록에 구겨 넣을 것인가?

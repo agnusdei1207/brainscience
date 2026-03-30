@@ -1,9 +1,9 @@
 +++
+weight = 531
 title = "531. 익스텐트 (Extent) 할당 기법"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 531
 +++
 
 # 익스텐트 (Extent) - 4KB 조각의 반란, 클라우드를 집어삼킨 초거대 연속 블록의 부활

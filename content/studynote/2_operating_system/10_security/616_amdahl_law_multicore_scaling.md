@@ -1,9 +1,9 @@
 +++
+weight = 616
 title = "616. ëíìì íìì ëë (Amdahl's Law) ë ìë ë êí ìë"
 date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
-weight = 616
 +++
 
 # ëíìì íìì ëë (Amdahl's Law) ë ìë ë êí ìë

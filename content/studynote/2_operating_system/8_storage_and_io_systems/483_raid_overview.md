@@ -1,9 +1,9 @@
 +++
+weight = 483
 title = "483. RAID (Redundant Array of Independent Disks)"
 date = "2026-03-24"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 483
 +++
 
 # RAID (Redundant Array of Independent Disks)

@@ -1,8 +1,8 @@
 +++
+weight = 43
 title = "날짜/시간 함수 (Date/Time Functions)"
 description = "주요 SQL 날짜 및 시간 함수"
 date = 2026-03-26
-weight = 43
 
 [taxonomies]
 tags = ["database", "sql", "date", "time", "function"]

@@ -1,9 +1,9 @@
 +++
+weight = 510
 title = "510. 비순환 그래프 디렉터리 (Acyclic Graph Directory)"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 510
 +++
 
 # 비순환 그래프 디렉터리 (Acyclic Graph Directory) - 링크(Link)와 파일 공유의 마법

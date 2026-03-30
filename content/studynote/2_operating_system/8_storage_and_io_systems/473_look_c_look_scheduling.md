@@ -1,9 +1,9 @@
 +++
+weight = 473
 title = "473. LOOK 및 C-LOOK 바보 엘리베이터에 눈을 달다"
 date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 473
 +++
 
 # LOOK 및 C-LOOK (디스크 스케줄링 최적화)

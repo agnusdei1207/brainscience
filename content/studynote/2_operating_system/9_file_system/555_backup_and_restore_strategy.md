@@ -1,9 +1,9 @@
 +++
+weight = 555
 title = "555. 백업 (Backup) 및 복구 - 전체(Full) vs 증분(Incremental) 백업 모델"
 date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
-weight = 555
 +++
 
 # 백업 (Backup) 및 복구 (Restore) - 삭제된 내일의 데이터를 오늘 미리 저장하는 생명 연장의 거시 타임머신 모델 
