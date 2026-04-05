@@ -1,5 +1,5 @@
 +++
-title = "14. 멀티 테넌시 (Multi-Tenancy)"
+title = "14. 멀티 테넌시"
 description = "SaaS 아키텍처의 핵심인 멀티 테넌시의 데이터 격리 모델과 리소스 분배 전략"
 date = "2026-03-04"
 [taxonomies]

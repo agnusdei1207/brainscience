@@ -1,5 +1,5 @@
 +++
-title = "7. 퍼블릭 클라우드 (Public Cloud)"
+title = "07. 퍼블릭 클라우드"
 description = "초기 투자 없이 무한한 확장성을 제공하는 공용 인프라의 다중 테넌트 아키텍처 메커니즘과 실무 도입 전략"
 date = "2024-05-24"
 [taxonomies]

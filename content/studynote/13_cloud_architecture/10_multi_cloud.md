@@ -1,5 +1,5 @@
 +++
-title = "10. 멀티 클라우드 (Multi-Cloud)"
+title = "10. 멀티 클라우드"
 description = "단일 벤더 종속(Lock-in)의 치명적 리스크를 피하고 글로벌 가용성을 극대화하기 위한 이기종 클라우드 분산 아키텍처"
 date = "2024-05-24"
 [taxonomies]

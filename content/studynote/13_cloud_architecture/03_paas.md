@@ -1,5 +1,5 @@
 +++
-title = "PaaS (Platform as a Service) 아키텍처"
+title = "03. PaaS (Platform as a Service)"
 description = "운영체제와 미들웨어가 사전 구성된 개발 및 런타임 환경을 제공하여 개발 생산성을 극대화하는 PaaS의 원리 분석"
 date = "2024-05-24"
 [taxonomies]

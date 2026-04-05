@@ -1,5 +1,5 @@
 +++
-title = "6. FaaS (Function as a Service) 및 서버리스 아키텍처"
+title = "06. FaaS (Function as a Service)"
 description = "인프라 프로비저닝 없이 코드 조각 단위로 실행되는 FaaS의 근본 원리, 아키텍처, 그리고 콜드 스타트 최적화 전략"
 date = "2024-05-24"
 [taxonomies]

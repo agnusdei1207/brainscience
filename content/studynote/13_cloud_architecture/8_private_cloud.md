@@ -1,5 +1,5 @@
 +++
-title = "8. 프라이빗 클라우드 (Private Cloud)"
+title = "08. 프라이빗 클라우드"
 description = "온프레미스의 강력한 보안 통제권과 클라우드의 민첩성을 결합한 기업 전용 독자적 인프라 아키텍처"
 date = "2024-05-24"
 [taxonomies]

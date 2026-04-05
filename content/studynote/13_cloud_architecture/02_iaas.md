@@ -1,5 +1,5 @@
 +++
-title = "IaaS (Infrastructure as a Service) 아키텍처"
+title = "02. IaaS (Infrastructure as a Service)"
 description = "서버, 스토리지, 네트워크 등 클라우드 인프라 자원을 가상화하여 제공하는 IaaS의 핵심 원리와 실무 아키텍처 가이드"
 date = "2024-05-24"
 [taxonomies]

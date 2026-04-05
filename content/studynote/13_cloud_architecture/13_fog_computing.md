@@ -1,5 +1,5 @@
 +++
-title = "13. 포그 컴퓨팅 (Fog Computing)"
+title = "13. 포그 컴퓨팅"
 description = "클라우드와 엣지 사이의 간극을 메우는 로컬 네트워크 기반 중간 분산 처리 아키텍처"
 date = "2026-03-04"
 [taxonomies]
