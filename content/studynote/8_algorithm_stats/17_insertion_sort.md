@@ -1,5 +1,6 @@
 +++
 title = "17. 삽입 정렬 (Insertion Sort)"
+weight = 17
 +++
 
 # 17. 삽입 정렬 (Insertion Sort)

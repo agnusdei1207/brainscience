@@ -1,5 +1,6 @@
 +++
 title = "16. 선택 정렬 (Selection Sort)"
+weight = 16
 +++
 
 # 16. 선택 정렬 (Selection Sort)

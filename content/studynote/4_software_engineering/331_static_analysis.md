@@ -1,5 +1,6 @@
 +++
 title = "331. 정적 분석 (Static Analysis) - 실행하지 않고 소스코드의 결함 탐지"
+weight = 331
 +++
 
 # 331. 정적 분석 (Static Analysis) - 실행하지 않고 소스코드의 결함 탐지

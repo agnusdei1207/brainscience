@@ -1,4 +1,5 @@
 +++
+weight = 105
 title = "105. CSMA 지속 방식 (1-Persistent, Non-Persistent, p-Persistent) 심층 분석"
 description = "CSMA에서 채널이 사용 중일 때 노드가 대기하는 세 가지 전략적 접근 방식(지속 방식)의 동작 원리, 장단점 및 트레이드오프를 심층 분석합니다."
 date = "2026-03-04"

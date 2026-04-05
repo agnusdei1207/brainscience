@@ -1,5 +1,6 @@
 +++
 title = "291. 정보 아키텍처 (Information Architecture) 설계"
+weight = 291
 +++
 
 # 291. 정보 아키텍처 (Information Architecture) 설계

@@ -1,5 +1,6 @@
 +++
 title = "07. 동적 프로그래밍 (Dynamic Programming)"
+weight = 7
 +++
 
 # 07. 동적 프로그래밍 (Dynamic Programming)

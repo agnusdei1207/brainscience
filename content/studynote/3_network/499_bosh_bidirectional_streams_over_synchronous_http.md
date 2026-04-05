@@ -1,4 +1,5 @@
 +++
+weight = 499
 title = "BOSH (Bidirectional-streams Over Synchronous HTTP)"
 description = "웹소켓(WebSocket)이 세상에 나오기 전, 1초마다 서버를 찌르는 폴링(Polling)의 부하를 막기 위해 클라이언트가 텅 빈 HTTP 요청을 던져놓고 서버가 데이터가 생길 때까지 무식하게 응답을 물고 늘어지는 초창기 웹 채팅의 전설적인 롱 폴링(Long Polling) 꼼수"
 date = 2026-04-03

@@ -1,4 +1,5 @@
 +++
+weight = 631
 title = "631. 메모리 KSM (Kernel Samepage Merging) 가상머신 간 중복 메모리 통합 절약"
 date = "2026-03-29"
 [extra]

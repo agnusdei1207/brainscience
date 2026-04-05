@@ -1,5 +1,6 @@
 +++
 title = "51. FMEA (Failure Mode and Effects Analysis)"
+weight = 51
 +++
 
 # 51. FMEA (Failure Mode and Effects Analysis)

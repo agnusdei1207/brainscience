@@ -1,4 +1,5 @@
 +++
+weight = 155
 title = "인덱스의 단점 - DML(Insert, Update) 시 오버헤드 폭발"
 description = "검색(SELECT)을 100배 빠르게 뚫어주는 빛의 이면. 데이터 딱 1건을 삽입(INSERT)할 때마다 가나다순으로 얼어붙어 있는 B-Tree 잎사귀 장부를 갈기갈기 찢고(Index Split) 억지로 비집고 끼워 넣느라 서버가 피를 토하는 치명적인 쓰기 지연(Write Penalty)의 공포"
 date = 2026-04-03

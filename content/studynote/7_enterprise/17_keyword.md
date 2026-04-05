@@ -1,5 +1,6 @@
 +++
 title = "17. AS-IS 분석 vs TO-BE 모델링"
+weight = 17
 +++
 
 # 17. AS-IS 분석 vs TO-BE 모델링

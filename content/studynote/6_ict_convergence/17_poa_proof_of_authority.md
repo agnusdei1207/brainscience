@@ -1,4 +1,5 @@
 +++
+weight = 17
 title = "17. 권위 증명 (PoA, Proof of Authority)"
 description = "신원이 검증되고 권위를 부여받은 소수의 노드(Validator)만이 블록을 생성하고 합의에 참여하는 프라이빗 블록체인 최적화 알고리즘"
 date = "2026-03-04"

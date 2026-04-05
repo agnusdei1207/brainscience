@@ -1,4 +1,5 @@
 +++
+weight = 20
 title = "20. 데이터 정의 언어 (DDL: Data Definition Language)"
 description = "데이터베이스의 골격인 스키마와 물리적 저장 객체를 정의, 변경, 삭제하는 언어"
 date = "2026-03-04"

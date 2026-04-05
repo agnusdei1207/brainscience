@@ -1,4 +1,5 @@
 +++
+weight = 589
 title = "589. V2X (Vehicle to Everything) - 자율주행과 커넥티드 카(C-ITS)의 초연결 통신 아키텍처"
 date = "2026-04-05"
 [extra]

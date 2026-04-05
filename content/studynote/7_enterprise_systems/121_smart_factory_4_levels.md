@@ -1,4 +1,5 @@
 +++
+weight = 121
 title = "121. 스마트 팩토리 (Smart Factory) 4단계 진화 모델"
 date = "2026-04-02"
 [extra]

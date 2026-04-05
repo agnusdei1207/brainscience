@@ -1,4 +1,5 @@
 +++
+weight = 128
 title = "128. 광섬유 케이블 (Optical Fiber Cable) 구조: 코어(Core)와 클래딩(Cladding)"
 description = "전반사 원리를 이용한 광섬유 내부 코어와 클래딩의 구조, 굴절률 차이 및 통신망 적용 분석"
 date = "2026-03-04"

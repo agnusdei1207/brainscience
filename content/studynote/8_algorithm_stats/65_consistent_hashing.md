@@ -1,5 +1,6 @@
 +++
 title = "65. 일관성 해시 (Consistent Hashing)"
+weight = 65
 +++
 
 # 65. 일관성 해시 (Consistent Hashing)

@@ -1,4 +1,5 @@
 +++
+weight = 545
 title = "545. 커버로스 (Kerberos) - KDC(Key Distribution Center)/티켓 기반 인증, 타임스탬프 재전송 방지"
 date = "2026-04-05"
 [extra]

@@ -1,6 +1,7 @@
 +++
 title = "364. 정형 기술 검토 (FTR, Formal Technical Review)"
 date = 2026-04-05
+weight = 364
 +++
 
 # 364. 정형 기술 검토 (FTR, Formal Technical Review)

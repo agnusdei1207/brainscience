@@ -1,4 +1,5 @@
 +++
+weight = 144
 title = "연관 서브쿼리 (Correlated Subquery) - 바깥 세상과 묶인 루프"
 description = "서브쿼리 내부의 로직이 바깥쪽 메인 쿼리의 컬럼 값을 참조하여, 메인 쿼리의 행(Row) 개수만큼 무한 반복 실행(Nested Loop)되는 강력하지만 위험한 SQL 필터링/추출 기법"
 date = 2026-04-03

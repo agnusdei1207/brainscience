@@ -1,4 +1,5 @@
 +++
+weight = 25
 title = "025. 편향-분산 트레이드오프 (Bias-Variance Trade-off)"
 date = "2026-04-02"
 [extra]

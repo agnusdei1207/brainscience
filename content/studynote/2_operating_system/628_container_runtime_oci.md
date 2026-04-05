@@ -1,4 +1,5 @@
 +++
+weight = 628
 title = "628. 컨테이너 런타임 (runc, containerd) OCI 규격 표준화"
 date = "2026-03-29"
 [extra]

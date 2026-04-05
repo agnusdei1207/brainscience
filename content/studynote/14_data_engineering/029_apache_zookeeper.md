@@ -1,4 +1,5 @@
 +++
+weight = 29
 title = "029. 아파치 주키퍼 (Apache ZooKeeper)"
 date = "2026-04-05"
 [extra]

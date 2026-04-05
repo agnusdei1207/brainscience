@@ -1,4 +1,5 @@
 +++
+weight = 698
 title = "698. Test-and-Set 연산 하드웨어"
 date = "2026-03-29"
 [extra]

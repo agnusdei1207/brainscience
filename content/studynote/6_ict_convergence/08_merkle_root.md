@@ -1,5 +1,6 @@
 +++
 title = "08. 머클 루트 (Merkle Root)"
+weight = 8
 +++
 
 # 08. 머클 루트 (Merkle Root)

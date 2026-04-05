@@ -1,5 +1,6 @@
 +++
 title = "56. 다익스트라 알고리즘 (Dijkstra's Algorithm)"
+weight = 56
 +++
 
 # 56. 다익스트라 알고리즘 (Dijkstra's Algorithm)

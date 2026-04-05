@@ -1,4 +1,5 @@
 +++
+weight = 800
 title = "800. 시스템 아키텍처 결함 허용 (Fault Tolerance) 듀얼 구성"
 date = "2026-03-30"
 [extra]

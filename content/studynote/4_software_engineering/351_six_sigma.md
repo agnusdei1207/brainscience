@@ -1,6 +1,7 @@
 +++
 title = "351. 식스 시그마 (6 Sigma) - DMAIC (Define, Measure, Analyze, Improve, Control)"
 date = 2026-04-05
+weight = 351
 +++
 
 # 351. 식스 시그마 (6 Sigma) - DMAIC (Define, Measure, Analyze, Improve, Control)

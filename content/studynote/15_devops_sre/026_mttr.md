@@ -1,4 +1,5 @@
 +++
+weight = 26
 title = "026. 서비스 복구 시간 (MTTR, Mean Time To Recovery)"
 date = "2026-04-05"
 [extra]

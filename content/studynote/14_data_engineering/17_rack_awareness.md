@@ -1,4 +1,5 @@
 +++
+weight = 17
 title = "랙 인지 알고리즘 (Rack Awareness Algorithm)"
 description = "분산 클러스터에서 스위치나 전원 장애 등 랙(Rack) 단위의 대규모 결함을 방어하기 위한 지능형 데이터 분산 배치 기법"
 date = "2025-01-01"

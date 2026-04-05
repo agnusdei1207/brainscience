@@ -1,4 +1,5 @@
 +++
+weight = 25
 title = "025. 스파크 RDD (Resilient Distributed Dataset) - 인메모리 분산 데이터셋"
 date = "2026-04-02"
 [extra]

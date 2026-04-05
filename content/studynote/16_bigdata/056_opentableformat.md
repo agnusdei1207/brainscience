@@ -1,4 +1,5 @@
 +++
+weight = 56
 title = "56. 오픈 테이블 포맷 (Open Table Format)"
 date = "2026-04-05"
 [extra]

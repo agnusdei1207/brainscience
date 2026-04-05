@@ -1,4 +1,5 @@
 +++
+weight = 58
 title = "58. GitHub Actions (깃허브 액션스)"
 date = "2026-04-05"
 [extra]

@@ -1,5 +1,6 @@
 +++
 title = "271. 커맨드 (Command) - 요청을 객체로 캡슐화 (Undo/Redo 지원)"
+weight = 271
 +++
 
 # 271. 커맨드 (Command) - 요청을 객체로 캡슐화 (Undo/Redo 지원)

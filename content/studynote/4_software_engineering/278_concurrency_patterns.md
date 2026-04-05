@@ -1,5 +1,6 @@
 +++
 title = "278. 동시성 패턴 (Concurrency Patterns) - Active Object, Monitor Object, Thread Pool"
+weight = 278
 +++
 
 # 278. 동시성 패턴 (Concurrency Patterns) - Active Object, Monitor Object, Thread Pool

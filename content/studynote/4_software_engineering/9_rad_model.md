@@ -1,4 +1,5 @@
 +++
+weight = 9
 title = "09. RAD 모델 (Rapid Application Development)"
 description = "자동화 도구와 컴포넌트 재사용을 통해 60~90일 이내에 초고속으로 시스템을 개발하는 방법론"
 date = "2026-03-04"

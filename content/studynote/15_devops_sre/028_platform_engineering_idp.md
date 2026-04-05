@@ -1,4 +1,5 @@
 +++
+weight = 28
 title = "028. 플랫폼 엔지니어링 / IDP (Internal Developer Platform)"
 date = "2026-04-05"
 [extra]

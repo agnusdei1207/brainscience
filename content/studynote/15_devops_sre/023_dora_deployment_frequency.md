@@ -1,4 +1,5 @@
 +++
+weight = 23
 title = "023. DORA 메트릭스: 배포 빈도 (Deployment Frequency)"
 date = "2026-04-02"
 [extra]

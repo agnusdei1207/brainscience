@@ -1,4 +1,5 @@
 +++
+weight = 689
 title = "689. SJF 기아 (Starvation) 발생"
 date = "2026-03-29"
 [extra]

@@ -1,6 +1,7 @@
 +++
 title = "442. 테스트 시나리오 (Test Scenario)"
 date = 2026-04-05
+weight = 442
 +++
 
 # 442. 테스트 시나리오 (Test Scenario)

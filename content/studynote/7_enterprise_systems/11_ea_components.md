@@ -1,4 +1,5 @@
 +++
+weight = 11
 title = "11. EA 구성요소 (BA, DA, AA, TA, SA)"
 description = "전사적 아키텍처(EA)를 구성하는 핵심 도메인별 세부 아키텍처(BA, DA, AA, TA, SA)의 구조와 유기적 연계 메커니즘 심층 분석"
 date = "2024-05-24"

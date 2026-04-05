@@ -1,5 +1,6 @@
 +++
 title = "256. 결과적 일관성 (Eventual Consistency)"
+weight = 256
 +++
 
 # 256. 결과적 일관성 (Eventual Consistency)

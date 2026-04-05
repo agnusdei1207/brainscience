@@ -1,5 +1,6 @@
 +++
 title = "67. 스킵 리스트 (Skip List)"
+weight = 67
 +++
 
 # 67. 스킵 리스트 (Skip List)

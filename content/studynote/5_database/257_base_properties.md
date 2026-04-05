@@ -1,5 +1,6 @@
 +++
 title = "257. BASE 속성 (BASE Properties)"
+weight = 257
 +++
 
 # 257. BASE 속성 (BASE Properties)

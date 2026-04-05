@@ -1,4 +1,5 @@
 +++
+weight = 734
 title = "734. FAT 방식 연결 할당 최적화"
 date = "2026-03-29"
 [extra]

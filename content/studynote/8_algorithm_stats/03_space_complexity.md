@@ -1,5 +1,6 @@
 +++
 title = "03. 공간 복잡도 (Space Complexity)"
+weight = 3
 +++
 
 # 03. 공간 복잡도 (Space Complexity)

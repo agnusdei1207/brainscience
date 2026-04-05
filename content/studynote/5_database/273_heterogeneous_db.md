@@ -1,5 +1,6 @@
 +++
 title = "273. 동종 분산 DB vs 이종 (Heterogeneous) 분산 DB 통합"
+weight = 273
 +++
 
 # 273. 동종 분산 DB vs 이종 (Heterogeneous) 분산 DB 통합

@@ -1,5 +1,6 @@
 +++
 title = "319. 웹어셈블리 (WebAssembly) 적용 아키텍처"
+weight = 319
 +++
 
 # 319. 웹어셈블리 (WebAssembly, Wasm) 적용 아키텍처

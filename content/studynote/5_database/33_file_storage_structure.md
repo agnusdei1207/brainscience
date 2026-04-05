@@ -1,4 +1,5 @@
 +++
+weight = 33
 title = "33. 파일 저장 구조: 히프(Heap), 순차(Sequential), 해시(Hash), 인덱스(Indexed) 파일"
 description = "데이터베이스 레코드의 물리적 파일 저장 구조의 원리와 성능 트레이드오프 분석"
 date = "2026-03-04"

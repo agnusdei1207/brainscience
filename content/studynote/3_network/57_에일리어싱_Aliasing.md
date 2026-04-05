@@ -1,4 +1,5 @@
 +++
+weight = 57
 title = "57. 에일리어싱 (Aliasing)"
 date = "2026-03-30"
 [extra]

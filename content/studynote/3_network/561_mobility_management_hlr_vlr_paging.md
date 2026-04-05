@@ -1,4 +1,5 @@
 +++
+weight = 561
 title = "561. 이동성 관리 (Mobility Management) - HLR (Home), VLR (Visitor) 구조 및 Paging"
 date = "2026-04-05"
 [extra]

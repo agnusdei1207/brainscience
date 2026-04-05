@@ -1,4 +1,5 @@
 +++
+weight = 505
 title = "WebRTC (Web Real-Time Communication) - 플러그인을 죽인 브라우저 화상 통신"
 description = "액티브X(ActiveX)와 플래시(Flash) 설치의 고통에서 인류를 해방하고, 크롬이나 사파리 브라우저 탭 하나만 열면 마이크와 카메라가 연동되어 서버를 거치지 않고 사용자끼리 다이렉트(P2P)로 1밀리초 만에 화상 회의를 뚫어버리는 구글(Google) 주도의 파괴적 웹 통신 혁명"
 date = 2026-04-03

@@ -1,5 +1,6 @@
 +++
 title = "259. 래프트 (Raft) / 팍소스 (Paxos) 알고리즘"
+weight = 259
 +++
 
 # 259. 래프트 (Raft) / 팍소스 (Paxos) 알고리즘

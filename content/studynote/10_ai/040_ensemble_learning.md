@@ -1,4 +1,5 @@
 +++
+weight = 40
 title = "040. 앙상블 학습 (Ensemble Learning)"
 date = "2026-04-05"
 [extra]

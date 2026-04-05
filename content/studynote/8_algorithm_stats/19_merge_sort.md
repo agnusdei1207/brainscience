@@ -1,5 +1,6 @@
 +++
 title = "19. 합병 정렬 (Merge Sort)"
+weight = 19
 +++
 
 # 19. 합병 정렬 (Merge Sort)

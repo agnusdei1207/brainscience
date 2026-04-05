@@ -1,4 +1,5 @@
 +++
+weight = 583
 title = "583. WPA3 - SAE (Simultaneous Auth) 핸드셰이크 도입과 딕셔너리 공격 완전 차단"
 date = "2026-04-05"
 [extra]

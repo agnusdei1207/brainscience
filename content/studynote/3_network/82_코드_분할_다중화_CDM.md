@@ -1,4 +1,5 @@
 +++
+weight = 82
 title = "82. 코드 분할 다중화 (CDM, Code Division Multiplexing)"
 description = "주파수와 시간을 쪼개지 않고, 동일한 공간에 직교 코드를 곱해 수많은 신호를 동시에 전송하는 암호 수학 기반의 다중화 아키텍처"
 date = "2026-03-30"

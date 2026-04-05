@@ -1,4 +1,5 @@
 +++
+weight = 4
 title = "4. 약인공지능 (Weak AI / Narrow AI)"
 description = "특정 도메인과 제한된 작업에 특화되어 현대 산업을 주도하는 실용적 인공지능 패러다임"
 date = "2026-03-04"

@@ -1,4 +1,5 @@
 +++
+weight = 665
 title = "665. 시스템 레지스트리 (Windows Registry) 및 구성 데이터베이스 관리 구조"
 date = "2026-03-29"
 [extra]

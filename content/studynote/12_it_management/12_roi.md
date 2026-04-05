@@ -1,4 +1,5 @@
 +++
+weight = 12
 title = "12. IT 투자 타당성 분석 지표 - ROI (Return on Investment)"
 description = "IT 투자의 재무적 효과를 측정하는 투자수익률(ROI)의 원리와 실무 분석"
 date = "2024-05-20"

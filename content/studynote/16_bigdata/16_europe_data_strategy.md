@@ -1,4 +1,5 @@
 +++
+weight = 16
 title = "16. 유럽 데이터 전략 (European Data Strategy: Data Spaces & Gaia-X)"
 description = "데이터 주권 확보와 안전한 데이터 공유를 위한 유럽의 Data Spaces 및 Gaia-X 연합 아키텍처 분석"
 date = "2024-05-24"

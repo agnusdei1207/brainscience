@@ -1,5 +1,6 @@
 +++
 title = "279. 그래프 저장소 (Graph Store)"
+weight = 279
 +++
 
 # 279. 그래프 저장소 (Graph Store)

@@ -1,5 +1,6 @@
 +++
 title = "13. 랜덤화 알고리즘 (Randomized Algorithm)"
+weight = 13
 +++
 
 # 13. 랜덤화 알고리즘 (Randomized Algorithm)

@@ -1,4 +1,5 @@
 +++
+weight = 4
 title = "04. 데이터 독립성 (Data Independence)"
 description = "논리적 독립성과 물리적 독립성의 개념, 사상(Mapping) 원리 및 데이터베이스 스키마 보호 아키텍처"
 date = "2024-05-20"

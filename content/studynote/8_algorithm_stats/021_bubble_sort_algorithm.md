@@ -1,4 +1,5 @@
 +++
+weight = 21
 title = "021. 거품 정렬 (Bubble Sort) 알고리즘"
 date = "2026-04-02"
 [extra]

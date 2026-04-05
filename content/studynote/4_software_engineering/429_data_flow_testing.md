@@ -1,6 +1,7 @@
 +++
 title = "429. 데이터 흐름 테스팅 (Data Flow Testing)"
 date = 2026-04-05
+weight = 429
 +++
 
 # 429. 데이터 흐름 테스팅 (Data Flow Testing)

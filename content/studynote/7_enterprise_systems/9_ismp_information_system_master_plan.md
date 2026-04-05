@@ -1,4 +1,5 @@
 +++
+weight = 9
 title = "09. 정보시스템 마스터플랜 (ISMP, Information System Master Plan)"
 description = "특정 정보시스템 구축 사업을 위한 상세 요구사항 분석, 아키텍처 설계, RFP 작성을 아우르는 ISMP의 수립 방법론과 실무 적용 방안"
 date = "2026-03-04"

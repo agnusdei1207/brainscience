@@ -1,4 +1,5 @@
 +++
+weight = 25
 title = "25. 과업 대비표 (Task Traceability Matrix)"
 date = "2026-04-02"
 [extra]

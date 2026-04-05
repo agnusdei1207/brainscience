@@ -1,4 +1,5 @@
 +++
+weight = 17
 title = "17. 관계형 데이터 모델 (Relational Data Model)"
 description = "E.F. Codd가 제안한 테이블 구조 기반의 수학적 논리 데이터 모델"
 date = "2026-03-04"

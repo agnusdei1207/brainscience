@@ -1,4 +1,5 @@
 +++
+weight = 2
 title = "02. 기밀성 (Confidentiality)"
 description = "인가되지 않은 정보 접근 및 유출을 차단하기 위한 기밀성의 핵심 원리, 암호화, 접근 제어 및 실무 적용 방안"
 date = "2023-10-24"

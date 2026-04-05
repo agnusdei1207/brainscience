@@ -1,4 +1,5 @@
 +++
+weight = 16
 title = "16. BPR (Business Process Reengineering)"
 description = "획기적인 성과 향상을 위해 기존 업무 방식을 버리고 비즈니스 프로세스를 원점에서 근본적으로 재설계하는 경영 혁신 기법"
 date = "2026-03-04"

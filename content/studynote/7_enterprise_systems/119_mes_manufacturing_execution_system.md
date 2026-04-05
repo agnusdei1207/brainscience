@@ -1,4 +1,5 @@
 +++
+weight = 119
 title = "119. MES (Manufacturing Execution System) - 제조 실행 시스템"
 date = "2026-04-02"
 [extra]

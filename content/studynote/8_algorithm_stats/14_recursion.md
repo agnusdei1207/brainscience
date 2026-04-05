@@ -1,5 +1,6 @@
 +++
 title = "14. 재귀 (Recursion)"
+weight = 14
 +++
 
 # 14. 재귀 (Recursion)

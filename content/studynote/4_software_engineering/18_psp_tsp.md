@@ -1,4 +1,5 @@
 +++
+weight = 18
 title = "18. PSP (Personal Software Process) / TSP (Team Software Process)"
 description = "하향식 프로세스 개선의 한계를 극복하기 위한 개인(PSP)과 팀(TSP) 차원의 상향식 소프트웨어 프로세스 프레임워크를 심층 분석합니다."
 date = "2026-03-04"

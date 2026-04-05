@@ -1,6 +1,7 @@
 +++
 title = "417. 유스케이스 테스팅 (Use Case Testing)"
 date = 2026-04-05
+weight = 417
 +++
 
 # 417. 유스케이스 테스팅 (Use Case Testing)

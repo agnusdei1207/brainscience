@@ -1,6 +1,7 @@
 +++
 title = "349. 품질 비용 (COQ, Cost of Quality) - 예방 비용, 평가 비용, 내부 실패 비용, 외부 실패 비용"
 date = 2026-04-05
+weight = 349
 +++
 
 # 349. 품질 비용 (COQ, Cost of Quality) - 예방 비용, 평가 비용, 내부 실패 비용, 외부 실패 비용

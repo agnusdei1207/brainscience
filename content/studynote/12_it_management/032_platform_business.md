@@ -1,4 +1,5 @@
 +++
+weight = 32
 title = "032. 플랫폼 비즈니스 - ecosystems를 연결하는 새 경제 주체의 설계"
 date = "2026-04-05"
 [extra]

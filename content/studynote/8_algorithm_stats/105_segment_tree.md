@@ -1,5 +1,6 @@
 +++
 title = "105. 세그먼트 트리 (Segment Tree)"
+weight = 105
 +++
 
 # 105. 세그먼트 트리 (Segment Tree)

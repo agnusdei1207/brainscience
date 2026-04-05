@@ -1,4 +1,5 @@
 +++
+weight = 57
 title = "57. 스토리지와 컴퓨팅 분리 (Storage-Compute Separation)"
 date = "2026-04-05"
 [extra]

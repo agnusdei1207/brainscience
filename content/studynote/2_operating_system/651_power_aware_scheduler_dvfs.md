@@ -1,4 +1,5 @@
 +++
+weight = 651
 title = "651. 전력 인식(Power-aware) 스케줄러 동적 전압/주파수 스케일링(DVFS) 통합형 CPU 제어"
 date = "2026-03-29"
 [extra]

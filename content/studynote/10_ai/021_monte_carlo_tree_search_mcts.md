@@ -1,4 +1,5 @@
 +++
+weight = 21
 title = "021. 몬테카를로 트리 탐색 (MCTS)"
 date = "2026-04-02"
 [extra]

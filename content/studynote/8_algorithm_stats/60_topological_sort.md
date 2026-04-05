@@ -1,5 +1,6 @@
 +++
 title = "60. 위상 정렬 (Topological Sort)"
+weight = 60
 +++
 
 # 60. 위상 정렬 (Topological Sort)

@@ -1,4 +1,5 @@
 +++
+weight = 552
 title = "552. 주파수 분할 방식(FDD) vs 시분할 방식(TDD) - 무선 통신 이중화(Duplexing) 아키텍처"
 date = "2026-04-05"
 [extra]

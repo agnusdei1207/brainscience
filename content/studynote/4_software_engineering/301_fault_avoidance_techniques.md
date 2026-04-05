@@ -1,5 +1,6 @@
 +++
 title = "301. 결함 회피 (Fault Avoidance) 기법"
+weight = 301
 +++
 
 # 301. 결함 회피 (Fault Avoidance) 기법

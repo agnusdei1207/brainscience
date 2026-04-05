@@ -1,4 +1,5 @@
 +++
+weight = 10
 title = "10. 백엔드 서비스"
 date = "2026-04-05"
 [taxonomies]

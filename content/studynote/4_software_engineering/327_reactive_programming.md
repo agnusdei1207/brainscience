@@ -1,5 +1,6 @@
 +++
 title = "327. 반응형 프로그래밍 (Reactive Programming) - 데이터 스트림과 변화 전파"
+weight = 327
 +++
 
 # 327. 반응형 프로그래밍 (Reactive Programming) - 데이터 스트림과 변화 전파

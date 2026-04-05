@@ -1,6 +1,7 @@
 +++
 title = "414. 경계값 분석 (Boundary Value Analysis)"
 date = 2026-04-05
+weight = 414
 +++
 
 # 414. 경계값 분석 (Boundary Value Analysis)

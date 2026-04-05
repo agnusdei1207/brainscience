@@ -1,4 +1,5 @@
 +++
+weight = 17
 title = "17. 핵심 성공 요인 (CSF, Critical Success Factor)"
 description = "조직이 전략적 목표를 달성하기 위해 반드시 우수한 성과를 내거나 역량을 집중해야 하는 가장 결정적이고 필수적인 조건 및 활동 영역"
 date = "2024-05-20"

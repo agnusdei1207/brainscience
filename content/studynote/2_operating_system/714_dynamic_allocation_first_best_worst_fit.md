@@ -1,4 +1,5 @@
 +++
+weight = 714
 title = "714. 동적 할당 First/Best/Worst Fit"
 date = "2026-03-29"
 [extra]

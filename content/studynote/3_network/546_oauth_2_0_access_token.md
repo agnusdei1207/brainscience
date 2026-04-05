@@ -1,5 +1,6 @@
 +++
 title = "546. OAuth 2.0 - 타사 애플리케이션 보안 인증 위임 프레임워크 (Access Token)"
+weight = 546
 +++
 
 # 546. OAuth 2.0 - 타사 애플리케이션 보안 인증 위임 프레임워크 (Access Token)

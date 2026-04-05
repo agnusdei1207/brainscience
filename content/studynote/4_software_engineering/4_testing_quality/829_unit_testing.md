@@ -2,6 +2,7 @@
 title = "단위 테스트"
 description = "Unit Testing"
 category = "4_software_engineering"
+weight = 829
 +++
 
 # 단위 테스트 (Unit Testing)

@@ -1,5 +1,6 @@
 +++
 title = "328. 코딩 컨벤션 (Coding Convention) 및 스타일 가이드"
+weight = 328
 +++
 
 # 328. 코딩 컨벤션 (Coding Convention) 및 스타일 가이드

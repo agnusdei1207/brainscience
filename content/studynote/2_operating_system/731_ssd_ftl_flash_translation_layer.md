@@ -1,4 +1,5 @@
 +++
+weight = 731
 title = "731. SSD FTL (Flash Translation Layer)"
 date = "2026-03-29"
 [extra]

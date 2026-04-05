@@ -1,5 +1,6 @@
 +++
 title = "314. 트랜잭셔널 아웃박스 (Transactional Outbox) 패턴"
+weight = 314
 +++
 
 # 314. 트랜잭셔널 아웃박스 (Transactional Outbox) 패턴

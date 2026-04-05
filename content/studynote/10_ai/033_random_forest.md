@@ -1,4 +1,5 @@
 +++
+weight = 33
 title = "033. 랜덤 포레스트 (Random Forest)"
 date = "2026-04-05"
 [extra]

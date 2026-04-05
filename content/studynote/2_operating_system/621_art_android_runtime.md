@@ -1,4 +1,5 @@
 +++
+weight = 621
 title = "621. ART (Android Runtime) AOT/JIT 컴파일러 혼합 실행 환경"
 date = "2026-03-29"
 [extra]

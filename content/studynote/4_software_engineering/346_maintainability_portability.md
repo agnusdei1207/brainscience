@@ -1,6 +1,7 @@
 +++
 title = "346. 유지보수성 (Maintainability) / 이식성 (Portability)"
 date = 2026-04-05
+weight = 346
 +++
 
 # 346. 유지보수성 (Maintainability) / 이식성 (Portability)

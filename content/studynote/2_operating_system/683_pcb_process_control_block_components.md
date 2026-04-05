@@ -1,4 +1,5 @@
 +++
+weight = 683
 title = "683. PCB 구성 요소 필수 암기"
 date = "2026-03-29"
 [extra]

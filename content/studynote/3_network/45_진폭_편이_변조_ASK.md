@@ -1,4 +1,5 @@
 +++
+weight = 45
 title = "45. 진폭 편이 변조 (ASK, Amplitude Shift Keying)"
 date = "2026-03-30"
 [extra]

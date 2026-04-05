@@ -1,5 +1,6 @@
 +++
 title = "324. 함수형 프로그래밍 (Functional Programming) - 일급 객체, 순수 함수, 불변성"
+weight = 324
 +++
 
 # 324. 함수형 프로그래밍 (Functional Programming) - 일급 객체, 순수 함수, 불변성

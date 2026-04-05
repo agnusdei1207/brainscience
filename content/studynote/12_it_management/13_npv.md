@@ -1,4 +1,5 @@
 +++
+weight = 13
 title = "13. NPV (Net Present Value, 순현재가치)"
 description = "화폐의 시간가치를 반영하여 IT 투자의 절대적 타당성을 평가하는 재무 지표"
 date = "2024-05-20"

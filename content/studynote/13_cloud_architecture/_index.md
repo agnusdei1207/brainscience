@@ -2,7 +2,6 @@
 weight = 12000
 title = "13: 클라우드 아키텍처 (Cloud Architecture)"
 render = true
-paginate_by = 10
 sort_by = "weight"
 insert_anchor_links = "right"
 [extra]

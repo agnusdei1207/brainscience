@@ -1,4 +1,5 @@
 +++
+weight = 55
 title = "55. Trunk-Based Development (트렁크 기반 개발)"
 date = "2026-04-05"
 [extra]

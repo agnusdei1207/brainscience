@@ -1,4 +1,5 @@
 +++
+weight = 7
 title = "07. 수치 알고리즘 (Numerical Algorithm)"
 description = "수학적 연산의 최적화 기법과 실무적 오차/복잡도 관리 전략"
 date = "2024-05-20"

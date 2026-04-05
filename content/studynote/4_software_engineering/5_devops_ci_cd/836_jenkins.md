@@ -2,6 +2,7 @@
 title = "Jenkins"
 description = "Jenkins"
 category = "4_software_engineering"
+weight = 836
 +++
 
 # Jenkins

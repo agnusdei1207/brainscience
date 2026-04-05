@@ -1,4 +1,5 @@
 +++
+weight = 629
 title = "629. 라이브 마이그레이션 (Live Migration) 메모리 더티 페이지 프리-카피(Pre-copy) 알고리즘 방식"
 date = "2026-03-29"
 [extra]

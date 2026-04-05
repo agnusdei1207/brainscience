@@ -1,4 +1,5 @@
 +++
+weight = 478
 title = "GraphQL - 메타 개발, 클라이언트 주도 쿼리 언어"
 description = "단일 엔드포인트를 통해 클라이언트가 정확히 원하는 데이터 구조만 쿼리할 수 있도록 하여, REST API의 오버패칭(Over-fetching)과 언더패칭(Under-fetching) 문제를 해결한 쿼리 언어"
 date = 2026-04-03

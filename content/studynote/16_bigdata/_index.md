@@ -2,7 +2,6 @@
 weight = 15016
 title = "16: 빅데이터 (Big Data)"
 render = true
-paginate_by = 10
 sort_by = "weight"
 insert_anchor_links = "right"
 [extra]

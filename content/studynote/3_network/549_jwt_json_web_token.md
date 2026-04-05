@@ -1,4 +1,5 @@
 +++
+weight = 549
 title = "549. JWT (JSON Web Token) - 비상태(Stateless) 분산 서버 환경의 독립적 인증 토큰"
 date = "2026-04-05"
 [extra]

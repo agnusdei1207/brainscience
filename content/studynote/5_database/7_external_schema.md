@@ -1,4 +1,5 @@
 +++
+weight = 7
 title = "07. 외부 스키마 (External Schema)"
 description = "사용자 및 응용 프로그램 관점의 데이터베이스 논리적 구조와 논리적 데이터 독립성의 실무적 응용"
 date = "2024-05-20"

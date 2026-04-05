@@ -1,4 +1,5 @@
 +++
+weight = 22
 title = "022. 지속적 피드백 (Continuous Feedback)"
 date = "2026-04-02"
 [extra]

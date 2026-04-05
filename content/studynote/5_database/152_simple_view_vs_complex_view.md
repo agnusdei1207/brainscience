@@ -1,4 +1,5 @@
 +++
+weight = 152
 title = "단순 뷰 (Simple View) vs 복합 뷰 (Complex View)"
 description = "데이터베이스의 가짜 유리창(View)을 깎을 때, 테이블 딱 1개만 써서 수정(Update)이 콱콱 뚫고 들어가는 투명한 창문(단순 뷰)과, 조인(Join)과 믹서기(SUM)를 떡칠해서 오직 구경만 가능한 무거운 색유리 창문(복합 뷰)을 가르는 차가운 잣대"
 date = 2026-04-03

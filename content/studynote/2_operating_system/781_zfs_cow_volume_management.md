@@ -1,4 +1,5 @@
 +++
+weight = 781
 title = "781. ZFS Copy-on-Write 볼륨 관리 통합"
 date = "2026-03-30"
 [extra]

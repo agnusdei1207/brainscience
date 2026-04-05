@@ -1,5 +1,6 @@
 +++
 title = "61. KMP 문자열 매칭 (Knuth-Morris-Pratt Algorithm)"
+weight = 61
 +++
 
 # 61. KMP 문자열 매칭 (Knuth-Morris-Pratt Algorithm)

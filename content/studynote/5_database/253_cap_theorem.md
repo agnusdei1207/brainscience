@@ -1,5 +1,6 @@
 +++
 title = "253. CAP 정리 (CAP Theorem)"
+weight = 253
 +++
 
 # 253. CAP 정리 (CAP Theorem)

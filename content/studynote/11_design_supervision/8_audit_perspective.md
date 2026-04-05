@@ -1,4 +1,5 @@
 +++
+weight = 8
 title = "8. 감리 관점 (Audit Perspective)"
 description = "정보시스템 감리의 3대 관점(절차, 산출물, 성과)을 통한 객관적 증거 수집과 입체적 품질 검증 메커니즘"
 date = "2024-05-24"

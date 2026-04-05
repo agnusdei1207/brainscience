@@ -1,4 +1,5 @@
 +++
+weight = 159
 title = "클러스터드 인덱스 (Clustered Index) - 하드디스크를 강제 성형하는 독재자"
 description = "데이터가 흩어지는(Random) 혼돈을 혐오하며, 디스크에 박히는 원본 데이터의 물리적 순서(Physical Order) 자체를 인덱스의 나뭇잎 순서와 100% 똑같이 멱살 잡고 정렬(Sort)시켜버리는 테이블당 오직 단 1개만 허락되는 절대 권력의 신분증(Primary Key)"
 date = 2026-04-03

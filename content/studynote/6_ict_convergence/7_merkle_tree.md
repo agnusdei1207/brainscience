@@ -1,4 +1,5 @@
 +++
+weight = 7
 title = "07. 머클 트리 (Merkle Tree / Hash Tree)"
 description = "트랜잭션 무결성 검증을 위한 해시 트리의 구조와 O(log N) 검증 매커니즘"
 date = "2024-03-24"

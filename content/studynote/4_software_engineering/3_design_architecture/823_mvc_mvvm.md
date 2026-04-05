@@ -2,6 +2,7 @@
 title = "MVC, MVP, MVVM 패턴"
 description = "MVC, MVP, MVVM Patterns"
 category = "4_software_engineering"
+weight = 823
 +++
 
 # MVC, MVP, MVVM 패턴

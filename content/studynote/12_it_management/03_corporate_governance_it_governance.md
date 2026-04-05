@@ -1,4 +1,5 @@
 +++
+weight = 3
 title = "03. 기업 거버넌스 (Corporate Governance)와 IT 거버넌스의 관계"
 description = "전사적 가치 창출을 위한 기업 거버넌스의 핵심 하위 구조로서 IT 거버넌스가 수행하는 역할과 연계 메커니즘"
 date = "2026-03-04"

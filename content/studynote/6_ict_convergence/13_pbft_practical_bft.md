@@ -1,4 +1,5 @@
 +++
+weight = 13
 title = "13. PBFT (Practical Byzantine Fault Tolerance)"
 description = "다수결 기반 상태 기계 복제 합의 (텐더민트, 하이퍼레저)"
 date = "2024-05-18"

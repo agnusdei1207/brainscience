@@ -1,4 +1,5 @@
 +++
+weight = 16
 title = "16. 망형 데이터 모델 (Network Model) - 그래프 구조"
 description = "다대다(N:M) 관계의 복잡성을 포인터 그래프 구조로 해결하려 했던 CODASYL 표준 모델과 그 한계점"
 date = "2024-05-18"

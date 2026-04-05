@@ -1,4 +1,5 @@
 +++
+weight = 576
 title = "576. 802.11ax (Wi-Fi 6) - OFDMA 도입, 양방향 MU-MIMO, TWT(Target Wake Time)"
 date = "2026-04-05"
 [extra]

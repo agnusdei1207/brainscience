@@ -1,4 +1,5 @@
 +++
+weight = 728
 title = "728. C-SCAN 단방향 회전"
 date = "2026-03-29"
 [extra]

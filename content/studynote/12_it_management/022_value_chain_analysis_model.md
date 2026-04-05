@@ -1,4 +1,5 @@
 +++
+weight = 22
 title = "022. 가치 사슬 (Value Chain) 분석"
 date = "2026-04-02"
 [extra]

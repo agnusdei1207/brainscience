@@ -1,4 +1,5 @@
 +++
+weight = 37
 title = "037. 서포트 벡터 머신-커널 트릭 (Kernel Trick)"
 date = "2026-04-05"
 [extra]

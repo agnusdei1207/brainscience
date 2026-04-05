@@ -1,4 +1,5 @@
 +++
+weight = 18
 title = "18. 객체지향 및 객체 관계형 데이터 모델 (OODBMS / ORDBMS)"
 description = "RDBMS의 한계를 극복하고 복잡한 사용자 정의 데이터 타입과 상속을 지원하는 차세대 데이터 모델"
 date = "2026-03-04"

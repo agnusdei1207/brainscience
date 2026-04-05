@@ -1,4 +1,5 @@
 +++
+weight = 15
 title = "15. 지분 증명 (PoS, Proof of Stake)"
 description = "보유 지분(Coin)에 비례해 블록 생성 권한 부여 (이더리움 2.0)"
 date = "2024-05-18"

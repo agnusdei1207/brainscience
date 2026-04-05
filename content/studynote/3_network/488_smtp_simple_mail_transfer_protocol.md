@@ -1,4 +1,5 @@
 +++
+weight = 488
 title = "SMTP (Simple Mail Transfer Protocol) - 메일 발송 및 중계 (포트 25)"
 description = "클라이언트(MUA)가 편지를 우체국에 접수하고, 우체국(MTA)끼리 편지를 릴레이로 전달할 때 사용하는 인터넷 이메일 발송의 대동맥 프로토콜"
 date = 2026-04-03

@@ -1,5 +1,6 @@
 +++
 title = "15. ITA (Information Technology Architecture)"
+weight = 15
 +++
 
 # 15. ITA (Information Technology Architecture)

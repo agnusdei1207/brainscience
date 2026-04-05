@@ -1,5 +1,6 @@
 +++
 title = "25. MBO (Management by Objectives)"
+weight = 25
 +++
 
 # 25. MBO (Management by Objectives)

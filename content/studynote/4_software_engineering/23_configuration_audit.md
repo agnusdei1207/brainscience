@@ -1,4 +1,5 @@
 +++
+weight = 23
 title = "23. 형상 감사 (Configuration Audit)"
 description = "요구사항과 실제 구현된 소프트웨어의 일치 여부를 검증하고 시스템의 무결성을 확증하는 평가 메커니즘"
 date = "2026-03-04"

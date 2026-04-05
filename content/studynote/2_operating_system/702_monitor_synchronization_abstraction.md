@@ -1,4 +1,5 @@
 +++
+weight = 702
 title = "702. 모니터 (Monitor) 동기화 추상화"
 date = "2026-03-29"
 [extra]

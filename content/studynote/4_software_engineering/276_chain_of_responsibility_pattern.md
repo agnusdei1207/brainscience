@@ -1,5 +1,6 @@
 +++
 title = "276. 책임 연쇄 (Chain of Responsibility) - 요청을 처리할 수 있는 객체를 찾을 때까지 고리 전달"
+weight = 276
 +++
 
 # 276. 책임 연쇄 (Chain of Responsibility) - 요청을 처리할 수 있는 객체를 찾을 때까지 고리 전달

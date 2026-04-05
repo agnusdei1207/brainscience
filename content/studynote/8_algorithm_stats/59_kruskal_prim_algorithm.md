@@ -1,5 +1,6 @@
 +++
 title = "59. 크루스칼/프림 알고리즘 (Kruskal's / Prim's Algorithm)"
+weight = 59
 +++
 
 # 59. 크루스칼/프림 알고리즘 (Kruskal's / Prim's Algorithm)

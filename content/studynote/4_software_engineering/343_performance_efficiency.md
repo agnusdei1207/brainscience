@@ -1,6 +1,7 @@
 +++
 title = "343. 성능 효율성 (Performance Efficiency)"
 date = 2026-04-05
+weight = 343
 +++
 
 # 343. 성능 효율성 (Performance Efficiency)

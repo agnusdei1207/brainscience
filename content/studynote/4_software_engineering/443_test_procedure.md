@@ -1,6 +1,7 @@
 +++
 title = "443. 테스트 절차 (Test Procedure) / 테스트 스크립트 (Test Script)"
 date = 2026-04-05
+weight = 443
 +++
 
 # 443. 테스트 절차 (Test Procedure) / 테스트 스크립트 (Test Script)

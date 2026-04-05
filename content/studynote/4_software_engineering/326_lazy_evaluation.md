@@ -1,5 +1,6 @@
 +++
 title = "326. 지연 평가 (Lazy Evaluation)"
+weight = 326
 +++
 
 # 326. 지연 평가 (Lazy Evaluation)

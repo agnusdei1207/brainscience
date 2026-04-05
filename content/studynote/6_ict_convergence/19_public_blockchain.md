@@ -1,4 +1,5 @@
 +++
+weight = 19
 title = "19. 퍼블릭 블록체인 (Public Blockchain)"
 description = "중앙 통제 기관 없이 누구나 자유롭게 네트워크에 참여하고 트랜잭션을 검증할 수 있는 무허가형(Permissionless) 개방형 분산 원장 기술"
 date = "2026-03-04"

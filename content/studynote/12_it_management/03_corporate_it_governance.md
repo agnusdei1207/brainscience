@@ -1,4 +1,5 @@
 +++
+weight = 3
 title = "03. 기업 거버넌스와의 관계 (Corporate Governance and IT Governance)"
 description = "기업 거버넌스와 IT 거버넌스의 관계, 차원 구분, 시너지 효과 및統合フレームワーク"
 date = "2026-04-05"

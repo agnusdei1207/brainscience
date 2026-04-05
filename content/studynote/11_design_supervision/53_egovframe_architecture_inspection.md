@@ -1,4 +1,5 @@
 +++
+weight = 53
 title = "53. 전자정부 표준 프레임워크 (eGovFrame) 아키텍처 및 적용 기준 점검"
 date = "2026-04-05"
 [extra]

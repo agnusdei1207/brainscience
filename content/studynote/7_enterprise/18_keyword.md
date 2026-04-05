@@ -1,5 +1,6 @@
 +++
 title = "18. PI (Process Innovation)"
+weight = 18
 +++
 
 # 18. PI (Process Innovation)

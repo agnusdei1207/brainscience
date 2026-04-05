@@ -1,4 +1,5 @@
 +++
+weight = 31
 title = "031. 교차 검증 (Cross Validation)"
 date = "2026-04-05"
 [extra]

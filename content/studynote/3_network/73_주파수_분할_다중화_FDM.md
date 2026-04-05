@@ -1,4 +1,5 @@
 +++
+weight = 73
 title = "73. 주파수 분할 다중화 (FDM, Frequency Division Multiplexing)"
 description = "FDM의 기본 개념, 아날로그/반송파 할당 원리, 대역폭 분할 아키텍처 및 TDM/OFDM과의 융합 분석"
 date = "2024-05-20"

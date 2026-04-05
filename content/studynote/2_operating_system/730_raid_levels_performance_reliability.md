@@ -1,4 +1,5 @@
 +++
+weight = 730
 title = "730. RAID 0, 1, 5, 6 성능 신뢰성"
 date = "2026-03-29"
 [extra]

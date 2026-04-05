@@ -1,4 +1,5 @@
 +++
+weight = 8
 title = "08. BPR (업무 프로세스 재설계: Business Process Reengineering)"
 description = "기존 업무 프로세스의 근본적 재설계를 통해 비용, 품질, 속도를 극적으로 개선하는 경영기법"
 date = "2026-04-05"

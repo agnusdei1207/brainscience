@@ -1,4 +1,5 @@
 +++
+weight = 646
 title = "646. 리눅스 시스템 콜 테이블 (sys_call_table) 확장 및 보안 훅 추가"
 date = "2026-03-29"
 [extra]

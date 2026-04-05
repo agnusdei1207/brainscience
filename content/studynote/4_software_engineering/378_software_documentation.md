@@ -1,6 +1,7 @@
 +++
 title = "378. 소프트웨어 문서화 (Documentation)"
 date = 2026-04-05
+weight = 378
 +++
 
 # 378. 소프트웨어 문서화 (Documentation)

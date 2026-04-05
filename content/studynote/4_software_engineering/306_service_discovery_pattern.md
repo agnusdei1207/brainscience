@@ -1,5 +1,6 @@
 +++
 title = "306. 서비스 디스커버리 (Service Discovery) 패턴"
+weight = 306
 +++
 
 # 306. 서비스 디스커버리 (Service Discovery) 패턴

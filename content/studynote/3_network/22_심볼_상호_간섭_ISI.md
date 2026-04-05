@@ -1,4 +1,5 @@
 +++
+weight = 22
 title = "22. 심볼 상호 간섭 (ISI: Inter-Symbol Interference)"
 date = "2026-03-30"
 [extra]

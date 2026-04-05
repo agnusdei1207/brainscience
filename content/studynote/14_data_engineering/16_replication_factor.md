@@ -1,4 +1,5 @@
 +++
+weight = 16
 title = "복제 계수 3 (Replication Factor 3)"
 description = "하둡 분산 파일 시스템(HDFS)에서 하드웨어 장애를 대비해 데이터 블록을 다중 서버에 분산 저장하는 결함 허용 메커니즘"
 date = "2025-01-01"

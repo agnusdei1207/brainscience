@@ -1,5 +1,6 @@
 +++
 title = "52. BIM (Building Information Modeling)"
+weight = 52
 +++
 
 # 52. BIM (Building Information Modeling)

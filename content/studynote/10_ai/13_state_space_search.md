@@ -1,4 +1,5 @@
 +++
+weight = 13
 title = "13. 상태 공간 탐색 (State Space Search)"
 description = "문제 해결 과정을 초기 상태에서 목표 상태로 도달하기 위한 그래프 탐색으로 모델링하는 AI 탐색의 근본 패러다임"
 date = "2024-05-24"

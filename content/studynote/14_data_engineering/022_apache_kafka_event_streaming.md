@@ -1,4 +1,5 @@
 +++
+weight = 22
 title = "022. 아파치 카프카 (Apache Kafka)"
 date = "2026-04-02"
 [extra]

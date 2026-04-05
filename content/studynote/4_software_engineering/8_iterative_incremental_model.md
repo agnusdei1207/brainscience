@@ -1,4 +1,5 @@
 +++
+weight = 8
 title = "08. 반복적/점진적 모델 (Iterative and Incremental Model)"
 description = "소프트웨어의 디테일을 반복적으로 고도화하고 기능을 점진적으로 추가하여 완성하는 현대 애자일의 근간"
 date = "2026-03-04"

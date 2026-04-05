@@ -1,6 +1,7 @@
 +++
 title = "344. 호환성 (Compatibility) / 사용성 (Usability)"
 date = 2026-04-05
+weight = 344
 +++
 
 # 344. 호환성 (Compatibility) / 사용성 (Usability)

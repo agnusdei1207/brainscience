@@ -1,4 +1,5 @@
 +++
+weight = 765
 title = "765. SELinux 보안 강제 접근 통제"
 date = "2026-03-30"
 [extra]

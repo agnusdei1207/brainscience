@@ -1,4 +1,5 @@
 +++
+weight = 726
 title = "726. 워킹 셋 (Working Set) 메모리"
 date = "2026-03-29"
 [extra]

@@ -1,5 +1,6 @@
 +++
 title = "03. 시맨틱 웹 (Semantic Web)"
+weight = 3
 +++
 
 # 03. 시맨틱 웹 (Semantic Web)

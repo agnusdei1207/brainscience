@@ -1,5 +1,6 @@
 +++
 title = "31. 버킷 정렬 (Bucket Sort)"
+weight = 31
 +++
 
 # 31. 버킷 정렬 (Bucket Sort)

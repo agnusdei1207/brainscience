@@ -1,4 +1,5 @@
 +++
+weight = 23
 title = "023. 마이클 포터의 5 Forces 모델 - 산업 구조 분석"
 date = "2026-04-02"
 [extra]

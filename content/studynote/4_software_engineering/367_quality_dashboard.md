@@ -1,6 +1,7 @@
 +++
 title = "367. 품질 대시보드 (Quality Dashboard)"
 date = 2026-04-05
+weight = 367
 +++
 
 # 367. 품질 대시보드 (Quality Dashboard)

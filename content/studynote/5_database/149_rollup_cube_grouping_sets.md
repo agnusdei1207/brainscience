@@ -1,4 +1,5 @@
 +++
+weight = 149
 title = "ROLLUP, CUBE, GROUPING SETS - 다차원 소계 및 총계 생성"
 description = "GROUP BY의 단순한 단일 덩어리 통계를 넘어, 부서별 소계, 연도별 소계, 그리고 전사 총합계까지 엑셀 피벗 테이블 같은 입체적 다차원 OLAP 큐브(Cube)를 조인 떡칠 없이 단 1방의 쿼리로 뽑아내는 데이터 웨어하우스의 위대한 마법"
 date = 2026-04-03

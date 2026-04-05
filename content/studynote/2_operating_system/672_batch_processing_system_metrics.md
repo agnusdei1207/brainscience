@@ -1,4 +1,5 @@
 +++
+weight = 672
 title = "672. 일괄 처리 시스템 (Batch Processing System) 성능 지표"
 date = "2026-03-29"
 [extra]

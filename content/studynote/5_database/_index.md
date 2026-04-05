@@ -2,7 +2,6 @@
 weight = 4005
 title = "5: 데이터베이스 (Database)"
 render = true
-paginate_by = 10
 sort_by = "weight"
 insert_anchor_links = "right"
 [extra]

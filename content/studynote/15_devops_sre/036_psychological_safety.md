@@ -1,4 +1,5 @@
 +++
+weight = 36
 title = "036. 심리적 안전감 (Psychological Safety)"
 date = "2026-04-05"
 [extra]

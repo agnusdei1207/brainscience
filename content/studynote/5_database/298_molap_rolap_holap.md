@@ -1,5 +1,6 @@
 +++
 title = "298. MOLAP, ROLAP, HOLAP"
+weight = 298
 +++
 
 # 298. MOLAP, ROLAP, HOLAP

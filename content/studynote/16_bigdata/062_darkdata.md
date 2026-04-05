@@ -1,4 +1,5 @@
 +++
+weight = 62
 title = "62. 다크 데이터 (Dark Data)"
 date = "2026-04-05"
 [extra]

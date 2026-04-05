@@ -1,5 +1,6 @@
 +++
 title = "60. SSO (Single Sign-On)"
+weight = 60
 +++
 
 # 60. SSO (Single Sign-On)

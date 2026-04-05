@@ -1,4 +1,5 @@
 +++
+weight = 3
 title = "03. 빅데이터 7V (5V + Visualization, Variability)"
 description = "복잡한 데이터의 문맥(Variability)을 포착하고 시각적(Visualization)으로 직관화하는 7V 패러다임 분석"
 date = "2024-05-24"

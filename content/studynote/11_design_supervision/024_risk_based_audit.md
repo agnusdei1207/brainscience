@@ -1,4 +1,5 @@
 +++
+weight = 24
 title = "24. 위험 기반 감리 (Risk-based Audit)"
 date = "2026-04-02"
 [extra]

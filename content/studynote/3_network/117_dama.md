@@ -1,4 +1,5 @@
 +++
+weight = 117
 title = "117. DAMA (Demand Assignment Multiple Access) - 위성 통신"
 description = "위성 통신 환경에서 대역폭을 동적으로 할당하는 DAMA의 원리, 구조 및 실무 설계 관점"
 date = "2026-03-04"

@@ -1,4 +1,5 @@
 +++
+weight = 68
 title = "68. 스펙트럼 확산 (Spread Spectrum)"
 description = "전송 신호의 대역폭을 의도적으로 넓혀 잡음 강인성과 보안성을 확보하는 통신 기술"
 date = "2024-05-24"

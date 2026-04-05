@@ -1,4 +1,5 @@
 +++
+weight = 31
 title = "031. 리드 타임 / 사이클 타임 (Lead Time & Cycle Time)"
 date = "2026-04-05"
 [extra]

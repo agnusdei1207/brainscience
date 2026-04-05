@@ -1,4 +1,5 @@
 +++
+weight = 12
 title = "12. 무상태 프로세스"
 date = "2026-04-05"
 [taxonomies]

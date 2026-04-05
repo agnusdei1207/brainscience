@@ -1,4 +1,5 @@
 +++
+weight = 1
 title = "01. 데브옵스 사상"
 date = "2026-04-05"
 [taxonomies]

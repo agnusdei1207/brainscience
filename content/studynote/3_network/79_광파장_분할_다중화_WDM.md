@@ -1,4 +1,5 @@
 +++
+weight = 79
 title = "79. 광파장 분할 다중화 (WDM, Wavelength Division Multiplexing)"
 description = "빛의 파장을 분할하여 하나의 광섬유로 거대한 대역폭을 전송하는 광통신 다중화의 끝판왕 기술 및 아키텍처"
 date = "2026-03-30"

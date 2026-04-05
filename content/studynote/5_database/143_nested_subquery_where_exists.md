@@ -1,4 +1,5 @@
 +++
+weight = 143
 title = "중첩 서브쿼리 (Nested Subquery) - WHERE 절의 필터 링 마법"
 description = "메인 쿼리의 데이터가 문지기를 통과할 수 있는지 판별하기 위해, WHERE 절 괄호 안에 숨어서 다수의 비교 집합을 은밀하게 뽑아내는 필터링 서브쿼리"
 date = 2026-04-03

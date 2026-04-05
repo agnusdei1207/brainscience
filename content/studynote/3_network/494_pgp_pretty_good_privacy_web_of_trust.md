@@ -1,4 +1,5 @@
 +++
+weight = 494
 title = "PGP (Pretty Good Privacy) - 웹 오브 트러스트 기반 이메일 암호화"
 description = "국가나 중앙 인증기관(CA)의 통제를 거부하고, 개인과 개인이 서로의 공개키를 보증해 주는 분산형 신뢰망(Web of Trust)을 기반으로 탄생한 가장 완벽한 자유주의적 종단간 이메일 암호화 프로그램"
 date = 2026-04-03

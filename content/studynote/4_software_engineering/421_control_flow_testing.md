@@ -1,6 +1,7 @@
 +++
 title = "421. 제어 흐름 테스트 (Control Flow Testing)"
 date = 2026-04-05
+weight = 421
 +++
 
 # 421. 제어 흐름 테스트 (Control Flow Testing)

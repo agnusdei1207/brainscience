@@ -1,4 +1,5 @@
 +++
+weight = 133
 title = "133. 내부 조인 (Inner Join) - 교집합, 양쪽 모두 존재하는 행만 추출"
 date = "2026-04-02"
 [extra]

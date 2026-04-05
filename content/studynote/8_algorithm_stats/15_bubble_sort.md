@@ -1,5 +1,6 @@
 +++
 title = "15. 버블 정렬 (Bubble Sort)"
+weight = 15
 +++
 
 # 15. 버블 정렬 (Bubble Sort)

@@ -1,4 +1,5 @@
 +++
+weight = 52
 title = "52. 쿠버네티스 클러스터 아키텍처"
 date = "2026-04-05"
 [taxonomies]

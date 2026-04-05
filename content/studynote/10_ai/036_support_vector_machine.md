@@ -1,4 +1,5 @@
 +++
+weight = 36
 title = "036. 서포트 벡터 머신 (SVM)"
 date = "2026-04-05"
 [extra]

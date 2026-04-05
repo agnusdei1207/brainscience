@@ -2,7 +2,6 @@
 weight = 13000
 title = "14: 데이터 엔지니어링 (Data Engineering)"
 render = true
-paginate_by = 10
 sort_by = "weight"
 insert_anchor_links = "right"
 [extra]

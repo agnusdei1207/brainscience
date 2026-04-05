@@ -1,5 +1,6 @@
 +++
 title = "296. 결함 허용 (Fault Tolerance) 시스템 설계"
+weight = 296
 +++
 
 # 296. 결함 허용 (Fault Tolerance) 시스템 설계

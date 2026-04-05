@@ -2,7 +2,6 @@
 weight = 11000
 title = "12: IT 경영 및 관리 (IT Management)"
 render = true
-paginate_by = 10
 sort_by = "weight"
 insert_anchor_links = "right"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 721
 title = "721. 유효/무효 비트 (Valid/Invalid)"
 date = "2026-03-29"
 [extra]

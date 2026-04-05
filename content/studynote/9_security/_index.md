@@ -2,7 +2,6 @@
 weight = 8000
 title = "9: 정보 보안 (Security)"
 render = true
-paginate_by = 10
 sort_by = "weight"
 insert_anchor_links = "right"
 [extra]

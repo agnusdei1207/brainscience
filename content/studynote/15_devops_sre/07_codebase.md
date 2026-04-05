@@ -1,4 +1,5 @@
 +++
+weight = 7
 title = "07. 코드베이스"
 date = "2026-04-05"
 [taxonomies]

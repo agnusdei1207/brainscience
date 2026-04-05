@@ -1,4 +1,5 @@
 +++
+weight = 153
 title = "인스펙션 (Inspection) - 결함 척살을 위한 공식적 검토"
 description = "작성자를 배제한 채, 훈련된 전문가 집단(Inspector)이 깐깐한 체크리스트와 통제된 룰(Fagan Model)을 들이밀며 코드와 설계서에 숨은 결함을 핏빛으로 후벼 파는 정적 테스팅의 끝판왕"
 date = 2026-04-03

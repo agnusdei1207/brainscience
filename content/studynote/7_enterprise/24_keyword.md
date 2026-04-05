@@ -1,5 +1,6 @@
 +++
 title = "24. OKR (Objectives and Key Results)"
+weight = 24
 +++
 
 # 24. OKR (Objectives and Key Results)

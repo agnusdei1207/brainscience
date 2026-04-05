@@ -1,4 +1,5 @@
 +++
+weight = 157
 title = "요구사항 추적 매트릭스 (RTM, Requirements Traceability Matrix)"
 description = "산발적으로 흩어진 수백 개의 요구사항이 설계 문서, 소스 코드, 그리고 테스트 결과에 이르기까지 1:1로 매핑(Mapping)된 엑셀 표의 끝판왕으로, 프로젝트의 구현 누락과 오버엔지니어링(금도금)을 0.1초 만에 척살하는 완벽한 감리(Audit) 방어막"
 date = 2026-04-03

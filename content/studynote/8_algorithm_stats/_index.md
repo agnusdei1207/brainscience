@@ -2,7 +2,6 @@
 weight = 7001
 title = "8: 알고리즘 및 통계 (Algorithm & Stats)"
 render = true
-paginate_by = 10
 sort_by = "weight"
 insert_anchor_links = "right"
 [extra]

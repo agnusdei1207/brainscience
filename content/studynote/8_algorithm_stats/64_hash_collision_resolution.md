@@ -1,5 +1,6 @@
 +++
 title = "64. 해시 테이블 충돌 해결 (Hash Table Collision Resolution)"
+weight = 64
 +++
 
 # 64. 해시 테이블 충돌 해결 (Hash Table Collision Resolution)

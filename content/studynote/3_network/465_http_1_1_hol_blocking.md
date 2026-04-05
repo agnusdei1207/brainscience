@@ -1,4 +1,5 @@
 +++
+weight = 465
 title = "465. HTTP 1.1 HOL 블로킹 (Head-of-Line Blocking) 현상"
 date = "2026-04-02"
 [extra]

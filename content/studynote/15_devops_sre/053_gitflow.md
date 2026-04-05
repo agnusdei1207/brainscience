@@ -1,4 +1,5 @@
 +++
+weight = 53
 title = "53. GitFlow (깃플로우)"
 date = "2026-04-05"
 [extra]

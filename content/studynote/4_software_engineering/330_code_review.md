@@ -1,5 +1,6 @@
 +++
 title = "330. 코드 리뷰 (Code Review) - 동료 검토 (Peer Review), 풀 리퀘스트 (PR) 기반 검토"
+weight = 330
 +++
 
 # 330. 코드 리뷰 (Code Review) - 동료 검토 (Peer Review), 풀 리퀘스트 (PR) 기반 검토

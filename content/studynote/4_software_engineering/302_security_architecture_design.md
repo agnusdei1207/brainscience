@@ -1,5 +1,6 @@
 +++
 title = "302. 보안 아키텍처 (Security Architecture) 설계"
+weight = 302
 +++
 
 # 302. 보안 아키텍처 (Security Architecture) 설계

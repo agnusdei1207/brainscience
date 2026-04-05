@@ -1,4 +1,5 @@
 +++
+weight = 11
 title = "11. 후향 추론 (Backward Chaining)"
 description = "가설이나 목표에서 출발하여 조건 데이터를 역으로 검증해 나가는 전문가 시스템의 목표 주도 추론 방식"
 date = "2024-05-24"

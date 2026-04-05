@@ -1,4 +1,5 @@
 +++
+weight = 56
 title = "56. 표본화 (Sampling) 및 표본화 정리 (Sampling Theorem)"
 date = "2026-03-30"
 [extra]

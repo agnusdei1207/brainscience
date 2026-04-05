@@ -1,4 +1,5 @@
 +++
+weight = 140
 title = "140. 섀도잉 (Shadowing) - 사용자 업무 환경 직접 관찰 기법"
 date = "2026-04-02"
 [extra]

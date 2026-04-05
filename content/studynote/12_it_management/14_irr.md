@@ -1,4 +1,5 @@
 +++
+weight = 14
 title = "14. IRR (Internal Rate of Return, 내부수익률)"
 description = "NPV를 0으로 만드는 할인율을 찾아 IT 프로젝트의 자체 수익성을 평가하는 지표"
 date = "2024-05-20"

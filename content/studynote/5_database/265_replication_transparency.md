@@ -1,5 +1,6 @@
 +++
 title = "265. 복제 투명성 (Replication Transparency)"
+weight = 265
 +++
 
 # 265. 복제 투명성 (Replication Transparency)

@@ -1,4 +1,5 @@
 +++
+weight = 464
 title = "464. HTTP 1.1 - 지속 연결 (Persistent Connection)과 파이프라이닝 (Pipelining)"
 date = "2026-04-02"
 [extra]

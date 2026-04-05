@@ -1,4 +1,5 @@
 +++
+weight = 9
 title = "09. 정보이론 (Information Theory)"
 description = "엔트로피와 데이터 압축, 통신 채널의 한계를 규명하는 섀넌의 정보이론"
 date = "2024-05-20"

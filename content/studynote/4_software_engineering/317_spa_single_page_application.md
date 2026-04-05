@@ -1,5 +1,6 @@
 +++
 title = "317. 단일 페이지 애플리케이션 (SPA, Single Page Application) 설계"
+weight = 317
 +++
 
 # 317. 단일 페이지 애플리케이션 (SPA, Single Page Application) 설계

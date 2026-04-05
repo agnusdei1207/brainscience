@@ -1,4 +1,5 @@
 +++
+weight = 25
 title = "목표 관리 (MBO, Management by Objectives)"
 description = "피터 드러커가 창안한 전통적 경영 철학으로, 경영자와 실무자가 합의하여 명확한 목표를 설정하고 그 결과로 성과를 평가하는 관리 체계"
 date = "2024-05-24"

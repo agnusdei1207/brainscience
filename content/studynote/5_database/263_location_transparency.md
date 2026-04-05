@@ -1,5 +1,6 @@
 +++
 title = "263. 위치 투명성 (Location Transparency)"
+weight = 263
 +++
 
 # 263. 위치 투명성 (Location Transparency)

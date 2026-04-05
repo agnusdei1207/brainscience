@@ -1,4 +1,5 @@
 +++
+weight = 34
 title = "34. Apache ZooKeeper"
 date = "2026-04-05"
 [extra]

@@ -1,5 +1,6 @@
 +++
 title = "13. TOGAF (The Open Group Architecture Framework)"
+weight = 13
 +++
 
 # 13. TOGAF (The Open Group Architecture Framework)

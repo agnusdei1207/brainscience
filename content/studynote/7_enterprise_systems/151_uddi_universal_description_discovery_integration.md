@@ -1,4 +1,5 @@
 +++
+weight = 151
 title = "UDDI (Universal Description, Discovery and Integration) - 죽은 SOA 제국의 황금 전화번호부"
 description = "사내망에 1만 개의 서비스(API) 블록이 둥둥 떠다니는데 내가 원하는 '결제 모듈'의 주소(IP)가 어디에 박혀있는지 몰라 처음부터 코딩 1만 줄을 노가다로 다시 짜는 중복 개발의 늪(Silo)을 척살하기 위해! 모든 서비스 제공자가 자기 능력과 주소(WSDL)를 자랑스럽게 등록(Publish)하고, 앱 개발자는 클릭 1번으로 주소를 훔쳐 검색(Find)해 런타임에 다이렉트 꼽아버리는(Bind) 2000년대 B2B 엔터프라이즈 통합의 가장 위대했던 중앙 집권 도서관의 탄생과 몰락"
 date = 2026-04-03

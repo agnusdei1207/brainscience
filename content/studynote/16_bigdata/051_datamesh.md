@@ -1,4 +1,5 @@
 +++
+weight = 51
 title = "51. 데이터 메시 (Data Mesh)"
 date = "2026-04-05"
 [extra]

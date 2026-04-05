@@ -1,5 +1,6 @@
 +++
 title = "277. 문서 저장소 (Document Store)"
+weight = 277
 +++
 
 # 277. 문서 저장소 (Document Store)

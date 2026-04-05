@@ -1,5 +1,6 @@
 +++
 title = "261. 분산 데이터베이스 (Distributed Database)"
+weight = 261
 +++
 
 # 261. 분산 데이터베이스 (Distributed Database)

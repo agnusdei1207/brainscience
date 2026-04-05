@@ -1,5 +1,6 @@
 +++
 title = "18. 셸 정렬 (Shell Sort)"
+weight = 18
 +++
 
 # 18. 셸 정렬 (Shell Sort)

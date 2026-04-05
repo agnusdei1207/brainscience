@@ -1,4 +1,5 @@
 +++
+weight = 32
 title = "032. 콘웨이의 법칙 (Conway's Law)"
 date = "2026-04-05"
 [extra]

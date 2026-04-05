@@ -2,7 +2,6 @@
 weight = 5001
 title = "6: ICT 융합 기술 (ICT Convergence)"
 render = true
-paginate_by = 10
 sort_by = "weight"
 insert_anchor_links = "right"
 [extra]

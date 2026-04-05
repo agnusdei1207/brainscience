@@ -1,4 +1,5 @@
 +++
+weight = 777
 title = "777. OOM 킬러 메모리 보호 정책"
 date = "2026-03-30"
 [extra]

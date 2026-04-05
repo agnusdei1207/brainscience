@@ -1,5 +1,6 @@
 +++
 title = "323. 오버로딩 (Overloading) vs 오버라이딩 (Overriding)"
+weight = 323
 +++
 
 # 323. 오버로딩 (Overloading) vs 오버라이딩 (Overriding)

@@ -1,4 +1,5 @@
 +++
+weight = 123
 title = "123. PDM (Product Data Management) - 제품 설계 데이터 관리"
 date = "2026-04-02"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 126
 title = "126. UTP 카테고리 (Cat 3, Cat 5, Cat 5e, Cat 6, Cat 6a, Cat 7, Cat 8)"
 description = "UTP 케이블 카테고리별 주파수 대역, 전송 속도 진화 및 실무 포설 기준"
 date = "2026-03-04"

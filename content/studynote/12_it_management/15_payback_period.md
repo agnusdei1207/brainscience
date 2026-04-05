@@ -1,4 +1,5 @@
 +++
+weight = 15
 title = "15. PP (Payback Period, 투자회수기간)"
 description = "IT 투자 원금을 회수하는 데 걸리는 시간을 측정하여 리스크와 유동성을 평가하는 지표"
 date = "2024-05-20"

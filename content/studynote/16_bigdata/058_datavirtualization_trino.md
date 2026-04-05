@@ -1,4 +1,5 @@
 +++
+weight = 58
 title = "58. 데이터 가상화 / Trino"
 date = "2026-04-05"
 [extra]

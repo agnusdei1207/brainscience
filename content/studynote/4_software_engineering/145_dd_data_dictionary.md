@@ -1,4 +1,5 @@
 +++
+weight = 145
 title = "구조적 분석 (Structured Analysis) - DFD, Data Dictionary, Mini-Spec"
 description = "소프트웨어의 기능과 데이터의 흐름을 하향식(Top-Down)으로 분해하여 시스템의 논리적 구조를 시각화하고 명세하는 고전적인 소프트웨어 요구사항 분석 기법"
 date = 2026-04-03

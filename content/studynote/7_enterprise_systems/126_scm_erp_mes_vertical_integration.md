@@ -1,4 +1,5 @@
 +++
+weight = 126
 title = "SCM-ERP-MES 수직적 통합 (Vertical Integration) 아키텍처"
 description = "최상위 경영 계획(ERP)부터 외부 공급망(SCM), 그리고 최하위 공장 설비 단말(MES)까지 톱니바퀴처럼 실시간으로 맞물려 돌아가는 제조업 디지털 트랜스포메이션의 궁극적 아키텍처"
 date = 2026-04-03

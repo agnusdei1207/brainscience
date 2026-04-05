@@ -1,5 +1,6 @@
 +++
 title = "255. PACELC 정리 (PACELC Theorem)"
+weight = 255
 +++
 
 # 255. PACELC 정리 (PACELC Theorem)

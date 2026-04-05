@@ -1,4 +1,5 @@
 +++
+weight = 639
 title = "639. RDMA (Remote Direct Memory Access) 커널 바이패스 초고속 통신 체제"
 date = "2026-03-29"
 [extra]

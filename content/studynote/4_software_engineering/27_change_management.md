@@ -1,4 +1,5 @@
 +++
+weight = 27
 title = "27. 변경 관리 (Change Management) 프로세스"
 description = "소프트웨어 생명주기 전반에 걸친 변경 통제, CCB 역할 및 변경 관리 프로세스 실무 가이드"
 date = "2026-03-04"

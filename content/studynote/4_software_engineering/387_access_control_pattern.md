@@ -1,6 +1,7 @@
 +++
 title = "387. 접근 통제 (Access Control) 패턴 로직 구현"
 date = 2026-04-05
+weight = 387
 +++
 
 # 387. 접근 통제 (Access Control) 패턴 로직 구현

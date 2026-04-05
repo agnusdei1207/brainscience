@@ -1,4 +1,5 @@
 +++
+weight = 54
 title = "54. ConfigMap/Secret"
 date = "2026-04-05"
 [taxonomies]

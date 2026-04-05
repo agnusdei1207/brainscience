@@ -1,4 +1,5 @@
 +++
+weight = 21
 title = "021. 지속적 배포 (CD, Continuous Deployment/Delivery)"
 date = "2026-04-02"
 [extra]

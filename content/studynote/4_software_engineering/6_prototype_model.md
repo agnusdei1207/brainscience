@@ -1,4 +1,5 @@
 +++
+weight = 6
 title = "06. 프로토타입 모델 (Prototype Model)"
 description = "요구사항의 불확실성을 시제품으로 해소하는 고객 중심 개발 프로세스"
 date = "2026-03-04"

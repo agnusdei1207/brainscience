@@ -1,4 +1,5 @@
 +++
+weight = 5
 title = "05. BaaS (Backend as a Service)"
 description = "모바일 및 웹 앱 개발을 가속화하기 위해 인증, DB, 푸시 알림 등 공통 백엔드 기능을 API로 제공하는 BaaS 패러다임"
 date = "2024-05-24"

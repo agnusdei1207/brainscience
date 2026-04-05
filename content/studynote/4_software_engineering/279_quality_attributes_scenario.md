@@ -1,5 +1,6 @@
 +++
 title = "279. 아키텍처 품질 속성 (Quality Attributes) - 시나리오 기반 정의"
+weight = 279
 +++
 
 # 279. 아키텍처 품질 속성 (Quality Attributes) - 시나리오 기반 정의

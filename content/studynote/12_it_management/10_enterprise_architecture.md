@@ -1,4 +1,5 @@
 +++
+weight = 10
 title = "10. EA (기업 아키텍처: Enterprise Architecture)"
 description = "비즈니스, 데이터, 애플리케이션, 기술架构를体系적으로 모델링하여 기업의 情報시스템 전략을 지원하는 EA 프레임워크"
 date = "2026-04-05"

@@ -1,6 +1,7 @@
 +++
 title = "359. MTTR (Mean Time To Repair) - 평균 수리 시간"
 date = 2026-04-05
+weight = 359
 +++
 
 # 359. MTTR (Mean Time To Repair) - 평균 수리 시간

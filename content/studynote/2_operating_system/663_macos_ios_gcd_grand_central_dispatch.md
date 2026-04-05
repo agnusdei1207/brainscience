@@ -1,4 +1,5 @@
 +++
+weight = 663
 title = "663. macOS/iOS Grand Central Dispatch (GCD) 블록 및 디스패치 큐 기반 동시성 구조"
 date = "2026-03-29"
 [extra]

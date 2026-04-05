@@ -1,4 +1,5 @@
 +++
+weight = 626
 title = "626. 쉐도우 페이지 테이블 (Shadow Page Table) vs 확장 페이지 테이블 (EPT/NPT 하드웨어 보조)"
 date = "2026-03-29"
 [extra]

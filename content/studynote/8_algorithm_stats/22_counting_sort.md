@@ -1,5 +1,6 @@
 +++
 title = "22. 계수 정렬 (Counting Sort)"
+weight = 22
 +++
 
 # 22. 계수 정렬 (Counting Sort)

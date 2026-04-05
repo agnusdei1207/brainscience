@@ -1,5 +1,6 @@
 +++
 title = "01. 알고리즘 (Algorithm) 정의"
+weight = 1
 +++
 
 # 01. 알고리즘 (Algorithm) 정의

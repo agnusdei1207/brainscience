@@ -1,4 +1,5 @@
 +++
+weight = 32
 title = "032. 결정 트리 (Decision Tree)"
 date = "2026-04-05"
 [extra]

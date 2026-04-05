@@ -1,4 +1,5 @@
 +++
+weight = 681
 title = "681. IPC 기법 성능 오버헤드"
 date = "2026-03-29"
 [extra]

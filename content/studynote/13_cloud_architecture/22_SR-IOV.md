@@ -1,4 +1,5 @@
 +++
+weight = 22
 title = "22. SR-IOV (Single Root I/O Virtualization)"
 description = "PCIe 디바이스를 하드웨어적으로 분할하여 VM에 직접 할당하는 SR-IOV의 아키텍처와高性能 네트워킹 구현 원리"
 date = "2024-05-24"

@@ -1,4 +1,5 @@
 +++
+weight = 25
 title = "025. 변경 실패율 (CFR, Change Failure Rate)"
 date = "2026-04-02"
 [extra]

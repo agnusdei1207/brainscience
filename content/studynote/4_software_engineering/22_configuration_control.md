@@ -1,4 +1,5 @@
 +++
+weight = 22
 title = "22. 형상 통제 (Configuration Control)"
 description = "식별된 형상 항목(CI)에 대한 변경 요구를 체계적으로 검토, 승인, 추적하는 형상 관리의 핵심 제어 메커니즘"
 date = "2026-03-04"

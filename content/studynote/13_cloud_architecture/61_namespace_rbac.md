@@ -1,4 +1,5 @@
 +++
+weight = 61
 title = "61. 네임스페이스/RBAC"
 date = "2026-04-05"
 [taxonomies]

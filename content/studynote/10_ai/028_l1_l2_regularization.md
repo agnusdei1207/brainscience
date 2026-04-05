@@ -1,4 +1,5 @@
 +++
+weight = 28
 title = "028. L1/L2 정규화 (Ridge, Lasso)"
 date = "2026-04-05"
 [extra]

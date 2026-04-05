@@ -1,4 +1,5 @@
 +++
+weight = 30
 title = "030. 검증 세트 (Validation Set)"
 date = "2026-04-05"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 113
 title = "113. 예약 방식 접속 (Reservation Access)"
 description = "무작위 채널 접근의 충돌 문제를 근본적으로 회피하기 위해, 실제 데이터를 보내기 전 짧은 제어 슬롯을 통해 대역폭을 선점하는 예약 방식(Reservation Access) 매체 제어 기술 심층 분석"
 date = "2024-05-24"

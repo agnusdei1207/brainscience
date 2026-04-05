@@ -1,5 +1,6 @@
 +++
 title = "53. 결정 트리 알고리즘 (Decision Tree Algorithm)"
+weight = 53
 +++
 
 # 53. 결정 트리 알고리즘 (Decision Tree Algorithm)

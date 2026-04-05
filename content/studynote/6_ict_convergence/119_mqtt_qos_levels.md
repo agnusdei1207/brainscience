@@ -1,4 +1,5 @@
 +++
+weight = 119
 title = "119. MQTT QoS (Quality of Service) - 메시지 전송 품질 수준"
 date = "2026-04-02"
 [extra]

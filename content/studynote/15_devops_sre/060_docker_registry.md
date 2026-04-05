@@ -1,4 +1,5 @@
 +++
+weight = 60
 title = "60. Docker Registry (도커 레지스트리)"
 date = "2026-04-05"
 [extra]

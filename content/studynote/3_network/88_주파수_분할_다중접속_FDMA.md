@@ -1,4 +1,5 @@
 +++
+weight = 88
 title = "88. 주파수 분할 다중 접속 (FDMA, Frequency Division Multiple Access)"
 description = "초기 무선 통신에서 대역폭을 쪼개어 채널을 할당하는 FDMA의 한계와 실무적 낭비 요인"
 date = 2026-03-30

@@ -1,4 +1,5 @@
 +++
+weight = 142
 title = "스칼라 서브쿼리 (Scalar Subquery) - SELECT 절의 서브쿼리"
 description = "SELECT 절 내부에서 마치 하나의 함수처럼 동작하며, 메인 쿼리의 각 행(Row)마다 단 하나의 스칼라 값(1행 1열)만을 정밀하게 추출해 내는 서브쿼리 기법"
 date = 2026-04-03

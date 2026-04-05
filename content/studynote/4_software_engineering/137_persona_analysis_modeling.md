@@ -1,4 +1,5 @@
 +++
+weight = 137
 title = "137. 페르소나 (Persona) 분석 - 가상 사용자 모델링"
 date = "2026-04-02"
 [extra]

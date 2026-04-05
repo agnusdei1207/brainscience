@@ -1,4 +1,5 @@
 +++
+weight = 463
 title = "463. HTTP 상태 코드 (HTTP Status Codes - 1xx~5xx)"
 date = "2026-04-02"
 [extra]

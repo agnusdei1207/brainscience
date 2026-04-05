@@ -1,4 +1,5 @@
 +++
+weight = 658
 title = "658. Virtio - 반가상화 I/O 백엔드/프론트엔드 링버퍼(Vring) 디바이스 드라이버 구조"
 date = "2026-03-29"
 [extra]

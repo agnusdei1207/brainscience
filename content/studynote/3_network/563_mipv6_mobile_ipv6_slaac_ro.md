@@ -1,4 +1,5 @@
 +++
+weight = 563
 title = "563. MIPv6 (Mobile IPv6) - FA 불필요(SLAAC), 기본 최적 경로(RO) 아키텍처 지원"
 date = "2026-04-05"
 [extra]

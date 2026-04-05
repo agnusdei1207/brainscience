@@ -1,5 +1,6 @@
 +++
 title = "290. 데이터 마트 (Data Mart)"
+weight = 290
 +++
 
 # 290. 데이터 마트 (Data Mart)

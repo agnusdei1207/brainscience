@@ -1,4 +1,5 @@
 +++
+weight = 120
 title = "120. W-CDMA (Wideband CDMA) / HSPA (High Speed Packet Access)"
 description = "유럽 주도의 3G 핵심 기술 W-CDMA와 데이터 가속 패치 HSDPA/HSUPA 망 아키텍처, CDMA2000과의 비교"
 date = "2026-03-04"

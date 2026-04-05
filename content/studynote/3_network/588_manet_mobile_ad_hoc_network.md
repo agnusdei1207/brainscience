@@ -1,4 +1,5 @@
 +++
+weight = 588
 title = "588. MANET (Mobile Ad-hoc Network) - 기지국 없는 분산형 라우팅과 AODV/DSR 아키텍처"
 date = "2026-04-05"
 [extra]

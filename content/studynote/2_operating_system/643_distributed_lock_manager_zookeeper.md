@@ -1,4 +1,5 @@
 +++
+weight = 643
 title = "643. 분산 락 매니저 구현 (Chubby, ZooKeeper 등 분산 코디네이션 락 알고리즘)"
 date = "2026-03-29"
 [extra]

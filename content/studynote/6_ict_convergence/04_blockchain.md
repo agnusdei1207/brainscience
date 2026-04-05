@@ -1,5 +1,6 @@
 +++
 title = "04. 블록체인 (Blockchain)"
+weight = 4
 +++
 
 # 04. 블록체인 (Blockchain)

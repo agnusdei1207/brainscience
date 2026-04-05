@@ -1,5 +1,6 @@
 +++
 title = "06. 탐욕 알고리즘 (Greedy Algorithm)"
+weight = 6
 +++
 
 # 06. 탐욕 알고리즘 (Greedy Algorithm)

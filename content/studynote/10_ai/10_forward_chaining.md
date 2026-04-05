@@ -1,4 +1,5 @@
 +++
+weight = 10
 title = "10. 전향 추론 (Forward Chaining)"
 description = "주어진 데이터(Fact)에서 출발해 규칙(Rule)을 연쇄적으로 적용하여 결론을 도출하는 데이터 주도형 추론 방식"
 date = "2024-05-20"

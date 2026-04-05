@@ -1,4 +1,5 @@
 +++
+weight = 735
 title = "735. i-node 직접/간접 포인터 인덱스"
 date = "2026-03-29"
 [extra]

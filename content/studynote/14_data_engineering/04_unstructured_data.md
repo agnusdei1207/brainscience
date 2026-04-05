@@ -1,4 +1,5 @@
 +++
+weight = 4
 title = "04. 비정형 데이터 (Unstructured Data)"
 description = "텍스트, 이미지, 오디오 등 사전 정의된 스키마가 없는 원시 데이터의 특성과 딥러닝/벡터 DB 기반의 처리 아키텍처"
 date = "2024-05-24"

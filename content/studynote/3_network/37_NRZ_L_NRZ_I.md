@@ -1,4 +1,5 @@
 +++
+weight = 37
 title = "37. NRZ (Non-Return to Zero) - NRZ-L, NRZ-I"
 date = "2026-03-30"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 787
 title = "787. 안드로이드 LMK (Low Memory Killer)"
 date = "2026-03-30"
 [extra]

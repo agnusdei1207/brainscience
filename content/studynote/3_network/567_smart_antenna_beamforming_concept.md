@@ -1,4 +1,5 @@
 +++
+weight = 567
 title = "567. 스마트 안테나 (Smart Antenna) - 빔포밍(Beamforming) 기반 간섭 억제 및 용량 극대화"
 date = "2026-04-05"
 [extra]

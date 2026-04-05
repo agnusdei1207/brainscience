@@ -1,5 +1,6 @@
 +++
 title = "285. 트리 구조 저장 - Materialized Path, Nested Sets"
+weight = 285
 +++
 
 # 285. 트리 구조 저장 - Materialized Path, Nested Sets

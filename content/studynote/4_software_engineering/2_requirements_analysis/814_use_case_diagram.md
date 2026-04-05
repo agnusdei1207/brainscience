@@ -2,6 +2,7 @@
 title = "유스케이스 다이어그램"
 description = "Use Case Diagram"
 category = "4_software_engineering"
+weight = 814
 +++
 
 # 유스케이스 다이어그램 (Use Case Diagram)

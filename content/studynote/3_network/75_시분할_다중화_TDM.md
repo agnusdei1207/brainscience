@@ -1,4 +1,5 @@
 +++
+weight = 75
 title = "75. 시분할 다중화 (TDM, Time Division Multiplexing)"
 description = "시간을 잘게 쪼개어 여러 채널이 하나의 고속 링크를 교대로 사용하는 디지털 다중화 기술의 핵심 원리와 실무 적용"
 date = "2026-03-30"

@@ -2,7 +2,6 @@
 weight = 10011
 title = "11: IT 디자인 및 감리 (Design & Supervision)"
 render = true
-paginate_by = 10
 sort_by = "weight"
 insert_anchor_links = "right"
 [extra]

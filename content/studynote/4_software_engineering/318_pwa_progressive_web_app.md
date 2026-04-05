@@ -1,5 +1,6 @@
 +++
 title = "318. 프로그레시브 웹 앱 (PWA, Progressive Web App) 아키텍처"
+weight = 318
 +++
 
 # 318. 프로그레시브 웹 앱 (PWA, Progressive Web App) 아키텍처

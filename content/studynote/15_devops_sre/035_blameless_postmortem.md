@@ -1,4 +1,5 @@
 +++
+weight = 35
 title = "035. 비난 없는 포스트모템 (Blameless Postmortem)"
 date = "2026-04-05"
 [extra]

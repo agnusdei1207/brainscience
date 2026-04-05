@@ -1,6 +1,7 @@
 +++
 title = "350. 전사적 품질 관리 (TQM, Total Quality Management)"
 date = 2026-04-05
+weight = 350
 +++
 
 # 350. 전사적 품질 관리 (TQM, Total Quality Management)

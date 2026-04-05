@@ -1,4 +1,5 @@
 +++
+weight = 138
 title = "138. 서브쿼리 (Subquery) - 쿼리 내부에 포함된 독립적 질의"
 date = "2026-04-02"
 [extra]

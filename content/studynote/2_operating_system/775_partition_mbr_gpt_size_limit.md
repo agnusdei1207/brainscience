@@ -1,4 +1,5 @@
 +++
+weight = 775
 title = "775. 파티션 MBR과 GPT 크기 제한"
 date = "2026-03-30"
 [extra]

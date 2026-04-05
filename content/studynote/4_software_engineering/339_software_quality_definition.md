@@ -1,6 +1,7 @@
 +++
 title = "339. 소프트웨어 품질 (Software Quality)의 정의 (명시적, 묵시적 요구사항 충족)"
 date = 2026-04-05
+weight = 339
 +++
 
 # 339. 소프트웨어 품질 (Software Quality)의 정의 (명시적, 묵시적 요구사항 충족)

@@ -1,4 +1,5 @@
 +++
+weight = 92
 title = "근거리-원거리 문제 (Near-Far Problem)와 CDMA 전력 제어"
 description = "CDMA 시스템의 치명적 결함인 근거리-원거리 문제의 발생 원리와 이를 극복하기 위한 정밀한 전력 제어(Power Control) 메커니즘"
 date = 2026-03-31

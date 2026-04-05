@@ -1,4 +1,5 @@
 +++
+weight = 14
 title = "14. 맹목적 탐색 (Uninformed Search)"
 description = "목표 위치에 대한 정보 없이 오직 순서와 구조에만 의존하여 모든 경로를 스캔하는 기초 탐색 알고리즘"
 date = "2024-05-24"

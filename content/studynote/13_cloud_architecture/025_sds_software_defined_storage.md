@@ -1,4 +1,5 @@
 +++
+weight = 25
 title = "025. SDS (Software-Defined Storage) - 스토리지 가상화와 분산 아키텍처"
 date = "2026-04-02"
 [extra]

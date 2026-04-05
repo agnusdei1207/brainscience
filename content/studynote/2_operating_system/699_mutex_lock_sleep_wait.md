@@ -1,4 +1,5 @@
 +++
+weight = 699
 title = "699. 뮤텍스 락 (Mutex Lock)"
 date = "2026-03-29"
 [extra]

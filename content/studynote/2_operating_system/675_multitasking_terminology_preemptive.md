@@ -1,4 +1,5 @@
 +++
+weight = 675
 title = "675. 멀티태스킹 (Multitasking) 용어"
 date = "2026-03-29"
 [extra]

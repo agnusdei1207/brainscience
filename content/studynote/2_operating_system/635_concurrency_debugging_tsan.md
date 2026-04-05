@@ -1,4 +1,5 @@
 +++
+weight = 635
 title = "635. 동시성 디버깅 경쟁 조건 재현 기법 퍼저/스레드 새니타이저 (ThreadSanitizer)"
 date = "2026-03-29"
 [extra]

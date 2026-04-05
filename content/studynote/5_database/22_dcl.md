@@ -1,4 +1,5 @@
 +++
+weight = 22
 title = "22. DCL (Data Control Language)"
 description = "데이터 제어 언어(DCL)의 정의, 보안 아키텍처, 권한 검증 메커니즘 및 실무 적용 백서"
 date = "2024-05-24"

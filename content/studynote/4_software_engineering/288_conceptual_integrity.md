@@ -1,5 +1,6 @@
 +++
 title = "288. 개념적 무결성 (Conceptual Integrity) - 아키텍처 전반의 일관성"
+weight = 288
 +++
 
 # 288. 개념적 무결성 (Conceptual Integrity) - 아키텍처 전반의 일관성

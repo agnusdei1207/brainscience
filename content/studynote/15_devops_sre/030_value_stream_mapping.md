@@ -1,4 +1,5 @@
 +++
+weight = 30
 title = "030. 가치 흐름 매핑 (Value Stream Mapping)"
 date = "2026-04-05"
 [extra]

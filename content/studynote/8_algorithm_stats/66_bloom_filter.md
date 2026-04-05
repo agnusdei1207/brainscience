@@ -1,5 +1,6 @@
 +++
 title = "66. 블룸 필터 (Bloom Filter)"
+weight = 66
 +++
 
 # 66. 블룸 필터 (Bloom Filter)

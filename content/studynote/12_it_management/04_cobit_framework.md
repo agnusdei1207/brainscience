@@ -1,4 +1,5 @@
 +++
+weight = 4
 title = "04. COBIT 프레임워크 (COBIT Framework)"
 description = "IT 거버넌스 및 관리의 글로벌 베스트 프랙티스 프레임워크인 COBIT의 핵심 구성요소와 활용 방법"
 date = "2026-04-05"

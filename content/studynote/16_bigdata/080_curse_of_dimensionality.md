@@ -1,4 +1,5 @@
 +++
+weight = 80
 title = "80. 차원 저주 (Curse of Dimensionality)"
 description = "차원 저주의 정의, 고차원 공간에서의 통계적·계산적 문제, 차원 저주를 완화하는 방법론"
 date = "2026-04-05"

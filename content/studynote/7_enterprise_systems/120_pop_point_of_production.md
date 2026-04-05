@@ -1,4 +1,5 @@
 +++
+weight = 120
 title = "120. POP (Point of Production) - 생산 시점 정보 관리 시스템"
 date = "2026-04-02"
 [extra]

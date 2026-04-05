@@ -1,5 +1,6 @@
 +++
 title = "11. 분기 한정 (Branch and Bound)"
+weight = 11
 +++
 
 # 11. 분기 한정 (Branch and Bound)

@@ -1,4 +1,5 @@
 +++
+weight = 11
 title = "11. 빌드, 릴리스, 실행"
 date = "2026-04-05"
 [taxonomies]

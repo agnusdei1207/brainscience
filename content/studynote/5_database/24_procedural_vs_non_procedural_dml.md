@@ -1,4 +1,5 @@
 +++
+weight = 24
 title = "24. 절차적 DML vs 비절차적 DML"
 description = "네비게이션 기반의 절차적 DML과 옵티마이저 기반의 선언적 DML의 아키텍처 비교 및 실무 성능 분석"
 date = "2024-05-24"

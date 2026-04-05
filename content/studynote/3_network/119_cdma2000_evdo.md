@@ -1,4 +1,5 @@
 +++
+weight = 119
 title = "119. CDMA2000 1x / EV-DO (Evolution-Data Optimized)"
 description = "3G 통신 진화를 이끈 CDMA2000 1x와 EV-DO의 아키텍처, 패킷 스케줄링 메커니즘 및 실무 네트워크 설계 원리"
 date = "2026-03-04"

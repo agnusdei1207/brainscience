@@ -1,5 +1,6 @@
 +++
 title = "557. 하드 핸드오버 (Hard Handover) - Break before make, LTE방식"
+weight = 557
 +++
 
 # 557. 하드 핸드오버 (Hard Handover) - "Break before make", LTE방식

@@ -1,4 +1,5 @@
 +++
+weight = 6
 title = "06. 블록의 구조 (Block Structure)"
 description = "블록 헤더(버전, 이전 블록 해시, 머클 루트, 타임스탬프, 난이도, 논스)와 바디의 상세 구조 및 원리"
 date = "2024-03-24"

@@ -1,4 +1,5 @@
 +++
+weight = 10
 title = "10. 백엔드 서비스 (Backing Services)"
 description = "DB, 큐, 캐시 등을 로컬에 종속시키지 않고 네트워크로 연결된 자원(Attached Resource)으로 취급"
 date = "2024-05-24"

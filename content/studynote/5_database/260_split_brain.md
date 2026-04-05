@@ -1,5 +1,6 @@
 +++
 title = "260. 스플릿 브레인 (Split Brain) 현상"
+weight = 260
 +++
 
 # 260. 스플릿 브레인 (Split Brain) 현상

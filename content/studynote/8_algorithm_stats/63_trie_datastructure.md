@@ -1,5 +1,6 @@
 +++
 title = "63. 트라이 자료구조 (Trie Data Structure)"
+weight = 63
 +++
 
 # 63. 트라이 자료구조 (Trie Data Structure)

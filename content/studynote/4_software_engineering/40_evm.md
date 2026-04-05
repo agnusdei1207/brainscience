@@ -1,4 +1,5 @@
 +++
+weight = 40
 title = "EVM (Earned Value Management)"
 description = "일정과 원가를 통합하여 프로젝트의 진척도와 성과를 정량적으로 측정하고 미래를 예측하는 획득 가치 관리 기법의 핵심"
 date = 2024-05-24

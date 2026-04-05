@@ -1,6 +1,7 @@
 +++
 title = "445. 성능 테스트 (Performance Test) 4가지 유형"
 date = 2026-04-05
+weight = 445
 +++
 
 # 445. 성능 테스트 (Performance Test) 4가지 유형

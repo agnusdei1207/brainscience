@@ -1,4 +1,5 @@
 +++
+weight = 7
 title = "07. 빅데이터 생태계 (Big Data Ecosystem)"
 description = "수집, 저장, 처리, 분석, 시각화로 이어지는 빅데이터 파이프라인의 전체 아키텍처와 실무 적용 전략"
 date = "2024-05-20"

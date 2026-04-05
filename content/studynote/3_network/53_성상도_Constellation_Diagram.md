@@ -1,4 +1,5 @@
 +++
+weight = 53
 title = "53. 성상도 (Constellation Diagram)"
 date = "2026-03-30"
 [extra]

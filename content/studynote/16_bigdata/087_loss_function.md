@@ -1,4 +1,5 @@
 +++
+weight = 87
 title = "87. 손실 함수 (Loss Function)"
 description = "손실 함수의 정의와 역할, 분류/회귀별 주요 손실 함수, 커스텀 손실 함수 설계 원칙"
 date = "2026-04-05"

@@ -1,4 +1,5 @@
 +++
+weight = 24
 title = "024. 변경 리드 타임 (Lead Time for Changes)"
 date = "2026-04-02"
 [extra]

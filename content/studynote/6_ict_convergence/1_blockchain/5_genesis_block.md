@@ -1,4 +1,5 @@
 +++
+weight = 5
 title = "05. 제네시스 블록 (Genesis Block)의 구조와 신뢰의 기원"
 description = "블록체인 생태계의 기원이자 최초의 하드코딩된 신뢰 앵커(Trust Anchor)인 제네시스 블록의 아키텍처와 상징적 메커니즘을 심층 분석합니다."
 date = "2024-05-18"

@@ -1,4 +1,5 @@
 +++
+weight = 657
 title = "657. 가상화 I/O 패스스루 (Passthrough) VFIO 프레임워크"
 date = "2026-03-29"
 [extra]

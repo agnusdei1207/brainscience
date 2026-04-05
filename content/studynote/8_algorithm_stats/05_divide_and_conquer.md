@@ -1,5 +1,6 @@
 +++
 title = "05. 분할 정복 (Divide and Conquer)"
+weight = 5
 +++
 
 # 05. 분할 정복 (Divide and Conquer)

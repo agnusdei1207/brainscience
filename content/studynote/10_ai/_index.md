@@ -2,7 +2,6 @@
 weight = 9010
 title = "10: 인공지능 (Artificial Intelligence)"
 render = true
-paginate_by = 10
 sort_by = "weight"
 insert_anchor_links = "right"
 [extra]

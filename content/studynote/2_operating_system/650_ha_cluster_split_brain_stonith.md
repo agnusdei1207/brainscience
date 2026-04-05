@@ -1,4 +1,5 @@
 +++
+weight = 650
 title = "650. 고가용성 클러스터 운영체제 하트비트/펜싱 (Fencing / STONITH) 뇌 분할(Split-Brain) 방어 메커니즘"
 date = "2026-03-29"
 [extra]

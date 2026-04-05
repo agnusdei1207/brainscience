@@ -1,4 +1,5 @@
 +++
+weight = 537
 title = "537. SNTP (Simple NTP) / PTP (Precision Time Protocol, IEEE 1588 - 마이크로초 이내 정밀)"
 date = "2026-04-05"
 [extra]

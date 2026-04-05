@@ -1,6 +1,7 @@
 +++
 title = "372. 상용 소프트웨어 (COTS, Commercial Off-The-Shelf)"
 date = 2026-04-05
+weight = 372
 +++
 
 # 372. 상용 소프트웨어 (COTS, Commercial Off-The-Shelf)

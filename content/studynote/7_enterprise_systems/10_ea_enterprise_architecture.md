@@ -1,4 +1,5 @@
 +++
+weight = 10
 title = "10. 전사적 아키텍처 (EA, Enterprise Architecture)"
 description = "기업의 비즈니스, 데이터, 애플리케이션, 기술 인프라를 체계적으로 구조화한 청사진인 EA의 프레임워크(Zachman, TOGAF)와 실무 거버넌스"
 date = "2026-03-04"

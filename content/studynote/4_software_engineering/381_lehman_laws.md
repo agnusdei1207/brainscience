@@ -1,6 +1,7 @@
 +++
 title = "381. 메이먼의 법칙 (Lehman's Laws of Software Evolution)"
 date = 2026-04-05
+weight = 381
 +++
 
 # 381. 메이먼의 법칙 (Lehman's Laws of Software Evolution)

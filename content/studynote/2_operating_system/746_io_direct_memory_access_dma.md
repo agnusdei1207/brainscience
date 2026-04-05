@@ -1,4 +1,5 @@
 +++
+weight = 746
 title = "746. I/O 직접 메모리 접근 (DMA)"
 date = "2026-03-30"
 [extra]

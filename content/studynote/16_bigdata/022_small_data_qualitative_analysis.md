@@ -1,4 +1,5 @@
 +++
+weight = 22
 title = "022. 스몰 데이터 (Small Data)"
 date = "2026-04-02"
 [extra]

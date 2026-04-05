@@ -1,5 +1,6 @@
 +++
 title = "294. OLTP vs OLAP"
+weight = 294
 +++
 
 # 294. OLTP vs OLAP

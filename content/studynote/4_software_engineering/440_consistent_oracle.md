@@ -1,6 +1,7 @@
 +++
 title = "440. 일관성 오라클 (Consistent Oracle)"
 date = 2026-04-05
+weight = 440
 +++
 
 # 440. 일관성 오라클 (Consistent Oracle)

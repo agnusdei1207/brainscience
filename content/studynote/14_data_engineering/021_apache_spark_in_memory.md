@@ -1,4 +1,5 @@
 +++
+weight = 21
 title = "021. 아파치 스파크 (Apache Spark) - 인메모리 고속 분산 처리 엔진"
 date = "2026-04-02"
 [extra]

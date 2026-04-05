@@ -1,4 +1,5 @@
 +++
+weight = 21
 title = "021. 하드웨어 보조 가상화 (Hardware-assisted Virtualization)"
 date = "2026-04-02"
 [extra]

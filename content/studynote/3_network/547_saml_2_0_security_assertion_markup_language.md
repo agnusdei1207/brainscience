@@ -1,4 +1,5 @@
 +++
+weight = 547
 title = "547. SAML 2.0 (Security Assertion Markup Language) - B2B 환경 SSO 구현, XML 기반"
 date = "2026-04-05"
 [extra]

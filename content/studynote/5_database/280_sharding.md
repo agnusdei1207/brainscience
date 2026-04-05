@@ -1,5 +1,6 @@
 +++
 title = "280. 샤딩 (Sharding)"
+weight = 280
 +++
 
 # 280. 샤딩 (Sharding)

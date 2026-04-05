@@ -1,6 +1,7 @@
 +++
 title = "416. 상태 전이 테스트 (State Transition Testing)"
 date = 2026-04-05
+weight = 416
 +++
 
 # 416. 상태 전이 테스트 (State Transition Testing)

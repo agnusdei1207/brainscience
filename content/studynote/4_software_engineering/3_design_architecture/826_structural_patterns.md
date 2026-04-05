@@ -2,6 +2,7 @@
 title = "구조 패턴"
 description = "Structural Design Patterns"
 category = "4_software_engineering"
+weight = 826
 +++
 
 # 구조 패턴 (Structural Design Patterns)

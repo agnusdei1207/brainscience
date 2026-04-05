@@ -1,4 +1,5 @@
 +++
+weight = 766
 title = "766. 실시간 스케줄링 마감 시간 (Deadline)"
 date = "2026-03-30"
 [extra]

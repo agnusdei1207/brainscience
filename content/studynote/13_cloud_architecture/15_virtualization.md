@@ -1,4 +1,5 @@
 +++
+weight = 15
 title = "15. 가상화 (Virtualization)"
 description = "클라우드 컴퓨팅의 근간이 되는 하이퍼바이저 아키텍처와 하드웨어 분할 기술"
 date = "2026-03-04"

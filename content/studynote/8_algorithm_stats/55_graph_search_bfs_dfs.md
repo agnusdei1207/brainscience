@@ -1,5 +1,6 @@
 +++
 title = "55. 그래프 탐색 - BFS/DFS (Breadth-First Search / Depth-First Search)"
+weight = 55
 +++
 
 # 55. 그래프 탐색 - BFS/DFS (Breadth-First Search / Depth-First Search)

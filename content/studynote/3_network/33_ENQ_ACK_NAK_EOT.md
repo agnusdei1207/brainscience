@@ -1,4 +1,5 @@
 +++
+weight = 33
 title = "33. 엔트 (ENQ) / 애크 (ACK) / 나크 (NAK) / EOT"
 date = "2026-03-30"
 [extra]

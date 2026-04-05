@@ -1,5 +1,6 @@
 +++
 title = "19. 식스 시그마 (Six Sigma)"
+weight = 19
 +++
 
 # 19. 식스 시그마 (Six Sigma)

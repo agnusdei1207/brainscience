@@ -1,4 +1,5 @@
 +++
+weight = 795
 title = "795. 틱리스 커널(Tickless) 모바일 배터리 보존"
 date = "2026-03-30"
 [extra]

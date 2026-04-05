@@ -1,6 +1,7 @@
 +++
 title = "336. 라이브러리 (Library) vs 프레임워크 (Framework) - 제어의 역전 (IoC, Inversion of Control) 차이"
 date = 2026-04-05
+weight = 336
 +++
 
 # 336. 라이브러리 (Library) vs 프레임워크 (Framework) - 제어의 역전 (IoC, Inversion of Control) 차이

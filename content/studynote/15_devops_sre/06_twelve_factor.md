@@ -1,4 +1,5 @@
 +++
+weight = 6
 title = "06. 12 팩터 앱"
 date = "2026-04-05"
 [taxonomies]

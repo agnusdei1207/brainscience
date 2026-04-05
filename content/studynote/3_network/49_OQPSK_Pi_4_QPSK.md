@@ -1,4 +1,5 @@
 +++
+weight = 49
 title = "49. OQPSK (Offset QPSK) / Pi/4 QPSK"
 date = "2026-03-30"
 [extra]

@@ -1,5 +1,6 @@
 +++
 title = "52. 위험 관리 (Risk Management)"
+weight = 43
 +++
 
 # 52. 위험 관리 (Risk Management)

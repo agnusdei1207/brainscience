@@ -1,5 +1,6 @@
 +++
 title = "268. 수평 분할 (Horizontal Fragmentation)"
+weight = 268
 +++
 
 # 268. 수평 분할 (Horizontal Fragmentation)

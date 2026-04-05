@@ -1,5 +1,6 @@
 +++
 title = "05. IT 투자 성과 평가 지표 (ROI, NPV, IRR, PP)"
+weight = 5
 +++
 
 # 05. IT 투자 성과 평가 지표 (ROI, NPV, IRR, PP)

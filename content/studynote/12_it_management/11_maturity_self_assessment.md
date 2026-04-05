@@ -1,4 +1,5 @@
 +++
+weight = 11
 title = "11. 자가 진단 및 성숙도 모델 (Maturity Model and Self-Assessment)"
 description = "조직의 IT 거버넌스 및 관리 수준을 자체적으로 평가하는 성숙도 모델과 자가 진단 방법론"
 date = "2026-04-05"

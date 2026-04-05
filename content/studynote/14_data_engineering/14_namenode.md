@@ -1,4 +1,5 @@
 +++
+weight = 14
 title = "14. 네임노드 (NameNode)"
 description = "HDFS의 파일 디렉터리 트리와 블록 매핑 장부를 메모리에서 중앙 관리하는 마스터 노드 구조 및 SPOF 한계 돌파 기술"
 date = "2023-10-24"

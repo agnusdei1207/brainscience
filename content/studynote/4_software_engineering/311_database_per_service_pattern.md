@@ -1,5 +1,6 @@
 +++
 title = "311. 데이터베이스 퍼 서비스 (Database per Service) 패턴"
+weight = 311
 +++
 
 # 311. 데이터베이스 퍼 서비스 (Database per Service) 패턴

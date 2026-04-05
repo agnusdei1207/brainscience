@@ -1,5 +1,6 @@
 +++
 title = "297. N-버전 프로그래밍 (N-Version Programming) 다중화 설계"
+weight = 297
 +++
 
 # 297. N-버전 프로그래밍 (N-Version Programming) 다중화 설계

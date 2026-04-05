@@ -1,4 +1,5 @@
 +++
+weight = 16
 title = "16. TCO (Total Cost of Ownership, 총소유비용)"
 description = "초기 도입 비용(CAPEX) 외에 운영/유지보수 비용(OPEX)을 전체적으로 포괄하여 자산의 전체 수명주기 동안 발생하는 모든 비용을 분석하는 지표"
 date = "2024-05-20"

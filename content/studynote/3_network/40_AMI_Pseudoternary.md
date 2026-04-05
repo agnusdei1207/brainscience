@@ -1,4 +1,5 @@
 +++
+weight = 40
 title = "40. AMI (Alternate Mark Inversion) / Pseudoternary"
 date = "2026-03-30"
 [extra]

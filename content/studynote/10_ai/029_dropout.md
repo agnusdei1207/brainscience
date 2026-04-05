@@ -1,4 +1,5 @@
 +++
+weight = 29
 title = "029. 드롭아웃 (Dropout)"
 date = "2026-04-05"
 [extra]

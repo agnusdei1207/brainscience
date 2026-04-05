@@ -1,4 +1,5 @@
 +++
+weight = 153
 title = "SOAP (Simple Object Access Protocol) - B2B 신뢰망을 락킹한 무겁고 위대한 XML 쇳덩이 봉투"
 description = "REST API(JSON)가 깃털처럼 가볍게 날아다니는 시대에, 왜 은행, 병원, 국가 기관들의 심장 백엔드 코어망은 아직도 SOAP라는 무겁고 끔찍한 XML 봉투 껍데기 떡칠을 버리지 못하고 있는가? 개발자들은 '파싱 랙 타임아웃 뻗음 💀' 이라 욕하지만, 아키텍트의 눈에 SOAP는 한 번 쏘면 중간에 10개 서버를 거쳐도 절.대. 패킷을 잃어버리지 않는 WS-ReliableMessaging 절대 생존 텐트망과 WS-Security의 2중 강철 암호 자물쇠를 품은 전 우주 가장 완벽한 B2B 계약서(Contract) 장갑차다"
 date = 2026-04-03

@@ -1,4 +1,5 @@
 +++
+weight = 14
 title = "14. 작업 증명 (PoW, Proof of Work)"
 description = "해시 퍼즐 연산 경쟁, 비트코인의 핵심 합의 알고리즘"
 date = "2024-05-18"

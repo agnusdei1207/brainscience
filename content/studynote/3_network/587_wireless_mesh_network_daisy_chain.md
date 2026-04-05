@@ -1,4 +1,5 @@
 +++
+weight = 587
 title = "587. 무선 메시 네트워크 (WMN) - 데이지 체인 백홀과 자가 치유(Self-Healing) 자동화 구조"
 date = "2026-04-05"
 [extra]

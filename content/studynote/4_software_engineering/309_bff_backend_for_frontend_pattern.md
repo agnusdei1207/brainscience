@@ -1,5 +1,6 @@
 +++
 title = "309. 백엔드 포 프론트엔드 (BFF, Backend For Frontend) 패턴"
+weight = 309
 +++
 
 # 309. 백엔드 포 프론트엔드 (BFF, Backend For Frontend) 패턴

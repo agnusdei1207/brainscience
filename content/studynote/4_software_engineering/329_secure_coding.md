@@ -1,5 +1,6 @@
 +++
 title = "329. 시큐어 코딩 (Secure Coding) 원칙"
+weight = 329
 +++
 
 # 329. 시큐어 코딩 (Secure Coding) 원칙

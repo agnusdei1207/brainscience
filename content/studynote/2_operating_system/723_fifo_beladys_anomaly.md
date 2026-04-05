@@ -1,4 +1,5 @@
 +++
+weight = 723
 title = "723. FIFO 벨라디의 모순"
 date = "2026-03-29"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 55
 title = "55. Ingress/Service 타입"
 date = "2026-04-05"
 [taxonomies]

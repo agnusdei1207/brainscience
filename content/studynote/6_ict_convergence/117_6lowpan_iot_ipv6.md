@@ -1,4 +1,5 @@
 +++
+weight = 117
 title = "117. 6LoWPAN - 저전력 네트워크에서 IPv6 패킷 전송 기술"
 date = "2026-04-02"
 [extra]

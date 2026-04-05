@@ -1,4 +1,5 @@
 +++
+weight = 28
 title = "28. VPC (Virtual Private Cloud)"
 description = "가상 사설 클라우드의 핵심 개념, 네트워크 설계 원리, 서브넷 아키텍처 및 실무 보안 적용 가이드"
 date = "2024-05-24"

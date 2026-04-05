@@ -1,4 +1,5 @@
 +++
+weight = 596
 title = "596. HAPS (High Altitude Platform Station) - 성층권 무선 드론 통신망 아키텍처"
 date = "2026-04-05"
 [extra]

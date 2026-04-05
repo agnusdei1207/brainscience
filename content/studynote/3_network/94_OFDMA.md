@@ -1,4 +1,5 @@
 +++
+weight = 94
 title = "OFDMA (Orthogonal Frequency Division Multiple Access) - LTE, 5G"
 description = "4G LTE와 5G 시스템의 핵심 다중 접속 기술인 OFDMA의 구조, 직교 부반송파 할당 원리 및 기존 기술과의 비교 분석"
 date = 2026-03-31

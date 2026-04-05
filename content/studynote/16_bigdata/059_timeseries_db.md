@@ -1,4 +1,5 @@
 +++
+weight = 59
 title = "59. 시계열 DB (Time Series Database)"
 date = "2026-04-05"
 [extra]

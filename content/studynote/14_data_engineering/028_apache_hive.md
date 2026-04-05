@@ -1,4 +1,5 @@
 +++
+weight = 28
 title = "028. 아파치 하이브 (Apache Hive)"
 date = "2026-04-05"
 [extra]

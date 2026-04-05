@@ -1,4 +1,5 @@
 +++
+weight = 21
 title = "핵심 성공 요인 (CSF, Critical Success Factor)"
 description = "비즈니스 목표 달성을 위해 경영진이 반드시 집중해야 할 소수의 핵심 영역을 식별하는 CSF 방법론의 원리와 실무 적용"
 date = "2024-05-24"

@@ -1,4 +1,5 @@
 +++
+weight = 133
 title = "EPM / CPM (Enterprise Performance Management) - 전사 성과 관리"
 description = "과거의 죽은 영수증 기록만 쳐다보는 백미러(ERP)의 한계를 부수고, 재무 데이터와 운영 데이터를 끌어모아 내년도 예산을 편성하고 시나리오를 예측하며 조직의 전략적 목표 달성을 지휘하는 CFO의 지능형 대시보드 내비게이션"
 date = 2026-04-03

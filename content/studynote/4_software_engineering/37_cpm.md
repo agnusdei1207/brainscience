@@ -1,4 +1,5 @@
 +++
+weight = 37
 title = "CPM (Critical Path Method)"
 description = "프로젝트의 최장 경로를 식별하여 최소 완료 시간을 결정하고 여유 일정을 관리하는 주공정법의 핵심 원리와 실무"
 date = 2024-05-24

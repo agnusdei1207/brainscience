@@ -1,6 +1,7 @@
 +++
 title = "352. 결함 (Defect)의 정의 - 오류 (Error/Mistake), 결점 (Fault/Bug), 고장/실패 (Failure)"
 date = 2026-04-05
+weight = 352
 +++
 
 # 352. 결함 (Defect)의 정의 - 오류 (Error/Mistake), 결점 (Fault/Bug), 고장/실패 (Failure)

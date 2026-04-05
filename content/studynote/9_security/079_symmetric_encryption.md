@@ -1,4 +1,5 @@
 +++
+weight = 79
 title = "79. 대칭키 암호 (Symmetric Encryption)"
 description = "동일한 키로 암호화와 복호화를 수행하는 대칭키 암호 시스템"
 date = 2026-03-26

@@ -1,5 +1,6 @@
 +++
 title = "272. 멀티 마스터 (Multi-Master) 복제"
+weight = 272
 +++
 
 # 272. 멀티 마스터 (Multi-Master) 복제

@@ -1,4 +1,5 @@
 +++
+weight = 33
 title = "033. 역 콘웨이 전략 (Inverse Conway Maneuver)"
 date = "2026-04-05"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 2
 title = "2. 튜링 테스트 (Turing Test)"
 description = "기계가 지능을 가졌는지 판별하는 대화 기반 모방 게임과 평가 체계"
 date = "2026-03-04"

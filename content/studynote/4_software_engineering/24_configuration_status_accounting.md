@@ -1,4 +1,5 @@
 +++
+weight = 24
 title = "24. 형상 기록/보고 (Configuration Status Accounting)"
 description = "형상 항목의 모든 변경 이력을 기록하고, 프로젝트 이해관계자에게 현재 상태를 가시화하여 제공하는 SCM 대시보드"
 date = "2026-03-04"

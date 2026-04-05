@@ -1,5 +1,6 @@
 +++
 title = "274. NoSQL (Not Only SQL) 데이터베이스"
+weight = 274
 +++
 
 # 274. NoSQL (Not Only SQL) 데이터베이스

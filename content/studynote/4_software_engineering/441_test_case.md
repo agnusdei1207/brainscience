@@ -1,6 +1,7 @@
 +++
 title = "441. 테스트 케이스 (Test Case) 구조"
 date = 2026-04-05
+weight = 441
 +++
 
 # 441. 테스트 케이스 (Test Case) 구조

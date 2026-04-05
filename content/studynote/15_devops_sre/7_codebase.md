@@ -1,4 +1,5 @@
 +++
+weight = 7
 title = "7. 코드베이스 (Codebase)"
 description = "버전 관리되는 하나의 코드베이스와 다양한 배포(Dev, Staging, Prod) 연계 구조"
 date = "2024-05-24"

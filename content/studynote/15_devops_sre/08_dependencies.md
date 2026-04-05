@@ -1,4 +1,5 @@
 +++
+weight = 8
 title = "08. 종속성 격리"
 date = "2026-04-05"
 [taxonomies]

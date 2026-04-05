@@ -1,4 +1,5 @@
 +++
+weight = 11
 title = "11. 자가 진단 및 성숙도 모델 (Maturity Model)"
 description = "조직의 역량 및 프로세스 성숙도를 진단하는 CMMI 및 SPICE 모델 분석"
 date = "2024-05-20"

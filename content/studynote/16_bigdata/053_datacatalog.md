@@ -1,4 +1,5 @@
 +++
+weight = 53
 title = "53. 데이터 카탈로그 (Data Catalog)"
 date = "2026-04-05"
 [extra]

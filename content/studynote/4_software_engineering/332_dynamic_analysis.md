@@ -1,5 +1,6 @@
 +++
 title = "332. 동적 분석 (Dynamic Analysis) - 실행 중 메모리 누수, 성능 병목 탐지"
+weight = 332
 +++
 
 # 332. 동적 분석 (Dynamic Analysis) - 실행 중 메모리 누수, 성능 병목 탐지

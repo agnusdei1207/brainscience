@@ -1,5 +1,6 @@
 +++
 title = "16. BPR (Business Process Reengineering)"
+weight = 16
 +++
 
 # 16. BPR (Business Process Reengineering)

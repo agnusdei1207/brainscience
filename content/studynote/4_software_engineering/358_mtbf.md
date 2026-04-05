@@ -1,6 +1,7 @@
 +++
 title = "358. MTBF (Mean Time Between Failures) - 평균 무고장 시간"
 date = 2026-04-05
+weight = 358
 +++
 
 # 358. MTBF (Mean Time Between Failures) - 평균 무고장 시간

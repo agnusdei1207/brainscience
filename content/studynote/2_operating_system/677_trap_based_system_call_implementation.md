@@ -1,4 +1,5 @@
 +++
+weight = 677
 title = "677. 트랩 (Trap) 기반 시스템 콜 구현"
 date = "2026-03-29"
 [extra]

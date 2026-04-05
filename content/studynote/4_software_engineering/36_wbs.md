@@ -1,4 +1,5 @@
 +++
+weight = 36
 title = "WBS (Work Breakdown Structure)"
 description = "프로젝트의 범위를 정의하고 관리 가능한 단위로 분할하는 작업 분할 구조도의 핵심 원리와 실무 적용"
 date = 2024-05-24

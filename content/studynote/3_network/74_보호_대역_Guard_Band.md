@@ -1,4 +1,5 @@
 +++
+weight = 74
 title = "74. 보호 대역 (Guard Band)"
 description = "보호 대역의 존재 이유, 주파수 간섭(Crosstalk) 회피 매커니즘, 낭비 트레이드오프와 OFDM으로의 진화"
 date = "2024-05-20"

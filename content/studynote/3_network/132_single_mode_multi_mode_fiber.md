@@ -1,4 +1,5 @@
 +++
+weight = 132
 title = "132. 단일모드 광섬유 (Single-mode Fiber, SMF) / 다중모드 광섬유 (MMF)"
 description = "장거리 초고속 통신의 핵심인 SMF와 근거리 경제적 통신인 MMF의 구조적 특성 및 성능 비교"
 date = "2024-05-18"

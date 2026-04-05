@@ -1,4 +1,5 @@
 +++
+weight = 154
 title = "워크쓰루 (Walkthrough) - 비공식적 지식 공유 리뷰"
 description = "결함 척살(Bug-finding)이라는 무거운 압박감에서 벗어나, 작성자(Author)가 주도하여 칠판에 설계도를 띄워놓고 동료들과 자유롭게 토론하며 아이디어와 비전을 전파(Training)하는 가장 대중적이고 부드러운 정적 리뷰 기법"
 date = 2026-04-03

@@ -1,4 +1,5 @@
 +++
+weight = 696
 title = "696. 경쟁 조건 (Race Condition)"
 date = "2026-03-29"
 [extra]

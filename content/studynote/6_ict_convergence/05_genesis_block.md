@@ -1,5 +1,6 @@
 +++
 title = "05. 제네시스 블록 (Genesis Block)"
+weight = 5
 +++
 
 # 05. 제네시스 블록 (Genesis Block)

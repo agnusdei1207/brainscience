@@ -1,4 +1,5 @@
 +++
+weight = 27
 title = "027. SPACE 프레임워크 (Developer Experience Measurement Framework)"
 date = "2026-04-05"
 [extra]

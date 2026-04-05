@@ -1,5 +1,6 @@
 +++
 title = "09. ISMP (Information System Master Plan)"
+weight = 9
 +++
 
 # 09. ISMP (Information System Master Plan)

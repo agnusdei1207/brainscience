@@ -1,5 +1,6 @@
 +++
 title = "267. 데이터 분할 기법 (Fragmentation)"
+weight = 267
 +++
 
 # 267. 데이터 분할 기법 (Fragmentation)

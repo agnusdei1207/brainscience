@@ -1,4 +1,5 @@
 +++
+weight = 62
 title = "62. 펄스 부호 변조 (PCM, Pulse Code Modulation) 처리 과정"
 description = "아날로그 음성 신호를 디지털 비트 스트림으로 변환하는 표본화, 양자화, 부호화의 3단계 핵심 메커니즘과 통신망 대역폭 산출 원리"
 date = "2024-05-15"

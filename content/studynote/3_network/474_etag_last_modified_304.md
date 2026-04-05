@@ -1,4 +1,5 @@
 +++
+weight = 474
 title = "ETag / Last-Modified 검증 (304 Not Modified)"
 description = "만료된 웹 캐시의 재사용 가능 여부를 판단하기 위해 콘텐츠 지문이나 수정 시간을 서버에 질의하는 조건부 요청(Conditional Request) 검증 메커니즘"
 date = 2026-04-03

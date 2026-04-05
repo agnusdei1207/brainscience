@@ -1,4 +1,5 @@
 +++
+weight = 6
 title = "06. 총 소유 비용 (TCO, Total Cost of Ownership)"
 description = "IT 자산의 도입부터 폐기까지 발생하는 모든 직간접적 비용을 측정하고 관리하는 총 소유 비용 (TCO)의 아키텍처와 실무 적용 방안"
 date = "2026-03-04"

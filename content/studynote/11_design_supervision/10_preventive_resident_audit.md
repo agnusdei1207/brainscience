@@ -1,4 +1,5 @@
 +++
+weight = 10
 title = "10. 예방 감리 및 상주 감리 (Preventive & Resident Audit)"
 description = "사업 실패 리스크를 조기에 차단하는 예방 감리와 대형 사업에 밀착 대응하는 상주 감리의 운영 아키텍처 및 실무 통제"
 date = "2024-05-24"

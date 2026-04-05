@@ -1,4 +1,5 @@
 +++
+weight = 88
 title = "88. 옵티마이저 (Optimizer)"
 description = "옵티마이저의 개념, 다양한 최적화 알고리즘의 분류와 특성, Adaptive Learning Rate 방법론"
 date = "2026-04-05"

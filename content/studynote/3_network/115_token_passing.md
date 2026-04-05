@@ -1,4 +1,5 @@
 +++
+weight = 115
 title = "115. 토큰 패싱 (Token Passing) 접속 방식"
 description = "중앙 통제자 없이 '토큰(Token)'이라는 특수한 제어 패킷을 분산 순환시켜 채널 충돌을 원천 차단하고 통신 지연의 한계성(Bounded Delay)을 보장하는 토큰 패싱 MAC 심층 분석"
 date = "2024-05-24"

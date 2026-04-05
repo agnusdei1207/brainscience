@@ -1,4 +1,5 @@
 +++
+weight = 668
 title = "668. 부채널 공격 (Side-channel Attack, Meltdown/Spectre) 마이크로아키텍처 취약점 대응 소프트웨어 패치(KPTI, Retpoline)"
 date = "2026-03-29"
 [extra]

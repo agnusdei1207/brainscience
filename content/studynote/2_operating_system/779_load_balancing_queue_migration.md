@@ -1,4 +1,5 @@
 +++
+weight = 779
 title = "779. 부하 균등화 (Load Balancing) 큐 이주"
 date = "2026-03-30"
 [extra]

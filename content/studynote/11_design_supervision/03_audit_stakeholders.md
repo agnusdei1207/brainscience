@@ -1,4 +1,5 @@
 +++
+weight = 3
 title = "03. 감리 발주자/피감리인/감리법인"
 description = "정보시스템 감리의 3대 이해관계자 발주자(Client), 피감리인(Auditee), 감리법인(Auditor)의 역할, 책임 및 상호 관계"
 date = "2026-04-05"

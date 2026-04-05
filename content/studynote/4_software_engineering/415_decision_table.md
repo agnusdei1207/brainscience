@@ -1,6 +1,7 @@
 +++
 title = "415. 의사 결정 테이블 (Decision Table)"
 date = 2026-04-05
+weight = 415
 +++
 
 # 415. 의사 결정 테이블 (Decision Table)

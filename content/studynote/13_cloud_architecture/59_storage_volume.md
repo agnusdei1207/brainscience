@@ -1,4 +1,5 @@
 +++
+weight = 59
 title = "59. 스토리지/볼륨"
 date = "2026-04-05"
 [taxonomies]

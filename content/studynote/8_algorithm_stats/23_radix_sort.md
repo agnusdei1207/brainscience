@@ -1,5 +1,6 @@
 +++
 title = "23. 기수 정렬 (Radix Sort)"
+weight = 23
 +++
 
 # 23. 기수 정렬 (Radix Sort)

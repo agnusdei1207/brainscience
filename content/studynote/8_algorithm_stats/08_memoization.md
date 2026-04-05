@@ -1,5 +1,6 @@
 +++
 title = "08. 메모이제이션 (Memoization)"
+weight = 8
 +++
 
 # 08. 메모이제이션 (Memoization)

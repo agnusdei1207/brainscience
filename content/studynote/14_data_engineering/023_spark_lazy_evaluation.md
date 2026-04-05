@@ -1,4 +1,5 @@
 +++
+weight = 23
 title = "023. 지연 평가 (Lazy Evaluation) - 스파크(Spark) 인메모리 최적화의 핵심"
 date = "2026-04-02"
 [extra]

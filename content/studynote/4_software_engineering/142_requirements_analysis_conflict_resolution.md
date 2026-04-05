@@ -1,4 +1,5 @@
 +++
+weight = 142
 title = "142. 요구사항 분석 (Requirements Analysis) - 모순 해결과 범위 확정"
 date = "2026-04-02"
 [extra]

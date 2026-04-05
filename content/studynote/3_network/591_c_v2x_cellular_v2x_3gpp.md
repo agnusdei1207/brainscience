@@ -1,4 +1,5 @@
 +++
+weight = 591
 title = "591. C-V2X (Cellular V2X) - 3GPP 5G 융합 차량 통신과 PC5 사이드링크 아키텍처"
 date = "2026-04-05"
 [extra]

@@ -2,7 +2,6 @@
 weight = 9006
 title = "6. 데이터 사이언스 수학"
 render = true
-paginate_by = 10
 sort_by = "weight"
 insert_anchor_links = "right"
 [extra]

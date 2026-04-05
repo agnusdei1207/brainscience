@@ -1,4 +1,5 @@
 +++
+weight = 22
 title = "022. 선택 정렬 (Selection Sort) 알고리즘"
 date = "2026-04-02"
 [extra]

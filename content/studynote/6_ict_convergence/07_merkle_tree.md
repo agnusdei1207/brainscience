@@ -1,5 +1,6 @@
 +++
 title = "07. 머클 트리 (Merkle Tree)"
+weight = 7
 +++
 
 # 07. 머클 트리 (Merkle Tree)

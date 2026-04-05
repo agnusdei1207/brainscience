@@ -1,4 +1,5 @@
 +++
+weight = 20
 title = "20. 알파-베타 가지치기 (Alpha-Beta Pruning)"
 description = "미니맥스 트리의 연산량을 극적으로 줄여주는 탐색 공간 최적화 기법"
 date = "2024-05-24"

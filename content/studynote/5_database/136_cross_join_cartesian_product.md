@@ -1,4 +1,5 @@
 +++
+weight = 136
 title = "136. 교차 조인 (Cross Join) 및 카티션 프로덕트 (Cartesian Product)"
 date = "2026-04-02"
 [extra]

@@ -1,5 +1,6 @@
 +++
 title = "27. 힙 정렬 (Heap Sort)"
+weight = 27
 +++
 
 # 27. 힙 정렬 (Heap Sort)

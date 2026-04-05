@@ -1,4 +1,5 @@
 +++
+weight = 720
 title = "720. 페이지 폴트 (Page Fault) ISR"
 date = "2026-03-29"
 [extra]

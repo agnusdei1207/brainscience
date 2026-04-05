@@ -1,4 +1,5 @@
 +++
+weight = 2
 title = "02. 데이터베이스(Database)의 정의"
 description = "통합, 저장, 운영, 공용 데이터로서의 데이터베이스 본질 및 ISOS 개념 심층 분석"
 date = "2024-05-20"

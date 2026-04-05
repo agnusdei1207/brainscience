@@ -1,4 +1,5 @@
 +++
+weight = 116
 title = "116. 서드파티 쿠키리스(Cookie-less) 시대 대응 퍼스트파티(1st Party) 데이터 확보 전략"
 date = "2026-04-02"
 [extra]

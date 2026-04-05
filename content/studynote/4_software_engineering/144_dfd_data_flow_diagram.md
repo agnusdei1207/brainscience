@@ -1,4 +1,5 @@
 +++
+weight = 144
 title = "TFTP (Trivial FTP) - UDP 기반 간단 파일 전송 (포트 69)"
 description = "초기화 단계의 디스크 없는 장비(Diskless Device)가 OS 이미지를 부팅하기 위해 사용하는, UDP 기반의 초경량 파일 전송 프로토콜"
 date = 2026-04-03

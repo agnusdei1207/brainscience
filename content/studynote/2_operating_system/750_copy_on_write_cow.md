@@ -1,4 +1,5 @@
 +++
+weight = 750
 title = "750. 쓰기 시 복사 (COW)"
 date = "2026-03-30"
 [extra]

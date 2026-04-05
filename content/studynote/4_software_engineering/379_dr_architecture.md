@@ -1,6 +1,7 @@
 +++
 title = "379. 재해 복구 (DR) 아키텍처 - RTO, RPO"
 date = 2026-04-05
+weight = 379
 +++
 
 # 379. 재해 복구 (DR) 아키텍처 - RTO, RPO

@@ -1,6 +1,7 @@
 +++
 title = "357. 가용성 (Availability) 계산 = MTBF / (MTBF + MTTR)"
 date = 2026-04-05
+weight = 357
 +++
 
 # 357. 가용성 (Availability) 계산 = MTBF / (MTBF + MTTR)

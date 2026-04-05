@@ -1,5 +1,6 @@
 +++
 title = "62. 보이어-무어 알고리즘 (Boyer-Moore Algorithm)"
+weight = 62
 +++
 
 # 62. 보이어-무어 알고리즘 (Boyer-Moore Algorithm)

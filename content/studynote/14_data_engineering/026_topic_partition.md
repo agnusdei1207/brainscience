@@ -1,4 +1,5 @@
 +++
+weight = 26
 title = "026. 토픽(Topic)과 파티션(Partition)"
 date = "2026-04-05"
 [extra]

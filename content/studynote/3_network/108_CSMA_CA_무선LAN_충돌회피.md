@@ -1,4 +1,5 @@
 +++
+weight = 108
 title = "108. CSMA/CA (Carrier Sense Multiple Access with Collision Avoidance)"
 description = "무선 LAN 환경에서 충돌 감지 한계를 극복하기 위해 도입된 충돌 회피 알고리즘 및 동작 메커니즘"
 date = "2026-04-01"

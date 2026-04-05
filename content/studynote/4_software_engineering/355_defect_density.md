@@ -1,6 +1,7 @@
 +++
 title = "355. 결함 밀도 (Defect Density) - 코드 규모 (KLOC) 대비 결함 수"
 date = 2026-04-05
+weight = 355
 +++
 
 # 355. 결함 밀도 (Defect Density) - 코드 규모 (KLOC) 대비 결함 수

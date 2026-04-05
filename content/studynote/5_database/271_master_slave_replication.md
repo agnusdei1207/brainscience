@@ -1,5 +1,6 @@
 +++
 title = "271. 마스터-슬레이브 (Master-Slave) 복제"
+weight = 271
 +++
 
 # 271. 마스터-슬레이브 (Master-Slave) 복제

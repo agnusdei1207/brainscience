@@ -1,6 +1,7 @@
 +++
 title = "377. 체크섬/서명을 통한 무결성 검증 (Integrity Verification)"
 date = 2026-04-05
+weight = 377
 +++
 
 # 377. 체크섬/서명을 통한 무결성 검증 (Integrity Verification)

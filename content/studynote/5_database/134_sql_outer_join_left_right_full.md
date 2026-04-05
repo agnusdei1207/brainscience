@@ -1,4 +1,5 @@
 +++
+weight = 134
 title = "134. 외부 조인 (Outer Join) - LEFT, RIGHT, FULL 아키텍처"
 date = "2026-04-02"
 [extra]

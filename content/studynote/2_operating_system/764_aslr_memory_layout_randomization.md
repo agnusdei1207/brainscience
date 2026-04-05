@@ -1,4 +1,5 @@
 +++
+weight = 764
 title = "764. ASLR 메모리 레이아웃 난수화"
 date = "2026-03-30"
 [extra]

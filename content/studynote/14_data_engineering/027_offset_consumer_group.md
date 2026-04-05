@@ -1,4 +1,5 @@
 +++
+weight = 27
 title = "027. 오프셋(Offset)과 컨슈머 그룹(Consumer Group)"
 date = "2026-04-05"
 [extra]

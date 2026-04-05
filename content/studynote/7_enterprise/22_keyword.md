@@ -1,5 +1,6 @@
 +++
 title = "22. BSC (Balanced Scorecard, 균형 성과 기록표)"
+weight = 22
 +++
 
 # 22. BSC (Balanced Scorecard, 균형 성과 기록표)

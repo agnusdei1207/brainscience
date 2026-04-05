@@ -1,4 +1,5 @@
 +++
+weight = 28
 title = "28. 지연 평가 (Lazy Evaluation)"
 date = "2026-04-05"
 [extra]

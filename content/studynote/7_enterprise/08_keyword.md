@@ -1,5 +1,6 @@
 +++
 title = "08. 정보화 전략 계획 (ISP, Information Strategy Planning)"
+weight = 8
 +++
 
 # 08. 정보화 전략 계획 (ISP, Information Strategy Planning)

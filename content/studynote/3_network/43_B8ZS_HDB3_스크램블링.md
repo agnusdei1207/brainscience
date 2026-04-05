@@ -1,4 +1,5 @@
 +++
+weight = 43
 title = "43. B8ZS / HDB3 (Scrambling, 스크램블링)"
 date = "2026-03-30"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 116
 title = "116. PRMA (Packet Reservation Multiple Access)"
 description = "PRMA의 핵심 원리, 아키텍처, 알로하 및 TDMA와의 비교 분석 및 실무 관점"
 date = "2026-03-04"

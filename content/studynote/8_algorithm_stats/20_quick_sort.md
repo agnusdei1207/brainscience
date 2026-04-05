@@ -1,5 +1,6 @@
 +++
 title = "20. 퀵 정렬 (Quick Sort)"
+weight = 20
 +++
 
 # 20. 퀵 정렬 (Quick Sort)

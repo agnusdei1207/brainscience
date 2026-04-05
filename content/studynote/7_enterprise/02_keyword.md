@@ -1,5 +1,6 @@
 +++
 title = "02. IT 거버넌스 (IT Governance)"
+weight = 2
 +++
 
 # 02. IT 거버넌스 (IT Governance)

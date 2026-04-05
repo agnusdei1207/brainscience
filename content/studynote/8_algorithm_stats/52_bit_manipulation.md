@@ -1,5 +1,6 @@
 +++
 title = "52. 비트 조작 (Bit Manipulation)"
+weight = 52
 +++
 
 # 52. 비트 조작 (Bit Manipulation)

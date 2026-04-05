@@ -1,4 +1,5 @@
 +++
+weight = 158
 title = "요구사항 관리 (Requirements Management) - 변경 통제와 버전"
 description = "프로젝트가 시작된 후 아침저녁으로 '이거 바꿔줘, 저거 빼줘'라며 쏟아지는 고객의 무자비한 변심(Scope Creep)을 방어하기 위해, 스펙에 도장을 찍어 얼려버리는 베이스라인(Baseline)과 깐깐한 변경 통제 위원회(CCB)의 결재를 강제하는 거대한 빗장 체계"
 date = 2026-04-03

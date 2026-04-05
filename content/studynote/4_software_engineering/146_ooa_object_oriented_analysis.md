@@ -1,4 +1,5 @@
 +++
+weight = 146
 title = "객체지향 분석 (OOA, Object-Oriented Analysis)"
 description = "소프트웨어 시스템을 데이터와 행위가 캡슐화된 '객체(Object)'들의 상호작용 네트워크로 모델링하여, 현실 세계의 비즈니스를 가장 직관적으로 코드에 매핑하는 요구사항 분석 기법"
 date = 2026-04-03

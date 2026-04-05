@@ -1,5 +1,6 @@
 +++
 title = "33. 프라이버시 보호 기술 (Privacy by Design)"
+weight = 33
 +++
 
 # 33. 프라이버시 보호 기술 (Privacy by Design)

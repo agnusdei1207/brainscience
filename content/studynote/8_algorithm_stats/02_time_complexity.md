@@ -1,5 +1,6 @@
 +++
 title = "02. 시간 복잡도 (Time Complexity)"
+weight = 2
 +++
 
 # 02. 시간 복잡도 (Time Complexity)

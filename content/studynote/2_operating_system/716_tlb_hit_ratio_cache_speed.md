@@ -1,4 +1,5 @@
 +++
+weight = 716
 title = "716. TLB 적중률 캐시 속도"
 date = "2026-03-29"
 [extra]

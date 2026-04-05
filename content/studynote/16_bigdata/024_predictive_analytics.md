@@ -1,4 +1,5 @@
 +++
+weight = 24
 title = "024. 예측 분석 (Predictive Analytics) - 빅데이터의 전략적 연금술"
 date = "2026-04-02"
 [extra]

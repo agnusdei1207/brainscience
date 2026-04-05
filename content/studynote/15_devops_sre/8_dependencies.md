@@ -1,4 +1,5 @@
 +++
+weight = 8
 title = "8. 종속성 (Dependencies) 격리"
 description = "모든 종속성은 패키지 매니저를 통해 명시적으로 선언하고 시스템 전체 패키지와 철저히 격리"
 date = "2024-05-24"

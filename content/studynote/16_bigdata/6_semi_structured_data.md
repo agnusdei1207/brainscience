@@ -1,4 +1,5 @@
 +++
+weight = 6
 title = "06. 반정형 데이터 (Semi-Structured Data)"
 description = "JSON/XML/CSV 등 반정형 데이터의 구조, 파싱 메커니즘, 그리고 실무적 활용 방안"
 date = "2024-05-20"

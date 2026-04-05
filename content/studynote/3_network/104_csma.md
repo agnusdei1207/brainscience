@@ -1,4 +1,5 @@
 +++
+weight = 104
 title = "104. CSMA (Carrier Sense Multiple Access) 원리와 다중 접속 제어"
 description = "네트워크 다중 접속의 근간이 되는 CSMA 프로토콜의 'Listen Before Talk' 철학과 한계, 그리고 이를 극복하기 위한 발전 과정을 심층 분석합니다."
 date = "2026-03-04"

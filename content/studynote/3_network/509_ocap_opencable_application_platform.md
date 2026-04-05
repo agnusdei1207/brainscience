@@ -1,4 +1,5 @@
 +++
+weight = 509
 title = "OCAP (OpenCable Application Platform) - 셋톱박스의 강철 감옥을 깬 자바(Java) 해방선"
 description = "과거 케이블 방송사마다 셋톱박스 기계(하드웨어)가 달라서 리모컨 앱 하나 개발하려면 기계 100종류에 맞춰 밤새 100번을 다시 짜야 했던 최악의 종속성(Vendor Lock-in) 지옥을 부수고, '어떤 셋톱박스든 자바(Java) 가상 머신(JVM)만 얹으면 똑같은 앱이 돌아간다(Write Once, Run Anywhere)'는 혁명적 표준을 선언한 북미 디지털 케이블 TV의 미들웨어 독립 헌법"
 date = 2026-04-03

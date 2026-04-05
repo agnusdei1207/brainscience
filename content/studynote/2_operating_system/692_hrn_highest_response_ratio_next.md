@@ -1,4 +1,5 @@
 +++
+weight = 692
 title = "692. HRN 대기 시간 공식"
 date = "2026-03-29"
 [extra]

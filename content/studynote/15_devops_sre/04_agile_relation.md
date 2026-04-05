@@ -1,4 +1,5 @@
 +++
+weight = 4
 title = "04. 애자일과의 관계"
 date = "2026-04-05"
 [taxonomies]

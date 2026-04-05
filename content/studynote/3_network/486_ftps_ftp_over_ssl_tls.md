@@ -1,4 +1,5 @@
 +++
+weight = 486
 title = "FTPS (FTP over SSL/TLS)"
 description = "평문 전송의 보안 결함을 극복하기 위해 기존 FTP 프로토콜에 SSL/TLS 암호화 계층을 덧씌운 과도기적 보안 파일 전송 표준"
 date = 2026-04-03

@@ -1,5 +1,6 @@
 +++
 title = "07. 섀도우 IT (Shadow IT)"
+weight = 7
 +++
 
 # 07. 섀도우 IT (Shadow IT)

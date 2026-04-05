@@ -1,4 +1,5 @@
 +++
+weight = 20
 title = "20. 반가상화 (Para-virtualization)"
 description = "운영체제 커널을 직접 수정하여 하이퍼바이저와 다이렉트로 통신(Hypercall)함으로써 에뮬레이션 오버헤드를 제거한 반가상화 아키텍처"
 date = "2024-05-20"

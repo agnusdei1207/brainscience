@@ -1,4 +1,5 @@
 +++
+weight = 2
 title = "시간 복잡도 (Time Complexity) — Big-O / Ω / Θ 표기법"
 description = "알고리즘의 성능을 점근적으로 평가하는 시간 복잡도 표기법(Big-O, Ω, Θ)의 수학적 원리와 실무적 적용 기준을 분석합니다."
 date = "2024-05-20"

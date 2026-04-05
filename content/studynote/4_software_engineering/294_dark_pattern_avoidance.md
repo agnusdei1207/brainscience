@@ -1,5 +1,6 @@
 +++
 title = "294. 다크 패턴 (Dark Pattern) 회피 설계"
+weight = 294
 +++
 
 # 294. 다크 패턴 (Dark Pattern) 회피 설계

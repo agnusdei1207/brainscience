@@ -1,4 +1,5 @@
 +++
+weight = 501
 title = "SIP (Session Initiation Protocol) - 인터넷 전화의 HTTP"
 description = "복잡하고 무거운 기존 통신망(H.323, ISDN)의 장벽을 부수고, 텍스트 기반의 가벼운 HTTP 통신 구조를 완벽하게 모방하여 인터넷 전화(VoIP)와 화상 회의의 세션(Session)을 뚫고 닫아주는 가장 위대하고도 범용적인 멀티미디어 라우팅 프로토콜"
 date = 2026-04-03

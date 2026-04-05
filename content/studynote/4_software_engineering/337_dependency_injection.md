@@ -1,6 +1,7 @@
 +++
 title = "337. 의존성 주입 (DI, Dependency Injection) - 객체 결합도 감소"
 date = 2026-04-05
+weight = 337
 +++
 
 # 337. 의존성 주입 (DI, Dependency Injection) - 객체 결합도 감소

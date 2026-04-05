@@ -2,6 +2,7 @@
 title = "생성 패턴"
 description = "Creational Design Patterns"
 category = "4_software_engineering"
+weight = 825
 +++
 
 # 생성 패턴 (Creational Design Patterns)

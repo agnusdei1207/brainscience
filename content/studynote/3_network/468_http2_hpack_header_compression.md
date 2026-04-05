@@ -1,4 +1,5 @@
 +++
+weight = 468
 title = "468. HTTP/2 헤더 압축 (HPACK 알고리즘 활용)"
 date = "2026-04-02"
 [extra]

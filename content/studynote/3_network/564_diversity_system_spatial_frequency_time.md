@@ -1,4 +1,5 @@
 +++
+weight = 564
 title = "564. 다이버시티 시스템 (Diversity System) - 페이딩 극복 (공간, 주파수, 시간, 편파 다이버시티)"
 date = "2026-04-05"
 [extra]

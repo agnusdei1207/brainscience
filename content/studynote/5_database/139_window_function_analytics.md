@@ -1,4 +1,5 @@
 +++
+weight = 139
 title = "139. 윈도우 함수 (Window Function) - 데이터 분석의 마법사"
 date = "2026-04-02"
 [extra]

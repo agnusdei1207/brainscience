@@ -1,4 +1,5 @@
 +++
+weight = 85
 title = "85. 하이퍼파라미터 튜닝 (Hyperparameter Tuning)"
 description = "하이퍼파라미터 튜닝의 개념, Grid Search, Random Search, Bayesian Optimization 등 다양한 기법"
 date = "2026-04-05"

@@ -1,4 +1,5 @@
 +++
+weight = 121
 title = "121. LwM2M (Lightweight M2M) - IoT 디바이스 통합 원격 관리 프로토콜"
 date = "2026-04-02"
 [extra]

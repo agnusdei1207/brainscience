@@ -1,4 +1,5 @@
 +++
+weight = 57
 title = "57. 오퍼레이터 패턴"
 date = "2026-04-05"
 [taxonomies]

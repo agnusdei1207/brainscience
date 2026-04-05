@@ -1,4 +1,5 @@
 +++
+weight = 548
 title = "548. OpenID Connect (OIDC) - OAuth 2.0 기반 사용자 인증(Authentication) 프로토콜"
 date = "2026-04-05"
 [extra]

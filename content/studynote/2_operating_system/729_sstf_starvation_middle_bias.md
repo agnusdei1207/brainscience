@@ -1,4 +1,5 @@
 +++
+weight = 729
 title = "729. SSTF 기아 현상 (가운데 편중)"
 date = "2026-03-29"
 [extra]

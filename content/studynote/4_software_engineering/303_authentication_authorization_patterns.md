@@ -1,5 +1,6 @@
 +++
 title = "303. 인증 (Authentication) 및 인가 (Authorization) 패턴"
+weight = 303
 +++
 
 # 303. 인증 (Authentication) 및 인가 (Authorization) 패턴

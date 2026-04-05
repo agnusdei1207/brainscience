@@ -1,5 +1,6 @@
 +++
 title = "252. 사가 패턴 (Saga Pattern)"
+weight = 252
 +++
 
 # 252. 사가 패턴 (Saga Pattern)

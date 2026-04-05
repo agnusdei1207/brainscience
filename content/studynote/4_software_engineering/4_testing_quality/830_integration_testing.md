@@ -2,6 +2,7 @@
 title = "통합 테스트"
 description = "Integration Testing"
 category = "4_software_engineering"
+weight = 830
 +++
 
 # 통합 테스트 (Integration Testing)

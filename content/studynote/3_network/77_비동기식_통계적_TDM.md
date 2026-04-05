@@ -1,4 +1,5 @@
 +++
+weight = 77
 title = "77. 비동기식 (통계적) 시분할 다중화 (Asynchronous / Statistical TDM)"
 description = "데이터가 있는 채널에만 타임 슬롯을 동적으로 할당하여 대역폭 효율을 극대화한 비동기식 TDM의 원리와 패킷 교환망의 기반"
 date = "2026-03-30"

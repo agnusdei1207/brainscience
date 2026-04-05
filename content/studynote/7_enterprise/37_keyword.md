@@ -1,5 +1,6 @@
 +++
 title = "37. OAuth 2.0 / OIDC"
+weight = 37
 +++
 
 # 37. OAuth 2.0 / OIDC

@@ -1,5 +1,6 @@
 +++
 title = "104. 그래프 (Graph)"
+weight = 104
 +++
 
 # 104. 그래프 (Graph)

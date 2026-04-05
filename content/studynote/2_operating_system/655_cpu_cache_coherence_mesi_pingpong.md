@@ -1,4 +1,5 @@
 +++
+weight = 655
 title = "655. CPU 캐시 일관성 정책 (MESI 프로토콜) 이 커널 락(Lock)에 미치는 캐시라인 핑퐁(Ping-pong) 문제"
 date = "2026-03-29"
 [extra]

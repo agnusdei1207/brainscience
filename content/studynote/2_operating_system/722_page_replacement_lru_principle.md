@@ -1,4 +1,5 @@
 +++
+weight = 722
 title = "722. 페이지 교체 LRU 원리"
 date = "2026-03-29"
 [extra]

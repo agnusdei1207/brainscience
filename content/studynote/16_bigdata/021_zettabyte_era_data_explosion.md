@@ -1,4 +1,5 @@
 +++
+weight = 21
 title = "021. 제타바이트 시대 (Zettabyte Era)"
 date = "2026-04-02"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 30
 title = "30. Apache Kafka"
 date = "2026-04-05"
 [extra]

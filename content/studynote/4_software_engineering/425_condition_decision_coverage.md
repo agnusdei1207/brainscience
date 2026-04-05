@@ -1,6 +1,7 @@
 +++
 title = "425. 조건/결정 커버리지 (Condition/Decision Coverage)"
 date = 2026-04-05
+weight = 425
 +++
 
 # 425. 조건/결정 커버리지 (Condition/Decision Coverage)

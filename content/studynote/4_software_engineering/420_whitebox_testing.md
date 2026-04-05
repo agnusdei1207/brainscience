@@ -1,6 +1,7 @@
 +++
 title = "420. 화이트박스 테스트 (White-box Testing)"
 date = 2026-04-05
+weight = 420
 +++
 
 # 420. 화이트박스 테스트 (White-box Testing)

@@ -1,4 +1,5 @@
 +++
+weight = 8
 title = "08. 정보화 전략 계획 (ISP, Information Strategy Planning)"
 description = "기업의 중장기 경영 목표 달성을 위해 비즈니스 전략과 IT 아키텍처를 정렬하는 전사적 IT 마스터플랜(ISP)의 수립 방법론과 실무 적용"
 date = "2026-03-04"

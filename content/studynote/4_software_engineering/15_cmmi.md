@@ -1,4 +1,5 @@
 +++
+weight = 15
 title = "15. CMMI (Capability Maturity Model Integration)"
 description = "조직의 개발 및 서비스 프로세스 역량을 5단계로 평가하고 지속적으로 개선하기 위한 통합 성숙도 모델"
 date = "2024-05-01"

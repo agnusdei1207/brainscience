@@ -1,4 +1,5 @@
 +++
+weight = 83
 title = "83. 교차 검증 (Cross Validation)"
 description = "교차 검증의 개념, K-Fold, Stratified K-Fold, Leave-One-Out 등 다양한 검증 기법과 장단점 비교"
 date = "2026-04-05"

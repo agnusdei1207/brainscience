@@ -1,4 +1,5 @@
 +++
+weight = 782
 title = "782. LFS (Log-structured File System) 랜덤 쓰기 순차화"
 date = "2026-03-30"
 [extra]

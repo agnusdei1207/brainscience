@@ -1,4 +1,5 @@
 +++
+weight = 122
 title = "122. PLM (Product Lifecycle Management) - 제품 수명 주기 관리"
 date = "2026-04-02"
 [extra]

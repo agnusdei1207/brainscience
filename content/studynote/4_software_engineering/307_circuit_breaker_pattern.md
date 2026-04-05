@@ -1,5 +1,6 @@
 +++
 title = "307. 서킷 브레이커 (Circuit Breaker) 패턴 - 연쇄 장애 방지"
+weight = 307
 +++
 
 # 307. 서킷 브레이커 (Circuit Breaker) 패턴 - 연쇄 장애 방지

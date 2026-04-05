@@ -1,4 +1,5 @@
 +++
+weight = 2
 title = "02. 사일로 현상 타파"
 date = "2026-04-05"
 [taxonomies]

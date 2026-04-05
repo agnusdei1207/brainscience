@@ -1,5 +1,6 @@
 +++
 title = "04. COBIT (Control Objectives for Information and related Technology)"
+weight = 4
 +++
 
 # 04. COBIT (Control Objectives for Information and related Technology)

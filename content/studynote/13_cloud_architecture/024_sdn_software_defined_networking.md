@@ -1,4 +1,5 @@
 +++
+weight = 24
 title = "024. SDN (Software Defined Networking) - 네트워크 가상화와 제어 분리"
 date = "2026-04-02"
 [extra]

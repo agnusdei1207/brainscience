@@ -1,4 +1,5 @@
 +++
+weight = 4
 title = "04. COBIT 프레임워크: IT 통제 및 목표 관리를 위한 최상위 표준"
 description = "ISACA가 제정한 엔터프라이즈 IT 거버넌스 및 통제 프레임워크인 COBIT의 원칙, 아키텍처 및 실무 도입 방안"
 date = "2026-03-04"

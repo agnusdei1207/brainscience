@@ -1,5 +1,6 @@
 +++
 title = "556. 핸드오버 (Handover) / 핸드오프 (Handoff) 종류 개념"
+weight = 556
 +++
 
 # 556. 핸드오버 (Handover) / 핸드오프 (Handoff) 종류 개념

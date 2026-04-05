@@ -1,4 +1,5 @@
 +++
+weight = 53
 title = "53. Service/Pod/Deployment"
 date = "2026-04-05"
 [taxonomies]

@@ -2,7 +2,6 @@
 weight = 2
 title = "2: 운영체제 (Operating System)"
 render = true
-paginate_by = 10
 sort_by = "weight"
 insert_anchor_links = "right"
 [extra]

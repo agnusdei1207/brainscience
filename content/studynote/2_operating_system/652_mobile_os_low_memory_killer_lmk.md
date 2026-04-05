@@ -1,4 +1,5 @@
 +++
+weight = 652
 title = "652. 모바일 OS Out-Of-Memory (Low Memory Killer) 스코어 계산 알고리즘 및 앱 수명 주기 관리"
 date = "2026-03-29"
 [extra]

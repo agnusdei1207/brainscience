@@ -1,5 +1,6 @@
 +++
 title = "09. 해시 포인터 (Hash Pointer)"
+weight = 9
 +++
 
 # 09. 해시 포인터 (Hash Pointer)

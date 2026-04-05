@@ -1,5 +1,6 @@
 +++
 title = "10. 백트래킹 (Backtracking)"
+weight = 10
 +++
 
 # 10. 백트래킹 (Backtracking)

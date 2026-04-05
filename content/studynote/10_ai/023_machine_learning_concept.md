@@ -1,4 +1,5 @@
 +++
+weight = 23
 title = "023. 머신러닝 (Machine Learning) - 데이터 주도형 학습 패러다임"
 date = "2026-04-02"
 [extra]

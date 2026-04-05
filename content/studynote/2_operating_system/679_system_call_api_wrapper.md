@@ -1,4 +1,5 @@
 +++
+weight = 679
 title = "679. 시스템 콜 API 래퍼"
 date = "2026-03-29"
 [extra]

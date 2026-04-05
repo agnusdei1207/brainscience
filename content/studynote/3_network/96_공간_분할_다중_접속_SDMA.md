@@ -1,4 +1,5 @@
 +++
+weight = 96
 title = "96. 공간 분할 다중 접속 (SDMA, Space Division Multiple Access)"
 description = "무선 통신에서 동일한 주파수와 시간 자원을 사용하여 공간적으로 분리된 여러 사용자에게 데이터를 전송하는 SDMA의 핵심 원리와 실무 아키텍처"
 date = "2026-03-04"

@@ -1,4 +1,5 @@
 +++
+weight = 790
 title = "790. POSIX 스레드 (pthreads) 표준 API"
 date = "2026-03-30"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 52
 title = "52. 데이터 패브릭 (Data Fabric)"
 date = "2026-04-05"
 [extra]

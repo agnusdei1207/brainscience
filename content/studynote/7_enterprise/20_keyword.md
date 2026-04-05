@@ -1,5 +1,6 @@
 +++
 title = "20. KPI (Key Performance Indicator)"
+weight = 20
 +++
 
 # 20. KPI (Key Performance Indicator)

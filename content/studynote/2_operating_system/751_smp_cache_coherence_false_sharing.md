@@ -1,4 +1,5 @@
 +++
+weight = 751
 title = "751. SMP 캐시 일관성 폴스 셰어링"
 date = "2026-03-30"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 52
 title = "52. Git 브랜치 전략 (Git Branching Strategies)"
 date = "2026-04-05"
 [extra]

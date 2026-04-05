@@ -1,4 +1,5 @@
 +++
+weight = 7
 title = "07. 섀도우 IT (Shadow IT)"
 description = "IT 부서의 통제를 벗어나 현업 부서가 임의로 도입해 사용하는 SaaS 및 소프트웨어로 인한 보안 리스크와 거버넌스 해결 방안"
 date = "2026-03-04"

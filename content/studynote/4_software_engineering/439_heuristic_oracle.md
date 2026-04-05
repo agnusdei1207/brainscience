@@ -1,6 +1,7 @@
 +++
 title = "439. 휴리스틱 오라클 (Heuristic Oracle)"
 date = 2026-04-05
+weight = 439
 +++
 
 # 439. 휴리스틱 오라클 (Heuristic Oracle)

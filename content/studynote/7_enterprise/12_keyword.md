@@ -1,5 +1,6 @@
 +++
 title = "12. 잭맨 프레임워크 (Zachman Framework)"
+weight = 12
 +++
 
 # 12. 잭맨 프레임워크 (Zachman Framework)

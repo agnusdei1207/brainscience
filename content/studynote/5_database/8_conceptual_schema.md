@@ -1,4 +1,5 @@
 +++
+weight = 8
 title = "08. 개념 스키마 (Conceptual Schema)"
 description = "조직 전체 관점의 논리적 데이터베이스 구조와 전사 데이터 모델링 원리"
 date = "2024-05-20"

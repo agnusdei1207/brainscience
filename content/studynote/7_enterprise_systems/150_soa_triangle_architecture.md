@@ -1,4 +1,5 @@
 +++
+weight = 150
 title = "SOA 3요소 아키텍처 - 퍼블리시, 파인드, 바인드의 거대한 분산 중개 핑퐁"
 description = "시스템끼리 직접 IP를 외워 찌르던 무식한 점대점(P2P) 강결합의 늪을 파괴하고! 중앙에 거대한 전화번호부 도서관(Registry)을 세워 서비스 제공자(Provider)가 자기 능력을 등록(Publish)하면, 소비자(Requester)가 이를 검색(Find)하여 다이렉트로 결합(Bind)해버리는 동적 디커플링의 위대한 삼위일체(Triangle) 설계도"
 date = 2026-04-03

@@ -1,6 +1,7 @@
 +++
 title = "342. 기능 적합성 (Functional Suitability)"
 date = 2026-04-05
+weight = 342
 +++
 
 # 342. 기능 적합성 (Functional Suitability)

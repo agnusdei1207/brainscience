@@ -1,4 +1,5 @@
 +++
+weight = 684
 title = "684. 문맥 교환 TLB 플러시"
 date = "2026-03-29"
 [extra]

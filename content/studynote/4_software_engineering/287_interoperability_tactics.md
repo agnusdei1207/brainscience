@@ -1,5 +1,6 @@
 +++
 title = "287. 상호운용성 (Interoperability) - 시스템 간 정보 교환 전술"
+weight = 287
 +++
 
 # 287. 상호운용성 (Interoperability) - 시스템 간 정보 교환 전술

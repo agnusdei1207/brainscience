@@ -1,5 +1,6 @@
 +++
 title = "333. 가독성 (Readability) vs 효율성 (Efficiency) 트레이드오프"
+weight = 333
 +++
 
 # 333. 가독성 (Readability) vs 효율성 (Efficiency) 트레이드오프

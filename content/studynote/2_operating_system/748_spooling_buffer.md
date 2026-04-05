@@ -1,4 +1,5 @@
 +++
+weight = 748
 title = "748. 스풀링 (Spooling) 버퍼"
 date = "2026-03-30"
 [extra]

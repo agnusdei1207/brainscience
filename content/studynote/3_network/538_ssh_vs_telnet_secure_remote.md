@@ -1,4 +1,5 @@
 +++
+weight = 538
 title = "538. SSH (Secure Shell) 포트 22 / Telnet (원격 접속) 포트 23 비교"
 date = "2026-04-05"
 [extra]

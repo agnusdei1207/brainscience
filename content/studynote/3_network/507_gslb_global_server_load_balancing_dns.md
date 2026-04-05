@@ -1,4 +1,5 @@
 +++
+weight = 507
 title = "GSLB (Global Server Load Balancing) - 전 지구적 DNS 라우팅의 신"
 description = "단순히 IP 주소만 던져주는 바보 같은 전통적 DNS를 부수고, '너 지금 파리에 있네? 파리 서버 10대 중에 지금 제일 널널한 놈이 3번 서버니까 글로 가!'라며 초 단위로 지구 반대편 유저의 트래픽을 빛의 속도로 찢어(Steering) 분산시켜 주는 클라우드 0순위 무결점 네비게이션"
 date = 2026-04-03

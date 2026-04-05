@@ -1,5 +1,6 @@
 +++
 title = "28. 우선순위 큐 (Priority Queue)"
+weight = 28
 +++
 
 # 28. 우선순위 큐 (Priority Queue)

@@ -1,4 +1,5 @@
 +++
+weight = 24
 title = "024. 아파치 플링크 (Apache Flink)"
 date = "2026-04-02"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 8
 title = "8. 비즈니스 프로세스 재설계 (BPR, Business Process Reengineering)"
 description = "경쟁 우위 확보를 위한 비즈니스 프로세스의 근본적이고 획기적인 원점 재설계"
 date = "2024-05-20"

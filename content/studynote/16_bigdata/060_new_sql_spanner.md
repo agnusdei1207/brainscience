@@ -1,4 +1,5 @@
 +++
+weight = 60
 title = "60. 뉴에스큐엘 / 스패너 (NewSQL / Spanner)"
 date = "2026-04-05"
 [extra]

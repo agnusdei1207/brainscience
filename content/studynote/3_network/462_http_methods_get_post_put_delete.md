@@ -1,4 +1,5 @@
 +++
+weight = 462
 title = "462. HTTP 메서드 (HTTP Methods)"
 date = "2026-04-02"
 [extra]

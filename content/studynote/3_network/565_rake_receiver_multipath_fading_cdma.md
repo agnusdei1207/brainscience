@@ -1,4 +1,5 @@
 +++
+weight = 565
 title = "565. 레이크 수신기 (Rake Receiver) - 다중경로 페이딩(Multipath) 극복과 CDMA 다이버시티 결합"
 date = "2026-04-05"
 [extra]

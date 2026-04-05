@@ -1,6 +1,7 @@
 +++
 title = "345. 신뢰성 (Reliability) / 보안성 (Security)"
 date = 2026-04-05
+weight = 345
 +++
 
 # 345. 신뢰성 (Reliability) / 보안성 (Security)

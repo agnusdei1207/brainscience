@@ -1,5 +1,6 @@
 +++
 title = "11. EA 구성요소 (BA, DA, AA, TA, SA)"
+weight = 11
 +++
 
 # 11. EA 구성요소 (BA, DA, AA, TA, SA)

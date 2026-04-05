@@ -1,4 +1,5 @@
 +++
+weight = 562
 title = "562. MIPv4 (Mobile IPv4) - FA/HA 구조와 세모 라우팅 (Triangular Routing) 문제 해결"
 date = "2026-04-05"
 [extra]

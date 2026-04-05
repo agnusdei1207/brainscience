@@ -1,4 +1,5 @@
 +++
+weight = 118
 title = "118. 인바운드 마케팅 (Inbound) vs 아웃바운드 마케팅 (Outbound)"
 date = "2026-04-02"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 59
 title = "59. ArgoCD/Flux (아르고씨디/플럭스)"
 date = "2026-04-05"
 [extra]

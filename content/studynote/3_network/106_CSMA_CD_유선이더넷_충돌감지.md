@@ -1,4 +1,5 @@
 +++
+weight = 106
 title = "106. CSMA/CD (Carrier Sense Multiple Access with Collision Detection)"
 description = "초기 유선 이더넷의 다중 접속 제어 프로토콜인 CSMA/CD의 동작 원리와 충돌 도메인의 한계"
 date = "2026-04-01"

@@ -1,5 +1,6 @@
 +++
 title = "21. CSF (Critical Success Factor)"
+weight = 21
 +++
 
 # 21. CSF (Critical Success Factor)

@@ -1,5 +1,6 @@
 +++
 title = "281. 가용성 (Availability) - 결함 탐지, 복구, 예방 전술"
+weight = 281
 +++
 
 # 281. 가용성 (Availability) - 결함 탐지, 복구, 예방 전술

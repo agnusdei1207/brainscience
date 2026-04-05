@@ -1,4 +1,5 @@
 +++
+weight = 46
 title = "46. 주파수 편이 변조 (FSK, Frequency Shift Keying)"
 date = "2026-03-30"
 [extra]

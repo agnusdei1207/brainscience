@@ -1,4 +1,5 @@
 +++
+weight = 483
 title = "액티브(Active) FTP vs 패시브(Passive) FTP 동작 원리 차이"
 description = "클라이언트 방화벽(NAT) 환경을 극복하기 위해 FTP 데이터 채널의 연결 주도권(역방향 침투 여부)을 서버에서 클라이언트로 넘겨주는 방화벽 우회 메커니즘"
 date = 2026-04-03

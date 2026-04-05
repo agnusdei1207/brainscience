@@ -1,4 +1,5 @@
 +++
+weight = 788
 title = "788. iOS 앱 샌드박싱 구조"
 date = "2026-03-30"
 [extra]

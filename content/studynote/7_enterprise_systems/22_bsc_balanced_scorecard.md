@@ -1,4 +1,5 @@
 +++
+weight = 22
 title = "균형 성과 기록표 (BSC, Balanced Scorecard)"
 description = "조직의 비전과 전략을 재무, 고객, 내부 프로세스, 학습과 성장의 4가지 관점에서 측정하고 관리하는 전략적 성과 관리 도구"
 date = "2024-05-24"

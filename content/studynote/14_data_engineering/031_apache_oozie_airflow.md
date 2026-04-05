@@ -1,4 +1,5 @@
 +++
+weight = 31
 title = "031. 아파치 우지(Apache Oozie)와 에어플로우(Apache Airflow)"
 date = "2026-04-05"
 [extra]

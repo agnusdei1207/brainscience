@@ -1,6 +1,7 @@
 +++
 title = "370. 코드 스멜 (Code Smell) - 리팩토링의 징후"
 date = 2026-04-05
+weight = 370
 +++
 
 # 370. 코드 스멜 (Code Smell) - 리팩토링의 징후

@@ -1,4 +1,5 @@
 +++
+weight = 9
 title = "09. PI (프로세스 혁신: Process Innovation)"
 description = "정보기술을 활용하여 업무 프로세스의 본질적创新을 통해 기업 경쟁력을 높이는 기법"
 date = "2026-04-05"

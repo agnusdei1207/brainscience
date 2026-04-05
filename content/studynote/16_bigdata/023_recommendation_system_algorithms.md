@@ -1,4 +1,5 @@
 +++
+weight = 23
 title = "023. 추천 시스템 (Recommendation System) - 협업 필터링과 콘텐츠 기반 필터링"
 date = "2026-04-02"
 [extra]

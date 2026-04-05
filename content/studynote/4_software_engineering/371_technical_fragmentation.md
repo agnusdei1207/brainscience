@@ -1,6 +1,7 @@
 +++
 title = "371. 기술적 단편화 (Technical Fragmentation)"
 date = 2026-04-05
+weight = 371
 +++
 
 # 371. 기술적 단편화 (Technical Fragmentation)

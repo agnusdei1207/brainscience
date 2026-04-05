@@ -1,5 +1,6 @@
 +++
 title = "57. 벨만-포드 알고리즘 (Bellman-Ford Algorithm)"
+weight = 57
 +++
 
 # 57. 벨만-포드 알고리즘 (Bellman-Ford Algorithm)

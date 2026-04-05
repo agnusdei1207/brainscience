@@ -1,4 +1,5 @@
 +++
+weight = 29
 title = "29. 감리 절차 및 방법"
 description = "감리의 표준 절차(Planning, Execution, Reporting, Follow-up), 감리 기법(문서 검토, 인터뷰, 샘플링, 테스트), 증거 수집 방법, 감리 체크리스트 활용에 대한 심층 분석"
 date = "2026-03-04"

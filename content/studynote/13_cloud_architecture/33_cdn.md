@@ -1,4 +1,5 @@
 +++
+weight = 33
 title = "33. CDN (Content Delivery Network)"
 description = "CDN의 핵심 개념, 작동 원리, 다양한 유형 및 글로벌 콘텐츠 배포를 위한 실용적 적용 가이드"
 date = "2024-05-24"

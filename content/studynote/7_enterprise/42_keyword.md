@@ -1,5 +1,6 @@
 +++
 title = "42. GDPR 대응"
+weight = 42
 +++
 
 # 42. GDPR 대응

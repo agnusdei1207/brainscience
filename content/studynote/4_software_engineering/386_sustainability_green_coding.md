@@ -1,6 +1,7 @@
 +++
 title = "386. 지속 가능성 및 그린 코딩 (Sustainability and Green Coding)"
 date = 2026-04-05
+weight = 386
 +++
 
 # 386. 지속 가능성 및 그린 코딩 (Sustainability and Green Coding)

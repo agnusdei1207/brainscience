@@ -1,6 +1,7 @@
 +++
 title = "423. 결정 커버리지 (Decision Coverage)"
 date = 2026-04-05
+weight = 423
 +++
 
 # 423. 결정 커버리지 (Decision Coverage)

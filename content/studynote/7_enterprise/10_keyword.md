@@ -1,5 +1,6 @@
 +++
 title = "10. EA (Enterprise Architecture, 전사적 아키텍처)"
+weight = 10
 +++
 
 # 10. EA (Enterprise Architecture, 전사적 아키텍처)

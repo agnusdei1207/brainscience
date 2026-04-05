@@ -1,4 +1,5 @@
 +++
+weight = 125
 title = "C-Commerce (Collaborative Commerce) - 협업 상거래"
 description = "단순한 부품 거래(B2B)를 넘어, 기업 간(공급사-제조사) 신제품 기획부터 설계 도면, 생산 재고 정보까지 인터넷 기반으로 실시간 공유하며 하나의 가상 기업처럼 유기적으로 움직이는 차세대 상거래 모델"
 date = 2026-04-03

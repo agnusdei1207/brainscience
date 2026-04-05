@@ -1,4 +1,5 @@
 +++
+weight = 135
 title = "135. 광전송 용어 - 광원 (LED, LD), 수광소자 (PIN 디오드, APD)"
 description = "광통신 시스템의 시작과 끝을 담당하는 발광 소자(LED, LD)와 수광 소자(PIN, APD)의 물리적 동작 원리"
 date = "2024-05-18"

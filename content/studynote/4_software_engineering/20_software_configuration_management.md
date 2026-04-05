@@ -1,4 +1,5 @@
 +++
+weight = 20
 title = "20. 형상 관리 (SCM, Software Configuration Management)"
 description = "소프트웨어 생명주기 전반의 변경 사항을 식별하고 통제하는 형상 관리의 4단계와 베이스라인 전략을 다룹니다."
 date = "2026-03-04"

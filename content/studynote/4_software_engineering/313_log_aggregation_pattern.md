@@ -1,5 +1,6 @@
 +++
 title = "313. 로그 취합 아키텍처 (Log Aggregation Pattern)"
+weight = 313
 +++
 
 # 313. 로그 취합 아키텍처 (Log Aggregation Pattern)

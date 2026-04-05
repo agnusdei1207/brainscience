@@ -1,4 +1,5 @@
 +++
+weight = 138
 title = "138. 프로토타이핑 (Prototyping) 모델 - Throwaway와 Evolutionary"
 date = "2026-04-02"
 [extra]

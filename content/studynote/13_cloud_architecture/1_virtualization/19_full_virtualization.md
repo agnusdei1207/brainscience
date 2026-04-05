@@ -1,4 +1,5 @@
 +++
+weight = 19
 title = "19. 전가상화 (Full Virtualization)"
 description = "하드웨어를 완벽히 에뮬레이션하여 수정되지 않은 게스트 OS를 그대로 구동하는 전가상화 아키텍처와 트랩 앤 에뮬레이션의 비밀"
 date = "2024-05-20"

@@ -1,4 +1,5 @@
 +++
+weight = 38
 title = "PERT (Program Evaluation and Review Technique)"
 description = "불확실성이 높은 프로젝트 일정 관리를 위해 3점 추정 기법과 확률 모델을 적용하는 PERT의 핵심 원리와 실무 적용"
 date = 2024-05-24

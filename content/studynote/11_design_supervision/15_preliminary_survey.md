@@ -1,4 +1,5 @@
 +++
+weight = 15
 title = "15. 예비 조사 (Preliminary Survey)"
 description = "피감리인 인터뷰와 문서 분석을 통해 프로젝트의 잠복 리스크를 식별하고 감리의 주안점을 도출하는 예비 조사의 핵심 아키텍처"
 date = "2024-05-20"

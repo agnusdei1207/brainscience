@@ -1,5 +1,6 @@
 +++
 title = "32. Timsort (합병 정렬 + 삽입 정렬)"
+weight = 32
 +++
 
 # 32. Timsort (합병 정렬 + 삽입 정렬)

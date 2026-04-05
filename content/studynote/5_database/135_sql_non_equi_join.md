@@ -1,4 +1,5 @@
 +++
+weight = 135
 title = "135. 비동등 조인 (Non-Equi Join) - 등호(=)를 제외한 조건 연산"
 date = "2026-04-02"
 [extra]

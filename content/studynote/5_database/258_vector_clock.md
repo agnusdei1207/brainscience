@@ -1,5 +1,6 @@
 +++
 title = "258. 벡터 시계 (Vector Clock) / 타임스탬프"
+weight = 258
 +++
 
 # 258. 벡터 시계 (Vector Clock) / 타임스탬프

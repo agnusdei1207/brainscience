@@ -1,4 +1,5 @@
 +++
+weight = 491
 title = "SMTPS, POP3S, IMAPS (보안 캡슐화)"
 description = "평문 텍스트로 날아가던 구시대 이메일 통신 규격(SMTP, POP3, IMAP)의 치명적인 도청/해킹 위험을 막기 위해, 통신 채널 전체에 SSL/TLS 암호화 방탄조끼를 입혀버린 3대 보안 이메일 프로토콜"
 date = 2026-04-03

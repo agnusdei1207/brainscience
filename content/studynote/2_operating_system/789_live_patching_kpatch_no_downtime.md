@@ -1,4 +1,5 @@
 +++
+weight = 789
 title = "789. 라이브 패칭 (Kpatch) 커널 정지 없는 보안"
 date = "2026-03-30"
 [extra]

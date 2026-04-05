@@ -1,5 +1,6 @@
 +++
 title = "09. 타뷸레이션 (Tabulation)"
+weight = 9
 +++
 
 # 09. 타뷸레이션 (Tabulation)

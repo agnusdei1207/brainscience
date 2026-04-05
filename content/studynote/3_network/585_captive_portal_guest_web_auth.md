@@ -1,4 +1,5 @@
 +++
+weight = 585
 title = "585. 캡티브 포털 (Captive Portal) - 게스트 접속 제어와 HTTP 리다이렉션 아키텍처"
 date = "2026-04-05"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 47
 title = "47. 위상 편이 변조 (PSK, Phase Shift Keying)"
 date = "2026-03-30"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 492
 title = "MIME (Multipurpose Internet Mail Extensions) - 인터넷 데이터 포맷의 표준"
 description = "알파벳과 숫자만 보낼 수 있던 구시대 7비트 이메일의 한계를 부수고, 사진, 음악, 한글, 첨부파일 등 모든 종류의 바이너리(Binary) 데이터를 텍스트로 둔갑시켜 전송하게 만든 현대 인터넷 콘텐츠의 마법사"
 date = 2026-04-03

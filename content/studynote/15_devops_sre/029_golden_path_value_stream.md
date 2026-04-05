@@ -1,4 +1,5 @@
 +++
+weight = 29
 title = "029. 골든 패스 / �ályu (Golden Path & Value Stream)"
 date = "2026-04-05"
 [extra]

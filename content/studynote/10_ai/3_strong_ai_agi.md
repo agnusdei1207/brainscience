@@ -1,4 +1,5 @@
 +++
+weight = 3
 title = "3. 강인공지능 (Strong AI / AGI)"
 description = "모든 인지적 영역에서 인간과 동등하거나 뛰어난 범용 지능 시스템"
 date = "2026-03-04"

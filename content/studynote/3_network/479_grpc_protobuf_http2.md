@@ -1,4 +1,5 @@
 +++
+weight = 479
 title = "gRPC - HTTP/2 기반 초고속 RPC 프레임워크"
 description = "구글이 개발한 고성능 원격 프로시저 호출 프레임워크로, HTTP/2의 멀티플렉싱과 Protocol Buffers의 이진 직렬화를 결합하여 마이크로서비스 간 통신을 최적화한 기술"
 date = 2026-04-03

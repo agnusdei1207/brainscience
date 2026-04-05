@@ -1,4 +1,5 @@
 +++
+weight = 21
 title = "21. 형상 식별 (Configuration Identification)"
 description = "형상 관리의 첫 단계, 시스템을 구성하는 형상 항목(CI)을 분할하고 유일한 식별 체계를 부여하는 메커니즘"
 date = "2026-03-04"

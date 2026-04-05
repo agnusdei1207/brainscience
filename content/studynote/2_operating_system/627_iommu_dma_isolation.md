@@ -1,4 +1,5 @@
 +++
+weight = 627
 title = "627. IOMMU (Input/Output MMU) 역할 - 가상머신 DMA 장치 할당 및 보호 격리"
 date = "2026-03-29"
 [extra]

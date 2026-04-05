@@ -1,5 +1,6 @@
 +++
 title = "283. 참조 (Reference) 패턴"
+weight = 283
 +++
 
 # 283. 참조 (Reference) 패턴

@@ -1,4 +1,5 @@
 +++
+weight = 481
 title = "SSE (Server-Sent Events) - 단방향 서버 푸시 기술"
 description = "서버가 클라이언트 측으로 실시간 이벤트 스트림(Text)을 일방적으로 밀어 넣는(Push) 데 특화된 HTTP 기반의 가볍고 강력한 표준 기술"
 date = 2026-04-03

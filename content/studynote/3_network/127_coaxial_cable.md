@@ -1,4 +1,5 @@
 +++
+weight = 127
 title = "127. 동축 케이블 (Coaxial Cable) 및 BNC 커넥터"
 description = "동축 케이블의 비대칭 차폐 구조, 임피던스 매칭 원리 및 실무 활용망 분석"
 date = "2026-03-04"

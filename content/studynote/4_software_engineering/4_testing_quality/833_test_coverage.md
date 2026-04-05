@@ -2,6 +2,7 @@
 title = "코드 커버리지"
 description = "Code Coverage"
 category = "4_software_engineering"
+weight = 833
 +++
 
 # 코드 커버리지 (Code Coverage)

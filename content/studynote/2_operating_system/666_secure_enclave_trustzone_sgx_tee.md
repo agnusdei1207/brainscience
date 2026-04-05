@@ -1,4 +1,5 @@
 +++
+weight = 666
 title = "666. 보안 엔클레이브 (TrustZone, SGX)와 OS TEE (Trusted Execution Environment) 연동 구조"
 date = "2026-03-29"
 [extra]

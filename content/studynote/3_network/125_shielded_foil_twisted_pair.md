@@ -1,4 +1,5 @@
 +++
+weight = 125
 title = "125. STP (Shielded Twisted Pair) / FTP (Foil Twisted Pair)"
 description = "극한의 전자기 간섭(EMI/RFI) 환경에서 신호 무결성을 보장하는 STP 및 FTP 케이블의 차폐 아키텍처, 접지 메커니즘, 실무 적용 시나리오를 심도 있게 다룹니다."
 date = 2026-03-05

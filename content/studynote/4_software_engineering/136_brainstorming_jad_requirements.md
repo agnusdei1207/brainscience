@@ -1,4 +1,5 @@
 +++
+weight = 136
 title = "136. 브레인스토밍 (Brainstorming) / JAD (Joint Application Design)"
 date = "2026-04-02"
 [extra]

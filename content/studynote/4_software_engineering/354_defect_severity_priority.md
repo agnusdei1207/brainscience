@@ -1,6 +1,7 @@
 +++
 title = "354. 결함 심각도 (Severity) vs 결함 우선순위 (Priority)"
 date = 2026-04-05
+weight = 354
 +++
 
 # 354. 결함 심각도 (Severity) vs 결함 우선순위 (Priority)

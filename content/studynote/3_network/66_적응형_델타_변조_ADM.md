@@ -1,4 +1,5 @@
 +++
+weight = 66
 title = "66. 적응형 델타 변조 (ADM, Adaptive Delta Modulation)"
 description = "델타 변조의 잡음 한계를 극복하기 위해 신호의 변화율에 따라 스텝 크기를 동적으로 조절하는 ADM 기술"
 date = "2024-05-24"

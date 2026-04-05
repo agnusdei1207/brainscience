@@ -1,4 +1,5 @@
 +++
+weight = 480
 title = "WebSocket - 하나의 TCP 연결 위 전이중 (Full-Duplex) 실시간 브라우저-서버 통신"
 description = "HTTP의 단방향 통신 한계를 극복하고, 브라우저와 서버 간에 하나의 TCP 연결로 양방향 실시간 데이터를 주고받는 HTML5 표준 프로토콜"
 date = 2026-04-03

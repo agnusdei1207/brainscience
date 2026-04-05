@@ -1,4 +1,5 @@
 +++
+weight = 461
 title = "461. HTTP 상태 비저장 (Stateless) 및 연결형/비연결형 특징"
 date = "2026-04-02"
 [extra]

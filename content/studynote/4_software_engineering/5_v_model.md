@@ -1,4 +1,5 @@
 +++
+weight = 5
 title = "05. V-모델"
 description = "폭포수 모델의 검증 한계를 극복한 V-모델의 구조, 검증(Verification)과 확인(Validation)의 매핑 관계, 실무 테스트 전략 분석"
 date = "2024-05-20"

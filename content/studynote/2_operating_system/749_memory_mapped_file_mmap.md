@@ -1,4 +1,5 @@
 +++
+weight = 749
 title = "749. 메모리 매핑 파일 (mmap)"
 date = "2026-03-30"
 [extra]

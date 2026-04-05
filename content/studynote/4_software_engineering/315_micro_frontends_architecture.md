@@ -1,5 +1,6 @@
 +++
 title = "315. 마이크로 프론트엔드 (Micro Frontends) 아키텍처"
+weight = 315
 +++
 
 # 315. 마이크로 프론트엔드 (Micro Frontends) 아키텍처

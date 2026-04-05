@@ -1,5 +1,6 @@
 +++
 title = "06. 총 소유 비용 (TCO, Total Cost of Ownership)"
+weight = 6
 +++
 
 # 06. 총 소유 비용 (TCO, Total Cost of Ownership)

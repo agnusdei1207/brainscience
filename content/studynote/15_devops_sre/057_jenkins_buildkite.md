@@ -1,4 +1,5 @@
 +++
+weight = 57
 title = "57. Jenkins/Buildkite (젠킨스/빌드카이트)"
 date = "2026-04-05"
 [extra]

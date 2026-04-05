@@ -1,4 +1,5 @@
 +++
+weight = 4
 title = "04. SaaS (Software as a Service)"
 description = "최종 사용자에게 클라우드를 통해 완제품 소프트웨어를 구독형으로 제공하는 SaaS의 아키텍처 원리와 멀티 테넌시 분석"
 date = "2024-05-24"

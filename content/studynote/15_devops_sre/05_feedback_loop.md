@@ -1,4 +1,5 @@
 +++
+weight = 5
 title = "05. 피드백 루프"
 date = "2026-04-05"
 [taxonomies]

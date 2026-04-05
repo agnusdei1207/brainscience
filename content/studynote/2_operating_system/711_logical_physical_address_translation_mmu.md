@@ -1,4 +1,5 @@
 +++
+weight = 711
 title = "711. 논리 주소 물리 주소 변환 MMU"
 date = "2026-03-29"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 4
 title = "04. 임피던스 (Impedance)"
 date = "2026-03-26"
 [extra]

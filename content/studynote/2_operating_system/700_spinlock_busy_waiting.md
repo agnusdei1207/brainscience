@@ -1,4 +1,5 @@
 +++
+weight = 700
 title = "700. 스핀락 바쁜 대기 (Busy Wait)"
 date = "2026-03-29"
 [extra]

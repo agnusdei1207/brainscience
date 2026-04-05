@@ -1,4 +1,5 @@
 +++
+weight = 489
 title = "POP3 (Post Office Protocol v3) - 메일 다운로드 프로토콜"
 description = "수신 측 메일 서버(MDA)에 도착한 이메일을 클라이언트(MUA)의 로컬 컴퓨터로 다운로드하고 서버에서는 삭제하는 고전적인 단방향 이메일 수신 프로토콜"
 date = 2026-04-03

@@ -1,5 +1,6 @@
 +++
 title = "28. 디지털 전환 (Digital Transformation)"
+weight = 28
 +++
 
 # 28. 디지털 전환 (Digital Transformation)

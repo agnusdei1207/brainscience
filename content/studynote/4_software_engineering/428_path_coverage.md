@@ -1,6 +1,7 @@
 +++
 title = "428. 경로 커버리지 (Path Coverage)"
 date = 2026-04-05
+weight = 428
 +++
 
 # 428. 경로 커버리지 (Path Coverage)

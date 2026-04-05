@@ -1,4 +1,5 @@
 +++
+weight = 7
 title = "7. 지식 표현 (Knowledge Representation)"
 description = "인간의 지식을 컴퓨터가 이해하고 추론할 수 있도록 정형화하는 AI의 핵심 설계 기법"
 date = "2024-05-20"

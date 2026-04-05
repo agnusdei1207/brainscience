@@ -1,5 +1,6 @@
 +++
 title = "58. 플로이드-워샬 알고리즘 (Floyd-Warshall Algorithm)"
+weight = 58
 +++
 
 # 58. 플로이드-워샬 알고리즘 (Floyd-Warshall Algorithm)

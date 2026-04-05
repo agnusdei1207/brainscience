@@ -1,4 +1,5 @@
 +++
+weight = 130
 title = "130. 다중 모드 계단형 광섬유 (Multi-mode Step-Index Fiber)"
 description = "초기 광통신 매체인 다중 모드 계단형 광섬유의 굴절률 프로파일 구조, 모드 분산 한계 및 실무 활용도"
 date = "2026-03-04"

@@ -1,5 +1,6 @@
 +++
 title = "270. 복제 (Replication) - 동기식 vs 비동기식"
+weight = 270
 +++
 
 # 270. 복제 (Replication) - 동기식 vs 비동기식

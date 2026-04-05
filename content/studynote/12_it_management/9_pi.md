@@ -1,4 +1,5 @@
 +++
+weight = 9
 title = "9. 프로세스 혁신 (PI, Process Innovation)"
 description = "점진적이고 지속적인 현업 중심의 비즈니스 프로세스 개선"
 date = "2024-05-20"

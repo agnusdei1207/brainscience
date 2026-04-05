@@ -1,5 +1,6 @@
 +++
 title = "325. 고차 함수 (Higher-Order Function) 및 클로저 (Closure)"
+weight = 325
 +++
 
 # 325. 고차 함수 (Higher-Order Function) 및 클로저 (Closure)

@@ -1,4 +1,5 @@
 +++
+weight = 54
 title = "54. 데이터 리니지 (Data Lineage)"
 date = "2026-04-05"
 [extra]

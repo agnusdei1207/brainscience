@@ -1,6 +1,7 @@
 +++
 title = "335. 기술 부채 (Technical Debt)의 관리 및 상환 전략"
 date = 2026-04-05
+weight = 335
 +++
 
 # 335. 기술 부채 (Technical Debt)의 관리 및 상환 전략

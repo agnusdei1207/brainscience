@@ -1,4 +1,5 @@
 +++
+weight = 10
 title = "10. 데이터 민주화 (Data Democratization)"
 description = "현업 주도의 데이터 분석을 가능케 하는 셀프서비스 BI 플랫폼과 데이터 거버넌스의 융합"
 date = "2024-05-20"

@@ -1,4 +1,5 @@
 +++
+weight = 23
 title = "023. 삽입 정렬 (Insertion Sort) 알고리즘"
 date = "2026-04-02"
 [extra]

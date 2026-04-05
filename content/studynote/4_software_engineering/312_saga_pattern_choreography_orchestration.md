@@ -1,5 +1,6 @@
 +++
 title = "312. 사가 (Saga) 패턴의 코레오그래피 (Choreography) vs 오케스트레이션 (Orchestration)"
+weight = 312
 +++
 
 # 312. 사가 (Saga) 패턴의 코레오그래피 (Choreography) vs 오케스트레이션 (Orchestration)

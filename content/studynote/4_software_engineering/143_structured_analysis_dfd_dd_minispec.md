@@ -1,4 +1,5 @@
 +++
+weight = 143
 title = "143. 구조적 분석 (Structured Analysis) - DFD, DD, Mini-Spec"
 date = "2026-04-02"
 [extra]

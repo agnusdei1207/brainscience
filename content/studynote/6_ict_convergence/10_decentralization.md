@@ -1,4 +1,5 @@
 +++
+weight = 10
 title = "10. 탈중앙화 (Decentralization)"
 description = "단일 장애점(SPOF)을 제거하고 투명성을 확보하는 웹 3.0 및 블록체인의 핵심 철학과 구조"
 date = "2024-03-24"

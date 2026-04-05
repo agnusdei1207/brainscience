@@ -1,6 +1,7 @@
 +++
 title = "422. 구문 커버리지 (Statement Coverage)"
 date = 2026-04-05
+weight = 422
 +++
 
 # 422. 구문 커버리지 (Statement Coverage)

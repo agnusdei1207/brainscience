@@ -1,5 +1,6 @@
 +++
 title = "68. 스택/큐 (Stack / Queue)"
+weight = 68
 +++
 
 # 68. 스택/큐 (Stack / Queue)

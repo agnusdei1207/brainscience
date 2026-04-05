@@ -1,6 +1,7 @@
 +++
 title = "360. MTTF (Mean Time To Failure) - 평균 고장 시간"
 date = 2026-04-05
+weight = 360
 +++
 
 # 360. MTTF (Mean Time To Failure) - 평균 고장 시간

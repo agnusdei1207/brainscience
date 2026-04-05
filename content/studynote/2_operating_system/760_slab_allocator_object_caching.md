@@ -1,4 +1,5 @@
 +++
+weight = 760
 title = "760. 슬랩 (Slab) 할당기 객체 캐싱"
 date = "2026-03-30"
 [extra]

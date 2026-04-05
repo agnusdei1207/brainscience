@@ -1,4 +1,5 @@
 +++
+weight = 38
 title = "38. 관계 대수 (Relational Algebra)"
 description = "관계형 모델의 절차적 데이터 처리 언어인 관계 대수의 개념과 연산 메커니즘"
 date = "2026-03-04"

@@ -1,4 +1,5 @@
 +++
+weight = 78
 title = "78. Naive Bayes (나이브 베이즈 분류기)"
 description = "Naive Bayes 분류기의 확률적 원리, 조건부 독립 가정,贝叶斯定理 적용 방법, 텍스트 분류에서의 활용"
 date = "2026-04-05"

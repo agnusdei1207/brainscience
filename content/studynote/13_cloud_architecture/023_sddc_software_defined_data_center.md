@@ -1,4 +1,5 @@
 +++
+weight = 23
 title = "023. 소프트웨어 정의 데이터센터 (SDDC, Software-Defined Data Center)"
 date = "2026-04-02"
 [extra]

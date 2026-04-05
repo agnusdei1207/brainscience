@@ -1,6 +1,7 @@
 +++
 title = "418. 페어와이즈 테스팅 (Pairwise Testing)"
 date = 2026-04-05
+weight = 418
 +++
 
 # 418. 페어와이즈 테스팅 (Pairwise Testing)

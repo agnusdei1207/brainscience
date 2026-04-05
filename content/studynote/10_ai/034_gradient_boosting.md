@@ -1,4 +1,5 @@
 +++
+weight = 34
 title = "034. 그래디언트 부스팅 (Gradient Boosting)"
 date = "2026-04-05"
 [extra]

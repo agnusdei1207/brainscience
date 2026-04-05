@@ -1,4 +1,5 @@
 +++
+weight = 20
 title = "20. 프라이빗 블록체인 (Private Blockchain)"
 description = "사전에 인가된(Permissioned) 노드만 네트워크에 참여하여 트랜잭션을 처리함으로써, 기업의 데이터 프라이버시와 고성능을 보장하는 엔터프라이즈 블록체인"
 date = "2026-03-04"

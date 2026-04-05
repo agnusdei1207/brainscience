@@ -1,4 +1,5 @@
 +++
+weight = 39
 title = "039. 나이브 베이즈 분류기 (Naive Bayes)"
 date = "2026-04-05"
 [extra]

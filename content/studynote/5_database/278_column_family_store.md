@@ -1,5 +1,6 @@
 +++
 title = "278. 컬럼 패밀리 저장소 (Column Family / Wide-Column Store)"
+weight = 278
 +++
 
 # 278. 컬럼 패밀리 저장소 (Column Family / Wide-Column Store)

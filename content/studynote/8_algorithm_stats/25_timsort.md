@@ -1,5 +1,6 @@
 +++
 title = "25. 팀 정렬 (Timsort)"
+weight = 25
 +++
 
 # 25. 팀 정렬 (Timsort)

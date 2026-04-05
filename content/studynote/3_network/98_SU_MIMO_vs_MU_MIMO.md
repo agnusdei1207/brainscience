@@ -1,4 +1,5 @@
 +++
+weight = 98
 title = "98. SU-MIMO (Single User MIMO) vs MU-MIMO (Multi-User MIMO)"
 description = "단일 사용자 중심의 무선 통신 한계를 극복하고 다수 사용자에게 동시 다발적인 공간 다중화를 제공하는 SU-MIMO와 MU-MIMO의 심층 구조 비교"
 date = "2026-03-04"

@@ -1,4 +1,5 @@
 +++
+weight = 686
 title = "686. CPU 바운드 vs I/O 바운드"
 date = "2026-03-29"
 [extra]

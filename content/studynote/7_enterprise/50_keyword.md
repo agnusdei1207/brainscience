@@ -1,5 +1,6 @@
 +++
 title = "50. ITIL 프레임워크"
+weight = 50
 +++
 
 # 50. ITIL 프레임워크

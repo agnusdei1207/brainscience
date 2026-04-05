@@ -1,4 +1,5 @@
 +++
+weight = 469
 title = "HTTP/2 서버 푸시 (Server Push)"
 description = "클라이언트가 요청하기 전에 서버가 필요한 리소스를 능동적으로 밀어넣어 RTT(Round Trip Time)를 단축하는 HTTP/2의 성능 최적화 기술"
 date = 2026-04-03

@@ -1,4 +1,5 @@
 +++
+weight = 131
 title = "131. 멀티모드 언덕형 광섬유 (Multi-mode Graded-index)"
 description = "모드 분산을 최소화하여 전송 대역폭을 획기적으로 향상시킨 언덕형 굴절률 광섬유의 원리"
 date = "2024-05-18"

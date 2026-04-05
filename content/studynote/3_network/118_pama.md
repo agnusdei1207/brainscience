@@ -1,4 +1,5 @@
 +++
+weight = 118
 title = "118. PAMA (Pre-Assigned Multiple Access)"
 description = "위성 및 무선 통신의 고정 할당 방식 PAMA의 개념, 아키텍처 및 DAMA와의 트레이드오프 분석"
 date = "2026-03-04"

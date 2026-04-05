@@ -2,6 +2,7 @@
 title = "디자인 패턴 개요"
 description = "Design Patterns Overview"
 category = "4_software_engineering"
+weight = 822
 +++
 
 # 디자인 패턴 개요 (Design Patterns Overview)

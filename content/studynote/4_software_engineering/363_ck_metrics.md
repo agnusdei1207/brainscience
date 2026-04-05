@@ -1,6 +1,7 @@
 +++
 title = "363. 객체지향 메트릭 (CK 메트릭스) - WMC, DIT, NOC, CBO, RFC, LCOM"
 date = 2026-04-05
+weight = 363
 +++
 
 # 363. 객체지향 메트릭 (CK 메트릭스) - WMC, DIT, NOC, CBO, RFC, LCOM

@@ -1,4 +1,5 @@
 +++
+weight = 13
 title = "13. 데이터 디렉터리 (Data Directory)"
 description = "DBMS 시스템 내부에서만 접근 가능한 카탈로그의 은닉 영역이자 핵심 제어 구조"
 date = "2024-05-18"

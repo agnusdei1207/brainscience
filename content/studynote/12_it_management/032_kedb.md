@@ -1,4 +1,5 @@
 +++
+weight = 32
 title = "78. 알려진 오류 데이터베이스 (KEDB, Known Error Database)"
 description = "알려진 오류와 워크어라운드, 해결책을 모아둔 지식 베이스"
 date = "2024-05-20"

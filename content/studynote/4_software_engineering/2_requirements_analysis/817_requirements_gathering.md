@@ -2,6 +2,7 @@
 title = "요구사항 도출"
 description = "Requirements Elicitation"
 category = "4_software_engineering"
+weight = 817
 +++
 
 # 요구사항 도출 (Requirements Elicitation)

@@ -1,5 +1,6 @@
 +++
 title = "320. 엣지 컴퓨팅 (Edge Computing) 분산 아키텍처 설계"
+weight = 320
 +++
 
 # 320. 엣지 컴퓨팅 (Edge Computing) 분산 아키텍처 설계

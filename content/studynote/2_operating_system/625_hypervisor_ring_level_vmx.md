@@ -1,4 +1,5 @@
 +++
+weight = 625
 title = "625. 하이퍼바이저 링 레벨 (Ring -1 모드 VMX Root/Non-Root 모드)"
 date = "2026-03-29"
 [extra]

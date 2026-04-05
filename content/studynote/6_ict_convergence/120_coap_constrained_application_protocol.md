@@ -1,4 +1,5 @@
 +++
+weight = 120
 title = "120. CoAP (Constrained Application Protocol)"
 date = "2026-04-02"
 [extra]

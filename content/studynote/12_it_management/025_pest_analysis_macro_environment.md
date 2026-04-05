@@ -1,4 +1,5 @@
 +++
+weight = 25
 title = "025. PEST 분석 - 거시 환경(Macro-Environment) 전략 프레임워크"
 date = "2026-04-02"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 757
 title = "757. 파일 지연 쓰기 (Delayed Write)"
 date = "2026-03-30"
 [extra]

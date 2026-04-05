@@ -1,4 +1,5 @@
 +++
+weight = 118
 title = "118. 초광대역 (UWB, Ultra-Wideband) 무선 통신 기술"
 date = "2026-04-02"
 [extra]

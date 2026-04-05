@@ -1,4 +1,5 @@
 +++
+weight = 500
 title = "XMPP (Extensible Messaging and Presence Protocol) - XML 기반 실시간 메신저"
 description = "초기 인터넷 시대에 구글 토크와 페이스북 메신저의 심장을 뛰게 했던 오픈소스 프로토콜로, '누가 온라인 상태인지(Presence)'와 '채팅 메시지'를 거대한 XML 태그 껍데기에 구겨 넣어 이메일처럼 서버 간 라우팅(Routing)하던 실시간 통신의 위대한 조상"
 date = 2026-04-03

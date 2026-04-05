@@ -1,5 +1,6 @@
 +++
 title = "310. 스트랭글러 피그 (Strangler Fig) 패턴 - 레거시를 점진적으로 MSA로 마이그레이션"
+weight = 310
 +++
 
 # 310. 스트랭글러 피그 (Strangler Fig) 패턴 - 레거시를 점진적으로 MSA로 마이그레이션

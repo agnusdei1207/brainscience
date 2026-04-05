@@ -1,4 +1,5 @@
 +++
+weight = 701
 title = "701. 세마포어 P, V 연산"
 date = "2026-03-29"
 [extra]

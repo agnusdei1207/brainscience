@@ -1,5 +1,6 @@
 +++
 title = "292. 접근성 (Accessibility) - KWCAG, WCAG 웹 접근성 지침"
+weight = 292
 +++
 
 # 292. 접근성 (Accessibility) - KWCAG, WCAG 웹 접근성 지침

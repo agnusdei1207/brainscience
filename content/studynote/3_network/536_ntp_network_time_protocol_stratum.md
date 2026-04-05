@@ -1,4 +1,5 @@
 +++
+weight = 536
 title = "536. NTP (Network Time Protocol) - 계층적 시간 동기화, Stratum 레벨 모델 (UDP 123)"
 date = "2026-04-05"
 [extra]

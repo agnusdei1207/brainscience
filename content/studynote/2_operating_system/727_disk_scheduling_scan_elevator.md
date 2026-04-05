@@ -1,4 +1,5 @@
 +++
+weight = 727
 title = "727. 디스크 스케줄링 SCAN 엘리베이터"
 date = "2026-03-29"
 [extra]

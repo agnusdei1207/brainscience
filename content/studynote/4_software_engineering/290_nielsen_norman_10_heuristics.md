@@ -1,5 +1,6 @@
 +++
 title = "290. 니코보코 (Nielsen-Norman) 10대 휴리스틱 원칙"
+weight = 290
 +++
 
 # 290. 니코보코 (Nielsen-Norman) 10대 휴리스틱 원칙

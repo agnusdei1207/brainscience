@@ -1,4 +1,5 @@
 +++
+weight = 129
 title = "129. 굴절률(Refractive Index)과 전반사(Total Internal Reflection)"
 description = "광통신의 근본 물리 원리인 스넬의 법칙, 임계각, 그리고 굴절률 조작을 통한 전반사 메커니즘 분석"
 date = "2026-03-04"

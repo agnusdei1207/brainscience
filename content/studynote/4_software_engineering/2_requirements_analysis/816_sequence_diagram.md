@@ -2,6 +2,7 @@
 title = "시퀀스 다이어그램"
 description = "Sequence Diagram"
 category = "4_software_engineering"
+weight = 816
 +++
 
 # 시퀀스 다이어그램 (Sequence Diagram)

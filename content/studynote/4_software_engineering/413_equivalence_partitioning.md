@@ -1,6 +1,7 @@
 +++
 title = "413. 동등 분할 (Equivalence Partitioning)"
 date = 2026-04-05
+weight = 413
 +++
 
 # 413. 동등 분할 (Equivalence Partitioning)

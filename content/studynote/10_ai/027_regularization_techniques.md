@@ -1,4 +1,5 @@
 +++
+weight = 27
 title = "027. 정규화 (Regularization) 기법"
 date = "2026-04-05"
 [extra]

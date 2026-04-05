@@ -1,5 +1,6 @@
 +++
 title = "276. 키-값 저장소 (Key-Value Store)"
+weight = 276
 +++
 
 # 276. 키-값 저장소 (Key-Value Store)

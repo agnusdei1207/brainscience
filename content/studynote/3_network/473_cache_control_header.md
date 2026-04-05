@@ -1,4 +1,5 @@
 +++
+weight = 473
 title = "캐시 제어 헤더 (Cache-Control: max-age, no-cache, no-store 등)"
 description = "웹 브라우저와 중간 프록시(CDN)의 캐싱 동작(저장, 공유, 만료, 검증)을 정교하게 지휘하는 HTTP/1.1의 핵심 제어 사령탑"
 date = 2026-04-03

@@ -1,4 +1,5 @@
 +++
+weight = 124
 title = "124. UTP (Unshielded Twisted Pair)"
 description = "이더넷 LAN 환경의 표준 매체인 UTP 케이블의 물리적 특성, 카테고리별 대역폭 발전 과정, 그리고 차폐 없이도 고속 전송을 달성하는 원리를 분석합니다."
 date = 2026-03-05

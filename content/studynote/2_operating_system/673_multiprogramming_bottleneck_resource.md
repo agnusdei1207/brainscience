@@ -1,4 +1,5 @@
 +++
+weight = 673
 title = "673. 다중 프로그래밍 (Multiprogramming) 한계 자원"
 date = "2026-03-29"
 [extra]

@@ -1,4 +1,5 @@
 +++
+weight = 12
 title = "12. 비잔틴 장애 허용 (BFT, Byzantine Fault Tolerance)"
 description = "1/3 미만의 악의적 노드가 있어도 정상 합의를 보장하는 매커니즘"
 date = "2024-05-18"

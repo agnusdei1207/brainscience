@@ -1,4 +1,5 @@
 +++
+weight = 82
 title = "82. 파이프라인 (Machine Learning Pipeline)"
 description = "머신러닝 파이프라인의 개념, 구성 요소, 구축 방법,自动化 및 재현성 확보 전략"
 date = "2026-04-05"

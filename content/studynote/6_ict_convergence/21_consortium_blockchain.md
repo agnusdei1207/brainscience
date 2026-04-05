@@ -1,4 +1,5 @@
 +++
+weight = 21
 title = "21. 컨소시엄 블록체인 (Consortium Blockchain)"
 description = "다수의 허가된 기관이 연합하여 권한을 분산하고 공동으로 원장을 관리하는 엔터프라이즈 분산 원장 기술"
 date = "2024-05-18"

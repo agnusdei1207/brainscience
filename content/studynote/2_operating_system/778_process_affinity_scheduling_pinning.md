@@ -1,4 +1,5 @@
 +++
+weight = 778
 title = "778. 프로세스 친화성 (Affinity) 스케줄링"
 date = "2026-03-30"
 [extra]

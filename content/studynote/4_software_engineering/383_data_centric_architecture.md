@@ -1,6 +1,7 @@
 +++
 title = "383. 데이터 중심 아키텍처 (Data-Centric Architecture)"
 date = 2026-04-05
+weight = 383
 +++
 
 # 383. 데이터 중심 아키텍처 (Data-Centric Architecture)

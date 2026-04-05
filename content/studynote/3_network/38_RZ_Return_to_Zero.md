@@ -1,4 +1,5 @@
 +++
+weight = 38
 title = "38. RZ (Return to Zero) - 동기화 장점, 대역폭 증가"
 date = "2026-03-30"
 [extra]

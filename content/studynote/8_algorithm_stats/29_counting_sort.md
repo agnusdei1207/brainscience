@@ -1,5 +1,6 @@
 +++
 title = "29. 카운팅 정렬 (Counting Sort)"
+weight = 29
 +++
 
 # 29. 카운팅 정렬 (Counting Sort)

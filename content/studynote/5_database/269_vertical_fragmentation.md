@@ -1,5 +1,6 @@
 +++
 title = "269. 수직 분할 (Vertical Fragmentation)"
+weight = 269
 +++
 
 # 269. 수직 분할 (Vertical Fragmentation)

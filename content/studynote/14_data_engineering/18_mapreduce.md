@@ -1,4 +1,5 @@
 +++
+weight = 18
 title = "맵리듀스 (MapReduce)"
 description = "초대용량 데이터 세트를 다수의 노드에서 병렬로 매핑(Map)하고 집계(Reduce)하여 처리하는 디스크 기반 분산 연산 프레임워크"
 date = "2025-01-01"

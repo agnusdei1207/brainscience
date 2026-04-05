@@ -1,4 +1,5 @@
 +++
+weight = 32
 title = "32. TP 모니터 (Transaction Processing Monitor) / 미들웨어"
 description = "TP 모니터와 미들웨어의 개념, 아키텍처, 실무 적용 방안"
 date = "2026-03-04"

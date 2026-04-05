@@ -1,4 +1,5 @@
 +++
+weight = 16
 title = "16. 위임 지분 증명 (DPoS, Delegated Proof of Stake)"
 description = "네트워크 참여자의 투표로 선출된 소수의 대표자(BP)가 블록 생성과 합의를 대리하는 고속 블록체인 합의 알고리즘"
 date = "2026-03-04"

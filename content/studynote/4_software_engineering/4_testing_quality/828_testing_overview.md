@@ -2,6 +2,7 @@
 title = "소프트웨어 테스트 개요"
 description = "Software Testing Overview"
 category = "4_software_engineering"
+weight = 828
 +++
 
 # 소프트웨어 테스트 개요 (Software Testing Overview)

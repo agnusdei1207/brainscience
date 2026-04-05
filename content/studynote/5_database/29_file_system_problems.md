@@ -1,4 +1,5 @@
 +++
+weight = 29
 title = "29. 데이터베이스 파일 시스템 문제점 (데이터 종속성, 중복성)"
 description = "전통적 파일 시스템의 근본적 한계인 데이터 종속성(Data Dependence)과 중복성(Redundancy)의 원리 및 DBMS의 탄생 배경 심층 분석"
 date = "2026-03-04"

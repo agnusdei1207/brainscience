@@ -1,5 +1,6 @@
 +++
 title = "264. 분할 투명성 (Fragmentation/Partition Transparency)"
+weight = 264
 +++
 
 # 264. 분할 투명성 (Fragmentation/Partition Transparency)

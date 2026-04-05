@@ -1,4 +1,5 @@
 +++
+weight = 798
 title = "798. 분산 락 주키퍼(ZooKeeper) 합의 동기화"
 date = "2026-03-30"
 [extra]

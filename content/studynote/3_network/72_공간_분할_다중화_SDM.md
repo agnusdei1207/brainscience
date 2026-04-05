@@ -1,4 +1,5 @@
 +++
+weight = 72
 title = "72. 공간 분할 다중화 (SDM, Space Division Multiplexing)"
 description = "물리적 공간을 분리하는 SDM의 원리, 유/무선 아키텍처 진화 및 실무적 Massive MIMO 융합 분석"
 date = "2024-05-20"

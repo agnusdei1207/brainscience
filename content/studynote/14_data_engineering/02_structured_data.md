@@ -1,4 +1,5 @@
 +++
+weight = 2
 title = "02. 정형 데이터 (Structured Data)"
 description = "관계형 데이터베이스 테이블처럼 엄격한 스키마 구조를 보유하는 데이터 유형의 정의, RDBMS 기반 저장 구조, OLTP와 OLAP 환경에서의 활용"
 date = "2024-05-24"

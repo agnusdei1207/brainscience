@@ -1,4 +1,5 @@
 +++
+weight = 5
 title = "5. 초인공지능 (ASI, Artificial Super Intelligence)"
 description = "인류 전체의 지성을 아득히 초월하여 스스로 진화하는 특이점 이후의 절대 지능"
 date = "2026-03-04"

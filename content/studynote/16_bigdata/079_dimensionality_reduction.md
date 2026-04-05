@@ -1,4 +1,5 @@
 +++
+weight = 79
 title = "79. 차원 축소 (Dimensionality Reduction)"
 description = "차원 축소의 필요성, 주성분 분석 PCA, t-SNE, UMAP 등 기법의 원리와 비교, 차원 저주와의 관계"
 date = "2026-04-05"

@@ -1,4 +1,5 @@
 +++
+weight = 467
 title = "467. HTTP/2 스트림 다중화 (Multiplexing)와 TCP HOL 블로킹"
 date = "2026-04-02"
 [extra]

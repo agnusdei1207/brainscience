@@ -1,4 +1,5 @@
 +++
+weight = 18
 title = "18. 핵심 성과 지표 (KPI, Key Performance Indicator)"
 description = "조직의 핵심 성공 요인(CSF)이 올바른 궤도로 달성되고 있는지를 정량적인 수치로 측정하여, 실시간 피드백과 전략 수정을 가능케 하는 핵심 내비게이션 지표"
 date = "2024-05-20"

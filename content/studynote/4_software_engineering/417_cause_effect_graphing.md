@@ -1,6 +1,7 @@
 +++
 title = "417. 원인-결과 그래프 (Cause-Effect Graphing)"
 date = 2026-04-05
+weight = 417
 +++
 
 # 417. 원인-결과 그래프 (Cause-Effect Graphing)

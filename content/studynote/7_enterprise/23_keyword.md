@@ -1,5 +1,6 @@
 +++
 title = "23. 전략 체계도 (Strategy Map)"
+weight = 23
 +++
 
 # 23. 전략 체계도 (Strategy Map)

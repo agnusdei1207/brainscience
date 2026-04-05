@@ -1,4 +1,5 @@
 +++
+weight = 26
 title = "026. 과적합 (Overfitting) / 과소적합 (Underfitting)"
 date = "2026-04-05"
 [extra]

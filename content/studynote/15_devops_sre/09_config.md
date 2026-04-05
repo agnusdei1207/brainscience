@@ -1,4 +1,5 @@
 +++
+weight = 9
 title = "09. 설정"
 date = "2026-04-05"
 [taxonomies]

@@ -1,4 +1,5 @@
 +++
+weight = 14
 title = "14. 데이터바우처 사업 (Data Voucher)"
 description = "중소기업의 데이터 활용 격차 해소를 위한 지원 체계 및 실무 도입 전략"
 date = "2024-05-23"
