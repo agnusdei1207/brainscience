@@ -8,316 +8,128 @@ tags = ["옵티마이저", "Optimizer", "최적화", "Adam", "SGD", "AdamW", "�
 categories = ["studynote-bigdata"]
 +++
 
-# 옵티마이저 (Optimizer)
+## 핵심 인사이트 (3줄 요약)
 
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 옵티마이저(Optimizer)는 손실 함수의 값을 최소화하는 방향으로 모델 파라미터를 업데이트하는 알고리즘이다. 학습률, 모멘텀, 적응적 학습률 등의 메커니즘을 통해 효율적인 최적화를 도모한다.
-> 2. **가치**: 적절한 옵티마이저 선택과 하이퍼파라미터 튜닝은 모델 수렴 속도와 최종 성능에 直接적 영향을 미친다.
-> 3. **융합**: SGD, Adam, AdamW, RMSProp, AdaGrad 등 다양한 옵티마이저가 있으며, 각각 고유한 장단점이 있어 문제 상황에 맞게 선택해야 한다.
+> 1. **본질**: 옵티마이저 (Optimizer)는 인공지능 모델이 예측한 값과 정답 간의 오차(Loss)를 최소화하기 위해, 네트워크의 가중치(Weight)를 어느 방향으로 얼만큼 수정할지 결정하는 내비게이션 알고리즘이다.
+> 2. **가치**: 단순한 경사하강법의 느린 속도와 지역 최적해(Local Minima) 함정 문제를 극복하기 위해, 관성(Momentum)과 적응형 학습률(Adaptive Learning Rate) 개념을 도입하여 학습의 안정성과 속도를 비약적으로 높인다.
+> 3. **판단 포인트**: 항상 최고 성능을 내는 '만능' 옵티마이저는 없으며, 데이터의 희소성(Sparsity), 모델의 크기, 배포 환경에 따라 `SGD (Stochastic Gradient Descent)` 계열과 `Adam` 계열 중 적합한 것을 취사선택해야 한다.
 
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+## Ⅰ. 개요 및 필요성
 
-옵티마이저(Optimizer)는 머신러닝과딥러닝에서 模型의 파라미터를更新하여 손실 함수를 최소화하는 핵심 알고리즘이다. 손실 함수가山脈의 높이 차이를 나타낸다면, 옵티마이저는 그山脈을 가장 효율적인 경로로 내려오는探险가이다.
+딥러닝의 학습 과정은 수백만 개의 파라미터가 얽힌 칠흑 같은 산속에서, 바닥(최소 오차점)을 향해 길을 찾아 내려가는 고차원 최적화 문제와 같다. 초기에는 매번 전체 데이터를 다 보고 한 걸음 이동하는 방식(Batch Gradient Descent)을 썼으나, 연산량이 너무 많고 속도가 느려 실전 적용이 불가능했다.
 
-深度學習에서는 수백만~수십억 개의 파라미터를 포함하는 매우複雑な 非凸最適化 문제를 풀어야 한다. 따라서 옵티마이저의 선택은 模型의 훈련 효율과 最终性能에 Crucial한 영향을 미친다.
+이후 데이터의 일부만 보고 이동 방향을 정하는 `SGD (Stochastic Gradient Descent)`가 등장했지만, 이번에는 기울기가 가파른 곳에서 진동하거나 평탄한 곳에서 멈춰버리는 문제가 발생했다. 결국 지형의 형태에 맞춰 보폭을 넓히거나 좁히고, 내리막길의 가속도를 유지해주는 정교한 옵티마이저 (Optimizer) 엔진이 필수적으로 요구되었다.
 
-옵티마이저의 발전 과정을 시각화해보면 다음과 같다.
+- **📢 섹션 요약 비유**: 캄캄한 산속에서 손전등 하나에 의지해 하산할 때, 발밑의 경사만 보고 무작정 걷지 않도록 속도와 방향을 똑똑하게 제어해 주는 등산 안내인과 같다.
+
+---
+
+## Ⅱ. 아키텍처 및 핵심 원리
+
+옵티마이저의 핵심 원리는 과거의 이동 이력을 기억하는 '모멘텀(관성)'과 각 파라미터별로 빈도를 따져 보폭을 조절하는 '적응형 학습률' 두 축으로 구성된다.
+
+| 핵심 원리 | 설명 | 대표 알고리즘 |
+| :--- | :--- | :--- |
+| **Momentum (관성)** | 이전 단계의 이동 방향과 속도를 기억해 기울기가 작아져도 밀고 나감 | Momentum, Nesterov |
+| **Adaptive Learning Rate (보폭 조절)** | 많이 변한 파라미터는 학습률을 줄이고, 적게 변한 파라미터는 늘림 | `AdaGrad`, `RMSProp` |
+| **하이브리드 (통합형)** | 관성으로 방향을 유지하면서 파라미터별 보폭도 같이 조절함 | `Adam`, `AdamW` |
 
 ```text
-[옵티마이저의 발전 역사]
+┌──────────────────────────────────────────────────────────────┐
+│             Adam 옵티마이저의 가중치 업데이트 원리           │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  [현재 기울기(Gradient)]                                     │
+│           │                                                  │
+│           ├─▶ (1) 1차 모멘트: 과거 방향의 관성 계산 (Momentum) │
+│           │                                                  │
+│           └─▶ (2) 2차 모멘트: 기울기 제곱합으로 보폭 계산      │
+│                                                              │
+│  [새로운 가중치] = [이전 가중치] - (학습률 × 관성) / (보폭+ε)│
+└──────────────────────────────────────────────────────────────┘
+```
 
-1952: Gradient Descent (Cauchy)
+가장 널리 쓰이는 `Adam (Adaptive Moment Estimation)`은 이 두 가지 기법을 정교하게 결합한 형태다. 1차 모멘트로 매끄러운 방향성을 잡고, 2차 모멘트로 변수마다 맞춤형 보폭을 적용함으로써 험준한 오차 지형에서도 빠르고 안정적으로 최소점을 찾아간다.
+
+- **📢 섹션 요약 비유**: 모멘텀이 자전거의 '관성 주행'이라면, 적응형 학습률은 자갈길과 아스팔트에 맞춰 바퀴의 '서스펜션'을 실시간으로 조절하는 기술이다.
+
+---
+
+## Ⅲ. 비교 및 연결
+
+현대 딥러닝에서 옵티마이저는 크게 `SGD` 계열과 `Adam` 계열로 양분되며, 각각의 장단점이 명확해 문제 영역에 따라 달리 쓰인다.
+
+| 비교 축 | `SGD` + Momentum | `Adam` (Adaptive Moment Estimation) | `AdamW` |
+| :--- | :--- | :--- | :--- |
+| **수렴 속도** | 초기에는 상대적으로 느림 | 초반 수렴 속도가 매우 빠름 | 빠름 |
+| **일반화 성능** | 세밀하게 수렴하여 테스트 성능이 높음 | Train Loss는 잘 줄이나 과적합 우려 있음 | `Adam`의 과적합 문제를 개선함 |
+| **설정 민감도** | 학습률 튜닝이 매우 까다로움 | 기본 설정값만으로도 훌륭한 성능 발휘 | 가중치 감쇠(Weight Decay) 조절 용이 |
+
+`AdaGrad (Adaptive Gradient)`는 자연어 처리처럼 자주 등장하지 않는 희소(Sparse) 단어 학습에 유리하지만, 학습이 길어지면 학습률이 0으로 소실되는 단점이 있었다. 이를 개선한 것이 최근 추세를 이끄는 `RMSProp (Root Mean Square Propagation)`과 `Adam`이며, 특히 대형 언어 모델(LLM)에서는 정규화 효과를 깔끔하게 분리한 `AdamW`가 사실상 표준으로 자리 잡았다.
+
+- **📢 섹션 요약 비유**: `SGD`는 운전이 까다롭지만 최고 속도가 빠른 수동 변속기 차량이고, `Adam`은 누구나 편하게 몰 수 있지만 코너링에서 가끔 미끄러지는 자동 변속기 차량이다.
+
+---
+
+## Ⅳ. 실무 적용 및 기술사 판단
+
+옵티마이저 선택은 단순히 코드를 한 줄 바꾸는 것을 넘어, 전체 프로젝트의 실험 속도와 배포 모델의 신뢰성을 결정짓는 핵심 아키텍처 의사결정이다.
+
+### 실무 선택 가이드
+
+1. **컴퓨터 비전(CNN 계열)**: `SGD (Stochastic Gradient Descent)` + Momentum 조합이 압도적으로 유리하다. 학습은 오래 걸리지만 최종 일반화 성능이 `Adam`보다 뛰어난 경우가 많다.
+2. **자연어 처리 및 Transformer 계열**: 초기 학습이 불안정하므로 `Adam`이나 `AdamW`를 사용하며, 특히 `Warm-up` (초기 학습률을 서서히 올리는 기법)을 반드시 병행해야 발산을 막을 수 있다.
+3. **빠른 프로토타이핑**: 새로운 구조의 모델을 검증할 때는 학습률 튜닝 없이도 빠르게 결과를 보여주는 `Adam`을 최우선으로 적용하여 가설을 먼저 검증한다.
+
+### 안티패턴
+
+- 어떤 모델이든 무비판적으로 `Adam`만 고집하고, 학습 후반부에 학습률 스케줄러(Learning Rate Scheduler)를 통해 보폭을 줄여주는 세밀한 제어를 생략하는 행위.
+
+- **📢 섹션 요약 비유**: 연습 경기에 나갈 때는 쉽게 다룰 수 있는 장비(Adam)로 몸을 풀고, 실전 결승전에서는 예민하지만 한계치가 높은 맞춤 장비(SGD)를 쓰는 전략적 판단이 필요하다.
+
+---
+
+## Ⅴ. 기대효과 및 결론
+
+우수한 옵티마이저의 선택은 모델 학습 시간을 주 단위에서 일 단위로 단축시키며, 데이터가 가진 잠재력을 끝까지 쥐어짜 내는 역할을 한다. 반대로 옵티마이저 튜닝에 실패하면 아무리 훌륭한 신경망 구조와 양질의 데이터를 가졌더라도 영원히 학습을 끝내지 못한다.
+
+결론적으로, 옵티마이저 기술은 "얼마나 빨리 떨어지는가"를 넘어 "어떻게 브레이크를 밟으며 정교하게 멈춰 설 것인가"의 예술이다. 실무 엔지니어는 자신이 다루는 데이터의 특성(희소성, 노이즈)과 모델의 깊이를 종합하여 최적의 엔진(Optimizer)을 장착할 수 있는 튜닝 역량을 갖추어야 한다.
+
+- **📢 섹션 요약 비유**: 옵티마이저는 단순히 산을 내려가는 엔진이 아니라, 거친 지형을 매끄럽게 흡수하고 목표 지점에 흔들림 없이 주차하게 해 주는 고급 브레이크 시스템이다.
+
+---
+
+### 📌 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+| :--- | :--- |
+| 손실 함수 (Loss Function) | 옵티마이저가 깎아내려야 하는 지형의 형태(목표치) |
+| 기울기 (Gradient) | 현재 위치에서 가장 가파른 내리막의 방향을 나타내는 벡터 |
+| 가중치 감쇠 (Weight Decay) | 과적합을 막기 위해 가중치가 너무 커지지 않도록 옵티마이저에 패널티를 주는 기법 |
+| 지역 최적해 (Local Minima) | 진정한 최저점이 아니지만 주변보다 낮아서 옵티마이저가 갇히기 쉬운 웅덩이 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+전체 데이터 기반 업데이트
     │
-    │  문제: 전체 데이터의 gradient 계산 필요, 느림
     ▼
-1986: Stochastic Gradient Descent (SGD)
-    │  Batch GD보다 빠르지만 노이즈 심함
-    │  문제: 모든 파라미터에 동일한 학습률 적용
+SGD (Stochastic Gradient Descent) : 미니배치 단위 이동
+    │
     ▼
-1983: Momentum (Polyak)
-    │  이전 gradient 방향에 관성 부여
-    │  문제: 여전히 고정 학습률
+Momentum : 관성을 활용해 지역 최적해 탈출
+    │
     ▼
-2011: AdaGrad
-    │  적응적 학습률 (파라미터별)
-    │  문제: 학습률이 계속 감소하는 문제
+AdaGrad / RMSProp : 특징별로 보폭을 다르게 조절 (Adaptive)
+    │
     ▼
-2012: RMSProp
-    │  AdaGrad의 문제 해결 (지수 이동 평균)
-    ▼
-2014: Adam (Adaptive Moment Estimation)
-    │  모멘텀 + RMSProp 결합
-    │  현재 딥러닝의 사실상의 표준
-    ▼
-2017: AdamW (Decoupled Weight Decay)
-    │  Adam + L2 Regularization의 올바른 분리
-    ▼
-~2018 이후: LAMB, NovoGrad, Ranger, ...
-    │  대규모 분산 훈련을 위한 최적화
-    ▼
+Adam / AdamW : 관성과 적응형 보폭을 결합한 현대적 표준
 ```
 
-> 📢 **섹션 요약 비유**: 옵티마이저의 발전 역사는犹如교통手段의进化と類似している. 처음에는 다리를 사용해 직접 걸어갔다면(Gradient Descent),、自行车(SGD)를 타고 이동하는 것이 더 빨라졌다. 그리고堵著에는，自行车の速度를 상황에 맞게 조절하는 능력이 필요해졌다(Momentum). Cars、오토바이等의 다양한交通工具(다양한 옵티마이저)가 개발된 것처럼,、深層学習에서도 다양한 최적화 알고리즘이 등장했다.
-
----
-
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
-
-### 2.1 옵티마이저의 구성 요소
-
-대부분의 옵티마이저는 다음 요소들의 조합으로 구성된다.
-
-```text
-[옵티마이저의 핵심 요소]
-
-파라미터 업데이트 규칙:
-  θ_{t+1} = θ_t - α × update(gradient, history)
-
-주요 요소:
-  1. 학습률 (α): 업데이트의 스케일
-  2. 모멘텀: 이전 업데이트 방향의 관성
-  3. 적응적 학습률: 파라미터별 학습률 조정
-  4. Regularization: 과적합防止
-```
-
-### 2.2 주요 옵티마이저 심층 분석
-
-**SGD (Stochastic Gradient Descent)**
-
-```python
-# SGD 옵티마이저
-# θ_{t+1} = θ_t - α ∇L(θ_t)
-
-class SGD:
-    def __init__(self, lr=0.01, momentum=0.0):
-        self.lr = lr
-        self.momentum = momentum
-        self.v = None
-
-    def step(self, params, grads):
-        if self.v is None:
-            self.v = [np.zeros_like(p) for p in params]
-
-        for i, (p, g) in enumerate(zip(params, grads)):
-            if self.momentum > 0:
-                self.v[i] = self.momentum * self.v[i] - self.lr * g
-            else:
-                self.v[i] = -self.lr * g
-            p += self.v[i]
-```
-
-**Adam (Adaptive Moment Estimation)**
-
-Adam은 각 파라미터에 대해 적응적 학습률을計算한다.
-
-```python
-# Adam 옵티마이저 상세
-# m_t = β₁ · m_{t-1} + (1-β₁) · g_t     (모멘텀, 1차 모멘트)
-# v_t = β₂ · v_{t-1} + (1-β₂) · g_t²    (적응 학습률, 2차 모멘트)
-# m_hat = m_t / (1 - β₁^t)                (바이어스補正)
-# v_hat = v_t / (1 - β₂^t)
-# θ_{t+1} = θ_t - α · m_hat / (√v_hat + ε)
-
-class Adam:
-    def __init__(self, lr=0.001, β₁=0.9, β₂=0.999, ε=1e-8):
-        self.lr = lr
-        self.β₁ = β₁
-        self.β₂ = β₂
-        self.ε = ε
-        self.m = None
-        self.v = None
-        self.t = 0
-
-    def step(self, params, grads):
-        self.t += 1
-        if self.m is None:
-            self.m = [np.zeros_like(p) for p in params]
-            self.v = [np.zeros_like(p) for p in params]
-
-        for i, (p, g) in enumerate(zip(params, grads)):
-            # 1차 모멘트 (모멘텀)
-            self.m[i] = self.β₁ * self.m[i] + (1 - self.β₁) * g
-            # 2차 모멘트 (적응 학습률)
-            self.v[i] = self.β₂ * self.v[i] + (1 - self.β₂) * (g ** 2)
-
-            # 바이어스 보정
-            m_hat = self.m[i] / (1 - self.β₁ ** self.t)
-            v_hat = self.v[i] / (1 - self.β₂ ** self.t)
-
-            # 업데이트
-            p -= self.lr * m_hat / (np.sqrt(v_hat) + self.ε)
-```
-
-```text
-[Adam의物적意味]
-
-m_t (모멘텀): gradient의 지수加权移動平均
-  →過去のgradient 방향을 기억하여 진동 감소
-
-v_t (적응 학습률): gradient 제곱의 지수加权移動平均
-  →陡한 방향(큰 gradient)에서는 학습률을 줄이고
-    平坦한 방향(작은 gradient)에서는 학습률을 유지
-
-예시:
-  파라미터 θ₁ (거친 gradient): v_hat 큼 → 학습률 ↓
-  파라미터 θ₂ (미세한 gradient): v_hat 작음 → 학습률 유지
-```
-
-### 2.3 AdamW (Weight Decay의 올바른 분리)
-
-AdamW는 Adam의 L2 Regularization 문제를 해결한다.
-
-```python
-# Adam vs AdamW의 차이
-
-# Adam (잘못된 L2 regularization)
-loss = compute_loss(params) + λ * Σ||params||²  # 손실에 L2 추가
-# 문제: 옵티마이저가 gradient를計算할 때 이미 L2 영향이 포함됨
-# 但し learning rate 조정을 통해 적용되어 문제가 있음
-
-# AdamW (올바른 분리)
-loss = compute_loss(params)  # 손실에 L2 추가 안 함
-optimizer.step()
-# 옵티마이저 내부에서 직접 weight decay 적용
-params -= (self.lr * m_hat / (np.sqrt(v_hat) + ε) + self.lr * λ * params)
-```
-
-### 2.4 Learning Rate Scheduling
-
-옵티마이저와 함께 학습률을 동적으로 조절한다.
-
-```text
-[주요 Learning Rate Schedule]
-
-1. Step Decay:
-   epoch 1-30:  lr=0.1
-   epoch 31-60: lr=0.01
-   epoch 61-90: lr=0.001
-
-2. Cosine Annealing:
-   lr(t) = lr_max × (1 + cos(πt/T)) / 2
-   (0에서 시작해 가장高点 дости後 다시 감소)
-
-3. Warmup + Decay:
-   - 처음 few epochs: lr 점진적 증가
-   - 이후: Cosine或其他 schedule로 감소
-
-4. Reduce on Plateau:
-   - 검증 성능이 개선되지 않으면 lr 감소
-```
-
-> 📢 **섹션 요약 비유**: 옵티마이저는犹如万能钥匙と類似している. 모든 문(문제)에 동일한 열쇠(기본 옵티마이저)를 쓸 수 있지만, 열쇠의デザイン(파라미터 설정)를 상황에 맞게 조정해야 가장 잘 열린다. 때로는 열쇠를 삐딱하게 돌리거나(모멘텀), 힘을 가감해야(학습률) 문이 쉽게 열린다.
-
----
-
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
-
-주요 옵티마이저를 비교해보자.
-
-| 옵티마이저 | 장점 | 단점 | 권장 사용 상황 |
-|:---|:---|:---|:---|
-| **SGD + Momentum** | 일반화 양호, 튜닝 쉬움 | 수렴 느림 | 컴퓨터 비전, 전통적 ML |
-| **Adam** | 빠른 초기 수렴, 대부분의 경우 good | 종종 SGD보다 일반화 낮음 | 자연어 처리,빠른 prototyping |
-| **AdamW** | Adam + 올바른 정규화 | 하이퍼파라미터 민감 | Transformer,大型モデル |
-| **LAMB** | 대규모 분산 훈련에 효과적 | 구현 복잡 | BERT规模的训练 |
-| **AdaGrad** | 희소 데이터에 효과적 | 학습률 감소 문제 | 추천 시스템, RNN |
-
-```text
-[SGD vs Adam: 공통된 인식]
-
-일반적인 인식:
-  • Adam: 빠른 수렴, 낮은 훈련 손실
-  • SGD: 더 나은 일반화, 더 높은 훈련 손실
-
-실제 연구 결과 (Reddi et al., 2018):
-  • Adam의 수렴 문제가 있을 수 있음 (arnesiate 문제)
-  • 적절한 하이퍼파라미터로 Adam도 SGD에 필적하는 성능
-
-결론:
-  ✓ Rapid Prototyping: Adam (빠른 iteration)
-  ✓ Production/Competition: SGD + Momentum (より良い一般化)
-  ✓大型モデル: AdamW 또는 LAMB
-```
-
-> 📢 **섹션 요약 비유**: 옵티마이저 선택은犹如料理での火加減と類似している. 강불(높은 학습률)로 빨리 끓일 수 있지만 넘칠 위험이 있고, 약불(낮은 학습률)은 안전하지만 시간이 오래 걸린다. 가스레인지의 자동 제어 기능(Adam)은 편리하지만,_manual火加減(SGD+Momentum)에 비해 맛이 조금 다를 수 있다. 상황과 목적에 맞는火加減(옵티마이저) 선택이 필요하다.
-
----
-
-### Ⅳ. 실무 적용 및 한계 (Application & Limitation)
-
-**실무 적용:**
-
-1. **컴퓨터 비전 (CNN)**
-   - SGD + Momentum (lr=0.01, momentum=0.9)
-   - Weight Decay 적용
-   - Step Decay 또는 Cosine Annealing
-
-2. **자연어 처리 (Transformer)**
-   - AdamW (lr=1e-4 ~ 3e-4, weight_decay=0.01)
-   - Warmup + Cosine Annealing
-   - Gradient Clipping (max_norm=1.0)
-
-3. **Recommender Systems**
-   - AdaGrad 또는 Adam
-   - 학습률 lr=0.01 ~ 0.1
-
-```python
-# PyTorch에서의 옵티마이저 설정 예시
-import torch.optim as optim
-
-# SGD with Momentum
-optimizer = optim.SGD(
-    model.parameters(),
-    lr=0.01,
-    momentum=0.9,
-    weight_decay=1e-4
-)
-
-# AdamW (권장 for Transformers)
-optimizer = optim.AdamW(
-    model.parameters(),
-    lr=3e-4,
-    betas=(0.9, 0.999),
-    weight_decay=0.01
-)
-
-# Learning Rate Scheduler와 결합
-scheduler = optim.lr_scheduler.OneCycleLR(
-    optimizer,
-    max_lr=3e-4,
-    epochs=num_epochs,
-    steps_per_epoch=len(train_loader)
-)
-```
-
-**한계점:**
-
-1. **수렴 보장 없음**: 비볼록(non-convex) 함수에서全局 최적 보장 없음
-
-2. **지역 최솟값/鞍点 문제**: 특히 고차원에서는鞍점(saddle point)이 지역 최솟값보다 문제
-
-3. **하이퍼파라미터 민감도**: Adam도 학습률, β₁, β₂ 등의 조정이 필요
-
-4. **대规模 모델에서의 메모리**: 2차 모멘트(v_t) 추가로 메모리 사용량 증가
-
-> 📢 **섹션 요약 비유**: 옵티마이저는犹如探索ロボットと類似している.複雑な 미로(손실 함수 landscape)에서 最速経路으로出口(최적해)를 찾아야 한다. 로봇은壁(gradient)를 감지하여 방향을 결정하는데, 너무 빨리 움직이면 벽에 충돌하고(발산), 너무 느리면 시간 내에 탈출하지 못한다(느린 수렴). 때로는 후진해서 우회하는 것이(모멘텀) 더 빠른 경우도 있다.
-
----
-
-### Ⅴ. 요약 및 전망 (Summary & Outlook)
-
-옵티마이저는深度학습 훈련의核心要素이다. Adam이 대부분의 상황에서 좋은 기본값을 제공하지만, SGD + Momentum이、より良い一般化性能を達成する場合도 많다.
-
-앞으로의 전망으로는, 더 대규모 분산 훈련을 위한 최적화 알고리즘,Learning Rate 자동 조정 기능의 통합, 그리고 二階堂最適化 방법론의 효율적 구현 등의 研究가 진행되고 있다. 또한 Neuroscience의 发现를 활용한biol-inspired 최적화 알고리즘도 기대된다.
-
-결론적으로, 옵티마이저 선택은 경험, 실험, 그리고 문제 상황에 대한 이해를 통해 이루어져야 하며, 어떤 경우에도万能적인最优解는 없다.
-
----
-
-**References**
-- Ruder, S. (2016). An overview of gradient descent optimization algorithms. arXiv:1609.04747.
-- Kingma, D. P., & Ba, J. (2014). Adam: A method for stochastic optimization. ICLR.
-- Loshchilov, I., & Hutter, F. (2017). Decoupled Weight Decay Regularization. ICLR.
-- Reddi, S. J., et al. (2018). On the Convergence of Adam and Beyond. ICLR.
+### 👶 어린이를 위한 3줄 비유 설명
+
+1. 깜깜한 산에서 내려올 때 발밑의 경사만 보고 무작정 뛰면 금방 넘어지거나 길을 잃어요.
+2. 옵티마이저는 "이전에는 어느 방향으로 뛰었지?(관성)"와 "지금 이 길은 너무 가파른가?(보폭 조절)"를 계산해 주는 똑똑한 나침반이에요.
+3. 이 나침반 덕분에 컴퓨터는 아무리 복잡한 길이라도 넘어지지 않고 가장 깊은 골짜기(정답)를 빠르게 찾아갈 수 있답니다.
