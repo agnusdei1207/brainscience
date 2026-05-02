@@ -1,70 +1,118 @@
 +++
-title = "119. 쿠버네티스 선언적(Declarative) API 원리"
-date = "2026-03-04"
 weight = 119
+title = "119. K8s 선언적 API (Declarative API) - Desired State·Reconciliation Loop"
+date = "2026-04-19"
 [extra]
-categories = "studynote-cloud"
+categories = "studynote-cloud-architecture"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
-1. **선언적(Declarative) 접근**: "어떻게 할 것인가(How)"를 명령하지 않고, "어떤 상태가 되기를 원하는가(What)"를 YAML 파일로 선언하는 쿠버네티스의 핵심 철학입니다.
-2. **제어 루프 (Control Loop)**: 컨트롤러 매니저가 무한히 돌며 클러스터의 '현재 상태'를 관측하고, 사용자가 선언한 '원하는 상태'와 일치시키기 위한 작업을 자동 수행합니다.
-3. **인프라 자동화와 GitOps의 근간**: 이 원리로 인해 클러스터 장애 시 시스템이 스스로 복구(Self-healing)하며, 인프라스트럭처 애즈 코드(IaC) 및 GitOps 배포 패러다임이 가능해졌습니다.
+> 1. **본질**: K8s 선언적 API는 **"무엇을 원하는가(Desired State)"를 YAML로 선언**하면, K8s 컨트롤러가 현재 상태를 Desired State에 **자동으로 수렴시키는(Reconciliation)** 운영 모델이다.
+> 2. **가치**: 명령형(Imperative)은 "Pod를 3개 만들어라"(How)이고, 선언적(Declarative)은 "Pod가 3개인 상태를 유지하라"(What)이다. Pod가 죽으면 선언적 모델은 **자동으로 3개를 복원**하지만, 명령형은 수동 개입이 필요하다.
+> 3. **판단 포인트**: Reconciliation Loop(관찰→비교→행동)가 K8s 컨트롤러의 핵심이며, Custom Resource + Custom Controller로 **어떤 리소스든 선언적으로 관리**할 수 있다(Operator Pattern).
 
-### Ⅰ. 개요 (Context & Background)
-전통적인 IT 인프라 운영은 명령형(Imperative)이었습니다. "A서버 접속해라, B명령어 쳐라, 에러 나면 재시작해라" 처럼 쉘 스크립트나 운영자가 직접 절차를 제어했습니다. 반면, 쿠버네티스(Kubernetes)는 철저한 **선언적(Declarative) API** 아키텍처를 채택했습니다. 사용자는 단지 최종적인 목표 상태(Desired State)만을 Kube-API Server에 제출(YAML)하며, 시스템 내부의 컴포넌트들이 그 목표를 달성하고 유지하기 위한 모든 복잡한 과정(How)을 대신 위임받아 수행합니다.
+---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
-쿠버네티스의 선언적 모델을 지탱하는 핵심 메커니즘은 리콘실리에이션(Reconciliation, 조정) 루프입니다.
+## Ⅰ. 개요 및 필요성
 
 ```text
-[ Declarative Control Loop (Reconciliation Loop) ]
-
-  [User] ---> (Apply YAML) ---> [ Kube-API Server / etcd ]
-        "웹서버 파드 3개 띄워줘"        (Desired State 저장: Replicas=3)
-                                          |
-        +---------------------------------+
-        |
-        v
-+-----------------------------------------------------------+
-|                 Kube-Controller-Manager                   |
-|                                                           |
-|  1. Observe (관측): 현재 떠 있는 웹서버 파드가 몇 개인가? |
-|                     (Current State: 1개)                  |
-|                                                           |
-|  2. Diff (비교): Desired(3) ≠ Current(1)                  |
-|                  차이(Diff) 발생!                         |
-|                                                           |
-|  3. Act (조치): 파드 2개를 더 생성하도록 API Server에 요청|
-|                                                           |
-+-------^-------------------------------------------+-------+
-        | (무한 반복 감시 루프)                     | (상태 변화 피드백)
-        +-------------------------------------------+
-               "어느 날 노드 하나가 죽어서 파드 1개가 터지면?"
-               -> 다시 Diff 발생 -> 즉시 1개 재생성 (Self-healing)
+┌───────────────────────────────────────────────────────┐
+│    명령형 vs 선언적                                   │
+├───────────────────────────────────────────────────────┤
+│  [명령형 (Imperative)]                                │
+│   kubectl run nginx --image=nginx                     │
+│   kubectl scale --replicas=3 deploy/nginx             │
+│   → "어떻게(How)"를 지시, 상태 보장 없음             │
+│                                                       │
+│  [선언적 (Declarative)]                               │
+│   apiVersion: apps/v1                                 │
+│   kind: Deployment                                    │
+│   spec:                                               │
+│     replicas: 3                                       │
+│   → "무엇(What)"을 선언, K8s가 자동 유지             │
+│   Pod 1개 죽으면 → 자동으로 1개 재생성               │
+└───────────────────────────────────────────────────────┘
 ```
-- 사용자가 `kubectl apply -f app.yaml`을 치고 떠나면 끝입니다. 이후 파드가 죽든 노드가 터지든, 쿠버네티스의 컨트롤러(ReplicaSet 등)가 스스로 차이를 인지하고 복구합니다.
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
-| 비교 항목 | 명령형 (Imperative) | 선언형 (Declarative) |
-|---|---|---|
-| **작업 방식** | 스텝별 절차(스크립트)를 지시 (How) | 도달해야 할 최종 목표 상태를 명시 (What) |
-| **K8s 명령어 예시** | `kubectl run nginx --image=nginx` <br> `kubectl scale deploy nginx --replicas=3` | `kubectl apply -f nginx-deployment.yaml` |
-| **장애 복구** | 스크립트 도중 에러가 나면 수동 개입이나 복잡한 예외 처리 로직(if/else) 필요 | 컨트롤러가 알아서 현재 상태를 계속 추적하므로 자동 복구(Self-healing)가 내장됨 |
-| **버전/형상 관리** | 절차 중심이라 재실행 시 멱등성 보장이 어려울 수 있음 | YAML 파일(상태) 자체를 Git에 커밋하여 완벽한 인프라 형상 관리(IaC/GitOps) 달성 |
+- **📢 섹션 요약 비유**: 명령형은 "에어컨을 켜라, 온도를 25도로 맞춰라"(수동)이고, 선언적은 "실내 온도 25도 유지"(자동 항온기)이다.
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
-- **테스트/디버깅 vs 프로덕션 운영**: 실무에서 트러블슈팅이나 가벼운 테스트 시에는 명령형(`kubectl create/delete`)이 빠르고 편합니다. 하지만 프로덕션 환경에서는 100% 선언형(`kubectl apply`) 원칙을 고수하여, 클러스터의 실제 상태와 형상 관리 도구(Git)의 YAML 상태가 절대 어긋나지 않도록 단일 진실 공급원(SSOT)을 유지해야 합니다.
-- **GitOps 아키텍처 도입**: 선언적 API가 있기 때문에 ArgoCD나 Flux 같은 GitOps 도구가 탄생할 수 있었습니다. Git 레포지토리의 YAML(선언)과 쿠버네티스의 상태를 지속 동기화하는 가장 이상적인 클라우드 네이티브 배포 아키텍처입니다.
+---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
-명령형에서 선언형으로의 패러다임 전환은 인프라 운영자의 인지 부하(Cognitive Load)를 극적으로 줄이고 대규모 분산 시스템의 신뢰성을 보장했습니다. 쿠버네티스 선언적 API 모델은 현대 클라우드 네이티브 아키텍처의 근간이며, 테라폼(Terraform) 등 타 인프라 통제 시스템으로도 그 사상이 확산되고 있는 범용적 IT 표준입니다.
+## Ⅱ. 아키텍처 및 핵심 원리
 
-### 📌 관련 개념 맵 (Knowledge Graph)
-- **상위 개념**: 쿠버네티스 아키텍처, 인프라스트럭처 애즈 코드(IaC), 클라우드 네이티브
-- **하위/연관 개념**: 컨트롤 루프(Control Loop), 멱등성(Idempotency), Kube-Controller-Manager, YAML 매니페스트, GitOps(ArgoCD)
+### Reconciliation Loop
+
+| 단계 | 설명 |
+|:---|:---|
+| **Observe** | 현재 상태 확인 (Pod 2개) |
+| **Diff** | Desired(3개) vs Current(2개) = 1개 부족 |
+| **Act** | Pod 1개 생성 → 3개 달성 |
+| **반복** | 무한 루프로 상태 유지 |
+
+### Operator Pattern
+- **Custom Resource (CR)**: 사용자 정의 리소스 (e.g., `PostgreSQL`).
+- **Custom Controller**: CR의 Desired State를 Reconcile하는 로직.
+- 결과: `kubectl apply -f postgres.yaml`로 **DB 클러스터 자동 프로비저닝**.
+
+- **📢 섹션 요약 비유**: Operator는 전문 기술자 로봇이다. "PostgreSQL 3대 클러스터"를 선언하면, 로봇이 설치·설정·백업·스케일링을 전부 자동으로 한다.
+
+---
+
+## Ⅲ. 비교 및 연결
+
+| 비교 | 명령형 | 선언적 |
+|:---|:---|:---|
+| **표현** | How (방법) | **What (목표)** |
+| **상태 보장** | 없음 | **자동 복원** |
+| **GitOps** | 불가 | **자연스러운 결합** |
+| **롤백** | 수동 | **git revert → 자동** |
+
+---
+
+## Ⅳ. 실무 적용 및 기술사 판단
+
+### 선언적 관리 Best Practice
+1. 모든 리소스를 YAML로 정의 → Git 관리.
+2. `kubectl apply -f` (선언적) 사용, `kubectl create/run` (명령형) 지양.
+3. Kustomize/Helm으로 환경별 분기.
+
+---
+
+## Ⅴ. 기대효과 및 결론
+
+선언적 API는 K8s의 **철학적 핵심**이며, 이 원칙 덕분에 GitOps·Operator·Self-healing이 자연스럽게 구현된다. 모든 클라우드 네이티브 도구가 이 패러다임을 따른다.
+
+---
+
+### 📌 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+|:---|:---|
+| **Desired State** | YAML로 선언한 목표 상태 |
+| **Reconciliation Loop** | 현재→목표 자동 수렴 |
+| **Operator Pattern** | CR + Controller로 선언적 확장 |
+| **GitOps** | 선언적 API 위에 Git 기반 운영 |
+| **Self-healing** | Reconciliation의 자동 복구 효과 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[명령형 인프라 관리 (스크립트, 2000s)]
+    │
+    ▼
+[K8s 선언적 API (2014~) — Desired State + Reconciliation]
+    │
+    ▼
+[Custom Resource + Operator (2016~) — 선언적 확장]
+    │
+    ▼
+[GitOps (2017~) — Git + 선언적 API 결합]
+    │
+    ▼
+[현재: Crossplane — 클라우드 리소스까지 선언적 관리]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
-1. **명령형**은 로봇에게 "10걸음 앞으로 가, 왼쪽으로 돌아, 블록을 집어"라고 하나하나 조종하는 거예요. 중간에 넘어지면 로봇은 어쩔 줄 몰라 멈춰버리죠.
-2. **선언형(쿠버네티스)**은 로봇에게 "블록을 상자 안에 넣어둔 상태를 만들어!"라고 사진(목표)만 한 장 주는 거예요.
-3. 그러면 로봇이 넘어져도 스스로 다시 일어나고 장애물을 돌아서 결국 어떻게든 사진과 똑같은 상태를 만들어 낸답니다!
+1. 명령형은 "에어컨 켜, 온도 25도로 맞춰"라고 **하나하나 지시**하는 거예요.
+2. 선언적은 "방 온도 25도 유지해"라고 **목표만 말하면** 항온기(K8s)가 알아서 조절해요.
+3. 온도가 올라가면 **자동으로 에어컨을 켜서** 다시 25도로 맞춰주니까 편리하답니다!
