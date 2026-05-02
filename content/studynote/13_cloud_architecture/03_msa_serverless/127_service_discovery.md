@@ -1,72 +1,109 @@
 +++
 weight = 127
-title = "서비스 디스커버리 (Service Discovery)"
-date = "2024-03-24"
+title = "127. Service Discovery - MSA 서비스 자동 등록·탐색 메커니즘"
+date = "2026-04-19"
 [extra]
-categories = "studynote-cloud"
+categories = "studynote-cloud-architecture"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
-- **서비스 디스커버리**는 클라우드 환경에서 오토스케일링 등으로 인해 동적으로 변하는 마이크로서비스들의 IP 주소와 포트 위치를 자동으로 찾아주는 매커니즘임.
-- 각 서비스의 상태를 저장하는 **서비스 레지스트리(Service Registry)**와 이를 조회하는 탐색 로직으로 구성됨.
-- 클라이언트 사이드와 서버 사이드 탐색 방식이 있으며, MSA 환경의 네트워킹 핵심 기반 기술임.
+> 1. **본질**: Service Discovery는 **MSA에서 동적으로 변하는 서비스 인스턴스의 위치(IP:Port)를 자동으로 등록·탐색·갱신**하는 메커니즘이며, 서비스 레지스트리(Service Registry)가 핵심 컴포넌트이다.
+> 2. **가치**: 컨테이너 환경에서 서비스 인스턴스는 스케일링·재배포 시 **IP가 수시로 변경**되므로 하드코딩이 불가능하며, Service Discovery가 **"주문 서비스 어디 있어?"에 실시간 답변**한다.
+> 3. **판단 포인트**: **Client-side(클라이언트가 레지스트리 조회)** vs **Server-side(로드밸런서가 레지스트리 조회)**를 구분하고, K8s의 DNS 기반 Service Discovery가 사실상 표준이다.
 
-### Ⅰ. 개요 (Context & Background)
-- 고정된 IP를 가진 전통적인 서버 환경과 달리, 클라우드/컨테이너 환경에서는 파드(Pod)나 인스턴스가 수시로 생성되고 소멸함.
-- 수백 개의 서비스가 서로 통신할 때 수동으로 IP를 관리하는 것은 불가능하므로, 동적으로 위치 정보를 등록하고 조회하는 자동화 체계가 필수적임.
-- 넷플릭스 유레카(Eureka), 쿠버네티스 서비스(DNS/Kube-proxy), 주키퍼(ZooKeeper) 등이 대표적인 솔루션임.
+---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
-- 서비스 디스커버리는 '등록(Registration)', '해지(Deregistration)', '탐색(Lookup)'의 생명주기를 가짐.
+## Ⅰ. 개요 및 필요성
 
 ```text
-[ Service Discovery Workflow ]
-+---------------------+       +---------------------+
-|  Service Registry   | <---  |  New Service Node   |
-| (Database of IPs)   | [REG] | [Self-Registration] |
-+---------------------+       +---------------------+
-          ^
-          | [LOOKUP]
-+---------|-----------+       +---------------------+
-|   Service Consumer  | ----> |   Service Provider  |
-| (Client/Gateway)    | [CALL]| (Found via IP/Port) |
-+---------------------+       +---------------------+
-
-[ BILINGUAL PATTERN: Client vs Server Side ]
-1. Client-Side: Client calls Registry -> Gets IP -> Calls Service Direct. (e.g., Netflix Eureka)
-2. Server-Side: Client calls Load Balancer -> LB calls Registry -> LB routes to Service. (e.g., AWS ELB, K8s Service)
-
-+-------------------+       +-------------------+       +-------------------+
-|     Client        | ----> |   Load Balancer   | ----> |   Service Node    |
-| [Request Service] |       | [Query Registry]  |       | [Receive Request] |
-+-------------------+       +-------------------+       +-------------------+
+┌───────────────────────────────────────────────────────┐
+│    Service Discovery 동작                             │
+├───────────────────────────────────────────────────────┤
+│  1. 서비스 인스턴스 시작 → Registry에 등록           │
+│     (Order-Svc: 10.0.1.5:8080)                       │
+│  2. 호출자가 "Order-Svc 어디?" → Registry 조회       │
+│  3. Registry 응답: 10.0.1.5:8080                     │
+│  4. 호출자 → 10.0.1.5:8080 직접 호출                │
+│  5. 인스턴스 종료 → Registry에서 제거 (헬스체크)     │
+└───────────────────────────────────────────────────────┘
 ```
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+- **📢 섹션 요약 비유**: Service Discovery는 **전화번호부**이다. 사람(서비스)이 이사(IP 변경)해도 전화번호부(레지스트리)를 보면 **현재 주소를 찾을 수 있다**.
 
-| 방식 | 클라이언트 사이드 (Client-Side) | 서버 사이드 (Server-Side) |
-| :--- | :--- | :--- |
-| **특징** | 클라이언트가 레지스트리를 직접 조회 | 로드밸런서가 레지스트리 조회 대행 |
-| **장점** | 서비스별 부하 분산 알고리즘 직접 구현 | 클라이언트 로직 단순화 (투명성) |
-| **단점** | 서비스 언어별 디스커버리 라이브러리 필요 | 로드밸런서 자체가 가용성 병목(SPOF) 가능 |
-| **솔루션** | Netflix Eureka, Consul | Kubernetes Service, AWS ELB/ALB |
+---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
-- **헬스 체크(Health Check)**: 레지스트리는 서비스 노드의 생존 여부를 주기적으로 확인하여, 장애가 발생한 노드의 IP를 자동으로 목록에서 제거해야 함.
-- **쿠버네티스 기반 표준**: 최근에는 인프라 레벨에서 DNS를 통해 서비스 디스커버리를 제공하는 쿠버네티스 표준 방식이 선호됨.
-- **가용성 설계**: 서비스 레지스트리 자체가 죽으면 전체 통신이 불가능해지므로, 레지스트리는 반드시 클러스터링(etcd 등)을 통해 고가용성을 확보해야 함.
+## Ⅱ. 아키텍처 및 핵심 원리
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
-- 서비스 디스커버리는 유연한 확장(Scaling)과 자가 치유(Self-healing) 아키텍처를 실현하는 클라우드 네이티브의 근간임.
-- 향후 서비스 메시(Service Mesh)에서는 사이드카 프록시가 이 역할을 대행하며 개발자의 비즈니스 로직과 더욱 격리될 것임.
-- 결론적으로 서비스 디스커버리는 **복잡한 분산 시스템의 '내비게이션'** 역할을 수행하여 통신 복잡도를 획기적으로 낮춤.
+### Client-side vs Server-side
 
-### 📌 관련 개념 맵 (Knowledge Graph)
-- **상위 개념**: 마이크로서비스 아키텍처 (MSA), 오케스트레이션
-- **하위 개념**: 서비스 레지스트리, 헬스 체크, 유레카, DNS
-- **연관 개념**: 로드 밸런서, API 게이트웨이, 쿠버네티스, etcd
+| 방식 | 동작 | 대표 |
+|:---|:---|:---|
+| **Client-side** | 클라이언트가 레지스트리 조회 + LB | **Eureka** |
+| **Server-side** | LB가 레지스트리 조회 | **K8s Service** |
+
+### K8s Service Discovery
+- Pod 생성 → kube-dns에 자동 등록.
+- `order-svc.default.svc.cluster.local`로 DNS 조회.
+
+- **📢 섹션 요약 비유**: Client-side는 직접 전화번호부를 찾는 것, Server-side는 안내 데스크(LB)에 물어보는 것이다.
+
+---
+
+## Ⅲ. 비교 및 연결
+
+| 비교 | 하드코딩 | Service Discovery |
+|:---|:---|:---|
+| **IP 변경** | 코드 수정 | **자동 갱신** |
+| **스케일링** | 수동 | **동적 등록** |
+| **장애** | 감지 불가 | **헬스체크 제거** |
+
+---
+
+## Ⅳ. 실무 적용 및 기술사 판단
+
+### 대표 도구
+- **Consul** (HashiCorp): Service Discovery + Config.
+- **Eureka** (Netflix): Client-side, Spring Cloud.
+- **K8s Service**: Server-side, DNS 기반.
+- **etcd**: K8s의 상태 저장소.
+
+---
+
+## Ⅴ. 기대효과 및 결론
+
+Service Discovery는 **MSA의 서비스 간 통신의 기본 인프라**이며, K8s 환경에서는 DNS 기반으로 투명하게 제공된다.
+
+---
+
+### 📌 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+|:---|:---|
+| **Service Registry** | 서비스 위치 저장소 |
+| **헬스체크** | 비정상 인스턴스 자동 제거 |
+| **Consul** | HashiCorp 서비스 디스커버리 |
+| **Eureka** | Netflix 클라이언트 사이드 |
+| **K8s DNS** | 서버 사이드 디스커버리 표준 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[하드코딩 IP (전통, ~2010s)]
+    │
+    ▼
+[Client-side Discovery (Eureka, 2012~)]
+    │
+    ▼
+[Server-side Discovery (K8s Service, 2015~)]
+    │
+    ▼
+[Service Mesh (Istio/Envoy, 2018~) — 투명한 Discovery]
+    │
+    ▼
+[현재: 멀티 클러스터 Discovery — 클러스터 간 서비스 탐색]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
-- 학교 축제 때 떡볶이 가게 위치가 자꾸 바뀔 때, 게시판에 가서 "오늘 떡볶이 어디서 팔아요?"라고 물어보는 것과 같아요.
-- 게시판(레지스트리)은 가게가 어디로 이사 갔는지 실시간으로 알려줘요.
-- 덕분에 손님들은 가게 주소를 외우지 않아도 맛있는 떡볶이를 찾으러 갈 수 있답니다.
+1. Service Discovery는 **전화번호부**예요. 친구(서비스)가 이사해도 **새 주소**를 찾을 수 있어요.
+2. 전화번호부가 없으면 친구가 이사할 때마다 **직접 물어봐야** 해서 불편해요.
+3. 쿠버네티스(K8s)는 전화번호부를 **자동으로 업데이트**해줘서 편리하답니다!
