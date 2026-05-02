@@ -1,83 +1,107 @@
 +++
 weight = 121
-title = "지도 학습 (Supervised Learning)"
-date = "2024-05-22"
+title = "121. 지도 학습 (Supervised Learning) - 라벨 기반 학습·분류·회귀"
+date = "2026-04-19"
 [extra]
-categories = "studynote-bigdata"
+categories = "studynote-dataengineering"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
-1. **정답(Label)이 포함된 학습 데이터**를 통해 입력(X)과 출력(Y) 간의 매핑 함수(Mapping Function)를 도출하는 기계학습 방법론이다.
-2. 결과값의 특성에 따라 연속적인 수치를 예측하는 **회귀(Regression)**와 불연속적인 범주를 구분하는 **분류(Classification)**로 나뉜다.
-3. 데이터 엔지니어링 관점에서 고품질의 **라벨링된 데이터셋(Labeled Dataset)** 확보와 피처 엔지니어링(Feature Engineering)이 모델 성능의 핵심이다.
+> 1. **본질**: 지도 학습은 **입력(X)과 정답 라벨(y)의 쌍**으로 구성된 학습 데이터를 통해 모델이 **X→y 매핑 함수를 학습**하는 ML 패러다임이며, 분류(Classification)와 회귀(Regression)로 나뉜다.
+> 2. **가치**: 정답 라벨이 주어지므로 **명확한 평가 기준(정확도·MSE)**이 있어 모델 성능을 객관적으로 측정할 수 있으며, 가장 성숙하고 실무에서 널리 사용되는 ML 방식이다.
+> 3. **판단 포인트**: 지도 학습의 핵심 과제는 **라벨링 비용(인건비·시간)**이며, 이를 줄이기 위한 Semi-supervised Learning·Self-supervised Learning·Active Learning이 대안으로 발전했다.
 
 ---
 
-### Ⅰ. 개요 (Context & Background)
-기계학습(Machine Learning)의 가장 대표적인 유형으로, 입력 데이터와 그에 대응하는 명확한 정답(Ground Truth)을 쌍으로 제공하여 모델을 훈련시킨다. 이는 마치 학생이 문제와 해답지가 있는 문제집으로 공부하는 것과 유사하며, 명확한 목표값이 존재하므로 예측 성능 평가(Accuracy, MSE 등)가 직관적이다.
-
----
-
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
-지도 학습은 훈련 단계(Training Phase)에서 오차(Loss)를 최소화하는 방향으로 가중치(Weights)를 업데이트하고, 추론 단계(Inference Phase)에서 미지의 데이터에 대해 결과를 예측한다.
+## Ⅰ. 개요 및 필요성
 
 ```text
-[ Supervised Learning Workflow / 지도 학습 워크플로우 ]
-
-    +-------------------+       +-----------------------+
-    |  Labeled Dataset  |       |  Training Algorithm   |
-    | (Features, Label) | ----> | (Gradient Descent...) |
-    +---------+---------+       +-----------+-----------+
-              |                             |
-              v                             v
-    +---------+---------+       +-----------+-----------+
-    |   Input (X)       | ----> |  Model Function (f)   | ----> Prediction (Y')
-    +-------------------+       +-----------+-----------+
-                                            |
-                                            v
-                                +-----------+-----------+
-                                |  Loss Function (L)    | <--- Compare (Y, Y')
-                                +-----------------------+
+┌───────────────────────────────────────────────────────┐
+│    지도 학습 분류 vs 회귀                              │
+├───────────────────────────────────────────────────────┤
+│  [분류 (Classification)]                              │
+│   입력: 이메일 텍스트 → 출력: 스팸/정상 (이산값)      │
+│   모델: 로지스틱 회귀, SVM, Random Forest, DNN       │
+│                                                       │
+│  [회귀 (Regression)]                                  │
+│   입력: 면적·위치 → 출력: 집값 3.2억 (연속값)        │
+│   모델: 선형 회귀, Ridge, Random Forest, DNN          │
+└───────────────────────────────────────────────────────┘
 ```
 
-1. **학습 알고리즘**: 경사 하강법(Gradient Descent)을 통해 손실 함수를 최소화하는 최적의 파라미터를 탐색한다.
-2. **범주**:
-   - **분류(Classification)**: Binary(이진), Multi-class(다중), Multi-label 분류. (예: 스팸 여부, 숫자 인식)
-   - **회귀(Regression)**: 선형 회귀, 다항 회귀 등. (예: 주택 가격 예측, 매출 전망)
+- **📢 섹션 요약 비유**: 분류는 "이 동물이 고양이인가 개인가?" (카테고리)이고, 회귀는 "이 집의 가격은 얼마인가?" (숫자)이다.
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## Ⅱ. 아키텍처 및 핵심 원리
 
-| 비교 항목 | 분류 (Classification) | 회귀 (Regression) |
-| :--- | :--- | :--- |
-| **출력값 형태** | 이산적 (Discrete) / 범주형 | 연속적 (Continuous) / 수치형 |
-| **핵심 목표** | 데이터가 속한 클래스 결정 | 입력 변수 간의 상관관계 및 수치 도출 |
-| **평가 지표** | Accuracy, Precision, Recall, F1-Score | MSE, RMSE, MAE, R-Squared |
-| **대표 알고리즘** | SVM, Random Forest, Logistic Regression | Linear Regression, Lasso, Ridge |
+### 학습 패러다임 비교
 
----
+| 패러다임 | 라벨 | 목표 | 대표 |
+|:---|:---|:---|:---|
+| **지도** | **있음** | 예측 | 분류·회귀 |
+| **비지도** | 없음 | 구조 발견 | 클러스터링·PCA |
+| **강화** | 보상 | 행동 최적화 | 게임·로봇 |
+| **자기 지도** | 자동 생성 | 표현 학습 | **BERT·GPT** |
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
-1. **데이터 품질(Data Quality)**: "Garbage In, Garbage Out". 라벨링 오류(Mislabeled)는 모델 성능을 직접적으로 저하시키므로 데이터 클렌징과 QA 공정이 필수적이다.
-2. **과적합(Overfitting) 관리**: 훈련 데이터에만 과도하게 최적화되어 일반화 성능이 떨어지는 것을 막기 위해 규제(Regularization)와 교차 검정(Cross Validation)을 적용해야 한다.
-3. **PE 관점의 판단**: 실무에서는 라벨링 비용이 매우 높으므로, 초기에는 적은 양의 데이터로 지도 학습을 수행하고 이후 능동 학습(Active Learning)이나 준지도 학습(Semi-supervised Learning)으로 확장하는 전략이 효율적이다.
+- **📢 섹션 요약 비유**: 지도 학습은 선생님(라벨)이 정답을 알려주는 수업, 비지도는 혼자 규칙을 찾는 탐구, 강화는 게임에서 점수를 올리며 배우는 것이다.
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
-지도 학습은 이미 이미지 인식, 음성 번역, 질병 진단 등 다양한 분야에서 인간 수준의 성능을 입증했다. 향후에는 초거대 모델(Foundation Model)을 활용한 미세 조정(Fine-tuning) 전략이 주류가 될 것이며, 데이터 엔지니어는 대규모 데이터 파이프라인 자동화와 라벨링 효율화를 통해 AI의 경제성을 확보해야 한다.
+## Ⅲ. 비교 및 연결
+
+| 비교 | 분류 | 회귀 |
+|:---|:---|:---|
+| **출력** | 이산 (카테고리) | **연속 (숫자)** |
+| **손실** | Cross-Entropy | **MSE** |
+| **평가** | Accuracy, F1 | **R², RMSE** |
 
 ---
 
-### 📌 관련 개념 맵 (Knowledge Graph)
-- **상위 개념**: Machine Learning (기계학습)
-- **하위 개념**: Linear Regression, Support Vector Machine, Decision Tree, Neural Networks
-- **연관 개념**: Loss Function, Overfitting, Labeling, Feature Engineering
+## Ⅳ. 실무 적용 및 기술사 판단
+
+### 라벨링 비용 절감 전략
+1. **Active Learning**: 불확실한 샘플만 라벨링 요청.
+2. **Semi-supervised**: 소량 라벨 + 대량 비라벨 활용.
+3. **Self-supervised**: 데이터 자체에서 라벨 자동 생성 (BERT 마스킹).
 
 ---
+
+## Ⅴ. 기대효과 및 결론
+
+지도 학습은 ML의 **가장 기본이자 실무 적용이 가장 광범위한 패러다임**이며, Self-supervised Learning(BERT·GPT)이 라벨링 비용 문제를 혁신적으로 해결하면서 새로운 지평을 열고 있다.
+
+---
+
+### 📌 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+|:---|:---|
+| **분류** | 이산값 예측 (스팸 탐지·이미지 분류) |
+| **회귀** | 연속값 예측 (가격·매출 예측) |
+| **라벨링 비용** | 지도 학습의 핵심 과제 |
+| **Self-supervised** | 라벨 없이 학습 (BERT·GPT) |
+| **편향-분산 트레이드오프** | 지도 학습 모델 선택의 기준 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[선형 회귀 / 로지스틱 회귀 (통계학)]
+    │
+    ▼
+[SVM / Decision Tree (1990s)]
+    │
+    ▼
+[Random Forest / XGBoost (2000~2010s)]
+    │
+    ▼
+[DNN / CNN / RNN (Deep Learning, 2012~)]
+    │
+    ▼
+[현재: Self-supervised → Fine-tuning (BERT·GPT)]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
-1. 사과 사진 밑에 '사과'라고 적힌 카드로 공부하는 것과 같아요.
-2. 나중에 글자가 없는 사과 사진만 봐도 "이건 사과야!"라고 맞힐 수 있게 돼요.
-3. 선생님(정답)이 옆에서 틀린 걸 바로바로 고쳐주는 공부법이에요.
+1. 지도 학습은 **선생님(라벨)**이 "이건 고양이, 이건 개"라고 알려주는 수업이에요.
+2. 많이 배우면 처음 보는 동물 사진도 **"이건 고양이야!"**라고 맞출 수 있어요.
+3. 문제는 선생님이 **일일이 정답을 알려줘야 해서** 시간과 비용이 많이 든다는 거예요!
