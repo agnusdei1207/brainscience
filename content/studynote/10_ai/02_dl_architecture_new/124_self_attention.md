@@ -1,74 +1,105 @@
 +++
 weight = 124
-title = "셀프 어텐션 (Self-Attention)"
-date = "2025-05-15"
+title = "124. Self-Attention (자기 주의 메커니즘) - 시퀀스 내 모든 위치 상호 참조"
+date = "2026-04-19"
 [extra]
 categories = "studynote-ai"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
-- 입력 시퀀스 내의 모든 단어가 **서로를 참조**하여 문맥적 의미를 파악하는 내부 응집 기법이다.
-- "The animal didn't cross the street because **it** was too tired"에서 'it'이 'animal'임을 수학적으로 찾아내는 핵심 기술이다.
-- 거리에 상관없이 단어 간의 직접적인 연결을 형성하여 RNN의 고질적인 **장기 의존성(Long-term Dependency)** 문제를 해결한다.
+> 1. **본질**: Self-Attention은 **같은 시퀀스 내에서 각 위치가 다른 모든 위치를 참조**하여 문맥을 파악하는 메커니즘이며, Transformer의 핵심 연산이다. Q·K·V가 모두 **같은 시퀀스에서 생성**된다.
+> 2. **가치**: "The animal didn't cross the street because **it** was too tired"에서 "it"이 "animal"을 가리킨다는 것을 파악하려면 문장 전체를 참조해야 하며, Self-Attention이 이를 **가중치로 정량화**한다.
+> 3. **판단 포인트**: Cross-Attention(Q≠K,V, 인코더→디코더)과 구분하고, **Masked Self-Attention**(디코더에서 미래 토큰 참조 방지)의 필요성을 이해해야 한다.
 
-### Ⅰ. 개요 (Context & Background)
-전통적인 RNN은 단어를 순차적으로 처리하며 정보를 압축하기 때문에, 문장이 길어지면 앞쪽의 정보를 잃어버리는 한계가 있었다. 셀프 어텐션은 문장 전체를 한꺼번에 입력받아, 모든 단어 쌍(Pairwise)에 대해 유사도를 계산한다. 이를 통해 각 단어는 자신을 둘러싼 주변 맥락(Context)을 완벽하게 반영한 새로운 벡터 표현을 얻게 된다.
+---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
-셀프 어텐션은 동일한 시퀀스에서 유래한 Q, K, V를 사용하여 연산을 수행한다.
+## Ⅰ. 개요 및 필요성
 
 ```text
-[Self-Attention Mechanism: Intra-sequence Relationship]
-
-Input Sequence: "I love learning AI"
-                 X1  X2     X3    X4
-
-Step 1: Each Xi generates Qi, Ki, Vi via weight matrices.
-
-Step 2: Score Calculation (Similarity check within same sentence)
-   Score(X1, X1), Score(X1, X2), Score(X1, X3), Score(X1, X4)
-   - "I" relates to "I", "love", "learning", "AI"
-
-Step 3: Softmax Normalization
-   Weights = Softmax(Scores)
-
-Step 4: Weighted Sum of Values
-   Contextual_X1 = Σ (Weights * Vi)
-
-[Architecture Diagram]
-     [I]    [love]   [learning]   [AI]
-      |       |          |         |
-   +--v-------v----------v---------v--+
-   |        Self-Attention Layer      |  <-- Every word looks at 
-   |      (All-to-All Interaction)    |      every other word.
-   +--|-------|----------|---------|--+
-      v       v          v         v
-    [C1]    [C2]       [C3]      [C4]    <-- Context-aware vectors
+┌───────────────────────────────────────────────────────┐
+│    Self-Attention 동작                                │
+├───────────────────────────────────────────────────────┤
+│  입력: "The cat sat on the mat"                       │
+│                                                       │
+│  "sat"의 Self-Attention:                              │
+│   "The"→0.05, "cat"→0.30, "sat"→0.10               │
+│   "on"→0.15, "the"→0.05, "mat"→0.35                │
+│   → "sat"은 "cat"과 "mat"에 높은 가중치!            │
+│   → "누가(cat) 어디에(mat) 앉았는지" 파악            │
+└───────────────────────────────────────────────────────┘
 ```
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+- **📢 섹션 요약 비유**: Self-Attention은 교실에서 **모든 학생이 서로의 얼굴을 보면서** 누가 누구와 관련 있는지 파악하는 것이다.
 
-| 비교 항목 (Criteria) | 셀프 어텐션 (Self-Attention) | RNN (Recurrent) | CNN (Convolutional) |
-| :--- | :--- | :--- | :--- |
-| **문맥 참조 범위** | **전체 시퀀스 (Global)** | 이전 상태 (Sequential) | 윈도우 크기 내 (Local) |
-| **병렬 처리** | **완전 가능 (Highly Parallel)** | 불가능 (Step-by-step) | 가능 (Filter-based) |
-| **장거리 의존성** | **상수 시간 O(1) 연결** | 선형 시간 O(n) 소실 | 로그 시간 O(log n) |
-| **연산 복잡도** | O(n² · d) (시퀀스 길이 제곱) | O(n · d²) | O(k · n · d²) |
+---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
-- **(문맥적 중의성 해결)** "Bank"라는 단어가 "River bank"인지 "Investment bank"인지 주변 단어와의 셀프 어텐션 강도를 통해 즉각적으로 판별한다.
-- **(연산 비용 이슈)** 시퀀스 길이(n)의 제곱에 비례하는 연산 복잡도 때문에, 아주 긴 문서(Long Context) 처리 시 메모리 부족 문제가 발생한다. 이를 위해 **Linear Attention**이나 **Flash Attention** 같은 최적화 기법이 실무적으로 중요하다.
-- **(기술사적 가치)** 셀프 어텐션은 '정적인 단어장'을 '살아있는 문맥'으로 변환하는 **다이나믹 그래프** 생성 기술이며, 이는 인공지능이 인간의 언어 이해 방식과 유사한 추론을 수행하게 하는 결정적 계기가 되었다.
+## Ⅱ. 아키텍처 및 핵심 원리
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
-셀프 어텐션은 트랜스포머의 핵심 엔진으로서 NLP를 넘어 비전(Vision Transformer), 단백질 구조 예측(AlphaFold 2) 등 다양한 도메인으로 확장되고 있다. 데이터 내의 숨겨진 모든 관계를 스스로 찾아내는 이 메커니즘은 '범용 인공지능(AGI)'으로 가는 가장 중요한 수학적 도구로 평가받는다.
+### Self vs Cross vs Masked
 
-### 📌 관련 개념 맵 (Knowledge Graph)
-- **부모 개념**: 어텐션 메커니즘(Attention Mechanism)
-- **자식/확장 개념**: 멀티 헤드 어텐션(Multi-Head Attention), 마스크드 셀프 어텐션(Masked Self-Attention)
-- **유사 개념**: 그래프 신경망(GNN - 노드 간 관계 처리), 완전 연결망(Fully Connected)
+| 유형 | Q·K·V | 용도 |
+|:---|:---|:---|
+| **Self** | 같은 시퀀스 | **인코더 (양방향)** |
+| **Cross** | Q(디코더), K,V(인코더) | 인코더→디코더 참조 |
+| **Masked Self** | 같은 시퀀스 + 미래 마스킹 | **디코더 (자기 회귀)** |
+
+- **📢 섹션 요약 비유**: Self는 책 전체를 보고 이해하는 것, Masked는 앞 페이지만 보고 다음 페이지를 예측하는 것이다.
+
+---
+
+## Ⅲ. 비교 및 연결
+
+| 비교 | RNN | Self-Attention |
+|:---|:---|:---|
+| **참조 범위** | 직전 상태 | **전체 시퀀스** |
+| **병렬화** | 불가 | **가능** |
+| **장거리 의존성** | 약함 | **강함** |
+
+---
+
+## Ⅳ. 실무 적용 및 기술사 판단
+
+### 계산 복잡도
+- Self-Attention: **O(n²)** — 시퀀스 길이 n에 대해 모든 쌍 비교.
+- 해결: Linear Attention·Flash Attention·Sliding Window.
+
+---
+
+## Ⅴ. 기대효과 및 결론
+
+Self-Attention은 **Transformer·BERT·GPT의 단일 핵심 메커니즘**이며, Vision(ViT)·Audio(Whisper)까지 확장되어 현대 AI의 근간이다.
+
+---
+
+### 📌 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+|:---|:---|
+| **Self-Attention** | 같은 시퀀스 내 상호 참조 |
+| **Masked Self-Attention** | 미래 토큰 마스킹 (GPT 디코더) |
+| **Multi-Head** | 다관점 Self-Attention |
+| **O(n²) 복잡도** | Self-Attention의 한계 |
+| **Flash Attention** | O(n²) 메모리 최적화 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[Cross-Attention (Bahdanau, 2014)]
+    │
+    ▼
+[Self-Attention (Transformer, 2017)]
+    │
+    ▼
+[Multi-Head + Masked Self-Attention (GPT)]
+    │
+    ▼
+[Efficient Attention (Linformer, 2020 — O(n))]
+    │
+    ▼
+[현재: Flash Attention 2/3 — 메모리 최적화]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
-1. 교실에 있는 모든 친구들이 서로를 쳐다보면서 "누가 나랑 제일 친한가?" 생각해요.
-2. "나(it)"라는 단어는 "강아지(animal)"라는 친구를 가장 빤히 쳐다보며 그 뜻을 이해해요.
-3. 이렇게 서로를 꼼꼼히 살펴보면 문장 속의 숨은 뜻을 완벽하게 알 수 있답니다!
+1. Self-Attention은 교실에서 **모든 친구의 얼굴을 보면서** 관계를 파악하는 거예요.
+2. "고양이가 매트 위에 앉았다"에서 "앉았다"는 **"고양이"와 "매트"를 더 많이** 봐요.
+3. 이 방법 덕분에 AI가 **문장의 뜻을 정확하게 이해**할 수 있답니다!
