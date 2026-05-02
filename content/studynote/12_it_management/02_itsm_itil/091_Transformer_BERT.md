@@ -8,286 +8,136 @@ tags = ["Transformer", "BERT", "Self-Attention", "어텐션", "사전학습", "�
 categories = ["studynote-bigdata"]
 +++
 
-# Transformer/BERT (트랜스포머/양방향 인코더 표현)
+## 핵심 인사이트 (3줄 요약)
 
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Transformer는 2017년 Vaswani et al.이 제안한 모델로, Self-Attention 메커니즘을 통해 시퀀스의 모든 위치 간 의존성을 병렬적으로 계산할 수 있어, RNN의 순차적 처리 한계를 극복한 것이다.
-> 2. **가치**: BERT는 Transformer의 인코더 부분을 활용하여 양방향(Bidirectional) 문맥을 동시에 고려하는 사전 학습 모델로, 다양한NLPタスクで最高 성능을 달성하고 있다.
-> 3. **융합**: BERT 이후RoBERTa, ALBERT, ELECTRA 등 다수의 BERT 변형 모델이 등장했으며, GPT 계열과 함께 현대 NLP의 사실상의 표준 기반 역할을 하고 있다.
+> 1. **본질**: Transformer는 기존 RNN의 순차 처리 한계를 극복하기 위해, 입력된 시퀀스 내의 모든 단어 위치 간 의존성을 동시에 계산하는 셀프 어텐션(Self-Attention) 메커니즘만으로 구성된 병렬 처리 인공신경망 아키텍처다.
+> 2. **가치**: 이 아키텍처의 인코더(Encoder)만을 분리해 대규모 텍스트로 양방향 문맥을 학습시킨 모델이 BERT이며, 특정 도메인의 데이터만 조금 추가하는 파인튜닝(Fine-tuning)만으로 다양한 자연어 처리 문제에서 압도적 성능을 낸다.
+> 3. **판단 포인트**: 시계열이나 순서 데이터의 맥락을 완벽히 이해해야 할 때 RNN 대신 Transformer 계열을 채택하되, 텍스트의 분류나 문맥 파악이 목적이면 BERT(인코더)를, 텍스트 생성이 목적이면 GPT(디코더)를 선택해야 한다.
 
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+## Ⅰ. 개요 및 필요성
 
-Transformer는 2017년 Google's论文"Attention Is All You Need"에서 소개되었으며, NLP 분야에Revolution을 가져왔다. 그전까지 RNN(특히 LSTM/GRU)이 순서 데이터 처리의 표준이었지만, Transformer는 Attention 메커니즘만으로 구성되어 RNN을 完全하게替代했다.
+Transformer는 2017년 구글이 "Attention Is All You Need" 논문에서 발표한 딥러닝 아키텍처로, 자연어 처리(NLP) 분야의 패러다임을 바꾼 핵심 기술이다. 
 
-왜 Transformer가 중요한가? RNN의 가장 큰 문제점은 시퀀스가 길어질수록 먼 위치의 정보를 전달하기 어려워지는"장기 의존성(Long-term Dependency)"문제와"순차적 처리"로 인한 병렬화 한계였다. Transformer는 이러한 제약을 Self-Attention으로 완전히 해결했다.
+과거 언어 번역이나 문장 분석에는 단어를 순서대로 하나씩 읽어 들이는 RNN(Recurrent Neural Network)이 표준으로 사용되었다. 그러나 RNN은 치명적인 단점이 있었다. 순서대로 읽다 보니 문장이 길어지면 앞에 읽었던 단어의 의미를 잊어버리는 장기 의존성(Long-term Dependency) 문제가 발생했고, 이전 단어 처리가 끝나야 다음 단어를 처리할 수 있어 GPU를 활용한 병렬 연산이 불가능했다. Transformer는 단어의 순서에 얽매이지 않고 문장 전체를 한 번에 입력받아, 모든 단어가 서로 어떤 연관이 있는지를 셀프 어텐션 메커니즘을 통해 동시에 계산해냄으로써 이 두 가지 문제를 완벽하게 해결했다.
+
+- **📢 섹션 요약 비유**: 과거의 RNN이 한 줄로 서서 앞사람이 뒷사람에게 귓속말로 문장을 전달하다가 내용이 왜곡되는 '전화 게임'이라면, Transformer는 단체 채팅방에 모든 사람이 동시에 들어와 누가 어떤 맥락으로 말했는지 실시간으로 파악하는 효율적인 화상 회의와 같다.
+
+---
+
+## Ⅱ. 아키텍처 및 핵심 원리
+
+Transformer 모델은 입력을 분석하는 인코더(Encoder)와 결과를 생성하는 디코더(Decoder)로 나뉜다. 이 아키텍처의 핵심 심장부는 **멀티 헤드 어텐션 (Multi-Head Attention)**이다.
+
+| 구성 요소 | 역할 | 핵심 특징 |
+| :--- | :--- | :--- |
+| **셀프 어텐션 (Self-Attention)** | 문장 내 단어 간의 연관성(가중치) 계산 | Query, Key, Value 벡터의 내적으로 중요도 점수 산출 |
+| **멀티 헤드 어텐션** | 어텐션을 병렬로 여러 개 수행 | 문법적 관계, 의미적 관계 등 다양한 관점의 문맥 포착 |
+| **위치 인코딩 (Positional Encoding)** | 병렬 입력으로 잃어버린 단어의 순서 정보 주입 | 사인/코사인 함수를 사용해 위치마다 고유한 값 부여 |
 
 ```text
-[RNN vs Transformer: 처리 방식 비교]
-
-[RNN (순차적 처리)]
-  시간 t=1: x₁ 처리 → h₁
-                    ↓
-  시간 t=2: x₂ + h₁ 처리 → h₂
-                    ↓
-  시간 t=3: x₃ + h₂ 처리 → h₃
-                    ↓
-  ...
-
-  문제: t=1의 정보가 h₃에 전달되려면 2단계 거치는 동안 손실 가능
-       병렬 처리 불가능 (순서 의존)
-
-[Transformer (병렬 처리)]
-  모든 시간 단계 x₁, x₂, x₃, ... xₙ을 동시에 처리
-       │
-  ┌────┴────┐
-  │         │
-  ▼         ▼
-  Self-Attention: 모든 위치 간 관계를 동시에 계산
-
-  병렬 처리 가능 → RNN보다 수십~수백 배 빠른 훈련
-  모든 위치 간 직접 연결 → 장기 의존성 문제 해결
+┌──────────────────────────────────────────────────────────────┐
+│             Self-Attention의 Q, K, V 계산 흐름             │
+├──────────────────────────────────────────────────────────────┤
+│ "The", "cat", "sat" (모든 단어 동시 입력)                  │
+│        │                                                   │
+│        ▼ (선형 변환)                                       │
+│    [ Query(Q) ] : "나는 어떤 정보가 필요한가?"             │
+│    [ Key(K) ]   : "나는 이런 정보를 가지고 있다"           │
+│    [ Value(V) ] : "나의 실제 의미 값은 이것이다"           │
+│        │                                                   │
+│        ▼                                                   │
+│  Attention Score = Softmax( (Q × K^T) / √d ) × V          │
+│        │                                                   │
+│        ▼                                                   │
+│   "cat"과 "sat"의 연관성이 높음을 수학적으로 도출          │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-> 📢 **섹션 요약 비유**: Transformer는犹如효율적인회의진행방식과 유사하다. RNN이 한 사람씩轮流발언하면서 의견을 전달한다면(순차적), Transformer는 모든参会자가 동시에 discussion하고(병렬 처리),누가무엇을 말했는지 모두가即时 확인하는(모든 위치 간 직접 attention) 것과 같다. 훨씬 효율적이고 빠르며,情報の損失도 없다.
+BERT(Bidirectional Encoder Representations from Transformers)는 이 Transformer 구조 중에서 디코더를 버리고 **인코더만**을 차용한 모델이다. BERT의 가장 큰 원리는 문장의 일부 단어를 빈칸([MASK])으로 뚫어놓고, 주변의 양방향 문맥을 모두 고려해 빈칸을 맞추도록 대규모 사전 학습(Pre-training)을 수행한다는 점이다.
+
+- **📢 섹션 요약 비유**: 셀프 어텐션은 소개팅 자리와 같다. Query(내 이상형)와 Key(상대방 프로필)를 대조해 매칭 점수(Attention Score)를 내고, 점수가 높은 사람의 Value(실제 성격)에 가장 큰 비중을 두고 관계를 맺는 수학적 연관도 측정법이다.
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## Ⅲ. 비교 및 연결
 
-### 2.1 Self-Attention 메커니즘
+자연어 처리의 양대 산맥인 BERT와 GPT는 모두 Transformer에서 파생되었으나, 채택한 아키텍처 부품과 목적이 극명하게 다르다.
 
-Self-Attention은 입력 시퀀스 내의 모든 위치들이 서로 어떻게 관련되어 있는지를 계산하는 메커니즘이다.
+| 항목 | BERT | GPT |
+| :--- | :--- | :--- |
+| **차용 아키텍처** | Transformer의 **인코더(Encoder)** | Transformer의 **디코더(Decoder)** |
+| **문맥 참조 방향** | **양방향 (Bidirectional)** | **단방향 (Unidirectional, 좌→우)** |
+| **학습 방식** | 문장 중간의 빈칸([MASK]) 단어 예측 | 주어진 단어들 다음으로 올 단어 예측 |
+| **강점 분야** | 텍스트 분류, 감성 분석, 기계 독해(QA) | 텍스트 생성, 대화형 AI, 요약 |
+
+BERT는 문장의 처음과 끝을 동시에 파악하므로 문맥의 의미를 깊게 이해하는 데 탁월하다. 반면 GPT는 오직 이전 단어들만 보고 다음 단어를 생성해야 하므로 작문 능력에 특화되어 있다. 이들 모두 방대한 데이터로 '사전 학습(Pre-training)'을 마친 뒤, 특정 목적에 맞게 지식을 미세 조정하는 '파인튜닝(Fine-tuning)'이라는 공통된 패러다임을 공유한다.
+
+- **📢 섹션 요약 비유**: BERT는 지문 전체를 앞뒤로 꼼꼼히 읽고 빈칸 추론 문제의 정답을 찾아내는 깐깐한 '독해 수험생'이고, GPT는 앞 단어의 흐름만 보고 뒤이어 나올 단어들을 술술 지어내는 창의적인 '소설가'다.
+
+---
+
+## Ⅳ. 실무 적용 및 기술사 판단
+
+실무 현장에서 NLP 프로젝트를 시작할 때 무작정 모델을 처음부터 학습시키는 것은 시간과 비용의 낭비다. Transformer 기반 모델을 활용한 전이 학습(Transfer Learning) 전략이 필수적이다.
+
+### 체크리스트
+1. **문제의 성격이 분류인가, 생성인가?** 고객의 리뷰가 긍정인지 부정인지 분류하는 문제라면 BERT(또는 RoBERTa, ALBERT) 계열을, 챗봇처럼 자연스러운 답변을 생성해야 한다면 GPT 계열을 선택한다.
+2. **사전 학습된 모델이 도메인에 맞는가?** 의료, 법률 등 특수 도메인일 경우 일반 텍스트로 학습된 기본 BERT보다는 BioBERT, LegalBERT 등 특화된 코퍼스로 사전 학습된 모델을 베이스로 가져와 파인튜닝해야 한다.
+3. **GPU 메모리와 연산 한계가 존재하는가?** Transformer는 시퀀스 길이의 제곱(O(N²))에 비례하여 메모리를 소모한다. 모바일이나 엣지 디바이스 환경이라면 파라미터를 경량화한 DistilBERT나 TinyBERT 채택을 검토한다.
+
+### 안티패턴
+- 수만 건에 불과한 소규모 자체 데이터셋만으로 Transformer 모델을 바닥부터(From Scratch) 학습시키려는 설계. (반드시 거대 코퍼스로 사전 학습된 가중치를 불러와야 한다.)
+- 긴 문서(예: 1만 단어 이상의 보고서)를 전처리 없이 BERT에 한 번에 밀어 넣는 행위. (입력 토큰 길이 제한(보통 512)에 걸려 에러가 발생한다.)
+
+- **📢 섹션 요약 비유**: 일반인(초기 모델)에게 의학 지식을 가르치는 것보다, 이미 수능 만점을 받은 엘리트 의대생(사전 학습된 BERT)을 데려와 우리 병원의 차트 작성법(파인튜닝)만 3일간 가르쳐 현장에 투입하는 것이 훨씬 빠르고 정확한 실무 전략이다.
+
+---
+
+## Ⅴ. 기대효과 및 결론
+
+Transformer와 BERT의 등장은 자연어 처리 역사상 가장 거대한 도약이다. 병렬 처리를 통한 방대한 데이터 학습 능력을 바탕으로, 인공지능이 문맥의 뉘앙스를 인간 수준으로 이해하게 되었다. 
+
+그러나 시퀀스 길이에 따른 폭발적인 연산 비용과 거대 언어 모델(LLM)이 요구하는 천문학적인 컴퓨팅 자원(GPU)은 뚜렷한 한계점이다. 앞으로는 Longformer, Linformer처럼 연산 복잡도를 줄이는 연구와, 언어를 넘어 이미지, 음성까지 하나의 Transformer로 통합 처리하는 멀티모달(Multimodal) 기술로 확장이 가속화될 것이다. 결론적으로 Transformer는 "데이터의 순서를 무시하고 관계의 본질에 직접 집중한 혁명적 아키텍처"로 기억해야 한다.
+
+- **📢 섹션 요약 비유**: 고가의 최고급 만능 조리기(Transformer/BERT)를 들여오면 세상 모든 요리를 최고급 레스토랑 수준으로 만들 수 있지만, 그만큼 주방(GPU 메모리)이 엄청나게 넓어야 하고 전기세(연산 비용)를 감당해야 하는 트레이드오프가 남는다.
+
+---
+
+### 📌 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+| :--- | :--- |
+| **RNN / LSTM** | Transformer 이전에 시계열 및 자연어 처리를 담당하던 순차 처리 기반 모델 |
+| **어텐션 메커니즘 (Attention)** | 인코더의 특정 단어에 가중치를 두어 디코더에 전달하던 기존 기법을, Transformer가 Self-Attention으로 승화시킴 |
+| **사전 학습 (Pre-training) & 파인튜닝 (Fine-tuning)** | 거대 데이터로 언어의 보편적 규칙을 배운 뒤, 소량의 정답 데이터로 특정 태스크에 맞추는 학습 패러다임 |
+| **LLM (Large Language Model)** | Transformer 아키텍처를 기반으로 파라미터 수를 수천억 개로 확장한 거대 언어 모델 |
+
+### 📈 관련 키워드 및 발전 흐름도
 
 ```text
-[Self-Attention 계산 과정]
-
-입력 시퀀스: "The cat sat on the mat"
-
-각 단어에 대해 Query(Q), Key(K), Value(V) 벡터를 생성:
-
-  Q = 입력 × W_Q
-  K = 입력 × W_K
-  V = 입력 × W_V
-
-Attention Score 계산:
-  Attention(Q, K, V) = softmax(QKᵀ / √d_k) × V
-
-  여기서:
-  - QKᵀ: Query와 Key의 유사도 (dot product)
-  - √d_k: 스케일링 (벡터 차원 정규화)
-  - softmax: 확률적으로 변환
-  - V: 실제注意力가 적용될 값
-
-[Multi-Head Attention]
-
-여러 개의 Attention을 병렬로 수행:
-
-  MultiHead = Concat(head₁, head₂, ..., headₕ) × W_O
-
-  각 head_i = Attention(QW_Qᵢ, KW_Kᵢ, VW_Vᵢ)
-
-  이점:
-  - 다양한 종류의 관계를 동시에 포착
-  - 예: head₁은 문법 관계, head₂는 의미 관계 등
+RNN / LSTM (순차 처리, 장기 의존성 한계)
+    │
+    ▼
+Attention Mechanism 도입 (Seq2Seq 성능 개선)
+    │
+    ▼
+Transformer (RNN 제거, 100% 병렬 Self-Attention)
+    │
+    ├──────────────┬──────────────┐
+    ▼              ▼              ▼
+  인코더 활용    디코더 활용  인코더-디코더 모두 활용
+ (BERT 계열)    (GPT 계열)      (T5, BART 계열)
+    │              │
+ 문맥 이해 최적화 텍스트 생성 최적화
+    │              │
+    ▼              ▼
+ 다양한 도메인 파인튜닝 및 초거대 LLM(GPT-4 등) 진화
 ```
 
-### 2.2 Transformer 구조
+### 👶 어린이를 위한 3줄 비유 설명
 
-Transformer는 인코더(Encoder)와 디코더(Decoder)로 구성된다.
-
-```text
-[Transformer 아키텍처]
-
-인코더 (N=6 레이어):
-  입력 임베딩 + 위치 인코딩
-       │
-  ┌────┴────┐
-  │ Encoder │
-  │  Layer  │ × N
-  │ Multi-Head │
-  │ Attention │
-  │   +   FFN  │
-  └────┬────┘
-       │
-  디코더 입력 (Shifted Right)
-       │
-  ┌────┴────┐
-  │ Decoder │
-  │  Layer  │ × N
-  │ Masked  │
-  │ Multi-Head │
-  │ Attention │
-  │   +  Encoder-  │
-  │   Decoder      │
-  │ Attention + FFN│
-  └────┬────┘
-       │
-  선형 계층 + Softmax
-       │
-     출력
-```
-
-**위치 인코딩 (Positional Encoding)**
-Transformer는 순환 구조가 없으므로, 단어의 위치 정보를 추가해야 한다. Sinusoidal 함수를 사용하여 각 위치에 고유한 인코딩을 생성한다.
-
-### 2.3 BERT: Bidirectional Encoder Representations from Transformers
-
-BERT는 Transformer의 인코더만을 사용하며, 양방향(Bidirectional) 문맥을 학습하는 것이 핵심이다.
-
-```text
-[BERT vs 기존 접근법]
-
-기존 언어 모델 (单向):
-  - Left-to-Right: "I love you" 모델이 좌→우만 예측
-  - GPT: 이전 단어들만 고려하여 다음 단어 예측
-  이 경우 오른쪽 문맥이 누락됨
-
-BERT (双向):
-  - 양방향 문맥을 동시에 고려
-  - "The cat sat on the [MASK]" → [MASK]를 양방향에서 추론
-  → 더 풍부한 표현 학습 가능
-
-[BERT의 사전 학습]
-
-1. Masked Language Model (MLM):
-  - 입력의 15% 토큰을 [MASK]로 치환
-  - 주변 문맥(양방향)에서 [MASK] 토큰 예측
-  예: "The cat [MASK] on the mat" → "sat"
-
-2. Next Sentence Prediction (NSP):
-  - 두 문장이 주어졌을 때 연속적인지 판단
-  예: "The cat sat on the mat." + "It was fluffy."
-  → IsNext (연속) 또는 NotNext (비연속)
-```
-
-### 2.4 BERT의 파인튜닝 (Fine-tuning)
-
-사전 학습된 BERT를 특정タスクに適用するには、이른 파인튜닝 과정을 거친다.
-
-```python
-# Hugging Face Transformers를 활용한 BERT 파인튜닝
-from transformers import BertTokenizer, BertForSequenceClassification
-import torch
-
-# 사전 학습된 BERT 로드
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-model = BertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=2)
-
-# 텍스트 전처리
-inputs = tokenizer("This is great!", return_tensors="pt")
-
-# 파인튜닝
-outputs = model(**inputs)
-logits = outputs.logits
-```
-
-> 📢 **섹션 요약 비유**: BERT의 사전 학습과 파인튜닝은犹如대학 교육과 전문 과정의 관계와 유사하다. 대학에서 다양한 과목을 학습하면(사전 학습) 기본적인知的能力과 지식이 쌓인다. 이후 전문 과정(의료, 법률 등)에서 파인튜닝하면 그 분야에 즉시 적용 가능한 전문가가 된다. BERT도 다양한 тек스트에서 기본 언어 이해 능력을 학습한 후, 특정タスクに맞게微調整하여 적용하는 것이다.
-
----
-
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
-
-BERT 이후 등장한 주요 변형 모델들을 비교해보자.
-
-| 모델 | 개발사 | 주요创新 | 크기 |
-|:---|:---|:---|:---|
-| **BERT** | Google | 양방향, MLM + NSP | Base: 110M, Large: 340M |
-| **RoBERTa** | Facebook | NSP 제거, 더 많은 데이터, 긴 훈련 | Base: 125M, Large: 355M |
-| **ALBERT** | Google | 파라미터 공유,Embedding分解 | Base: 12M, Large: 235M |
-| **ELECTRA** | Google | Replaced Token Detection (RTD) | Base: 14M, Large: 335M |
-| **DistilBERT** | HuggingFace | 지식 증류, 60% 빠른推断 | 66M |
-| **TinyBERT** | Huawei |BERT의 7.5배 작은 버전 | 14M |
-
-```text
-[BERT vs GPT 차이]
-
-BERT (인코더 Only):
-  - 양방향 문맥 이해 (MLM)
-  - 주로 분류, QA, NER 등에 강점
-  - 입력 시퀀스 전체를 양방향으로Attention
-
-GPT (디코더 Only):
-  - 단방향 (이전 토큰들만 고려)
-  - 주로 텍스트 생성에 강점
-  - autoregressive 생성
-
-T5 (인코더-디코더):
-  - 모든 작업을 텍스트-투-텍스트로 변환
-  - 범용적但是 복잡한部
-
-[Transformer vs RNN/LSTM]
-
-장점:
-  ✓ 병렬 처리로 훈련 속도大幅 향상
-  ✓ 장기 의존성 문제 해결
-  ✓ 더 나은 성능 (대부분의 NLPタスクで)
-
-단점:
-  ✗ 시퀀스 길이에 비례하는 메모리 사용 (O(N²))
-  ✗ 위치 정보를 명시적으로注入해야 함
-  ✗ RNN보다 많은 데이터 필요
-```
-
-> 📢 **섹션 요약 비유**: BERT와 GPT의 관계는犹如비밀번호破解의두 가지 전략과 유사하다. BERT는 전체 비밀번호를 양방향에서 동시에推测하려는 것이고, GPT는 첫 글자부터順次に猜测해 가는 것이다. 전자가 대부분의 경우 더 빠르지만,后者는 문장을生成할 때(텍스트 생성) 더 자연스럽다.
-
----
-
-### Ⅳ. 실무 적용 및 한계 (Application & Limitation)
-
-**주요 적용 분야:**
-
-1. **텍스트 분류 (Text Classification)**
-   - 감성 분석, 스팸 탐지, 토픽 분류
-   - BERT 파인튜닝으로 SOTA 성능 달성
-
-2. **질문 답변 (Question Answering)**
-   - SQuAD, Natural Questions 등 데이터셋에서 인간 수준 초과
-
-3. **명명된 개체 인식 (NER)**
-   - 사람, 장소, 조직 등의 개체 추출
-
-4. **텍스트 생성 ( GPT와 결합)**
-   - 대화 시스템, 요약, 번역 등
-
-**한계점:**
-
-1. **계산 비용**: 매우 큰 모델(수십억 파라미터)로 훈련/동작에 상당한 GPU 메모리와 연산 필요
-
-2. **긴 시퀀스 처리 한계**: Self-Attention의 이차 복잡도로 인해 긴 시퀀스 처리가 어려움 (단축을工夫로 해결하려는 연구 활발)
-
-3. **프라이버시 문제**: 대규모 텍스트 데이터로 사전 학습 시 데이터 내 개인 정보 포함 가능성
-
-4. **역幻觉 (Hallucination)**: 생성 모델에서 사실과 다른 내용을 생성하는 경향
-
-```python
-# Hugging Face로 BERT 기반 감성 분석 파이프라인
-from transformers import pipeline
-
-# 사전 훈련된 감성 분석 모델
-classifier = pipeline("sentiment-analysis")
-
-# 텍스트 분류
-result = classifier("I love using BERT for NLP tasks!")
-# [{'label': 'POSITIVE', 'score': 0.99}]
-```
-
-> 📢 **섹션 요약 비유**: Transformer/BERT는犹如万能調理器와 같다. 기본 원리는 간단하지만(Attention),それを大規模な데이터로 훈련하면(사전 학습) 다양한 요리에 활용할 수 있다(다양한NLPタスク). 그러나万能調理기도 크기가 크면(큰 모델) 설치 비용이 많이 들고(계산 비용), 처음 사용시 조리법을 찾는 데 시간이 걸린다(파인튜닝 필요).
-
----
-
-### Ⅴ. 요약 및 전망 (Summary & Outlook)
-
-Transformer는 현대 NLP의基石로서, 2017년 등장 이후 불과 数년 만에 거의 모든NLPタスク를Revolutionized했다. BERT는 사전 학습+파인튜닝이라는Paradigm을 정립하여, 레이블된 데이터가 부족한 상황에서도 전이 학습이 가능하게 했다.
-
-앞으로의 전망으로는, 더 효율적인Transformervariant 개발 (Longformer, BigBird, Reformer 등), 효율적인 모델 크기 축소 (知識 증류, 양자화), Multimodal 학습 (텍스트+이미지+오디오), 그리고 Foundation Models로서의 발전 등이 기대된다.
-
-결론적으로, Transformer/BERT는 NLP의Past, Present를代表了가며, Near Future에도 その 영향は続くものと考えられる.
-
----
-
-**References**
-- Vaswani, A., et al. (2017). Attention Is All You Need. NIPS.
-- Devlin, J., et al. (2018). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. NAACL.
-- Rogers, A., et al. (2020). A Primer in BERTology: What we know about how BERT works. Transactions of the Association for Computational Linguistics.
+1. 옛날 AI는 책을 읽을 때 글자를 손가락으로 짚어가며 하나하나 순서대로 읽어서 시간이 오래 걸렸어요.
+2. 트랜스포머(Transformer)는 책의 한 페이지를 카메라로 찰칵 찍어서 전체 단어들이 서로 무슨 뜻으로 연결되었는지 한 번에 알아채는 똑똑한 방법이에요.
+3. 그중에서도 버트(BERT)는 문장에 뚫린 빈칸을 기가 막히게 잘 맞추는 훈련을 받아서, 글의 진짜 의미를 가장 잘 이해하는 반장 같은 모델이랍니다.
