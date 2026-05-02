@@ -1,69 +1,137 @@
 +++
 weight = 113
-title = "AWS SAM (Serverless Application Model) 서버리스 모델"
-date = "2024-05-22"
+title = "113. AWS SAM (Serverless Application Model) - CloudFormation 네이티브 FaaS 배포"
+date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
-- **AWS 네이티브 서버리스 IaC:** CloudFormation의 확장판으로, AWS 환경에 최적화된 서버리스 애플리케이션(Lambda, API Gateway, DynamoDB)을 선언적으로 정의함.
-- **로컬 개발 환경 강화:** SAM CLI를 통해 로컬에서 Lambda 함수를 에뮬레이션(Docker 기반)하고, 실제 AWS 환경과 유사하게 디버깅할 수 있는 강력한 툴체인을 제공함.
-- **점진적 배포 자동화:** AWS CodeDeploy와 연계하여 Linear, Canary 배포 등 고도화된 릴리스 전략을 `template.yaml` 설정만으로 손쉽게 구현함.
+> 1. **본질**: AWS SAM(Serverless Application Model)은 **CloudFormation의 확장 문법**으로, Lambda·API Gateway·DynamoDB·Step Functions 등 서버리스 리소스를 **간결한 YAML로 선언**하고 `sam deploy`로 배포하는 AWS 공식 IaC 도구다.
+> 2. **가치**: CloudFormation으로 Lambda를 배포하면 50+ 줄 YAML이 필요하지만, SAM은 `AWS::Serverless::Function` 매크로로 **10줄로 축약**하며, `sam local invoke`로 **로컬에서 Lambda를 Docker 에뮬레이션**하여 배포 전 테스트가 가능하다.
+> 3. **판단 포인트**: SAM은 AWS 전용(벤더 종속)이지만 CloudFormation 네이티브이므로 **기존 CF 스택과 완벽 호환**되며, Serverless Framework(멀티클라우드)·SST(TypeScript 네이티브)와 비교하여 AWS 올인 전략에서 가장 자연스러운 선택이다.
 
-### Ⅰ. 개요 (Context & Background)
-1. **CloudFormation의 복잡성 해결:** 순수 CloudFormation으로 서버리스를 정의하려면 수백 줄의 코드가 필요하지만, SAM은 '서버리스 전용 문법'을 통해 이를 획기적으로 단축함.
-2. **개발-배포 일치:** 로컬 테스트부터 CI/CD 파이프라인 배포까지 일관된 환경을 유지하여 서버리스 애플리케이션의 신뢰성을 확보함.
+---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
-- **AWS SAM Components & Deployment Lifecycle**
+## Ⅰ. 개요 및 필요성
+
+CloudFormation으로 Lambda + API Gateway를 배포하려면 `AWS::Lambda::Function`, `AWS::Lambda::Permission`, `AWS::ApiGateway::RestApi`, `AWS::ApiGateway::Method` 등 **5~10개 리소스를 각각 정의**해야 한다.
+
 ```text
-[ Developer Machine ]         [ AWS Cloud Infrastructure ]
-+---------------------+        +-----------------------------------+
-| template.yaml       |        | CloudFormation Service (Engine)   |
-| (Transform: SAM)    | -----> | [ Resources ]                     |
-+---------------------+        | - AWS::Serverless::Function       |
-| SAM CLI (Local)     |        | - AWS::Serverless::Api            |
-| (sam build/deploy)  |        | - AWS::Serverless::SimpleTable    |
-+---------------------+        +-----------------------------------+
-           |                             ^
-           +--- (Upload to S3) ----------+
+┌───────────────────────────────────────────────────────┐
+│    CloudFormation vs SAM: 코드량 비교                  │
+├───────────────────────────────────────────────────────┤
+│  [CloudFormation 직접]                                │
+│   Lambda Function:     15줄                           │
+│   Lambda Permission:    8줄                           │
+│   API Gateway RestApi: 10줄                           │
+│   API Gateway Method:  12줄                           │
+│   API Gateway Stage:    8줄                           │
+│   IAM Role:            15줄                           │
+│   합계: ~68줄                                         │
+│                                                       │
+│  [SAM]                                                │
+│   AWS::Serverless::Function:                          │
+│     Handler, Runtime, Events(Api) → 10줄              │
+│   → SAM이 나머지를 CloudFormation으로 자동 변환       │
+└───────────────────────────────────────────────────────┘
 ```
 
-1. **Transform 선언:**
-   - `Transform: AWS::Serverless-2016-10-31` 구문을 통해 CloudFormation에 SAM 문법임을 알리며, 내부적으로 표준 CloudFormation 리소스로 확장(Expansion)됨.
-2. **핵심 리소스 유형:**
-   - `AWS::Serverless::Function`: 람다 함수 정의.
-   - `AWS::Serverless::Api`: API 게이트웨이 및 라우팅 정의.
-   - `AWS::Serverless::SimpleTable`: DynamoDB 테이블 생성(Primary Key 설정 등 단순화).
-3. **SAM CLI 워크플로우:**
-   - `sam init` (템플릿 생성) -> `sam build` (의존성 설치) -> `sam local invoke` (로컬 실행) -> `sam deploy` (클라우드 배포).
+- **📢 섹션 요약 비유**: CloudFormation이 레시피의 모든 재료와 조리법을 일일이 적는 요리책이라면, SAM은 "카레 세트"라고만 쓰면 재료가 자동으로 준비되는 밀키트다.
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+---
 
-| 비교 항목 | AWS SAM | CloudFormation (CFN) | Serverless Framework (SLS) |
-| :--- | :--- | :--- | :--- |
-| **태생/소속** | AWS 공식 오픈소스 | AWS 표준 IaC 서비스 | 서드파티 (Serverless Inc.) |
-| **코드 가독성** | 매우 좋음 (간결) | 낮음 (장황) | 좋음 (추상화 높음) |
-| **클라우드 범위** | AWS 전용 | AWS 전용 | 멀티 클라우드 가능 |
-| **배포 전략** | CodeDeploy 기반 카나리 기본 지원 | 수동 구성 필요 | 플러그인 필요 |
-| **로컬 디버깅** | SAM CLI (매우 강력) | 지원 안 함 | 플러그인 지원 |
+## Ⅱ. 아키텍처 및 핵심 원리
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
-1. **서버리스 CI/CD 파이프라인 (Strategy):**
-   - SAM은 `sam pipeline init` 명령을 통해 Jenkins, GitLab, GitHub Actions용 CI/CD 구성을 자동으로 생성해주어, 데브옵스 환경 구축 속도를 획기적으로 높여줌.
-2. **기술사적 판단:** AWS 환경에 완전히 정착한 프로젝트라면 서드파티 툴보다 SAM이 서비스 간 연동과 최신 기능 반영 속도 면에서 유리함. 특히 정책 템플릿(Policy Templates)을 사용하여 S3 Read, SNS Publish 등 흔한 권한을 한 줄로 정의할 수 있어 보안 설정 오류를 최소화함.
+### SAM 핵심 리소스 타입
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
-1. **기대효과:** 복잡한 인프라 코드를 줄여 유지보수성을 높이고, 로컬 테스트 환경을 통해 개발 주기를 단축하며 안정적인 배포 전략(Canary)을 내재화함.
-2. **결론:** AWS SAM은 서버리스 개발의 표준 모델이며, 단순한 IaC 도구를 넘어 로컬 개발과 클라우드 배포를 잇는 완성도 높은 에코시스템임.
+| SAM 타입 | 확장 대상 | 자동 생성 리소스 |
+|:---|:---|:---|
+| `AWS::Serverless::Function` | Lambda | IAM Role, CloudWatch Logs |
+| `AWS::Serverless::Api` | API Gateway | RestApi, Stage, Deployment |
+| `AWS::Serverless::SimpleTable` | DynamoDB | 단일 키 테이블 |
+| `AWS::Serverless::StateMachine` | Step Functions | 상태 머신 |
 
-### 📌 관련 개념 맵 (Knowledge Graph)
-- **상위 개념:** IaC (Infrastructure as Code), 서버리스
-- **하위 개념:** CloudFormation, SAM CLI, CodeDeploy
-- **연관 개념:** 서버리스 프레임워크, 람다 (Lambda), API 게이트웨이
+### SAM CLI 핵심 명령어
+
+| 명령 | 역할 |
+|:---|:---|
+| `sam init` | 프로젝트 스캐폴딩 |
+| `sam build` | 종속성 설치 + 패키징 |
+| `sam local invoke` | **로컬 Docker에서 Lambda 실행** |
+| `sam local start-api` | 로컬에서 API Gateway 에뮬레이션 |
+| `sam deploy --guided` | CloudFormation 스택 배포 |
+
+- **📢 섹션 요약 비유**: `sam local invoke`는 요리를 손님에게 내기 전 **주방에서 맛보기**하는 것이다.
+
+---
+
+## Ⅲ. 비교 및 연결
+
+| 비교 | SAM | Serverless Framework | SST |
+|:---|:---|:---|:---|
+| **클라우드** | AWS 전용 | 멀티클라우드 | AWS 전용 |
+| **기반** | CloudFormation | CF + 자체 플러그인 | CDK (TypeScript) |
+| **로컬 테스트** | **sam local (Docker)** | serverless-offline | Live Lambda Dev |
+| **생태계** | AWS 공식 | 플러그인 풍부 | TypeScript 네이티브 |
+
+---
+
+## Ⅳ. 실무 적용 및 기술사 판단
+
+### CI/CD 통합
+```yaml
+# GitHub Actions 예시
+- run: sam build
+- run: sam deploy --no-confirm-changeset --stack-name prod
+```
+
+### 안티패턴
+- **SAM으로 비서버리스 리소스 관리**: EC2·RDS 등은 SAM이 아닌 CDK/CF로 관리하는 것이 적합.
+
+---
+
+## Ⅴ. 기대효과 및 결론
+
+| 지표 | CF 직접 | SAM | 개선 |
+|:---|:---|:---|:---|
+| YAML 코드량 | 68줄 | **10줄** | 85% 감소 |
+| 로컬 테스트 | 불가 | **Docker 에뮬레이션** | 배포 전 검증 |
+| 배포 속도 | 동일 | 동일 (CF 기반) | - |
+
+SAM은 AWS의 공식 서버리스 IaC로, CDK(Cloud Development Kit)와 통합하여 TypeScript/Python으로 SAM 템플릿을 생성하는 **SAM + CDK 하이브리드** 패턴이 주류가 되고 있다.
+
+---
+
+### 📌 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+|:---|:---|
+| **CloudFormation** | SAM의 기반, SAM 템플릿은 CF로 변환됨 |
+| **Lambda** | SAM이 관리하는 핵심 컴퓨팅 리소스 |
+| **API Gateway** | SAM Events로 자동 생성되는 HTTP 엔드포인트 |
+| **Serverless Framework** | 멀티클라우드 경쟁 IaC 도구 |
+| **CDK** | SAM과 통합하여 프로그래밍 언어로 인프라 정의 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[CloudFormation (2011) — AWS IaC 표준]
+    │
+    ▼
+[AWS SAM (2016) — 서버리스 전용 CF 확장]
+    │
+    ▼
+[SAM CLI (2018~) — 로컬 테스트·디버깅 지원]
+    │
+    ▼
+[SAM + CDK 통합 (2021~) — TypeScript로 SAM 템플릿 생성]
+    │
+    ▼
+[현재: SAM Accelerate — 핫 리로드, 빠른 개발 루프]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
-- **레고 만들기:** 설명서 없이 수천 개의 레고 조각을 하나하나 조립하는 게 기존 방식이라면,
-- **AWS SAM:** "지붕", "벽", "문"이라는 큰 덩어리 조각을 미리 준비해줘서 뚝딱 집을 짓게 해주는 특별한 설명서예요.
-- **결론:** 집을 짓기 전에 내 방 책상에서 미리 조립해보고(로컬 테스트), 마음에 들면 단번에 큰 마당(클라우드)으로 옮겨주는 편리한 도구랍니다.
+1. CloudFormation은 레시피를 **재료부터 조리법까지 전부 적어야** 하는 두꺼운 요리책이에요.
+2. SAM은 **"카레 세트"**라고만 쓰면 재료가 자동으로 준비되는 편리한 밀키트예요!
+3. `sam local`은 손님에게 내기 전 **주방에서 맛보기**하는 것처럼, 배포 전에 테스트할 수 있답니다!
