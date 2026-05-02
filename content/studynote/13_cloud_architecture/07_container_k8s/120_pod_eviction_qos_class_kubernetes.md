@@ -1,71 +1,127 @@
 +++
-title = "120. 포드 이빅션 (Pod Eviction) 및 리소스 QoS 클래스"
-date = "2026-03-04"
 weight = 120
+title = "120. Pod Eviction과 QoS Class (K8s 리소스 관리) - Guaranteed·Burstable·BestEffort"
+date = "2026-04-19"
 [extra]
-categories = "studynote-cloud"
+categories = "studynote-cloud-architecture"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
-1. **노드 압박에 의한 퇴출**: 워커 노드의 자원(메모리, 디스크)이 고갈될 위기에 처하면, 쿠버네티스의 `kubelet`은 노드 생존을 위해 실행 중인 파드를 강제로 쫓아내는(Eviction) 방어 메커니즘을 가동합니다.
-2. **QoS (Quality of Service) 클래스**: 파드가 CPU/메모리를 선언(Requests/Limits)한 방식에 따라 쿠버네티스는 자동으로 3가지 등급(Guaranteed, Burstable, BestEffort)을 부여하여 강제 종료의 우선순위를 결정합니다.
-3. **자원 최적화 설계**: 운영 환경에서 핵심 애플리케이션 파드가 억울하게 죽는 것을 막으려면, 리소스 선언을 명확히 하여 최상위 QoS 등급을 확보하고 클러스터의 안정성을 사수해야 합니다.
+> 1. **본질**: K8s QoS Class는 Pod의 리소스 요청(requests)·제한(limits) 설정에 따라 **Guaranteed·Burstable·BestEffort** 3등급으로 자동 분류되며, 노드 리소스 부족 시 **QoS 등급이 낮은 Pod부터 Eviction(퇴거)**된다.
+> 2. **가치**: 노드의 메모리가 부족하면 K8s가 Pod를 강제 종료(OOMKilled)하는데, QoS Class에 따라 **중요 Pod(Guaranteed)는 보호**하고 **비중요 Pod(BestEffort)부터 제거**하여 서비스 안정성을 유지한다.
+> 3. **판단 포인트**: `requests == limits`이면 **Guaranteed**, `requests < limits`이면 **Burstable**, 설정 없으면 **BestEffort**이며, 프로덕션 워크로드는 반드시 **Guaranteed 또는 Burstable(requests 필수)**로 설정해야 한다.
 
-### Ⅰ. 개요 (Context & Background)
-클라우드 환경에서 쿠버네티스는 다수의 파드를 워커 노드에 빈틈없이 구겨 넣는(Bin-packing) 특성을 가집니다. 그러나 특정 파드가 갑자기 메모리 누수(Memory Leak)를 일으키거나 트래픽 폭주로 노드 전체의 메모리/디스크가 고갈되면, 노드 자체가 멈추는 시스템 장애가 발생합니다. 이를 막기 위해 노드 에이전트인 `kubelet`은 임계치(Threshold) 도달 시 일부 파드를 죽여 자원을 회수하는 **포드 이빅션(Pod Eviction, 퇴출)** 정책을 가동하며, 희생양을 고를 때 **QoS 클래스**를 기준으로 삼습니다.
+---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
-파드 배포 시 작성하는 자원 요구량(Requests)과 상한선(Limits)의 조합에 따라 3가지 QoS 클래스가 런타임에 결정됩니다. `kubelet`이 퇴출을 결정하는 OOM(Out of Memory) Killer 작동 시, 1순위로 희생되는 것은 가장 낮은 등급입니다.
+## Ⅰ. 개요 및 필요성
 
 ```text
-[ Kubernetes QoS Class & Eviction Priority ]
-
-  High Priority (절대 죽이지 않음 - 최후의 보루)
-      ^
-      |    +------------------------------------------+
-      |    | 1. Guaranteed (보장형)                   |
-      |    |  - 조건: Pod 내 모든 컨테이너가          |
-      |    |          Requests == Limits 동일하게 설정|
-      |    |  - 대상: 핵심 DB, 결제 시스템, 코어 API  |
-      |    +------------------------------------------+
-      |
-      |    +------------------------------------------+
-      |    | 2. Burstable (가변형)                    |
-      |    |  - 조건: Requests < Limits 로 다르게 설정|
-      |    |          (또는 일부만 설정됨)            |
-      |    |  - 특징: 자원 여유 시 Limit까지 사용 가능|
-      |    +------------------------------------------+
-      |
-      |    +------------------------------------------+
-      |    | 3. BestEffort (최선형)                   |
-      |    |  - 조건: Requests, Limits 둘 다 아예 없음|
-      |    |  - 대상: 중요도 낮은 배치 작업, 테스트   |
-      |    |  - 희생 1순위: 노드 압박 시 가장 먼저 킬 |
-      |    +------------------------------------------+
-      v
-  Low Priority (가장 먼저 죽임 - Eviction 1순위 타겟)
+┌───────────────────────────────────────────────────────┐
+│    QoS Class 결정 규칙                                │
+├───────────────────────────────────────────────────────┤
+│  [Guaranteed] requests == limits (CPU + Memory 모두)  │
+│   → 최우선 보호, Eviction 가장 마지막               │
+│                                                       │
+│  [Burstable] requests < limits (일부만 설정도 포함)   │
+│   → 중간 우선순위                                     │
+│                                                       │
+│  [BestEffort] requests·limits 없음                    │
+│   → 최저 우선순위, Eviction 1순위                    │
+│                                                       │
+│  Eviction 순서: BestEffort → Burstable → Guaranteed  │
+└───────────────────────────────────────────────────────┘
 ```
-- 노드 메모리가 부족해지면 `kubelet`은 `BestEffort` 파드를 가장 먼저 퇴출(Eviction)시키고, 그래도 부족하면 한도(Requests)를 초과해 사용 중인 `Burstable` 파드를 죽입니다. `Guaranteed` 파드는 노드 커널 자체가 패닉에 빠지지 않는 한 건드리지 않습니다.
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
-| QoS 클래스 | 장점 | 단점 및 리스크 | 실무 적용 대상 |
-|---|---|---|---|
-| **Guaranteed** | OOM Killer의 대상에서 거의 완벽히 제외되며, 자원 배분(CPU 핀 고정 등)이 가장 확실하게 보장됨 | Requests와 Limits를 넉넉하게 동일하게 잡아야 하므로, 자원 낭비(Idle)가 커져 클라우드 비용이 증가함 | 절대 중단되어서는 안 되는 미션 크리티컬 워크로드 (예: 주문 처리 API, 마스터 DB) |
-| **Burstable** | 평소 리소스는 적게 점유하다가 트래픽 폭주 시 한도(Limits)까지 유연하게 확장 가능. 자원 효율성(Bin-packing) 극대화 | 노드 전체 자원이 부족할 때 Limits까지 팽창한 파드는 `kubelet`의 킬링 타겟이 될 확률이 높음 | 일반적인 웹 서버, 유연한 확장이 필요한 마이크로서비스 앱 |
-| **BestEffort** | 자원 제한을 아예 적지 않아 배포가 편하고, 남는 자원을 공짜로 마구 쓸 수 있음 | 노드에 작은 압박만 와도 가장 1순위로 무자비하게 삭제(Eviction)됨. 안정성 0% | 로컬 테스트, 무작위로 죽었다 살아나도 상관없는 찌꺼기 크롤러 배치 |
+- **📢 섹션 요약 비유**: QoS Class는 비행기 좌석 등급이다. 1등석(Guaranteed)은 오버부킹 시에도 보호되고, 이코노미(BestEffort)부터 내려야 한다.
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
-- **클러스터 안정성 전략**: 많은 초급 개발자들이 파드 매니페스트(YAML)에 Requests/Limits를 생략하여 클러스터 전체에 `BestEffort` 파드가 난무하게 만듭니다. 이는 시한폭탄과 같습니다. SRE(사이트 신뢰성 공학) 관점에서, 쿠버네티스의 네임스페이스(Namespace)에 **LimitRange**나 **ResourceQuota**를 강제 적용하여 자원 명세가 없는 파드는 아예 배포조차 되지 않도록 통제하는 거버넌스가 필수입니다.
-- **오버프로비저닝 통제**: `Burstable` 비율을 높이면 비용은 절감되나 클러스터 전체 노드 압박(Node Pressure)이 심해질 수 있습니다. 클러스터 오토스케일러(CA)와 적절한 밸런스를 맞추는 아키텍트의 설계 능력이 요구됩니다.
+---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
-이빅션과 QoS 클래스 구조를 정확히 이해하고 설계하면, 제한된 컴퓨팅 자원 내에서도 핵심 시스템(Guaranteed)의 생존을 100% 보장하면서 잉여 자원을 비핵심 작업(BestEffort)으로 돌리는 극한의 효율성을 달성할 수 있습니다. 이는 FinOps(클라우드 비용 최적화)와 서비스 가용성(SLA)을 동시에 잡는 클라우드 네이티브 운영의 핵심 마스터 키입니다.
+## Ⅱ. 아키텍처 및 핵심 원리
 
-### 📌 관련 개념 맵 (Knowledge Graph)
-- **상위 개념**: 쿠버네티스(Kubernetes), 클러스터 리소스 관리, 오케스트레이션
-- **하위/연관 개념**: Requests & Limits, OOM(Out of Memory) Killed, Kubelet, ResourceQuota, 클러스터 오토스케일러(CA), Bin-packing
+### Eviction 순서
+
+| 순서 | QoS | 조건 | 보호 수준 |
+|:---|:---|:---|:---|
+| **1순위** | BestEffort | requests 없음 | 최저 |
+| **2순위** | Burstable | requests 초과 사용 중 | 중간 |
+| **3순위** | Guaranteed | requests == limits | **최고** |
+
+### 설정 예시
+```yaml
+# Guaranteed: requests == limits
+resources:
+  requests:
+    cpu: 500m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+```
+
+- **📢 섹션 요약 비유**: Guaranteed는 "예약한 만큼만 쓰고 더 안 쓰겠다"는 약속이다. 약속을 지키므로 K8s가 가장 신뢰한다.
+
+---
+
+## Ⅲ. 비교 및 연결
+
+| 비교 | BestEffort | Burstable | Guaranteed |
+|:---|:---|:---|:---|
+| **requests** | 없음 | 있음 | **== limits** |
+| **Eviction** | 1순위 | 2순위 | **마지막** |
+| **적합** | 배치·테스트 | 일반 워크로드 | **프로덕션 핵심** |
+
+---
+
+## Ⅳ. 실무 적용 및 기술사 판단
+
+### Best Practice
+1. **프로덕션**: Guaranteed (requests == limits).
+2. **개발/테스트**: Burstable (requests < limits).
+3. **BestEffort**: 절대 프로덕션 금지.
+4. LimitRange·ResourceQuota로 네임스페이스 전체 관리.
+
+---
+
+## Ⅴ. 기대효과 및 결론
+
+| 지표 | QoS 미설정 | QoS 설정 | 개선 |
+|:---|:---|:---|:---|
+| OOMKilled 대상 | 무작위 | **등급순** | 핵심 보호 |
+| 리소스 예측 | 불가 | **requests 기반** | 스케줄링 최적화 |
+
+QoS Class는 K8s 리소스 관리의 기본이며, VPA(Vertical Pod Autoscaler)가 requests/limits를 자동 조정하는 방향으로 진화하고 있다.
+
+---
+
+### 📌 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+|:---|:---|
+| **Guaranteed** | requests == limits, 최고 보호 |
+| **Eviction** | 리소스 부족 시 Pod 강제 종료 |
+| **OOMKilled** | 메모리 초과 시 커널이 프로세스 종료 |
+| **LimitRange** | 네임스페이스 기본 requests/limits 설정 |
+| **VPA** | requests/limits 자동 조정 도구 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[K8s 초기 (리소스 미설정, OOMKill 빈발)]
+    │
+    ▼
+[QoS Class 도입 (2016~) — 3등급 Eviction 우선순위]
+    │
+    ▼
+[LimitRange/ResourceQuota (네임스페이스 관리)]
+    │
+    ▼
+[VPA (2019~) — requests/limits 자동 조정]
+    │
+    ▼
+[현재: Karpenter — 노드 자체를 자동 스케일링]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
-1. 구명보트(노드)에 사람들이 타고 있는데 너무 무거워서 배가 가라앉으려고 해요. 선장(kubelet)은 배를 살리기 위해 누군가를 물로 내보내야(Eviction) 해요.
-2. 이때 구명보트 티켓을 정당한 비싼 돈 주고 확실하게 끊은 사람(Guaranteed)은 절대 내보내지 않아요.
-3. 하지만 티켓도 안 사고 몰래 타서 남는 자리 앉아있던 사람(BestEffort)을 1순위로 물속으로 내보내서 배 전체를 살리는 규칙이랍니다!
+1. QoS Class는 비행기 좌석 등급이에요. **1등석(Guaranteed)**은 가장 안전해요.
+2. 비행기(노드)가 너무 무거우면 **이코노미(BestEffort) 짐부터 내려요** (Eviction).
+3. 중요한 짐(프로덕션 Pod)은 **1등석에 놓아야** 안전하답니다!
