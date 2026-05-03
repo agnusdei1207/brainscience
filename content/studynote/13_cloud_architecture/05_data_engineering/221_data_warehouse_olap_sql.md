@@ -183,5 +183,19 @@ categories = "studynote-cloud-architecture"
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 데이터 웨어하우스는 회사의 모든 서류를 깨끗이 정리해 보관하는 중앙 서류함이다. 영업팀, 재무팀 서류를 모두 통일된 형식으로 정리해두면, 사장님이 언제든 빠르게 찾아볼 수 있다.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+OLTP (트랜잭션 처리, 행 기반)
+    │
+    ▼
+Data Warehouse: OLAP · Star/Snowflake 스키마
+    ├─► BigQuery · Snowflake · Redshift
+    └─► Schema-on-Write · 컬럼 지향 저장
+    │
+    ▼
+Lakehouse: DW + Lake 통합 (Delta Lake · Iceberg)
+```
 2. 마치 도서관 사서처럼, 밤마다(ETL 야간 배치) 각 교실(운영 DB)에서 중요한 내용을 가져와 도서관(DW)에 깔끔하게 분류해 넣는다.
 3. BigQuery·Snowflake·Redshift는 같은 서류함이지만, 각각 Google·중립·Amazon 건물에 있는 셈이다. 어느 건물에 이미 살고 있느냐에 따라 선택이 달라진다.
