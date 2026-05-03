@@ -174,3 +174,28 @@ sort_by = "weight"
 - 데이터 인프라는 거대한 '디지털 수로'를 만드는 일이에요.
 - 여기저기서 쏟아지는 정보(물)를 깨끗하게 걸러서(정제), 아주 큰 물탱크(데이터 레이크)에 가득 담아두는 거죠.
 - 이 물탱크가 튼튼하고 깨끗해야, 나중에 인공지능 로봇 친구들이 이 물을 마시고 쑥쑥 자랄 수 있답니다!
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+데이터 소스 (RDBMS · 로그 · API · IoT)
+    │
+    ▼
+수집 (Ingestion)
+    ├─► 배치: Sqoop · Airbyte · dbt
+    ├─► 스트리밍: Kafka · Kinesis · Pub/Sub
+    └─► CDC: Debezium · AWS DMS (Binlog 기반)
+    │
+    ▼
+저장: 데이터 레이크 (S3/HDFS) + Medallion (Bronze→Silver→Gold)
+    │
+    ├─► 파일 포맷: Parquet (컬럼나) · Avro (스키마 내장)
+    └─► 테이블 포맷: Delta Lake · Apache Iceberg · Hudi
+    │
+    ▼
+오케스트레이션: Airflow · Dagster · Prefect
+    │
+    ▼
+데이터 메시 · Serverless 인프라 · DataOps (미래)
+```
+
