@@ -111,5 +111,17 @@ ETL (Extract, Transform, Load)과(와) ELT (Extract, Load, Transform)은 이 흐
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 데이터 및 AI 아키텍트 전용 고득점 암기 단어장 집대성은 일을 하기 전에 "어떤 규칙으로 할지" 먼저 정하는 거예요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+데이터 엔지니어링 핵심 키워드 총정리
+    ├─► 빅데이터 처리: Hadoop → Spark → Flink
+    ├─► 저장 아키텍처: DW → Lake → Lakehouse → Mesh
+    ├─► 스트리밍: Kafka · CDC · 이벤트 소싱
+    ├─► ML/DL: 퍼셉트론 → CNN/RNN → Transformer → LLM
+    ├─► MLOps: CI/CD/CT · 드리프트 · 피처 스토어
+    └─► 프라이버시: 연방학습 · 차분 프라이버시 · XAI
+```
 2. 중간에 확인표가 있어야 틀린 곳을 빨리 고칠 수 있어요.
 3. 그래서 끝까지 잘했다고 말하려면 증거와 순서가 같이 있어야 해요.

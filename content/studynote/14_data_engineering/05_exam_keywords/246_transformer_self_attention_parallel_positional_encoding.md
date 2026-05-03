@@ -231,5 +231,19 @@ Transformer (2017)
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 셀프 어텐션은 문장 속 단어들이 "나는 너와 얼마나 관련 있어?"라고 서로에게 물어보고, 중요한 친구에게 더 집중하는 것이야.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+RNN (순차 처리, 병렬화 불가)
+    │
+    ▼
+Transformer: Self-Attention + Positional Encoding
+    ├─► Multi-Head Attention: 여러 관점에서 동시 분석
+    └─► Feed-Forward + Layer Norm + Residual
+    │
+    ▼
+Encoder (BERT) / Decoder (GPT) / Enc-Dec (T5)
+```
 2. 멀티헤드 어텐션은 같은 문장을 여러 명의 전문가(문법 선생님, 의미 분석가, 번역가)가 동시에 읽고 각자의 관점을 합치는 것이야.
 3. 포지셔널 인코딩은 순서를 모르는 어텐션에게 "이 단어는 세 번째야"라고 번호를 붙여주는 이름표야.
