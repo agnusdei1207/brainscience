@@ -138,5 +138,17 @@ Prometheus + Grafana 스택 도입으로 쿠버네티스 클러스터와 애플�
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 메트릭은 자동차 계기판처럼 서비스의 상태를 숫자로 보여줘요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+메트릭 수집: Prometheus (Pull) · Datadog (Push)
+    │
+    ▼
+저장: TSDB (시계열 DB) → PromQL 쿼리
+    │
+    ▼
+시각화: Grafana 대시보드 · 알림: AlertManager
+```
 2. Prometheus는 15초마다 모든 서비스에게 "지금 어때?"라고 물어보는 건강 검진사예요.
 3. Grafana는 그 건강 검진 결과를 예쁜 그래프로 보여주는 화면이에요!

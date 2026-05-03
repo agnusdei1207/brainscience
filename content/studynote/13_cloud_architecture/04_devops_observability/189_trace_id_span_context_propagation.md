@@ -162,5 +162,17 @@ Context Propagation의 완전성은 분산 추적 품질의 핵심이다. 하나
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. Trace ID는 마라톤 참가자 번호예요. 출발부터 결승까지 같은 번호로 추적해요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+Trace ID: 요청 고유 식별자 (전 서비스 전파)
+    │
+    ▼
+Span: 각 서비스 내 작업 단위 (parent-child 관계)
+    │
+    ▼
+Context Propagation: W3C Trace Context · B3 헤더
+```
 2. Span ID는 각 구간(10km, 20km, 30km)에서 그 선수의 기록이에요.
 3. Context Propagation은 구간마다 "이 선수 번호는 X번이야"라고 이어서 알려주는 것이에요!

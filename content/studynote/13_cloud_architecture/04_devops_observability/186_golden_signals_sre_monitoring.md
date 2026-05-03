@@ -138,5 +138,19 @@ categories = "studynote-cloud-architecture"
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 4 Golden Signals는 의사가 환자를 볼 때 꼭 재는 체온, 혈압, 맥박, 산소포화도예요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+4 Golden Signals (Google SRE)
+    ├─► Latency: 응답 시간 (p50, p99)
+    ├─► Traffic: 요청량 (QPS, TPS)
+    ├─► Errors: 오류율 (5xx, 비즈니스 에러)
+    └─► Saturation: 리소스 포화도 (CPU, Mem, Disk)
+    │
+    ▼
+USE Method (Utilization · Saturation · Errors)
+RED Method (Rate · Errors · Duration)
+```
 2. 이 4가지만 정상이면 대부분 건강하고, 하나라도 이상하면 더 자세히 검사해요.
 3. 서비스도 이 4가지(지연, 트래픽, 에러, 포화도)만 잘 보면 대부분의 문제를 잡을 수 있어요!

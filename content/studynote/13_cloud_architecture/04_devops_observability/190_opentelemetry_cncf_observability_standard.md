@@ -171,5 +171,20 @@ OpenTelemetry 도입은 옵저버빌리티 인프라의 장기 투자 관점에�
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. OpenTelemetry는 전 세계 어디서나 쓸 수 있는 만능 어댑터예요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+벤더별 전용 SDK (Jaeger SDK · Datadog SDK → 벤더 종속)
+    │
+    ▼
+OpenTelemetry (OTel): CNCF 표준
+    ├─► SDK: 언어별 자동 계측 (Auto-instrumentation)
+    ├─► Collector: 수집 · 처리 · 라우팅
+    └─► OTLP: 오픈 프로토콜
+    │
+    ▼
+백엔드 선택 자유: Jaeger · Grafana · Datadog · Splunk
+```
 2. 한 번 계측(plug-in)해두면 Prometheus, Jaeger, Datadog 어디에든 연결할 수 있어요.
 3. 덕분에 더 좋은 도구가 나와도 처음부터 다시 만들 필요 없이 쉽게 바꿀 수 있어요!

@@ -163,5 +163,19 @@ kubectl rollout history deployment/my-app
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 롤링 배포는 식당에서 의자를 하나씩 교체하는 것처럼, 손님이 앉아있는 동안 빈 의자부터 하나씩 새 의자로 바꿔.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+K8s Deployment: maxSurge · maxUnavailable 설정
+    │
+    ▼
+Rolling Update: 기존 Pod 종료 → 신규 Pod 생성 (순차)
+    ├─► Readiness Probe: 트래픽 수신 준비 확인
+    └─► Graceful Shutdown: 기존 연결 완료 대기
+    │
+    ▼
+롤백: kubectl rollout undo → 이전 ReplicaSet 복원
+```
 2. 한 번에 다 바꾸면 손님이 앉을 의자가 없으니까, 하나 바꾸고→하나 돌아오고→또 하나 바꾸고 반복해.
 3. `maxSurge`는 "의자를 최대 몇 개까지 동시에 밖에 내보낼 수 있는지", `maxUnavailable`은 "동시에 몇 개 자리를 비울 수 있는지"야.

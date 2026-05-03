@@ -125,5 +125,20 @@ categories = "studynote-cloud-architecture"
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 옵저버빌리티는 의사가 환자의 체온, 혈압, X-ray, MRI를 모두 보고 진단하는 능력이에요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+모니터링 (미리 정한 지표만 감시)
+    │
+    ▼
+Observability 3 Pillars
+    ├─► Metrics: 숫자 (Prometheus · Grafana)
+    ├─► Logs: 텍스트 (ELK · Loki)
+    └─► Traces: 요청 흐름 (Jaeger · Tempo)
+    │
+    ▼
+OpenTelemetry: 3 Pillar 통합 표준
+```
 2. 모니터링이 "체온이 높아요!"라는 경보라면, 옵저버빌리티는 "왜 열이 났는지"를 파악하는 것이에요.
 3. 수백 개의 서비스가 얽혀 있는 현대 시스템에서는 이 능력이 없으면 어디가 아픈지 알 수 없어요!
