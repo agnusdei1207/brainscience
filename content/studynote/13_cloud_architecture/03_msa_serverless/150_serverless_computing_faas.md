@@ -115,5 +115,19 @@ FaaS (Function as a Service)는 서버리스의 핵심 실행 모델이다. 이�
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 서버리스는 켜 두지 않아도 되는 전등 — 방에 들어갈 때만 자동으로 켜지고, 나가면 꺼져서 전기세를 아낀다.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+항상 가동 서버 (유휴 비용 발생)
+    │
+    ▼
+Serverless / FaaS: 이벤트 기반 · Pay-per-Use
+    ├─► AWS Lambda · GCP Cloud Functions · Azure Functions
+    └─► BaaS: Firebase · Supabase (백엔드 서비스)
+    │
+    ▼
+Cold Start 최적화 · Knative (K8s 기반 서버리스)
+```
 2. 개발자는 전구(코드) 디자인만 하면 되고, 전선 공사(서버 관리)는 클라우드 회사가 다 해준다.
 3. 손님이 100명 오면 전등이 100개 켜지고, 손님이 0명이면 전등이 꺼져서 요금이 0원이 된다.

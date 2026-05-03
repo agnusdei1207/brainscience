@@ -114,5 +114,17 @@ categories = "studynote-cloud-architecture"
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. Lambda, Cloud Functions, Azure Functions는 세 나라의 자동 로봇 공장이에요 — 일(코드)을 시키면 알아서 기계를 켜고 만들어 준다는 건 같아요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+각 CSP의 FaaS 구현
+    ├─► AWS Lambda: 가장 오래된 · 생태계 최대
+    ├─► GCP Cloud Functions: GCP 통합 · gen2
+    └─► Azure Functions: Durable Functions 확장
+    │
+    ▼
+통합 이식: Knative · OpenFaaS (멀티클라우드)
+```
 2. 하지만 어느 나라 부품(다른 클라우드 서비스)을 쓰느냐에 따라 어울리는 공장이 달라요.
 3. 나라를 바꾸고 싶다면 Knative라는 '만국 공통 설계도'를 쓰면 어느 나라 공장에서도 똑같이 만들 수 있어요.

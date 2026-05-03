@@ -126,5 +126,19 @@ categories = "studynote-cloud-architecture"
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 서버리스 함수는 메모가 없는 안내 로봇이에요 — 오늘 어떤 손님이 왔었는지 기억을 못 해요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+Stateful 서버 (세션 · 로컬 파일 시스템)
+    │
+    ▼
+Stateless 서버리스: 호출 간 상태 비공유
+    ├─► 외부 저장소: DynamoDB · Redis · S3
+    └─► /tmp 임시 공간: 동일 실행 환경 한정
+    │
+    ▼
+Durable Functions · Step Functions → Stateful 워크플로
+```
 2. 그래서 모든 중요한 정보는 옆에 있는 메모장(외부 DB)에 적어 두어야 다음 로봇도 같은 내용을 알 수 있어요.
 3. 이렇게 하면 로봇이 고장 나도 새 로봇이 메모장을 보고 똑같이 일을 이어갈 수 있어요.

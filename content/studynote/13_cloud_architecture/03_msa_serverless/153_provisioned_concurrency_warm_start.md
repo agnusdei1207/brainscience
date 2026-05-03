@@ -115,5 +115,19 @@ Provisioned Concurrency는 서버리스의 콜드 스타트 단점을 비용으�
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. Provisioned Concurrency는 미리 준비된 택시 줄 — 손님이 올 때를 대비해 빈 택시가 줄 서서 기다리고 있어요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+On-Demand 실행 (Cold Start 지연)
+    │
+    ▼
+Provisioned Concurrency: 사전 웜 인스턴스 유지
+    ├─► 비용: 유휴 시간에도 과금
+    └─► Auto Scaling 연동: 트래픽 패턴 기반 조정
+    │
+    ▼
+SnapStart (JVM) · Init Caching → 하이브리드 최적화
+```
 2. 그래서 손님이 오면 기다릴 필요 없이 바로 탈 수 있지만, 빈 택시도 대기료가 나와요.
 3. 손님이 많은 출퇴근 시간엔 많이 세워두고, 새벽엔 줄을 줄이면(Auto Scaling) 요금을 아낄 수 있어요.

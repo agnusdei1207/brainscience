@@ -120,5 +120,17 @@ GraalVM Native Image, AWS Lambda SnapStart (Java용) 등 최신 기술로 JVM �
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 콜드 스타트는 오랫동안 안 쓴 전자레인지를 처음 켤 때 전원이 들어오는 데 시간이 걸리는 것과 같아요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+Cold Start: 컨테이너 초기화 지연 (100ms~수 초)
+    │
+    ▼
+최적화: 경량 런타임 · 패키지 최소화 · SnapStart
+    │
+    ▼
+Provisioned Concurrency: 사전 Warm 인스턴스 유지
+```
 2. 방금 썼던 전자레인지(웜 스타트)는 버튼 누르자마자 바로 가열이 시작돼요.
 3. 자주 쓰는 전자레인지(중요 함수)는 항상 꽂아 두고(Provisioned Concurrency), 가끔 쓰는 건 플러그를 뽑아 절전해요.

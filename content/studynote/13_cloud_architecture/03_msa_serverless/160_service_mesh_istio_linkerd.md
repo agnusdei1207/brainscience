@@ -141,5 +141,22 @@ Istio는 풍부한 기능과 높은 성숙도로 대규모 엔터프라이즈에
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 서비스 메시는 학교 복도 CCTV와 경비원 — 학생(서비스)들이 이동할 때마다 어디서 왔는지, 어디 가는지 자동으로 기록해요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+서비스 간 직접 통신 (보안 · 관찰 부재)
+    │
+    ▼
+Service Mesh: Sidecar Proxy 기반 통신 제어
+    ├─► Data Plane: Envoy · Linkerd-proxy (트래픽 가로채기)
+    └─► Control Plane: Istio · Linkerd (정책 · 관찰)
+    │
+    ▼
+기능: mTLS · Retry · Circuit Breaker · 분산 추적
+    │
+    ▼
+eBPF 기반 Mesh: Cilium Service Mesh (Sidecar-less)
+```
 2. 학생들은 CCTV 설치 방법을 몰라도 되고, 경비원(Envoy)이 알아서 감시하고 보고해요.
 3. 수상한 학생(의심 트래픽)이 오면 경비원이 막아주고, 인기 있는 교실(핫 서비스)은 여러 방으로 나눠 학생을 분산시켜줘요.
