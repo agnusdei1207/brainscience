@@ -135,3 +135,28 @@ RLHF는 ChatGPT, Claude, Gemini 같은 상업 AI 어시스턴트의 핵심 기�
 1. RLHF는 AI가 대답을 하면, 사람이 "이 대답이 더 좋아" 또는 "저 대답이 더 나빠"라고 알려주는 훈련이에요.
 2. AI는 더 좋은 점수를 받으려고 계속 대답을 개선해서, 점점 유용하고 안전한 AI가 돼요.
 3. ChatGPT가 위험한 내용을 거절하는 것도 이 훈련 덕분이에요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+사전 학습 LLM (GPT, LLaMA 등)
+    │
+    ▼
+SFT (Supervised Fine-Tuning) — 인스트럭션 따르기 학습
+    │
+    ▼
+RLHF 3단계
+    ├─► Step 1: SFT 모델 기반
+    ├─► Step 2: 보상 모델 (RM) 학습 — 인간 선호 쌍
+    └─► Step 3: PPO 강화학습 — RM 보상 최대화 + KL 제약
+    │
+    ▼
+RLHF 대안 기법
+    ├─► DPO: 보상 모델 불필요, 직접 선호 최적화
+    ├─► KTO: 바이너리 피드백만으로 정렬
+    └─► RLAIF: AI가 인간 대신 피드백 제공
+    │
+    ▼
+HHH 정렬 AI (Helpful · Harmless · Honest)
+```
+
