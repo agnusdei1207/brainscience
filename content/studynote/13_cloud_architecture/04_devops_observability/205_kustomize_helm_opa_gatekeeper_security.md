@@ -214,5 +214,19 @@ Policy as Code는 DevSecOps의 핵심 실천이다. "보안은 전문 팀의 일
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. OPA Gatekeeper는 학교 교문에 서 있는 자동 검사 기계 같아. 가방(YAML)을 들고 들어오면 "위험한 것 없이?", "학교 규정 지켰어?" 자동으로 확인해.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+K8s Admission Controller (Webhook)
+    │
+    ▼
+OPA Gatekeeper: Rego 정책 언어 기반 검증
+    ├─► ConstraintTemplate: 정책 정의
+    └─► Constraint: 네임스페이스/리소스에 적용
+    │
+    ▼
+Kyverno: YAML 네이티브 정책 · Helm/Kustomize 통합
+```
 2. `image:latest` 금지는 "유통기한이 없는 음식은 학교에 가져오면 안 돼"와 같아. 반드시 날짜(버전)를 붙여야 해.
 3. 사람이 매번 확인하지 않아도 기계가 24시간 지켜보니까 실수로 규정을 어기는 일이 없어.

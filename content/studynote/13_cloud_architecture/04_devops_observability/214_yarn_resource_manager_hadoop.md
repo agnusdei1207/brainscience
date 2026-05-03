@@ -179,5 +179,19 @@ YARN은 하둡을 "MapReduce 전용 시스템"에서 "빅데이터 범용 운영
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. YARN은 학교 운동장 사용 스케줄표와 같아. 야구부(MapReduce), 농구부(Spark), 축구부(Flink)가 같은 운동장(클러스터)을 나눠 쓸 수 있도록 시간표를 관리해.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+Hadoop 1.0: JobTracker (MapReduce 전용)
+    │
+    ▼
+YARN: ResourceManager + NodeManager (범용 리소스 관리)
+    ├─► ApplicationMaster: 앱별 독립 관리
+    └─► Capacity/Fair Scheduler: 멀티테넌트 리소스 배분
+    │
+    ▼
+K8s on Hadoop · Spark on K8s → 클라우드 통합 관리
+```
 2. ResourceManager는 교장선생님처럼 전체 스케줄을 결정하고, NodeManager는 각 선생님처럼 운동장 상황을 보고해.
 3. Hadoop 1.x에서는 운동장 스케줄 담당(JobTracker)이 너무 많은 일을 혼자 해서 학교가 무너질 뻔했어(SPOF). YARN으로 역할을 나눠서 해결했어.

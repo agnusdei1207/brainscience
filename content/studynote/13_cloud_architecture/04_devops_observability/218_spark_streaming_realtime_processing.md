@@ -220,5 +220,20 @@ Spark Structured Streaming은 "빅데이터 배치 처리의 강점을 실시간
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. Structured Streaming은 쇼핑몰 CCTV처럼, 카메라(Kafka)에서 계속 들어오는 영상(이벤트)을 실시간으로 분석해서 도둑이 있는지(이상 감지) 알려줘.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+배치 처리 (지연 ↑, 실시간성 ↓)
+    │
+    ▼
+Spark Streaming: 마이크로배치 (준실시간)
+    │
+    ▼
+Structured Streaming: DataFrame API + Event-Time + Watermark
+    │
+    ▼
+Flink: True Streaming (이벤트별 처리) · 정확히 한 번 보장
+```
 2. 마이크로 배치는 10초마다 영상을 묶어서 분석하는 것, 연속 처리는 프레임마다 즉시 분석하는 거야.
 3. 워터마크는 "이미 10분 지난 영상은 그냥 넘어가자"라는 규칙이야. 너무 늦게 온 데이터는 기다리지 않고 무시해서 메모리가 꽉 차지 않게 해.

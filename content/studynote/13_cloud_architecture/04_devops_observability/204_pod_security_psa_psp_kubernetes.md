@@ -194,5 +194,20 @@ PSA는 K8s 보안의 첫 번째 방어선이다. Restricted 프로파일을 기�
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. PSA는 놀이터 입장 규칙과 같아. "관리자(root)처럼 행동하거나 담장(host network) 너머를 넘보는 사람은 입장 불가!"
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+PodSecurityPolicy (PSP, 폐지됨)
+    │
+    ▼
+Pod Security Admission (PSA): 네임스페이스 레벨 보안
+    ├─► Privileged: 제한 없음
+    ├─► Baseline: 위험 설정 차단
+    └─► Restricted: 최소 권한 강제
+    │
+    ▼
+OPA Gatekeeper · Kyverno → 세밀한 정책 관리
+```
 2. Restricted 프로파일은 가장 엄격한 규칙이야. 꼭 필요한 장난감(캐퍼빌리티)만 가져올 수 있어.
 3. 특별히 필요한 경우(시스템 컴포넌트)만 예외로 허용하고, 기본값은 항상 "최소 권한"이야.

@@ -191,5 +191,20 @@ Apache Spark는 현재 빅데이터 처리의 사실상 표준(De facto Standard
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. Spark는 책(데이터)을 서가에서 꺼낼 때마다 원위치시키는 MapReduce와 달리, 자주 보는 책은 책상 위에 계속 펼쳐두어서(메모리 캐시) 훨씬 빠르게 찾을 수 있어.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+MapReduce: 단계마다 디스크 I/O (느림)
+    │
+    ▼
+Spark: In-Memory 처리 (DAG 기반 실행 계획)
+    ├─► Spark SQL · DataFrame: 구조화 데이터
+    ├─► Spark Streaming: 마이크로배치 스트리밍
+    └─► MLlib · GraphX: ML + 그래프 연산
+    │
+    ▼
+Spark on K8s · Databricks Lakehouse
+```
 2. 배치 처리도, SQL 쿼리도, 머신러닝도, 실시간 분석도 모두 Spark 하나로 할 수 있어. 스위스 군용 칼처럼 다기능이야.
 3. 단, 책상이(메모리가) 작은데 너무 많은 책을 올리면 바닥에 쌓이게 되어(디스크 spill) 다시 느려지니까, 책상 크기에 맞게 조절해야 해.

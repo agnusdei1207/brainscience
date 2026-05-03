@@ -174,5 +174,18 @@ RPO < 24시간       백업 + 복구 프로세스
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. RPO는 게임에서 마지막으로 저장한 포인트와 현재의 차이야. 저장 안 하고 너무 오래 하다가 꺼지면 그 시간 동안 한 것이 날아가.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+RPO (Recovery Point Objective): 허용 데이터 손실량
+RTO (Recovery Time Objective): 복구 소요 시간 목표
+    │
+    ▼
+DR 전략: Backup & Restore → Pilot Light → Warm Standby → Active-Active
+    │
+    ▼
+Multi-Region · Multi-AZ 이중화 + Chaos Engineering 검증
+```
 2. RTO는 게임이 꺼진 후 다시 켜서 이어서 할 수 있게 되는 시간이야. 빠를수록 좋지.
 3. Active-Active는 게임을 두 대 콘솔에서 동시에 하는 것처럼, 하나가 꺼져도 다른 하나로 즉시 계속할 수 있어.

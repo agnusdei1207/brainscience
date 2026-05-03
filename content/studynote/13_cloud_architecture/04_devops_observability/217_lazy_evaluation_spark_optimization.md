@@ -193,5 +193,19 @@ df.filter(df.age > 30).groupBy("dept").count().explain()
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 지연 평가는 여행 계획을 세울 때, 각 교통편을 바로 예약하는 대신 모든 일정을 다 정한 후 여행사에 최적 루트를 부탁하는 것이야.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+Eager Evaluation: 즉시 실행 (최적화 기회 없음)
+    │
+    ▼
+Lazy Evaluation: DAG 구축 → Action 호출 시 실행
+    ├─► Catalyst Optimizer: 실행 계획 최적화
+    └─► Predicate Pushdown · Partition Pruning
+    │
+    ▼
+Adaptive Query Execution (AQE): 런타임 동적 최적화
+```
 2. Spark도 filter, groupBy, count 같은 연산을 모두 모아두었다가, "결과를 줘!"(액션) 할 때 한 번에 최적화해서 실행해.
 3. 덕분에 "필요한 자료만 가져오기(Pushdown)", "중간 저장 없이 연속 처리(Pipeline Fusion)" 등의 자동 최적화가 가능해.
