@@ -214,5 +214,18 @@ Q5: 강력한 JOIN + ACID 필수?
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. NoSQL의 4가지 종류는 4가지 장난감 수납 방법이다. 키-값은 라벨 달린 상자(빠른 찾기), 도큐먼트는 파일 폴더(자세한 내용), 와이드컬럼은 대형 선반(엄청 많은 양), 그래프는 거미줄(연결 관계)이다.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+RDBMS: SQL · ACID · 정규화 (수직 확장 한계)
+    │
+    ▼
+NoSQL: 수평 확장 · 유연한 스키마 · 최종 일관성
+    ├─► Key-Value: Redis · DynamoDB
+    ├─► Document: MongoDB · Elasticsearch
+    ├─► Wide-Column: Cassandra · HBase
+    └─► Graph: Neo4j · Neptune
+```
 2. RDBMS가 만능 도구라면, NoSQL은 각자 한 가지를 잘하는 전문 도구다. 볼트를 조이는 데는 스패너(Key-Value)가, 나무를 자르는 데는 톱(Wide-Column)이 더 낫다.
 3. 현대 앱들은 여러 종류의 NoSQL을 함께 쓴다. 로그인(Redis), 상품 정보(MongoDB), 친구 추천(Neo4j)처럼 각 기능에 맞는 DB를 고르는 것이 스마트한 방법이다.

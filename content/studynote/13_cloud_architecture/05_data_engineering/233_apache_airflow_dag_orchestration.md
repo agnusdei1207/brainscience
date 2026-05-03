@@ -261,5 +261,19 @@ with DAG('dbt_daily_transform', schedule='0 3 * * *', ...):
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. Airflow는 학교 시간표와 같다. 1교시 수학, 2교시 과학처럼 각 수업(Task)이 언제 어떤 순서로 진행되는지 정해두면, 선생님(Scheduler)이 자동으로 수업을 진행한다.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+cron + 쉘 스크립트 (의존관계 관리 불가)
+    │
+    ▼
+Airflow: DAG 기반 워크플로 오케스트레이션
+    ├─► Scheduler · Worker · Metadata DB
+    └─► Operator: Python · Bash · K8s · Spark
+    │
+    ▼
+차세대: Dagster · Prefect · Mage (데이터 자산 중심)
+```
 2. DAG는 집 짓기 공정표다. 기초 공사를 해야 벽을 세울 수 있고, 벽이 있어야 지붕을 올릴 수 있는 것처럼, 각 단계(Task)가 순서대로 이루어진다.
 3. 만약 어느 공정이 실패하면(벽 공사 실패), Airflow는 자동으로 다시 시도하고, 실패 원인을 기록해 나중에 확인할 수 있게 해준다.

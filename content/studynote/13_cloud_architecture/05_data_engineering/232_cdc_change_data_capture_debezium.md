@@ -213,5 +213,19 @@ GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE,
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. CDC는 도서관 사서가 책 반납 기록부(트랜잭션 로그)를 보고 "어떤 책이 대출되고 반납됐는지" 실시간으로 확인하는 것이다. 직접 책장을 다 뒤지지 않아도 된다.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+풀 스캔 동기화 (전체 복사, 비효율)
+    │
+    ▼
+CDC: 변경분만 캡처 (Log-based · Trigger-based)
+    ├─► Debezium: MySQL/PG WAL → Kafka 토픽
+    └─► Kafka Connect: Source/Sink 커넥터
+    │
+    ▼
+실시간 ETL · 이벤트 소싱 · CQRS 패턴 연동
+```
 2. Debezium은 기록부를 읽는 비서다. 사서(DB)가 기록부에 쓰는 것을 지켜보다가, 새 내용이 생기면 즉시 공지 게시판(Kafka)에 붙여준다.
 3. 덕분에 다른 도서관들(DW, 레이크, 서비스들)은 게시판만 보면 원본 도서관 상황을 실시간으로 알 수 있어, 일일이 원본 도서관(운영 DB)에 전화하지 않아도 된다.

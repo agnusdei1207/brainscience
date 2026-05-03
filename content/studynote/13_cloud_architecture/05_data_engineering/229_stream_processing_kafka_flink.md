@@ -219,5 +219,19 @@ env.execute("Fraud Detection Pipeline");
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 스트림 처리는 물이 흐르는 강에서 물고기를 바로바로 잡는 것이다. 강(Kafka)에 물고기(데이터)가 흘러오면, 낚시꾼(Flink)이 즉시 잡아 요리한다.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+Batch (지연 처리) → Micro-batch (Spark Streaming)
+    │
+    ▼
+True Stream: Apache Flink · Kafka Streams
+    ├─► Exactly-Once 보장 · Event-Time 처리
+    └─► Watermark: 늦은 이벤트 처리
+    │
+    ▼
+Unified: Batch + Stream 통합 (Flink · Beam)
+```
 2. 윈도우는 강의 그물을 일정 구간에 치는 것이다. 10분마다 그물을 걷어서 그 사이 잡힌 물고기를 세면, 10분 단위 어획량(집계)을 알 수 있다.
 3. 워터마크는 "이 물고기는 너무 오래전에 잡힌 것이라 포함하지 않겠다"는 규칙이다. 너무 늦게 도착한 데이터는 결과에 포함하지 않아야 처리가 멈추지 않는다.

@@ -193,5 +193,20 @@ Topic: "user-events"  Replication Factor: 3
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. Kafka는 유튜브 채널이다. 동영상(이벤트)을 올리면(Producer가 발행), 구독자(Consumer)가 각자 원하는 시간에 볼 수 있고, 영상은 지워지지 않아서 나중에 다시 볼 수 있다(재처리).
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+Point-to-Point 메시징 (RabbitMQ)
+    │
+    ▼
+Kafka: 분산 로그 기반 Pub/Sub
+    ├─► Topic · Partition · Consumer Group
+    ├─► 영속성: 디스크 순차 쓰기 + 복제
+    └─► Connect · Streams · Schema Registry
+    │
+    ▼
+Event-Driven Architecture (EDA) + CDC
+```
 2. 파티션은 유튜브 재생목록과 같다. 한 채널의 영상이 여러 재생목록에 나뉘어 있으면, 여러 친구가 각자 다른 재생목록을 동시에 볼 수 있어 더 빠르다(병렬 처리).
 3. 오프셋은 책갈피다. 어디까지 읽었는지(소비했는지) 북마크를 저장해두면, 다음에 이어서 읽을 수 있고, 처음부터 다시 읽고 싶으면 북마크를 앞으로 옮기면 된다(재처리).
