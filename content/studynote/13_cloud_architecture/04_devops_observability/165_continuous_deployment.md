@@ -54,5 +54,19 @@ Continuous Deployment는 신뢰할 수 있는 자동화 테스트를 기반으�
 
 ### 👶 어린이를 위한 3줄 비유 설명
 - 장난감 공장에서 로봇들이 장난감을 조립하고 포장하자마자 바로 트럭에 실어서 출발해요! (Deployment)
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+Continuous Delivery (수동 승인 배포)
+    │
+    ▼
+Continuous Deployment: 테스트 통과 → 자동 운영 배포
+    ├─► 전제: 높은 테스트 커버리지 + 자동 롤백
+    └─► Feature Flag: 기능 단위 노출 제어
+    │
+    ▼
+Progressive Delivery + Observability 기반 자동 판단
+```
 - 사람이 사인을 해줄 필요도 없이, 기계가 "이 장난감은 안전해요!"라고 확인하면 바로 가게로 가는 거죠.
 - 세상에서 가장 빠른 속도로 장난감을 배달하는 마법 같은 시스템이랍니다.

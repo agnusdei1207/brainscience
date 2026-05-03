@@ -71,5 +71,19 @@ GitOps는 개발자의 운영 개입을 최소화하고 소프트웨어 공급�
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 깃옵스는 요리책(Git)에 '피자 1판 만들기'라고 써두면, 로봇 요리사(에이전트)가 그걸 보고 똑같이 만드는 거예요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+수동 kubectl apply (명령형 배포)
+    │
+    ▼
+GitOps: Git = Single Source of Truth
+    ├─► Pull 방식: ArgoCD · Flux (클러스터가 Git 감시)
+    └─► Push 방식: Jenkins (CI가 클러스터에 배포)
+    │
+    ▼
+Progressive Delivery: Argo Rollouts · Flagger
+```
 2. 만약 누군가 몰래 피자 조각을 훔쳐 가면, 로봇이 요리책과 다르다는 걸 알고 다시 피자를 채워 넣는답니다.
 3. 요리책 내용만 잘 적어두면 언제든 똑같은 피자를 맛볼 수 있어요!

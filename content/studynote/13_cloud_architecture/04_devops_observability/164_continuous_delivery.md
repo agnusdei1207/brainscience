@@ -55,5 +55,20 @@ Continuous Delivery는 파이프라인(Pipeline)을 통해 흐르며, 각 단계
 
 ### 👶 어린이를 위한 3줄 비유 설명
 - 장난감 공장에서 로봇들이 장난감을 조립하고 포장까지 다 끝낸 상태예요. (CD)
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+CI: 자동 빌드 + 테스트
+    │
+    ▼
+CD (Continuous Delivery): 스테이징 자동 배포 + 수동 승인
+    │
+    ▼
+CD (Continuous Deployment): 운영 배포까지 100% 자동화
+    │
+    ▼
+GitOps · Progressive Delivery (Canary · Blue-Green)
+```
 - "이제 가게로 보내도 좋아요!"라고 공장장님이 사인을 보내기만 기다리는 거죠.
 - 언제든 사인만 나면 바로 트럭에 실어서 출발할 수 있게 준비를 다 마친 상태랍니다.
