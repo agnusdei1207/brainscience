@@ -237,5 +237,20 @@ VACUUM delta.`/data/orders` RETAIN 168 HOURS;  -- 7일 이내 보존
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 데이터 레이크하우스는 레고 블록 창고야 — 어떤 모양의 블록(데이터)이든 넣을 수 있고, 재고 목록(트랜잭션 로그)도 정확히 관리되지!
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+Data Lake (유연 · 거버넌스 부족)
+    │         ╳
+    ▼     Data Warehouse (정확 · 유연성 부족)
+Lakehouse 통합
+    ├─► Delta Lake: ACID + Time Travel + Parquet
+    ├─► Apache Iceberg: Hidden Partitioning
+    └─► Apache Hudi: Upsert + CDC 특화
+    │
+    ▼
+Unity Catalog · Open Table Format 표준화
+```
 2. Parquet 파일은 블록을 종류별로 꽉꽉 눌러서 지퍼백에 담아 놓은 것 — 같은 종류끼리 있으니 공간도 적게 차지하고, 필요한 것만 꺼내기도 쉬워.
 3. 타임 트래블은 '되감기 버튼'이야 — 실수로 블록을 버렸어도 어제 창고 상태로 되돌릴 수 있으니 걱정 없어!

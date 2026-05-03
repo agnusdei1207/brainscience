@@ -216,5 +216,20 @@ Consistency Level 설정:
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. BASE는 '대충 맞아도 괜찮은 학교 투표 결과'야 — 반장 선거에서 딱 맞지 않아도 모두가 결과를 알 수 있으면 돼.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+ACID (RDBMS: 강한 일관성)
+    │
+    ▼
+BASE (NoSQL: 유연한 일관성)
+    ├─► Basically Available: 항상 응답
+    ├─► Soft State: 시간이 지나면 변할 수 있음
+    └─► Eventual Consistency: 최종적 일관성 보장
+    │
+    ▼
+Sharding: 수평 분할 · Consistent Hashing
+```
 2. 샤딩은 학교 급식 배식대를 여러 줄로 나눈 것이야 — 줄이 많을수록 밥을 빨리 받을 수 있어!
 3. 결과적 일관성은 SNS에서 내가 올린 사진이 모든 친구에게 5초 뒤에 뜨는 것 — 동시에 안 보여도 결국은 다 보게 되잖아?

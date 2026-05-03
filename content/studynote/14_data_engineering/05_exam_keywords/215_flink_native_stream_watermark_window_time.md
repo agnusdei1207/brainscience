@@ -228,5 +228,23 @@ Flink는 상태(State)를 RocksDB(디스크) 또는 메모리에 저장하고, �
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. Flink는 편지(이벤트)가 오는 즉시 읽는 우체부야 — Spark는 편지를 10통씩 모아서 한꺼번에 읽어서 조금 느려.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+배치 처리 (MapReduce · Spark)
+    │
+    ▼
+마이크로 배치 (Spark Structured Streaming)
+    │
+    ▼
+네이티브 스트리밍: Apache Flink
+    ├─► Event Time + Watermark: 지연 이벤트 허용
+    ├─► Window: Tumbling · Sliding · Session
+    └─► Exactly-Once: Checkpoint + 2PC Sink
+    │
+    ▼
+Flink SQL · Table API → 통합 배치/스트리밍
+```
 2. 워터마크는 "이 날짜 전 편지는 다 도착했겠지"라고 판단하는 기준이야 — 그래야 늦게 도착하는 편지를 하염없이 기다리지 않아도 되거든.
 3. 텀블링 윈도우는 '10분마다 정리하는 서랍', 세션 윈도우는 '손님이 없으면 문 닫는 가게' — 어떻게 묶어서 볼지 결정하는 방법이야.
