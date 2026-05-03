@@ -279,5 +279,23 @@ Apache Spark는 인메모리 RDD, 지연 평가, DAG 스케줄러, Catalyst 옵�
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. RDD는 "마법 스티커 책"이에요. 페이지를 찢어도(파티션 손실) 어떻게 만들었는지 기억(Lineage)하기 때문에 다시 만들 수 있어요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+MapReduce (디스크 기반, 느림)
+    │
+    ▼
+Spark RDD: 인메모리 · Lazy Evaluation · Lineage 복구
+    │
+    ▼
+DataFrame / Dataset API: 스키마 기반 · Catalyst 최적화
+    │
+    ▼
+Spark SQL · Structured Streaming · MLlib
+    │
+    ▼
+Photon (Databricks) · Spark Connect (원격 실행)
+```
 2. 지연 평가는 "쇼핑 목록을 다 적은 다음 한 번에 효율적으로 쇼핑하는 것"이에요. 중간에 불필요한 물건을 AI가 목록에서 지워줘요.
 3. DAG는 "요리 레시피 흐름도"예요. 어떤 재료(데이터)가 어떤 순서로 섞여야 완성 요리(결과)가 나오는지 그림으로 보여줘요!

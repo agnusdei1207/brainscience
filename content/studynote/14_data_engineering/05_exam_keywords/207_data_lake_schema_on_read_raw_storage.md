@@ -180,5 +180,20 @@ Raw Zone        → Curated Zone   → Consumption Zone
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 데이터 레이크는 **모든 종류의 장난감을 한 방에 다 넣어두는 큰 방**이야. 레고도 있고, 인형도 있고, 공도 있어.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+파일 서버 · RDBMS (구조화 데이터만)
+    │
+    ▼
+Data Lake: Schema-on-Read · 원시 데이터 저장 (S3 · HDFS)
+    │ 데이터 늪 (Data Swamp) 위험
+    ▼
+Data Lakehouse: Lake + Warehouse 통합 (Delta · Iceberg)
+    │
+    ▼
+Data Mesh: 도메인별 분산 소유권 + 자기 서빙 인프라
+```
 2. 놀고 싶을 때 방에 들어가서 "오늘은 레고만 꺼낼래"하고 그때 골라 쓰는 거야. 미리 정리 안 해도 돼.
 3. 방이 너무 커지면 어디 있는지 모르게 되니까 **지도(카탈로그)**를 만들어야 찾을 수 있어.

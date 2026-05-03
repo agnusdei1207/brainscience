@@ -254,5 +254,20 @@ NameNode SPOF와 MapReduce 디스크 병목은 Hadoop 생태계의 성숙 과정
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. NameNode SPOF는 "마을 지도를 딱 한 명이 갖고 있는 것"이에요. 그 사람이 아프면 아무도 창고 위치를 모르게 돼요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+NameNode 단일 장애점 (SPOF)
+    │
+    ▼
+HA NameNode: Active-Standby · JournalNode 동기화
+    │
+    ▼
+MapReduce: Map → Shuffle → Reduce (디스크 기반)
+    │ 디스크 I/O 병목
+    ▼
+Spark: 인메모리 처리 → 10~100배 성능 향상
+```
 2. HA NameNode는 "지도를 두 명이 갖고, 한 명이 아프면 다른 사람이 바로 지도를 꺼내는 것"이에요.
 3. MapReduce 디스크 병목은 "덧셈할 때마다 칠판에 지우고 다시 쓰는 것"인데, Spark는 "머릿속으로 연산해서 최종 답만 칠판에 쓰는 것"처럼 훨씬 빠르답니다!

@@ -176,5 +176,22 @@ categories = "studynote-data-engineering"
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 데이터 웨어하우스는 **회사의 모든 기록을 모아놓은 거대한 도서관**이야. 판매 기록, 고객 기록, 재고 기록이 다 모여 있어.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+OLTP (운영 DB: MySQL · PostgreSQL)
+    │ ETL
+    ▼
+Data Warehouse: Schema-on-Write · 정형 분석 (Inmon · Kimball)
+    ├─► Star Schema · Snowflake Schema
+    └─► OLAP Cube: Drill-Down · Roll-Up · Slice · Dice
+    │
+    ▼
+클라우드 DW: BigQuery · Snowflake · Redshift
+    │
+    ▼
+Lakehouse: DW 기능 + Lake 유연성 통합
+```
 2. 이 도서관은 책을 넣을 때 **미리 꼼꼼히 분류해서 정리**해. 그래서 찾을 때는 아주 빠르게 찾을 수 있어.
 3. 한 번 넣은 기록은 **지우지 않고 영원히 보관**해. 5년 전 기록도 오늘처럼 정확하게 볼 수 있어.
