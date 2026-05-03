@@ -357,3 +357,24 @@ Apache Airflow는 데이터 엔지니어링과 MLOps 분야에서 사실상 표�
 1. Airflow는 자동 청소 로봇의 청소 순서 프로그램 같아요. "방 청소 → 화장실 청소 → 쓰레기 버리기" 순서를 코드로 적어두면, 매일 새벽에 자동으로 청소를 실행하고 중간에 실패하면 다시 시도해요.
 2. DAG는 레고 설명서 같아요. 어느 부품을 먼저 조립해야 다음 부품을 붙일 수 있는지 순서도로 그려두면, 로봇이 알아서 순서대로 조립해요.
 3. Executor는 음식 배달 방법 같아요. 혼자 다 배달하거나(Sequential), 여러 명이 나눠서 하거나(Celery), 각 주문마다 드론을 보내는(Kubernetes) 방법 중 상황에 맞게 골라요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+cron + 쉘 스크립트 (원시적 스케줄링)
+    │
+    ▼
+Apache Airflow: Python DAG 기반 워크플로우
+    ├─► Scheduler: DAG 실행 스케줄링
+    ├─► Executor: Sequential · Celery · Kubernetes
+    └─► Web UI: 실행 현황 · 로그 · 재시도 관리
+    │
+    ▼
+Airflow + Kubernetes Executor → 동적 Pod 스케일링
+    │
+    ▼
+차세대 오케스트레이터
+    ├─► Dagster: 자산 기반 (Asset-centric)
+    ├─► Prefect: Pythonic, 클라우드 네이티브
+    └─► Mage AI: 통합 데이터 파이프라인
+```
