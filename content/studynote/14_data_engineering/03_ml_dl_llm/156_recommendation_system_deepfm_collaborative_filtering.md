@@ -133,3 +133,26 @@ categories = "studynote-data-engineering"
 1. 추천 시스템은 "나와 비슷한 친구가 좋아하는 것"을 자동으로 찾아주는 AI 큐레이터예요.
 2. DeepFM은 여러 정보(나이, 취향, 시간대)를 모두 섞어서 가장 좋아할 것을 예측해요.
 3. 유튜브나 넷플릭스에서 "다음에 볼 것" 추천이 잘 맞는 이유가 이 기술 덕분이에요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+콘텐츠 기반 필터링 (Content-Based)
+    │
+    ▼
+협업 필터링 (Collaborative Filtering)
+    ├─► 사용자 기반 / 아이템 기반
+    └─► 행렬 분해 (SVD · ALS)
+    │
+    ▼
+딥러닝 추천 모델
+    ├─► Wide & Deep (Google) — 암기 + 일반화
+    ├─► DeepFM — FM + DNN 결합
+    └─► DIN · DIEN — 사용자 행동 시퀀스 모델링
+    │
+    ▼
+콜드 스타트 → 그래프 기반 (GNN) 추천
+    │
+    ▼
+LLM 기반 대화형 추천 (Conversational RecSys)
+```

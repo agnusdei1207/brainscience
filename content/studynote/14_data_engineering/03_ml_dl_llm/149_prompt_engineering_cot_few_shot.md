@@ -132,3 +132,25 @@ Zero-Shot CoT:
 1. 프롬프트 엔지니어링은 AI에게 "이렇게 이렇게 해줘"라고 잘 부탁하는 방법이에요.
 2. CoT는 "답만 말하지 말고 어떻게 풀었는지 설명하면서 답해"라고 하면 AI가 더 정확하게 풀어요.
 3. Few-Shot은 "이런 문제는 이렇게 답하더라"는 예시를 2~3개 보여주면, AI가 그 방식을 따라 해요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+Zero-Shot Prompting (예시 없이 직접 지시)
+    │
+    ▼
+Few-Shot Prompting (예시 2~3개 포함)
+    │
+    ▼
+Chain-of-Thought (CoT) — 단계별 추론 유도
+    │
+    ├─► Zero-Shot CoT: "Let's think step by step"
+    ├─► Tree-of-Thought (ToT) — 분기 탐색
+    └─► ReAct — 추론 + 행동 반복
+    │
+    ▼
+프롬프트 템플릿 → LangChain · LlamaIndex
+    │
+    ▼
+System Prompt 설계 → RAG 통합 → 에이전트 오케스트레이션
+```

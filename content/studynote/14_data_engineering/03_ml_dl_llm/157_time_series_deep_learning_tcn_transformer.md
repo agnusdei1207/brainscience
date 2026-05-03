@@ -145,3 +145,27 @@ TCN과 Transformer 기반 시계열 모델은 전통 통계 방법(ARIMA, Expone
 1. TCN은 시간의 흐름을 여러 창문으로 동시에 바라보는 방법이에요 — 창문이 클수록 더 오래전까지 볼 수 있어요.
 2. 팽창 합성곱은 창문을 레이어마다 2배씩 크게 만들어, 몇 개 층만으로도 수백 단계 과거를 볼 수 있어요.
 3. 덕분에 주가, 날씨, 수요 예측을 LSTM보다 훨씬 빠르고 정확하게 할 수 있어요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+통계 모델: ARIMA · SARIMA · Prophet
+    │
+    ▼
+RNN / LSTM / GRU — 순차적 시계열 처리
+    │
+    ▼
+TCN (Temporal Convolutional Network)
+    ├─► 인과적 합성곱 (미래 정보 차단)
+    ├─► 팽창 합성곱 (Dilated Convolution) — 수용 영역 확장
+    └─► 잔차 연결 (Residual Connection)
+    │
+    ▼
+Transformer 기반 시계열
+    ├─► Informer (희소 Attention)
+    ├─► Autoformer (자기상관 분해)
+    └─► PatchTST (패치 기반)
+    │
+    ▼
+Foundation Model for Time Series (TimesFM, Chronos)
+```
