@@ -336,5 +336,26 @@ for inputs, labels in dataloader:
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 지식 증류는 선생님(큰 AI)이 "정답은 A야, 근데 B도 조금 맞고 C는 완전히 틀렸어"라고 자세히 설명해주면, 학생(작은 AI)이 더 빠르게 배우는 거예요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+대형 Teacher 모델 (높은 정확도 · 느린 추론)
+    │
+    ▼
+지식 증류 (Knowledge Distillation)
+    ├─► 소프트 타겟: Teacher의 확률 분포 전달
+    ├─► Temperature Scaling: 분포 평탄화 (T>1)
+    └─► KL Divergence 손실: Student ↔ Teacher 분포 매칭
+    │
+    ▼
+경량 Student 모델 (엣지 배포 가능)
+    │
+    ▼
+결합 기법
+    ├─► 양자화 + 증류: INT8 Student
+    ├─► 프루닝 + 증류: 희소 Student
+    └─► Self-Distillation: 같은 모델 내 증류
+```
 2. 온도 매개변수는 아이스크림 온도예요. 너무 딱딱하면(낮은 온도) 한 맛만 강하게 느껴지고, 살짝 녹으면(높은 온도) 여러 맛이 고루 느껴지죠.
 3. DistilBERT는 두꺼운 사전을 얇은 포켓 사전으로 만든 거예요. 40%는 줄었지만 97%의 내용은 그대로 담겨 있어요.
