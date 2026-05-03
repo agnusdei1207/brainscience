@@ -375,5 +375,26 @@ Kafka Consumer Lag 모니터링 설계 시 필수 언급:
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. **Consumer Lag**는 마치 카카오톡에서 메시지를 보낸 시각과 읽은 시각의 차이처럼, 카프카에서 메시지가 쓰여진 위치와 읽힌 위치의 차이를 숫자로 나타낸 것이에요—이 숫자가 클수록 처리가 많이 밀려있는 거예요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+Kafka Producer → Broker (Topic/Partition)
+    │
+    ▼
+Consumer Group → 파티션별 Offset 추적
+    │
+    ▼
+Consumer Lag = Latest Offset - Consumer Offset
+    │
+    ▼
+모니터링 도구
+    ├─► Burrow (LinkedIn 오픈소스)
+    ├─► Kafka Lag Exporter → Prometheus → Grafana
+    └─► Confluent Control Center
+    │
+    ▼
+자동 대응: Consumer 스케일아웃 · 파티션 추가 · 경보
+```
 2. **Consumer Lag 모니터링**은 마치 음식점에서 주문 대기열 번호판을 관리자 핸드폰으로 실시간 전송하는 것처럼, 카프카의 처리 지연을 자동으로 감지해서 경보를 보내는 시스템이에요.
 3. **컨슈머 수 ≤ 파티션 수** 원칙은 마치 계산대가 4개인 마트에 직원이 10명이어도 4명만 계산대에 설 수 있는 것처럼, 파티션 수보다 컨슈머를 더 많이 늘려도 추가 컨슈머는 아무 일도 못 하는 낭비가 된다는 뜻이에요.
