@@ -177,3 +177,18 @@ sort_by = "weight"
 - 그래프 알고리즘은 거미줄처럼 얽힌 길에서 보물을 찾는 '마법의 지도'와 같아요.
 - 친구네 집까지 가장 빨리 가는 길을 찾거나(최단 경로), 모든 친구의 집을 가장 짧은 실로 연결하는 법(MST)을 알려주죠.
 - 이 마법 지도를 잘 쓰면, 우리는 복잡한 미로도 단번에 빠져나올 수 있는 최고의 탐험가가 될 수 있답니다!
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+그래프 고급 알고리즘
+    ├─► 최대 유량 (Max Flow): Ford-Fulkerson, Dinic
+    ├─► 이분 매칭 (Bipartite Matching)
+    └─► 강연결 요소 (SCC): Tarjan, Kosaraju
+    │
+    ▼
+위상 정렬 (Topological Sort) — DAG 의존성 해결
+    │
+    ▼
+평면 그래프 / 트리 분할 (Heavy-Light Decomposition)
+```
