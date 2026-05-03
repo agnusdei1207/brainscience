@@ -168,5 +168,19 @@ if (showNewUI) {
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 피처 플래그는 장난감 가게에서 새 장난감을 진열장에 올려두되, 포장 상자를 아직 안 뜯어둔 것과 같아.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+Feature Branch + 배포 = 기능 공개 (분리 불가)
+    │
+    ▼
+Feature Flag: 코드 배포 ≠ 기능 공개 (Decouple)
+    ├─► LaunchDarkly · Unleash · ConfigCat
+    └─► A/B Testing · Percentage Rollout
+    │
+    ▼
+Trunk-Based Development + Feature Flag = CD 극대화
+```
 2. "이제 팔아도 돼"라는 신호가 오면 상자만 뜯으면 바로 판매 시작, 문제 생기면 다시 포장해서 치우면 돼.
 3. 가게를 다시 꾸미지(재배포) 않아도 판매 ON/OFF를 할 수 있어서 엄청 편리해.
