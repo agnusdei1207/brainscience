@@ -279,3 +279,22 @@ NoSQL은 저장 목적에 따라 네 가지 주요 모델로 분류된다.
 3. 그래서 데이터가 엄청나게 많아지는 현대 인터넷 세상에서는 이 **NoSQL 바구니**가 꼭 필요하답니다!
 [extra]
 categories = ["studynote-bigdata"]
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+RDBMS 확장 한계 (수평 확장 불가)
+    │
+    ▼
+NoSQL 4가지 유형
+    ├─► Key-Value: Redis, DynamoDB
+    ├─► Document: MongoDB, CouchDB
+    ├─► Column-Family: Cassandra, HBase
+    └─► Graph: Neo4j, Amazon Neptune
+    │
+    ▼
+CAP 정리 — 일관성·가용성·파티션 내성 트레이드오프
+    │
+    ▼
+NewSQL (TiDB, CockroachDB) — 수평 확장 + ACID
+```

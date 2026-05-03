@@ -182,3 +182,21 @@ MapReduce는 데이터를 처리할 때 가장 부하가 큰 **셔플 (Shuffle)*
 - 하둡은 엄청나게 큰 퍼즐 조각들을 수백 장의 책상에 나눠서 올려두고 맞추는 게임과 같아요.
 - 한쪽 책상이 넘어져도 다른 책상에 똑같은 퍼즐 조각이 있어서 게임은 멈추지 않아요.
 - 대장 선생님(네임노드)이 어느 퍼즐 조각이 어느 책상에 있는지 다 기억하고 있어서 우리는 걱정 없답니다!
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+GFS (Google File System, 2003) → HDFS
+    │
+    ▼
+MapReduce (Google, 2004) → Hadoop MapReduce
+    │
+    ▼
+Hadoop 에코시스템: YARN · Hive · HBase · Pig · Sqoop
+    │
+    ▼
+Hadoop 한계 (디스크 I/O) → Apache Spark (인메모리)
+    │
+    ▼
+YARN → Kubernetes 컨테이너 오케스트레이션으로 진화
+```

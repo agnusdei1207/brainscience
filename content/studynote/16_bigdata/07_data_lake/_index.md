@@ -265,3 +265,20 @@ sort_by = "weight"
 3. **레이크하우스**는 큰 장난감 상자 안에 로봇 팔이 들어와서 우리가 공룡 가져와!라고 하면 산더미 같은 장난감 속에서도 척척 찾아주는 똑똑한 창고예요. 저렴하면서도 아주 편리하죠!
 [extra]
 categories = ["studynote-bigdata"]
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+데이터 웨어하우스 (DW) — Schema-on-Write
+    │
+    ▼
+데이터 레이크 — Schema-on-Read (원시 데이터 보존)
+    │
+    ├─► 데이터 늪(Data Swamp) 문제 → 거버넌스 필요
+    │
+    ▼
+데이터 레이크하우스 (Delta Lake, Apache Iceberg, Apache Hudi)
+    │
+    ▼
+데이터 메시 (Data Mesh) — 도메인별 분산 소유권
+```

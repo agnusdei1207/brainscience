@@ -181,3 +181,23 @@ sort_by = "weight"
 - 스파크는 숙제를 할 때 공책에 하나하나 적으면서 하는 게 아니라, 모든 내용을 머릿속에 쏙쏙 암기해서 순식간에 풀어내는 천재 친구예요.
 - 친구 여러 명과 한 팀이 되어서 어려운 문제를 나누어 푸는데, 한 명의 기억이 가물가물해도 옆 친구가 알려주니까 절대 틀리지 않아요.
 - 복잡한 수학 문제도, 국어 문제도 다 잘 풀어서 우리 학교에서 제일 인기 많은 공부 대장이랍니다!
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+Hadoop MapReduce (디스크 기반, 느림)
+    │
+    ▼
+Apache Spark (RDD → DataFrame → Dataset)
+    │
+    ├─► Spark SQL — SQL 기반 분산 처리
+    ├─► Spark Streaming → Structured Streaming
+    ├─► MLlib — 분산 머신러닝
+    └─► GraphX — 그래프 연산
+    │
+    ▼
+Spark on Kubernetes / Delta Lake 통합
+    │
+    ▼
+Apache Flink (스트리밍 우선 아키텍처)와 경쟁·공존
+```
