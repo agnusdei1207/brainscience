@@ -73,5 +73,18 @@ categories = "studynote-cloud"
 
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 축구팀이 이기려면 좋은 공(자동화)도 필요하지만, 친구들과 친하게 지내고(문화) 전술을 나누는 것(공유)도 중요해요.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+DevOps 도입 (도구만 도입, 문화 부재)
+    │
+    ▼
+CALMS: Culture · Automation · Lean · Measurement · Sharing
+    │
+    ▼
+성숙도 평가: DORA Metrics · SPACE Framework
+```
+
 2. 경기가 끝나고 우리가 몇 골을 넣었는지 기록(측정)해서 부족한 점을 찾아요.
 3. 불필요한 행동을 줄이고(린) 다 같이 힘을 합쳐야 최고의 팀이 될 수 있다는 약속이에요!
