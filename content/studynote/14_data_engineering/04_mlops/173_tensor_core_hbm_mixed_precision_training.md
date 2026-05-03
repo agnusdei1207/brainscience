@@ -335,5 +335,25 @@ Transformer Engine 동작:
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. Tensor Core는 곱셈 전용 계산기야 — 일반 계산기는 한 번에 하나씩 계산하지만, Tensor Core는 4×4 표 전체를 한 번에 처리해!
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+FP32 학습 (기본, 높은 정밀도)
+    │
+    ▼
+혼합 정밀도 학습 (Mixed Precision): FP16 연산 + FP32 마스터 가중치
+    ├─► Loss Scaling: 언더플로 방지
+    └─► Tensor Core 활용: 4×4 행렬 fused multiply-add
+    │
+    ▼
+GPU 메모리 최적화
+    ├─► HBM (High Bandwidth Memory): 대역폭 극대화
+    ├─► Gradient Checkpointing: 메모리↔연산 트레이드오프
+    └─► Flash Attention: IO-aware 어텐션
+    │
+    ▼
+BF16 (Brain Float 16) → FP8 (H100+) → 차세대 정밀도
+```
 2. 혼합 정밀도 학습은 계산할 때 연필(FP16)로 빠르게 쓰고, 최종 답은 잉크(FP32)로 정확하게 남기는 거야.
 3. HBM은 GPU 안에 있는 초고속 메모리야 — 일반 RAM이 버스라면, HBM은 특급 열차처럼 빠르게 데이터를 전달해줘!

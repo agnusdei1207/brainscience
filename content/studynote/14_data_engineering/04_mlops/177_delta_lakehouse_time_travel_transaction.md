@@ -354,5 +354,26 @@ Delta Lake + MLflow 통합으로 ML 재현성:
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. Delta Lake는 데이터 창고에 타임머신을 달아놓은 거야 — 어제, 지난주, 한 달 전 데이터를 언제든 꺼내볼 수 있어!
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+Data Lake (S3 원시 저장) → 스키마 관리 불가
+    │
+    ▼
+Data Warehouse → ETL 비용 높음, 유연성 부족
+    │
+    ▼
+Data Lakehouse (레이크 + 웨어하우스 통합)
+    ├─► Delta Lake (Databricks): ACID + Time Travel
+    ├─► Apache Iceberg (Netflix): 파티션 진화
+    └─► Apache Hudi (Uber): Upsert + CDC 특화
+    │
+    ▼
+Parquet 기반 · 스냅샷 격리 · 트랜잭션 로그
+    │
+    ▼
+Unity Catalog → 데이터 거버넌스 통합
+```
 2. ACID 트랜잭션은 데이터를 저장할 때 "전부 성공하거나, 전부 실패하거나"만 되는 규칙이야 — 절반만 저장된 이상한 상태는 절대 생기지 않아.
 3. Time Travel은 도서관 책에 번호를 매겨서 "버전 5번 책"이라고 하면 그 날의 책을 정확히 꺼내주는 것과 같아!

@@ -345,5 +345,26 @@ df.write \
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. Parquet은 반찬을 종류별로 따로 담아두는 도시락 통이야 — "김치만 주세요"라고 하면 김치 칸만 열면 되니까 훨씬 빠르게 꺼낼 수 있어!
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+CSV/JSON (행 기반, 비압축)
+    │
+    ▼
+열 지향 포맷: Parquet · ORC
+    ├─► 컬럼별 독립 압축 (RLE · Dictionary · Snappy)
+    ├─► 프레디케이트 푸시다운: 불필요 컬럼 스킵
+    └─► Row Group + Page 구조: 병렬 읽기
+    │
+    ▼
+Lakehouse 기반 테이블 포맷
+    ├─► Delta Lake (.parquet + 트랜잭션 로그)
+    ├─► Apache Iceberg (.parquet + 메타데이터 트리)
+    └─► Apache Hudi (.parquet + Upsert)
+    │
+    ▼
+Arrow In-Memory Format → 제로 복사 교환
+```
 2. RLE 압축은 "같은 말 반복 줄이기"야 — "A A A A A B B B"를 "A 5번 B 3번"으로 짧게 표현하는 거지.
 3. Predicate Pushdown은 책을 하나하나 펼치는 대신, 책 표지 요약(min/max 통계)만 보고 "이 책장엔 원하는 내용 없다!"고 통째로 건너뛰는 똑똑한 도서관 검색이야.

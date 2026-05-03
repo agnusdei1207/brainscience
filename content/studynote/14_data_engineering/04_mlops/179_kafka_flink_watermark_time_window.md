@@ -353,5 +353,25 @@ env.getCheckpointConfig().setCheckpointStorage("s3://flink-checkpoints/");
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. Kafka는 무한히 긴 우편함이야 — 편지(메시지)가 끊임없이 들어오고, 여러 집(Consumer)이 각자 담당 구역의 편지만 가져가.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+배치 처리 (MapReduce · Spark Batch)
+    │
+    ▼
+메시지 브로커: Kafka (Topic · Partition · Offset)
+    ├─► Producer → Broker → Consumer
+    └─► Consumer Group: 파티션별 병렬 소비
+    │
+    ▼
+스트림 처리 엔진: Apache Flink
+    ├─► 이벤트 시간 (Event Time) 기반 처리
+    ├─► 워터마크 (Watermark): 지연 데이터 허용 범위
+    └─► 시간 창 (Window): Tumbling · Sliding · Session
+    │
+    ▼
+실시간 분석: Kafka + Flink → 실시간 대시보드 · 이상 탐지
+```
 2. Watermark는 "30분 기다렸으니 늦은 편지는 포기하고 결산하자"는 우체부의 규칙 — 무한정 기다릴 수 없으니 기준을 정하는 거야.
 3. Exactly-Once는 "편지가 반드시 딱 한 번만 배달되도록" 하는 등기 우편 시스템 — Flink 세이브포인트 + Kafka 트랜잭션이 함께 있어야 가능해!

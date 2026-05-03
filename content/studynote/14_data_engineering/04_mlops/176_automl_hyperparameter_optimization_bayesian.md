@@ -326,5 +326,25 @@ importance = optuna.importance.get_param_importances(study)
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. AutoML은 AI 모델의 자동 조리법 찾기야 — 어떤 재료(피처)를 얼마나(하이퍼파라미터) 넣어야 가장 맛있는지 AI가 스스로 실험해서 알아내!
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+수동 하이퍼파라미터 튜닝 (Grid Search · Random Search)
+    │
+    ▼
+베이지안 최적화 (Bayesian Optimization)
+    ├─► Surrogate Model (GP · TPE)
+    └─► 탐색-활용 균형 (Acquisition Function)
+    │
+    ▼
+AutoML 플랫폼
+    ├─► NAS (Neural Architecture Search): 모델 구조 자동 탐색
+    ├─► AutoFeature: 피처 자동 생성 · 선택
+    └─► Google AutoML · H2O · Auto-sklearn
+    │
+    ▼
+LLM 기반 AutoML: 자연어로 ML 파이프라인 생성
+```
 2. 베이지안 최적화는 요리 대회에서 지금까지의 실험 결과를 기억하고, "이 조합이 맛있을 것 같다!"는 방향으로 점점 좁혀가는 영리한 탐정 방식이야.
 3. Hyperband는 100개 레시피 중 맛없는 건 중간에 탈락시키는 빠른 선발전 — 자원을 아끼면서 최고의 레시피를 찾아내는 거야!

@@ -363,5 +363,26 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO debezium;
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. CDC는 도서관 책 대출 기록이야 — 누가 어떤 책을 가져갔는지, 반납했는지, 새 책이 들어왔는지 모든 변화를 실시간으로 기록해.
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+배치 ETL (주기적 전체 복사)
+    │
+    ▼
+CDC (Change Data Capture): 변경분만 실시간 캡처
+    ├─► 로그 기반 CDC: MySQL Binlog · PostgreSQL WAL
+    └─► 쿼리 기반 CDC: 타임스탬프 비교 (레거시)
+    │
+    ▼
+Debezium (오픈소스 CDC 커넥터)
+    └─► DB → Kafka Connect → Kafka Topic → 소비자
+    │
+    ▼
+실시간 동기화 파이프라인
+    ├─► OLTP → OLAP 실시간 복제
+    ├─► 캐시 무효화 · 검색 인덱스 동기화
+    └─► Event Sourcing · 마이크로서비스 데이터 통합
+```
 2. Debezium은 DB 일기를 읽는 탐정이야 — DB가 매일 쓰는 일기(트랜잭션 로그)를 분석해서 "오늘 주문이 3건 생기고 1건 취소됐어!"를 알려줘.
 3. Outbox 패턴은 편지를 직접 우체통에 넣는 대신 서랍에 먼저 보관하는 거야 — 편지 쓰기(DB 저장)와 발송(이벤트 발행)이 한 번에 실패하거나 한 번에 성공해서 편지를 잃어버릴 일이 없어!
