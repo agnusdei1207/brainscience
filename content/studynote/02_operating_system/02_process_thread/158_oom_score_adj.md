@@ -6,339 +6,147 @@ date = "2026-03-22"
 categories = "studynote-operating-system"
 +++
 
-# oom_score_adj
+## 핵심 인사이트 (3줄 요약)
 
-## Ⅰ. oom_score_adj의 개념
-
-### 1. 정의
-
-**oom_score_adj**는 Linux 커널이 OOM (Out-Of-Memory) 상태에서 프로세스를 강제 종료할 때의 우선순위를 관리자가 수동으로 조정할 수 있는 파라미터이다. `/proc/[pid]/oom_score_adj` 파일을 통해 -1000부터 +1000 사이의 정수값을 설정할 수 있으며, 이 값은 커널이 계산한 `oom_score`에 더해져 최종 OOM 점수를 결정한다.
-
-> **비유**: oom_score_adj는 "위험도 점수에 더하거나 빼는 보너스/패널티 점수"다. -1000점을 받으면 "무적 쉴드"가 씌워지고, +1000점을 받으면 "가장 먼저 퇴장" 대상이 된다.
-
-### 2. oom_score와 oom_score_adj의 관계
-
-```
-최종 OOM 점수 계산 구조
-
-+------------------------------------------------------+
-|  oom_score (커널이 자동 계산, 읽기 전용)               |
-|  = (RSS + Swap + PageTable) / 총 메모리 * 1000       |
-|                                                      |
-|  oom_score_adj (관리자 수동 설정, -1000 ~ +1000)      |
-|  = 수동 보정값                                        |
-|                                                      |
-|  최종 점수 = oom_score + oom_score_adj                |
-|                                                      |
-|  주의: 최종 점수가 음수라도 0 이하로 내려가지 않음      |
-|        (단, oom_score_adj = -1000은 특별 예외)         |
-+------------------------------------------------------+
-
-예시:
-  프로세스 A: oom_score=500, oom_score_adj=0   --> 최종: 500
-  프로세스 B: oml_score=500, oom_score_adj=-500 --> 최종: 0 (보호됨)
-  프로세스 C: oom_score=300, oom_score_adj=+500 --> 최종: 800 (위험)
-```
+> 1. **본질**: `oom_score_adj`는 Linux 커널이 OOM (Out Of Memory) 상황에서 희생 프로세스를 고를 때, 기본 위험도(`oom_score`)에 정책적 가중치를 더하거나 빼는 조정 손잡이다.
+> 2. **가치**: 데이터베이스, `sshd`, `kubelet` 같은 핵심 프로세스는 덜 죽게 하고, 배치 작업이나 실험성 워크로드는 먼저 정리되게 만들어 시스템 전체 생존 확률을 높인다.
+> 3. **판단 포인트**: `oom_score_adj`는 메모리를 늘려 주는 기능이 아니라 “누가 먼저 희생될지”를 정하는 정책이므로, cgroup (Control Group) 제한, 재시작 정책, 메모리 누수 대응과 함께 써야 한다.
 
 ---
 
-## Ⅱ. oom_score_adj 값의 범위와 의미
+## Ⅰ. 개요 및 필요성
 
-### 1. 상세 범위별 동작
+`oom_score_adj`는 Linux가 메모리 부족으로 OOM Killer를 발동할 때 프로세스 중요도를 관리자가 직접 보정하는 인터페이스다. 커널은 기본적으로 메모리를 많이 쓰는 프로세스를 위험 후보로 보지만, 실제 운영에서는 메모리 사용량이 많아도 반드시 살아 있어야 하는 프로세스가 있다. 이런 현실을 반영하기 위해 `/proc/<pid>/oom_score_adj`에 `-1000`부터 `+1000` 사이 값을 설정해 종료 우선순위를 조정한다.
 
-| oom_score_adj | 의미 | OOM Killer 동작 |
-|---------------|------|-----------------|
-| **-1000** | OOM 면제 (Immune) | OOM 발생 시 절대 종료되지 않음 |
-| **-999 ~ -1** | 낮은 우선순위 | oom_score에서 해당 값 차감, 종료 확률 감소 |
-| **0** | 기본값 (Default) | 커널 계산 점수 그대로 사용 |
-| **+1 ~ +999** | 높은 우선순위 | oom_score에 해당 값 가산, 종료 확률 증가 |
-| **+1000** | 최우선 종료 (Always Kill First) | OOM 발생 시 가장 먼저 종료됨 |
+이 기능이 필요한 이유는 “메모리를 많이 쓴다”와 “먼저 죽어도 된다”가 항상 같지 않기 때문이다. 예를 들어 데이터베이스나 노드 관리 에이전트는 메모리를 많이 쓰더라도 함부로 죽이면 전체 서비스가 더 크게 흔들린다. 반대로 임시 배치, 캐시 워머, 분석 작업은 먼저 종료되어도 시스템이 버틸 수 있다. `oom_score_adj`는 바로 이런 운영 우선순위를 커널 판단에 주입하는 도구다.
 
-### 2. -1000 (OOM 면제)의 특수 동작
-
-```
-oom_score_adj = -1000 설정 시
-
-[일반 프로세스]
-  oom_score_adj = -1000
-  oom_score = 0으로 고정 (실제 메모리 사용량 무관)
-  --> OOM Killer 대상에서 완전 제외
-
-[예외 상황: cpuset 또는 mempolicy 제한]
-  cgroup/mempolicy로 메모리가 제한된 노드에서
-  해당 노드 내에서만 OOM 발생 시
-  --> -1000 프로세스도 종료 가능 (Linux 2.6.36 이후)
-  --> 단, 전역 OOM에서는 여전히 보호됨
-
-[커널 스레드]
-  커널 스레드는 기본적으로 oom_score_adj = -1000
-  --> 커널 스레드는 항상 OOM으로부터 보호됨
-```
-
-### 3. 설정 방법
-
-```bash
-# OOM 면제 (가장 중요한 프로세스 보호)
-echo -1000 > /proc/$(pidof mysqld)/oom_score_adj
-
-# OOM 우선 종료 대상 (장애 복구용)
-echo 1000 > /proc/$(pidof stress_worker)/oom_score_adj
-
-# 특정 범위로 설정
-echo -500 > /proc/1234/oom_score_adj
-
-# 현재 값 확인
-cat /proc/1234/oom_score_adj
-
-# 모든 프로세스의 oom_score_adj 확인
-for pid in /proc/[0-9]*/oom_score_adj; do
-  echo "$pid: $(cat $pid)"
-done
-```
-
-> **비유**: -1000은 "관람석 VIP 패스"로 경기장이 폭주해도 VIP는 안전하다. +1000은 "가장 앞줄 석"으로 불이 나면 제일 먼저 대피(퇴장)해야 한다.
+- **📢 섹션 요약 비유**: `oom_score_adj`는 비상 탈출 명단에 붙이는 우선순위 스티커와 같다. 모두를 동시에 살릴 수 없을 때, 누가 마지막까지 남아야 하는지 미리 표시해 두는 것이다.
 
 ---
 
-## Ⅲ. systemd와의 연동
+## Ⅱ. 아키텍처 및 핵심 원리
 
-### 1. systemd의 OOMScoreAdjust 지시자
+OOM 상황이 오면 커널은 페이지 회수, 메모리 압축, 스왑 같은 완화 절차를 먼저 시도한다. 그래도 할당 실패가 계속되면 OOM Killer가 동작하고, 이때 커널이 계산한 기본 위험도인 `oom_score`와 관리자가 준 `oom_score_adj`가 함께 반영된다. 즉 `oom_score`가 현재 상태를 보여 주는 계기판이라면, `oom_score_adj`는 운영 정책을 반영하는 조정 손잡이다.
 
-systemd 서비스 유닛 파일에서 `OOMScoreAdjust`를 설정하면 서비스 시작 시 자동으로 `/proc/[pid]/oom_score_adj`가 설정된다.
+### 값의 범위와 의미
 
-```ini
-# /etc/systemd/system/production-db.service
-[Unit]
-Description=Production Database
-After=network.target
+| 값 범위 | 의미 | 운영 해석 |
+| :--- | :--- | :--- |
+| `-1000` | 사실상 OOM 면제 | 정말 반드시 살아야 할 프로세스에만 제한적으로 사용 |
+| `-999 ~ -1` | 종료 가능성 낮춤 | 중요하지만 절대 면제는 아닌 프로세스 보호 |
+| `0` | 기본값 | 커널 계산 결과를 그대로 따름 |
+| `1 ~ 999` | 종료 가능성 높임 | 먼저 정리해도 되는 작업성 프로세스 지정 |
+| `1000` | 최우선 희생 후보 | 실험성/임시성 워크로드에만 신중히 사용 |
 
-[Service]
-Type=simple
-ExecStart=/usr/bin/postgres -D /var/lib/pgsql/data
-Restart=always
-OOMScoreAdjust=-500       # 데이터베이스 보호
-MemoryHigh=6G             # cgroup 메모리 soft limit
-MemoryMax=8G              # cgroup 메모리 hard limit
+아래 그림은 OOM 판단에 `oom_score_adj`가 개입하는 지점을 요약한다.
 
-[Install]
-WantedBy=multi-user.target
+```text
+┌────────────────────────────────────────────────────────────────────────────┐
+│                 OOM selection path with policy override                    │
+├────────────────────────────────────────────────────────────────────────────┤
+│ memory pressure                                                            │
+│      │                                                                     │
+│      ├── reclaim / compact / swap try                                      │
+│      └── still allocation failure                                          │
+│              ▼                                                             │
+│      kernel badness heuristic ──▶ oom_score                                │
+│                                   +                                        │
+│                          admin policy ──▶ oom_score_adj                    │
+│                                   │                                        │
+│                                   ▼                                        │
+│                        victim chosen and SIGKILL issued                     │
+└────────────────────────────────────────────────────────────────────────────┘
 ```
 
-```
-systemd 서비스별 OOMScoreAssign 기본값
+실무적으로 기억할 점은 세 가지다. 첫째, `oom_score_adj`는 프로세스 단위 값이며 자식 프로세스에 상속될 수 있어 서비스 트리 전체에 영향을 준다. 둘째, 직접 `/proc`에 쓴 값은 프로세스가 재시작되면 사라지므로 지속 정책은 `systemd`나 오케스트레이터에서 관리하는 편이 낫다. 셋째, `-1000`은 강력하지만 남용하면 커널이 실제 위기 때 선택할 후보를 잃어 더 큰 장애를 만들 수 있다.
 
-+-------------------------------------------+
-|  systemd 프로세스 자체:      -1000 (보호)   |
-|  시스템 서비스 (default):         0        |
-|  사용자 서비스 (default):         0        |
-|  커스텀 설정:             -1000 ~ +1000   |
-+-------------------------------------------+
-
-주의: systemd는 --user 인스턴스에서도 OOMScoreAdjust를 적용함
-```
-
-### 2. systemd 설정 확인
-
-```bash
-# 서비스의 OOM 설정 확인
-systemctl show production-db.service | grep OOM
-# OOMScoreAdjust=500
-# MemoryHigh=infinity
-# MemoryMax=infinity
-
-# 시스템 데몬들의 OOM 점수 확인
-systemctl status --no-pager | awk '{print $1}' | while read svc; do
-  score=$(systemctl show "$svc" 2>/dev/null | grep OOMScoreAdjust | cut -d= -f2)
-  echo "$svc: $score"
-done
-```
+- **📢 섹션 요약 비유**: 기본 위험도 계산이 시험 점수라면, `oom_score_adj`는 교사가 붙이는 가감점이다. 같은 점수를 받아도 중요한 역할을 맡은 학생은 덜 탈락하게 만들 수 있다.
 
 ---
 
-## Ⅳ. Kubernetes와의 연동
+## Ⅲ. 비교 및 연결
 
-### 1. Pod QoS (Quality of Service)와 oom_score_adj 매핑
+`oom_score_adj`를 제대로 이해하려면 비슷해 보이는 다른 메커니즘과 구분해야 한다.
 
-Kubernetes는 Pod의 리소스 설정(Request/Limit)에 따라 QoS 클래스를 부여하고, 이에 따라 컨테이너 프로세스의 `oom_score_adj`를 자동 설정한다.
+| 항목 | 역할 | 무엇을 바꾸는가 | 한계 |
+| :--- | :--- | :--- | :--- |
+| `oom_score` | 현재 위험도 지표 | 커널이 계산한 OOM 후보 점수 | 관리자가 직접 정책을 담기 어려움 |
+| `oom_score_adj` | 정책 가중치 | 종료 우선순위 | 메모리 총량 자체는 늘리지 못함 |
+| `memory.max` / cgroup 제한 | 격리 한도 | 워크로드별 사용 가능 메모리 상한 | 잘못 잡으면 cgroup 내부 OOM이 자주 발생 |
+| `systemd` `OOMScoreAdjust=` | 서비스 단위 지속 설정 | 재시작 후에도 정책 유지 | 서비스 경계 밖까지 자동 해결되진 않음 |
+| Kubernetes QoS (Quality of Service) | 컨테이너 계층 정책 | Pod 중요도에 따른 자동 보정 | 애플리케이션 누수 자체는 해결하지 못함 |
 
-```
-Kubernetes Pod QoS 매핑 구조
+즉 `oom_score_adj`는 **정책 신호**이고, cgroup 제한은 **격리 장치**다. 둘은 경쟁 관계가 아니라 보완 관계다. 예를 들어 Kubernetes는 Guaranteed, Burstable, BestEffort QoS 클래스에 따라 `oom_score_adj`를 자동 부여해 노드 OOM 시 종료 순서를 정리한다. 하지만 컨테이너가 메모리를 무한정 먹지 못하게 막는 일은 여전히 `requests/limits`와 cgroup이 맡는다.
 
-+--------------------------------------------------------------+
-|  Guaranteed (보장됨)                                          |
-|    Request = Limit (동일)                                     |
-|    예: requests.memory=1Gi, limits.memory=1Gi                |
-|    oom_score_adj = -998                                      |
-|    --> OOM 발생 시 가장 마지막에 종료                          |
-+--------------------------------------------------------------+
-|  Burstable (가변)                                             |
-|    Request < Limit (Request만 설정 또는 둘 다 설정)             |
-|    예: requests.memory=256Mi, limits.memory=1Gi              |
-|    oom_score_adj = min(0, 999 - (1000 * request / node_total))|
-|    --> 중간 우선순위                                          |
-+--------------------------------------------------------------+
-|  BestEffort (최선 노력)                                        |
-|    Request 미설정, Limit 미설정                                |
-|    oom_score_adj = 1000                                      |
-|    --> OOM 발생 시 가장 먼저 종료                              |
-+--------------------------------------------------------------+
-```
-
-### 2. 실제 oom_score_adj 계산 예시
-
-```
-노드 메모리: 8GB (8192 MiB)
-
-[Guaranteed Pod]
-  Container A: request=memory:4Gi, limit=memory:4Gi
-  oom_score_adj = -998
-
-[Burstable Pod]
-  Container B: request=memory:2Gi, limit=memory:4Gi
-  oom_score_adj = 999 - (1000 * 2048 / 8192)
-               = 999 - 250
-               = 749
-
-  Container C: request=memory:512Mi, limit=memory:2Gi
-  oom_score_adj = 999 - (1000 * 512 / 8192)
-               = 999 - 62
-               = 937
-
-[BestEffort Pod]
-  Container D: (request/limit 미설정)
-  oom_score_adj = 1000
-
-OOM 발생 시 종료 순서: D --> C --> B --> A
-```
-
-### 3. 노드 OOM 시 Pod 종료 프로세스
-
-```
-Kubernetes 노드 OOM 발생 시 처리 흐름
-
-[OOM 발생]
-    |
-    v
-[Kubelet이 노드 상태 조건(NodeCondition) 업데이트]
-    Status: MemoryPressure=True
-    |
-    v
-[OOM Killer가 oom_score_adj 기준으로 프로세스 종료]
-    BestEffort Pod 먼저 종료 (oom_score_adj=1000)
-    |
-    v
-[Pod 내 컨테이너 종료 감지]
-    kubelet이 ContainerStatus Changed 이벤트 수신
-    |
-    v
-[Pod 재시작 정책 적용]
-    RestartPolicy=Always --> 컨테이너 재시작
-    RestartPolicy=Never --> Pod 상태를 Completed/Failed로 변경
-    |
-    v
-[이벤트 기록]
-    kubectl describe node | grep OOM
-    kubectl describe pod | grep OOMKilled
-```
-
-> **비유**: Kubernetes의 QoS 매핑은 "비상 상황 시 대피 우선순위표"다. Guaranteed는 "소방관(필수 인원)", Burstable은 "일반 직원", BestEffort는 "방문객"이다. 방문객이 먼저 대피하고, 소방관은 마지막까지 남는다.
+- **📢 섹션 요약 비유**: `oom_score_adj`가 좌석 우선순위표라면, cgroup은 아예 객실 칸막이다. 먼저 내릴 사람을 정하는 일과, 방마다 정원을 정하는 일은 서로 다른 관리다.
 
 ---
 
-## Ⅴ. 실무 운영 가이드
+## Ⅳ. 실무 적용 및 기술사 판단
 
-### 1. 모니터링 설정
+운영 현장에서는 `oom_score_adj`를 “중요 서비스 보호 정책”으로 설계한다. 예를 들어 `systemd` 서비스에서는 `OOMScoreAdjust=-500`처럼 명시해 데이터베이스와 노드 에이전트를 보호하고, 실험성 워커나 배치 잡에는 양수 값을 주어 먼저 정리되도록 한다. 컨테이너 환경에서는 단일 프로세스보다 Pod 전체 중요도, 재시작 정책, 노드 메모리 압박 신호까지 함께 봐야 한다.
 
-```bash
-# OOM 점수 모니터링 스크립트
-#!/bin/bash
-# oom_monitor.sh
-echo "=== Top 10 OOM Risk Processes ==="
-ps -eo pid,comm,rss,oom_score,oom_score_adj --sort=-oom_score | head -11
+### 체크리스트
 
-echo ""
-echo "=== Protected Processes (oom_score_adj < 0) ==="
-for pid in /proc/[0-9]*; do
-  adj=$(cat "$pid/oom_score_adj" 2>/dev/null)
-  if [ "$adj" -lt 0 ] 2>/dev/null; then
-    comm=$(cat "$pid/comm" 2>/dev/null)
-    echo "PID=$(basename $pid) COMM=$comm OOM_ADJ=$adj"
-  fi
-done
-```
+1. **정말 반드시 살아야 하는 프로세스만 음수로 보호했는가?** 핵심 제어면만 선별해야 한다.
+2. **`-1000`을 남발하지 않았는가?** 면제 대상이 많을수록 커널 선택 폭이 줄어든다.
+3. **재시작 후에도 정책이 유지되는가?** `/proc` 직접 수정만으로는 지속되지 않는다.
+4. **메모리 누수와 상한 설정을 같이 관리하는가?** `oom_score_adj`만으로 근본 원인은 해결되지 않는다.
 
-### 2. 주의사항
+### 안티패턴
 
-```
-oom_score_adj 설정 시 주의사항
+- 모든 중요 서비스에 일괄적으로 `-1000`을 주는 경우
+- 애플리케이션 메모리 누수는 방치한 채 OOM 점수만 조정하는 경우
+- Kubernetes나 `systemd` 기본 정책을 이해하지 않고 수동 값만 덮어쓰는 경우
 
-+--------------------------------------------------+
-| 1. 권한 필요                                      |
-|    root 또는 CAP_SYS_RESOURCE capability 필요       |
-|    일반 사용자는 자신의 프로세스만 수정 가능          |
-+--------------------------------------------------+
-| 2. -1000 남용 금지                                 |
-|    너무 많은 프로세스를 -1000으로 설정하면           |
-|    OOM Killer가 선택할 프로세스가 없어짐             |
-|    --> 시스템 전체 정지 가능                         |
-+--------------------------------------------------+
-| 3. 프로세스 재시작 시 초기화                         |
-|    oom_score_adj는 /proc를 통한 런타임 설정          |
-|    프로세스 재시작 시 기본값(0)으로 리셋              |
-|    --> 영구 설정은 systemd/k8s에서 관리              |
-+--------------------------------------------------+
-| 4. cgroup과의 상호작용                              |
-|    cgroup 메모리 제한과 oom_score_adj은 독립적       |
-|    cgroup 제한 위반 시 cgroup 내에서만 OOM 발생      |
-+--------------------------------------------------+
-```
+- **📢 섹션 요약 비유**: `oom_score_adj` 설정은 병원 응급실의 중증도 분류와 같다. 누구를 먼저 돌볼지 정하는 것은 중요하지만, 병실 수와 의료 장비 부족 문제 자체를 없애 주지는 못한다.
 
 ---
 
-## 요약
+## Ⅴ. 기대효과 및 결론
 
-### 지식 그래프
+`oom_score_adj`를 올바르게 쓰면 메모리 위기가 왔을 때 장애 반경을 줄일 수 있다. 즉 모든 프로세스를 무차별적으로 위험에 노출하는 대신, 핵심 제어 프로세스는 살리고 비핵심 작업을 먼저 정리하게 만들어 노드 전체 다운 가능성을 낮춘다. 특히 `systemd`, Kubernetes, 재시작 정책과 결합하면 “누가 죽고 누가 복구되는가”를 훨씬 예측 가능하게 만든다.
 
+하지만 이 값은 어디까지나 최후의 순간을 위한 정책이다. 메모리 사용량 예측, 상한 설정, 캐시 전략, 누수 제거, PSI (Pressure Stall Information) 기반 조기 경보가 함께 있어야 진짜 운영 품질이 올라간다. 따라서 `oom_score_adj`는 “메모리 문제 해결책”이 아니라 **메모리 재난 시 생존 순서를 정하는 운영 레버**로 기억해야 한다.
+
+- **📢 섹션 요약 비유**: `oom_score_adj`는 배가 침수될 때 어떤 짐을 먼저 버릴지 정해 둔 목록과 같다. 배를 더 크게 만들어 주지는 않지만, 침몰 직전에 무엇을 지켜야 할지는 분명하게 해 준다.
+
+---
+
+### 📌 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+| :--- | :--- |
+| OOM Killer | 메모리 회수 실패 후 희생 프로세스를 선택하는 최종 메커니즘 |
+| `oom_score` | 커널이 계산하는 현재 프로세스 위험도 |
+| cgroup (Control Group) | 워크로드별 메모리 격리와 제한을 담당 |
+| `systemd` `OOMScoreAdjust=` | 서비스 단위의 지속적 `oom_score_adj` 설정 방법 |
+| Kubernetes QoS (Quality of Service) | Pod 중요도에 따라 자동 우선순위를 조정하는 상위 정책 |
+| PSI (Pressure Stall Information) | OOM 이전의 메모리 압박을 조기 감지하는 신호 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+메모리 압박
+    │
+    ▼
+페이지 회수 · 스왑 · 압축 시도
+    │
+    ▼
+OOM Killer 진입
+    │
+    ▼
+oom_score + oom_score_adj
+    │
+    ▼
+cgroup 정책 · systemd · Kubernetes QoS와 결합한 생존 우선순위 설계
 ```
-oom_score_adj
-├── 기본 개념
-│   ├── OOM Killer 종료 우선순위 조정
-│   ├── 범위: -1000 ~ +1000
-│   └── /proc/[pid]/oom_score_adj 인터페이스
-├── 값별 의미
-│   ├── -1000 (OOM 면제, Immune)
-│   ├── -999 ~ -1 (종료 확률 감소)
-│   ├── 0 (기본값)
-│   ├── +1 ~ +999 (종료 확률 증가)
-│   └── +1000 (최우선 종료)
-├── 플랫폼 연동
-│   ├── systemd OOMScoreAdjust (서비스 설정)
-│   ├── Kubernetes QoS 매핑
-│   │   ├── Guaranteed (-998)
-│   │   ├── Burstable (계산식)
-│   │   └── BestEffort (1000)
-│   └── Docker/CRI-O (container runtime)
-├── 관련 커널 메커니즘
-│   ├── oom_badness() (점수 자동 계산)
-│   ├── oom_score (읽기 전용 산정값)
-│   └── CAP_SYS_RESOURCE (설정 권한)
-└── 운영 가이드
-    ├── 모니터링 및 알림
-    ├── -1000 남용 방지
-    └── 프로세스 재시작 시 초기화 대응
-```
 
-### 세 줄 설명 (어린이용)
+이 흐름은 `oom_score_adj`가 단독 기능이 아니라, 메모리 압박 감지에서 희생자 선정과 상위 오케스트레이션 정책으로 이어지는 운영 체계의 한 요소임을 보여준다.
 
-1. oom_score_adj는 컴퓨터 메모리가 부족할 때 "누구를 먼저 끌 것인가"를 정하는 점수예요.
-2. 점수를 -1000으로 하면 "이 프로그램은 절대 끄지 마세요!"라고 컴퓨터에게 부탁할 수 있어요.
-3. Kubernetes에서는 중요한 프로그램에 -998, 덜 중요한 프로그램에 1000을 자동으로 매겨서 똑똑하게 지켜줘요.
+### 👶 어린이를 위한 3줄 비유 설명
 
-### 약어 정리
+1. 컴퓨터 방이 너무 꽉 차면, 누군가는 밖으로 나가야 해서 OOM Killer가 누굴 먼저 내보낼지 골라요.
+2. `oom_score_adj`는 “이 친구는 중요해요” 또는 “이 친구는 먼저 나가도 돼요”라고 붙이는 스티커예요.
+3. 하지만 방이 너무 좁은 문제까지 없어지는 건 아니어서, 원래부터 방 크기와 사람 수를 잘 맞춰야 해요.
 
-| 약어 | Full Name |
-|------|-----------|
-| OOM | Out-Of-Memory |
-| RSS | Resident Set Size |
-| QoS | Quality of Service |
-| CRI | Container Runtime Interface |
