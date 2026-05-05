@@ -1,324 +1,131 @@
 +++
 weight = 82
-title = "82. 윈도우 연산 — 텀블링 / 슬라이딩 / 세션 / 글로벌 윈도우"
-description = "머신러닝 파이프라인의 개념, 구성 요소, 구축 방법,自动化 및 재현성 확보 전략"
+title = "82. 릴리스 및 배포 관리 (Release and Deployment Management)"
 date = "2026-04-05"
-[taxonomies]
-tags = ["파이프라인", "ML파이프라인", "워크플로우", "자동화", "재현성", "스크림"]
-categories = ["studynote-bigdata"]
+[extra]
+categories = "studynote-it-management"
 +++
+
 ## 0. 핵심 인사이트
 
-> **핵심**: 머신러닝 파이프라인은 데이터 수집, 전처리, 특성 공학, 모델 훈련, 평가, 배포 등의 단계를 자동화된 순차적 흐름으로 연결하는 소프트웨어 아키텍처이다.
-> 2. **가치**:手動 处理의 오류를 줄이고, 实验的結果의 재현성을 보장하며, 모델 개발から 배포까지의 시간을 크게 단축시킨다.
-> 3. **융합**: Airflow, Prefect, Kubeflow, MLflow 등의 오케스트레이션 도구와 scikit-learn의 Pipeline API, TensorFlow Extended (TFX) 등의 프레임워크가 활용된다.
+> **핵심**: 릴리스 및 배포 관리 (Release and Deployment Management)의 본질은 변경된 소프트웨어/하드웨어를 실제 운영 환경에 이관하는 통제 절차를 비즈니스 가치, 통제, 실행 관점에서 일관되게 연결하는 데 있다.
+> **비유**: 전략과 운영 사이의 간극을 메우는 조정 메커니즘과 같다.
+
+---
 
 > 📝 모범 답안
 
-# 파이프라인 (Machine Learning Pipeline)
+## 1. 개요 및 필요성
 
-##
+릴리스 및 배포 관리 (Release and Deployment Management)는 변경된 소프트웨어/하드웨어를 실제 운영 환경에 이관하는 통제 절차를 다루는 개념이다. IT 관리 영역에서 이 주제가 중요한 이유는 기술 요소 하나를 설명하는 데 그치지 않고, 비즈니스 목표·운영 프로세스·통제 기준·성과 측정 방식을 함께 정렬해야 실제 가치가 발생하기 때문이다.
+
+특히 2. IT 서비스 관리 (ITSM) 및 ITIL 프레임워크 (70개) 맥락에서는 복잡성이 커질수록 의사결정 지연, 책임 불명확, 비용 가시성 저하, 규제 대응 누락이 동시에 발생한다. 따라서 릴리스 및 배포 관리 (Release and Deployment Management)는 단순 용어가 아니라 “무엇을 기준으로 설계하고, 어떤 순서로 운영하며, 어떤 지표로 통제할 것인가”를 정리하는 관리 프레임으로 이해해야 한다.
+
+이 개념이 부재하면 현업 요구와 IT 실행 사이에 단절이 생기고, 결과적으로 프로젝트 실패·서비스 품질 저하·보안 리스크 증가·중복 투자 같은 문제가 누적된다. 반대로 릴리스 및 배포 관리 (Release and Deployment Management)를 명확히 정의하면 조직은 우선순위 설정, 책임 분배, 자동화 범위 설정, 감사 대응까지 하나의 논리로 묶을 수 있다.
+
 ---
 
-### 1. 개요 및 필요성
+## 2. 구성요소
 
-머신러닝 파이프라인(ML Pipeline)은 실제 산업에서 머신러닝을 활용할 때 반드시 필요한 소프트웨어 아키텍처이다. 研究環境에서 Jupyter Notebook으로 모델을 개발하는 것은 좋지만, 그렇게 개발된 코드는再利用 불가능하고, 유지보수가 어렵고, 오류 발생 가능성이 높다. 따라서production 환경에서는 각 단계를 체계적으로 연결하는 파이프라인이 필수적이다.
+| 요소 | 역할 | 핵심 포인트 |
+|:---|:---|:---|
+| 정책/원칙 | 무엇을 허용·금지할지 정의 | 상위 전략과 규제 요구를 해석하는 기준선 |
+| 프로세스 | 실행 순서와 책임을 표준화 | 재현 가능성과 품질 확보의 핵심 |
+| 조직/역할 | 승인·운영·감사 역할 분담 | 책임 분리가 되어야 통제가 작동 |
+| 지표/증빙 | 성과와 위험을 측정 | 측정되지 않으면 개선도 불가능함 |
 
-머신러닝 개발에는 通常 다음과 같은 단계가 있다.
+위 요소들은 독립적으로 존재하지 않는다. 릴리스 및 배포 관리 (Release and Deployment Management)에서는 정책이 방향을 정하고, 프로세스가 이를 실행 가능하게 만들며, 조직이 책임을 지고, 지표와 증빙이 결과를 다시 정책으로 환류시킨다. 따라서 구성요소를 외우는 수준을 넘어서, 어느 요소가 빠질 때 통제 공백이 생기는지를 함께 봐야 한다.
 
-1. 데이터 수집 (Data Ingestion)
-2. 데이터 검증 (Data Validation)
-3. 데이터 전처리 (Data Preprocessing)
-4. 특성 공학 (Feature Engineering)
-5. 모델 훈련 (Model Training)
-6. 모델 평가 (Model Evaluation)
-7. 모델 배포 (Model Deployment)
-8. 모니터링 (Monitoring)
+---
 
-手動으로 각 단계를管理하면 여러 가지 문제가 발생한다.
+## 3. 구조 및 원리
+
+릴리스 및 배포 관리 (Release and Deployment Management)의 구조를 이해할 때 중요한 것은 구성요소를 나열하는 것이 아니라, 어떤 입력이 어떤 판단 규칙을 거쳐 어떤 결과와 증빙으로 이어지는지를 보는 것이다. 즉 릴리스 및 배포 관리 (Release and Deployment Management)는 기준선, 실행 경로, 피드백 루프가 결합된 운영 메커니즘으로 이해해야 한다.
+
+**핵심 조건**: 정책·프로세스·지표가 같은 목표를 향해 정렬되고, 예외 처리 기준이 문서화되어야 한다.
+
+동작 순서:
+1. **정책 수립**: 이 단계는 릴리스 및 배포 관리 (Release and Deployment Management)가 단순 개념이 아니라 실제 통제와 실행으로 이어지게 만드는 연결점이다.
+2. **표준 프로세스 정의**: 이 단계는 릴리스 및 배포 관리 (Release and Deployment Management)가 단순 개념이 아니라 실제 통제와 실행으로 이어지게 만드는 연결점이다.
+3. **운영 및 통제**: 이 단계는 릴리스 및 배포 관리 (Release and Deployment Management)가 단순 개념이 아니라 실제 통제와 실행으로 이어지게 만드는 연결점이다.
+4. **성과 환류**: 이 단계는 릴리스 및 배포 관리 (Release and Deployment Management)가 단순 개념이 아니라 실제 통제와 실행으로 이어지게 만드는 연결점이다.
 
 ```text
-[手動 처리 시 문제점]
-
-Research 환경 (Jupyter Notebook):
-  ┌─────────────────────────────────────────────┐
-  │ 1. 데이터 로드: pd.read_csv('data.csv')     │
-  │ 2. 전처리: df.fillna(...)                   │
-  │ 3. 모델 훈련: model.fit(X_train, y_train)   │
-  │ 4. 평가: model.score(X_test, y_test)       │
-  │ 5. (다른 데이터셋에서) 다시 반복...          │
-  └─────────────────────────────────────────────┘
-
-발생하는 문제:
-  ✗ 전처리 코드가 여러 셀에分散
-  ✗ 훈련/테스트 분할 기준不統一
-  ✗ 매개변수가 하드코딩됨
-  ✗ 다른 환경에서 재현 불가
-  ✗ 데이터 변경 시 모든 셀 순서대로 再실행 필요
-  ✗ 실수로 테스트 데이터가 훈련에 포함되는 경우 발생
+[정책 수립] -> [표준화] -> [운영 실행] -> [측정] -> [개선]
 ```
 
-파이프라인은 이러한 문제를 해결한다. 모든 단계를 하나의连贯한 흐름으로 결합함으로써,入力データが変化했을 때 자동으로 전체流程が更新され、결과rieved 재현 가능한出力が得られる。
-
-> 📢 **섹션 요약 비유**: 머신러닝 파이프라인은犹如料理の自动化 производственный lineと類似している. 수동으로 각 단계를 거치면 속도도 느리고 불량률이 높아진다.自动化라인에 넣으면原材料投入부터 완성품까지 일정한 품질로大量 생산이 가능하다. 데이터도 마찬가지로 파이프라인에 넣으면 일관된 품질의 예측 결과를 얻을 수 있다.
+이 구조에서 핵심은 선행 조건이 충족되지 않으면 뒤 단계의 효율이 높아도 전체 품질이 보장되지 않는다는 점이다. 예를 들어 지표 정의가 불명확하거나 승인 경계가 흐리면, 자동화가 오히려 오류를 빠르게 확산시키는 결과가 된다. 따라서 구조 설계에서는 속도보다 정합성, 개별 최적화보다 전체 제어성을 함께 고려해야 한다.
 
 ---
 
-### 2. 구성요소
+## 4. 비교 및 연결
 
-### 2.1 파이프라인 기본 구조
-
-파이프라인은 通常以下几个阶段로 구성된다.
-
-```text
-[머신러닝 파이프라인 전체 흐름]
-
-[데이터 소스] ──→ [데이터 수집] ──→ [데이터 검증]
-                              │
-                         DQ 체크포인트
-                              │
-                              ▼
-                        [데이터 전처리]
-                              │
-                    ┌─────────┴─────────┐
-                    ▼                   ▼
-            [훈련 데이터           [테스트 데이터
-             준비]                  준비]
-                    │                   │
-                    └─────────┬─────────┘
-                              ▼
-                        [특성 공학]
-                              │
-                    ┌─────────┴─────────┐
-                    ▼                   ▼
-              [훈련 특성           [테스트 특성
-               변환]                 변환]
-                    │                   │
-                    └─────────┬─────────┘
-                              ▼
-                        [모델 훈련]
-                              │
-                              ▼
-                      [모델 평가/검증]
-                              │
-                              ▼
-                      [모델 레지스트리]
-                              │
-                              ▼
-                      [모델 배포/Serving]
-                              │
-                              ▼
-                      [모니터링/로깅]
-```
-
-### 2.2 scikit-learn Pipeline
-
-scikit-learn은Pipeline을 위해专门的 API를 제공한다. Pipeline을 사용하면 전처리와 모델 훈련 단계를一体化하고, fit_transform과 predict 호출을 자동으로 연결한다.
-
-```python
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-
-# 파이프라인 정의
-pipeline = Pipeline([
-    ('scaler', StandardScaler()),      # 1단계: 스케일링
-    ('pca', PCA(n_components=10)),    # 2단계: PCA 차원 축소
-    ('classifier', RandomForestClassifier())  # 3단계: 분류기
-])
-
-# 데이터 분할
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-
-# 파이프라인 전체를 한 번에 훈련
-pipeline.fit(X_train, y_train)
-
-# 예측 (모든 단계가 자동으로 적용됨)
-predictions = pipeline.predict(X_test)
-```
-
-Pipeline의 중요한 장점 중 하나는**信息隔離**이다. 테스트 데이터가 훈련 단계에漏れることを防止한다. pipeline.fit(X_train, y_train)을 호출하면 StandardScaler가 X_train의 평균/표준편차만 사용하여fit되고, 이후 X_test에 적용될 때도 동일한统计量が 사용된다.
-
-### 2.3 ColumnTransformer for Heterogeneous Data
-
-표格式 데이터에서 수치형, 범주형 열에 서로 다른 전처리를 적용해야 할 때 ColumnTransformer를 사용한다.
-
-```python
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-
-# 열 정의
-numeric_features = ['age', 'income', 'credit_score']
-categorical_features = ['occupation', 'city']
-
-# 열별 변환기 정의
-preprocessor = ColumnTransformer(
-    transformers=[
-        ('num', StandardScaler(), numeric_features),  # 수치형: 스케일링
-        ('cat', OneHotEncoder(), categorical_features)  # 범주형: 원핫인코딩
-    ])
-
-# 전처리 + 모델 파이프라인
-full_pipeline = Pipeline([
-    ('preprocessor', preprocessor),
-    ('classifier', RandomForestClassifier())
-])
-```
-
-### 2.4 FeatureUnion: 병렬 특성 처리
-
-여러 특성 변환을 동시에 적용하고 결과를 결합할 때 FeatureUnion을 사용한다.
-
-```python
-from sklearn.pipeline import FeatureUnion
-from sklearn.decomposition import PCA
-from sklearn.feature_selection import SelectKBest
-
-# 병렬 처리할 변환기 목록
-combined_features = FeatureUnion([
-    ('pca', PCA(n_components=3)),        # PCA 특성 3개
-    ('best', SelectKBest(k=5))           # 상위 5개 특성
-])
-
-# 전체 파이프라인
-pipeline = Pipeline([
-    ('features', combined_features),
-    ('classifier', RandomForestClassifier())
-])
-```
-
-> 📢 **섹션 요약 비유**: 머신러닝 파이프라인은犹如자동차 生产라인と類似している. 각 작업장(파이프라인 단계)에서 정해진 도구를 사용해 정해진 작업을 수행하고, 완성된 부품이 다음 작업장으로 이동한다. 어느 한 작업장이 잘못되면 전체 라인에 영향이 가고, 품질 검증을 통해 불량품을 걸러낼 수 있다.
-
----
-
-### 3. 구조 및 동작 원리
-
-주요 파이프라인 오케스트레이션 도구를 비교해보면 다음과 같다.
-
-| 도구 | 유형 | 특징 | 적합한 사용 사례 |
+| 항목 | 릴리스 및 배포 관리 (Release and Deployment Management) | 인접 개념 | 의사결정 포인트 |
 |:---|:---|:---|:---|
-| **Airflow** | 작업 스케줄러 | DAG 기반, 높은 커스터마이징 | 대규모 ETL, 복잡한 의존성 |
-| **Prefect** | 작업 오케스트레이션 | Airflow보다 사용 간단,Cloud-first | 빠른 개발,modern 인프라 |
-| **Kubeflow** | ML 특화 플랫폼 | Kubernetes 통합, 재현성 강조 | ML训练/서빙, 분산 처리 |
-| **MLflow** | ML 라이프사이클 관리 | 실험 추적, 모델 레지스트리 | End-to-end ML 관리 |
-| **TFX** | Google ML 플랫폼 | 프로덕션 ML 특화, 검증 내장 | 대규모 프로덕션 배포 |
-| **ZenML** | MLOps 파이프라인 | 추상화 높아 간단, 확장성 | 빠른 prototyping |
+| 초점 | 전략·운영·통제 중 해당 주제의 중심축 | 유사하지만 초점이 다른 개념 | 무엇을 최우선으로 관리할지 결정 |
+| 적용 범위 | 조직/서비스/프로젝트/플랫폼 중 직접 적용 영역 | 경계가 겹치지만 책임선이 다른 영역 | 책임 분리와 협업 구조 설계 |
+| 실패 시 영향 | 품질·비용·일정·보안 중 주요 손실 지점 | 다른 개념이 보완할 수 있는 영역 | 단일 해법이 아닌 조합 설계 필요 |
+
+따라서 비교 섹션에서는 장단점 나열보다 “어떤 문제를 풀 때 어떤 개념을 중심축으로 잡을 것인가”를 설명하는 것이 중요하다.
+
+---
+
+## 5. 실무 적용 및 판단
+
+**채택 조건**:
+- 릴리스 및 배포 관리 (Release and Deployment Management)가 해결하려는 문제의 범위와 책임 주체가 명확할 때
+- 정책·프로세스·도구·지표를 함께 설계할 수 있을 때
+- 운영 증빙과 사후 개선 루프를 지속적으로 유지할 수 있을 때
+
+**회피 조건**:
+- 용어만 도입하고 실제 권한·책임 구조를 바꾸지 않을 때
+- 정량 기준 없이 선언적 문구만 남는 경우
+- 자동화가 필요한데 표준 데이터와 인터페이스가 준비되지 않은 경우
+
+체크리스트:
+1. 목표와 범위가 문서화되어 있는가?
+2. 승인·예외 처리·에스컬레이션 경로가 정의되어 있는가?
+3. 운영 데이터와 감사 증빙을 수집할 수 있는가?
+4. 성과 지표가 비즈니스 영향과 연결되는가?
+5. 실패 시 롤백·보완·재평가 절차가 준비되어 있는가?
+
+실무에서는 릴리스 및 배포 관리 (Release and Deployment Management)를 독립 프로젝트로 보는 것보다, 기존 거버넌스·보안·개발·운영 체계와 어떻게 접합할지를 함께 설계해야 성공 확률이 높다.
+
+---
+
+## 6. 기대효과 및 결론
+
+릴리스 및 배포 관리 (Release and Deployment Management)를 올바르게 적용하면 의사결정의 일관성, 운영의 재현성, 통제의 추적성이 동시에 향상된다. 즉 “누가 무엇을 왜 했는가”가 남기 때문에 조직이 커질수록 효과가 커진다.
+
+다만 릴리스 및 배포 관리 (Release and Deployment Management)는 문서만 잘 만들어도 성공하는 영역이 아니다. 정의와 실행이 분리되면 형식주의가 되고, 자동화만 앞서면 통제 목적이 사라진다. 따라서 표준화와 민첩성, 통제와 생산성 사이의 균형이 항상 필요하다.
+
+향후에는 정책 코드화(Policy as Code), 실시간 관측성(Observability), AI 기반 이상 탐지와 의사결정 지원이 결합되면서 관리 체계가 더 자동화되고 증거 중심으로 진화할 가능성이 크다. 결론적으로 핵심은 도구가 아니라 기준선이며, 기준선이 명확할 때만 자동화와 확장이 의미를 가진다.
+
+---
+
+## 7. 발전 흐름도
 
 ```text
-[파이프라인 아키텍처 선택 가이드]
-
-소규모/연구 환경:
-  ┌─────────────────────────────────────────┐
-  │  scikit-learn Pipeline (단일 서버)      │
-  │  • 빠른 실험 iteration                   │
-  │  • 소규모 데이터                         │
-  │  • 빠른 prototyping                       │
-  └─────────────────────────────────────────┘
-
-중규모/팀 환경:
-  ┌─────────────────────────────────────────┐
-  │  Prefect/Airflow + MLflow               │
-  │  • 작업 스케줄링 + 실험 관리              │
-  │  • 팀 협업 가능                          │
-  │  • 기본적인 모니터링                      │
-  └─────────────────────────────────────────┘
-
-대규모/프로덕션 환경:
-  ┌─────────────────────────────────────────┐
-  │  Kubeflow/TFX + MLflow + Prometheus     │
-  │  • Kubernetes 기반 확장성                 │
-  │  • 분산 훈련/서빙                         │
-  │  • 고급 모니터링 및 알림                  │
-  │  • 데이터/모델 버전 관리                  │
-  └─────────────────────────────────────────┘
+개별 대응
+    ↓
+프로세스 표준화
+    ↓
+릴리스 및 배포 관리 (Release and Deployment Management) 정착
+    ↓
+지표 기반 통제
+    ↓
+정책 코드화·AI 보조
 ```
 
-> 📢 **섹션 요약 비유**: 파이프라인 도구의 선택은犹如建築構造의 선택과 같다. 작은 집은 일반 목공으로 지을 수 있지만(단순 스크립트), 아파트 단지는 전문 건설회사(Airflow/Kubeflow)가 필요하며, 미래扩展가능성을 위해 탄탄한 기반(클라우드 네이티브)을 미리 확보하는 것이 현명하다.
-
 ---
 
-### 4. 비교 및 트레이드오프
+## 8. 관련 개념 맵
 
-**실무 적용 사례:**
-
-1. **영화 추천 시스템 파이프라인**
-   - 데이터 수집: 사용자 행동 로그, 영화 메타데이터
-   - 전처리: 결측치 처리, 로그 변환
-   - 특성 공학: 사용자-영화 상호작용 행렬 생성
-   - 모델: 협업 필터링, Matrix Factorization
-   - 서빙: 실시간 추천 API
-
-2. **신용 점수 예측 파이프라인**
-   - 데이터 수집: 거래 내역, 고객 정보, 외부 데이터
-   - 검증: 데이터 품질 체크, 분포 이상 탐지
-   - 전처리: 스케일링, Encoding
-   - 모델 훈련: 로지스틱 회귀, GBDT
-   - 모니터링: 예측 분포 드리프트 탐지
-
-**한계점:**
-
-1. **복잡성 증가**: 파이프라인 구축 및 유지보수에 상당한 시간이 소요된다.
-
-2. **디버깅 어려움**: 파이프라인 전체에서 오류가 발생하면 원인을 찾기 어려울 수 있다.
-
-3. **버전 관리**: 데이터, 코드, 모델 버전을 동시에 관리해야 한다.
-
-4. **컴퓨팅 자원**: 대규모 데이터 처리 시 많은 컴퓨팅 자원이 필요하다.
-
-```text
-MLflow를 활용한 파이프라인 관리 예시
-
-import mlflow
-from mlflow.pipeline import Pipeline
-
-# MLflow 실험 추적 활성화
-mlflow.set_experiment("credit_scoring")
-
-with mlflow.start_run():
-    # 파라미터 로깅
-    mlflow.log_param("model_type", "gradient_boosting")
-    mlflow.log_param("n_estimators", 100)
-
-    # 파이프라인 실행
-    pipeline = Pipeline([
-        ('preprocessor', preprocessor),
-        ('classifier', GradientBoostingClassifier())
-    ])
-
-    pipeline.fit(X_train, y_train)
-
-    # 메트릭 로깅
-    train_score = pipeline.score(X_train, y_train)
-    test_score = pipeline.score(X_test, y_test)
-    mlflow.log_metric("train_accuracy", train_score)
-    mlflow.log_metric("test_accuracy", test_score)
-
-    # 모델 저장
-    mlflow.sklearn.log_model(pipeline, "model")
-
-# 모델 레지스트리에서 프로덕션 배포
-model_uri = "runs:/<run_id>/model"
-mlflow.register_model(model_uri, "credit_scoring_production")
-```
-
-> 📢 **섹션 요약 비유**: 파이프라인 구축은犹如등산로 조성과 같다. 처음에는 없는 길(undefinedな道)를 만들거나现有 길(手動処理)을 따라 가면 된다. 하지만等산로(파이프라인)를 만들어 놓으면 다른 사람들도 안전하게登산할 수 있고(재현성),天气(데이터)가 변해도同一한ルート(일관된処理)로 진행할 수 있다. 그러나 등산로를 만들려면事前に念入りな調査(설계)가 필요하다.
-
----
-
-### 5. 실무 적용 및 최적화 기법
-
-머신러닝 파이프라인은研究原型からプロダクションへの移行에 필수적인 인프라이다.随着 MLOps의 중요성이 부각되고 있으며, 파이프라인의自动化と 모니터링能力已成为现代数据科学团队的核心竞争力。
-
-앞으로의 전망으로는, 파이프라인의低コード/노코드 도구 등장으로 더욱 쉽게 접근할 수 있게 될 것이다. 또한 AutoML과의 결합을 통해 파이프라인의 일부 단계(특히 모델 선택 및 하이퍼파라미터 튜닝)를自动化하는研究方向가 활발하다. 또한-feature store, model store 등의专门的 스토어와 파이프라인의 깊숙한 통합も今後のトレンドとして期待される。
-
-결론적으로, 효과적인 머신러닝 파이프라인을 구축하는 것은 단순히 코드를连结하는 것을 넘어, 데이터와 모델의 Lifecycle을 체계적으로管理하는 것을 의미한다. 이는组织가 머신러닝을 대규모로 활용하기 위한基石이다.
-
----
-
-**References**
-- sklearn.pipeline — scikit-learn documentation
-- MLflow Documentation — Databricks
-- Kubeflow Documentation — CNCF
-- Huyen, C. (2022). Designing Machine Learning Systems. O'Reilly Media.
+| 개념 | 연결 포인트 |
+|:---|:---|
+| 전략 정렬 | 릴리스 및 배포 관리 (Release and Deployment Management)를 설계·운영·평가할 때 함께 검토해야 하는 인접 개념 |
+| 리스크 관리 | 릴리스 및 배포 관리 (Release and Deployment Management)를 설계·운영·평가할 때 함께 검토해야 하는 인접 개념 |
+| 성과 측정 | 릴리스 및 배포 관리 (Release and Deployment Management)를 설계·운영·평가할 때 함께 검토해야 하는 인접 개념 |
+| 컴플라이언스 | 릴리스 및 배포 관리 (Release and Deployment Management)를 설계·운영·평가할 때 함께 검토해야 하는 인접 개념 |
+| 운영 표준화 | 릴리스 및 배포 관리 (Release and Deployment Management)를 설계·운영·평가할 때 함께 검토해야 하는 인접 개념 |
+| 자동화 | 릴리스 및 배포 관리 (Release and Deployment Management)를 설계·운영·평가할 때 함께 검토해야 하는 인접 개념 |
