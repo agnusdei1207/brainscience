@@ -1,5 +1,5 @@
 +++
-weight = 785
+weight = 789
 title = "789. 도전-응답 쌍 (Challenge-Response Pair, CRP)"
 date = "2026-04-20"
 [extra]

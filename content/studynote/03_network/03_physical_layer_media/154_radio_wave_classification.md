@@ -1,5 +1,5 @@
 +++
-weight = 155
+weight = 154
 title = "155. 마이크로파 (Microwave) - 1GHz~300GHz 직진성의 저격수 스나이퍼 빔"
 date = "2026-05-03"
 [extra]

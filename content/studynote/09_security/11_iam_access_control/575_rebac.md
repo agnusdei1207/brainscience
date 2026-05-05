@@ -1,5 +1,5 @@
 +++
-weight = 580
+weight = 575
 title = "580. 접근 검토 (Access Review)"
 date = "2026-04-22"
 [extra]
