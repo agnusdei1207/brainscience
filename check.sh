@@ -8,7 +8,7 @@ set -euo pipefail
 
 ZOLA_VERSION="0.19.2"
 CONTENT_DIR="content"
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
 
 ERRORS=0
