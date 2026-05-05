@@ -5,13 +5,15 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+
 ## 0. 핵심 인사이트
 
+> **핵심**: OOM (Out Of Memory) Killer 프로세스 종료 정책은(는) 운영체제가 자원을 추상화하고 통제하는 과정에서 성능, 보호, 응답성을 동시에 조율하기 위해 필요한 핵심 개념이다.
 > **비유**: OOM Killer는 "비상시 배를 가볍게 하기 위해 화물을 바다에 던지는 선장"이다. 배(시스템)가 침몰하는 것보다 일부 화물(프로세스)을 희생하는 것이 낫다.
 
-> 📝 모범 답안
+---
 
-# OOM Killer 프로세스 종료 정책 (OOM Killer Process Termination Policy)
+📝 모범 답안
 
 ## 1. 개요 및 필요성
 
@@ -100,15 +102,10 @@ oom_score = 프로세스 메모리 사용량 + 가중치 보정
 ### 3. 점수 확인 방법
 
 ```bash
-# 특정 프로세스의 OOM 점수 확인
 cat /proc/[pid]/oom_score
-# 예: 543
 
-# OOM 점수 조정값 확인
 cat /proc/[pid]/oom_score_adj
-# 예: 0
 
-# 전체 프로세스의 OOM 점수 확인 (높은 순서)
 ps -eo pid,comm,rss,oom_score | sort -k4 -rn | head -10
 ```
 
@@ -116,7 +113,15 @@ ps -eo pid,comm,rss,oom_score | sort -k4 -rn | head -10
 
 ---
 
-## 3. 구조 및 동작 원리
+## 3. 구조 및 원리
+
+**핵심 조건**: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.
+
+동작 순서:
+1. **요청 또는 이벤트 발생**: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.
+2. **현재 상태 확인**: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.
+3. **정책 적용 및 자원 배정**: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.
+4. **결과 반영 및 후속 처리**: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.
 
 ### 1. oom_score_adj
 
@@ -148,23 +153,18 @@ oom_score_adj 설정에 따른 동작
 ### 2. 설정 예시
 
 ```bash
-# 프로세스를 OOM Killer로부터 보호
 echo -1000 > /proc/1234/oom_score_adj
 
-# 프로세스를 OOM 시 우선 종료 대상으로 지정
 echo 500 > /proc/1234/oom_score_adj
 
-# 기본값으로 복원
 echo 0 > /proc/1234/oom_score_adj
 
-# 설정 확인
 cat /proc/1234/oom_score_adj
 ```
 
 ### 3. systemd에서의 OOMScoreAdjust
 
 ```ini
-# /etc/systemd/system/myapp.service
 [Service]
 OOMScoreAdjust=-500    # OOM 종료 우선순위 낮춤 (보호)
 ExecStart=/usr/bin/myapp
@@ -178,7 +178,64 @@ ExecStart=/usr/bin/myapp
 
 ---
 
-## 4. 비교 및 트레이드오프
+## 4. 비교 및 연결
+
+### 1. oom_score_adj
+
+`oom_score_adj`는 관리자가 프로세스의 OOM 우선순위를 수동으로 조정할 수 있는 인터페이스이다. `/proc/[pid]/oom_score_adj` 파일에 값을 기록하여 변경한다.
+
+```
+oom_score_adj 설정에 따른 동작
+
+[-1000]  ================================================
+         OOM 면제: 이 프로세스는 OOM Killer 대상에서 제외
+         단, 시스템 자체가 불가피한 상황이면 예외 존재
+
+[-999 ~ -1]  ==========================================
+              oom_score에서 해당 값만큼 차감
+              종료 확률 낮아짐
+
+[0]  ====================================================
+     기본값: oom_badness()로 계산된 점수 그대로 사용
+
+[+1 ~ +999]  ==========================================
+              oom_score에서 해당 값만큼 가산
+              종료 확률 높아짐
+
+[+1000]  ================================================
+          무조건 최우선 종료 대상
+          OOM 발생 시 가장 먼저 SIGKILL
+```
+
+### 2. 설정 예시
+
+```bash
+echo -1000 > /proc/1234/oom_score_adj
+
+echo 500 > /proc/1234/oom_score_adj
+
+echo 0 > /proc/1234/oom_score_adj
+
+cat /proc/1234/oom_score_adj
+```
+
+### 3. systemd에서의 OOMScoreAdjust
+
+```ini
+[Service]
+OOMScoreAdjust=-500    # OOM 종료 우선순위 낮춤 (보호)
+ExecStart=/usr/bin/myapp
+```
+
+| OOMScoreAdjust | systemd 기본값 |
+|----------------|---------------|
+| systemd 자체 | -1000 (항상 보호) |
+| 사용자 서비스 | 0 |
+| 커스텀 설정 | -1000 ~ 1000 |
+
+---
+
+## 5. 실무 적용 및 판단
 
 ### 1. cgroup v1: memory.oom_control
 
@@ -198,7 +255,7 @@ cgroup 메모리 제어 구조
     |
     +-- [PostgreSQL] (PID 1001)
     +-- [Redis]      (PID 1002)
-    
+
   [cgroup: /sys/fs/cgroup/memory/app]
     memory.limit_in_bytes = 2G
     memory.oom_control:
@@ -210,18 +267,10 @@ cgroup 메모리 제어 구조
 ### 2. cgroup v2: memory.events
 
 ```bash
-# cgroup v2에서 OOM 이벤트 확인
 cat /sys/fs/cgroup/memory/mygroup/memory.events
-# low 0
-# high 0
-# max 3
-# oom 1
-# oom_kill 1
 
-# 메모리 한계 설정
 echo "2G" > /sys/fs/cgroup/memory/mygroup/memory.max
 
-# OOM Kill 비활성화 (v2에서는 memory.oom.group 등 활용)
 echo 1 > /sys/fs/cgroup/memory/mygroup/memory.swap.max
 ```
 
@@ -250,19 +299,13 @@ oom_kill_disable=1 설정 시 동작
 
 ---
 
-## 5. 실무 적용 및 최적화 기법
+## 6. 기대효과 및 결론
 
 ### 1. OOM Killer 로그
 
 ```bash
-# dmesg 또는 /var/log/syslog에서 OOM 이벤트 확인
 dmesg | grep -i "oom\|out of memory\|killed process"
 
-# 로그 예시:
-# Out of memory: Killed process 12345 (java) total-vm:8G, anon-rss:6G
-# oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),
-#   cpuset=systemd,mems_allowed=0,oom_memcg=/database,
-#   task=java,pid=12345,uid=1000,oom_score_adj=0
 ```
 
 ### 2. OOM 방지 전략
@@ -288,52 +331,26 @@ OOM 방지 다중 방어 레이어
 
 ---
 
-## 요약
+## 7. 발전 흐름도
 
-### 지식 그래프
-
-```
-OOM Killer 프로세스 종료 정책
-├── 개념
-│   ├── Out-Of-Memory 상태
-│   ├── 커널 개입으로 시스템 생존 보장
-│   └── SIGKILL로 강제 프로세스 종료
-├── 점수 산정
-│   ├── oom_badness() 함수
-│   ├── RSS (Resident Set Size)
-│   ├── 페이지 테이블 크기
-│   └── Swap 사용량
-├── 점수 제어
-│   ├── oom_score (0~1000, 읽기 전용 산정값)
-│   ├── oom_score_adj (-1000~+1000, 수동 조정)
-│   └── /proc/[pid]/oom_score_adj
-├── cgroup 제어
-│   ├── cgroup v1: memory.oom_control
-│   ├── cgroup v2: memory.events
-│   ├── memory.limit_in_bytes
-│   └── oom_kill_disable
-├── 관리자 도구
-│   ├── dmesg (OOM 로그 확인)
-│   ├── ps (프로세스 점수 확인)
-│   └── systemd OOMScoreAdjust
-└── 방지 전략
-    ├── 모니터링
-    ├── 메모리 제한 설정
-    └── 자동 복구
+```text
+기초 자원 관리 문제
+    ↓
+OOM (Out Of Memory) Killer 프로세스 종료 정책
+    ↓
+성능·격리·공정성 최적화
+    ↓
+가상화·관측·자동화 통합
 ```
 
-### 세 줄 설명 (어린이용)
+---
 
-1. OOM Killer는 컴퓨터의 메모리가 꽉 찼을 때, 가장 덜 중요한 프로그램을 골라서 끄는 "긴급 구조대"예요.
-2. 각 프로그램은 점수(oom_score)를 받는데, 점수가 높을수록 먼저 끌려가고, 점수를 낮추면 안전해져요.
-3. 점수를 -1000으로 하면 "절대 끄지 마!"라고 표시할 수 있고, cgroup으로도 그룹 단위로 지킬 수 있어요.
+## 8. 관련 개념 맵
 
-### 약어 정리
-
-| 약어 | Full Name |
-|------|-----------|
-| OOM | Out-Of-Memory |
-| RSS | Resident Set Size |
-| SIGKILL | Signal Kill (무조건 종료 시그널) |
-| ENOMEM | Error No Memory |
-| cgroup | Control Group |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| OOM (Out Of Memory) Killer 프로세스 종료 정책 | 운영체제 자원 관리와 보호 정책이 실제로 적용되는 핵심 주제 |
+| 커널 (Kernel) | 정책 집행, 상태 전이, 시스템 호출 처리의 중심 |
+| 프로세스/스레드 | CPU, 메모리, 동기화 자원과 직접 연결되는 실행 단위 |
+| 메모리/I/O | 성능 병목과 보호 요구사항이 함께 드러나는 연계 영역 |
+| 가상화/보안 | 격리, 제어, 관측 확장 관점에서 해당 주제가 연결되는 상위 개념 |

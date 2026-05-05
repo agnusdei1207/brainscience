@@ -5,13 +5,15 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+
 ## 0. 핵심 인사이트
 
+> **핵심**: 환경 변수 (Environment Variables) 상속은(는) 운영체제가 자원을 추상화하고 통제하는 과정에서 성능, 보호, 응답성을 동시에 조율하기 위해 필요한 핵심 개념이다.
 > **비유**: 환경 변수는 "가족의 전통 레시피"다. 부모가 아이에게 전달하며, 아이는 그대로 사용하거나 자신만의 재료를 추가할 수 있다.
 
-> 📝 모범 답안
+---
 
-# 환경 변수 상속 (Environment Variable Inheritance)
+📝 모범 답안
 
 ## 1. 개요 및 필요성
 
@@ -83,29 +85,32 @@ Low Address
 $ echo $PATH
 /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-# 현재 디렉토리를 PATH에 추가 (보안 주의)
 $ export PATH=.:$PATH   # 위험: 현재 디렉토리의 악성 파일 실행 가능
 ```
 
 ### 3. 환경 변수 설정 방법
 
 ```bash
-# 임시 설정 (현재 셸만)
 export MY_VAR="hello"
 
-# 영구 설정
 echo 'export MY_VAR="hello"' >> ~/.bashrc
 
-# 자식 프로세스에만 전달 (현재 셸에는 미설정)
 MY_VAR="hello" /bin/child_program
 
-# unset으로 제거
 unset MY_VAR
 ```
 
 ---
 
-## 3. 구조 및 동작 원리
+## 3. 구조 및 원리
+
+**핵심 조건**: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.
+
+동작 순서:
+1. **요청 또는 이벤트 발생**: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.
+2. **현재 상태 확인**: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.
+3. **정책 적용 및 자원 배정**: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.
+4. **결과 반영 및 후속 처리**: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.
 
 ### 1. C 표준 라이브러리 함수
 
@@ -177,7 +182,79 @@ environ 배열에서 "KEY=" 검색
 
 ---
 
-## 4. 비교 및 트레이드오프
+## 4. 비교 및 연결
+
+### 1. C 표준 라이브러리 함수
+
+| 함수 | 원형 | 설명 |
+|------|------|------|
+| **getenv()** | `char *getenv(const char *name)` | 환경 변수 값 조회 |
+| **setenv()** | `int setenv(const char *name, const char *value, int overwrite)` | 환경 변수 설정 (overwrite=1이면 덮어씀) |
+| **putenv()** | `int putenv(char *string)` | "NAME=VALUE" 형식 문자열로 설정 (버퍼 소유권 이전) |
+| **unsetenv()** | `int unsetenv(const char *name)` | 환경 변수 제거 |
+| **environ** | `extern char **environ` | 전체 환경 변수 배열에 대한 전역 포인터 |
+
+### 2. 사용 예제
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    // 환경 변수 조회
+    char *path = getenv("PATH");
+    if (path) {
+        printf("PATH: %s\n", path);
+    }
+
+    // 환경 변수 설정 (기존 값 있으면 덮어씀)
+    setenv("MY_APP_DIR", "/opt/myapp", 1);
+
+    // putenv: 문자열 포인터를 직접 전달 (주의: 버퍼 수정 시 문제)
+    putenv("MY_TEMP_VAR=temp_value");
+
+    // 환경 변수 제거
+    unsetenv("MY_TEMP_VAR");
+
+    // 전체 환경 변수 순회
+    extern char **environ;
+    for (char **env = environ; *env != NULL; env++) {
+        printf("%s\n", *env);
+    }
+
+    return 0;
+}
+```
+
+```
+환경 변수 API 동작 흐름
+
+[getenv("PATH")]
+    |
+    v
+environ 배열에서 "PATH="로 시작하는 항목 검색
+    |
+    v
+"PATH=/usr/bin:/bin"에서 '=' 이후 문자열 반환
+    |
+    v
+포인터 반환 (복사본 아님, 수정하면 안 됨)
+
+[setenv("KEY", "VALUE", 1)]
+    |
+    v
+environ 배열에서 "KEY=" 검색
+    |
+    +-- 있고 overwrite=1 --> 기존 항목 대체
+    |
+    +-- 없음 --> environ 배열 확장 후 새 항목 추가
+```
+
+> **비유**: getenv()는 "전화번호부에서 이름 찾기", setenv()는 "전화번호부에 새 번호 등록하기"와 같다. putenv()는 "직접 전화번호부 책갈피에 메모지 꽂기"라서 메모지를 분실하면 번호도 사라진다.
+
+---
+
+## 5. 실무 적용 및 판단
 
 ### 1. fork() 시 환경 변수 복사
 
@@ -231,7 +308,7 @@ exec() 계열의 환경 변수 처리
 
 ---
 
-## 5. 실무 적용 및 최적화 기법
+## 6. 기대효과 및 결론
 
 ### 1. LD_PRELOAD의 동작 원리
 
@@ -251,12 +328,9 @@ void *malloc(size_t size) {
 ```
 
 ```bash
-# 악성 라이브러리 컴파일
 gcc -shared -fPIC -o /tmp/malicious.so malicious.c -ldl
 
-# 공격 실행
 LD_PRELOAD=/tmp/malicious.so /usr/bin/victim_program
-# victim_program의 모든 malloc 호출이 가로채짐!
 ```
 
 ### 3. 방어 수단
@@ -286,51 +360,26 @@ LD_PRELOAD 공격 방어 레이어
 
 ---
 
-## 요약
+## 7. 발전 흐름도
 
-### 지식 그래프
-
-```
-환경 변수 상속
-├── 기본 개념
-│   ├── 키-값(Key-Value) 쌍
-│   ├── 부모-자식 상속 (Inheritance)
-│   └── environ 블록 (메모리의 Stack 영역)
-├── 주요 환경 변수
-│   ├── PATH (실행 파일 검색 경로)
-│   ├── HOME (사용자 홈 디렉토리)
-│   ├── LANG (로케일 설정)
-│   ├── LD_LIBRARY_PATH (동적 라이브러리 경로)
-│   └── LD_PRELOAD (사전 로드 라이브러리)
-├── C API
-│   ├── getenv() (조회)
-│   ├── setenv() (설정)
-│   ├── putenv() (포인터 직접 설정)
-│   └── unsetenv() (제거)
-├── 프로세스 생성 시 동작
-│   ├── fork() -> 환경 변수 복사
-│   ├── exec() -> 유지 또는 대체
-│   ├── execl/execv -> 기존 환경 유지
-│   └── execle/execve -> 새 envp로 대체
-└── 보안
-    ├── LD_PRELOAD 공격 (함수 가로채기)
-    ├── SUID/SGID 바이너리 안전
-    └── 컨테이너 격리
+```text
+기초 자원 관리 문제
+    ↓
+환경 변수 (Environment Variables) 상속
+    ↓
+성능·격리·공정성 최적화
+    ↓
+가상화·관측·자동화 통합
 ```
 
-### 세 줄 설명 (어린이용)
+---
 
-1. 환경 변수는 컴퓨터 프로그램에게 "어디에서 무엇을 찾아야 하는지" 알려주는 메모장이에요.
-2. 부모 프로그램은 이 메모장을 복사해서 자식 프로그램에게 주고, 자식은 필요한 내용을 바꿀 수 있어요.
-3. LD_PRELOAD는 나쁜 사람이 가짜 도구를 먼저 끼워 넣어서 프로그램을 속이는 나쁜 짓이에요, 그래서 방어가 필요해요.
+## 8. 관련 개념 맵
 
-### 약어 정리
-
-| 약어 | Full Name |
-|------|-----------|
-| PATH | Pathname Variable |
-| HOME | Home Directory |
-| LANG | Language and Locale |
-| API | Application Programming Interface |
-| SUID | Set Owner User ID |
-| SGID | Set Group ID |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| 환경 변수 (Environment Variables) 상속 | 운영체제 자원 관리와 보호 정책이 실제로 적용되는 핵심 주제 |
+| 커널 (Kernel) | 정책 집행, 상태 전이, 시스템 호출 처리의 중심 |
+| 프로세스/스레드 | CPU, 메모리, 동기화 자원과 직접 연결되는 실행 단위 |
+| 메모리/I/O | 성능 병목과 보호 요구사항이 함께 드러나는 연계 영역 |
+| 가상화/보안 | 격리, 제어, 관측 확장 관점에서 해당 주제가 연결되는 상위 개념 |

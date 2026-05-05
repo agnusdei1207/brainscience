@@ -5,13 +5,15 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+
 ## 0. 핵심 인사이트
 
+> **핵심**: oom_score_adj은(는) 운영체제가 자원을 추상화하고 통제하는 과정에서 성능, 보호, 응답성을 동시에 조율하기 위해 필요한 핵심 개념이다.
 > **비유**: oom_score_adj는 "위험도 점수에 더하거나 빼는 보너스/패널티 점수"다. -1000점을 받으면 "무적 쉴드"가 씌워지고, +1000점을 받으면 "가장 먼저 퇴장" 대상이 된다.
 
-> 📝 모범 답안
+---
 
-# oom_score_adj
+📝 모범 답안
 
 ## 1. 개요 및 필요성
 
@@ -81,19 +83,14 @@ oom_score_adj = -1000 설정 시
 ### 3. 설정 방법
 
 ```bash
-# OOM 면제 (가장 중요한 프로세스 보호)
 echo -1000 > /proc/$(pidof mysqld)/oom_score_adj
 
-# OOM 우선 종료 대상 (장애 복구용)
 echo 1000 > /proc/$(pidof stress_worker)/oom_score_adj
 
-# 특정 범위로 설정
 echo -500 > /proc/1234/oom_score_adj
 
-# 현재 값 확인
 cat /proc/1234/oom_score_adj
 
-# 모든 프로세스의 oom_score_adj 확인
 for pid in /proc/[0-9]*/oom_score_adj; do
   echo "$pid: $(cat $pid)"
 done
@@ -103,14 +100,21 @@ done
 
 ---
 
-## 3. 구조 및 동작 원리
+## 3. 구조 및 원리
+
+**핵심 조건**: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.
+
+동작 순서:
+1. **요청 또는 이벤트 발생**: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.
+2. **현재 상태 확인**: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.
+3. **정책 적용 및 자원 배정**: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.
+4. **결과 반영 및 후속 처리**: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.
 
 ### 1. systemd의 OOMScoreAdjust 지시자
 
 systemd 서비스 유닛 파일에서 `OOMScoreAdjust`를 설정하면 서비스 시작 시 자동으로 `/proc/[pid]/oom_score_adj`가 설정된다.
 
 ```ini
-# /etc/systemd/system/production-db.service
 [Unit]
 Description=Production Database
 After=network.target
@@ -143,13 +147,8 @@ systemd 서비스별 OOMScoreAssign 기본값
 ### 2. systemd 설정 확인
 
 ```bash
-# 서비스의 OOM 설정 확인
 systemctl show production-db.service | grep OOM
-# OOMScoreAdjust=500
-# MemoryHigh=infinity
-# MemoryMax=infinity
 
-# 시스템 데몬들의 OOM 점수 확인
 systemctl status --no-pager | awk '{print $1}' | while read svc; do
   score=$(systemctl show "$svc" 2>/dev/null | grep OOMScoreAdjust | cut -d= -f2)
   echo "$svc: $score"
@@ -158,7 +157,56 @@ done
 
 ---
 
-## 4. 비교 및 트레이드오프
+## 4. 비교 및 연결
+
+### 1. systemd의 OOMScoreAdjust 지시자
+
+systemd 서비스 유닛 파일에서 `OOMScoreAdjust`를 설정하면 서비스 시작 시 자동으로 `/proc/[pid]/oom_score_adj`가 설정된다.
+
+```ini
+[Unit]
+Description=Production Database
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/postgres -D /var/lib/pgsql/data
+Restart=always
+OOMScoreAdjust=-500       # 데이터베이스 보호
+MemoryHigh=6G             # cgroup 메모리 soft limit
+MemoryMax=8G              # cgroup 메모리 hard limit
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```
+systemd 서비스별 OOMScoreAssign 기본값
+
++-------------------------------------------+
+|  systemd 프로세스 자체:      -1000 (보호)   |
+|  시스템 서비스 (default):         0        |
+|  사용자 서비스 (default):         0        |
+|  커스텀 설정:             -1000 ~ +1000   |
++-------------------------------------------+
+
+주의: systemd는 --user 인스턴스에서도 OOMScoreAdjust를 적용함
+```
+
+### 2. systemd 설정 확인
+
+```bash
+systemctl show production-db.service | grep OOM
+
+systemctl status --no-pager | awk '{print $1}' | while read svc; do
+  score=$(systemctl show "$svc" 2>/dev/null | grep OOMScoreAdjust | cut -d= -f2)
+  echo "$svc: $score"
+done
+```
+
+---
+
+## 5. 실무 적용 및 판단
 
 ### 1. Pod QoS (Quality of Service)와 oom_score_adj 매핑
 
@@ -248,14 +296,12 @@ Kubernetes 노드 OOM 발생 시 처리 흐름
 
 ---
 
-## 5. 실무 적용 및 최적화 기법
+## 6. 기대효과 및 결론
 
 ### 1. 모니터링 설정
 
 ```bash
-# OOM 점수 모니터링 스크립트
 #!/bin/bash
-# oom_monitor.sh
 echo "=== Top 10 OOM Risk Processes ==="
 ps -eo pid,comm,rss,oom_score,oom_score_adj --sort=-oom_score | head -11
 
@@ -298,50 +344,26 @@ oom_score_adj 설정 시 주의사항
 
 ---
 
-## 요약
+## 7. 발전 흐름도
 
-### 지식 그래프
-
-```
+```text
+기초 자원 관리 문제
+    ↓
 oom_score_adj
-├── 기본 개념
-│   ├── OOM Killer 종료 우선순위 조정
-│   ├── 범위: -1000 ~ +1000
-│   └── /proc/[pid]/oom_score_adj 인터페이스
-├── 값별 의미
-│   ├── -1000 (OOM 면제, Immune)
-│   ├── -999 ~ -1 (종료 확률 감소)
-│   ├── 0 (기본값)
-│   ├── +1 ~ +999 (종료 확률 증가)
-│   └── +1000 (최우선 종료)
-├── 플랫폼 연동
-│   ├── systemd OOMScoreAdjust (서비스 설정)
-│   ├── Kubernetes QoS 매핑
-│   │   ├── Guaranteed (-998)
-│   │   ├── Burstable (계산식)
-│   │   └── BestEffort (1000)
-│   └── Docker/CRI-O (container runtime)
-├── 관련 커널 메커니즘
-│   ├── oom_badness() (점수 자동 계산)
-│   ├── oom_score (읽기 전용 산정값)
-│   └── CAP_SYS_RESOURCE (설정 권한)
-└── 운영 가이드
-    ├── 모니터링 및 알림
-    ├── -1000 남용 방지
-    └── 프로세스 재시작 시 초기화 대응
+    ↓
+성능·격리·공정성 최적화
+    ↓
+가상화·관측·자동화 통합
 ```
 
-### 세 줄 설명 (어린이용)
+---
 
-1. oom_score_adj는 컴퓨터 메모리가 부족할 때 "누구를 먼저 끌 것인가"를 정하는 점수예요.
-2. 점수를 -1000으로 하면 "이 프로그램은 절대 끄지 마세요!"라고 컴퓨터에게 부탁할 수 있어요.
-3. Kubernetes에서는 중요한 프로그램에 -998, 덜 중요한 프로그램에 1000을 자동으로 매겨서 똑똑하게 지켜줘요.
+## 8. 관련 개념 맵
 
-### 약어 정리
-
-| 약어 | Full Name |
-|------|-----------|
-| OOM | Out-Of-Memory |
-| RSS | Resident Set Size |
-| QoS | Quality of Service |
-| CRI | Container Runtime Interface |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| oom_score_adj | 운영체제 자원 관리와 보호 정책이 실제로 적용되는 핵심 주제 |
+| 커널 (Kernel) | 정책 집행, 상태 전이, 시스템 호출 처리의 중심 |
+| 프로세스/스레드 | CPU, 메모리, 동기화 자원과 직접 연결되는 실행 단위 |
+| 메모리/I/O | 성능 병목과 보호 요구사항이 함께 드러나는 연계 영역 |
+| 가상화/보안 | 격리, 제어, 관측 확장 관점에서 해당 주제가 연결되는 상위 개념 |
