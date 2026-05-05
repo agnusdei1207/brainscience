@@ -1,24 +1,17 @@
 +++
 weight = 83
 title = "83. 직교성 (Orthogonality) 원리"
-description = "겹쳐진 파동이나 코드가 서로에게 단 1%의 간섭도 주지 않고 완벽히 분리될 수 있도록 만드는 통신 공학의 핵심 수학적 성질"
 date = "2026-03-30"
-[taxonomies]
-tags = ["Network", "Orthogonality", "OFDM", "CDM", "Mathematics"]
-categories = ["studynote"]
+[extra]
+categories = "studynote-network"
 +++
+
 ## 0. 핵심 인사이트
 
 > **핵심**: (개념 본질)
 > **비유**: (개념 비유)
 
 > 📝 모범 답안
-
-- **본질**: 직교성 (Orthogonality)은 두 신호·코드·공간 벡터의 내적이 0이 되는 성질로, 서로 겹쳐도 수학적으로 분리되는 기초다.
-- **가치**: 가드밴드 (Guard Band) 낭비를 줄여 OFDM (Orthogonal Frequency Division Multiplexing), CDMA (Code Division Multiple Access), MIMO (Multiple-Input Multiple-Output)를 가능하게 한다.
-- **판단 포인트**: 직교성은 이상적인 상태가 아니라 동기화·전력·채널 추정 조건이 유지될 때만 성립하므로, ICI (Inter-Carrier Interference)와 near-far 문제를 함께 봐야 한다.
-
----
 
 ## 1. 개요 및 필요성
 
@@ -32,8 +25,6 @@ categories = ["studynote"]
 │ 직교: 신호를 겹쳐 보냄 → 수신단에서 수학으로 분리            │
 └──────────────────────────────────────────────────────────────┘
 ```
-
-- **📢 섹션 요약 비유**: 같은 길에 차를 띄워 세우는 대신, 신호등의 약속을 맞춰 동시에 지나가게 하는 교통 정리다.
 
 ---
 
@@ -62,11 +53,13 @@ OFDM은 IFFT (Inverse Fast Fourier Transform)로 직교 부반송파를 합성�
 
 직교성은 "겹치게 보내되, 읽을 때는 분리되게 하는" 구조다. 따라서 송신단의 설계보다 수신단의 수학적 복원 능력이 더 중요하다.
 
-- **📢 섹션 요약 비유**: 악보는 서로 겹쳐 보이지만, 지휘자가 박자를 맞추면 각 악기가 자기 파트를 정확히 연주하는 합주와 같다.
-
 ---
 
-## 3. 구조 및 동작 원리
+## 3. 구조 및 원리
+
+**핵심 조건**: 직교성 (Orthogonality) 원리은(는) 채널 분할, 슬롯 할당, 충돌 제어 조건을 함께 만족할 때 안정적으로 동작한다.
+
+동작 순서:
 
 직교성을 이해하려면 FDM과 OFDM, CDMA와 MIMO의 경계를 봐야 한다. FDM은 안전하지만 가드밴드가 필요하고, OFDM은 효율적이지만 동기화에 민감하다. CDMA는 코드로 사용자를 나누고, MIMO는 공간으로 분리한다.
 
@@ -80,11 +73,9 @@ OFDM은 IFFT (Inverse Fast Fourier Transform)로 직교 부반송파를 합성�
 
 LTE (Long Term Evolution)와 5G NR (New Radio)은 이 직교성을 실전으로 끌어낸 대표 사례다. 다운링크는 OFDMA (Orthogonal Frequency Division Multiple Access)를 쓰고, 업링크는 SC-FDMA (Single Carrier Frequency Division Multiple Access)를 사용해 송신기 부담을 줄인다.
 
-- **📢 섹션 요약 비유**: 빈 좌석을 많이 두는 극장형(FDM)과, 좌석은 붙어 있어도 좌표표를 정확히 주는 스마트 좌석형(OFDM)의 차이다.
-
 ---
 
-## 4. 비교 및 트레이드오프
+## 4. 비교 및 연결
 
 실무에서 직교성 붕괴는 주파수 오차, 도플러 효과, 전력 불균형, 채널 추정 실패로 나타난다. 고속 이동 환경에서는 OFDM의 부반송파 간격이 너무 좁으면 ICI (Inter-Carrier Interference)가 폭발한다. 이때는 5G NR의 더 넓은 subcarrier spacing을 쓰거나, 동기화 품질을 개선해야 한다.
 
@@ -96,28 +87,17 @@ LTE (Long Term Evolution)와 5G NR (New Radio)은 이 직교성을 실전으로 
 3. 전력 제어가 안정적인가?
 4. 안테나 간 채널 상관이 낮은가?
 
-- **📢 섹션 요약 비유**: 발걸음이 조금만 어긋나도 줄넘기 줄이 엉키듯, 직교성은 박자와 간격을 끝까지 지켜야 한다.
-
 ---
 
-## 5. 실무 적용 및 최적화 기법
+## 5. 실무 적용 및 판단
 
 직교성은 제한된 자원에서 동시 사용자 수와 전송 효율을 끌어올리는 가장 강력한 수학적 도구다. 덕분에 OFDM, CDMA, MIMO가 각각 다른 방식으로 같은 공기를 더 잘 쓸 수 있게 되었다. 하지만 직교성은 완벽한 조건이 아닐 때 쉽게 무너진다.
 
+## 6. 기대효과 및 결론
+
 그래서 결론은 분명하다. 직교성은 "간섭이 없는 상태"가 아니라 "간섭을 0으로 만들 수 있는 조건"이다. 앞으로도 5G/6G, Massive MIMO, beamforming에서 이 원리는 더 정교하게 쓰일 것이다.
 
-### 📌 관련 개념 맵
-
-| 개념 | 연결 포인트 |
-| :--- | :--- |
-| 내적 | 직교성을 판정하는 수학적 기준 |
-| OFDM (Orthogonal Frequency Division Multiplexing) | 주파수 직교를 실전화한 방식 |
-| CDMA (Code Division Multiple Access) | 코드 직교를 이용한 다중 접속 |
-| CP (Cyclic Prefix) | 다중경로로부터 직교성을 보호 |
-| ICI (Inter-Carrier Interference) | 직교성 붕괴의 대표 증상 |
-| MIMO (Multiple-Input Multiple-Output) | 공간 직교를 활용한 용량 확장 |
-
-### 📈 관련 키워드 및 발전 흐름도
+## 7. 발전 흐름도
 
 ```text
 FDM
@@ -135,8 +115,13 @@ LTE (Long Term Evolution) / 5G NR (New Radio)
 Massive MIMO / Beamforming
 ```
 
-### 👶 어린이를 위한 3줄 비유 설명
+## 8. 관련 개념 맵
 
-1. 직교성은 여러 사람이 같은 방에 있어도 서로 말이 섞이지 않게 하는 약속이에요.
-2. 각자 다른 박자, 다른 비밀번호, 다른 방향을 쓰면 서로를 방해하지 않아요.
-3. 그래서 통신은 같은 공간을 더 똑똑하게 나눠 쓸 수 있답니다.
+| 개념 | 연결 포인트 |
+| :--- | :--- |
+| 내적 | 직교성을 판정하는 수학적 기준 |
+| OFDM (Orthogonal Frequency Division Multiplexing) | 주파수 직교를 실전화한 방식 |
+| CDMA (Code Division Multiple Access) | 코드 직교를 이용한 다중 접속 |
+| CP (Cyclic Prefix) | 다중경로로부터 직교성을 보호 |
+| ICI (Inter-Carrier Interference) | 직교성 붕괴의 대표 증상 |
+| MIMO (Multiple-Input Multiple-Output) | 공간 직교를 활용한 용량 확장 |
