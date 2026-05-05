@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 거친 멀티스레딩 (Coarse-grained Multithreading)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 단일 코어 내에서 스레드 병렬성(TLP)을 구현하는 초기 방식으로, 스레드 하나가 L2/L3 캐시 미스(Cache Miss) 같은 무거운 지연(Stall)을 겪을 때만 다른 스레드로 실행을 넘기는(Switch) 교대 기법이다.
+> **핵심**: 단일 코어 내에서 스레드 병렬성(TLP)을 구현하는 초기 방식으로, 스레드 하나가 L2/L3 캐시 미스(Cache Miss) 같은 무거운 지연(Stall)을 겪을 때만 다른 스레드로 실행을 넘기는(Switch) 교대 기법이다.
 > 2. **가치**: 스위칭 빈도가 낮아 단일 스레드의 실행 속도(순차 성능)를 깎아먹지 않으면서도, 캐시 미스로 인해 파이프라인이 수백 클럭 동안 텅 비는 최악의 낭비 구간을 다른 스레드로 메워 효율을 높인다.
 > 3. **융합**: 컨텍스트 스위칭 시 파이프라인을 비워야(Flush) 하는 아키텍처적 오버헤드 때문에, 짧은 지연(데이터 의존성 등)에는 속수무책이라 현대에는 세밀한 스레딩(Fine-grained)이나 동시 멀티스레딩(SMT)으로 융합/진화하며 도태되었다.
 
+> 📝 모범 답안
+
+# 거친 멀티스레딩 (Coarse-grained Multithreading)
+
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 거친 멀티스레딩 (Coarse-grained Multithreading)은 단일 코어의 효율을 높이려는 하드웨어 엔지니어들의 "타협적인 첫 시도"였다.
 
@@ -43,7 +45,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 거친 멀티스레딩을 하드웨어로 구현하려면, CPU 칩 내부에 여러 스레드의 영혼(문맥)을 동시에 보관할 수 있는 레지스터 복제 공간이 필요하다.
 
@@ -73,7 +75,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 멀티스레딩 아키텍처는 교체 시점(Granularity)에 따라 거친(Coarse), 세밀한(Fine), 동시(SMT) 방식으로 나뉘며 명확한 진화의 궤적을 그린다.
 
@@ -104,7 +106,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 현대의 범용 CPU에서 순수한 의미의 '거친 멀티스레딩(Coarse-grained)' 하드웨어를 구경할 일은 없다. 그러나 이 **"큰 지연이 발생할 때만 태스크를 스위칭한다"**는 철학은 실무 소프트웨어 아키텍처(비동기 I/O) 설계에서 완벽하게 부활했다.
 
@@ -143,7 +145,7 @@ fetchData async () {
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 거친 멀티스레딩(Coarse-grained Multithreading)은 비록 최신 CPU 칩의 메인 아키텍처 자리는 SMT(하이퍼스레딩)에 내어주었지만, 컴퓨터 공학이 '지연(Latency)'을 다루는 방식을 완전히 바꿔놓은 선구자다.
 

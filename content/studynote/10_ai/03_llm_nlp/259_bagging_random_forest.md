@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 배깅(Bagging, Bootstrap Aggregating)은 복원 추출(Bootstrap Sampling)로 다양한 훈련 서브셋을 만들고, 독립적으로 학습한 모델들을 병렬로 집계하여 분산(Variance)을 줄이는 앙상블 기법이다.
+> **핵심**: 배깅(Bagging, Bootstrap Aggregating)은 복원 추출(Bootstrap Sampling)로 다양한 훈련 서브셋을 만들고, 독립적으로 학습한 모델들을 병렬로 집계하여 분산(Variance)을 줄이는 앙상블 기법이다.
 > 2. **가치**: 랜덤 포레스트(Random Forest)는 배깅에 특성 무작위 선택(Random Feature Selection)을 추가하여 상관관계를 더욱 낮춰 가장 강력한 배깅 구현체가 되었다.
 > 3. **판단 포인트**: OOB(Out-Of-Bag) 오차를 활용하면 별도 검증 세트 없이도 모델 성능을 추정할 수 있는 것이 배깅만의 장점이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 단일 결정 트리(Decision Tree)는 **고분산(High Variance)** 모델이다. 훈련 데이터가 조금만 달라져도 완전히 다른 트리가 만들어질 수 있다. 이 불안정성을 극복하기 위해 Leo Breiman(1996)이 배깅을 제안했다.
 
@@ -35,7 +37,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 배깅 전체 흐름
 
@@ -101,7 +103,7 @@ n개 샘플에서 복원 추출로 n개를 뽑으면:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Bagging vs Random Forest
 
@@ -131,7 +133,7 @@ Random Forest는 각 특성이 불순도(Gini, Entropy) 감소에 기여한 평�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Random Forest 튜닝 전략
 
@@ -155,7 +157,7 @@ Random Forest는 각 특성이 불순도(Gini, Entropy) 감소에 기여한 평�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 배깅 및 랜덤 포레스트를 적용하면:
 

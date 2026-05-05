@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# RCU (Read-Copy-Update)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: RCU (Read-Copy-Update)는 독자(Reader)에게 락 없이 읽기를 허용하고, 저자(Writer)는 데이터의 복사본을 수정한 뒤 포인터 교체로 업데이트하여, 독자와 저자가 서로를 차단하지 않는 리눅스 커널 핵심 동기화 기법이다.
+> **핵심**: RCU (Read-Copy-Update)는 독자(Reader)에게 락 없이 읽기를 허용하고, 저자(Writer)는 데이터의 복사본을 수정한 뒤 포인터 교체로 업데이트하여, 독자와 저자가 서로를 차단하지 않는 리눅스 커널 핵심 동기화 기법이다.
 > 2. **가치**: SMP (Symmetric Multiprocessing) 환경에서 수천 개의 CPU가 동시에 같은 데이터를 읽을 수 있으며, 읽기 경로의 오버헤드가 사실상 0에 가깝다. 리눅스 커널에서 수천 개 코드 경로에 적용된다.
 > 3. **융합**: RCU는 독자-저자 문제 (Readers-Writers Problem)의 산업적 해법이며, 가비지 콜렉션의 "시대 기반 회수" (epoch-based reclamation), Rust의 Arc 소유권 모델과 깊이 연결된다.
 
+> 📝 모범 답안
+
+# RCU (Read-Copy-Update)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 리눅스 커널의 핵심 자료구조(라우팅 테이블, 프로세스 목록, 파일 시스템 마운트 정보)는 읽기가 쓰기보다 수백 배 빈번하다. 전통적인 ReadWriteLock조차 읽기 측 오버헤드(원자적 카운터 증감)가 존재하고, SMP 환경에서 캐시라인 경합을 유발한다.
 
@@ -57,7 +59,7 @@ RCU는 이 문제를 근본적으로 해결한다. 읽기는 완전한 락 프�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Grace Period (유예 기간) 메커니즘
 
@@ -115,7 +117,7 @@ call_rcu(&old->rcu_head, free_callback);
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### RCU vs ReadWriteLock 비교
 
@@ -141,7 +143,7 @@ call_rcu(&old->rcu_head, free_callback);
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **DNS 조회 캐시**: 읽기가 압도적(수만 QPS), 쓰기는 TTL 만료 시만 발생. RCU로 읽기 경로 오버헤드 제거.
@@ -155,7 +157,7 @@ call_rcu(&old->rcu_head, free_callback);
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 구분 | ReadWriteLock | RCU |
 |:---|:---|:---|

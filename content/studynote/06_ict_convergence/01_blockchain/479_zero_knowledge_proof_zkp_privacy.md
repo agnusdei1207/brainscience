@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: ZKP(Zero-Knowledge Proof, 영지식 증명)는 비밀 정보를 공개하지 않고도 **그 정보를 알고 있음을 수학적으로 증명**하는 프로토콜로, 완전성·건전성·영지식성 세 가지 성질을 만족해야 한다.
+> **핵심**: ZKP(Zero-Knowledge Proof, 영지식 증명)는 비밀 정보를 공개하지 않고도 **그 정보를 알고 있음을 수학적으로 증명**하는 프로토콜로, 완전성·건전성·영지식성 세 가지 성질을 만족해야 한다.
 > 2. **가치**: zk-SNARKs(Zero-Knowledge Succinct Non-Interactive Arguments of Knowledge)는 증명 크기를 수백 바이트로 압축하여 zkRollup의 **타당성 증명(Validity Proof)**으로 활용, L2 확장성과 프라이버시를 동시에 달성한다.
 > 3. **판단 포인트**: 대화형(Interactive) ZKP는 실시간 도전-응답이 필요하고, 비대화형(Non-Interactive) zk-SNARKs는 검증자 없이도 오프라인 증명 생성이 가능해 블록체인 실용 적용의 핵심 기술이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 프라이버시 딜레마
 
@@ -31,7 +32,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 대화형 vs 비대화형 ZKP
 
@@ -72,7 +73,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### ZKP 활용 스펙트럼
 
@@ -98,7 +99,7 @@ L2 사용자 트랜잭션 → zkRollup 시퀀서
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Zcash ZKP 프라이버시 모델
 
@@ -116,7 +117,7 @@ L2 사용자 트랜잭션 → zkRollup 시퀀서
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 항목 | 내용 |
 |:---|:---|

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: XPath Injection (XPath 인젝션)은 XML (eXtensible Markup Language) 데이터를 쿼리하는 XPath 표현식에 사용자 입력이 직접 포함될 때, 공격자가 쿼리 논리를 변경해 인증을 우회하거나 XML 문서의 전체 내용을 추출하는 취약점이다.
+> **핵심**: XPath Injection (XPath 인젝션)은 XML (eXtensible Markup Language) 데이터를 쿼리하는 XPath 표현식에 사용자 입력이 직접 포함될 때, 공격자가 쿼리 논리를 변경해 인증을 우회하거나 XML 문서의 전체 내용을 추출하는 취약점이다.
 > 2. **가치**: XPath 인젝션은 SQL 인젝션과 유사하지만 XML 데이터를 대상으로 하며, 권한 분리나 데이터 필터링 없이 전체 XML 트리에 접근할 수 있다는 특성이 있다.
 > 3. **판단 포인트**: 파라미터화된 XPath (XPath Variables/Parameterized XPath)를 지원하는 언어에서는 반드시 사용하고, 그렇지 않으면 입력 이스케이프와 화이트리스트 검증을 적용해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 XML 데이터 저장소와 XSLT (eXtensible Stylesheet Language Transformations) 처리, SOA (Service-Oriented Architecture) 환경에서 XPath를 사용한 데이터 검색이 광범위하게 이루어진다. 이때 XPath 쿼리에 사용자 입력을 직접 포함하면 인젝션 취약점이 생긴다.
 
@@ -32,7 +34,7 @@ XPath에는 SQL의 `--` 같은 주석이 없지만, `or '1'='1'`로 조건을 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 XPath 인젝션 공격 패턴과 효과:
 
@@ -59,7 +61,7 @@ XPath 인젝션 공격 패턴과 효과:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | SQL 인젝션 | XPath 인젝션 |
 |:---|:---|:---|
@@ -72,7 +74,7 @@ XPath 인젝션 공격 패턴과 효과:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **대응 전략**:
 1. **파라미터화 XPath**: Java Saxon 라이브러리의 XPathVariable, .NET의 XPathExpression 파라미터 사용
@@ -85,7 +87,7 @@ XPath 인젝션 공격 패턴과 효과:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 파라미터화 XPath와 입력 화이트리스트를 적용하면 XPath 인젝션을 방어할 수 있다. XML 기반 설정 파일이나 데이터 저장소를 사용하는 레거시 시스템에서 특히 주의가 필요하며, 현대 시스템에서는 JSON 기반 REST API와 적절한 DB 사용으로 XPath 노출 자체를 줄이는 것이 최선이다.
 

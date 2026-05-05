@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 커널 루트킷은 ring 0 커널 공간에 악성 코드를 삽입하여 시스템 콜 테이블, 인터럽트 디스크립터 테이블(IDT), VFS(Virtual File System) 후킹으로 OS의 눈을 완전히 속이는 가장 강력한 루트킷 유형이다.
+> **핵심**: 커널 루트킷은 ring 0 커널 공간에 악성 코드를 삽입하여 시스템 콜 테이블, 인터럽트 디스크립터 테이블(IDT), VFS(Virtual File System) 후킹으로 OS의 눈을 완전히 속이는 가장 강력한 루트킷 유형이다.
 > 2. **가치**: 커널 수준에서 동작하므로 사용자 공간의 모든 보안 도구(AV, EDR)가 커널 루트킷에 의해 조작된 API를 통해 정보를 받아 탐지가 본질적으로 어렵다.
 > 3. **판단 포인트**: 방어는 DKMS(Dynamic Kernel Module Support) 서명 강제, Linux `lockdown` 모드, Windows HVCI(Hypervisor-Protected Code Integrity), PatchGuard로 커널 수정 자체를 차단하는 것이 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 커널 루트킷은 악성 커널 모듈(LKM: Loadable Kernel Module) 또는 Windows 드라이버(.sys)를 통해 커널 공간에 로드된다. 로드되면 커널 내부 자료구조를 직접 조작하여: ① 시스템 콜 테이블(sys_call_table)의 함수 포인터를 후킹 함수로 교체, ② DKOM(Direct Kernel Object Manipulation)으로 프로세스/모듈 목록의 이중 연결 리스트에서 자신의 항목 제거, ③ VFS 후킹으로 특정 파일·디렉터리를 파일 시스템 함수에서 숨김.
 
@@ -23,7 +25,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 커널 루트킷 후킹 기법
 
@@ -53,7 +55,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 루트킷 유형 | 동작 계층 | 탐지 난이도 | 방어 기법 |
 |:---|:---|:---|:---|
@@ -65,7 +67,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 Linux 커널 루트킷 방어: ① `CONFIG_MODULE_SIG_FORCE`로 서명된 모듈만 로드, ② `lockdown=integrity` 모드로 `/dev/mem`, `/proc/kcore` 등 커널 메모리 직접 접근 차단, ③ LKRG(Linux Kernel Runtime Guard)로 syscall 테이블·DKOM 실시간 감지. Windows: PatchGuard(KPP)로 커널 패치 탐지, HVCI로 서명 없는 드라이버 로드 차단.
 
@@ -75,7 +77,7 @@ Linux 커널 루트킷 방어: ① `CONFIG_MODULE_SIG_FORCE`로 서명된 모듈
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 HVCI와 Secure Boot의 보편화는 커널 루트킷 로드 자체를 어렵게 만들고 있다. 장기적으로 Rust for Linux를 통한 메모리 안전 커널 코드와, eBPF 검증기의 강화는 커널 루트킷이 악용하는 취약점의 수를 줄이는 근본 방향이다.
 

@@ -5,15 +5,18 @@ description = "실시간 스트리밍 데이터의 품질 이슈, 스키마 레�
 categories = "studynote-bigdata"
 tags = ["streaming data quality", "schema registry", "Great Expectations", "Kafka", "data validation", "anomaly detection", "data quality", "real-time"]
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 스트리밍 데이터 품질 관리는 배치와 달리 실시간으로 유입되는 데이터의 오류를 즉시 탐지·처리해야 하며, 지연 데이터(late data)와 스키마 변화가 핵심 과제다.
 > 2. Confluent Schema Registry + Avro/Protobuf를 통한 스키마 버전 관리가 Kafka 기반 스트림의 품질 첫 번째 방어선이며, 생산자-소비자 간 스키마 호환성을 자동 검증한다.
 > 3. 인라인 데이터 검증(Great Expectations, Apache Griffin), 이상값 탐지(통계적/ML 기반), 데드 레터 큐(DLQ)가 스트리밍 품질 관리의 3단 방어 체계를 구성한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 스트리밍 데이터 품질 개요
+## 1. 개요 및 필요성
 
 ### 1.1 배치 vs 스트리밍 품질 관리 차이
 
@@ -40,7 +43,7 @@ tags = ["streaming data quality", "schema registry", "Great Expectations", "Kafk
 
 ---
 
-## Ⅱ. 스키마 레지스트리
+## 2. 구성요소
 
 ### 2.1 Confluent Schema Registry
 
@@ -78,7 +81,7 @@ tags = ["streaming data quality", "schema registry", "Great Expectations", "Kafk
 
 ---
 
-## Ⅲ. 인라인 데이터 검증
+## 3. 구조 및 동작 원리
 
 ### 3.1 Flink DataStream 내 검증
 
@@ -114,7 +117,7 @@ results = validator.validate()
 
 ---
 
-## Ⅳ. 데드 레터 큐 (DLQ)와 재처리
+## 4. 비교 및 트레이드오프
 
 ### 4.1 DLQ 아키텍처
 
@@ -148,7 +151,7 @@ results = validator.validate()
 
 ---
 
-## Ⅴ. 이상 탐지 (Anomaly Detection)
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 통계 기반 이상 탐지
 

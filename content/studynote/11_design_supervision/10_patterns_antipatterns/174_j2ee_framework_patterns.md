@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: J2EE (Java 2 Platform, Enterprise Edition) / Jakarta EE 패턴은 엔터프라이즈 계층(Presentation → Business → Integration) 간 관심사를 분리하여 유지보수성과 확장성을 확보하는 구조적 설계 언어다.
+> **핵심**: J2EE (Java 2 Platform, Enterprise Edition) / Jakarta EE 패턴은 엔터프라이즈 계층(Presentation → Business → Integration) 간 관심사를 분리하여 유지보수성과 확장성을 확보하는 구조적 설계 언어다.
 > 2. **가치**: DAO, DTO, Front Controller, Service Locator 등 각 패턴은 특정 계층의 반복적인 설계 문제를 표준화하여 팀 간 공통 어휘를 제공한다.
 > 3. **판단 포인트**: 각 패턴의 위치(계층)와 역할 경계를 명확히 해야 한다. 혼용(예: DAO 안에 비즈니스 로직)은 관심사 분리 원칙을 위반하는 대표적 실수다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### J2EE 패턴의 역사적 배경
 
@@ -51,7 +52,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 7대 핵심 패턴 상세
 
@@ -102,7 +103,9 @@ UserService svc = (UserService) ServiceLocator.getService("UserService");
 
 여러 EJB (Enterprise JavaBeans) 호출을 단일 세션 빈(Session Bean)으로 묶어 클라이언트 측 원격 호출 횟수를 최소화.
 
-#### 7. Transfer Object Assembler (전송 객체 조립자)
+##> 📖 학습 보조
+
+## 7. Transfer Object Assembler (전송 객체 조립자)
 
 여러 비즈니스 컴포넌트의 데이터를 조합하여 복합 DTO를 구성.
 
@@ -110,7 +113,7 @@ UserService svc = (UserService) ServiceLocator.getService("UserService");
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 계층별 패턴 책임 요약표
 
@@ -139,7 +142,7 @@ UserService svc = (UserService) ServiceLocator.getService("UserService");
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### DAO 패턴 계층 분리의 실무 가치
 
@@ -201,7 +204,7 @@ DI 방식은 의존성이 생성자에 명시되어 테스트 시 Mock 주입이
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 J2EE 패턴 적용의 기대효과:
 

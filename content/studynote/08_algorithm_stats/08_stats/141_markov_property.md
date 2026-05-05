@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-algorithm"
 +++
-
-## 핵심 인사이트
+## 0. 핵심 인사이트
 
 > 마르코프 성질(Markov Property)은 "미래는 현재만 알면 충분하며, 과거는 현재가 요약해준다"는 조건부 독립(Conditional Independence) 원칙으로, 복잡한 시계열 문제를 다루기 쉽게 만드는 핵심 가정이다.
 > HMM(Hidden Markov Model)은 관측 불가능한 숨겨진 상태가 마르코프 체인을 이루고, 각 상태에서 관측값을 생성하는 구조로 — 음성 인식, 유전자 분석, 품사 태깅에서 필수 도구다.
 > MDP(Markov Decision Process)는 마르코프 성질을 강화학습에 적용한 프레임워크로, 벨만 방정식(Bellman Equation)을 통해 최적 정책(Optimal Policy)을 동적 프로그래밍(Dynamic Programming)으로 계산한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 마르코프 성질의 수학적 정의
+## 1. 개요 및 필요성
 
 **1차 마르코프 가정 (First-Order Markov Assumption)**:
 
@@ -42,7 +43,7 @@ P(X > s+t | X > s) = P(X > t)
 
 ---
 
-## Ⅱ. HMM (Hidden Markov Model)
+## 2. 구성요소
 
 **HMM(Hidden Markov Model, 은닉 마르코프 모델)**은 두 층의 확률 과정으로 구성된다.
 
@@ -69,7 +70,7 @@ X_1      X_2      X_3      X_4   ← 관측값 (Observations)
 
 ---
 
-## Ⅲ. MDP (Markov Decision Process)
+## 3. 구조 및 동작 원리
 
 **MDP(Markov Decision Process, 마르코프 결정 과정)**는 의사결정 문제를 마르코프 성질로 정형화한 프레임워크로, 강화학습의 수학적 기반이다.
 
@@ -95,7 +96,7 @@ V*(s) = max_a [ R(s,a) + γ · Σ_{s'} P(s'|s,a) · V*(s') ]
 
 ---
 
-## Ⅳ. 동적 프로그래밍과 마르코프 성질
+## 4. 비교 및 트레이드오프
 
 **동적 프로그래밍 (Dynamic Programming, DP)**이 가능한 이유는 정확히 마르코프 성질 때문이다.
 
@@ -123,7 +124,7 @@ V*(s) = max_a [ R(s,a) + γ · Σ_{s'} P(s'|s,a) · V*(s') ]
 
 ---
 
-## Ⅴ. MDP vs HMM 비교 및 활용
+## 5. 실무 적용 및 최적화 기법
 
 두 모델 모두 마르코프 성질을 공유하지만 구조와 목적이 다르다.
 

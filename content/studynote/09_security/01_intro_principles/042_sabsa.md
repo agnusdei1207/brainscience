@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. SABSA(Sherwood Applied Business Security Architecture)는 자크만 프레임워크(Zachman Framework)를 보안에 특화 적용한 보안 아키텍처 방법론으로, 비즈니스 요구사항에서 시작하여 논리·물리·기술 계층까지 "위에서 아래로(Top-down)" 보안을 설계하는 완전한 생명주기 프레임워크다.
 > 2. SABSA의 6대 계층(Contextual→Conceptual→Logical→Physical→Component→Operational)과 6대 속성 열(What/How/Where/Who/When/Why)의 36셀 매트릭스는 비즈니스 컨텍스트부터 운영 절차까지 보안 아키텍처의 완전성을 보장한다.
 > 3. SABSA의 가장 강력한 특징은 "비즈니스 목표 → 보안 정책 → 보안 아키텍처 → 보안 통제"로 이어지는 추적 가능성(Traceability)으로, 각 보안 투자가 어떤 비즈니스 리스크를 해소하는지 경영진에게 설명할 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. SABSA 개요
+## 1. 개요 및 필요성
 
 ```
 SABSA (Sherwood Applied Business Security Architecture):
@@ -46,7 +49,7 @@ SABSA 활용 분야:
 
 ---
 
-## Ⅱ. SABSA 6층 매트릭스
+## 2. 구성요소
 
 ```
 SABSA 아키텍처 레이어:
@@ -86,7 +89,7 @@ Row 6: Operational (운영):
 
 ---
 
-## Ⅲ. SABSA 속성 (6질문)
+## 3. 구조 및 동작 원리
 
 ```
 SABSA 6대 속성 열:
@@ -121,7 +124,7 @@ SABSA 속성 분류 (Security Attributes):
 
 ---
 
-## Ⅳ. SABSA 추적 가능성
+## 4. 비교 및 트레이드오프
 
 ```
 SABSA 추적 가능성 (Traceability):
@@ -160,7 +163,7 @@ SABSA Business Attributes Profile:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 클라우드 SABSA 적용
+## 5. 실무 적용 및 최적화 기법
 
 ```
 금융기관 클라우드 보안 아키텍처 SABSA 적용:

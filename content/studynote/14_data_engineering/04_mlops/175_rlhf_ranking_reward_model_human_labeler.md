@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: RLHF (Reinforcement Learning from Human Feedback)는 인간 평가자의 선호 피드백으로 보상 모델을 학습하고, PPO (Proximal Policy Optimization) 강화학습으로 LLM을 인간 가치에 정렬(Alignment)하는 기술이다.
+> **핵심**: RLHF (Reinforcement Learning from Human Feedback)는 인간 평가자의 선호 피드백으로 보상 모델을 학습하고, PPO (Proximal Policy Optimization) 강화학습으로 LLM을 인간 가치에 정렬(Alignment)하는 기술이다.
 > 2. **가치**: GPT-4, Claude, Gemini 등 현대 대화형 AI가 유용하고 무해하며 정직한 응답을 생성하는 핵심 원동력이며, 단순한 모방 학습(SFT)만으로는 달성할 수 없는 인간 선호 최적화를 가능케 한다.
 > 3. **판단 포인트**: RLHF는 레이블러 품질·다양성 관리 비용이 높으므로, RLAIF (AI Feedback)나 DPO (Direct Preference Optimization)를 상황에 따라 대안으로 선택해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 AI Alignment (정렬) 문제
 
@@ -60,7 +62,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 Stage 1 — SFT (Supervised Fine-Tuning)
 
@@ -145,7 +147,7 @@ SFT 데이터셋 구성:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 RLHF vs RLAIF vs DPO 비교
 
@@ -195,7 +197,7 @@ DPO 손실 함수:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 InstructGPT RLHF 구현 세부
 
@@ -252,7 +254,7 @@ OpenAI InstructGPT (2022) 구성:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 RLHF 도입 효과
 

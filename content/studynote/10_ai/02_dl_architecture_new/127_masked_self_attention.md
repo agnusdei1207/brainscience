@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Masked Self-Attention은 **디코더에서 현재 위치 이후의 미래 토큰을 참조하지 못하도록 마스킹(-∞)하는 Self-Attention**이며, GPT 등 자기 회귀(Autoregressive) 모델의 핵심 메커니즘이다.
+> **핵심**: Masked Self-Attention은 **디코더에서 현재 위치 이후의 미래 토큰을 참조하지 못하도록 마스킹(-∞)하는 Self-Attention**이며, GPT 등 자기 회귀(Autoregressive) 모델의 핵심 메커니즘이다.
 > 2. **가치**: "I love"까지 생성 후 다음 토큰을 예측할 때, 정답인 "you"를 이미 본 상태에서 예측하면 **학습이 무의미(data leakage)**하므로, Masked Self-Attention이 미래를 가려서 **진정한 예측**을 가능하게 한다.
 > 3. **판단 포인트**: Causal Mask(하삼각 행렬)를 Attention Score에 적용하여 미래 위치에 -∞를 더하고 softmax 후 0이 되게 하며, BERT(양방향)는 마스킹 없이 전체 참조한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -41,7 +43,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Self vs Masked Self vs Cross
 
@@ -55,7 +57,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | BERT (Self) | GPT (Masked Self) |
 |:---|:---|:---|
@@ -65,7 +67,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### KV Cache
 - 자기 회귀 생성 시 이전 Key·Value를 캐싱하여 중복 계산 방지.
@@ -73,7 +75,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Masked Self-Attention은 **GPT·Llama 등 자기 회귀 LLM의 필수 구성 요소**이며, KV Cache와 결합하여 효율적 텍스트 생성을 실현한다.
 

@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# Rowhammer (로우해머) 공격
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Rowhammer는 DRAM의 특정 메모리 행(Row)을 매우 빠른 속도로 반복 접근(Hammering)하여, 인접 행의 전하가 누설되어 데이터 비트(0→1 또는 1→0)가 물리적으로 뒤집히는 현상(Bit-flip)을 악용한 하드웨어 공격이다.
+> **핵심**: Rowhammer는 DRAM의 특정 메모리 행(Row)을 매우 빠른 속도로 반복 접근(Hammering)하여, 인접 행의 전하가 누설되어 데이터 비트(0→1 또는 1→0)가 물리적으로 뒤집히는 현상(Bit-flip)을 악용한 하드웨어 공격이다.
 > 2. **가치**: 소프트웨어 버그가 아닌 DRAM의 물리적 미세화 한계를 악용하여, 권한 설정 비트를 임의로 변경함으로써 일반 사용자가 Root 권한을 탈취하거나, ECC都无法防御하는 일比特 단위의 정확한 제어를 통해 암호화 키를 탈취하는 것이 가능하다.
 > 3. **융합**: TRR (Target Row Refresh), ECC 메모리, Refresh Rate 증가, 그리고 DRAM 제조 공정의 변경 등 하드웨어-소프트웨어 공동 방어 체계가 필요하다.
 
+> 📝 모범 답안
+
+# Rowhammer (로우해머) 공격
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 문제의식: DRAM 미세화와 물리적 한계
 
@@ -27,7 +29,7 @@ Rowhammer는 이 물리적 한계를 본격적으로 공격한다. 특정 Row의
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Rowhammer의 물리적 메커니즘
 
@@ -90,7 +92,7 @@ Rowhammer로 Bit-flip을통해 권한 상승이 가능해지는 과정은정밀�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### Rowhammer 방어 기술 비교
 
@@ -110,7 +112,7 @@ DRAM 레벨 방어에서는 TRR (Target Row Refresh)이 가장 효과적이며, 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -135,7 +137,7 @@ DRAM 레벨 방어에서는 TRR (Target Row Refresh)이 가장 효과적이며, 
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### Rowhammer 방어 기술의 발전
 

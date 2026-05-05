@@ -6,15 +6,17 @@ description = "47개 보안 약점을 기준으로 소프트웨어 개발 보안
 taxonomy = ""
 tags = ["Software Engineering", "Security", "KISA", "Guideline", "Secure Coding"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 이 가이드는 개발 단계에서 보안 약점을 줄이기 위한 공식 기준이다.
+> **핵심**: 이 가이드는 개발 단계에서 보안 약점을 줄이기 위한 공식 기준이다.
 > 2. **가치**: 47개 보안 약점을 체계적으로 관리하게 해 준다.
 > 3. **판단 포인트**: 구현 편의보다 보안 요구를 먼저 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 행정안전부와 KISA (Korea Internet & Security Agency)는 안전한 소프트웨어 개발을 위한 가이드를 제시한다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Security", "KISA", "Guideline", "Secure Coding"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 가이드는 입력 검증, 인증, 세션, 접근 제어, 오류 처리, 암호화 같은 분야를 포괄한다.
 
@@ -43,7 +45,7 @@ tags = ["Software Engineering", "Security", "KISA", "Guideline", "Secure Coding"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 이 가이드는 OWASP Top 10보다 더 세부적인 국내 실무 기준으로 활용된다.
 
@@ -59,7 +61,7 @@ tags = ["Software Engineering", "Security", "KISA", "Guideline", "Secure Coding"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 개발 표준, 보안 리뷰, 교육 자료, 점검표로 쓴다.
 
@@ -72,7 +74,7 @@ tags = ["Software Engineering", "Security", "KISA", "Guideline", "Secure Coding"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 이 가이드는 보안을 개인의 감이 아니라 조직의 기준으로 만든다.
 

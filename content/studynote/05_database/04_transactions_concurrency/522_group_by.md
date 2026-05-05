@@ -7,17 +7,19 @@ date = 2026-03-26
 [taxonomies]
 tags = ["database", "sql", "group-by", "having", "aggregate"]
 +++
+## 0. 핵심 인사이트
 
-# GROUP BY와 HAVING
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: GROUP BY는 행들을 특정 열의 값으로 그룹화하고, 각 그룹에 대해 집계 함수 (COUNT, SUM, AVG 등)를 적용하는 SQL 절이다.
+> **핵심**: GROUP BY는 행들을 특정 열의 값으로 그룹화하고, 각 그룹에 대해 집계 함수 (COUNT, SUM, AVG 등)를 적용하는 SQL 절이다.
 > 2. **가치**: GROUP BY를 통해 다양한 차원의 데이터 분석이 가능해져, 매출 분석, 통계 보고, 대시보드 데이터 생성 등에 필수적인 도구다.
 > 3. **융합**: OLAP (Online Analytical Processing), 데이터 웨어하우스, BI 도구와 결합하여 기업 데이터 분석의 핵심 인프라로 활용된다.
 
+> 📝 모범 답안
+
+# GROUP BY와 HAVING
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 
@@ -56,7 +58,7 @@ GROUP BY는 **반별로 조별 만들기**와 같다. 전체 학생 중에서 �
 
 ---
 
-## Ⅱ. GROUP BY 기본
+## 2. 구성요소
 
 ### 기본 문법
 
@@ -104,7 +106,7 @@ GROUP BY city;
 
 ---
 
-## Ⅲ. HAVING 절
+## 3. 구조 및 동작 원리
 
 HAVING은 **GROUP BY로 형성된 그룹을 필터링**하는 조건이다. WHERE가 개별 행을 필터링하는 반면, HAVING은 그룹 단위로 필터링한다.
 
@@ -153,7 +155,7 @@ HAVING COUNT(*) >= 2;
 
 ---
 
-## Ⅳ. 다중 열 GROUP BY
+## 4. 비교 및 트레이드오프
 
 ### 예시: 도시별, 등급별 고객 수
 
@@ -197,7 +199,7 @@ ORDER BY city, grade;
 
 ---
 
-## Ⅴ.ROLLUP과 CUBE
+## 5. 실무 적용 및 최적화 기법
 
 ### ROLLUP: 계층적 부분 합계
 

@@ -4,15 +4,18 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. KEDB(Known Error Database)는 IT 서비스 운영 중 발생한 근본 원인이 확인된 오류와 임시 조치(Workaround)를 저장한 ITIL 문제 관리 데이터베이스다.
 > 2. 인시던트 발생 시 KEDB를 먼저 조회해 임시 해결책을 즉시 적용함으로써 MTTR(Mean Time To Repair)을 단축하는 것이 핵심 가치다.
 > 3. KEDB는 서비스 데스크·변경 관리·릴리즈 관리와 연계해 조직 지식 자산으로 관리되어야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. KEDB의 정의와 ITIL 프로세스 위치
+## 1. 개요 및 필요성
 
 KEDB(Known Error Database, 기지 오류 데이터베이스)는 **ITIL 문제 관리(Problem Management) 프로세스**의 산출물로, 근본 원인(Root Cause)이 파악된 문제와 임시 조치 방법을 기록한다.
 
@@ -39,7 +42,7 @@ KEDB(Known Error Database, 기지 오류 데이터베이스)는 **ITIL 문제 �
 
 ---
 
-## Ⅱ. KEDB 레코드 구조
+## 2. 구성요소
 
 ### KEDB 레코드 필수 항목
 
@@ -59,7 +62,7 @@ KEDB(Known Error Database, 기지 오류 데이터베이스)는 **ITIL 문제 �
 
 ---
 
-## Ⅲ. KEDB 활용 — 인시던트 해결 시간 단축
+## 3. 구조 및 동작 원리
 
 ```
 인시던트 접수
@@ -85,7 +88,7 @@ KEDB 검색 (증상 키워드 매칭)
 
 ---
 
-## Ⅳ. KEDB 관리와 품질 유지
+## 4. 비교 및 트레이드오프
 
 ### KEDB 품질 저하 원인
 
@@ -108,7 +111,7 @@ KEDB 검색 (증상 키워드 매칭)
 
 ---
 
-## Ⅴ. 현대적 통합 — ITSM 도구와 AI 연계
+## 5. 실무 적용 및 최적화 기법
 
 ### ITSM 도구 통합
 

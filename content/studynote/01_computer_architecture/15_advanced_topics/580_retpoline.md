@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 580. 리트폴린 (Retpoline)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 리트폴린(Retpoline, Return Trampoline)은 간접 분기(Indirect Branch) 시 발생하는 CPU의 투기적 실행을 방지하기 위해, **`jmp`나 `call` 대신 `return` 명령어를 교묘하게 사용하여 하드웨어 분기 예측기를 격리**시키는 소프트웨어적 보안 기법이다.
+> **핵심**: 리트폴린(Retpoline, Return Trampoline)은 간접 분기(Indirect Branch) 시 발생하는 CPU의 투기적 실행을 방지하기 위해, **`jmp`나 `call` 대신 `return` 명령어를 교묘하게 사용하여 하드웨어 분기 예측기를 격리**시키는 소프트웨어적 보안 기법이다.
 > 2. **가치**: 스펙터 v2(Spectre v2) 공격의 핵심 루트인 간접 분기 예측기(BTB) 오염을 원천 차단하며, 하드웨어 교체 없이 컴파일러 수준의 코드 수정만으로 전 세계 수십억 대의 PC와 서버를 긴급 보호한 구세주 같은 기술이다.
 > 3. **융합**: 운영체제의 커널 패치와 컴파일러(GCC, Clang)의 코드 생성 엔진이 융합되어 작동하며, 보안을 위해 일부 성능 하락을 감수하는 하드웨어-소프트웨어 간의 처절한 타협점을 상징한다.
 
+> 📝 모범 답안
+
+# 580. 리트폴린 (Retpoline)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 - **개념**: 'Return'과 'Trampoline'의 합성어로, 분기 예측기가 다음에 어디로 갈지 짐작하지 못하게 '스택'으로 우회로를 만들어 명령어를 튕겨내는(Trampoline) 기술이다. 2018년 구글(Google) 엔지니어 폴 코허(Paul Kocher) 등이 제안했다.
 - **필요성**: 스펙터 v2 공격은 CPU가 `jmp eax` 같은 간접 분기를 만났을 때, 해커가 미리 오염시켜둔 '나쁜 기억(BTB)'을 믿고 악성 가젯으로 달려가는 틈을 노린다. 리트폴린은 **"기억(BTB)을 믿지 말고, 아예 예측 장치 자체가 작동하지 않는 길로 돌아가라"**는 명령을 내리기 위해 탄생했다.
@@ -45,7 +47,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 간접 분기의 위험성 제거
 - 현대 CPU의 간접 분기 예측기(Indirect Branch Predictor)는 복잡한 로직을 거치는데, 해커는 이 로직을 훈련(Training)시킬 수 있다. 리트폴린은 이 복잡한 예측 회로를 타지 않게 만든다.
@@ -61,7 +63,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Retpoline vs IBPB (하드웨어 방어)
 
@@ -79,7 +81,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -99,7 +101,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **Spectre v2 공격 성공률 0%**: 간접 분기 예측 과정을 완전히 바이패스함으로써 공격 루트를 소멸시킨다.

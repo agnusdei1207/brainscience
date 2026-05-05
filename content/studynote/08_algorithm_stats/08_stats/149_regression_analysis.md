@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-algorithm"
 +++
-
-## 핵심 인사이트
+## 0. 핵심 인사이트
 
 > 회귀 분석(Regression Analysis)의 본질은 변수 간 함수 관계를 추정하는 것으로, OLS(Ordinary Least Squares, 최소 제곱법)는 잔차(Residual)의 제곱합을 최소화해 가장 잘 맞는 선(최적 적합선)을 찾는다.
 > 로지스틱 회귀(Logistic Regression)는 이름과 달리 분류(Classification) 알고리즘이며, 선형 결합을 시그모이드(Sigmoid) 함수로 변환해 확률로 해석할 수 있게 한다 — 딥러닝 분류 레이어의 직접 조상이다.
 > 릿지(Ridge)와 라쏘(Lasso) 정규화는 과적합(Overfitting) 방지와 변수 선택의 도구이며, 베이즈 관점에서는 각각 가우시안 사전(Gaussian Prior)과 라플라스 사전(Laplace Prior)에 해당한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 단순 선형 회귀
+## 1. 개요 및 필요성
 
 **단순 선형 회귀 (Simple Linear Regression)** 모델:
 
@@ -63,7 +64,7 @@ R² = 1: 모델이 분산을 완벽하게 설명
 
 ---
 
-## Ⅱ. 다중 회귀와 다중공선성
+## 2. 구성요소
 
 **다중 회귀 (Multiple Regression)**:
 
@@ -99,7 +100,7 @@ R²_j: j번째 변수를 나머지 변수들로 회귀했을 때의 R²
 
 ---
 
-## Ⅲ. 로지스틱 회귀
+## 3. 구조 및 동작 원리
 
 **로지스틱 회귀 (Logistic Regression)**: 이진 분류를 위한 선형 모델
 
@@ -132,7 +133,7 @@ P(y=k|x) = exp(Xβ_k) / Σ_j exp(Xβ_j)
 
 ---
 
-## Ⅳ. 정규화: Ridge와 Lasso
+## 4. 비교 및 트레이드오프
 
 **과적합 문제**: 변수가 많으면 학습 데이터에 과도하게 맞아 일반화 성능 저하.
 
@@ -179,7 +180,7 @@ P(y=k|x) = exp(Xβ_k) / Σ_j exp(Xβ_j)
 
 ---
 
-## Ⅴ. 회귀 가정과 잔차 분석
+## 5. 실무 적용 및 최적화 기법
 
 **선형 회귀의 4가지 가정 (LINE)**:
 1. **선형성 (Linearity)**: E[y|X] = Xβ — 비선형 패턴 시 변수 변환 필요

@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 네트워크 파일 시스템 (NFS)과 무상태 (Stateless) 설계
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: NFS (Network File System)는 내 컴퓨터에 없는 다른 서버의 하드 디스크 폴더를 네트워크를 통해 당겨와, 마치 **내 컴퓨터에 꽂힌 물리적 C드라이브(로컬 디스크)인 것처럼 완벽하게 눈속임(마운트, Mount)해 주는 원격 파일 공유 프로토콜**이다.
+> **핵심**: NFS (Network File System)는 내 컴퓨터에 없는 다른 서버의 하드 디스크 폴더를 네트워크를 통해 당겨와, 마치 **내 컴퓨터에 꽂힌 물리적 C드라이브(로컬 디스크)인 것처럼 완벽하게 눈속임(마운트, Mount)해 주는 원격 파일 공유 프로토콜**이다.
 > 2. **가치**: NFS v2/v3 아키텍처의 가장 위대한 철학은 서버가 클라이언트의 상태를 전혀 기억하지 않는 **무상태(Stateless) 아키텍처**에 있다. 덕분에 서버가 갑자기 뻗었다 켜져도 클라이언트들은 에러를 뿜고 죽는 대신 하던 작업을 투명하게 재개(Resilience)할 수 있는 극강의 고가용성을 획득했다.
 > 3. **융합**: 가상 파일 시스템(VFS) 스위치 계층과 RPC (Remote Procedure Call) 통신 기술이 융합되어, 응용 프로그램이 코드를 1비트도 수정하지 않고 로컬 `read()/write()` 함수만으로 태평양 건너의 스토리지 데이터를 조작할 수 있게 만든 클라우드 NAS의 역사적 토대다.
 
+> 📝 모범 답안
+
+# 네트워크 파일 시스템 (NFS)과 무상태 (Stateless) 설계
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - Sun Microsystems가 1984년 개발한 분산 파일 시스템. 
@@ -70,7 +72,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### NFS 무상태성 (Statelessness)의 심연
 
@@ -113,7 +115,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### NFS 버전별 진화와 Stateful로의 변절 (NFS v3 vs v4)
 
@@ -135,7 +137,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 트러블슈팅
 
@@ -180,7 +182,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: RLHF는 **인간 평가자의 선호도 피드백으로 보상 모델(Reward Model)을 학습**하고, 이를 기반으로 **PPO(Proximal Policy Optimization) 강화학습**으로 LLM을 인간 의도에 정렬(Align)하는 기법이다.
+> **핵심**: RLHF는 **인간 평가자의 선호도 피드백으로 보상 모델(Reward Model)을 학습**하고, 이를 기반으로 **PPO(Proximal Policy Optimization) 강화학습**으로 LLM을 인간 의도에 정렬(Align)하는 기법이다.
 > 2. **가치**: 사전 학습된 LLM은 **유해·편향·비관련 출력**을 생성할 수 있지만, RLHF는 "인간이 선호하는 답변"을 학습하여 **ChatGPT 수준의 안전하고 유용한 대화**를 가능하게 했다.
 > 3. **판단 포인트**: SFT(Supervised Fine-tuning)→RM(Reward Model) 학습→PPO 정렬의 3단계이며, DPO(Direct Preference Optimization)가 RM 없이 직접 정렬하는 간소화 대안이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 RLHF 3단계:

@@ -5,17 +5,19 @@ date = "2026-04-07"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-# Authority Information Access (AIA) — OCSP 포인터와 인증서 체인(Chain) 복구
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: AIA(Authority Information Access)는 발급된 X.509 디지털 인증서 안에 박혀 있는 내비게이션 확장(Extension) 필드로, 브라우저에게 두 가지 결정적인 정보의 주소(URL)를 알려준다: **첫째, 이 인증서를 실시간으로 검증해 줄 OCSP 서버의 주소. 둘째, 내 부모 인증서(Issuer Certificate)를 다운로드할 수 있는 주소**다.
+> **핵심**: AIA(Authority Information Access)는 발급된 X.509 디지털 인증서 안에 박혀 있는 내비게이션 확장(Extension) 필드로, 브라우저에게 두 가지 결정적인 정보의 주소(URL)를 알려준다: **첫째, 이 인증서를 실시간으로 검증해 줄 OCSP 서버의 주소. 둘째, 내 부모 인증서(Issuer Certificate)를 다운로드할 수 있는 주소**다.
 > 2. **가치**: 과거의 무식한 다운로드 방식(CRL/CDP)을 멸망시키고, 단 1건의 트랜잭션만 가볍게 묻고 답하는 **초고속 실시간 인증서 상태 검증(OCSP)**을 구동시키는 심장(포인터)이다. 또한 웹 서버가 설정 실수로 부모 인증서 체인(Intermediate CA)을 클라이언트에게 안 줬을 때, 브라우저가 AIA에 적힌 주소로 달려가 부모를 직접 모셔 와 체인을 완성하는 자가 치유(Self-healing) 기능을 제공한다.
 > 3. **융합**: AIA는 단독으로 쓰이지 않고, PKI(공개키 기반 구조) 인프라에서 빠른 속도를 보장하는 **OCSP 프로토콜**과, 브라우저가 신뢰의 뿌리(Root CA)까지 거슬러 올라가는 **Chain of Trust 검증 아키텍처**에 톱니바퀴처럼 완벽하게 융합되어 있다.
 
+> 📝 모범 답안
+
+# Authority Information Access (AIA) — OCSP 포인터와 인증서 체인(Chain) 복구
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 브라우저(크롬)가 웹 서버(네이버)에 접속하면 서버 인증서를 하나 받는다. 이 인증서의 속성을 열어보면 `Authority Information Access`라는 항목이 떡하니 있다. 그 속에는 보통 두 줄의 URL이 적혀 있다. 
   1. `OCSP - URI: http://ocsp.digicert.com` (내 블랙리스트 여부 실시간 조회처)
@@ -40,7 +42,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### AIA 기반의 OCSP 검증 및 자가 치유(Self-healing) 아키텍처
 
@@ -77,7 +79,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 실무 적용 및 기술사적 판단
+## 3. 구조 및 동작 원리
 
 ### 실무 시나리오
 
@@ -94,7 +96,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 기대효과 및 결론
+## 4. 비교 및 트레이드오프
 
 ### 정량/정성 기대효과
 

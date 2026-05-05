@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 차원 축소(Dimensionality Reduction)는 고차원 데이터의 핵심 정보는 유지하면서 불필요한 차원을 제거하여, 차원의 저주(Curse of Dimensionality)를 극복하고 시각화·모델 성능을 개선하는 기법이다.
+> **핵심**: 차원 축소(Dimensionality Reduction)는 고차원 데이터의 핵심 정보는 유지하면서 불필요한 차원을 제거하여, 차원의 저주(Curse of Dimensionality)를 극복하고 시각화·모델 성능을 개선하는 기법이다.
 > 2. **가치**: PCA(Principal Component Analysis, 주성분 분석)는 분산 최대화 비지도 축소, LDA(Linear Discriminant Analysis, 선형 판별 분석)는 클래스 분리 극대화 지도 축소, t-SNE(t-Distributed Stochastic Neighbor Embedding)는 고차원 이웃 관계를 보존하는 비선형 시각화를 각각 제공한다.
 > 3. **판단 포인트**: PCA는 전처리·압축 목적, LDA는 분류 전처리, t-SNE/UMAP은 탐색적 시각화 목적으로 선택해야 하며, t-SNE는 새 데이터 변환(out-of-sample)이 불가능하다는 제약이 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 차원의 저주 (Curse of Dimensionality)
 
@@ -34,7 +36,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. PCA (Principal Component Analysis, 주성분 분석)
 
@@ -121,7 +123,7 @@ t-분포의 긴 꼬리(Heavy Tail)가 완화한다.
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. 언제 어떤 차원 축소를 쓰는가?
 
@@ -170,7 +172,7 @@ PCA 주성분 = V의 열벡터
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. 이미지 압축 시나리오 (PCA 적용)
 
@@ -210,7 +212,7 @@ PCA 주성분 = V의 열벡터
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 차원 축소는 현대 데이터 분석 파이프라인에서 **전처리·탐색·모델링** 세 단계 모두에 필수적인 도구다.
 

@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# CPU 이용률 (CPU Utilization)과 처리량 (Throughput)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CPU 이용률은 전체 시간 중 CPU가 유휴(Idle) 상태가 아닌 실제 프로세스 연산을 수행한 시간의 비율을 의미하며, 처리량은 단위 시간당 시스템이 완전히 실행을 끝마친(Terminated) 프로세스의 총 개수다.
+> **핵심**: CPU 이용률은 전체 시간 중 CPU가 유휴(Idle) 상태가 아닌 실제 프로세스 연산을 수행한 시간의 비율을 의미하며, 처리량은 단위 시간당 시스템이 완전히 실행을 끝마친(Terminated) 프로세스의 총 개수다.
 > 2. **가치**: 이 두 지표는 스케줄링 기준 5요소 중 **"기계적 효율성(System-oriented Criteria)"**을 대변하며, 관리자 관점에서 비싼 하드웨어 인프라 자원의 투자 대비 수익(ROI)을 측정하는 핵심 척도다.
 > 3. **융합**: 단기 스케줄러가 응답성(Response Time)을 높이기 위해 너무 잦은 문맥 교환(Context Switch)을 시도하면 시스템 오버헤드가 급증하여 CPU 이용률의 '순수 연산' 비율이 하락하고 결국 처리량이 붕괴하는 트레이드오프(Trade-off)가 발생한다.
 
+> 📝 모범 답안
+
+# CPU 이용률 (CPU Utilization)과 처리량 (Throughput)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: CPU 이용률 (CPU Utilization)은 물리적인 CPU 코어가 쉬지 않고 일하고 있는 시간의 백분율이다. 처리량 (Throughput)은 그 결과물로서 시스템이 1초 혹은 1시간 등 일정한 기준 시간 내에 완전히 마무리 지은 작업(프로세스나 트랜잭션)의 총량을 뜻한다.
 - **필요성**: 슈퍼컴퓨터, 클라우드 데이터센터의 노드 등 시스템 관리자 입장에서는 수천만 원짜리 장비가 가동 중일 때 이 장비가 1초라도 놀고 있는 꼴(Idle)을 볼 수 없다. 기계는 돌리면 돌릴수록 본전을 뽑는 것이기 때문에, 이 두 지표를 극대화하는 것은 운영체제(특히 장기/중기 스케줄러)의 가장 오래되고 근본적인 사명이다.
@@ -47,7 +49,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 지표 측정과 성능 관계의 수식적 이해
 
@@ -92,7 +94,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 응답 시간 (Response Time)과의 극단적 트레이드오프
 
@@ -112,7 +114,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **TPS (Transactions Per Second) 모니터링 튜닝**: 웹 서버(Tomcat/Nginx)의 성능 테스트 시, 부하를 주면 처음에는 CPU 이용률과 TPS(처리량)가 같이 올라간다. 하지만 어느 순간 CPU 이용률이 100%를 치는 시점부터 TPS가 오히려 깎이거나 지연(Latency)이 치솟는 '병목 지점'을 만나게 된다.
@@ -151,7 +153,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

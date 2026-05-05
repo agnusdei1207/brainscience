@@ -6,15 +6,17 @@ description = "K-익명성, L-다양성, T-근접성을 활용한 데이터 비�
 taxonomy = ""
 tags = ["Software Engineering", "Privacy", "Pseudonymization", "Anonymization", "Data"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 가명 처리와 비식별화는 개인정보 노출을 줄이는 기술이다.
+> **핵심**: 가명 처리와 비식별화는 개인정보 노출을 줄이는 기술이다.
 > 2. **가치**: 분석 가능성과 보호 수준의 균형을 맞춘다.
 > 3. **판단 포인트**: 재식별 위험을 함께 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 데이터를 쓰면서도 개인을 직접 드러내지 않으려면 변환 기술이 필요하다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Privacy", "Pseudonymization", "Anonymization", 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 가명 처리 (Pseudonymization)는 다시 식별 가능성이 일부 남고, 비식별화 (Anonymization)는 재식별 가능성을 낮추려 한다.
 
@@ -42,7 +44,7 @@ tags = ["Software Engineering", "Privacy", "Pseudonymization", "Anonymization", 
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 완전 익명은 어렵기 때문에 재식별 위험을 계속 평가해야 한다.
 
@@ -58,7 +60,7 @@ tags = ["Software Engineering", "Privacy", "Pseudonymization", "Anonymization", 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 마스킹, 토큰화, 집계, 구간화, 노이즈 주입 등을 사용한다.
 
@@ -71,7 +73,7 @@ tags = ["Software Engineering", "Privacy", "Pseudonymization", "Anonymization", 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 비식별화는 데이터 활용과 프라이버시를 동시에 지키는 도구다.
 

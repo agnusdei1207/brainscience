@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Matter(구 Project CHIP)는 Apple·Google·Amazon·Samsung이 공동 개발한 **스마트 홈 디바이스 상호 운용성 표준**으로, Zigbee·Z-Wave·Wi-Fi·Thread 위에서 동작하는 **애플리케이션 계층 프로토콜**이다.
+> **핵심**: Matter(구 Project CHIP)는 Apple·Google·Amazon·Samsung이 공동 개발한 **스마트 홈 디바이스 상호 운용성 표준**으로, Zigbee·Z-Wave·Wi-Fi·Thread 위에서 동작하는 **애플리케이션 계층 프로토콜**이다.
 > 2. **가치**: 기존에는 HomeKit 전용·Google Home 전용·Alexa 전용 디바이스를 각각 구매해야 했지만, Matter 인증 디바이스는 **모든 플랫폼에서 동시 동작**한다 (Multi-admin).
 > 3. **판단 포인트**: Matter는 **Thread(저전력 메시) + Wi-Fi(고속) + BLE(커미셔닝)**를 전송 계층으로 사용하며, IPv6 기반으로 클라우드 없이 **로컬 제어**가 가능하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -36,7 +38,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Matter 프로토콜 스택
 
@@ -60,7 +62,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Zigbee | Z-Wave | Matter |
 |:---|:---|:---|:---|
@@ -71,7 +73,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Matter 1.0 지원 디바이스 유형
 조명, 스위치, 스마트 플러그, 도어록, 온도 조절기, 블라인드, 센서.
@@ -81,7 +83,7 @@ Zigbee/Z-Wave → **Matter Bridge**를 통해 Matter 생태계에 편입 가능.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Matter는 스마트 홈의 **USB-C 모먼트**이며, 플랫폼 파편화를 해소하여 IoT 시장의 대중화를 가속시키고 있다. Matter 2.0에서는 카메라·로봇 청소기·가전 등으로 디바이스 유형이 확대될 예정이다.
 

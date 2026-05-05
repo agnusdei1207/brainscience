@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 동적 할당 First/Best/Worst Fit
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 동적 메모리 할당(Dynamic Storage Allocation)은 가변 분할 환경에서 새로운 프로세스가 들어오거나 `malloc`이 호출되었을 때, **"메모리에 흩어져 있는 여러 개의 빈 공간(Hole) 중 과연 어느 곳에 이 프로세스를 집어넣을 것인가?"**를 결정하는 알고리즘이다.
+> **핵심**: 동적 메모리 할당(Dynamic Storage Allocation)은 가변 분할 환경에서 새로운 프로세스가 들어오거나 `malloc`이 호출되었을 때, **"메모리에 흩어져 있는 여러 개의 빈 공간(Hole) 중 과연 어느 곳에 이 프로세스를 집어넣을 것인가?"**를 결정하는 알고리즘이다.
 > 2. **3가지 전략**: 위에서부터 찾다가 첫 번째로 맞는 곳에 넣는 **First-Fit(최초 적합)**, 남는 자투리가 가장 적은 곳에 넣는 **Best-Fit(최적 적합)**, 오히려 남는 자투리가 가장 큰 곳에 넣는 **Worst-Fit(최악 적합)**이 있다.
 > 3. **실전 승자**: 직관적으로는 Best-Fit이 가장 좋을 것 같지만, 실제 시스템에서는 탐색 시간이 가장 짧고(O(1)에 근접) 잉여 공간을 큼직하게 보존하는 **First-Fit이 속도와 공간 효율성 양면에서 가장 우수**한 것으로 증명되어 실무 메모리 할당기의 근간이 되었다.
 
+> 📝 모범 답안
+
+# 동적 할당 First/Best/Worst Fit
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **가변 분할 (Variable Partitioning)**: 프로세스가 요구하는 크기만큼 메모리를 잘라서 주는 방식.
@@ -42,7 +44,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 3대 할당 알고리즘 시뮬레이션
 
@@ -78,7 +80,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 할당 전략과 자료구조(Data Structure)의 결합
 
@@ -99,7 +101,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -147,7 +149,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

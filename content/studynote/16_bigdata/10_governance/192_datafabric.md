@@ -5,19 +5,21 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-bigdata"
 +++
-
-# 데이터 패브릭 (Data Fabric) - 지능형 데이터 통합 아키텍처
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 Gartner가 2019년부터 지속 역점화하고 있는 차세대 데이터 아키텍처 패러다임인 '데이터 패브릭(Data Fabric)'의 핵심 개념, 지식 그래프 기반 데이터 연결 메커니즘, 자동화된 데이터 통합 설계, 그리고 데이터 메시와의 차이점을 기술사 수준에서 심층 분석합니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# 데이터 패브릭 (Data Fabric) - 지능형 데이터 통합 아키텍처
+
 > 1. **본질**: 데이터 패브릭(Data Fabric)은 "데이터의 위치(온프레미스, 클라우드, SaaS 등)와 상관없이, 메타데이터(Metadata) 기반의 지식 그래프 Knowledge Graph)를 구축하여 데이터 간의 의미론적 관계를 이해하고, 이 지식을 활용하여 데이터 통합, 변환, 라우팅을 자동으로Orchestration하는 지능형 데이터 연결 아키텍처"이다.
 > 2. **가치**: 데이터 엔지니어가数百 개의 데이터 소스 간의 파이프라인을手動으로 설계하는 것을 탈피하여, 메타데이터가 데이터 연결의 추론 기반(Reasoning Engine)을提供하고, 시스템이 스스로 "어떤 데이터를 어떻게 연결해야 하는가"를 자동 결정하는 Autonomous Data Integration을 달성한다.
 > 3. **융합**: 데이터 패브릭의 지식 그래프와 자율적 연결 메커니즘은 RDF(_resource Description Framework), 온톨로지(Ontology) engineering, 강화 학습(Reinforcement Learning) 기반 자동화 기술이 융합된 산물이다.
 
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 1. 데이터 분산 환경의 복잡성 증가 (Pain Point)
 현대 기업은 수십 개의 데이터 소스로부터 데이터를 수집합니다. ERP, CRM, HR 시스템, 마케팅 자동화 플랫폼, IoT 센서, SNS 등 데이터가 퍼져있는 위치만큼이나 그 포맷과 의미도 제각각입니다.
@@ -33,7 +35,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅱ. 핵심 아키텍처 및 원리 (Architecture & Mechanism)
+## 2. 구성요소
 
 데이터 패브릭 아키텍처는 크게 4개의 핵심 레이어로 구성되며, 각 레이어가 메타데이터 지식 그래프를 중심으로 유기적으로 동작합니다.
 
@@ -84,7 +86,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅲ. 비교 및 기술적 트레이드오프 (Comparison & Trade-offs)
+## 3. 구조 및 동작 원리
 
 ### 데이터 패브릭 vs 데이터 메시 vs 전통적 데이터 레이크
 
@@ -106,7 +108,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅳ. 실무 판단 기준 (Decision Making)
+## 4. 비교 및 트레이드오프
 
 | 고려 사항 | 세부 내용 | 도입 의사결정 |
 |:---|:---|:---|
@@ -123,7 +125,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅴ. 미래 전망 및 발전 방향 (Future Trend)
+## 5. 실무 적용 및 최적화 기법
 
 1. **生成 AI(Generative AI)와의 융합**
    LLM(大型言語 Model)이 온톨로지 구축을 자동화하는 연구가 진행되고 있습니다. 자연어로 "고객 테이블과 Client 테이블은 같은 실체를 가리킨다"는 설명을 하면, LLM이 이를Ontology로 번역하여 지식 그래프에 자동 추가하는 것이 가능해지고 있습니다. 이로 인해 온톨로지 구축의 Man Hour(인건비)가 大幅 감소할 것으로 기대됩니다.

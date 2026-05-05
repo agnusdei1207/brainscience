@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 망분리(Network Separation) 감리는 외부망(인터넷)과 내부 업무망을 완전히 분리하고, 연계가 불가피한 구간에서 망연계 솔루션(Network Bridging Solution)이 자료 전송의 보안성을 담보하는지 검증한다.
+> **핵심**: 망분리(Network Separation) 감리는 외부망(인터넷)과 내부 업무망을 완전히 분리하고, 연계가 불가피한 구간에서 망연계 솔루션(Network Bridging Solution)이 자료 전송의 보안성을 담보하는지 검증한다.
 > 2. **가치**: 망분리는 인터넷을 통한 APT (Advanced Persistent Threat, 지능형 지속 위협) 공격이 내부 업무망·DB에 직접 도달하는 경로를 물리적·논리적으로 차단하는 핵심 방어선이다.
 > 3. **판단 포인트**: 물리적 망분리 vs. 논리적 망분리 선택의 적정성, 망연계 구간 단방향 전송 여부, 자료 전송 로그의 완전성과 이상 탐지 연계가 핵심 점검 항목이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 망분리 의무화 배경
 
@@ -34,7 +35,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 망분리 보안 아키텍처
 
@@ -101,7 +102,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 물리적 vs. 논리적 망분리 비교
 
@@ -126,7 +127,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 망분리 보안 감리 체크리스트
 
@@ -167,7 +168,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 기대효과
 

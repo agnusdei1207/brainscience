@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: MVC (Model-View-Controller, 모델-뷰-컨트롤러)는 단일 패턴이 아니라 옵저버(Observer), 전략(Strategy), 컴포지트(Composite) 등 다수 GoF (Gang of Four) 패턴의 융합체(Composite Pattern)다.
+> **핵심**: MVC (Model-View-Controller, 모델-뷰-컨트롤러)는 단일 패턴이 아니라 옵저버(Observer), 전략(Strategy), 컴포지트(Composite) 등 다수 GoF (Gang of Four) 패턴의 융합체(Composite Pattern)다.
 > 2. **가치**: 관심사 분리(SoC, Separation of Concerns)를 통해 UI, 비즈니스 로직, 흐름 제어를 독립적으로 변경 가능하게 하여 유지보수성과 테스트 용이성을 높인다.
 > 3. **판단 포인트**: MVC 변형(MVP, MVVM 등) 선택 시 "Model과 View 사이 결합 방향"과 "테스트 환경"을 기준으로 판단하라.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### GUI 애플리케이션의 역사적 문제
 
@@ -38,7 +39,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### MVC 흐름도와 내장된 GoF 패턴
 
@@ -88,7 +89,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### MVC 변형 패턴 비교
 
@@ -111,7 +112,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Spring MVC 구조 매핑
 
@@ -156,7 +157,7 @@ HTTP 요청
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 MVC 및 변형 패턴 적용의 기대효과:
 

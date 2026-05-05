@@ -5,15 +5,17 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 소켓 (Socket)은 네트워크 상에서 프로세스 간 통신을 가능하게 하는 양방향 통신 종단점 (Endpoint)으로, IP (Internet Protocol) 주소와 포트 (Port) 번호의 조합으로 식별되는 소프트웨어적 창구다.
+> **핵심**: 소켓 (Socket)은 네트워크 상에서 프로세스 간 통신을 가능하게 하는 양방향 통신 종단점 (Endpoint)으로, IP (Internet Protocol) 주소와 포트 (Port) 번호의 조합으로 식별되는 소프트웨어적 창구다.
 > 2. **가치**: 파일 디스크립터 (File Descriptor) 기반의 단일 추상화 계층을 통해 TCP (Transmission Control Protocol) 스트림과 UDP (User Datagram Protocol) 데이터그램이라는 상이한 통신 의미론 (Semantics)을 동일한 `read()`/`write()` 인터페이스로 통합하여, 네트워크 프로그래밍의 복잡도를 극적으로 낮춘다.
 > 3. **융합**: 로컬 IPC (Inter-Process Communication)로서의 UNIX Domain Socket에서부터 글로벌 네트워크 통신까지 범용적으로 사용되며, RPC (Remote Procedure Call), 분산 데이터베이스, 마이크로서비스 아키텍처 등 거의 모든 분산 시스템의 근간을 이루는 가장 일반적인 통신 메커니즘이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 소켓 (Socket)은 1983년 BSD (Berkeley Software Distribution) UNIX에서 처음 도입된 네트워크 통신 인터페이스로, 두 프로세스가 네트워크를 통해 데이터를 주고받을 수 있게 해주는 표준화된 API (Application Programming Interface)다. 각 소켓은 (IP 주소, 포트 번호)의 쌍으로 유일하게 식별된다.
 
@@ -72,7 +74,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -141,7 +143,7 @@ TCP (Transmission Control Protocol) 소켓 기반의 클라이언트-서버 통�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 네트워크 소켓 (TCP/UDP) vs 로컬 소켓 (UNIX Domain Socket)
 
@@ -203,7 +205,7 @@ TCP (Transmission Control Protocol) 소켓 기반의 클라이언트-서버 통�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -260,7 +262,7 @@ TCP (Transmission Control Protocol) 소켓 기반의 클라이언트-서버 통�
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

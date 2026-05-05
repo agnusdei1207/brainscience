@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: ZKP(Zero-Knowledge Proof, 영지식 증명)는 증명자(Prover)가 검증자(Verifier)에게 특정 사실의 진실을 비밀 정보(Witness) 노출 없이 수학적으로 증명하는 암호학적 프로토콜이다.
+> **핵심**: ZKP(Zero-Knowledge Proof, 영지식 증명)는 증명자(Prover)가 검증자(Verifier)에게 특정 사실의 진실을 비밀 정보(Witness) 노출 없이 수학적으로 증명하는 암호학적 프로토콜이다.
 > 2. **가치**: 프라이버시를 유지하면서 신뢰를 증명하여 블록체인 확장성(zk-Rollup), 개인정보 보호 신원 증명, 규정 준수 검증에 핵심 기술이 된다.
 > 3. **판단 포인트**: 비대화형 ZKP인 zk-SNARK(Succinct Non-interactive ARgument of Knowledge)와 zk-STARK의 성능·신뢰 설정(Trusted Setup) 차이가 실무 선택의 핵심 기준이다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 Goldwasser·Micali·Rackoff가 1985년 제안한 ZKP는 완전성(Completeness)·건전성(Soundness)·영지식성(Zero-Knowledge) 세 특성을 만족해야 한다. 대화형(Interactive) ZKP는 여러 라운드 교환이 필요하여 블록체인에 적합하지 않으므로, 비대화형(Non-Interactive) zk-SNARK/zk-STARK가 주로 활용된다.
 
@@ -20,7 +21,7 @@ Goldwasser·Micali·Rackoff가 1985년 제안한 ZKP는 완전성(Completeness)�
 
 📢 **섹션 요약 비유**: 영지식 증명은 비밀 암호를 알고 있다는 증명 — 암호 자체는 말하지 않고도 "나는 암호를 알아" 를 수학으로 증명한다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ZKP 구성:
@@ -49,13 +50,13 @@ zk-SNARK vs zk-STARK:
 
 📢 **섹션 요약 비유**: zk-SNARK는 작고 빠른 마법 도장 — 진짜라는 것을 간단한 도장(작은 증명)으로 즉시 확인. zk-STARK는 더 투명하고 양자 컴퓨터에도 안전한 큰 도장.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 zk-Rollup: ZKP를 블록체인 Layer 2 확장성에 활용 — 수천 개 트랜잭션을 오프체인에서 처리하고 ZKP 하나로 일괄 검증. Ethereum의 스케일링 핵심 기술.
 
 📢 **섹션 요약 비유**: zk-Rollup은 단체 사진 한 장 — 1,000명의 출석을 확인하는 대신 단체 사진(ZKP) 하나로 모두가 거기 있었음을 증명한다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **의사결정 포인트**:
 - Layer 2 확장성: zk-Rollup (zkSync, StarkNet, Polygon zkEVM)
@@ -65,7 +66,7 @@ zk-Rollup: ZKP를 블록체인 Layer 2 확장성에 활용 — 수천 개 트랜
 
 📢 **섹션 요약 비유**: ZKP는 프라이버시의 방탄 조끼 — 공격(정보 요구)을 막으면서도 필요한 것(증명)은 전달한다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ZKP는 프라이버시·신뢰·확장성을 동시에 실현하는 암호학의 혁명적 기술로, 블록체인 Layer 2·개인정보 보호 신원 증명·규정 준수 검증에서 빠르게 채택되고 있다. 높은 계산 비용(Prover Time)과 회로 설계 복잡도가 현재 한계이며, 하드웨어 가속(ZK ASIC, GPU 최적화)으로 점진적 해소 중이다.
 

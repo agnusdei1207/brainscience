@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Directory Traversal (경로 역추적, Path Traversal)은 `../` 시퀀스를 이용해 웹 애플리케이션의 루트 디렉터리 밖의 파일 시스템에 무단 접근하는 공격이다.
+> **핵심**: Directory Traversal (경로 역추적, Path Traversal)은 `../` 시퀀스를 이용해 웹 애플리케이션의 루트 디렉터리 밖의 파일 시스템에 무단 접근하는 공격이다.
 > 2. **가치**: 설정 파일(`/etc/passwd`, `web.xml`), 소스 코드, 자격 증명 파일을 직접 읽어낼 수 있어 정보 유출과 추가 공격의 발판이 된다.
 > 3. **판단 포인트**: 사용자 입력을 파일 경로에 직접 포함할 때 반드시 정규화(Canonicalization) 후 허용 경로 내 포함 여부를 검증해야 하며, 절대 경로 참조 방식으로 전환하는 것이 근본 해결책이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Directory Traversal은 웹 서버가 사용자가 요청한 파일 이름을 그대로 파일 시스템 경로에 연결할 때 발생한다. 공격자는 `../../etc/passwd` 같은 입력을 통해 의도된 디렉터리를 벗어나 서버의 민감한 파일에 접근한다. Windows 환경에서는 `..\..\windows\system32\config\SAM` 처럼 백슬래시를 사용하기도 한다.
 
@@ -30,7 +32,7 @@ File f = new File("/var/app/files/" + filename);
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 인코딩 기법 | 예시 | 설명 |
 |:---|:---|:---|
@@ -58,7 +60,7 @@ File f = new File("/var/app/files/" + filename);
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Directory Traversal은 LFI (Local File Inclusion)와 구분된다.
 
@@ -73,7 +75,7 @@ Directory Traversal은 LFI (Local File Inclusion)와 구분된다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **대응 전략**:
 1. **경로 정규화 검증**: `File.getCanonicalPath()`로 정규화 후 허용 기본 경로로 시작하는지 확인
@@ -86,7 +88,7 @@ Directory Traversal은 LFI (Local File Inclusion)와 구분된다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 경로 정규화와 화이트리스트 검증을 결합하면 Directory Traversal 공격을 효과적으로 차단할 수 있다. 특히 Java의 `getCanonicalPath()`, Python의 `os.path.realpath()` 등 언어별 정규화 API를 활용하면 인코딩 우회 기법도 함께 방어된다.
 

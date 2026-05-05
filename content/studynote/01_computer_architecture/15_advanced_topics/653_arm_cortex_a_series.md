@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 653. ARM Cortex-A 시리즈 (ARM Cortex-A Series)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ARM Cortex-A 시리즈는 스마트폰, 태블릿, 서버 등 복잡한 운영체제(Linux, Android, Windows)를 구동하기 위해 설계된 **고성능 애플리케이션 프로세서(Application Processor) 아키텍처**다.
+> **핵심**: ARM Cortex-A 시리즈는 스마트폰, 태블릿, 서버 등 복잡한 운영체제(Linux, Android, Windows)를 구동하기 위해 설계된 **고성능 애플리케이션 프로세서(Application Processor) 아키텍처**다.
 > 2. **가치**: 고성능 연산을 위한 파이프라인 최적화, 고급 가상화(Virtualization) 지원, 하드웨어 보안 기술인 TrustZone을 통해 "전력 효율과 성능"이라는 상충하는 가치를 동시에 만족시킨다.
 > 3. **융합**: 고성능 코어와 저전력 코어를 조합하는 big.LITTLE(또는 DynamIQ) 기술을 통해 모바일 기기의 배터리 수명을 극대화하면서도 필요할 때 폭발적인 연산력을 제공하는 현대 모바일 컴퓨팅의 표준이 되었다.
 
+> 📝 모범 답안
+
+# 653. ARM Cortex-A 시리즈 (ARM Cortex-A Series)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 전력 효율적인 고성능의 표준
 - **현상**: 모바일 기기는 PC 수준의 성능을 내면서도 배터리 소모는 최소화해야 한다.
@@ -50,7 +52,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 가상 메모리 관리 (MMU, Memory Management Unit)
 - Linux나 Android 같은 OS를 돌리려면 각 프로세스가 독립된 메모리 공간을 가져야 한다. 
@@ -73,7 +75,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Cortex-A vs Cortex-R vs Cortex-M
 
@@ -93,7 +95,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -115,7 +117,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **전성비(성능 대비 전력)**: 동일 성능의 x86 대비 최대 2~3배 우수.

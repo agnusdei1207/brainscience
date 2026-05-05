@@ -5,19 +5,21 @@ date = "2026-04-02"
 [extra]
 categories = "studynote-network"
 +++
-
-# HTTP 상태 비저장 (Stateless) 및 연결형/비연결형 특징
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 인터넷의 근간을 이루는 HTTP 프로토콜의 아키텍처 철학인 무상태성(Stateless)과 비연결성(Connectionless), 그리고 하위 계층인 TCP 연결형(Connection-oriented) 구조와의 상호작용 메커니즘을 심층 분석합니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# HTTP 상태 비저장 (Stateless) 및 연결형/비연결형 특징
+
 > 1. **본질**: HTTP는 전송 계층의 연결 지향적(Connection-oriented)인 TCP를 활용해 신뢰성을 확보하지만, 정작 자신(L7)은 상태를 기억하지 않는 무상태성(Stateless)과 응답 후 통신을 끊는 비연결성(Connectionless)을 지향하는 역설적 구조를 갖는다.
 > 2. **가치**: 이러한 극단적인 무상태 및 비연결 아키텍처는 서버의 자원(메모리, 소켓) 점유를 최소화하여 수백만 명의 불특정 다수 클라이언트 요청을 처리할 수 있는 전 지구적 수평 확장성(Scale-out)의 핵심 원동력이 되었다.
 > 3. **융합**: 현대 웹 생태계에서는 순수 HTTP의 한계를 극복하기 위해 쿠키(Cookie)와 세션(Session), JWT(JSON Web Token)로 논리적 상태(Stateful)를 부여하고, Keep-Alive와 HTTP/2의 멀티플렉싱으로 비연결성을 우회하여 지속적이고 실시간성 높은 인프라로 진화하였다.
 
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 1. HTTP 아키텍처 철학의 탄생
 초기 웹(World Wide Web)은 전 세계의 수많은 텍스트 문서(HTML)를 하이퍼링크로 연결하여 빠르게 읽고 넘기는 용도로 설계되었습니다. 1:1로 지속적인 세션을 맺고 통신하는 텔넷(Telnet)이나 FTP와 달리, 웹 서버는 언제 어디서 쏟아질지 모르는 불특정 다수의 대규모 요청을 처리해야 했습니다. 이를 위해 HTTP(HyperText Transfer Protocol)는 **상태를 저장하지 않고(Stateless)**, 한 번 응답하면 즉시 **연결을 끊어버리는(Connectionless)** 극단적으로 가벼운 패러다임을 채택했습니다.
@@ -29,7 +31,7 @@ categories = "studynote-network"
 
 ---
 
-## Ⅱ. 핵심 아키텍처 및 원리 (Architecture & Mechanism)
+## 2. 구성요소
 
 ### 1. 전송 계층의 연결형 (Connection-oriented) 보장
 HTTP가 상태를 기억하지 않고(Stateless), 금방 연결을 끊어버린다(Connectionless)고 해서 데이터 전송 자체가 부실한 것은 아닙니다. 텍스트 문서의 무결성을 보장하기 위해 HTTP는 전송 계층(L4) 프로토콜로 신뢰성 있는 **TCP(Transmission Control Protocol)**를 선택했습니다.
@@ -94,7 +96,7 @@ Connectionless는 **"서버가 클라이언트의 요청에 대해 응답을 마
 
 ---
 
-## Ⅲ. 비교 및 기술적 트레이드오프 (Comparison & Trade-offs)
+## 3. 구조 및 동작 원리
 
 ### 1. 상태 유지 모델 간 비교 (Stateful vs Stateless)
 
@@ -121,7 +123,7 @@ Connectionless는 **"서버가 클라이언트의 요청에 대해 응답을 마
 
 ---
 
-## Ⅳ. 실무 판단 기준 (Decision Making)
+## 4. 비교 및 트레이드오프
 
 | 고려 사항 | 세부 내용 | 주요 아키텍처 의사결정 |
 |:---|:---|:---|
@@ -133,7 +135,7 @@ Connectionless는 **"서버가 클라이언트의 요청에 대해 응답을 마
 
 ---
 
-## Ⅴ. 미래 전망 및 발전 방향 (Future Trend)
+## 5. 실무 적용 및 최적화 기법
 
 1. **상태 비저장의 극대화 (Cloud Native & Serverless)**
    HTTP의 Stateless 철학은 현대 클라우드의 FaaS (Function as a Service, AWS Lambda 등) 아키텍처 철학으로 계승되었습니다. 서버리스 함수들은 호출될 때만 기동되어 연산을 처리하고 바로 소멸하는 완벽한 Stateless 컴퓨팅을 구현하고 있습니다.

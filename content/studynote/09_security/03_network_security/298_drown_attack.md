@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: DROWN(Decrypting RSA with Obsolete and Weakened eNcryption)은 폐기된 SSLv2(Secure Sockets Layer version 2) 서버를 RSA(Rivest–Shamir–Adleman) 복호화 오라클(Decryption Oracle)로 악용하여, 동일 RSA 키를 공유하는 최신 TLS 세션을 복호화하는 크로스 프로토콜 공격이다.
+> **핵심**: DROWN(Decrypting RSA with Obsolete and Weakened eNcryption)은 폐기된 SSLv2(Secure Sockets Layer version 2) 서버를 RSA(Rivest–Shamir–Adleman) 복호화 오라클(Decryption Oracle)로 악용하여, 동일 RSA 키를 공유하는 최신 TLS 세션을 복호화하는 크로스 프로토콜 공격이다.
 > 2. **가치**: 서버 자체가 SSLv2를 지원하지 않더라도, 같은 RSA 개인 키를 공유하는 다른 서버(이메일 서버, 보조 서버 등)가 SSLv2를 활성화하고 있으면 취약하다 — 이는 "내 서버만 패치했다"는 안일함의 위험을 보여준다.
 > 3. **판단 포인트**: 방어의 핵심은 SSLv2의 완전 비활성화와 RSA 키 공유 최소화다. 특히 PFS(Perfect Forward Secrecy)를 지원하지 않는 RSA 키 교환 방식은 DROWN 취약성을 증폭시킨다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 2016년 3월 Nimrod Aviram, Sebastian Schinzel 등 국제 공동 연구팀이 공개한 DROWN은 SSLv2가 이미 폐기된 지 오래됐음에도, 수많은 서버가 여전히 활성화 상태로 유지하고 있음을 드러냈다. 발표 당시 전체 HTTPS 서버의 약 33%, 상위 100만 개 웹사이트 중 약 25%가 취약한 것으로 측정됐다.
 
@@ -25,7 +27,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 크로스 프로토콜 공격 흐름
 
@@ -76,7 +78,7 @@ HTTPS 서버 (SSLv2 비활성화)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### SSLv2 기반 취약점 비교
 
@@ -94,7 +96,7 @@ HTTPS 서버 (SSLv2 비활성화)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **방어 체크리스트**
 
@@ -116,7 +118,7 @@ HTTPS 서버 (SSLv2 비활성화)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 DROWN이 남긴 핵심 교훈은 **레거시 프로토콜의 잔존 위험**이다. SSLv2는 2011년 RFC 6176으로 이미 공식 폐기됐지만, 여전히 수백만 대 서버에서 활성화 상태였다. 취약한 기능을 "사용하지 않는다"는 것과 "비활성화한다"는 것은 전혀 다른 보안 수준이다.
 

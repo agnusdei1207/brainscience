@@ -5,17 +5,19 @@ weight = 194
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-# 컨테이너 가상화 (Container Virtualization) - OS 커널 공유 초경량 격리
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 컨테이너 가상화(Container Virtualization)는 가상 머신(VM) 하나를 띄울 때마다 수 기가바이트의 운영체제(Guest OS)를 통째로 중복 설치해야 했던 비효율을 혐오하며 탄생한 기술로, 밑바닥의 **호스트 운영체제(Host OS) 커널(Kernel) 단 1개만을 완벽하게 공유하면서 앱들만 종이 파티션으로 쪼개는 초경량 프로세스 격리 기술**이다.
+> **핵심**: 컨테이너 가상화(Container Virtualization)는 가상 머신(VM) 하나를 띄울 때마다 수 기가바이트의 운영체제(Guest OS)를 통째로 중복 설치해야 했던 비효율을 혐오하며 탄생한 기술로, 밑바닥의 **호스트 운영체제(Host OS) 커널(Kernel) 단 1개만을 완벽하게 공유하면서 앱들만 종이 파티션으로 쪼개는 초경량 프로세스 격리 기술**이다.
 > 2. **가치**: 운영체제를 켤 필요가 없으므로 부팅 시간이 '수 분(Minutes)'에서 '0.1초(Milliseconds)'로 단축되었으며, 하나의 물리 서버에 10개의 VM을 띄우던 한계를 부수고 **1,000개의 컨테이너를 쑤셔 넣을 수 있는 극단적인 밀도(Density)와 가성비의 혁명**을 이뤄냈다.
 > 3. **융합**: 컨테이너는 개발자의 노트북에서 돌던 코드가 아마존 클라우드에 가든 구글에 가든 "내 컴퓨터에선 되는데 서버에선 안 되네?"라는 영원한 핑계를 멸망시켰다. 이 완벽한 이식성(Portability) 덕분에 거대한 시스템을 잘게 쪼개는 **마이크로서비스 아키텍처(MSA)와 데브옵스(DevOps)의 CI/CD 융합**이 비로소 기술적 완성형을 띠게 되었다.
 
+> 📝 모범 답안
+
+# 컨테이너 가상화 (Container Virtualization) - OS 커널 공유 초경량 격리
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 컨테이너(Container) 가상화는 하이퍼바이저(Hypervisor)를 이용해 하드웨어 자체를 가상화하는 방식(VM)과 달리, 리눅스(Linux) 운영체제 커널의 격리 기능(`chroot`, `namespace`, `cgroup`)을 활용하여 각 애플리케이션이 마치 자신만의 독립된 운영체제를 가진 것처럼 착각하게 만드는 **운영체제 레벨 가상화 (OS-level Virtualization)**다.
 
@@ -66,7 +68,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 얇은 종이 파티션을 강철벽으로 속이는 2대 마법 (Namespaces & Cgroups)
 
@@ -89,7 +91,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 최후의 튜닝: 가상 머신(VM) vs 컨테이너(Container) 최종 매트릭스
 
@@ -113,7 +115,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 설계 안티패턴
 
@@ -167,7 +169,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

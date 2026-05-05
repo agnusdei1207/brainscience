@@ -5,15 +5,17 @@ date = "2026-03-19"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 고정 길이 명령어(Fixed-Length Instruction)는 모든 명령어의 비트 수(보통 32비트)를 **동일한 크기로 통일**하여 메모리에 배치하는 설계 방식이다.
+> **핵심**: 고정 길이 명령어(Fixed-Length Instruction)는 모든 명령어의 비트 수(보통 32비트)를 **동일한 크기로 통일**하여 메모리에 배치하는 설계 방식이다.
 > 2. **가치**: 명령어의 시작과 끝이 명확하여 **해독(Decoding) 속도가 극도로 빠르며**, 파이프라인의 각 단계가 일정한 박자로 맞물려 돌아가므로 명령어 수준의 병렬성(ILP)을 극대화한다.
 > 3. **융합**: 현대의 **RISC(Reduced Instruction Set Computer)** 아키텍처의 핵심 기반이며, 단순한 하드웨어 구조와 복잡한 컴파일러 최적화 기술이 융합되어 GHz 단위의 초고속 연산을 실현한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 고정 길이 명령어(Fixed-length Instruction)는 모든 명령어의 비트 수(보통 32비트)를 동일한 크기로 통일하여 메모리에 배치하는 설계 방식이다. 명령어의 경계가 명확하여 하드웨어가 연산 코드와 피연산자의 위치를 즉각적으로 파악할 수 있게 한다.
 
@@ -44,7 +46,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (고정 길이 형식을 지탱하는 3대 설계 축)
 
@@ -83,7 +85,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 심층 기술 비교: 고정 길이 (RISC) vs 가변 길이 (CISC)
 
@@ -122,7 +124,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -171,7 +173,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

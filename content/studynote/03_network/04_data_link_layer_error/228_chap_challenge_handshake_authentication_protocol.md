@@ -2,15 +2,17 @@
 title = "228. CHAP (Challenge Handshake Authentication Protocol) - 해시 기반 인증 (3-way)"
 weight = 228
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CHAP (Challenge Handshake Authentication Protocol)는 PPP 인증 과정에서 비밀번호를 평문으로 전송하지 않고(No Cleartext), **질의-응답(Challenge-Response) 방식과 일방향 해시(Hash) 함수**를 결합하여 보안을 강화한 3-Way 인증 프로토콜이다.
+> **핵심**: CHAP (Challenge Handshake Authentication Protocol)는 PPP 인증 과정에서 비밀번호를 평문으로 전송하지 않고(No Cleartext), **질의-응답(Challenge-Response) 방식과 일방향 해시(Hash) 함수**를 결합하여 보안을 강화한 3-Way 인증 프로토콜이다.
 > 2. **보안성**: 서버가 무작위 난수(Challenge)를 보내면, 클라이언트는 이 난수와 자신의 비밀번호를 섞어 해시값(Response)을 만든 뒤 서버에 전송한다. 해시값은 복호화가 불가능하므로 스니핑이나 재생 공격(Replay Attack)을 원천 차단한다.
 > 3. **지속성**: PAP와 달리 연결 초기뿐만 아니라 연결 유지 중에도 서버가 불시에(랜덤하게) 재인증을 요구(Repeated Challenge)하여 통신 도중 세션을 가로채는 하이재킹(Hijacking)을 방어한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: CHAP (Challenge Handshake Authentication Protocol, RFC 1994)는 PAP의 치명적인 평문 전송 취약점을 극복하기 위해 설계된 보안 인증 프로토콜이다. 클라이언트와 서버가 사전에 공유된 비밀번호(Shared Secret)를 가지고 있다는 전제하에, 비밀번호 자체를 넘기지 않고 "나는 비밀번호를 알고 있다"는 사실만 해시 연산을 통해 증명(Zero-Knowledge Proof의 일종)한다.
 
@@ -22,7 +24,7 @@ weight = 228
 
 ---
 
-## Ⅱ. CHAP의 동작 원리와 3-Way 핸드셰이크 (Deep Dive)
+## 2. 구성요소
 
 ### 1. 3-Way 핸드셰이크 메커니즘
 CHAP는 인증 과정을 서버(Authenticator)가 주도(Server-driven)한다. 

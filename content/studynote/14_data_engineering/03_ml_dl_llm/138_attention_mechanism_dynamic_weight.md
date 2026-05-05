@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Attention은 **입력 시퀀스의 모든 위치에 대해 현재 출력과의 관련도(유사도)를 계산하여 동적 가중치를 부여**하는 메커니즘이며, Transformer의 핵심 구성 요소(Self-Attention)이다.
+> **핵심**: Attention은 **입력 시퀀스의 모든 위치에 대해 현재 출력과의 관련도(유사도)를 계산하여 동적 가중치를 부여**하는 메커니즘이며, Transformer의 핵심 구성 요소(Self-Attention)이다.
 > 2. **가치**: RNN은 긴 문장에서 초반 정보를 잊지만(Vanishing), Attention은 **거리에 무관하게 관련 위치에 직접 접근**하여 장기 의존성 문제를 근본적으로 해결한다.
 > 3. **판단 포인트**: Scaled Dot-Product Attention(Q·K·V)이 표준이며, Multi-Head Attention으로 다양한 관점의 관련도를 동시에 학습한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Attention(Q, K, V) = softmax(QK^T / √d_k) · V

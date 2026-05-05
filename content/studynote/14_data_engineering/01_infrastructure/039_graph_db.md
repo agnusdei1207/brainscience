@@ -4,11 +4,14 @@ date = "2026-03-04"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 그래프 DB는 데이터를 노드(Node)·엣지(Edge)·속성(Property)으로 표현하여 관계(Relationship)가 일급 시민(First-Class Citizen)인 데이터 모델로, SNS·추천 시스템·사기 탐지처럼 연결성이 핵심인 문제에서 관계형 DB의 다단계 JOIN을 그래프 탐색으로 대체하여 수십~수백 배 빠른 성능을 제공한다.
 > 2. 프로퍼티 그래프(Property Graph, Neo4j)와 RDF 그래프(Triple Store, Ontology) 두 가지 모델이 주류 — 프로퍼티 그래프는 애플리케이션 개발에, RDF/SPARQL은 시맨틱 웹과 지식 그래프에 적합하다.
 > 3. Cypher 쿼리 언어의 핵심 패턴: `(a)-[r]->(b)` — 노드와 관계를 ASCII 아트처럼 직관적으로 표현하여 "6단계 친분 찾기" 같은 복잡한 그래프 탐색을 간단한 쿼리로 작성할 수 있다.
+
+> 📝 모범 답안
 
 ---
 

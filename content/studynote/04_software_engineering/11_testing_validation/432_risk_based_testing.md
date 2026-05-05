@@ -6,15 +6,17 @@ description = "비즈니스와 기술 위험이 큰 영역에 테스트 자원�
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "Risk-based Testing", "Risk", "Prioritization"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 리스크 기반 테스팅(Risk-based Testing)은 위험이 큰 곳에 테스트를 먼저 집중하는 전략이다.
+> **핵심**: 리스크 기반 테스팅(Risk-based Testing)은 위험이 큰 곳에 테스트를 먼저 집중하는 전략이다.
 > 2. **가치**: 한정된 시간과 자원으로도 가장 치명적인 결함을 우선 줄일 수 있다.
 > 3. **판단 포인트**: 모든 것을 똑같이 테스트하기보다, 위험도와 영향도를 기준으로 우선순위를 정해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 리스크 기반 테스팅은 결함이 생겼을 때 피해가 큰 영역부터 검증하는 방식이다. 중요한 것은 테스트의 양이 아니라, 어디에 힘을 쏟을지 결정하는 기준이다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "Risk-based Testing", "Risk", "Priori
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 위험도는 보통 발생 가능성(Probability)과 영향도(Impact)를 함께 본다. 둘이 크면 우선순위가 높아진다.
 
@@ -44,7 +46,7 @@ tags = ["Software Engineering", "Testing", "Risk-based Testing", "Risk", "Priori
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 리스크 기반 테스팅은 평균적으로 다 테스트하는 방식보다 현실적이다. 특히 사업 핵심 경로, 결제, 인증, 데이터 손실 구간에서 효과적이다.
 
@@ -60,7 +62,7 @@ tags = ["Software Engineering", "Testing", "Risk-based Testing", "Risk", "Priori
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 결제, 로그인, 개인정보, 정산처럼 장애 비용이 큰 영역을 먼저 잡는다. 리스크 매트릭스로 분류하면 우선순위를 설명하기 쉬워진다.
 
@@ -73,7 +75,7 @@ tags = ["Software Engineering", "Testing", "Risk-based Testing", "Risk", "Priori
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 리스크 기반 테스팅은 제한된 자원으로도 큰 사고를 줄인다. 완전무결을 보장하진 않지만, 현실적인 품질 관리에 강하다.
 

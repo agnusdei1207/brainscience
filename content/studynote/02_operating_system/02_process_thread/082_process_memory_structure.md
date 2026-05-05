@@ -5,15 +5,19 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## Core Insights (핵심 인사이트)
-> 1. **본질**: 프로세스 메모리 구조는 실행 코드인 Text, 초기화된 전역 데이터인 Data, 비초기화 데이터인 BSS, 동적 할당 공간인 Heap, 그리고 함수 컨텍스트를 위한 Stack 세그먼트로 구성된 논리적 주소 공간이다.
+> **핵심**: 프로세스 메모리 구조는 실행 코드인 Text, 초기화된 전역 데이터인 Data, 비초기화 데이터인 BSS, 동적 할당 공간인 Heap, 그리고 함수 컨텍스트를 위한 Stack 세그먼트로 구성된 논리적 주소 공간이다.
 > 2. **가치**: 정적 영역(Text, Data, BSS)과 동적 영역(Heap, Stack)의 분리 관리를 통해 메모리 보호, 재진입성 (Re-entrancy) 보장, 그리고 프로세스 간 실행 코드 공유를 통한 자원 효율성을 달성한다.
 > 3. **융합**: 가상 메모리 (Virtual Memory) 시스템은 이러한 논리 구조를 물리 페이지로 매핑하며, 주소 공간 레이아웃 랜덤화 (ASLR, Address Space Layout Randomization)와 같은 보안 기법의 핵심 적용 대상이 된다.
 
+> 📝 모범 답안
+
+## Core Insights (핵심 인사이트)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 프로세스 메모리 구조는 운영체제가 프로세스를 실행하기 위해 할당하는 가상 주소 공간 (Virtual Address Space)의 물리적/논리적 분할 체계이다. 이는 데이터의 성격(수정 가능 여부, 수명주기, 할당 방식)에 따라 Text, Data, BSS (Block Started by Symbol), Heap, Stack의 5가지 핵심 세그먼트로 나뉜다.
 
@@ -51,7 +55,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 프로세스 메모리 구성 요소 (세부 분석)
 
@@ -117,7 +121,7 @@ BSS (Block Started by Symbol) 영역은 초기화되지 않은 전역 변수나 
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 메모리 영역별 특성 비교
 
@@ -138,7 +142,7 @@ BSS (Block Started by Symbol) 영역은 초기화되지 않은 전역 변수나 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 메모리 누수와 세그먼테이션 폴트
 
@@ -154,7 +158,7 @@ BSS (Block Started by Symbol) 영역은 초기화되지 않은 전역 변수나 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 구조적 메모리 관리의 기대효과
 

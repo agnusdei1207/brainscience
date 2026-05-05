@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: DeepFM 은 FM (Factorization Machine, 인수분해 머신) 의 2차 피처 상호작용 (Feature Interaction) 과 DNN (Deep Neural Network) 의 고차 상호작용을 공유 임베딩 (Shared Embedding) 으로 동시에 학습해 CTR (Click-Through Rate, 클릭률) 예측 정확도를 높인다.
+> **핵심**: DeepFM 은 FM (Factorization Machine, 인수분해 머신) 의 2차 피처 상호작용 (Feature Interaction) 과 DNN (Deep Neural Network) 의 고차 상호작용을 공유 임베딩 (Shared Embedding) 으로 동시에 학습해 CTR (Click-Through Rate, 클릭률) 예측 정확도를 높인다.
 > 2. **가치**: Wide & Deep 과 달리 FM 컴포넌트가 수동 피처 엔지니어링 없이 저차 상호작용을 자동 학습하므로, 도메인 전문 지식 없이도 고품질 추천이 가능하다.
 > 3. **판단 포인트**: FM 은 O(kd) 복잡도로 2차 상호작용을 학습하고, DNN 은 3차 이상 고차 상호작용을 암묵적으로 학습한다는 상보적 역할을 반드시 서술해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### CTR 예측의 핵심 과제
 
@@ -30,7 +32,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### DeepFM 전체 구조
 
@@ -82,7 +84,7 @@ FM 의 2차 상호작용 항:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 딥러닝 추천 모델 계보
 
@@ -98,7 +100,7 @@ FM 의 2차 상호작용 항:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 산업 적용 사례
 
@@ -117,7 +119,7 @@ FM 의 2차 상호작용 항:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 - **자동화**: 피처 엔지니어링 없이 저차·고차 상호작용 동시 학습
 - **성능**: Criteo 벤치마크에서 Wide & Deep, PNN 대비 AUC 향상

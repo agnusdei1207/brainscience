@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 역전파 (Backpropagation) 는 연쇄 법칙 (Chain Rule) 을 계산 그래프 (Computational Graph) 에 적용해, 손실 함수의 각 파라미터에 대한 편미분 ∂L/∂w 를 출력층에서 입력층 방향으로 효율적으로 계산하는 알고리즘이다.
+> **핵심**: 역전파 (Backpropagation) 는 연쇄 법칙 (Chain Rule) 을 계산 그래프 (Computational Graph) 에 적용해, 손실 함수의 각 파라미터에 대한 편미분 ∂L/∂w 를 출력층에서 입력층 방향으로 효율적으로 계산하는 알고리즘이다.
 > 2. **가치**: 역전파 없이는 파라미터 수가 수십억 개인 LLM (Large Language Model) 의 학습이 불가능하며, 자동 미분 (Autograd) 엔진 (PyTorch, TensorFlow) 은 모두 역전파를 자동화한 것이다.
 > 3. **판단 포인트**: 수치 미분 (Numerical Gradient) 은 O(d) 번 순전파가 필요해 O(d) 비용이지만, 역전파는 단 한 번의 역방향 패스로 모든 편미분을 O(1) 비율로 계산한다는 계산 복잡도 차이를 명시해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 역전파의 등장 배경
 
@@ -31,7 +33,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 연쇄 법칙 (Chain Rule) 기본
 
@@ -113,7 +115,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Forward Mode vs Reverse Mode 자동 미분
 
@@ -128,7 +130,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### PyTorch Autograd 활용 예시
 
@@ -170,7 +172,7 @@ for i in range(w.shape[0]):
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 - **효율성**: 파라미터 수와 무관하게 단 한 번의 역방향 패스로 모든 기울기 계산
 - **자동화**: PyTorch Autograd, TensorFlow GradientTape 로 구현 자동화

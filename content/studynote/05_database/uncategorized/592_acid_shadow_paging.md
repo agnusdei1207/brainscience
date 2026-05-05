@@ -2,17 +2,19 @@
 title = "592. ACID 트랜잭션 섀도우 페이징 롤백 속도 최적 디스크 I/O 절감 데이터베이스 구조"
 weight = 592
 +++
+## 0. 핵심 인사이트
 
-# ACID 트랜잭션 섀도우 페이징 롤백 속도 최적 디스크 I/O 절감 데이터베이스 구조
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 섀도우 페이징 (Shadow Paging)은 트랜잭션 (Transaction)이 데이터를 변경할 때 원본 디스크 페이지를 직접 수정하는 대신 복사본(Shadow)을 만들어 수정하고, 커밋(Commit) 시점에 페이지 테이블(Page Table)의 포인터만 스위칭하여 데이터베이스의 원자성(Atomicity)과 내구성(Durability)을 동시에 보장하는 구조적 기법이다.
+> **핵심**: 섀도우 페이징 (Shadow Paging)은 트랜잭션 (Transaction)이 데이터를 변경할 때 원본 디스크 페이지를 직접 수정하는 대신 복사본(Shadow)을 만들어 수정하고, 커밋(Commit) 시점에 페이지 테이블(Page Table)의 포인터만 스위칭하여 데이터베이스의 원자성(Atomicity)과 내구성(Durability)을 동시에 보장하는 구조적 기법이다.
 > 2. **가치**: WAL (Write-Ahead Logging) 방식처럼 별도의 Undo Log나 Redo Log를 디스크에 기록할 필요가 없어 복구 및 롤백(Rollback) 과정이 사실상 0초(Zero-Time)에 가깝게 즉각적으로 이루어지며, 크래시 발생 시 로그 분석 없이 이전 상태를 완벽히 유지한다.
 > 3. **융합**: 복수 사용자의 동시성(Concurrency) 제어가 어렵고 데이터 파편화(Fragmentation)가 심해 범용 RDBMS (Relational Database Management System)보다는 SQLite와 같은 임베디드(Embedded) DB 환경이나, ZFS/Btrfs 같은 COW (Copy-On-Write) 기반 파일 시스템 아키텍처에 융합되어 최적의 성능을 발휘한다.
 
+> 📝 모범 답안
+
+# ACID 트랜잭션 섀도우 페이징 롤백 속도 최적 디스크 I/O 절감 데이터베이스 구조
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 섀도우 페이징 (Shadow Paging)은 데이터베이스 트랜잭션 관리에서 ACID (Atomicity, Consistency, Isolation, Durability) 속성을 구현하기 위한 로깅 대안 기술이다. 업데이트가 발생하면 현재 페이지를 덮어쓰지 않고 새로운 빈 디스크 블록에 데이터를 기록한 후, 트랜잭션이 성공적으로 완료(Commit)되는 찰나의 순간에 데이터베이스 헤더(디렉토리)가 가리키는 포인터를 구버전 페이지에서 신버전 페이지로 원자적으로 전환(Atomic Switch)하는 방식이다. 
 
@@ -66,7 +68,7 @@ weight = 592
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -155,7 +157,7 @@ weight = 592
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 섀도우 페이징 vs WAL (Write-Ahead Logging) & ARIES
 
@@ -200,7 +202,7 @@ weight = 592
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -252,7 +254,7 @@ weight = 592
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

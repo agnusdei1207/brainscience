@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 부채널 공격 (Side-channel Attack, Meltdown/Spectre) 마이크로아키텍처 취약점 대응 소프트웨어 패치(KPTI, Retpoline)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Meltdown과 Spectre는 소프트웨어의 버그가 아니라, 현대 CPU가 성능을 극대화하기 위해 도입한 **비순차적 실행(Out-of-Order Execution)**과 **분기 예측(Branch Prediction)**이라는 하드웨어 '마이크로아키텍처'의 근본적 취약점을 찌르는 최악의 부채널 공격(Side-channel Attack)이다.
+> **핵심**: Meltdown과 Spectre는 소프트웨어의 버그가 아니라, 현대 CPU가 성능을 극대화하기 위해 도입한 **비순차적 실행(Out-of-Order Execution)**과 **분기 예측(Branch Prediction)**이라는 하드웨어 '마이크로아키텍처'의 근본적 취약점을 찌르는 최악의 부채널 공격(Side-channel Attack)이다.
 > 2. **KPTI (Meltdown 방어)**: 멜트다운은 유저 모드에서 커널 메모리를 훔쳐보는 공격이다. 이를 막기 위해 리눅스 커널은 **KPTI (Kernel Page Table Isolation)** 패치를 도입하여, 유저 모드일 때는 커널 메모리 페이지 테이블을 아예 매핑에서 분리(격리)해 버림으로써 하드웨어가 커널 메모리를 캐시에 올리는 것 자체를 원천 차단했다.
 > 3. **Retpoline (Spectre 방어)**: 스펙터는 CPU의 분기 예측기를 속여 엉뚱한 코드를 미리 실행(추측 실행)하게 한 뒤 캐시에 흔적을 남기는 공격이다. 구글은 **Retpoline(Return Trampoline)**이라는 소프트웨어 컴파일러 기법을 고안하여, 간접 분기(Indirect Branch)를 무한 루프에 빠지는 '트램펄린'으로 우회시킴으로써 CPU의 추측 실행을 고의로 교란하고 방어했다.
 
+> 📝 모범 답안
+
+# 부채널 공격 (Side-channel Attack, Meltdown/Spectre) 마이크로아키텍처 취약점 대응 소프트웨어 패치(KPTI, Retpoline)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **부채널 공격 (Side-channel Attack)**: 암호 알고리즘 자체의 수학적 결함을 찾는 것이 아니라, 알고리즘이 물리적 하드웨어(CPU)에서 돌아갈 때 발생하는 전력 소모량, 연산 시간(Timing), 캐시 상태 등의 '물리적 흔적(Side-channel)'을 측정하여 비밀 정보를 유추해 내는 해킹 기법.
@@ -42,7 +44,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Meltdown과 KPTI (Kernel Page Table Isolation)
 
@@ -115,7 +117,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### Meltdown vs Spectre 상세 비교
 
@@ -136,7 +138,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -185,7 +187,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: XAI (eXplainable AI, 설명 가능한 AI) 는 딥러닝(Deep Learning) 같은 블랙박스(Black-box) 모델의 예측 결과를 사람이 이해할 수 있는 방식으로 설명하는 기술 체계로, LIME (Local Interpretable Model-agnostic Explanations) 과 SHAP (SHapley Additive exPlanations) 이 가장 널리 사용된다.
+> **핵심**: XAI (eXplainable AI, 설명 가능한 AI) 는 딥러닝(Deep Learning) 같은 블랙박스(Black-box) 모델의 예측 결과를 사람이 이해할 수 있는 방식으로 설명하는 기술 체계로, LIME (Local Interpretable Model-agnostic Explanations) 과 SHAP (SHapley Additive exPlanations) 이 가장 널리 사용된다.
 > 2. **가치**: 금융 대출 거절, 의료 진단, 형사 재판 등 고위험 의사결정에서 AI가 "왜"라고 설명할 수 있어야 법적 의무(EU GDPR Article 22, EU AI Act)를 충족하고 신뢰를 얻을 수 있다.
 > 3. **판단 포인트**: XAI는 완벽한 설명이 아니라 근사(Approximation) 설명임을 인식해야 한다. SHAP 값이 높다고 그 특성이 실제 인과관계를 갖는다는 의미는 아니며, 상관관계와 인과관계를 혼동하는 오해를 경계해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 신경망(Neural Network) 기반의 딥러닝 모델은 수억~수천억 개의 파라미터가 상호작용하며 예측을 만들어 낸다. 이 예측이 왜 나왔는지를 내부적으로 추적하는 것은 사실상 불가능하다. 이것이 "블랙박스 문제"다.
 
@@ -25,7 +27,7 @@ XAI는 규제 대응을 넘어 모델 디버깅과 품질 개선 도구로도 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 XAI 기법은 설명 범위에 따라 전역적(Global) 설명과 지역적(Local) 설명으로, 적용 방식에 따라 모델 비의존적(Model-agnostic)과 모델 의존적(Model-specific)으로 구분된다.
 
@@ -69,7 +71,7 @@ XAI 기법은 설명 범위에 따라 전역적(Global) 설명과 지역적(Loca
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | 전역 설명 (Global) | 지역 설명 (Local) |
 |:---|:---|:---|
@@ -84,7 +86,7 @@ XAI 기법은 설명 범위에 따라 전역적(Global) 설명과 지역적(Loca
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **규제 산업별 XAI 적용 전략**
 
@@ -102,7 +104,7 @@ XAI 기법은 설명 범위에 따라 전역적(Global) 설명과 지역적(Loca
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 XAI를 도입한 조직은 모델 편향을 조기에 발견하고 수정하여 AI 의사결정의 품질과 공정성을 높인다. 규제 기관과 고객에게 AI 결정의 근거를 투명하게 제시함으로써 신뢰를 구축하고, AI 관련 소송 위험을 선제적으로 관리할 수 있다.
 

@@ -2,14 +2,17 @@
 title = "327. OLTP (On-Line Transaction Processing) - 실시간 트랜잭션, 정규화된 RDB, 빠른 응답 속도"
 weight = 327
 +++
+## 0. 핵심 인사이트
 
 > **💡 핵심 인사이트**
 > Hint Handoff와 Anti-entropy는 **"분산 데이터베이스에서 네트워크 분할(Partition)이나 노드 장애 시 데이터 불일치를 해결하기 위해使用되는 두 가지 상이한 복구 메커니즘"**입니다.
 > Hint Handoff는 **"일시적 장애 시Hints(지시서)를 활용하여 데이터를 나중에 올바른 노드에 전달하는 즉각적 대응"**이고, Anti-entropy는 **"，定期적으로 전체 데이터의 Checksum이나 해시 트리(Merkle Tree)를 비교하여 불일치를 발견하고修正하는background 복구"**입니다. 이 두 기법은 CAP 정리에서 **"일시적 정합성(Causal Consistency)이 깨진 후 복구"**하는 핵심 수단입니다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 분산 DB의Failure Modes와 복구 필요성
+## 1. 개요 및 필요성
 
 ```
 [분산 DB에서 발생할 수 있는 장애 유형]
@@ -220,7 +223,7 @@ def read_repair(key, column_family):
 
 ---
 
-## Ⅴ. 실용적 적용과 📢 비유
+## 5. 실무 적용 및 최적화 기법
 
 **Cassandra에서 두 기법의 역할:**
 

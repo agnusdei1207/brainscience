@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Self-Attention은 **같은 시퀀스 내에서 각 위치가 다른 모든 위치를 참조**하여 문맥을 파악하는 메커니즘이며, Transformer의 핵심 연산이다. Q·K·V가 모두 **같은 시퀀스에서 생성**된다.
+> **핵심**: Self-Attention은 **같은 시퀀스 내에서 각 위치가 다른 모든 위치를 참조**하여 문맥을 파악하는 메커니즘이며, Transformer의 핵심 연산이다. Q·K·V가 모두 **같은 시퀀스에서 생성**된다.
 > 2. **가치**: "The animal didn't cross the street because **it** was too tired"에서 "it"이 "animal"을 가리킨다는 것을 파악하려면 문장 전체를 참조해야 하며, Self-Attention이 이를 **가중치로 정량화**한다.
 > 3. **판단 포인트**: Cross-Attention(Q≠K,V, 인코더→디코더)과 구분하고, **Masked Self-Attention**(디코더에서 미래 토큰 참조 방지)의 필요성을 이해해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -33,7 +35,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Self vs Cross vs Masked
 
@@ -47,7 +49,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | RNN | Self-Attention |
 |:---|:---|:---|
@@ -57,7 +59,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 계산 복잡도
 - Self-Attention: **O(n²)** — 시퀀스 길이 n에 대해 모든 쌍 비교.
@@ -65,7 +67,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Self-Attention은 **Transformer·BERT·GPT의 단일 핵심 메커니즘**이며, Vision(ViT)·Audio(Whisper)까지 확장되어 현대 AI의 근간이다.
 

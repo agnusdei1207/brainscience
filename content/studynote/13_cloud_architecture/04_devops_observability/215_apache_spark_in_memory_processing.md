@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Apache Spark는 데이터를 메모리(RAM)에 올려 병렬 연산하는 통합 분석 엔진으로, MapReduce의 디스크 I/O 병목을 제거하여 반복 처리와 실시간 처리에서 10~100배 빠른 성능을 실현한다.
+> **핵심**: Apache Spark는 데이터를 메모리(RAM)에 올려 병렬 연산하는 통합 분석 엔진으로, MapReduce의 디스크 I/O 병목을 제거하여 반복 처리와 실시간 처리에서 10~100배 빠른 성능을 실현한다.
 > 2. **가치**: 배치(Spark Core)·SQL(SparkSQL)·스트리밍(Structured Streaming)·머신러닝(MLlib)·그래프(GraphX)를 단일 엔진으로 통합하여, 데이터 엔지니어·데이터 과학자·분석가 모두를 하나의 플랫폼에서 지원한다.
 > 3. **판단 포인트**: Spark의 성능은 메모리에 의존한다. 데이터가 메모리를 초과하면 디스크로 spill이 발생하여 성능이 급격히 저하된다. 데이터 크기에 맞는 적절한 executor 메모리 설정이 Spark 튜닝의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 2009년 UC Berkeley AMP Lab의 Matei Zaharia가 개발한 Spark는 MapReduce의 근본적 한계—매 처리 단계마다 디스크에 중간 결과를 쓰는 것—을 해결하기 위해 탄생했다. 특히 머신러닝의 반복 알고리즘(로지스틱 회귀, k-평균 클러스터링)은 수십~수백 번 데이터를 반복 처리하는데, MapReduce로는 각 반복마다 HDFS 읽기/쓰기가 발생하여 극도로 느렸다.
 
@@ -26,7 +27,7 @@ Spark의 핵심 아이디어: **메모리에 데이터를 유지한다(Keep Data
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Spark 아키텍처
 
@@ -97,7 +98,7 @@ word_count.write.csv("s3://mybucket/output/wordcount")
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Spark vs MapReduce 성능 비교
 
@@ -123,7 +124,7 @@ word_count.write.csv("s3://mybucket/output/wordcount")
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **Spark 성능 튜닝 핵심**:
 ```python
@@ -162,7 +163,7 @@ df_skewed = df.withColumn(
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 설명 |
 |:---|:---|

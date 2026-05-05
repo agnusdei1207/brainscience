@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: LSTM(Long Short-Term Memory)은 **Forget·Input·Output 3개의 게이트로 셀 상태(Cell State)를 제어**하여 Vanilla RNN의 장기 의존성(Vanishing Gradient) 문제를 해결한 순환 신경망이며, GRU는 LSTM을 **2개 게이트(Reset·Update)로 단순화**한 경량 변형이다.
+> **핵심**: LSTM(Long Short-Term Memory)은 **Forget·Input·Output 3개의 게이트로 셀 상태(Cell State)를 제어**하여 Vanilla RNN의 장기 의존성(Vanishing Gradient) 문제를 해결한 순환 신경망이며, GRU는 LSTM을 **2개 게이트(Reset·Update)로 단순화**한 경량 변형이다.
 > 2. **가치**: RNN은 "어제 비가 왔다"는 기억하지만 "한 달 전 비가 왔다"는 잊지만, LSTM은 **중요한 정보를 셀 상태에 장기 보존**하여 먼 과거의 맥락도 활용한다.
 > 3. **판단 포인트**: 성능은 LSTM≈GRU이나 GRU가 파라미터가 적어(학습 빠름) 소규모 데이터에 유리하며, 현재는 **Transformer가 대부분 대체**했으나 시계열·온디바이스에서 여전히 사용된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 LSTM 3 Gate:

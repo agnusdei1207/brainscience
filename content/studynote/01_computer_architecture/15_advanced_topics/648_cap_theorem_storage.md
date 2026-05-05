@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 648. 스토리지 시스템의 CAP 정리 (CAP Theorem in Storage)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CAP 정리는 분산 스토리지 시스템이 네트워크 분단(Partition Tolerance) 상황에서 **일관성(Consistency)과 가용성(Availability)을 동시에 완벽하게 만족시킬 수 없으며**, 반드시 하나를 희생하거나 절협해야 한다는 공학적 원리다.
+> **핵심**: CAP 정리는 분산 스토리지 시스템이 네트워크 분단(Partition Tolerance) 상황에서 **일관성(Consistency)과 가용성(Availability)을 동시에 완벽하게 만족시킬 수 없으며**, 반드시 하나를 희생하거나 절협해야 한다는 공학적 원리다.
 > 2. **가치**: 스토리지 설계 시 "어떠한 데이터 오류를 허용할 것인가"에 대한 명확한 기준을 제시하며, 금융권(CP 중심)과 소셜 미디어(AP 중심) 등 서비스 특성에 맞는 최적의 인프라를 선택하는 가이드라인이 된다.
 > 3. **융합**: 현대 아키텍처는 CAP의 이분법을 넘어 PACELC 이론으로 확장되며, 평상시 지연시간(Latency)과 정합성 사이의 트레이드오프까지 고려하는 지능형 분산 스토리지로 진화하고 있다.
 
+> 📝 모범 답안
+
+# 648. 스토리지 시스템의 CAP 정리 (CAP Theorem in Storage)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 분산 스토리지의 숙명: 네트워크는 믿을 수 없다
 - **현상**: 데이터가 여러 서버에 분산 저장될 때, 서버 간 연결이 끊어지는 '네트워크 분단'은 반드시 일어난다. 
@@ -55,7 +57,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. CP 시스템 (Consistency + Partition Tolerance)
 - **원리**: 분단이 발생하면 일관성이 깨질 위험이 있는 노드들은 에러를 리턴한다. 
@@ -78,7 +80,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### CP vs AP 스토리지 상세 비교
 
@@ -99,7 +101,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -121,7 +123,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **SLA(서비스 수준 협약) 달성**: 서비스 특성에 맞는 CAP 선택을 통해 가동률 99.999% 달성.

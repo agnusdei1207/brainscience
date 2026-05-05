@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 컨테이너 런타임 (runc, containerd) OCI 규격 표준화
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 과거 도커(Docker)라는 단일 거대 소프트웨어가 독점하던 컨테이너 생태계는, 기술의 발전과 함께 '이미지 포맷'과 '실행 엔진'을 분리하여 개방형 표준으로 정의하는 **OCI (Open Container Initiative)** 규격으로 파편화 및 표준화되었다.
+> **핵심**: 과거 도커(Docker)라는 단일 거대 소프트웨어가 독점하던 컨테이너 생태계는, 기술의 발전과 함께 '이미지 포맷'과 '실행 엔진'을 분리하여 개방형 표준으로 정의하는 **OCI (Open Container Initiative)** 규격으로 파편화 및 표준화되었다.
 > 2. **계층화**: 이 표준화에 따라 컨테이너 런타임은 고수준 런타임(containerd, CRI-O - 이미지 풀링, 네트워크 관리)과 저수준 런타임(runc - 실제 리눅스 namespace와 cgroup을 조작하여 프로세스 생성)으로 계층이 명확히 분리되었다.
 > 3. **가치**: OCI 표준화 덕분에 쿠버네티스(Kubernetes)는 무거운 Docker 엔진(dockerd)을 버리고 containerd나 CRI-O와 직접 통신(CRI)할 수 있게 되었으며, gVisor나 Kata Containers 같은 강력한 보안 샌드박스 런타임을 `runc` 대신 손쉽게 끼워 넣을 수 있는 플러그인 생태계가 완성되었다.
 
+> 📝 모범 답안
+
+# 컨테이너 런타임 (runc, containerd) OCI 규격 표준화
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **OCI (Open Container Initiative)**: 리눅스 재단 산하에서 컨테이너의 이미지 포맷(Image Spec)과 런타임 실행 방식(Runtime Spec)을 정의한 산업 표준이다.
@@ -40,7 +42,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 컨테이너 생태계의 계층 구조 (Layered Architecture)
 
@@ -127,7 +129,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 런타임(Runtime) 종류별 비교
 
@@ -149,7 +151,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -196,7 +198,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

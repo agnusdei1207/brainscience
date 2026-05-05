@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: SQL Injection (SQL 인젝션)은 사용자 입력이 SQL 구문으로 해석될 때 발생하며, PreparedStatement (파라미터 바인딩)가 가장 효과적인 근본 방어다.
+> **핵심**: SQL Injection (SQL 인젝션)은 사용자 입력이 SQL 구문으로 해석될 때 발생하며, PreparedStatement (파라미터 바인딩)가 가장 효과적인 근본 방어다.
 > 2. **가치**: Parameterized Query는 입력값을 절대 SQL 코드로 해석하지 않아 공격을 원천 차단하고, WAF (Web Application Firewall)는 알려진 패턴의 2차 방어선을 형성한다.
 > 3. **판단 포인트**: 방어 심층 구조(Defense in Depth)는 앱 레벨(바인딩), WAF(웹 방화벽), DB 방화벽(화이트리스트), 최소 권한 원칙(Least Privilege) 4계층을 모두 갖춰야 한다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 SQL Injection은 OWASP (Open Web Application Security Project) Top 10 목록에서 2021년 기준 3위를 기록한 가장 오래되고 치명적인 웹 취약점이다.
 
@@ -36,7 +37,7 @@ SELECT * FROM users WHERE username = 'admin'--' AND password = '...';
 
 📢 **섹션 요약 비유**: SQL Injection은 주문서에 "모든 음식 무료 제공"이라고 적어 넣는 것이다. 주방이 주문서를 검증 없이 그대로 처리하면 피해가 발생한다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### PreparedStatement (파라미터 바인딩) 원리
 
@@ -114,7 +115,7 @@ session.execute(
 
 📢 **섹션 요약 비유**: PreparedStatement는 주문서 양식을 미리 인쇄해두는 것이다. 손님이 어떤 내용을 적어도 미리 정해진 칸에만 들어가고, 주방 지시문을 수정할 수 없다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### WAF vs DB 방화벽
 
@@ -128,7 +129,7 @@ session.execute(
 
 📢 **섹션 요약 비유**: WAF는 건물 입구 보안 요원, DB 방화벽은 금고실 앞 전담 경비원이다. 입구를 통과했더라도 금고실은 따로 검사한다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### SQL Injection 방어 체크리스트
 
@@ -148,7 +149,7 @@ session.execute(
 
 📢 **섹션 요약 비유**: WAF만 믿는 건 현관 잠금장치만 믿고 창문은 열어두는 것이다. 다중 방어선이 필수다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 항목 | 미방어 | 방어 후 |
 |:---|:---|:---|

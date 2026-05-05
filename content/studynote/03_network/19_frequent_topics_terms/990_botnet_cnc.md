@@ -6,17 +6,19 @@ date = 2024-05-24
 [taxonomies]
 tags = ["Network", "Security", "Botnet"]
 +++
+## 0. 핵심 인사이트
 
-# 990. 봇넷 (Botnet) C&C
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 봇넷 (Botnet)은 악성코드에 감염되어 공격자의 원격 제어 하에 놓인 다수의 좀비 기기(Bots) 네트워크를 의미하며, C&C (Command and Control) 서버는 이 거대한 봇 군단에 명령을 하달하고 데이터를 수집하는 두뇌 역할을 한다.
+> **핵심**: 봇넷 (Botnet)은 악성코드에 감염되어 공격자의 원격 제어 하에 놓인 다수의 좀비 기기(Bots) 네트워크를 의미하며, C&C (Command and Control) 서버는 이 거대한 봇 군단에 명령을 하달하고 데이터를 수집하는 두뇌 역할을 한다.
 > 2. **가치**: 봇넷은 DDoS (Distributed Denial of Service) 공격, 대규모 스팸(Spam) 메일 발송, 암호화폐 채굴, 데이터 탈취 등 사이버 범죄 생태계(Cybercrime-as-a-Service)의 핵심 인프라이며, 방어자는 C&C 서버를 식별하고 무력화(Takedown)하는 데 보안 역량을 집중한다.
 > 3. **융합**: 전통적인 중앙 집중형 IRC (Internet Relay Chat) 방식에서 P2P (Peer-to-Peer), DGA (Domain Generation Algorithm), 블록체인 기반 C&C 등 분산화 및 은닉 기술이 융합되면서 네트워크 트래픽 분석과 머신러닝(ML) 기반의 이상 탐지가 방어 체계의 표준으로 자리 잡았다.
 
+> 📝 모범 답안
+
+# 990. 봇넷 (Botnet) C&C
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 봇넷 (Botnet)은 '로봇(Robot)'과 '네트워크(Network)'의 합성어로, 해커(Botmaster 또는 Herder)가 취약점을 통해 원격 제어 악성코드(Bot)를 감염시킨 수많은 컴퓨터, 스마트폰, IoT (Internet of Things) 기기들의 집합체이다. 이 봇넷을 일사불란하게 지휘하고 명령을 전달하는 중앙 통제 인프라가 바로 C&C (Command and Control) 서버 시스템이다.
 
@@ -61,7 +63,7 @@ tags = ["Network", "Security", "Botnet"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -121,7 +123,7 @@ tags = ["Network", "Security", "Botnet"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: C&C 아키텍처 토폴로지 비교 (중앙 집중형 vs 분산형)
 
@@ -156,7 +158,7 @@ C&C 서버와 봇의 통신(Beaconing) 주기는 방어자의 NIDS (Network Intr
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -211,7 +213,7 @@ C&C 서버와 봇의 통신(Beaconing) 주기는 방어자의 NIDS (Network Intr
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

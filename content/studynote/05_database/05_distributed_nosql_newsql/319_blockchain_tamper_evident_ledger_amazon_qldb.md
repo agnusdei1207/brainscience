@@ -5,17 +5,19 @@ date = "2026-04-07"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-# 블록체인 기반 변조 방지 원장 데이터베이스 (Amazon QLDB)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 원장 데이터베이스(Ledger Database, 예: Amazon QLDB)는 관계형 DB의 유연성(SQL)과 블록체인의 '크립토그래픽 해시 체인(Cryptographic Hash Chain)' 기술을 결합하여, **한 번 기록된 데이터의 변경 및 삭제 이력을 물리적으로 위변조가 절대 불가능하게(Tamper-evident) 암호학적으로 영구 증명**하는 특수 목적형 데이터베이스다.
+> **핵심**: 원장 데이터베이스(Ledger Database, 예: Amazon QLDB)는 관계형 DB의 유연성(SQL)과 블록체인의 '크립토그래픽 해시 체인(Cryptographic Hash Chain)' 기술을 결합하여, **한 번 기록된 데이터의 변경 및 삭제 이력을 물리적으로 위변조가 절대 불가능하게(Tamper-evident) 암호학적으로 영구 증명**하는 특수 목적형 데이터베이스다.
 > 2. **가치**: 퍼블릭 블록체인(비트코인, 이더리움)은 완벽한 분산/합의 구조지만 속도가 끔찍하게 느리고(초당 10건) 관리가 통제 불가능하다. 반면 QLDB는 중앙 집중형(Centralized) 권한을 가져 초당 수만 건의 대규모 트랜잭션을 처리(High Performance)하면서도, 해시 체인 증명을 통해 사내 악의적 DBA(슈퍼유저)조차 은행 송금 내역을 몰래 지울 수 없는 완벽한 금융 감사(Audit) 트레일을 제공한다.
 > 3. **융합**: 기존 RDBMS에 무거운 트리거(Trigger)와 커스텀 이력(History) 테이블을 지저분하게 덕지덕지 붙이던 감사 시스템 아키텍처를 원천 폐기하고, 아예 커널 스토리지 레벨에서 **'Append-only (추가만 가능)'** 속성을 가진 저널(Journal) 기반의 이벤트 소싱(Event Sourcing) 패턴과 융합하여 데이터 무결성의 궁극적 단일 진실 원천(SSOT)으로 진화했다.
 
+> 📝 모범 답안
+
+# 블록체인 기반 변조 방지 원장 데이터베이스 (Amazon QLDB)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: Amazon QLDB (Quantum Ledger Database)로 대표되는 원장(Ledger) DB는 은행의 '통장 장부'와 같다. 일반 DB는 `UPDATE` 명령어로 과거 데이터를 지우고 새 값을 덮어쓰지만, 원장 DB는 절대 지우지 않는다. 기존 값을 놔두고 '수정되었다는 사실(버전 2)'을 새로운 줄에 추가(Append)만 한다. 이 줄들은 각각 앞줄의 해시(지문)를 물고 체인처럼 엮여있어, 중간 줄을 누군가 몰래 바꾸면 체인 전체가 박살 나며 위변조가 즉시 발각된다.
 
@@ -34,7 +36,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### QLDB 아키텍처: 저널(Journal)과 뷰(Views)의 철저한 분리
 
@@ -76,7 +78,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅲ. 실무 적용 및 기술사적 판단
+## 3. 구조 및 동작 원리
 
 ### 실무 시나리오
 
@@ -93,7 +95,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅳ. 기대효과 및 결론
+## 4. 비교 및 트레이드오프
 
 ### 정량/정성 기대효과
 

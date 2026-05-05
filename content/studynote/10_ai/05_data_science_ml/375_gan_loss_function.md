@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: GAN (Generative Adversarial Network)의 미니맥스 목적 함수는 판별자(Discriminator) D가 실제 데이터와 생성 데이터를 구별하려는 최대화 목표와, 생성자(Generator) G가 판별자를 속이려는 최소화 목표가 동시에 진행하는 제로섬 게임(Zero-Sum Game)이다.
+> **핵심**: GAN (Generative Adversarial Network)의 미니맥스 목적 함수는 판별자(Discriminator) D가 실제 데이터와 생성 데이터를 구별하려는 최대화 목표와, 생성자(Generator) G가 판별자를 속이려는 최소화 목표가 동시에 진행하는 제로섬 게임(Zero-Sum Game)이다.
 > 2. **가치**: 이 적대적 학습(Adversarial Training)은 D와 G가 서로를 강화하며 G가 결국 실제 데이터 분포 p_data(x)를 모방하는 분포를 학습하도록 유도한다. 이론적 내쉬 균형(Nash Equilibrium)에서 D(x) = 1/2이 된다.
 > 3. **판단 포인트**: 원래 GAN은 JS 발산(Jensen-Shannon Divergence) 최소화와 동치이지만, 분포 지지(Support)가 겹치지 않을 때 발산이 불연속적으로 나타나 학습 불안정과 모드 붕괴(Mode Collapse)가 발생한다. WGAN (Wasserstein GAN)은 Wasserstein 거리(Earth Mover's Distance)로 이를 해결한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 2014년 Ian Goodfellow가 제안한 GAN은 생성 모델(Generative Model)의 패러다임을 바꿨다. 기존 생성 모델(VAE, RBM)이 명시적 확률 밀도(Explicit Probability Density)를 최대화하는 방식이라면, GAN은 **암묵적 생성(Implicit Generation)** — 데이터 분포를 명시하지 않고 직접 샘플을 생성 — 을 달성한다.
 
@@ -27,7 +29,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 미니맥스 목적 함수 (Minimax Objective)
 
@@ -105,7 +107,7 @@ max_D (E[D(x)] - E[D(G(z))])   s.t. ||D||_L ≤ 1 (Lipschitz 제약)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | GAN | VAE | Flow-based | Diffusion |
 |:---|:---|:---|:---|:---|
@@ -120,7 +122,7 @@ max_D (E[D(x)] - E[D(G(z))])   s.t. ||D||_L ≤ 1 (Lipschitz 제약)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **학습 안정화 기법**:
 1. 스펙트럼 정규화(Spectral Normalization): D의 가중치 스펙트럼 노름을 1로 제한 → Lipschitz 제약 만족
@@ -138,7 +140,7 @@ max_D (E[D(x)] - E[D(G(z))])   s.t. ||D||_L ≤ 1 (Lipschitz 제약)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 GAN과 미니맥스 손실 함수는 생성 AI(Generative AI) 혁명의 출발점이다. 적대적 학습이라는 아이디어는 이미지 생성을 넘어 데이터 증강(Data Augmentation), 도메인 적응(Domain Adaptation), 텍스트-이미지 변환, 음성 합성, 약물 분자 생성 등 다양한 분야에서 혁신을 가져왔다.
 

@@ -5,17 +5,19 @@ date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 가상 주소 공간 구조 무작위화 (ASLR)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ASLR (Address Space Layout Randomization)은 프로그램이 실행될 때마다 스택(Stack), 힙(Heap), 공유 라이브러리(Shared Library), 그리고 실행 파일(Executable)의 메모리 로드 주소를 무작위로 변경하는 운영체제 (OS, Operating System) 레벨의 보안 기술이다.
+> **핵심**: ASLR (Address Space Layout Randomization)은 프로그램이 실행될 때마다 스택(Stack), 힙(Heap), 공유 라이브러리(Shared Library), 그리고 실행 파일(Executable)의 메모리 로드 주소를 무작위로 변경하는 운영체제 (OS, Operating System) 레벨의 보안 기술이다.
 > 2. **가치**: 해커가 버퍼 오버플로우 (Buffer Overflow)나 ROP (Return-Oriented Programming) 공격을 시도할 때, 특정 셸코드(Shellcode)나 ROP 가젯(Gadget)의 메모리 주소를 미리 예측할 수 없게 만들어 익스플로잇 (Exploit) 성공률을 0에 가깝게 떨어뜨린다.
 > 3. **융합**: 데이터 실행 방지 (DEP, Data Execution Prevention)와 융합(Combo)되어 현대 시스템 보안의 양대 산맥을 이루며, 이를 완벽하게 지원하기 위해서는 컴파일러 수준에서 위치 독립 실행 파일 (PIE, Position Independent Executable) 옵션이 반드시 활성화되어야 한다.
 
+> 📝 모범 답안
+
+# 가상 주소 공간 구조 무작위화 (ASLR)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 **개념 및 정의**
 주소 공간 배열 무작위화 (ASLR, Address Space Layout Randomization)는 프로세스가 가상 메모리 공간(Virtual Memory Space)에 로드될 때 주요 메모리 세그먼트들의 시작 주소를 난수(Random Number)를 기반으로 다르게 배치하는 기술이다. 이를 통해 공격자가 시스템의 고정된 주소값을 하드코딩하여 악용하는 것을 방지한다.
@@ -52,7 +54,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (ASLR의 메모리 오프셋 난수화)
 
@@ -100,7 +102,7 @@ ASLR의 보안 강도는 주소가 얼마나 '무작위'인가를 나타내는 �
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### ASLR 우회 기법과 방어의 창과 방패
 
@@ -147,7 +149,7 @@ ASLR을 완벽히 뚫기 위해 해커들이 사용하는 가장 우아한 기�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: PIE 미적용으로 인한 ASLR 반쪽 방어 실패 사례
 
@@ -168,7 +170,7 @@ ASLR을 완벽히 뚫기 위해 해커들이 사용하는 가장 우아한 기�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

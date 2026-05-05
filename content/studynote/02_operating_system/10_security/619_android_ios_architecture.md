@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 모바일 OS 특징 (Android vs iOS 아키텍처 비교)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Android는 Google이 주도하는 오픈 소스 (Open Source) 모바일 운영체제로 리눅스 커널 (Linux Kernel) 위에 ART (Android Runtime) 가상머신과 Java/Kotlin 애플리케이션 프레임워크를 탑재한 구조이며, iOS는 Apple이 개발한 폐쇄형 모바일 운영체제로 XNU (X is Not Unix) 하이브리드 커널 위에 Swift/Objective-C 네이티브 런타임을 탑재한 구조다.
+> **핵심**: Android는 Google이 주도하는 오픈 소스 (Open Source) 모바일 운영체제로 리눅스 커널 (Linux Kernel) 위에 ART (Android Runtime) 가상머신과 Java/Kotlin 애플리케이션 프레임워크를 탑재한 구조이며, iOS는 Apple이 개발한 폐쇄형 모바일 운영체제로 XNU (X is Not Unix) 하이브리드 커널 위에 Swift/Objective-C 네이티브 런타임을 탑재한 구조다.
 > 2. **가치**: 두 운영체제는 전 세계 모바일 시장의 99% 이상을 점유하며, 각각의 아키텍처 선택(오픈 생태계 vs 폐쇄 일체형, VM vs 네이티브, 커널 커스터마이징 vs 독자 커널)이 보안 모델, 성능 특성, 개발자 생태계, 전력 관리 전략에 근본적인 차이를 만들어낸다.
 > 3. **융합**: Android의 리눅스 커널 기반 Wakelock 전력 관리, Binder IPC (Inter-Process Communication), Zygote 프로세스 포킹 (Forking) 메커니즘은 서버 운영체제 기술이 모바일에 적응한 사례이며, iOS의 XNU 커널은 Mach 마이크로커널 (Microkernel)과 BSD (Berkeley Software Distribution) 계층이 융합된 독자적 아키텍처다.
 
+> 📝 모범 답안
+
+# 모바일 OS 특징 (Android vs iOS 아키텍처 비교)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 **개념 및 정의**
 모바일 운영체제 (Mobile OS, Mobile Operating System)는 스마트폰, 태블릿, 웨어러블 (Wearable) 등 휴대용 기기에서 배터리 전력, 열 관리 (Thermal Management), 무선 통신, 터치 인터페이스라는 고유한 하드웨어 제약 아래에서 애플리케이션을 실행하고 자원을 관리하는 특수 목적 운영체제다. 데스크톱 OS와의 가장 근본적인 차이는 **"배터리라는 유한 에너지원 아래에서 최대 성능과 최소 전력 소비 사이의 균형을 실시간으로 조정해야 한다"** 는 점이다.
@@ -53,7 +55,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 커널 아키텍처 비교
 
@@ -128,7 +130,7 @@ XNU (X is Not Unix)는 Apple의 독자 커널로, Mach 마이크로커널의 메
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 보안 모델 심층 비교
 
@@ -183,7 +185,7 @@ XNU (X is Not Unix)는 Apple의 독자 커널로, Mach 마이크로커널의 메
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오별 선택 기준
 
@@ -234,7 +236,7 @@ XNU (X is Not Unix)는 Apple의 독자 커널로, Mach 마이크로커널의 메
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 미래 전망
 

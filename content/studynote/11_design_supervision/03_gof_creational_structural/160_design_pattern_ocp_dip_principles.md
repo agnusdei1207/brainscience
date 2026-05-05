@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 디자인 패턴은 SOLID (Single Responsibility, Open-Closed, Liskov Substitution, Interface Segregation, Dependency Inversion) 원칙의 구체적 구현 수단이며, 특히 OCP (Open-Closed Principle, 개방-폐쇄 원칙)와 DIP (Dependency Inversion Principle, 의존성 역전 원칙)를 구현하는 핵심 도구다.
+> **핵심**: 디자인 패턴은 SOLID (Single Responsibility, Open-Closed, Liskov Substitution, Interface Segregation, Dependency Inversion) 원칙의 구체적 구현 수단이며, 특히 OCP (Open-Closed Principle, 개방-폐쇄 원칙)와 DIP (Dependency Inversion Principle, 의존성 역전 원칙)를 구현하는 핵심 도구다.
 > 2. **가치**: 패턴을 원칙과 연결해 이해하면 "왜 이 패턴을 쓰는가"에 답할 수 있어, 패턴 암기가 아닌 설계 판단력을 갖추게 된다.
 > 3. **판단 포인트**: 새 기능 추가 시 기존 코드를 수정해야 한다면 OCP 위반이고, 고수준 모듈이 구체 클래스에 직접 의존한다면 DIP 위반이다 — 두 원칙을 지키는 패턴을 선택해야 한다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 좋은 소프트웨어 설계의 핵심은 변경(Change)에 유연하게 대응하는 것이다. 로버트 마틴(Robert Martin)이 체계화한 SOLID 원칙은 객체지향 설계의 5가지 핵심 지침으로, 이 중 OCP와 DIP는 디자인 패턴과 가장 긴밀하게 연결된다.
 
@@ -24,7 +25,7 @@ categories = "studynote-design-supervision"
 
 📢 **섹션 요약 비유**: OCP는 "콘센트 규격처럼 확장구는 꽂아도 되지만 벽 배선은 건드리지 말라"는 규칙이고, DIP는 "전자기기가 특정 브랜드 콘센트가 아닌 표준 220V 규격에 의존해야 한다"는 원칙이다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### OCP 위반과 준수 비교
 
@@ -84,7 +85,7 @@ OCP를 위반하면 새 도형 추가 시마다 `ShapeDrawer` 클래스를 수�
 
 📢 **섹션 요약 비유**: SOLID 원칙은 건축물의 설계 기준이고, 디자인 패턴은 그 기준을 만족하는 검증된 건축 공법이다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 각 디자인 패턴이 어떤 SOLID 원칙을 주로 구현하는지 매핑한 표다.
 
@@ -101,7 +102,7 @@ OCP를 위반하면 새 도형 추가 시마다 `ShapeDrawer` 클래스를 수�
 
 📢 **섹션 요약 비유**: SOLID 원칙이 "집 짓기 규칙"이라면, 패턴은 그 규칙을 만족하면서 벽·지붕·창문을 다는 "표준 시공 방법서"다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **전략 패턴과 OCP (Strategy + OCP)**
 
@@ -118,7 +119,7 @@ OCP를 위반하면 새 도형 추가 시마다 `ShapeDrawer` 클래스를 수�
 
 📢 **섹션 요약 비유**: OCP를 지키는 코드는 새 기능을 추가할 때 기존 코드를 읽지 않아도 되는 코드고, DIP를 지키는 코드는 구현체를 교체해도 다른 코드가 컴파일 오류를 내지 않는 코드다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 OCP와 DIP를 디자인 패턴과 연결해 이해하면 얻는 효과:
 

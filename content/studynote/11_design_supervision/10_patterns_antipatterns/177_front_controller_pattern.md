@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 프론트 컨트롤러 (Front Controller) 패턴은 모든 HTTP 요청을 단일 진입점이 받아서 공통 처리(인증, 로깅, 세션) 후 적절한 핸들러로 라우팅하는 구조다.
+> **핵심**: 프론트 컨트롤러 (Front Controller) 패턴은 모든 HTTP 요청을 단일 진입점이 받아서 공통 처리(인증, 로깅, 세션) 후 적절한 핸들러로 라우팅하는 구조다.
 > 2. **가치**: 공통 로직의 중복 제거와 요청 처리 흐름의 일관성 보장이 핵심이며, Spring MVC의 DispatcherServlet이 이 패턴의 대표 구현체다.
 > 3. **판단 포인트**: 웹 애플리케이션에서 인증/인가, 로깅, 예외 처리 등 횡단 관심사를 한 곳에서 관리해야 할 때 프론트 컨트롤러 패턴이 최적 해결책이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 패턴 등장 배경
 
@@ -42,7 +43,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Spring MVC DispatcherServlet 처리 흐름
 
@@ -101,7 +102,7 @@ Client    DispatcherServlet    HandlerMapping    Controller    ViewResolver    V
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Front Controller vs Page Controller 비교
 
@@ -127,7 +128,7 @@ Client    DispatcherServlet    HandlerMapping    Controller    ViewResolver    V
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Spring Boot에서의 DispatcherServlet 설정
 
@@ -171,7 +172,7 @@ public class UserController {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### Front Controller 도입 기대효과
 

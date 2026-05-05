@@ -5,17 +5,19 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 하드웨어 인터럽트 (Hardware Interrupt)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 하드웨어 인터럽트 (Hardware Interrupt)는 마우스, 키보드, 네트워크 카드, 타이머 등 외부 주변 장치가 CPU (Central Processing Unit)의 명령어 실행 흐름과 무관하게 비동기적 (Asynchronous)으로 전송하는 전기적 신호 기반의 중단 요청이다.
+> **핵심**: 하드웨어 인터럽트 (Hardware Interrupt)는 마우스, 키보드, 네트워크 카드, 타이머 등 외부 주변 장치가 CPU (Central Processing Unit)의 명령어 실행 흐름과 무관하게 비동기적 (Asynchronous)으로 전송하는 전기적 신호 기반의 중단 요청이다.
 > 2. **가치**: CPU가 데이터 입력을 무작정 기다리지 않고 다른 연산을 수행할 수 있게 하여 시스템의 실시간성 (Real-time)과 병렬 처리 능력을 보장하며, 다중 입출력 장치의 동시적 관리를 가능하게 한다.
 > 3. **융합**: 고성능 서버 환경에서는 MSI (Message Signaled Interrupts)와 같은 진화된 방식을 통해 고정된 핀의 한계를 극복하며, 인터럽트 친화성 (Interrupt Affinity) 설정을 통해 멀티코어 환경의 캐시 지역성 (Cache Locality)을 최적화한다.
 
+> 📝 모범 답안
+
+# 하드웨어 인터럽트 (Hardware Interrupt)
+
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 - **개념**: 하드웨어 인터럽트 (Hardware Interrupt)는 컴퓨터 시스템의 외부 장치가 CPU에 특정 사건의 발생을 알리기 위해 하드웨어 라인을 통해 보내는 신호다. CPU의 내부 상태 변화에 의해 발생하는 소프트웨어 인터럽트와 달리, 외부 물리적 장치의 동작 완료나 상태 변화에 의해 유발되므로 발생 시점을 예측할 수 없는 **비동기적 (Asynchronous)** 특성을 갖는다.
 
@@ -53,7 +55,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 - **하드웨어 인터럽트 주요 종류 및 특성**:
 
@@ -122,7 +124,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 - **인터럽트 전달 방식 비교: Pin-based vs MSI**:
 
@@ -159,7 +161,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 - **실무 이슈 및 해결 전략**:
   1. **인터럽트 폭풍 (Interrupt Storm)**: 고장 난 하드웨어나 과도한 네트워크 유입으로 인해 초당 수만 건의 인터럽트가 발생하여 CPU가 ISR 처리만 하다가 시스템이 멈추는 현상이다. 커널 레벨에서 인터럽트 빈도를 제한(Throttling)하거나, 앞서 언급한 NAPI (New API)처럼 폴링 방식으로 자동 전환하는 보호 메커니즘이 필요하다.
@@ -189,7 +191,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 - **기대효과**: 하드웨어 인터럽트는 시스템에 '생동감'을 부여한다. 이를 통해 컴퓨터는 정적인 연산기에서 벗어나 외부 환경과 실시간으로 상호작용하는 지능형 시스템으로 진화했다. 특히 전력 관리 측면에서 장치가 쉬는 동안 CPU도 절전 모드에 들어갔다가 인터럽트 신호로 깨어나는 'Wake-on-Interrupt' 기술은 모바일 기기 배터리 수명 연장의 핵심이다.
 

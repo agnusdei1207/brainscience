@@ -6,15 +6,17 @@ description = "한 번 기록된 데이터는 영구적으로 덮어쓰거나 �
 taxonomy = ""
 tags = ["Computer Architecture", "Advanced Topics", "Storage", "Security", "WORM", "Compliance"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: WORM(Write Once Read Many) 스토리지는 말 그대로 "한 번 기록하면 무한히 읽을 수는 있으나 절대 수정 및 삭제가 불가능"한 스토리지 기술이다.
+> **핵심**: WORM(Write Once Read Many) 스토리지는 말 그대로 "한 번 기록하면 무한히 읽을 수는 있으나 절대 수정 및 삭제가 불가능"한 스토리지 기술이다.
 > 2. **가치**: 해커가 최고 관리자(Root) 권한을 탈취하거나 랜섬웨어가 시스템을 장악해도, 데이터를 덮어쓰거나 암호화하는 것을 원천적으로 차단하여 원본 보존성을 무결하게 지킨다.
 > 3. **판단 포인트**: 과거에는 CD-R 등 물리적 매체를 사용했으나, 현대에는 클라우드 오브젝트 스토리지 레벨에서 소프트웨어적 잠금(Object Lock Compliance Mode)을 적용하여 안전성과 편의성을 동시에 확보한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 일반적인 하드디스크나 SSD(Solid State Drive)와 같은 스토리지 매체는 관리자(Administrator/Root) 권한을 얻으면 언제든지 데이터를 수정하거나 포맷할 수 있습니다. 정상적인 운영 환경에서는 자원의 재사용을 위해 필수적인 특성이지만, **데이터의 위변조 방지**가 최우선인 법적 증거 자료, 의료 기록, 금융 거래 내역 보관에 있어서는 치명적인 약점이 됩니다.
 
@@ -40,7 +42,7 @@ tags = ["Computer Architecture", "Advanced Topics", "Storage", "Security", "WORM
 
 ---
 
-## Ⅱ. WORM의 두 가지 구현 방식
+## 2. 구성요소
 
 ### 1. 물리적 WORM (Hardware/Physical WORM)
 초창기 방식이자 가장 직관적인 형태입니다. 특정 매체는 설계 속성상 아예 덮어쓰기가 불가능합니다.
@@ -56,7 +58,7 @@ tags = ["Computer Architecture", "Advanced Topics", "Storage", "Security", "WORM
 
 ---
 
-## Ⅲ. 랜섬웨어와의 전쟁 (최후의 방어선)
+## 3. 구조 및 동작 원리
 
 현대의 보안 전략(Zero Trust 등)은 "결국 1차 방어선은 뚫릴 수 있다"는 사실을 전제로 합니다. 제아무리 철저하게 망분리를 하고 방화벽을 세워도, 누군가 악성 메일을 클릭하거나 제로데이(Zero-Day) 취약점이 터지는 상황을 100% 막을 수는 없기 때문입니다.
 
@@ -66,7 +68,7 @@ tags = ["Computer Architecture", "Advanced Topics", "Storage", "Security", "WORM
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서 WORM 스토리지를 도입할 때는 컴플라이언스(법적 규제)와 운영 효율 간의 트레이드오프(Trade-off)를 면밀히 따져야 합니다.
 
@@ -82,7 +84,7 @@ tags = ["Computer Architecture", "Advanced Topics", "Storage", "Security", "WORM
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 WORM 스토리지는 단순한 보관 기술이 아니라, 기업의 컴플라이언스 대응력과 비즈니스 연속성(Business Continuity)을 결정짓는 최상위 무결성 보장 수단입니다. 락(Lock) 메커니즘을 통해 데이터 라이프사이클의 끝자락을 단단히 묶어두며, 해커로부터 데이터를 인질로 잡히는 최악의 시나리오를 막아내는 훌륭한 보험이 됩니다. 
 

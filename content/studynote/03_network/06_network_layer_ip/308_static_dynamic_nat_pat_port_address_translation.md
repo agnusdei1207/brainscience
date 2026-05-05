@@ -2,15 +2,17 @@
 title = "308. Static NAT (1:1) / Dynamic NAT (M:N) / PAT (Port Address Translation = NAPT, 1:N)"
 weight = 308
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: NAT(주소 변환) 기술은 공인 IP와 사설 IP를 몇 대 몇으로 매핑(Mapping)하느냐에 따라 **1:1 고정 방식인 Static NAT**, **M:N 유동 방식인 Dynamic NAT**, 그리고 **1개의 공인 IP를 수백 대가 쪼개 쓰는 1:N 방식인 PAT(Port Address Translation)**의 세 가지로 나뉜다.
+> **핵심**: NAT(주소 변환) 기술은 공인 IP와 사설 IP를 몇 대 몇으로 매핑(Mapping)하느냐에 따라 **1:1 고정 방식인 Static NAT**, **M:N 유동 방식인 Dynamic NAT**, 그리고 **1개의 공인 IP를 수백 대가 쪼개 쓰는 1:N 방식인 PAT(Port Address Translation)**의 세 가지로 나뉜다.
 > 2. **Static NAT (서버용)**: 특정 사설 IP(예: 사내 웹서버)를 무조건 특정 공인 IP 1개와 영구적으로 묶어두는 방식으로, 외부 인터넷 사용자가 우리 회사 내부의 서버로 먼저 접속을 치고 들어와야 할 때(Port Forwarding 등) 필수적으로 사용된다.
 > 3. **PAT (NAPT, 공유기 원리)**: 집에서 흔히 쓰는 '공유기'의 진짜 이름이다. 1개의 공인 IP로 10대의 스마트폰이 동시에 통신하려면 IP만으론 누굴 줄지 구별이 안 되므로, IP 주소 뒤에 달린 **'포트 번호(Port Number, 4계층)'까지 건드려서 통신을 쪼개어 구별하는 궁극의 IP 절약 마법**이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: NAT 테이블을 구성하는 3가지 세부 방식이다.
   - **Static NAT**: 1 대 1 정적 맵핑
@@ -27,7 +29,7 @@ weight = 308
 
 ---
 
-## Ⅱ. 3대 NAT 방식의 세부 동작 메커니즘 (Deep Dive)
+## 2. 구성요소
 
 ### 1. Static NAT (1:1 매핑)
 - 관리자가 라우터에 `ip nat inside source static 192.168.0.100 211.1.1.100`이라고 박아버린다.

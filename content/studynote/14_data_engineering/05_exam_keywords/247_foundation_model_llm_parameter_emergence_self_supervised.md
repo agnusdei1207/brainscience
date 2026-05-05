@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 파운데이션 모델(Foundation Model)은 방대한 비라벨 데이터로 자기 지도 학습(Self-Supervised Learning)을 통해 사전 훈련된 후, 다양한 다운스트림 태스크에 적응할 수 있는 범용 기반 모델이다.
+> **핵심**: 파운데이션 모델(Foundation Model)은 방대한 비라벨 데이터로 자기 지도 학습(Self-Supervised Learning)을 통해 사전 훈련된 후, 다양한 다운스트림 태스크에 적응할 수 있는 범용 기반 모델이다.
 > 2. **가치**: 스케일링 법칙(Scaling Law)에 따라 파라미터 수·데이터·연산량이 동시에 증가하면 예측 손실이 멱함수적으로 감소하며, 특정 규모 이상에서 계획되지 않은 능력인 창발성(Emergence)이 나타난다.
 > 3. **판단 포인트**: LLM(Large Language Model)의 실용화 핵심은 파인튜닝 없이 프롬프트만으로 새 태스크를 수행하는 제로샷(Zero-Shot)/퓨샷(Few-Shot) 능력이며, 이는 스케일이 충분히 클 때 창발한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 2021년 Stanford AI Lab의 논문 "On the Opportunities and Risks of Foundation Models"(Bommasani et al.)이 파운데이션 모델 개념을 체계화했다. 이 전에는 BERT, GPT 같은 대형 모델들이 등장했지만 이 개념으로 통합되지 않았었다.
 
@@ -50,7 +52,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 자기 지도 학습 (Self-Supervised Learning)
 
@@ -124,7 +126,7 @@ L: 손실, N: 파라미터 수, D: 데이터 크기, C: 연산량
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 주요 LLM (Large Language Model) 비교
 
@@ -155,7 +157,7 @@ L: 손실, N: 파라미터 수, D: 데이터 크기, C: 연산량
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 파운데이션 모델 배포 스택
 
@@ -187,7 +189,7 @@ LLM API / 추론 레이어
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 파운데이션 모델의 사회적 영향
 

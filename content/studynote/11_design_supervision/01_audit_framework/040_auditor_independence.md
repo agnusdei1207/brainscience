@@ -5,15 +5,18 @@ date = "2026-03-19"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 감리인 독립성(Auditor Independence)은 감리가 형식이 아닌 실질적 검증 기능을 하기 위한 전제 조건으로, 발주자·사업자로부터 독립된 제3자가 객관적 평가를 수행해야만 감리 결과에 신뢰성이 부여된다.
 > 2. 독립성은 외관적 독립성(Independence in Appearance)과 실질적 독립성(Independence in Fact) 두 차원으로 구분되며, 이해충돌(Conflict of Interest)·겸직 제한·회전문 제약(Cooling-off Period) 등이 외관적 독립성을 보장하는 제도적 장치다.
 > 3. 정보화 사업 감리 법제에서 감리인 독립성 위반은 감리 결과 무효·과태료·자격 취소 사유이며, 정보시스템 감리법(2007년 제정)은 발주자·사업자와 이해관계 있는 자의 감리 참여를 명시적으로 금지한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 독립성의 두 차원
+## 1. 개요 및 필요성
 
 ```
 감리인 독립성 (Auditor Independence):
@@ -46,7 +49,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 이해충돌 유형과 금지 규정
+## 2. 구성요소
 
 ```
 정보화 사업 감리 이해충돌:
@@ -79,7 +82,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅲ. 감리인 독립성 확보 메커니즘
+## 3. 구조 및 동작 원리
 
 ```
 독립성 보장 제도:
@@ -116,7 +119,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅳ. 클라우드·AI 사업 감리 독립성 이슈
+## 4. 비교 및 트레이드오프
 
 ```
 신기술 사업에서의 독립성 도전:
@@ -141,7 +144,7 @@ AI/ML 사업 감리:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 대규모 공공 감리
+## 5. 실무 적용 및 최적화 기법
 
 ```
 대형 공공 정보화 사업 감리 독립성 사례:

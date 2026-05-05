@@ -4,17 +4,19 @@ weight = 994
 [taxonomies]
 tags = ["Network", "Security", "IDS", "IPS"]
 +++
+## 0. 핵심 인사이트
 
-# 994. IDS / IPS 탐지 차단율
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: IDS (Intrusion Detection System)와 IPS (Intrusion Prevention System)의 탐지/차단율은 시스템의 정확도를 나타내는 핵심 지표이며, 오탐 (False Positive)과 미탐 (False Negative) 간의 필연적인 트레이드오프 관계를 이해하는 것이 보안 아키텍처의 근본이다.
+> **핵심**: IDS (Intrusion Detection System)와 IPS (Intrusion Prevention System)의 탐지/차단율은 시스템의 정확도를 나타내는 핵심 지표이며, 오탐 (False Positive)과 미탐 (False Negative) 간의 필연적인 트레이드오프 관계를 이해하는 것이 보안 아키텍처의 근본이다.
 > 2. **가치**: 정밀한 임계치(Threshold) 튜닝과 탐지 룰 최적화를 통해 보안 사고 발생 확률(미탐)을 최소화하면서도, 비즈니스 가용성을 훼손하는 정상 트래픽 차단(오탐)을 방지함으로써 기업의 연속성을 보장한다.
 > 3. **융합**: 시그니처 기반의 정적 분석 한계를 극복하기 위해 최근에는 AI (Artificial Intelligence)와 머신러닝 모델을 융합한 행위 기반(Anomaly-based) 탐지가 도입되고 있으며, SIEM (Security Information and Event Management) 및 SOAR (Security Orchestration, Automation and Response)와의 연동으로 자동 대응 체계를 구축하고 있다.
 
+> 📝 모범 답안
+
+# 994. IDS / IPS 탐지 차단율
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: IDS (Intrusion Detection System)는 네트워크나 시스템의 트래픽을 모니터링하여 악의적인 활동이나 정책 위반을 탐지하고 경고하는 시스템이며, IPS (Intrusion Prevention System)는 탐지를 넘어 해당 위협 트래픽을 실시간으로 차단(Drop)하는 능동형 보안 솔루션이다. 이 두 시스템의 성능은 정상과 비정상 트래픽을 얼마나 정확하게 식별하는가, 즉 탐지 및 차단율로 평가된다.
 
@@ -54,7 +56,7 @@ tags = ["Network", "Security", "IDS", "IPS"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -130,7 +132,7 @@ tags = ["Network", "Security", "IDS", "IPS"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 오용 탐지 (Misuse) vs 이상 탐지 (Anomaly)
 
@@ -152,7 +154,7 @@ tags = ["Network", "Security", "IDS", "IPS"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 전자상거래 플랫폼의 대규모 프로모션 기간
 
@@ -197,7 +199,7 @@ IPS와 IDS를 어디에, 어떻게 배치할지 결정하는 것은 비즈니스
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

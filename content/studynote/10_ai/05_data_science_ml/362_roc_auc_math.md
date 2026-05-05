@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ROC(Receiver Operating Characteristic, 수신자 조작 특성) 곡선은 분류 임계값(Threshold)을 변화시키면서 TPR(True Positive Rate, 재현율)과 FPR(False Positive Rate, 거짓 양성률)의 트레이드오프를 시각화하며, AUC(Area Under Curve)는 이 곡선 아래 면적으로 분류기의 전반적 성능을 [0,1]로 수치화한다.
+> **핵심**: ROC(Receiver Operating Characteristic, 수신자 조작 특성) 곡선은 분류 임계값(Threshold)을 변화시키면서 TPR(True Positive Rate, 재현율)과 FPR(False Positive Rate, 거짓 양성률)의 트레이드오프를 시각화하며, AUC(Area Under Curve)는 이 곡선 아래 면적으로 분류기의 전반적 성능을 [0,1]로 수치화한다.
 > 2. **가치**: 클래스 불균형(Class Imbalance) 데이터에서 정확도(Accuracy)는 왜곡되지만 AUC는 클래스 비율에 독립적으로 분류 성능을 평가해 의료 진단, 사기 탐지의 표준 평가 지표다.
 > 3. **판단 포인트**: AUC=0.5는 랜덤 분류, AUC=1.0은 완벽한 분류기이며, AUC는 "임의 양성 샘플이 임의 음성 샘플보다 높은 점수를 받을 확률"과 동치다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 암 진단 AI에서 임계값(threshold)을 낮추면 모든 환자를 양성으로 예측해 재현율(Recall=TPR)은 100%지만 거짓 양성(FP)도 폭발한다. 반대로 임계값을 높이면 확실한 케이스만 양성으로 예측해 정밀도(Precision)는 높지만 재현율이 낮아진다. 어떤 임계값이 최적인가? ROC 곡선은 임계값 전체 범위에서의 성능을 한 그래프에 담아 모델의 고유 성능을 임계값 독립적으로 평가한다.
 
@@ -21,7 +23,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -57,7 +59,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 AUC-PR(Precision-Recall Curve) 대 AUC-ROC: 데이터에서 양성 클래스가 극히 희귀(1% 미만)할 때(사기 탐지, 희귀 질환) AUC-ROC는 높게 나와도 실제 성능이 나쁠 수 있다. 이 경우 AUC-PR이 더 엄격한 평가 지표다. 다중 클래스에서 OvR(One-vs-Rest) 방식으로 각 클래스별 AUC를 계산해 매크로 평균을 취한다.
 
@@ -65,7 +67,7 @@ AUC-PR(Precision-Recall Curve) 대 AUC-ROC: 데이터에서 양성 클래스가 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 최적 임계값 선택: ① 유덴 지수(Youden Index) = TPR - FPR 최대점 ② 비용 민감 분류에서 오분류 비용(C_FP, C_FN) 가중 최적점 ③ F1 Score 최대점. DeLong Test: 두 모델의 AUC가 통계적으로 유의하게 다른지 검정하는 비모수 통계 검정. 구현: sklearn.metrics.roc_auc_score, roc_curve로 계산 가능.
 
@@ -73,7 +75,7 @@ AUC-PR(Precision-Recall Curve) 대 AUC-ROC: 데이터에서 양성 클래스가 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ROC/AUC는 분류 모델의 글로벌 성능을 임계값 독립적으로 요약하는 가장 중요한 평가 지표 중 하나다. 기술사 시험에서 TPR/FPR 수식, AUC의 확률적 해석(Wilcoxon 통계량 동치), AUC-PR이 필요한 상황(불균형 데이터)을 서술하면 완성도 높은 답안이다.
 

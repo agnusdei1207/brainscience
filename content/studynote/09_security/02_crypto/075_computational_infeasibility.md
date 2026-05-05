@@ -7,16 +7,17 @@ date = 2026-03-26
 [extra]
 categories = ["studynote-software-engineering"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: computationally infeasible는 수학적으로 불가능이 아니라, 현실 시간·비용·자원으로는 풀 수 없다는 뜻이며 현대 암호학의 기본 가정이다.
+> **핵심**: computationally infeasible는 수학적으로 불가능이 아니라, 현실 시간·비용·자원으로는 풀 수 없다는 뜻이며 현대 암호학의 기본 가정이다.
 > 2. **가치**: AES (Advanced Encryption Standard), RSA (Rivest–Shamir–Adleman), ECC (Elliptic Curve Cryptography)는 각각 다른 난제와 보안 마진을 이용해 공격 비용을 폭발시킨다.
 > 3. **판단 포인트**: 알고리즘이 지금 안 깨졌다는 사실보다 키 길이·공격 모델·양자 위협까지 고려해 "얼마나 오래 안전한가"를 판단해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 암호가 안전한 이유는 "절대 못 푼다"가 아니라 "현실적으로 못 푼다"이기 때문이다. 즉 보안은 수학적 난해성과 계산 자원의 한계가 만나는 지점에서 성립한다.
 
@@ -34,7 +35,7 @@ secret -> algorithm -> attacker search cost -> infeasible -> security
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 암호학은 보통 one-way function과 큰 key space를 활용한다. 입력은 쉽게 만들 수 있지만, 역으로 복원하는 데는 엄청난 계산이 필요해야 한다.
 
@@ -51,7 +52,7 @@ secret -> algorithm -> attacker search cost -> infeasible -> security
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 infeasible과 impossible은 다르다. 전자는 자원이 부족해 못 푸는 것이고, 후자는 원리상 못 푸는 것이다.
 
@@ -67,7 +68,7 @@ infeasible과 impossible은 다르다. 전자는 자원이 부족해 못 푸는 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 키 길이, 알고리즘 수명, 공격 모델을 같이 본다. 단순히 "안 깨졌다"가 아니라, 5년·10년 뒤에도 버틸 수 있는지 따져야 한다.
 
@@ -82,7 +83,7 @@ infeasible과 impossible은 다르다. 전자는 자원이 부족해 못 푸는 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 computational infeasibility는 암호학의 현실주의를 보여 준다. 보안은 절대값이 아니라 비용 곡선이며, 그 곡선이 공격자의 예산을 넘어설 때 성립한다.
 

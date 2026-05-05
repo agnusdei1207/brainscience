@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 옵티미스틱 롤업(Optimistic Rollup)은 "일단 믿고, 문제 있으면 증명"하는 낙관적 가정으로 설계된 이더리움 Layer 2 확장 솔루션으로 — ZK 롤업과 달리 트랜잭션 유효성 증명을 즉시 생성하지 않아 가스 비용이 낮지만, 출금 시 7일 이의제기 기간(Challenge Period)이 발생한다.
 > 2. 사기 증명(Fraud Proof)은 "시퀀서가 잘못된 상태 전이를 제출했다"고 누군가 증명하면 해당 배치가 롤백되는 메커니즘으로 — 이의제기자에게 보상을 주어 감시 인센티브를 만들고 시퀀서에게 슬래시(Slash) 패널티를 부과한다.
 > 3. Optimism(OP Stack)과 Arbitrum이 양대 옵티미스틱 롤업 구현체이며 — OP Stack의 오픈소스화로 Base(Coinbase), Zora, Mantle 등 수십 개의 Layer 2 체인이 동일한 스택으로 구축되는 "Superchain" 생태계가 형성되고 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 옵티미스틱 롤업 개념
+## 1. 개요 및 필요성
 
 ```
 롤업 (Rollup) 원리:
@@ -55,7 +58,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 사기 증명 메커니즘
+## 2. 구성요소
 
 ```
 사기 증명 (Fraud Proof) 단계:
@@ -98,7 +101,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. Optimism vs Arbitrum
+## 3. 구조 및 동작 원리
 
 ```
 비교:
@@ -135,7 +138,7 @@ Arbitrum:
 
 ---
 
-## Ⅳ. ZK 롤업과의 비교
+## 4. 비교 및 트레이드오프
 
 ```
 Optimistic vs ZK Rollup:
@@ -169,7 +172,7 @@ ZK 롤업 확산:
 
 ---
 
-## Ⅴ. 실무 시나리오 — Base 체인 DApp 배포
+## 5. 실무 적용 및 최적화 기법
 
 ```
 OP Stack 기반 Base 체인 DApp 배포:

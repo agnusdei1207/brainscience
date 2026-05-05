@@ -5,17 +5,19 @@ description = "성공적인 프로젝트 범위 관리를 위한 WBS의 계층�
 [taxonomies]
 tags = ["Project Management", "WBS", "Scope Management", "100% Rule", "Work Package"]
 +++
+## 0. 핵심 인사이트
 
-# 235. 범위 관리 WBS (Work Breakdown Structure) 100% Rule 규칙 통제
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: WBS (Work Breakdown Structure, 작업 분할 구조)는 프로젝트가 달성해야 할 전체 범위를 관리 가능하고 측정 가능한 최소 단위인 작업 패키지(Work Package)로 계층적으로 분해해 나가는 인도물(Deliverables) 중심의 설계도다.
+> **핵심**: WBS (Work Breakdown Structure, 작업 분할 구조)는 프로젝트가 달성해야 할 전체 범위를 관리 가능하고 측정 가능한 최소 단위인 작업 패키지(Work Package)로 계층적으로 분해해 나가는 인도물(Deliverables) 중심의 설계도다.
 > 2. **가치**: WBS 작성의 대전제인 '100% Rule'은 하위 레벨 작업들의 합이 상위 레벨의 범위를 100% 일치하게 채워야 함을 강제하여, 필수 작업의 누락을 막고 불필요한 과잉 작업(Gold Plating)을 원천 차단하는 가장 강력한 통제 기준이 된다.
 > 3. **융합**: 작성된 WBS 하단의 작업 패키지는 일정 관리(Gantt Chart, PERT/CPM), 원가 관리(Earned Value Management, EVM), 그리고 리스크 관리의 기본 식별 단위가 되어 프로젝트 통제 베이스라인(Baseline)의 중추 신경망 역할을 한다.
 
+> 📝 모범 답안
+
+# 235. 범위 관리 WBS (Work Breakdown Structure) 100% Rule 규칙 통제
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 범위 관리에서 WBS는 프로젝트의 최종 산출물을 완성하기 위해 팀이 수행해야 할 '모든 일'을 트리(Tree) 구조로 하향식(Top-Down) 분해한 명세서다. 100% Rule은 WBS 트리의 어떤 노드(Node)를 보더라도 자식 노드들이 나타내는 작업의 총합이 부모 노드의 작업을 정확히 100% 대변해야 한다는 엄격한 수학적·논리적 규칙이다.
 - **필요성**: 프로젝트를 덩어리째로 보면 완료까지 얼마나 걸릴지, 비용이 얼마나 들지 추정할 수 없다(코끼리를 한 입에 먹을 수 없는 것과 같다). 더 큰 문제는 누군가의 머릿속에만 있는 암묵적인 작업이 누락되거나, 반대로 고객이 요구하지도 않은 화려한 기능을 몰래 끼워 넣는 범위 팽창(Scope Creep)이 발생하는 것이다. WBS와 100% Rule은 이 거대한 코끼리를 소화 가능한 크기로 자르고, 남는 고기나 버리는 고기가 없도록 검증하는 저울 역할을 한다.
@@ -56,7 +58,7 @@ tags = ["Project Management", "WBS", "Scope Management", "100% Rule", "Work Pack
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### WBS의 계층적 트리 구조 (Tree Architecture)
 
@@ -114,7 +116,7 @@ WBS를 어디까지 쪼개야 하는가는 PM들의 오랜 난제다. 너무 안
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### WBS vs Agile 제품 백로그 (Product Backlog) 심층 비교
 
@@ -159,7 +161,7 @@ WBS를 어디까지 쪼개야 하는가는 PM들의 오랜 난제다. 너무 안
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 의사결정
 
@@ -203,7 +205,7 @@ WBS 기반의 범위 통제와 변경 요청(CR) 처리 절차를 도식화하�
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

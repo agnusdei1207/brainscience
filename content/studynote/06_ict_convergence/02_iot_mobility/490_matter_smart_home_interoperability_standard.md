@@ -5,16 +5,17 @@ weight = 490
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Matter(구 Project CHIP)는 Apple·Google·Amazon·Samsung이 주도하는 CSA(Connectivity Standards Alliance) 기반의 스마트홈 통합 표준으로, 서로 다른 생태계의 기기들이 단일 프로토콜로 상호 운용(Interoperability)되도록 설계되었다.
+> **핵심**: Matter(구 Project CHIP)는 Apple·Google·Amazon·Samsung이 주도하는 CSA(Connectivity Standards Alliance) 기반의 스마트홈 통합 표준으로, 서로 다른 생태계의 기기들이 단일 프로토콜로 상호 운용(Interoperability)되도록 설계되었다.
 > 2. **가치**: 기존에는 ZigBee, Z-Wave, HomeKit, SmartThings 등 수십 개의 파편화된 프로토콜로 인해 기기 호환성 지옥이 발생했다. Matter는 이를 하나의 표준으로 통합해 소비자와 제조사 모두의 복잡도를 혁신적으로 낮춘다.
 > 3. **판단 포인트**: Matter는 IP(Internet Protocol) 기반(Thread/Wi-Fi/Ethernet)으로 동작하며, 강력한 기기 인증(Attestation) 모델로 보안을 내재화하여 기술사 시험에서 표준화·보안·상호운용성 관점 모두를 아우르는 핵심 토픽이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 **스마트홈 프로토콜 파편화 문제**
 
@@ -33,7 +34,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌────────────────────────────────────────────────────────────┐
@@ -70,7 +71,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **기존 프로토콜 vs Matter 비교**
 
@@ -92,7 +93,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **기술 선택 판단**
 
@@ -108,7 +109,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Matter는 스마트홈 생태계의 표준화 이정표다. 제조사는 단일 구현으로 모든 주요 플랫폼 지원이 가능해져 개발 비용이 감소하고, 소비자는 생태계 종속 없이 최적 기기를 선택할 수 있다. Thread 기반 메시 네트워크와 강력한 인증 체계는 보안과 안정성을 동시에 달성한다.
 

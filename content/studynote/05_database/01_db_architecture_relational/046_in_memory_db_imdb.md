@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 인메모리 DB(IMDB)는 모든 데이터를 RAM에 상주시켜 디스크 I/O를 완전 제거 — 전통 디스크 기반 DB 대비 10~1,000배 빠른 응답(마이크로초 단위)을 달성하며, 트랜잭션 처리(OLTP), 캐싱, 실시간 분석에서 핵심 역할을 한다.
 > 2. IMDB의 핵심 과제는 내구성(Durability) 확보 — 전원 장애 시 RAM 데이터 소실을 방지하기 위해 WAL(Write-Ahead Logging), 스냅샷, 배터리 백업 RAM(NVRAM) 등을 활용하며, Redis의 RDB/AOF가 대표적 해결책이다.
 > 3. RAM 가격 하락과 DRAM 용량 증가로 IMDB 적용 범위 확대 — 수TB RAM 서버 등장으로 전통 DW 워크로드까지 IMDB로 처리 가능해졌으며, SAP HANA, VoltDB, Redis Enterprise가 이 영역을 선도한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. IMDB 개요
+## 1. 개요 및 필요성
 
 ```
 IMDB vs 전통 디스크 DB:
@@ -62,7 +65,7 @@ RAM 비용:
 
 ---
 
-## Ⅱ. 내구성 메커니즘
+## 2. 구성요소
 
 ```
 IMDB 내구성 (Durability) 문제:
@@ -115,7 +118,7 @@ VoltDB:
 
 ---
 
-## Ⅲ. 데이터 구조와 활용
+## 3. 구조 및 동작 원리
 
 ```
 Redis 데이터 구조:
@@ -166,7 +169,7 @@ Streams:
 
 ---
 
-## Ⅳ. 캐싱 전략
+## 4. 비교 및 트레이드오프
 
 ```
 IMDB 캐싱 패턴:
@@ -218,7 +221,7 @@ Thundering Herd (Cache Stampede):
 
 ---
 
-## Ⅴ. 실무 시나리오 — 전자상거래 캐싱 아키텍처
+## 5. 실무 적용 및 최적화 기법
 
 ```
 전자상거래 Redis 캐싱 아키텍처:

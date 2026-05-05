@@ -5,17 +5,19 @@ weight = 380
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-# 시퀀스 객체 vs Auto Increment (데이터베이스 식별자 생성 아키텍처)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 데이터베이스에서 행(Row)을 유일하게 식별하는 기본 키(Primary Key)인 일련번호를 생성할 때, `Auto Increment (Identity)`는 특정 테이블 내부 공간에 **종속(Dependent)**되어 작동하는 자동 번호표 기계이고, `Sequence`는 테이블과 완전히 분리되어 DB 전역에서 혼자 돌아가는 **독립적인(Independent)** 번호 생성 객체다.
+> **핵심**: 데이터베이스에서 행(Row)을 유일하게 식별하는 기본 키(Primary Key)인 일련번호를 생성할 때, `Auto Increment (Identity)`는 특정 테이블 내부 공간에 **종속(Dependent)**되어 작동하는 자동 번호표 기계이고, `Sequence`는 테이블과 완전히 분리되어 DB 전역에서 혼자 돌아가는 **독립적인(Independent)** 번호 생성 객체다.
 > 2. **가치**: `Auto Increment`는 설정의 직관성 덕분에 빠른 개발이 가능하지만, 대용량 엔터프라이즈 환경이나 다수 테이블 간의 번호 통합, 선제적 번호 획득이 필요한 비즈니스 로직에서는 한계를 보인다. 반면 `Sequence`는 인메모리 캐싱(Caching)을 통해 동시성 병목을 뚫어내고 아키텍처적 유연성을 제공한다.
 > 3. **융합**: 현대 ORM (JPA, Hibernate) 환경에서는 영속성 컨텍스트(Persistence Context)의 관리를 위해 `INSERT` 쿼리를 모았다가 한 번에 쏘는 Batch Insert가 필수적인데, 이를 완벽하게 지원하기 위해서는 애플리케이션이 DB에 미리 번호를 받아올 수 있는 `Sequence` 아키텍처와의 융합이 결정적 차이를 만든다.
 
+> 📝 모범 답안
+
+# 시퀀스 객체 vs Auto Increment (데이터베이스 식별자 생성 아키텍처)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 관계형 데이터베이스에서 새 레코드를 삽입할 때 식별자(PK) 값을 어떻게 부여할 것인가에 대한 전략적 선택이다. **Auto Increment (Identity Column)** 방식은 컬럼 속성 자체에 "값이 안 들어오면 네가 알아서 1 더해서 넣어라"라고 위임하는 방식이고, **Sequence** 방식은 `CREATE SEQUENCE` 명령어로 별도의 객체를 만들어 필요할 때마다 `NEXTVAL` 함수를 호출해 번호를 뽑아 쓰는 방식이다.
 
@@ -64,7 +66,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 시퀀스(Sequence) 캐시(Cache) 아키텍처 메커니즘
 
@@ -89,7 +91,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### Auto Increment vs Sequence 아키텍처 심층 벤치마크
 
@@ -112,7 +114,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 안티패턴
 
@@ -163,7 +165,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

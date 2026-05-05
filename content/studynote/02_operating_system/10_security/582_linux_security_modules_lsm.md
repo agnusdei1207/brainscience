@@ -5,13 +5,15 @@ date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 리눅스 보안 모듈 (LSM, Linux Security Modules) - 리눅스 커널에 보안 정책 enforcement 기능을 플러그인 방식으로 제공 하는 프레임워크
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: LSM(Linux Security Modules)은 리눅스 커널에 **"보안 enforcement를 위한 훅(Hook)"**을 제공하여, SELinux, AppArmor 등 다양한 보안 모듈이 커널을 수정하지 않고 **플러그인 방식으로** 부착할 수 있게 하는 프레임워크이다.
+> **핵심**: LSM(Linux Security Modules)은 리눅스 커널에 **"보안 enforcement를 위한 훅(Hook)"**을 제공하여, SELinux, AppArmor 등 다양한 보안 모듈이 커널을 수정하지 않고 **플러그인 방식으로** 부착할 수 있게 하는 프레임워크이다.
 > 2. **가치**: 이 **추상화 계층(Abstraction Layer)** 덕분에 커널 코드와 보안 정책 코드가 분리되어, 다양한 보안 정책(SELinux, AppArmor, Smack, Tomoyo 등)을 자유롭게 선택하고 교체할 수 있다.
 > 3. **한계**: 각 보안 모듈이 LSM 훅을 모두 지원하지는 않아서, **모듈 간 기능 차이**가 있으며, 동시에 두 개 이상의 주요 MAC 모듈을 사용하는 것은 권장되지 않는다.
+
+> 📝 모범 답안
+
+# 리눅스 보안 모듈 (LSM, Linux Security Modules) - 리눅스 커널에 보안 정책 enforcement 기능을 플러그인 방식으로 제공 하는 프레임워크
 
 ---
 

@@ -5,16 +5,17 @@ date = "2026-04-10"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 합성곱 신경망 (CNN, Convolutional Neural Network)은 이미지의 2차원 공간적 구조를 파괴하지 않고 필터(Filter)를 이용해 지역적 특징(Local Feature)을 순차적으로 추출하는 인공신경망이다.
+> **핵심**: 합성곱 신경망 (CNN, Convolutional Neural Network)은 이미지의 2차원 공간적 구조를 파괴하지 않고 필터(Filter)를 이용해 지역적 특징(Local Feature)을 순차적으로 추출하는 인공신경망이다.
 > 2. **가치**: 전체 픽셀을 한 번에 연산하지 않고 파라미터 공유(Parameter Sharing)를 통해 가중치 개수를 극단적으로 줄이면서도, 사물의 위치가 이동해도 동일하게 인식할 수 있는 위치 이동 불변성(Translation Invariance)을 제공한다.
 > 3. **판단 포인트**: 시각적 패턴 인식이 필요한 영상 및 이미지 분류에서는 압도적인 성능을 내지만, 데이터의 순서나 시계열 흐름이 중요한 텍스트/음성 데이터에서는 순환 신경망 (RNN, Recurrent Neural Network) 대비 효율이 떨어진다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 합성곱 신경망 (CNN)은 다층 퍼셉트론 (MLP, Multi-Layer Perceptron)이 가진 이미지 처리의 한계를 극복하기 위해 등장한 아키텍처다. 기존 MLP 방식은 2차원 이미지를 입력받기 위해 1차원 벡터로 평탄화(Flatten)해야 했으며, 이 과정에서 픽셀 간의 상하좌우 공간적 연관성이 완전히 소실되는 치명적인 문제가 발생했다. 
 
@@ -24,7 +25,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 CNN은 크게 특징 추출(Feature Extraction) 영역과 분류(Classification) 영역으로 나뉜다. 특징 추출은 합성곱 층(Convolution Layer)과 풀링 층(Pooling Layer)의 반복으로 이루어지며, 최종 분류는 완전 연결 층(Fully Connected Layer)이 담당한다.
 
@@ -46,7 +47,7 @@ CNN은 크게 특징 추출(Feature Extraction) 영역과 분류(Classification)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 이미지 처리 관점에서 전통적인 완전 연결 신경망(MLP)과 CNN의 구조적 차이를 이해하는 것이 핵심이다.
 
@@ -63,7 +64,7 @@ CNN은 크게 특징 추출(Feature Extraction) 영역과 분류(Classification)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서 CNN을 설계하거나 도입할 때는 하이퍼파라미터(Hyperparameter) 튜닝과 메모리 용량의 트레이드오프를 반드시 고려해야 한다.
 
@@ -76,7 +77,7 @@ CNN은 크게 특징 추출(Feature Extraction) 영역과 분류(Classification)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 CNN은 이미지 처리에서 압도적인 연산 효율성과 높은 인식 정확도를 제공하여 자율주행, 의료 영상 판독, 안면 인식 등 현대 AI 산업의 핵심 인프라를 구축했다. 지역적 특성을 추출하는 기능 덕분에 최근에는 이미지뿐만 아니라 시계열 데이터(1D CNN)나 자연어 처리 영역에서도 일부 활용되고 있다.
 

@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: RDD (Resilient Distributed Dataset, 내결함성 분산 데이터셋)는 Apache Spark의 핵심 추상화로, 클러스터 전체에 분산된 불변(Immutable) 데이터 파티션의 집합이다. Resilient는 "복원력 있는(내결함성)"을 의미하며, 리니지(Lineage) 정보를 통해 노드 장애 시 실패한 파티션만 재계산하여 자동 복구한다.
+> **핵심**: RDD (Resilient Distributed Dataset, 내결함성 분산 데이터셋)는 Apache Spark의 핵심 추상화로, 클러스터 전체에 분산된 불변(Immutable) 데이터 파티션의 집합이다. Resilient는 "복원력 있는(내결함성)"을 의미하며, 리니지(Lineage) 정보를 통해 노드 장애 시 실패한 파티션만 재계산하여 자동 복구한다.
 > 2. **가치**: RDD는 MapReduce보다 10~100배 빠른 인메모리(In-memory) 처리를 가능하게 하여 반복 알고리즘(ML 훈련 루프)과 대화형 분석(REPL)을 실용화했다. 트랜스포메이션(Transformation)의 지연 실행(Lazy Evaluation)과 DAG (Directed Acyclic Graph, 방향 비순환 그래프) 기반 실행 계획 최적화로 효율적인 분산 처리를 실현한다.
 > 3. **판단 포인트**: 현대 Spark 개발에서는 RDD보다 DataFrame/Dataset API를 권장한다. DataFrame은 스키마 정보를 가지며 Catalyst Optimizer에 의해 자동 최적화되어 동등한 RDD 코드보다 훨씬 빠르다. 하지만 저수준 커스텀 처리나 비정형 데이터 처리에는 여전히 RDD가 필요하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌────────────────────────────────────────────────────────────┐
@@ -33,7 +35,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### RDD 연산 유형
 
@@ -80,7 +82,7 @@ rdd → words → pairs → counts
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ```text
 Spark API 계층:
@@ -100,7 +102,7 @@ Spark API 계층:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 사용자 지정 파티셔닝이 필요한 그래프 처리
 
@@ -127,7 +129,7 @@ for i in range(100):
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

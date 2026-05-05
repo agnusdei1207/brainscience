@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. ZK-Rollup(Zero-Knowledge Rollup)은 수천 건의 트랜잭션을 오프체인에서 처리하고 수학적 유효성 증명(zk-SNARK/zk-STARK)만 메인체인에 제출하는 Layer 2 확장 기술로 — 낙관적 롤업(Optimistic Rollup)과 달리 도전 기간 없이 즉시 최종성(Finality)을 달성한다.
 > 2. ZK-Rollup의 핵심인 영지식 증명(ZKP — Zero-Knowledge Proof)은 "비밀을 공개하지 않고 비밀을 알고 있음을 증명"하는 암호학 기법으로 — 증명자(Prover)는 계산 결과만 공개하고 메인체인(검증자)은 수학적으로 검증하므로, 프라이버시와 확장성을 동시에 달성한다.
 > 3. zk-SNARK(Succinct Non-interactive ARgument of Knowledge)는 증명 크기가 작고 검증이 빠르지만 신뢰된 셋업(Trusted Setup)이 필요한 반면 — zk-STARK(Scalable Transparent ARgument of Knowledge)는 신뢰된 셋업이 없어 투명하고 양자 내성이 있지만 증명 크기가 크다는 트레이드오프가 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. ZK-Rollup 개념
+## 1. 개요 및 필요성
 
 ```
 ZK-Rollup (Zero-Knowledge Rollup):
@@ -53,7 +56,7 @@ ZK-Rollup vs Optimistic Rollup:
 
 ---
 
-## Ⅱ. 영지식 증명 (ZKP)
+## 2. 구성요소
 
 ```
 영지식 증명 (ZKP — Zero-Knowledge Proof):
@@ -92,7 +95,7 @@ ZK-Rollup vs Optimistic Rollup:
 
 ---
 
-## Ⅲ. zk-SNARK vs zk-STARK
+## 3. 구조 및 동작 원리
 
 ```
 zk-SNARK (Succinct Non-interactive ARgument of Knowledge):
@@ -149,7 +152,7 @@ zk-STARK (Scalable Transparent ARgument of Knowledge):
 
 ---
 
-## Ⅳ. ZK-Rollup 생태계
+## 4. 비교 및 트레이드오프
 
 ```
 ZK-Rollup 프로젝트 현황:
@@ -197,7 +200,7 @@ ZK 증명 생성 비용:
 
 ---
 
-## Ⅴ. 실무 시나리오 — ZK-Rollup DEX
+## 5. 실무 적용 및 최적화 기법
 
 ```
 ZK-Rollup 기반 탈중앙화 거래소 (DEX):

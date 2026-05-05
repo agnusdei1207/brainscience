@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# IOMMU (Input/Output MMU) 역할 - 가상머신 DMA 장치 할당 및 보호 격리
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CPU가 메모리에 접근할 때 MMU가 주소를 변환하듯, 주변기기(NIC, GPU 등)가 메모리에 직접 접근(DMA)할 때 주소를 변환하고 접근 권한을 통제하는 하드웨어 장치가 **IOMMU (Input/Output Memory Management Unit)**이다.
+> **핵심**: CPU가 메모리에 접근할 때 MMU가 주소를 변환하듯, 주변기기(NIC, GPU 등)가 메모리에 직접 접근(DMA)할 때 주소를 변환하고 접근 권한을 통제하는 하드웨어 장치가 **IOMMU (Input/Output Memory Management Unit)**이다.
 > 2. **해결**: 가상머신(VM)에 물리적 장치(PCIe 기기)를 직접 할당(Passthrough)할 때, 장치는 게스트 OS의 가상 물리 주소(GPA)만 알기 때문에 잘못된 물리 메모리(HPA)를 덮어쓰는 치명적 DMA 공격이나 오류가 발생할 수 있다. IOMMU는 장치의 DMA 요청을 중간에서 가로채 GPA를 올바른 HPA로 변환(Remapping)하여 이를 방지한다.
 > 3. **가치**: IOMMU(Intel VT-d, AMD-Vi)의 도입으로 클라우드 인프라에서 SR-IOV 네트워크 카드나 물리 GPU를 VM에 성능 저하 없이 직접 꽂아주면서도, VM 간 완벽한 보안 격리(Isolation)를 달성하는 하드웨어 I/O 가상화가 완성되었다.
 
+> 📝 모범 답안
+
+# IOMMU (Input/Output MMU) 역할 - 가상머신 DMA 장치 할당 및 보호 격리
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: IOMMU는 메인보드 칩셋(기존의 북브릿지)이나 CPU 내부에 위치하며, PCI Express 버스와 메인 메모리 사이에 연결되어 **디바이스가 발생시키는 DMA(Direct Memory Access) 요청의 주소를 변환하고 접근 제어**를 수행하는 하드웨어 유닛이다. 
 
@@ -35,7 +37,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 비교 (MMU vs IOMMU)
 
@@ -101,7 +103,7 @@ IOMMU (Intel VT-d)의 또 다른 핵심 기능은 **인터럽트 리매핑**이�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### I/O 가상화 기술 비교
 
@@ -123,7 +125,7 @@ IOMMU는 단순히 주소만 변환하는 것이 아니라, 가상화 환경에�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -173,7 +175,7 @@ IOMMU는 단순히 주소만 변환하는 것이 아니라, 가상화 환경에�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

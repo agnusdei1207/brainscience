@@ -5,17 +5,19 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 다중 프로그래밍 (Multiprogramming)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 다중 프로그래밍 (Multiprogramming)은 I/O 작업으로 인해 CPU가 유휴 상태 (Idle)가 될 때 다른 작업으로 전환하여 CPU 활용률 (Utilization)을 극대화하는 자원 효율화 기법이다.
+> **핵심**: 다중 프로그래밍 (Multiprogramming)은 I/O 작업으로 인해 CPU가 유휴 상태 (Idle)가 될 때 다른 작업으로 전환하여 CPU 활용률 (Utilization)을 극대화하는 자원 효율화 기법이다.
 > 2. **가치**: 단일 작업 처리 (Uni-programming)의 한계인 자원 낭비를 극복하고, 메모리에 여러 프로세스를 상주시켜 시스템 전체의 처리량 (Throughput)을 비약적으로 향상시킨다.
 > 3. **융합**: 현대의 시분할 시스템 (Time-sharing)과 가상 메모리 (Virtual Memory) 기술의 근간이 되었으며, 프로세스 스케줄링 및 메모리 보호 (Memory Protection) 기술 발전을 견인했다.
 
+> 📝 모범 답안
+
+# 다중 프로그래밍 (Multiprogramming)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 다중 프로그래밍 (Multiprogramming)은 여러 개의 프로그램 (Job)을 동시에 메모리에 적재해 두고, 현재 실행 중인 프로그램이 I/O (Input/Output) 요청 등으로 인해 대기 상태에 빠지면 CPU (Central Processing Unit)를 즉시 다른 프로그램에게 할당하여 실행을 지속하는 방식이다. 이는 'CPU는 한순간도 쉬지 않아야 한다'는 효율성 중심의 운영 철학을 대변한다.
 
@@ -49,7 +51,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -116,7 +118,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 다중 작업 처리 방식 비교
 
@@ -137,7 +139,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 적용 시나리오 및 운영 전략
 
@@ -158,7 +160,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 다중 프로그래밍 도입의 정량/정성적 효과
 

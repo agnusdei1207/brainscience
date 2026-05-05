@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 리얼타임 리눅스 (PREEMPT_RT) 커널 스핀락을 뮤텍스로 변환하는 선점 허용 구조 개요
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 일반 리눅스(GPOS)는 커널 모드에서 코드가 실행 중일 때(특히 Spinlock을 쥐고 있을 때) 다른 높은 우선순위의 작업이 이를 빼앗지 못하게 막아(Preemption Disable), 수십 밀리초(ms)의 치명적인 인터럽트 지연을 유발한다.
+> **핵심**: 일반 리눅스(GPOS)는 커널 모드에서 코드가 실행 중일 때(특히 Spinlock을 쥐고 있을 때) 다른 높은 우선순위의 작업이 이를 빼앗지 못하게 막아(Preemption Disable), 수십 밀리초(ms)의 치명적인 인터럽트 지연을 유발한다.
 > 2. **혁신 (PREEMPT_RT)**: 리눅스를 실시간(Real-Time) OS로 탈바꿈시키는 **PREEMPT_RT 패치**의 가장 핵심적인 원리는, 절대 뺏을 수 없던 커널 내부의 수많은 **스핀락(Spinlock)을 슬립 가능한(Sleepable) 뮤텍스(rt_mutex)로 강제 변환**하는 것이다.
 > 3. **가치**: 이 변환과 함께 '우선순위 상속(Priority Inheritance)'을 적용함으로써, 커널이 시스템 콜을 처리하는 도중이라도 더 긴급한 실시간 스레드(예: 로봇 제어, 오디오 처리)가 언제든 CPU를 빼앗아(Preempt) **10~50마이크로초($\mu s$) 내의 확정적 응답 시간(Determinism)**을 보장받게 된다.
 
+> 📝 모범 답안
+
+# 리얼타임 리눅스 (PREEMPT_RT) 커널 스핀락을 뮤텍스로 변환하는 선점 허용 구조 개요
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **선점(Preemption)**: 현재 CPU를 쓰고 있는 스레드를 강제로 내쫓고, 우선순위가 더 높은 스레드에게 CPU를 넘겨주는 행위.
@@ -41,7 +43,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 리눅스 커널의 Spinlock vs Mutex
 
@@ -106,7 +108,7 @@ PREEMPT_RT 패치를 적용하면 커널 소스의 `#include <linux/spinlock.h>`
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 커널 선점(Preemption) 모델 비교
 
@@ -128,7 +130,7 @@ PREEMPT_RT 패치를 적용하면 커널 소스의 `#include <linux/spinlock.h>`
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -177,7 +179,7 @@ PREEMPT_RT 패치를 적용하면 커널 소스의 `#include <linux/spinlock.h>`
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

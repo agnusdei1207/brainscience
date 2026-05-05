@@ -5,16 +5,17 @@ date = "2026-05-01"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Ingress는 HTTP/HTTPS 요청을 클러스터 내부 서비스로 라우팅하는 진입점이다.
+> **핵심**: Ingress는 HTTP/HTTPS 요청을 클러스터 내부 서비스로 라우팅하는 진입점이다.
 > 2. **가치**: Service Type (ClusterIP, NodePort, LoadBalancer)과 함께 외부 노출 방식을 설계한다.
 > 3. **판단 포인트**: Ingress Controller가 실제 동작 주체이며, TLS와 경로/호스트 규칙이 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 쿠버네티스에서 외부 트래픽을 어떻게 받을지 정해야 한다. 서비스 타입은 노출 방식을, Ingress는 HTTP 라우팅 규칙을 담당한다.
 
@@ -24,7 +25,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Service는 Pod 묶음에 안정적인 네트워크를 제공하고, Ingress는 여러 서비스 앞에서 HTTP 라우팅을 수행한다. 실제 라우팅은 Ingress Controller가 맡는다.
 
@@ -45,7 +46,7 @@ Client → Ingress Controller → Ingress Rule → Service → Pod
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Service Type은 네트워크 노출 방식이고, Ingress는 HTTP 계층의 규칙이다. 둘을 함께 써야 웹 애플리케이션을 깔끔하게 외부에 제공할 수 있다.
 
@@ -61,7 +62,7 @@ Ingress Controller는 NGINX, Traefik, HAProxy 같은 구현이 있다. 운영에
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 외부 공개 범위, TLS 종료 위치, 경로 기반 분기, health check, WAF 연계 등을 본다. 서비스 타입별 장단점도 명확히 해야 한다.
 
@@ -84,7 +85,7 @@ Ingress Controller는 NGINX, Traefik, HAProxy 같은 구현이 있다. 운영에
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Ingress와 Service Type을 적절히 조합하면 외부 트래픽 관리와 서비스 분리가 쉬워진다.
 

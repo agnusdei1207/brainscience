@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> Kafka 호환 API는 "해외 전자 제품의 어댑터(어댑터)"와 같다. 플러그 모양(Kafka API)은 같고 소켓(Event Hubs)만 다른데, 어댑터(Kafka 프로토콜 지원)를 꽂으면 기존 제품(Kafka 클라이언트)을 그대로 사용할 수 있다.
+
+> 📝 모범 답안
 
 - **본질**: Azure Event Hubs (애저 이벤트 허브)는 Microsoft Azure의 완전 관리형 이벤트 스트리밍 서비스로, Apache Kafka 프로토콜 호환 엔드포인트를 제공하여 기존 Kafka 클라이언트 코드 변경 없이(Drop-in Replacement) 마이그레이션이 가능하다.
 - **가치**: Kafka 호환 API 덕분에 온프레미스 Kafka → Azure 마이그레이션 경로가 쉽고, AMQP/HTTPS도 지원하여 다양한 클라이언트와 통합되며, Capture 기능으로 원본 이벤트를 Azure Data Lake Storage(ADLS)에 자동 백업하여 장기 분석 파이프라인을 구성한다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. Azure Event Hubs 위치
 
@@ -47,11 +50,10 @@ producer.produce('my-event-hub', key='user-001', value='{"action": "click"}')
 ```
 
 **📢 섹션 요약 비유**
-> Kafka 호환 API는 "해외 전자 제품의 어댑터(어댑터)"와 같다. 플러그 모양(Kafka API)은 같고 소켓(Event Hubs)만 다른데, 어댑터(Kafka 프로토콜 지원)를 꽂으면 기존 제품(Kafka 클라이언트)을 그대로 사용할 수 있다.
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. Event Hubs 구조
 
@@ -110,7 +112,7 @@ producer.produce('my-event-hub', key='user-001', value='{"action": "click"}')
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 1. Azure Event Hubs vs Apache Kafka vs Amazon Kinesis
 
@@ -145,7 +147,7 @@ schema_registry = SchemaRegistryClient(
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1. Azure + Kafka 마이그레이션 경로
 
@@ -178,7 +180,7 @@ IoT 디바이스/웹앱 → Event Hubs → Azure Stream Analytics → Power BI (
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 기대효과
 
@@ -207,7 +209,6 @@ Azure Event Hubs는 **Kafka 호환성을 통한 점진적 마이그레이션**�
 | Azure Databricks | 통합 처리 | Spark Structured Streaming과 연동 |
 | Azure Data Lake Gen2 | 저장 대상 | Capture 기능으로 자동 보관 |
 | Kafka MirrorMaker 2 | 마이그레이션 도구 | 온프레미스 → Event Hubs 마이그레이션 |
-
 
 ### 📈 관련 키워드 및 발전 흐름도
 

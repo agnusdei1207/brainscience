@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. COCOMO II(Constructive Cost Model II)는 소프트웨어 개발 규모(LOC 또는 기능 점수)와 복잡도 요인을 결합하여 공수(Person-Month)와 일정을 과학적으로 추정 — 1995년 Barry Boehm이 발전시킨 COCOMO I의 개선 모델로, 현대 소프트웨어 개발 환경(재사용, CBD)을 반영한다.
 > 2. 스케일 팩터(Scale Factor)와 비용 드라이버(Cost Driver)의 합성이 핵심 — 선형이 아닌 지수 스케일링으로 소규모 프로젝트(1만 LOC)와 초대형 프로젝트(100만 LOC) 사이의 비선형적 비용 증가를 모델링한다.
 > 3. 추정의 불확실성을 인식하는 것이 COCOMO II 활용의 전제 — 초기 추정(Application Composition)은 ±4배, 상세 추정(Post-Architecture)도 ±25% 오차가 존재하므로, 추정을 하나의 점이 아닌 범위로 제시하고 지속적으로 검보하는 것이 올바른 활용법이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. COCOMO II 모델 개요
+## 1. 개요 및 필요성
 
 ```
 COCOMO I vs COCOMO II:
@@ -60,7 +63,7 @@ COCOMO II (1995, 2000 개정):
 
 ---
 
-## Ⅱ. 스케일 팩터 (Scale Factor)
+## 2. 구성요소
 
 ```
 SF (Scaling Factor):
@@ -108,7 +111,7 @@ SF 계산 예:
 
 ---
 
-## Ⅲ. 비용 드라이버 (Cost Driver)
+## 3. 구조 및 동작 원리
 
 ```
 EM (Effort Multiplier):
@@ -152,7 +155,7 @@ SCED 역설:
 
 ---
 
-## Ⅳ. 추정 프로세스
+## 4. 비교 및 트레이드오프
 
 ```
 COCOMO II 추정 절차:
@@ -208,7 +211,7 @@ Step 6: 팀 규모
 
 ---
 
-## Ⅴ. 실무 시나리오 — 금융 시스템 추정
+## 5. 실무 적용 및 최적화 기법
 
 ```
 금융 거래 처리 시스템 COCOMO II 추정:

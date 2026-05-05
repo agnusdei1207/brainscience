@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 틱리스 커널 (Tickless Kernel)과 모바일 배터리 보존
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 틱리스 커널(Tickless Kernel)은 CPU 스케줄러가 일정한 시간(예: 1ms)마다 무조건 강제로 깨어나던 고정된 타이머 인터럽트(Periodic Tick) 방식을 버리고, **"할 일이 없을 때는 다음 예약된 스케줄이 올 때까지 알람을 끄고 무한정 깊은 수면(Deep Sleep)에 빠지는" 동적 이벤트 기반(Event-Driven) 타이머 아키텍처**다.
+> **핵심**: 틱리스 커널(Tickless Kernel)은 CPU 스케줄러가 일정한 시간(예: 1ms)마다 무조건 강제로 깨어나던 고정된 타이머 인터럽트(Periodic Tick) 방식을 버리고, **"할 일이 없을 때는 다음 예약된 스케줄이 올 때까지 알람을 끄고 무한정 깊은 수면(Deep Sleep)에 빠지는" 동적 이벤트 기반(Event-Driven) 타이머 아키텍처**다.
 > 2. **가치**: 아무 일도 안 하면서 1초에 1,000번씩 허공에 도끼질을 하던 CPU의 무의미한 각성(Wake-up) 오버헤드를 0으로 만들어, 스마트폰이 주머니 속에 있을 때(대기 모드) 배터리가 증발하는 현상을 막고 기기의 **대기 전력 수명을 며칠 단위로 획기적으로 연장**시켰다.
 > 3. **융합**: 모바일(Android/iOS)의 배터리 보존을 위해 탄생한 이 `CONFIG_NO_HZ_IDLE` 기술은, 이제 HPC(고성능 컴퓨팅)와 금융 서버 환경에서 단 1코어만 돌릴 때 타이머 간섭 자체를 없애는 `CONFIG_NO_HZ_FULL` 극저지연 튜닝 기술로 융합 발전하여 데스크톱/서버의 생태계까지 정복했다.
 
+> 📝 모범 답안
+
+# 틱리스 커널 (Tickless Kernel)과 모바일 배터리 보존
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - 과거 운영체제는 HZ(Hertz)라는 값에 따라 1초에 100번~1000번씩 규칙적으로 시계 알람(Timer Tick)을 울렸다.
@@ -62,7 +64,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 하드웨어 타이머의 진화 (PIT에서 APIC / HPET로)
 
@@ -100,7 +102,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 틱리스(Tickless) 옵션의 3대 진화 (CONFIG_NO_HZ 트리)
 
@@ -121,7 +123,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 최적화 함정
 
@@ -166,7 +168,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

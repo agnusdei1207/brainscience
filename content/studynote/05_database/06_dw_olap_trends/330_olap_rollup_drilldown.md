@@ -5,17 +5,19 @@ date = "2026-04-07"
 [extra]
 categories = "studynote-db"
 +++
+## 0. 핵심 인사이트
 
-# 다차원 데이터 분석(OLAP): 롤업(Roll-up)과 드릴다운(Drill-down)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 롤업 (Roll-up)과 드릴다운 (Drill-down)은 OLAP (On-Line Analytical Processing) 환경에서 다차원 데이터 큐브의 계층 구조 (Hierarchy)를 따라 데이터를 상향 요약 (Aggregation) 하거나 하향 구체화 (Detail) 하여 비즈니스 인사이트를 도출하는 양방향 분석 기법이다.
+> **핵심**: 롤업 (Roll-up)과 드릴다운 (Drill-down)은 OLAP (On-Line Analytical Processing) 환경에서 다차원 데이터 큐브의 계층 구조 (Hierarchy)를 따라 데이터를 상향 요약 (Aggregation) 하거나 하향 구체화 (Detail) 하여 비즈니스 인사이트를 도출하는 양방향 분석 기법이다.
 > 2. **가치**: 경영진은 막대한 원시 데이터 (Raw Data)를 롤업으로 압축하여 전사적 트렌드를 조망하고, 이상 징후 (Anomaly) 발견 시 드릴다운을 통해 지점별, 품목별 상세 원인으로 파고듦으로써 직관적인 데이터 기반 의사결정 (Data-Driven Decision)을 내릴 수 있다.
 > 3. **융합**: 이 기법들은 데이터 웨어하우스 (Data Warehouse)의 스타 스키마 (Star Schema) 및 스노우플레이크 스키마 (Snowflake Schema) 계층 설계에 절대적으로 의존하며, SQL의 `GROUP BY ROLLUP`, BI (Business Intelligence) 도구의 인터랙티브 대시보드와 깊숙이 결합되어 동작한다.
 
+> 📝 모범 답안
+
+# 다차원 데이터 분석(OLAP): 롤업(Roll-up)과 드릴다운(Drill-down)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 다차원 데이터 분석의 관점에서 볼 때 데이터는 지역, 시간, 상품과 같은 여러 '차원 (Dimension)'과 '계층 (Hierarchy)'을 갖는다. **롤업 (Roll-up)** 은 하위 속성에서 상위 속성으로 올라가며 데이터를 그룹화/합산 (예: 일별 → 월별 → 연별)하는 연산이다. 반대로 **드릴다운 (Drill-down)** 은 요약된 데이터에서 하위 단계의 구체적 상세 데이터 (예: 연별 → 월별 → 일별)로 파고 들어가는 연산이다.
 - **필요성**: 수억 건 단위의 트랜잭션 기록(OLTP)은 그 자체로는 아무런 의사결정 정보가 되지 못한다. 거대한 데이터를 인간의 뇌가 인지하기 위해서는 반드시 직관적인 요약(Roll-up)이 필요하며, 특정 요약 지표에 나타난 급락/급등의 문제 원인을 규명하기 위해서는 더 깊은 레벨로 세분화(Drill-down)하여 돋보기를 들이댈 필요가 역설적으로 발생한다.
@@ -51,7 +53,7 @@ categories = "studynote-db"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### OLAP 연산 구성 요소와 동작 메커니즘
 
@@ -99,7 +101,7 @@ categories = "studynote-db"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 다차원 OLAP 연산 비교 매트릭스
 
@@ -137,7 +139,7 @@ categories = "studynote-db"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **시나리오 — 데이터 웨어하우스 대시보드 타임아웃 장애 (Drill-down 병목)**: 사용자가 BI 대시보드(Tableau 등)에서 '연도'를 클릭해 '일' 단위 데이터로 5단계를 한 번에 드릴다운하자, 백엔드 DB에서 수십억 건의 조인이 발생해 OOM(Out of Memory)과 화면 정지(Timeout) 상태 발생.
@@ -156,7 +158,7 @@ categories = "studynote-db"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

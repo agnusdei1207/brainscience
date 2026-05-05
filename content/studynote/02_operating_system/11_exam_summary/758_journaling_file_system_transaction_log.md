@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 저널링 파일 시스템과 트랜잭션 로그 (Journaling File System)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 저널링 파일 시스템 (Journaling File System)은 디스크에 실제 파일 데이터를 기록하기 전에, **어떤 변경 작업을 할 것인지 그 계획을 미리 별도의 안전한 로그 영역(저널, Journal)에 순차적으로 기록해 두는 아키텍처**다.
+> **핵심**: 저널링 파일 시스템 (Journaling File System)은 디스크에 실제 파일 데이터를 기록하기 전에, **어떤 변경 작업을 할 것인지 그 계획을 미리 별도의 안전한 로그 영역(저널, Journal)에 순차적으로 기록해 두는 아키텍처**다.
 > 2. **가치**: 쓰기 도중 갑작스러운 정전이나 커널 패닉이 발생했을 때, 전통적인 `fsck` (파일 시스템 검사)로 디스크 전체를 스캔하느라 서버가 몇 시간씩 멈춰있는 악몽을 끝내고, **단 몇 초 만에 로그(저널)를 다시 재생(Replay)하여 파일 시스템의 무결성 일관성을 즉각 복구**해 낸다.
 > 3. **융합**: 데이터베이스(DB) 시스템의 핵심인 '트랜잭션(Transaction)'과 WAL (Write-Ahead Logging) 철학을 운영체제의 파일 시스템 커널 레이어로 그대로 이식하여 융합시킨, 현대 OS (ext4, XFS, NTFS)의 절대적 생존 표준 기술이다.
 
+> 📝 모범 답안
+
+# 저널링 파일 시스템과 트랜잭션 로그 (Journaling File System)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - 저널링은 파일 시스템의 변경 사항(메타데이터 및 데이터)을 원본 디스크 위치에 반영하기 직전에, 원형 큐 구조로 된 전용 로그 영역(Journal Area)에 일기장 쓰듯 순서대로 먼저 밀어 넣는(Commit) 기법이다.
@@ -64,7 +66,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 저널링의 내부 파이프라인 (WAL 철학)
 
@@ -110,7 +112,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 저널링 파일 시스템 (Journaling) vs COW 파일 시스템 (ZFS, Btrfs)
 
@@ -132,7 +134,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 운영 안티패턴
 
@@ -176,7 +178,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Foundation Model은 **대규모 데이터로 사전 학습(Pre-training)된 범용 AI 모델**로, 다양한 하위 작업(NLP·Vision·코드)에 Fine-tuning 또는 Prompting으로 적응 가능하며, GPT·BERT·Stable Diffusion이 대표이다.
+> **핵심**: Foundation Model은 **대규모 데이터로 사전 학습(Pre-training)된 범용 AI 모델**로, 다양한 하위 작업(NLP·Vision·코드)에 Fine-tuning 또는 Prompting으로 적응 가능하며, GPT·BERT·Stable Diffusion이 대표이다.
 > 2. **가치**: 개별 작업마다 처음부터 모델을 학습하면 비용이 막대하지만, Foundation Model을 **기반으로 미세 조정**하면 소량 데이터로도 높은 성능을 달성할 수 있다(Transfer Learning).
 > 3. **판단 포인트**: 스탠포드 HAI(2021)가 명명했으며, **Emergent Abilities(창발 능력)**—규모가 커지면 사전에 학습하지 않은 능력이 나타나는 현상—이 핵심 특성이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Foundation Model = 대규모 데이터 + 대규모 파라미터 + 자기지도 학습
@@ -25,7 +27,7 @@ Foundation Model = 대규모 데이터 + 대규모 파라미터 + 자기지도 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 특성 | 설명 |
 |:---|:---|

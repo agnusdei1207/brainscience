@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: AI (Artificial Intelligence) 모델 성능 감리는 학습 데이터셋(Dataset) 품질, 모델 평가 지표(Precision, Recall, F1-Score) 적정성, 편향성(Bias) 여부, MLOps (Machine Learning Operations) 배포 절차의 4축을 체계적으로 검증한다.
+> **핵심**: AI (Artificial Intelligence) 모델 성능 감리는 학습 데이터셋(Dataset) 품질, 모델 평가 지표(Precision, Recall, F1-Score) 적정성, 편향성(Bias) 여부, MLOps (Machine Learning Operations) 배포 절차의 4축을 체계적으로 검증한다.
 > 2. **가치**: AI 모델의 편향성이나 과적합(Overfitting)은 공공 의사결정에 직접 영향을 미치므로, 감리를 통해 알고리즘 공정성과 신뢰성을 사전에 보장해야 한다.
 > 3. **판단 포인트**: 학습/검증/테스트 데이터 분리 비율, F1-Score 임계값(Threshold), 인구통계학적 동등성(Demographic Parity) 충족 여부가 핵심 점검 항목이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 AI 모델 감리의 배경
 
@@ -35,7 +36,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 AI 모델 성능 감리 체계
 
@@ -82,7 +83,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 편향성(Bias) 유형 비교
 
@@ -105,7 +106,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 AI 모델 성능 감리 체크리스트
 
@@ -157,7 +158,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 기대효과
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Java Deserialization 취약점은 `ObjectInputStream.readObject()`가 사용자 제어 데이터를 처리할 때, 클래스패스에 존재하는 가젯 체인을 통해 원격 코드 실행(RCE)이 가능한 취약점이다.
+> **핵심**: Java Deserialization 취약점은 `ObjectInputStream.readObject()`가 사용자 제어 데이터를 처리할 때, 클래스패스에 존재하는 가젯 체인을 통해 원격 코드 실행(RCE)이 가능한 취약점이다.
 > 2. **가치**: Apache Commons Collections, Spring Framework, Groovy 같은 광범위하게 사용되는 라이브러리들이 가젯 체인을 포함하여, 대부분의 Java EE 서버가 잠재적으로 취약하다.
 > 3. **판단 포인트**: Java 9+의 ObjectInputFilter로 역직렬화 허용 클래스를 화이트리스트로 제한하는 것이 가장 효과적인 방어이며, 레거시 시스템은 SerialKiller 라이브러리로 임시 방어 가능하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Java 역직렬화 취약점은 2015년 FoxGlove Security의 보고서 "What Do WebLogic, WebSphere, JBoss, Jenkins, OpenNMS, and Your Application Have in Common?"으로 대중에 알려졌다. 당시 Apache Commons Collections 라이브러리의 가젯 체인을 이용한 RCE가 Java EE 서버 전반에 영향을 미쳤다.
 
@@ -39,7 +41,7 @@ Java의 직렬화 형식은 매직 바이트 `0xACED 0x0005`로 시작한다. �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 주요 가젯 체인 라이브러리
 
@@ -75,7 +77,7 @@ Java의 직렬화 형식은 매직 바이트 `0xACED 0x0005`로 시작한다. �
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 방어 방법 | 적용 범위 | 효과 | 비고 |
 |:---|:---|:---|:---|
@@ -91,7 +93,7 @@ JNDI (Java Naming and Directory Interface) 인젝션 (Log4Shell, CVE-2021-44228)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **취약 여부 진단 체크리스트**:
 1. `ObjectInputStream`을 직접 사용하는 코드 위치 목록 작성
@@ -109,7 +111,7 @@ JNDI (Java Naming and Directory Interface) 인젝션 (Log4Shell, CVE-2021-44228)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Java 역직렬화 취약점을 제거하면 RCE, 권한 상승, 서비스 거부 등 심각한 공격 벡터를 원천 차단할 수 있다. 특히 엔터프라이즈 Java 환경(WebLogic, JBoss, WebSphere)에서는 정기적인 패치와 ObjectInputFilter 적용이 필수적이다.
 

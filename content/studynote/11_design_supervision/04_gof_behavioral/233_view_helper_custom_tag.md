@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 뷰헬퍼 (View Helper) 와 커스텀 태그 (Custom Tag) 는 프레젠테이션 레이어 (Presentation Layer) 의 반복적인 표현 로직을 재사용 가능한 컴포넌트로 캡슐화한다.
+> **핵심**: 뷰헬퍼 (View Helper) 와 커스텀 태그 (Custom Tag) 는 프레젠테이션 레이어 (Presentation Layer) 의 반복적인 표현 로직을 재사용 가능한 컴포넌트로 캡슐화한다.
 > 2. **가치**: JSP (Java Server Pages) 의 스크립틀릿(Scriptlet) 제거, 템플릿 코드 간결화, 표현 로직과 비즈니스 로직의 경계를 명확히 한다.
 > 3. **판단 포인트**: 뷰에서 Java 코드가 5줄 이상 반복된다면 Helper/Tag로 추출하는 것이 유지보수성과 테스트 용이성을 동시에 높인다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 전통적인 JSP (Java Server Pages) 개발에서는 뷰 파일에 Java 스크립틀릿 코드가 직접 삽입되는 일이 흔했다. 날짜 포맷팅, null 체크, 조건부 CSS 클래스 적용, 페이지네이션(Pagination) 출력 등이 모든 JSP 파일에 복사·붙여넣기 되면 변경이 필요할 때 수십 개 파일을 수정해야 한다.
 
@@ -42,7 +43,7 @@ ${userHelper.renderRoleBadge(user)}
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 패턴 구조
 
@@ -99,7 +100,7 @@ public class DateHelper {
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 뷰 로직 분리 전략 비교
 
@@ -126,7 +127,7 @@ public class DateHelper {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Helper vs Tag 선택 기준
 
@@ -160,7 +161,7 @@ void formatDate_nullInput_returnsDash() {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 뷰헬퍼 + 커스텀 태그 패턴의 도입 효과:
 

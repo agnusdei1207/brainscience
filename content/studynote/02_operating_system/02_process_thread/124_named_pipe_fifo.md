@@ -5,15 +5,17 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 지명 파이프 (Named Pipe / FIFO)는 파일 시스템 상에 이름을 가진 특수 파일로 존재하여, 부모-자식 관계가 없는 독립적인 프로세스 간에도 데이터를 전달할 수 있는 IPC (Inter-Process Communication) 메커니즘이다.
+> **핵심**: 지명 파이프 (Named Pipe / FIFO)는 파일 시스템 상에 이름을 가진 특수 파일로 존재하여, 부모-자식 관계가 없는 독립적인 프로세스 간에도 데이터를 전달할 수 있는 IPC (Inter-Process Communication) 메커니즘이다.
 > 2. **가치**: 일반 파이프 (Pipe)가 부모-자식 프로세스 관계에 종속되는 반면, 지명 파이프는 파일 시스템 경로를 통해 어떤 프로세스든 접근할 수 있으므로 관련 없는 프로세스 간 통신의 유연성을 극대화한다.
 > 3. **융합**: 쉘 스크립트의 파이프라인 연결, 클라이언트-서버 모델의 간단한 구현, 그리고 데몬 (Daemon) 프로세스와 사용자 프로세스 간의 로컬 메시징 등 다양한 시스템 프로그래밍 시나리오에서 핵심 통신 수단으로 활용된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 지명 파이프 (Named Pipe / FIFO)는 파일 시스템 내에 `mkfifo` 명령어 또는 `mkfifo()` 시스템 콜 (System Call)로 생성되는 특수 파일 (Special File)이다. FIFO는 First-In-First-Out의 약자로, 먼저 쓰인 데이터가 먼저 읽히는 큐 (Queue) 동작 방식을 따른다. 파일 시스템 상에 경로가 존재하므로, 파일 경로를 아는 모든 프로세스가 이를 열어 데이터를 주고받을 수 있다.
 
@@ -64,7 +66,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -136,7 +138,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 일반 파이프 (Unnamed Pipe) vs 지명 파이프 (Named Pipe / FIFO)
 
@@ -201,7 +203,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -257,7 +259,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,17 +5,19 @@ date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 플래시 메모리 한계 (Flash Memory Limitations)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 낸드 플래시(NAND Flash) 메모리는 자기장을 쓰는 HDD와 달리 전자를 가둬 0과 1을 판별하는데, 물리적 특성상 **데이터를 덮어쓰는(Overwrite) 것이 불가능하며 반드시 지우고(Erase) 나서야 쓸 수 있는 Erase-before-write 족쇄**를 차고 있다.
+> **핵심**: 낸드 플래시(NAND Flash) 메모리는 자기장을 쓰는 HDD와 달리 전자를 가둬 0과 1을 판별하는데, 물리적 특성상 **데이터를 덮어쓰는(Overwrite) 것이 불가능하며 반드시 지우고(Erase) 나서야 쓸 수 있는 Erase-before-write 족쇄**를 차고 있다.
 > 2. **가치(한계)**: 게다가 데이터를 읽고 쓰는 단위(Page, 4KB)와 지우는 단위(Block, 2MB)가 500배 이상 차이 나서 단 1바이트를 고치려 해도 2MB를 다 지워야 하는 병목을 낳고, **지울 때 가해지는 고전압 스트레스로 인해 셀이 서서히 녹아내려 수명(Wear-out)이 정해져 있다는 치명적 한계**를 갖는다.
 > 3. **융합**: 이 기계적 하자를 운영체제(OS)에게 들키면 아무도 SSD를 사지 않을 것이므로, SSD 제조사들은 컨트롤러 내부에 **FTL(Flash Translation Layer)**이라는 사기꾼 펌웨어를 융합시켜 이 끔찍한 물리적 한계를 100% 투명하게 은닉(Hide)했다.
 
+> 📝 모범 답안
+
+# 플래시 메모리 한계 (Flash Memory Limitations)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 플래시 메모리(SSD)는 빛처럼 빠르지만 완벽하지 않다. 
   - **Erase-before-write (덮어쓰기 불가)**: 이미 데이터가 쓰여진 빈방(Cell)에 새로운 데이터를 바로 밀어 넣을 수 없다. 무조건 텅 빈(Erased) 상태로 초기화한 뒤에야 전자를 넣을 수 있다.
@@ -63,7 +65,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 비대칭 연산의 지옥 (Read / Write / Erase)
 
@@ -92,7 +94,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: SLC vs MLC vs TLC vs QLC (수명과 속도의 제물)
 
@@ -126,7 +128,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: DB 트랜잭션과 Write Amplification (쓰기 증폭)의 공포
 1. **문제 상황**: MySQL 데이터베이스가 유저 결제 잔액을 1바이트 고쳤다. OS 커널이 이걸 디스크(SSD)에 `4KB` 버퍼 블록으로 쏜다.
@@ -146,7 +148,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

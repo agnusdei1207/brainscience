@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SDS (Software Defined Storage, 소프트웨어 정의 스토리지)는 스토리지 하드웨어(HDD, SSD, NVMe)와 제어 소프트웨어를 분리(Disaggregation)하여, 이기종 하드웨어를 추상화하고 단일 API로 제어하는 스토리지 아키텍처다.
+> **핵심**: SDS (Software Defined Storage, 소프트웨어 정의 스토리지)는 스토리지 하드웨어(HDD, SSD, NVMe)와 제어 소프트웨어를 분리(Disaggregation)하여, 이기종 하드웨어를 추상화하고 단일 API로 제어하는 스토리지 아키텍처다.
 > 2. **가치**: SDS는 고가의 전용 스토리지 어플라이언스(EMC, NetApp) 의존도를 줄이고 상용 x86 서버 + SDS 소프트웨어(Ceph, GlusterFS, VMware vSAN)로 동일한 기능을 더 낮은 비용에 제공한다. 스케일아웃(Scale-out) 방식으로 페타바이트 규모까지 선형적으로 용량을 확장한다.
 > 3. **판단 포인트**: SDS는 SDDC (Software Defined Data Center, 소프트웨어 정의 데이터센터)의 3대 구성 요소(SDN, SDS, SDVC) 중 하나로, 컨테이너 환경(Kubernetes)에서 PVC (Persistent Volume Claim)를 통해 영구 스토리지를 동적으로 프로비저닝하는 CSI (Container Storage Interface) 드라이버로 구현된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 전통적 스토리지는 하드웨어+소프트웨어가 단일 어플라이언스로 통합되어, 벤더 종속, 고비용, 수직적 확장(Scale-up) 한계를 가졌다.
 
@@ -41,7 +43,7 @@ SDS의 3가지 스토리지 서비스:
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Ceph — 오픈소스 SDS 레퍼런스 아키텍처
 
@@ -93,7 +95,7 @@ spec:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | 전통 SAN/NAS | SDS (Ceph/vSAN) |
 |:---|:---|:---|
@@ -106,7 +108,7 @@ spec:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 공공 클라우드 SDS 구축 (Ceph + OpenStack)
 1. 상용 스토리지 어플라이언스(EMC) 교체 → x86 서버 30대 + Ceph 구축.
@@ -121,7 +123,7 @@ spec:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

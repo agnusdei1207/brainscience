@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 분산 락 매니저 구현 (Chubby, ZooKeeper 등 분산 코디네이션 락 알고리즘)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 단일 서버에서는 OS 커널이 Mutex나 Semaphore로 락(Lock)을 관리하지만, 물리적으로 떨어진 수백 대의 분산 서버들이 하나의 자원(예: DB 테이블, 마스터 선출)을 두고 경쟁할 때는 **분산 락 매니저 (DLM: Distributed Lock Manager)**라는 합의된 제3의 통제소가 필요하다.
+> **핵심**: 단일 서버에서는 OS 커널이 Mutex나 Semaphore로 락(Lock)을 관리하지만, 물리적으로 떨어진 수백 대의 분산 서버들이 하나의 자원(예: DB 테이블, 마스터 선출)을 두고 경쟁할 때는 **분산 락 매니저 (DLM: Distributed Lock Manager)**라는 합의된 제3의 통제소가 필요하다.
 > 2. **메커니즘**: Google의 Chubby나 Apache ZooKeeper 같은 분산 코디네이터는 **임시 노드(Ephemeral Node)**와 **와치(Watch)** 매커니즘을 사용해 락을 구현한다. 누군가 락을 잡고 죽어버려도(세션 끊김) 임시 노드가 자동 삭제되어 데드락을 방지하고, 대기자들에게 즉시 알림을 쏴주어 폴링(Polling) 오버헤드를 없앤다.
 > 3. **가치**: 분산 락은 마이크로서비스(MSA)와 클라우드 아키텍처에서 노드 간의 충돌(Race Condition)을 막고, 리더 선출(Leader Election)을 완벽하게 통제하여 '스플릿 브레인(Split-brain)' 대참사를 막는 가장 핵심적인 인프라 동기화 도구다.
 
+> 📝 모범 답안
+
+# 분산 락 매니저 구현 (Chubby, ZooKeeper 등 분산 코디네이션 락 알고리즘)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 분산 락(Distributed Lock)은 여러 독립된 프로세스나 서버가 공유 자원(데이터베이스, 파일 시스템, 특정 연산 등)에 순차적으로 접근해야 할 때, 네트워크를 통해 상호 배제(Mutual Exclusion)를 보장하는 기술이다. 이를 전문적으로 수행하는 시스템을 분산 코디네이션 서비스(Distributed Coordination Service)라고 부른다.
 
@@ -38,7 +40,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### ZooKeeper 기반 분산 락 구현 원리 (Znode)
 
@@ -92,7 +94,7 @@ ZooKeeper는 파일 시스템과 비슷한 계층적 디렉터리 구조(`Znode`
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 분산 락 기술 스택 비교
 
@@ -113,7 +115,7 @@ ZooKeeper는 파일 시스템과 비슷한 계층적 디렉터리 구조(`Znode`
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -160,7 +162,7 @@ ZooKeeper는 파일 시스템과 비슷한 계층적 디렉터리 구조(`Znode`
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

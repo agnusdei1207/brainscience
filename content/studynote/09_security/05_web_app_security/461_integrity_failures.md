@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: OWASP A08 소프트웨어 무결성 실패 (Software and Data Integrity Failures)는 코드·데이터·CI/CD 파이프라인이 신뢰되지 않은 소스에서 검증 없이 실행될 때 발생한다.
+> **핵심**: OWASP A08 소프트웨어 무결성 실패 (Software and Data Integrity Failures)는 코드·데이터·CI/CD 파이프라인이 신뢰되지 않은 소스에서 검증 없이 실행될 때 발생한다.
 > 2. **가치**: 공급망 공격 (Supply Chain Attack)이 현대 위협의 핵심으로 부상함에 따라, "내가 배포한 코드가 진짜인가"를 검증하는 무결성 보장이 필수가 됐다.
 > 3. **판단 포인트**: SolarWinds, Log4Shell 사건이 보여주듯 빌드 파이프라인 하나의 침해가 수천 개 조직을 동시에 위협할 수 있으므로, 서명 검증과 SBOM (Software Bill of Materials) 관리가 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 OWASP (Open Web Application Security Project) Top 10 2021에서 새로 등장한 A08은 소프트웨어 업데이트, 플러그인, CDN (Content Delivery Network) 라이브러리, CI/CD (Continuous Integration/Continuous Delivery) 파이프라인의 무결성이 검증되지 않을 때 발생하는 취약점 범주다.
 
@@ -39,7 +41,7 @@ OWASP (Open Web Application Security Project) Top 10 2021에서 새로 등장한
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 주요 공격 벡터
 
@@ -71,7 +73,7 @@ SRI (Subresource Integrity)는 HTML `<script>` 태그에 `integrity` 속성으�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | 무결성 실패 | 보안 설정 오류 (A05) | 취약한 컴포넌트 (A06) |
 |:---|:---|:---|:---|
@@ -85,7 +87,7 @@ SBOM (Software Bill of Materials)은 소프트웨어에 포함된 모든 컴포�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **시나리오**: npm 프로젝트의 의존성 `event-stream` 패키지에 악성 코드가 삽입돼 암호화폐 지갑을 탈취하는 사건(2018)이 발생했다. 수백만 개의 프로젝트가 이를 설치한 상태였다.
 
@@ -100,7 +102,7 @@ SBOM (Software Bill of Materials)은 소프트웨어에 포함된 모든 컴포�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 소프트웨어 무결성 관리 체계를 구축하면 공급망 공격, 악성 의존성 삽입, 빌드 파이프라인 침해를 조기에 탐지하고 차단할 수 있다. SLSA 레벨 3 이상의 빌드 무결성 달성은 국제적으로 인정받는 공급망 보안 성숙도 지표다.
 

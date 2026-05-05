@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: XAI (Explainable AI)는 블랙박스 모델의 예측 근거를 인간이 이해할 수 있는 형태로 변환하여, AI 신뢰성과 규제 준수를 동시에 달성하는 기술이다.
+> **핵심**: XAI (Explainable AI)는 블랙박스 모델의 예측 근거를 인간이 이해할 수 있는 형태로 변환하여, AI 신뢰성과 규제 준수를 동시에 달성하는 기술이다.
 > 2. **가치**: LIME (Local Interpretable Model-agnostic Explanations)은 개별 예측을 국소 선형 근사로, SHAP (SHapley Additive exPlanations)은 게임 이론 기반으로 피처 기여도를 계산해 의사결정의 투명성을 보장한다.
 > 3. **판단 포인트**: EU AI Act의 고위험 AI 설명 의무, 의료·신용평가·채용 분야에서 "왜 이 결정을 내렸는가"를 반드시 설명해야 하는 법적 요건을 충족한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 XAI (Explainable AI) 정의
 
@@ -63,7 +65,7 @@ XAI 적용 후:
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 LIME (Local Interpretable Model-agnostic Explanations)
 
@@ -161,7 +163,7 @@ SHAP은 2017년 Scott Lundberg가 제안한 방법으로, **게임 이론의 샤
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 LIME vs SHAP 상세 비교
 
@@ -215,7 +217,7 @@ SHAP은 2017년 Scott Lundberg가 제안한 방법으로, **게임 이론의 샤
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 EU AI Act 설명 가능성 요구사항
 
@@ -319,7 +321,7 @@ lime_exp.show_in_notebook()
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 XAI 도입 기대효과
 

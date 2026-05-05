@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 물리적 보안 및 하드웨어 보안 모듈 (TPM, Trusted Platform Module)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: TPM(Trusted Platform Module)은 메인보드(Mainboard)에 물리적으로 탑재된 전용 보안 칩셋으로, 소프트웨어 공격뿐 아니라 물리적 침입(Firmware Dump, Bus Sniffing 등)에도 견디는 하드웨어 경계의 루트 오브 트러스트(RoT, Root of Trust)를 제공한다.
+> **핵심**: TPM(Trusted Platform Module)은 메인보드(Mainboard)에 물리적으로 탑재된 전용 보안 칩셋으로, 소프트웨어 공격뿐 아니라 물리적 침입(Firmware Dump, Bus Sniffing 등)에도 견디는 하드웨어 경계의 루트 오브 트러스트(RoT, Root of Trust)를 제공한다.
 > 2. **가치**: 소프트웨어만으로는 운영체제(OS) 부팅 과정의 무결성(Integrity)을 보증할 수 없는데, TPM은 부팅 체인(Boot Chain)의 각 단계 해시값을 자신의 불휘발성 메모리(PCR, Platform Configuration Register)에 기록하여, 부팅 이전 상태와 현재 상태가 일치하는지 암호학적으로 증명하는 신뢰 접점(Trust Anchor) 역할을 수행한다.
 > 3. **융합**: TPM은 컴퓨터 아키텍처의 버스(Bus) 계층, 암호학(Cryptography)의 비대칭 키 및 증명(Attestation) 체계, 그리고 운영체제의 보안 부팅(Secure Boot) 메커니즘이 융합된 하드웨어-소프트웨어 복합 보안 아키텍처의 핵심 기반이다.
 
+> 📝 모범 답안
+
+# 물리적 보안 및 하드웨어 보안 모듈 (TPM, Trusted Platform Module)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 **개념 및 정의**
 물리적 보안(Physical Security)은 서버, 워크스테이션, 임베디드 기기의 하드웨어 자체를 물리적 조작이나 도난으로부터 보호하는 보안 영역이다. 그중 TPM(Trusted Platform Module)은 TCG(Trusted Computing Group)가 표준화한 사양에 따라 메인보드에 장착되는 전용 암호화 보안 코프로세서(Coprocessor)로, 시스템의 루트 오브 트러스트(RoT, Root of Trust)를 하드웨어 수준에서 구현한다. 소프트웨어 기반 보안 솔루션은 OS가 이미 침해된 상태에서는 무력화될 수 있으나, TPM은 OS와 독립된 물리적 칩셋에서 동작하므로 OS가 완전히 장악당한 상황에서도 기밀 키의 유출을 방지할 수 있다.
@@ -60,7 +62,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### TPM 하드웨어 아키텍처 구성 요소
 
@@ -115,7 +117,7 @@ TPM의 핵심 메커니즘은 **신뢰 체인(Chain of Trust)**을 통한 **원�
 
 ---
 
-## Ⅲ. 비교 분석 (Comparative Analysis)
+## 3. 구조 및 동작 원리
 
 ### TPM 1.2 vs TPM 2.0 비교
 
@@ -161,7 +163,7 @@ TPM의 핵심 메커니즘은 **신뢰 체인(Chain of Trust)**을 통한 **원�
 
 ---
 
-## Ⅳ. 실무 판단 (Practical Judgment)
+## 4. 비교 및 트레이드오프
 
 ### 실무 적용 시나리오 및 의사결정
 
@@ -210,7 +212,7 @@ TPM의 핵심 메커니즘은 **신뢰 체인(Chain of Trust)**을 통한 **원�
 
 ---
 
-## Ⅴ. 결론 (Conclusion)
+## 5. 실무 적용 및 최적화 기법
 
 TPM(Trusted Platform Module)은 운영체제의 보안을 넘어 하드웨어 수준에서 신뢰의 근간(Root of Trust)을 확립하는 핵심 기술이다. 소프트웨어 보안이 OS가 정상 동작한다는 전제에 의존하는 반면, TPM은 부팅 최초 시점부터 암호학적 증명을 통해 시스템 무결성을 보증하므로, 물리적 공격과 펌웨어 변조라는 근원적 위협에 대응할 수 있다.
 

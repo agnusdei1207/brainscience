@@ -7,17 +7,19 @@ date = 2024-05-20
 categories = ["Network", "Security"]
 tags = ["DNS Sinkhole", "C&C Server", "Botnet"]
 +++
+## 0. 핵심 인사이트
 
-# 936. DNS 싱크홀 (DNS Sinkhole)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: DNS 싱크홀 (Domain Name System Sinkhole)은 악성코드에 감염된 좀비 PC (Zombie PC)가 해커의 C&C (Command & Control) 서버로 접속하기 위해 질의하는 악성 도메인을 가로채어, 안전한 가짜 IP (Sinkhole IP)로 응답함으로써 통신을 원천 차단하는 네트워크 보안 메커니즘이다.
+> **핵심**: DNS 싱크홀 (Domain Name System Sinkhole)은 악성코드에 감염된 좀비 PC (Zombie PC)가 해커의 C&C (Command & Control) 서버로 접속하기 위해 질의하는 악성 도메인을 가로채어, 안전한 가짜 IP (Sinkhole IP)로 응답함으로써 통신을 원천 차단하는 네트워크 보안 메커니즘이다.
 > 2. **가치**: KISA (Korea Internet & Security Agency) 등 국가 기관이나 ISP (Internet Service Provider)와 연동하여 수백만 대의 엔드포인트에 일일이 백신을 설치하지 않고도 네트워크 관문에서 대규모 봇넷 (Botnet) 활동을 즉각적으로 무효화 (Nullification) 및 억제할 수 있다.
 > 3. **융합**: 최신 위협 인텔리전스 (CTI, Cyber Threat Intelligence)와 방화벽, IPS (Intrusion Prevention System)와 융합하여 실시간 블랙리스트 (Blacklist)를 동기화하며, 단순히 접속을 차단하는 것을 넘어 감염된 내부 자산을 식별하고 격리하는 사고 대응 (Incident Response)의 핵심 트리거로 작동한다.
 
+> 📝 모범 답안
+
+# 936. DNS 싱크홀 (DNS Sinkhole)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: DNS 싱크홀 (Domain Name System Sinkhole)은 내부 네트워크의 클라이언트가 도메인 이름 풀이를 요청할 때, 해당 도메인이 알려진 악성 도메인(예: 랜섬웨어 유포지, C&C 서버)인 경우 정상적인 공인 IP (Public IP) 대신 사전에 정의된 차단 안내 페이지나 격리용 서버의 IP 주소를 반환하는 라우팅 우회 기술이다.
 - **필요성**: 현대의 악성코드는 IP 기반 차단을 우회하기 위해 DGA (Domain Generation Algorithm)를 사용하여 끊임없이 수천 개의 도메인을 생성하고 C&C 서버를 이동시킨다. 방화벽에서 변동하는 모든 IP를 차단하는 것은 불가능에 가깝다. 따라서 도메인을 IP로 변환하는 '길목'인 DNS (Domain Name System) 서버 자체에서 악성 질의를 감지하고 가짜 방향을 알려주는, 원천적이고 포괄적인 방어선이 필수적으로 요구된다.
@@ -70,7 +72,7 @@ tags = ["DNS Sinkhole", "C&C Server", "Botnet"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -154,7 +156,7 @@ malware-drop.org    IN CNAME .          ; 혹은 강제로 응답하지 않음(N
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 방화벽 IP 차단 vs DNS 싱크홀 vs 웹 프록시 (SWG) 차단
 
@@ -200,7 +202,7 @@ malware-drop.org    IN CNAME .          ; 혹은 강제로 응답하지 않음(N
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 의사결정
 
@@ -255,7 +257,7 @@ malware-drop.org    IN CNAME .          ; 혹은 강제로 응답하지 않음(N
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

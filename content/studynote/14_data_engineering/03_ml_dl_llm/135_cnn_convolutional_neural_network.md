@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CNN은 **합성곱(Convolution) 연산으로 입력의 지역적 패턴(엣지·텍스처·형태)을 계층적으로 추출**하는 신경망이며, 이미지·영상 처리의 핵심 아키텍처이다.
+> **핵심**: CNN은 **합성곱(Convolution) 연산으로 입력의 지역적 패턴(엣지·텍스처·형태)을 계층적으로 추출**하는 신경망이며, 이미지·영상 처리의 핵심 아키텍처이다.
 > 2. **가치**: 전결합층(FC)은 이미지를 1D로 펼쳐 공간 정보를 잃지만, CNN은 **2D 구조를 유지하며 파라미터를 공유(가중치 공유)**하여 효율적으로 학습한다.
 > 3. **판단 포인트**: Conv→ReLU→Pool의 반복이 기본 구조이며, AlexNet→VGGNet→ResNet→EfficientNet의 발전과 함께 Vision Transformer(ViT)가 대안으로 부상했다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 CNN 구조: [Conv → ReLU → Pool] × N → FC → Softmax

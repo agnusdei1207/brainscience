@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: CLIP(Contrastive Language-Image Pre-training)은 4억 쌍의 이미지-텍스트 데이터에서 대조 학습(Contrastive Learning)으로 이미지 인코더와 텍스트 인코더를 동일한 잠재 공간에 정렬해 제로샷(Zero-Shot) 분류와 멀티모달 이해를 가능하게 한다.
+> **핵심**: CLIP(Contrastive Language-Image Pre-training)은 4억 쌍의 이미지-텍스트 데이터에서 대조 학습(Contrastive Learning)으로 이미지 인코더와 텍스트 인코더를 동일한 잠재 공간에 정렬해 제로샷(Zero-Shot) 분류와 멀티모달 이해를 가능하게 한다.
 > 2. **가치**: 레이블 없이 텍스트 설명만으로 이미지 분류가 가능한 제로샷 능력은 기존 지도 학습 모델과 맞먹는 성능을 보이며, Stable Diffusion·DALL-E 3 등 이미지 생성 모델의 핵심 텍스트 인코더로 광범위하게 사용된다.
 > 3. **판단 포인트**: CLIP은 인터넷 스크랩 데이터의 편향(Bias)을 그대로 학습하므로, 의료·법률 등 민감 분야 적용 시 편향 감사(Bias Audit)와 파인튜닝이 필수적으로 요구된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 전통적 이미지 분류 모델(CNN, ViT)은 고정된 클래스 레이블을 학습하므로 새로운 클래스 추가 시 재훈련이 필요하다. CLIP은 자연어 설명을 활용해 이 한계를 극복했다.
 
@@ -27,7 +28,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -71,7 +72,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### CLIP 계열 모델 비교
 
@@ -97,7 +98,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **CLIP 파인튜닝 전략**
 
@@ -131,7 +132,7 @@ text_features = model.encode_text(texts)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 CLIP은 이미지와 언어를 통합한 멀티모달 AI의 기반 기술로 자리잡았다. 제로샷 분류, 이미지 생성 조건화, 멀티모달 검색 등 광범위한 응용이 CLIP의 단일 임베딩 공간에서 이루어진다. GPT-4o·Gemini 같은 대형 멀티모달 모델로의 발전은 CLIP의 패러다임을 더욱 확장하고 있다.
 

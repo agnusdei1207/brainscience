@@ -5,27 +5,30 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> ( Vertex B )
+
+> 📝 모범 답안
+
 1. **스파크 그래프엑스 (Spark GraphX)**는 그래프(Graph) 데이터와 컬렉션(Collection) 데이터를 통합하여 처리하는 스파크의 분산 그래프 처리 엔진이다.
 2. 정점(Vertex)과 간선(Edge) 정보를 병렬로 처리하는 **'프로퍼티 그래프(Property Graph)'** 모델을 사용하며, 대규모 소셜 네트워크나 지식 그래프 분석에 최적화되어 있다.
 3. 구글의 **Pregel** 아키텍처를 스파크 상에 구현하여, 복잡한 그래프 알고리즘을 반복적(Iterative)으로 수행할 때 높은 성능을 제공한다.
 
 ---
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 - **정의**: 데이터 간의 복잡한 관계를 노드(Node)와 링크(Link)로 표현하고, 이를 분산 환경에서 효율적으로 연산하기 위한 스파크 라이브러리이다.
 - **배경**: 전통적인 표 형식(Table) 데이터 처리 방식으로는 수십억 개의 관계를 가진 데이터의 연결성(Connectivity) 분석에 한계가 있어 이를 보완하기 위해 탄생했다.
 - **주요 활용**: 페이스북/링크드인의 친구 추천, 구글의 페이지랭크(PageRank) 순위 결정, 사기 결제망 탐지, 단백질 구조 분석 등 초연결 데이터 분석에 필수적이다.
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 #### 1. 프로퍼티 그래프(Property Graph) 모델
 ```text
-( Vertex A ) --[ Edge ]--> ( Vertex B )
-     |                         |
+( Vertex A ) --[ Edge ]--     |                         |
   [Property]                [Property]
  (Name: John)              (Name: Bob)
  (Age: 30)                 (Age: 25)
@@ -42,7 +45,7 @@ categories = "studynote-bigdata"
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 비교 항목 | 전용 그래프 DB (Neo4j) | Spark GraphX |
 | :--- | :--- | :--- |
@@ -54,14 +57,14 @@ categories = "studynote-bigdata"
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 - **데이터 통합(Unified)의 강점**: GraphX의 최대 장점은 ETL 결과물(DataFrame)을 즉시 그래프로 변환하고, 분석 결과를 다시 SQL로 조회할 수 있다는 점이다.
 - **셔플링과 파티셔닝**: 그래프 데이터는 연결성 때문에 노드 간 데이터 이동(Shuffle)이 매우 잦다. `PartitionStrategy`를 적절히 설정하여 네트워크 비용을 최소화하는 것이 성능 튜닝의 핵심이다.
 - **GraphFrames로의 진화**: 최근에는 RDD 기반의 GraphX보다 DataFrame 기반의 `GraphFrames` 라이브러리가 더 널리 쓰이며, Spark SQL과의 연동성이 더 뛰어나므로 프로젝트 시작 시 고려해야 한다.
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 - **기대효과**: 개별 데이터의 속성뿐 아니라 데이터 사이의 '관계'에서 숨겨진 가치를 찾아냄으로써 비즈니스 통찰의 차원을 한 단계 높인다.
 - **결론**: GraphX는 대규모 그래프 분석 분야의 강력한 표준이다. 향후 지식 그래프(Knowledge Graph)와 생성형 AI(LLM)의 결합이 중요해짐에 따라, 관계 기반의 데이터 구조를 처리하는 GraphX의 역할은 더욱 증대될 것이다.
 

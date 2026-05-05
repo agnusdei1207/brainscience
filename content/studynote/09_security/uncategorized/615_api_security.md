@@ -4,17 +4,19 @@ title = "615. Federated Identity — SAML/OIDC 기반 연합"
 description = "REST, GraphQL, gRPC 등 현대 API 아키텍처의 보안 전략"
 date = 2024-01-15
 +++
+## 0. 핵심 인사이트
 
-# API 보안 (API Security)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: API 보안은 내부 로직을 외부에 노출하는 API Gateway로서의 특성上, 인증(Authentication), 인가(Authorization), 입력 검증(Input Validation), 출력 인코딩(Output Encoding), 속도限制(Rate Limiting), 감사 로깅(Audit Logging) 등의 다층 방어를 통해 malicious traffic과 무단 접근을 방지하는 것이다.
+> **핵심**: API 보안은 내부 로직을 외부에 노출하는 API Gateway로서의 특성上, 인증(Authentication), 인가(Authorization), 입력 검증(Input Validation), 출력 인코딩(Output Encoding), 속도限制(Rate Limiting), 감사 로깅(Audit Logging) 등의 다층 방어를 통해 malicious traffic과 무단 접근을 방지하는 것이다.
 > 2. **가치**: 현대 애플리케이션의 대부분이 API를 통해 데이터를 교환하며, 2023년 Akamai 보고에 따르면 전 세계 인터넷 트래픽의 30%이상이 API 호출이다. 주요 유출 사고(2019년 Facebook, 2021년 LinkedIn)의 상당수가 API 취약점을 利用했다.
 > 3. **융합**: API 보안은 OAuth 2.0, OpenID Connect, JWT, TLS, WAF, API Gateway, GraphQL Security, GraphQL Shield 등 인증/인가 프로토콜과 깊이 결합한다.
 
+> 📝 모범 답안
+
+# API 보안 (API Security)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 
@@ -34,7 +36,7 @@ API 보안은 고급 호텔의コンシェルジュ 데스크와 같다. 호텔 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### OWASP API Security Top 10
 
@@ -190,7 +192,7 @@ GraphQL은 REST와 다른 고유한 보안 위협을 가지며, 쿼리 복잡도
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### REST vs GraphQL vs gRPC 보안 비교
 
@@ -210,7 +212,7 @@ GraphQL은 REST와 다른 고유한 보안 위협을 가지며, 쿼리 복잡도
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -233,7 +235,7 @@ GraphQL은 REST와 다른 고유한 보안 위협을 가지며, 쿼리 복잡도
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

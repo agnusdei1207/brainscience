@@ -7,17 +7,19 @@ date = 2026-03-26
 [taxonomies]
 tags = ["database", "sql", "dml", "ddl", "dcl"]
 +++
+## 0. 핵심 인사이트
 
-# DML, DDL, DCL
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SQL은 목적에 따라 DML (데이터 조작), DDL (데이터 정의), DCL (데이터 제어)로 분류되며, 이 세 가지가 상호 보완적으로 작동하여 데이터베이스를 관리한다.
+> **핵심**: SQL은 목적에 따라 DML (데이터 조작), DDL (데이터 정의), DCL (데이터 제어)로 분류되며, 이 세 가지가 상호 보완적으로 작동하여 데이터베이스를 관리한다.
 > 2. **가치**: DML로 데이터CRUD를, DDL로 스키마를 정의하며, DCL로 보안을 관리하여 체계적인 데이터베이스 운영이 가능하다.
 > 3. **융합**: DevOps에서 DDL은 마이그레이션 도구 (Flyway, Liquibase)로 관리되고, DML은 ORM 프레임워크에서自動生成되어 사용된다.
 
+> 📝 모범 답안
+
+# DML, DDL, DCL
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### SQL의 분류
 
@@ -54,7 +56,7 @@ SQL의 세 가지 하위 언어는 **도서관 관리 시스템**과 같다. DDL
 
 ---
 
-## Ⅱ. DDL (Data Definition Language)
+## 2. 구성요소
 
 DDL은 **데이터베이스 객체의 구조를 정의**하는 언어다.
 
@@ -126,7 +128,7 @@ ALTER TABLE customers ADD CONSTRAINT chk_email
 
 ---
 
-## Ⅲ. DML (Data Manipulation Language)
+## 3. 구조 및 동작 원리
 
 DML은 **데이터를 조작**하는 언어다.
 
@@ -173,7 +175,7 @@ WHERE customer_id = 'C001';
 
 ---
 
-## Ⅳ. DCL (Data Control Language)
+## 4. 비교 및 트레이드오프
 
 DCL은 **데이터베이스의 접근 권한과 보안을 관리**하는 언어다.
 
@@ -238,7 +240,7 @@ REVOKE GRANT OPTION FOR SELECT ON customers FROM user3;
 
 ---
 
-## Ⅴ. TCL (Transaction Control Language)
+## 5. 실무 적용 및 최적화 기법
 
 보통 DCL과 함께 언급되는 TCL은 **트랜잭션을 관리**하는 언어다.
 

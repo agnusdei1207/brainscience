@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: K8s Network Policy는 **Pod 간 네트워크 트래픽을 라벨 기반으로 허용/거부**하는 선언적 방화벽 규칙이며, 마이크로 세그멘테이션(Micro-segmentation)을 통해 클러스터 내부 **East-West 트래픽을 제어**한다.
+> **핵심**: K8s Network Policy는 **Pod 간 네트워크 트래픽을 라벨 기반으로 허용/거부**하는 선언적 방화벽 규칙이며, 마이크로 세그멘테이션(Micro-segmentation)을 통해 클러스터 내부 **East-West 트래픽을 제어**한다.
 > 2. **가치**: 기본 K8s는 **모든 Pod 간 통신이 허용(Flat Network)**되므로, 하나의 Pod가 침투당하면 클러스터 전체가 위험하다. Network Policy로 **"frontend → backend만 허용, backend → DB만 허용"**처럼 최소 권한을 적용한다.
 > 3. **판단 포인트**: Network Policy는 **CNI 플러그인(Calico·Cilium)이 실제 적용**하며, 기본 CNI(Flannel)는 Network Policy를 지원하지 않는다. Cilium의 L7(HTTP/gRPC) 정책이 차세대 표준이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -36,7 +38,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Network Policy 구성 요소
 
@@ -60,7 +62,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 기본 (정책 없음) | L3/L4 Policy | L7 Policy |
 |:---|:---|:---|:---|
@@ -69,7 +71,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 기본 정책: Default Deny
 ```yaml
@@ -85,7 +87,7 @@ spec:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | 정책 없음 | Network Policy | 개선 |
 |:---|:---|:---|:---|

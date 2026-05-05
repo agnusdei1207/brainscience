@@ -5,17 +5,19 @@ weight = 201
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-# 서버리스 (Serverless) 아키텍처 한계점과 콜드 스타트 (Cold Start) 지연
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 서버리스(Serverless / FaaS) 아키텍처는 개발자가 인프라(서버 깡통)의 존재 자체를 망각하고 오직 함수(Code)만 둥둥 띄워 놓으면, 사용자가 접속하는 찰나의 순간에 클라우드가 컨테이너를 0.1초 만에 허공에서 생성해 코드를 돌리고 꺼버리는 **극단적인 이벤트 주도(Event-driven) 과금 0원 컴퓨팅**이다.
+> **핵심**: 서버리스(Serverless / FaaS) 아키텍처는 개발자가 인프라(서버 깡통)의 존재 자체를 망각하고 오직 함수(Code)만 둥둥 띄워 놓으면, 사용자가 접속하는 찰나의 순간에 클라우드가 컨테이너를 0.1초 만에 허공에서 생성해 코드를 돌리고 꺼버리는 **극단적인 이벤트 주도(Event-driven) 과금 0원 컴퓨팅**이다.
 > 2. **가치**: "서버 10대 돌릴래?"라는 IaaS의 달콤한 악몽(유휴 서버 요금 폭탄)을 박살 냈다. 새벽에 손님이 0명이면 서버도 0대(Scale-to-Zero)가 되어 요금이 0원이고, 100만 명이 몰리면 1초 만에 함수 100만 개가 병렬로 폭발(Scale-Out)하여 트래픽을 완벽하게 방어하는 **클라우드 네이티브 인프라의 끝판왕**이다.
 > 3. **융합(한계)**: 하지만 이 기적은 공짜가 아니다. 잠들어 있던 함수가 처음 깨어날 때, 클라우드가 빈 컨테이너를 찾고 런타임(자바/파이썬)을 로딩하느라 1~3초간 화면이 멈추는 치명적인 **'콜드 스타트(Cold Start)' 지연 딜레마**가 발생하며, 이를 극복하기 위한 무상태(Stateless) 경량 코딩 철학과 프로비저닝된 동시성(202번 문서) 튜닝의 융합이 필수적이다.
 
+> 📝 모범 답안
+
+# 서버리스 (Serverless) 아키텍처 한계점과 콜드 스타트 (Cold Start) 지연
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 서버리스(Serverless)는 물리적 '서버'가 없다는 뜻이 아니다. 서버를 세팅하고, 운영체제를 깔고, 용량을 늘리는(Auto-scaling) 모든 관리의 책임을 클라우드 제공자(AWS, GCP)에게 완전히 떠넘겨서(Abstracted), 개발자의 눈앞에서 **서버의 존재감이 완벽히 사라졌다(Less)**는 의미의 클라우드 컴퓨팅 최상위 모델인 **FaaS (Function as a Service)**를 지칭한다. (대표: AWS Lambda, Google Cloud Functions).
 
@@ -65,7 +67,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 서버리스(FaaS)의 빛과 3대 치명적 한계점 (Limitations)
 
@@ -91,7 +93,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 클라우드 컴퓨팅 스펙트럼 최종 병기 분석 (IaaS vs CaaS vs FaaS)
 
@@ -114,7 +116,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 설계 안티패턴
 
@@ -169,7 +171,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

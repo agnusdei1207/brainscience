@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 자원 할당 그래프 (Resource-Allocation Graph)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 자원 할당 그래프 (Resource-Allocation Graph, RAG)는 운영체제 내 존재하는 프로세스 집합과 가용 자원 집합 간의 요청(Request) 및 점유(Assignment/Allocated) 상태의 얽힘을 명확하게 도식화하고 모델링하는 방향성 유향 그래프(Directed Graph) 도구이다.
+> **핵심**: 자원 할당 그래프 (Resource-Allocation Graph, RAG)는 운영체제 내 존재하는 프로세스 집합과 가용 자원 집합 간의 요청(Request) 및 점유(Assignment/Allocated) 상태의 얽힘을 명확하게 도식화하고 모델링하는 방향성 유향 그래프(Directed Graph) 도구이다.
 > 2. **가치**: 그래프 탐색(Graph Traversal) 알고리즘을 통해 사이클(Cycle)의 유무를 추적함으로써 시스템이 현재 교착 상태(Deadlock)에 빠졌는지, 혹은 위험 구간에 있는지를 단숨에 수학적으로 증명(탐지, Detection)해낼 수 있는 강력한 코어 로직이다.
 > 3. **융합**: 단일 인스턴스 자원의 경우 사이클 존재가 곧 데드락을 의미하지만, 다중 인스턴스 자원(동일한 프린터가 3대 있는 자원 등)의 경우 사이클은 '데드락 필요조건 중 하나'일 뿐 충분조건이 아니므로, 상태 공간을 줄인 은행원(Banker's) 대기 모델 등으로 위상 검사 매커니즘을 융합 진화시켰다.
 
+> 📝 모범 답안
+
+# 자원 할당 그래프 (Resource-Allocation Graph)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 수많은 스레드와 자원이 복잡하게 요청하고 점유하는 상황을 C언어 텍스트나 변수만 보고 즉각 "꼬였다(Deadlock)"라고 선언할 수 없다. 우리는 거대한 미로를 조감할 지도가 필요하다.
 
@@ -51,7 +53,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 단일 vs 다중 인스턴스의 본질적 맹점 (Cycle과 Deadlock의 방정식)
 
@@ -82,7 +84,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 | 모델 종류 | 사용 대상 | 한계와 복잡성 | 현대 OS의 적용 여부 |
 |:---|:---|:---|:---|
@@ -94,7 +96,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 **실무 시나리오**:
 1. **DB Wait-For Graph (WFG)**: Oracle이나 MySQL은 자원(테이블 트랜잭션 락)이 단일 속성에 가깝기 때문에 트랜잭션 A가 B를 기다리는 연결선만 이어 버리는 단축된 대기 그래프를 메모리에 구현해둔다. 1초마다 백그라운드 데몬이 이 WFG 그래프에 DFS/BFS를 돌려 사이클 꼬리가 잡히는 즉시 에러 로그(ORA/ER_LOCK_DEADLOCK) 뱉고 한 트랙잭션을 세션 킬한다. (응용 최적화 탑티어 사례)
@@ -107,7 +109,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기준 | 그래프 미사용 추론 | RAG. WFG 모델링 도입 |
 |:---|:---|:---|

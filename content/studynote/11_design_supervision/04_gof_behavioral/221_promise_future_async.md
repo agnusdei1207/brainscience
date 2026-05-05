@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Promise / Future (프로미스/퓨처)는 "아직 완료되지 않은 비동기 연산의 미래 결과"를 나타내는 객체로, 콜백 지옥(Callback Hell)을 탈피하고 비동기 연산을 체이닝(Chaining)으로 표현하는 비동기 패턴이다.
+> **핵심**: Promise / Future (프로미스/퓨처)는 "아직 완료되지 않은 비동기 연산의 미래 결과"를 나타내는 객체로, 콜백 지옥(Callback Hell)을 탈피하고 비동기 연산을 체이닝(Chaining)으로 표현하는 비동기 패턴이다.
 > 2. **가치**: Promise 상태 기계(Pending → Fulfilled/Rejected)와 `.then()/.catch()` 체이닝으로 다단계 비동기 흐름을 선형 코드로 표현할 수 있어 가독성과 에러 처리가 획기적으로 개선된다.
 > 3. **판단 포인트**: `async/await`는 Promise의 문법적 설탕(Syntactic Sugar) — Promise 위에서 동작하며, `await`는 Promise가 완료될 때까지 현재 함수를 일시 중단하되 스레드를 블로킹하지 않는다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 콜백 지옥에서 Promise로
 
@@ -66,7 +67,7 @@ getUser(id)
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Promise API 전체 구조
 
@@ -127,7 +128,7 @@ async function fetchUserData(id) {
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Promise.all vs Promise.race vs Promise.allSettled vs Promise.any
 
@@ -166,7 +167,7 @@ Promise.any([A, B, C]):
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 병렬 vs 순차 비동기 처리
 
@@ -215,7 +216,7 @@ result.orTimeout(5, TimeUnit.SECONDS)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Promise/Future 패턴은 콜백 지옥을 해결하고 비동기 코드의 가독성을 혁신적으로 개선했다:
 

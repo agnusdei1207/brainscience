@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. ITIL(IT Infrastructure Library)은 IT 서비스 관리(ITSM)의 사실상 표준 프레임워크 — 영국 정부 CCTA가 1980년대 개발하고 현재 Axelos가 관리하며, IT 서비스를 비즈니스 관점에서 제공·지원·개선하는 모범 사례(Best Practice) 집합이다.
 > 2. ITIL 4(2019)의 핵심은 서비스 가치 시스템(SVS)과 4차원 모델 — 기존 프로세스 중심에서 Agile·DevOps·Lean을 통합한 가치 공동 창출 관점으로 진화하며, 34개 관리 관행(Practice)으로 구성된다.
 > 3. ITSM 구현의 핵심 도전은 도구(Tool) 도입보다 문화(Culture) 변화 — ServiceNow 같은 ITSM 플랫폼만 도입한다고 ITIL이 작동하지 않으며, 인시던트 → 변경 → 문제 관리의 프로세스 규율이 필요하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. ITIL 역사와 구조
+## 1. 개요 및 필요성
 
 ```
 ITIL 발전 역사:
@@ -57,7 +60,7 @@ ITIL 4 구조:
 
 ---
 
-## Ⅱ. 핵심 관리 관행 (Key Practices)
+## 2. 구성요소
 
 ```
 ITIL 4 주요 관리 관행:
@@ -107,7 +110,7 @@ ITIL 4 주요 관리 관행:
 
 ---
 
-## Ⅲ. 7가지 안내 원칙
+## 3. 구조 및 동작 원리
 
 ```
 ITIL 4 안내 원칙 (Guiding Principles):
@@ -149,7 +152,7 @@ ITIL 4 안내 원칙 (Guiding Principles):
 
 ---
 
-## Ⅳ. ITSM 도구 — ServiceNow
+## 4. 비교 및 트레이드오프
 
 ```
 ITSM 플랫폼 대표: ServiceNow
@@ -203,7 +206,7 @@ CMDB 활용:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 대기업 ITSM 도입
+## 5. 실무 적용 및 최적화 기법
 
 ```
 금융그룹 ITSM 혁신 프로젝트:

@@ -5,15 +5,18 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 자원 할당(Resource Allocation)은 OS의 핵심 기능으로, CPU·메모리·I/O 장치·파일 등 한정된 자원을 여러 프로세스에 공정하고 효율적으로 분배하는 문제이며, 잘못된 할당은 교착상태(Deadlock)·기아(Starvation)·스래싱(Thrashing)을 유발한다.
 > 2. 자원 할당의 핵심 트레이드오프는 공정성(Fairness)·처리율(Throughput)·응답시간(Response Time)·이용률(Utilization) 간의 균형으로, 어떤 스케줄링 정책도 모든 기준을 동시에 최적화할 수 없다.
 > 3. 교착상태 예방을 위한 은행원 알고리즘(Banker's Algorithm)과 RAG(Resource Allocation Graph)는 자원 할당의 안전성을 형식적으로 검증하는 핵심 도구로, OS 설계의 안전성·활성성(Liveness) 보장 메커니즘이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 자원 할당 기본 개념
+## 1. 개요 및 필요성
 
 ```
 자원 유형:
@@ -38,7 +41,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. RAG (Resource Allocation Graph)
+## 2. 구성요소
 
 ```
 자원 할당 그래프 (Resource Allocation Graph):
@@ -70,7 +73,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 은행원 알고리즘
+## 3. 구조 및 동작 원리
 
 ```
 Banker's Algorithm (Dijkstra):
@@ -107,7 +110,7 @@ Banker's Algorithm (Dijkstra):
 
 ---
 
-## Ⅳ. 자원 할당 문제들
+## 4. 비교 및 트레이드오프
 
 ```
 교착상태 (Deadlock):
@@ -136,7 +139,7 @@ Banker's Algorithm (Dijkstra):
 
 ---
 
-## Ⅴ. 실무 시나리오 — 클라우드 자원 할당
+## 5. 실무 적용 및 최적화 기법
 
 ```
 클라우드 멀티테넌트 자원 할당:

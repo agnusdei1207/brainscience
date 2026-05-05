@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: DPU(Data Processing Unit)와 SmartNIC은 서버 CPU가 처리하던 네트워킹, 스토리지, 보안 작업을 전용 카드로 분리·오프로딩하여 CPU 자원을 애플리케이션에 온전히 반환한다.
+> **핵심**: DPU(Data Processing Unit)와 SmartNIC은 서버 CPU가 처리하던 네트워킹, 스토리지, 보안 작업을 전용 카드로 분리·오프로딩하여 CPU 자원을 애플리케이션에 온전히 반환한다.
 > 2. **가치**: 100Gbps 이상의 고속 네트워크 환경에서 CPU 기반 패킷 처리는 비효율적이며, DPU 오프로딩은 성능 향상과 소비 전력 절감을 동시에 달성한다.
 > 3. **판단 포인트**: DPU는 단순 패킷 처리를 넘어 프로그래머블 인프라(인프라 가상화, Zero Trust 보안, NVMe-oF 스토리지)를 서버 외부로 이전하는 새로운 컴퓨팅 패러다임이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 현대 데이터센터에서 서버 CPU의 상당 부분(20~30%)이 네트워크 패킷 처리, 스토리지 I/O, 암호화 등 인프라 작업에 소비된다. 이는 비즈니스 로직 실행에 써야 할 자원이 낭비되는 것이다.
 
@@ -29,7 +30,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 **DPU 내부 구조**:
 
@@ -67,7 +68,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **NVIDIA BlueField 활용 시나리오**:
 1. **SDN(Software Defined Networking) 가속**: OpenFlow/VXLAN 처리를 DPU로 이관
@@ -82,7 +83,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **기술사 시험 판단 포인트**:
 1. DPU가 CPU 효율을 개선하는 메커니즘(오프로딩)을 구체적 수치(CPU 부하 30~40% 감소)와 함께 기술한다.
@@ -95,7 +96,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 DPU/SmartNIC 도입의 기대 효과:
 - **CPU 효율 극대화**: 인프라 오프로딩으로 애플리케이션 처리 가능 코어 20~40% 증가

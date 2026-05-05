@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: NoSQL의 BASE(Basically Available, Soft-state, Eventually Consistent) 속성은 RDBMS의 ACID(Atomicity·Consistency·Isolation·Durability)와 정반대로, 분산 환경에서 강한 일관성 대신 가용성과 성능을 택하는 설계 철학이다.
+> **핵심**: NoSQL의 BASE(Basically Available, Soft-state, Eventually Consistent) 속성은 RDBMS의 ACID(Atomicity·Consistency·Isolation·Durability)와 정반대로, 분산 환경에서 강한 일관성 대신 가용성과 성능을 택하는 설계 철학이다.
 > 2. **가치**: 결과적 일관성(Eventual Consistency)은 모든 복제본이 시간이 지나면 같은 상태가 된다는 보장으로, 네트워크 파티션 상황에서도 서비스를 중단하지 않고 계속 응답할 수 있게 한다.
 > 3. **판단 포인트**: 금융 계좌 잔액(절대 일관성 필요)에는 ACID, 소셜미디어 좋아요 수(약간의 불일치 허용)에는 BASE — 비즈니스 데이터의 일관성 요구 수준이 ACID vs BASE 선택의 기준이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 분산 시스템에서 일관성의 딜레마
 
@@ -45,7 +47,7 @@ Eric Brewer는 2000년 CAP 정리로 "분산 시스템은 일관성, 가용성, 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 BASE 속성 상세 설명
 
@@ -129,7 +131,7 @@ Consistency Level 설정:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 결과적 일관성 패턴
 
@@ -158,7 +160,7 @@ Consistency Level 설정:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 BASE 설계 패턴 적용 사례
 
@@ -182,7 +184,7 @@ Consistency Level 설정:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 BASE + 샤딩 도입 효과
 

@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 657. VMX 루트 모드 (VMX Root Operation)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: VMX 루트 모드는 인텔의 가상화 기술(VT-x)에서 **하이퍼바이저(VMM)가 CPU의 물리적 자원을 직접 제어하기 위해 실행되는 특수 고권한 동작 모드**다.
+> **핵심**: VMX 루트 모드는 인텔의 가상화 기술(VT-x)에서 **하이퍼바이저(VMM)가 CPU의 물리적 자원을 직접 제어하기 위해 실행되는 특수 고권한 동작 모드**다.
 > 2. **가치**: 게스트 OS가 실행되는 'VMX 비-루트 모드(Non-root Operation)'와 엄격히 분리되어, 가상 머신이 하드웨어에 직접 접근하려 할 때 발생하는 이벤트를 가로채(VM-Exit) 안전하게 처리함으로써 완벽한 격리를 보장한다.
 > 3. **융합**: VMCS(Virtual Machine Control Structure) 데이터 구조와 결합되어, 여러 개의 운영체제가 마치 독립된 실제 하드웨어에서 도는 것처럼 속이는 '하드웨어 보조 가상화(Hardware-assisted Virtualization)'의 심장 역할을 한다.
 
+> 📝 모범 답안
+
+# 657. VMX 루트 모드 (VMX Root Operation)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 가상화의 역설: "왕 위에 왕이 있다"
 - **현상**: 일반적인 운영체제(OS)는 자신이 하드웨어의 주인(Ring 0)이라고 믿는다.
@@ -53,7 +55,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. VMCS (Virtual Machine Control Structure)
 - VMX의 가장 핵심적인 데이터 구조다. 메모리의 특정 영역에 위치하며 다음 정보를 담는다.
@@ -77,7 +79,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 소프트웨어 에뮬레이션 vs VMX 하드웨어 가속
 
@@ -97,7 +99,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -119,7 +121,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **가상화 오버헤드 감소**: 소프트웨어 방식 대비 CPU 성능 손실을 5% 이내로 억제.

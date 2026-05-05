@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# DVFS (Dynamic Voltage and Frequency Scaling)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: DVFS (Dynamic Voltage and Frequency Scaling)는 CPU·GPU의 작업 부하(Workload)를 실시간으로 감지하여 공급 전압(V)과 클럭 주파수(f)를 동시에 조절함으로써 불필요한 전력 소모를 최소화하는 핵심 절전 기술이다. 동적 전력 공식 $P = \alpha C V^2 f$에서 전압이 제곱으로 반영되므로, 전압을 낮추면 전력은 V²의 비례로 감소한다.
+> **핵심**: DVFS (Dynamic Voltage and Frequency Scaling)는 CPU·GPU의 작업 부하(Workload)를 실시간으로 감지하여 공급 전압(V)과 클럭 주파수(f)를 동시에 조절함으로써 불필요한 전력 소모를 최소화하는 핵심 절전 기술이다. 동적 전력 공식 $P = \alpha C V^2 f$에서 전압이 제곱으로 반영되므로, 전압을 낮추면 전력은 V²의 비례로 감소한다.
 > 2. **가치**: DVFS는 스마트폰이 배터리를 수일간 유지하고, 데이터센터가 에너지 비례 컴퓨팅을 구현하며, 고성능 GPU가 열 분해 능력을 초과하지 않으면서 최대 성능을 발휘할 수 있게 하는 핵심 기술이다.
 > 3. **융합**: Linux의 `cpufreq` 거버너, Intel SpeedStep/SpeedShift, AMD Precision Boost, ARM big.LITTLE, Android PowerHAL이 모두 DVFS 위에서 동작하며, 클라우드 서버에서는 DVFS 기반 에너지 비례 컴퓨팅으로 PUE를 최적화한다.
 
+> 📝 모범 답안
+
+# DVFS (Dynamic Voltage and Frequency Scaling)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 현대 프로세서가 직면한 근본적 문제는 성능과 전력 소비 사이의 불가피한 트레이드오프이다. 더 높은 성능(빠른 처리)을 위해서는 더 높은 클럭 주파수(f)와 더 높은 공급 전압(V)이 필요하지만, 이 두 가지 모두 전력 소모를 비례이상으로 증가시킨다. $P_{dyn} = \alpha C V^2 f$에서 알 수 있듯이, 전압(V)이 전력에 미치는 영향은 제곱(V²)이다. 따라서 전압을 20% 낮추면 동적 전력이 약 36% 감소하고, 전압과 주파수를 함께 20%씩 낮추면 약 57.8% 감소한다.
 
@@ -75,7 +77,7 @@ DVFS의 핵심 insight는 단순하지만 강력한 물리 법칙에 기반한�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Linux cpufreq 거버너 (Governor)
 
@@ -202,7 +204,7 @@ Apple은 이概念을さらに 발전시켜, 자사 Silicon(M1, M2, M3 시리즈
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### DVFS vs 클럭 게이팅 vs 파워 게이팅
 
@@ -265,7 +267,7 @@ DVFS는 에너지 비례 컴퓨팅을 실현하는 핵심 기술이다. DVFS가 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### DVFS 실무 시나리오
 
@@ -343,7 +345,7 @@ AWS EC2 인스턴스의 CPU 사용률이 10%인情况和 80%인 경우에 DVFS�
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 DVFS의 미래 발전 방향은 다음과 같다.
 

@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: DDD는 **복잡한 비즈니스 도메인을 소프트웨어 모델의 중심에 놓고**, 도메인 전문가와 개발자가 **유비쿼터스 언어(Ubiquitous Language)**를 공유하여 모델과 코드를 일치시키는 설계 방법론이다.
+> **핵심**: DDD는 **복잡한 비즈니스 도메인을 소프트웨어 모델의 중심에 놓고**, 도메인 전문가와 개발자가 **유비쿼터스 언어(Ubiquitous Language)**를 공유하여 모델과 코드를 일치시키는 설계 방법론이다.
 > 2. **가치**: 기술 중심 설계는 비즈니스 로직이 여기저기 흩어지고 도메인 전문가의 의도와 코드가 괴리되지만, DDD는 **도메인 모델이 곧 코드**가 되어 변경에 강하고 이해하기 쉬운 시스템을 만든다.
 > 3. **판단 포인트**: **전략적 설계**(Bounded Context·Context Map)와 **전술적 설계**(Entity·Value Object·Aggregate·Repository)를 구분하고, MSA의 서비스 경계가 Bounded Context와 일치해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -35,7 +37,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 전술적 패턴
 
@@ -51,7 +53,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 데이터 중심 | DDD |
 |:---|:---|:---|
@@ -61,7 +63,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### DDD + MSA
 - Bounded Context = 마이크로서비스 경계.
@@ -70,7 +72,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 DDD는 **복잡한 비즈니스 도메인을 다루는 대규모 시스템 설계의 핵심 방법론**이며, MSA 서비스 경계 설계의 이론적 기반이다.
 

@@ -5,17 +5,19 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 인터럽트 핸들러 (Interrupt Handler)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 인터럽트 핸들러 (Interrupt Handler)는 하드웨어 인터럽트 발생 시 커널에 의해 기동되는 최상위 관리 로직으로, 인터럽트 벡터와 ISR (Interrupt Service Routine)을 포함하여 장치 식별, 상태 관리, 후속 작업 스케줄링을 총괄하는 소프트웨어 아키텍처이다.
+> **핵심**: 인터럽트 핸들러 (Interrupt Handler)는 하드웨어 인터럽트 발생 시 커널에 의해 기동되는 최상위 관리 로직으로, 인터럽트 벡터와 ISR (Interrupt Service Routine)을 포함하여 장치 식별, 상태 관리, 후속 작업 스케줄링을 총괄하는 소프트웨어 아키텍처이다.
 > 2. **가치**: 인터럽트 처리를 즉시 처리해야 할 **상위 절반 (Top Half)**과 지연 처리가 가능한 **하위 절반 (Bottom Half)**으로 계층화하여, 인터럽트 금지 시간을 최소화함으로써 시스템의 전체적인 응답성과 데이터 처리량 (Throughput) 사이의 균형을 맞춘다.
 > 3. **융합**: 리눅스의 SoftIRQ, Tasklet, Workqueue나 윈도우의 DPC (Deferred Procedure Call)와 같은 커널 메커니즘과 연동되어, 멀티코어 환경에서 인터럽트 부하 분산 (Load Balancing) 및 병렬 데이터 처리를 실현하는 기반이 된다.
 
+> 📝 모범 답안
+
+# 인터럽트 핸들러 (Interrupt Handler)
+
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 - **개념**: 인터럽트 핸들러 (Interrupt Handler)는 운영체제가 인터럽트라는 비동기적 사건을 처리하기 위해 운용하는 논리적 프레임워크다. 단순히 특정 코드를 실행하는 것을 넘어, 여러 장치로부터 쏟아지는 인터럽트의 순서를 정하고, 무거운 작업이 시스템을 점유하지 않도록 관리하며, 최종적으로 사용자 프로세스에게 데이터를 전달하는 '전체 처리 공정'을 의미한다.
 
@@ -59,7 +61,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 - **인터럽트 핸들링 주요 메커니즘 및 구성 요소**:
 
@@ -127,7 +129,7 @@ static irqreturn_t my_interrupt_handler(int irq, void *dev_id) {
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 - **하위 절반(Bottom Half) 방식 간의 비교**:
 
@@ -166,7 +168,7 @@ static irqreturn_t my_interrupt_handler(int irq, void *dev_id) {
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 - **실무 시나리오 및 트러블슈팅**:
   1. **인터럽트 공유 (IRQ Sharing) 병목**: 두 장치가 하나의 IRQ 라인을 공유하는데, 한 장치의 핸들러가 `IRQ_NONE`을 늦게 리턴하면 다른 장치의 데이터 처리가 지연된다. 실무에서는 `lspci -v` 명령을 통해 IRQ 공유 현황을 파악하고, 가능하면 MSI (Message Signaled Interrupts) 방식으로 전환하여 공유를 원천 제거해야 한다.
@@ -196,7 +198,7 @@ static irqreturn_t my_interrupt_handler(int irq, void *dev_id) {
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 - **기대효과**: 계층형 인터럽트 핸들러 아키텍처는 시스템에 '강인함'과 '유연함'을 동시에 제공한다. 어떠한 고부하 상황에서도 최소한의 장치 응답(Top Half)을 보장하여 시스템 붕괴를 막고, 복잡한 비즈니스 로직(Bottom Half)은 하드웨어 간섭 없이 안전하게 처리하게 한다. 이는 현대 운영체제가 가용성 (Availability) 99.999%를 달성할 수 있게 한 일등 공신이다.
 

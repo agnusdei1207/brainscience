@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 컨테이너 이미지 보안 스캐닝은 Docker/OCI 이미지의 **OS 패키지·언어 라이브러리에 포함된 알려진 취약점(CVE)**을 자동으로 탐지하고, SBOM(Software Bill of Materials)을 생성하여 공급망 보안을 확보하는 프로세스다.
+> **핵심**: 컨테이너 이미지 보안 스캐닝은 Docker/OCI 이미지의 **OS 패키지·언어 라이브러리에 포함된 알려진 취약점(CVE)**을 자동으로 탐지하고, SBOM(Software Bill of Materials)을 생성하여 공급망 보안을 확보하는 프로세스다.
 > 2. **가치**: 프로덕션 컨테이너의 **76%가 High/Critical CVE**를 포함하고 있으며(Sysdig 2024 보고서), 빌드 시점(Shift Left)에서 스캔하여 취약 이미지의 배포를 차단해야 한다.
 > 3. **판단 포인트**: Trivy(OSS, 빠름)·Snyk(개발자 친화)·Grype(SBOM 통합)가 대표 도구이며, K8s Admission Controller와 연동하여 **스캔 미통과 이미지의 배포를 자동 거부**하는 정책 적용이 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -33,7 +35,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 도구 비교
 
@@ -51,7 +53,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 스캔 없음 | CI 스캔 | CI + Admission |
 |:---|:---|:---|:---|
@@ -60,7 +62,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Shift Left 전략
 - **IDE**: Snyk 플러그인으로 코딩 시점 CVE 감지.
@@ -70,7 +72,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | 스캔 미도입 | 스캔 도입 | 개선 |
 |:---|:---|:---|:---|

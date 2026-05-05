@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: DOM-based XSS (Document Object Model 기반 XSS)는 서버를 거치지 않고 클라이언트 사이드 JavaScript가 DOM을 조작하는 과정에서 공격자 제공 데이터가 실행되는 XSS 유형이다.
+> **핵심**: DOM-based XSS (Document Object Model 기반 XSS)는 서버를 거치지 않고 클라이언트 사이드 JavaScript가 DOM을 조작하는 과정에서 공격자 제공 데이터가 실행되는 XSS 유형이다.
 > 2. **가치**: 서버 로그에 흔적이 없고 WAF (Web Application Firewall)가 탐지하기 어려워 가장 은밀한 XSS 유형이다.
 > 3. **판단 포인트**: Source(데이터 출처)가 Sink(위험한 DOM API)로 흐르는 경로를 추적하는 것이 취약점 분석의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 DOM-based XSS는 클라이언트 측 JavaScript가 `location.hash`, `document.referrer`, `window.name` 등 Source에서 데이터를 읽어 `innerHTML`, `eval()`, `document.write()` 등 Sink에 그대로 출력할 때 발생한다.
 
@@ -23,7 +25,7 @@ DOM-based XSS는 클라이언트 측 JavaScript가 `location.hash`, `document.re
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | Source (입력원) | Sink (위험 API) | 결과 |
 |:---|:---|:---|
@@ -54,7 +56,7 @@ URL: https://site.com/#<img src=x onerror=alert(1)>
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | DOM XSS | Reflected XSS |
 |:---|:---|:---|
@@ -69,7 +71,7 @@ URL: https://site.com/#<img src=x onerror=alert(1)>
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **방어**:
 1. `innerHTML` 대신 `textContent`·`createTextNode` 사용
@@ -83,7 +85,7 @@ URL: https://site.com/#<img src=x onerror=alert(1)>
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Trusted Types API와 CSP를 결합하면 DOM XSS를 근본적으로 차단할 수 있다. CI/CD 파이프라인에 정적 분석 도구를 통합하면 코드 커밋 단계에서 취약 패턴을 사전 차단할 수 있다.
 

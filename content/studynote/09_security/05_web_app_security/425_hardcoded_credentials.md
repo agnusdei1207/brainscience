@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 하드코딩된 자격증명 (Hardcoded Credentials)은 비밀번호, API (Application Programming Interface) 키, 토큰, DB (Database) 연결 문자열 등을 소스 코드에 직접 기록해 버전 관리 시스템(VCS, Version Control System)이나 바이너리를 통해 누구에게나 노출되는 취약점이다.
+> **핵심**: 하드코딩된 자격증명 (Hardcoded Credentials)은 비밀번호, API (Application Programming Interface) 키, 토큰, DB (Database) 연결 문자열 등을 소스 코드에 직접 기록해 버전 관리 시스템(VCS, Version Control System)이나 바이너리를 통해 누구에게나 노출되는 취약점이다.
 > 2. **가치**: GitHub에서 분당 수십 개의 민감 정보가 노출된다는 연구 결과가 있으며, 한 번 공개된 키는 즉시 자동화 도구로 수집되어 악용된다.
 > 3. **판단 포인트**: 환경 변수(Environment Variable), 비밀 관리 서비스(Secrets Manager), Vault를 통한 런타임 주입이 표준 대응이며, 커밋 전 자동 스캔(pre-commit hook)으로 사전 차단해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 개발 편의성을 위해 코드에 자격증명을 직접 작성하는 습관은 심각한 보안 위협이다. 특히 오픈소스 프로젝트에서 민감 정보가 포함된 커밋이 GitHub에 푸시되면, 즉시 봇이 이를 스캔해 AWS (Amazon Web Services) 자격증명, Stripe API 키, Slack 웹훅 등을 수집한다.
 
@@ -30,7 +32,7 @@ STRIPE_SECRET = "sk_live_AbCdEfGhIjKlMnOp"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 하드코딩 자격증명의 위험 경로:
 
@@ -63,7 +65,7 @@ STRIPE_SECRET = "sk_live_AbCdEfGhIjKlMnOp"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 자격증명 관리의 성숙도 모델:
 
@@ -79,7 +81,7 @@ STRIPE_SECRET = "sk_live_AbCdEfGhIjKlMnOp"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **대응 전략**:
 1. **pre-commit 훅**: GitLeaks, detect-secrets를 모든 개발자 환경에 설치 의무화
@@ -92,7 +94,7 @@ STRIPE_SECRET = "sk_live_AbCdEfGhIjKlMnOp"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 비밀 관리 서비스 + pre-commit 훅 + Secret Scanning 조합은 하드코딩 자격증명 위험을 구조적으로 제거한다. 특히 IRSA나 Workload Identity 같은 단기 자격증명 메커니즘은 긴 수명의 자격증명 자체를 없애 노출 위험을 최소화한다.
 

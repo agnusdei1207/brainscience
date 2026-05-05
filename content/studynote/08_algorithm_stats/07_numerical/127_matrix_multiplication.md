@@ -5,15 +5,18 @@ description = "나이브 O(N³) 행렬 곱셈, Strassen O(N^2.81) 알고리즘, 
 categories = "studynote-algorithm"
 tags = ["matrix multiplication", "Strassen", "O(N^2.81)", "cache optimization", "block matrix", "GEMM", "cuBLAS", "deep learning"]
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 나이브 행렬 곱셈 O(N³)은 Strassen(1969)의 분할정복으로 O(N^2.807)으로 개선됐으나, 실무에서는 캐시 효율을 극대화한 블록 행렬 곱셈(GEMM)이 더 중요하다.
 > 2. 딥러닝의 핵심 연산인 행렬 곱셈(matmul)은 GPU의 SIMD 병렬 처리와 Tensor Core(FP16/INT8)를 통해 수천 배 가속된다.
 > 3. 현대 BLAS 라이브러리(OpenBLAS, cuBLAS, oneMKL)는 하드웨어 특성에 맞춘 극도로 최적화된 GEMM 커널을 제공하여 직접 구현보다 수십~수백 배 빠르다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 나이브 행렬 곱셈
+## 1. 개요 및 필요성
 
 ### 1.1 기본 정의
 
@@ -46,7 +49,7 @@ B 행렬을 전치(transpose)하면 j 방향 접근이 행 방향으로 바뀌�
 
 ---
 
-## Ⅱ. Strassen 알고리즘
+## 2. 구성요소
 
 ### 2.1 분할 정복
 
@@ -84,7 +87,7 @@ C22 = M1-M2+M3+M6
 
 ---
 
-## Ⅲ. 블록 행렬 곱셈 (Cache Blocking)
+## 3. 구조 및 동작 원리
 
 ### 3.1 캐시 계층 활용
 
@@ -116,7 +119,7 @@ def matmul_blocked(A, B, block_size=64):
 
 ---
 
-## Ⅳ. GPU 가속 행렬 곱셈
+## 4. 비교 및 트레이드오프
 
 ### 4.1 GPU 병렬화
 
@@ -149,7 +152,7 @@ C = torch.mm(A_gpu, B_gpu)  # cuBLAS 자동 활용
 
 ---
 
-## Ⅴ. 현대 행렬 곱셈 표준 — GEMM
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 BLAS GEMM API
 

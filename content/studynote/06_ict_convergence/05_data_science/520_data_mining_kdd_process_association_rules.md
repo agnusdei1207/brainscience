@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: KDD(Knowledge Discovery in Databases) 프로세스는 원시 데이터에서 유용한 지식을 발굴하는 단계적 절차이며, CRISP-DM(CRoss-Industry Standard Process for Data Mining)은 이를 비즈니스 맥락에서 실용화한 산업 표준 방법론이다.
+> **핵심**: KDD(Knowledge Discovery in Databases) 프로세스는 원시 데이터에서 유용한 지식을 발굴하는 단계적 절차이며, CRISP-DM(CRoss-Industry Standard Process for Data Mining)은 이를 비즈니스 맥락에서 실용화한 산업 표준 방법론이다.
 > 2. **가치**: 연관 규칙(Association Rules)은 지지도(Support)·신뢰도(Confidence)·향상도(Lift)의 세 지표로 규칙 품질을 평가하며, Apriori보다 메모리 효율적인 FP-Growth가 대규모 장바구니 분석의 실무 표준이다.
 > 3. **판단 포인트**: Lift > 1이면 양의 연관, Lift = 1이면 독립, Lift < 1이면 음의 연관 — 신뢰도 높지만 Lift ≈ 1인 규칙은 아이템의 인기도에 불과하므로 반드시 향상도를 함께 확인해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 데이터 마이닝(Data Mining)은 대용량 데이터에서 통계·기계학습·패턴 인식 기술을 통해 의미 있는 패턴, 규칙, 지식을 발굴하는 분석 과정이다.
 
@@ -35,7 +36,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 연관 규칙 세 지표
 
@@ -71,7 +72,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 데이터 마이닝 기법 분류
 
@@ -93,7 +94,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **시나리오 - 슈퍼마켓 장바구니 분석**:
 - 100만 건 트랜잭션, 5,000개 아이템.
@@ -114,7 +115,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 KDD/CRISP-DM 프로세스와 연관 규칙 마이닝의 체계적 적용은 데이터에 숨겨진 패턴을 발굴해 마케팅·재고 관리·개인화 서비스의 효율을 높인다.
 

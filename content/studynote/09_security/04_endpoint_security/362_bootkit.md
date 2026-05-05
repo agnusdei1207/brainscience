@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 부트킷(Bootkit)은 MBR(Master Boot Record), VBR(Volume Boot Record), 또는 UEFI 부트 체인을 감염시켜 OS 로드 이전에 악성 코드를 실행하는 루트킷으로, OS 수준의 모든 보안 도구가 로드되기 전에 시스템을 장악한다.
+> **핵심**: 부트킷(Bootkit)은 MBR(Master Boot Record), VBR(Volume Boot Record), 또는 UEFI 부트 체인을 감염시켜 OS 로드 이전에 악성 코드를 실행하는 루트킷으로, OS 수준의 모든 보안 도구가 로드되기 전에 시스템을 장악한다.
 > 2. **가치**: OS 재설치 후에도 살아남고(MBR 부트킷), 심지어 UEFI 펌웨어에 삽입되면 하드디스크 교체 후에도 지속되는 극도로 끈질긴 지속성을 가진다.
 > 3. **판단 포인트**: Secure Boot + TPM Measured Boot가 표준 방어이며, MBR 무결성 검사(Rootkit Revealer, TDSS Killer)와 UEFI 서명 검증이 추가로 필요하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 부트킷은 시스템 전원이 켜진 후 BIOS/UEFI → 부트로더 → OS 커널 로드 전 단계에 악성 코드를 실행하여 OS가 로드될 때 이미 시스템 전체를 제어하고 있는 상태를 만든다. 이로 인해 OS가 시작하는 모든 보안 소프트웨어—AV, EDR, 로그 에이전트—는 이미 조작된 환경 위에서 실행된다.
 
@@ -23,7 +25,7 @@ TDL4(2011)는 최초의 대규모 부트킷으로, MBR을 감염시켜 Windows 6
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 부팅 체인과 부트킷 감염 위치
 
@@ -57,7 +59,7 @@ TDL4(2011)는 최초의 대규모 부트킷으로, MBR을 감염시켜 Windows 6
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 부트킷 유형 | 감염 위치 | OS 재설치 생존 | 방어 기법 |
 |:---|:---|:---|:---|
@@ -69,7 +71,7 @@ TDL4(2011)는 최초의 대규모 부트킷으로, MBR을 감염시켜 Windows 6
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 부트킷 방어의 핵심: ① UEFI Secure Boot 활성화(부트로더·커널 서명 강제 검증), ② TPM Measured Boot로 PCR에 부팅 단계별 해시 기록, ③ 원격 증명(Remote Attestation)으로 이상 부팅 감지, ④ 부트킷 전용 탐지 도구(Kaspersky TDSS Killer, RootRepeal) 정기 실행.
 
@@ -79,7 +81,7 @@ UEFI 부트킷 대응: SPI 플래시 쓰기 방지 점퍼, BootGuard(Intel Boot 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Windows 11의 보안 기준(TPM 2.0 필수, Secure Boot 필수)과 Android Verified Boot는 부트킷 공격 표면을 대폭 줄이는 방향이다. 그러나 UEFI 구현 취약점(CVE 형태)이 지속적으로 발견되므로 펌웨어 업데이트 관리가 여전히 중요하다.
 

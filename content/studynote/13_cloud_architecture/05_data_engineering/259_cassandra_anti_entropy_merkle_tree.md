@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Cassandra는 노드 간 데이터 불일치를 머클 트리(Merkle Tree) 비교로 효율적으로 탐지하고, Read Repair·Hinted Handoff·Anti-Entropy Repair로 일관성을 복구하는 3단계 자가 치유 메커니즘을 갖춘다.
+> **핵심**: Cassandra는 노드 간 데이터 불일치를 머클 트리(Merkle Tree) 비교로 효율적으로 탐지하고, Read Repair·Hinted Handoff·Anti-Entropy Repair로 일관성을 복구하는 3단계 자가 치유 메커니즘을 갖춘다.
 > 2. **가치**: 네트워크 장애, 노드 다운 등으로 발생한 데이터 불일치를 전체 데이터를 전송하지 않고 머클 트리 루트 해시 비교만으로 불일치 범위를 O(log N)에 특정하여 최소한의 데이터만 동기화한다.
 > 3. **판단 포인트**: `nodetool repair`는 정기적으로 실행해야 하며, gc_grace_seconds(기본 10일) 안에 실행하지 않으면 삭제된 데이터(Tombstone)가 복구되는 "좀비 데이터" 문제가 발생한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Cassandra는 마스터 없는 P2P 분산 아키텍처로, 쓰기 작업이 ConsistencyLevel에 따라 일부 노드에만 즉시 반영될 수 있다. 네트워크 파티션이나 노드 장애 후 복구 시 노드 간 데이터가 불일치할 수 있다.
 
@@ -37,7 +39,7 @@ Node-3 [A=???] ✗ (네트워크 장애로 미반영)
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 머클 트리(Merkle Tree) 구조
 
@@ -111,7 +113,7 @@ Compaction 과정에서 Tombstone과 원본 데이터 영구 삭제
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Cassandra 일관성 레벨(Consistency Level)과 안티 엔트로피
 
@@ -134,7 +136,7 @@ Compaction 과정에서 Tombstone과 원본 데이터 영구 삭제
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### nodetool repair 운영 전략
 
@@ -174,7 +176,7 @@ nodetool compactionstats
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

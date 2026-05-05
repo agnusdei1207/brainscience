@@ -7,16 +7,19 @@ date = 2024-01-01
 [extra]
 categories = ["studynote-software-engineering"]
 +++
-+++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 2단계 잠금 프로토콜(2PL)은 잠금 확장 단계(Growing Phase)와 잠금 수축 단계(Shrinking Phase)로 나뉘어, 확장 단계에서는 잠금만 획득하고 해제는 하지 않는 원칙을 준수한다.
+> **핵심**: 2단계 잠금 프로토콜(2PL)은 잠금 확장 단계(Growing Phase)와 잠금 수축 단계(Shrinking Phase)로 나뉘어, 확장 단계에서는 잠금만 획득하고 해제는 하지 않는 원칙을 준수한다.
 > 2. **가치**: 2PL을 따르면 직렬 가능성(Serializability)이 보장되어, 동시 실행 결과가 어떤 직렬 실행 결과와 동일함이 수학적으로 보장된다.
 > 3. **융합**: 2PL은 컴퓨터구조의 파이프라인과 유사한 phases 개념을 적용한 것으로, OS의 페이징 알고리즘과도 관련이 있다.
 
+> 📝 모범 답안
+
++++
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념
 2단계 잠금 프로토콜(2PL, Two-Phase Locking)은 잠금 기반 동시성 제어에서 직렬 가능성을 보장하는 표준 프로토콜이다. 트랜잭션은 잠금 확장 단계(Growing Phase)에서 필요한 잠금을 모두 획득하고,一度 획득한 잠금은 해제하지 않는다. 이후 잠금 수축 단계(Shrinking Phase)에서는 기존 잠금을 해제하기만 하고 새로운 잠금은 획득하지 않는다.
@@ -37,7 +40,7 @@ categories = ["studynote-software-engineering"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 2PL phases 동작
 
@@ -131,7 +134,7 @@ categories = ["studynote-software-engineering"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교: 2PL vs Timestamp Ordering vs Optimistic
 
@@ -152,7 +155,7 @@ categories = ["studynote-software-engineering"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -173,7 +176,7 @@ categories = ["studynote-software-engineering"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: TF-IDF(Term Frequency-Inverse Document Frequency)는 문서 내 단어 빈도를 전체 문서에서의 희귀도로 보정해 단어 중요도를 정량화 — BoW(Bag of Words)의 한계를 극복한 가중치 방식이다.
+> **핵심**: TF-IDF(Term Frequency-Inverse Document Frequency)는 문서 내 단어 빈도를 전체 문서에서의 희귀도로 보정해 단어 중요도를 정량화 — BoW(Bag of Words)의 한계를 극복한 가중치 방식이다.
 > 2. **가치**: Word2Vec은 단어를 조밀한 벡터(Dense Vector)로 표현해 의미적 유사성을 거리로 표현 — "왕 − 남자 + 여자 = 여왕" 같은 벡터 산술이 가능하다.
 > 3. **판단 포인트**: 키워드 매칭은 TF-IDF(BM25), 의미 검색은 Dense Vector(BERT Embedding) — RAG(Retrieval-Augmented Generation) 파이프라인에서는 하이브리드 검색이 성능 최적.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 텍스트를 컴퓨터가 처리하려면 수치화(Vectorization)가 필수다. BoW부터 BERT까지의 진화는 "단어 빈도 → 의미 → 문맥 이해"로의 발전 과정이다.
 
@@ -31,7 +32,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### TF-IDF 계산 구조
 
@@ -67,7 +68,7 @@ $$\cos(\theta) = \frac{\vec{A} \cdot \vec{B}}{|\vec{A}||\vec{B}|}$$
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 희소 벡터 vs 조밀 벡터
 
@@ -102,7 +103,7 @@ $$\cos(\theta) = \frac{\vec{A} \cdot \vec{B}}{|\vec{A}||\vec{B}|}$$
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **시나리오 1 - 고객 리뷰 분석**:
 - 10만 건 리뷰 TF-IDF 벡터화 → 코사인 유사도로 유사 리뷰 클러스터링.
@@ -122,7 +123,7 @@ $$\cos(\theta) = \frac{\vec{A} \cdot \vec{B}}{|\vec{A}||\vec{B}|}$$
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 텍스트 마이닝 기술의 계층적 이해는 키워드 기반 검색부터 의미 기반 RAG 시스템 설계까지 실무 전 과정에 활용된다.
 

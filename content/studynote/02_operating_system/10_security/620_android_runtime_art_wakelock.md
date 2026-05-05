@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 안드로이드 리눅스 커널 커스터마이징 (Wakelock 전력 통제 모듈)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Wakelock은 Android가 리눅스 커널 (Linux Kernel)에 추가한 전력 관리(PM, Power Management) 확장 모듈로, 애플리케이션이나 커널 서브시스템이 CPU, 디스플레이, 무선 통신 장치의 절전(Suspend) 상태 진입을 선점적으로 방지(Lock)하여, 사용자 경험을 해치지 않으면서도 유휴(Idle) 시간에는 최대한 전력을 절약하는 세밀한 전력 통제 메커니즘이다.
+> **핵심**: Wakelock은 Android가 리눅스 커널 (Linux Kernel)에 추가한 전력 관리(PM, Power Management) 확장 모듈로, 애플리케이션이나 커널 서브시스템이 CPU, 디스플레이, 무선 통신 장치의 절전(Suspend) 상태 진입을 선점적으로 방지(Lock)하여, 사용자 경험을 해치지 않으면서도 유휴(Idle) 시간에는 최대한 전력을 절약하는 세밀한 전력 통제 메커니즘이다.
 > 2. **가치**: 기존 리눅스의 OPP (Operating Performance Points) 기반 cpuidle 프레임워크만으로는 모바일 기기의 "화면이 꺼진 상태에서도 음악 재생, GPS 추적, 메시지 수신 대기" 같은 복잡한 전력 시나리오를 처리할 수 없었으나, Wakelock은 이를 우아하게 해결하여 Android가 모바일 OS 시장을 장악하는 핵심 기술 기반이 되었다.
 > 3. **융합**: Wakelock은 리눅스 커널의 PM 서브시스템과 Android의 PowerManagerService, ActivityManagerService, 그리고 Doze/App Standby 등 상위 전력 정책 계층이 유기적으로 결합된 결과물이며, 커널 수준의 하드웨어 제어와 프레임워크 수준의 앱 생명주기 관리가 융합된 사례다.
 
+> 📝 모범 답안
+
+# 안드로이드 리눅스 커널 커스터마이징 (Wakelock 전력 통제 모듈)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 **개념 및 정의**
 Wakelock은 Android가 리눅스 커널의 전력 관리(PM, Power Management) 서브시스템 위에 구현한 **잠금 기반(Lock-based) 전력 상태 제어 메커니즘**이다. 기본적으로 리눅스 커널은 CPU가 유휴(Idle) 상태가 되면 자동으로 저전력 모드(C-State)로 진입하지만, 모바일 기기에서는 "백그라운드에서 음악이 재생 중이거나", "GPS가 위치를 추적 중이거나", "긴급 메시지를 기다리는 중"에 CPU가 잠들어 버리면 치명적인 사용자 경험 저하가 발생한다. Wakelock은 이 문제를 해결하기 위해 **"특정 작업이 완료될 때까지 CPU나 디바이스가 잠들지 못하게 붙잡아 두는(Wake + Lock)" 장치**다.
@@ -56,7 +58,7 @@ Wakelock은 Android가 리눅스 커널의 전력 관리(PM, Power Management) �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Wakelock 유형 분류
 
@@ -173,7 +175,7 @@ Android 6.0 (API 23)부터 도입된 Doze 모드는 Wakelock의 남용을 제한
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### Wakelock vs 표준 리눅스 전력 관리
 
@@ -225,7 +227,7 @@ Android 6.0 (API 23)부터 도입된 Doze 모드는 Wakelock의 남용을 제한
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 디버깅
 
@@ -290,7 +292,7 @@ Android 6.0 (API 23)부터 도입된 Doze 모드는 Wakelock의 남용을 제한
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

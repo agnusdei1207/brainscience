@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 부하 균등화 (Load Balancing)와 큐 이주 (Queue Migration)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 멀티 코어(SMP) 환경의 부하 균등화(Load Balancing)는 운영체제 스케줄러가 여러 개의 CPU 코어 중 **일거리가 넘쳐 터지기 직전인 코어(Overloaded)의 대기열(Run Queue)에서 프로세스를 쏙 빼내어, 놀고 있는 빈 코어(Idle)의 대기열로 이주(Migration)시켜 시스템 전체의 연산 효율을 극대화하는 메커니즘**이다.
+> **핵심**: 멀티 코어(SMP) 환경의 부하 균등화(Load Balancing)는 운영체제 스케줄러가 여러 개의 CPU 코어 중 **일거리가 넘쳐 터지기 직전인 코어(Overloaded)의 대기열(Run Queue)에서 프로세스를 쏙 빼내어, 놀고 있는 빈 코어(Idle)의 대기열로 이주(Migration)시켜 시스템 전체의 연산 효율을 극대화하는 메커니즘**이다.
 > 2. **가치**: 특정 코어만 100% 불타오르고 다른 코어는 0%로 놀고 있는 자원 비대칭(Asymmetry)의 바보 같은 상황을 막아, 사용자가 구매한 값비싼 64코어, 128코어 서버의 잠재력을 100% 끝까지 쥐어짜 내는 가장 기본적인 다중 처리 엔진이다.
 > 3. **융합**: 그러나 프로세스를 딴 코어로 옮기면 기껏 데워놓은 L1 캐시가 박살 나는(Cache Miss) 치명적 딜레마(CPU Affinity의 반대 개념)가 발생하므로, 현대 리눅스의 스케줄링 도메인(Sched Domain)은 '캐시 공유 트리'와 'NUMA 노드 아키텍처'를 계산하여 가장 타격이 적은 가까운 코어로만 짐을 옮기는 고도의 융합 수학 모델로 진화했다.
 
+> 📝 모범 답안
+
+# 부하 균등화 (Load Balancing)와 큐 이주 (Queue Migration)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **Run Queue (실행 대기열)**: 멀티 코어 OS는 중앙에 큐를 1개만 두면 락(Lock) 병목이 걸리므로, 코어 0번 전용 큐, 코어 1번 전용 큐처럼 코어마다 독립된 대기열을 갖는다.
@@ -67,7 +69,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 이주(Migration)의 치명적 독극물: 캐시 파괴(Cache Bouncing)
 
@@ -114,7 +116,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### CPU 친화성 (Affinity) vs 부하 균등화 (Load Balancing)의 전쟁
 
@@ -135,7 +137,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 서버 튜닝
 
@@ -178,7 +180,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

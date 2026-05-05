@@ -5,17 +5,19 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 시분할 시스템 (Time-sharing System)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 시분할 시스템 (Time-sharing System)은 CPU 시간을 매우 짧은 시간 단위인 타임 슬라이스 (Time Slice)로 나누어 여러 사용자나 프로세스에게 번갈아 할당함으로써, 각 사용자가 컴퓨터를 독점하고 있는 듯한 환상 (Illusion)을 제공하는 기술이다.
+> **핵심**: 시분할 시스템 (Time-sharing System)은 CPU 시간을 매우 짧은 시간 단위인 타임 슬라이스 (Time Slice)로 나누어 여러 사용자나 프로세스에게 번갈아 할당함으로써, 각 사용자가 컴퓨터를 독점하고 있는 듯한 환상 (Illusion)을 제공하는 기술이다.
 > 2. **가치**: 일괄 처리 시스템의 긴 대기 시간을 해결하고 대화형 (Interactive) 인터페이스를 가능하게 하여, 사용자 응답 시간 (Response Time)을 최소화하고 시스템 자원의 민주적 배분을 실현한다.
 > 3. **융합**: 현대 멀티태스킹 운영체제 (OS)의 근간이며, 가상 메모리 (Virtual Memory) 및 고속 컨텍스트 스위칭 (Context Switching) 기술과 결합하여 복잡한 다중 사용자 환경의 안정성을 보장한다.
 
+> 📝 모범 답안
+
+# 시분할 시스템 (Time-sharing System)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 시분할 시스템 (Time-sharing System)은 다중 프로그래밍 (Multiprogramming)의 논리적 확장으로, CPU 스케줄링과 다중 프로그래밍을 사용하여 각 사용자에게 컴퓨터의 작은 부분을 시각적으로 동시에 제공하는 방식이다. 핵심은 '응답 시간 (Response Time)'의 최소화에 있으며, 이를 위해 라운드 로빈 (RR, Round Robin)과 같은 선점형 스케줄링 알고리즘을 사용한다.
 
@@ -49,7 +51,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -113,7 +115,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 다중 프로그래밍과 시분할 시스템의 심층 비교
 
@@ -136,7 +138,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 적용 시나리오 및 튜닝 전략
 
@@ -157,7 +159,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 시분할 시스템 도입의 정량/정성적 효과
 

@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Expand and Contract 패턴은 DB 스키마 변경(DDL)을 **확장(Expand) → 병행(Migrate) → 수축(Contract)**의 3단계로 분리하여, 신·구버전 앱이 동시에 운영 DB를 사용해도 **서비스 중단 없이(Zero-Downtime)** 스키마를 진화시키는 기법이다.
+> **핵심**: Expand and Contract 패턴은 DB 스키마 변경(DDL)을 **확장(Expand) → 병행(Migrate) → 수축(Contract)**의 3단계로 분리하여, 신·구버전 앱이 동시에 운영 DB를 사용해도 **서비스 중단 없이(Zero-Downtime)** 스키마를 진화시키는 기법이다.
 > 2. **가치**: 컬럼 삭제·이름 변경을 가장 마지막 단계로 미룸으로써, 배포 중 롤백하더라도 **DB 데이터가 그대로 남아 장애를 방지**하며, 이는 블루/그린 배포의 DB 판 완성형이다.
 > 3. **판단 포인트**: Flyway·Liquibase로 각 단계를 **버전 관리(V1__expand, V2__migrate, V3__contract)**하고 CI/CD에 통합하며, 데이터 마이그레이션은 Lazy Migration 또는 DB 트리거로 실시간 동기화한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 앱은 블루/그린·카나리 배포로 무중단이 가능하지만, **DB 스키마(DDL)는 갑자기 바꾸면 구버전 앱이 에러**를 뿜는다. "컬럼 이름을 `name` → `full_name`으로 바꿔야 하는데, 구버전 앱은 아직 `name`을 읽고 있다." 이때 점검 페이지를 띄우는 것은 현대 DevOps의 목표가 아니다.
 
@@ -43,7 +45,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 3단계 상세
 
@@ -65,7 +67,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 빅뱅 배포 | Expand & Contract |
 |:---|:---|:---|
@@ -77,7 +79,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### CI/CD 통합 체크리스트
 1. **Flyway/Liquibase**로 SQL 스크립트를 `V1__expand.sql`, `V2__migrate.sql`, `V3__contract.sql`로 버저닝.
@@ -90,7 +92,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | 빅뱅 배포 | E&C 패턴 | 개선 |
 |:---|:---|:---|:---|

@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-network"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. PSK(Phase Shift Keying)는 반송파의 위상(Phase)을 변화시켜 디지털 데이터를 전송 — BPSK는 2가지 위상(0°/180°)으로 1비트, QPSK는 4가지 위상(0°/90°/180°/270°)으로 2비트를 동시에 전송한다.
 > 2. QPSK는 BPSK와 동일한 대역폭(Bandwidth)으로 2배 데이터 전송 — 위상 수를 4개로 늘려 심볼당 비트 수를 2배로 높이면서도 BER(Bit Error Rate) 성능은 BPSK와 동일하게 유지되는 효율적인 변조 방식이다.
 > 3. 현대 통신에서 QAM(직교진폭변조)으로의 진화 — 5G NR에서 256-QAM을 사용하면 심볼당 8비트 전송이 가능하지만, SNR 요구사항도 급격히 높아지는 트레이드오프가 존재하며, 채널 상태에 따라 QPSK~256-QAM을 적응적으로 선택(AMC)한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. BPSK (Binary Phase Shift Keying)
+## 1. 개요 및 필요성
 
 ```
 BPSK 개요:
@@ -61,7 +64,7 @@ BER (Bit Error Rate):
 
 ---
 
-## Ⅱ. QPSK (Quadrature Phase Shift Keying)
+## 2. 구성요소
 
 ```
 QPSK 개요:
@@ -112,7 +115,7 @@ QPSK vs BPSK 비교:
 
 ---
 
-## Ⅲ. 고차 QAM으로의 진화
+## 3. 구조 및 동작 원리
 
 ```
 진화 과정:
@@ -157,7 +160,7 @@ AMC (Adaptive Modulation and Coding):
 
 ---
 
-## Ⅳ. 실제 통신 시스템 적용
+## 4. 비교 및 트레이드오프
 
 ```
 LTE/5G에서의 변조:
@@ -201,7 +204,7 @@ DOCSIS (케이블 인터넷):
 
 ---
 
-## Ⅴ. 실무 시나리오 — 5G 기지국 AMC
+## 5. 실무 적용 및 최적화 기법
 
 ```
 5G NR AMC 동작 예시:

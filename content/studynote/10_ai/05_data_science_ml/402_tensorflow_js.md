@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: TensorFlow.js는 자바스크립트를 사용하여 웹 브라우저나 Node.js 환경에서 직접 머신러닝 모델을 학습시키고 배포(Inference)할 수 있는 오픈소스 라이브러리다.
+> **핵심**: TensorFlow.js는 자바스크립트를 사용하여 웹 브라우저나 Node.js 환경에서 직접 머신러닝 모델을 학습시키고 배포(Inference)할 수 있는 오픈소스 라이브러리다.
 > 2. **가치**: 서버로 데이터를 전송할 필요 없이 클라이언트 측에서 즉시 연산이 가능하므로, 낮은 지연 시간(Low Latency), 높은 개인정보 보호(Privacy), 서버 비용 절감의 이점을 제공한다.
 > 3. **판단 포인트**: 대규모 학습보다는 기학습된 모델의 변환(Converted Model) 및 최적화된 서빙에 초점을 맞춰야 하며, WebGL/WebGPU 가속 성능을 최대한 활용하는 설계가 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 기존의 머신러닝 모델은 주로 Python 서버 환경에서 동작했으나, 사용자 경험 고도화와 보안 강화를 위해 브라우저 단의 AI 필요성이 증대되었다. TensorFlow.js는 웹 개발자들에게 친숙한 JS 환경에서 고성능 ML 기능을 제공한다.
 
@@ -26,7 +28,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 TensorFlow.js는 상위 레벨의 Layers API와 하위 레벨의 Core API로 구성되며, 하드웨어 가속을 위해 브라우저의 그래픽 엔진을 활용한다.
 
@@ -65,7 +67,7 @@ TensorFlow.js는 상위 레벨의 Layers API와 하위 레벨의 Core API로 구
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | Python TensorFlow | TensorFlow.js (Browser) |
 |:---|:---|:---|
@@ -80,7 +82,7 @@ TensorFlow.js는 13_cloud_architecture의 **엣지 컴퓨팅(Edge Computing)** �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 고려 사항
 1. **모델 크기**: 브라우저 로딩 속도를 위해 모델 파일 크기를 최소화해야 한다. (Graph Optimization, Quantization 필수)
@@ -94,7 +96,7 @@ TensorFlow.js는 13_cloud_architecture의 **엣지 컴퓨팅(Edge Computing)** �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 TensorFlow.js는 AI 기술의 진입 장벽을 낮추고, 웹 환경의 풍부한 미디어 API와 AI를 결합하여 혁신적인 킬러 앱을 탄생시킨다.
 

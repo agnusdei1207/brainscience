@@ -5,17 +5,19 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 소프트웨어 인터럽트, 트랩 및 예외 (Software Interrupt, Trap & Exception)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 소프트웨어 인터럽트 (Software Interrupt) 및 트랩 (Trap)은 CPU (Central Processing Unit)가 명령어를 실행하는 과정에서 발생하는 **동기적 (Synchronous)** 사건으로, 의도적인 서비스 요청 (시스템 콜)이나 비의도적인 오류 상황 (예외)을 처리하기 위해 제어권을 커널로 전환하는 메커니즘이다.
+> **핵심**: 소프트웨어 인터럽트 (Software Interrupt) 및 트랩 (Trap)은 CPU (Central Processing Unit)가 명령어를 실행하는 과정에서 발생하는 **동기적 (Synchronous)** 사건으로, 의도적인 서비스 요청 (시스템 콜)이나 비의도적인 오류 상황 (예외)을 처리하기 위해 제어권을 커널로 전환하는 메커니즘이다.
 > 2. **가치**: 사용자 모드 (User Mode)의 프로세스가 보호된 커널 자원에 안전하게 접근할 수 있는 유일한 통로를 제공하며, 나누기 0 (Division by zero)이나 잘못된 메모리 참조와 같은 런타임 오류로부터 시스템 전체의 붕괴를 방지한다.
 > 3. **융합**: 가상 메모리 관리의 핵심인 페이지 폴트 (Page Fault) 예외부터 컨테이너 환경의 자원 격리를 위한 시스템 콜 필터링 (Seccomp)까지, 운영체제의 보안과 안정성을 지탱하는 논리적 기반으로 작용한다.
 
+> 📝 모범 답안
+
+# 소프트웨어 인터럽트, 트랩 및 예외 (Software Interrupt, Trap & Exception)
+
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 - **개념**: 소프트웨어 인터럽트 (Software Interrupt)는 CPU 내부에서 실행 중인 명령어에 의해 직접 유발되는 제어 전달 방식이다. 하드웨어 인터럽트가 외부 장치의 신호에 의해 비동기적으로 발생하는 것과 달리, 소프트웨어 인터럽트는 특정 명령어를 실행한 결과로 발생하므로 **동기적 (Synchronous)**인 특성을 갖는다. 대표적으로 시스템 서비스를 요청하는 '트랩 (Trap)'과 예상치 못한 오류를 의미하는 '예외 (Exception)'로 구분된다.
 
@@ -54,7 +56,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 - **트랩 및 예외 처리 구성 요소**:
 
@@ -124,7 +126,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 - **폴트 (Fault) vs 어보트 (Abort) vs 트랩 (Trap) 비교**:
 
@@ -160,7 +162,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 - **실무 시나리오 및 디버깅 전략**:
   1. **좀비 프로세스와 예외 처리**: 자식 프로세스가 예외로 종료될 때 부모가 `wait()` 시스템 콜(트랩)을 통해 상태를 수거하지 않으면 좀비 프로세스가 된다. 시스템 설계 시 시그널 핸들러를 통해 비정상 종료 예외를 반드시 관리해야 한다.
@@ -190,7 +192,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 - **기대효과**: 소프트웨어 인터럽트와 트랩은 운영체제에게 '전지전능한 통제권'을 부여한다. 이를 통해 하드웨어는 공유 가능한 자원이 되었고, 애플리케이션은 서로를 침범하지 않는 안전한 모래상자 (Sandbox) 안에서 동작하게 되었다. 이는 클라우드 컴퓨팅과 가상화 기술이 탄생할 수 있었던 가장 근본적인 토대다.
 
@@ -210,7 +212,6 @@ categories = "studynote-operating-system"
 | **Seccomp** | 리눅스 보안 기술로, 허용되지 않은 시스템 콜(트랩) 발생 시 프로세스를 즉시 예외 종료시킴. |
 
 ---
-
 
 ### 📈 관련 키워드 및 발전 흐름도
 

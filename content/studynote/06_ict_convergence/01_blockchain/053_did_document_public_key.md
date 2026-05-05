@@ -5,16 +5,17 @@ date = "2026-05-01"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: DID 문서 (DID Document)는 DID (Decentralized Identifier)에 연결된 공개 메타데이터와 검증 수단을 담는 자료다.
+> **핵심**: DID 문서 (DID Document)는 DID (Decentralized Identifier)에 연결된 공개 메타데이터와 검증 수단을 담는 자료다.
 > 2. **가치**: 공개키 (Public Key), verification method, service endpoint를 통해 중앙 CA 없이도 인증과 검증을 수행한다.
 > 3. **판단 포인트**: DID 식별자, DID 문서, DID Resolver, 검증 관계를 분리해 설명해야 구조가 선명해진다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 분산 신원에서는 중앙 서버가 "이 사람이 누구인지"를 대신 증명해 주지 않는다. 대신 사용자가 자신의 식별자와 키를 직접 관리하고, 상대는 공개 정보를 바탕으로 검증한다.
 
@@ -24,7 +25,7 @@ DID 문서는 이때 필요한 공개 정보 묶음이다. 누가 서명할 수 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 DID는 식별자이고, DID 문서는 그 식별자에 대한 상세 설명서다. Resolver가 DID를 조회하면 DID 문서가 나오고, 그 안의 verification method로 서명 검증을 수행한다.
 
@@ -50,7 +51,7 @@ DID → DID Resolver → DID Document
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 DID 문서는 기존 PKI (Public Key Infrastructure) 인증서와 비슷해 보이지만, 중심 철학이 다르다. PKI는 CA 중심의 신뢰 체계이고, DID는 주체 중심의 분산 신뢰 체계다.
 
@@ -67,7 +68,7 @@ DID 문서는 Verifiable Credential (VC)과 Verifiable Presentation (VP)의 기�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 키 회전, 서비스 엔드포인트 변경, 여러 검증 관계를 어떻게 관리할지가 핵심이다. 공개키는 바뀔 수 있으므로, 문서 갱신과 해석 규칙이 중요하다.
 
@@ -90,7 +91,7 @@ DID 문서는 Verifiable Credential (VC)과 Verifiable Presentation (VP)의 기�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 DID 문서와 공개키 구조는 중앙 기관 의존도를 낮추고, 사용자가 자신의 신원을 더 세밀하게 통제하게 해 준다.
 

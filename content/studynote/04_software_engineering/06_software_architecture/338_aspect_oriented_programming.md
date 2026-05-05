@@ -3,17 +3,19 @@ title = "338. 관점 지향 프로그래밍 (AOP, Aspect Oriented Programming) -
 date = 2026-04-05
 weight = 338
 +++
+## 0. 핵심 인사이트
 
-# 338. 관점 지향 프로그래밍 (AOP, Aspect Oriented Programming) - 횡단 관심사 (Cross-cutting Concern) 분리
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 관점 지향 프로그래밍 (AOP, Aspect Oriented Programming)은 소프트웨어의 핵심 기능(주가 관심사, Core Concern)과 공통으로 적용되는 부가 기능(횡단 관심사, Cross-cutting Concern)을 분리하여, 핵심 비즈니스 로직에 부가 기능이 침투하지 않도록 하는 프로그래밍 패러다임이다.
+> **핵심**: 관점 지향 프로그래밍 (AOP, Aspect Oriented Programming)은 소프트웨어의 핵심 기능(주가 관심사, Core Concern)과 공통으로 적용되는 부가 기능(횡단 관심사, Cross-cutting Concern)을 분리하여, 핵심 비즈니스 로직에 부가 기능이 침투하지 않도록 하는 프로그래밍 패러다임이다.
 > 2. **가치**: 로깅, 보안, 트랜잭션 관리, 예외 처리 등의 횡단 관심사가 여러 모듈에 중복해서 포함되는 것을 방지하고, 한 곳에서 집중 관리함으로써 코드 중복을 제거하고 유지보수성을 향상시킨다.
 > 3. **융합**: AOP는 Spring Framework의声明적 트랜잭션 관리 (@Transactional), 보안 (Spring Security), 캐싱 (@Cacheable) 등의 핵심 기반 기술이며, DDD에서 도메인 로직과 인프라 로직의 분리를実現する에도 활용된다.
 
+> 📝 모범 답안
+
+# 338. 관점 지향 프로그래밍 (AOP, Aspect Oriented Programming) - 횡단 관심사 (Cross-cutting Concern) 분리
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: AOP는 소프트웨어 시스템을 주가 관심사 (Core Concern)와 횡단 관심사 (Cross-cutting Concern)로 분리하는 프로그래밍 패러다임이다. 주가 관심사는 비즈니스 핵심 로직(예: 주문 처리, 결제 처리)이고, 횡단 관심사는 여러 모듈에 공통으로 적용되는 부가 기능(예: 로깅, 보안, 트랜잭션, 예외 처리)이다. 전통적인 절차적 프로그래밍에서 이러한 횡단 관심사는 각 모듈에 중복해서 포함되어 코드 중복과 유지보수苦难을 야기한다. AOP는 이러한 횡단 관심사를 "관점(Aspect)"이라는 별도의 모듈로 분리하여, 필요한 곳에 선언적으로 적용할 수 있게 한다.
 
@@ -27,7 +29,7 @@ weight = 338
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### AOP 핵심 용어
 
@@ -198,7 +200,7 @@ weight = 338
 
 ---
 
-## Ⅲ. 구현 및 실무 응용 (Implementation & Practice)
+## 3. 구조 및 동작 원리
 
 ### Spring AOP 실습
 
@@ -281,7 +283,7 @@ public class ProductService {
 
 ---
 
-## Ⅳ. 품질 관리 및 테스트 (Quality & Testing)
+## 4. 비교 및 트레이드오프
 
 ### AOP 적용 전후 비교
 
@@ -307,7 +309,7 @@ public class ProductService {
 
 ---
 
-## Ⅴ. 최신 트렌드 및 결론 (Trends & Conclusion)
+## 5. 실무 적용 및 최적화 기법
 
 ### AOP 활용 분야
 
@@ -329,8 +331,6 @@ public class ProductService {
 - **📢 섹션 요약 비유**: AOP는 "은행のセキュリティシステム"와 같다. 금고(핵심 로직)에 직접セキュリティ機器を接続하지 않고, セキュリティ会社(Aspect)가集中的に監視하고, 万万一の時にだけ対応하면よい. 핵심 로직은 보안의 존재를 모르면서도 安全을享受할 수 있다.
 
 ---
-
-## 핵심 인사이트 ASCII 다이어그램 (Concept Map)
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐

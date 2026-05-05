@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 소프트웨어 유지보수(Software Maintenance)는 ISO/IEC 14764에 따라 수정(Corrective)·적응(Adaptive)·완전화(Perfective)·예방(Preventive)의 4가지 유형으로 분류된다. 운영 중인 소프트웨어에 가해지는 모든 변경이 이 네 유형 중 하나다.
+> **핵심**: 소프트웨어 유지보수(Software Maintenance)는 ISO/IEC 14764에 따라 수정(Corrective)·적응(Adaptive)·완전화(Perfective)·예방(Preventive)의 4가지 유형으로 분류된다. 운영 중인 소프트웨어에 가해지는 모든 변경이 이 네 유형 중 하나다.
 > 2. **가치**: 현실에서 유지보수가 전체 소프트웨어 비용의 60~80%를 차지한다. 유지보수 유형 분류는 변경 요청(Change Request)의 우선순위·자원 배분·SLA(Service Level Agreement) 결정의 기준이 된다.
 > 3. **판단 포인트**: 완전화 유지보수(Perfective)가 실제 비용의 가장 큰 비중(약 50%)을 차지한다. 사용자 요구 기능 추가·성능 개선이 버그 수정보다 더 많은 자원을 소모한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 유지보수 4유형:
@@ -34,7 +36,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 유지보수 유형 상세
 
@@ -70,7 +72,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 수정 | 적응 | 완전화 | 예방 |
 |:---|:---|:---|:---|:---|
@@ -83,7 +85,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 유지보수성(Maintainability) 향상 전략
 
@@ -108,7 +110,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

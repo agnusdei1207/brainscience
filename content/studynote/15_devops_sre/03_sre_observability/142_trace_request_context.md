@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Trace는 **하나의 요청 전체 경로**, Span은 **각 서비스 구간의 작업 단위**이며, Context Propagation은 **Trace ID·Span ID를 HTTP 헤더(traceparent)로 서비스 간 전파**하여 전체 호출 체인을 연결하는 메커니즘이다.
+> **핵심**: Trace는 **하나의 요청 전체 경로**, Span은 **각 서비스 구간의 작업 단위**이며, Context Propagation은 **Trace ID·Span ID를 HTTP 헤더(traceparent)로 서비스 간 전파**하여 전체 호출 체인을 연결하는 메커니즘이다.
 > 2. **가치**: Context가 전파되지 않으면 각 서비스의 로그가 **독립적으로 흩어져** 연결이 불가능하지만, traceparent 헤더로 **전체 호출 체인을 하나의 Trace로 묶어** 시각화한다.
 > 3. **판단 포인트**: W3C Trace Context(traceparent: 00-traceId-spanId-flags)가 표준이며, B3(Zipkin)에서 W3C로 수렴 중이다. 서비스 메시(Istio)가 자동 전파를 지원한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 traceparent: 00-{traceId}-{spanId}-{flags}

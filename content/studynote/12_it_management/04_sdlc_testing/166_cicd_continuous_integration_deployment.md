@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: CI/CD는 코드 변경(커밋)부터 운영 배포까지 자동화된 파이프라인을 통해 소프트웨어를 빠르고 안정적으로 제공하는 DevOps 핵심 실천법으로—CI (Continuous Integration, 지속적 통합)는 코드 통합·검증, CD (Continuous Deployment/Delivery)는 배포 자동화를 담당한다.
+> **핵심**: CI/CD는 코드 변경(커밋)부터 운영 배포까지 자동화된 파이프라인을 통해 소프트웨어를 빠르고 안정적으로 제공하는 DevOps 핵심 실천법으로—CI (Continuous Integration, 지속적 통합)는 코드 통합·검증, CD (Continuous Deployment/Delivery)는 배포 자동화를 담당한다.
 > 2. **가치**: CI/CD는 "작은 변경을 자주 통합"하는 방식으로 대형 통합(Big Bang Integration)의 위험을 제거한다—빌드·테스트·배포 사이클을 수분~수시간으로 단축해 시장 출시 시간(Time to Market)을 혁신한다.
 > 3. **판단 포인트**: Continuous Delivery와 Continuous Deployment의 차이—Delivery는 운영 배포 전 인간 승인이 있고, Deployment는 완전 자동화로 인간 개입 없이 운영까지 자동 배포된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 CI/CD (Continuous Integration / Continuous Delivery & Deployment)는 DevOps 문화의 기술적 핵심이다. 전통적 SW 개발에서는 각 개발자가 오랫동안 독립적으로 작업 후 큰 단위로 통합했다—이른바 "지옥의 통합(Integration Hell)"이 발생했다. 코드 충돌, 예상치 못한 의존성 문제, 수주간의 통합 작업이 반복되었다.
 
@@ -25,7 +27,7 @@ CI는 이 문제를 "매일 또는 매 커밋마다 통합"으로 해결한다. 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### CI/CD 파이프라인 단계
 
@@ -100,7 +102,7 @@ Shift Left (CI/CD):
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 브랜치 전략 비교
 
@@ -134,7 +136,7 @@ Shift Left (CI/CD):
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### GitHub Actions 예시
 
@@ -188,7 +190,7 @@ jobs:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 CI/CD를 체계적으로 도입하면:
 

@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-algorithm"
 +++
-
-## 핵심 인사이트
+## 0. 핵심 인사이트
 
 > EM 알고리즘(Expectation-Maximization Algorithm)은 "관측 데이터만으로 MLE(Maximum Likelihood Estimation)가 불가능할 때, 잠재변수(Latent Variable)에 대한 기댓값을 계산하고 파라미터를 갱신하는 과정을 반복해 수렴시키는" 우아한 반복 최적화 기법이다.
 > E-단계(Expectation Step)와 M-단계(Maximization Step)를 교대 반복할 때마다 로그 우도(Log-Likelihood)는 단조 증가(Monotonically Non-Decreasing)가 보장된다 — 이것이 EM의 수학적 핵심이다.
 > GMM(Gaussian Mixture Models) 클러스터링, HMM(Hidden Markov Model) 학습, 결측 데이터 대체까지 — EM은 "불완전한 데이터"를 다루는 통계학의 만능 열쇠다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 문제 설정: 잠재변수와 불완전 데이터
+## 1. 개요 및 필요성
 
 **완전 데이터 (Complete Data)**: (X, Z) — 관측값 X와 잠재변수 Z 모두 알 때  
 **불완전 데이터 (Incomplete Data)**: X만 관측, Z는 숨겨져 있음
@@ -33,7 +34,7 @@ categories = "studynote-algorithm"
 
 ---
 
-## Ⅱ. EM 알고리즘 수식
+## 2. 구성요소
 
 **Q 함수 (보조 함수)**:
 
@@ -81,7 +82,7 @@ Q 함수를 최대화하는 새 파라미터를 찾음:
 
 ---
 
-## Ⅲ. 단조 증가 보장 (Jensen's Inequality)
+## 3. 구조 및 동작 원리
 
 EM이 각 반복마다 로그 우도를 감소시키지 않는 이유는 **Jensen 부등식(Jensen's Inequality)** 때문이다.
 
@@ -106,7 +107,7 @@ log Σ_Z P(Z|X, θ_old) · [P(X,Z|θ) / P(Z|X, θ_old)]
 
 ---
 
-## Ⅳ. GMM에서의 EM 구체 적용
+## 4. 비교 및 트레이드오프
 
 **GMM(Gaussian Mixture Models, 가우시안 혼합 모델)**은 K개 가우시안 분포의 가중합:
 
@@ -132,7 +133,7 @@ P(x) = Σ_{k=1}^{K} π_k · N(x | μ_k, Σ_k)
 
 ---
 
-## Ⅴ. 응용: HMM 학습, 결측 데이터, 변형
+## 5. 실무 적용 및 최적화 기법
 
 **Baum-Welch 알고리즘**: HMM 파라미터 추정을 위한 EM 특수 케이스.
 - E-단계: Forward-Backward Algorithm으로 숨겨진 상태의 사후 확률 계산

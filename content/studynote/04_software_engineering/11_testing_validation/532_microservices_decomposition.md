@@ -6,15 +6,17 @@ description = "마이크로서비스를 분해할 때의 기본 패턴과 주의
 taxonomy = ""
 tags = ["Software Engineering", "Architecture", "Microservices", "Decomposition", "Design"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 마이크로서비스 분해는 책임과 경계를 나누는 일이다.
+> **핵심**: 마이크로서비스 분해는 책임과 경계를 나누는 일이다.
 > 2. **가치**: 독립 배포와 독립 확장을 가능하게 한다.
 > 3. **판단 포인트**: 너무 잘게 나누면 복잡도가 급증한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 마이크로서비스는 비즈니스 변화에 빠르게 대응하기 위해 분해한다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Architecture", "Microservices", "Decomposition"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 분해 기준은 기능, 데이터, 변경 빈도, 팀 구조다.
 
@@ -42,7 +44,7 @@ tags = ["Software Engineering", "Architecture", "Microservices", "Decomposition"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 분해는 마이크로서비스의 성공과 실패를 좌우한다.
 
@@ -58,7 +60,7 @@ tags = ["Software Engineering", "Architecture", "Microservices", "Decomposition"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 서비스 간 경계, 데이터 소유권, 관측성, 배포 독립성을 본다.
 
@@ -71,7 +73,7 @@ tags = ["Software Engineering", "Architecture", "Microservices", "Decomposition"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 좋은 분해는 팀과 시스템의 민첩성을 높인다.
 

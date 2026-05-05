@@ -7,17 +7,20 @@ date = "2024-05-01"
 tags = ["Cleanroom", "Software Engineering", "Quality Control", "Formal Methods", "통계적 품질 제어"]
 categories = ["studynote-se"]
 +++
+## 0. 핵심 인사이트
 
-# 클린룸 소프트웨어 공학 (Cleanroom Software Engineering)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 하드웨어 반도체 공정의 '클린룸' 개념을 소프트웨어에 도입, '결함 발생 후 수정(Debugging)'이 아닌 '결함의 사전 예방(Prevention)'에 초점을 맞춘 수학적·정형적 개발 방법론이다.
+> **핵심**: 하드웨어 반도체 공정의 '클린룸' 개념을 소프트웨어에 도입, '결함 발생 후 수정(Debugging)'이 아닌 '결함의 사전 예방(Prevention)'에 초점을 맞춘 수학적·정형적 개발 방법론이다.
 > 2. **가치**: 증명 기반의 명세(Box Structure)와 통계적 사용 테스팅(Statistical Usage Testing)을 통해 제로 결함(Zero-Defect)에 가까운 고신뢰성을 확보하며, 검증 비용을 극적으로 낮춘다.
 > 3. **융합**: 우주항공, 의료기기 등 무결성이 요구되는 도메인에서 함수형 프로그래밍(Functional Programming) 및 정형 기법(Formal Methods)과 결합하여 현대 안전 필수 시스템의 기반을 제공한다.
 
+> 📝 모범 답안
+
+# 클린룸 소프트웨어 공학 (Cleanroom Software Engineering)
+
+##
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 소프트웨어 개발에서 전통적인 디버깅 방식은 "코드를 먼저 짜고, 버그가 나오면 고친다"는 사후 대응적 성격을 띤다. 하지만 시스템의 규모와 복잡도가 폭발적으로 증가하면서, 사후 디버깅만으로는 모든 결함을 찾아내는 것이 수학적으로 불가능해졌다. **클린룸 소프트웨어 공학 (Cleanroom Software Engineering)**은 이러한 한계를 극복하기 위해 제안된 패러다임으로, 수학적 증명과 통계적 품질 제어를 통해 결함이 소스코드에 유입되는 것 자체를 원천 차단하는 정형적 개발 방법론이다.
 
@@ -46,7 +49,7 @@ categories = ["studynote-se"]
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 클린룸 방법론은 크게 **박스 구조 명세(Box Structure Specification)**, **정확성 증명(Correctness Verification)**, **통계적 사용 테스팅(Statistical Usage Testing)**이라는 3대 핵심 원리로 구성된다.
 
@@ -107,7 +110,7 @@ categories = ["studynote-se"]
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 클린룸 방법론은 다른 생명주기 모델들과 질적으로 다른 접근을 취한다. 구조적 관점에서 폭포수(Waterfall) 및 애자일(Agile)과 어떻게 다른지, 그리고 어떤 시너지를 낼 수 있는지 비교 분석한다.
 
@@ -146,7 +149,7 @@ categories = ["studynote-se"]
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 실무에서 클린룸 방법론을 전사적으로 도입하는 것은 거의 불가능하며, 비즈니스 리스크가 극도로 높은 특정 도메인에 선택적으로 적용해야 한다.
 
@@ -178,7 +181,7 @@ categories = ["studynote-se"]
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 | 기대효과 분류 | 상세 내용 | ROI 관점 |
 |:---|:---|:---|

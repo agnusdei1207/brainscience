@@ -5,15 +5,19 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> 📢 **섹션 요약 비유**: Fabric 이전은 각기 다른 회사의 앱(Word, Excel, PowerPoint)을 따로 구매하던 시절이었다면, Fabric은 Microsoft 365처럼 모든 데이터 서비스를 하나의 구독으로 통합한 것이다.
+
+> 📝 모범 답안
+
 1. Microsoft Fabric(2023)은 OneLake를 중심으로 Power BI·Azure Synapse·Azure Data Factory·Azure Databricks·Real-Time Analytics를 단일 SaaS 플랫폼으로 통합하여, **전사 데이터를 하나의 논리적 데이터 레이크**에서 관리한다.
 2. **OneLake**는 조직 전체를 위한 단일 ADLS (Azure Data Lake Storage) Gen2 기반 데이터 레이크로, Shortcuts 기능을 통해 데이터를 물리적으로 복사하지 않고 다른 저장소의 데이터를 가상으로 참조할 수 있다.
 3. Fabric SKU(F4~F2048)가 Power BI Premium, Azure Synapse, Data Factory 등 개별 서비스 라이선스를 대체하여 **단일 용량 과금 모델**로 TCO (Total Cost of Ownership) 최적화를 실현한다.
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Microsoft의 데이터 서비스는 Azure Synapse Analytics, Azure Data Factory, Power BI, Azure Databricks, Azure Data Lake Storage 등이 각각 독립적으로 운영되어, 조직이 여러 서비스를 개별 계약·관리해야 하는 복잡성이 있었다. 데이터 사일로(Data Silo) 문제도 심각하여, 부서마다 별도 스토리지에 동일한 데이터를 중복 보관하는 경우가 빈번했다.
 
@@ -28,11 +32,9 @@ Microsoft Fabric은 이 분산된 Azure 데이터 서비스를 단일 SaaS 플�
 | Azure Machine Learning | Fabric Data Science |
 | 개별 서비스 라이선스 | 단일 Fabric SKU |
 
-> 📢 **섹션 요약 비유**: Fabric 이전은 각기 다른 회사의 앱(Word, Excel, PowerPoint)을 따로 구매하던 시절이었다면, Fabric은 Microsoft 365처럼 모든 데이터 서비스를 하나의 구독으로 통합한 것이다.
-
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -87,7 +89,7 @@ Microsoft Fabric은 이 분산된 Azure 데이터 서비스를 단일 SaaS 플�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **Fabric vs 경쟁 플랫폼 비교**
 
@@ -110,7 +112,7 @@ Microsoft Fabric은 이 분산된 Azure 데이터 서비스를 단일 SaaS 플�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **Fabric 도입 의사 결정 기준**
 
@@ -132,7 +134,7 @@ Microsoft Fabric은 이 분산된 Azure 데이터 서비스를 단일 SaaS 플�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 | 내용 |
 |:---|:---|
@@ -159,7 +161,6 @@ Microsoft Fabric은 2023년 GA(General Availability) 이후 Microsoft 최대 데
 | Microsoft Purview | 거버넌스 통합 | OneLake 전체 데이터 카탈로그·리니지 |
 
 ---
-
 
 ### 📈 관련 키워드 및 발전 흐름도
 

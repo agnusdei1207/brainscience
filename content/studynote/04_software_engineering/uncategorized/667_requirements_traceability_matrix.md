@@ -6,17 +6,19 @@ date = "2024-05-20"
 [taxonomies]
 tags = ["소프트웨어공학", "요구사항공학", "RTM", "품질보증", "테스트"]
 +++
+## 0. 핵심 인사이트
 
-# 667. 요구사항 검증 추적성 매트릭스 (RTM, Requirements Traceability Matrix)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 요구사항 검증 추적성 매트릭스 (RTM)는 프로젝트의 원시 요구사항 (Business Requirements)이 설계, 구현을 거쳐 최종 테스트 케이스 (Test Case)까지 누락이나 변형 없이 연결됨을 증명하는 **양방향 생명주기 검증 도구**이다.
+> **핵심**: 요구사항 검증 추적성 매트릭스 (RTM)는 프로젝트의 원시 요구사항 (Business Requirements)이 설계, 구현을 거쳐 최종 테스트 케이스 (Test Case)까지 누락이나 변형 없이 연결됨을 증명하는 **양방향 생명주기 검증 도구**이다.
 > 2. **가치**: 대규모 소프트웨어 시스템 개발 시 요구사항 누락률을 0%에 수렴하게 만들며, 요구사항 변경 시 영향도 분석 (Impact Analysis)의 기준점이 되어 유지보수 비용과 장애 복구 지연을 획기적으로 낮춘다.
 > 3. **융합**: 최신 DevOps 및 CI/CD (Continuous Integration/Continuous Deployment) 파이프라인에서는 ALM (Application Lifecycle Management) 도구와 결합하여 코드 커밋, 자동화된 테스트 결과가 RTM과 실시간 동기화되는 동적 추적성 (Dynamic Traceability) 체계로 진화하고 있다.
 
+> 📝 모범 답안
+
+# 667. 요구사항 검증 추적성 매트릭스 (RTM, Requirements Traceability Matrix)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 요구사항 검증 추적성 매트릭스 (RTM, Requirements Traceability Matrix)는 소프트웨어 개발 생명주기 (SDLC, Software Development Life Cycle) 전반에 걸쳐 요구사항의 출처부터 최종 테스트 결과까지의 관계를 다대다 (N:M) 매핑으로 가시화한 표 또는 데이터베이스 형태의 관리 도구다. 순방향 추적 (Forward Traceability)을 통해 요구사항이 실제 구현되었는지 확인하고, 역방향 추적 (Backward Traceability)을 통해 불필요한 코드 (Gold Plating)가 없는지 검증한다.
 
@@ -61,7 +63,7 @@ RTM이 해결하고자 하는 '요구사항과 산출물 간의 단절 문제'�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -147,7 +149,7 @@ RTM은 단순한 엑셀 시트가 아니라, 다대다 (N:M) 관계를 처리하
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 수동 RTM (Excel 기반) vs 동적/자동화 RTM (ALM 기반)
 
@@ -211,7 +213,7 @@ RTM의 양방향 추적성이 결함 예방에 미치는 영향을 매트릭스�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -268,7 +270,7 @@ RTM의 양방향 추적성이 결함 예방에 미치는 영향을 매트릭스�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

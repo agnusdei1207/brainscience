@@ -5,15 +5,19 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> 📢 **섹션 요약 비유**: Snowflake의 진화는 식당이 배달 서비스와 밀키트까지 확장하는 것이다. 원래 레스토랑(DW)에서 시작했지만 이제는 다른 냉장고(레이크) 안의 재료도 직접 요리(쿼리)할 수 있게 됐다.
+
+> 📝 모범 답안
+
 1. Snowflake는 전통적 SQL 중심 DW를 넘어 External Tables와 Iceberg Tables를 통해 **객체 스토리지(S3/ADLS/GCS)의 데이터를 직접 쿼리**하는 레이크하우스 방향으로 확장하고 있다.
 2. **스토리지-컴퓨팅 완전 분리(Decoupled Architecture)**가 Snowflake의 핵심 설계 원칙이며, Virtual Warehouse(컴퓨팅)를 독립적으로 스케일 업/다운하여 쿼리 성능과 비용을 탄력적으로 제어한다.
 3. **Snowpark** (Python/Java/Scala 코드를 Snowflake 내부에서 실행)와 **데이터 공유(Data Sharing)** 기능이 SQL 전문가뿐 아니라 데이터 엔지니어, ML 엔지니어까지 사용자 저변을 확대하고 있다.
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Snowflake는 2012년 Amazon Redshift를 대체할 완전 클라우드 네이티브 DW로 출발했다. 스토리지와 컴퓨팅을 분리하고, 쿼리량에 따라 Virtual Warehouse를 독립적으로 조정하는 혁신적 아키텍처로 시장을 장악했다.
 
@@ -26,11 +30,9 @@ Snowflake는 2012년 Amazon Redshift를 대체할 완전 클라우드 네이티�
 | 3세대 (2021~) | Snowpark, External Table | Analytics Platform |
 | 4세대 (2023~) | Iceberg Table, Arctic (AI) | Lakehouse + AI |
 
-> 📢 **섹션 요약 비유**: Snowflake의 진화는 식당이 배달 서비스와 밀키트까지 확장하는 것이다. 원래 레스토랑(DW)에서 시작했지만 이제는 다른 냉장고(레이크) 안의 재료도 직접 요리(쿼리)할 수 있게 됐다.
-
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -81,7 +83,7 @@ Snowflake는 2012년 Amazon Redshift를 대체할 완전 클라우드 네이티�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **Snowflake vs Databricks — 레이크하우스 관점**
 
@@ -103,7 +105,7 @@ Snowflake는 2012년 Amazon Redshift를 대체할 완전 클라우드 네이티�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **Snowflake 레이크하우스 도입 시나리오**
 
@@ -125,7 +127,7 @@ Snowflake는 2012년 Amazon Redshift를 대체할 완전 클라우드 네이티�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 | 내용 |
 |:---|:---|

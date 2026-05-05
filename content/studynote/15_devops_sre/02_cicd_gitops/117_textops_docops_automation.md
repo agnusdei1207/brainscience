@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: TextOps/DocOps는 기술 문서를 **코드처럼 Git으로 관리하고, CI/CD 파이프라인으로 빌드·검증·배포**하는 Docs-as-Code 패러다임이며, 마크다운·AsciiDoc으로 작성한 문서를 자동으로 웹 사이트·PDF·API 문서로 변환한다.
+> **핵심**: TextOps/DocOps는 기술 문서를 **코드처럼 Git으로 관리하고, CI/CD 파이프라인으로 빌드·검증·배포**하는 Docs-as-Code 패러다임이며, 마크다운·AsciiDoc으로 작성한 문서를 자동으로 웹 사이트·PDF·API 문서로 변환한다.
 > 2. **가치**: 위키·Confluence는 코드와 문서가 분리되어 문서가 빠르게 구식이 되지만, Docs-as-Code는 **코드 PR에 문서 변경을 함께 포함**하여 코드와 문서의 동기화를 보장한다.
 > 3. **판단 포인트**: MkDocs(Material)·Docusaurus(React)·Hugo가 대표 SSG(Static Site Generator)이며, Vale(문법 린트)·markdownlint·OpenAPI Spec 검증을 CI에 통합하여 **문서 품질을 자동 검증**한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -34,7 +36,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### SSG 도구 비교
 
@@ -58,7 +60,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Wiki/Confluence | Docs-as-Code |
 |:---|:---|:---|
@@ -69,7 +71,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 도입 체크리스트
 1. 프로젝트 루트에 `docs/` 디렉터리 생성.
@@ -79,7 +81,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | Wiki | Docs-as-Code | 개선 |
 |:---|:---|:---|:---|

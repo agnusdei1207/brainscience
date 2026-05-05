@@ -5,16 +5,17 @@ date = "2026-04-10"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 손실 함수 (Loss Function)는 개별 샘플의 오차를 수치화하고, 비용 함수 (Cost Function)는 그 손실을 모아 최적화 대상으로 만든다.
+> **핵심**: 손실 함수 (Loss Function)는 개별 샘플의 오차를 수치화하고, 비용 함수 (Cost Function)는 그 손실을 모아 최적화 대상으로 만든다.
 > 2. **가치**: 어떤 손실을 고르느냐가 학습 신호의 모양을 바꿔서, 같은 모델이라도 수렴 속도와 최종 성능을 달리 만든다.
 > 3. **판단 포인트**: 정확도(Accuracy) 같은 평가 지표는 결과 확인용이고, 학습은 미분 가능한 목적 함수(Objective Function)를 최소화해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 기계학습은 예측이 정답과 얼마나 다른지를 숫자로 바꿔서 줄여 가는 과정이다. 이때 샘플 하나의 오차를 재는 것이 loss이고, 전체 데이터셋 수준에서 합쳐 최적화하는 것이 cost 또는 objective다.
 
@@ -30,7 +31,7 @@ prediction -> sample loss -> aggregate -> regularize -> optimizer
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 학습 파이프라인은 보통 예측값을 만들고, sample loss를 계산한 뒤, 평균이나 합으로 묶고, regularization을 더한 objective를 만든다. 그다음 Gradient Descent가 그 objective의 기울기를 따라 파라미터를 갱신한다.
 
@@ -48,7 +49,7 @@ prediction -> sample loss -> aggregate -> regularize -> optimizer
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 loss, cost, metric은 목적이 다르다. loss는 학습용 미분 신호이고, cost는 전체 최적화 대상이며, metric은 사람이 결과를 평가하는 기준이다.
 
@@ -64,7 +65,7 @@ loss, cost, metric은 목적이 다르다. loss는 학습용 미분 신호이고
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 먼저 문제 유형을 본다. 연속값 예측이면 MSE나 MAE, 분류면 cross-entropy, 이상치가 크면 Huber, 클래스 불균형이면 가중치나 focal loss를 검토한다.
 
@@ -79,7 +80,7 @@ loss, cost, metric은 목적이 다르다. loss는 학습용 미분 신호이고
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 좋은 objective는 비즈니스의 실패를 학습 가능한 신호로 바꾼다. 그래서 loss 설계는 수학 문제이면서 동시에 도메인 해석 문제다.
 

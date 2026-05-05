@@ -5,17 +5,19 @@ date = "2026-04-07"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-# 다중 모델 데이터베이스 (Multi-model Database) - 폴리글랏 퍼시스턴스의 진화
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 다중 모델 데이터베이스(Multi-model Database, 예: ArangoDB, Cosmos DB)는 오직 테이블(RDBMS)이나 JSON 문서(Document) 중 하나만 고집하던 과거의 단일 렌즈를 깨부수고, **단일 데이터베이스 커널 엔진 위에서 Document(문서), Graph(그래프), Key-Value(키-값) 모델을 동시에 쿼리하고 저장할 수 있는 올인원(All-in-one) 데이터 플랫폼**이다.
+> **핵심**: 다중 모델 데이터베이스(Multi-model Database, 예: ArangoDB, Cosmos DB)는 오직 테이블(RDBMS)이나 JSON 문서(Document) 중 하나만 고집하던 과거의 단일 렌즈를 깨부수고, **단일 데이터베이스 커널 엔진 위에서 Document(문서), Graph(그래프), Key-Value(키-값) 모델을 동시에 쿼리하고 저장할 수 있는 올인원(All-in-one) 데이터 플랫폼**이다.
 > 2. **가치**: 마이크로서비스(MSA) 시대에 유행하던 폴리글랏 퍼시스턴스(Polyglot Persistence, 서비스별로 DB를 다르게 쓰는 방식)는 필연적으로 데이터 파편화, 동기화(Kafka 연동) 지연, 관리 비용 폭발이라는 부채를 낳았다. 다중 모델 DB는 이 수많은 DB를 하나로 다시 뭉쳐놓고 **'하나의 쿼리 언어(AQL 등)로 그래프 탐색과 문서 조인(Join)을 한 트랜잭션 안에서 믹스(Mix)하여 처리'**하는 극강의 유연성과 운영 단순성을 제공한다.
 > 3. **융합**: 초기에는 여러 DB 엔진을 단순히 묶어놓은 껍데기(Layered Multi-model)에 불과했으나, ArangoDB 등으로 대변되는 현대 모델은 아예 메모리와 디스크 스토리지 밑바닥부터 모든 모델이 똑같은 C++ 코어로 돌아가도록 설계된 **네이티브 다중 모델(Native Multi-model)** 아키텍처로 융합되어 NoSQL의 차세대 표준으로 급부상하고 있다.
 
+> 📝 모범 답안
+
+# 다중 모델 데이터베이스 (Multi-model Database) - 폴리글랏 퍼시스턴스의 진화
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: "스위스 아미 나이프(맥가이버칼)" 같은 데이터베이스다. 내가 유저 정보(JSON)를 넣고 싶으면 Document DB처럼 작동하고, 유저들 간의 "누가 누구를 팔로우했다"는 관계망을 긋고 싶으면 Graph DB처럼 엣지(Edge)를 만들어준다. 심지어 이 두 가지를 한 번의 쿼리문으로 동시에 가져올 수 있다.
 
@@ -34,7 +36,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Native Multi-model의 코어 아키텍처 (ArangoDB 예시)
 
@@ -80,7 +82,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅲ. 실무 적용 및 기술사적 판단
+## 3. 구조 및 동작 원리
 
 ### 실무 시나리오
 
@@ -97,7 +99,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅳ. 기대효과 및 결론
+## 4. 비교 및 트레이드오프
 
 ### 정량/정성 기대효과
 

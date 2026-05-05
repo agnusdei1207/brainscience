@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SSRF (Server-Side Request Forgery, 서버 측 요청 위조)는 공격자가 서버가 대신 요청을 보내도록 조작해, 방화벽 뒤의 내부 리소스에 접근하거나 내부 서비스를 공격하는 취약점이다.
+> **핵심**: SSRF (Server-Side Request Forgery, 서버 측 요청 위조)는 공격자가 서버가 대신 요청을 보내도록 조작해, 방화벽 뒤의 내부 리소스에 접근하거나 내부 서비스를 공격하는 취약점이다.
 > 2. **가치**: 클라우드 환경에서 SSRF는 AWS EC2 메타데이터 서비스(169.254.169.254)를 통한 IAM (Identity and Access Management) 자격증명 탈취로 직결되어, 전체 클라우드 인프라 침해로 이어질 수 있다.
 > 3. **판단 포인트**: 허용 목록 (Allow List) 기반 URL 검증과 IMDSv2 (Instance Metadata Service Version 2) 적용이 SSRF의 핵심 방어 수단이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 SSRF (Server-Side Request Forgery)는 OWASP Top 10 2021에서 A10으로 새롭게 등재됐다. 서버가 사용자 입력으로 URL을 받아 외부 요청을 보내는 기능(프록시, 웹훅, 이미지 가져오기 등)에서 URL 검증이 부재할 때 발생한다.
 
@@ -41,7 +43,7 @@ SSRF (Server-Side Request Forgery)는 OWASP Top 10 2021에서 A10으로 새롭�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### SSRF 공격 대상 및 영향
 
@@ -74,7 +76,7 @@ SSRF (Server-Side Request Forgery)는 OWASP Top 10 2021에서 A10으로 새롭�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | SSRF | CSRF (Cross-Site Request Forgery) |
 |:---|:---|:---|
@@ -89,7 +91,7 @@ SSRF와 XXE (XML External Entity)는 함께 언급된다. XXE는 XML 파서가 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **체크리스트**:
 - [ ] 사용자 입력 URL을 서버가 직접 요청하는 기능 목록 작성
@@ -102,7 +104,7 @@ SSRF와 XXE (XML External Entity)는 함께 언급된다. XXE는 XML 파서가 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 SSRF 방어 체계 구축 시 클라우드 인프라 자격증명 탈취, 내부 서비스 무단 접근, 데이터 유출을 방지할 수 있다. 특히 마이크로서비스 아키텍처와 클라우드 환경에서 SSRF의 잠재적 피해는 기존 온프레미스보다 훨씬 크므로, 설계 단계부터 URL 요청 패턴을 검토해야 한다.
 

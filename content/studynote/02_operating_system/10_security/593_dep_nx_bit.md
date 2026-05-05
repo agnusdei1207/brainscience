@@ -5,17 +5,19 @@ date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 데이터 실행 방지 (DEP) 및 NX Bit
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: DEP (Data Execution Prevention)와 NX Bit (No-eXecute Bit)는 메모리 상의 데이터 영역(스택, 힙)에서 기계어 코드가 실행되는 것을 하드웨어 및 운영체제 (OS, Operating System) 레벨에서 원천 차단하는 보안 기술이다.
+> **핵심**: DEP (Data Execution Prevention)와 NX Bit (No-eXecute Bit)는 메모리 상의 데이터 영역(스택, 힙)에서 기계어 코드가 실행되는 것을 하드웨어 및 운영체제 (OS, Operating System) 레벨에서 원천 차단하는 보안 기술이다.
 > 2. **가치**: 버퍼 오버플로우 (Buffer Overflow) 취약점을 통해 주입된 악성 셸코드 (Shellcode)의 실행을 구조적으로 불가능하게 만들어, 공격자가 시스템 제어권을 쉽게 탈취하지 못하게 하는 현대 운영체제의 필수 방어선이다.
 > 3. **융합**: 컴퓨터구조 (CA, Computer Architecture)의 메모리 관리 유닛(MMU)의 페이지 테이블(Page Table) 속성을 OS 커널이 제어하여 보안을 달성하며, 이를 우회하기 위해 공격자들은 ROP (Return-Oriented Programming)라는 새로운 공격 패러다임을 탄생시켰다.
 
+> 📝 모범 답안
+
+# 데이터 실행 방지 (DEP) 및 NX Bit
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 **개념 및 정의**
 데이터 실행 방지 (DEP, Data Execution Prevention)는 시스템 메모리를 '코드(실행 가능)' 영역과 '데이터(실행 불가)' 영역으로 엄격하게 분리하는 보안 메커니즘이다. 이를 하드웨어 수준에서 지원하는 것이 NX Bit (No-eXecute Bit, 인텔에서는 XD 비트라 명명)이다. NX 비트가 설정된 메모리 페이지에서 CPU가 명령어를 읽어 들여 실행하려고 시도하면, 즉시 예외(Exception)가 발생하고 OS는 해당 프로세스를 강제 종료시킨다.
@@ -54,7 +56,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (하드웨어 및 OS 레벨 통합 구조)
 
@@ -106,7 +108,7 @@ DEP의 구현은 CPU의 하드웨어 지원(NX Bit)과 운영체제 커널의 �
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 하드웨어 DEP vs 소프트웨어 DEP 비교
 
@@ -154,7 +156,7 @@ DEP는 구현 방식에 따라 하드웨어 기반과 소프트웨어 기반으�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: DEP 우회를 위한 ROP(Return-Oriented Programming) 공격의 등장
 
@@ -173,7 +175,7 @@ DEP는 구현 방식에 따라 하드웨어 기반과 소프트웨어 기반으�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

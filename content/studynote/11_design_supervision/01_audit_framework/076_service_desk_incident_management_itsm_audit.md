@@ -5,16 +5,17 @@ date = "2026-04-10"
 [extra]
 categories = "studynote-design"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 서비스 데스크(Service Desk)는 사용자의 모든 IT 문의와 장애를 모으는 단일 접점(SPOC, Single Point of Contact)이다.
+> **핵심**: 서비스 데스크(Service Desk)는 사용자의 모든 IT 문의와 장애를 모으는 단일 접점(SPOC, Single Point of Contact)이다.
 > 2. **가치**: 인시던트 관리(Incident Management)는 원인 규명보다 서비스 복구를 먼저 달성해 MTTR(Mean Time To Restore)을 줄이고 SLA(Service Level Agreement)를 지킨다.
 > 3. **판단 포인트**: 감리에서는 전화번호가 있느냐보다 티켓, 우선순위, 에스컬레이션, 지식화가 실제로 작동하느냐를 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ITSM(IT Service Management)과 ITIL(IT Infrastructure Library) 관점에서 서비스 데스크는 "사용자와 운영팀 사이의 공식 문"이다. 이 문이 없으면 문의가 메신저, 전화, 이메일, 개인 지식으로 흩어지고 같은 장애가 여러 번 중복 처리된다. 그 결과 누가 언제 무엇을 했는지 증빙이 사라진다.
 
@@ -40,7 +41,7 @@ ITSM(IT Service Management)과 ITIL(IT Infrastructure Library) 관점에서 서�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 서비스 데스크의 핵심은 접수, 분류, 배정, 복구, 종료의 분업이다. L1은 자주 발생하는 단순 장애와 워크어라운드를 처리하고, L2/L3는 기술적 원인을 분석한다. 문제 관리자는 반복 장애를 분리해 KEDB(Known Error Database)를 갱신한다.
 
@@ -65,7 +66,7 @@ ITSM(IT Service Management)과 ITIL(IT Infrastructure Library) 관점에서 서�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 서비스 데스크는 헬프 데스크보다 범위가 넓다. 헬프 데스크가 "문제 해결 상담"에 가깝다면, 서비스 데스크는 문의·요청·장애를 모두 포괄하는 운영 창구다. 또한 인시던트 관리, 문제 관리, 변경 관리의 경계도 명확히 나눠야 한다.
 
@@ -82,7 +83,7 @@ ITSM(IT Service Management)과 ITIL(IT Infrastructure Library) 관점에서 서�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 감리 체크리스트는 장식이 아니라 증빙 항목이다.
 
@@ -105,7 +106,7 @@ ITSM(IT Service Management)과 ITIL(IT Infrastructure Library) 관점에서 서�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 서비스 데스크와 인시던트 관리는 MTTR을 줄이고, 장애의 흔적을 남기며, 책임 경계를 선명하게 만든다. 그 결과 고객은 빨리 복구받고, 조직은 누가 무엇을 했는지 설명할 수 있다.
 

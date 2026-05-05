@@ -2,17 +2,19 @@
 title = "981. ESP (Encapsulating Security Payload)"
 weight = 981
 +++
+## 0. 핵심 인사이트
 
-# 981. ESP (Encapsulating Security Payload)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ESP (Encapsulating Security Payload)는 IPSec 프레임워크 내에서 패킷의 기밀성 (Confidentiality, 데이터 암호화)과 데이터 무결성 (Integrity), 그리고 선택적인 재생 공격 방지 기능을 모두 제공하는 올어라운드 (All-around) 보안 프로토콜이다.
+> **핵심**: ESP (Encapsulating Security Payload)는 IPSec 프레임워크 내에서 패킷의 기밀성 (Confidentiality, 데이터 암호화)과 데이터 무결성 (Integrity), 그리고 선택적인 재생 공격 방지 기능을 모두 제공하는 올어라운드 (All-around) 보안 프로토콜이다.
 > 2. **가치**: AH (Authentication Header)와 달리 페이로드만을 암호화 및 인증의 대상으로 삼기 때문에, NAT (Network Address Translation) 환경에서도 IP 변환에 따른 인증 실패 문제를 유연하게 우회 (NAT-T)할 수 있어 현대 VPN (Virtual Private Network) 구현의 사실상 유일한 표준 기술로 자리 잡았다.
 > 3. **융합**: ESP는 AES-GCM (Advanced Encryption Standard - Galois/Counter Mode) 같은 최신 인증 암호화 (AEAD) 알고리즘과 결합되어 한 번의 연산으로 암호화와 무결성 해시(MAC)를 동시에 산출하며, 클라우드 인프라와 제로 트러스트 (Zero Trust) 네트워크 아키텍처의 기저에서 전송 계층의 보안을 완벽히 책임진다.
 
+> 📝 모범 답안
+
+# 981. ESP (Encapsulating Security Payload)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: ESP (Encapsulating Security Payload)는 IETF (Internet Engineering Task Force)에서 제정한 네트워크 계층 보안 프로토콜 (IP 프로토콜 50번)로, IP 패킷에 암호화 헤더와 트레일러를 씌워 (Encapsulating) 데이터가 전송되는 동안 외부에서 그 내용을 읽거나 변조할 수 없도록 보호한다.
 - **필요성**: 기업의 사내 망을 인터넷이라는 공개된 퍼블릭 망을 통해 연결하려면 두 가지가 필요하다. 하나는 "누가 보냈는가(인증)", 다른 하나는 "내용을 훔쳐볼 수 없게 만들기(기밀성)"이다. AH는 앞의 것만 해결했지만, 신용카드 번호나 기업 기밀문서 같은 민감한 페이로드를 스니핑(도청)으로부터 보호하려면 패킷 내부의 데이터 전체를 무작위 난수처럼 보이게 만드는 강력한 암호화 캡슐이 반드시 필요하다.
@@ -53,7 +55,7 @@ ESP 도입을 통해 네트워크 스니핑 공격이 어떻게 무력화되는�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -123,7 +125,7 @@ ESP가 데이터를 전송하고 목적지에서 안전하게 복원하는 일�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: ESP의 두 가지 암호화 모드 (CBC vs GCM)
 
@@ -173,7 +175,7 @@ ESP 내부에서 암호화와 인증 연산을 처리하는 아키텍처의 패�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -226,7 +228,7 @@ ESP 내부에서 암호화와 인증 연산을 처리하는 아키텍처의 패�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

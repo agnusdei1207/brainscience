@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 오토인코더 (Autoencoder) 는 입력을 저차원 병목층 (Bottleneck) 으로 압축한 뒤 원본과 최대한 같게 복원하도록 학습하여, 레이블 없이 데이터의 핵심 표현 (Latent Representation) 을 습득한다.
+> **핵심**: 오토인코더 (Autoencoder) 는 입력을 저차원 병목층 (Bottleneck) 으로 압축한 뒤 원본과 최대한 같게 복원하도록 학습하여, 레이블 없이 데이터의 핵심 표현 (Latent Representation) 을 습득한다.
 > 2. **가치**: 재구성 오차 (Reconstruction Error) 가 크면 이상치 (Anomaly) 로 판정하는 비지도 이상 탐지 (Unsupervised Anomaly Detection) 에 핵심적으로 활용된다.
 > 3. **판단 포인트**: VAE (Variational Autoencoder) 는 잠재 공간 (Latent Space) 을 확률 분포로 모델링해 새 데이터 생성이 가능하고, 기본 AE 는 그렇지 않다는 차이를 명확히 서술해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 비지도 표현 학습의 핵심 아키텍처
 
@@ -30,7 +32,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 기본 구조 다이어그램
 
@@ -77,7 +79,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 오토인코더 변형 종류
 
@@ -93,7 +95,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 제조 품질 이상 탐지 시나리오
 
@@ -114,7 +116,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 - **비지도 학습**: 레이블 없는 대규모 데이터에서 유용한 표현 자동 습득
 - **확장성**: 이미지·텍스트·시계열·표형 데이터 모두 적용 가능

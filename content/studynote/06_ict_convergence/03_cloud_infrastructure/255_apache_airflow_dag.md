@@ -2,17 +2,19 @@
 title = "255. 데이터 파이프라인 (Apache Airflow) DAG 배치 플로우 관리"
 weight = 255
 +++
+## 0. 핵심 인사이트
 
-# 데이터 파이프라인 (Apache Airflow) DAG (Directed Acyclic Graph) 배치 플로우 관리
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 아파치 에어플로우 (Apache Airflow)는 복잡한 데이터 파이프라인을 파이썬 (Python) 코드로 정의하고, 방향성 비순환 그래프 (DAG, Directed Acyclic Graph) 형태로 태스크 (Task)의 의존성과 실행 순서를 스케줄링 및 모니터링하는 워크플로우 오케스트레이션 플랫폼이다.
+> **핵심**: 아파치 에어플로우 (Apache Airflow)는 복잡한 데이터 파이프라인을 파이썬 (Python) 코드로 정의하고, 방향성 비순환 그래프 (DAG, Directed Acyclic Graph) 형태로 태스크 (Task)의 의존성과 실행 순서를 스케줄링 및 모니터링하는 워크플로우 오케스트레이션 플랫폼이다.
 > 2. **가치**: 기존 크론 (Cron) 기반의 파편화된 스크립트 실행 방식을 중앙 집중화하여, 태스크 실패 시의 재시도 (Retries), 백필 (Backfill), 알림 (Alerting) 메커니즘을 자동화함으로써 데이터 엔지니어링 조직의 운영 유지보수 비용을 획기적으로 절감한다.
 > 3. **융합**: 최신 모던 데이터 스택 (Modern Data Stack) 환경에서 데이터 웨어하우스 (Data Warehouse), 스파크 (Apache Spark), 쿠버네티스 (Kubernetes) 등 다양한 이기종 시스템과 연동되어 ETL/ELT (Extract, Transform, Load) 프로세스의 허브 역할을 수행하며, 데이터 거버넌스와 옵저버빌리티 (Observability)의 핵심 기반이 된다.
 
+> 📝 모범 답안
+
+# 데이터 파이프라인 (Apache Airflow) DAG (Directed Acyclic Graph) 배치 플로우 관리
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 아파치 에어플로우 (Apache Airflow)는 데이터 파이프라인을 코드로 작성 (Configuration as Code)하여 스케줄링하고 모니터링하는 플랫폼이다. 핵심 개념인 방향성 비순환 그래프 (DAG, Directed Acyclic Graph)는 태스크 간의 의존성을 논리적으로 표현하며, 순환 (Cycle)을 허용하지 않음으로써 워크플로우가 반드시 무한 루프 없이 종료되도록 보장한다.
 
@@ -62,7 +64,7 @@ weight = 255
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -182,7 +184,7 @@ with DAG(
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 오케스트레이션 도구 아키텍처 비교 (Airflow vs Argo Workflows vs Prefect)
 
@@ -238,7 +240,7 @@ with DAG(
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -297,7 +299,7 @@ with DAG(
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

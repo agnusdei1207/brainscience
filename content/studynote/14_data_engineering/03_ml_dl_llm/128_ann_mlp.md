@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ANN(인공 신경망)은 **생물학적 뉴런을 모방**하여 입력→가중치 곱→활성화 함수→출력의 구조를 컴퓨터로 구현한 것이며, MLP(다층 퍼셉트론)는 **은닉층(Hidden Layer)이 1개 이상인 피드포워드 신경망**이다.
+> **핵심**: ANN(인공 신경망)은 **생물학적 뉴런을 모방**하여 입력→가중치 곱→활성화 함수→출력의 구조를 컴퓨터로 구현한 것이며, MLP(다층 퍼셉트론)는 **은닉층(Hidden Layer)이 1개 이상인 피드포워드 신경망**이다.
 > 2. **가치**: 단층 퍼셉트론은 XOR 문제를 풀 수 없는(선형 분리 불가) 근본 한계가 있었으나, **은닉층 추가(MLP) + 역전파(Backpropagation)**로 비선형 문제를 해결하며 딥러닝의 기초가 되었다.
 > 3. **판단 포인트**: 활성화 함수(Sigmoid→ReLU), 역전파 알고리즘, Vanishing Gradient 문제와 해결(ReLU·BatchNorm·ResNet)을 이해해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -35,7 +37,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 활성화 함수 진화
 
@@ -50,7 +52,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 단층 퍼셉트론 | MLP |
 |:---|:---|:---|
@@ -60,7 +62,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### MLP의 위치
 - Transformer의 FFN(Feed-Forward Network) = **2층 MLP**.
@@ -68,7 +70,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 MLP는 **딥러닝의 가장 기본 빌딩 블록**이며, Transformer의 FFN으로 현재까지 핵심 역할을 수행한다.
 

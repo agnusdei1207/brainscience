@@ -5,17 +5,19 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 운영체제 (Operating System)의 목적
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 운영체제 (Operating System)는 사용자에게는 하드웨어 추상화 (Hardware Abstraction)를 통한 편의성을 제공하고, 시스템 측면에서는 한정된 자원을 최적으로 배분하는 중재자 역할을 수행한다.
+> **핵심**: 운영체제 (Operating System)는 사용자에게는 하드웨어 추상화 (Hardware Abstraction)를 통한 편의성을 제공하고, 시스템 측면에서는 한정된 자원을 최적으로 배분하는 중재자 역할을 수행한다.
 > 2. **가치**: 자원의 효율적 활용 (Efficiency)과 사용자 경험 (Convenience) 사이의 트레이드오프를 관리하며, 시스템의 안정성 (Reliability)과 처리량 (Throughput)을 극대화하는 것이 핵심 목표다.
 > 3. **융합**: 현대 OS는 가상화 (Virtualization) 및 컨테이너화 (Containerization) 기술과 결합하여 물리적 자원의 한계를 넘어 논리적 격리와 무한한 확장성을 제공하는 클라우드 인프라의 근간이 된다.
 
+> 📝 모범 답안
+
+# 운영체제 (Operating System)의 목적
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 운영체제 (Operating System)는 하드웨어와 사용자/응용 프로그램 사이의 인터페이스 역할을 수행하는 시스템 소프트웨어다. 이는 복잡한 하드웨어 조작을 추상화하여 단순한 API (Application Programming Interface) 형태로 제공하고, CPU (Central Processing Unit), 메모리 (Memory), I/O (Input/Output) 장치 등 시스템 자원을 중앙에서 통제하고 관리한다.
 
@@ -51,7 +53,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -121,7 +123,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 운영체제 주요 목적 간의 상충 관계 분석
 
@@ -142,7 +144,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 적용 시나리오 및 최적화 전략
 
@@ -163,7 +165,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 운영체제 도입의 정량/정성적 효과
 

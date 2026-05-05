@@ -2,17 +2,19 @@
 title = "589. 람포트 시계 논리적 이벤트 순서 선후 관계 인과 보장 분산 벡터 타임스탬프"
 weight = 589
 +++
+## 0. 핵심 인사이트
 
-# 람포트 시계와 벡터 타임스탬프 (Lamport Clock & Vector Timestamp)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 분산 시스템에서 전역 물리 시계(Global Physical Clock)의 부재를 극복하기 위해 제안된 논리적 시계(Logical Clock) 시스템으로, 이벤트 간의 발생 선후 관계(Happens-before)와 인과성(Causality)을 수학적으로 보장한다.
+> **핵심**: 분산 시스템에서 전역 물리 시계(Global Physical Clock)의 부재를 극복하기 위해 제안된 논리적 시계(Logical Clock) 시스템으로, 이벤트 간의 발생 선후 관계(Happens-before)와 인과성(Causality)을 수학적으로 보장한다.
 > 2. **가치**: 동시성 제어(Concurrency Control) 및 충돌 해소(Conflict Resolution)의 기초가 되며, 특히 벡터 타임스탬프(Vector Timestamp)는 이벤트 간의 독립성(Concurrent)을 정확히 식별하여 데이터 일관성 위반을 방지한다.
 > 3. **융합**: 분산 데이터베이스(DynamoDB, Cassandra)의 다중 리더 복제(Multi-leader Replication) 및 최종 일관성(Eventual Consistency) 모델과 결합되어 버전 벡터(Version Vector)로 발전하였으며, Git과 같은 분산 버전 관리 시스템의 병합 알고리즘에도 본질적인 영향을 미쳤다.
 
+> 📝 모범 답안
+
+# 람포트 시계와 벡터 타임스탬프 (Lamport Clock & Vector Timestamp)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 람포트 시계 (Lamport Clock)는 각 노드가 단일 카운터를 유지하며 이벤트를 정렬하는 가장 단순한 형태의 논리 시계이고, 벡터 타임스탬프 (Vector Timestamp)는 시스템 내 모든 노드의 상태를 배열(Vector)로 관리하여 이벤트 간의 엄격한 인과 관계(Causal Relationship)를 추적하는 확장된 논리 시계다. 
 
@@ -59,7 +61,7 @@ weight = 589
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -150,7 +152,7 @@ weight = 589
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 물리 시계 vs 람포트 시계 vs 벡터 타임스탬프
 
@@ -194,7 +196,7 @@ weight = 589
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -250,7 +252,7 @@ weight = 589
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

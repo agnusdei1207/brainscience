@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 대규모 이미지 분석은 CNN (Convolutional Neural Network) 아키텍처로 이미지 특성을 자동 추출하고, 분류 (Classification)·객체 탐지 (Object Detection)·세그멘테이션 (Segmentation) 태스크를 수행하며, 빅데이터 환경에서는 분산 추론 파이프라인이 필수다.
+> **핵심**: 대규모 이미지 분석은 CNN (Convolutional Neural Network) 아키텍처로 이미지 특성을 자동 추출하고, 분류 (Classification)·객체 탐지 (Object Detection)·세그멘테이션 (Segmentation) 태스크를 수행하며, 빅데이터 환경에서는 분산 추론 파이프라인이 필수다.
 > 2. **가치**: 의료 영상 진단 자동화, 리테일 상품 인식, CCTV 이상 행동 탐지, 제조 불량 검사 등 시각적 정보를 처리하는 모든 산업에서 인간 전문가의 처리 속도와 일관성 한계를 극복한다.
 > 3. **판단 포인트**: ResNet/EfficientNet은 분류에 강하고, YOLO (You Only Look Once)/Faster-RCNN은 실시간 객체 탐지에 적합하며, SAM (Segment Anything Model)/Mask-RCNN은 세그멘테이션에 특화된다. 수억 장 배치 처리에는 Spark + PyTorch 분산 추론 아키텍처가 필요하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 매일 수십억 장의 이미지가 생성된다. 인스타그램·위챗·유튜브의 이미지·영상, 의료 기관의 CT·MRI, 제조 현장의 품질 검사 카메라, 자율주행 차량의 카메라—이 모든 시각 데이터는 딥러닝이 등장하기 전까지 사람이 직접 분석해야 했다.
 
@@ -23,7 +25,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### CNN 처리 파이프라인
 
@@ -71,7 +73,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | YOLO (You Only Look Once) | Faster-RCNN |
 |:---|:---|:---|
@@ -86,7 +88,7 @@ ViT (Vision Transformer)는 이미지를 패치로 분할하고 트랜스포머�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 적용 시나리오
 
@@ -106,7 +108,7 @@ ViT (Vision Transformer)는 이미지를 패치로 분할하고 트랜스포머�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 | 내용 |
 |:---|:---|

@@ -2,17 +2,19 @@
 title = "303. 역색인 (Inverted Index) 구조 - 단어(Term)가 포함된 문서 ID 리스트 매핑 (검색 엔진 핵심)"
 weight = 303
 +++
+## 0. 핵심 인사이트
 
-# 303. 스트림 처리 DB
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 스트림 처리 DB(Stream Processing Database)는 데이터 스트림(事件 流)을 실시간으로 처리·분석하는 데이터베이스로, Kafka, Flink, Kafka Streams, KSQLDB 등이 있다.
+> **핵심**: 스트림 처리 DB(Stream Processing Database)는 데이터 스트림(事件 流)을 실시간으로 처리·분석하는 데이터베이스로, Kafka, Flink, Kafka Streams, KSQLDB 등이 있다.
 > 2. **가치**: 수 밀리초~수 초의 극低 지연으로 실시간 분석, 연속 Queries, 실시간 대시보드, 이상 탐지,事件驱动 애플리케이션 지원이 가능하다.
 > 3. **융합**: Kafka, Apache Flink, 스트림 처리, Complex Event Processing, 실시간 분석, Lambda/Kappa 아키텍처와 밀접하게 연관된다.
 
+> 📝 모범 답안
+
+# 303. 스트림 처리 DB
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 스트림 처리 DB(Stream Processing Database)는 데이터의_continuous stream_(연속적인事件 流)을 실시간으로 처리·분석하는数据库이다. 전통적인 배치 처리(Batch Processing)가 저장된 데이터를 일괄적으로処理するのに対し、ストリーム処理는 데이터가 도착하는 시점에 바로 처리한다. 스트림 처리 시스템은"time in motion"으로 데이터를捕らえ、데이터の arriving speedに跟上する。Kafka, Apache Flink, Kafka Streams, KSQLDB, Apache Storm, Amazon Kinesis Data Analytics 등이 대표적인 스트림 처리 기술이다.
@@ -30,7 +32,7 @@ weight = 303
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 배치 처리 vs 스트림 처리
 
@@ -264,15 +266,13 @@ weight = 303
 
 ---
 
-## Ⅲ. 결론
+## 3. 구조 및 동작 원리
 
 스트림 처리 DB는 데이터 스트림을 실시간으로 처리·분석하는 핵심 기술로, Kafka, Flink, Kafka Streams, KSQLDB 등이 있다. 배치 처리와 달리 데이터를 저장하지 않고event-by-event로 처리하여 수 밀리초~수 초의 극低 지연을 제공한다. Event Time 기반 처리, Watermark, Window 등의 개념을 통해 무한 스트림을 유한 단위로 분석할 수 있다. 금융 사기 탐지, IoT 모니터링, 실시간 추천, 네트워크 침입 감지 등 실시간성이 필수적인 다양한領域에서 활용된다.
 
 📢 섹션 요약: 스트림 처리 DB는event-by-event 실시간 처리를 통해 극低 지연을 제공하며, Kafka Streams, Flink 등이 대표적이고, Event Time, Watermark, Window 등의 개념으로 무한 스트림을 분석한다.
 
 ---
-
-## 핵심 인사이트 ASCII 다이어그램 (Concept Map)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐

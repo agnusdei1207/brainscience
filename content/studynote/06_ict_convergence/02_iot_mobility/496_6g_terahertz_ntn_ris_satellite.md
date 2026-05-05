@@ -5,16 +5,17 @@ weight = 496
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 6G(6th Generation)는 ITU-R IMT-2030 표준으로, 테라헤르츠(THz, 100GHz~10THz) 대역을 활용해 Tbps급 속도와 10μs 이하 지연을 목표로 하며, AI가 네트워크 설계에 내재화(AI-Native)되는 차세대 이동통신이다.
+> **핵심**: 6G(6th Generation)는 ITU-R IMT-2030 표준으로, 테라헤르츠(THz, 100GHz~10THz) 대역을 활용해 Tbps급 속도와 10μs 이하 지연을 목표로 하며, AI가 네트워크 설계에 내재화(AI-Native)되는 차세대 이동통신이다.
 > 2. **가치**: NTN(Non-Terrestrial Network)으로 위성·HAPS(고고도 플랫폼)를 통합하여 해상·오지의 커버리지 공백을 해소하고, RIS(Reconfigurable Intelligent Surface)로 전파 방향을 능동 제어해 음영지역(Dead Zone)을 소프트웨어적으로 제거한다.
 > 3. **판단 포인트**: THz 대역은 극고속이지만 경로 손실과 대기 흡수가 심해 수십 m 이내 통신에 제한된다. NTN·RIS는 이 한계를 보완하는 핵심 기술이며, 기술사 시험에서 6G의 도전 과제와 해결책을 세트로 제시해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 **5G의 한계와 6G 필요성**
 
@@ -36,7 +37,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -75,7 +76,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **NTN 위성 궤도 비교**
 
@@ -96,7 +97,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **6G 응용 시나리오**
 
@@ -118,7 +119,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 6G는 2030년대 상용화를 목표로 전 세계 주요국(한국·미국·EU·중국·일본)이 R&D를 경쟁적으로 추진 중이다. THz·NTN·RIS의 유기적 결합과 AI-Native 망 설계가 6G 비전을 실현하는 핵심이다. 기술사 시험에서는 5G와의 차별점, 각 기술의 역할과 한계를 명확히 정리해야 한다.
 

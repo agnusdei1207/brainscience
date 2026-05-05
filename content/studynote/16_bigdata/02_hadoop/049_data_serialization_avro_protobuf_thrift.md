@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Avro, Protocol Buffers(Protobuf), Apache Thrift는 구조화된 데이터를 언어·플랫폼 독립적인 바이너리 형식으로 직렬화(Serialization)하는 프레임워크로, JSON/XML 대비 크기·속도에서 탁월한 효율을 제공한다.
+> **핵심**: Avro, Protocol Buffers(Protobuf), Apache Thrift는 구조화된 데이터를 언어·플랫폼 독립적인 바이너리 형식으로 직렬화(Serialization)하는 프레임워크로, JSON/XML 대비 크기·속도에서 탁월한 효율을 제공한다.
 > 2. **가치**: 빅데이터 파이프라인에서 직렬화 형식 선택은 네트워크 비용·처리 지연·스토리지 비용에 직접 영향을 준다. Kafka 메시지 직렬화에 JSON 대신 Avro를 사용하면 메시지 크기가 50~70% 줄고 역직렬화 속도가 10배 이상 빨라질 수 있다.
 > 3. **판단 포인트**: 세 가지 선택 기준 — ①스키마 진화(Schema Evolution) 용이성: Avro > Protobuf ≈ Thrift, ②언어 지원 폭: Protobuf ≈ Thrift > Avro, ③Kafka/Hadoop 생태계 통합: Avro > Protobuf > Thrift. 실무에서는 Kafka+Confluent Schema Registry = Avro, gRPC 서비스 = Protobuf가 사실상 표준이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌────────────────────────────────────────────────────────┐
@@ -32,7 +34,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 각 형식의 직렬화 방식
 
@@ -71,7 +73,7 @@ Thrift:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Avro | Protobuf | Thrift |
 |:---|:---|:---|:---|
@@ -86,7 +88,7 @@ Thrift:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Kafka + Confluent Schema Registry + Avro
 
@@ -107,7 +109,7 @@ Consumer ← [Avro 역직렬화] ← Kafka 토픽
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

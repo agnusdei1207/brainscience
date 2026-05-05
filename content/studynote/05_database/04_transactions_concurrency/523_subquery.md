@@ -7,17 +7,19 @@ date = 2026-03-26
 [taxonomies]
 tags = ["database", "sql", "subquery", "nested-query"]
 +++
+## 0. 핵심 인사이트
 
-# 서브쿼리 (Subquery)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 서브쿼리 (Subquery)는 SELECT, INSERT, UPDATE, DELETE 문 안에 중첩된另一 SELECT 문으로, 메인 쿼리의 조건에 필요한 값을 동적으로 산출한다.
+> **핵심**: 서브쿼리 (Subquery)는 SELECT, INSERT, UPDATE, DELETE 문 안에 중첩된另一 SELECT 문으로, 메인 쿼리의 조건에 필요한 값을 동적으로 산출한다.
 > 2. **가치**: 서브쿼리를 통해 복잡한 쿼리를 단계적으로 구성하고, WHERE 조건에 미리 계산된 값을 利用할 수 있어 쿼리의 Modularization과 可読性를 높인다.
 > 3. **융합**: 상관 서브쿼리 (Correlated Subquery)는 외부 쿼리의 행마다 내부 쿼리가 실행되어,窓関数와类似的 분석 기능을 제공한다.
 
+> 📝 모범 답안
+
+# 서브쿼리 (Subquery)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 
@@ -57,7 +59,7 @@ tags = ["database", "sql", "subquery", "nested-query"]
 
 ---
 
-## Ⅱ. 서브쿼리의 유형
+## 2. 구성요소
 
 ### 1. 스칼라 서브쿼리 (Scalar Subquery)
 
@@ -101,7 +103,7 @@ WHERE customer_id IN (
 
 ---
 
-## Ⅲ. 상관 vs 비상관 서브쿼리
+## 3. 구조 및 동작 원리
 
 ### 비상관 서브쿼리 (Non-Correlated Subquery)
 
@@ -165,7 +167,7 @@ FROM customers c;
 
 ---
 
-## Ⅳ. EXISTS와 NOT EXISTS
+## 4. 비교 및 트레이드오프
 
 ### EXISTS
 
@@ -217,7 +219,7 @@ WHERE NOT EXISTS (
 
 ---
 
-## Ⅴ. 실무 적용 및 기술사적 판단
+## 5. 실무 적용 및 최적화 기법
 
 ### 실무 시나리오
 
@@ -239,7 +241,7 @@ WHERE NOT EXISTS (
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

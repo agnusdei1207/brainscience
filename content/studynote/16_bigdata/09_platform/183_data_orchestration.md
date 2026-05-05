@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> 📢 **섹션 요약 비유**: 데이터 오케스트레이션은 오케스트라 지휘자처럼, 각 악기(파이프라인)가 언제 연주를 시작하고 끝낼지, 실수가 있을 때 어떻게 대처할지 총괄 지휘한다.
+
+> 📝 모범 답안
 
 - 데이터 오케스트레이션은 데이터 파이프라인의 스케줄링·의존성 관리·모니터링·재시도를 자동화하며, Apache Airflow의 DAG (Directed Acyclic Graph) 기반 접근이 사실상 표준이 됐다.
 - Dagster는 자산(Asset) 중심 패러다임으로 "어떤 작업을 실행할 것인가"에서 "어떤 데이터 자산을 생산할 것인가"로 철학을 전환하여 데이터 품질과 테스트 가능성을 높인다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1-1. 오케스트레이션이 필요한 이유
 
@@ -34,11 +37,9 @@ categories = "studynote-bigdata"
 | 클라우드 관리형 | MWAA, Cloud Composer | Dagster Cloud | Prefect Cloud |
 | 생태계 규모 | 매우 큼 | 성장 중 | 성장 중 |
 
-> 📢 **섹션 요약 비유**: 데이터 오케스트레이션은 오케스트라 지휘자처럼, 각 악기(파이프라인)가 언제 연주를 시작하고 끝낼지, 실수가 있을 때 어떻게 대처할지 총괄 지휘한다.
-
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. Apache Airflow DAG 구조
 
@@ -95,7 +96,7 @@ def order_metrics(cleaned_orders: pd.DataFrame) -> dict:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 실행 환경별 Airflow Executor
 
@@ -113,7 +114,7 @@ def order_metrics(cleaned_orders: pd.DataFrame) -> dict:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. Airflow 운영 모범 사례
 
@@ -132,7 +133,7 @@ def order_metrics(cleaned_orders: pd.DataFrame) -> dict:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 | 내용 |
 |:---|:---|

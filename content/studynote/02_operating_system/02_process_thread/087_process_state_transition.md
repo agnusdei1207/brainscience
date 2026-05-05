@@ -5,16 +5,18 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> **핵심**: 프로세스 상태 전이 (Process State Transition)는 New, Ready, Running, Waiting/Blocked, Terminated 사이의 이동 규칙을 정의해 스케줄러가 CPU 시간을 공정하게 나누게 한다.
 
-    > 1. **본질**: 프로세스 상태 전이 (Process State Transition)는 New, Ready, Running, Waiting/Blocked, Terminated 사이의 이동 규칙을 정의해 스케줄러가 CPU 시간을 공정하게 나누게 한다.
-    > 2. **가치**: 상태를 분리하면 CPU 바운드와 I/O 바운드의 차이를 설명할 수 있고, 문맥 교환과 대기 큐 관리도 명확해진다.
+> 📝 모범 답안
+
+        > 2. **가치**: 상태를 분리하면 CPU 바운드와 I/O 바운드의 차이를 설명할 수 있고, 문맥 교환과 대기 큐 관리도 명확해진다.
     > 3. **판단 포인트**: 상태 전이를 단순 목록으로 외우지 말고, 어떤 사건이 상태를 바꾸는지와 그 결과가 스케줄링에 어떤 영향을 주는지 함께 봐야 한다.
 
     ---
 
-    ## Ⅰ. 개요 및 필요성
+    ## 1. 개요 및 필요성
 
     프로세스는 실행 중인 프로그램이며, 운영체제는 이를 상태로 관리한다. 프로세스 상태 전이 (Process State Transition)는 프로세스가 생성에서 종료까지 어떤 조건으로 이동하는지 정리한 모델이다.
 
@@ -24,7 +26,7 @@ categories = "studynote-operating-system"
 
     ---
 
-    ## Ⅱ. 아키텍처 및 핵심 원리
+    ## 2. 구성요소
 
     전이의 핵심은 사건(event)이다. 입장(admit)되면 New에서 Ready로, 디스패치(dispatch)되면 Ready에서 Running으로, I/O 요청이나 대기 조건이 생기면 Running에서 Waiting으로 이동한다. 이벤트가 끝나면 Waiting에서 Ready로 돌아오고, 종료 시 Terminated가 된다.
 
@@ -50,7 +52,7 @@ New ──admit──► Ready ──dispatch──► Running ──exit──�
 
     ---
 
-    ## Ⅲ. 비교 및 연결
+    ## 3. 구조 및 동작 원리
 
     프로세스 상태는 스레드 상태와도 연결된다. 프로세스는 주소 공간과 자원을 포함한 실행 단위이고, 스레드는 그 안에서 실행 흐름을 더 잘게 나눈 단위다.
 
@@ -67,7 +69,7 @@ New ──admit──► Ready ──dispatch──► Running ──exit──�
 
     ---
 
-    ## Ⅳ. 실무 적용 및 기술사 판단
+    ## 4. 비교 및 트레이드오프
 
     실무에서는 상태 전이가 비정상적으로 길어지는 지점을 찾는 것이 중요하다. Waiting이 길면 I/O 병목이나 외부 의존성 문제를, Ready가 길면 CPU 경쟁이나 우선순위 불균형을 의심할 수 있다.
 
@@ -86,7 +88,7 @@ New ──admit──► Ready ──dispatch──► Running ──exit──�
 
     ---
 
-    ## Ⅴ. 기대효과 및 결론
+    ## 5. 실무 적용 및 최적화 기법
 
     상태 전이 모델은 운영체제의 스케줄링, 성능 분석, 장애 분석을 한 프레임으로 묶어 준다. 상태를 보면 왜 CPU가 바빠 보이는데 실제 처리량은 낮은지, 왜 요청이 멈췄는지도 설명할 수 있다.
 

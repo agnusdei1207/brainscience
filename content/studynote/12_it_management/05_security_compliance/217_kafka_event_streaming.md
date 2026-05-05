@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: Apache Kafka는 LinkedIn이 2011년 오픈소스화한 분산 이벤트 스트리밍 플랫폼으로, Pub/Sub(Publish-Subscribe, 발행-구독) 패턴의 분산 커밋 로그(Distributed Commit Log)다. 토픽(Topic)/파티션(Partition)/오프셋(Offset)/컨슈머 그룹(Consumer Group) 4대 개념이 수백만 TPS(Transactions Per Second) 처리와 내구성을 동시에 보장한다.
+> **핵심**: Apache Kafka는 LinkedIn이 2011년 오픈소스화한 분산 이벤트 스트리밍 플랫폼으로, Pub/Sub(Publish-Subscribe, 발행-구독) 패턴의 분산 커밋 로그(Distributed Commit Log)다. 토픽(Topic)/파티션(Partition)/오프셋(Offset)/컨슈머 그룹(Consumer Group) 4대 개념이 수백만 TPS(Transactions Per Second) 처리와 내구성을 동시에 보장한다.
 > 2. **가치**: 이벤트 소싱(Event Sourcing) 아키텍처에서 Kafka는 모든 상태 변경을 불변 이벤트로 기록하는 **시스템 간 신뢰 원천(Source of Truth)**이 되며, 정확히 한 번(Exactly-once) 의미론은 금융·결제 시스템의 중복 처리를 원천 차단한다.
 > 3. **판단 포인트**: 초당 수십만 건 이상의 고처리량 실시간 데이터 파이프라인, 마이크로서비스 간 비동기 통신, 이벤트 소싱 구현이 필요할 때 Kafka가 최적이며, 간단한 메시지 큐는 RabbitMQ/SQS도 충분하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 LinkedIn의 데이터 파이프라인 문제
 2010년대 초 LinkedIn은 다양한 서비스(프로필, 뉴스피드, 광고, 추천) 간 데이터 교환을 위해 수십 개의 포인트-투-포인트(Point-to-Point) 파이프라인을 운영했다. 서비스 N개가 서로 연결되면 N²개의 파이프라인이 필요하고, 유지보수 비용이 폭발적으로 증가했다.
@@ -30,7 +32,7 @@ Kafka는 이를 **중앙 이벤트 허브(Central Event Hub)** 패턴으로 해�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 Kafka 아키텍처 구조
 
@@ -84,7 +86,7 @@ Exactly-once는 **Idempotent Producer** + **Transactional API** + **Stream Proce
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 Kafka vs 전통 메시지 큐 비교
 
@@ -113,7 +115,7 @@ Exactly-once는 **Idempotent Producer** + **Transactional API** + **Stream Proce
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 Kafka 주요 활용 패턴
 
@@ -144,7 +146,7 @@ Exactly-once는 **Idempotent Producer** + **Transactional API** + **Stream Proce
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 Kafka 도입 효과
 

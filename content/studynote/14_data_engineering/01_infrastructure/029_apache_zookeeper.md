@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Apache ZooKeeper는 분산 시스템의 조율(Coordination) 서비스다. 분산 잠금(Distributed Lock), 리더 선출(Leader Election), 설정 관리(Config), 서비스 디스커버리(Service Discovery)를 일관성 있게 제공하는 분산 CP 시스템이다.
+> **핵심**: Apache ZooKeeper는 분산 시스템의 조율(Coordination) 서비스다. 분산 잠금(Distributed Lock), 리더 선출(Leader Election), 설정 관리(Config), 서비스 디스커버리(Service Discovery)를 일관성 있게 제공하는 분산 CP 시스템이다.
 > 2. **가치**: 분산 환경에서 "두 노드가 동시에 같은 결정을 내리는 것"(스플릿 브레인, Split Brain)을 방지한다. ZAB(ZooKeeper Atomic Broadcast) 프로토콜로 과반수(쿼럼) 합의를 보장하여 일관성을 제공한다.
 > 3. **판단 포인트**: ZooKeeper는 Kafka, HBase, Hadoop YARN, Solr의 핵심 의존성이었으나 운영 복잡성으로 인해 대안이 등장했다. Kafka는 KRaft(내장 Raft)로 ZooKeeper 의존성 제거(Kafka 3.3+), etcd(쿠버네티스), Consul이 현대적 대안이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌──────────────────────────────────────────────────────────┐
@@ -37,7 +39,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### ZooKeeper znode (데이터 모델)
 
@@ -69,7 +71,7 @@ ZAB (ZooKeeper Atomic Broadcast):
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | ZooKeeper | etcd | Consul |
 |:---|:---|:---|:---|
@@ -82,7 +84,7 @@ ZAB (ZooKeeper Atomic Broadcast):
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Kafka ZooKeeper 의존성 제거
 
@@ -111,7 +113,7 @@ Kafka (2.x 이하): 컨트롤러 선출, 토픽 메타데이터
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

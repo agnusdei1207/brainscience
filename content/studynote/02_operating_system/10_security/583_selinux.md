@@ -5,13 +5,15 @@ date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# SELinux (Security-Enhanced Linux) - NSA가 만든 리눅스 커널용 강제 접근 제어 보안 모듈
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SELinux는 1990년대 NSA(미국 국가안보국)와 함께 개발된 리눅스 커널용 MAC(강제적 접근 제어) 보안 모듈로, 582장의 LSM(Linux Security Modules) 프레임워크 위에 구현된다. 모든 프로세스와 파일에 **"보안 컨텍스트(Security Context = user:role:type:level)"** 라는 4단계 라벨을 부착하고, **Type Enforcement(유형 강제)** 방식으로 접근을 통제하는 커널 레벨 보안 시스템이다.
+> **핵심**: SELinux는 1990년대 NSA(미국 국가안보국)와 함께 개발된 리눅스 커널용 MAC(강제적 접근 제어) 보안 모듈로, 582장의 LSM(Linux Security Modules) 프레임워크 위에 구현된다. 모든 프로세스와 파일에 **"보안 컨텍스트(Security Context = user:role:type:level)"** 라는 4단계 라벨을 부착하고, **Type Enforcement(유형 강제)** 방식으로 접근을 통제하는 커널 레벨 보안 시스템이다.
 > 2. **가치**: **유형 강제 통제(Type-Enforced Confinement)** 덕분에, Nginx 웹 서버가 해킹당해 `rm -rf /`(시스템 삭제) 명령을 내려도, LSM 훅에서 Nginx 프로세스의 유형(`httpd_t`)이 `/etc/shadow`(파일 유형 `shadow_t`)에 접근할 수 없도록 차단한다. 제로 데이(Zero-Day) 취약점이 발견되어도, 권한 상승(Privilege Escalation)을 원천 차단하는 방어선을 제공한다.
 > 3. **한계**: SELinux의 가장 큰 약점은 **디버깅 지옥(Debugging Nightmare)** 과 비활성화 유혹이다. SELinux가 적용된 환경에서 접근 거부(`Permission Denied`) 오류가 발생하면, 해당 프로세스와 파일의 유형(`_t` 접미사)을 하나하나 추적해야 한다. 이 과정에서 90%의 관리자가 `/etc/selinux/config`에서 `SELINUX=disabled`로 설정하여(SELinux 끄기) 방어망을 해제하는 문제가 발생한다.
+
+> 📝 모범 답안
+
+# SELinux (Security-Enhanced Linux) - NSA가 만든 리눅스 커널용 강제 접근 제어 보안 모듈
 
 ---
 

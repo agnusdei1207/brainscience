@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: gRPC (Google Remote Procedure Call)는 HTTP/2 위에서 Protocol Buffers (바이너리 직렬화)를 사용해 마이크로서비스 간 내부 동기 통신을 REST/JSON보다 최대 5~10배 빠르게 처리하는 고성능 RPC 프레임워크다.
+> **핵심**: gRPC (Google Remote Procedure Call)는 HTTP/2 위에서 Protocol Buffers (바이너리 직렬화)를 사용해 마이크로서비스 간 내부 동기 통신을 REST/JSON보다 최대 5~10배 빠르게 처리하는 고성능 RPC 프레임워크다.
 > 2. **가치**: 강타입 스키마(`.proto` 파일), 다국어 클라이언트 자동 생성, 양방향 스트리밍 지원으로 서비스 간 계약을 명확히 하고 개발 생산성을 높인다.
 > 3. **판단 포인트**: MSA 내부 서비스 간 통신에는 gRPC가 최적이나, 브라우저 직접 호출은 gRPC-Web 레이어가 필요하고 디버깅이 REST보다 어려워 외부 API에는 여전히 REST/GraphQL이 적합하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 MSA 환경에서 수백 개의 마이크로서비스가 서로 빈번하게 호출할 때 HTTP/1.1 + JSON 방식의 REST API는 두 가지 성능 병목을 만든다. 첫째, JSON 직렬화·역직렬화 비용이 크다. 둘째, HTTP/1.1은 요청당 커넥션을 새로 맺거나 Keep-Alive에 의존해 헤더 오버헤드가 크다.
 
@@ -25,7 +27,7 @@ gRPC (Google Remote Procedure Call)는 이 문제를 HTTP/2 + Protocol Buffers (
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 항목 | REST/JSON | gRPC/Protobuf |
 |:---|:---|:---|
@@ -70,7 +72,7 @@ gRPC (Google Remote Procedure Call)는 이 문제를 HTTP/2 + Protocol Buffers (
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | Unary RPC | Server Streaming | Client Streaming | Bidirectional |
 |:---|:---|:---|:---|:---|
@@ -84,7 +86,7 @@ gRPC의 4가지 통신 패턴은 REST가 Unary에만 자연스럽게 맞는 것�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **내부/외부 통신 기술 선택 기준**
 - 마이크로서비스 내부 동기 통신 → gRPC (성능·타입 안전성)
@@ -102,7 +104,7 @@ gRPC의 4가지 통신 패턴은 REST가 Unary에만 자연스럽게 맞는 것�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 gRPC는 MSA 내부 통신의 성능 문제를 원천적으로 해결하는 강력한 도구다. 특히 수십~수백 개의 마이크로서비스가 초당 수만 건의 RPC를 주고받는 대규모 시스템에서 REST 대비 지연 감소·처리량 향상 효과가 명확하다.
 

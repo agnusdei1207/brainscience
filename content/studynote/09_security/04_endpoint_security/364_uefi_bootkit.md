@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: UEFI 부트킷은 UEFI(Unified Extensible Firmware Interface) 펌웨어에 악성 드라이버를 삽입하여 하드디스크 교체·OS 재설치 후에도 살아남는 "불멸의 지속성"을 달성하는 가장 고급 부트킷이다.
+> **핵심**: UEFI 부트킷은 UEFI(Unified Extensible Firmware Interface) 펌웨어에 악성 드라이버를 삽입하여 하드디스크 교체·OS 재설치 후에도 살아남는 "불멸의 지속성"을 달성하는 가장 고급 부트킷이다.
 > 2. **가치**: LoJax(2018, APT28/Fancy Bear), CosmicStrand(2022, 중국 APT), BlackLotus(2023, CVE-2022-21894 악용)는 모두 실제 야생에서 발견된 UEFI 부트킷으로, 국가 수준 APT의 핵심 무기다.
 > 3. **판단 포인트**: 방어는 UEFI Secure Boot + Intel Boot Guard(CPU에서 UEFI 서명 검증) + 정기 펌웨어 업데이트 + SPI 플래시 쓰기 방지가 4중 기준이며, Secure Boot 비활성화 또는 MOK 취약점이 있으면 우회 가능하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 UEFI는 BIOS의 후속으로, 부팅 과정을 관리하는 펌웨어 표준이다. UEFI 코드는 SPI(Serial Peripheral Interface) 플래시 칩에 저장되며, 운영체제와 완전히 분리된 환경에서 실행된다. UEFI 부트킷은 이 플래시 칩에 악성 UEFI 애플리케이션/드라이버를 삽입하여 OS 로드 전 단계에서 영속적으로 실행된다.
 
@@ -23,7 +25,7 @@ BlackLotus(2023)는 특히 주목받는 사례로, Secure Boot가 활성화된 W
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### UEFI 부트킷 동작 구조
 
@@ -55,7 +57,7 @@ BlackLotus(2023)는 특히 주목받는 사례로, Secure Boot가 활성화된 W
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | MBR 부트킷 | UEFI 부트킷 |
 |:---|:---|:---|
@@ -69,7 +71,7 @@ BlackLotus(2023)는 특히 주목받는 사례로, Secure Boot가 활성화된 W
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 UEFI 부트킷 방어: ① Intel Boot Guard(CPU 내장 ACM이 UEFI 서명 검증, 펌웨어 수정 불가 모드), ② Secure Boot(부트로더·커널 서명 검증, 취약점 패치 필수), ③ UEFI 펌웨어 정기 업데이트(알려진 UEFI 취약점 패치), ④ CHIPSEC(UEFI 펌웨어 보안 점검 도구)로 정기 검사.
 
@@ -79,7 +81,7 @@ UEFI 부트킷 방어: ① Intel Boot Guard(CPU 내장 ACM이 UEFI 서명 검증
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 UEFI 부트킷 대응은 Secured-core PC(Windows 11 요구사항) 플랫폼처럼 하드웨어 수준에서 Boot Guard + Secure Boot + TPM을 결합하는 방향이 가장 효과적이다. Secure Boot 취약점(BlackLotus 등)에 대해서는 DBX(Secure Boot 폐기 목록) 업데이트가 신속히 이루어져야 한다.
 

@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. IT 컴플라이언스(IT Compliance)는 법·규정·표준 준수를 위한 IT 거버넌스의 실천 — GDPR(개인정보), SOX(재무 보고), HIPAA(의료) 등 각 도메인별 규제가 IT 시스템에 구체적 통제 요구사항을 부과하며, 이를 충족하지 못하면 막대한 과징금과 법적 책임이 발생한다.
 > 2. GDPR의 핵심은 개인 데이터의 생애주기 관리 — 수집 시 동의, 처리 목적 명시, 보유 기간 제한, 삭제 권리(잊혀질 권리), 국외 이전 제한이 IT 아키텍처와 데이터 파이프라인 설계에 직접 영향을 미친다.
 > 3. SOX IT 통제는 재무 데이터의 정확성과 무결성 보장 — 재무 시스템에 대한 접근 통제, 변경 관리, 감사 추적이 SOX Section 404 준수의 핵심이며, COBIT·COSO 프레임워크가 SOX IT 통제 구현의 참조 모델이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. GDPR IT 준수
+## 1. 개요 및 필요성
 
 ```
 GDPR (General Data Protection Regulation):
@@ -64,7 +67,7 @@ GDPR (General Data Protection Regulation):
 
 ---
 
-## Ⅱ. SOX IT 통제
+## 2. 구성요소
 
 ```
 SOX (Sarbanes-Oxley Act, 2002):
@@ -115,7 +118,7 @@ IT 감사 증거:
 
 ---
 
-## Ⅲ. 주요 통제 프레임워크
+## 3. 구조 및 동작 원리
 
 ```
 IT 통제 프레임워크 비교:
@@ -168,7 +171,7 @@ HIPAA (미국 의료):
 
 ---
 
-## Ⅳ. SOC 2 인증
+## 4. 비교 및 트레이드오프
 
 ```
 SOC 2 (System and Organization Controls 2):
@@ -219,7 +222,7 @@ ROI:
 
 ---
 
-## Ⅴ. 실무 시나리오 — SaaS 스타트업 컴플라이언스
+## 5. 실무 적용 및 최적화 기법
 
 ```
 B2B SaaS 스타트업 컴플라이언스 로드맵:

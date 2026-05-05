@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CRYSTALS-Dilithium(크리스탈스-딜리시움)은 격자(Lattice) 수학 문제의 어려움에 기반한 양자 내성(Post-Quantum, PQC) 디지털 서명 알고리즘으로, NIST(National Institute of Standards and Technology)가 2024년 ML-DSA(Module Lattice-Based Digital Signature Algorithm, FIPS 204)로 표준화했다.
+> **핵심**: CRYSTALS-Dilithium(크리스탈스-딜리시움)은 격자(Lattice) 수학 문제의 어려움에 기반한 양자 내성(Post-Quantum, PQC) 디지털 서명 알고리즘으로, NIST(National Institute of Standards and Technology)가 2024년 ML-DSA(Module Lattice-Based Digital Signature Algorithm, FIPS 204)로 표준화했다.
 > 2. **가치**: 양자 컴퓨터(Quantum Computer)가 RSA·ECDSA 기반 기존 디지털 서명을 수초 내에 파괴할 수 있는 시대를 대비해, **양자 공격에 안전한 디지털 서명 표준**으로 인터넷·PKI(Public Key Infrastructure) 인프라를 미래 보호한다.
 > 3. **판단 포인트**: Dilithium은 RSA/ECDSA 대비 공개키·서명 크기가 크지만 서명 생성·검증 속도가 빠르고 구현이 단순하여, **TLS 1.3·코드 서명·PKI 인증서 대체**의 1순위 후보다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 디지털 서명은 메시지의 무결성과 발신자 인증을 보장하는 암호 기술이다. 현재 인터넷 보안의 근간인 RSA·ECDSA(Elliptic Curve Digital Signature Algorithm)는 소인수분해와 이산대수 문제의 어려움에 의존한다. 그러나 Shor 알고리즘을 구현한 양자 컴퓨터가 등장하면 이 두 문제 모두 다항 시간(Polynomial Time)에 풀린다.
 
@@ -28,7 +30,7 @@ NIST는 2016년 PQC 표준화 공모를 시작했고, CRYSTALS-Dilithium이 최�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 격자(Lattice) 기반 보안의 기초
 
@@ -86,7 +88,7 @@ CRYSTALS-Dilithium은 **Module-LWE(Module Learning With Errors)** 와 **Module-S
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### PQC 디지털 서명 후보군 비교
 
@@ -105,7 +107,7 @@ RSA/ECDSA 취약점(양자 컴퓨터) → PQC 필요성 → NIST PQC 표준화 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 의사결정 체크리스트
 
@@ -131,7 +133,7 @@ RSA/ECDSA 취약점(양자 컴퓨터) → PQC 필요성 → NIST PQC 표준화 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 CRYSTALS-Dilithium(ML-DSA)은 NIST가 공식 채택한 PQC 디지털 서명 표준으로, 향후 10~20년 내 인터넷 보안 인프라의 서명 알고리즘 기반을 교체하는 대규모 전환의 핵심이다.
 

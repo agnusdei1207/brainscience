@@ -2,14 +2,17 @@
 title = "351. ANN (Approximate Nearest Neighbor) 알고리즘 - 벡터 DB의 고속 근사치 검색 (정확도 일부 희생, 속도 극대화)"
 weight = 351
 +++
+## 0. 핵심 인사이트
 
 > **💡 핵심 인사이트**
 > HNSW(Hierarchical Navigable Small World)는 **"다층 그래프(Multi-layer Graph) 구조를 이용해 벡터 공간에서 가까운 이웃을 계층적으로 탐색하는"** 대표적인 ANN(Approximate Nearest Neighbor) 알고리즘입니다.
 > 상위 레이어에서는 **_대략적인 위치_**를 빠르게 파악하고, 하위 레이어로 **_점진적으로 내려가며_** (_세밀하게 탐색_) 합니다. 이 "_ Hierarchical_" 구조 덕분에 **_수천 차원의 벡터에서도 수십 밀리초 내에 정확한 유사 이웃을 발견_**할 수 있습니다. Milvus, Weaviate, Qdrant 등 **_주요 벡터 데이터베이스의 기본 인덱싱 알고리즘_**으로 사용됩니다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. HNSW의 탄생: NSW의 한계를 극복
+## 1. 개요 및 필요성
 
 HNSW은 **NSW(Navigable Small World)** 알고리즘에서 영감을 받았습니다.
 
@@ -40,7 +43,7 @@ NSW 그래프 예시:
 
 ---
 
-## Ⅱ. HNSW의 구조: 다층 그래프
+## 2. 구성요소
 
 ```
 [HNSW 다층 구조]
@@ -81,7 +84,7 @@ NSW 그래프 예시:
 
 ---
 
-## Ⅲ. HNSW 탐색 알고리즘: Greedy Search
+## 3. 구조 및 동작 원리
 
 HNSW의 검색은 **_greedy traversal_** 방식으로 이루어집니다.
 
@@ -120,7 +123,7 @@ HNSW의 검색은 **_greedy traversal_** 방식으로 이루어집니다.
 
 ---
 
-## Ⅳ. HNSW 파라미터와 성능 조절
+## 4. 비교 및 트레이드오프
 
 ```python
 # HNSWlib (Python) 예시
@@ -176,7 +179,7 @@ labels, distances = index.knn_query(query_vectors, k=10)
 
 ---
 
-## Ⅴ. HNSW의 메모리 관리와 📢 비유
+## 5. 실무 적용 및 최적화 기법
 
 **메모리 사용량:**
 

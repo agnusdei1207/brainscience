@@ -5,17 +5,19 @@ weight = 252
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-# AIOps (Artificial Intelligence for IT Operations) - AI 기반 클라우드 운영 자동화
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: AIOps(Artificial Intelligence for IT Operations)는 수백만 개의 마이크로서비스 컨테이너들이 1초마다 뿜어내는 수천 기가바이트의 시스템 에러 로그와 경고 알람을 **인간 엔지니어가 눈알을 굴려가며 엑셀로 찾는 미친 짓(수동 디버깅)을 끝내고, 인공지능(ML)을 투입해 장애 원인을 1초 만에 색출하는 IT 인프라 뇌수술 기술**이다.
+> **핵심**: AIOps(Artificial Intelligence for IT Operations)는 수백만 개의 마이크로서비스 컨테이너들이 1초마다 뿜어내는 수천 기가바이트의 시스템 에러 로그와 경고 알람을 **인간 엔지니어가 눈알을 굴려가며 엑셀로 찾는 미친 짓(수동 디버깅)을 끝내고, 인공지능(ML)을 투입해 장애 원인을 1초 만에 색출하는 IT 인프라 뇌수술 기술**이다.
 > 2. **가치**: "CPU가 90%다! 삐용삐용!" 의미 없이 시끄럽게 울려 엔지니어들을 노이로제(Alert Fatigue)에 걸리게 하던 가짜 쓰레기 알람들을 90% 이상 싹 다 쳐내서 압축(Correlation)하고, 장애가 터지기 전(어? 1시간 뒤에 결제 서버 뻗겠는데?)에 **미리 미래를 예지하여 스스로 파드(Pod)를 재부팅시키는 무결점 예지 정비(Predictive Maintenance)**를 달성한다.
 > 3. **융합**: 이 흑마술은 낡은 로그 파일 텍스트를 분석하는 것을 넘어, 데이터센터의 온도 센서, 쿠버네티스(K8s)의 스케줄러, CI/CD 배포 파이프라인의 모든 텔레메트리(Telemetry) 데이터와 융합되어 인간의 통제권을 빼앗고 **'완전한 자율 주행 데이터센터(NoOps)'**를 향해 클라우드를 진화시키는 궁극의 마지막 피스다.
 
+> 📝 모범 답안
+
+# AIOps (Artificial Intelligence for IT Operations) - AI 기반 클라우드 운영 자동화
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: AIOps (IT 운영을 위한 인공지능)는 방대하고 복잡한 IT 인프라 환경에서 발생하는 수많은 빅데이터(Log, Metric, Trace)를 머신러닝(ML)과 분석 알고리즘을 통해 실시간으로 수집 및 분석하여, 이상 징후 탐지(Anomaly Detection), 근본 원인 분석(RCA), 이벤트 상관관계 매핑, 자동 치유(Auto-remediation)를 수행하는 차세대 IT 운영 플랫폼 철학이다. (가트너 Gartner가 최초 명명).
 
@@ -71,7 +73,7 @@ AIOps는 "결제 앱이 DB에 연결되어 있으니, 결제 앱 에러의 99%�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### AIOps 플랫폼을 굴리는 3단계 빅데이터 파이프라인 (Observability)
 
@@ -99,7 +101,7 @@ AIOps의 **동적 기준선(Dynamic Baselining)**은 이 멍청한 숫자 '80'�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 운영 자동화 패러다임 진화 (Scripting vs Orchestration vs AIOps)
 
@@ -123,7 +125,7 @@ AIOps의 **동적 기준선(Dynamic Baselining)**은 이 멍청한 숫자 '80'�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 설계 안티패턴
 
@@ -181,7 +183,7 @@ AIOps의 **동적 기준선(Dynamic Baselining)**은 이 멍청한 숫자 '80'�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# RCU (Read-Copy-Update): 다중 독자 락 프리 고성능 기법
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: RCU (Read-Copy-Update)는 공유 데이터를 읽는 자(Reader)들에게는 **어떠한 자물쇠(Lock)나 대기(Wait)도 없이 100% 락 프리(Lock-free)로 질주할 권한**을 주고, 데이터를 고치는 자(Writer)는 원본을 복사해서 고친 뒤 포인터를 바꿔치기(Copy-Update)하고 낡은 데이터는 독자들이 다 볼 때까지 기다렸다가 버리는 동기화 기법이다.
+> **핵심**: RCU (Read-Copy-Update)는 공유 데이터를 읽는 자(Reader)들에게는 **어떠한 자물쇠(Lock)나 대기(Wait)도 없이 100% 락 프리(Lock-free)로 질주할 권한**을 주고, 데이터를 고치는 자(Writer)는 원본을 복사해서 고친 뒤 포인터를 바꿔치기(Copy-Update)하고 낡은 데이터는 독자들이 다 볼 때까지 기다렸다가 버리는 동기화 기법이다.
 > 2. **가치**: 읽기와 쓰기가 동시에 발생할 때 전통적 락(Rwlock)이 유발하는 극심한 캐시 라인 핑퐁(병목) 현상을 원천적으로 폭파시켜, 읽기 비율이 압도적으로 높은 운영체제 커널 환경(예: 네트워크 라우팅 테이블)에서 메모리 버스 트래픽을 0에 가깝게 만들며 시스템 스루풋을 수천 배 상승시킨다.
 > 3. **융합**: 가비지 컬렉션(GC)의 메모리 수거 지연 철학(Grace Period)과 가상 메모리의 포인터 원자적 스위칭(Atomic Pointer Exchange)을 운영체제 하부 C언어 생태계에 소름 돋게 융합시킨, 리눅스 커널 동기화의 최고봉이자 백엔드 인프라의 마스터피스 알고리즘이다.
 
+> 📝 모범 답안
+
+# RCU (Read-Copy-Update): 다중 독자 락 프리 고성능 기법
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - 리눅스 커널의 창시자급 개발자인 Paul McKenney가 정립한 동기화 메커니즘.
@@ -70,7 +72,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### RCU의 심장: Grace Period (유예 기간) 추적 메커니즘
 
@@ -114,7 +116,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### RCU vs RWLock vs Spinlock: 동기화 무기의 궁극적 선택
 
@@ -135,7 +137,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 최적화 함정
 
@@ -178,7 +180,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

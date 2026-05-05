@@ -5,15 +5,17 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 듀얼 모드 (Dual Mode)는 CPU (Central Processing Unit)가 명령어를 실행할 때 사용자 모드 (User Mode)와 커널 모드 (Kernel Mode)로 권한을 분리하여 시스템 자원을 보호하는 운영체제의 핵심 보안 아키텍처다.
+> **핵심**: 듀얼 모드 (Dual Mode)는 CPU (Central Processing Unit)가 명령어를 실행할 때 사용자 모드 (User Mode)와 커널 모드 (Kernel Mode)로 권한을 분리하여 시스템 자원을 보호하는 운영체제의 핵심 보안 아키텍처다.
 > 2. **가치**: 사용자 애플리케이션의 오동작이나 악의적인 공격이 하드웨어 및 운영체제 핵심 영역으로 전파되는 것을 하드웨어 수준에서 차단하여 전체 시스템의 가용성 (Availability)과 무결성 (Integrity)을 보장한다.
 > 3. **융합**: 현대 아키텍처는 가상화 기술의 발전에 따라 하이퍼바이저 모드 (VMM Mode) 등 다층적 보호 링 (Protection Rings) 구조로 진화했으며, 이는 클라우드 컴퓨팅과 컨테이너 보안의 근간이 된다.
 
+> 📝 모범 답안
+
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 - **개념**: 듀얼 모드 (Dual Mode)는 CPU (Central Processing Unit)의 실행 상태를 사용자 모드 (User Mode)와 커널 모드 (Kernel Mode, 또는 Supervisor Mode)의 두 가지로 나누어 관리하는 하드웨어 지원 메커니즘이다. 사용자 프로그램은 제한된 명령만 수행하고, 입출력이나 메모리 관리 등 위험한 명령은 오직 운영체제가 커널 모드에서만 수행하도록 강제한다.
 
@@ -46,7 +48,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 - **구성 요소 (표)**
 
@@ -110,7 +112,7 @@ void handle_sys_open() {
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 - **심층 기술 비교: 사용자 모드 vs 커널 모드**
 
@@ -149,7 +151,7 @@ void handle_sys_open() {
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 - **실무 시나리오**:
   1. **고성능 서버 튜닝**: 시스템 호출이 너무 빈번하면 모드 전환 오버헤드로 인해 CPU 점유율은 높으나 실제 처리량 (Throughput)은 낮아진다. 이때 버퍼링 (Buffering)이나 배치 처리 (Batching)를 통해 시스템 호출 횟수를 줄이는 전략이 필요하다.
@@ -188,7 +190,7 @@ void handle_sys_open() {
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 - **정량/정성 기대효과 (표)**
 

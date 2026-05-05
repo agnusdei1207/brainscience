@@ -6,15 +6,17 @@ description = "모든 입력이 아니라 일부 대표 입력만 확인해 결�
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "Sampling Oracle", "Oracle", "Representative"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 샘플링 오라클(Sampling Oracle)은 일부 대표 입력에 대해서만 기대 결과를 제공하는 오라클이다.
+> **핵심**: 샘플링 오라클(Sampling Oracle)은 일부 대표 입력에 대해서만 기대 결과를 제공하는 오라클이다.
 > 2. **가치**: 참 오라클이 불가능할 때 현실적인 판정 기준이 된다.
 > 3. **판단 포인트**: 전체를 보지 않으므로 대표성 있는 샘플을 고르는 것이 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 샘플링 오라클은 전체 입력을 다 판정하지 않고, 일부 대표 샘플을 기준으로 판단한다. 비용을 줄이면서도 중요한 부분을 확인하는 타협안이다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "Sampling Oracle", "Oracle", "Represe
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 핵심은 대표성이다. 샘플이 전체를 잘 대변해야 오라클의 의미가 있다.
 
@@ -44,7 +46,7 @@ tags = ["Software Engineering", "Testing", "Sampling Oracle", "Oracle", "Represe
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 샘플링 오라클은 참 오라클보다 현실적이고, 휴리스틱 오라클보다 덜 주관적일 수 있다. 대신 전체 보장은 약하다.
 
@@ -60,7 +62,7 @@ tags = ["Software Engineering", "Testing", "Sampling Oracle", "Oracle", "Represe
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 대량 데이터 처리, UI 반응성, 로그 검증, 회귀 검증에서 샘플링 오라클을 쓴다. 중요한 것은 대표 샘플을 어떻게 고르느냐다.
 
@@ -73,7 +75,7 @@ tags = ["Software Engineering", "Testing", "Sampling Oracle", "Oracle", "Represe
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 샘플링 오라클은 현실적인 비용으로 판정을 가능하게 한다. 다만 샘플이 편향되면 전체를 잘못 판단할 수 있다.
 

@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Diffusion Model(확산 모델)은 데이터에 단계적으로 가우시안 노이즈를 추가하는 순방향 과정(Forward Process)과, 훈련된 신경망이 이 노이즈를 역방향으로 제거(Denoising)하여 새 데이터를 생성하는 역방향 과정(Reverse Process)으로 구성된 생성 AI 모델이다.
+> **핵심**: Diffusion Model(확산 모델)은 데이터에 단계적으로 가우시안 노이즈를 추가하는 순방향 과정(Forward Process)과, 훈련된 신경망이 이 노이즈를 역방향으로 제거(Denoising)하여 새 데이터를 생성하는 역방향 과정(Reverse Process)으로 구성된 생성 AI 모델이다.
 > 2. **가치**: GAN보다 학습 안정성이 높고 모드 붕괴(Mode Collapse) 문제가 없으며, Stable Diffusion, DALL-E 3, Sora 등 현재 이미지/비디오 생성 AI의 지배적 아키텍처로, 텍스트·이미지·음성·3D 모델 생성 전반에 적용되고 있다.
 > 3. **판단 포인트**: Latent Diffusion Model(LDM)은 픽셀 공간이 아닌 잠재 공간(Latent Space)에서 노이즈 제거를 수행하여 연산 비용을 1/8 이상 절감하는 핵심 최적화이며, Stable Diffusion이 이 방식으로 일반 GPU에서 실행 가능한 이유이다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 2020~2022년 이미지 생성 AI의 패러다임이 GAN에서 Diffusion Model로 전환되었다. GAN은 생성자-판별자의 적대적 훈련으로 학습 불안정성과 다양성 부족 문제가 있었지만, Diffusion Model은 노이즈 예측이라는 명확한 목표 함수로 안정적으로 학습된다.
 
@@ -22,7 +23,7 @@ Ho et al.의 DDPM(2020), Song et al.의 Score-based Model, Rombach et al.의 Sta
 
 📢 **섹션 요약 비유**: Diffusion Model은 뽀얀 안개 속에서 그림이 서서히 드러나는 것처럼, 완전한 노이즈(안개)에서 시작하여 AI가 단계적으로 안개를 걷어내며 선명한 그림(생성 이미지)을 만드는 점진적 창조 과정이다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Diffusion Model 순방향/역방향 과정
 
@@ -62,7 +63,7 @@ Ho et al.의 DDPM(2020), Song et al.의 Score-based Model, Rombach et al.의 Sta
 
 📢 **섹션 요약 비유**: LDM의 잠재 공간 처리는 원본 그림 대신 그 그림의 '핵심 요소 요약본'(잠재 벡터)을 편집하다가 마지막에 원본 크기로 복원하는 것처럼, 연산 비용을 드라마틱하게 줄이는 영리한 지름길이다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 생성 모델 비교
 
@@ -82,7 +83,7 @@ Ho et al.의 DDPM(2020), Song et al.의 Score-based Model, Rombach et al.의 Sta
 
 📢 **섹션 요약 비유**: DDIM은 1,000층 계단 대신 에스컬레이터(50 스텝)로, Consistency Model은 순간 이동(1 스텝)으로 같은 목적지(고품질 이미지)에 도달하는 추론 속도 혁신이다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 기업 생성 AI 도입 시 기술사 판단 포인트
 
@@ -94,7 +95,7 @@ Ho et al.의 DDPM(2020), Song et al.의 Score-based Model, Rombach et al.의 Sta
 
 📢 **섹션 요약 비유**: 기업 생성 AI 도입은 외주 디자인 에이전시 계약처럼, 속도(API)와 커스터마이징(자체 훈련) 사이의 균형과 저작권·윤리 책임 소재를 명확히 해야 하는 비즈니스 결정이다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 **기대효과**: 마케팅 콘텐츠 생성 비용 80% 절감, 제품 디자인 프로토타이핑 사이클 10배 단축, 의약품 분자 생성·단백질 구조 예측 가속.
 

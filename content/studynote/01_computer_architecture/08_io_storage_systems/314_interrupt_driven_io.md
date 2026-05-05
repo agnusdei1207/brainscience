@@ -5,15 +5,17 @@ date = "2026-03-26"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 인터럽트 구동 I/O는 I/O 장치가 작업 완료를 CPU에 알리기 위해 Interrupt 신호를 보내 CPU가 다른 유용한 연산을 수행하다가 Interrupt 발생 시 즉시 대응하는 방식으로, 폴링 대비 CPU 이용률을 극대화한다.
+> **핵심**: 인터럽트 구동 I/O는 I/O 장치가 작업 완료를 CPU에 알리기 위해 Interrupt 신호를 보내 CPU가 다른 유용한 연산을 수행하다가 Interrupt 발생 시 즉시 대응하는 방식으로, 폴링 대비 CPU 이용률을 극대화한다.
 > 2. **가치**: 고속 I/O 환경에서 폴링의 Busy-waiting으로 인한 CPU 낭비를 제거하여, 동일 시간에 더 많은 연산을 완료할 수 있게 하며, 시스템 전체 처리량(Throughput)을 획기적으로 향상시켰다.
 > 3. **융합**: DMA, APIC, MSI(Message Signaled Interrupt) 등 다른 하드웨어 메커니즘과 결합되어 현대 컴퓨터의 I/O 처리 표준을 이루며, OS의 스케줄러와 긴밀하게 통합된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 탄생 배경: 폴링의 한계
 
@@ -60,7 +62,7 @@ Interrupt-driven I/O는 "CPU가 I/O를 폴링하는 것이 아니라, I/O가 필
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 인터럽트 구동 I/O의 5단계 처리 모델
 
@@ -130,7 +132,7 @@ ISR (Interrupt Service Routine, 커널 메모리)
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### Interrupt Storm 현상과 고속 I/O의 딜레마
 
@@ -185,7 +187,7 @@ Interrupt는 OS 커널의 스케줄러(Scheduler)와 긴밀하게 통합된다. 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 시나리오 1: 고속 네트워크 카드를 사용한 서버 설계
 
@@ -232,7 +234,7 @@ Interrupt는 OS 커널의 스케줄러(Scheduler)와 긴밀하게 통합된다. 
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### Interrupt 기술의 정량적 발전
 

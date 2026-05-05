@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# PCB 구성 요소 필수 암기
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: PCB(Process Control Block, 프로세스 제어 블록)는 운영체제가 수많은 프로세스를 관리하기 위해, 각 프로세스의 '모든 개인 정보와 현재 상태'를 기록해 두는 **커널 메모리 상의 이력서(자료구조)**다. (리눅스에서는 `task_struct`라 부른다.)
+> **핵심**: PCB(Process Control Block, 프로세스 제어 블록)는 운영체제가 수많은 프로세스를 관리하기 위해, 각 프로세스의 '모든 개인 정보와 현재 상태'를 기록해 두는 **커널 메모리 상의 이력서(자료구조)**다. (리눅스에서는 `task_struct`라 부른다.)
 > 2. **필수 구성요소**: 가장 중요한 핵심 정보는 CPU를 빼앗길 때 레지스터 값을 임시로 적어두는 **Context(문맥) 정보**, 프로세스의 생사를 나타내는 **상태(State)**, 메모리 위치를 알려주는 **포인터(Page Table Base)**다.
 > 3. **가치**: 이 PCB가 존재하기 때문에 CPU는 1초에 수천 번씩 프로세스를 바꾸는 멀티태스킹(Context Switch)을 하면서도, 이전에 하던 작업을 완벽하게 기억하고 이어갈 수 있다. OS 스케줄링의 알파이자 오메가다.
 
+> 📝 모범 답안
+
+# PCB 구성 요소 필수 암기
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **PCB (Process Control Block)**: 운영체제가 프로세스의 생성부터 소멸까지의 전 주기를 관리하기 위해 유지하는 C 언어 구조체(Struct).
@@ -40,7 +42,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### PCB의 6대 핵심 구성 요소 (필수 암기)
 
@@ -91,7 +93,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### PCB (Process Control Block) vs TCB (Thread Control Block)
 
@@ -113,7 +115,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -158,7 +160,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

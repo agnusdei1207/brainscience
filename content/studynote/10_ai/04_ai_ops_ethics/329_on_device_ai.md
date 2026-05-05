@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 온디바이스 AI (On-Device AI)는 AI 추론(Inference)을 원격 클라우드 서버가 아닌 스마트폰·웨어러블·IoT·자율주행 ECU 등 **엣지 디바이스에 탑재된 NPU (Neural Processing Unit, 신경 처리 장치)**에서 로컬로 수행하는 AI 배포 방식이다.
+> **핵심**: 온디바이스 AI (On-Device AI)는 AI 추론(Inference)을 원격 클라우드 서버가 아닌 스마트폰·웨어러블·IoT·자율주행 ECU 등 **엣지 디바이스에 탑재된 NPU (Neural Processing Unit, 신경 처리 장치)**에서 로컬로 수행하는 AI 배포 방식이다.
 > 2. **가치**: 네트워크 없는 환경 동작·밀리초 이하 응답(실시간성)·개인 데이터의 디바이스 내 처리(프라이버시)·클라우드 비용 0의 4대 이점이 있으며, Apple Intelligence·Google Gemini Nano·Samsung Galaxy AI가 온디바이스 AI의 대표 사례다.
 > 3. **판단 포인트**: 온디바이스 AI의 핵심 기술은 **모델 경량화 3인방** — 양자화(Quantization)·지식 증류(Knowledge Distillation)·모델 프루닝(Model Pruning) — 과 이를 하드웨어에서 가속하는 NPU/DSP의 INT4/INT8 연산 최적화다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 응급 의료 드론이 산악 지형에서 환자를 구조할 때, LTE 신호가 없는 환경에서도 의사 결정(골절 여부 판단 AI)이 필요하다. 클라우드 AI에 의존하면 신호 없는 순간 AI가 멈춘다. 온디바이스 AI는 이 한계를 극복한다.
 
@@ -23,7 +25,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```text
 ┌──────────────────────────────────────────────────────────────────┐
@@ -64,7 +66,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **하이브리드 AI (Hybrid AI) 아키텍처**: 온디바이스와 클라우드를 상황에 따라 자동 전환하는 전략.
 - 짧은 텍스트·오프라인 상태·프라이버시 데이터 → SLM 온디바이스 처리
@@ -76,7 +78,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **온디바이스 AI 배포 설계 체크리스트**:
 1. **타겟 하드웨어 TOPS(Tera Operations Per Second) 확인**: 모델 추론 지연시간 = 파라미터수 × 2 / TOPS
@@ -89,7 +91,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 온디바이스 AI는 AI를 클라우드 서버실에서 꺼내 일상의 모든 기기에 심는 AI 편재화(AI Everywhere) 혁명의 핵심이다. Apple M 시리즈·퀄컴 스냅드래곤·삼성 엑시노스·Google Tensor 등 모바일 AP(Application Processor)의 NPU 성능이 매년 2배씩 증가하며, 2~3년 내 스마트폰에서 70B 파라미터 LLM이 실시간 동작하는 시대가 예상된다. AI 기능의 디바이스화는 클라우드 AI와 상호 보완하며 AI 활용 생태계를 더욱 풍부하게 만들 것이다.
 

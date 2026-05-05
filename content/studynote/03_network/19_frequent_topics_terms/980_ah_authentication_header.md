@@ -2,17 +2,19 @@
 title = "980. AH (Authentication Header)"
 weight = 980
 +++
+## 0. 핵심 인사이트
 
-# 980. AH (Authentication Header)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: AH (Authentication Header)는 IPSec의 핵심 프로토콜 중 하나로, IP 패킷에 대한 데이터 무결성 (Data Integrity)과 데이터 발신자 인증 (Data Origin Authentication), 그리고 선택적인 재생 공격 방지 (Anti-replay) 기능을 제공하는 헤더다.
+> **핵심**: AH (Authentication Header)는 IPSec의 핵심 프로토콜 중 하나로, IP 패킷에 대한 데이터 무결성 (Data Integrity)과 데이터 발신자 인증 (Data Origin Authentication), 그리고 선택적인 재생 공격 방지 (Anti-replay) 기능을 제공하는 헤더다.
 > 2. **가치**: 데이터 암호화 (Confidentiality) 기능은 제공하지 않지만, 가변 필드를 제외한 IP 헤더 전체와 페이로드의 해시값(MAC)을 계산하여 부착함으로써 전송 중 패킷이 위조되거나 변조되지 않았음을 수학적으로 완벽히 보장한다.
 > 3. **융합**: AH는 NAT (Network Address Translation) 환경에서 IP 헤더가 변조되면 인증이 깨지는 치명적인 한계가 있어 현대 네트워크에서는 ESP 단독 사용 또는 ESP+AH 조합으로 대체되는 추세이지만, 내부망이나 IPv6 환경에서는 여전히 강력한 인증 수단으로 작용한다.
 
+> 📝 모범 답안
+
+# 980. AH (Authentication Header)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: AH (Authentication Header)는 IP 패킷의 인증 및 무결성을 보장하기 위해 IETF (Internet Engineering Task Force)에서 정의한 IPSec 보안 프로토콜이다. 패킷의 내용이 전송 중에 변경되지 않았으며, 송신자가 위장되지 않았음을 수신자가 검증할 수 있게 해주는 '디지털 봉인' 역할을 한다.
 - **필요성**: 기존의 평문 IP 기반 통신에서는 공격자가 패킷을 가로채어 출발지 IP 주소를 조작 (IP Spoofing)하거나 데이터 내용을 몰래 변경하더라도 수신자가 이를 알아챌 방법이 없다. 금융 거래나 라우팅 정보 교환 시에는 내용이 암호화되지 않아도 무방하더라도 내용이 조작되지 않았다는 '확실한 증명'이 반드시 필요하다.
@@ -52,7 +54,7 @@ AH 도입 전 IP 스푸핑 공격의 위협과 AH 도입 후의 방어 메커니
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -118,7 +120,7 @@ AH의 송수신 처리 메커니즘은 해시 연산과 카운터 윈도우 검�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: AH (Authentication Header) vs ESP (Encapsulating Security Payload)
 
@@ -168,7 +170,7 @@ IPSec의 양대 산맥인 AH와 ESP는 보호하는 영역과 암호화 제공 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -215,7 +217,7 @@ AH가 제공하는 또 다른 핵심 기능인 '재생 공격(Replay Attack) 방
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

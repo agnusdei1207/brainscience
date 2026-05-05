@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ARP (Address Resolution Protocol) 스푸핑은 가짜 ARP 응답을 주입해 피해자의 ARP 캐시를 오염시키고, 트래픽을 공격자 MAC (Media Access Control) 주소로 우회시키는 L2 (Layer 2) 중간자 공격이다.
+> **핵심**: ARP (Address Resolution Protocol) 스푸핑은 가짜 ARP 응답을 주입해 피해자의 ARP 캐시를 오염시키고, 트래픽을 공격자 MAC (Media Access Control) 주소로 우회시키는 L2 (Layer 2) 중간자 공격이다.
 > 2. **가치**: ARP는 인증이 없는 프로토콜이므로 동일 L2 세그먼트에 접근 가능한 공격자가 네트워크를 무음 도청(Passive Sniffing)하거나 세션을 탈취할 수 있다.
 > 3. **판단 포인트**: Dynamic ARP Inspection (DAI)과 DHCP Snooping 바인딩 테이블의 결합이 실무 핵심 방어책이며, 스태틱 ARP 항목은 소규모 환경의 임시 방편이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ARP (Address Resolution Protocol)는 IP 주소를 MAC 주소로 변환하는 L2 프로토콜로, RFC 826에 정의되어 있다. 설계 당시 보안 개념이 없었기 때문에 수신한 ARP 응답의 신뢰성을 검증하는 메커니즘이 존재하지 않는다. 모든 호스트는 자신이 요청하지 않은 ARP 응답(Gratuitous ARP 또는 unsolicited ARP reply)도 수신하면 캐시에 저장한다.
 
@@ -25,7 +27,7 @@ ARP (Address Resolution Protocol)는 IP 주소를 MAC 주소로 변환하는 L2 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 공격 흐름
 
@@ -75,7 +77,7 @@ ARP (Address Resolution Protocol)는 IP 주소를 MAC 주소로 변환하는 L2 
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 방어 기술 | 원리 | 특징 |
 |:---|:---|:---|
@@ -89,7 +91,7 @@ ARP (Address Resolution Protocol)는 IP 주소를 MAC 주소로 변환하는 L2 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **DAI (Dynamic ARP Inspection) 설정 절차**:
 
@@ -126,7 +128,7 @@ interface GigabitEthernet0/2
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ARP 스푸핑은 기술적으로 단순하지만 내부망 보안에 치명적인 위협이다. DHCP Snooping + DAI 조합을 스위치 인프라에 적용하면 이 공격을 L2에서 원천 차단할 수 있다.
 

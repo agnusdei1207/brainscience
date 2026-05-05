@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: IoT (Internet of Things) 환경의 D2G (Device-to-Gateway) 및 G2S (Gateway-to-Server) 구간에서 DTLS (Datagram Transport Layer Security, 데이터그램 전송 계층 보안) 등 적절한 암호 프로토콜이 적용되었는지 감리한다.
+> **핵심**: IoT (Internet of Things) 환경의 D2G (Device-to-Gateway) 및 G2S (Gateway-to-Server) 구간에서 DTLS (Datagram Transport Layer Security, 데이터그램 전송 계층 보안) 등 적절한 암호 프로토콜이 적용되었는지 감리한다.
 > 2. **가치**: IoT 센서는 컴퓨팅 자원이 제한적(Constrained Device)이므로, TLS (Transport Layer Security) 대신 UDP (User Datagram Protocol) 기반 DTLS (Datagram Transport Layer Security)를 사용하면 오버헤드 없이 기밀성·무결성을 보장할 수 있다.
 > 3. **판단 포인트**: D2G 구간의 DTLS 버전(1.2 이상), 인증서 기반 상호 인증(Mutual Authentication) 여부, G2S 구간의 TLS 적용 여부가 핵심 점검 항목이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 IoT 보안 위협의 특수성
 
@@ -36,7 +37,7 @@ IoT (Internet of Things) 환경은 수백~수천 개의 센서와 게이트웨�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 IoT 구간별 보안 아키텍처
 
@@ -94,7 +95,7 @@ IoT (Internet of Things) 환경은 수백~수천 개의 센서와 게이트웨�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 IoT 보안 프로토콜 비교
 
@@ -116,7 +117,7 @@ IoT (Internet of Things) 환경은 수백~수천 개의 센서와 게이트웨�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 IoT DTLS 감리 체크리스트
 
@@ -156,7 +157,7 @@ IoT (Internet of Things) 환경은 수백~수천 개의 센서와 게이트웨�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 기대효과
 

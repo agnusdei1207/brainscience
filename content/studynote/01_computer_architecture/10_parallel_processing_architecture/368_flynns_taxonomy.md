@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 플린의 분류법 (Flynn's Taxonomy)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 마이클 플린(Michael J. Flynn)이 제안한 컴퓨터 아키텍처 분류 체계로, 시스템이 한 번에 처리하는 '명령어 흐름(Instruction Stream)'과 '데이터 흐름(Data Stream)'의 단일/다중 여부에 따라 컴퓨터 구조를 4가지로 나눈 기준이다.
+> **핵심**: 마이클 플린(Michael J. Flynn)이 제안한 컴퓨터 아키텍처 분류 체계로, 시스템이 한 번에 처리하는 '명령어 흐름(Instruction Stream)'과 '데이터 흐름(Data Stream)'의 단일/다중 여부에 따라 컴퓨터 구조를 4가지로 나눈 기준이다.
 > 2. **가치**: 단순히 하드웨어를 어떻게 설계할 것인지에 그치지 않고, 그 위에서 도는 소프트웨어의 병렬 처리(Parallel Processing) 모델을 결정짓는 가장 거시적인 뼈대를 제공한다.
 > 3. **융합**: 현대의 데스크탑 CPU(SISD 파생), GPU/벡터 가속기(SIMD), 클라우드 기반의 분산 처리 시스템(MIMD) 등 모든 컴퓨팅 인프라의 설계 철학을 관통하는 분류의 원형(Archetype)이다.
 
+> 📝 모범 답안
+
+# 플린의 분류법 (Flynn's Taxonomy)
+
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 플린의 분류법 (Flynn's Taxonomy)은 컴퓨터 구조의 발전 방향을 명확히 정의하기 위해 1966년에 등장한 개념적 틀이다. 
 
@@ -44,7 +46,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 플린의 분류법은 단순히 이름을 붙인 것이 아니라, 하드웨어 내부의 제어 유닛(Control Unit)과 연산 유닛(Processing Unit/ALU)이 어떻게 물리적으로 결합하고 통신하는지를 정의한다.
 
@@ -82,7 +84,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 플린의 4분류는 서로 경쟁하는 것이 아니라, 서로의 약점을 메워주며 현대 컴퓨터 구조 안에서 하이브리드(Hybrid) 형태로 융합되어 사용된다.
 
@@ -118,7 +120,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 현업의 시스템 아키텍트와 소프트웨어 엔지니어는 자신들이 풀고자 하는 도메인의 문제가 SIMD에 적합한지, MIMD에 적합한지를 정확히 판별(Profiling)하여 하드웨어를 선택해야 한다.
 
@@ -157,7 +159,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 플린의 분류법은 발명된 지 반세기가 넘었음에도 하드웨어의 태생적 성격을 규명하는 완벽한 렌즈로 작용하고 있다.
 

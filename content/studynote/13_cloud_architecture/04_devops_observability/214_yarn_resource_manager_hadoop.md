@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: YARN(Yet Another Resource Negotiator)은 하둡 클러스터의 CPU와 메모리를 중앙에서 조율하는 범용 리소스 관리자로, Hadoop 2.x에서 도입되어 MapReduce뿐 아니라 Spark·Flink·Tez 등 다양한 처리 엔진을 동일 클러스터에서 실행 가능하게 한다.
+> **핵심**: YARN(Yet Another Resource Negotiator)은 하둡 클러스터의 CPU와 메모리를 중앙에서 조율하는 범용 리소스 관리자로, Hadoop 2.x에서 도입되어 MapReduce뿐 아니라 Spark·Flink·Tez 등 다양한 처리 엔진을 동일 클러스터에서 실행 가능하게 한다.
 > 2. **가치**: Hadoop 1.x의 JobTracker가 리소스 관리와 작업 스케줄링을 모두 담당하던 병목과 SPOF 문제를 ResourceManager(리소스 관리)와 ApplicationMaster(작업 관리) 분리로 해결하여 클러스터 활용률을 극적으로 높였다.
 > 3. **판단 포인트**: YARN의 핵심 스케줄러 선택(FIFO·Capacity·Fair)이 멀티 테넌트 환경에서 공정성과 자원 효율의 균형을 결정한다. 대부분 실무에서는 팀별 자원 보장이 가능한 Capacity Scheduler를 사용한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Hadoop 1.x의 JobTracker는 클러스터 전체의 리소스 관리와 모든 MapReduce 작업의 스케줄링을 혼자 담당했다. 이 단일 서버가 수만 개의 태스크를 추적하면서 두 가지 문제가 발생했다: **확장성 한계**(4,000 노드 이상에서 병목)와 **SPOF**(JobTracker 다운 = 전체 클러스터 정지).
 
@@ -26,7 +27,7 @@ YARN은 이 두 문제를 동시에 해결했다. 리소스 관리를 처리 엔
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### YARN 아키텍처
 
@@ -81,7 +82,7 @@ YARN은 이 두 문제를 동시에 해결했다. 리소스 관리를 처리 엔
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Hadoop 1.x vs 2.x YARN
 
@@ -106,7 +107,7 @@ YARN은 이 두 문제를 동시에 해결했다. 리소스 관리를 처리 엔
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **Capacity Scheduler 설정 예시**:
 ```xml
@@ -150,7 +151,7 @@ spark-submit \
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 설명 |
 |:---|:---|

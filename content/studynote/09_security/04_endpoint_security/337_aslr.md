@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ASLR(Address Space Layout Randomization)은 프로세스의 스택·힙·라이브러리·실행 파일의 가상 주소를 실행마다 무작위로 배치하여, 공격자가 리턴 주소나 코드 위치를 예측할 수 없게 만드는 메모리 방어 기법이다.
+> **핵심**: ASLR(Address Space Layout Randomization)은 프로세스의 스택·힙·라이브러리·실행 파일의 가상 주소를 실행마다 무작위로 배치하여, 공격자가 리턴 주소나 코드 위치를 예측할 수 없게 만드는 메모리 방어 기법이다.
 > 2. **가치**: ROP·ret2libc·힙 스프레이 등 주소 예측에 의존하는 공격 기법에 대해 공격 성공률을 확률적으로 극적으로 낮추며, NX/DEP와 조합 시 대부분의 메모리 공격을 실용적으로 방어한다.
 > 3. **판단 포인트**: ASLR의 효과는 엔트로피(랜덤화 비트 수)에 비례하며, 64비트 환경에서 최대 효과를 발휘하고 PIE(Position Independent Executable)와 함께 사용해야 실행 파일 코드까지 완전히 랜덤화된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ASLR(Address Space Layout Randomization)은 2001년 PaX 패치로 Linux에 처음 도입되었으며, 이후 Linux 커널 2.6.12(2005), Windows Vista(2007), macOS 10.5 Leopard(2007)에 각각 탑재되어 현재 모든 주요 OS의 기본 보안 기능이 되었다.
 
@@ -25,7 +27,7 @@ ASLR이 활성화되면 스택·힙·라이브러리 기준 주소(Base Address)
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### ASLR 랜덤화 범위 (Linux 64비트 기준)
 
@@ -60,7 +62,7 @@ ASLR의 핵심 원리는 **예측 불가성(Unpredictability)**이다. 공격자
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### ASLR 우회 기법 비교
 
@@ -77,7 +79,7 @@ ASLR은 PIE(Position Independent Executable)와 함께 사용해야 실행 파�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **ASLR 활성화 확인:**
 - Linux: `cat /proc/sys/kernel/randomize_va_space` (2=완전 랜덤화 권고)
@@ -94,7 +96,7 @@ ASLR은 PIE(Position Independent Executable)와 함께 사용해야 실행 파�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ASLR은 64비트 환경에서 주소 예측 공격을 현실적으로 불가능하게 만드는 핵심 방어 기법이다. NX/DEP와 조합하면 쉘코드 직접 실행과 코드 재사용 공격 모두를 동시에 어렵게 만드는 강력한 이중 방어가 완성된다.
 

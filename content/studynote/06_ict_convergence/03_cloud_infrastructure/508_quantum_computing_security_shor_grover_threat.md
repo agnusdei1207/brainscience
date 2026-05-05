@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 쇼어 알고리즘(Shor's Algorithm)은 RSA/ECC 공개키 암호를 다항 시간에 풀어 현재 인터넷 보안의 근간을 위협하고, 그로버 알고리즘(Grover's Algorithm)은 대칭키 강도를 절반으로 낮춘다.
+> **핵심**: 쇼어 알고리즘(Shor's Algorithm)은 RSA/ECC 공개키 암호를 다항 시간에 풀어 현재 인터넷 보안의 근간을 위협하고, 그로버 알고리즘(Grover's Algorithm)은 대칭키 강도를 절반으로 낮춘다.
 > 2. **가치**: NIST PQC(Post-Quantum Cryptography) 표준화가 완료되어 CRYSTALS-Kyber와 Dilithium으로 양자 내성 암호 전환이 시작되었으며, 지금 당장 하베스팅 공격에 대비해야 한다.
 > 3. **판단 포인트**: 현재 양자 컴퓨터(NISQ)는 실용적 위협이 아니지만, "지금 수집하고 나중에 해독(Harvest Now, Decrypt Later)"은 현재 진행 중인 위협이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 양자 컴퓨터는 큐비트(Qubit)와 중첩(Superposition), 얽힘(Entanglement) 원리를 이용하여 특정 문제를 고전 컴퓨터보다 지수적으로 빠르게 풀 수 있다. 이 능력이 현재 암호 체계에 직접적인 위협이 된다.
 
@@ -29,7 +30,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 **알고리즘별 위협 수준**:
 
@@ -65,7 +66,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **하베스팅 공격(Harvest Now, Decrypt Later)**:
 국가 수준 공격자가 현재 암호화된 통신 데이터를 대량 수집·저장하고, 양자 컴퓨터가 실용화되면 소급하여 해독하는 공격 전략. 장기 기밀(군사, 외교, 개인정보)이 특히 취약하다.
@@ -76,7 +77,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **기술사 시험 판단 포인트**:
 1. 쇼어 알고리즘(비대칭키 붕괴)과 그로버 알고리즘(대칭키 약화)의 위협 메커니즘을 명확히 구분한다.
@@ -89,7 +90,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 양자 보안 전환을 선제적으로 추진하면:
 - **장기 데이터 보안**: 하베스팅 공격 무력화

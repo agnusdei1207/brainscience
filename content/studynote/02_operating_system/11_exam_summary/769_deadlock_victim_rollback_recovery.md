@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 교착 상태(Deadlock) 희생자 롤백과 복구망 (Deadlock Recovery & Victim Selection)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 데드락 희생자 롤백 복구 (Deadlock Recovery & Rollback)는 시스템이 꼬리 물기 식의 영원한 멈춤(교착 상태)에 빠졌을 때, 이를 해결하기 위해 **관련된 프로세스 중 가장 만만한 녀석(희생자, Victim)을 골라 강제로 죽이거나 뒤로 후퇴시켜 자원을 뱉어내게 만드는 응급 수술 메커니즘**이다.
+> **핵심**: 데드락 희생자 롤백 복구 (Deadlock Recovery & Rollback)는 시스템이 꼬리 물기 식의 영원한 멈춤(교착 상태)에 빠졌을 때, 이를 해결하기 위해 **관련된 프로세스 중 가장 만만한 녀석(희생자, Victim)을 골라 강제로 죽이거나 뒤로 후퇴시켜 자원을 뱉어내게 만드는 응급 수술 메커니즘**이다.
 > 2. **가치**: 데드락 예방(Prevention)이나 회피(Avoidance)처럼 미리 깐깐하게 검사해서 시스템 성능을 갉아먹는 대신, 일단 자유롭게 놔두다가 사고가 터지면 그때 가서 최소한의 피해로 엉킨 실타래를 끊어내어 **운영체제의 처리량(Throughput)과 생존율을 동시에 확보**한다.
 > 3. **융합**: 운영체제 차원에서는 프로세스 강제 종료(Kill)라는 투박한 방식을 쓰지만, 데이터베이스(DBMS) 트랜잭션 시스템과 융합되면서 피해를 최소화하는 '세이브포인트(Savepoint) 기반 부분 롤백'과 '기아(Starvation) 방지 알고리즘'으로 고도로 정교화되었다.
 
+> 📝 모범 답안
+
+# 교착 상태(Deadlock) 희생자 롤백과 복구망 (Deadlock Recovery & Victim Selection)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - 4가지 데드락 발생 조건(상호 배제, 점유 대기, 비선점, 환형 대기)이 겹쳐 완전히 굳어버린 시스템에서, 탐지기(Detection Algorithm)가 데드락을 발견한 직후 취하는 사후 조치(Recovery)다.
@@ -67,7 +69,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 희생자 선택 알고리즘 (Victim Selection Criteria)
 
@@ -113,7 +115,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 데드락 처리의 4대 사상 (예방 vs 회피 vs 탐지/복구 vs 무시)
 
@@ -135,7 +137,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 운영 안티패턴
 
@@ -182,7 +184,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> 스트리밍 SQL은 "흐르는 강물에 그물(SQL)을 치는 것"이다. 물(데이터)이 흐르는 동안 그물이 지속적으로 물고기(집계 결과)를 잡아준다. 낚싯대(DataStream API)보다 그물(SQL)이 더 쉽고 생산적이다.
+
+> 📝 모범 답안
 
 - **본질**: 스트리밍 SQL (Streaming SQL)은 무한 데이터 스트림에 지속적으로 실행되는 SQL 쿼리로, 표준 SQL에 윈도우 함수·워터마크·스트림-테이블 조인 등 스트리밍 고유 연산이 추가된 형태이며, ksqlDB (Confluent), Flink SQL (Apache Flink), Spark Structured Streaming SQL이 3대 주요 엔진이다.
 - **가치**: 스트리밍 처리를 위해 Java/Python API를 배우지 않아도 SQL 한 줄로 Kafka 스트림 집계·필터·조인을 구현할 수 있어 데이터 엔지니어의 진입 장벽을 낮추고, 선언적 쿼리로 옵티마이저가 실행 계획을 자동 최적화한다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 스트리밍 SQL의 등장 배경
 
@@ -42,11 +45,10 @@ categories = "studynote-bigdata"
 | Spark Structured Streaming | Apache Spark | Spark 클러스터 필요 | 초~분 (마이크로배치) |
 
 **📢 섹션 요약 비유**
-> 스트리밍 SQL은 "흐르는 강물에 그물(SQL)을 치는 것"이다. 물(데이터)이 흐르는 동안 그물이 지속적으로 물고기(집계 결과)를 잡아준다. 낚싯대(DataStream API)보다 그물(SQL)이 더 쉽고 생산적이다.
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. ksqlDB (Confluent)
 
@@ -145,7 +147,7 @@ result.writeStream.format("console").start()
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 1. 스트리밍 SQL의 특수 기능
 
@@ -173,7 +175,7 @@ LEFT JOIN users u ON c.user_id = u.user_id;
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1. 스트리밍 SQL 엔진 선택 가이드
 
@@ -198,7 +200,7 @@ LEFT JOIN users u ON c.user_id = u.user_id;
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 기대효과
 

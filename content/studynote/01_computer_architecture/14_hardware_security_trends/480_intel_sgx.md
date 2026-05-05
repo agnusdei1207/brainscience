@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# Intel SGX (Software Guard Extensions)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Intel SGX (Software Guard Extensions)는 프로세서 내부에 Enclave Page Cache (EPC)를 생성하여, Enclave 내부 데이터가 CPU 내에서만 평문으로 존재하고 RAM으로 나갈 때Hardware적으로AES-128로 암호화되는 메모리 보호 기술이다.
+> **핵심**: Intel SGX (Software Guard Extensions)는 프로세서 내부에 Enclave Page Cache (EPC)를 생성하여, Enclave 내부 데이터가 CPU 내에서만 평문으로 존재하고 RAM으로 나갈 때Hardware적으로AES-128로 암호화되는 메모리 보호 기술이다.
 > 2. **가치**: OS, Hypervisor, BIOS, Administrator, 심지어物理적으로RAM을 탈취하는 공격자까지 경계하는"Zero Trust" 환경에서, обработка данных의保密성을 보장하여 클라우드 환경에서 기밀 컴퓨팅(Confidential Computing)을 실현한다.
 > 3. **융합**: Microsoft Azure Confidential Computing, IBM Cloud Data Shield,蚂蚁금服隐私计算 등이 SGX 기반으로提供되며, 同Computational Integrity와 결합하여 처리 중 데이터(Data-in-use)까지 보호하는 차세대 클라우드 보안 체계를 형성한다.
 
+> 📝 모범 답안
+
+# Intel SGX (Software Guard Extensions)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 문제의식: 클라우드 환경의 신뢰 문제
 
@@ -31,7 +33,7 @@ ARM TrustZone은 시스템 전체를 두World(Normal/Secure)로 나누어, 보�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Enclave Page Cache (EPC)와 Memory Encryption Engine (MEE)
 
@@ -129,7 +131,7 @@ SGX의Encryption Key는 CPU 제조 시内置된 fuse array에 저장된 provisio
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### SGX vs TrustZone vs AMD SEV
 
@@ -149,7 +151,7 @@ SGX, TrustZone, AMD SEV는 각각 다른 격리 모델을 제공한다. SGX는�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -174,7 +176,7 @@ SGX, TrustZone, AMD SEV는 각각 다른 격리 모델을 제공한다. SGX는�
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### SGX 도입 효과
 

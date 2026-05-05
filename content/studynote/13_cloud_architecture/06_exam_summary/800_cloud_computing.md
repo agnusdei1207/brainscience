@@ -7,16 +7,19 @@ date = 2026-03-26
 [taxonomies]
 tags = ["cloud", "cloud-computing", "iaas", "paas", "saas"]
 +++
-+++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 클라우드 컴퓨팅 (Cloud Computing)은 온디맨드 (On-Demand) 방식으로 컴퓨팅 자원 (CPU, Memory, Storage, Network)을 서비스 형태로 제공하여, 사용자가 인프라를 소유하지 않고도 필요 시 언제든지 인프라를 활용할 수 있는 패러다임이다.
+> **핵심**: 클라우드 컴퓨팅 (Cloud Computing)은 온디맨드 (On-Demand) 방식으로 컴퓨팅 자원 (CPU, Memory, Storage, Network)을 서비스 형태로 제공하여, 사용자가 인프라를 소유하지 않고도 필요 시 언제든지 인프라를 활용할 수 있는 패러다임이다.
 > 2. **가치**: 초기 투자 비용 (CapEx, Capital Expenditure)을 운영 비용 (OpEx, Operational Expenditure)으로 전환하고, 물리적 인프라 조달 시간 수 주를 수 분으로 단축하여 비즈니스 민첩성을 비약적으로 향상시킨다.
 > 3. **융합**: 가상화 (Virtualization), 컨테이너 (Container), 서버리스 (Serverless) 기술과 결합하여 DevOps (Development and Operations), CI/CD (Continuous Integration/Continuous Deployment), 하이브리드 클라우드 아키텍처의 기반이 된다.
 
+> 📝 모범 답안
+
++++
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 
@@ -60,7 +63,7 @@ tags = ["cloud", "cloud-computing", "iaas", "paas", "saas"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -122,7 +125,7 @@ tags = ["cloud", "cloud-computing", "iaas", "paas", "saas"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 온프레미스 vs 퍼블릭 클라우드 vs 프라이빗 클라우드
 
@@ -174,7 +177,7 @@ tags = ["cloud", "cloud-computing", "iaas", "paas", "saas"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -200,7 +203,7 @@ tags = ["cloud", "cloud-computing", "iaas", "paas", "saas"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

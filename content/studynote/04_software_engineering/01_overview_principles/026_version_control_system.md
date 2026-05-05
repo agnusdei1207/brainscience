@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: VCS (Version Control System, 버전 관리 시스템)는 소프트웨어의 소스 코드·문서·설정 파일의 변경 이력을 추적하고, 이전 버전으로 되돌리거나 여러 사람의 변경을 병합하는 협업 도구로, SCM (Software Configuration Management)의 핵심 구현체다.
+> **핵심**: VCS (Version Control System, 버전 관리 시스템)는 소프트웨어의 소스 코드·문서·설정 파일의 변경 이력을 추적하고, 이전 버전으로 되돌리거나 여러 사람의 변경을 병합하는 협업 도구로, SCM (Software Configuration Management)의 핵심 구현체다.
 > 2. **가치**: Git이 지배적인 현대 DVCS (Distributed VCS) 시대에서 브랜치 전략(GitFlow, Trunk-Based Development)은 CI/CD 파이프라인과 팀 협업 방식을 결정하는 핵심 아키텍처 결정이다. 단순한 코드 저장소를 넘어 "변경 제안→리뷰→병합→배포"의 전체 소프트웨어 개발 워크플로우를 조직한다.
 > 3. **판단 포인트**: CVCS (Centralized VCS, 중앙집중형)와 DVCS (Distributed VCS, 분산형)의 가장 큰 차이는 "오프라인 작업 가능성"과 "단일 장애점(SPOF) 여부"다. Git의 로컬 전체 이력 복제는 서버 장애 시에도 개발을 계속하고 빠른 복구를 가능하게 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌────────────────────────────────────────────────────────────┐
@@ -34,7 +36,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Git 기본 아키텍처 (3 트리)
 
@@ -64,7 +66,7 @@ main ─── commit ─── commit ─── commit ─── (Feature Flag)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | SVN (CVCS) | Git (DVCS) |
 |:---|:---|:---|
@@ -77,7 +79,7 @@ main ─── commit ─── commit ─── commit ─── (Feature Flag)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Git 핵심 명령어 워크플로우
 
@@ -104,7 +106,7 @@ git branch -d feature/user-auth
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

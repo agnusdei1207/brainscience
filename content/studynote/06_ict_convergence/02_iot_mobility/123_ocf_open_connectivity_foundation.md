@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: OCF는 **이기종 IoT 디바이스 간 상호운용성(Interoperability)을 보장**하는 개방형 표준으로, 제조사·프로토콜에 관계없이 디바이스가 **자동 발견(Discovery)·통신·보안 연결**될 수 있도록 한다.
+> **핵심**: OCF는 **이기종 IoT 디바이스 간 상호운용성(Interoperability)을 보장**하는 개방형 표준으로, 제조사·프로토콜에 관계없이 디바이스가 **자동 발견(Discovery)·통신·보안 연결**될 수 있도록 한다.
 > 2. **가치**: IoT 디바이스가 제조사마다 독자 프로토콜을 사용하면 "삼성 냉장고↔LG 에어컨" 연동이 불가능하지만, OCF 표준을 따르면 **브랜드 무관하게 자동 연동**된다.
 > 3. **판단 포인트**: OCF는 **IoTivity(오픈소스 구현체)**를 제공하며, Matter(2022)와 함께 **스마트 홈 상호운용성 표준 생태계**를 형성한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -33,7 +35,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### OCF vs Matter
 
@@ -48,7 +50,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | OCF | oneM2M | Matter |
 |:---|:---|:---|:---|
@@ -57,7 +59,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### IoTivity
 - Linux Foundation 오픈소스 프로젝트.
@@ -66,7 +68,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 OCF는 **이기종 IoT 상호운용성의 기술 표준**이며, Matter와 함께 스마트 홈·산업 IoT의 표준 생태계를 형성하고 있다.
 

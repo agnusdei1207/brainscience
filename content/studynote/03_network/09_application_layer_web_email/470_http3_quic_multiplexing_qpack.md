@@ -7,15 +7,17 @@ date = 2026-04-03
 tags = ["HTTP/3", "QUIC", "Multiplexing", "네트워크", "QPACK"]
 categories = ["Network"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: HTTP/3는 30년간 웹의 기반이었던 TCP를 버리고, UDP 상에 구축된 **QUIC (Quick UDP Internet Connections) 프로토콜**을 전송 계층으로 채택하여 설계된 차세대 Hypertext Transfer Protocol이다.
+> **핵심**: HTTP/3는 30년간 웹의 기반이었던 TCP를 버리고, UDP 상에 구축된 **QUIC (Quick UDP Internet Connections) 프로토콜**을 전송 계층으로 채택하여 설계된 차세대 Hypertext Transfer Protocol이다.
 > 2. **가치**: TCP 레벨의 헤드 오브 라인 블로킹 (HOL Blocking)을 완벽히 제거하고, TLS 1.3을 내장하여 연결 설정 지연을 0-RTT~1-RTT로 단축함으로써, 모바일 네트워크 전환이나 패킷 손실률이 높은 열악한 환경에서도 극강의 로딩 속도를 보장한다.
 > 3. **융합**: 헤더 압축을 위해 HTTP/2의 HPACK 대신 스트림 독립성을 보장하는 **QPACK**을 도입하였으며, IP 주소가 변경되어도 연결을 유지하는 Connection ID 메커니즘을 통해 클라우드 및 5G 모바일 환경의 연속성을 극대화했다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: HTTP/3 (HyperText Transfer Protocol version 3)는 IETF에서 승인된 3번째 메이저 HTTP 버전으로, TCP 대신 UDP 기반의 범용 전송 프로토콜인 QUIC을 사용하여 애플리케이션 계층 데이터(HTTP 시맨틱스)를 교환하는 규약이다.
 
@@ -59,7 +61,7 @@ categories = ["Network"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -119,7 +121,7 @@ QUIC은 연결을 식별하기 위해 IP 주소가 아닌 64비트의 **Connecti
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: QPACK vs HPACK (헤더 압축의 진화)
 
@@ -141,7 +143,7 @@ HTTP/2의 **HPACK**은 동적 테이블(Dynamic Table)을 사용하여 이전에
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -189,7 +191,7 @@ HTTP/2의 **HPACK**은 동적 테이블(Dynamic Table)을 사용하여 이전에
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

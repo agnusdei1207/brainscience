@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 스레드 스케줄링 (Thread Scheduling) - PCS vs SCS
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 스레드 스케줄링은 다중 스레드 환경에서 '누가 스레드를 CPU에 올릴 것인가'에 대한 결정권의 주체를 다루며, 유저 레벨 라이브러리가 결정하는 **PCS (Process-Contention Scope)**와 OS 커널이 직접 결정하는 **SCS (System-Contention Scope)**로 나뉜다.
+> **핵심**: 스레드 스케줄링은 다중 스레드 환경에서 '누가 스레드를 CPU에 올릴 것인가'에 대한 결정권의 주체를 다루며, 유저 레벨 라이브러리가 결정하는 **PCS (Process-Contention Scope)**와 OS 커널이 직접 결정하는 **SCS (System-Contention Scope)**로 나뉜다.
 > 2. **가치**: PCS는 커널 개입(Context Switch)이 없어 극도로 가볍고 빠르지만 블로킹(Blocking) 시 프로세스 전체가 멈추는 한계가 있으며, SCS는 무겁지만 진정한 병렬성(Parallelism)과 커널 보호를 달성하는 현대 OS의 표준 모델이다.
 > 3. **융합**: 이 두 모델의 투쟁은 단순히 스케줄링 알고리즘의 차이를 넘어, 사용자 공간(User Space)과 커널 공간(Kernel Space) 간의 자원 제어권(Control)을 둘러싼 거대한 아키텍처 진화(예: Green Threads, Goroutines)의 뼈대가 되었다.
 
+> 📝 모범 답안
+
+# 스레드 스케줄링 (Thread Scheduling) - PCS vs SCS
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 스레드는 프로세스 내의 실행 흐름이다. 시스템에 수천 개의 스레드가 존재할 때 이들을 레디 큐(Ready Queue)에 세우고 우선순위를 매기는 경쟁 범위(Contention Scope)가 프로세스 '내부'에 국한되느냐(PCS), 시스템 '전체' 스레드와 경쟁하느냐(SCS)를 구분하는 스케줄링 모델이다.
 - **필요성**: 과거 싱글 코어 시절에는 운영체제 커널이 스레드라는 존재 자체를 모른 채(User-level Thread) 오직 프로세스만 스케줄링했다. 멀티 코어가 대중화되면서, 하나의 프로세스 안에 있는 수십 개의 스레드를 여러 물리 코어에 찢어서 뿌려주는 진정한 병렬 처리가 필요해졌고, 이를 위해 커널이 스레드의 존재를 인지하고 통제권을 뺏어오는 아키텍처적 전환(SCS 도입)이 필수 불가결해졌다.
@@ -46,7 +48,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 1. PCS (Process-Contention Scope) 스케줄링
 - **주체**: 유저 스페이스(User Space)에서 동작하는 '스레드 라이브러리 (예: pthread, Go 런타임)'가 전권을 쥔다.
@@ -80,7 +82,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### PCS vs SCS 극단적 패러다임 비교
 
@@ -101,7 +103,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **리눅스 Pthread 스케줄링 범위 (Scope) 확인**: 실무에서 C/C++로 다중 스레드 서버를 개발할 때, 리눅스 NPTL(Native POSIX Thread Library)은 스레드 스케줄링 범위가 기본적으로 100% SCS(`PTHREAD_SCOPE_SYSTEM`)로 고정되어 있다. 개발자가 억지로 `pthread_attr_setscope` 함수를 써서 PCS를 쓰려 해도 리눅스 커널은 이를 무시한다. 즉, 현대 백엔드 개발자(C/C++/Java)가 띄우는 모든 스레드는 OS가 멱살을 잡고 통제하는 무거운 커널 자원임을 뼛속 깊이 인지하고 스레드 풀(Thread Pool) 튜닝을 해야 한다.
@@ -132,7 +134,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 PCS와 SCS의 차이를 명확히 이해하면, 개발자는 `Thread.sleep()`이나 `File.read()` 같은 블로킹(Blocking) 코드가 시스템의 어떤 계층(유저/커널)에서 얼마나 파괴적인 나비효과를 가져오는지 예측할 수 있으며, 시스템의 메모리와 디스패치 한계치를 고려한 최적의 스레드 풀(Thread Pool) 크기를 계산해 낼 수 있다.

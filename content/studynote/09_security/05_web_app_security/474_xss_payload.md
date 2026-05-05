@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: XSS (Cross-Site Scripting) 방어는 입력 검증 → 출력 인코딩 → HTTP 보안 헤더(CSP, HTTPOnly, X-Content-Type-Options)로 이어지는 심층 방어(Defense in Depth) 전략이다.
+> **핵심**: XSS (Cross-Site Scripting) 방어는 입력 검증 → 출력 인코딩 → HTTP 보안 헤더(CSP, HTTPOnly, X-Content-Type-Options)로 이어지는 심층 방어(Defense in Depth) 전략이다.
 > 2. **가치**: 단일 계층 방어는 새로운 우회 기법에 취약하므로, 여러 계층이 독립적으로 작동해야 실질적 보호가 가능하다.
 > 3. **판단 포인트**: CSP (Content Security Policy) 정책이 지나치게 느슨하거나 `'unsafe-inline'`을 허용하면 방어 효과가 사실상 무력화된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 XSS 방어를 위한 HTTP (Hypertext Transfer Protocol) 보안 헤더 3종은 각각 독립적인 역할을 수행한다.
 - **CSP**: 실행 가능한 스크립트 출처를 제한
@@ -26,7 +28,7 @@ XSS 방어를 위한 HTTP (Hypertext Transfer Protocol) 보안 헤더 3종은 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 헤더 | 역할 | 예시 값 |
 |:---|:---|:---|
@@ -63,7 +65,7 @@ XSS 방어를 위한 HTTP (Hypertext Transfer Protocol) 보안 헤더 3종은 �
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 방어 기법 | 차단하는 공격 | 한계 |
 |:---|:---|:---|
@@ -76,7 +78,7 @@ XSS 방어를 위한 HTTP (Hypertext Transfer Protocol) 보안 헤더 3종은 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **Nginx 설정 예시**:
 ```
@@ -91,7 +93,7 @@ add_header X-Frame-Options "DENY";
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 세 헤더를 모두 적용하면 알려진 XSS 페이로드의 대부분이 브라우저 수준에서 차단된다. CSP 리포트 기능은 제로데이 시도까지 포착하는 탐지 수단으로도 활용된다.
 

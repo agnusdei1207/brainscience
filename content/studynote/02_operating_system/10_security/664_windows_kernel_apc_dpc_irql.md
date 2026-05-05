@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# Windows 커널 비동기 프로시저 호출 (APC) 및 지연된 프로시저 호출 (DPC)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Windows 운영체제는 하드웨어 인터럽트(ISR)가 시스템을 오래 멈추는 것을 막기 위해, 인터럽트 처리의 긴급한 부분만 ISR에서 끝내고, 덜 긴급한 나머지 작업은 나중에 처리하도록 지연시키는 **DPC (Deferred Procedure Call)**와 스레드 특정 비동기 작업인 **APC (Asynchronous Procedure Call)** 메커니즘을 사용한다. (리눅스의 Top/Bottom Half와 유사)
+> **핵심**: Windows 운영체제는 하드웨어 인터럽트(ISR)가 시스템을 오래 멈추는 것을 막기 위해, 인터럽트 처리의 긴급한 부분만 ISR에서 끝내고, 덜 긴급한 나머지 작업은 나중에 처리하도록 지연시키는 **DPC (Deferred Procedure Call)**와 스레드 특정 비동기 작업인 **APC (Asynchronous Procedure Call)** 메커니즘을 사용한다. (리눅스의 Top/Bottom Half와 유사)
 > 2. **DPC (지연된 호출)**: 하드웨어 인터럽트(IRQL: DIRQL)보다 한 단계 낮은 IRQL(DISPATCH_LEVEL)에서 실행되며, 스레드 문맥이 아니라 '프로세서(CPU 코어)' 자체에 묶여 컨텍스트 스위치를 막고 시스템 전역의 I/O 후처리를 담당한다.
 > 3. **APC (비동기 호출)**: 특정 '스레드(Thread)'의 컨텍스트(IRQL: APC_LEVEL)에서 실행되며, 주로 I/O 비동기 완료 통보(Completion Routine)나 스레드 일시 정지/강제 종료 등 유저 스페이스와 커널 스페이스 간의 스레드 제어 통신에 사용된다.
 
+> 📝 모범 답안
+
+# Windows 커널 비동기 프로시저 호출 (APC) 및 지연된 프로시저 호출 (DPC)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **IRQL (Interrupt Request Level)**: Windows 커널이 CPU의 우선순위를 0(PASSIVE_LEVEL, 일반 스레드)부터 31(HIGH_LEVEL, 치명적 하드웨어)까지 나누어 관리하는 권한 레벨. (우선순위가 높은 작업이 낮은 작업을 선점함)
@@ -41,7 +43,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Windows IRQL (Interrupt Request Level) 스택
 
@@ -82,7 +84,7 @@ DPC가 "CPU 코어"의 숙제라면, APC는 **"특정 스레드(Thread)"**의 �
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 리눅스 vs 윈도우 커널 인터럽트 후처리 비교
 
@@ -104,7 +106,7 @@ DPC가 "CPU 코어"의 숙제라면, APC는 **"특정 스레드(Thread)"**의 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -151,7 +153,7 @@ DPC가 "CPU 코어"의 숙제라면, APC는 **"특정 스레드(Thread)"**의 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

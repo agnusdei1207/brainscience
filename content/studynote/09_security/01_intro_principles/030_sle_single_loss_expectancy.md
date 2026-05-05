@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SLE(Single Loss Expectancy, 단일 손실 기대값)은 보안 사고 한 번 발생 시 예상 손실액이고, ALE(Annual Loss Expectancy, 연간 손실 기대값)은 연간 기대 손실액이다. 정량적 위험 분석의 핵심 계산식이다.
+> **핵심**: SLE(Single Loss Expectancy, 단일 손실 기대값)은 보안 사고 한 번 발생 시 예상 손실액이고, ALE(Annual Loss Expectancy, 연간 손실 기대값)은 연간 기대 손실액이다. 정량적 위험 분석의 핵심 계산식이다.
 > 2. **가치**: ALE = SLE × ARO(Annual Rate of Occurrence, 연간 발생 빈도)로 계산된다. ALE가 보안 통제 비용보다 크면 투자가 정당화된다. 이것이 보안 투자 ROI 계산의 기반이다.
 > 3. **판단 포인트**: SLE = 자산가치(AV, Asset Value) × 노출 인자(EF, Exposure Factor). EF는 0~1 사이 비율로 사고 발생 시 자산의 몇 %가 손실되는지를 나타낸다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 정량적 위험 분석 계산식:
@@ -35,7 +37,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 보안 통제 적용 후 잔여 위험
 
@@ -65,7 +67,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 정량적 분석 | 정성적 분석 |
 |:---|:---|:---|
@@ -78,7 +80,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 사이버 보안 ALE 실제 사례
 
@@ -108,7 +110,7 @@ FAIR = 현대화된 정량적 위험 분석 표준
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

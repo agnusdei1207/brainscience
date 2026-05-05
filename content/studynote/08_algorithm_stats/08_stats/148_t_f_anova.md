@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-algorithm"
 +++
-
-## 핵심 인사이트
+## 0. 핵심 인사이트
 
 > t-검정(t-Test)은 두 집단의 평균 비교에서 모표준편차 σ 미지(未知) 상황을 다루는 핵심 도구이며, F-검정(F-Test)은 두 집단의 분산 비교를, ANOVA(Analysis of Variance, 분산 분석)는 3개 이상 집단의 평균 비교를 하나의 검정으로 처리한다.
 > ANOVA의 F-통계량 = 집단 간 분산 / 집단 내 분산이라는 직관적 비율로, 집단 간 차이가 집단 내 자연 변동보다 크면 귀무 가설을 기각한다 — 신호 대 잡음비(SNR) 개념이다.
 > 이원 분산 분석(Two-Way ANOVA)에서 교호작용(Interaction Effect)의 유무를 먼저 확인하는 것이 올바른 분석 순서다 — 교호작용이 있으면 주효과(Main Effect)만으로는 결과를 해석할 수 없다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. t-검정의 세 가지 유형
+## 1. 개요 및 필요성
 
 **학생 t-분포 (Student t-Distribution)**:
 
@@ -49,7 +50,7 @@ df ≈ (s₁²/n₁ + s₂²/n₂)² / [...]   (Welch-Satterthwaite)
 
 ---
 
-## Ⅱ. F-검정과 등분산 가정
+## 2. 구성요소
 
 **F-검정 (F-Test)**: 두 집단의 분산 비교
 
@@ -78,7 +79,7 @@ H₀: σ₁² = σ₂²   (두 집단의 모분산이 같다)
 
 ---
 
-## Ⅲ. 일원 분산 분석 (One-Way ANOVA)
+## 3. 구조 및 동작 원리
 
 **일원 ANOVA(One-Way ANOVA, Analysis of Variance)**: k개 집단(k ≥ 3)의 평균이 같은지 검정
 
@@ -132,7 +133,7 @@ F = MS_Between / MS_Within
 
 ---
 
-## Ⅳ. 사후 검정 (Post-Hoc Test)
+## 4. 비교 및 트레이드오프
 
 ANOVA에서 H₀ 기각 → "어느 집단 간에 차이가 있는가?" → 사후 검정 필요
 
@@ -153,7 +154,7 @@ ANOVA에서 H₀ 기각 → "어느 집단 간에 차이가 있는가?" → 사�
 
 ---
 
-## Ⅴ. 이원 분산 분석 (Two-Way ANOVA)
+## 5. 실무 적용 및 최적화 기법
 
 **이원 ANOVA(Two-Way ANOVA)**: 두 요인(Factor)의 효과 동시 분석
 

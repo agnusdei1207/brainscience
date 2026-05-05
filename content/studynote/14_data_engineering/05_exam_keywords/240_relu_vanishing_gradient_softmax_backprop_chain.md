@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 시그모이드(Sigmoid) 활성화 함수는 기울기 소실(Vanishing Gradient) 문제를 유발해 깊은 신경망 학습을 어렵게 하며, ReLU(Rectified Linear Unit)가 이를 해결하는 핵심 대안이다.
+> **핵심**: 시그모이드(Sigmoid) 활성화 함수는 기울기 소실(Vanishing Gradient) 문제를 유발해 깊은 신경망 학습을 어렵게 하며, ReLU(Rectified Linear Unit)가 이를 해결하는 핵심 대안이다.
 > 2. **가치**: 역전파(Backpropagation)의 연쇄 법칙(Chain Rule)을 통해 기울기가 전파되므로, 기울기 소실·폭발(Vanishing/Exploding Gradient) 문제는 신경망 깊이와 활성화 함수 선택에 직접적으로 연결된다.
 > 3. **판단 포인트**: 은닉층에는 ReLU/GELU, 출력층에는 회귀→선형(Linear), 이진분류→시그모이드, 다중분류→소프트맥스(Softmax)를 사용하는 조합 원칙을 논술에서 명확히 제시해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 기울기 소실 문제 (Vanishing Gradient Problem)
 
@@ -40,7 +42,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 활성화 함수 비교
 
@@ -82,7 +84,7 @@ Loss L 계산 → ∂L/∂W3 → ∂L/∂W2 → ∂L/∂W1
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### ReLU vs 변형 비교
 
@@ -108,7 +110,7 @@ ReLU의 음수 입력 시 기울기 = 0 → 뉴런이 "죽음(Dead)"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 출력층 활성화 함수 선택 원칙
 
@@ -139,7 +141,7 @@ Softmax(xi) = exp(xi) / Σ exp(xj)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 현대 신경망 설계 원칙 정리
 

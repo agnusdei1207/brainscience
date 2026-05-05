@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: MDS (Microarchitectural Data Sampling)는 CPU 내부 마이크로아키텍처 버퍼(Line Fill Buffer·Load Port·Store Buffer)에 잔류하는 인-플라이트(in-flight) 데이터를 투기적 실행으로 샘플링해 추출하는 취약점 계열이다.
+> **핵심**: MDS (Microarchitectural Data Sampling)는 CPU 내부 마이크로아키텍처 버퍼(Line Fill Buffer·Load Port·Store Buffer)에 잔류하는 인-플라이트(in-flight) 데이터를 투기적 실행으로 샘플링해 추출하는 취약점 계열이다.
 > 2. **가치**: Spectre/Meltdown이 캐시를 통한 공격이라면 MDS는 더 깊은 CPU 내부 버퍼를 공격해 같은 물리 코어에서 실행 중인 다른 스레드·VM의 데이터까지 추출할 수 있어 하이퍼스레딩(HT) 환경이 특히 취약하다.
 > 3. **판단 포인트**: 완화는 마이크로코드 업데이트 + VERW 명령어(버퍼 클리어) + 고위험 환경에서 하이퍼스레딩 비활성화이며, 2019년 이후 출시 Intel CPU는 하드웨어 수준에서 차단됐다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 2019년 5월 공개된 MDS 취약점 계열은 Spectre/Meltdown의 후속타였다. RIDL (Rogue In-Flight Data Load), Fallout, ZombieLoad라는 별칭으로도 알려진 MDS는 CPU 마이크로아키텍처의 내부 버퍼를 공격 표면으로 삼는다.
 
@@ -25,7 +27,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | MDS 변형 | 별칭 | 공격 버퍼 | CVE |
 |:---|:---|:---|:---|
@@ -63,7 +65,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | Spectre/Meltdown | MDS |
 |:---|:---|:---|
@@ -76,7 +78,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **대응 전략**  
 1. Intel 마이크로코드 업데이트 (MDSUM 지원 확인)  
@@ -94,7 +96,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 MDS는 하이퍼스레딩이 클라우드 보안에 근본적 위협이 될 수 있음을 드러낸 취약점이다. Google Cloud·Microsoft Azure 등 주요 클라우드 제공자는 MDS 발표 직후 호스트 서버에 마이크로코드 업데이트를 긴급 적용했다. 신규 CPU 구매 시 MDS 하드웨어 내성(ARCH_CAP_MDS_NO 플래그) 확인이 서버 선택의 기준이 됐다.
 

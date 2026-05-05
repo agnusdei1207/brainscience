@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 퍼블리시/서브스크라이브 (Publish/Subscribe) 패턴은 이벤트 발행자(Publisher)와 구독자(Subscriber) 사이에 브로커(Broker)를 두어 완전한 결합도 제거(Decoupling)를 달성하는 비동기 통신 구조다.
+> **핵심**: 퍼블리시/서브스크라이브 (Publish/Subscribe) 패턴은 이벤트 발행자(Publisher)와 구독자(Subscriber) 사이에 브로커(Broker)를 두어 완전한 결합도 제거(Decoupling)를 달성하는 비동기 통신 구조다.
 > 2. **가치**: Publisher는 누가 구독하는지 모르고, Subscriber는 누가 발행하는지 모른다 — 이 "무지(Ignorance)"가 마이크로서비스 간 독립적 배포와 확장을 가능하게 한다.
 > 3. **판단 포인트**: Observer 패턴과의 결정적 차이는 브로커의 존재다. Observer는 발행자가 구독자를 직접 알고 호출하지만, Pub/Sub은 브로커를 통해 완전히 분리된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 강결합 통신의 문제
 
@@ -59,7 +60,7 @@ Service A (Publisher)
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 이벤트 버스 vs 메시지 브로커 구조 비교
 
@@ -115,7 +116,7 @@ Topic: "order-events"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Pub/Sub vs Observer 패턴 비교
 
@@ -143,7 +144,7 @@ Topic: "order-events"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Spring Boot + Kafka 이벤트 발행/구독 예시
 
@@ -199,7 +200,7 @@ public class NotificationEventHandler {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### Pub/Sub 도입 기대효과
 

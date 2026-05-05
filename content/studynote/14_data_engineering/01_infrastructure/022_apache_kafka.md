@@ -5,19 +5,21 @@ date = "2026-04-02"
 [extra]
 categories = "studynote-data-engineering"
 +++
-
-# 아파치 카프카 (Apache Kafka) - 분산 이벤트 스트리밍 플랫폼
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 현대 데이터 플랫폼에서 실시간 메시지 파이프라인의 심장 역할을 하며, 수백만 건의 이벤트를 초당 수십만 개 수준으로 처리하는 분산형 고성능 로그 스트리밍 시스템인 '아파치 카프카(Apache Kafka)'의 핵심 아키텍처와 Pub/Sub 메세지 큐 원리를 심층 분석합니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# 아파치 카프카 (Apache Kafka) - 분산 이벤트 스트리밍 플랫폼
+
 > 1. **본질**: 아파치 카프카는 수평 확장 가능한 다수의 브로커(Broker) 클러스터 위에 토픽(Topic)이라는 메시지 카테고리를 두어, 발신자(Producer)가 메시지를 쓰면 컨슈머(Consumer)가 원하는 속도로 가져가는 분산형 발행-구독(Pub/Sub) 메시지 큐이자 초고속 로그 스토리지 시스템이다.
 > 2. **가치**: 기존 메시지 큐(RabbitMQ 등)와 달리, 메시지를 메모리에 버퍼링하지 않고 브로커의 로컬 디스크에 순차적으로 기록(Write-Ahead Log)하여 서버가 재시작되어도 데이터가 유실되지 않는 내구성(Durability)과 무한한 메시지 보존을 동시에 제공한다.
 > 3. **융합**: 마이크로서비스 간 비동기 통신, IoT 센서 데이터 수집, 로그 집계, CDC(Change Data Capture) 파이프라인 등 거의 모든 실시간 데이터 흐름의 허브 역할을 하며, 스프링(Spring), 플링크(Flink), 스파크(Spark)와 긴밀히 융합되어 카파(Kappa) 아키텍처의基石를 구성한다.
 
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 1. 기존 메시지 큐의 한계와 카프카의 혁신
 기존 RabbitMQ나 JMS 같은 메시지 브로커는 메시지를 메모리(또는 짧은 디스크 TTL)에 버퍼링했다.
@@ -31,7 +33,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 핵심 아키텍처 및 원리 (Architecture & Mechanism)
+## 2. 구성요소
 
 ### 1. 브로커, 토픽, 파티션 아키텍처
 카프카의 스토리지는 토픽(Topic)이라는 메시지 카테고리로 구성된다. 각 토픽은 하나 이상의 파티션(Partition)으로 나뉘며, 각 파티션은 클러스터 내 여러 브로커에 분산 배치된다.
@@ -77,7 +79,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅲ. 비교 및 기술적 트레이드오프 (Comparison & Trade-offs)
+## 3. 구조 및 동작 원리
 
 ### 메시지 큐 비교 (Kafka vs RabbitMQ vs ActiveMQ)
 
@@ -100,7 +102,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅳ. 실무 판단 기준 (Decision Making)
+## 4. 비교 및 트레이드오프
 
 | 고려 사항 | 세부 내용 | 주요 아키텍처 의사결정 |
 |:---|:---|:---|
@@ -115,7 +117,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅴ. 미래 전망 및 발전 방향 (Future Trend)
+## 5. 실무 적용 및 최적화 기법
 
 1. **카프카와 레이크하우스의 결합**: 카프카를 통해 유입되는 실시간 스트림 데이터를 바로 Iceberg/Delta Lake에 저장하여 배치와 스트리밍을 단일 파이프라인으로 통합하는 카파(Kappa) 아키텍처가 주목받고 있다.
 2. **카프카 기반 스트리밍 SQL**: KSQL(현재 Confluent SQL)과 Flink SQL의 융합으로, 복잡한 스트림 처리 로직을 SQL로 직관적으로 작성하는 것이 업계 표준이 될 것이다.

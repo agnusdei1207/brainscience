@@ -4,11 +4,14 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 위험 경감(Risk Mitigation)은 보안 통제(Security Control)를 적용해 위험의 발생 확률(Likelihood) 또는 영향(Impact)을 허용 가능한 수준으로 낮추는 위험 처리 전략이다.
 > 2. 경감 통제는 예방적(Preventive)·탐지적(Detective)·교정적(Corrective) 세 유형으로 분류되며, 효과적인 보안은 세 유형의 심층 방어(Defense-in-Depth)를 통해 달성한다.
 > 3. 비용-효익 분석(Cost-Benefit Analysis)이 핵심 — 통제 적용 비용이 경감되는 위험의 재정적 기대 손실(ALE, Annualized Loss Expectancy)보다 낮아야 경제적으로 합리적이다.
+
+> 📝 모범 답안
 
 ---
 

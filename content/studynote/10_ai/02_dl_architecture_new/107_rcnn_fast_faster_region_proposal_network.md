@@ -5,15 +5,17 @@ date = "2026-04-10"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 객체 탐지(Object Detection) 영역에서 영역 추정(Region Proposal)과 CNN (Convolutional Neural Network) 분류를 분리하여 수행하는 2-Stage 모델의 발전 과정(R-CNN → Fast R-CNN → Faster R-CNN)이다.
+> **핵심**: 객체 탐지(Object Detection) 영역에서 영역 추정(Region Proposal)과 CNN (Convolutional Neural Network) 분류를 분리하여 수행하는 2-Stage 모델의 발전 과정(R-CNN → Fast R-CNN → Faster R-CNN)이다.
 > 2. **가치**: 후보 영역을 찾는 알고리즘을 외부(Selective Search)에서 내부 신경망인 RPN (Region Proposal Network)으로 통합함으로써, 정확도를 유지한 채 실시간 처리에 근접하는 속도 혁신을 이뤄냈다.
 > 3. **판단 포인트**: 실시간성이 극도로 중요한 자율주행에서는 1-Stage인 YOLO (You Only Look Once)를 선택하지만, 정밀한 의료 영상이나 작은 객체 탐지가 필수인 도메인에서는 여전히 Faster R-CNN 계열을 채택해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 R-CNN (Regions with Convolutional Neural Network features) 계열 모델은 이미지 내에서 물체가 있을 만한 위치를 먼저 찾고, 그 위치에 있는 물체가 무엇인지 분류(Classification)하는 2-Stage 객체 탐지 방식의 표준이다. 
 과거의 객체 탐지는 슬라이딩 윈도우 방식으로 이미지 전체를 훑으며 분석했기 때문에 컴퓨팅 자원 낭비가 극심했다. 이를 해결하기 위해 물체가 있을 법한 후보 영역만 골라내어 분석하는 방식이 도입되었으나, 초기 R-CNN은 2,000개의 후보 영역을 각각 CNN에 통과시켜야 하므로 병목 현상이 심각했다. 이를 해결하기 위해 연산 공유와 신경망 통합이라는 두 번의 핵심적인 혁신을 거쳐 지금의 Faster R-CNN으로 진화하게 되었다.
@@ -22,7 +24,7 @@ R-CNN (Regions with Convolutional Neural Network features) 계열 모델은 이�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 R-CNN 계열의 진화는 "반복되는 CNN 연산을 어떻게 줄일 것인가"와 "병목이 되는 외부 알고리즘을 어떻게 내재화할 것인가"에 초점이 맞춰져 있다.
 
@@ -57,7 +59,7 @@ R-CNN 계열의 진화는 "반복되는 CNN 연산을 어떻게 줄일 것인가
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 2-Stage 계열의 핵심 경쟁자는 1-Stage 탐지기인 YOLO와 SSD (Single Shot MultiBox Detector)다. 두 방식은 정확도와 속도라는 명확한 트레이드오프를 가진다.
 
@@ -74,7 +76,7 @@ Faster R-CNN의 성공 이후, 분할(Segmentation) 작업을 추가한 Mask R-C
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서 객체 탐지 모델을 선정할 때는 지연 시간(Latency)의 한계선과 오탐/미탐의 치명도를 기준으로 판단해야 한다.
 
@@ -89,7 +91,7 @@ Faster R-CNN의 성공 이후, 분할(Segmentation) 작업을 추가한 Mask R-C
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 R-CNN에서 Faster R-CNN으로의 발전은 단순히 속도 향상을 넘어, 객체 탐지의 모든 과정을 딥러닝 하나로 통합했다는 데에 큰 의의가 있다. 이를 통해 개발자는 복잡한 외부 알고리즘 파이프라인을 관리할 필요 없이 모델 튜닝에만 집중할 수 있게 되었다.
 

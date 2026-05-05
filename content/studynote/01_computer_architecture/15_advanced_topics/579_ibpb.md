@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 579. IBPB (Indirect Branch Predictor Barrier)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: IBPB(Indirect Branch Predictor Barrier)는 CPU의 간접 분기 예측기(Indirect Branch Predictor)가 가진 **이전 실행 이력을 강제로 삭제하여 무효화**하는 하드웨어 제어 명령(Barrier)이다.
+> **핵심**: IBPB(Indirect Branch Predictor Barrier)는 CPU의 간접 분기 예측기(Indirect Branch Predictor)가 가진 **이전 실행 이력을 강제로 삭제하여 무효화**하는 하드웨어 제어 명령(Barrier)이다.
 > 2. **가치**: 한 프로세스가 남긴 분기 이력을 다른 프로세스가 이용해 비밀 정보를 훔치는 **'스펙터 v2(Spectre v2)' 공격을 원천 차단**하며, 컨텍스트 스위칭 시 실행 문맥 간의 완벽한 '정보 격리'를 보장한다.
 > 3. **융합**: 운영체제의 스케줄러와 CPU의 마이크로코드 인터페이스(MSR)가 융합되어 작동하며, 성능 지연(Performance Penalty)을 감수하고서라도 데이터 기밀성을 지켜야 하는 클라우드 인프라의 필수 보안 장치다.
 
+> 📝 모범 답안
+
+# 579. IBPB (Indirect Branch Predictor Barrier)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 - **개념**: CPU가 분기문의 목적지를 예측하기 위해 사용하는 내부 장부인 **BTB(Branch Target Buffer)**를 깨끗이 청소하는 '하드웨어 리셋' 명령이다.
 - **필요성**: 현대 CPU는 성능 향상을 위해 이전에 어디로 점프했는지 기억해두었다가 다음에 똑같이 행동한다. 하지만 해커는 이 '기억력'을 역이용한다. 해커가 일부러 이상한 곳으로 점프하는 습관을 CPU에게 가르쳐놓으면(BTB Poisoning), 나중에 중요한 정보를 다루는 다른 프로세스가 실행될 때 CPU가 해커의 습관을 따라 투기적으로 실행하게 된다. IBPB는 이 **'나쁜 습관(오염된 이력)'**이 전이되지 않게 막기 위해 필요하다.
@@ -46,7 +48,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. MSR (Model Specific Register) 제어
 - IBPB는 일반적인 연산 명령어가 아니다. 운영체제가 CPU의 특수 레지스터인 MSR(특히 `IA32_PRED_CMD`)에 특정 값을 써넣음으로써 하드웨어에게 직접 명령을 내린다.
@@ -63,7 +65,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### IBPB vs STIBP vs IBRS (스펙터 방어 3총사)
 
@@ -80,7 +82,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -100,7 +102,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **Spectre v2 공격 원천 봉쇄**: 주소 주입을 통한 데이터 유출 가능성을 이론적/물리적으로 0에 가깝게 수렴시킨다.

@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: HDFS ViewFS (View File System)는 HDFS 연합(Federation) 환경에서 여러 독립 NameNode 클러스터를 단일 논리 네임스페이스 `/user`, `/data`, `/tmp` 등으로 마운트하여 통합 파일 시스템 뷰를 제공하는 클라이언트 측 가상 마운트 레이어다.
+> **핵심**: HDFS ViewFS (View File System)는 HDFS 연합(Federation) 환경에서 여러 독립 NameNode 클러스터를 단일 논리 네임스페이스 `/user`, `/data`, `/tmp` 등으로 마운트하여 통합 파일 시스템 뷰를 제공하는 클라이언트 측 가상 마운트 레이어다.
 > 2. **가치**: HDFS Federation은 단일 NameNode의 메모리 한계(수억 개 파일 = ~GB 메모리)를 해결하기 위해 네임스페이스를 수평 분할한다. ViewFS는 이 분산된 네임스페이스를 사용자·애플리케이션 입장에서 단일 경로처럼 접근 가능하게 추상화하여 기존 HDFS 코드 변경 없이 사용할 수 있다.
 > 3. **판단 포인트**: ViewFS는 클라이언트 측 추상화이므로 마운트 포인트 설정이 각 클라이언트에 일치해야 하고, 크로스 마운트 포인트 파일 이동(rename)이 불가능하다는 한계가 있다. 이 한계를 극복하기 위해 HDFS Federation + ViewFS + RBF(Router Based Federation)로 발전했다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -35,7 +37,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### ViewFS 설정 (core-site.xml)
 
@@ -67,7 +69,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 단일 NameNode | HDFS Federation | ViewFS |
 |:---|:---|:---|:---|
@@ -79,7 +81,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 대규모 Hadoop 클러스터 설계
 - 파일 수 > 1억 개: 단일 NameNode JVM 힙 ~60GB 초과 → Federation 분리 시점.
@@ -93,7 +95,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

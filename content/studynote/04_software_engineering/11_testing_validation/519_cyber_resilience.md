@@ -6,15 +6,17 @@ description = "공격을 견디고 복구하며 계속 서비스를 유지하는
 taxonomy = ""
 tags = ["Software Engineering", "Security", "Cyber Resilience", "Recovery", "Architecture"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Cyber Resilience는 공격을 막는 것뿐 아니라 버티고 복구하는 능력이다.
+> **핵심**: Cyber Resilience는 공격을 막는 것뿐 아니라 버티고 복구하는 능력이다.
 > 2. **가치**: 침해 이후에도 서비스 연속성을 유지한다.
 > 3. **판단 포인트**: 예방, 탐지, 대응, 복구를 한 흐름으로 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 완벽한 방어는 없다. 그래서 공격을 받더라도 빠르게 회복할 수 있어야 한다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Security", "Cyber Resilience", "Recovery", "Arc
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 사이버 레질리언스는 예방, 탐지, 대응, 복구, 적응의 단계로 본다.
 
@@ -42,7 +44,7 @@ tags = ["Software Engineering", "Security", "Cyber Resilience", "Recovery", "Arc
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 보안은 사고를 막는 데서 끝나지 않고, 사고 후 운영까지 봐야 한다.
 
@@ -58,7 +60,7 @@ BCP (Business Continuity Planning), DR (Disaster Recovery)와도 연결된다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 백업, 복구 훈련, 장애 대응, 복원력 테스트가 중요하다.
 
@@ -71,7 +73,7 @@ BCP (Business Continuity Planning), DR (Disaster Recovery)와도 연결된다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 레질리언스는 사고를 없애는 게 아니라 피해를 작게 만든다.
 

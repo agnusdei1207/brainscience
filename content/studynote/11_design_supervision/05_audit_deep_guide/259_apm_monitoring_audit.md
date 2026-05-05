@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: APM(Application Performance Management, 애플리케이션 성능 관리)은 트랜잭션 단위로 응답 시간, 오류, 리소스 사용을 추적하여 문제 원인을 코드 레벨까지 특정하는 도구다.
+> **핵심**: APM(Application Performance Management, 애플리케이션 성능 관리)은 트랜잭션 단위로 응답 시간, 오류, 리소스 사용을 추적하여 문제 원인을 코드 레벨까지 특정하는 도구다.
 > 2. **가치**: 장애 발생 시 "어느 메서드에서 얼마나 걸렸는지"를 초 단위로 추적할 수 있어 MTTR(Mean Time To Repair, 평균 복구 시간)을 획기적으로 단축한다.
 > 3. **판단 포인트**: APM 도입만이 아니라 슬로우 쿼리(Slow Query) 임계값, 힙 덤프(Heap Dump) 자동 수집, 알림(Alert) 기준이 설정되어 운영 중인지 확인한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 APM(Application Performance Management)은 애플리케이션의 성능을 실시간으로 모니터링하고 병목·오류를 자동으로 탐지하는 솔루션이다. 단순 서버 지표(CPU, 메모리) 모니터링을 넘어 트랜잭션 추적(Transaction Tracing), 코드 레벨 프로파일링(Profiling), DB 슬로우 쿼리 자동 포착 기능을 제공한다.
 
@@ -40,7 +41,7 @@ APM(Application Performance Management)은 애플리케이션의 성능을 실�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. APM 트랜잭션 추적 구조
 
@@ -120,7 +121,7 @@ APM(Application Performance Management)은 애플리케이션의 성능을 실�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. 모니터링 도구 계층 비교
 
@@ -147,7 +148,7 @@ APM(Application Performance Management)은 애플리케이션의 성능을 실�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. APM 감리 체크리스트
 
@@ -178,7 +179,7 @@ APM(Application Performance Management)은 애플리케이션의 성능을 실�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 APM 도입과 올바른 설정을 통해 MTTR(평균 복구 시간)을 수 시간에서 수 분으로 단축하고, 슬로우 쿼리·메모리 누수를 운영 장애로 확대되기 전에 선제적으로 탐지할 수 있다. 공공정보화 사업에서 APM 없이 운영하는 것은 블랙박스 없는 항공기 운항과 같다. 감리인은 APM 도입만이 아니라 임계값 설정, 알림 체계, 운영팀 활용 역량까지 종합적으로 검증해야 한다.
 

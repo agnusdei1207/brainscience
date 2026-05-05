@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. Re-factor(재구성)와 Re-architect(재설계)는 클라우드 마이그레이션 6R 전략의 가장 높은 가치를 창출하는 단계로 — Re-factor는 애플리케이션 코드를 PaaS/서버리스에 최적화하고, Re-architect는 모놀리스를 MSA(Microservices Architecture)로 근본적으로 재설계한다.
 > 2. MSA 전환의 핵심 원칙은 도메인 주도 설계(DDD)의 바운디드 컨텍스트(Bounded Context)를 서비스 경계로 삼는 것으로 — 각 마이크로서비스는 독립적으로 배포·확장·장애 격리가 가능해야 하며, "두 피자 팀(Two-Pizza Team)"이 소유·운영할 수 있는 크기가 적절하다.
 > 3. MSA 전환은 Strangler Fig Pattern(교살 무화과 패턴)으로 점진적으로 진행하는 것이 권장되며 — 모놀리스를 즉시 전부 전환하는 "Big Bang" 방식은 서비스 중단 리스크와 복잡성으로 인해 대부분 실패한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 클라우드 마이그레이션 6R
+## 1. 개요 및 필요성
 
 ```
 6R 마이그레이션 전략:
@@ -61,7 +64,7 @@ Re-factor vs Re-architect:
 
 ---
 
-## Ⅱ. MSA 설계 원칙
+## 2. 구성요소
 
 ```
 MSA (Microservices Architecture) 원칙:
@@ -116,7 +119,7 @@ Two-Pizza Team:
 
 ---
 
-## Ⅲ. Strangler Fig Pattern
+## 3. 구조 및 동작 원리
 
 ```
 Strangler Fig Pattern (교살 무화과 패턴):
@@ -164,7 +167,7 @@ Strangler 장점:
 
 ---
 
-## Ⅳ. 클라우드 네이티브 패턴
+## 4. 비교 및 트레이드오프
 
 ```
 클라우드 네이티브 패턴:
@@ -214,7 +217,7 @@ Strangler 장점:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 이커머스 MSA 전환
+## 5. 실무 적용 및 최적화 기법
 
 ```
 대형 이커머스 모놀리스 → MSA 전환:

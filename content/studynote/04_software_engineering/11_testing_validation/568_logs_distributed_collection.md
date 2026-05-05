@@ -6,15 +6,17 @@ description = "애플리케이션과 인프라 로그를 중앙 수집해 분석
 taxonomy = ""
 tags = ["Software Engineering", "Observability", "Logs", "ELK", "Fluentd"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 로그는 사건의 텍스트 기록이다.
+> **핵심**: 로그는 사건의 텍스트 기록이다.
 > 2. **가치**: 장애 순간의 맥락과 디버깅 정보를 제공한다.
 > 3. **판단 포인트**: 구조화, 보존, 검색성을 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 로그는 시스템이 무슨 일을 했는지 남긴다. 분산 환경에서는 이 로그를 중앙에 모아야 사건을 연결할 수 있다.
 
@@ -22,7 +24,7 @@ tags = ["Software Engineering", "Observability", "Logs", "ELK", "Fluentd"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 로그 수집기는 Fluentd나 Logstash로 흔히 구성하고, 검색과 시각화는 Elasticsearch와 Kibana를 쓴다.
 
@@ -40,7 +42,7 @@ App Logs -> Collector -> Elasticsearch -> Kibana
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 로그는 메트릭보다 상세하지만 비용이 더 높다. 추적과 결합하면 사건 맥락을 더 잘 본다.
 
@@ -54,7 +56,7 @@ App Logs -> Collector -> Elasticsearch -> Kibana
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 구조화 로그(JSON), 상관관계 ID, 보존 정책을 정한다.
 
@@ -67,7 +69,7 @@ App Logs -> Collector -> Elasticsearch -> Kibana
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 로그는 문제 상황의 맥락을 복원하는 핵심 자료다.
 

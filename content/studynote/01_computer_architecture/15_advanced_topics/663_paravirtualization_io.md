@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 663. 입출력 반가상화 (I/O Paravirtualization)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 입출력 반가상화(I/O Paravirtualization)는 게스트 OS가 가상화 환경임을 인지하고, 하이퍼바이저와 **협력적인 통신 채널(Hypercall, Shared Memory)**을 통해 데이터를 주고받는 고효율 I/O 전송 방식이다.
+> **핵심**: 입출력 반가상화(I/O Paravirtualization)는 게스트 OS가 가상화 환경임을 인지하고, 하이퍼바이저와 **협력적인 통신 채널(Hypercall, Shared Memory)**을 통해 데이터를 주고받는 고효율 I/O 전송 방식이다.
 > 2. **가치**: 실제 하드웨어를 일일이 흉내 내는 에뮬레이션(Full Virtualization)의 트랩-앤-에뮬레이트 오버헤드를 제거하여, 네트워크와 디스크 처리량을 네이티브 장치 수준으로 끌어올린다.
 > 3. **융합**: 프론트엔드/백엔드(Front-end/Back-end) 드라이버 모델과 공유 메모리 기반의 링 버퍼(Ring Buffer) 구조를 사용하여 인터럽트 지연을 최소화하고 멀티코어 확장성을 보장한다.
 
+> 📝 모범 답안
+
+# 663. 입출력 반가상화 (I/O Paravirtualization)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 전가상화 I/O의 한계: "너무 잦은 노크"
 - **문제점**: 전가상화(Full Virtualization)에서는 게스트 OS가 실제 하드웨어(예: 구형 Realtek 랜카드)를 직접 건드린다고 믿는다. 게스트가 레지스터 하나를 건드릴 때마다 CPU 트랩이 발생하여 하이퍼바이저로 제어권이 넘어간다(VM-Exit).
@@ -56,7 +58,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 프론트엔드(Front-end)와 백엔드(Back-end) 모델
 - **Front-end**: 게스트 OS 커널 내부에 위치하는 드라이버. 표준 장치 인터페이스를 제공하면서 내부적으로는 하이퍼바이저와의 통신을 담당한다.
@@ -78,7 +80,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 전가상화 I/O vs 반가상화 I/O vs Direct Pass-through
 
@@ -98,7 +100,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -120,7 +122,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **네트워크 처리량**: 에뮬레이션(100Mbps 미만) -> 반가상화(10Gbps 이상 가능).

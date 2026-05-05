@@ -5,17 +5,19 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 인터럽트 메커니즘 (Interrupt Mechanism)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 인터럽트 (Interrupt) 메커니즘은 CPU (Central Processing Unit)가 현재 실행 중인 프로그램을 일시 중단하고, 외부에 발생한 비동기적 사건이나 예외 상황을 우선적으로 처리하기 위해 제어권을 운영체제 (OS, Operating System) 커널로 넘기는 하드웨어 기반의 신호 체계이다.
+> **핵심**: 인터럽트 (Interrupt) 메커니즘은 CPU (Central Processing Unit)가 현재 실행 중인 프로그램을 일시 중단하고, 외부에 발생한 비동기적 사건이나 예외 상황을 우선적으로 처리하기 위해 제어권을 운영체제 (OS, Operating System) 커널로 넘기는 하드웨어 기반의 신호 체계이다.
 > 2. **가치**: 폴링 (Polling) 방식의 자원 낭비를 제거하여 CPU 이용률을 극대화하며, 실시간 응답성 확보 및 다중 프로그래밍 (Multi-programming) 환경에서 입출력 장치와 연산 장치의 병렬 동작을 가능케 하는 현대 컴퓨팅의 근간이다.
 > 3. **융합**: 하드웨어적인 인터럽트 요청 (IRQ, Interrupt Request) 라인부터 소프트웨어적인 시스템 콜 (System Call) 처리까지 통합적으로 관리되며, 마이크로커널 아키텍처나 실시간 운영체제 (RTOS, Real-Time Operating System)의 성능 레이턴시 (Latency)를 결정짓는 핵심 지표로 작용한다.
 
+> 📝 모범 답안
+
+# 인터럽트 메커니즘 (Interrupt Mechanism)
+
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 - **개념**: 인터럽트 (Interrupt) 메커니즘은 컴퓨터 시스템 내부 또는 외부에서 발생하는 특정 이벤트에 반응하여, 현재 수행 중인 프로세스의 명령 흐름을 강제로 멈추고 미리 정의된 서비스 루틴으로 분기하는 제어 전달 체계다. 이는 CPU가 입출력 장치의 완료를 무작정 기다리는 비효율을 방지하고, 사건 중심 (Event-driven)의 효율적인 자원 스케줄링을 가능하게 한다.
 
@@ -53,7 +55,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 - **인터럽트 처리 구성 요소**:
 
@@ -98,7 +100,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 - **인터럽트 vs 트랩 vs 폴링 비교**:
 
@@ -136,7 +138,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 - **실무 시나리오 및 최적화 전략**:
   1. **인터럽트 레이턴시 (Latency) 최소화**: 실시간 제어 시스템에서 인터럽트 발생부터 ISR 실행까지의 지연 시간은 시스템 안정성을 결정한다. 이를 위해 ISR 내부 코드를 최소화하고, 무거운 작업은 하위 절반 (Bottom Half) 또는 지연 처리 (Deferred Procedure Call)로 넘기는 전략이 필수적이다.
@@ -173,7 +175,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 - **기대효과**: 인터럽트 메커니즘의 도입으로 시스템은 진정한 의미의 병렬성 (Concurrency)을 확보하게 되었다. CPU는 연산에 집중하고 I/O 장치는 전송에 집중하며, 사건 발생 시에만 짧은 교류를 가짐으로써 전체 ROI (Return on Investment)를 극대화한다. 또한 실시간 이벤트 대응이 가능해져 미사일 제어, 의료 기기, 자동차 ECU (Electronic Control Unit) 등 신뢰성이 중요한 분야의 토대를 형성한다.
 
@@ -193,7 +195,6 @@ categories = "studynote-operating-system"
 | **재진입성 (Reentrancy)** | ISR 실행 중 또 다른 인터럽트가 발생해도 데이터가 오염되지 않도록 보장하는 코드 특성. |
 
 ---
-
 
 ### 📈 관련 키워드 및 발전 흐름도
 

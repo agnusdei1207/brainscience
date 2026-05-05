@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 지니 불순도(Gini Impurity)와 엔트로피(Entropy) 기반 정보 획득량(Information Gain)은 결정 트리(Decision Tree)가 어느 특성(Feature)으로 데이터를 분할할 때 가장 순수한(Pure) 그룹이 만들어지는지를 측정하는 분할 기준이다.
+> **핵심**: 지니 불순도(Gini Impurity)와 엔트로피(Entropy) 기반 정보 획득량(Information Gain)은 결정 트리(Decision Tree)가 어느 특성(Feature)으로 데이터를 분할할 때 가장 순수한(Pure) 그룹이 만들어지는지를 측정하는 분할 기준이다.
 > 2. **가치**: Gini는 계산이 빠르고(CART 알고리즘 사용), Entropy 기반 정보 획득량은 이론적으로 정교하나(ID3/C4.5 사용) 계산이 느리다. 실무에서 scikit-learn 기본은 Gini다.
 > 3. **판단 포인트**: 순수 노드(한 클래스만)에서 Gini=0, Entropy=0이 되고, 완전 불순 노드(균등 분포)에서 Gini=1-1/K, Entropy=log₂K가 최대가 된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 결정 트리는 데이터를 이진(Binary) 질문으로 반복 분할하여 분류한다. "나이 < 30인가? → 예/아니오"처럼 분할할 때 어떤 기준으로 가장 좋은 질문을 고르는가가 핵심이다. 무작위로 고르면 트리가 깊어지고 과적합(Overfitting)이 발생한다. 분할 후 각 그룹이 얼마나 순수한지(한 클래스만 모였는지)를 측정하는 지표가 지니 불순도와 엔트로피다.
 
@@ -21,7 +23,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -55,7 +57,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 정보 획득량(IG)의 단점은 다값 특성(많은 카테고리 값)에 편향(Bias)된다는 것이다. 고유 ID 같은 특성은 IG가 최대가 되지만 실제로는 쓸모없다. C4.5가 획득 비율(Gain Ratio, GR) = IG/H(A)로 이를 보정했다. CART(Classification And Regression Tree)는 Gini를 사용하고 이진 분할만 지원하며, scikit-learn의 DecisionTreeClassifier 기본 기준이다. 랜덤 포레스트(Random Forest)는 여러 결정 트리의 Gini 불순도 감소량을 합산하여 변수 중요도(Feature Importance)를 계산한다.
 
@@ -63,7 +65,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 결정 트리 과적합 방지를 위한 사전 가지치기(Pre-pruning): max_depth, min_samples_split, min_samples_leaf 등 파라미터 제한. 사후 가지치기(Post-pruning): 비용-복잡도 가지치기(CCP, Cost-Complexity Pruning) α 파라미터로 트리를 단순화. 불균형 데이터에서 Gini는 다수 클래스 편향이 심해지므로 class_weight='balanced' 옵션과 함께 사용한다. 회귀 트리(Regression Tree)에서는 MSE(Mean Squared Error) 감소량을 분할 기준으로 사용한다.
 
@@ -71,7 +73,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 지니 불순도와 정보 획득량은 결정 트리 계열 모델(의사결정나무, 랜덤 포레스트, 그래디언트 부스팅)의 핵심 수학 도구다. 수식을 암기할 뿐 아니라, "왜 순수 노드에서 0이 되는가?"를 직관적으로 이해하면 기술사 답안에서 차별화된다. Gini = CART = 실무 기본, Entropy = ID3/C4.5 = 이론적 정교함이라는 매핑도 중요하다.
 

@@ -6,15 +6,17 @@ description = "입력값을 검증하고 안전한 표현으로 다루는 보안
 taxonomy = ""
 tags = ["Software Engineering", "Security", "Input Validation", "Encoding", "OWASP"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Input Validation은 입력을 신뢰하지 않는다는 원칙이다.
+> **핵심**: Input Validation은 입력을 신뢰하지 않는다는 원칙이다.
 > 2. **가치**: 인젝션과 데이터 오염을 크게 줄인다.
 > 3. **판단 포인트**: 길이, 형식, 범위, 인코딩을 함께 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 입력은 어디서나 공격의 출발점이 될 수 있다. 그래서 검증은 가장 기본적인 방어다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Security", "Input Validation", "Encoding", "OWA
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 검증은 허용 목록, 정규식, 길이 제한, 범위 제한 등으로 이뤄진다.
 
@@ -43,7 +45,7 @@ tags = ["Software Engineering", "Security", "Input Validation", "Encoding", "OWA
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 검증과 표현은 함께 봐야 한다. 검증만 하고 출력 인코딩을 안 하면 여전히 문제가 생긴다.
 
@@ -59,7 +61,7 @@ SQL Injection, XSS (Cross-Site Scripting) 방어와 직접 연결된다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 사용자 입력, API payload, 파일 업로드, 경로 값 등을 모두 검증한다.
 
@@ -72,7 +74,7 @@ SQL Injection, XSS (Cross-Site Scripting) 방어와 직접 연결된다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 입력 검증과 안전한 표현은 대부분의 웹 취약점의 첫 방어선이다.
 

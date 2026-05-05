@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-algorithm-stats"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. BQP(Bounded-error Quantum Polynomial time)는 양자 컴퓨터가 다항 시간에 효율적으로 풀 수 있는 문제 클래스 — 고전 컴퓨터의 P에 대응하며, Shor 알고리즘(인수분해)과 Grover 알고리즘(탐색)이 BQP의 대표적 예다.
 > 2. BQP와 NP의 관계는 아직 미지수 — BQP⊄NP, NP⊄BQP인지 모두 미증명이며, 현재 P ⊆ BQP ⊆ PSPACE가 알려진 포함 관계다. 양자 컴퓨터가 모든 NP 문제를 빠르게 풀지는 못한다(NP⊄BQP로 추정).
 > 3. QMA(Quantum Merlin-Arthur)는 NP의 양자 대응 — 양자 검증자(Verifier)가 다항 시간에 검증 가능한 문제 클래스로, Local Hamiltonian 문제가 QMA-완전이며, 양자 물리학과 계산 복잡도가 만나는 지점이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 양자 복잡도 클래스 체계
+## 1. 개요 및 필요성
 
 ```
 고전 vs 양자 복잡도 대응:
@@ -52,7 +55,7 @@ QMA (Quantum Merlin-Arthur):
 
 ---
 
-## Ⅱ. BQP 핵심 알고리즘
+## 2. 구성요소
 
 ```
 BQP의 대표 문제와 알고리즘:
@@ -99,7 +102,7 @@ HHL Algorithm (하로우-하시딤-로이드, 2009):
 
 ---
 
-## Ⅲ. QMA와 Local Hamiltonian
+## 3. 구조 및 동작 원리
 
 ```
 QMA (Quantum Merlin-Arthur):
@@ -144,7 +147,7 @@ NP와 QMA 관계:
 
 ---
 
-## Ⅳ. 양자 우위와 한계
+## 4. 비교 및 트레이드오프
 
 ```
 양자 우위 (Quantum Advantage/Supremacy):
@@ -191,7 +194,7 @@ BQP의 실용적 의미:
 
 ---
 
-## Ⅴ. 실무 시나리오 — PQC 전환
+## 5. 실무 적용 및 최적화 기법
 
 ```
 양자 위협 대응: 후양자 암호(PQC) 전환

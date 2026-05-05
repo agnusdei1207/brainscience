@@ -7,15 +7,17 @@ date = 2026-04-03
 tags = ["EAI", "ESB", "Enterprise Application Integration", "Enterprise Service Bus", "SOA", "Hub and Spoke", "Bus Architecture", "엔터프라이즈 아키텍처"]
 categories = ["Enterprise Systems"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: EAI(Enterprise Application Integration)는 벤더(IBM, TIBCO) 종속적인 전용 프로토콜을 사용해 **중앙 허브(Hub & Spoke)** 쇳덩이 1대에서 모든 데이터 번역과 라우팅을 독점 짬처리하는 무거운 통제망이다. 반면 ESB(Enterprise Service Bus)는 SOA 사상에 기반하여 특정 벤더에 묶이지 않는 **[개방형 웹 서비스 표준 (XML, SOAP, REST)]**을 핏줄로 삼아 ➔ 빈 껍데기 버스(Bus) 고속도로 위에서 각 시스템이 독립적으로 핑퐁 치게 찢어발긴 분산 지향적(Decentralized) 생태계다.
+> **핵심**: EAI(Enterprise Application Integration)는 벤더(IBM, TIBCO) 종속적인 전용 프로토콜을 사용해 **중앙 허브(Hub & Spoke)** 쇳덩이 1대에서 모든 데이터 번역과 라우팅을 독점 짬처리하는 무거운 통제망이다. 반면 ESB(Enterprise Service Bus)는 SOA 사상에 기반하여 특정 벤더에 묶이지 않는 **[개방형 웹 서비스 표준 (XML, SOAP, REST)]**을 핏줄로 삼아 ➔ 빈 껍데기 버스(Bus) 고속도로 위에서 각 시스템이 독립적으로 핑퐁 치게 찢어발긴 분산 지향적(Decentralized) 생태계다.
 > 2. **가치**: EAI 시대엔 새 시스템(A) 1개를 추가하려면 EAI 중앙 벤더 서버용 맞춤 어댑터(Adapter) 쇳덩이를 10억 주고 사다 코딩 노가다로 용접 록온(Lock-in) 쳐야 했다. 하지만 ESB 강림 후엔? ➔ "야 걍 니들 시스템 대문 밖으로 `[WSDL/XML]` 표준 텍스트 껍데기 1장만 예쁘게 달아 툭 ㅋ!" ➔ 전 우주 어느 회사 시스템이든 ESB 버스 파이프 구멍에 찰칵(Plug-and-Play) 1초 컷 무결점 다이렉트 꽂기 조립 쾌속 환승 스키를 타버리는 **극강의 벤더 종속 탈피(Vendor Lock-in 척살) 가성비 구원**이 터졌다.
 > 3. **융합**: EAI는 중앙 뇌(Hub) 1대가 타죽으면 전사 시스템이 100% 동시 올스탑 셧다운 마비되는 **단일 고장점(SPOF 💀)** 폭탄을 안고 있었다. ESB는 로직을 중앙에 몰빵하지 않고 끝단 서비스(Endpoint) 대문 앞 엣지(Edge)로 통제권을 다 찢어 분산(Decoupling) 시켜 ➔ 버스 파이프가 끊겨도 각자 지 살길 우회 기동 방어 생존 쉴드를 치게 만들어, 훗날 마이크로서비스(MSA)와 API 게이트웨이(API Gateway)로 진화하는 위대한 도약의 징검다리 성배가 되었다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **EAI (Enterprise Application Integration)**: 기업 내 파편화된 사일로(Silo) 시스템들(ERP, CRM, SCM)을 1개의 벤더 전용(Proprietary) 미들웨어 허브 쇳덩이를 통해 중앙 집중식으로 엮어 묶는(Hub & Spoke) 낡은 데이터 통합 기술.
@@ -89,7 +91,7 @@ categories = ["Enterprise Systems"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 1. EAI의 4대 낡은 통합 유형 십자 엑스레이 (Data ➔ Function ➔ Process)
 
@@ -132,7 +134,7 @@ categories = ["Enterprise Systems"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 딜레마: 낡은 허브 EAI (중앙 독재 💀) vs 모던 파이프 ESB (분산 버스 🚀)
 
@@ -180,7 +182,7 @@ categories = ["Enterprise Systems"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

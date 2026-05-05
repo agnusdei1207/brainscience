@@ -4,15 +4,18 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-devops"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 콘웨이의 법칙(Conway's Law)은 조직의 커뮤니케이션 구조가 시스템 아키텍처를 결정한다는 원칙으로, 마이크로서비스 전환 시 팀 구조 재편이 아키텍처 재설계만큼 중요하다.
 > 2. 역 콘웨이 기동(Inverse Conway Maneuver)은 원하는 아키텍처를 먼저 정의하고 그에 맞게 팀을 재구성하는 전략으로, Netflix·Amazon의 마이크로서비스 성공 비결이다.
 > 3. Team Topologies의 4가지 팀 유형(Stream-aligned·Platform·Enabling·Complicated-subsystem)과 3가지 상호작용 모드가 현대 소프트웨어 조직 설계의 표준 프레임워크가 되었다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 콘웨이의 법칙 심화 분석
+## 1. 개요 및 필요성
 
 > *"Organizations which design systems are constrained to produce designs which are copies of the communication structures of these organizations."*
 > — Mel Conway, 1967
@@ -38,7 +41,7 @@ categories = "studynote-devops"
 
 ---
 
-## Ⅱ. 역 콘웨이 기동 — 실행 방법
+## 2. 구성요소
 
 ### 실행 4단계
 
@@ -67,7 +70,7 @@ categories = "studynote-devops"
 
 ---
 
-## Ⅲ. Team Topologies 심화
+## 3. 구조 및 동작 원리
 
 ### 4가지 팀 유형 상세
 
@@ -108,7 +111,7 @@ Platform Team의 역할:
 
 ---
 
-## Ⅳ. 콘웨이 법칙과 플랫폼 엔지니어링
+## 4. 비교 및 트레이드오프
 
 ### 플랫폼 엔지니어링 (Platform Engineering)
 
@@ -132,7 +135,7 @@ Dev → 인프라팀 요청    Dev → 내부 개발자 플랫폼 (IDP)
 
 ---
 
-## Ⅴ. Spotify 모델 — 콘웨이 법칙의 또 다른 구현
+## 5. 실무 적용 및 최적화 기법
 
 ```
 Squad (스쿼드): 소규모 독립팀 (6~12명)

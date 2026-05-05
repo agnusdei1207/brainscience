@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 합성곱(Convolution)은 필터(Filter/Kernel)를 입력 위에 슬라이딩하며 특징(Feature)을 추출하는 연산으로, CNN (Convolutional Neural Network)의 핵심 빌딩 블록이다.
+> **핵심**: 합성곱(Convolution)은 필터(Filter/Kernel)를 입력 위에 슬라이딩하며 특징(Feature)을 추출하는 연산으로, CNN (Convolutional Neural Network)의 핵심 빌딩 블록이다.
 > 2. **가치**: 스트라이드(Stride)와 패딩(Padding)을 조절하여 출력 크기를 제어하고, 다양한 수용 영역(Receptive Field)에서 지역 패턴(Local Pattern)을 계층적으로 학습할 수 있다.
 > 3. **판단 포인트**: 시험에서는 출력 크기 공식 `(입력 - 필터 + 2×패딩) / 스트라이드 + 1`, 동일 패딩(Same Padding)과 유효 패딩(Valid Padding)의 차이, 팽창 합성곱(Dilated Convolution)의 수용 영역 확장 효과를 묻는다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 합성곱 연산의 탄생 배경
 
@@ -35,7 +37,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 출력 크기 공식
 
@@ -110,7 +112,7 @@ $$O = \left\lfloor \frac{I - F + 2P}{S} \right\rfloor + 1$$
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 스트라이드 크기별 출력 비교
 
@@ -130,7 +132,7 @@ $$O = \left\lfloor \frac{I - F + 2P}{S} \right\rfloor + 1$$
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 설계 선택 기준
 
@@ -155,7 +157,7 @@ $$O = \left\lfloor \frac{I - F + 2P}{S} \right\rfloor + 1$$
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 합성곱 연산의 핵심 가치
 

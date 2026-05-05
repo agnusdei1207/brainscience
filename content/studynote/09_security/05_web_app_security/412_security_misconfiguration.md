@@ -5,14 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Security Misconfiguration (보안 설정 오류, A05)은 기능상 작동은 하지만 보안 측면에서 잘못 구성된 시스템·서비스·클라우드 환경이 공격 표면이 되는 취약점이다.
+## 0. 핵심 인사이트
+
+> **핵심**: Security Misconfiguration (보안 설정 오류, A05)은 기능상 작동은 하지만 보안 측면에서 잘못 구성된 시스템·서비스·클라우드 환경이 공격 표면이 되는 취약점이다.
 > 2. **가치**: OWASP 2021에서 5위를 차지하며, 전체 애플리케이션 90%에서 평균 19.8건의 오설정이 발견될 만큼 만연하다.
 > 3. **판단 포인트**: 기본 비밀번호, 불필요한 포트 개방, 상세 에러 메시지, 미적용 패치가 핵심 위험이며, IaC (Infrastructure as Code) 기반 일관된 배포와 CIS (Center for Internet Security) 벤치마크 적용이 대응의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 소프트웨어 자체의 코드 결함이 아닌, 잘못된 **설정**이 침해 경로가 되는 취약점이다. AWS S3 (Simple Storage Service) 버킷의 퍼블릭 공개, Apache Tomcat의 기본 관리자 계정 미변경, 운영 환경의 디버그 모드 활성화 등이 대표적이다.
 
@@ -24,7 +27,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 보안 설정 오류는 스택의 모든 레이어에서 발생한다.
 
@@ -57,7 +60,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 보안 설정 오류는 Vulnerable and Outdated Components (A06)와 구분이 필요하다. A06은 컴포넌트 자체의 취약점이고, A05는 정상 컴포넌트를 잘못 설정한 경우다.
 
@@ -72,7 +75,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **대응 전략**:
 1. **Hardening**: CIS Benchmark, DISA STIG (Security Technical Implementation Guide) 기준으로 OS·미들웨어·DB 보안 강화
@@ -85,7 +88,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 IaC와 CSPM을 도입하면 설정 오류 탐지 시간을 수일에서 수분으로 단축할 수 있다. 특히 클라우드 환경에서 설정을 코드로 관리하면 변경 이력 추적과 롤백이 가능해 DevSecOps (Development, Security, Operations) 문화와 자연스럽게 융합된다.
 

@@ -5,19 +5,21 @@ date = "2026-04-10"
 [extra]
 categories = "studynote-enterprise"
 +++
-
-# 193. 오픈 API 규격 사양 (OpenAPI Specification / Swagger)
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 마이크로서비스(MSA) 수백 개가 각자 API를 열고 통신할 때 발생하는 "이 API는 어떤 파라미터를 보내면 무슨 JSON으로 대답해 주나요?"라는 끝없는 개발자 간의 의사소통 병목과 엑셀 문서 수작업의 고통을 멸망시키기 위해, **API의 명세(Specification)를 기계가 읽을 수 있는 언어(YAML/JSON)로 통일하고 명세서를 자동 생성해 주는 글로벌 표준 규격인 'OpenAPI Specification(OAS)'**을 다룹니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# 193. 오픈 API 규격 사양 (OpenAPI Specification / Swagger)
+
 > 1. **본질**: "`/users/123`으로 `GET` 요청을 보내면 `{"name": "홍길동"}`이 200 OK 상태 코드로 떨어진다"는 식당의 메뉴판(API 명세서)을, 사람이 엑셀로 치는 것이 아니라 기계(봇)가 읽어 들일 수 있는 국제 표준 문법(YAML/JSON)으로 정의한 설계 도면이다.
 > 2. **가치**: 이 도면만 던져주면, 프론트엔드 개발자는 백엔드 서버가 완성되기도 전에 자동으로 튀어나온 임시 응답(Mock)을 보고 미리 화면을 개발할 수 있으며, 클라이언트 호출 소스코드(SDK)조차 1초 만에 자동 생성(Code Generation)되는 마법이 펼쳐진다.
 > 3. **기술 체계**: 과거 **'Swagger(스웨거)'**라는 이름으로 유명했으며 3.0 버전부터 'OpenAPI Specification(OAS)'으로 이름이 바뀌어 리눅스 파운데이션 산하의 오픈 표준이 되었다. 코드 위에 주석(Annotation)만 달아주면 명세서 웹페이지를 화려하게 자동 출력해 주는 생태계를 이끌고 있다.
 
 ---
 
-### Ⅰ. 엑셀(Excel) API 명세서의 비극: 낡고 썩은 문서들
+### 1. 개요 및 필요성
 사람이 손으로 문서를 쓰면 그 문서는 1분 만에 거짓말쟁이가 된다.
 
 1. **동기화의 실패 (Out of Sync)**:
@@ -32,7 +34,7 @@ categories = "studynote-enterprise"
 
 ---
 
-### Ⅱ. OpenAPI Specification의 구조와 Swagger UI
+### 2. 구성요소
 기계도 읽고 사람도 예쁘게 볼 수 있는 이중 마법이다.
 
 1. **OAS 문서 (YAML / JSON 포맷)**:
@@ -60,7 +62,7 @@ categories = "studynote-enterprise"
 
 ---
 
-### Ⅲ. 계약 주도 개발 (Design First)과 1초 자동 코딩
+### 3. 구조 및 동작 원리
 요즘 1류 개발팀들은 코드를 짜기 전에 '계약(OAS)'부터 먼저 맺는다.
 
 1. **Design First (API 우선 설계)**:

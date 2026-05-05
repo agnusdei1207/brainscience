@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: LDAP (Lightweight Directory Access Protocol)는 DAP (Directory Access Protocol)를 경량화한 RFC 4511 프로토콜로, 조직의 사용자·장치·정책 정보를 계층 트리 구조로 저장하고 조회하는 표준 디렉터리 서비스다.
+> **핵심**: LDAP (Lightweight Directory Access Protocol)는 DAP (Directory Access Protocol)를 경량화한 RFC 4511 프로토콜로, 조직의 사용자·장치·정책 정보를 계층 트리 구조로 저장하고 조회하는 표준 디렉터리 서비스다.
 > 2. **가치**: SSO (Single Sign-On), 이메일 주소록, 네트워크 장비 인증 등 중앙화된 신원 관리(Identity Management)의 백본(Backbone)으로, 수천 대 서버의 계정을 한 곳에서 제어할 수 있게 한다.
 > 3. **판단 포인트**: DIT (Directory Information Tree) 구조와 DN (Distinguished Name) 표기법을 정확히 이해해야 LDAP 인젝션, LDAPS, Active Directory 연계 문제를 모두 풀 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 1980년대 X.500 표준이 정의한 DAP (Directory Access Protocol)는 강력했지만, OSI 7계층 전체를 구현해야 했기에 무겁고 복잡했다. 1993년 미시간 대학교에서 TCP/IP 위에서 동작하는 경량화 버전인 LDAP v2를 개발했고, 현재는 RFC 4511로 표준화된 LDAPv3가 사실상 표준이다.
 
@@ -25,7 +27,7 @@ LDAP의 존재 이유는 단순하다. 1,000명의 직원이 있는 기업에서
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### DIT (Directory Information Tree) 구조
 
@@ -82,7 +84,7 @@ NOT:          (!(uid=guest))
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### LDAP vs 관계형 DB (Relational Database)
 
@@ -108,7 +110,7 @@ NOT:          (!(uid=guest))
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Linux 서버 LDAP 인증 통합 흐름
 
@@ -140,7 +142,7 @@ LDAP 관련 기술사 문제의 핵심은 두 가지다. 첫째, "중앙화된 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 LDAP 기반 중앙 디렉터리 서비스 도입으로 기업은 계정 관리 효율화, 보안 강화, 컴플라이언스(Compliance) 준수라는 세 가지 핵심 가치를 얻는다. 퇴직자 계정 즉시 비활성화, 권한 변경의 실시간 전파, 접근 로그 중앙 수집이 모두 단일 LDAP 디렉터리 수정으로 실현된다.
 

@@ -5,15 +5,18 @@ date = "2026-03-30"
 [extra]
 categories = "studynote-network"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. AMI(Alternate Mark Inversion, 교류 마크 반전)는 0을 0전압, 1을 +V와 -V 교번(交番)으로 표현하는 삼진 부호 방식으로, DC 성분 제거와 단일 비트 오류 탐지(연속 동극성 위반 검출)라는 두 가지 효과를 동시에 달성한다.
 > 2. Pseudoternary(의사 삼진 부호)는 AMI의 역(逆) — 1을 0전압, 0을 ±V 교번으로 표현하며, 동일한 수학적 특성을 가지지만 1이 많은 데이터 환경에서 유리하다.
 > 3. AMI 계열 라인 코딩은 ISDN BRI(기본 속도 인터페이스) 표준 코딩으로 채택됐으며, 이후 B8ZS·HDB3 등 연속 0 처리 개선 버전으로 발전하여 E1/T1 디지털 전화망의 기반이 됐다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 라인 코딩 분류
+## 1. 개요 및 필요성
 
 ```
 라인 코딩 (Line Coding) 분류:
@@ -40,7 +43,7 @@ AMI vs Pseudoternary:
 
 ---
 
-## Ⅱ. AMI 인코딩 원리
+## 2. 구성요소
 
 ```
 AMI (Alternate Mark Inversion):
@@ -70,7 +73,7 @@ AMI (Alternate Mark Inversion):
 
 ---
 
-## Ⅲ. AMI의 한계와 개선: B8ZS, HDB3
+## 3. 구조 및 동작 원리
 
 ```
 AMI 한계:
@@ -98,7 +101,7 @@ HDB3 (High Density Bipolar 3):
 
 ---
 
-## Ⅳ. Pseudoternary
+## 4. 비교 및 트레이드오프
 
 ```
 Pseudoternary (의사 삼진 부호):
@@ -125,7 +128,7 @@ ISDN BRI (Basic Rate Interface) 사용:
 
 ---
 
-## Ⅴ. 실무 시나리오 — ISDN과 디지털 전화망
+## 5. 실무 적용 및 최적화 기법
 
 ```
 디지털 전화망 라인 코딩 실무:

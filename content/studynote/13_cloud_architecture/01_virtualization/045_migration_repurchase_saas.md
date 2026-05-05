@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 클라우드 이전(Migration) 전략의 6R(또는 7R) 프레임워크 — Retire(폐기), Retain(유지), Rehost(Lift & Shift), Replatform(이식), Repurchase(SaaS 전환), Refactor(재설계), Relocate(이전)으로 각 워크로드에 최적 전략을 선택한다.
 > 2. Repurchase(SaaS 재구매)는 사내 구축 소프트웨어를 SaaS로 교체 — 이메일(Exchange→Office 365), CRM(Siebel→Salesforce), ERP(온프레미스→SAP S/4HANA Cloud) 전환이 대표적이며, 초기 비용보다 장기 총소유비용(TCO) 분석이 핵심이다.
 > 3. SaaS 전환의 핵심 과제는 데이터 이전(Data Migration)과 통합(Integration) — 수년간 축적된 레거시 데이터를 SaaS 데이터 모델로 변환하고, 기존 시스템과의 연동(API 통합)이 프로젝트 복잡성의 80%를 차지한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 클라우드 이전 6R
+## 1. 개요 및 필요성
 
 ```
 AWS 클라우드 이전 6R 프레임워크:
@@ -68,7 +71,7 @@ AWS 클라우드 이전 6R 프레임워크:
 
 ---
 
-## Ⅱ. Repurchase — SaaS 전환
+## 2. 구성요소
 
 ```
 Repurchase SaaS 전환 유형:
@@ -118,7 +121,7 @@ HR/급여:
 
 ---
 
-## Ⅲ. SaaS 데이터 이전
+## 3. 구조 및 동작 원리
 
 ```
 SaaS 데이터 이전 (Data Migration):
@@ -168,7 +171,7 @@ SaaS 데이터 이전 (Data Migration):
 
 ---
 
-## Ⅳ. TCO 분석
+## 4. 비교 및 트레이드오프
 
 ```
 SaaS 전환 TCO (Total Cost of Ownership) 분석:
@@ -215,7 +218,7 @@ TCO 결론:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 글로벌 제조업 M365 전환
+## 5. 실무 적용 및 최적화 기법
 
 ```
 글로벌 제조업체 Microsoft 365 전환:

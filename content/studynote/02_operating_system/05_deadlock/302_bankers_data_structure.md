@@ -5,17 +5,19 @@ date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 은행원 알고리즘 자료구조 (Banker's Algorithm Data Structures)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 에츠허르 다익스트라(Dijkstra)의 은행원 알고리즘이 데드락 회피 시뮬레이션을 돌리기 위해 실시간 메모리에 유지해야 하는 **4대 장부(Matrix)**인 `Available`(남은 자원), `Max`(최대 필요량), `Allocation`(현재 빌려준 양), `Need`(앞으로 빌려줄 양)를 의미한다.
+> **핵심**: 에츠허르 다익스트라(Dijkstra)의 은행원 알고리즘이 데드락 회피 시뮬레이션을 돌리기 위해 실시간 메모리에 유지해야 하는 **4대 장부(Matrix)**인 `Available`(남은 자원), `Max`(최대 필요량), `Allocation`(현재 빌려준 양), `Need`(앞으로 빌려줄 양)를 의미한다.
 > 2. **가치**: 이 네 가지 행렬의 산술 방정식인 **"Need = Max - Allocation"**과 **"Need <= Available 이면 졸업 가능"** 규칙만을 이용해, 그 복잡한 다중 인스턴스의 얽히고설킨 사이클(Unsafe) 확률을 오로지 숫자 매트릭스 뺄셈 몇 번으로 완벽히 증명해 내는 데이터 모델의 극치를 보여준다.
 > 3. **융합**: 비록 순수 OS 커널 단위에선 사장되었으나, AWS나 쿠버네티스 같은 거대 클라우드 스케줄러가 노드(Node)의 자원 용량을 파드(Pod)의 `Requests/Limits` 선언값과 매칭시켜 빈 패킹(Bin-packing) 가용성을 점검할 때 이와 유사한 다차원 행렬 자료구조가 핵심 코어로 계승되어 사용된다.
 
+> 📝 모범 답안
+
+# 은행원 알고리즘 자료구조 (Banker's Algorithm Data Structures)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 자원 할당 그래프(RAG)의 선 긋기 장난은 단일 인스턴스(프린터 1대)에서는 직관적이었지만, 프린터가 3대, 스캐너가 2대, CPU가 4코어인 '다중 환경'에서는 선이 엉켜 아예 시각적 증명이 불가능해진다. 
 
@@ -50,7 +52,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Need 매트릭스의 '변동성' 장악
 
@@ -68,7 +70,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 | 자료구조 | 상태 범위 | 갱신 주체 (Update) | 한계 부작용 (부하/오버헤드) |
 |:---|:---|:---|:---|
@@ -81,7 +83,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 **실무 시나리오**:
 1. **Kubernetes (K8s) Resource Quota 및 Limits**: K8s 매니페스트 파일에서 `requests`가 바로 해당 파드가 사용할 `Allocation` 보증이고, `limits`가 바로 `Max`를 의미한다. 스케줄러 노드의 CPU/Memory 사이즈가 `Available`이다. 쿠버네티스는 은행원처럼 시뮬레이션하지는 않지만, 이 4가지 매트릭스 사상을 이어받아 "이 노드의 Available이 팟의 Needs를 커버 못하면 애초에 스케줄링(할당)을 거부(Pending)" 하는 현대식 분산 회피 모델로 승화시켰다.
@@ -93,7 +95,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기준 | 장부(Matrix)가 없는 원시 OS | 4대 장부를 탑재한 Banker OS |
 |:---|:---|:---|

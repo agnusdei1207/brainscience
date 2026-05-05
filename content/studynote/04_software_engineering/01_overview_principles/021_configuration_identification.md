@@ -7,17 +7,20 @@ date = "2026-03-04"
 categories = ["studynote-se"]
 tags = ["Software Engineering", "SCM", "Configuration Identification", "CI", "형상식별"]
 +++
+## 0. 핵심 인사이트
 
-# 형상 식별 (Configuration Identification)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 형상 식별은 소프트웨어 시스템을 관리 가능한 최소 단위인 형상 항목(CI, Configuration Item)으로 분해하고, 각각에 고유한 식별자와 버전 체계를 부여하는 과정이다.
+> **핵심**: 형상 식별은 소프트웨어 시스템을 관리 가능한 최소 단위인 형상 항목(CI, Configuration Item)으로 분해하고, 각각에 고유한 식별자와 버전 체계를 부여하는 과정이다.
 > 2. **가치**: 변경 통제의 대상 범위를 명확히 함으로써, 시스템의 복잡성을 낮추고 추적성(Traceability)을 확보하여 형상 관리 전체 프로세스의 기반을 다진다.
 > 3. **융합**: 단순한 파일 관리가 아닌 클라우드 네이티브 환경의 마이크로서비스(MSA), 인프라스트럭처 애즈 코드(IaC), 소프트웨어 자재 명세서(SBOM)의 식별 체계로 직접 이어진다.
 
+> 📝 모범 답안
+
+# 형상 식별 (Configuration Identification)
+
+##
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 형상 식별 (Configuration Identification)은 형상 관리(SCM, Software Configuration Management) 프로세스의 가장 첫 번째 단계로, 전체 시스템 내에서 형상 관리의 대상이 될 항목들을 찾아내고 이들에 대한 식별 번호와 버전 부여 규칙을 정의하는 활동이다. 이는 단순한 이름표 붙이기를 넘어, 소프트웨어를 구성하는 부품들의 생명주기를 어떻게 관리할 것인지에 대한 설계적 결단이다.
 
@@ -29,7 +32,7 @@ tags = ["Software Engineering", "SCM", "Configuration Identification", "CI", "�
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 형상 식별의 아키텍처는 하향식 분해(Top-down Decomposition) 메커니즘을 따른다. 전체 시스템을 점진적으로 분할하여, 더 이상 나눌 수 없거나 나눌 필요가 없는 관리의 최소 단위인 CI를 도출한다.
 
@@ -73,7 +76,7 @@ tags = ["Software Engineering", "SCM", "Configuration Identification", "CI", "�
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 형상 식별에서 가장 중요한 결정은 CI의 크기(Granularity), 즉 '얼마나 잘게 쪼갤 것인가'이다. 이는 마이크로서비스 아키텍처(MSA)에서의 서비스 분리 기준과 매우 유사하다.
 
@@ -100,7 +103,7 @@ tags = ["Software Engineering", "SCM", "Configuration Identification", "CI", "�
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 실무에서 형상 식별을 잘못 수행하면 시스템 전체의 형상 통제가 마비되는 치명적 안티패턴에 직면한다. 
 
@@ -134,7 +137,7 @@ tags = ["Software Engineering", "SCM", "Configuration Identification", "CI", "�
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 형상 식별이 체계적으로 구축되었을 때 얻는 정량적/정성적 효과는 다음과 같다.
 

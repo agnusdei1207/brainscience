@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: OWASP ZAP (Zed Attack Proxy)는 OWASP (Open Web Application Security Project)에서 개발한 무료 오픈소스 웹 취약점 스캐너로, 수동·자동 취약점 탐지를 모두 지원하는 통합 웹 보안 테스트 도구이다.
+> **핵심**: OWASP ZAP (Zed Attack Proxy)는 OWASP (Open Web Application Security Project)에서 개발한 무료 오픈소스 웹 취약점 스캐너로, 수동·자동 취약점 탐지를 모두 지원하는 통합 웹 보안 테스트 도구이다.
 > 2. **가치**: CI/CD (Continuous Integration/Continuous Delivery) 파이프라인에 통합하여 DAST (Dynamic Application Security Testing) 자동화가 가능하며, API 보안 테스트에도 활용된다.
 > 3. **판단 포인트**: Active Scan은 실제 공격 페이로드를 전송하므로 운영 환경이 아닌 스테이징 환경에서만 사용해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ZAP은 2010년 오픈소스로 공개되어 현재 가장 널리 사용되는 웹 보안 테스트 도구 중 하나이다. 인터셉팅 프록시로 동작하며, 브라우저와 웹 서버 사이에서 HTTP (Hypertext Transfer Protocol) 트래픽을 캡처·수정·재전송할 수 있다.
 
@@ -23,7 +25,7 @@ ZAP은 2010년 오픈소스로 공개되어 현재 가장 널리 사용되는 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 스캔 유형 | 동작 | 위험 수준 |
 |:---|:---|:---|
@@ -58,7 +60,7 @@ ZAP 결과 보고서
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 도구 | 특징 | 유형 |
 |:---|:---|:---|
@@ -71,7 +73,7 @@ ZAP 결과 보고서
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **CI/CD ZAP 통합 예시 (GitHub Actions)**:
 ```yaml
@@ -87,7 +89,7 @@ ZAP 결과 보고서
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ZAP을 CI/CD에 통합하면 웹 취약점을 배포 전에 자동으로 탐지하여 Shift-Left 보안을 실현할 수 있다. Baseline Scan은 Passive 모드이므로 운영 환경에도 적용 가능하다.
 

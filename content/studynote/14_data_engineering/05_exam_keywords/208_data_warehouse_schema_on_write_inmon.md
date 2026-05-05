@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 데이터 웨어하우스(Data Warehouse)는 여러 운영 시스템의 데이터를 주제 지향적(Subject-Oriented)으로 통합·정제하여 의사결정 지원에 최적화된 분석용 데이터베이스다.
+> **핵심**: 데이터 웨어하우스(Data Warehouse)는 여러 운영 시스템의 데이터를 주제 지향적(Subject-Oriented)으로 통합·정제하여 의사결정 지원에 최적화된 분석용 데이터베이스다.
 > 2. **가치**: 스키마 온 라이트(Schema-on-Write) 방식으로 데이터 적재 전 품질을 보장하여, 경영진이 일관된 단일 진실 공급원(Single Source of Truth)을 기반으로 의사결정할 수 있도록 한다.
 > 3. **판단 포인트**: Inmon 방법론(Top-Down, 정규화 중심)과 Kimball 방법론(Bottom-Up, 차원 모델링 중심)의 트레이드오프를 명확히 이해하고, 기업 규모·분석 요건에 따라 선택 근거를 논술할 것.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 데이터 웨어하우스 정의
 
@@ -39,7 +41,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Inmon의 CIF (Corporate Information Factory) 아키텍처
 
@@ -97,7 +99,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Inmon vs Kimball 방법론 비교
 
@@ -120,7 +122,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 현대 클라우드 데이터 웨어하우스
 
@@ -141,7 +143,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 도입 기대효과
 

@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Apache Flink는 이벤트 시간(Event Time) 기반 상태 저장(Stateful) 스트림 처리 엔진으로, 배치를 스트림의 특수 케이스로 통합(Unified Processing)하며 밀리초 단위 지연(Latency)과 Exactly-once 시맨틱(Semantics)을 동시에 제공하는 진정한 실시간 처리 플랫폼이다.
+> **핵심**: Apache Flink는 이벤트 시간(Event Time) 기반 상태 저장(Stateful) 스트림 처리 엔진으로, 배치를 스트림의 특수 케이스로 통합(Unified Processing)하며 밀리초 단위 지연(Latency)과 Exactly-once 시맨틱(Semantics)을 동시에 제공하는 진정한 실시간 처리 플랫폼이다.
 > 2. **가치**: Spark Streaming이 마이크로 배치(Micro-batch, 수백ms~초 단위 지연)를 "스트리밍"으로 처리하는 데 반해, Flink는 이벤트 단위 네이티브 스트림 처리로 10ms 이하 지연을 달성하며, 강력한 상태 관리와 워터마크(Watermark) 기반 이벤트 시간 처리가 핵심 차별점이다.
 > 3. **판단 포인트**: Flink를 선택하는 결정적 기준은 "이벤트 도착 순서가 보장되지 않는 환경에서 정확한 집계가 필요한가"이다. 네트워크 지연으로 이벤트 순서가 뒤섞이는 실제 분산 환경에서 워터마크 기반 이벤트 시간 윈도우가 Kafka+Flink 조합의 핵심 가치이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Apache Flink는 독일 베를린 공과대학(TU Berlin) 연구에서 시작된 오픈소스 스트림 처리 엔진으로, 2014년 Apache 프로젝트로 편입되었다.
 
@@ -40,7 +42,7 @@ Apache Flink는 독일 베를린 공과대학(TU Berlin) 연구에서 시작된 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Flink 핵심 아키텍처
 
@@ -71,7 +73,7 @@ Apache Flink는 독일 베를린 공과대학(TU Berlin) 연구에서 시작된 
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | Apache Flink | Spark Streaming | Kafka Streams |
 |:---|:---|:---|:---|
@@ -86,7 +88,7 @@ Apache Flink는 독일 베를린 공과대학(TU Berlin) 연구에서 시작된 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 실시간 이상 거래 탐지
 금융사 카드 거래 스트림에서 이상 패턴 즉각 탐지.
@@ -104,7 +106,7 @@ Apache Flink는 독일 베를린 공과대학(TU Berlin) 연구에서 시작된 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

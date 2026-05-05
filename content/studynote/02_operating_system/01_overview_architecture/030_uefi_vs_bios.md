@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: BIOS(Basic Input/Output System)는 16비트 리얼 모드로 실행되는 레거시 펌웨어로 1MB 이하 주소 공간·MBR 디스크 구조에 묶인다. UEFI(Unified Extensible Firmware Interface)는 32/64비트 보호 모드에서 실행되며 GPT 디스크·2.2TB 이상 용량·Secure Boot를 지원한다.
+> **핵심**: BIOS(Basic Input/Output System)는 16비트 리얼 모드로 실행되는 레거시 펌웨어로 1MB 이하 주소 공간·MBR 디스크 구조에 묶인다. UEFI(Unified Extensible Firmware Interface)는 32/64비트 보호 모드에서 실행되며 GPT 디스크·2.2TB 이상 용량·Secure Boot를 지원한다.
 > 2. **가치**: UEFI의 핵심 혁신은 ① GPU 드라이버 내장으로 그래픽 부팅 화면, ② 네트워크 스택으로 PXE 부팅 고도화, ③ Secure Boot로 부트킷 방지, ④ 빠른 부팅(Fast Boot)이다.
 > 3. **판단 포인트**: 현대 서버·PC는 UEFI가 표준이지만, 레거시 BIOS 호환을 위해 CSM(Compatibility Support Module)을 제공한다. Secure Boot 활성화 여부는 악성코드 방어와 커스텀 OS 설치 사이의 트레이드오프다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 BIOS 부팅 흐름:
@@ -39,7 +41,7 @@ UEFI 부팅 흐름:
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### UEFI 부팅 단계 (PI Specification)
 
@@ -68,7 +70,7 @@ Linux    → shim(MOK) 통해 GRUB 서명 검증
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | BIOS | UEFI |
 |:---|:---|:---|
@@ -83,7 +85,7 @@ Linux    → shim(MOK) 통해 GRUB 서명 검증
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 디스크 구조: MBR vs GPT
 
@@ -114,7 +116,7 @@ GPT (GUID Partition Table):
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 페이지 폴트 (Page Fault) ISR
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 페이지 폴트(Page Fault)는 CPU가 접근하려는 가상 메모리 주소가 현재 물리 램(RAM)에 존재하지 않을 때, MMU 하드웨어가 발생시키는 **치명적이고도 필수적인 예외(Exception) 인터럽트**다.
+> **핵심**: 페이지 폴트(Page Fault)는 CPU가 접근하려는 가상 메모리 주소가 현재 물리 램(RAM)에 존재하지 않을 때, MMU 하드웨어가 발생시키는 **치명적이고도 필수적인 예외(Exception) 인터럽트**다.
 > 2. **ISR의 역할**: 이 인터럽트를 받은 OS의 **Interrupt Service Routine (ISR)**은 즉시 실행을 멈추고 디스크(Swap)로 달려가 해당 페이지를 RAM의 빈 프레임에 복사해 온 뒤, 중단되었던 명령어를 처음부터 다시 실행(Restart)시킨다.
 > 3. **가치**: 1번의 페이지 폴트는 일반 메모리 접근보다 약 10만 배 느리지만, 이 정교한 ISR 파이프라인 덕분에 개발자는 램의 크기에 구애받지 않고 무한한 메모리를 가진 것처럼 프로그래밍할 수 있게 되었다. (요구 페이징의 핵심 동력)
 
+> 📝 모범 답안
+
+# 페이지 폴트 (Page Fault) ISR
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **인터럽트 서비스 루틴 (ISR)**: 하드웨어나 소프트웨어가 인터럽트/예외를 쏘았을 때 OS가 이를 처리하기 위해 지정해 둔 커널 함수.
@@ -40,7 +42,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Page Fault ISR 파이프라인 (6단계 하드웨어-소프트웨어 협력)
 
@@ -82,7 +84,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### Major Fault vs Minor Fault (소프트 폴트와 하드 폴트)
 
@@ -104,7 +106,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -149,7 +151,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

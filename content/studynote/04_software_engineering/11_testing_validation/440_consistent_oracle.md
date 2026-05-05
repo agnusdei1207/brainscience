@@ -6,15 +6,17 @@ description = "변경 전후의 결과가 같은지 비교해 테스트 판정�
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "Consistent Oracle", "Regression", "Oracle"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 일관성 오라클(Consistent Oracle)은 변경 전과 후의 결과가 같은지를 기준으로 판정하는 오라클이다.
+> **핵심**: 일관성 오라클(Consistent Oracle)은 변경 전과 후의 결과가 같은지를 기준으로 판정하는 오라클이다.
 > 2. **가치**: 정답을 몰라도 결과가 바뀌지 않아야 하는 상황에서 유용하다.
 > 3. **판단 포인트**: 회귀 테스트에서 변경 영향이 없는 입력을 확인할 때 강하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 일관성 오라클은 결과의 절대 정답 대신 "이전과 비교해 달라졌는가"를 본다. 즉, 기준 버전과 현재 버전의 동작이 같아야 하는 경우에 쓰인다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "Consistent Oracle", "Regression", "O
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 핵심은 기준선(Baseline)과 현재 결과의 비교다. 정답을 몰라도 "변하지 않아야 한다"는 규칙이 있으면 판정이 가능하다.
 
@@ -46,7 +48,7 @@ tags = ["Software Engineering", "Testing", "Consistent Oracle", "Regression", "O
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 일관성 오라클은 참 오라클보다 현실적이다. 하지만 "달라져도 되는 변화"와 "달라지면 안 되는 변화"를 구분해야 한다.
 
@@ -62,7 +64,7 @@ tags = ["Software Engineering", "Testing", "Consistent Oracle", "Regression", "O
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 리팩토링, 라이브러리 교체, 성능 튜닝 후에 기존 결과가 유지되는지 확인할 때 쓴다. 특히 입력이 같을 때 출력이 같아야 하는 로직에 적합하다.
 
@@ -75,7 +77,7 @@ tags = ["Software Engineering", "Testing", "Consistent Oracle", "Regression", "O
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 일관성 오라클은 회귀 결함을 빨리 잡는다. 정답이 애매한 시스템에서도 변화 감지라는 실용적 기준을 제공한다.
 

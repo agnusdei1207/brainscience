@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Measured Boot는 부팅 과정의 각 단계에서 로드되는 소프트웨어의 지문(Hash)을 측정하여 TPM(Trusted Platform Module) 내부의 안전한 장소에 기록하는 기술이다.
+> **핵심**: Measured Boot는 부팅 과정의 각 단계에서 로드되는 소프트웨어의 지문(Hash)을 측정하여 TPM(Trusted Platform Module) 내부의 안전한 장소에 기록하는 기술이다.
 > 2. **가치**: 부팅을 강제로 중단시키지 않으면서도, 시스템이 현재 어떤 상태(정상/변조)인지 외부 서버에 증명(Remote Attestation)할 수 있는 근거를 제공한다.
 > 3. **판단 포인트**: Measured Boot는 '방어(Defense)'보다는 '탐지와 증명(Detection & Proof)'에 초점이 맞춰져 있으며, Zero Trust 아키텍처에서 기기의 신뢰성을 확인하는 핵심 수단이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Secure Boot가 "가짜는 절대 안 돼!"라고 문을 걸어 잠그는 방식이라면, **Measured Boot**는 "누가 들어왔는지 전부 기록할 테니, 나중에 확인해 봐"라고 말하는 방식이다. 때로는 시스템 가용성을 위해 부팅을 중단시키기보다, 일단 부팅을 완료하되 그 상태가 안전한지 검증한 후 중요 자산에 접근하게 만드는 전략이 유효할 때가 있다.
 
@@ -23,7 +25,7 @@ Secure Boot가 "가짜는 절대 안 돼!"라고 문을 걸어 잠그는 방식�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Measured Boot는 TPM의 **PCR(Platform Configuration Register)**을 핵심 저장소로 사용한다. PCR은 단순히 값을 쓰는 것이 아니라, '기존 값 + 새로운 측정값'을 해시하여 덮어쓰는 **Extend(확장)** 방식을 사용한다.
 
@@ -54,7 +56,7 @@ Measured Boot는 TPM의 **PCR(Platform Configuration Register)**을 핵심 저�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Measured Boot는 시스템의 **상태 증명(Attestation)**으로 연결되며, 이는 다시 **Zero Trust** 네트워크 접근 제어로 이어진다.
 
@@ -69,7 +71,7 @@ Measured Boot는 시스템의 **상태 증명(Attestation)**으로 연결되며,
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무적으로 Measured Boot를 활용할 때 가장 중요한 것은 **'신뢰 기준값(Golden Measurement)'**의 관리이다. 윈도우 업데이트 등으로 정상적인 부팅 파일이 바뀌면 PCR 값도 변한다. 이때 Verifier 서버가 이를 '변조'로 오인하지 않도록 최신 정상 해시 리스트를 유지하는 화이트리스트 관리가 기술적 난제다.
 
@@ -82,7 +84,7 @@ Measured Boot는 시스템의 **상태 증명(Attestation)**으로 연결되며,
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Measured Boot는 '가시성(Visibility)'을 제공한다. 보이지 않는 부팅 영역의 무결성을 숫자로 증명할 수 있게 됨으로써, 기업은 신뢰할 수 있는 기기만 업무 망에 접속시키는 강력한 보안 정책을 펼칠 수 있다.
 

@@ -3,17 +3,19 @@ title = "377. 체크섬(Checksum), 서명(Signature)을 통한 무결성(Integri
 date = 2026-04-05
 weight = 377
 +++
+## 0. 핵심 인사이트
 
-# 377. 체크섬/서명을 통한 무결성 검증 (Integrity Verification)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 무결성 검증(Integrity Verification)은 소프트웨어 아티팩트(코드, 라이브러리, 바이너리, 문서 등)가 전달 과정에서 변조되지 않았음을 보장하는 기술이다. 체크섬(Checksum)은 데이터의 무결성을 검증하는 간단한 해시 값이고, 디지털 서명(Digital Signature)은 공개키 암호화 기반의 stronger한 무결성 및 인증 메커니즘이다.
+> **핵심**: 무결성 검증(Integrity Verification)은 소프트웨어 아티팩트(코드, 라이브러리, 바이너리, 문서 등)가 전달 과정에서 변조되지 않았음을 보장하는 기술이다. 체크섬(Checksum)은 데이터의 무결성을 검증하는 간단한 해시 값이고, 디지털 서명(Digital Signature)은 공개키 암호화 기반의 stronger한 무결성 및 인증 메커니즘이다.
 > 2. **가치**: 무결성 검증은 소프트웨어 공급망 공격(SolarWinds, Codecov 등)에서第二步防线として機能하며, 下载한 软件이나 빌드 산출물이攻撃자에 의해 변조되지 않았음을保証하여, 랜섬웨어, 데이터 유출 등의安全事故을事前防止한다.
 > 3. **융합**: 체크섬(SHA-256, MD5)과 디지털 서명(코드 서명, 서명되지 않은 코드 실행 차단)은 SLSA, Sigstore, Notary, SBOM 등의 공급망 보안 표준 및 도구와 결합되어 활용된다.
 
+> 📝 모범 답안
+
+# 377. 체크섬/서명을 통한 무결성 검증 (Integrity Verification)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 무결성 검증은 데이터나 소프트웨어가 생성된 후, 전달/보관 과정에서任何人에 의해 변경되지 않았음을数学적으로 보장하는 메커니즘이다.チェックサムはデータの"指纹"を提供し、디지털 서명은 데이터의 출처까지保証한다.
 
@@ -31,7 +33,7 @@ weight = 377
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 체크섬 (Checksum) 원리
 
@@ -157,7 +159,7 @@ weight = 377
 
 ---
 
-## Ⅲ. 구현 및 실무 응용 (Implementation & Practice)
+## 3. 구조 및 동작 원리
 
 ### 무결성 검증 실습
 
@@ -237,7 +239,7 @@ gpg: Good signature from "Developer <dev@example.com>"
 
 ---
 
-## Ⅳ. 품질 관리 및 테스트 (Quality & Testing)
+## 4. 비교 및 트레이드오프
 
 ### 무결성 검증 품질 지표
 
@@ -263,7 +265,7 @@ gpg: Good signature from "Developer <dev@example.com>"
 
 ---
 
-## Ⅴ. 최신 트렌드 및 결론 (Trends & Conclusion)
+## 5. 실무 적용 및 최적화 기법
 
 ### 최신 동향
 

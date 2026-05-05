@@ -7,17 +7,19 @@ date = 2026-03-26
 [taxonomies]
 tags = ["database", "normalization", "anomaly", "redundancy"]
 +++
+## 0. 핵심 인사이트
 
-# 정규화 (Normalization)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 정규화 (Normalization)는 데이터베이스에서 데이터 중복을 최소화하고, 갱신 이상 (Update Anomaly), 삽입 이상 (Insert Anomaly), 삭제 이상 (Delete Anomaly)을 제거하기 위해 테이블을 체계적으로 분해하는 과정이다.
+> **핵심**: 정규화 (Normalization)는 데이터베이스에서 데이터 중복을 최소화하고, 갱신 이상 (Update Anomaly), 삽입 이상 (Insert Anomaly), 삭제 이상 (Delete Anomaly)을 제거하기 위해 테이블을 체계적으로 분해하는 과정이다.
 > 2. **가치**: 정규화를 통해 데이터 무결성을 보장하고, 저장 공간을 절약하며, 데이터 일관성을 유지할 수 있다.
 > 3. **융합**: 정규화는 관계형 데이터베이스 설계의核心原則으로, 반정규화와 함께 성능과 무결성의 균형을 맞추는 데 활용된다.
 
+> 📝 모범 답안
+
+# 정규화 (Normalization)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 
@@ -60,7 +62,7 @@ tags = ["database", "normalization", "anomaly", "redundancy"]
 
 ---
 
-## Ⅱ. 함수 종속성 (Functional Dependency)
+## 2. 구성요소
 
 ### 개념 정의
 
@@ -114,7 +116,7 @@ tags = ["database", "normalization", "anomaly", "redundancy"]
 
 ---
 
-## Ⅲ. 정규형 (Normal Form)
+## 3. 구조 및 동작 원리
 
 정규형은 정규화의 수준을 나타내며, 숫자가 높을수록 엄격한 정규화를 의미한다.
 
@@ -160,7 +162,7 @@ tags = ["database", "normalization", "anomaly", "redundancy"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -182,7 +184,7 @@ tags = ["database", "normalization", "anomaly", "redundancy"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

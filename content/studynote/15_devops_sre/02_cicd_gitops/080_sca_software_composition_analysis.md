@@ -8,17 +8,20 @@ date = "2026-04-05"
 tags = ["DevOps", "SCA", "Security", "CVE", "Dependency Scanning", "DevSecOps"]
 categories = ["studynote-devops-sre"]
 +++
+## 0. 핵심 인사이트
 
-# 80. 패키지 취약점 스캐닝 (SCA, Software Composition Analysis)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SCA(Software Composition Analysis)는 프로젝트가 사용하는 외부 오픈소스 라이브러리와 그 transitive dependencies(전이적 의존성) 전체를 탐색하여 알려진 보안 취약점(CVE)과 라이선스 위반을 자동으로 스캔하는 기법이다.
+> **핵심**: SCA(Software Composition Analysis)는 프로젝트가 사용하는 외부 오픈소스 라이브러리와 그 transitive dependencies(전이적 의존성) 전체를 탐색하여 알려진 보안 취약점(CVE)과 라이선스 위반을 자동으로 스캔하는 기법이다.
 > 2. **가치**: 현대 애플리케이션의 80~90%는 오픈소스 코드(Dependencies)로 구성되므로, 이들의 취약점이 곧 애플리케이션의 취약점이 된다. SCA는 이 '전면 야외전'에서 조직을 보호하는 첫 번째 방어선이다.
 > 3. **융합**: SCA는 CI/CD 파이프라인(Shift-Left)의 빌드 단계에 내장되어,脆弱한 라이브러리가 프로덕션에 배포되는 것을 자동으로 차단하며, SBOM(Software Bill of Materials) 생성으로 공급망 보안 규제 준수의 증거로 활용된다.
 
+> 📝 모범 답안
+
+# 80. 패키지 취약점 스캐닝 (SCA, Software Composition Analysis)
+
+##
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 오픈소스 소프트웨어(OSS)는 현대 소프트웨어 개발의 근간이다. 개발자가 직접 작성하는 코드보다 npm, PyPI, Maven Central 등에서 내려받는 외부 라이브러리(Dependencies)로 구성되는 코드가 압도적으로 많다. 문제는 이 오픈소스 라이브러리가 항상 안전하다는 가정에 있다. 실제로 Log4j(CVE-2021-44228), OpenSSL Heartbleed, Spring4Shell(CVE-2022-22965) 같은 치명적 취약점이 오픈소스에서 비롯되었으며, 한 번 발견되면 전 세계 수천 개의 애플리케이션에 즉각적 영향을 미친다.
 
@@ -50,7 +53,7 @@ SCA의 필요성은 단순히 보안 취약점 탐지를 넘어서 **라이선�
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 SCA 도구의 동작 원리는 크게 세 단계로 나뉜다. 의존성 탐지(Discovery), 취약점 매칭(Matching), 리포팅 및 통제(Reporting & Governance)이다.
 
@@ -143,7 +146,7 @@ SCA를 CI/CD 파이프라인에 통합하는 구조는 다음과 같다:
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 SCA는 단독으로 존재하지 않고, SAST(코드 정적 분석), 컨테이너 스캐닝, SBOM 생성과 결합하여 DevSecOps 보안 파이프라인을 완성한다.
 
@@ -179,7 +182,7 @@ SCA와 SAST의 가장 큰 차이는 **분석 대상**이다. SAST는 내가 작�
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 SCA를 실무에 도입할 때 흔히 겪는 딜레마와 기술적 판단 기준은 다음과 같다.
 
@@ -216,7 +219,7 @@ Policy Enforcement:
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 SCA가 조직에 정착되면 다음과 같은 기대효과가 있다.
 

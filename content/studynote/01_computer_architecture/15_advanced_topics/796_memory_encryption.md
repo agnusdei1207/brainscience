@@ -5,15 +5,17 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 메모리 암호화 (Memory Encryption)는 CPU (Central Processing Unit)와 RAM (Random Access Memory) 사이에서 송수신되는 데이터를 하드웨어 엔진을 통해 실시간으로 암호화하여, 물리적 공격 및 권한 없는 소프트웨어의 데이터 탈취를 방지하는 기술이다.
+> **핵심**: 메모리 암호화 (Memory Encryption)는 CPU (Central Processing Unit)와 RAM (Random Access Memory) 사이에서 송수신되는 데이터를 하드웨어 엔진을 통해 실시간으로 암호화하여, 물리적 공격 및 권한 없는 소프트웨어의 데이터 탈취를 방지하는 기술이다.
 > 2. **가치**: Intel MKTME (Multi-Key Total Memory Encryption)와 AMD SME (Secure Memory Encryption)/SEV (Secure Encrypted Virtualization)는 메모리 덤프, 콜드 부트 공격 (Cold Boot Attack), 가상 머신 간 데이터 유출을 원천적으로 차단하여 기밀 컴퓨팅의 물리적 기반을 제공한다.
 > 3. **융합**: 고성능 AES-XTS (Advanced Encryption Standard - XEX-based Tweaked-codebook mode with ciphertext Stealing) 알고리즘을 하드웨어 레벨에서 구현함으로써, 성능 저하를 최소화하면서도 서버 및 클라우드 인프라의 데이터 보안성을 극대화한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 메모리 암호화는 컴퓨터 시스템의 메인 메모리(RAM)에 저장되는 데이터를 평문이 아닌 암호문 상태로 유지하는 기술이다. 데이터가 CPU 내부 캐시를 벗어나 시스템 버스를 타고 RAM으로 이동할 때 암호화되고, 다시 CPU로 읽어 들일 때 복호화된다. 이를 통해 메모리 칩을 물리적으로 스캐닝하거나 다른 운영체제나 가상 머신이 메모리 영역을 침범하더라도 실제 내용을 알 수 없게 한다.
 
@@ -57,7 +59,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 및 기술 특징
 
@@ -131,7 +133,7 @@ Intel의 MKTME (Multi-Key Total Memory Encryption)는 페이지 테이블 (Page 
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 기술 비교: Intel MKTME vs AMD SME/SEV
 
@@ -153,7 +155,7 @@ Intel의 MKTME (Multi-Key Total Memory Encryption)는 페이지 테이블 (Page 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **시나리오 — 클라우드 기반 뱅킹 시스템 구축**: 은행의 핵심 거래 시스템을 퍼블릭 클라우드에 올릴 때, 클라우드 운영사의 관리자가 메모리 스누핑을 할 수 없도록 AMD SEV 기능을 활성화한 기밀 VM을 도입한다.
@@ -173,7 +175,7 @@ Intel의 MKTME (Multi-Key Total Memory Encryption)는 페이지 테이블 (Page 
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

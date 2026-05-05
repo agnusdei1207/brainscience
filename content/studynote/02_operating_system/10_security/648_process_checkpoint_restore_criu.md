@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 프로세스 체크포인트/리스토어 (CRIU) 컨테이너 마이그레이션 도구 구조
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CRIU (Checkpoint/Restore In Userspace)는 리눅스 환경에서 **실행 중인 프로세스(또는 컨테이너)를 일시 정지(Freeze)하고 메모리와 상태를 파일로 덤프(Checkpoint)한 뒤, 나중에 혹은 다른 서버에서 그 파일로부터 프로세스를 정확히 복원(Restore)하여 실행을 재개**하는 사용자 공간(User-space) 도구다.
+> **핵심**: CRIU (Checkpoint/Restore In Userspace)는 리눅스 환경에서 **실행 중인 프로세스(또는 컨테이너)를 일시 정지(Freeze)하고 메모리와 상태를 파일로 덤프(Checkpoint)한 뒤, 나중에 혹은 다른 서버에서 그 파일로부터 프로세스를 정확히 복원(Restore)하여 실행을 재개**하는 사용자 공간(User-space) 도구다.
 > 2. **메커니즘**: 커널의 Ptrace API와 `/proc` 파일 시스템을 이용하여 타겟 프로세스의 주소 공간, 레지스터, 열린 파일 디스크립터(FD), 네트워크 소켓 상태까지 완벽하게 추출하여 직렬화(Serialization)한다.
 > 3. **가치**: 무거운 가상머신(VM) 라이브 마이그레이션을 가벼운 컨테이너(Docker, LXC) 레벨로 끌어내렸으며, 서버리스(Serverless) 함수의 콜드 스타트(Cold Start) 지연을 극복하기 위한 '사전 부팅 후 멈춰두기(Pre-baking)' 아키텍처의 핵심 기반 기술이 되었다.
 
+> 📝 모범 답안
+
+# 프로세스 체크포인트/리스토어 (CRIU) 컨테이너 마이그레이션 도구 구조
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **Checkpoint (체크포인트)**: 실행 중인 프로세스의 상태(메모리, 레지스터, 소켓 등)를 얼려서 디스크(이미지 파일)로 저장하는 행위.
@@ -39,7 +41,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### CRIU 체크포인트 (Checkpoint) 4단계 동작 원리
 
@@ -96,7 +98,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 라이브 마이그레이션 기술 비교
 
@@ -117,7 +119,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -166,7 +168,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

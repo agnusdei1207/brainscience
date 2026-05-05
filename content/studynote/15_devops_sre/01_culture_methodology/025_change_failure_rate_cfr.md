@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CFR (Change Failure Rate, 변경 실패율)은 DORA (DevOps Research and Assessment, 데브옵스 연구·평가) 4대 핵심 메트릭 중 하나로, "전체 배포 건수 대비 서비스 장애·롤백·핫픽스를 유발한 배포의 비율"을 측정하여 배포 프로세스의 안정성을 정량화한다.
+> **핵심**: CFR (Change Failure Rate, 변경 실패율)은 DORA (DevOps Research and Assessment, 데브옵스 연구·평가) 4대 핵심 메트릭 중 하나로, "전체 배포 건수 대비 서비스 장애·롤백·핫픽스를 유발한 배포의 비율"을 측정하여 배포 프로세스의 안정성을 정량화한다.
 > 2. **가치**: CFR은 배포 빈도(Deployment Frequency)와 반비례하는 경향이 있다고 오해하기 쉽지만, DORA 연구에 따르면 Elite 팀은 배포 빈도도 높고 CFR도 낮다(0~15%). 고품질 자동화 테스트, 점진적 배포(Canary/Blue-Green), 피처 플래그(Feature Flag)가 이 역설을 가능하게 한다.
 > 3. **판단 포인트**: CFR은 단독으로 해석하면 안 되고 MTTR (Mean Time to Recover, 평균 복구 시간)과 함께 분석해야 한다. CFR이 높아도 MTTR이 낮으면(빠른 롤백) 실제 서비스 영향은 작을 수 있다. 진정한 목표는 CFR을 낮추면서 동시에 MTTR도 낮추는 것이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌──────────────────────────────────────────────────────────┐
@@ -45,7 +47,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### CFR 감소를 위한 배포 전략
 
@@ -89,7 +91,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | DORA 메트릭 | 측정 대상 | CFR과의 관계 |
 |:---|:---|:---|
@@ -102,7 +104,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### CFR 측정 및 개선 사이클
 
@@ -131,7 +133,7 @@ def calculate_cfr(deployments, incidents):
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

@@ -5,15 +5,18 @@ date = "2026-03-19"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 레이어 2(L2) 솔루션은 블록체인 트릴레마를 우회하는 핵심 전략으로, 메인체인(L1) 밖에서 트랜잭션을 처리하고 최종 결과만 L1에 기록하여 L1의 보안성을 상속하면서 확장성을 수십~수천 배 향상시킨다.
 > 2. Optimistic Rollup(낙관적 롤업)과 ZK-Rollup(영지식 롤업)이 L2의 양대 주류로, Optimistic은 구현이 간단하지만 7일 분쟁 기간이 있고, ZK-Rollup은 즉시 검증 가능하지만 영지식 증명 생성 비용이 높아 복잡한 연산에는 한계가 있다.
 > 3. 2024년 기준 Arbitrum·Optimism(Optimistic Rollup)과 zkSync·StarkNet(ZK-Rollup)이 이더리움 L2 TVL(Total Value Locked)의 90% 이상을 차지하며, L2가 블록체인 생태계의 새로운 전장이 됐다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. L2 솔루션 분류
+## 1. 개요 및 필요성
 
 ```
 레이어 2 스케일링 전략:
@@ -47,7 +50,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. Optimistic Rollup
+## 2. 구성요소
 
 ```
 Optimistic Rollup 동작:
@@ -80,7 +83,7 @@ Optimistic Rollup 동작:
 
 ---
 
-## Ⅲ. ZK-Rollup
+## 3. 구조 및 동작 원리
 
 ```
 ZK-Rollup (Zero-Knowledge Rollup):
@@ -118,7 +121,7 @@ ZK 증명 유형:
 
 ---
 
-## Ⅳ. State Channel
+## 4. 비교 및 트레이드오프
 
 ```
 State Channel (상태 채널):
@@ -149,7 +152,7 @@ Lightning Network (비트코인):
 
 ---
 
-## Ⅴ. 실무 시나리오 — DeFi L2 선택
+## 5. 실무 적용 및 최적화 기법
 
 ```
 DeFi 프로토콜 L2 선택 기준 (2024):

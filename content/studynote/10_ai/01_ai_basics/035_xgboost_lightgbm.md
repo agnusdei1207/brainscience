@@ -4,11 +4,14 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. XGBoost (Extreme Gradient Boosting)와 LightGBM은 모두 Gradient Boosting 계열의 앙상블 알고리즘으로, 테이블 형식 데이터(정형 데이터)에서 최고 수준의 성능을 보이는 ML 표준 도구다.
 > 2. XGBoost는 레벨 단위(Level-wise) 트리 성장으로 안정적이고, LightGBM은 리프 단위(Leaf-wise) 트리 성장으로 더 빠르고 낮은 메모리로 동일 성능을 달성한다.
 > 3. Kaggle·산업 데이터 대회에서 XGBoost/LightGBM은 딥러닝보다 정형 데이터에서 우위를 점하며, CatBoost와 함께 "테이블 데이터 3대 부스터"를 형성한다.
+
+> 📝 모범 답안
 
 ---
 

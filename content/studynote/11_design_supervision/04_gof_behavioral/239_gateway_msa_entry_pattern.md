@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: API 게이트웨이 (API Gateway) 는 MSA (Microservices Architecture) 의 모든 외부 요청이 통과하는 단일 진입점으로, 인증·라우팅·로드밸런싱·속도제한을 중앙화한다.
+> **핵심**: API 게이트웨이 (API Gateway) 는 MSA (Microservices Architecture) 의 모든 외부 요청이 통과하는 단일 진입점으로, 인증·라우팅·로드밸런싱·속도제한을 중앙화한다.
 > 2. **가치**: 클라이언트가 개별 마이크로서비스의 내부 구조를 알 필요가 없어 결합도가 낮아지고, 횡단 관심사 (Cross-Cutting Concerns) 를 서비스 코드 밖에서 처리한다.
 > 3. **판단 포인트**: 게이트웨이가 SPoF (Single Point of Failure: 단일 장애점) 이 될 수 있으므로, 고가용성 (HA: High Availability) 구성과 회로 차단기 (Circuit Breaker) 가 필수다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 모놀리식 (Monolithic) 아키텍처에서는 단일 서버가 모든 요청을 처리했다. MSA (Microservices Architecture) 로 전환하면 주문 서비스, 결제 서비스, 사용자 서비스 등 수십 개의 마이크로서비스가 각자의 포트와 프로토콜을 가진다.
 
@@ -34,7 +35,7 @@ API 게이트웨이가 동기 HTTP (HyperText Transfer Protocol) 요청의 진�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### API 게이트웨이 전체 구조
 
@@ -93,7 +94,7 @@ Partner     ──▶  Partner GW  ──▶  마이크로서비스들
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### API 게이트웨이 솔루션 비교
 
@@ -119,7 +120,7 @@ Partner     ──▶  Partner GW  ──▶  마이크로서비스들
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Spring Cloud Gateway 설정 예시
 
@@ -161,7 +162,7 @@ spring:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 API 게이트웨이 도입 효과:
 

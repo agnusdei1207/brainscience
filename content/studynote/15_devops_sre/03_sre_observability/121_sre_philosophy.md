@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SRE(Site Reliability Engineering)는 Google이 정립한 **소프트웨어 엔지니어링으로 운영 문제를 해결**하는 철학이며, "운영을 소프트웨어 문제로 다루겠다"는 원칙 아래 **SLI/SLO/Error Budget**으로 신뢰성을 정량 관리한다.
+> **핵심**: SRE(Site Reliability Engineering)는 Google이 정립한 **소프트웨어 엔지니어링으로 운영 문제를 해결**하는 철학이며, "운영을 소프트웨어 문제로 다루겠다"는 원칙 아래 **SLI/SLO/Error Budget**으로 신뢰성을 정량 관리한다.
 > 2. **가치**: 전통 Ops는 "장애 없이 100% 가용"을 목표로 하지만, SRE는 **"100%는 잘못된 목표"**라고 선언하고, Error Budget(허용 가능 장애 시간)을 활용하여 **신뢰성과 혁신 속도의 균형**을 유지한다.
 > 3. **판단 포인트**: SLI(측정 지표)→SLO(목표 임계치)→Error Budget(남은 여유)→SLA(계약)의 계층 구조를 이해하고, Error Budget이 소진되면 **피처 개발을 중단하고 신뢰성 개선에 집중**하는 정책이 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -38,7 +40,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### SRE vs DevOps
 
@@ -57,7 +59,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 전통 Ops | SRE |
 |:---|:---|:---|
@@ -67,7 +69,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### SRE 핵심 도서
 - **"Site Reliability Engineering"** (Google, 2016): SRE 바이블.
@@ -75,7 +77,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 SRE는 **"완벽한 가용성은 잘못된 목표"**라는 혁명적 관점으로, Error Budget을 통해 신뢰성과 혁신의 균형을 정량적으로 관리하는 현대 운영의 표준이다.
 

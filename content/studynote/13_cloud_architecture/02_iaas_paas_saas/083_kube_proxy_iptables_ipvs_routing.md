@@ -2,15 +2,20 @@
 title = "83. Kube-proxy - 노드 내부의 네트워크 라우팅 및 서비스 로드밸런싱 통신 규칙(iptables/IPVS) 설정"
 weight = 83
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> **핵심**: (개념 본질)
+> **비유**: (개념 비유)
+
+> 📝 모범 답안
+
 - **본질**: Kube-proxy는 각 노드에 배포되어 Service VIP (Virtual IP) 트래픽을 살아 있는 Pod endpoint로 바꿔 주는 노드 로컬 네트워크 규칙 관리자다.
 - **가치**: Pod IP가 계속 바뀌어도 Service 주소는 고정되므로, 애플리케이션은 서비스 이름만 알고 통신할 수 있다.
 - **판단 포인트**: 작은 클러스터는 iptables로도 충분하지만, 규모가 커지면 IPVS (IP Virtual Server)나 eBPF (Extended Berkeley Packet Filter) 계열로 전환할지 판단해야 한다.
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 쿠버네티스에서 Pod는 임시적이다. 죽었다가 다시 뜨면 IP가 바뀐다. 애플리케이션이 이 변화를 직접 추적하게 두면, 서비스는 주소 변경 때문에 쉽게 깨진다. Kube-proxy는 이 문제를 해결하기 위해 Service라는 안정된 진입점을 만들고, 실제로는 살아 있는 Pod들로 트래픽을 흘려 보낸다.
 
@@ -27,7 +32,7 @@ weight = 83
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Kube-proxy는 보통 모든 워커 노드에 DaemonSet으로 배포된다. 그리고 Service와 Endpoints 변경을 감시해 iptables 또는 IPVS 테이블을 갱신한다. 여기서 실제 패킷 중계는 커널이 수행하고, Kube-proxy는 규칙만 만든다. 패킷은 DNAT (Destination Network Address Translation)을 거쳐 목적지 Pod로 바뀐다.
 
@@ -53,7 +58,7 @@ Service 타입도 함께 봐야 한다. ClusterIP는 클러스터 내부에서�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Kube-proxy는 Ingress나 외부 전송 계층 로드밸런서와 역할이 다르다. 외부 로드밸런서는 클러스터로 들어오는 큰 입구를 담당하고, Ingress는 애플리케이션 계층에서 경로와 호스트를 나눈다. Kube-proxy는 그 안쪽에서 Service VIP를 실제 Pod로 쪼개는 마지막 단계다.
 
@@ -70,7 +75,7 @@ iptables와 IPVS도 비교해야 한다. iptables는 규칙 수가 늘수록 순
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 서비스 수와 트래픽을 먼저 본다. 작은 클러스터면 iptables도 충분하지만, 서비스와 엔드포인트가 많아지면 선형 탐색이 병목이 된다. 그때는 IPVS로 바꾸거나, 더 나아가 eBPF 기반 dataplane으로 전환할지 검토한다.
 
@@ -88,7 +93,7 @@ iptables와 IPVS도 비교해야 한다. iptables는 규칙 수가 늘수록 순
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Kube-proxy는 서비스 이름을 안정적으로 유지하면서 Pod의 생명주기를 숨겨 준다. 그 결과 애플리케이션은 IP 변경을 신경 쓰지 않고도 트래픽을 처리할 수 있고, 운영자는 Service 단위로 네트워크를 관리할 수 있다.
 

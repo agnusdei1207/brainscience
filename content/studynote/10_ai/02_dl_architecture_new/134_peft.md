@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: PEFT는 **Foundation Model의 전체 파라미터 중 극소수(0.1~1%)만 추가·학습**하여 도메인 적응하는 기법의 총칭이며, LoRA·Adapter·Prefix Tuning·Prompt Tuning이 대표이다.
+> **핵심**: PEFT는 **Foundation Model의 전체 파라미터 중 극소수(0.1~1%)만 추가·학습**하여 도메인 적응하는 기법의 총칭이며, LoRA·Adapter·Prefix Tuning·Prompt Tuning이 대표이다.
 > 2. **가치**: 70B LLM을 Full FT하려면 A100 8장+가 필요하지만, PEFT(QLoRA)로는 **소비자 GPU 1장(24GB)**으로도 Fine-tuning이 가능하여 민주화를 실현한다.
 > 3. **판단 포인트**: LoRA(저랭크 행렬)가 성능 대비 효율 최고이며, 여러 LoRA 어댑터를 교체하여 **하나의 베이스 모델로 다양한 도메인에 대응**할 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Full FT:       100% 파라미터 학습 (비용↑↑)

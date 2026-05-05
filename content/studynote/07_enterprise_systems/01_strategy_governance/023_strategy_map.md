@@ -5,16 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 전략 체계도 (Strategy Map)는 균형 성과 기록표 (BSC, Balanced Scorecard)의 4대 관점—재무, 고객, 내부 프로세스, 학습 및 성장—간 전략 목표의 인과관계를 화살표로 시각화한 한 장짜리 전략 스토리보드다.
+> **핵심**: 전략 체계도 (Strategy Map)는 균형 성과 기록표 (BSC, Balanced Scorecard)의 4대 관점—재무, 고객, 내부 프로세스, 학습 및 성장—간 전략 목표의 인과관계를 화살표로 시각화한 한 장짜리 전략 스토리보드다.
 > 2. **가치**: 경영진의 추상적 전략을 전 직원이 공유 가능한 시각적 논리 지도로 단순화하여, "내 업무가 어떻게 회사 재무 성과에 기여하는가"를 직관적으로 이해하게 한다.
 > 3. **판단 포인트**: 지표 (KPI, Key Performance Indicator)가 상위 화살표와 연결되지 않는 고아 목표 (Orphan Objective)를 즉시 식별하여 비전략적 예산 낭비를 차단하는 자원 배분 필터로 기능한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 전략 체계도 (Strategy Map)는 BSC (Balanced Scorecard)의 창시자 로버트 캐플란과 데이비드 노튼이 2001년 제안한 시각화 프레임워크다. 기존 BSC는 4대 관점의 지표를 단순 나열한 대시보드에 그쳤으나, 현장 직원들은 개별 KPI의 달성에만 매몰되어 지표 간의 유기적 인과관계를 이해하지 못하는 문제가 반복됐다.
 
@@ -40,7 +41,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 전략 체계도의 아키텍처는 **하향식으로 설계되고(Design Top-Down) 상향식으로 실행된다(Execute Bottom-Up)**. 경영진이 최상단 재무 목표를 먼저 확정한 뒤, 그 목표를 달성하기 위해 필요한 고객 가치 → 핵심 프로세스 → 무형자산(IT/인재)을 역순으로 도출하는 방식이다.
 
@@ -79,7 +80,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 전략 체계도는 경영 분석 도구인 가치 사슬 (Value Chain), 프로세스 마이닝 (Process Mining)과 시너지를 내며, 기업 아키텍처 (EA, Enterprise Architecture)의 비즈니스 레이어를 시각화하는 데 직접 응용된다.
 
@@ -115,7 +116,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서 전략 체계도를 작성할 때 빠지기 쉬운 3가지 함정이 있다.
 
@@ -163,7 +164,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 전략 체계도는 경영진의 암묵지 (Tacit Knowledge)를 전 직원이 공유 가능한 형식지 (Explicit Knowledge)로 변환하는 강력한 소통 도구이자 의사결정 프레임워크다.
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: 가치 사슬(Value Chain)은 Michael Porter가 1985년 제시한 기업 경쟁 우위 분석 도구로, 원재료 조달부터 최종 고객 서비스까지의 모든 활동을 "주활동(Primary Activities)"과 "지원활동(Support Activities)"으로 분해해 가치 창출 원천을 파악한다.
+> **핵심**: 가치 사슬(Value Chain)은 Michael Porter가 1985년 제시한 기업 경쟁 우위 분석 도구로, 원재료 조달부터 최종 고객 서비스까지의 모든 활동을 "주활동(Primary Activities)"과 "지원활동(Support Activities)"으로 분해해 가치 창출 원천을 파악한다.
 > 2. **가치**: IT 시스템은 단순 지원 도구가 아니라 각 가치 사슬 활동을 디지털화·자동화해 경쟁 우위를 창출하는 전략적 자산이다. IT가 어느 활동에서 가장 큰 부가가치를 만드는지를 분석하면 IT 투자 우선순위가 결정된다.
 > 3. **판단 포인트**: 가치 사슬 분석의 핵심은 각 활동의 비용과 차별화 잠재력을 개별 분리(Disaggregation)하는 것이다. 모든 활동을 동등하게 취급하면 경쟁 우위의 원천을 찾을 수 없다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### Michael Porter와 경쟁 우위
 하버드 경영대학원의 Michael Porter는 1985년 저서 "Competitive Advantage: Creating and Sustaining Superior Performance"에서 가치 사슬을 소개했다. Porter는 경쟁 우위를 비용 우위(Cost Leadership)와 차별화 우위(Differentiation)로 나누고, 이 두 가지 중 어느 하나를 특정 가치 사슬 활동에서 달성해야 지속 가능한 경쟁력이 생긴다고 주장했다.
@@ -28,7 +30,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Porter의 가치 사슬 모델 전체 구조
 
@@ -81,7 +83,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 가치 사슬 vs 공급망(Supply Chain) vs 비즈니스 프로세스
 
@@ -108,7 +110,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 가치 사슬 분석 5단계 방법론
 1. **활동 식별**: 기업의 모든 활동을 주활동·지원활동으로 분류
@@ -127,7 +129,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 전략적 IT 투자 우선순위 결정
 가치 사슬 분석은 IT 투자가 어느 활동에서 가장 큰 ROI를 창출하는지 결정하는 프레임워크를 제공한다. 제조업에서 불량률이 높다면 MES(제조 실행 시스템) 투자가 우선이고, 배송 불만이 많다면 TMS와 고객 알림 시스템이 우선이다.

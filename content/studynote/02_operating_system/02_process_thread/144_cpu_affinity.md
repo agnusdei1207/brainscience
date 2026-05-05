@@ -5,16 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
+
+> **비유:** 아이가 항상 앉던 자리를 선호하는 것(Soft)과, 담임 선생님이 특정 자리를 지정하는 것(Hard)의 차이와 같다.
+
+> 📝 모범 답안
 
 # CPU 친화성 Soft/Hard Affinity
 
-## Ⅰ. CPU 어피니티 개념
+## 1. 개요 및 필요성
 
 ### 1. 정의
 
 CPU 어피니티(CPU Affinity)는 프로세스나 스레드가 실행될 CPU 코어의 집합을 지정 또는 선호하는 속성이다. 운영체제 스케줄러의 스레드 배치 정책에 직접적인 영향을 미친다.
-
-> **비유:** 아이가 항상 앉던 자리를 선호하는 것(Soft)과, 담임 선생님이 특정 자리를 지정하는 것(Hard)의 차이와 같다.
 
 ```
 ┌─────────── CPU Affinity Overview ────────────┐
@@ -75,7 +78,7 @@ CPU 어피니티(CPU Affinity)는 프로세스나 스레드가 실행될 CPU 코
 └───────────────────────────────────────────┘
 ```
 
-## Ⅱ. CPU 마스크 비트맵
+## 2. 구성요소
 
 ### 1. 비트마스크 구조
 
@@ -121,7 +124,7 @@ taskset -c 0,1 ./my_app
 echo "0-1" > /sys/fs/cgroup/cpuset/mygroup/cpuset.cpus
 ```
 
-## Ⅲ. 로드 불균형 위험
+## 3. 구조 및 동작 원리
 
 ### 1. 과도한 고정의 문제
 
@@ -156,7 +159,7 @@ echo "0-1" > /sys/fs/cgroup/cpuset/mygroup/cpuset.cpus
 
 > **비유:** 4개의 계산대가 있는 마트에서 모든 손님을 1번 계산대로만 보내면 혼잡해지는 것과 같다.
 
-## Ⅳ. NUMA와의 관계
+## 4. 비교 및 트레이드오프
 
 ### 1. NUMA 시스템에서의 어피니티
 
@@ -189,7 +192,7 @@ echo "0-1" > /sys/fs/cgroup/cpuset/mygroup/cpuset.cpus
 | **메모리 노드 바인딩** | `numactl --membind=0` | Node 0의 메모리만 할당 |
 | **선호도 설정** | `numactl --preferred=0` | Node 0 선호, 부족 시 다른 노드 |
 
-## Ⅴ. 지식 그래프
+## 5. 실무 적용 및 최적화 기법
 
 ```
 CPU 친화성 Soft/Hard Affinity

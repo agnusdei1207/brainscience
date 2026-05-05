@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: NoSQL Injection (NoSQL 인젝션)은 MongoDB, Redis, Elasticsearch 등 비관계형 DB (Database)에서 JSON (JavaScript Object Notation)/BSON 쿼리 구조나 쿼리 연산자를 악용해 인증 우회, 데이터 탈취를 유발하는 공격이다.
+> **핵심**: NoSQL Injection (NoSQL 인젝션)은 MongoDB, Redis, Elasticsearch 등 비관계형 DB (Database)에서 JSON (JavaScript Object Notation)/BSON 쿼리 구조나 쿼리 연산자를 악용해 인증 우회, 데이터 탈취를 유발하는 공격이다.
 > 2. **가치**: "SQL을 안 쓰면 SQL 인젝션이 없다"는 잘못된 인식과 달리, MongoDB의 `$where`, `$regex`, `$gt` 연산자가 새로운 인젝션 공격 벡터가 된다.
 > 3. **판단 포인트**: 쿼리 파라미터의 타입 검증(JSON 객체를 문자열로 강제), MongoDB 쿼리 연산자 화이트리스트, 최신 드라이버 사용이 핵심 방어책이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 NoSQL 데이터베이스는 SQL을 사용하지 않지만, 사용자 입력을 쿼리에 직접 포함하면 동일한 인젝션 위험에 노출된다. 특히 MongoDB에서 HTTP 요청 바디의 JSON이 쿼리 객체로 직접 변환될 때 공격자가 쿼리 연산자(`$gt`, `$ne`, `$where`, `$regex`)를 주입할 수 있다.
 
@@ -33,7 +35,7 @@ db.users.find({ username: req.body.username, password: req.body.password })
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 MongoDB 주요 인젝션 연산자:
 
@@ -65,7 +67,7 @@ MongoDB 주요 인젝션 연산자:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | SQL 인젝션 | NoSQL 인젝션 |
 |:---|:---|:---|
@@ -78,7 +80,7 @@ MongoDB 주요 인젝션 연산자:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **대응 전략**:
 1. **타입 강제 검증**: 비밀번호 필드는 반드시 string 타입만 허용, 객체 수신 시 거부
@@ -98,7 +100,7 @@ db.users.find({ username: username, password: password });
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 타입 강제 검증과 ODM 스키마를 활용하면 NoSQL 인젝션을 구조적으로 방어할 수 있다. 특히 Express.js 환경에서 `express-validator`와 Mongoose를 조합하면 입력 타입 검증과 쿼리 안전성을 동시에 확보할 수 있다.
 

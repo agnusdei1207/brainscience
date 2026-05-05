@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: PropTech(Property Technology)는 **부동산 산업에 AI·빅데이터·IoT·블록체인을 적용**하여 거래·관리·투자·건설을 혁신하는 기술 분야이다.
+> **핵심**: PropTech(Property Technology)는 **부동산 산업에 AI·빅데이터·IoT·블록체인을 적용**하여 거래·관리·투자·건설을 혁신하는 기술 분야이다.
 > 2. **가치**: 전통 부동산은 정보 비대칭·불투명 거래·비효율 관리가 문제이며, PropTech는 **AI 시세 예측·VR 모델하우스·스마트 빌딩·토큰 증권(STO) 투자**로 혁신한다.
 > 3. **판단 포인트**: Construction Tech(건설)·Smart Building(관리)·Real Estate Marketplace(거래)·RE STO(투자)가 PropTech의 4대 영역이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 PropTech 4대 영역:

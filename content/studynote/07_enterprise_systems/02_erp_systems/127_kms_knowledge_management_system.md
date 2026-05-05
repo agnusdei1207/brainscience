@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: KMS는 **조직 내 암묵지(Tacit Knowledge)를 형식지(Explicit Knowledge)로 변환·저장·공유·활용**하는 시스템으로, 노나카의 SECI 모델(사회화→외부화→결합화→내면화)이 이론적 기반이다.
+> **핵심**: KMS는 **조직 내 암묵지(Tacit Knowledge)를 형식지(Explicit Knowledge)로 변환·저장·공유·활용**하는 시스템으로, 노나카의 SECI 모델(사회화→외부화→결합화→내면화)이 이론적 기반이다.
 > 2. **가치**: 핵심 인력 퇴사 시 **지식 유실**이 발생하고, 같은 문제를 반복 해결하는 **지식 중복**이 생기지만, KMS는 **조직 지식을 자산화**하여 재사용·학습·혁신을 가속한다.
 > 3. **판단 포인트**: CoP(Community of Practice, 실천공동체)가 KMS의 조직적 기반이며, 위키·포럼·전문가 네트워크·문서 관리가 핵심 기능이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -32,7 +34,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### KMS 핵심 기능
 
@@ -48,7 +50,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | KMS 없음 | KMS 있음 |
 |:---|:---|:---|
@@ -58,7 +60,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 현대 KMS
 - **Confluence**: Atlassian 위키 기반.
@@ -68,7 +70,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 KMS는 **조직 지식을 자산화**하여 인력 유실 위험을 줄이고, AI/RAG와 결합하여 **사내 지식 챗봇**으로 진화하고 있다.
 

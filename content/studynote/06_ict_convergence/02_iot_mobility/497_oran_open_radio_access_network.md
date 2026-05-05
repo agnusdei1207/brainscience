@@ -5,16 +5,17 @@ weight = 497
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: O-RAN(Open Radio Access Network)은 기존 이동통신 기지국의 하드웨어와 소프트웨어를 분리(Disaggregation)하고 인터페이스를 개방(Open)하여, 특정 벤더에 종속되지 않는 다중 공급자 기지국 생태계를 구축하는 아키텍처다.
+> **핵심**: O-RAN(Open Radio Access Network)은 기존 이동통신 기지국의 하드웨어와 소프트웨어를 분리(Disaggregation)하고 인터페이스를 개방(Open)하여, 특정 벤더에 종속되지 않는 다중 공급자 기지국 생태계를 구축하는 아키텍처다.
 > 2. **가치**: 단일 벤더 장비(Nokia·Ericsson·Huawei)에 의존하던 통신사의 벤더 종속성(Vendor Lock-in)을 탈피하고, 3rd party 소프트웨어(xApp·rApp)로 망 기능을 확장하여 TCO(Total Cost of Ownership)를 절감한다.
 > 3. **판단 포인트**: O-RAN의 개방형 인터페이스(Fronthaul·Midhaul)는 혁신의 기회이자 보안 취약점이다. 기술사 시험에서 O-RAN의 가치(개방·경쟁·혁신)와 위험(보안·호환성)을 함께 논해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 **기존 RAN(Radio Access Network) 한계**
 
@@ -30,7 +31,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -71,7 +72,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **O-RAN vs C-RAN(Cloud RAN) vs 전통 RAN**
 
@@ -89,7 +90,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **O-RAN 도입의 기대 효과**
 
@@ -108,7 +109,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 O-RAN은 이동통신 산업의 구조적 혁신을 이끄는 핵심 트렌드다. 벤더 종속 탈피, TCO 절감, AI 기반 망 지능화가 주요 가치이나 보안·호환성·표준 성숙도가 해결 과제다. 기술사 시험에서는 O-RAN 3분할(O-RU/O-DU/O-CU), RIC 구조, 개방 인터페이스의 장단점을 체계적으로 정리해야 한다.
 

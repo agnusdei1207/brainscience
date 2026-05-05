@@ -5,15 +5,17 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: AWS Nitro Enclaves (AWS 니트로 엔클레이브)는 EC2 (Elastic Compute Cloud) 인스턴스 내에서 고도로 격리된 CPU (Central Processing Unit) 및 메모리 구역을 생성하여, 민감한 데이터를 처리하는 격리된 가상 환경을 제공하는 기술이다.
+> **핵심**: AWS Nitro Enclaves (AWS 니트로 엔클레이브)는 EC2 (Elastic Compute Cloud) 인스턴스 내에서 고도로 격리된 CPU (Central Processing Unit) 및 메모리 구역을 생성하여, 민감한 데이터를 처리하는 격리된 가상 환경을 제공하는 기술이다.
 > 2. **가치**: 호스트 인스턴스의 사용자, 관리자 및 Nitro Hypervisor (니트로 하이퍼바이저)조차 접근할 수 없는 독립적 실행 환경을 구축함으로써, 데이터 기밀성 (Confidentiality)과 무결성 (Integrity)을 하드웨어 수준에서 보장한다.
 > 3. **융합**: Nitro Card (니트로 카드) 기반의 하드웨어 오프로딩 기술과 증명 문서 (Attestation Document) 발급 프로세스를 결합하여, 기밀 컴퓨팅 (Confidential Computing) 생태계의 핵심적인 신뢰 실행 환경 (TEE: Trusted Execution Environment)으로 자리 잡고 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: AWS Nitro Enclaves (AWS 니트로 엔클레이브)는 동일한 EC2 (Elastic Compute Cloud) 인스턴스 내의 다른 프로세스나 사용자로부터 완전히 격리된 별도의 가상 머신 환경을 만드는 기술이다. 이는 영구 저장 장치 (Persistent Storage), 외부 네트워크 (External Networking), 인터랙티브 접근 (Interactive Access)이 모두 차단된 '잠긴 방'과 같은 환경을 제공한다.
 
@@ -64,7 +66,7 @@ AWS Nitro Enclaves가 일반적인 EC2 (Elastic Compute Cloud) 인스턴스 내�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -136,7 +138,7 @@ Nitro Enclaves의 가장 강력한 기능 중 하나는 자신이 "수정되지 
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### AWS Nitro Enclaves vs 일반 EC2 인스턴스
 
@@ -158,7 +160,7 @@ Nitro Enclaves는 단독으로 쓰이기보다 AWS KMS (Key Management Service)�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **시나리오 — 신용카드 번호 처리 서버**: 외부 API로부터 들어온 암호화된 카드 번호를 복호화하여 유효성을 검사해야 하는 상황. 일반 서버에서 복호화하면 메모리 덤프 공격에 취약하므로, 복호화 로직을 Nitro Enclaves 내부에 배치하고 오직 엔클레이브만이 KMS에서 복호화 키를 가져올 수 있게 설계한다.
@@ -178,7 +180,7 @@ Nitro Enclaves는 단독으로 쓰이기보다 AWS KMS (Key Management Service)�
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Foundation Model은 **대규모 비라벨 데이터로 사전 학습(Pre-training)된 범용 모델**이며, Fine-tuning이나 Prompt로 다양한 다운스트림 작업에 적응한다. GPT·BERT·LLaMA·Stable Diffusion이 대표이다.
+> **핵심**: Foundation Model은 **대규모 비라벨 데이터로 사전 학습(Pre-training)된 범용 모델**이며, Fine-tuning이나 Prompt로 다양한 다운스트림 작업에 적응한다. GPT·BERT·LLaMA·Stable Diffusion이 대표이다.
 > 2. **가치**: 각 작업마다 별도 모델을 학습하는 **"하나의 작업=하나의 모델"** 패러다임을 **"하나의 모델=모든 작업"**으로 전환하여, 데이터·컴퓨팅 효율을 극대화했다.
 > 3. **판단 포인트**: 사전 학습 비용(수백만 달러)은 한 번만 지불하고, 이후 Fine-tuning·Prompt 비용은 극히 적어 **규모의 경제**가 핵심 가치이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Foundation Model:

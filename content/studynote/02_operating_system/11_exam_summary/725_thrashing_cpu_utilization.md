@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 스래싱 (Thrashing) CPU 이용률 저하
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 스래싱(Thrashing)은 다중 프로그래밍(Multiprogramming) 환경에서 메모리(RAM)에 너무 많은 프로세스를 욱여넣었을 때, **CPU가 원래 해야 할 '프로그램 연산'은 멈춘 채, 디스크에서 페이지를 넣고 빼는(Swap in/out) 무의미한 막노동에만 100%의 시간을 쏟는 치명적 시스템 붕괴 상태**다.
+> **핵심**: 스래싱(Thrashing)은 다중 프로그래밍(Multiprogramming) 환경에서 메모리(RAM)에 너무 많은 프로세스를 욱여넣었을 때, **CPU가 원래 해야 할 '프로그램 연산'은 멈춘 채, 디스크에서 페이지를 넣고 빼는(Swap in/out) 무의미한 막노동에만 100%의 시간을 쏟는 치명적 시스템 붕괴 상태**다.
 > 2. **악순환의 고리**: CPU 사용률이 떨어지는 것을 본 OS 스케줄러는 "어라? CPU가 놀고 있네? 프로그램을 더 띄워야지!"라고 오판하여 메모리에 프로세스를 더 밀어 넣게 되고, 이로 인해 Page Fault가 더 미친 듯이 폭발하며 시스템이 완전히 마비되는 데스 스파이럴(Death Spiral)에 빠진다.
 > 3. **해결책**: 스래싱을 막는 유일한 방법은 다중 프로그래밍 정도(Degree of Multiprogramming)를 강제로 낮춰서 몇몇 프로세스를 완전히 쫓아내거나(Suspend), 각 프로세스가 필수적으로 필요로 하는 최소한의 메모리 덩어리인 **워킹 셋(Working Set)**을 보장해 주는 아키텍처를 도입하는 것이다.
 
+> 📝 모범 답안
+
+# 스래싱 (Thrashing) CPU 이용률 저하
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **스래싱 (Thrashing)**: 프로세스가 실제 실행되는 시간보다, 페이지 교체(Page Fault 처리)에 더 많은 시간을 소비하여 시스템 전체의 성능이 곤두박질치는 현상.
@@ -41,7 +43,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 스래싱의 수학적 발생 구조 (CPU 이용률 그래프)
 
@@ -87,7 +89,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 로컬 교체 (Local Replacement) vs 글로벌 교체 (Global Replacement)
 
@@ -107,7 +109,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -153,7 +155,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

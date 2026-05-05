@@ -2,15 +2,17 @@
 title = "356. EIGRP 특징: 부분/바운디드 업데이트, Unequal-Cost 부하분산, Successor / Feasible Successor"
 weight = 356
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 앞서 배운 EIGRP의 DUAL 알고리즘을 든든하게 받쳐주는 두 가지 강력한 무기는, 쓸데없이 30초마다 전체 지도를 뿌리지 않는 **'부분/제한적 업데이트(Partial/Bounded Update)'**와 점수가 다른 길도 섞어 쓸 수 있는 **'불균등 로드 밸런싱(Unequal-Cost Load Balancing)'**이다.
+> **핵심**: 앞서 배운 EIGRP의 DUAL 알고리즘을 든든하게 받쳐주는 두 가지 강력한 무기는, 쓸데없이 30초마다 전체 지도를 뿌리지 않는 **'부분/제한적 업데이트(Partial/Bounded Update)'**와 점수가 다른 길도 섞어 쓸 수 있는 **'불균등 로드 밸런싱(Unequal-Cost Load Balancing)'**이다.
 > 2. **부분/바운디드 업데이트**: EIGRP는 네트워크에 변화(선로 단절 등)가 생겼을 때만 딱 그 **'변화된 부분(Partial)'** 정보만을, 그 변화에 영향을 받는 **'관련된 이웃 라우터들에게만(Bounded)'** 콕 집어서 멀티캐스트로 조용히 날려 대역폭 낭비를 0으로 만든다.
 > 3. **Unequal Cost 부하분산**: RIP나 OSPF는 점수(Metric)가 100% 똑같은 A길과 B길에서만 패킷을 5:5로 나눠 쏘지만, EIGRP는 **10점짜리 1등 길(Successor)과 30점짜리 2등 길(Feasible Successor)을 3:1 비율로 똑똑하게 나눠 쏘며 버려지는 길 없이 대역폭을 싹싹 긁어모아 쓴다**.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: Cisco의 독자 라우팅 프로토콜인 EIGRP가 경쟁 프로토콜(OSPF, RIP) 대비 기술적 우위를 점하게 해주는 핵심 최적화 기능들.
 - **필요성**: 
@@ -25,7 +27,7 @@ weight = 356
 
 ---
 
-## Ⅱ. 핵심 동작 메커니즘의 실무적 이해 (Deep Dive)
+## 2. 구성요소
 
 ### 1. 부분 및 제한적 업데이트 (Partial & Bounded Update)
 이 기능 덕분에 EIGRP는 "Hello" 패킷(5초 주기) 외에는 평소에 아예 대역폭을 소모하지 않는다.

@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 쿠버네티스(Kubernetes, K8s)는 컨테이너의 배포, 스케일링, 자가 치유(Self-Healing)를 자동화하는 오케스트레이션 플랫폼이며, 선언적(Declarative) 방식으로 '원하는 상태(Desired State)'를 명세한다.
+> **핵심**: 쿠버네티스(Kubernetes, K8s)는 컨테이너의 배포, 스케일링, 자가 치유(Self-Healing)를 자동화하는 오케스트레이션 플랫폼이며, 선언적(Declarative) 방식으로 '원하는 상태(Desired State)'를 명세한다.
 > 2. **가치**: Pod → ReplicaSet → Deployment 계층 구조로 롤링 업데이트, 롤백, 오토스케일링을 코드 한 줄 없이 YAML 선언만으로 실현한다.
 > 3. **판단 포인트**: K8s 운영 복잡성은 학습 비용과 맞바꾸는 것이므로, 소규모 서비스는 ECS나 Cloud Run 같은 매니지드 서비스가 더 적합할 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 수백~수천 개의 컨테이너를 수동으로 관리하는 것은 불가능하다. 컨테이너가 죽으면 재시작해야 하고, 트래픽이 늘면 복제해야 하며, 업데이트 시 무중단을 보장해야 한다. 이 모든 자동화를 담당하는 플랫폼이 Kubernetes다.
 
@@ -28,7 +29,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 **K8s 아키텍처**:
 
@@ -69,7 +70,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **서비스 유형(외부 접근 방법)**:
 
@@ -86,7 +87,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **기술사 시험 판단 포인트**:
 1. 컨트롤 플레인과 데이터 플레인 분리를 그림과 함께 설명할 수 있어야 한다.
@@ -99,7 +100,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Kubernetes 도입으로:
 - **운영 자동화**: 수동 재시작, 수동 스케일링 작업 90% 감소

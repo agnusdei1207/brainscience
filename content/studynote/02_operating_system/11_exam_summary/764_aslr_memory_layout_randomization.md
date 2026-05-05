@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# ASLR 메모리 레이아웃 난수화 (Address Space Layout Randomization)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ASLR (주소 공간 배치 무작위화)은 애플리케이션이 실행될 때마다 코드, 데이터, 힙(Heap), 스택(Stack), 공유 라이브러리(libc)가 **메모리에 올라가는 가상 주소(Virtual Address)의 위치를 매번 예측 불가능하게 랜덤(Random)하게 뒤섞어 버리는 운영체제의 보호막**이다.
+> **핵심**: ASLR (주소 공간 배치 무작위화)은 애플리케이션이 실행될 때마다 코드, 데이터, 힙(Heap), 스택(Stack), 공유 라이브러리(libc)가 **메모리에 올라가는 가상 주소(Virtual Address)의 위치를 매번 예측 불가능하게 랜덤(Random)하게 뒤섞어 버리는 운영체제의 보호막**이다.
 > 2. **가치**: 해커가 버퍼 오버플로우로 메모리 경계를 뚫더라도, 자신이 실행시키고 싶은 쉘코드나 리턴 주소(ROP Gadget)가 "어디에 있는지" 알 수 없게 만들어, 시스템 장악 시도를 치명타(Exploit)가 아닌 단순 프로그램 크래시(Crash, 서비스 종료)로 무력화시킨다.
 > 3. **융합**: 가상 메모리(Virtual Memory)의 논리적 추상화 구조 위에, 컴파일러(GCC/Clang)의 위치 독립 코드(PIE/PIC) 생성 기술, 그리고 OS의 보안 난수 발생기(CSPRNG)가 결합되어 탄생한 현대 시스템 방어 아키텍처의 필수 3요소(DEP, Canary, ASLR) 중 하나다.
 
+> 📝 모범 답안
+
+# ASLR 메모리 레이아웃 난수화 (Address Space Layout Randomization)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - 과거의 프로그램들은 `0x08048000` 같은 뻔하고 고정된 메모리 주소에 코드를 올리고 스택을 배정받았다.
@@ -58,7 +60,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### ASLR의 3단계 적용 범위 설정 (sysctl 파라미터)
 
@@ -101,7 +103,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 메모리 방어막 3대장 (DEP/NX vs Canary vs ASLR) 트라이포스
 
@@ -122,7 +124,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 트러블슈팅
 
@@ -166,7 +168,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,16 +5,20 @@ date = "2024-03-24"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+>  | Micro-batch 1 | ----> | RDD (t)   |
+
+> 📝 모범 답안
+
 - **마이크로 배치(Micro-batch):** 실시간 스트림 데이터를 아주 짧은 간격(예: 1초)의 작은 배치로 쪼개어 기존 스파크 배치 엔진으로 처리하는 방식.
 - **DStream (Discretized Stream):** 연속적인 데이터 흐름을 시간 단위의 RDD 시퀀스로 추상화하여, 기존 RDD 연산을 스트리밍 환경에서 그대로 활용 가능.
 - **신구 조화:** 초저지연(Native Streaming)보다는 처리량(Throughput)과 기존 코드 재사용성에 강점이 있으며, 현재는 Structured Streaming으로 진화하는 과도기적 핵심 기술.
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 아파치 스파크의 첫 번째 스트리밍 라이브러리인 Spark Streaming은 "모든 스트림 처리는 아주 작은 배치의 연속"이라는 철학에서 시작되었습니다. 이는 플링크(Flink) 같은 '이벤트 단위' 처리 모델과 대비되는 특징으로, 하둡 에코시스템과의 강력한 통합과 고도의 결함 허용(Fault Tolerance) 기능을 제공하며 실시간 분석 시장을 선도했습니다.
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 Spark Streaming은 입력을 짧은 주기의 RDD로 변환하여 스파크 코어 엔진으로 전달합니다.
 
 ```text
@@ -23,8 +27,7 @@ Spark Streaming은 입력을 짧은 주기의 RDD로 변환하여 스파크 코�
    (Input Stream)        (Spark Streaming)        (Spark Core)
    Kafka/Flume/S3           Receiver               Engine
    ~~~~~~~~~~~~~~       +---------------+       +-----------+
-   Data Flow (t)  --->  | Micro-batch 1 | ----> | RDD (t)   |
-   ~~~~~~~~~~~~~~       | (1 second)    |       +-----------+
+   Data Flow (t)  ---   ~~~~~~~~~~~~~~       | (1 second)    |       +-----------+
                         +---------------+       +-----------+
                         | Micro-batch 2 | ----> | RDD (t+1) |
                         | (1 second)    |       +-----------+
@@ -41,7 +44,7 @@ DStream = Sequence of RDDs (t, t+1, t+2, ...)
 3. **윈도우 연산 (Window Operations):** 현재 배치뿐 아니라 과거 여러 배치를 묶어서 집계(예: 최근 10분간의 평균) 수행.
 4. **체크포인팅 (Checkpointing):** 장애 시 상태 복구를 위해 메타데이터와 RDD 데이터를 안정적인 스토리지(HDFS)에 저장.
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 비교 항목 | Spark Streaming (DStream) | Structured Streaming |
 | :--- | :--- | :--- |
@@ -50,11 +53,11 @@ DStream = Sequence of RDDs (t, t+1, t+2, ...)
 | **최적화** | 수동 RDD 튜닝 필요 | Catalyst/Tungsten 자동 최적화 |
 | **이벤트 시간** | 처리 시간 기준 중심 (복잡) | 원어민 수준의 Event Time/Watermark 지원 |
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 - **실무 적용:** 기존에 작성된 대규모 스파크 배치 코드를 실시간으로 전환해야 할 때, DStream 모델을 사용하면 비즈니스 로직 수정 없이 배포할 수 있어 마이그레이션 비용이 저렴합니다.
 - **기술사적 판단:** DStream은 '초당 수십만 건'의 대량 처리에 유리하지만, '밀리초' 단위의 반응 속도가 중요한 증권 거래 등에는 부적합할 수 있습니다. 기술사는 비즈니스 요구사항(지연 시간 vs 처리량)을 분석하여 Spark Streaming과 Flink 중 적합한 엔진을 권고해야 합니다. 또한 최신 프로젝트라면 성능과 편의성이 개선된 'Structured Streaming'으로의 전환을 우선 고려해야 합니다.
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 Spark Streaming은 빅데이터 배치 처리와 실시간 처리를 단일 코드 베이스로 통합한 혁신적인 사례입니다. 비록 현재는 구조화된 스트리밍(Structured Streaming)에 주류 자리를 내주고 있으나, 마이크로 배치 사상은 클라우드 비용 최적화(서버리스 가동 시간 제어) 관점에서 여전히 유효한 아키텍처 표준입니다.
 
 ### 📌 관련 개념 맵 (Knowledge Graph)

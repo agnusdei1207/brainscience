@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: RLHF (Reinforcement Learning from Human Feedback)의 보상 모델(Reward Model, RM)은 사람의 선호도 데이터(Preference Data)를 학습하여, AI 모델의 답변이 얼마나 인간의 의도에 부합하는지 점수화(Scalar Score)하는 함수다.
+> **핵심**: RLHF (Reinforcement Learning from Human Feedback)의 보상 모델(Reward Model, RM)은 사람의 선호도 데이터(Preference Data)를 학습하여, AI 모델의 답변이 얼마나 인간의 의도에 부합하는지 점수화(Scalar Score)하는 함수다.
 > 2. **가치**: 단순히 정답을 맞히는 것을 넘어, 유해성(Toxicity), 사실관계(Truthfulness), 도움 정도(Helpfulness) 등 정량화하기 어려운 '인간의 가치'를 모델에 주입하는 핵심 교사 역할을 한다.
 > 3. **판단 포인트**: 보상 모델 학습 시 Bradley-Terry 모델 기반의 비교 손실 함수를 사용하며, RM의 품질이 최종 언어 모델(LLM)의 정렬(Alignment) 성능을 결정짓는 가장 중요한 병목 지점이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 대규모 언어 모델(LLM)이 사전 학습(Pre-training)과 미세 조정(SFT)을 거쳐도 여전히 환각이나 부적절한 답변을 내놓는 경우가 많다. 인간이 모든 답변에 점수를 매길 수 없으므로, 인간의 판단 기준을 모방하는 '보상 모델(RM)'을 만들어 기계가 스스로 피드백을 주고받으며 학습하게 해야 한다.
 
@@ -26,7 +28,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 보상 모델은 주로 사전 학습된 모델에 하나의 스칼라 값을 출력하는 Linear Layer를 붙여 구성하며, '비교 데이터'를 통해 학습된다.
 
@@ -65,7 +67,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | SFT (지도 미세 조정) | RLHF 보상 모델 (RM) |
 |:---|:---|:---|
@@ -79,7 +81,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 고려 사항
 1. **Reward Hacking (보상 해킹)**: 모델이 점수를 높게 받기 위해 인간이 좋아할 만한 미사여구만 늘어놓거나, 정답은 아니지만 듣기 좋은 말만 하는 현상을 경계해야 한다. (KL-Divergence 페널티 적용 필수)
@@ -93,7 +95,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 보상 모델은 AI가 단순히 지식을 나열하는 수준을 넘어, 인간과 진정으로 소통하고 공감하며 신뢰를 쌓을 수 있는 사회적 존재로 거듭나게 하는 핵심 장치다.
 

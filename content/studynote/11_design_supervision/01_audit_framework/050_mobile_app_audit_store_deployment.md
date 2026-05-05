@@ -5,15 +5,18 @@ description = "모바일 앱 감리의 스토어 배포 기준, 앱 스토어 �
 categories = "studynote-design"
 tags = ["mobile audit", "app store", "OWASP MASVS", "Play Store", "App Store Connect", "accessibility", "mobile security"]
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 모바일 앱 감리는 기능·성능·보안·접근성을 포함하며, 앱 스토어(Google Play·Apple App Store) 게재 정책 준수가 배포 전 필수 검증 항목이다.
 > 2. OWASP MASVS(Mobile Application Security Verification Standard)는 모바일 보안 검증의 국제 기준으로, L1(기본)~L2(심화) 수준 검증을 제공한다.
 > 3. 공공앱 감리에서는 웹 접근성(WCAG), 한국 장애인 차별금지법 기반 모바일 접근성 지침 준수 여부가 주요 감리 항목이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 모바일 앱 감리 개요
+## 1. 개요 및 필요성
 
 ### 1.1 감리 범위
 
@@ -39,7 +42,7 @@ tags = ["mobile audit", "app store", "OWASP MASVS", "Play Store", "App Store Con
 
 ---
 
-## Ⅱ. 앱 스토어 배포 정책 감리
+## 2. 구성요소
 
 ### 2.1 Google Play 주요 정책
 
@@ -63,7 +66,7 @@ tags = ["mobile audit", "app store", "OWASP MASVS", "Play Store", "App Store Con
 
 ---
 
-## Ⅲ. OWASP MASVS 보안 감리
+## 3. 구조 및 동작 원리
 
 ### 3.1 MASVS 구조
 
@@ -89,7 +92,7 @@ MASVS-RESILIENCE : 루팅/탈옥 탐지, 코드 난독화
 
 ---
 
-## Ⅳ. 모바일 접근성 감리
+## 4. 비교 및 트레이드오프
 
 ### 4.1 한국 모바일 접근성 지침 (KMAG)
 
@@ -111,7 +114,7 @@ MASVS-RESILIENCE : 루팅/탈옥 탐지, 코드 난독화
 
 ---
 
-## Ⅴ. 감리 보고서와 후속 조치
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 감리 결과 분류
 

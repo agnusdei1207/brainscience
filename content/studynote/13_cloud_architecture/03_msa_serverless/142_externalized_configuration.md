@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Externalized Configuration은 **애플리케이션의 설정(DB URL·API키·Feature Flag)을 코드 외부(환경변수·Config Server·Vault)로 분리**하여, 코드 변경 없이 환경별(dev/staging/prod) 설정을 관리하는 패턴이다.
+> **핵심**: Externalized Configuration은 **애플리케이션의 설정(DB URL·API키·Feature Flag)을 코드 외부(환경변수·Config Server·Vault)로 분리**하여, 코드 변경 없이 환경별(dev/staging/prod) 설정을 관리하는 패턴이다.
 > 2. **가치**: 설정이 코드에 하드코딩되면 **환경별 빌드가 필요**하고 시크릿 유출 위험이 있지만, 외부화하면 **하나의 이미지로 모든 환경**에 배포하고 런타임에 설정을 주입한다.
 > 3. **판단 포인트**: 12-Factor App 원칙의 "Config"항목이며, Spring Cloud Config·HashiCorp Consul·K8s ConfigMap/Secret·Vault가 핵심 도구이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 코드에 설정 → 환경별 빌드 필요 → 위험

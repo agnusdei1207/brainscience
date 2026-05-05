@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Kubernetes PSA(Pod Security Admission)는 Pod를 Privileged·Baseline·Restricted 세 보안 프로파일로 분류하여, 루트 실행·호스트 네트워크 접근 같은 위험 구성을 클러스터 레벨에서 강제로 차단하는 입장 통제 메커니즘이다.
+> **핵심**: Kubernetes PSA(Pod Security Admission)는 Pod를 Privileged·Baseline·Restricted 세 보안 프로파일로 분류하여, 루트 실행·호스트 네트워크 접근 같은 위험 구성을 클러스터 레벨에서 강제로 차단하는 입장 통제 메커니즘이다.
 > 2. **가치**: 컨테이너 탈출(Container Escape) 공격의 핵심 전제 조건인 "루트 권한 컨테이너 실행"을 정책으로 원천 차단하여, 컨테이너 킬 체인의 진입 장벽을 높인다.
 > 3. **판단 포인트**: Kubernetes 1.25에서 PodSecurityPolicy(PSP)가 제거되고 PSA로 완전 대체됐다. Restricted 프로파일을 기본값으로 시작하고, 예외는 명시적으로 허용하는 "최소 권한 원칙(Least Privilege)"이 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 컨테이너 환경의 보안 위협은 전통 VM 환경과 다르다. 컨테이너는 호스트 커널을 공유하므로, 특권(Privileged) 컨테이너가 탈출하면 전체 노드, 나아가 클러스터 전체를 장악할 수 있다. 이것이 "컨테이너 킬 체인(Container Kill Chain)"의 핵심 시나리오다.
 
@@ -26,7 +27,7 @@ Kubernetes는 이를 방어하기 위해 PodSecurityPolicy(PSP)를 도입했지�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### PSA 세 가지 보안 프로파일
 
@@ -99,7 +100,7 @@ spec:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### PSP vs PSA 비교
 
@@ -125,7 +126,7 @@ spec:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **PSA 마이그레이션 전략 (PSP → PSA)**:
 ```
@@ -165,7 +166,7 @@ spec:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 설명 |
 |:---|:---|

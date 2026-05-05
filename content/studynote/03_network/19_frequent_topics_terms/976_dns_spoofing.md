@@ -2,17 +2,20 @@
 title = "976. DNS 스푸핑 (DNS Spoofing / Cache Poisoning)"
 weight = 976
 +++
+## 0. 핵심 인사이트
 
-# 976. DNS 스푸핑 (DNS Spoofing / DNS Cache Poisoning)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: DNS 스푸핑 (DNS Spoofing)은 공격자가 위조된 DNS 응답 패킷을 정상적인 응답보다 먼저 희생자나 로컬 DNS 서버에 도달하게 하여, 피해자를 악성 웹사이트(Pharming)로 유도하는 통신 교란 공격이다.
+> **핵심**: DNS 스푸핑 (DNS Spoofing)은 공격자가 위조된 DNS 응답 패킷을 정상적인 응답보다 먼저 희생자나 로컬 DNS 서버에 도달하게 하여, 피해자를 악성 웹사이트(Pharming)로 유도하는 통신 교란 공격이다.
 > 2. **가치**: 이 공격이 성공하면 피해자는 올바른 URL(예: www.bank.com)을 입력하더라도 공격자의 서버로 접속하게 되며, 이는 금융 사기, 자격증명 탈취, 세션 하이재킹 등 치명적인 연계 공격(Exploit Chain)의 시발점이 된다.
 > 3. **융합**: UDP (User Datagram Protocol)의 비연결성 한계를 악용하는 구조적 취약점이므로, 본질적인 방어를 위해서는 인증서 기반의 HTTPS 활성화와 더불어 DNS 레코드의 무결성을 암호학적으로 검증하는 DNSSEC (DNS Security Extensions)의 전면적인 도입이 필수적이다.
 
+> 📝 모범 답안
+
+# 976. DNS 스푸핑 (DNS Spoofing / DNS Cache Poisoning)
+
+##
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: DNS (Domain Name System) 스푸핑은 사용자가 도메인 이름을 IP 주소로 변환할 때, 공격자가 조작된 IP 주소 정보를 응답으로 보내 피해자의 캐시(Cache)를 오염(Cache Poisoning)시키고 악성 사이트로 강제 우회(Redirect)시키는 네트워크 계층의 기만 공격(Spoofing)이다.
 
@@ -62,7 +65,7 @@ weight = 976
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (DNS 프로토콜 관점)
 
@@ -125,7 +128,7 @@ weight = 976
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 파밍 (Pharming) / 피싱 (Phishing) / 스푸핑 (Spoofing) 상관관계 분석
 
@@ -166,7 +169,7 @@ DNS 스푸핑은 '파밍(Pharming)'을 완성하기 위한 핵심 '기술적 수
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 의사결정
 
@@ -215,7 +218,7 @@ DNS 스푸핑은 '파밍(Pharming)'을 완성하기 위한 핵심 '기술적 수
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

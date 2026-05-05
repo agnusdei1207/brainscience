@@ -5,16 +5,17 @@ date = "2026-05-01"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 파드 (Pod)는 배포의 최소 실행 단위이고, 배포 (Deployment)는 파드의 원하는 상태를 관리한다.
+> **핵심**: 파드 (Pod)는 배포의 최소 실행 단위이고, 배포 (Deployment)는 파드의 원하는 상태를 관리한다.
 > 2. **가치**: 서비스 (Service)는 바뀌는 파드 IP를 숨기고 안정적인 접점을 제공한다.
 > 3. **판단 포인트**: 라벨/셀렉터, readiness/liveness probe, 롤링 업데이트가 안전한 배포의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 컨테이너를 그냥 띄우는 것만으로는 서비스 운영이 되지 않는다. 파드가 바뀌어도 접점이 유지되어야 하고, 배포 중에도 사용자는 끊기지 않아야 한다.
 
@@ -24,7 +25,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Deployment는 ReplicaSet을 통해 원하는 수의 Pod를 유지하고, Service는 label selector로 Pod를 묶어 안정적인 네트워크 엔드포인트를 제공한다.
 
@@ -46,7 +47,7 @@ Service ────────────────▶ Pod (via selector)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Service는 ClusterIP, NodePort, LoadBalancer 등으로 노출 방식이 달라진다. Deployment는 Stateless 앱에 적합하고, StatefulSet은 상태를 가진 워크로드에 적합하다.
 
@@ -62,7 +63,7 @@ Service는 ClusterIP, NodePort, LoadBalancer 등으로 노출 방식이 달라�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 라벨 설계, 리소스 요청/제한, 롤링 업데이트 전략, canary/blue-green 배포, HPA (Horizontal Pod Autoscaler)를 함께 본다.
 
@@ -85,7 +86,7 @@ Service는 ClusterIP, NodePort, LoadBalancer 등으로 노출 방식이 달라�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Service와 Pod 배포 구조를 이해하면 무중단 배포와 장애 복구를 안정적으로 설계할 수 있다. Kubernetes 운영의 가장 실용적인 기초다.
 

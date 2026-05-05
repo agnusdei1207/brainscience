@@ -7,17 +7,20 @@ date = "2026-03-04"
 categories = ["13_cloud_architecture"]
 tags = ["Cloud", "Virtualization", "Hypervisor", "Infrastructure", "VM"]
 +++
+## 0. 핵심 인사이트
 
-# 가상화 (Virtualization)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 가상화(Virtualization)는 물리적인 단일 하드웨어(CPU, RAM, 디스크) 위에 하이퍼바이저(Hypervisor)라는 제어 소프트웨어를 얹어, 완전히 독립된 운영체제를 가진 여러 개의 논리적 가상 머신(VM)으로 분할 구동하는 기반 기술이다.
+> **핵심**: 가상화(Virtualization)는 물리적인 단일 하드웨어(CPU, RAM, 디스크) 위에 하이퍼바이저(Hypervisor)라는 제어 소프트웨어를 얹어, 완전히 독립된 운영체제를 가진 여러 개의 논리적 가상 머신(VM)으로 분할 구동하는 기반 기술이다.
 > 2. **가치**: 10~20%에 불과했던 물리 서버의 유휴 자원 활용률을 80% 이상으로 극대화하여 데이터센터의 상면과 전력 비용을 파괴적으로 절감하고, 하드웨어 장단에 구애받지 않는 소프트웨어의 독립성을 부여한다.
 > 3. **융합**: 컨테이너(Docker), 마이크로VM(Firecracker), 그리고 서버/네트워크/스토리지를 모두 가상화하는 소프트웨어 정의 데이터센터(SDDC)의 역사적, 구조적 뼈대이자 퍼블릭 클라우드의 심장이다.
 
+> 📝 모범 답안
+
+# 가상화 (Virtualization)
+
+##
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 과거의 IT 환경은 "1 애플리케이션 = 1 물리 서버"라는 경직된 구조였다. 웹 서버, DB 서버, 메일 서버를 각각 별도의 물리적 철제 박스(Bare-metal)에 설치했다. 이 구조는 안정적이었지만 트래픽이 없을 때도 CPU는 빈둥거리며 전력을 소모했고(자원 낭비), 장비가 고장 나면 똑같은 하드웨어 부품을 구해 OS를 재설치해야 하는 최악의 복구 리드 타임(RTO)을 가졌다.
 
@@ -47,7 +50,7 @@ tags = ["Cloud", "Virtualization", "Hypervisor", "Infrastructure", "VM"]
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 가상화를 구현하는 심장부인 하이퍼바이저는 설치되는 위치(하드웨어 위 vs OS 위)에 따라 Type 1과 Type 2로 나뉘며, CPU 명령어를 어떻게 번역하느냐에 따라 전가상화와 반가상화로 세분화된다.
 
@@ -84,7 +87,7 @@ tags = ["Cloud", "Virtualization", "Hypervisor", "Infrastructure", "VM"]
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 명령어 번역 과정의 오버헤드를 극복하기 위해 가상화 기술은 전가상화 → 반가상화 → 하드웨어 보조 가상화로 진화해왔다. 이 진화 트리를 비교하는 것은 아키텍트의 필수 소양이다.
 
@@ -108,7 +111,7 @@ tags = ["Cloud", "Virtualization", "Hypervisor", "Infrastructure", "VM"]
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 실무에서 가상화 환경을 운영할 때 가장 흔히 겪는 장애는 '오버프로비저닝(Over-provisioning)'의 남용과 스토리지 I/O 병목이다. 
 
@@ -139,7 +142,7 @@ tags = ["Cloud", "Virtualization", "Hypervisor", "Infrastructure", "VM"]
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 가상화 기술은 단지 비용 절감을 넘어 데이터센터를 물리적 제약에서 해방시킨 21세기 IT 인프라의 가장 위대한 발명이다.
 
@@ -162,7 +165,6 @@ tags = ["Cloud", "Virtualization", "Hypervisor", "Infrastructure", "VM"]
 - 라이브 마이그레이션 (vMotion) | 서비스가 켜져서 핑(Ping)이 돌아가는 상태 그대로, 가상 머신을 물리적 서버 A에서 B로 중단 없이 이사시키는 무중단 마이그레이션 기술
 - 마이크로VM (Firecracker) | 가상 머신의 강력한 커널 격리 보안성과 컨테이너의 밀리초 단위 초고속 부팅 장점만을 결합한 AWS의 오픈소스 런타임
 - VDI (Virtual Desktop Infrastructure) | 데이터센터의 서버를 쪼개어 윈도우 PC 환경을 가상으로 만들고, 직원들은 깡통 단말기(Thin Client)로 화면만 송출받아 일하는 보안 망분리 기술
-
 
 ### 📈 관련 키워드 및 발전 흐름도
 

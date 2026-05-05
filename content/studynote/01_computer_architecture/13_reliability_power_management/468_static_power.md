@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 정적 전력 (Static Power)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 정적 전력 (Static Power)은 트랜지스터가 완전한 오프(Off) 상태에서도 게이트 산화막 터널링(Gate Oxide Tunneling)과 서브스레숄드 전도(Subthreshold Conduction)로 인해 소량의 전류가 지속적으로 흐르면서 발생하는 전력 소모로, $P_{sta} = V_{DD} \times I_{leak}$로 표현된다.
+> **핵심**: 정적 전력 (Static Power)은 트랜지스터가 완전한 오프(Off) 상태에서도 게이트 산화막 터널링(Gate Oxide Tunneling)과 서브스레숄드 전도(Subthreshold Conduction)로 인해 소량의 전류가 지속적으로 흐르면서 발생하는 전력 소모로, $P_{sta} = V_{DD} \times I_{leak}$로 표현된다.
 > 2. **가치**: 공정이 7nm, 5nm, 3nm로 미세화될수록 산화막이 얇아져 게이트 누설이 기하급수적으로 증가하며, 7nm 이하 공정에서는 정적 전력이 전체 전력의 30~50%를 차지하여 설계의 핵심 제약 조건이 된다.
 > 3. **융합**: 고-k 유전체(High-k Dielectric, HfO₂ 등), 핀펫(FinFET), GAAFET 트랜지스터 구조, 파워 게이팅, 멀티 임계 전압(Multi-Vt) 기법이 정적 전력 억제의 최전선 기술이며, 이들의 조합으로 나노 공정의 한계를 극복한다.
 
+> 📝 모범 답안
+
+# 정적 전력 (Static Power)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 트랜지스터가 오프(Off) 상태일 때에도 전류가 흐르는 현상은 무엇인가. 이상적인 MOSFET에서 오프 상태의 드레인-소스 간 전류는 0이어야 한다. 그러나 현실의 트랜지스터에서는 게이트 산화막(Gate Oxide)을 통해 양자역학적 터널링(Tunneling)으로 전자가 통과하거나, 서브스레숄드 영역(Subthreshold Region)을 통해 드레인-소스 간 전류가 미세하게 흐른다. 이 두 현상으로 인해 발생하는 전력이 바로 정적 전력, 또는 누설 전력(Leakage Power)이다.
 
@@ -117,7 +119,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 고-k 유전체 (High-k Dielectric) — 게이트 산화막 누설 억제
 
@@ -239,7 +241,7 @@ FinFET의 핀 구조가 채널의 3면만 감싸는 것에 비해, GAAFET은 나
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 동적 전력 vs 정적 전력 — 설계에서의 트레이드오프
 
@@ -318,7 +320,7 @@ GAAFET 이후의终极 구조として、CFET(Complementary FET)가 연구되고
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 정적 전력 관련 실무 시나리오
 
@@ -382,7 +384,7 @@ AMD EPYC에서 C6(C6는最深部の 파워 게이팅 상태) 상태 진입 시 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 | 공정 | 대표 트랜지스터 | 정적 전력 비율 | 주요 억제 기술 |
 |:---|:---|:---|:---|

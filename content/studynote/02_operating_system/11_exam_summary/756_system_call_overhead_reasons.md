@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 시스템 콜 오버헤드 (System Call Overhead)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 시스템 콜 (System Call)은 일반 응용 프로그램(User Mode)이 파일 읽기, 네트워크 통신, 메모리 할당 등 하드웨어 접근이 필요한 특권 작업을 운영체제 커널(Kernel Mode)에게 **'대신해달라고 부탁하는' 유일한 합법적 소프트웨어 트랩(Trap)** 통로다.
+> **핵심**: 시스템 콜 (System Call)은 일반 응용 프로그램(User Mode)이 파일 읽기, 네트워크 통신, 메모리 할당 등 하드웨어 접근이 필요한 특권 작업을 운영체제 커널(Kernel Mode)에게 **'대신해달라고 부탁하는' 유일한 합법적 소프트웨어 트랩(Trap)** 통로다.
 > 2. **가치**: 이 엄격한 문지기 시스템 덕분에 악성 코드나 버그 난 프로그램이 하드웨어를 직접 건드려 컴퓨터 전체를 망가뜨리는 사태를 완벽히 차단하는 철통 보안(Protection)을 제공한다.
 > 3. **융합**: 하지만 이 부탁을 위해 '모드 전환(User $\rightarrow$ Kernel)'과 레지스터 검증 등을 거치는 과정에서 막대한 시간적 낭비(Overhead)가 발생한다. 현대 OS는 이 오버헤드를 우회하기 위해 eBPF, io_uring, DPDK 같은 **커널 바이패스(Kernel Bypass)** 아키텍처로 진화하고 있다.
 
+> 📝 모범 답안
+
+# 시스템 콜 오버헤드 (System Call Overhead)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - 응용 프로그램은 하드웨어 자원(디스크, 랜카드)에 직접 접근할 권한이 없다.
@@ -68,7 +70,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 오버헤드를 발생시키는 4대 근본 원인
 
@@ -110,7 +112,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### API (라이브러리 함수) vs System Call의 명확한 차이
 
@@ -134,7 +136,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 최적화 아키텍처 (커널 바이패스)
 
@@ -182,7 +184,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

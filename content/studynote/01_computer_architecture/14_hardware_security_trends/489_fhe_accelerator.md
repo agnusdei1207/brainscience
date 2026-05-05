@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# FHE Accelerator (완전 동형 암호 가속기)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: FHE (Fully Homomorphic Encryption) 가속기는 데이터를 복호화하지 않고 암호화된 상태로 연산할 수 있는 완전 동형 암호의 막대한 연산량을 처리하기 위한 전용 하드웨어다.
+> **핵심**: FHE (Fully Homomorphic Encryption) 가속기는 데이터를 복호화하지 않고 암호화된 상태로 연산할 수 있는 완전 동형 암호의 막대한 연산량을 처리하기 위한 전용 하드웨어다.
 > 2. **가치**: FHE는 암호문(Ciphertext)의 크기가 기하급수적으로 커지고 노이즈가 쌓여 일반 CPU보다 수만 배에서 백만 배 이상 느리지만, NTT (수론적 변환) 연산기와 Bootstrapping 가속기를 갖춘 전용 ASIC/FPGA로 이 병목을 획기적으로 해결할 수 있다.
 > 3. **융합**: Intel, 삼성, startups 등이 FHE 가속기를 개발中이며, 의료/금융 AI 클라우드,隐私保護 컴퓨팅等领域에서 데이터 프라이버시의 Holy Grail로 불리며 차세대 기술로 주목받고 있다.
 
+> 📝 모범 답안
+
+# FHE Accelerator (완전 동형 암호 가속기)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 문제의식: 클라우드에서 데이터를 읽지 않고 연산한다는 역설
 
@@ -89,7 +91,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### FHE 가속기의 핵심 연산 구조
 
@@ -163,7 +165,7 @@ FHE의 막대한 병목 현상을 타개하기 위해 기업들은 ASIC 또는 F
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### FHE vs 기존 암호화 방식 비교
 
@@ -183,7 +185,7 @@ FHE의 막대한 병목 현상을 타개하기 위해 기업들은 ASIC 또는 F
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -208,7 +210,7 @@ FHE의 막대한 병목 현상을 타개하기 위해 기업들은 ASIC 또는 F
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### FHE 가속기의 미래 전망
 

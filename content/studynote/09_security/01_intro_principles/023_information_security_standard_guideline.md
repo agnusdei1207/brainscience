@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 정보보안 표준(Standard)은 정책(Policy)의 추상적 의지를 "AES (Advanced Encryption Standard)-256 이상, TLS (Transport Layer Security) 1.3 이상"처럼 **전사에서 반드시 지켜야 하는 정량화된 강제 규격(Mandatory Specification)**으로 구체화하고, 지침(Guideline)은 환경에 따라 유연하게 적용하도록 돕는 **권고형 가이드(Recommended Practice)**이다.
+> **핵심**: 정보보안 표준(Standard)은 정책(Policy)의 추상적 의지를 "AES (Advanced Encryption Standard)-256 이상, TLS (Transport Layer Security) 1.3 이상"처럼 **전사에서 반드시 지켜야 하는 정량화된 강제 규격(Mandatory Specification)**으로 구체화하고, 지침(Guideline)은 환경에 따라 유연하게 적용하도록 돕는 **권고형 가이드(Recommended Practice)**이다.
 > 2. **가치**: 1,000명의 개발자가 "보안"을 제각각 해석하는 파편화를 막아, CI/CD (Continuous Integration/Continuous Delivery) 파이프라인 안에서 표준 위반 코드가 자동 차단(Policy-as-Code)되는 **자동화된 보안 거버넌스 생태계**를 구축한다.
 > 3. **판단 포인트**: "이것이 없으면 전사적으로 얼마나 다양한 해석이 나오는가?"—표준은 **위반 시 즉각 제재**가 따르는 하드 컨트롤(Hard Control), 지침은 **위반 시 보완 통제(Compensating Control)**로 대체 가능한 소프트 컨트롤(Soft Control)로 구분한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 정보보안 표준(Standard)과 지침(Guideline)은 최상위 보안 정책(Policy)이 현장에서 실질적으로 작동하도록 연결하는 **중간 계층 거버넌스 문서 체계**다.
 
@@ -75,7 +77,7 @@ CEO 승인의 정보보안 정책서에 "고객 데이터를 최고 수준으로
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 표준(Standard)의 3대 설계 원칙
 
@@ -126,7 +128,7 @@ CEO 승인의 정보보안 정책서에 "고객 데이터를 최고 수준으로
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 1. 정책·표준·지침·절차 완전 비교
 
@@ -154,7 +156,7 @@ CEO 승인의 정보보안 정책서에 "고객 데이터를 최고 수준으로
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1. ISMS-P 심사 대비 체크리스트
 
@@ -183,7 +185,7 @@ CEO 승인의 정보보안 정책서에 "고객 데이터를 최고 수준으로
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 표준·지침 체계 도입의 기대효과
 

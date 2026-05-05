@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 스핀락 (Spinlock)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 스핀락 (Spinlock)은 스레드가 임계 구역(Critical Section)에 진입하려 할 때 락(Lock)이 이미 잠겨있으면, OS 대기실(Wait Queue)로 물러나지 않고 **락이 풀릴 때까지 제자리에서 무한 루프(`while`)를 돌며 CPU를 소모(Busy Waiting)하는 동기화 기법**이다.
+> **핵심**: 스핀락 (Spinlock)은 스레드가 임계 구역(Critical Section)에 진입하려 할 때 락(Lock)이 이미 잠겨있으면, OS 대기실(Wait Queue)로 물러나지 않고 **락이 풀릴 때까지 제자리에서 무한 루프(`while`)를 돌며 CPU를 소모(Busy Waiting)하는 동기화 기법**이다.
 > 2. **가치**: 스레드를 재우고(Sleep) 다시 깨우는(Wakeup) 과정에서 발생하는 무거운 **문맥 교환(Context Switch) 오버헤드를 원천적으로 제거**하므로, 락 유지 시간이 매우 짧은 커널 내부 로직이나 실시간 시스템에서 궁극의 디스패치 속도를 제공한다.
 > 3. **융합**: 단일 코어에서는 즉각 데드락을 유발하므로 절대 쓸 수 없으며, 멀티코어(SMP) 환경이라도 과도한 스핀락은 캐시 오염과 메모리 버스 트래픽(Bus Contention)을 폭발시키기 때문에 현대에는 로컬 캐시에서만 도는 **MCS 락(큐 기반 스핀락)**으로 진화했다.
 
+> 📝 모범 답안
+
+# 스핀락 (Spinlock)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 이름 그대로 락(Lock)을 얻을 때까지 CPU 코어 안에서 빙빙 돈다(Spin)는 뜻이다. 뮤텍스나 세마포어가 블로킹(Blocking) 방식이라면, 스핀락은 대표적인 넌블로킹(Non-blocking) 폴링(Polling) 방식의 락이다.
 - **필요성**: 문맥 교환에 걸리는 시간이 보통 2,000ns(나노초)라고 치자. 만약 임계 구역 안에서 해야 할 일이 고작 변수 1개 더하는 것(10ns 소요)이라면? 락이 걸려있다고 해서 스레드를 재우고 2,000ns를 버리는 건 미친 짓이다. "어차피 앞놈이 10ns 뒤에 나올 텐데, 그냥 문 앞에서 10ns만 달칵거리며 서서 기다리는 게 낫다"는 뼈아픈 효율성 계산에서 출발했다.
@@ -41,7 +43,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 스핀락의 내부 구조와 TAS (Test-And-Set)
 스핀락은 OS의 무거운 개입 없이, CPU 하드웨어 명령어인 `TestAndSet` 이나 `XCHG`를 이용하여 매우 얇게(Thin) 구현된다.
@@ -94,7 +96,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 스핀락의 진화: MCS Spinlock (큐 기반 스핀락)
 단순 스핀락의 '버스 마비'를 해결하기 위해 리눅스 커널 해커들은 **MCS 스핀락 (Mellor-Crummey and Scott)**을 도입했다. 이 락은 놀랍게도 "돌긴 도는데, 남의 눈치를 보지 않고 자기 방에서만 조용히 도는" 혁신적인 아키텍처다.
@@ -118,7 +120,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **리눅스 인터럽트 핸들러 (Interrupt Handler) 와 스핀락**: 커널 개발자가 인터럽트를 처리하는 `Top Half` 구역 코드를 짜고 있다. 여기서 공유 자원 락을 걸 때 절대 뮤텍스를 쓰면 안 된다.
@@ -150,7 +152,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 임계 구역의 길이가 문맥 교환 오버헤드보다 짧다는 것이 확정된 환경에서 스핀락(Spinlock)을 도입하면, 스레드가 블로킹(Blocking)되지 않고 1마이크로초 이내에 락을 쟁취하여 시스템의 디스패치 속도와 극한의 런타임 성능(HFT 등)을 달성할 수 있다.

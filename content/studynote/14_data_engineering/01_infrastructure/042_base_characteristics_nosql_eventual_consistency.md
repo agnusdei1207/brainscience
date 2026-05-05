@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. BASE(Basically Available, Soft-state, Eventual Consistency)는 ACID의 엄격한 일관성을 포기하고 가용성과 분산성을 극대화한 NoSQL의 설계 철학으로, CAP 정리에서 Partition Tolerance를 선택한 시스템이 필연적으로 채택하는 일관성 모델이다.
 > 2. BASE의 핵심인 Eventual Consistency(결과적 일관성)는 "언젠가는 모든 노드가 같은 값을 갖게 된다"는 보장으로, Amazon Dynamo의 사례처럼 짧은 불일치 윈도우 동안 읽기 요청이 구버전 데이터를 반환할 수 있다 — 이것이 허용되는 서비스(소셜 피드, 장바구니)와 불허되는 서비스(금융 결제, 재고)를 구분하는 기준이 된다.
 > 3. BASE는 ACID와 상반된 개념이 아니라 트레이드오프 — 현대 시스템은 중요도에 따라 코어 트랜잭션(ACID)과 주변 데이터(BASE)를 혼합하는 폴리글롯 퍼시스턴스(Polyglot Persistence) 아키텍처를 채택한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. BASE 3요소 상세
+## 1. 개요 및 필요성
 
 ```
 BASE (Basically Available, Soft-state, Eventual Consistency):
@@ -47,7 +50,7 @@ E - Eventual Consistency (결과적 일관성):
 
 ---
 
-## Ⅱ. ACID vs BASE 비교
+## 2. 구성요소
 
 ```
 ACID (전통 RDBMS):
@@ -83,7 +86,7 @@ CAP 정리와의 연결:
 
 ---
 
-## Ⅲ. Eventual Consistency 구현 방법
+## 3. 구조 및 동작 원리
 
 ```
 결과적 일관성 구현 기법:
@@ -122,7 +125,7 @@ CAP 정리와의 연결:
 
 ---
 
-## Ⅳ. NoSQL 시스템별 BASE 구현
+## 4. 비교 및 트레이드오프
 
 ```
 주요 NoSQL DB BASE 구현 방식:
@@ -160,7 +163,7 @@ Redis Cluster:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 폴리글롯 퍼시스턴스
+## 5. 실무 적용 및 최적화 기법
 
 ```
 이커머스 폴리글롯 퍼시스턴스 아키텍처:

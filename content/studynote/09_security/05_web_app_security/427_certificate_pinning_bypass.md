@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Certificate Pinning (인증서 고정) 우회는 모바일 애플리케이션이 특정 인증서를 신뢰하도록 하드코딩된 검증 로직을 공격자가 무력화해, 자신의 프록시 인증서로 TLS (Transport Layer Security) 트래픽을 가로채는 기법이다.
+> **핵심**: Certificate Pinning (인증서 고정) 우회는 모바일 애플리케이션이 특정 인증서를 신뢰하도록 하드코딩된 검증 로직을 공격자가 무력화해, 자신의 프록시 인증서로 TLS (Transport Layer Security) 트래픽을 가로채는 기법이다.
 > 2. **가치**: Certificate Pinning은 MITM (Man-In-The-Middle) 공격 방지 메커니즘이지만, Frida·SSL Kill Switch 등의 도구로 런타임에서 우회될 수 있다.
 > 3. **판단 포인트**: 루트 CA (Certificate Authority) 핀닝보다 SPKI (Subject Public Key Info) 핀닝이 더 강력하고, 코드 난독화와 루트 감지를 병행해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Certificate Pinning은 클라이언트가 서버 인증서나 공개 키를 미리 저장(pin)해두고, TLS 핸드셰이크 시 서버가 제시한 인증서와 비교해 일치하지 않으면 연결을 거부하는 기법이다. 신뢰할 수 있는 CA가 발급한 다른 인증서로 MITM 공격을 하려 해도 앱이 거부한다.
 
@@ -27,7 +29,7 @@ Certificate Pinning은 클라이언트가 서버 인증서나 공개 키를 미�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 핀닝 유형 | 대상 | 강도 | 유지보수 부담 |
 |:---|:---|:---|:---|
@@ -53,7 +55,7 @@ Certificate Pinning은 클라이언트가 서버 인증서나 공개 키를 미�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | Certificate Pinning | HPKP (HTTP Public Key Pinning, 폐기됨) |
 |:---|:---|:---|
@@ -66,7 +68,7 @@ Certificate Pinning은 클라이언트가 서버 인증서나 공개 키를 미�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **안전한 구현 전략**:
 1. **SPKI 해시 핀닝**: 공개 키 해시를 핀닝해 인증서 갱신 시 앱 업데이트 불필요
@@ -79,7 +81,7 @@ Certificate Pinning은 클라이언트가 서버 인증서나 공개 키를 미�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 SPKI 핀닝 + 코드 난독화 + 루트 감지 + Certificate Transparency 모니터링을 결합하면 MITM 공격 저항력을 크게 높일 수 있다. Certificate Pinning은 "완전한 방어"가 아닌 "공격 비용 증가" 전략으로 이해하고 심층 방어(Defense in Depth) 관점에서 적용해야 한다.
 

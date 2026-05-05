@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: PHP Object Injection은 `unserialize()` 함수가 사용자 제어 문자열을 처리할 때 PHP 매직 메서드(`__wakeup`, `__destruct`, `__toString`)가 자동으로 실행되어 임의 코드 실행·파일 조작·SQL 인젝션 등이 가능한 취약점이다.
+> **핵심**: PHP Object Injection은 `unserialize()` 함수가 사용자 제어 문자열을 처리할 때 PHP 매직 메서드(`__wakeup`, `__destruct`, `__toString`)가 자동으로 실행되어 임의 코드 실행·파일 조작·SQL 인젝션 등이 가능한 취약점이다.
 > 2. **가치**: WordPress, Laravel, Joomla 등 인기 PHP 프레임워크와 플러그인에서 반복적으로 발견되며, 가젯 클래스(POP Chain)를 결합하면 웹셸 업로드나 관리자 권한 탈취까지 가능하다.
 > 3. **판단 포인트**: 사용자 입력에 `unserialize()`를 절대 적용하지 않는 것이 근본 해결책이며, PHP 7+의 `allowed_classes` 옵션으로 역직렬화 허용 클래스를 제한해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 PHP의 `unserialize()` 함수는 `serialize()`로 생성된 문자열을 다시 PHP 객체로 복원한다. 이 과정에서 PHP는 특정 매직 메서드를 자동으로 호출한다. `__wakeup()`은 역직렬화 직후, `__destruct()`는 객체가 소멸될 때, `__toString()`은 객체가 문자열로 변환될 때 자동 실행된다.
 
@@ -42,7 +44,7 @@ WordPress 플러그인에서 자주 발견되는 이유는 쿠키나 POST 파라
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### PHP 매직 메서드와 악용 시나리오
 
@@ -76,7 +78,7 @@ WordPress 플러그인에서 자주 발견되는 이유는 쿠키나 POST 파라
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | PHP Object Injection | Java Deserialization | Python pickle |
 |:---|:---|:---|:---|
@@ -91,7 +93,7 @@ PHP 7.0+에서 `unserialize($data, ['allowed_classes' => false])` 옵션으로 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **취약 코드 탐지 및 방어**:
 
@@ -122,7 +124,7 @@ $data = unserialize($serialized);
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 PHP Object Injection 방어를 통해 RCE, 파일 시스템 접근, SQL 인젝션 체인 등 연쇄적 공격을 차단할 수 있다. 특히 WordPress·Drupal·Joomla 기반 사이트에서 플러그인의 unserialize 사용을 정기적으로 감사하는 것이 중요하다.
 

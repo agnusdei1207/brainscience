@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: FREAK(Factoring RSA Export Keys)는 미국 수출 규제 시대의 유물인 512비트 RSA_EXPORT 암호 스위트로 클라이언트를 다운그레이드한 뒤, RSA 팩토링(Factoring)으로 약한 키를 수 시간 내에 크래킹하여 TLS 세션을 복호화하는 공격이다.
+> **핵심**: FREAK(Factoring RSA Export Keys)는 미국 수출 규제 시대의 유물인 512비트 RSA_EXPORT 암호 스위트로 클라이언트를 다운그레이드한 뒤, RSA 팩토링(Factoring)으로 약한 키를 수 시간 내에 크래킹하여 TLS 세션을 복호화하는 공격이다.
 > 2. **가치**: 2015년 발표 당시 OpenSSL·Apple SecureTransport·NSS 등 주요 TLS 라이브러리가 서버가 RSA_EXPORT를 요청하면 클라이언트도 수용하는 버그를 갖고 있어, 수백만 대의 Android·iOS 기기가 즉시 취약 상태였다.
 > 3. **판단 포인트**: 서버 측에서 RSA_EXPORT 암호 스위트를 완전히 비활성화하고, 클라이언트 라이브러리를 패치하면 FREAK는 완전히 차단된다. 근본 원인은 Logjam과 마찬가지로 1990년대 수출 규제 정책이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 2015년 3월 INRIA(Institut National de Recherche en Informatique et en Automatique) 등 공동 연구팀이 공개한 FREAK은 SSL/TLS 역사의 가장 오랜 구조적 유산 중 하나를 공격한다.
 
@@ -27,7 +29,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### RSA 팩토링 공격 원리
 
@@ -81,7 +83,7 @@ RSA_EXPORT 공격 흐름:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### EXPORT 계열 취약점 비교
 
@@ -99,7 +101,7 @@ RSA_EXPORT 공격 흐름:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **서버 측 방어**
 
@@ -135,7 +137,7 @@ openssl s_client -connect example.com:443 -cipher EXPORT 2>&1 | grep -E "Cipher|
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 FREAK는 보안 정책이 기술적 레거시로 변환되는 과정의 전형적인 사례다. 1990년대 규제 목적의 "의도적 약화"가 규제 해제 후에도 코드베이스에 잔류하여 취약점으로 부활했다. 이는 정책 변경 시 해당 정책을 구현한 **모든 코드를 함께 정리해야 한다**는 교훈을 준다.
 

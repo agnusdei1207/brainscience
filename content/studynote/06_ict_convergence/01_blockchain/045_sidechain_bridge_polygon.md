@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 사이드체인(Sidechain)은 메인체인(Main Chain)과 양방향 페그(Two-Way Peg)로 연결된 독립 블록체인 — 메인체인의 보안을 활용하면서 독자적 합의 규칙으로 더 빠르고 저렴한 트랜잭션을 처리하며, Polygon PoS가 대표적 Ethereum 사이드체인이다.
 > 2. 브릿지(Bridge)는 서로 다른 블록체인 간 자산/데이터를 이전하는 프로토콜 — Lock-and-Mint(원체인 잠금 + 대상체인 발행) 방식이 일반적이며, 브릿지 스마트 컨트랙트는 해커의 주요 공격 표적(2022년 Ronin 해킹 6,100억원)이다.
 > 3. Polygon은 사이드체인 + ZK 롤업을 모두 제공하는 Ethereum 스케일링 생태계 — Polygon PoS(사이드체인), Polygon zkEVM(ZK 롤업)으로 다양한 확장 솔루션을 제공하며, ETH → MATIC 페그를 통해 가스비를 95% 절감한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 사이드체인 개념
+## 1. 개요 및 필요성
 
 ```
 사이드체인 (Sidechain):
@@ -54,7 +57,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 브릿지 작동 원리
+## 2. 구성요소
 
 ```
 브릿지 (Bridge) 유형:
@@ -102,7 +105,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. Polygon 생태계
+## 3. 구조 및 동작 원리
 
 ```
 Polygon (구 Matic Network):
@@ -148,7 +151,7 @@ MATIC → POL 토큰 전환:
 
 ---
 
-## Ⅳ. 크로스체인 생태계
+## 4. 비교 및 트레이드오프
 
 ```
 주요 브릿지/크로스체인 프로토콜:
@@ -189,7 +192,7 @@ IBC (Inter-Blockchain Communication):
 
 ---
 
-## Ⅴ. 실무 시나리오 — 게임 NFT 브릿지
+## 5. 실무 적용 및 최적화 기법
 
 ```
 P2E 게임 NFT 크로스체인 아키텍처:

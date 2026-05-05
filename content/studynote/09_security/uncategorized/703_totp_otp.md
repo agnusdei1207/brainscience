@@ -4,17 +4,19 @@ title = "703. UAC绕过 — 사용자 계정 컨트롤 우回"
 description = "일회성 비밀번호(OTP)와 시간 기반 OTP(TOTP)의 원리와 보안"
 date = 2024-01-15
 +++
+## 0. 핵심 인사이트
 
-# OTP와 TOTP (One-Time Password & Time-Based OTP)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: OTP(One-Time Password)는 한 번만 사용할 수 있는 비밀번호로, 매 인증 시도마다 새로운 비밀번호가 생성되어 재사용 공격(Replay Attack)을 방지하며, TOTP(Time-Based OTP)는 시계 기반 알고리즘으로 30초마다 OTP가 자동으로 갱신되어 보안성과 편의성을 모두 제공한다.
+> **핵심**: OTP(One-Time Password)는 한 번만 사용할 수 있는 비밀번호로, 매 인증 시도마다 새로운 비밀번호가 생성되어 재사용 공격(Replay Attack)을 방지하며, TOTP(Time-Based OTP)는 시계 기반 알고리즘으로 30초마다 OTP가 자동으로 갱신되어 보안성과 편의성을 모두 제공한다.
 > 2. **가치**: Google, Microsoft, GitHub 등 주요 서비스가 TOTP 기반 2FA를 지원하며, SMS OTP의脆弱性이 알려지면서 TOTP/Authenticator App 방식이 권장되고 있다. TOTP는 비밀번호 유출 후에도 계정을 보호하는 2차 방어선으로, 피싱 网站에서도 TOTP 코드는 탈취하기 어렵다.
 > 3. **융합**: TOTP는 HMAC-SHA1, Base32 인코딩, 시간 동기화, 그리고 이동 통신(SIM 스왑 방어)와 결합하며, FIDO2/WebAuthn의 대안 또는補完으로 활용된다.
 
+> 📝 모범 답안
+
+# OTP와 TOTP (One-Time Password & Time-Based OTP)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 
@@ -34,7 +36,7 @@ HOTP(HMAC-Based OTP)는 2005년 OATH(Initiative for Open Authentication)에서 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### TOTP 알고리즘 동작 원리
 
@@ -196,7 +198,7 @@ TOTP의 보안은 Secret Key(비밀 키)의安全管理에 달려 있다. Secret
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### OTP 전송 방식 비교
 
@@ -216,7 +218,7 @@ TOTP의 보안은 Secret Key(비밀 키)의安全管理에 달려 있다. Secret
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -239,7 +241,7 @@ TOTP의 보안은 Secret Key(비밀 키)의安全管理에 달려 있다. Secret
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

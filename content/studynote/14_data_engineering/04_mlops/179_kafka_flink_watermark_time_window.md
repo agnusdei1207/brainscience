@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Kafka + Flink 조합은 분산 메시지 브로커와 상태 기반(Stateful) 스트림 처리를 결합하여, 수억 이벤트/초 규모의 실시간 분석 파이프라인을 구축한다.
+> **핵심**: Kafka + Flink 조합은 분산 메시지 브로커와 상태 기반(Stateful) 스트림 처리를 결합하여, 수억 이벤트/초 규모의 실시간 분석 파이프라인을 구축한다.
 > 2. **가치**: Watermark (워터마크) 메커니즘은 네트워크 지연으로 늦게 도착하는 이벤트를 허용 범위 내에서 처리하여, Event Time 기반의 정확한 시계열 집계를 보장한다.
 > 3. **판단 포인트**: Exactly-Once 처리는 Flink Checkpoint + Kafka Transactional API의 2단계 커밋(Two-Phase Commit)으로만 완전 보장되며, 이 없이는 최소 At-Least-Once만 보장된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 실시간 스트리밍 처리의 필요성
 
@@ -69,7 +71,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 Flink 스트림 처리 아키텍처
 
@@ -183,7 +185,7 @@ Watermark 해결:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 처리 시맨틱 비교
 
@@ -234,7 +236,7 @@ Flink + Kafka Exactly-Once (2PC):
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 Flink Java/Python 구현
 
@@ -312,7 +314,7 @@ env.getCheckpointConfig().setCheckpointStorage("s3://flink-checkpoints/");
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 Kafka + Flink 도입 효과
 

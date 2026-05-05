@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 645. 데이터 파이프라인 가속 (Data Pipeline Acceleration)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 데이터 파이프라인 가속은 데이터의 생성(Ingestion)부터 처리(Processing), 저장(Storage)에 이르는 전 과정에서 발생하는 **CPU의 오버헤드를 최소화하고 전용 하드웨어(DSA, DMA 등)를 통해 데이터 이동 및 변환 속도를 극대화**하는 기술이다.
+> **핵심**: 데이터 파이프라인 가속은 데이터의 생성(Ingestion)부터 처리(Processing), 저장(Storage)에 이르는 전 과정에서 발생하는 **CPU의 오버헤드를 최소화하고 전용 하드웨어(DSA, DMA 등)를 통해 데이터 이동 및 변환 속도를 극대화**하는 기술이다.
 > 2. **가치**: 대규모 데이터 이동 시 발생하는 '데이터 복사(Data Copy) 오버헤드'를 제거하는 제로 카피(Zero-copy) 기술과 실시간 압축/암호화를 하드웨어 레벨에서 수행하여, 중앙 처리 장치가 순수 연산 로직에만 집중할 수 있는 환경을 제공한다.
 > 3. **융합**: 인텔의 DSA(Data Streaming Accelerator), NVMe-oF(NVMe over Fabrics), CXL(Compute Express Link) 등 차세대 인터커넥트 기술과 결합하여 데이터 센터 급의 거대한 공유 메모리 및 초저지연 데이터 처리 인프라를 구축하는 핵심 토대가 된다.
 
+> 📝 모범 답안
+
+# 645. 데이터 파이프라인 가속 (Data Pipeline Acceleration)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 데이터 폭발과 CPU의 한계
 - **현상**: 현대의 데이터 센터는 페타바이트(PB) 급의 데이터를 처리해야 하며, 데이터 전송 속도는 100Gbps, 400Gbps를 넘어 800Gbps를 향해 가고 있다.
@@ -60,7 +62,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 인텔 데이터 스트리밍 가속기 (Intel DSA, Data Streaming Accelerator)
 - **정의**: CPU 코어 대신 메모리 간 이동 및 논리 연산을 수행하는 온칩(On-chip) 가속기다.
@@ -84,7 +86,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### CPU 기반 처리 vs 하드웨어 가속 처리
 
@@ -104,7 +106,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -126,7 +128,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **CPU Offloading**: 전체 CPU 부하의 15~25% 절감 효과.

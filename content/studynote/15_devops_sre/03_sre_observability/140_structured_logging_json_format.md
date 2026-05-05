@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 구조화 로깅은 **로그를 사람이 읽는 텍스트가 아닌 JSON 등 기계가 파싱 가능한 구조로 출력**하여, 검색·필터·집계·상관 분석을 자동화하는 로깅 패턴이다.
+> **핵심**: 구조화 로깅은 **로그를 사람이 읽는 텍스트가 아닌 JSON 등 기계가 파싱 가능한 구조로 출력**하여, 검색·필터·집계·상관 분석을 자동화하는 로깅 패턴이다.
 > 2. **가치**: 비구조화 로그("ERROR: payment failed for user 123")는 **grep으로만 검색 가능**하지만, 구조화 로그({"level":"ERROR","user_id":123})는 **Loki·ELK에서 필드별 쿼리·집계**가 가능하다.
 > 3. **판단 포인트**: 로그 레벨(DEBUG·INFO·WARN·ERROR·FATAL), Correlation ID(분산 추적), 컨텍스트 필드(user_id·request_id·trace_id)가 구조화 로그의 필수 요소이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 비구조화: "2024-01-15 10:30:22 ERROR Payment failed for user 123"

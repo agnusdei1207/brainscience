@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 바쁜 대기 (Busy Waiting)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 바쁜 대기 (Busy Waiting)는 스레드가 임계 구역(Critical Section) 진입을 위해 락(Lock)을 기다릴 때, CPU를 양보하지 않고 **`while` 루프를 무한히 돌며 락이 풀렸는지 계속 확인하는 동기화 대기 방식**이다.
+> **핵심**: 바쁜 대기 (Busy Waiting)는 스레드가 임계 구역(Critical Section) 진입을 위해 락(Lock)을 기다릴 때, CPU를 양보하지 않고 **`while` 루프를 무한히 돌며 락이 풀렸는지 계속 확인하는 동기화 대기 방식**이다.
 > 2. **가치**: 스레드를 재우고 깨우는 **문맥 교환(Context Switch) 오버헤드를 완벽히 제거**하므로, 락(Lock) 대기 시간이 매우 짧은 멀티코어 환경에서는 디스패치 속도를 극대화하는 최고의 무기가 된다 (스핀락의 근간).
 > 3. **융합**: 하지만 락 대기 시간이 길어지거나 싱글 코어 환경에서는 아무런 유효 연산 없이 CPU 사이클과 전력만 100% 낭비하는 치명적 맹점(Livelock 유사)이 되므로, 현대 OS는 일정 시간 Busy Waiting을 하다가 Sleep으로 빠지는 하이브리드(Adaptive Mutex) 구조로 진화했다.
 
+> 📝 모범 답안
+
+# 바쁜 대기 (Busy Waiting)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 프로세스(스레드)가 조건을 만족할 때까지 어떠한 유용한 작업도 하지 않으면서, 오직 CPU의 연산 사이클(클럭)을 소모하며 조건을 반복 검사(Polling)하는 현상을 말한다. 
 - **필요성**: OS가 스레드를 `Sleep`(수면) 상태로 전환하고 나중에 `Wakeup`(기상) 시키는 작업은 생각보다 엄청나게 무겁다. 레지스터를 백업하고 스케줄러를 깨우는 데만 2~3 마이크로초(μs)가 걸린다. 만약 앞사람이 락을 쥐고 있는 시간이 0.01 마이크로초에 불과하다면? 잠들었다 깨는 비용이 기다리는 시간보다 200배나 비싸다. 이럴 바엔 차라리 잠깐 서서 딴짓 안 하고 문만 쳐다보는 게 훨씬 빠르고 효율적이다.
@@ -41,7 +43,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Busy Waiting의 하드웨어적 구현: PAUSE 명령어
 무식한 `while (lock == 1) {}` 루프는 CPU를 말 그대로 '불태운다'. 코어가 미친 듯이 연산을 반복하며 발열이 치솟고, 파이프라인(Pipeline)에 무의미한 분기 예측이 꽉 들어차게 된다.
@@ -66,7 +68,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### Busy Waiting (스핀락) vs Sleep (뮤텍스/세마포어)
 
@@ -92,7 +94,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **Redis 및 Node.js 의 비동기 이벤트 루프**: 싱글 스레드 아키텍처인 Node.js에서 개발자가 멍청하게 `while(true)` 나 무거운 암호화 동기 함수를 돌려버렸다(유저 레벨의 Busy Waiting).
@@ -132,7 +134,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 멀티코어 시스템에서 짧은 임계 구역을 Busy Waiting 기법(스핀락, 락-프리 루프)으로 감싸면, 수만 개의 스레드가 난립해도 OS 스케줄러가 개입하여 스레드를 멈추고 재우는 병목이 완벽히 사라져 수천만 단위의 극한의 초당 처리량(TPS)을 방어해 낼 수 있다.

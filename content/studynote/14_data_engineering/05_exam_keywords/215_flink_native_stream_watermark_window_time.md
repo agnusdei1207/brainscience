@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Apache Flink는 배치를 스트림의 특수 케이스로 보는 **네이티브 스트림 처리(Native Stream Processing)** 엔진으로, Spark의 마이크로배치(Micro-Batch)와 달리 이벤트 단위로 즉시 처리해 밀리초 단위 지연을 달성한다.
+> **핵심**: Apache Flink는 배치를 스트림의 특수 케이스로 보는 **네이티브 스트림 처리(Native Stream Processing)** 엔진으로, Spark의 마이크로배치(Micro-Batch)와 달리 이벤트 단위로 즉시 처리해 밀리초 단위 지연을 달성한다.
 > 2. **가치**: 이벤트 시간(Event Time) + 워터마크(Watermark) 메커니즘으로 네트워크 지연·순서 역전 문제를 해결하고, 텀블링·슬라이딩·세션 윈도우로 시계열 집계를 정확하게 수행한다.
 > 3. **판단 포인트**: 금융 사기 탐지·실시간 모니터링·IoT처럼 극저지연(Ultra-Low Latency)과 이벤트 시간 정확성이 동시에 요구될 때 Flink가 최선택이다 — Spark Streaming은 지연이 수 초 수준이기 때문이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 스트림 처리의 두 가지 접근법
 
@@ -44,7 +46,7 @@ Flink는 배치(Batch)를 유한한 스트림(Bounded Stream), 실시간을 무�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 Flink 아키텍처
 
@@ -140,7 +142,7 @@ Watermark = max(event_time_seen) - max_out_of_orderness
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 Flink vs Spark Streaming
 
@@ -169,7 +171,7 @@ Flink는 상태(State)를 RocksDB(디스크) 또는 메모리에 저장하고, �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 실시간 사기 탐지 파이프라인 (Fraud Detection)
 
@@ -194,7 +196,7 @@ Flink는 상태(State)를 RocksDB(디스크) 또는 메모리에 저장하고, �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 Flink 도입 효과
 

@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 595. 스마트 SSD (SmartSSD / Smart Storage)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 스마트 SSD(SmartSSD)는 저장 장치 내부에 **데이터 연산을 수행할 수 있는 FPGA나 프로세서를 직접 탑재**하여, 데이터를 CPU로 옮기지 않고 스토리지 내부에서 즉시 처리하는 컴퓨테이셔널 스토리지(Computational Storage) 솔루션이다.
+> **핵심**: 스마트 SSD(SmartSSD)는 저장 장치 내부에 **데이터 연산을 수행할 수 있는 FPGA나 프로세서를 직접 탑재**하여, 데이터를 CPU로 옮기지 않고 스토리지 내부에서 즉시 처리하는 컴퓨테이셔널 스토리지(Computational Storage) 솔루션이다.
 > 2. **가치**: 데이터 이동에 따른 **PCIe 대역폭 병목과 전력 소모를 획기적으로 줄이며**, CPU를 단순 데이터 전처리 업무에서 해방시켜 전체 시스템의 연산 효율을 극대화한다.
 > 3. **융합**: 고성능 낸드 플래시, 고속 인터커넥트, 그리고 가변형 로직(FPGA)이 융합된 결과물이며, 빅데이터 분석, 비디오 트랜스코딩, AI 추론 가속화의 핵심 인프라로 주목받고 있다.
 
+> 📝 모범 답안
+
+# 595. 스마트 SSD (SmartSSD / Smart Storage)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 - **개념**: "데이터가 있는 곳에서 연산하라(Compute near Data)"는 철학을 SSD에 구현한 것이다. SSD를 단순히 '창고'로 쓰는 게 아니라, 창고 안에 '가공 공장(연산기)'을 함께 차린 스마트 하드웨어다.
 - **필요성**: 데이터 양이 페타바이트($PB$)급으로 늘어나면서, 모든 데이터를 CPU로 가져와서 처리하는 '폰 노이만 방식'은 한계에 부딪혔다. 데이터를 옮기는 통로(PCIe)가 꽉 막혀버리기 때문이다. 스마트 SSD는 **"옮길 수 없다면 그 자리에서 끝내자"**는 전략으로 이 문제를 해결한다.
@@ -46,7 +48,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 내장형 가속기 (In-Storage Accelerator)
 - SSD 컨트롤러 옆에 강력한 **FPGA(Field Programmable Gate Array)**나 전용 ASIC을 배치한다. 
@@ -64,7 +66,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 일반 NVMe SSD vs 스마트 SSD
 
@@ -83,7 +85,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -104,7 +106,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **애플리케이션 성능 2~10배 향상**: I/O 병목 제거를 통해 연산 지연 시간을 최소화한다.

@@ -6,15 +6,17 @@ description = "쿠버네티스에서 사용자 정의 리소스를 감시하고 
 taxonomy = ""
 tags = ["Software Engineering", "Architecture", "Kubernetes", "Operator", "Controller"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 오퍼레이터는 사람이 하던 운영 절차를 코드로 자동화한다.
+> **핵심**: 오퍼레이터는 사람이 하던 운영 절차를 코드로 자동화한다.
 > 2. **가치**: 복잡한 상태 관리와 복구를 지속적으로 수행한다.
 > 3. **판단 포인트**: 상태 머신, 재시도, 사용자 정의 리소스를 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 복잡한 앱은 단순 배포만으로 끝나지 않는다. 백업, 업그레이드, 복구 같은 운영 절차를 자동화하려면 오퍼레이터가 필요하다.
 
@@ -22,7 +24,7 @@ tags = ["Software Engineering", "Architecture", "Kubernetes", "Operator", "Contr
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 오퍼레이터는 Custom Resource Definition (CRD, 사용자 정의 리소스 정의)를 감시하고, 원하는 상태와 실제 상태의 차이를 메운다.
 
@@ -40,7 +42,7 @@ CRD -> Operator -> Reconcile Loop -> Kubernetes State
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 오퍼레이터는 범용 컨트롤러보다 도메인 특화 작업에 강하다.
 
@@ -54,7 +56,7 @@ CRD -> Operator -> Reconcile Loop -> Kubernetes State
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 상태 전이와 실패 복구를 명확히 설계해야 한다.
 
@@ -67,7 +69,7 @@ CRD -> Operator -> Reconcile Loop -> Kubernetes State
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 오퍼레이터는 쿠버네티스 운영을 코드화해 안정성과 일관성을 높인다.
 

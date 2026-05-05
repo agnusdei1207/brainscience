@@ -2,14 +2,17 @@
 title = "308. 폴리글랏 퍼시스턴스 (Polyglot Persistence) - 마이크로서비스마다 목적에 맞는 최적의 이기종 DB 선택/혼용"
 weight = 308
 +++
+## 0. 핵심 인사이트
 
 > **💡 핵심 인사이트**
 > PGVector는 **PostgreSQL 데이터베이스에 벡터 검색 기능을原生(네이티브)插件으로 추가하는 확장 모듈**입니다. 기존 관계형 DB의 ACID 트랜잭션, 백업, 복제, 접근 제어 등 모든 생태계를 그대로 활용하면서 LLM 임베딩의 유사도 검색을 SQL 수준에서 구현할 수 있게 합니다.
 > 별도의 벡터 전용 DB( Pinecone, Milvus, Qdrant 등)를 도입할 필요 없이, **기존 PostgreSQL 인프라로 RAG(Retrieval-Augmented Generation) 파이프라인을 무설계”而 구축 가능**하다는 점이 가장 큰 매력입니다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 벡터 검색의 민주화: 왜 PostgreSQL인가?
+## 1. 개요 및 필요성
 
 기업 시스템에서 벡터 DB를 도입할 때 가장 큰 부담은 **새로운 시스템 도입의 복잡성**입니다. 기존 PostgreSQL/MySQL/Oracle 등 관계형 DB가 있다면 그 위에 새로운 벡터 DB를 붙이는 것은:
 - **운영 부담 증가**: 별도 클러스터 관리, 모니터링, 백업 정책 추가
@@ -20,7 +23,7 @@ PGVector는 이러한 부담을 **"기존 RDB 안에 벡터 칼럼을 그냥 추
 
 ---
 
-## Ⅱ. PGVector의 핵심 기능과 SQL 통합
+## 2. 구성요소
 
 ```
 [PostgreSQL 테이블에 벡터 열 추가]
@@ -61,7 +64,7 @@ CREATE INDEX ON documents USING ivfflat (embedding vector_cosine_ops);
 
 ---
 
-## Ⅲ. HNSW + PGVector: 메모리 내 그래프 ANN의威力
+## 3. 구조 및 동작 원리
 
 PGVector의 가장 강력한 인덱스는 **HNSW(Hierarchical Navigable Small World)**입니다. 이는 여러 계층의 그래프를 구축하여:
 
@@ -87,7 +90,7 @@ PGVector에서 HNSW를 사용할 때 **메모리消费量**가 핵심입니다. 
 
 ---
 
-## Ⅳ. PGVector의 한계와 대안적 접근
+## 4. 비교 및 트레이드오프
 
 **한계:**
 1. **확장성**: 1000만 개 이상 벡터에서는 전용 벡터 DB(Milvus, Qdrant)가 성능 우위
@@ -105,7 +108,7 @@ PGVector에서 HNSW를 사용할 때 **메모리消费量**가 핵심입니다. 
 
 ---
 
-## Ⅴ. RAG 파이프라인에서의 활용과 📢 비유
+## 5. 실무 적용 및 최적화 기법
 
 **실제 RAG(Retrieval-Augmented Generation) 파이프라인:**
 

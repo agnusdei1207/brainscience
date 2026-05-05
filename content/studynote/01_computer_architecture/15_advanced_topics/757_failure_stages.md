@@ -6,15 +6,15 @@ description = "배스터브 곡선(Bathtub Curve)을 구성하는 3단계 고장
 taxonomy =  ""
 tags = ["Computer Architecture", "Advanced Topics", "Reliability", "Maintenance"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
 > 1. **초기 고장기 (Decreasing Failure Rate, DFR)**: 공장에서 태어난 직후 약한 부품들이 죽어나가는 시기로, 고장률이 시간이 지남에 따라 급격히 감소한다. **번인(Burn-in) 테스트**로 솎아낸다.
 > 2. **우발 고장기 (Constant Failure Rate, CFR)**: 기계의 황금기로, 고장률이 낮고 일정하게 유지된다. 마모가 아닌 외부 환경(번개, 노이즈)에 의해 돌발적으로 고장 난다.
 > 3. **마모 고장기 (Increasing Failure Rate, IFR)**: 기계의 수명이 다해 고장률이 기하급수적으로 폭증하는 노년기다. **예방 보전(Preventive Maintenance)**을 통해 고장 나기 전에 미리 쇳덩어리를 내다 버려야 한다.
 
+> 📝 모범 답안
 
-
-## Ⅰ. 초기 고장기 (Infant Mortality) : 신병 훈련소
+## 1. 개요 및 필요성
 
 서버 부품(CPU, RAM, 메인보드)이 공장에서 막 조립되어 나왔습니다. 이때의 고장률은 미친 듯이 높습니다.
 
@@ -27,9 +27,7 @@ tags = ["Computer Architecture", "Advanced Topics", "Reliability", "Maintenance"
 
 > 📢 **섹션 요약 비유**: 해병대 지옥주 훈련입니다. 체력이 약하거나 병이 있는 훈련병(초기 불량)들은 첫 1주일 훈련에서 쓰러져 퇴소합니다. 훈련을 이겨낸 사람들은 웬만해선 쓰러지지 않는 강인한 군인이 됩니다.
 
-
-
-## Ⅱ. 우발 고장기 (Random Failure) : 전성기
+## 2. 구성요소
 
 초기 불량품을 다 솎아내고 랙에 꽂힌 서버들은 짧게는 3년, 길게는 5년 동안 전성기를 누립니다.
 
@@ -42,9 +40,7 @@ tags = ["Computer Architecture", "Advanced Topics", "Reliability", "Maintenance"
 
 > 📢 **섹션 요약 비유**: 건강한 20대 청년이 병원에 가는 이유는 노화(마모) 때문이 아니라, 길을 걷다 차에 치이거나 넘어져서 뼈가 부러지는 '우발적인 사고' 때문입니다. 사고를 예측할 순 없으니 보험(이중화)을 들어놓는 것이 최선입니다.
 
-
-
-## Ⅲ. 마모 고장기 (Wear-out Failure) : 늙고 병든 기계
+## 3. 구조 및 동작 원리
 
 5년 넘게 쉬지 않고 모터를 7,200RPM으로 돌린 하드디스크나, 뜨거운 열을 받아 구리스가 딱딱하게 굳은 CPU가 맞이하는 종말의 시기입니다.
 
@@ -58,7 +54,7 @@ tags = ["Computer Architecture", "Advanced Topics", "Reliability", "Maintenance"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -81,7 +77,7 @@ tags = ["Computer Architecture", "Advanced Topics", "Reliability", "Maintenance"
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

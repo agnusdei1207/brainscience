@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CT (Continuous Training)는 데이터 세계의 변화를 ML 모델이 자동으로 따라잡도록, 재학습 파이프라인을 트리거 기반으로 자동 실행하는 MLOps 핵심 메커니즘이다.
+> **핵심**: CT (Continuous Training)는 데이터 세계의 변화를 ML 모델이 자동으로 따라잡도록, 재학습 파이프라인을 트리거 기반으로 자동 실행하는 MLOps 핵심 메커니즘이다.
 > 2. **가치**: 수작업 재학습의 지연(수주)을 자동화(수시간)로 단축하여 모델 드리프트로 인한 성능 저하를 사전에 차단하고, 비즈니스 손실을 최소화한다.
 > 3. **판단 포인트**: 재학습 빈도가 높을수록 모델 신선도는 높아지나 컴퓨팅 비용과 데이터 레이블링 비용이 증가하므로, 트리거 조건과 재학습 전략(전체 vs 증분)을 비즈니스 요구에 맞게 설계해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 CT (Continuous Training)란?
 
@@ -47,7 +49,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 CT 트리거 3가지 방식
 
@@ -156,7 +158,7 @@ anomalies = tfdv.validate_statistics(new_stats, schema)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 CT 트리거 방식 심층 비교
 
@@ -204,7 +206,7 @@ anomalies = tfdv.validate_statistics(new_stats, schema)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 CT 비용 vs 성능 트레이드오프
 
@@ -286,7 +288,7 @@ def ct_pipeline(data_path: str, threshold: float = 0.90):
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 CT 도입 기대효과
 

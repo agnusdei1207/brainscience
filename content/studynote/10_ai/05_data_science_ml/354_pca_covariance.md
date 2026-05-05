@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: PCA(Principal Component Analysis, 주성분 분석)는 데이터의 공분산 행렬(Covariance Matrix)을 고유값 분해(Eigenvalue Decomposition)하여 분산이 가장 큰 방향(주성분, Principal Component)으로 투영함으로써 정보 손실을 최소화하며 차원을 축소하는 비지도 기법이다.
+> **핵심**: PCA(Principal Component Analysis, 주성분 분석)는 데이터의 공분산 행렬(Covariance Matrix)을 고유값 분해(Eigenvalue Decomposition)하여 분산이 가장 큰 방향(주성분, Principal Component)으로 투영함으로써 정보 손실을 최소화하며 차원을 축소하는 비지도 기법이다.
 > 2. **가치**: 수천 차원의 이미지·유전자 데이터를 2~3차원으로 압축해 시각화하거나, 차원의 저주(Curse of Dimensionality)를 방지하고 K-Means 등 하위 알고리즘의 성능을 극적으로 향상시킨다.
 > 3. **판단 포인트**: 주성분은 공분산 행렬의 고유벡터(Eigenvector)이고, 각 주성분의 설명 분산(Explained Variance)은 해당 고유값(Eigenvalue)에 비례하며, 고유값의 합 대비 누적 비율로 몇 차원을 남길지 결정한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 유전체 분석에서 환자 1만 명의 SNP(단일 염기 다형성) 데이터가 50만 차원이라 가정하자. 이 고차원 데이터를 그대로 머신러닝에 쓰면 계산 불가능하고, 시각화도 불가하다. PCA는 이 50만 차원에서 "데이터 변동이 가장 큰 방향" 순서로 새로운 축(주성분)을 잡아, 상위 10개 주성분만으로 데이터의 80% 이상의 분산을 설명하도록 압축한다.
 
@@ -21,7 +23,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -53,7 +55,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 PCA vs LDA(Linear Discriminant Analysis, 선형 판별 분석): PCA는 비지도이며 분산을 최대화하는 방향을 찾고, LDA는 지도 학습으로 클래스 간 분산을 최대화/클래스 내 분산을 최소화하는 방향을 찾는다. SVD(Singular Value Decomposition, 특이값 분해)를 사용하면 공분산 행렬 계산 없이 직접 PCA를 수행할 수 있어 대규모 데이터에 효율적이다(Truncated SVD).
 
@@ -61,7 +63,7 @@ PCA vs LDA(Linear Discriminant Analysis, 선형 판별 분석): PCA는 비지도
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 얼굴 인식(Face Recognition)에서 PCA 기반 고유얼굴(Eigenface) 방법은 얼굴 이미지를 주성분 공간으로 투영해 저차원 표현을 만든다. 이상 탐지(Anomaly Detection)에서 PCA 재구성 오차(Reconstruction Error)가 임계값을 초과하는 샘플을 이상치로 탐지한다. 화이트닝(Whitening/Sphering): 주성분을 고유값으로 나눠 각 성분의 분산을 1로 정규화하는 전처리로 신경망 수렴을 가속한다.
 
@@ -69,7 +71,7 @@ PCA vs LDA(Linear Discriminant Analysis, 선형 판별 분석): PCA는 비지도
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 PCA는 머신러닝 파이프라인에서 전처리 단계로 차원의 저주를 해소하고, 시각화(2D/3D 산점도), 노이즈 제거, 계산 효율화를 동시에 달성하는 만능 도구다. 기술사 시험에서는 공분산 행렬 → 고유값 분해 → 주성분 선택(Scree Plot, 누적 설명 분산 95%) → 투영의 4단계 파이프라인과 "분산 최대화 = 정보 보존 최대화"라는 핵심 원리를 서술하면 완벽한 답안이 된다.
 

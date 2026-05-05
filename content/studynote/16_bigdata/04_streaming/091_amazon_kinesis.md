@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> Kinesis는 "AWS가 운영하는 컨베이어 벨트 서비스"다. 직접 컨베이어를 만들고(Kafka 클러스터 구축) 유지보수할 필요 없이, AWS가 이미 깔아 놓은 벨트를 빌려 쓰는 것이다.
+
+> 📝 모범 답안
 
 - **본질**: Amazon Kinesis Data Streams (아마존 키네시스 데이터 스트림)은 샤드(Shard) 기반의 분산 스트리밍 서비스로, 샤드 1개당 1MB/s 쓰기·2MB/s 읽기 처리량을 가지며 AWS 완전 관리형으로 인프라 없이 실시간 데이터 스트리밍을 시작할 수 있다.
 - **가치**: 자체 Kafka 클러스터 운영과 달리 브로커 프로비저닝, 복제, 패치가 모두 AWS에서 관리되며, Lambda·Flink on EMR·Kinesis Data Analytics(Flink)·S3와 네이티브 통합되어 AWS 중심 아키텍처에서 빠른 스트리밍 파이프라인 구축이 가능하다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. Kinesis 제품군 구조
 
@@ -37,11 +40,10 @@ Amazon Kinesis는 스트리밍 데이터 처리를 위한 완전 관리형 AWS �
 - 로그 집계 및 실시간 알림
 
 **📢 섹션 요약 비유**
-> Kinesis는 "AWS가 운영하는 컨베이어 벨트 서비스"다. 직접 컨베이어를 만들고(Kafka 클러스터 구축) 유지보수할 필요 없이, AWS가 이미 깔아 놓은 벨트를 빌려 쓰는 것이다.
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. Kinesis Data Streams 구조
 
@@ -101,7 +103,7 @@ Lambda (서버리스)                          Kinesis Data Analytics
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 1. Kinesis Enhanced Fan-Out
 
@@ -132,7 +134,7 @@ Enhanced Fan-Out:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1. Kinesis vs Kafka 선택 기준
 
@@ -156,7 +158,7 @@ Enhanced Fan-Out:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 기대효과
 
@@ -184,7 +186,6 @@ Amazon Kinesis Data Streams는 **AWS 생태계 내 스트리밍의 표준 솔루
 | Kinesis Firehose | 연동 서비스 | Kinesis 데이터를 S3/Redshift로 자동 전달 |
 | AWS Lambda | 소비자 통합 | Kinesis 트리거로 서버리스 처리 |
 | Consumer Lag | 모니터링 개념 | Kinesis에서는 GetRecords.MillisBehindLatest |
-
 
 ### 📈 관련 키워드 및 발전 흐름도
 

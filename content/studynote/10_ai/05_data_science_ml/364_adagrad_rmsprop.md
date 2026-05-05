@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Adagrad(Adaptive Gradient Algorithm)와 RMSProp(Root Mean Square Propagation)은 각 파라미터마다 다른 학습률을 적응적으로 조정하는 옵티마이저로, 희소(Sparse) 특성이 많은 데이터에서 SGD보다 빠른 수렴을 달성한다.
+> **핵심**: Adagrad(Adaptive Gradient Algorithm)와 RMSProp(Root Mean Square Propagation)은 각 파라미터마다 다른 학습률을 적응적으로 조정하는 옵티마이저로, 희소(Sparse) 특성이 많은 데이터에서 SGD보다 빠른 수렴을 달성한다.
 > 2. **가치**: Adagrad는 자주 나타나는 특성은 학습률을 줄이고 드문 특성은 크게 유지해 텍스트 모델에 강력하지만, 학습이 진행될수록 학습률이 0에 수렴하는 치명적 소멸 문제가 있고 RMSProp이 이를 지수 이동 평균(EMA)으로 해결한다.
 > 3. **판단 포인트**: Adam = RMSProp (2차 모멘트, 학습률 적응) + Momentum (1차 모멘트)의 결합이며, Adam이 실무에서 가장 널리 사용되는 이유가 여기에 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 기본 SGD(Stochastic Gradient Descent)는 모든 파라미터에 동일한 학습률(η)을 적용한다. 텍스트 데이터에서 "the"같은 자주 나오는 단어의 가중치는 그래디언트가 크므로 큰 업데이트가, "quasar" 같은 드문 단어는 작은 업데이트가 필요하다. Adagrad는 이를 각 파라미터의 과거 그래디언트 제곱 합(G_t)을 학습률 분모에 넣어 자동으로 조정한다.
 
@@ -21,7 +23,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -55,7 +57,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 AMSGrad는 Adam의 과거 최대 2차 모멘트를 유지해 수렴 보장 문제를 해결한다. AdamW는 Adam에 가중치 감쇠(Weight Decay)를 L2 정규화와 분리하여 더 정확한 정규화를 구현한다(Transformer 훈련의 표준). Lion(Evolved Sign Momentum) 옵티마이저는 Google이 진화 알고리즘으로 발견한 Adam보다 메모리 효율적인 최신 옵티마이저다.
 
@@ -63,7 +65,7 @@ AMSGrad는 Adam의 과거 최대 2차 모멘트를 유지해 수렴 보장 문�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 하이퍼파라미터 기본값(Adam): η=0.001, β₁=0.9, β₂=0.999, ε=1e-8. Warmup 스케줄: 학습 초기에 학습률을 0에서 천천히 올려 초기 학습 불안정성 방지(Transformer 훈련 필수). Cosine Annealing: 학습률을 코사인 커브로 감소시켜 수렴 말기 섬세한 조정. Cyclic LR: 학습률을 주기적으로 올렸다 내렸다 하며 다양한 Loss Landscape 탐색.
 
@@ -71,7 +73,7 @@ AMSGrad는 Adam의 과거 최대 2차 모멘트를 유지해 수렴 보장 문�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Adagrad → RMSProp → Adam으로 이어지는 적응적 학습률의 진화는 딥러닝 최적화의 핵심 발전사다. RMSProp의 EMA 아이디어가 Adam의 2차 모멘트가 되었고, Momentum이 1차 모멘트가 되어 Adam이 완성됐다. 기술사 시험에서 Adagrad 소멸 문제 → RMSProp EMA 해결 → Adam 수식까지 진화 경로를 설명하면 최고 수준의 답안이다.
 

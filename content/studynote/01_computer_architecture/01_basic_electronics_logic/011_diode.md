@@ -5,11 +5,14 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-computer-architecture"
 +++
-
 ## 0. 핵심 인사이트
 
 > **핵심**: 다이오드 (Diode)는 P형과 N형 반도체의 접합을 통해 전류의 **단방향성(Unidirectional)**을 구현하는 가장 기본적인 능동형 회로 소자다.
 > **비유**: 물의 흐름을 한쪽 방향으로만 허용하고 반대 방향은 완벽하게 차단하는 역류 방지 밸브다.
+
+> 📝 모범 답안
+
+## 0. 핵심 인사이트
 
 ---
 
@@ -94,6 +97,8 @@ categories = "studynote-computer-architecture"
 PN 접합의 물리적 한계인 문턱 전압(Vf)으로 인해 도통 시 전력 손실이 필연적이다. 이를 해결하기 위해 최근에는 SiC(Silicon Carbide)나 GaN(Gallium Nitride)와 같은 Wide Bandgap 반도체를 활용한 고효율 전력 소자로 진화하고 있다.
 
 ---
+
+> 📖 학습 보조
 
 ## 7. 관련 개념 맵 및 발전 흐름도
 

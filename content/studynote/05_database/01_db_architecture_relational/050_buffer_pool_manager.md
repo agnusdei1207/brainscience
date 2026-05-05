@@ -5,15 +5,18 @@ description = "DBMS 버퍼 풀 매니저의 페이지 교체 정책(LRU, Clock),
 categories = "studynote-db"
 tags = ["buffer pool", "LRU", "clock algorithm", "dirty page", "InnoDB", "page replacement", "WAL", "DBMS"]
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 버퍼 풀(Buffer Pool)은 디스크 I/O를 줄이기 위해 자주 접근하는 페이지를 메모리에 캐시하는 DBMS의 핵심 컴포넌트다.
 > 2. LRU(Least Recently Used) 알고리즘은 가장 오랫동안 참조되지 않은 페이지를 교체하며, InnoDB는 LRU 리스트를 Young/Old 영역으로 나눠 풀 스캔에 의한 캐시 오염을 방지한다.
 > 3. 더티 페이지(Dirty Page)는 수정됐지만 아직 디스크에 기록되지 않은 페이지로, WAL(Write-Ahead Logging)과 체크포인트가 지속성을 보장한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 버퍼 풀의 역할과 구조
+## 1. 개요 및 필요성
 
 ### 1.1 메모리-디스크 계층
 
@@ -38,7 +41,7 @@ SQL 쿼리
 
 ---
 
-## Ⅱ. 페이지 교체 알고리즘
+## 2. 구성요소
 
 ### 2.1 LRU (Least Recently Used)
 
@@ -77,7 +80,7 @@ Young 영역 (5/8)    | Old 영역 (3/8)
 
 ---
 
-## Ⅲ. 더티 페이지와 플러시 정책
+## 3. 구조 및 동작 원리
 
 ### 3.1 더티 페이지 관리
 
@@ -103,7 +106,7 @@ Young 영역 (5/8)    | Old 영역 (3/8)
 
 ---
 
-## Ⅳ. WAL과 버퍼 풀의 관계
+## 4. 비교 및 트레이드오프
 
 ### 4.1 Write-Ahead Logging 원칙
 
@@ -128,7 +131,7 @@ InnoDB 재시작
 
 ---
 
-## Ⅴ. InnoDB 버퍼 풀 튜닝
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 주요 파라미터
 

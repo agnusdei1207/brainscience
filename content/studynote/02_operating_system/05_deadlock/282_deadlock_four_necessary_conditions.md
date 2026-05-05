@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 교착 상태 발생 4가지 필요조건
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 교착 상태 (Deadlock) 발생 4가지 필요조건은 E. G. Coffman이 1971년에 정리한 이론으로 상호 배제(Mutual Exclusion), 점유 대기(Hold and Wait), 비선점(No Preemption), 순환 대기(Circular Wait)가 **동시에 모두 충족**되어야만 데드락이 발생한다는 법칙이다.
+> **핵심**: 교착 상태 (Deadlock) 발생 4가지 필요조건은 E. G. Coffman이 1971년에 정리한 이론으로 상호 배제(Mutual Exclusion), 점유 대기(Hold and Wait), 비선점(No Preemption), 순환 대기(Circular Wait)가 **동시에 모두 충족**되어야만 데드락이 발생한다는 법칙이다.
 > 2. **가치**: 데드락이라는 시스템 결빙 버그를 "네 가지 퍼즐 조각이 모인 상태"라는 구조적 결함으로 해석케 함으로써, 운영체제나 개발자가 단 하나라도 조건을 파괴(Prevent)하거나 빗겨가(Avoid)도록 설계해 안전한 서비스를 구축할 명쾌한 엔지니어링 가이드라인을 제공한다.
 > 3. **융합**: DB 트랜잭션의 배타 락(Mutual Exclusion), 멀티 스레드 프로그래밍에서의 중첩 락(Hold & Wait), 외부 자원 점유 강제 박탈(Preemption), 락 획득 순서 넘버링(Circular Wait 예방) 등 현대 백엔드 오류 타임아웃 해결 기법과 직결된다.
 
+> 📝 모범 답안
+
+# 교착 상태 발생 4가지 필요조건
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 차량이 교차로 한가운데 네 방향에서 뒤엉켜 서로가 상대방이 비켜주기를 영원히 기다리는 상태가 교착 상태(Deadlock)다. 이 비극은 단순한 재수 없음이 아니다. 시스템 공학에서는 이 치명적 멈춤 뒤에 **정확히 4가지의 논리적 조건**이 존재함을 밝혀냈다.
 
@@ -53,7 +55,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 각 조건의 세부 성질
 
@@ -70,7 +72,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 데드락 관리 관점에서 이 4조건을 어떻게 바라보고 대처할 것인가:
 
@@ -85,7 +87,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 **실무 시나리오**:
 1. **DB 애플리케이션 데드락 로그 (MySQL InnoDB)**: Transaction A가 `Table 1` Update 중이고 Transaction B가 `Table 2` Update 중이다. 이때 서로를 교차 Update 요청하는 순간, 상호 배제(Row 락), 점유 대기, 순환 대기가 터진다. DB 커널은 강제로 한 명을 죽여(비선점 파괴/Preemption 강제) 희생자(Victim Rollback)로 만들고 나머지 하나를 구제한다.
@@ -98,7 +100,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 접근 방식 | 4가지 조건의 위상 | 엔지니어링 패러다임 |
 |:---|:---|:---|

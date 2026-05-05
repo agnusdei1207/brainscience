@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 변경 관리(Change Management)는 소프트웨어 개발 및 운영 중 발생하는 모든 변경(요구사항 변경, 결함 수정, 기능 추가)을 공식 프로세스로 통제하여 변경의 영향 범위를 분석하고 품질·일정·비용 영향을 관리하는 SCM(Software Configuration Management)의 핵심 활동이다.
+> **핵심**: 변경 관리(Change Management)는 소프트웨어 개발 및 운영 중 발생하는 모든 변경(요구사항 변경, 결함 수정, 기능 추가)을 공식 프로세스로 통제하여 변경의 영향 범위를 분석하고 품질·일정·비용 영향을 관리하는 SCM(Software Configuration Management)의 핵심 활동이다.
 > 2. **가치**: 체계적 변경 관리 없이 임의로 변경이 이루어지면 코드베이스가 일관성을 잃고, 검증되지 않은 변경이 운영 환경에 배포되어 장애를 유발한다. ITIL v4에서 변경 관리는 "변경 사후 장애 비율(Change Failure Rate)"을 핵심 KPI로 정의한다.
 > 3. **판단 포인트**: 변경 관리의 핵심 결정 포인트는 "긴급 변경(Emergency Change)과 일반 변경(Standard/Normal Change)의 승인 경로 분리"다. 긴급 변경은 사후 승인·검토를 허용하되, 사후 반드시 PIR(Post-Implementation Review)을 수행해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌──────────────────────────────────────────────────────┐
@@ -35,7 +37,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 변경 유형 분류
 
@@ -59,7 +61,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | ITSM 변경 관리 | DevOps 변경 관리 |
 |:---|:---|:---|
@@ -72,7 +74,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### DevOps에서 변경 관리 자동화
 - GitOps: Git 커밋이 변경 요청 → PR 리뷰가 CAB 역할 → CI/CD 파이프라인이 자동 배포.
@@ -86,7 +88,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

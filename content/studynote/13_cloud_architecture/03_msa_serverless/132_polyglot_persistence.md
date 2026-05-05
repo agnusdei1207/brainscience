@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Polyglot Persistence는 **각 마이크로서비스가 자신의 데이터 특성에 가장 적합한 DB 기술을 독립적으로 선택**하는 패턴이며, DB per Service의 자연스러운 확장이다.
+> **핵심**: Polyglot Persistence는 **각 마이크로서비스가 자신의 데이터 특성에 가장 적합한 DB 기술을 독립적으로 선택**하는 패턴이며, DB per Service의 자연스러운 확장이다.
 > 2. **가치**: 모든 서비스가 같은 RDBMS를 사용하면 **그래프 데이터에 JOIN 지옥, 시계열에 비효율 쿼리**가 발생하지만, Polyglot은 **주문=RDB, 추천=그래프DB, 로그=시계열DB**로 최적화한다.
 > 3. **판단 포인트**: 운영 복잡도(다양한 DB 관리)가 증가하므로, **관리형 서비스(RDS·DynamoDB·Neptune)**로 운영 부담을 줄이는 것이 현실적이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 주문 서비스 → PostgreSQL (관계형, ACID)
@@ -27,7 +29,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 데이터 유형 | 최적 DB |
 |:---|:---|

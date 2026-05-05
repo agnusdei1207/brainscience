@@ -4,15 +4,18 @@ date = "2026-03-04"
 [extra]
 categories = "studynote-enterprise"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. BCG 매트릭스(BCG Growth-Share Matrix)는 시장 성장률과 상대 시장 점유율 두 축으로 사업 포트폴리오를 Star·Cash Cow·Question Mark·Dog 4개 영역으로 분류해 전략적 투자 배분을 결정한다.
 > 2. BCG 매트릭스의 전략 논리는 Cash Cow의 현금 흐름으로 Star와 Question Mark에 투자하고, Dog는 철수하는 순환 포트폴리오 관리에 있다.
 > 3. 디지털 시대에는 시장 경계가 빠르게 재정의되므로 BCG 매트릭스 단독 적용보다 GE-McKinsey 매트릭스·Ansoff 매트릭스와 병행해 동적 포트폴리오를 관리해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. BCG 매트릭스 4개 영역
+## 1. 개요 및 필요성
 
 ```
          시장 성장률 (Market Growth Rate)
@@ -43,7 +46,7 @@ categories = "studynote-enterprise"
 
 ---
 
-## Ⅱ. BCG 매트릭스 실제 적용 — IT 기업 예시
+## 2. 구성요소
 
 ```
 삼성전자 사업부 (가상 예시):
@@ -65,7 +68,7 @@ categories = "studynote-enterprise"
 
 ---
 
-## Ⅲ. BCG vs GE-McKinsey 매트릭스
+## 3. 구조 및 동작 원리
 
 | 항목           | BCG 매트릭스          | GE-McKinsey 매트릭스     |
 |------------|---------------------|------------------------|
@@ -78,7 +81,7 @@ categories = "studynote-enterprise"
 
 ---
 
-## Ⅳ. Ansoff 매트릭스 — 성장 전략
+## 4. 비교 및 트레이드오프
 
 ```
 Ansoff 성장 전략 매트릭스:
@@ -97,7 +100,7 @@ Ansoff 성장 전략 매트릭스:
 
 ---
 
-## Ⅴ. 디지털 시대 포트폴리오 관리 변화
+## 5. 실무 적용 및 최적화 기법
 
 ```
 전통 BCG 한계:

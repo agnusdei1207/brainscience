@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: OAuth 2.0은 리소스 소유자(사용자)가 제3자 애플리케이션에게 자원 접근 권한을 '위임'하는 인가(Authorization) 프레임워크이며, OIDC(OpenID Connect)는 OAuth 2.0 위에 구축된 인증(Authentication) 레이어로 ID 토큰을 추가한다.
+> **핵심**: OAuth 2.0은 리소스 소유자(사용자)가 제3자 애플리케이션에게 자원 접근 권한을 '위임'하는 인가(Authorization) 프레임워크이며, OIDC(OpenID Connect)는 OAuth 2.0 위에 구축된 인증(Authentication) 레이어로 ID 토큰을 추가한다.
 > 2. **가치**: 사용자가 구글 계정 비밀번호를 제3자 앱에 제공하지 않고도 구글 Drive 접근을 허용할 수 있어, 크리덴셜 공유 없는 안전한 API 접근 위임이 현대 마이크로서비스·소셜 로그인의 기반이 된다.
 > 3. **판단 포인트**: OAuth 2.0의 적절한 Flow 선택이 보안의 핵심이며, SPA/모바일 앱은 반드시 PKCE(Proof Key for Code Exchange)를 적용하여 인가 코드 인터셉트 공격을 방어해야 한다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 "구글로 로그인" 버튼을 누를 때 일어나는 일이 바로 OAuth 2.0 + OIDC이다. 사용자는 구글 비밀번호를 앱에 주지 않고도, 구글이 발급한 토큰으로 앱이 구글 프로필 정보에 접근할 수 있게 한다. 이것이 '위임(Delegation)' 개념이다.
 
@@ -22,7 +23,7 @@ OAuth 2.0과 OIDC는 현대 IAM(Identity and Access Management) 체계의 언어
 
 📢 **섹션 요약 비유**: OAuth 2.0은 호텔에서 발레파킹 서비스에 차 열쇠를 맡기는 것처럼, "주차장만 이용해도 돼, 트렁크는 열지 마"라고 제한된 권한(Scope)을 명시하고 주는 위임 체계이다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### OAuth 2.0 구성 요소
 
@@ -91,7 +92,7 @@ OAuth 2.0과 OIDC는 현대 IAM(Identity and Access Management) 체계의 언어
 
 📢 **섹션 요약 비유**: ID Token은 여권처럼, 발급 기관(iss)·소유자(sub)·유효기간(exp) 정보가 담긴 공식 신분증으로 위조 방지 서명(JWT 서명)이 되어 있다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### OAuth 2.0 vs OIDC vs SAML 비교
 
@@ -110,7 +111,7 @@ OAuth 2.0과 OIDC는 현대 IAM(Identity and Access Management) 체계의 언어
 
 📢 **섹션 요약 비유**: Access Token은 일일 출입증(단명), Refresh Token은 장기 허가증(장명)처럼, 매일 새 출입증을 장기 허가증으로 갱신하는 이중 구조가 보안과 편의성을 동시에 달성한다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 마이크로서비스 API 게이트웨이 인가 설계
 
@@ -122,7 +123,7 @@ OAuth 2.0과 OIDC는 현대 IAM(Identity and Access Management) 체계의 언어
 
 📢 **섹션 요약 비유**: API Gateway의 JWT 검증은 공항 출입국 심사처럼, 탑승구(마이크로서비스)마다 여권을 확인하는 대신 입국장(Gateway)에서 한 번에 검증하여 내부 이동을 신뢰하는 효율적 보안 게이트이다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 **기대효과**:
 - 비밀번호 공유 없는 API 접근 위임으로 자격증명 탈취 위험 제거

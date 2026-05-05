@@ -5,18 +5,22 @@ date = "2024-03-24"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> |   Module B (Callee)|
+
+> 📝 모범 답안
+
 - **결합도(Coupling)**는 서로 다른 모듈 간의 상호 의존성 정도를 나타내며, 낮을수록 모듈의 독립성이 향상됨.
 - 결합도가 낮으면 변경 시 영향 범위가 최소화되어 유지보수성이 극대화되고 재사용성이 높아짐.
 - 이상적인 객체지향 설계는 **'강한 응집도(High Cohesion)'**와 **'느슨한 결합(Loose Coupling)'**을 지향함.
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 - 소프트웨어 공학에서 결합도는 한 모듈의 변화가 다른 모듈에 얼마나 영향을 주는지를 측정하는 척도임.
 - 모듈 간의 연결 통로가 복잡하고 정보 교환이 많을수록 결합도가 높다고 하며, 이는 시스템의 경직성을 초래함.
 - 인터페이스를 통한 추상화와 의존성 주입(DI) 등을 통해 결합도를 낮추는 것이 현대 아키텍처의 핵심 과제임.
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 - 결합도는 데이터(Data) 결합도에서 내용(Content) 결합도로 갈수록 강해지며, 설계 품질이 저하됨.
 
 ```text
@@ -38,8 +42,7 @@ categories = "studynote-design-supervision"
 
 [ BILINGUAL DIAGRAM: Coupling Levels ]
 +-------------------+       +-------------------+
-|   Module A (Caller)| ----> |   Module B (Callee)|
-| [Data Only]       | <---- | [Result Only]     |
+|   Module A (Caller)| ----| [Data Only]       | <---- | [Result Only]     |
 +-------------------+       +-------------------+
   (Data Coupling: Loose/Good)
 
@@ -50,7 +53,7 @@ categories = "studynote-design-supervision"
   (Content Coupling: Tight/Bad)
 ```
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 구분 | 결합도 (Coupling) | 응집도 (Cohesion) |
 | :--- | :--- | :--- |
@@ -59,12 +62,12 @@ categories = "studynote-design-supervision"
 | **목표** | 독립성 확보, 영향 최소화 | 명확한 기능 수행, 책임 분리 |
 | **상호 관계** | 결합도가 낮으면 응집도를 높이기 쉬움 | 응집도가 높으면 자연스럽게 결합도가 낮아짐 |
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 - **추상화(Abstraction) 활용**: 구체적인 클래스보다는 인터페이스(Interface)나 추상 클래스에 의존하게 하여 결합도를 완화함 (DIP 원칙).
 - **의존성 주입(Dependency Injection)**: 객체 생성을 외부 컨테이너에 맡겨 모듈 간의 직접적인 'new' 호출을 제거함.
 - **이벤트 기반 통신(EDA)**: 직접 호출 대신 메시지 큐나 이벤트 버스를 사용하여 발행자(Publisher)와 구독자(Subscriber) 간의 결합을 물리적으로 분리함.
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 - 결합도를 낮춤으로써 개별 모듈의 단위 테스트가 용이해지고, 병렬 개발의 효율성이 증대됨.
 - 향후 마이크로서비스 아키텍처(MSA)에서는 네트워크 결합도를 제어하기 위해 API 게이트웨이와 서비스 메시를 활용하는 추세임.
 - 결론적으로 낮은 결합도는 급변하는 비즈니스 요구사항에 유연하게 대응할 수 있는 '애자일한 아키텍처'의 근간임.

@@ -5,15 +5,19 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## Core Insights (핵심 인사이트)
-> 1. **본질**: 프로그램 (Program)은 보조기억장치에 저장된 정적인 바이너리 파일인 반면, 프로세스 (Process)는 메모리에 적재되어 CPU (Central Processing Unit) 자원을 할당받아 실행 중인 동적인 개체이다.
+> **핵심**: 프로그램 (Program)은 보조기억장치에 저장된 정적인 바이너리 파일인 반면, 프로세스 (Process)는 메모리에 적재되어 CPU (Central Processing Unit) 자원을 할당받아 실행 중인 동적인 개체이다.
 > 2. **가치**: 프로그램의 정적 속성은 재사용성과 저장 효율성을 제공하며, 프로세스의 동적 속성은 멀티태스킹 (Multitasking)과 자원 격리 (Isolation)를 통해 현대 운영체제의 동시성 제어를 가능하게 한다.
 > 3. **융합**: 가상 메모리 (Virtual Memory) 기술을 통해 프로그램의 일부가 프로세스의 주소 공간 (Address Space)으로 매핑되며, 커널 (Kernel)은 PCB (Process Control Block)를 통해 이들의 생명주기를 관리하고 문맥 교환 (Context Switch)의 기반을 마련한다.
 
+> 📝 모범 답안
+
+## Core Insights (핵심 인사이트)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 프로그램 (Program)은 명령어 (Instruction)와 데이터의 집합으로 구성된 수동적인 존재 (Passive Entity)이며, 프로세스 (Process)는 운영체제로부터 주소 공간, 메모리, CPU 타임 등 시스템 자원을 할당받아 실제로 실행 중인 능동적인 존재 (Active Entity)이다. 프로그램이 "요리 레시피"라면, 프로세스는 그 레시피를 바탕으로 "실제로 요리를 하는 과정"에 비유할 수 있다.
 
@@ -54,7 +58,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 프로그램과 프로세스의 구성 요소 비교
 
@@ -132,7 +136,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 프로그램 vs 프로세스 상세 비교
 
@@ -153,7 +157,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 좀비 프로세스와 고아 프로세스
 
@@ -169,7 +173,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 프로그램과 프로세스 분리 운영의 효과
 

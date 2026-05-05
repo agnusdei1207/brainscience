@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-
-> 1. **본질**: 클라우드 서비스 모델은 "얼마나 많은 IT 스택을 클라우드 공급자가 관리하는가"에 따라 IaaS·PaaS·SaaS·BaaS·FaaS로 구분되며, 책임 공유 모델(Shared Responsibility Model)이 핵심이다.
+> **핵심**: 클라우드 서비스 모델은 "얼마나 많은 IT 스택을 클라우드 공급자가 관리하는가"에 따라 IaaS·PaaS·SaaS·BaaS·FaaS로 구분되며, 책임 공유 모델(Shared Responsibility Model)이 핵심이다.
 > 2. **가치**: 모델 선택은 단순한 기술 결정이 아니라 운영 비용(OpEx), 개발 속도, 보안 책임 범위, 벤더 의존도(Vendor Lock-in) 간 트레이드오프를 경영적으로 판단하는 아키텍처 전략이다.
 > 3. **판단 포인트**: 기술사 시험에서는 각 모델의 책임 경계 구분, FaaS와 서버리스(Serverless)의 관계, 그리고 엔터프라이즈 도입 시 거버넌스·보안·비용 최적화 전략을 논리적으로 제시해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 클라우드 컴퓨팅(Cloud Computing)은 인터넷을 통해 컴퓨팅 자원(서버·스토리지·네트워크·소프트웨어)을 필요할 때 필요한 만큼 사용하는 IT 인프라 패러다임이다. NIST (National Institute of Standards and Technology, 미국 국립표준기술연구소)는 클라우드 서비스를 제공 방식에 따라 IaaS (Infrastructure as a Service), PaaS (Platform as a Service), SaaS (Software as a Service) 세 가지 기본 모델로 정의하였으며, 이후 BaaS (Backend as a Service), FaaS (Function as a Service) 등 특화 모델이 추가되었다.
 
@@ -24,7 +25,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. 책임 공유 모델 (Shared Responsibility Model)
 
@@ -59,7 +60,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. 모델별 비용·통제·유연성 트레이드오프
 
@@ -89,7 +90,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. 클라우드 서비스 모델 선택 기준
 
@@ -113,7 +114,7 @@ SaaS 도입 시 데이터 주권(Data Sovereignty) 이슈가 발생할 수 있�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 클라우드 서비스 모델의 올바른 선택과 책임 공유 모델의 이해는 디지털 전환의 성패를 좌우한다. IaaS부터 FaaS까지 각 모델의 관리 범위, 비용 구조, 보안 책임을 명확히 구분함으로써 조직은 워크로드에 최적화된 아키텍처를 설계하고, 불필요한 기술 부채와 비용 낭비를 방지할 수 있다.
 

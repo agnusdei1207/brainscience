@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 자크만 프레임워크(Zachman Framework)는 엔터프라이즈 아키텍처(EA)를 6가지 관점(이해관계자)×6가지 질문(What/How/Where/Who/When/Why)의 36셀 매트릭스로 체계화한 온톨로지로, 아키텍처 산출물을 분류하고 누락을 방지하는 메타프레임워크다.
 > 2. 보안 관점에서 자크만 프레임워크는 ISMS-P(정보보호 관리체계)·SABSA(Sherwood Applied Business Security Architecture) 등 보안 아키텍처 설계에서 각 계층의 보안 요구사항을 빠짐없이 도출하는 구조화 도구로 활용된다.
 > 3. 자크만 프레임워크는 프로세스(방법론)가 아닌 분류 체계(Taxonomy/Ontology)로, TOGAF·DoDAF 등 실제 EA 방법론과 결합하여 아키텍처 산출물의 완전성(Completeness)을 검증하는 기준으로 사용된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 자크만 6×6 매트릭스
+## 1. 개요 및 필요성
 
 ```
 자크만 프레임워크 구조:
@@ -42,7 +45,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 자크만 셀 예시
+## 2. 구성요소
 
 ```
 주요 셀 예시:
@@ -76,7 +79,7 @@ Row 3 × Where (아키텍트 × 네트워크):
 
 ---
 
-## Ⅲ. 보안 아키텍처 적용 (SABSA)
+## 3. 구조 및 동작 원리
 
 ```
 SABSA (Sherwood Applied Business Security Architecture):
@@ -107,7 +110,7 @@ ISMS-P 연계:
 
 ---
 
-## Ⅳ. EA 방법론과 자크만
+## 4. 비교 및 트레이드오프
 
 ```
 EA 방법론과 자크만 관계:
@@ -142,7 +145,7 @@ EA 4대 도메인 (TOGAF):
 
 ---
 
-## Ⅴ. 실무 시나리오 — ISP 산출물 자크만 매핑
+## 5. 실무 적용 및 최적화 기법
 
 ```
 정보화 전략 계획(ISP) 자크만 매핑:

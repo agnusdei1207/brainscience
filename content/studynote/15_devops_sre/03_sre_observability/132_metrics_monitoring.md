@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Metrics는 **시계열 수치 데이터(CPU·메모리·요청 수·에러율)**이며, Prometheus가 Pull 방식으로 수집하고 PromQL로 조회하며 Grafana로 시각화하는 것이 클라우드 네이티브 메트릭 표준이다.
+> **핵심**: Metrics는 **시계열 수치 데이터(CPU·메모리·요청 수·에러율)**이며, Prometheus가 Pull 방식으로 수집하고 PromQL로 조회하며 Grafana로 시각화하는 것이 클라우드 네이티브 메트릭 표준이다.
 > 2. **가치**: 메트릭 없이는 "시스템이 느리다"만 알고 **어떤 서비스의 어떤 지표가 임계치를 넘었는지** 알 수 없으며, 메트릭 기반 알림으로 **장애를 조기 감지**한다.
 > 3. **판단 포인트**: 4대 골든 시그널(Latency·Traffic·Errors·Saturation)이 SRE 모니터링의 핵심이며, RED(Rate·Errors·Duration)·USE(Utilization·Saturation·Errors)가 대안이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Prometheus → Pull → 서비스 /metrics 엔드포인트
@@ -26,7 +28,7 @@ Prometheus → Pull → 서비스 /metrics 엔드포인트
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 4대 골든 시그널 | 설명 |
 |:---|:---|

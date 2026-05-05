@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Modular Monolith (모듈형 모놀리스)는 단일 배포 단위(Monolithic Deployment)를 유지하면서도 내부를 명확한 모듈 경계(Module Boundary)로 분리하여, MSA (Microservice Architecture)의 모듈화 이점과 모놀리스의 운영 단순성을 동시에 달성하는 아키텍처다.
+> **핵심**: Modular Monolith (모듈형 모놀리스)는 단일 배포 단위(Monolithic Deployment)를 유지하면서도 내부를 명확한 모듈 경계(Module Boundary)로 분리하여, MSA (Microservice Architecture)의 모듈화 이점과 모놀리스의 운영 단순성을 동시에 달성하는 아키텍처다.
 > 2. **가치**: MSA 전환의 과도기 또는 대안으로, 단일 프로세스의 낮은 운영 복잡도를 유지하면서 DDD Bounded Context를 기반으로 미래 MSA 분리를 대비한 내부 구조를 갖춘다.
 > 3. **판단 포인트**: 모듈 간 통신은 반드시 **공개 인터페이스(Public API)** 를 통해서만 — 모듈 내부 클래스의 직접 참조는 금지. 이 규칙 위반 감지를 위해 ArchUnit 등의 아키텍처 테스트 도구가 필수다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 전통 모놀리스의 문제와 MSA의 오버킬
 
@@ -46,7 +47,7 @@ MSA의 오버킬:
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 모듈형 모놀리스 구조
 
@@ -105,7 +106,7 @@ module com.example.order {
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 아키텍처 진화 경로
 
@@ -131,7 +132,7 @@ module com.example.order {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### ArchUnit으로 모듈 경계 강제
 
@@ -188,7 +189,7 @@ Phase 3: 선택적 MSA 전환
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 모듈형 모놀리스는 "MSA의 모듈화 + 모놀리스의 단순성"을 모두 취하는 현실적인 선택이다:
 

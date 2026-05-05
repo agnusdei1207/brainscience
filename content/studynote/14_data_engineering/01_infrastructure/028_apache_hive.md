@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Apache Hive는 HDFS(또는 S3) 위에 SQL 인터페이스(HiveQL)를 제공하는 데이터 웨어하우스 인프라다. SQL 쿼리를 MapReduce/Tez/Spark 잡으로 변환하여 대규모 배치 처리를 SQL로 가능하게 한다.
+> **핵심**: Apache Hive는 HDFS(또는 S3) 위에 SQL 인터페이스(HiveQL)를 제공하는 데이터 웨어하우스 인프라다. SQL 쿼리를 MapReduce/Tez/Spark 잡으로 변환하여 대규모 배치 처리를 SQL로 가능하게 한다.
 > 2. **가치**: SQL 기반 분석가가 Java 없이 페타바이트급 데이터를 분석할 수 있게 했다. Hive Metastore(HMS)는 테이블 스키마·파티션 정보를 중앙 집중 관리하여 Spark, Presto, Trino 등 모든 데이터 엔진이 공유하는 메타데이터 표준이 됐다.
 > 3. **판단 포인트**: Hive는 배치 분석에 강하지만 인터랙티브 쿼리(초 단위 응답)에는 약하다. 인터랙티브 쿼리는 Presto/Trino(MPP), Spark SQL(인메모리), Impala(C++ 기반)가 대안이다. Hive Metastore는 여전히 레이크하우스(Lakehouse) 메타데이터 허브로 핵심 역할을 유지한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌──────────────────────────────────────────────────────────┐
@@ -38,7 +40,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Hive 핵심 구성 요소
 
@@ -67,7 +69,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Hive | Presto/Trino | Spark SQL |
 |:---|:---|:---|:---|
@@ -80,7 +82,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Lakehouse에서 Hive Metastore의 역할
 
@@ -112,7 +114,7 @@ Parquet:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 자바 동기화 (Java Synchronization)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Java는 언어 수준에서 `synchronized` 키워드로 모니터 기반 상호 배제를 제공하며, `wait()/notify()/notifyAll()`로 조건 변수 동기화를 지원하는 고수준 동기화 모델을 채택했다.
+> **핵심**: Java는 언어 수준에서 `synchronized` 키워드로 모니터 기반 상호 배제를 제공하며, `wait()/notify()/notifyAll()`로 조건 변수 동기화를 지원하는 고수준 동기화 모델을 채택했다.
 > 2. **가치**: `java.util.concurrent` 패키지 (JUC)는 ReentrantLock, ReadWriteLock, Semaphore, CountDownLatch 등 세마포어·모니터를 모두 추상화한 고성능 동기화 라이브러리를 제공한다.
 > 3. **융합**: JVM (Java Virtual Machine)의 객체 헤더에 내장된 모니터 락(Biased→Lightweight→Heavyweight 락 승격)은 OS 뮤텍스와 연계되어 성능과 공정성을 동적으로 조정한다.
 
+> 📝 모범 답안
+
+# 자바 동기화 (Java Synchronization)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Java는 멀티스레드를 언어 설계의 핵심으로 채택한 최초의 주류 언어 중 하나다. `synchronized` 키워드 하나로 컴파일러가 자동으로 모니터 락 획득/해제 코드를 생성하여, 개발자가 세마포어 P/V 순서를 직접 관리하는 저수준 실수를 방지한다.
 
@@ -47,7 +49,7 @@ Java는 멀티스레드를 언어 설계의 핵심으로 채택한 최초의 주
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### synchronized 키워드와 모니터
 
@@ -161,7 +163,7 @@ synchronized vs ReentrantLock 비교:
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### JVM 내부 락 승격 메커니즘
 
@@ -192,7 +194,7 @@ synchronized vs ReentrantLock 비교:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **고성능 캐시 업데이트**: `ConcurrentHashMap` + `ReadWriteLock`으로 읽기 우세 환경에서 독자-저자 문제 해결. `computeIfAbsent()`로 원자적 캐시 미스 처리.
@@ -224,7 +226,7 @@ private volatile static Singleton instance;
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 도구 | 사용 시나리오 | 주의 사항 |
 |:---|:---|:---|

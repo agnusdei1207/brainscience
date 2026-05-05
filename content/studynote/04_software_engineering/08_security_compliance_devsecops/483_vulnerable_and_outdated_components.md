@@ -2,17 +2,19 @@
 weight = 483
 title = "483. Vulnerable and Outdated Components (취약하고 만료된 컴포넌트)"
 +++
+## 0. 핵심 인사이트
 
-# 483. Vulnerable and Outdated Components (취약하고 만료된 컴포넌트)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 취약하고 낡은 컴포넌트(Vulnerable and Outdated Components)는 개발자가 짠 내 코드는 100점이지만, 내가 인터넷에서 공짜로 다운받아 코드에 끼워 넣은 **남이 짠 오픈소스 라이브러리(Log4j, Spring Framework 등)가 너무 오래되었거나 해킹 구멍이 나 있어서 시스템이 통째로 털리는 '공급망(Supply Chain) 지뢰'**다.
+> **핵심**: 취약하고 낡은 컴포넌트(Vulnerable and Outdated Components)는 개발자가 짠 내 코드는 100점이지만, 내가 인터넷에서 공짜로 다운받아 코드에 끼워 넣은 **남이 짠 오픈소스 라이브러리(Log4j, Spring Framework 등)가 너무 오래되었거나 해킹 구멍이 나 있어서 시스템이 통째로 털리는 '공급망(Supply Chain) 지뢰'**다.
 > 2. **가치**: "바퀴를 다시 발명하지 마라"는 소프트웨어 공학의 진리를 역이용하는 해커들의 가장 가성비 좋은 공격 루트다. 전 세계 수백만 대의 서버가 똑같은 오픈소스를 쓰기 때문에, 해커가 이 오픈소스의 취약점(CVE) 하나만 발견하면 전 세계 서버의 뒷문 키를 얻게 되는 **대량 살상 무기(Weapon of Mass Destruction)**로 돌변한다.
 > 3. **융합**: 이 파멸적 연쇄 폭발을 막기 위해 데브옵스(DevOps) 파이프라인의 **SCA(Software Composition Analysis)** 자동화 스캐너, 자재 명세서인 **SBOM(Software Bill of Materials)** 체계, 그리고 무중단 의존성 패치 봇(Dependabot) 등 클라우드 네이티브의 공급망 보안 아키텍처와 생명줄처럼 융합된다.
 
+> 📝 모범 답안
+
+# 483. Vulnerable and Outdated Components (취약하고 만료된 컴포넌트)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 내가 만든 앱 안에는 나 혼자 짠 코드가 10%고, 남이 만들어놓은 오픈소스 라이브러리(Component)가 90%를 차지한다. 
   - **Vulnerable (취약한)**: 최신 버전을 썼더라도, 어제 그 오픈소스 커뮤니티에서 "우리 코드에 심각한 버그(CVE) 발견됨!"이라며 경고가 뜬 상태.
@@ -31,7 +33,7 @@ title = "483. Vulnerable and Outdated Components (취약하고 만료된 컴포�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 1. 취약점의 사슬: 직접 의존성 vs 전이적 의존성(Transitive Dependency)
 
@@ -58,7 +60,7 @@ title = "483. Vulnerable and Outdated Components (취약하고 만료된 컴포�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 1. 보안 스캐너 3형제 (SAST vs DAST vs SCA)
 
@@ -79,7 +81,7 @@ OWASP Top 10을 잡기 위해 젠킨스에 붙이는 3대장 로봇들의 완벽
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -100,7 +102,7 @@ OWASP Top 10을 잡기 위해 젠킨스에 붙이는 3대장 로봇들의 완벽
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

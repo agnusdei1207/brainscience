@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 크로스체인 브릿지(Cross-Chain Bridge)는 서로 다른 블록체인 네트워크 간 자산·데이터를 전송하는 프로토콜 — 이더리움의 ERC-20 토큰을 솔라나·BSC·폴리곤으로 이동하거나, 비트코인을 DeFi에서 사용할 수 있게 해주는 블록체인 인터넷의 기반 인프라다.
 > 2. 락-앤-민트(Lock-and-Mint)와 번-앤-민트(Burn-and-Mint)가 크로스체인 브릿지의 두 핵심 메커니즘 — 원본 체인에서 자산을 잠그고(Lock) 목표 체인에서 동등한 래핑 토큰(Wrapped Token)을 발행(Mint)하거나, 원본을 소각(Burn)하고 목표 체인에서 민트하는 방식이다.
 > 3. 크로스체인 브릿지는 블록체인 생태계에서 가장 큰 해킹 피해를 낸 취약 지점 — 2022년 Ronin Bridge($625M), Wormhole($320M), Nomad($190M) 등 단일 취약점이 수천억 원의 손실로 이어지며, 탈중앙화 검증과 다중 서명이 핵심 보안 요소다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 크로스체인 필요성
+## 1. 개요 및 필요성
 
 ```
 블록체인 고립 문제 (Blockchain Isolation):
@@ -51,7 +54,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 브릿지 메커니즘
+## 2. 구성요소
 
 ```
 메커니즘 1 - Lock-and-Mint:
@@ -104,7 +107,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 보안 취약점과 해킹
+## 3. 구조 및 동작 원리
 
 ```
 크로스체인 브릿지 해킹 사례:
@@ -155,7 +158,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 차세대 브릿지
+## 4. 비교 및 트레이드오프
 
 ```
 ZK (Zero-Knowledge) 브릿지:
@@ -199,7 +202,7 @@ IBC (Inter-Blockchain Communication):
 
 ---
 
-## Ⅴ. 실무 시나리오 — DeFi 멀티체인 전략
+## 5. 실무 적용 및 최적화 기법
 
 ```
 DeFi 프로토콜 멀티체인 브릿지 전략:

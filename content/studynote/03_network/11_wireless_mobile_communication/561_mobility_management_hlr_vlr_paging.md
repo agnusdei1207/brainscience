@@ -5,17 +5,20 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-network"
 +++
+## 0. 핵심 인사이트
 
-# 561. 이동성 관리 (Mobility Management) - HLR (Home), VLR (Visitor) 구조 및 Paging
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 이동성 관리(Mobility Management)는 단말기(스마트폰)가 전 세계 어디에 있든 기지국을 통해 그 위치를 추적(Location Update)하고, 전화나 데이터가 올 때 해당 구역 전체에 방송을 때려(Paging) 사용자를 찾아내는 **모바일 네트워크의 거대한 숨바꼭질 엔진**이다.
+> **핵심**: 이동성 관리(Mobility Management)는 단말기(스마트폰)가 전 세계 어디에 있든 기지국을 통해 그 위치를 추적(Location Update)하고, 전화나 데이터가 올 때 해당 구역 전체에 방송을 때려(Paging) 사용자를 찾아내는 **모바일 네트워크의 거대한 숨바꼭질 엔진**이다.
 > 2. **가치**: 단말기가 이동할 때마다 코어망 중앙에 있는 **HLR (Home Location Register, 원부)**과 단말기가 현재 머무는 지역의 **VLR (Visitor Location Register, 임시 장부)**가 수시로 연동하여, 끊임없이 이동하는 80억 인류의 IP와 안테나 주소를 1초 만에 매핑해 내는 마법을 부린다.
 > 3. **융합**: 단말기의 상태가 통화 중(Connected Mode)일 때는 핸드오버 기술이 작동하고, 아무것도 안 하고 쉴 때(Idle Mode)는 페이징과 위치 등록 기술이 작동하여, **배터리 수명 보존과 통화 도달성(Reachability)**이라는 두 마리 토끼를 완벽하게 융합한 아키텍처를 이룬다.
 
+> 📝 모범 답안
+
+# 561. 이동성 관리 (Mobility Management) - HLR (Home), VLR (Visitor) 구조 및 Paging
+
+##
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 이동성 관리(MM)는 이동통신 가입자의 '현재 위치'를 망이 인지하고 추적하는 과정이다. 이를 위해 코어망에는 HLR(나의 원래 가입 통신사 DB)과 VLR(내가 놀러 간 지역의 임시 통신사 DB)이라는 두 거대 데이터베이스가 존재하며, 단말기는 주기적 또는 구역(Location Area)을 넘을 때마다 자신을 이 장부에 기록(Update)한다.
 - **필요성**: 내가 서울에 살다 부산으로 여행을 갔다. 친구가 내 번호(010-XXXX)로 전화를 걸면, 친구의 폰은 기지국에 "얘 좀 찾아줘!"라고 외친다. 만약 통신망이 내 위치를 모른다면, 대한민국 전체 기지국 수십만 개를 동시에 울리며 "홍길동 있니?"라고 방송(Paging)해야 한다. 이러면 단 10명이 전화해도 전국 기지국의 무선 자원이 100% 터져버리는 끔찍한 시그널링 폭풍(Signaling Storm)이 일어난다.
@@ -46,7 +49,7 @@ categories = "studynote-network"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 위치 등록(Location Update)과 HLR/VLR 연동 메커니즘
 
@@ -113,7 +116,7 @@ categories = "studynote-network"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 페이징 오버헤드와 Location Area 최적화의 딜레마
 
@@ -150,7 +153,7 @@ categories = "studynote-network"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 5G 시대 IoT 기기를 위한 eDRX (확장된 불연속 수신) 아키텍처
 
@@ -169,7 +172,7 @@ categories = "studynote-network"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

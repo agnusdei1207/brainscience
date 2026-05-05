@@ -5,17 +5,19 @@ date = 2024-03-01
 [taxonomies]
 tags = ["Cloud Cost Optimization", "Architecture", "FinOps", "Enterprise Systems"]
 +++
+## 0. 핵심 인사이트
 
-# 227. 클라우드 비용 절감 기술적 방안
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 클라우드 비용 절감 방안은 낭비되는 자원을 제거하는 '운영 최적화'를 넘어, 아키텍처 자체를 내결함성 및 탄력성 중심으로 개편하는 '클라우드 네이티브 설계'의 문제다.
+> **핵심**: 클라우드 비용 절감 방안은 낭비되는 자원을 제거하는 '운영 최적화'를 넘어, 아키텍처 자체를 내결함성 및 탄력성 중심으로 개편하는 '클라우드 네이티브 설계'의 문제다.
 > 2. **가치**: 약정 할인(RI/SP)이나 사용량 축소(Rightsizing)와 같은 단기적 레버뿐만 아니라, 오토스케일링(Auto Scaling), 스팟 인스턴스(Spot Instances), 서버리스(Serverless), 데이터 계층화(Storage Tiering)를 기술적으로 접목하여 단위 비즈니스 처리 비용을 극한으로 낮춘다.
 > 3. **융합**: 컨테이너 오케스트레이션(Kubernetes)의 자원 빈패킹(Bin-packing) 알고리즘, 인프라 애즈 코드(IaC)를 통한 동적 프로비저닝, 그리고 애플리케이션의 상태 분리(Stateless Design) 기술이 결합되어야 완벽한 비용 효율성을 달성할 수 있다.
 
+> 📝 모범 답안
+
+# 227. 클라우드 비용 절감 기술적 방안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 클라우드 비용 절감 기술 방안은 리소스를 필요한 순간에 필요한 만큼만 할당(Elasticity)하고, 사용하지 않는 자원을 실시간으로 회수하며, 가장 저렴한 컴퓨팅/스토리지 옵션을 자동으로 선택하도록 시스템을 설계하는 아키텍처 및 엔지니어링 기법의 총체다.
 
@@ -63,7 +65,7 @@ tags = ["Cloud Cost Optimization", "Architecture", "FinOps", "Enterprise Systems
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 클라우드 비용 절감을 위한 기술적 레버는 컴퓨팅, 스토리지, 아키텍처 등 여러 계층에 걸쳐 존재한다. 이를 5가지 핵심 기술적 방안으로 구조화할 수 있다.
 
@@ -134,7 +136,7 @@ tags = ["Cloud Cost Optimization", "Architecture", "FinOps", "Enterprise Systems
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 컴퓨팅 자원 실행 환경에 따른 비용/제어 트레이드오프
 
@@ -185,7 +187,7 @@ tags = ["Cloud Cost Optimization", "Architecture", "FinOps", "Enterprise Systems
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -243,7 +245,7 @@ tags = ["Cloud Cost Optimization", "Architecture", "FinOps", "Enterprise Systems
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

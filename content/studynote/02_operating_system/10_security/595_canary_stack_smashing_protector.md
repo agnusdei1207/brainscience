@@ -5,17 +5,19 @@ date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 카나리 (Canary) / 스택 스매싱 가드 (SSP)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 카나리 (Canary) 또는 스택 스매싱 가드 (SSP, Stack Smashing Protector)는 함수 호출 시 스택 버퍼와 리턴 주소(RET) 사이에 임의의 랜덤 값(카나리)을 삽입하고, 함수 종료 시 이 값이 변조되었는지 검증하여 버퍼 오버플로우 공격을 탐지하는 컴파일러 기반 보안 기술이다.
+> **핵심**: 카나리 (Canary) 또는 스택 스매싱 가드 (SSP, Stack Smashing Protector)는 함수 호출 시 스택 버퍼와 리턴 주소(RET) 사이에 임의의 랜덤 값(카나리)을 삽입하고, 함수 종료 시 이 값이 변조되었는지 검증하여 버퍼 오버플로우 공격을 탐지하는 컴파일러 기반 보안 기술이다.
 > 2. **가치**: DEP (Data Execution Prevention)나 ASLR (Address Space Layout Randomization)이 공격의 '실행'과 '주소 예측'을 막는다면, 카나리는 메모리 변조 행위 '그 자체'를 가장 먼저, 그리고 가장 저렴한 비용으로 감지하여 프로그램을 안전하게 패닉(강제 종료)시키는 1차 방어선이다.
 > 3. **융합**: 운영체제 커널이 제공하는 스레드 로컬 스토리지 (TLS, Thread-Local Storage)의 난수 생성 기술과 컴파일러(GCC, Clang 등)의 프롤로그/에필로그 코드 삽입 기능이 융합되어 구현되며, 현대 소프트웨어 빌드 파이프라인에서 기본적으로 활성화되어 있다.
 
+> 📝 모범 답안
+
+# 카나리 (Canary) / 스택 스매싱 가드 (SSP)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 **개념 및 정의**
 스택 스매싱 가드 (SSP), 흔히 카나리 (Canary)라 불리는 이 기술은 버퍼 오버플로우 (Buffer Overflow) 공격으로부터 함수의 리턴 주소(Return Address)와 프레임 포인터(EBP/RBP)를 보호하기 위한 방어 기법이다. 컴파일러는 함수가 시작될 때 스택 버퍼 바로 뒤에 보안 쿠키(Security Cookie)인 '카나리 값'을 심고, 함수가 종료되기 직전에 그 값이 원본과 동일한지 확인한다. 다르면 오버플로우가 발생한 것으로 간주해 `__stack_chk_fail()` 함수를 호출하고 프로세스를 강제 종료(Abort)한다.
@@ -55,7 +57,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (컴파일러와 OS의 협력 구조)
 
@@ -104,7 +106,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 카나리(Canary)의 유형 비교
 
@@ -147,7 +149,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 카나리 우회 기법 (Memory Leak 기반 Bypass)
 
@@ -173,7 +175,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

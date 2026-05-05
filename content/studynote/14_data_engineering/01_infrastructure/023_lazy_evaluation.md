@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 지연 평가(Lazy Evaluation)는 식(Expression)의 결과가 실제로 필요한 시점까지 계산을 미루는 평가 전략으로, 불필요한 연산을 원천 차단하고 무한 시퀀스(Infinite Sequence) 같은 자료구조를 유한 메모리에서 처리할 수 있게 한다.
+> **핵심**: 지연 평가(Lazy Evaluation)는 식(Expression)의 결과가 실제로 필요한 시점까지 계산을 미루는 평가 전략으로, 불필요한 연산을 원천 차단하고 무한 시퀀스(Infinite Sequence) 같은 자료구조를 유한 메모리에서 처리할 수 있게 한다.
 > 2. **가치**: Apache Spark·Haskell·Python Generator 등에서 핵심 설계 원칙으로 채택되어, 수억 건의 데이터셋 전체를 메모리에 올리지 않고 최종 필요한 결과만 계산하는 실행 계획 최적화(Query Plan Optimization)의 이론적 기반이 된다.
 > 3. **판단 포인트**: 지연 평가는 실행 계획(Execution Plan)이 실제 데이터 처리 전에 생성되므로, Spark DAG(Directed Acyclic Graph)처럼 최적화기(Optimizer)가 연산 순서를 재배치하고 불필요한 스테이지를 제거할 수 있어 즉시 평가(Eager Evaluation) 대비 I/O와 CPU 비용을 대폭 절감한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 지연 평가(Lazy Evaluation)는 함수형 프로그래밍(Functional Programming)에서 시작된 개념으로, 연산 결과가 명시적으로 요구될 때까지 계산을 지연시키는 프로그램 실행 전략이다.
 
@@ -42,7 +44,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Spark의 지연 평가: Transformation vs Action
 
@@ -84,7 +86,7 @@ first_10 = [next(lazy_gen) for _ in range(10)]  # 10번만 실행
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 평가 전략 | 언어/시스템 | 메모리 | 최적화 가능 | 무한 시퀀스 |
 |:---|:---|:---|:---|:---|
@@ -98,7 +100,7 @@ first_10 = [next(lazy_gen) for _ in range(10)]  # 10번만 실행
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: Spark 잡 성능 최적화
 10억 건 로그 데이터에서 오류 코드 500인 건만 집계하는 Spark 잡이 느리다.
@@ -120,7 +122,7 @@ first_10 = [next(lazy_gen) for _ in range(10)]  # 10번만 실행
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 | 수치 |
 |:---|:---|:---|

@@ -5,17 +5,19 @@ date = "2026-03-28"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 큐비트 (Qubit)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 큐비트 (Qubit, Quantum Bit)는 양자역학의 중첩 (Superposition)과 얽힘 (Entanglement) 현상을 이용하여 0과 1을 동시에 표현할 수 있는 양자 컴퓨터 (Quantum Computer)의 기본 정보 단위다.
+> **핵심**: 큐비트 (Qubit, Quantum Bit)는 양자역학의 중첩 (Superposition)과 얽힘 (Entanglement) 현상을 이용하여 0과 1을 동시에 표현할 수 있는 양자 컴퓨터 (Quantum Computer)의 기본 정보 단위다.
 > 2. **가치**: n개의 큐비트는 2ⁿ개의 상태를 병렬로 표현하여 고전 비트 대비 지수적 정보 밀도를 제공하며, 이는 특정 연산에서 지수적 가속 (Exponential Speedup)의 물리적 기반이다.
 > 3. **융합**: 큐비트는 하드웨어 구현 방식(초전도, 이온 트랩, 포토닉 등)에 따라 코히어런스 시간 (Coherence Time), 게이트 충실도 (Fidelity), 확장성 (Scalability) 특성이 달라지며, 양자 오류 정정 (QEC)과 결합하여 논리 큐비트 (Logical Qubit)를 구성한다.
 
+> 📝 모범 답안
+
+# 큐비트 (Qubit)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 큐비트는 양자 정보의 기본 단위로, 고전 비트 (Classical Bit)가 0 또는 1 중 하나의 상태만 가지는 것과 달리, 0과 1의 **중첩 상태 (Superposition State)** α|0⟩ + β|1⟩를 가진다. 여기서 α와 β는 복소수 확률 진폭(Probability Amplitude)이며, |α|² + |β|² = 1을 만족한다. 측정(Measurement) 시 |α|² 확률로 0, |β|² 확률로 1이 관측된다.
 
@@ -72,7 +74,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 큐비트의 3대 양자 특성
 
@@ -156,7 +158,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 물리 큐비트 vs 논리 큐비트
 
@@ -224,7 +226,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -255,7 +257,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

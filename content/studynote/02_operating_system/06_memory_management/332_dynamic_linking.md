@@ -5,17 +5,19 @@ date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 동적 연결 (Dynamic Linking)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 동적 연결 (Dynamic Linking)은 프로그램이 컴파일될 때 외부 라이브러리 코드를 내 실행 파일(EXE) 안에 통째로 복사해 넣지 않고, **실행되는 시점(Run-time)에 메모리에 이미 올라와 있는 공용 라이브러리의 주소만 연결(Link)**하는 기법이다.
+> **핵심**: 동적 연결 (Dynamic Linking)은 프로그램이 컴파일될 때 외부 라이브러리 코드를 내 실행 파일(EXE) 안에 통째로 복사해 넣지 않고, **실행되는 시점(Run-time)에 메모리에 이미 올라와 있는 공용 라이브러리의 주소만 연결(Link)**하는 기법이다.
 > 2. **가치**: 100개의 프로그램이 `printf`를 써도 메모리에는 단 1개의 `printf` 코드만 존재하게 하여 디스크 용량과 메인 메모리를 극적으로 절약하고, 라이브러리 버그 패치 시 각 프로그램을 재컴파일할 필요 없이 라이브러리 파일만 교체하면 되는 **독립적 유지보수성**을 제공한다.
 > 3. **융합**: Windows의 DLL (Dynamic Link Library)과 Linux의 SO (Shared Object) 파일이 그 구현체이며, 링커(Linker) 대신 운영체제의 로더(Loader)와 가상 메모리 매핑 기술이 융합되어 주소 변환을 수행한다.
 
+> 📝 모범 답안
+
+# 동적 연결 (Dynamic Linking)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 동적 연결 (Dynamic Linking)은 실행 파일 생성(Compile & Link) 시점에 시스템 라이브러리 코드를 포함하지 않고, 오직 '이 라이브러리를 쓸 것이다'라는 포인터(Stub)만 남겨둔 채, 실제 프로그램이 실행되어 해당 함수가 호출될 때 운영체제가 라이브러리를 찾아 메모리에 적재하고 주소를 연결해주는 메커니즘이다.
 - **필요성**: C 언어의 표준 입출력 함수(`printf`, `scanf`)나 수학 라이브러리 등은 거의 모든 프로그램이 공통으로 사용한다. 만약 정적 연결(Static Linking) 방식을 쓰면, 이 공통 코드들이 모든 카카오톡, 크롬, 엑셀 실행 파일 안에 중복 복사된다. 이는 디스크 공간의 막대한 낭비일 뿐 아니라, 램(RAM)에도 똑같은 코드가 수백 개씩 올라가는 대참사를 낳는다. 이를 해결할 "코드 공유(Code Sharing)" 메커니즘이 필요했다.
@@ -50,7 +52,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -102,7 +104,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 정적 연결 (Static Linking) vs 동적 연결 (Dynamic Linking)
 
@@ -137,7 +139,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 1: 보안 패치와 의존성 관리
 1. **상황**: 전 세계 컴퓨터에 깔린 OpenSSL 라이브러리에서 치명적인 하트블리드(Heartbleed) 보안 결함이 발견되었다.
@@ -155,7 +157,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,17 +5,19 @@ date = 2024-03-01
 [taxonomies]
 tags = ["Bimodal IT", "Gartner", "IT Strategy", "Enterprise Systems"]
 +++
+## 0. 핵심 인사이트
 
-# 230. 모달리티 1 vs 모달리티 2 - 가트너의 바이모달 IT
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 바이모달 IT (Bimodal IT)는 가트너(Gartner)가 제시한 IT 조직 운영 모델로, 안정성 중심의 전통적 방식(Mode 1)과 민첩성 중심의 혁신적 방식(Mode 2)이라는 두 가지 서로 다른 속도의 IT 운영 체계를 한 조직 내에서 병행하는 전략이다.
+> **핵심**: 바이모달 IT (Bimodal IT)는 가트너(Gartner)가 제시한 IT 조직 운영 모델로, 안정성 중심의 전통적 방식(Mode 1)과 민첩성 중심의 혁신적 방식(Mode 2)이라는 두 가지 서로 다른 속도의 IT 운영 체계를 한 조직 내에서 병행하는 전략이다.
 > 2. **가치**: 기존 핵심 시스템(Core ERP, 금융 원장 등)의 장애 없는 무결성을 유지하면서도, 디지털 혁신과 빠른 시장 출시(Time-to-Market)가 필요한 영역(모바일 앱, AI 서비스 등)에서 스타트업 같은 민첩성을 동시에 확보할 수 있게 해준다.
 > 3. **융합**: 기술적으로 Mode 1은 워터폴(Waterfall), 온프레미스(On-premise), 강결합 모놀리식(Monolithic) 환경과 연계되고, Mode 2는 애자일(Agile), 데브옵스(DevOps), 클라우드 네이티브, 마이크로서비스(MSA)와 깊이 융합되어 기업의 양손잡이(Ambidextrous) 혁신을 주도한다.
 
+> 📝 모범 답안
+
+# 230. 모달리티 1 vs 모달리티 2 - 가트너의 바이모달 IT
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 바이모달 IT는 IT 조직, 개발 방법론, 아키텍처, 툴 체인, 문화 심지어 평가 지표(KPI)까지 서로 상반된 두 가지 방식을 공존시키는 모델이다. 마라토너(Mode 1: 예측 가능성, 안정성, 효율성)와 단거리 스프린터(Mode 2: 탐색, 속도, 민첩성)가 하나의 팀으로 협력하는 형태다.
 
@@ -64,7 +66,7 @@ tags = ["Bimodal IT", "Gartner", "IT Strategy", "Enterprise Systems"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소: Mode 1과 Mode 2의 다차원적 특성 비교
 
@@ -132,7 +134,7 @@ tags = ["Bimodal IT", "Gartner", "IT Strategy", "Enterprise Systems"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: Mode 1과 Mode 2의 ITIL vs DevOps 시너지
 
@@ -178,7 +180,7 @@ tags = ["Bimodal IT", "Gartner", "IT Strategy", "Enterprise Systems"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -230,7 +232,7 @@ tags = ["Bimodal IT", "Gartner", "IT Strategy", "Enterprise Systems"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

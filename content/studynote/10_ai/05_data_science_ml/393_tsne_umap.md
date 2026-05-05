@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: t-SNE (t-distributed Stochastic Neighbor Embedding)와 UMAP (Uniform Manifold Approximation and Projection)은 고차원 데이터의 매니폴드 (Manifold) 구조를 보존하면서 2~3차원으로 비선형 차원 축소하는 시각화 기법이다.
+> **핵심**: t-SNE (t-distributed Stochastic Neighbor Embedding)와 UMAP (Uniform Manifold Approximation and Projection)은 고차원 데이터의 매니폴드 (Manifold) 구조를 보존하면서 2~3차원으로 비선형 차원 축소하는 시각화 기법이다.
 > 2. **가치**: 클러스터링 구조, 이상치, 클래스 분리도를 직관적으로 탐색할 수 있어 임베딩 벡터 분석·데이터 이해·모델 디버깅에 필수적인 탐색적 도구다.
 > 3. **판단 포인트**: t-SNE는 지역 구조 보존에 강하고 전역 구조 왜곡 가능, UMAP은 전역 구조를 더 잘 보존하고 20~100배 빠르며 새 데이터에 변환 적용 가능한 프로젝션 학습이 가능하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 고차원 공간 (수백~수천 차원)은 인간이 직접 시각화할 수 없다. 차원의 저주 (Curse of Dimensionality)로 인해 고차원에서 거리 개념도 무의미해진다. 차원 축소는 데이터의 본질 구조를 유지하며 저차원으로 표현하는 것이다.
 
@@ -23,7 +25,7 @@ PCA (Principal Component Analysis)는 선형 변환만 수행하므로 비선형
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### t-SNE (van der Maaten & Hinton, 2008)
 
@@ -80,7 +82,7 @@ PCA (Principal Component Analysis)는 선형 변환만 수행하므로 비선형
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 방법 | 선형? | 보존 | 속도 | 역변환 |
 |:---|:---|:---|:---|:---|
@@ -95,7 +97,7 @@ PCA (Principal Component Analysis)는 선형 변환만 수행하므로 비선형
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **임베딩 품질 검증**: BERT, Word2Vec, ResNet 특성의 클러스터 구조 시각화
 **이상치 탐지**: 군집에서 벗어난 점 → 레이블 오류 또는 진짜 이상치
@@ -108,7 +110,7 @@ PCA (Principal Component Analysis)는 선형 변환만 수행하므로 비선형
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 t-SNE와 UMAP은 고차원 데이터 탐색의 필수 도구로, 딥러닝 모델의 표현 학습 품질을 직관적으로 평가할 수 있게 한다. UMAP은 t-SNE의 속도·전역 구조 보존 한계를 개선해 대규모 임베딩 분석의 표준이 됐다.
 

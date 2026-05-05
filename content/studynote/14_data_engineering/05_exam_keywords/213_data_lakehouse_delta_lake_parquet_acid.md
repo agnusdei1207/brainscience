@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 데이터 레이크하우스(Data Lakehouse)는 데이터 레이크(Data Lake)의 저비용·유연성과 데이터 웨어하우스(Data Warehouse)의 ACID(Atomicity·Consistency·Isolation·Durability) 트랜잭션·스키마 관리를 통합한 차세대 데이터 플랫폼 아키텍처다.
+> **핵심**: 데이터 레이크하우스(Data Lakehouse)는 데이터 레이크(Data Lake)의 저비용·유연성과 데이터 웨어하우스(Data Warehouse)의 ACID(Atomicity·Consistency·Isolation·Durability) 트랜잭션·스키마 관리를 통합한 차세대 데이터 플랫폼 아키텍처다.
 > 2. **가치**: Delta Lake는 오브젝트 스토리지(S3, ADLS) 위에 트랜잭션 로그(Transaction Log)를 추가해 ACID를 보장하고, Parquet 컬럼 형식의 압축 효율과 함께 타임 트래블(Time Travel)로 임의 시점 데이터 복원을 가능하게 한다.
 > 3. **판단 포인트**: 기존 DW는 관리 비용이 높고 비정형 데이터를 처리 못하며, 순수 레이크는 ACID가 없어 데이터 신뢰성이 낮다 — 레이크하우스는 이 두 단점을 모두 해소하는 아키텍처적 수렴점이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 데이터 저장 아키텍처의 진화
 
@@ -50,7 +52,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 Delta Lake 아키텍처
 
@@ -133,7 +135,7 @@ RESTORE TABLE orders TO VERSION AS OF 3;
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 오픈 테이블 포맷 3종 비교
 
@@ -173,7 +175,7 @@ RESTORE TABLE orders TO VERSION AS OF 3;
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 Delta Lake 운영 최적화
 
@@ -204,7 +206,7 @@ VACUUM delta.`/data/orders` RETAIN 168 HOURS;  -- 7일 이내 보존
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 Lakehouse 도입 효과
 

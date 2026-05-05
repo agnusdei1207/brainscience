@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. t-SNE(t-distributed Stochastic Neighbor Embedding)는 고차원 데이터의 국소적 구조(Local Structure)를 2~3차원으로 시각화하는 비선형 차원 축소 기법으로 — 유사한 데이터 포인트를 가깝게, 상이한 포인트를 멀리 배치하여 클러스터 구조를 직관적으로 드러낸다.
 > 2. t-SNE의 핵심은 고차원 공간의 가우시안 분포 유사도와 저차원 공간의 t-분포(자유도 1, 코시 분포) 유사도 사이의 KL Divergence를 최소화하는 것으로 — t-분포의 두꺼운 꼬리(Heavy Tail)가 "군집 붕괴 문제(Crowding Problem)"를 해결하는 핵심이다.
 > 3. t-SNE는 탐색적 데이터 분석(EDA)과 모델 디버깅에는 강력하지만 — 퍼플렉시티(Perplexity) 하이퍼파라미터에 민감하고 전역 구조 보존이 약하며 계산량이 O(n²)이라 대규모 데이터에 직접 적용이 어려워, UMAP이 실용적 대안으로 부상하고 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. t-SNE 개념
+## 1. 개요 및 필요성
 
 ```
 t-SNE (t-distributed Stochastic Neighbor Embedding):
@@ -51,7 +54,7 @@ t-SNE 개선:
 
 ---
 
-## Ⅱ. t-SNE 알고리즘
+## 2. 구성요소
 
 ```
 t-SNE 알고리즘 상세:
@@ -99,7 +102,7 @@ t-SNE 알고리즘 상세:
 
 ---
 
-## Ⅲ. t-SNE vs PCA vs UMAP
+## 3. 구조 및 동작 원리
 
 ```
 차원 축소 기법 비교:
@@ -149,7 +152,7 @@ UMAP (Uniform Manifold Approximation and Projection):
 
 ---
 
-## Ⅳ. t-SNE 주의사항
+## 4. 비교 및 트레이드오프
 
 ```
 t-SNE 오용 패턴:
@@ -187,7 +190,7 @@ t-SNE 오용 패턴:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 텍스트 임베딩 시각화
+## 5. 실무 적용 및 최적화 기법
 
 ```
 BERT 텍스트 임베딩 t-SNE 시각화:

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: GPT (Generative Pre-trained Transformer)는 Transformer 디코더 구조를 사용하여 "다음 토큰 예측"이라는 단일 언어 모델링 태스크로 대규모 텍스트를 사전 학습한 뒤, 텍스트를 자기회귀적(Autoregressive)으로 생성하는 모델 계보다.
+> **핵심**: GPT (Generative Pre-trained Transformer)는 Transformer 디코더 구조를 사용하여 "다음 토큰 예측"이라는 단일 언어 모델링 태스크로 대규모 텍스트를 사전 학습한 뒤, 텍스트를 자기회귀적(Autoregressive)으로 생성하는 모델 계보다.
 > 2. **가치**: 좌→우 단방향 언어 모델링만으로도 사전 학습 규모를 늘릴수록 번역·요약·코드 생성·추론 등 다양한 태스크에서 SOTA를 달성하는 **스케일링 법칙(Scaling Law)**을 실증했으며, ChatGPT·GPT-4로 이어져 AI 대중화를 이끌었다.
 > 3. **판단 포인트**: GPT는 마스크드 셀프 어텐션(Masked Self-Attention)으로 미래 토큰을 보지 않는 **인과적(Causal) 언어 모델**이며, BERT처럼 양방향이 아니라 단방향 생성에 특화된 구조임을 BERT와 명확히 구별해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 OpenAI는 2018년 GPT-1을 발표하며 "단순히 다음 단어를 예측하는 언어 모델을 대규모로 학습하면, 별도의 레이블 없이도 다양한 언어 태스크를 잘 수행하는 범용 표현을 배울 수 있다"는 가설을 검증했다.
 
@@ -23,7 +25,7 @@ GPT는 Transformer의 디코더 부분만 사용하며, 학습 시 입력 시퀀
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```text
 ┌──────────────────────────────────────────────────────────────────┐
@@ -64,7 +66,7 @@ GPT는 Transformer의 디코더 부분만 사용하며, 학습 시 입력 시퀀
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 RLHF (Reinforcement Learning from Human Feedback, 인간 피드백 강화 학습)는 InstructGPT/ChatGPT의 핵심 혁신이다:
 1. **지도 학습 미세 조정(SFT)**: 인간이 작성한 이상적 답변으로 GPT 파인 튜닝
@@ -77,7 +79,7 @@ RLHF (Reinforcement Learning from Human Feedback, 인간 피드백 강화 학습
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **추론 전략 (Decoding Strategy)**:
 - **탐욕 탐색 (Greedy Decoding)**: 매 시점 확률 최고 토큰 선택. 빠르지만 단조로움
@@ -91,7 +93,7 @@ RLHF (Reinforcement Learning from Human Feedback, 인간 피드백 강화 학습
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 GPT 계보는 "언어 모델을 충분히 크게 훈련하면 모든 언어 태스크에서 우수해진다"는 스케일링 법칙을 현실로 증명했다. ChatGPT는 이 기술을 대중화하여 AI의 역사를 "전문가 전용"에서 "누구나 사용"으로 바꿨다. 코드 생성(GitHub Copilot), 법률 문서 분석, 의학 연구 지원 등 지식 노동의 모든 분야에 GPT가 침투하며 생산성 혁명을 이끌고 있다.
 

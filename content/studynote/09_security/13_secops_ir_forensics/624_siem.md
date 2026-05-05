@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SIEM (Security Information and Event Management)은 다양한 보안 장비와 시스템으로부터 로그와 이벤트를 실시간으로 수집, 정규화, 상관 분석하여 위협을 탐지하는 통합 보안 플랫폼이다.
+> **핵심**: SIEM (Security Information and Event Management)은 다양한 보안 장비와 시스템으로부터 로그와 이벤트를 실시간으로 수집, 정규화, 상관 분석하여 위협을 탐지하는 통합 보안 플랫폼이다.
 > 2. **가치**: 파편화된 데이터 사이의 연관 관계를 분석함으로써, 단일 장비로는 발견할 수 없는 복잡한 공격 패턴(APT 등)을 시각화하고 경보를 발령한다.
 > 3. **판단 포인트**: 방대한 로그 수집에 따른 스토리지 비용과 탐지 규칙(Rule)의 정확도 사이의 균형을 맞추는 정책 설계가 운영의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 SIEM (Security Information and Event Management)은 보안 관제의 '중심 엔진'이다. 기업 내에는 방화벽, IPS, 백신, 서버, DB 등 수많은 장비가 존재하며 각기 다른 형식의 로그를 쏟아낸다.
 
@@ -23,7 +25,7 @@ SIEM (Security Information and Event Management)은 보안 관제의 '중심 엔
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 SIEM은 크게 수집(Collector), 정규화(Normalization), 저장(Storage), 상관 분석(Correlation), 가시화(Visualization) 단계로 작동한다.
 
@@ -52,7 +54,7 @@ SIEM은 크게 수집(Collector), 정규화(Normalization), 저장(Storage), 상
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 SIEM은 과거의 SIM(Log Storage)과 SEM(Real-time Monitoring)이 합쳐진 개념이며, 최근에는 UEBA(행위 분석)와 통합되는 추세이다.
 
@@ -66,7 +68,7 @@ SIEM은 과거의 SIM(Log Storage)과 SEM(Real-time Monitoring)이 합쳐진 개
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 기술사는 SIEM 구축 시 '로그의 양보다 질'을 강조해야 한다. 무분별한 로그 수집은 장비 부하를 초래하고 의미 없는 알람(Noise)만 양산한다. 또한 '탐지 규칙(Rule)의 생명주기 관리'가 필수적이다.
 
@@ -83,7 +85,7 @@ SIEM은 과거의 SIM(Log Storage)과 SEM(Real-time Monitoring)이 합쳐진 개
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 SIEM은 기업 보안 운영의 가시성을 확보하는 가장 강력한 수단이다. 흩어진 보안 이벤트를 하나의 문맥(Context)으로 파악하게 함으로써, 사고 발생 시 원인 분석(Root Cause Analysis) 시간을 획기적으로 단축시킨다.
 

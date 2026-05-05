@@ -5,17 +5,19 @@ date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 반환 지향 프로그래밍 (ROP) 기법
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ROP (Return-Oriented Programming)는 공격자가 악성 셸코드(Shellcode)를 메모리에 직접 주입하여 실행할 수 없도록 만든 DEP/NX Bit 방어 체계를 우회하기 위해, 이미 실행 권한을 가진 채 메모리에 로드되어 있는 정상 코드 조각(가젯, Gadget)들을 짜깁기하여 원하는 악성 행위를 수행하게 만드는 최상위 수준의 익스플로잇 (Exploit) 기법이다.
+> **핵심**: ROP (Return-Oriented Programming)는 공격자가 악성 셸코드(Shellcode)를 메모리에 직접 주입하여 실행할 수 없도록 만든 DEP/NX Bit 방어 체계를 우회하기 위해, 이미 실행 권한을 가진 채 메모리에 로드되어 있는 정상 코드 조각(가젯, Gadget)들을 짜깁기하여 원하는 악성 행위를 수행하게 만드는 최상위 수준의 익스플로잇 (Exploit) 기법이다.
 > 2. **가치**: 버퍼 오버플로우 공격의 패러다임을 "코드 주입(Code Injection)"에서 "코드 재사용(Code-Reuse)"으로 완전히 전환시킨 보안 역사상의 가장 중대한 기술적 도약으로, 현대 운영체제 (OS, Operating System) 보안의 핵심 위협이다.
 > 3. **융합**: 컴퓨터구조 (CA, Computer Architecture)의 함수 호출 규약(Calling Convention), 스택 제어 명령어(`ret`, `pop`), 그리고 메모리 매핑 아키텍처에 대한 극도로 깊은 이해를 바탕으로 완성되며, 이를 막기 위해 ASLR (Address Space Layout Randomization)과 하드웨어 섀도우 스택(Shadow Stack) 기술이 고도화되고 있다.
 
+> 📝 모범 답안
+
+# 반환 지향 프로그래밍 (ROP) 기법
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 **개념 및 정의**
 반환 지향 프로그래밍 (ROP, Return-Oriented Programming)은 취약한 프로그램의 제어 흐름(Control Flow)을 탈취한 후, 기존 바이너리나 라이브러리(예: `libc.so`, `ntdll.dll`)에 존재하는 짧은 기계어 명령어 서열인 '가젯 (Gadget)'들을 연결(Chaining)하여 튜링 완전(Turing Complete)한 프로그램(원하는 모든 악성 행위)을 구성하는 코드 재사용 공격 기법이다. 모든 가젯은 스택에서 다음 실행 주소를 꺼내오는 반환 명령어(`ret` 등)로 끝난다는 특징 때문에 이런 이름이 붙었다.
@@ -54,7 +56,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (ROP 페이로드의 해부학)
 
@@ -102,7 +104,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### ROP의 진화 파생 기법 비교
 
@@ -151,7 +153,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: ASLR 환경에서 ROP를 이용한 DEP 해제 공격
 
@@ -178,7 +180,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과 (CFI 및 Shadow Stack 도입 시)
 

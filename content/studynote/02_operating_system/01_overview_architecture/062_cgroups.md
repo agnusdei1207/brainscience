@@ -5,16 +5,17 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: cgroups(Control Groups)는 프로세스 그룹별로 CPU, 메모리, I/O 같은 자원 사용량을 제한하고 측정하는 커널 기능이다.
+> **핵심**: cgroups(Control Groups)는 프로세스 그룹별로 CPU, 메모리, I/O 같은 자원 사용량을 제한하고 측정하는 커널 기능이다.
 > 2. **가치**: 한 서비스가 자원을 독점하는 것을 막아 멀티 테넌시와 서비스 안정성을 지킨다.
 > 3. **융합**: Kubernetes의 requests/limits와 OOM (Out of Memory) 제어는 cgroups 없이는 제대로 동작할 수 없다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 네임스페이스가 "무엇이 보이느냐"를 나누는 기술이라면, cgroups는 "얼마나 쓸 수 있느냐"를 나누는 기술이다. 즉, 시야와 자원 제한은 서로 다른 문제다.
 
@@ -24,7 +25,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```text
 Root Cgroup
@@ -52,7 +53,7 @@ cgroups는 계층 구조를 가진다. 상위 그룹이 전체 정책을 갖고,
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | cgroups | Namespace | Resource Quota |
 | :-- | :-- | :-- | :-- |
@@ -66,7 +67,7 @@ Kubernetes의 requests/limits는 결국 cgroups 설정으로 내려간다. 따�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 체크리스트
 
@@ -89,7 +90,7 @@ Kubernetes의 requests/limits는 결국 cgroups 설정으로 내려간다. 따�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 cgroups는 Linux를 대규모 서비스 플랫폼으로 만드는 핵심 기반이다. 컨테이너, Kubernetes, 클라우드 과금까지 모두 이 위에서 돌아간다.
 

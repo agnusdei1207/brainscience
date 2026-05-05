@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# SSD FTL (Flash Translation Layer)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: FTL(Flash Translation Layer)은 SSD 내부에 탑재된 아주 작은 독자적인 운영체제(소프트웨어)로, **덮어쓰기(Overwrite)가 불가능한 낸드 플래시(NAND Flash) 메모리의 물리적 한계를 운영체제(OS) 몰래 해결해 주는 추상화 계층**이다.
+> **핵심**: FTL(Flash Translation Layer)은 SSD 내부에 탑재된 아주 작은 독자적인 운영체제(소프트웨어)로, **덮어쓰기(Overwrite)가 불가능한 낸드 플래시(NAND Flash) 메모리의 물리적 한계를 운영체제(OS) 몰래 해결해 주는 추상화 계층**이다.
 > 2. **메커니즘 (LBA $\rightarrow$ PBA)**: OS가 "100번 주소에 데이터를 덮어써라!"라고 명령하면, FTL은 실제 100번 셀을 지우는 대신 비어있는 '새로운 200번 셀'에 데이터를 쓰고, 내부 맵핑 테이블에 `100 $\rightarrow$ 200`이라고 주소를 몰래 바꿔치기(Translation) 해둔다. (Out-of-place Update)
 > 3. **가치**: 이 천재적인 속임수 덕분에 HDD 전용으로 만들어진 기존 윈도우/리눅스의 파일 시스템을 1바이트도 수정하지 않고 그대로 SSD에 적용할 수 있게 되었으며, SSD의 수명(Wear Leveling)과 속도를 지배하는 두뇌 역할을 한다.
 
+> 📝 모범 답안
+
+# SSD FTL (Flash Translation Layer)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **NAND Flash Memory**: SSD를 구성하는 반도체 소자. 데이터를 쓸 수는 있지만, 이미 쓰인 곳에 덮어쓰기(Overwrite)를 하려면 반드시 해당 구역(Block) 전체를 지워야(Erase)만 쓸 수 있는 치명적 단점이 있다.
@@ -40,7 +42,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 낸드 플래시의 "지우기(Erase)의 저주"
 
@@ -83,7 +85,7 @@ SSD를 이해하려면 셀, 페이지, 블록의 크기 단위를 반드시 알�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### HDD 컨트롤러 vs SSD FTL 역할 비교
 
@@ -103,7 +105,7 @@ SSD를 이해하려면 셀, 페이지, 블록의 크기 단위를 반드시 알�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -148,7 +150,7 @@ SSD를 이해하려면 셀, 페이지, 블록의 크기 단위를 반드시 알�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

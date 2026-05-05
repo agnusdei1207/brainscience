@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: LLM(Large Language Model)은 훈련 데이터 범위 밖이나 최신 정보에 대해 그럴듯하지만 틀린 답변(Hallucination)을 생성한다.
+> **핵심**: LLM(Large Language Model)은 훈련 데이터 범위 밖이나 최신 정보에 대해 그럴듯하지만 틀린 답변(Hallucination)을 생성한다.
 > 2. **가치**: RAG(Retrieval Augmented Generation)는 외부 지식 베이스에서 관련 문서를 실시간 검색하여 컨텍스트로 주입함으로써 할루시네이션을 근본적으로 억제한다.
 > 3. **판단 포인트**: 벡터 DB(Vector Database) 선택(Pinecone·Weaviate·Milvus)과 임베딩(Embedding) 품질이 RAG 시스템의 전체 정확도를 결정짓는 핵심 변수이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 LLM 할루시네이션(Hallucination) 이란?
 
@@ -35,7 +37,7 @@ LLM은 다음 토큰(Token)을 예측하는 확률적 생성 모델이다. 따�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 RAG(Retrieval Augmented Generation) 구조
 
@@ -98,7 +100,7 @@ RAG는 세 단계로 구성된다: **검색(Retrieval) → 증강(Augmentation) 
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 RAG vs Fine-tuning vs Prompt Engineering 비교
 
@@ -125,7 +127,7 @@ RAG는 세 단계로 구성된다: **검색(Retrieval) → 증강(Augmentation) 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 기업 RAG 시스템 설계 체크리스트
 
@@ -153,7 +155,7 @@ RAG는 세 단계로 구성된다: **검색(Retrieval) → 증강(Augmentation) 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 RAG 도입 효과 요약
 

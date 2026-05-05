@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 540. 인텔 CET (Control-flow Enforcement Technology)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 인텔 CET(Control-flow Enforcement Technology)는 소프트웨어의 정상적인 실행 흐름(Control-flow)을 하이재킹하는 해킹 기법인 **ROP와 JOP를 하드웨어 수준에서 원천 차단**하기 위해 설계된 보안 아키텍처다.
+> **핵심**: 인텔 CET(Control-flow Enforcement Technology)는 소프트웨어의 정상적인 실행 흐름(Control-flow)을 하이재킹하는 해킹 기법인 **ROP와 JOP를 하드웨어 수준에서 원천 차단**하기 위해 설계된 보안 아키텍처다.
 > 2. **가치**: 리턴 주소를 별도로 복사해두는 **'그림자 스택(Shadow Stack)'**과 간접 분기 목적지를 검증하는 **'간접 분기 추적(IBT)'** 기술을 통해, 소프트웨어 패치만으로는 불가능했던 런타임 공격 방어를 0.1ns급 하드웨어 속도로 실현한다.
 > 3. **융합**: 운영체제의 프로세스 관리 시스템 및 컴파일러의 코드 생성 단계와 긴밀히 협력하여, 오직 허가된 지점으로만 프로그램이 점프할 수 있게 강제하는 하드웨어 기반 '무결성 가디언' 역할을 수행한다.
 
+> 📝 모범 답안
+
+# 540. 인텔 CET (Control-flow Enforcement Technology)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 - **개념**: 프로그램이 실행되는 도중 함수 리턴 주소나 점프 주소를 조작하여 악성 코드를 실행시키는 '흐름 제어 공격'을 막기 위해 인텔이 CPU 하드웨어 내부에 심어놓은 보안 기술이다.
 - **필요성**: 기존의 ASLR이나 DEP(데이터 실행 방지) 기술은 해커들의 진화된 공격 기법인 **ROP(Return-Oriented Programming)** 앞에 무력해졌다. 해커는 기존 프로그램에 있는 정상적인 코드 조각(Gadget)들을 교묘하게 짜깁기하여 실행하는데, 이는 시스템 입장에서 '정상 코드 실행'으로 보여 막을 방법이 없었다. CET는 이 비정상적인 '짜깁기 흐름' 자체를 하드웨어가 감시한다.
@@ -50,7 +52,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 그림자 스택 (Shadow Stack) - ROP 방어
 - **동작**: 함수가 호출될 때(CALL), 하드웨어는 리턴 주소를 일반 스택뿐만 아니라 사용자 접근이 불가능한 'Shadow Stack' 메모리 영역에 동시에 저장한다.
@@ -68,7 +70,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### CET vs 소프트웨어 기반 흐름 제어 보호 (S/W CFI)
 
@@ -86,7 +88,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -105,7 +107,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **보안 취약점 악용 시도 90% 이상 무력화**: 메모리 오염 기반의 가장 흔한 공격 루트를 물리적으로 봉쇄한다.

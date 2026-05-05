@@ -5,13 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: SAST (Static Application Security Testing)는 코드 실행 없이 소스를 분석하고, DAST (Dynamic Application Security Testing)는 실행 중인 애플리케이션에 실제 공격을 시도한다 — 두 방식은 상호 보완적이다.
+> **핵심**: SAST (Static Application Security Testing)는 코드 실행 없이 소스를 분석하고, DAST (Dynamic Application Security Testing)는 실행 중인 애플리케이션에 실제 공격을 시도한다 — 두 방식은 상호 보완적이다.
 > 2. **가치**: SAST는 오탐(False Positive)이 많고 DAST는 미탐(False Negative)이 많으므로, 두 도구를 DevSecOps 파이프라인에 조합하여 각자의 약점을 보완하는 것이 핵심 설계 원칙이다.
 > 3. **판단 포인트**: 기술사 답안에서는 "SAST/DAST 비교 → 오탐·미탐 트레이드오프 → IAST/RASP 보완 방안 → DevSecOps CI/CD 통합 설계"를 논리적으로 전개하면 고득점이다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 소프트웨어 보안 테스트는 개발 라이프사이클의 어느 단계에서, 어떤 방식으로 수행하느냐에 따라 크게 정적 분석과 동적 분석으로 나뉜다. 전통적으로 보안 테스트는 개발 완료 후 운영 배포 직전에 수행되었으나, 이 시점에서 발견된 취약점은 수정 비용이 매우 크다.
 
@@ -21,7 +23,7 @@ SAST와 DAST 외에도 IAST (Interactive Application Security Testing)는 에이
 
 📢 **섹션 요약 비유**: SAST는 출판 전 원고를 교정 편집자가 읽으며 문법 오류를 잡는 것이고, DAST는 출판된 책을 실제 독자에게 배포하고 독자 반응을 통해 오류를 발견하는 것이다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### SAST/DAST DevSecOps 파이프라인 통합 구조
 
@@ -64,7 +66,7 @@ SAST와 DAST 외에도 IAST (Interactive Application Security Testing)는 에이
 
 📢 **섹션 요약 비유**: SAST는 소스코드 속 지뢰를 지도를 보며 찾는 것이고, DAST는 실제 땅을 걸어보며 지뢰를 밟아 위치를 확인하는 것이다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | SAST | DAST | IAST | RASP |
 |:---|:---|:---|:---|:---|
@@ -85,7 +87,7 @@ SAST와 DAST 외에도 IAST (Interactive Application Security Testing)는 에이
 
 📢 **섹션 요약 비유**: 오탐은 거짓 경보가 너무 많은 화재 감지기처럼 신뢰를 잃게 만들고, 미탐은 실제 불이 나도 울리지 않는 감지기처럼 치명적이다 — 둘 다 균형 있게 관리해야 한다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **DevSecOps 보안 게이트 설계 원칙**  
 ① SAST는 PR (Pull Request) 생성 시마다 자동 실행하고, Critical/High 취약점 탐지 시 PR 머지를 차단한다.  
@@ -99,7 +101,7 @@ SAST와 DAST 외에도 IAST (Interactive Application Security Testing)는 에이
 
 📢 **섹션 요약 비유**: DevSecOps 보안 게이트는 공항 보안 검색대처럼 — 탑승 전(SAST)에 짐을 검사하고, 게이트에서(DAST) 한 번 더 확인하여 이중으로 안전을 보장한다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 SAST/DAST를 CI/CD에 통합한 DevSecOps 체제는 보안 취약점을 개발 초기에 발견하여 수정 비용을 운영 단계 대비 30~100배 절감한다. 지속적 보안 스캐닝으로 코드 베이스의 보안 품질이 점진적으로 향상되고, 감사 추적 자동화로 컴플라이언스 증거 수집 부담도 경감된다.
 

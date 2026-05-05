@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Self-Attention은 **시퀀스 내 모든 위치 쌍의 관련도를 계산**하는 메커니즘이고, Multi-Head는 **h개의 독립 Attention을 병렬 수행**하여 다양한 관점의 패턴을 학습하며, Positional Encoding은 **순서 정보를 주입**한다.
+> **핵심**: Self-Attention은 **시퀀스 내 모든 위치 쌍의 관련도를 계산**하는 메커니즘이고, Multi-Head는 **h개의 독립 Attention을 병렬 수행**하여 다양한 관점의 패턴을 학습하며, Positional Encoding은 **순서 정보를 주입**한다.
 > 2. **가치**: RNN은 순차 처리로 위치 정보가 자연 반영되지만, Transformer는 **순서 정보가 없으므로** Positional Encoding(사인/코사인 or 학습)으로 위치를 알려줘야 한다.
 > 3. **판단 포인트**: head 수(h=8~96)·d_model(512~4096)이 핵심 하이퍼파라미터이며, RoPE(Rotary PE)가 LLM의 표준 위치 인코딩이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Self-Attention: Q=K=V (같은 시퀀스에서 생성)

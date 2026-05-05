@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 조건 변수 (Condition Variable)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 조건 변수 (Condition Variable)는 특정 조건(상태)이 만족될 때까지 스레드를 **뮤텍스(Mutex) 락을 풀고 수면(Sleep) 상태로 대기**시키고, 조건이 만족되면 다른 스레드가 **신호(Signal/Broadcast)를 보내 깨워주는** 이벤트 통지형 동기화 객체다.
+> **핵심**: 조건 변수 (Condition Variable)는 특정 조건(상태)이 만족될 때까지 스레드를 **뮤텍스(Mutex) 락을 풀고 수면(Sleep) 상태로 대기**시키고, 조건이 만족되면 다른 스레드가 **신호(Signal/Broadcast)를 보내 깨워주는** 이벤트 통지형 동기화 객체다.
 > 2. **가치**: 스레드가 "원하는 값이 들어왔나?" 확인하려고 임계 구역(Critical Section) 안에서 무한 루프(Busy Waiting)를 도는 최악의 CPU 낭비를 막아주며, **모니터(Monitor) 동기화 구조의 핵심 부품**으로 동작한다.
 > 3. **융합**: 조건 변수는 절대로 혼자 쓸 수 없으며 **반드시 뮤텍스(Mutex)와 1:1로 짝을 지어(Pairing) 사용해야만** 경쟁 조건(Lost Wakeup)을 막을 수 있는 독특한 융합 아키텍처를 가진다.
 
+> 📝 모범 답안
+
+# 조건 변수 (Condition Variable)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 스레드가 공유 데이터를 조작하려 할 때, 아직 자신이 원하는 상태(Condition, 예: 큐에 데이터가 들어옴)가 아닐 경우 일단 대기실로 물러나 자고, 다른 스레드가 상태를 변경한 뒤 "이제 조건이 맞으니 일어나라!"라고 신호를 보내주는 메커니즘이다.
 - **필요성**: 뮤텍스(Mutex)는 "방에 1명만 들어가게"는 막아주지만, 방에 들어갔는데 정작 할 일이 없으면 문제가 된다. 
@@ -42,7 +44,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 조건 변수의 3대 핵심 API (POSIX Pthreads 기준)
 
@@ -90,7 +92,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 세마포어(Semaphore) vs 조건 변수(Condition Variable)
 
@@ -115,7 +117,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **Java의 `Object.wait()`와 `notifyAll()`**: 자바의 모든 객체(Object)는 태어날 때부터 내부에 보이지 않는 "뮤텍스 1개 + 조건 변수 1개"를 쌍으로 가지고 태어난다. (이걸 Monitor라고 부른다).
@@ -154,7 +156,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 뮤텍스(Mutex)와 조건 변수(CV)를 결합한 모니터(Monitor) 구조를 정확히 체화하면, 복잡한 상태(State)를 가진 멀티스레드 애플리케이션에서 스레드들이 쓸데없이 CPU를 태우지 않고 0%의 점유율로 완벽한 숙면(Sleep)을 취하다가, 데이터가 도달하는 정확히 그 나노초의 타이밍에 즉각 깨어나 처리하는 궁극의 **이벤트 기반(Event-Driven) 동기화**를 달성할 수 있다.

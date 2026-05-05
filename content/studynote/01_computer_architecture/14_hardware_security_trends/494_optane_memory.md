@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# Optane Memory (옵테인 메모리)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 옵테인 메모리는 인텔이 3D XPoint 기술을 기반으로 출시했던 차세대 비휘발성 메모리(SCM)의 상표명으로, NAND 플래시보다 1,000배 빠르고 DRAM보다 느리지만 저렴한 비휘발성 메모리였다.
+> **핵심**: 옵테인 메모리는 인텔이 3D XPoint 기술을 기반으로 출시했던 차세대 비휘발성 메모리(SCM)의 상표명으로, NAND 플래시보다 1,000배 빠르고 DRAM보다 느리지만 저렴한 비휘발성 메모리였다.
 > 2. **가치**: 바이트 단위 접근, 비휘발성, 수명이 긴 장점을 살려 스토리지 가속기(Optane SSD)와 영구 메모리(Optane DC Persistent Memory) 두 가지 형태로 출시되어 데이터센터 성능을 혁신할 것으로 기대되었다.
 > 3. **한계**: 비싼 제조 원가와 DRAM 가격 하락의 벽을 넘지 못하고 2022년 인텔이 사업 철수를 선언하며, 기술적으로는 시대를 앞선 혁명적 제품이었지만 상업적으로는 실패한 비운의 제품이 되었다.
 
+> 📝 모범 답안
+
+# Optane Memory (옵테인 메모리)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 문제의식: 메모리-스토리지 격차를 메울revolutionary한 후보
 
@@ -61,7 +63,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 옵테인 메모리의 성능 포지셔닝
 
@@ -137,7 +139,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 옵테인의 역사적 의의와 상업적 실패
 
@@ -158,7 +160,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -183,7 +185,7 @@ Redis나 Memcached 같은 인메모리 DB는 모든 데이터를 DRAM에 저장�
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 옵테인의 역사적 평가
 

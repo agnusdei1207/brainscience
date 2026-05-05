@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 비정형 데이터를 AI 임베딩 모델로 변환한 고차원 벡터를 저장하고, ANN(Approximate Nearest Neighbor) 알고리즘으로 "의미 유사성" 기반 초고속 검색을 제공하는 특수 데이터베이스다.
+> **핵심**: 비정형 데이터를 AI 임베딩 모델로 변환한 고차원 벡터를 저장하고, ANN(Approximate Nearest Neighbor) 알고리즘으로 "의미 유사성" 기반 초고속 검색을 제공하는 특수 데이터베이스다.
 > 2. **가치**: ChatGPT 같은 LLM이 사내 문서·상품 데이터를 "자기 지식"처럼 활용하도록 만드는 RAG(Retrieval-Augmented Generation) 파이프라인의 핵심 인프라로, 환각(Hallucination)을 억제한다.
 > 3. **판단 포인트**: 정확도(Recall)와 속도(QPS)의 트레이드오프 → Pinecone·Weaviate·Milvus 등 선택 시 HNSW vs IVF 인덱스 알고리즘과 클라우드 관리형 여부를 기준으로 판단한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 전통적인 관계형 데이터베이스는 "정확한 값" 또는 "범위" 기반 검색에 특화되어 있다. 그러나 "이 사진과 비슷한 이미지는?", "이 문장과 의미가 가까운 문서는?" 같은 **의미 기반(Semantic) 검색**에는 전적으로 무력하다.
 
@@ -39,7 +41,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### ANN(Approximate Nearest Neighbor) 알고리즘
 
@@ -90,7 +92,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 전통 DB vs 벡터 DB
 
@@ -116,7 +118,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### RAG 시스템 구축 시 핵심 고려사항
 
@@ -153,7 +155,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

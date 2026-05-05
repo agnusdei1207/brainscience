@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-algorithm-stats"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 스킵 리스트(Skip List)는 1990년 William Pugh가 고안한 확률적 자료구조(Probabilistic Data Structure)로, 여러 레벨의 연결 리스트(Linked List)를 계층화하여 평균 O(log n) 탐색·삽입·삭제를 달성하는 정렬된 딕셔너리(Sorted Dictionary) 구현체다.
+> **핵심**: 스킵 리스트(Skip List)는 1990년 William Pugh가 고안한 확률적 자료구조(Probabilistic Data Structure)로, 여러 레벨의 연결 리스트(Linked List)를 계층화하여 평균 O(log n) 탐색·삽입·삭제를 달성하는 정렬된 딕셔너리(Sorted Dictionary) 구현체다.
 > 2. **가치**: 스킵 리스트는 균형 이진 탐색 트리(AVL, Red-Black Tree)와 동일한 평균 성능을 제공하면서, 트리 회전(Rotation) 없이 확률적 랜덤화로 균형을 유지하므로 구현이 단순하고 동시성(Concurrency) 환경에서 Lock-free 구현이 용이하다.
 > 3. **판단 포인트**: 스킵 리스트의 최악 O(n) 탐색 가능성은 확률에 의존하므로, 최악 성능 보장이 필요한 시스템에서는 AVL 또는 Red-Black Tree가 적합하다. 반면 Redis의 Sorted Set, LevelDB의 memtable은 스킵 리스트의 실무 활용 대표 사례다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 정렬된 연결 리스트는 탐색이 O(n)으로 느리다. 스킵 리스트는 이 문제를 여러 레벨의 "고속 레인(Express Lane)"을 추가하여 해결한다.
 
@@ -37,7 +39,7 @@ categories = "studynote-algorithm-stats"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 레벨 결정 — 확률적 승진(Probabilistic Promotion)
 
@@ -66,7 +68,7 @@ def random_level(max_level, p=0.5):
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | 스킵 리스트 | AVL 트리 | Red-Black 트리 |
 |:---|:---|:---|:---|
@@ -82,7 +84,7 @@ Redis Sorted Set은 내부적으로 스킵 리스트를 사용하여 ZADD·ZRANK
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: Redis Sorted Set 활용
 실시간 게임 리더보드 구현.
@@ -98,7 +100,7 @@ Redis Sorted Set은 내부적으로 스킵 리스트를 사용하여 ZADD·ZRANK
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

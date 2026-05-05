@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 664. 입출력 전가상화 (I/O Full Virtualization)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 입출력 전가상화(I/O Full Virtualization)는 게스트 OS의 수정 없이, 하이퍼바이저가 실제 물리 하드웨어 장치의 동작을 소프트웨어적으로 완벽하게 흉내 내는(Emulation) 방식이다.
+> **핵심**: 입출력 전가상화(I/O Full Virtualization)는 게스트 OS의 수정 없이, 하이퍼바이저가 실제 물리 하드웨어 장치의 동작을 소프트웨어적으로 완벽하게 흉내 내는(Emulation) 방식이다.
 > 2. **가치**: 게스트 OS는 자신이 가상 환경에 있다는 사실을 전혀 모른 채 기존의 표준 드라이버를 그대로 사용할 수 있어, 수정이 불가능한 레거시 OS나 폐쇄형 OS를 구동하는 데 최적의 호환성을 제공한다.
 > 3. **한계**: 게스트가 가상 장치의 레지스터를 조작할 때마다 '트랩-앤-에뮬레이트(Trap-and-Emulate)' 과정이 발생하며, 이로 인한 잦은 VM-Exit과 컨텍스트 스위칭 오버헤드로 인해 입출력 성능이 매우 낮다.
 
+> 📝 모범 답안
+
+# 664. 입출력 전가상화 (I/O Full Virtualization)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 전가상화 I/O의 탄생 배경: "무수정의 철학"
 - **배경**: 초기 가상화 기술의 목표는 "기존 운영체제를 아무런 변경 없이 그대로 가상 머신에서 돌리는 것"이었다.
@@ -58,7 +60,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 트랩-앤-에뮬레이트 (Trap-and-Emulate)
 전가상화 I/O의 근본 원리다.
@@ -85,7 +87,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 전가상화 I/O vs 반가상화 I/O (Virtio)
 
@@ -106,7 +108,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -128,7 +130,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **호환성**: 1980년대 이후 출시된 x86 기반 거의 모든 운영체제 수용 가능.

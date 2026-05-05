@@ -7,17 +7,19 @@ date = 2026-03-26
 [taxonomies]
 tags = ["database", "normalization", "bcnf", "boyce-codd-normal-form"]
 +++
+## 0. 핵심 인사이트
 
-# BCNF (보이스-코드 정규형)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: BCNF (Boyce-Codd Normal Form)는 3NF보다 더 엄격한 정규형으로, 모든 결정자 (Determinant)가 후보 키 (Candidate Key)이어야 한다.
+> **핵심**: BCNF (Boyce-Codd Normal Form)는 3NF보다 더 엄격한 정규형으로, 모든 결정자 (Determinant)가 후보 키 (Candidate Key)이어야 한다.
 > 2. **가치**: BCNF는 3NF에서 허용되었던 결정자 문제를 해결하여, 갱신 이상의 추가 원인을 제거한다.
 > 3. **융합**: BCNF는 특히多个候选键이 있거나 결정자 간复杂한 관계가 있는テーブル설계에서 중요하며,高度 정규화가 필요한 시스템에 적용된다.
 
+> 📝 모범 답안
+
+# BCNF (보이스-코드 정규형)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 
@@ -46,7 +48,7 @@ BCNF (Boyce-Codd Normal Form)는 **3NF를 만족하되, 모든 결정자가 후�
 
 ---
 
-## Ⅱ. BCNF 위반 사례
+## 2. 구성요소
 
 ### 사례: 강의-학생-교수
 
@@ -87,7 +89,7 @@ BCNF (Boyce-Codd Normal Form)는 **3NF를 만족하되, 모든 결정자가 후�
 
 ---
 
-## Ⅲ. BCNF 분해
+## 3. 구조 및 동작 원리
 
 ### 분해 후
 

@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 216. 제어 메모리 (Control Memory)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 제어 메모리 (Control Memory)는 마이크로프로그래밍 제어 유닛 내부에 존재하며, 수많은 마이크로명령어(제어 신호 비트열)들을 영구적 혹은 반영구적으로 저장하는 초고속 전용 메모리다.
+> **핵심**: 제어 메모리 (Control Memory)는 마이크로프로그래밍 제어 유닛 내부에 존재하며, 수많은 마이크로명령어(제어 신호 비트열)들을 영구적 혹은 반영구적으로 저장하는 초고속 전용 메모리다.
 > 2. **가치**: 명령어의 '어떻게 동작할지'에 대한 레시피를 물리적 전선(Wire)의 얽힘이 아닌 논리적 데이터(Data) 형태로 보관함으로써, 프로세서 설계에 엄청난 유연성을 부여하고 복잡한 CISC 명령어 구현을 가능하게 한다.
 > 3. **융합**: 초기에는 쓰기 불가능한 순수 마스크 ROM으로 시작했으나, 현대에는 펌웨어 업데이트를 통해 치명적 하드웨어 버그(보안 취약점 등)를 런타임에 수정할 수 있도록 Writable Control Store(WCS) 개념을 도입한 혼합형 메모리로 진화했다.
 
+> 📝 모범 답안
+
+# 216. 제어 메모리 (Control Memory)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 - **개념**: 제어 메모리 (Control Memory, 또는 Control Store)는 마이크로프로그래밍 제어 유닛 내부에 존재하는 초고속 전용 저장소로, CPU의 각 구성 요소를 구동하기 위한 세부 제어 신호 묶음인 '마이크로코드'를 보관하는 공간이다.
 
@@ -26,7 +28,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 구성 요소 및 입출력
 
@@ -64,7 +66,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 마스크 ROM 제어 메모리 vs WCS (Writable Control Store)
 
@@ -86,7 +88,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -107,7 +109,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

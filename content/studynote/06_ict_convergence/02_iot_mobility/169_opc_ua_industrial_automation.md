@@ -5,17 +5,19 @@ weight = 169
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-# OPC UA (Open Platform Communications Unified Architecture) - 산업 자동화 표준 프로토콜
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: OPC UA는 지멘스 로봇, 미쓰비시 PLC, 엘지 센서 등 서로 다른 언어를 쓰는 수십 개 벤더의 공장 장비(OT)들이, 어떠한 번역기(게이트웨이) 없이도 클라우드(IT) 시스템과 완벽하게 대화할 수 있도록 만들어주는 **스마트 팩토리계의 공용어(에스페란토어)**이자 플랫폼 독립적인 통신 표준 아키텍처다.
+> **핵심**: OPC UA는 지멘스 로봇, 미쓰비시 PLC, 엘지 센서 등 서로 다른 언어를 쓰는 수십 개 벤더의 공장 장비(OT)들이, 어떠한 번역기(게이트웨이) 없이도 클라우드(IT) 시스템과 완벽하게 대화할 수 있도록 만들어주는 **스마트 팩토리계의 공용어(에스페란토어)**이자 플랫폼 독립적인 통신 표준 아키텍처다.
 > 2. **가치**: 과거 마이크로소프트 윈도우(Windows DCOM)에 묶여있던 낡은 'OPC Classic'의 족쇄를 끊어내고, 리눅스부터 모바일, 엣지(Edge) 디바이스까지 어디서든 구동되며, 통신망에 X.509 인증서 기반의 군사급 암호화(Security)를 내장하여 산업 스파이의 해킹을 원천 차단한다.
 > 3. **융합**: 데이터를 단순한 숫자(`30`)가 아니라 의미와 맥락을 담은 객체(Object, `온도센서_A구역_섭씨_30도`)로 포장하는 **정보 모델링(Information Modeling)** 기술을 탑재하여, 하단의 TSN(결정론적 이더넷)과 융합된 **"OPC UA over TSN"** 규격을 통해 진정한 IT/OT 융합(수직적 통합)의 백본(Backbone)으로 자리 잡았다.
 
+> 📝 모범 답안
+
+# OPC UA (Open Platform Communications Unified Architecture) - 산업 자동화 표준 프로토콜
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: OPC UA (Open Platform Communications Unified Architecture)는 산업 자동화 환경(OT, Operational Technology)과 IT 시스템 환경(ERP, MES 등) 간의 신뢰성 있고 안전한 상호 운용성(Interoperability) 데이터 교환을 보장하기 위해 OPC 파운데이션(OPC Foundation)에서 제정한 개방형 국제 표준(IEC 62541) 소프트웨어 아키텍처다.
 
@@ -68,7 +70,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### OPC UA를 지탱하는 3대 아키텍처 기둥 (Pillars)
 
@@ -118,7 +120,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 산업용 통신 프로토콜 간 스펙트럼 매트릭스 비교
 
@@ -139,7 +141,7 @@ OPC UA의 단 하나의 약점은 '실시간 모션 제어'였다. 데이터에 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 설계 안티패턴
 
@@ -192,7 +194,7 @@ OPC UA의 단 하나의 약점은 '실시간 모션 제어'였다. 데이터에 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

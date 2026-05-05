@@ -5,15 +5,17 @@ date = "2026-03-26"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 분리형 I/O (Isolated I/O, Port-Mapped I/O)는 메인 메모리 (Main Memory)의 주소 공간과 입출력 (I/O) 장치의 주소 공간을 물리적/논리적으로 완전히 분리하여 독립된 포트 번호로 관리하는 아키텍처다.
+> **핵심**: 분리형 I/O (Isolated I/O, Port-Mapped I/O)는 메인 메모리 (Main Memory)의 주소 공간과 입출력 (I/O) 장치의 주소 공간을 물리적/논리적으로 완전히 분리하여 독립된 포트 번호로 관리하는 아키텍처다.
 > 2. **가치**: 과거 RAM (Random Access Memory) 용량이 극도로 부족했던 16비트/32비트 환경에서 메모리 주소 공간을 희생하지 않고 I/O를 제어하기 위해 고안되었으며, 인텔 (Intel) x86 아키텍처의 강력한 하위 호환성을 상징한다.
 > 3. **융합**: 현대 고속 장치는 대부분 MMIO (Memory-Mapped I/O) 방식으로 전환되었으나, x86 CPU (Central Processing Unit)는 부팅 초기화 및 레거시 제어를 위해 여전히 전용 IN/OUT 명령어와 I/O 주소 공간을 유지하고 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 분리형 I/O (Isolated I/O, Port-Mapped I/O, PMIO)는 CPU (Central Processing Unit)가 접근할 수 있는 전체 주소 공간을 '메모리용'과 'I/O 장치용'으로 엄격히 분리하여 관리하는 방식이다. 메모리 접근 시에는 일반적인 데이터 전송 명령어 (MOV, LOAD, STORE)를 사용하고, I/O 포트에 접근할 때는 반드시 별도의 전용 명령어 (IN, OUT)를 사용해야 한다.
 
@@ -48,7 +50,7 @@ Memory-Mapped I/O (MMIO):           Isolated I/O (PMIO):
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (I/O 제어 모듈)
 
@@ -105,7 +107,7 @@ Memory-Mapped I/O (MMIO):           Isolated I/O (PMIO):
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### Isolated I/O vs Memory-Mapped I/O (MMIO)
 
@@ -144,7 +146,7 @@ Memory-Mapped I/O (MMIO):           Isolated I/O (PMIO):
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 가상화 성능 저하 문제
 
@@ -172,7 +174,7 @@ Memory-Mapped I/O (MMIO):           Isolated I/O (PMIO):
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과 (도입 전후 비교)
 

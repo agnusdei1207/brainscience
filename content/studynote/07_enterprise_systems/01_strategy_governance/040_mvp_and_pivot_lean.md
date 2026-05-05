@@ -5,15 +5,18 @@ date = "2026-03-19"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. MVP(Minimum Viable Product, 최소 기능 제품)는 Eric Ries의 린 스타트업(Lean Startup) 핵심 개념으로, 최소한의 기능으로 고객 가설을 빠르게 검증(Validated Learning)하는 제품 버전이며, "완성된 제품"이 아닌 "학습 도구"임을 이해하는 것이 핵심이다.
 > 2. MVP의 목적은 Build-Measure-Learn(BML) 피드백 루프를 최대한 짧게 돌리는 것으로, 빠른 실패(Fail Fast)와 피벗(Pivot) 또는 인내(Persevere) 결정이 MVP가 달성해야 하는 실질적 성과다.
 > 3. 기업 환경에서 MVP는 단순히 스타트업 기법이 아니라, 불확실성이 높은 디지털 전환(DX) 프로젝트에서 대규모 선행 투자 없이 검증 후 확대(Start Small, Scale Fast) 전략으로 채택되고 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. MVP 개념과 목적
+## 1. 개요 및 필요성
 
 ```
 MVP (Minimum Viable Product):
@@ -41,7 +44,7 @@ MVP가 답해야 하는 질문:
 
 ---
 
-## Ⅱ. MVP 유형
+## 2. 구성요소
 
 ```
 MVP 유형 비교:
@@ -73,7 +76,7 @@ MVP 유형 비교:
 
 ---
 
-## Ⅲ. BML 루프와 피벗
+## 3. 구조 및 동작 원리
 
 ```
 Build-Measure-Learn 루프:
@@ -110,7 +113,7 @@ Build-Measure-Learn 루프:
 
 ---
 
-## Ⅳ. MVP 핵심 지표 (Metrics)
+## 4. 비교 및 트레이드오프
 
 ```
 올바른 MVP 지표 선택:
@@ -141,7 +144,7 @@ Build-Measure-Learn 루프:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 기업 DX MVP
+## 5. 실무 적용 및 최적화 기법
 
 ```
 대기업 디지털 전환 (DX) MVP 사례:

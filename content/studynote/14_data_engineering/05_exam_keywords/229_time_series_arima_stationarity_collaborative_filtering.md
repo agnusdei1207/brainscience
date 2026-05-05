@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ARIMA(AutoRegressive Integrated Moving Average, 자기회귀 누적 이동평균)는 시계열 데이터의 과거 패턴(AR)·차분(I)·오차 패턴(MA)을 결합하여 미래를 예측하는 고전 통계 모델이며, 정상성(Stationarity) 확보가 전제조건이다.
+> **핵심**: ARIMA(AutoRegressive Integrated Moving Average, 자기회귀 누적 이동평균)는 시계열 데이터의 과거 패턴(AR)·차분(I)·오차 패턴(MA)을 결합하여 미래를 예측하는 고전 통계 모델이며, 정상성(Stationarity) 확보가 전제조건이다.
 > 2. **가치**: 협업 필터링(Collaborative Filtering)은 "나와 비슷한 사용자가 좋아한 것을 나도 좋아한다"는 원리로 추천 시스템을 구현하며, 행렬 분해(Matrix Factorization)로 희소성(Sparsity) 문제를 극복한다.
 > 3. **판단 포인트**: ARIMA는 선형·정상 시계열에 강하고, 딥러닝(LSTM·Transformer)은 비선형·복잡 패턴에 강하다. 협업 필터링은 콜드 스타트(Cold Start) 문제를 콘텐츠 기반 필터링으로 보완해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 시계열 분석과 추천 시스템은 두 가지 다른 분야처럼 보이지만, 모두 **과거 패턴에서 미래/선호를 예측**한다는 점에서 공통 수학 기반(행렬 분해·자기상관)을 공유한다.
 
@@ -30,7 +32,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. 시계열 분해 (Time Series Decomposition)
 
@@ -140,7 +142,7 @@ MA (Moving Average, 이동평균, q):
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. 시계열 예측 모델 비교
 
@@ -174,7 +176,7 @@ MA (Moving Average, 이동평균, q):
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. 소매 판매량 예측 SARIMA 적용 시나리오
 
@@ -214,7 +216,7 @@ n = 사용자 수, m = 영화 수, k = 잠재 요인 수 (50~200)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ARIMA와 협업 필터링은 각각 시계열 예측과 추천 분야의 기초 알고리즘이지만, 현대에는 딥러닝(LSTM, Transformer, 신경 협업 필터링)과 결합하여 더 강력해지고 있다.
 

@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 일관 해싱(Consistent Hashing)은 노드 추가/제거 시 최소한의 키 재배치만 발생하도록 설계된 해싱 기법 — 전통적인 모듈러 해싱(key % N)은 노드 수 N이 변하면 거의 모든 키를 재매핑해야 하지만, 일관 해싱은 (K/N)개의 키만 이동한다.
 > 2. 링(Ring) 구조 + 가상 노드(Virtual Node)의 조합이 핵심 — 0~2^32 범위의 원형 해시 공간에 노드를 배치하고, 가상 노드를 통해 균등 분산을 달성하는 Cassandra·DynamoDB·Redis Cluster의 근간이다.
 > 3. 핫 스팟(Hot Spot) 문제 해결이 실제 구현의 핵심 과제 — 이론적 균등 분산과 달리 실제 데이터의 접근 패턴이 불균등하여, 가상 노드 수 조정과 키 설계가 분산 시스템 성능을 결정한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 전통 해싱의 문제
+## 1. 개요 및 필요성
 
 ```
 전통 모듈러 해싱:
@@ -51,7 +54,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 일관 해싱 링 구조
+## 2. 구성요소
 
 ```
 일관 해싱 링:
@@ -102,7 +105,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅲ. 가상 노드 (Virtual Nodes)
+## 3. 구조 및 동작 원리
 
 ```
 가상 노드 (VNode, Virtual Node):
@@ -145,7 +148,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅳ. 실제 시스템 적용
+## 4. 비교 및 트레이드오프
 
 ```
 Cassandra 일관 해싱:
@@ -212,7 +215,7 @@ Redis Cluster:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 글로벌 캐시 클러스터 확장
+## 5. 실무 적용 및 최적화 기법
 
 ```
 글로벌 이커머스 Redis Cluster 스케일아웃:

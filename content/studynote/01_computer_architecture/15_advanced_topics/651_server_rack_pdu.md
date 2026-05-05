@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 651. 서버 랙 PDU (Server Rack Power Distribution Unit)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 서버 랙 PDU(Power Distribution Unit)는 데이터 센터의 고압 전력을 개별 IT 장비가 사용할 수 있는 전압으로 분배하고, **랙 단위의 전력 소비를 실시간으로 모니터링 및 제어하는 지능형 전원 분배 장치**다.
+> **핵심**: 서버 랙 PDU(Power Distribution Unit)는 데이터 센터의 고압 전력을 개별 IT 장비가 사용할 수 있는 전압으로 분배하고, **랙 단위의 전력 소비를 실시간으로 모니터링 및 제어하는 지능형 전원 분배 장치**다.
 > 2. **가치**: 단순한 멀티탭을 넘어, 포트별 전원 원격 차단, 과부하 방지, 환경 센서(온도/습도) 통합 기능을 통해 데이터 센터의 가동 중지 시간(Downtime)을 예방하고 에너지 효율(PUE)을 극대화한다.
 > 3. **융합**: DCIM(Data Center Infrastructure Management) 소프트웨어 및 인공지능 기반 전력 최적화 알고리즘과 결합하여, 부하 변화에 따라 전력을 동적으로 할당하는 스마트 그리드형 데이터 센터 인프라의 말단 신경계 역할을 수행한다.
 
+> 📝 모범 답안
+
+# 651. 서버 랙 PDU (Server Rack Power Distribution Unit)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 데이터 센터의 '숨은 영웅'
 - **현상**: 서버 한 대는 작지만, 수십 대가 모인 랙 하나는 수십 kW의 전력을 소모한다. 
@@ -54,7 +56,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 지능형 모니터링 (Intelligent Monitoring)
 - 내부의 전류 센서(CT)와 전압 센서를 통해 **전류(A), 전압(V), 유효 전력(W), 전력량(kWh), 역률(Power Factor)**을 정밀 측정한다. 
@@ -76,7 +78,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 일반 PDU vs 지능형(Intelligent) PDU
 
@@ -96,7 +98,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -118,7 +120,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **MTTR(평균 복구 시간) 단축**: 원격 재부팅을 통해 장애 조치 시간 80% 단축.

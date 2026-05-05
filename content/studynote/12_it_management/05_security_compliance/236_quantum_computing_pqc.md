@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: 충분히 강력한 양자 컴퓨터(Quantum Computer)는 쇼어 알고리즘(Shor's Algorithm)으로 RSA/ECC(Elliptic Curve Cryptography) 등 현재 공개키 암호 체계를 수학적으로 무력화할 수 있으며, 이에 대응하는 PQC(Post-Quantum Cryptography — 양자내성암호)가 NIST 표준화를 완료했다.
+> **핵심**: 충분히 강력한 양자 컴퓨터(Quantum Computer)는 쇼어 알고리즘(Shor's Algorithm)으로 RSA/ECC(Elliptic Curve Cryptography) 등 현재 공개키 암호 체계를 수학적으로 무력화할 수 있으며, 이에 대응하는 PQC(Post-Quantum Cryptography — 양자내성암호)가 NIST 표준화를 완료했다.
 > 2. **가치**: "지금 수확, 나중에 복호화(Harvest Now, Decrypt Later)" 공격은 이미 진행 중이며, 장기 기밀 데이터(의료·금융·국방)를 보유한 조직은 PQC 마이그레이션을 즉시 시작해야 한다.
 > 3. **판단 포인트**: NIST FIPS 203(ML-KEM/CRYSTALS-Kyber), FIPS 204(ML-DSA/CRYSTALS-Dilithium), FIPS 205(SLH-DSA/SPHINCS+)가 2024년 확정 표준이며, TLS 1.3·X.509 인증서·VPN의 PQC 전환이 2025~2030년 핵심 과제다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 RSA-2048은 현재 최고 수준의 고전 컴퓨터로도 수백만 년이 걸리지만, 이론적으로 4000큐비트(Qubit) 이상의 내결함성 양자 컴퓨터(FTQC: Fault-Tolerant Quantum Computer)는 수 시간~수 일 내에 해독 가능하다. IBM은 2023년 1121큐비트 Condor 프로세서를 공개했고, 2033년 이전 FTQC 실현 가능성이 전문가들 사이에서 논의된다.
 
@@ -25,7 +27,7 @@ RSA-2048은 현재 최고 수준의 고전 컴퓨터로도 수백만 년이 걸�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 양자 컴퓨팅 vs 고전 컴퓨팅 비교
 
@@ -80,7 +82,7 @@ RSA-2048은 현재 최고 수준의 고전 컴퓨터로도 수백만 년이 걸�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 현행 암호 vs PQC 비교
 
@@ -106,7 +108,7 @@ RSA-2048은 현재 최고 수준의 고전 컴퓨터로도 수백만 년이 걸�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### PQC 마이그레이션 로드맵 5단계
 
@@ -142,7 +144,7 @@ RSA-2048은 현재 최고 수준의 고전 컴퓨터로도 수백만 년이 걸�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 NIST의 PQC 표준 확정(2024년)은 글로벌 암호화 인프라 전환의 공식 출발 신호다. 미국 NSA(National Security Agency)의 CNSA 2.0(Commercial National Security Algorithm Suite 2.0) 가이드라인은 2025년부터 국방·정보기관의 PQC 전환을 의무화했으며, 한국도 동일한 방향으로 수렴하고 있다.
 

@@ -5,17 +5,19 @@ weight = 211
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-# 클라우드 마이그레이션 전략 (6R) - 엔터프라이즈 인프라 대이동
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 클라우드 마이그레이션(Cloud Migration) 6R 전략은 사내 전산실(On-Premise)에 박혀있는 수백 대의 낡은 서버와 먼지 쌓인 코드를 아마존(AWS)이나 구글(GCP)로 이사 보낼 때, **"짐을 그대로 쌀 것인가(Rehost), 껍데기만 바꿀 것인가(Replatform), 아니면 아예 뼈를 깎아 새로 지을 것인가(Refactor)"를 6가지 기법으로 분류한 마이그레이션의 바이블**이다.
+> **핵심**: 클라우드 마이그레이션(Cloud Migration) 6R 전략은 사내 전산실(On-Premise)에 박혀있는 수백 대의 낡은 서버와 먼지 쌓인 코드를 아마존(AWS)이나 구글(GCP)로 이사 보낼 때, **"짐을 그대로 쌀 것인가(Rehost), 껍데기만 바꿀 것인가(Replatform), 아니면 아예 뼈를 깎아 새로 지을 것인가(Refactor)"를 6가지 기법으로 분류한 마이그레이션의 바이블**이다.
 > 2. **가치**: 이 6R(Rehost, Replatform, Repurchase, Refactor, Retire, Retain) 전략표가 없으면, 대기업 임원들은 무지성으로 "모든 서버 클라우드로 당장 옮겨!"라고 지시하다가, 오히려 클라우드 요금 폭탄을 맞고 1년 뒤 온프레미스로 야반도주(Repatriation)하는 끔찍한 재앙을 겪게 된다. 
 > 3. **융합**: 초반에는 시간과 돈이 없어 가장 쉬운 '단순 복사(Lift and Shift, 리호스트)'로 도망치지만, 결국 클라우드의 무한 탄력성(Auto-scaling)과 비용 절감(FinOps)이라는 진정한 꿀을 빨기 위해서는 최종 보스인 **마이크로서비스(MSA)와 컨테이너(Docker) 기반의 '리팩터(Refactor, 클라우드 네이티브)'**로 모든 코드가 융합 진화하는 숙명을 띠고 있다.
 
+> 📝 모범 답안
+
+# 클라우드 마이그레이션 전략 (6R) - 엔터프라이즈 인프라 대이동
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 클라우드 마이그레이션 전략(6R)은 기업의 기존 IT 포트폴리오(애플리케이션, 데이터, 인프라)를 평가하여, 각 워크로드의 특성, 수명, 기술적 부채, 비즈니스 가치에 따라 클라우드 환경으로 이전하는 최적의 방법론 6가지를 정의한 아마존(AWS)과 가트너(Gartner)의 프레임워크다.
 
@@ -73,7 +75,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 마이그레이션 3대 핵심 전술 심층 해부 (Rehost, Replatform, Refactor)
 
@@ -100,7 +102,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 마이그레이션 전략 TCO (총소유비용) 십자포화 분석
 
@@ -125,7 +127,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 설계 안티패턴
 
@@ -187,7 +189,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

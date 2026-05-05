@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: ACL (Anti-Corruption Layer, 안티-커럽션 레이어)은 외부 시스템이나 다른 Bounded Context (바운디드 컨텍스트)의 도메인 모델이 우리 도메인 모델을 오염(Corrupt)시키지 못하도록 차단하는 DDD (Domain-Driven Design, 도메인 주도 설계) 번역 계층이다.
+> **핵심**: ACL (Anti-Corruption Layer, 안티-커럽션 레이어)은 외부 시스템이나 다른 Bounded Context (바운디드 컨텍스트)의 도메인 모델이 우리 도메인 모델을 오염(Corrupt)시키지 못하도록 차단하는 DDD (Domain-Driven Design, 도메인 주도 설계) 번역 계층이다.
 > 2. **가치**: 레거시 시스템이나 외부 서비스의 개념·용어·모델이 내부 도메인 언어를 잠식하는 것을 방지하여, 내부 도메인 모델의 순수성과 표현력(Expressiveness)을 유지한다.
 > 3. **판단 포인트**: Context Map (컨텍스트 맵)은 바운디드 컨텍스트들 간의 관계를 지도(Map)로 표현한다 — ACL은 그 관계 유형 중 하나로, "우리가 주도권을 갖고 외부를 번역"하는 방어적 관계다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### Bounded Context (바운디드 컨텍스트)의 필요성
 
@@ -53,7 +54,7 @@ CRM 컨텍스트: Customer { leadScore, segment, contactHistory }
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Context Map 관계 유형
 
@@ -113,7 +114,7 @@ CRM 컨텍스트: Customer { leadScore, segment, contactHistory }
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### ACL 구현 계층
 
@@ -160,7 +161,7 @@ public class LegacyCustomerACL {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 마이크로서비스에서의 ACL
 
@@ -203,7 +204,7 @@ ACL 변환: OrderPlacedEvent { customer: Customer{...}, lineItems: [...] }
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Context Map과 ACL 패턴은 대규모 소프트웨어 시스템의 전략적 설계 도구다:
 

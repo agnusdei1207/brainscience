@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: vLLM 의 PagedAttention (페이지드 어텐션) 은 OS 의 가상 메모리 페이징 아이디어를 KV 캐시 (Key-Value Cache) 에 적용해, 사전 할당 없이 블록 단위 동적 메모리 관리로 GPU 메모리 단편화 (Fragmentation) 를 90% 이상 제거한다.
+> **핵심**: vLLM 의 PagedAttention (페이지드 어텐션) 은 OS 의 가상 메모리 페이징 아이디어를 KV 캐시 (Key-Value Cache) 에 적용해, 사전 할당 없이 블록 단위 동적 메모리 관리로 GPU 메모리 단편화 (Fragmentation) 를 90% 이상 제거한다.
 > 2. **가치**: Continuous Batching 과 결합해 동일 GPU 에서 기존 대비 처리량 (Throughput) 을 최대 24배 향상시켜 LLM 서비스의 단가를 혁신적으로 낮춘다.
 > 3. **판단 포인트**: KV 캐시가 생성 길이에 따라 동적으로 증가하는 구조이기 때문에 정적 사전 할당은 메모리 낭비를 초래하며, PagedAttention 이 이를 해결하는 방식을 블록 테이블과 함께 설명해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### KV 캐시 단편화 문제
 
@@ -31,7 +33,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### PagedAttention (페이지드 어텐션) 구조
 
@@ -85,7 +87,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### LLM 서빙 프레임워크 비교
 
@@ -107,7 +109,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### vLLM 배포 예시
 
@@ -131,7 +133,7 @@ python -m vllm.entrypoints.openai.api_server \
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 - **처리량**: 동일 GPU 로 최대 24배 더 많은 요청 처리
 - **메모리 효율**: KV 캐시 단편화 90%+ 제거

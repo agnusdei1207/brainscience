@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: BFT(Byzantine Fault Tolerance, 비잔틴 장애 허용)는 최대 **f개의 악의적 노드**가 존재해도 정상 합의를 보장하기 위해 **3f+1개 이상의 노드**가 필요하다는 수학적 원리다.
+> **핵심**: BFT(Byzantine Fault Tolerance, 비잔틴 장애 허용)는 최대 **f개의 악의적 노드**가 존재해도 정상 합의를 보장하기 위해 **3f+1개 이상의 노드**가 필요하다는 수학적 원리다.
 > 2. **가치**: PBFT(Practical BFT)의 3단계(Pre-prepare → Prepare → Commit)와 현대적 최적화 알고리즘(Tendermint, HotStuff)은 허가형 블록체인의 **결정적 최종성(Deterministic Finality)**을 가능하게 한다.
 > 3. **판단 포인트**: BFT 기반 합의는 CAP 정리에서 **CP 모델**(일관성+파티션 허용)에 해당하며, 파티션 발생 시 가용성을 희생해 일관성을 지킨다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 비잔틴 장군 문제(Byzantine Generals Problem)
 
@@ -40,7 +41,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### PBFT 3단계 프로토콜
 
@@ -79,7 +80,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### BFT vs CFT 비교
 
@@ -100,7 +101,7 @@ BFT 프로토콜은 **CP(Consistency + Partition Tolerance)** 모델이다:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 구현별 특성과 판단 기준
 
@@ -120,7 +121,7 @@ PBFT는 리더(Primary)가 비잔틴 행동 시 **뷰 체인지 프로토콜**�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 항목 | 내용 |
 |:---|:---|

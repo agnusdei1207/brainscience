@@ -2,17 +2,19 @@
 title = "593. ARIES 복구 알고리즘 생존자 Analysis Redo Undo 3페이즈 시스템 복구 표준 원리"
 weight = 593
 +++
+## 0. 핵심 인사이트
 
-# ARIES 복구 알고리즘 생존자 Analysis Redo Undo 3페이즈 시스템 복구 표준 원리
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ARIES (Algorithms for Recovery and Isolation Exploiting Semantics)는 데이터베이스 시스템의 크래시(Crash) 발생 시 데이터의 무결성을 복원하기 위한 IBM의 전설적인 복구 알고리즘으로, WAL (Write-Ahead Logging) 원칙을 기반으로 Analysis, Redo, Undo의 엄격한 3단계 (3-Phase) 프로세스를 거쳐 장애 직전의 상태를 재구성한다.
+> **핵심**: ARIES (Algorithms for Recovery and Isolation Exploiting Semantics)는 데이터베이스 시스템의 크래시(Crash) 발생 시 데이터의 무결성을 복원하기 위한 IBM의 전설적인 복구 알고리즘으로, WAL (Write-Ahead Logging) 원칙을 기반으로 Analysis, Redo, Undo의 엄격한 3단계 (3-Phase) 프로세스를 거쳐 장애 직전의 상태를 재구성한다.
 > 2. **가치**: 트랜잭션의 커밋(Commit) 속도를 높이기 위한 Steal / No-Force 버퍼 관리 정책을 완벽하게 지원하여, 장애 발생 시 '디스크에 써졌지만 취소해야 할 쓰레기 데이터'와 '커밋되었지만 디스크에 못 적힌 소중한 데이터'를 모순 없이 논리적으로 복구하여 시스템 가용성과 I/O 효율성을 극대화한다.
 > 3. **융합**: LSN (Log Sequence Number)을 활용하여 페이지의 물리적 상태와 로그를 정밀하게 매핑하는 이 메커니즘은 관계형 DBMS뿐만 아니라 분산 파일 시스템의 저널링(Journaling) 및 현대 클라우드 네이티브 스토리지의 장애 극구(Fault-Tolerance) 아키텍처의 사실상 글로벌 표준(De Facto Standard)으로 자리 잡았다.
 
+> 📝 모범 답안
+
+# ARIES 복구 알고리즘 생존자 Analysis Redo Undo 3페이즈 시스템 복구 표준 원리
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: ARIES 알고리즘은 트랜잭션 기반 시스템이 갑작스러운 정전, 하드웨어 결함 또는 소프트웨어 패닉으로 중단되었을 때 재시작(Restart) 과정에서 데이터베이스의 ACID (특히 Atomicity와 Durability) 속성을 보장하기 위한 수학적이고 엄밀한 복구 절차다. 모든 데이터 변경을 일련번호(LSN)가 부여된 로그에 선행 기록(WAL)한 뒤, 크래시 발생 시 '어디까지 기록되었나 파악(Analysis) → 잃어버린 과거 상태를 똑같이 재현(Redo) → 실패한 작업만 선별하여 취소(Undo)'하는 3단계를 수행한다.
 
@@ -59,7 +61,7 @@ weight = 593
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -148,7 +150,7 @@ ARIES의 핵심 철학은 **Repeating History (역사 재현)** 이다. 크래�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: ARIES (Repeating History) vs 구형 복구 (Selective Redo) 알고리즘
 
@@ -195,7 +197,7 @@ ARIES의 핵심 철학은 **Repeating History (역사 재현)** 이다. 크래�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -249,7 +251,7 @@ ARIES의 핵심 철학은 **Repeating History (역사 재현)** 이다. 크래�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,29 +5,32 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> [ Transformed Data ]
+
+> 📝 모범 답안
+
 1. **스파크 MLlib (Machine Learning Library)**는 대규모 분산 환경에서 동작하는 고성능 머신러닝 알고리즘 및 유틸리티를 제공하는 스파크의 핵심 컴포넌트이다.
 2. Spark SQL의 DataFrame API를 기반으로 하는 **'ML 파이프라인(ML Pipelines)'** 아키텍처를 도입하여, 데이터 변환부터 모델 학습/평가까지의 과정을 표준화한다.
 3. 반복적(Iterative) 연산이 많은 머신러닝 특성에 맞춰 **인메모리 연산**을 수행하므로, 기존 MapReduce 기반 도구보다 최대 100배 빠른 성능을 제공한다.
 
 ---
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 - **정의**: 스파크 에코시스템 내에서 분산 분류, 회귀, 군집, 추천 시스템 및 차원 축소 알고리즘을 수행하기 위한 라이브러리이다.
 - **배경**: 단일 노드 머신러닝 라이브러리(scikit-learn 등)로는 처리 불가능한 '테라바이트(TB) 급 대용량 데이터'를 분산 병렬 학습하기 위해 고안되었다.
 - **주요 활용**: 대규모 사용자 대상의 상품 추천 시스템, 실시간 로그 기반 사기 탐지(FDS), 대규모 텍스트 데이터의 토픽 모델링 등 빅데이터 분석의 최전선에서 활용된다.
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 #### 1. ML 파이프라인(Pipeline) 구조
 ```text
 [ Raw Data (DataFrame) ]
       |
-      V [ Transformer ] (e.g., Tokenizer, Scaler) --> [ Transformed Data ]
-      |
+      V [ Transformer ] (e.g., Tokenizer, Scaler) --      |
       V [ Estimator ] (e.g., Logistic Regression) --> [ Model (Transformer) ]
       |
       V [ Evaluator ] (e.g., BinaryClassificationEvaluator) --> [ Performance Metric ]
@@ -41,7 +44,7 @@ categories = "studynote-bigdata"
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 비교 항목 | Scikit-learn (Python) | Spark MLlib |
 | :--- | :--- | :--- |
@@ -53,14 +56,14 @@ categories = "studynote-bigdata"
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 - **데이터 엔지니어링의 중요성**: MLlib 성능의 80%는 학습 알고리즘보다 앞단의 데이터 전처리(`VectorAssembler` 등)와 피처 엔지니어링 효율화에서 결정된다.
 - **하이퍼파라미터 튜닝 최적화**: `CrossValidator`를 사용한 대규모 병렬 튜닝 시 클러스터 자원이 급격히 소모될 수 있으므로, 그리드 서치(Grid Search) 범위를 신중히 설정해야 한다.
 - **모델 서빙(Serving) 전략**: 학습된 MLlib 모델을 실시간 추론에 사용할 경우, Spark 클러스터 오버헤드를 피하기 위해 PMML이나 MLeap 같은 표준 포맷으로 익스포트하여 경량 서버에서 서빙하는 방식이 선호된다.
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 - **기대효과**: 데이터 분석가가 복잡한 분산 프로그래밍 지식 없이도 고성능 대규모 머신러닝 시스템을 직접 구축하고 배포할 수 있게 한다.
 - **결론**: MLlib은 빅데이터 플랫폼으로서의 스파크의 가치를 완성하는 조각이다. 향후 딥러닝 프레임워크와의 연동(Spark deep learning pipelines) 및 분산 학습 표준화를 통해 데이터 과학의 대중화를 이끌 핵심 기술로 남을 것이다.
 

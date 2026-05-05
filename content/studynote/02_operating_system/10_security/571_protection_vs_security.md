@@ -5,13 +5,15 @@ date = "2026-03-25"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 보호(Protection)와 보안(Security)의 개념 차이 - 내부 통제와 외부 방어의 이중 방어 체계
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: **보호(Protection)**는 운영체제 커널 내부에서 정상 프로세스들이 서로의 메모리나 자원에 실수로 침범하지 못하게 막는 **내부 교통정리 체계(Internal Mechanism)**이고, **보안(Security)**은 해커나 바이러스 등 외부 적의 침입을 차단하는 **외곽 방어망(External Policy)**이다.
+> **핵심**: **보호(Protection)**는 운영체제 커널 내부에서 정상 프로세스들이 서로의 메모리나 자원에 실수로 침범하지 못하게 막는 **내부 교통정리 체계(Internal Mechanism)**이고, **보안(Security)**은 해커나 바이러스 등 외부 적의 침입을 차단하는 **외곽 방어망(External Policy)**이다.
 > 2. **가치**: 이 **이중 방어 체계(Dual Defense Architecture)**덕분에, 비밀번호 인증을 뚫고 들어온 해커조차도 OS 커널의 파일 접근 권한(보호)에 묶여 아무것도 하지 못하고 거부당하는 다층 방어(Defense in Depth)를 구현할 수 있다.
 > 3. **한계**: 보호(Protection) 체계가 아무리 잘 설계되어 있어도, 관리자 계정 탈취와 같은 보안(Security) 침해가 발생하면 내부의 모든 보호 장치가 무력화되는 **단일 실패점(Cascading Failure)** 위험을 항상 안고 있다.
+
+> 📝 모범 답안
+
+# 보호(Protection)와 보안(Security)의 개념 차이 - 내부 통제와 외부 방어의 이중 방어 체계
 
 ---
 

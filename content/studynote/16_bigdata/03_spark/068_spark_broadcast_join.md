@@ -5,23 +5,26 @@ date = "2026-03-04"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> [ Local Memory ]
+
+> 📝 모범 답안
+
 - Broadcast Join은 조인 대상 중 작은 테이블을 모든 워커 노드의 메모리에 복제하여, 네트워크를 통한 데이터 재분배(Shuffle) 없이 로컬에서 즉시 조인을 수행하는 기법이다.
 - 대량의 데이터 간 조인 시 발생하는 셔플 오버헤드를 원천적으로 차단하므로, 스파크에서 가장 강력한 성능 향상 도구 중 하나로 꼽힌다.
 - 기본적으로 스파크 옵티마이저가 테이블 크기를 판단하여 자동 적용하지만, 힌트(`broadcast()`)를 통해 명시적으로 유도할 수 있다.
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 분산 환경에서 두 테이블을 조인하려면 보통 동일한 키를 가진 데이터를 같은 노드로 모으는 '셔플 해시 조인(Shuffle Hash Join)'이 발생한다. 하지만 하나는 수십억 건이고 다른 하나는 수천 건 정도라면, 작은 쪽을 모든 노드에 뿌려버리는 것이 전체 데이터를 섞는 것보다 훨씬 효율적이다. 이것이 Broadcast Join의 핵심 아이디어다.
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 Broadcast Join은 **작은 테이블의 수집(Collect)**과 **전체 배포(Broadcast)** 과정을 거친다.
 
 ```text
 [ Broadcast Join Architecture / 브로드캐스트 조인 아키텍처 ]
 
-    [ Driver ] --(Collect 小 Table)--> [ Local Memory ]
-        |
+    [ Driver ] --(Collect 小 Table)--        |
         +----(Broadcast to all nodes)----> [ Executor 1 ] [ Executor 2 ] ...
                                                  |              |
                                            (Local Join)    (Local Join)
@@ -37,7 +40,7 @@ Broadcast Join은 **작은 테이블의 수집(Collect)**과 **전체 배포(Bro
 - **임계값 설정:** `spark.sql.autoBroadcastJoinThreshold` (기본값 10MB) 이하의 테이블은 자동으로 브로드캐스트 조인 대상이 된다.
 - **작동 조건:** 한쪽 테이블이 드라이버와 각 익스큐터의 메모리에 충분히 들어갈 수 있을 만큼 작아야 한다. 너무 크면 `OutOfMemory(OOM)` 오류가 발생할 수 있다.
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 비교 항목 | Shuffle Hash Join | Broadcast Join |
 | :--- | :--- | :--- |
@@ -47,11 +50,11 @@ Broadcast Join은 **작은 테이블의 수집(Collect)**과 **전체 배포(Bro
 | **성능 (대:소 조인)** | 느림 | **매우 빠름** |
 | **권장 상황** | 두 테이블 모두 대용량일 때 | 한쪽 테이블이 수십 MB 이내로 작을 때 |
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 - **OOM 주의:** 브로드캐스트 조인은 드라이버 메모리를 거쳐 전송되므로 드라이버 메모리 설정(`spark.driver.memory`)이 충분해야 한다. 또한 익스큐터들이 동시에 복제본을 유지하므로 익스큐터 메모리 부하도 고려해야 한다.
 - **기술사적 통찰:** AQE(Adaptive Query Execution)를 활성화하면, 스파크가 런타임에 통계를 확인하여 셔플 조인을 브로드캐스트 조인으로 자동 전환(Demote to Broadcast)해준다. 이는 데이터 통계가 부정확한 상황에서도 안정적인 성능을 보장하는 핵심 전략이다.
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 Broadcast Join은 '데이터는 연산보다 이동 비용이 비싸다'는 분산 컴퓨팅의 진리를 가장 잘 활용한 기술이다. 실무에서는 차원 테이블(Dimension Table)과 사실 테이블(Fact Table) 간의 조인에서 표준으로 사용된다. 향후에는 메모리 가격 하락과 네트워크 기술(RDMA 등)의 발전에 따라 더 큰 규모의 테이블도 브로드캐스트 방식으로 처리될 가능성이 높다.
 
 ### 📌 관련 개념 맵 (Knowledge Graph)

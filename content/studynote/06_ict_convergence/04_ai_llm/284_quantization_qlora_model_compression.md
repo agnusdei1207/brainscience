@@ -5,17 +5,19 @@ description = "모델 가중치의 정밀도를 32비트 소수점에서 낮은 
 [taxonomies]
 tags = ["Quantization", "QLoRA", "Model Compression", "LLM", "Edge AI"]
 +++
+## 0. 핵심 인사이트
 
-# 양자화 (Quantization / QLoRA)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 양자화 (Quantization)는 인공신경망의 가중치 (Weights)와 활성화 (Activations) 값을 표현하는 데이터 정밀도를 고정밀도 실수 (FP32)에서 저정밀도 실수 (FP16, BF16)나 정수 (INT8, INT4, NF4) 타입으로 변환 및 압축하여, 정보 손실을 최소화하면서도 모델의 물리적 크기를 줄이는 기법이다.
+> **핵심**: 양자화 (Quantization)는 인공신경망의 가중치 (Weights)와 활성화 (Activations) 값을 표현하는 데이터 정밀도를 고정밀도 실수 (FP32)에서 저정밀도 실수 (FP16, BF16)나 정수 (INT8, INT4, NF4) 타입으로 변환 및 압축하여, 정보 손실을 최소화하면서도 모델의 물리적 크기를 줄이는 기법이다.
 > 2. **가치**: 파라미터당 필요한 메모리를 32비트(4바이트)에서 4비트(0.5바이트)로 무려 1/8 수준으로 극적으로 감소시킴으로써, 클라우드 환경의 추론 비용 (GPU 요구량)을 대폭 낮추고 스마트폰, PC 등 메모리가 제한적인 온디바이스 (On-Device) 환경에 거대 언어 모델 (LLM)을 탑재 가능하게 만든다.
 > 3. **융합**: 양자화된 원본 모델에 학습 가능한 소규모 플러그인(LoRA)을 결합한 QLoRA (Quantized Low-Rank Adaptation) 기술의 등장으로, 4비트 양자화 환경에서도 성능 저하 없이 단일 GPU에서 초거대 모델의 미세조정(Fine-tuning)을 수행할 수 있는 새로운 MLOps 생태계가 열렸다.
 
+> 📝 모범 답안
+
+# 양자화 (Quantization / QLoRA)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 양자화 (Quantization)는 연속적인 아날로그 신호를 제한된 디지털 값으로 매핑하는 신호 처리의 전통적인 개념을 딥러닝에 적용한 것이다. 신경망은 무수히 많은 소수점 이하 자리(예: 3.141592...)를 가진 부동소수점 (Floating Point) 숫자로 이루어진 가중치 행렬로 구성되는데, 이를 근사적인 계단형 정수 값(예: 3)으로 변환(Mapping)하여 저장 공간과 연산 대역폭을 압축하는 최적화 프로세스다.
 
@@ -62,7 +64,7 @@ tags = ["Quantization", "QLoRA", "Model Compression", "LLM", "Edge AI"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 및 파라미터
 
@@ -129,7 +131,7 @@ tags = ["Quantization", "QLoRA", "Model Compression", "LLM", "Edge AI"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 양자화 방법론 심층 비교 (PTQ vs QAT vs QLoRA)
 
@@ -183,7 +185,7 @@ tags = ["Quantization", "QLoRA", "Model Compression", "LLM", "Edge AI"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 이상치(Outlier) 문제 해결
 
@@ -240,7 +242,7 @@ tags = ["Quantization", "QLoRA", "Model Compression", "LLM", "Edge AI"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

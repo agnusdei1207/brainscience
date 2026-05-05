@@ -4,11 +4,14 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. Flash Loan은 블록체인의 원자성(Atomicity)을 이용해 담보 없이 대규모 자금을 빌리고, 하나의 트랜잭션 내에서 사용 후 즉시 상환하는 DeFi 혁신 금융 도구다.
 > 2. 상환 실패 시 전체 트랜잭션이 롤백(revert)되므로 대출자는 손실 위험이 없지만, 공격자는 이를 악용해 가격 조작, 재진입 공격(Reentrancy)에 활용한다.
 > 3. 아비트라지(Arbitrage), 청산(Liquidation), 담보 전환(Collateral Swap) 등 합법적 활용도 크지만, Flash Loan Attack은 DeFi 보안의 핵심 위협이다.
+
+> 📝 모범 답안
 
 ---
 

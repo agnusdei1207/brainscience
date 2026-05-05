@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 단기 스케줄러 (Short-term Scheduler)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 단기 스케줄러 (Short-term Scheduler)는 준비 큐 (Ready Queue)에 있는 프로세스들 중 다음에 CPU를 할당받을 프로세스를 선택하여 실행 상태로 전환시키는 커널의 핵심 모듈이다.
+> **핵심**: 단기 스케줄러 (Short-term Scheduler)는 준비 큐 (Ready Queue)에 있는 프로세스들 중 다음에 CPU를 할당받을 프로세스를 선택하여 실행 상태로 전환시키는 커널의 핵심 모듈이다.
 > 2. **가치**: 스케줄링 주기가 매우 짧아(수 밀리초 단위) 시스템의 응답 시간 (Response Time)과 처리량 (Throughput)을 직접적으로 결정하며, 높은 효율성의 탐색 알고리즘이 필수적이다.
 > 3. **융합**: 단기 스케줄러의 연산 시간과 디스패치 지연 (Dispatch Latency)은 문맥 교환 (Context Switch) 오버헤드와 직결되며, 최근에는 캐시 친화성 (Cache Affinity)과 NUMA 환경까지 고려하여 스케줄링 결정을 내린다.
 
+> 📝 모범 답안
+
+# 단기 스케줄러 (Short-term Scheduler)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 단기 스케줄러 (Short-term Scheduler) 혹은 CPU 스케줄러는 다중 프로그래밍 (Multiprogramming) 환경에서 단일 혹은 다중 CPU 자원을 여러 프로세스들에게 분배하기 위해, 레디 큐에 대기 중인 프로세스 중 하나를 선택하는 운영체제의 구성 요소다.
 - **필요성**: 시스템에는 항상 하나 이상의 프로세스가 대기 중이며, 한 번에 코어당 하나의 프로세스만 실행될 수 있다. 현대의 시분할 시스템 (Time-sharing System)에서는 프로세스가 짧은 시간 할당량 (Time Quantum) 동안만 CPU를 사용하고 내려오므로, 빈번하고 공정하며 낭비 없는 CPU 분배 매커니즘이 필수적으로 요구된다.
@@ -43,7 +45,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 | 요소명 | 역할 | 내부 동작 | 프로토콜/특징 | 비유 |
@@ -85,7 +87,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 스케줄러 유형별 역할 비교
 
@@ -120,7 +122,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **문맥 교환 오버헤드에 의한 응답성 저하 (스레드 과다 생성)**: 트래픽이 폭주하는 웹 서버 환경에서 스레드 풀 크기를 CPU 코어의 수십 배로 늘리는 안티패턴. 이 경우 모든 스레드가 Ready Queue에 적체되고, 단기 스케줄러가 매우 빈번하게 개입하며 컨텍스트를 스위치한다. 캐시 무효화 (Cache Miss)와 TLB 플러시가 급증하여 시스템 처리량이 급감한다. 이 경우 스레드 수를 적절히 줄이고 비동기 I/O (Asynchronous I/O, Event Loop) 방식을 도입하여 스케줄러 개입을 회피해야 한다.
@@ -159,7 +161,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

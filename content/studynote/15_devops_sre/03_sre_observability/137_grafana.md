@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Grafana는 **Prometheus·Loki·Tempo·Elasticsearch 등 다양한 데이터 소스를 통합하여 대시보드로 시각화**하는 오픈소스 관측 가능성 플랫폼이며, LGTM Stack(Loki+Grafana+Tempo+Mimir)의 중심이다.
+> **핵심**: Grafana는 **Prometheus·Loki·Tempo·Elasticsearch 등 다양한 데이터 소스를 통합하여 대시보드로 시각화**하는 오픈소스 관측 가능성 플랫폼이며, LGTM Stack(Loki+Grafana+Tempo+Mimir)의 중심이다.
 > 2. **가치**: 메트릭·로그·트레이스를 **하나의 대시보드에서 상관 분석**할 수 있어, 장애 시 "메트릭 이상→로그 확인→트레이스 추적"의 워크플로를 단일 도구에서 수행한다.
 > 3. **판단 포인트**: Grafana는 시각화 레이어이지 저장소가 아니며, 데이터 소스(Prometheus·Loki·Tempo)와의 조합이 핵심이다. Grafana Cloud는 SaaS 관리형 서비스이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Grafana = 다중 데이터 소스 → 통합 대시보드

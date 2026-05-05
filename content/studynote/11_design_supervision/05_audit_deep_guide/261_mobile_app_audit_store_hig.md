@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 모바일 앱 감리는 기능 동작만이 아닌 플랫폼별 디자인 가이드(HIG, Human Interface Guidelines / Material Design) 준수와 앱스토어 심사 리젝(Reject) 대비 항목까지 포함해야 한다.
+> **핵심**: 모바일 앱 감리는 기능 동작만이 아닌 플랫폼별 디자인 가이드(HIG, Human Interface Guidelines / Material Design) 준수와 앱스토어 심사 리젝(Reject) 대비 항목까지 포함해야 한다.
 > 2. **가치**: 앱스토어 리젝은 출시 지연을 의미하며, 공공 서비스의 경우 수천 명의 사용자 서비스 지연으로 직결된다. 사전 체크리스트 점검으로 99% 예방 가능하다.
 > 3. **판단 포인트**: iOS는 Apple HIG(Human Interface Guidelines) 준수와 개인정보 접근 권한 설명 여부, Android는 Material Design 3 준수와 타겟 API 레벨이 핵심 감리 항목이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 모바일 앱은 iOS App Store와 Google Play Store 심사를 통과해야 배포가 가능하다. 두 플랫폼은 각각 Apple HIG(Human Interface Guidelines)와 Google Material Design이라는 디자인 철학을 기반으로 심사 기준을 운영한다. 공공정보화사업에서 모바일 앱 감리는 이 플랫폼별 요건이 충족되었는지를 배포 전에 확인한다.
 
@@ -43,7 +44,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. iOS 심사 대비 체크리스트 구조
 
@@ -124,7 +125,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. iOS HIG vs Android Material Design 주요 차이
 
@@ -150,7 +151,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. 모바일 앱 감리 체크리스트
 
@@ -173,7 +174,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 모바일 앱 감리에서 플랫폼 디자인 가이드와 스토어 심사 기준을 사전 점검하면 출시 지연, 사용자 불편, 리젝 후 재개발 비용을 방지할 수 있다. iOS와 Android는 서로 다른 UX 철학을 가지므로, 크로스플랫폼 개발 시에도 각 플랫폼의 네이티브 경험을 최대한 존중하는 설계가 필요하다. 공공 앱은 특히 접근성(KWCAG) 준수가 법적 의무임을 감리인이 반드시 확인해야 한다.
 

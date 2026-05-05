@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 플랫폼 엔지니어링(Platform Engineering)은 DevOps 실천 과정에서 폭증한 개발자 인지 부하(Cognitive Load)를 해소하기 위해, 인프라·CI/CD·보안 도구를 추상화한 **내부 개발자 플랫폼(IDP)**을 구축·운영하는 규율이다.
+> **핵심**: 플랫폼 엔지니어링(Platform Engineering)은 DevOps 실천 과정에서 폭증한 개발자 인지 부하(Cognitive Load)를 해소하기 위해, 인프라·CI/CD·보안 도구를 추상화한 **내부 개발자 플랫폼(IDP)**을 구축·운영하는 규율이다.
 > 2. **가치**: 앱 개발자가 Terraform·K8s·IAM 지식 없이도 **셀프서비스 포털 클릭 한 번으로 보안 검증된 환경을 프로비저닝**하여 Time-to-Market을 단축하고 Shadow IT를 원천 차단한다.
 > 3. **판단 포인트**: 플랫폼 팀은 제품(Product)처럼 IDP를 운영해야 하며, Golden Path와 Escape Hatch의 균형 설계가 성공의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 DevOps 철학("You build it, You run it")으로 배포 속도는 향상되었으나, 앱 개발자가 K8s 매니페스트·IaC·보안 정책까지 직접 작성해야 하는 **인지 부하(Cognitive Load) 폭발**이 심화되었다. Team Topologies의 Extraneous(업무 외 잡음) 부하가 번아웃과 줄퇴사의 직접 원인으로 지목된다.
 
@@ -39,7 +41,7 @@ DevOps 철학("You build it, You run it")으로 배포 속도는 향상되었으
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 계층 | 역할 | 대표 도구 | 비유 |
 |:---|:---|:---|:---|
@@ -54,7 +56,7 @@ DevOps 철학("You build it, You run it")으로 배포 속도는 향상되었으
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 항목 | DevOps (문화) | 플랫폼 엔지니어링 (구현) | SRE (신뢰성) |
 |:---|:---|:---|:---|
@@ -66,7 +68,7 @@ DevOps 철학("You build it, You run it")으로 배포 속도는 향상되었으
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 도입 체크리스트
 1. Stream-aligned Team이 4개 이상, 인프라 티켓 SLA 평균 3일 이상 → 플랫폼 팀 분리 시점.
@@ -79,7 +81,7 @@ DevOps 철학("You build it, You run it")으로 배포 속도는 향상되었으
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | 미도입 | 도입 후 | 개선 |
 |:---|:---|:---|:---|

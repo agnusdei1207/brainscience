@@ -5,17 +5,20 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-network"
 +++
+## 0. 핵심 인사이트
 
-# 547. SAML 2.0 (Security Assertion Markup Language) - B2B 환경 SSO 구현, XML 기반
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SAML 2.0은 인터넷 환경에서 서로 다른 도메인을 가진 기업 간(B2B)에 사용자의 인증(신원)과 인가(권한) 정보를 담은 **XML 기반의 보증서(Assertion)**를 주고받아 **SSO (Single Sign-On)**를 구현하는 OASIS 표준 프레임워크다.
+> **핵심**: SAML 2.0은 인터넷 환경에서 서로 다른 도메인을 가진 기업 간(B2B)에 사용자의 인증(신원)과 인가(권한) 정보를 담은 **XML 기반의 보증서(Assertion)**를 주고받아 **SSO (Single Sign-On)**를 구현하는 OASIS 표준 프레임워크다.
 > 2. **가치**: 대기업 직원이 사내 로그인(Active Directory) 한 번만으로 외부에 있는 Salesforce, Google Workspace, Zoom 등 수십 개의 클라우드(SaaS) 업무 앱에 패스워드 없이 자동 접속할 수 있게 하여, 기업의 계정 관리 통제력을 극대화한다.
 > 3. **융합**: 거대하고 무거운 XML 구조 탓에 모바일/B2C 환경에서는 OAuth/OIDC 연합에 자리를 내주었지만, 기업용 인프라(엔터프라이즈) 환경에서는 높은 성숙도와 강력한 암호화(XML Signature), 세밀한 정책 설정 능력을 통해 여전히 대체 불가능한 B2B 연동의 황제로 융합 유지되고 있다.
 
+> 📝 모범 답안
+
+# 547. SAML 2.0 (Security Assertion Markup Language) - B2B 환경 SSO 구현, XML 기반
+
+##
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: SAML (Security Assertion Markup Language)은 인증/인가 정보를 주고받기 위해 마크업 언어(XML)로 작성된 "보증서(Assertion)"를 정의하는 규격이다. 사용자(Principal), 인증 제공자(IdP, Identity Provider), 서비스 제공자(SP, Service Provider) 3자 간의 신뢰 교환을 규정한다. 2005년 제정된 SAML 2.0이 사실상의 절대 표준이다.
 - **필요성**: 기업이 클라우드(SaaS)로 전환하면서 직원들이 각기 다른 외부 서비스 10여 개를 사용하게 되었다. 직원마다 Salesforce 패스워드, Zoom 패스워드를 따로 만들면, 퇴사자 발생 시 10개 사이트에 일일이 들어가 계정을 끊어야 하는 보안 사각지대가 발생한다. "우리 회사 중앙 서버(AD/LDAP)에서 이 사람이 정직원임을 보증해 줄 테니, 외부 SaaS 서비스들은 로그인 창 띄우지 말고 그냥 믿고 들여보내라"는 강력한 B2B 간의 신뢰 교환 언어가 필요했다.
@@ -47,7 +50,7 @@ categories = "studynote-network"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (SAML 3대 주체 및 Assertion)
 
@@ -98,7 +101,7 @@ SAML 로그인에는 사용자가 포털에서 아이콘을 누르고 출발하�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### SAML 2.0 vs OAuth 2.0 / OpenID Connect (OIDC) 심층 비교
 
@@ -140,7 +143,7 @@ SAML은 2005년에 만들어진 중후장대한 장갑차다. 회사 직원의 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 메타데이터 연동 (Federation Trust) 파기 및 인증서 만료 장애
 
@@ -159,7 +162,7 @@ SAML은 2005년에 만들어진 중후장대한 장갑차다. 회사 직원의 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

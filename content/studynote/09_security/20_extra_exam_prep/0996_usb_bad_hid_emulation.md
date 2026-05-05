@@ -5,15 +5,19 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> [ OS ]
+
+> 📝 모범 답안
+
 1. **본질**: USB 장치가 단순한 저장 매체가 아니라 키보드나 마우스 같은 HID(Human Interface Device)로 위장하여, 연결 즉시 악성 명령어를 자동 입력하는 공격 기법이다.
 2. **가치**: 운영체제가 '키보드'를 신뢰한다는 근본적인 보안 전제를 악용하므로, 바이러스 백신이나 매체 제어 솔루션을 우회하여 시스템 권한을 획득할 수 있다.
 3. **판단 포인트**: 'BadUSB' 위협을 방어하기 위해서는 포트 수준의 승인 정책(HID 인증)과 함께, 시스템 권한 상승 시 추가 인증(MFA)을 강제하는 다층 방어가 필수적이다.
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 USB_BAD(또는 BadUSB) 공격은 USB 컨트롤러 펌웨어를 조작하여 장치의 정체성을 속이는 데서 시작된다. 사용자는 단순한 USB 메모리라고 생각하고 꽂았지만, 실제로는 컴퓨터가 이를 '매우 빠른 속도로 타이핑하는 숙련된 해커의 키보드'로 인식하게 만든다.
 
@@ -23,7 +27,7 @@ USB_BAD(또는 BadUSB) 공격은 USB 컨트롤러 펌웨어를 조작하여 장�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 USB_BAD는 USB 통신 프로토콜의 유연성을 악용한다.
 
@@ -36,8 +40,7 @@ USB_BAD는 USB 통신 프로토콜의 유연성을 악용한다.
 
 ```text
 [ USB_BAD Attack Flow ]
-1. Plugin: [ Malicious USB ] --(Identify as HID Keyboard)--> [ OS ]
-2. Trust:  [ OS ] <--(Accept Input without Verification)---- [ OS ]
+1. Plugin: [ Malicious USB ] --(Identify as HID Keyboard)--2. Trust:  [ OS ] <--(Accept Input without Verification)---- [ OS ]
 3. Attack: [ Malicious USB ] --(Type: Windows+R)-----------> [ OS ]
 4. Execute: [ Malicious USB ] --(Type: powershell -encodedCommand ...)
 5. Result: [ Backdoor Installed / Data Exfiltrated ]
@@ -49,7 +52,7 @@ USB_BAD는 USB 통신 프로토콜의 유연성을 악용한다.
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 USB_BAD는 일반적인 USB 악성코드와는 그 궤를 달리한다.
 
@@ -66,7 +69,7 @@ USB_BAD는 일반적인 USB 악성코드와는 그 궤를 달리한다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무적으로 BadUSB를 막는 것은 매우 까다롭지만, 다음과 같은 전략적 판단이 필요하다.
 
@@ -83,7 +86,7 @@ USB_BAD는 일반적인 USB 악성코드와는 그 궤를 달리한다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 USB_BAD 방어 체계를 갖추면, 길거리에서 주운 USB나 선물로 받은 악성 하드웨어를 통한 침해 사고를 효과적으로 막을 수 있다. 이는 특히 사회 공학(Social Engineering) 공격에 취약한 일반 임직원들을 보호하는 강력한 방패가 된다.
 

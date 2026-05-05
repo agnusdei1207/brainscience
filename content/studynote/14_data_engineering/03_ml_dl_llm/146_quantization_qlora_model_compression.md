@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 양자화(Quantization)는 **FP32/FP16 가중치를 INT8/INT4로 축소**하여 메모리·연산을 줄이는 모델 압축 기법이며, QLoRA는 **4비트 양자화된 모델에 LoRA를 적용**하여 단일 소비자 GPU(24GB)에서 LLM Fine-tuning을 가능하게 했다.
+> **핵심**: 양자화(Quantization)는 **FP32/FP16 가중치를 INT8/INT4로 축소**하여 메모리·연산을 줄이는 모델 압축 기법이며, QLoRA는 **4비트 양자화된 모델에 LoRA를 적용**하여 단일 소비자 GPU(24GB)에서 LLM Fine-tuning을 가능하게 했다.
 > 2. **가치**: 7B 모델 FP16은 **14GB 메모리**이지만, 4비트 양자화 시 **3.5GB**로 축소되어 소비자 GPU에서 추론·학습이 가능하다.
 > 3. **판단 포인트**: PTQ(Post-Training Quantization, 학습 후)·QAT(Quantization-Aware Training, 학습 중)로 구분하며, GPTQ·AWQ·bitsandbytes가 LLM 양자화의 핵심 도구이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 FP16: 7B × 2B = 14GB

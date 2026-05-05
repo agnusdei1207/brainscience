@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 피처 스토어(Feature Store)는 ML 모델 훈련(오프라인)과 실시간 서빙(온라인) 양쪽에서 동일한 Feature를 일관성 있게 제공하여 훈련-서빙 불일치(Training-Serving Skew)를 방지하는 ML 인프라 레이어다.
+> **핵심**: 피처 스토어(Feature Store)는 ML 모델 훈련(오프라인)과 실시간 서빙(온라인) 양쪽에서 동일한 Feature를 일관성 있게 제공하여 훈련-서빙 불일치(Training-Serving Skew)를 방지하는 ML 인프라 레이어다.
 > 2. **가치**: 팀 A가 만든 "사용자 구매 빈도" Feature를 팀 B가 재사용하고, 실시간 추론 시 Feature를 매번 재계산하지 않고 사전 계산된 값을 수 ms 이내에 조회하여 추론 지연을 최소화한다.
 > 3. **판단 포인트**: 온라인(저지연 조회, Redis/DynamoDB)과 오프라인(대용량 배치 훈련, S3/Hive) 스토어를 분리하여 운영하되, 두 스토어 간 Feature 값의 일관성 유지가 가장 중요한 설계 과제다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 추천 시스템 팀이 "사용자의 최근 30일 구매 횟수"를 Feature로 사용한다. 이 Feature는:
 1. 모델 **훈련** 시: 6개월치 배치 데이터에서 계산
@@ -42,7 +44,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 피처 스토어 이중 구조
 
@@ -125,7 +127,7 @@ online_features = store.get_online_features(
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 피처 스토어 제품 비교
 
@@ -150,7 +152,7 @@ online_features = store.get_online_features(
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Point-in-Time Correct Join
 
@@ -198,7 +200,7 @@ training_df = store.get_historical_features(
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

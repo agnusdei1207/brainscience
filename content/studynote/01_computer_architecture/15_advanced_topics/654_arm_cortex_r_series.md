@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 654. ARM Cortex-R 시리즈 (ARM Cortex-R Series)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ARM Cortex-R 시리즈는 지연 시간의 불확실성을 제거하고 **결정적 응답성(Deterministic Performance)을 보장하기 위해 설계된 실시간(Real-time) 임베디드 프로세서** 아키텍처다.
+> **핵심**: ARM Cortex-R 시리즈는 지연 시간의 불확실성을 제거하고 **결정적 응답성(Deterministic Performance)을 보장하기 위해 설계된 실시간(Real-time) 임베디드 프로세서** 아키텍처다.
 > 2. **가치**: 오류 발생 시 즉각적으로 시스템을 보호하는 듀얼 코어 락스텝(Dual-core Lock-step) 기술과 고속 인터럽트 처리를 통해 자동차 제어, 의료 장비, 산업용 로봇 등 생명과 안전이 직결된 분야의 핵심 두뇌 역할을 수행한다.
 > 3. **융합**: 가상 메모리(MMU) 대신 메모리 보호 장치(MPU)를 사용하여 지연 시간을 최소화하며, 고속 통신(5G 모뎀) 및 정밀 저장 장치(SSD 컨트롤러) 컨트롤러와 결합하여 고성능 실시간 데이터 처리를 가능케 한다.
 
+> 📝 모범 답안
+
+# 654. ARM Cortex-R 시리즈 (ARM Cortex-R Series)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. "빠른 것"보다 "정확한 시간"이 중요하다
 - **현상**: 일반적인 고성능 CPU(Cortex-A)는 평균적인 속도는 빠르지만, 가끔 예외 상황(Cache Miss, Page Fault)으로 인해 응답이 늦어질 수 있다.
@@ -51,7 +53,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 결정적 메모리 접근 (TCM, Tightly Coupled Memory)
 - 일반적인 캐시(Cache)는 데이터가 있으면 빠르지만 없으면 매우 느려진다(불확실성). 
@@ -73,7 +75,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Cortex-A vs Cortex-R 상세 비교
 
@@ -92,7 +94,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -114,7 +116,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **지연 시간 결정성**: 최악의 상황에서도 응답 속도 편차(Jitter) 5% 미만 유지.

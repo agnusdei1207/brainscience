@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 363. RoCE (RDMA over Converged Ethernet)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: RoCE(RDMA over Converged Ethernet)는 전용 하드웨어가 필요한 인피니밴드(InfiniBand)의 **RDMA(원격 직접 메모리 접근) 기술을 대중적인 이더넷(Ethernet)망 위에서 구현**할 수 있게 만든 혁신적인 통신 프로토콜이다.
+> **핵심**: RoCE(RDMA over Converged Ethernet)는 전용 하드웨어가 필요한 인피니밴드(InfiniBand)의 **RDMA(원격 직접 메모리 접근) 기술을 대중적인 이더넷(Ethernet)망 위에서 구현**할 수 있게 만든 혁신적인 통신 프로토콜이다.
 > 2. **가치**: 데이터 전송 시 CPU를 완전히 바이패스(Bypass)하여 0에 가까운 지연 시간(Low Latency)을 달성하며, 기존의 이더넷 인프라를 그대로 활용함으로써 **인피니밴드 대비 수백억 원의 데이터센터 구축 비용을 절감**한다.
 > 3. **융합**: 이더넷의 고질병인 패킷 유실을 막기 위해 **무손실(Lossless) 제어 기술인 PFC**를 필수적으로 수반하며, IP 라우팅이 가능한 **RoCE v2**를 통해 클라우드와 AI 가속기 간의 고속 인터커넥트 표준으로 자리 잡았다.
 
+> 📝 모범 답안
+
+# 363. RoCE (RDMA over Converged Ethernet)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 - **개념**: "RDMA의 강력한 성능을 왜 비싼 인피니밴드에서만 써야 하는가?"라는 물음에서 출발한 기술이다. 일반 이더넷 프레임 안에 RDMA 패킷을 실어 보냄으로써, CPU 간섭 없이 랜카드(NIC)끼리 직접 데이터를 주고받는다.
 - **필요성**: 현대 AI 학습이나 빅데이터 처리에서 CPU는 이미 연산만으로도 포화 상태다. 이때 데이터를 옮기기 위해 CPU가 TCP/IP 스택을 일일이 포장하고 푸는 방식은 시스템 전체의 마비를 부른다. RoCE는 이 **'포장 작업'을 100% 랜카드 하드웨어에 오프로딩**하여 CPU에게 자유를 선사한다.
@@ -44,7 +46,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 칠칠치 못한 이더넷의 개조 (Lossless Ethernet)
 일반 이더넷은 길이 막히면 패킷을 그냥 버린다(Best-effort). 하지만 RDMA는 패킷 하나만 없어져도 전체 전송이 꼬인다. 이를 막기 위해 RoCE는 다음 기술을 강제한다.
@@ -64,7 +66,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### RoCE vs 인피니밴드 (InfiniBand) vs iWARP
 
@@ -83,7 +85,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -103,7 +105,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **CPU 점유율 80% 절감**: 패킷 포장 작업을 하드웨어가 가져가므로, CPU는 연산에만 100% 집중할 수 있다.

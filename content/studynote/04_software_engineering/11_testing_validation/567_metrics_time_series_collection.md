@@ -6,15 +6,17 @@ description = "시계열 메트릭을 수집해 시스템 상태를 정량적으
 taxonomy = ""
 tags = ["Software Engineering", "Observability", "Metrics", "Prometheus", "Grafana"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 메트릭은 시간에 따라 변하는 수치 데이터다.
+> **핵심**: 메트릭은 시간에 따라 변하는 수치 데이터다.
 > 2. **가치**: 추세와 임계치를 통해 이상 징후를 빨리 찾는다.
 > 3. **판단 포인트**: 라벨 폭발, 샘플 수, 보존 기간을 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 메트릭은 CPU, 메모리, TPS, 에러율처럼 숫자로 표현되는 신호다. 시계열로 쌓아야 추세를 볼 수 있다.
 
@@ -22,7 +24,7 @@ tags = ["Software Engineering", "Observability", "Metrics", "Prometheus", "Grafa
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Prometheus는 pull 방식으로 메트릭을 수집하고, Grafana는 이를 시각화한다.
 
@@ -40,7 +42,7 @@ Target -> Prometheus -> Time Series DB -> Grafana
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 메트릭은 로그보다 가볍고, 트레이스보다 넓은 추세를 본다.
 
@@ -54,7 +56,7 @@ Target -> Prometheus -> Time Series DB -> Grafana
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 지표 정의를 신중히 하고, 경보는 단순하게 유지한다.
 
@@ -67,7 +69,7 @@ Target -> Prometheus -> Time Series DB -> Grafana
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 메트릭은 시스템 건강 상태를 빠르게 보여 준다.
 

@@ -4,17 +4,19 @@ title = "606. Protected Users 그룹 — Kerberos 전용 인증"
 description = "사용자의 의지 없이 요청을 실행시키는 CSRF(Cross-Site Request Forgery) 원리와 방어 기법"
 date = 2024-01-15
 +++
+## 0. 핵심 인사이트
 
-# CSRF (Cross-Site Request Forgery)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CSRF(Cross-Site Request Forgery)는 공격자가victim의 브라우저를 利用하여victim이 이미 인증된 웹사이트에 대해 의도하지 않은 요청(게시물 작성, 비밀번호 변경, 송금 등)을 자동 실행시키는 공격이다.
+> **핵심**: CSRF(Cross-Site Request Forgery)는 공격자가victim의 브라우저를 利用하여victim이 이미 인증된 웹사이트에 대해 의도하지 않은 요청(게시물 작성, 비밀번호 변경, 송금 등)을 자동 실행시키는 공격이다.
 > 2. **가치**: 사용자의 유효한 세션/쿠키가 자동으로 요청에 포함되므로, 공격자는victim의 인증 정보를알 필요 없이 상태 변경 요청을発行할 수 있다. 2009년 Netflix, 2010년 YouTube, 2016년 SWIFTbank 등 대규모 금융 사기사고의攻撃 벡터로活用되었다.
 > 3. **융합**: CSRF는 브라우저의 쿠키 메커니즘, Same-Origin Policy, HTTP 동사 보안, 토큰 기반 방어, 그리고 XSS와 결합하여 방어 없이 서로 다른 웹/App의 要求를混淆하는 복잡한 보안 분야이다.
 
+> 📝 모범 답안
+
+# CSRF (Cross-Site Request Forgery)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 
@@ -34,7 +36,7 @@ CSRF는 2001년 나무security researcher들이"Nested Image Tags in Email"으�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### CSRF 공격 흐름
 
@@ -157,7 +159,7 @@ CSRF 방어의 핵심은 "요청이사용자의 의도적인 행동에서 비롯
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 분석: CSRF vs XSS
 
@@ -181,7 +183,7 @@ XSS와 CSRF는 서로 독립적이지만 결합 가능하다. XSS를 利用하�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -204,7 +206,7 @@ XSS와 CSRF는 서로 독립적이지만 결합 가능하다. XSS를 利用하�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

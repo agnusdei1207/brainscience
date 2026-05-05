@@ -5,17 +5,19 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 비대칭 다중 처리 (ASMP, Asymmetric Multiprocessing)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 비대칭 다중 처리 (ASMP, Asymmetric Multiprocessing)는 하나의 마스터 (Master) 프로세서가 운영체제 (OS)를 실행하며 전체 시스템 자원과 스케줄링을 전담하고, 나머지 슬레이브 (Slave) 프로세서들은 마스터의 지시에 따라 사용자 작업만을 수행하는 주종 관계 기반의 아키텍처다.
+> **핵심**: 비대칭 다중 처리 (ASMP, Asymmetric Multiprocessing)는 하나의 마스터 (Master) 프로세서가 운영체제 (OS)를 실행하며 전체 시스템 자원과 스케줄링을 전담하고, 나머지 슬레이브 (Slave) 프로세서들은 마스터의 지시에 따라 사용자 작업만을 수행하는 주종 관계 기반의 아키텍처다.
 > 2. **가치**: 대칭형 다중 처리 (SMP) 대비 커널의 동기화 및 락 (Lock) 경합 문제를 단순화할 수 있어 설계가 용이하며, 초기 다중 처리 시스템이나 특정 연산 전용 가속기 환경에서 효율적인 통제를 가능하게 한다.
 > 3. **융합**: 현대에는 빅리틀 (big.LITTLE) 아키텍처와 같은 이기종 컴퓨팅 (Heterogeneous Computing)으로 진화하여, 성능 중심 코어와 전력 효율 중심 코어를 비대칭적으로 운영하는 저전력 전략의 핵심이 되고 있다.
 
+> 📝 모범 답안
+
+# 비대칭 다중 처리 (ASMP, Asymmetric Multiprocessing)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 비대칭 다중 처리 (ASMP, Asymmetric Multiprocessing)는 시스템 내의 여러 프로세서 중 단 하나(Master)만이 커널 코드 실행, I/O (Input/Output) 처리, 스케줄링 등 시스템 관리 권한을 독점하는 구조다. 슬레이브 (Slave) 프로세서들은 운영체제에 직접 접근할 수 없으며, 마스터에 의해 할당된 실행 코드를 단순 연산 처리하는 역할에 국한된다.
 
@@ -54,7 +56,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -106,7 +108,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### ASMP vs SMP 아키텍처 다각도 분석
 
@@ -129,7 +131,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 적용 시나리오 및 아키텍처 판단 기준
 
@@ -150,7 +152,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### ASMP 도입의 정량/정성적 효과
 

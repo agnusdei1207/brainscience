@@ -2,15 +2,17 @@
 title = "248. DTP (Dynamic Trunking Protocol) / VTP (VLAN Trunking Protocol) - Cisco 전용"
 weight = 248
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: DTP와 VTP는 수십~수백 대의 스위치가 엮인 거대한 기업망에서, 관리자가 일일이 트렁크 포트를 뚫고 VLAN을 생성하는 **"수작업 노가다"를 없애기 위해 시스코(Cisco)가 독자 개발한 자동화 프로토콜**이다.
+> **핵심**: DTP와 VTP는 수십~수백 대의 스위치가 엮인 거대한 기업망에서, 관리자가 일일이 트렁크 포트를 뚫고 VLAN을 생성하는 **"수작업 노가다"를 없애기 위해 시스코(Cisco)가 독자 개발한 자동화 프로토콜**이다.
 > 2. **DTP (Dynamic Trunking Protocol)**: 스위치끼리 선을 꽂기만 하면 양쪽 포트가 알아서 대화를 나누고 "우리 서로 트렁크 포트로 합시다!"라고 동적으로 협상해 주는(Negotiation) 편리하지만 보안에 취약한 링크 자동화 기술이다.
 > 3. **VTP (VLAN Trunking Protocol)**: 중앙의 마스터 스위치(Server)에 VLAN 10, 20을 만들어 두면, 연결된 나머지 하급 스위치(Client)들에게 그 VLAN 목록(DB)이 자동으로 동기화되어 복사되는 중앙 집중식 VLAN 관리 기술이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **DTP (Dynamic Trunking Protocol)**: 스위치 포트가 상대방 장비를 감지해 Access로 동작할지 Trunk로 동작할지 자동으로 결정하는 시스코 전용 프로토콜.
@@ -25,7 +27,7 @@ weight = 248
 
 ---
 
-## Ⅱ. 자동화의 원리와 치명적 보안 취약점 (Deep Dive)
+## 2. 구성요소
 
 ### 1. DTP의 동작 모드와 협상
 시스코 스위치 포트는 기본적으로 `Dynamic Desirable` 또는 `Dynamic Auto` 모드로 설정되어 있어 쉴 새 없이 DTP 협상 패킷을 내보낸다.

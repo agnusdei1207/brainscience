@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ETL(Extract, Transform, Load)은 중간 변환 서버에서 먼저 정제 후 DW에 적재하지만, ELT(Extract, Load, Transform)는 원본 데이터를 클라우드 DW에 먼저 적재 후 DW 내부의 막대한 컴퓨팅 파워로 변환한다.
+> **핵심**: ETL(Extract, Transform, Load)은 중간 변환 서버에서 먼저 정제 후 DW에 적재하지만, ELT(Extract, Load, Transform)는 원본 데이터를 클라우드 DW에 먼저 적재 후 DW 내부의 막대한 컴퓨팅 파워로 변환한다.
 > 2. **가치**: 클라우드 DW(Snowflake, BigQuery, Redshift)의 분리 스토리지-컴퓨팅 구조 덕분에 ELT는 변환 병목(Bottleneck)이 사라지고, dbt(Data Build Tool)로 SQL 기반 변환 파이프라인을 코드로 관리할 수 있다.
 > 3. **판단 포인트**: 온프레미스·레거시 환경은 ETL이 여전히 적합하나, 클라우드 네이티브·비정형 대용량 데이터에는 ELT가 압도적으로 유리하다 — 변환 로직의 위치가 아키텍처 선택의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 ETL의 탄생과 한계
 
@@ -40,7 +42,7 @@ ETL(Extract, Transform, Load)은 1970~80년대 온프레미스(On-Premise) 데�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 ETL vs ELT 아키텍처 비교
 
@@ -127,7 +129,7 @@ transformed_df.write.mode("overwrite").parquet("s3://data-lake/mart/daily_orders
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 변환 병목 위치 이동의 의미
 
@@ -155,7 +157,7 @@ ELT 시대:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 ETL vs ELT 선택 기준
 
@@ -186,7 +188,7 @@ ELT 시대:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 ELT 전환 효과
 

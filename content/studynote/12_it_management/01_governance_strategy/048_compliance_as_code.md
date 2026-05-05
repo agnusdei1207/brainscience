@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. Compliance as Code(컴플라이언스 애즈 코드)는 규정 준수 정책을 코드로 표현하여 자동화된 검사와 집행을 실현 — 감사자가 수동으로 확인하는 전통 컴플라이언스 대신, 인프라 변경 시마다 코드로 정의된 정책을 자동 검사하여 지속적 규정 준수를 보장한다.
 > 2. Policy as Code와 Infrastructure as Code의 교차점 — IaC로 인프라를 코드화하면 자연스럽게 정책도 코드로 표현 가능해지며, Open Policy Agent(OPA)·AWS Config Rules·Azure Policy 등이 이 패러다임을 구현한다.
 > 3. Shift-Left Compliance의 핵심 가치 — 운영 중 감사 발견에서 개발/배포 단계로 컴플라이언스 검사 시점을 당기면, 비용과 시간이 100배 이상 절감되고 개발 속도도 저해되지 않는다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. Compliance as Code 개요
+## 1. 개요 및 필요성
 
 ```
 전통 컴플라이언스 vs Compliance as Code:
@@ -55,7 +58,7 @@ Compliance as Code:
 
 ---
 
-## Ⅱ. OPA (Open Policy Agent)
+## 2. 구성요소
 
 ```
 OPA (Open Policy Agent):
@@ -115,7 +118,7 @@ OPA 통합 포인트:
 
 ---
 
-## Ⅲ. AWS Config + Security Hub
+## 3. 구조 및 동작 원리
 
 ```
 AWS Config:
@@ -166,7 +169,7 @@ AWS Security Hub:
 
 ---
 
-## Ⅳ. Terraform Sentinel
+## 4. 비교 및 트레이드오프
 
 ```
 Terraform Sentinel:
@@ -224,7 +227,7 @@ Conftest (오픈소스 대안):
 
 ---
 
-## Ⅴ. 실무 시나리오 — 금융사 CaC 구축
+## 5. 실무 적용 및 최적화 기법
 
 ```
 핀테크 스타트업 → 금융감독원 규제 준수 CaC:

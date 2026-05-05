@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Parquet(파케이)는 Apache의 컬럼 지향(Columnar) 저장 형식으로, Delta Encoding·Dictionary Encoding·RLE(Run-Length Encoding) 등의 압축 기법과 컬럼별 Min/Max 통계를 활용하여 분석 쿼리의 I/O와 처리 비용을 획기적으로 절감한다.
+> **핵심**: Parquet(파케이)는 Apache의 컬럼 지향(Columnar) 저장 형식으로, Delta Encoding·Dictionary Encoding·RLE(Run-Length Encoding) 등의 압축 기법과 컬럼별 Min/Max 통계를 활용하여 분석 쿼리의 I/O와 처리 비용을 획기적으로 절감한다.
 > 2. **가치**: 행 지향(Row) 저장 대비 컬럼 지향 저장은 분석 쿼리에서 필요한 컬럼만 읽어 I/O를 80~90% 절감하고, 동일 데이터 타입의 연속 값을 압축하여 저장 용량을 50~80% 절감한다.
 > 3. **판단 포인트**: Parquet는 쓰기 비용이 높고 랜덤 갱신이 불가하므로 OLAP(분석) 워크로드에 최적이며, OLTP(트랜잭션) 워크로드에는 여전히 행 저장 형식(RDB)이 필요하다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 빅데이터 시대에 데이터 엔지니어가 매일 직면하는 현실: S3에 쌓인 수 TB의 로그를 분석하는 데 CSV 형식으로 읽으면 수 시간이 걸리지만, Parquet 형식으로 변환하면 수 분이면 충분하다. 이 차이의 비결이 컬럼 지향 저장과 압축 알고리즘이다.
 
@@ -22,7 +23,7 @@ Hadoop, Spark, AWS Athena, Google BigQuery, Snowflake 등 현대 빅데이터/�
 
 📢 **섹션 요약 비유**: Parquet는 도서관의 책꽂이를 장르별로 정리하는 것처럼, 같은 종류의 데이터(동일 컬럼)끼리 모아 놓으면 특정 장르 책만 필요할 때 해당 선반만 가면 되어 훨씬 빠른 도서관 이용이 가능하다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 행 지향 vs 컬럼 지향 저장 비교
 
@@ -82,7 +83,7 @@ Hadoop, Spark, AWS Athena, Google BigQuery, Snowflake 등 현대 빅데이터/�
 
 📢 **섹션 요약 비유**: Delta Encoding은 가계부에서 "1일: 5,000원, 2일: +200원, 3일: -100원"처럼 절대 금액 대신 변화량만 적어 저장 공간을 절약하는 방식이다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 주요 컬럼 스토리지 형식 비교
 
@@ -105,7 +106,7 @@ Hadoop, Spark, AWS Athena, Google BigQuery, Snowflake 등 현대 빅데이터/�
 
 📢 **섹션 요약 비유**: Delta Lake는 Parquet에 은행 장부(트랜잭션 로그)를 더한 것처럼, 데이터 레이크에서도 ACID 트랜잭션과 Time Travel(과거 데이터 조회)을 가능하게 하는 레이크하우스 기반이다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 데이터 엔지니어링 파이프라인 최적화
 
@@ -117,7 +118,7 @@ Hadoop, Spark, AWS Athena, Google BigQuery, Snowflake 등 현대 빅데이터/�
 
 📢 **섹션 요약 비유**: Parquet 파티셔닝은 파일 캐비닛을 연도별→월별→일별로 정리하는 것처럼, 특정 기간 데이터를 조회할 때 해당 서랍만 열면 되어 나머지 서랍을 통째로 건너뛸 수 있다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 **기대효과**:
 - 저장 용량 50~80% 절감 (압축 효과)

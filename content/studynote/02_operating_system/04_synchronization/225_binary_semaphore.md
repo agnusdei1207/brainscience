@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 이진 세마포어 (Binary Semaphore)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 이진 세마포어 (Binary Semaphore)는 카운터의 값이 오직 **0과 1만을 가질 수 있도록 제한된 특수한 형태의 세마포어**로, 본질적으로 임계 구역(Critical Section)의 상호 배제(Mutual Exclusion)를 달성하는 데 특화된 동기화 객체다.
+> **핵심**: 이진 세마포어 (Binary Semaphore)는 카운터의 값이 오직 **0과 1만을 가질 수 있도록 제한된 특수한 형태의 세마포어**로, 본질적으로 임계 구역(Critical Section)의 상호 배제(Mutual Exclusion)를 달성하는 데 특화된 동기화 객체다.
 > 2. **가치**: 기능적으로는 단 1명만 들어갈 수 있는 자물쇠라는 점에서 뮤텍스(Mutex)와 완벽히 똑같이 동작하여 혼용되어 불리기도 하지만, OS 커널 내부에서 **'소유권(Ownership)'을 강제하지 않는다**는 결정적 차이가 있다.
 > 3. **융합**: 소유권이 없기 때문에 A 스레드가 락을 걸고(wait), B 스레드가 락을 풀어주는(signal) 비정상적인 행위가 허용되며, 이를 통해 프로세스 간의 **실행 순서를 맞추는 단방향 시그널링(Signaling)** 도구로 유연하게 활용된다.
 
+> 📝 모범 답안
+
+# 이진 세마포어 (Binary Semaphore)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 여러 개의 자원을 관리하는 카운팅 세마포어(Counting Semaphore)와 달리, 값(S)이 최대 1을 넘지 못하는 세마포어다. 1이면 "비어있음(열림)", 0이면 "사용 중(잠김)"을 의미한다.
 - **필요성**: 시스템에는 프린터 3대처럼 여러 개가 있는 자원도 있지만, 대부분의 문제는 "계좌 잔고 수정", "링크드 리스트 노드 추가"처럼 단 1명만 독점해야 하는 자원 보호가 99%를 차지한다. 1명만 들어가게 막으면서도 대기자를 깔끔하게 재워주는(Sleep) 도구가 필요했다.
@@ -47,7 +49,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 이진 세마포어의 한계 (소유권의 부재)
 이진 세마포어와 뮤텍스의 결정적 차이는 **'누가 문을 열 자격이 있는가?'**에 있다.
@@ -86,7 +88,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### Binary Semaphore vs Mutex 총정리
 
@@ -108,7 +110,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **Android / iOS의 비동기 UI 처리 (Signaling)**: 모바일 앱에서 버튼을 누르면 서버에 사진을 업로드하고, 완료되면 팝업을 띄운다.
@@ -141,7 +143,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 이진 세마포어의 시그널링(Signaling) 특성을 정확히 이해하고 사용하면, 스레드 간의 복잡한 실행 의존성(A가 끝나야 B가 돌고, B가 끝나야 C가 도는 파이프라인)을 OS의 Sleep/Wakeup 메커니즘을 통해 CPU 사이클 낭비(Busy Waiting) 0%로 완벽하게 릴레이 시킬 수 있다.

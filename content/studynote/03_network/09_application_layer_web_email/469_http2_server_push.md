@@ -7,15 +7,17 @@ date = 2026-04-03
 tags = ["HTTP/2", "Server Push", "Web Performance", "네트워크", "최적화"]
 categories = ["Network"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: HTTP/2 서버 푸시 (Server Push)는 클라이언트의 명시적 요청 없이도 서버가 `PUSH_PROMISE` 프레임을 통해 향후 필요할 리소스(CSS, JS, 이미지 등)를 클라이언트 캐시에 선제적으로 전송하는 메커니즘이다.
+> **핵심**: HTTP/2 서버 푸시 (Server Push)는 클라이언트의 명시적 요청 없이도 서버가 `PUSH_PROMISE` 프레임을 통해 향후 필요할 리소스(CSS, JS, 이미지 등)를 클라이언트 캐시에 선제적으로 전송하는 메커니즘이다.
 > 2. **가치**: 초기 HTML 로딩 후 연관 리소스를 가져오기 위해 발생하는 추가적인 RTT(Round Trip Time)를 제거하여, 특히 레이턴시가 긴 모바일 환경이나 글로벌 네트워크에서 페이지 렌더링 속도(First Contentful Paint)를 비약적으로 단축시킨다.
 > 3. **융합**: 자원 낭비(Over-pushing) 문제로 인해 실무에서는 `103 Early Hints`나 `<link rel="preload">`와 같은 힌트 기반 메커니즘으로 대체되는 추세이며, 캐시 제어 기술 및 CDN(Content Delivery Network) 아키텍처와 밀접하게 연동하여 최적화된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: HTTP/2 서버 푸시 (Server Push)는 웹 서버가 클라이언트(브라우저)의 단일 요청(예: index.html)에 응답할 때, 해당 HTML이 렌더링되기 위해 필연적으로 요청하게 될 종속 리소스(style.css, app.js 등)를 브라우저가 요청하기도 전에 미리 보내주는 기술이다.
 
@@ -57,7 +59,7 @@ categories = ["Network"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -120,7 +122,7 @@ categories = ["Network"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: Server Push vs Preload vs Early Hints
 
@@ -146,7 +148,7 @@ categories = ["Network"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -196,7 +198,7 @@ categories = ["Network"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

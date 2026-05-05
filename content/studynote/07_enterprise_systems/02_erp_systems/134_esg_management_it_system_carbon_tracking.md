@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ESG(Environmental·Social·Governance) 경영은 **환경·사회·지배구조를 기업 경영에 통합**하는 패러다임이며, IT 시스템이 탄소 배출 추적·ESG 보고서 자동화·공급망 ESG 모니터링을 지원한다.
+> **핵심**: ESG(Environmental·Social·Governance) 경영은 **환경·사회·지배구조를 기업 경영에 통합**하는 패러다임이며, IT 시스템이 탄소 배출 추적·ESG 보고서 자동화·공급망 ESG 모니터링을 지원한다.
 > 2. **가치**: EU CSRD·SEC 기후 공시 등 **ESG 공시 의무화**가 확대되면서, ESG 데이터 수집·분석·보고의 **자동화가 필수**가 되었다.
 > 3. **판단 포인트**: Scope 1(직접 배출)·Scope 2(간접, 전력)·Scope 3(공급망)을 구분하고, SAP Sustainability Control Tower·Persefoni가 대표 솔루션이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ESG = E(환경) + S(사회) + G(지배구조)

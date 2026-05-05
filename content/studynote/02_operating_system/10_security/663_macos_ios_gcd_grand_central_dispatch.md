@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# macOS/iOS Grand Central Dispatch (GCD) 블록 및 디스패치 큐 기반 동시성 구조
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Grand Central Dispatch (GCD, `libdispatch`)는 멀티코어 환경에서 개발자가 스레드(Thread)를 직접 생성하고 락(Lock)을 관리하는 고통을 없애기 위해, Apple이 XNU 커널과 언어(C/Objective-C/Swift) 차원에 깊숙이 통합한 **작업(Task) 기반의 비동기 실행 프레임워크**다.
+> **핵심**: Grand Central Dispatch (GCD, `libdispatch`)는 멀티코어 환경에서 개발자가 스레드(Thread)를 직접 생성하고 락(Lock)을 관리하는 고통을 없애기 위해, Apple이 XNU 커널과 언어(C/Objective-C/Swift) 차원에 깊숙이 통합한 **작업(Task) 기반의 비동기 실행 프레임워크**다.
 > 2. **메커니즘**: 개발자는 단순히 실행할 코드를 '블록(Block, 클로저)'으로 감싸서 **디스패치 큐(Dispatch Queue)**에 던지기만 하면 된다. 커널과 GCD가 현재 시스템의 부하 상태를 분석하여 스레드 풀(Thread Pool)을 동적으로 늘리거나 줄이며 큐에 쌓인 블록들을 알아서 꺼내 실행한다.
 > 3. **가치**: 스레드 생성 비용과 컨텍스트 스위칭 오버헤드를 시스템이 전역적으로 최적화해 주며, 데드락 없는 안전한 병행(Concurrency) 프로그래밍을 대중화하여 iPhone과 Mac 앱 특유의 부드럽고 끊김 없는 사용자 경험(UX)을 가능하게 한 1등 공신이다.
 
+> 📝 모범 답안
+
+# macOS/iOS Grand Central Dispatch (GCD) 블록 및 디스패치 큐 기반 동시성 구조
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **블록 (Block)**: C/C++, Objective-C, Swift에서 함수와 그 함수가 실행될 때 필요한 주변 상태(Context)를 통째로 캡처하여 객체처럼 다룰 수 있게 한 구조 (타 언어의 람다/클로저와 동일).
@@ -40,7 +42,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 디스패치 큐 (Dispatch Queue)의 종류
 
@@ -106,7 +108,7 @@ GCD가 다른 언어의 단순한 스레드 풀(Thread Pool) 라이브러리와 
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 동시성 처리 모델 비교
 
@@ -129,7 +131,7 @@ GCD가 다른 언어의 단순한 스레드 풀(Thread Pool) 라이브러리와 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -177,7 +179,7 @@ GCD가 다른 언어의 단순한 스레드 풀(Thread Pool) 라이브러리와 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

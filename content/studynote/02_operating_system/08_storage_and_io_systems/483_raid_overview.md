@@ -5,17 +5,19 @@ date = "2026-03-24"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# RAID (Redundant Array of Independent Disks)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: RAID (Redundant Array of Independent Disks)는 여러 개의 저렴한 독립적 물리 디스크(HDD 또는 SSD)를 논리적으로 묶어 하나의 거대한 단일 스토리지 볼륨으로 추상화하는 스토리지 가상화(Storage Virtualization) 아키텍처다.
+> **핵심**: RAID (Redundant Array of Independent Disks)는 여러 개의 저렴한 독립적 물리 디스크(HDD 또는 SSD)를 논리적으로 묶어 하나의 거대한 단일 스토리지 볼륨으로 추상화하는 스토리지 가상화(Storage Virtualization) 아키텍처다.
 > 2. **가치**: 데이터를 여러 디스크에 쪼개어 동시다발적으로 접근하는 스트라이핑(Striping)을 통해 **성능 극대화**를 이루고, 똑같은 데이터를 복제(Mirroring)하거나 패리티(Parity) 비트를 연산해 보관함으로써 하드웨어 고장에도 데이터가 유실되지 않는 **무중단 신뢰성(Redundancy/Fault Tolerance) 확보**의 두 마리 토끼를 동시에 잡는다.
 > 3. **융합**: 단일 디스크의 MTBF (Mean Time Between Failures)가 가진 물리적 확률 한계를 S/W 또는 H/W 컨트롤러 계층의 논리적 병합 연산 (XOR 패리티 등)으로 무력화시키는, 운영체제 고가용성(High Availability) 및 데이터베이스 스토리지 인프라 설계의 가장 밑바탕이 되는 근간 기술이다.
 
+> 📝 모범 답안
+
+# RAID (Redundant Array of Independent Disks)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: RAID는 이름에서 뜻하듯, 작고 저렴한 독립된 여러 디스크(Independent Disks)들을 배열(Array) 형태로 배치하여, 성능적인 이득과 시스템 고장 발생 시 대비책인 중복성(Redundancy)을 호스트 운영체제(OS)에게 투명하게(Transparent) 제공하는 스토리지 묶음 기술이다.
 - **필요성**: 엔터프라이즈 환경에서 단일 스토리지 드라이브가 제공할 수 있는 성능(I/O 속도)과 용량에는 물리적인 상한선이 크다. 더 심각한 것은 단일 지점 장애(SPOF, Single Point of Failure) 문제로, 드라이브 한 개가 돌연사하면 그 안의 모든 데이터가 증발한다는 점이다. 과거 이 문제를 해결하기 위해 엄청나게 비싼 SLED (Single Large Expensive Disk)를 사야만 했다 (이에 대비해 초기의 RAID는 싼 디스크들의 묶음인 Inexpensive Disks라 불리기도 했다). 기술자들은 이 거대하고 위험한 코끼리(SLED) 한 마리 대신, 여러 마리의 민첩한 말(RAID 배열)을 마차 하나에 엮어 훨씬 빠르고 튼튼하게 달릴 수 있는 수학적·물리적 분산 저장 아키텍처를 고안해냈다.
@@ -61,7 +63,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### RAID를 구성하는 기술적 핵심 기법 3가지 요소
 
@@ -116,7 +118,7 @@ RAID 로직(패리티 계산, I/O 라우팅 결정)을 누가 처리(Compute)하
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### RAID의 역사적 산술 패리티 연산(XOR) 원리 분석 해부
 
@@ -145,7 +147,7 @@ RAID 3, 4, 5, 6 의 신뢰성은 마법이 아니라 수학 논리 게이트 `�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 최적 레벨 의사 결정 모델
 
@@ -198,7 +200,7 @@ RAID 3, 4, 5, 6 의 신뢰성은 마법이 아니라 수학 논리 게이트 `�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

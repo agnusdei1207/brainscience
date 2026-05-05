@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 마르코프 성질(Markov Property)은 "미래 상태는 오직 현재 상태에만 의존하고, 과거 이력은 무관하다"는 메모리 없음(Memoryless) 가정이다.
+> **핵심**: 마르코프 성질(Markov Property)은 "미래 상태는 오직 현재 상태에만 의존하고, 과거 이력은 무관하다"는 메모리 없음(Memoryless) 가정이다.
 > 2. **가치**: 에르고딕 체인(Ergodic Chain)은 시간이 충분히 지나면 초기 상태와 무관하게 고유한 정상 분포(Stationary Distribution)에 수렴 — PageRank와 MCMC 샘플링의 이론적 토대.
 > 3. **판단 포인트**: 흡수 상태(Absorbing State) 존재 여부가 체인 거동을 결정한다 — 흡수 상태 있으면 결국 흡수, 없고 에르고딕이면 정상 분포 수렴.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 현실의 많은 시스템 — 날씨, 주가, 고객 상태, 웹 탐색 — 은 이전 상태에서 다음 상태로 확률적으로 이행한다. 마르코프 체인은 이런 확률적 동역학을 수학적으로 모델링한다.
 
@@ -28,7 +29,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 상태 분류와 체인 구조
 
@@ -66,7 +67,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### PageRank와 마르코프 체인
 
@@ -87,7 +88,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **시나리오 1 - 고객 이탈 분석**:
 - 상태: {활성, 휴면, 이탈(흡수)}.
@@ -109,7 +110,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 마르코프 체인은 확률 동역학의 범용 프레임워크로 PageRank부터 강화 학습(RL)의 MDP(Markov Decision Process)까지 광범위하게 활용된다.
 

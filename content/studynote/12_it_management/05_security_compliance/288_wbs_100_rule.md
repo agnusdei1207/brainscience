@@ -5,19 +5,21 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: WBS (Work Breakdown Structure, 작업 분류 체계)는 프로젝트 인도물(Deliverable)을 중심으로 하위 작업 패키지(Work Package)로 계층적으로 분해하는 프로젝트 범위 관리 도구다.
+> **핵심**: WBS (Work Breakdown Structure, 작업 분류 체계)는 프로젝트 인도물(Deliverable)을 중심으로 하위 작업 패키지(Work Package)로 계층적으로 분해하는 프로젝트 범위 관리 도구다.
 > 2. **가치**: 100% Rule: WBS의 모든 작업 패키지를 합산하면 프로젝트 전체 범위를 빠짐없이 포괄해야 하며, 부모 노드 작업량 = 자식 노드 작업량의 합이 성립해야 한다.
 > 3. **판단 포인트**: WBS는 인도물(Product Deliverable) 중심으로 작성해야 하며, 활동(Activity) 중심 분해와 혼동하면 안 된다. 최하위 작업 패키지는 독립적으로 일정·비용·품질을 측정·통제할 수 있는 단위여야 한다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 WBS는 PMBOK의 범위 관리(Scope Management) 프로세스에서 핵심 산출물이다. WBS 사전(WBS Dictionary)에는 각 작업 패키지의 정의, 완료 기준, 책임자, 예산이 명시된다. CPM·EVM의 기초 데이터가 WBS에서 도출된다.
 
 📢 **섹션 요약 비유**: 이 개념은 조직의 기초 체력 훈련이다. 당장은 힘들지만 나중에 빛난다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -38,7 +40,7 @@ WBS는 PMBOK의 범위 관리(Scope Management) 프로세스에서 핵심 산출
 
 📢 **섹션 요약 비유**: 이 구조는 잘 설계된 공장 라인이다. 각 단계가 명확하고 흐름이 끊기지 않는다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | WBS | OBS | RBS |
 |:---|:---|:---|:---|
@@ -47,7 +49,7 @@ WBS는 PMBOK의 범위 관리(Scope Management) 프로세스에서 핵심 산출
 
 📢 **섹션 요약 비유**: 이 비교는 여러 도로 중 목적지에 가장 빠른 길을 찾는 것이다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 WBS와 OBS(Organization Breakdown Structure)를 교차 매핑한 RAM(Responsibility Assignment Matrix)으로 작업 패키지별 담당자와 책임을 명확히 정의한다.
 
@@ -55,7 +57,7 @@ WBS와 OBS(Organization Breakdown Structure)를 교차 매핑한 RAM(Responsibil
 
 📢 **섹션 요약 비유**: 실무 적용은 지도를 보며 실제로 길을 걷는 것이다. 이론과 현실의 간극을 메우는 능력이 핵심이다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 WBS 작성으로 프로젝트 범위 기준선(Scope Baseline) 확정, 일정·비용·리스크 계획의 기초 수립, 범위 변경(Scope Creep) 통제가 달성된다.
 

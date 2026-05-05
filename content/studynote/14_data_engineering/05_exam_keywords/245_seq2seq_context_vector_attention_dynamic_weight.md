@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Seq2Seq(Sequence-to-Sequence)는 인코더(Encoder)가 입력 시퀀스를 고정 길이 컨텍스트 벡터(Context Vector)로 압축하고 디코더(Decoder)가 이를 펼쳐 출력 시퀀스를 생성하는 아키텍처다.
+> **핵심**: Seq2Seq(Sequence-to-Sequence)는 인코더(Encoder)가 입력 시퀀스를 고정 길이 컨텍스트 벡터(Context Vector)로 압축하고 디코더(Decoder)가 이를 펼쳐 출력 시퀀스를 생성하는 아키텍처다.
 > 2. **가치**: 어텐션 메커니즘(Attention Mechanism)은 디코더가 출력 토큰마다 인코더의 모든 은닉 상태에 동적 가중합(Dynamic Weighted Sum)을 수행해 정보 압축 병목(Bottleneck)을 극복한다.
 > 3. **판단 포인트**: 어텐션 메커니즘은 Transformer의 핵심 셀프 어텐션(Self-Attention)으로 진화했으며, Seq2Seq 자체는 기계 번역·요약·챗봇의 기반 아키텍처로 여전히 널리 참조된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 기존 RNN 기반 언어 모델은 단일 문장 또는 고정 길이 시퀀스만 처리할 수 있었다. Seq2Seq는 가변 길이 입력을 가변 길이 출력으로 변환하는 범용 시퀀스 변환 프레임워크를 제공한다.
 
@@ -31,7 +33,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 기본 Seq2Seq 아키텍처
 
@@ -112,7 +114,7 @@ Bahdanau et al. 2015 — "Neural Machine Translation by Jointly Learning to Alig
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Seq2Seq 아키텍처 진화
 
@@ -155,7 +157,7 @@ school│ ▒  │ ▒  │  ██   │  ▒   │  ← "학교에"에 집중
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 기계 번역 시스템 구현 예시
 
@@ -190,7 +192,7 @@ Beam Search (빔 탐색):
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### Seq2Seq가 열어준 가능성
 

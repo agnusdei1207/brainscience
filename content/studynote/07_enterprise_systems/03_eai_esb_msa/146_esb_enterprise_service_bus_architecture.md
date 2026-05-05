@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ESB는 **Hub-and-Spoke의 Hub를 분산 메시징 버스로 확장**한 통합 미들웨어이며, 메시지 변환·라우팅·오케스트레이션·프로토콜 중재·보안을 **표준화된 버스 인프라**에서 수행한다.
+> **핵심**: ESB는 **Hub-and-Spoke의 Hub를 분산 메시징 버스로 확장**한 통합 미들웨어이며, 메시지 변환·라우팅·오케스트레이션·프로토콜 중재·보안을 **표준화된 버스 인프라**에서 수행한다.
 > 2. **가치**: Hub의 SPOF 문제를 **분산 버스**로 해결하고, SOA(Service Oriented Architecture)의 **서비스 연결 백본**으로 기능하며, WSDL·SOAP·XML 기반 표준 통합을 제공한다.
 > 3. **판단 포인트**: MuleSoft·TIBCO·IBM Integration Bus가 대표이며, MSA 시대에는 **ESB의 무거운 중앙 집중이 안티패턴**으로 간주되어 Kafka·이벤트 기반으로 전환 중이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ESB 핵심 기능:

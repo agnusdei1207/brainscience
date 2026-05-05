@@ -5,16 +5,17 @@ weight = 494
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: V2X(Vehicle-to-Everything)는 차량이 주변 차량(V2V)·인프라(V2I)·보행자(V2P)·네트워크(V2N)와 통신하여 센서만으로는 불가능한 시야각 너머의 위험 정보를 공유하는 협력적 지능형 교통 기술이다.
+> **핵심**: V2X(Vehicle-to-Everything)는 차량이 주변 차량(V2V)·인프라(V2I)·보행자(V2P)·네트워크(V2N)와 통신하여 센서만으로는 불가능한 시야각 너머의 위험 정보를 공유하는 협력적 지능형 교통 기술이다.
 > 2. **가치**: 기존 자율주행 센서(LiDAR·카메라)의 시야 한계(약 200m, 건물·차량 차단)를 극복하고, 교차로 충돌 경고·긴급 차량 우선신호 등 비가시권(Non-Line of Sight) 위험을 수백 ms 전에 사전 감지한다.
 > 3. **판단 포인트**: WAVE(IEEE 802.11p, DSRC) vs C-V2X(Cellular V2X)의 기술 선택과, C-V2X에서 모드 3(네트워크) vs 모드 4(직접 통신)의 설계 선택이 기술사 시험의 핵심 비교 논제다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 **V2X 통신 종류**
 
@@ -29,7 +30,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -68,7 +69,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **C-V2X 모드 3 vs 모드 4 선택 기준**
 
@@ -88,7 +89,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **C-ITS(Cooperative Intelligent Transport System) 서비스**
 
@@ -109,7 +110,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 V2X는 자율주행 레벨 4 이상 실현을 위한 필수 보완 인프라다. 차량 단독 센서의 한계를 협력 통신으로 극복하고, 5G NR-V2X는 군집 주행·원격 제어 등 미래 이동성의 핵심 기반이 된다. 기술사 시험에서는 V2X 4종류, WAVE vs C-V2X, 모드 3 vs 모드 4, 보안(Pseudonym)을 체계적으로 답안에 포함해야 한다.
 

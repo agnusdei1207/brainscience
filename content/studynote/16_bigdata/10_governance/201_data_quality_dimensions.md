@@ -5,8 +5,12 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> **핵심**: (개념 본질)
+> **비유**: (개념 비유)
+
+> 📝 모범 답안
 
 - **본질**: 데이터 품질(Data Quality)은 완전성(Completeness)·정확성(Accuracy)·일관성(Consistency)·적시성(Timeliness)·유일성(Uniqueness)·유효성(Validity)의 6차원으로 측정되며, 각 차원은 서로 다른 결함 유형을 포착한다.
 - **가치**: 데이터 품질 저하는 AI 모델 오작동, 잘못된 경영 의사결정, 규제 위반으로 이어지며 IBM 연구에 따르면 미국 기업에 연간 3.1조 달러의 경제적 손실을 유발한다.
@@ -14,7 +18,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 데이터 품질의 중요성
 
@@ -43,7 +47,7 @@ DAMA (Data Management Association) DMBOK이 정의한 6대 데이터 품질 차�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 6차원 상세 설명
 
@@ -105,7 +109,7 @@ DQS = (W1×Completeness + W2×Accuracy + W3×Consistency
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 차원별 대표 문제와 원인
 
@@ -130,7 +134,7 @@ DQS = (W1×Completeness + W2×Accuracy + W3×Consistency
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 ETL 파이프라인에서의 DQ 검사
 
@@ -178,7 +182,7 @@ FROM customers;
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 데이터 품질 향상 기대효과
 

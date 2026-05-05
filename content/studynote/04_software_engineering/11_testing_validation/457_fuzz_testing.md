@@ -6,15 +6,17 @@ description = "무작위이거나 기형적인 입력을 넣어 크래시와 예
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "Fuzz Testing", "Fuzzing", "Security"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 퍼즈 테스팅(Fuzz Testing)은 이상한 입력을 대량으로 넣어 오류를 찾는 테스트다.
+> **핵심**: 퍼즈 테스팅(Fuzz Testing)은 이상한 입력을 대량으로 넣어 오류를 찾는 테스트다.
 > 2. **가치**: 예상 못한 크래시, 예외, 취약점을 잘 드러낸다.
 > 3. **판단 포인트**: 정상 입력보다 비정상 입력에 대한 방어력을 확인할 때 중요하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 퍼즈 테스팅은 "이상한 데이터를 던져 보는" 방식이다. 입력 파서, 네트워크 프로토콜, 파일 포맷처럼 외부 입력이 많은 곳에 강하다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "Fuzz Testing", "Fuzzing", "Security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 퍼즈는 무작위일 수도 있고, 약간의 규칙을 가진 변형일 수도 있다. 핵심은 이상 입력에 대한 반응이다.
 
@@ -44,7 +46,7 @@ tags = ["Software Engineering", "Testing", "Fuzz Testing", "Fuzzing", "Security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 퍼즈는 뮤테이션 테스팅과 다르다. 뮤테이션은 코드 변형, 퍼즈는 입력 변형이다.
 
@@ -60,7 +62,7 @@ tags = ["Software Engineering", "Testing", "Fuzz Testing", "Fuzzing", "Security"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 브라우저, 파일 처리, 압축, 네트워크 프로토콜에서 자주 쓴다. 자동화와 크래시 재현이 중요하다.
 
@@ -73,7 +75,7 @@ tags = ["Software Engineering", "Testing", "Fuzz Testing", "Fuzzing", "Security"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 퍼즈 테스팅은 입력 처리의 약점을 빠르게 찾아낸다. 그래서 보안과 안정성을 동시에 높인다.
 

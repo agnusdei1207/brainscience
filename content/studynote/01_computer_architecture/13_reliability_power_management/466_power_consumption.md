@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 전력 소모 (Power Consumption)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 전력 소모 (Power Consumption)는 디지털 회로에서 트랜지스터가 스위칭 동작(동적 전력, Dynamic Power)과 대기 중에도 흐르는 누설 전류(정적 전력, Static Power) 두 가지 성분으로 구성되며, 이 합계가 전체 전력이고 이것이 열로 전환되어 칩 온도를 결정한다.
+> **핵심**: 전력 소모 (Power Consumption)는 디지털 회로에서 트랜지스터가 스위칭 동작(동적 전력, Dynamic Power)과 대기 중에도 흐르는 누설 전류(정적 전력, Static Power) 두 가지 성분으로 구성되며, 이 합계가 전체 전력이고 이것이 열로 전환되어 칩 온도를 결정한다.
 > 2. **가치**: 전압(V)이 전력에 제곱(V²)으로 영향을 미치므로, 전압을 10% 낮추면 동적 전력이 약 19% 감소한다. 이 단순한 물리 법칙이 DVFS (Dynamic Voltage and Frequency Scaling), 저전압 공정, 소전력 아키텍처 설계의 핵심 동기가 된다.
 > 3. **융합**: 전력 소모 분석은 회로 설계(EDA), 운영체제(DVFS), 데이터센터 운영(PUE, Total Cost of Ownership)에 이르는 모든 계층에 영향을 미치며, AI 가속기와 데이터센터에서 'FLOPS/W' 기반 에너지 효율이 21세기 하드웨어 경쟁의 핵심 지표로 부상했다.
 
+> 📝 모범 답안
+
+# 전력 소모 (Power Consumption)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 전력 소모는 단순히 전기요금의 문제가 아니다. CPU·GPU·SoC가 전력을 소모하면 그 에너지의 상당 부분이 열로 전환되며, 칩의 접합 온도(Junction Temperature, Tj)가 설계 한계(TjMax, 예: Intel CPU에서 약 100°C)를 초과하면 열화 속도가 급격히 증가하거나 서멀 스로틀링(Thermal Throttling)이 발동하여 성능이 급격히 저하된다. 따라서 전력 소모는 성능, 신뢰성, 냉각 비용을 동시에 좌우하는 핵심 설계 변수다.
 
@@ -76,7 +78,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 전력 소모 공식의 구성 요소 분석
 
@@ -264,7 +266,7 @@ pJ/op(pico-Joules per operation)은.mobile SoC와 IoT 에서 특히 중요한 �
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 전력 소모와 시스템 아키텍처의 상호작용
 
@@ -347,7 +349,7 @@ AI 가속기 분야에서는 전력 소모가 비용의直接的構成要素이�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 전력 소모를 고려한 실무 설계 및 구매 판단
 
@@ -417,7 +419,7 @@ Intel i9-13900K의 TDP는 125W(PL1)지만, PL2 부스트 시 전력 소비는 25
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 전력 소모는 현대 컴퓨팅 설계의 가장 근본적인 제약 조건 중 하나이며, 향후 다음과 같은 트렌드가 예상된다.
 

@@ -5,19 +5,21 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-bigdata"
 +++
-
-# Apache Oozie와 Airflow - 워크플로우 오케스트레이션의 진화
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 Hadoop 환경에서 분산処理タスク(맵리듀스, 스park, hive等)의 실행 순서와 의존성을 정의하고 스케줄링하는 워크플로우 오케스트레이터(Workflow Orchestrator)인 Apache Oozie와, Python 기반의 모던 데이터 파이프라인 오케스트레이션 도구인 Apache Airflow의 아키텍처 차이(DAG 기반 처리, Operaner 모델, 멀티 테넌시)와, 오늘날 데이터 엔지니어링 분야에서 Airflow가主流이 된 배경과 각 도구의 적합한 활용 시나리오를 기술사 수준에서 심층 분석합니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# Apache Oozie와 Airflow - 워크플로우 오케스트레이션의 진화
+
 > 1. **본질**: Apache Oozie는 Hadoop生态圈에深度하게結合されたXML 기반의 워크플로우 엔진으로, 액션(Action)과 워크플로우(Workflow)를 XML로 기술하고 HDFS에 배포하여 YARN에서 실행하는"内製化された" 도구입니다. 반면 Apache Airflow는 Python으로 DAG(방향성 비순환 그래프)를 코드として定義し, 메타스토어(데이터베이스)에 실행 정보를 저장하고, 스케줄러가 DAG를 트리거하며, Worker가 실제 태스크를 실행하는"외부화된" 모던 오케스트레이션 플랫폼입니다.
 > 2. **가치**: Oozie는 Hadoop과의 긴밀한統合(맵리듀스 태스크 직접 실행, HDFS 배포, YARN 연동)를强点으로 하지만, XML 기반 설정의 복잡성과限定된エラー 핸들링能力が 부담이 됩니다. Airflow는 Python의 유연성으로 복잡한 분기, 조건부 실행, 예외 처리, 알람 통합 등을 Declarative하게 기술할 수 있어 현대 데이터 엔지니어링 팀에서 빠르게采用되고 있습니다.
 > 3. **확장**: Airflow는 Provider 패키지를 통해 Snowflake, BigQuery, Databricks, Kafka, Kubernetes 등400개 이상의 외부 시스템과 통합되며,"단일_control plane"으로 전사 데이터 파이프라인을 모니터링하고 管理하는 것을 목표로 합니다.
 
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 1. 왜 워크플로우 오케스트레이션이 필요한가?
 대규모 데이터 처리에서는 단순히"한 개의 프로그램을 실행"하는 것이 아니라,"이 데이터가 완료된 후에、あのプログラムを実行し、その後に电子邮件を送信"하는ような 복잡한 작업 순서(의존성 체인)를管理해야 합니다.
@@ -38,7 +40,7 @@ Airflow는 2014년 Airbnb(현 Apache Airflow → Astronomer 등이 유지보수)
 
 ---
 
-## Ⅱ. 핵심 아키텍처 및 원리 (Architecture & Mechanism)
+## 2. 구성요소
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
@@ -169,7 +171,7 @@ with DAG(
 
 ---
 
-## Ⅲ. 비교 및 기술적 트레이드오프 (Comparison & Trade-offs)
+## 3. 구조 및 동작 원리
 
 | 비교 항목 | Apache Oozie | Apache Airflow |
 |:---|:---|:---|
@@ -187,7 +189,7 @@ with DAG(
 
 ---
 
-## Ⅳ. 실무 판단 기준 (Decision Making)
+## 4. 비교 및 트레이드오프
 
 | 고려 사항 | 세부 내용 | 주요 의사결정 |
 |:---|:---|:---|
@@ -205,7 +207,7 @@ with DAG(
 
 ---
 
-## Ⅴ. 미래 전망 및 발전 방향 (Future Trend)
+## 5. 실무 적용 및 최적화 기법
 
 1. **Airflow의 완전히 관리되는 서비스 확산**
    AWS MWAA (Managed Workflows for Apache Airflow), Astronomer Cloud, Google Cloud Composer 등 fully managed Airflow 서비스가 확산됨에 따라,"스케줄러/웹서버/Worker 관리"의 운영 부담이 크게 줄어들고 있습니다. 이는"Serverless Airflow"라는 개념으로 진화하며, 데이터 엔지니어가"오케스트레이션의 logic 설계"에만 집중할 수 있는 환경을 제공합니다.

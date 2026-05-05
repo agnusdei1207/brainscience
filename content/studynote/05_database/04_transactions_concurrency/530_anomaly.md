@@ -7,17 +7,19 @@ date = 2026-03-26
 [taxonomies]
 tags = ["database", "normalization", "anomaly", "update-anomaly", "insert-anomaly", "delete-anomaly"]
 +++
+## 0. 핵심 인사이트
 
-# 이상 (Anomaly)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 이상 (Anomaly)은 정규화되지 않은 또는 불완전한 정규화로 인해 발생하는 데이터 불일치 현상으로, 삽입 이상, 삭제 이상, 갱신 이상의 세 가지 유형이 있다.
+> **핵심**: 이상 (Anomaly)은 정규화되지 않은 또는 불완전한 정규화로 인해 발생하는 데이터 불일치 현상으로, 삽입 이상, 삭제 이상, 갱신 이상의 세 가지 유형이 있다.
 > 2. **가치**: 이상의 원인을 이해하면 정규화의 필요성과 적절한 분해 방법의 근거가 된다.
 > 3. **융합**: 이상의 개념은 데이터 품질 관리, 데이터 무결성 연구와 연결되며, 반정규화 시의 트레이드오프 판단 기준이 된다.
 
+> 📝 모범 답안
+
+# 이상 (Anomaly)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 
@@ -31,7 +33,7 @@ tags = ["database", "normalization", "anomaly", "update-anomaly", "insert-anomal
 
 ---
 
-## Ⅱ. 세 가지 유형의 이상
+## 2. 구성요소
 
 ### 1. 갱신 이상 (Update Anomaly)
 
@@ -113,7 +115,7 @@ tags = ["database", "normalization", "anomaly", "update-anomaly", "insert-anomal
 
 ---
 
-## Ⅲ. 이상의 원인
+## 3. 구조 및 동작 원리
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐

@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. ChatOps는 운영 작업을 채팅 플랫폼에 통합하는 협업 모델 — "대화 주도 개발 운영(Conversation-Driven DevOps)"으로, 슬랙/팀즈 채널에서 명령어로 배포·모니터링·인시던트 대응을 수행하며 팀 전체가 맥락을 실시간 공유한다.
 > 2. ChatOps의 핵심 가치는 투명성과 학습 — 모든 운영 작업이 채팅 로그로 기록되어 누가 언제 무엇을 했는지 추적 가능하며, 주니어 엔지니어가 시니어의 운영 패턴을 자연스럽게 학습하는 효과가 있다.
 > 3. ChatOps 봇(Hubot/Lita/Errbot)은 단순한 메신저 통합이 아닌 운영 자동화 인터페이스 — CI/CD 파이프라인 트리거, 온콜 알림, 클라우드 리소스 관리, 인시던트 선언을 채팅 명령어 하나로 수행한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. ChatOps 개요
+## 1. 개요 및 필요성
 
 ```
 ChatOps 정의:
@@ -60,7 +63,7 @@ ChatOps 핵심 명령 예:
 
 ---
 
-## Ⅱ. ChatOps 봇 구현
+## 2. 구성요소
 
 ```
 Hubot 기반 ChatOps 예:
@@ -112,7 +115,7 @@ Hubot (GitHub, CoffeeScript/JavaScript):
 
 ---
 
-## Ⅲ. 인시던트 관리 ChatOps
+## 3. 구조 및 동작 원리
 
 ```
 인시던트 ChatOps 흐름:
@@ -164,7 +167,7 @@ Hubot (GitHub, CoffeeScript/JavaScript):
 
 ---
 
-## Ⅳ. ChatOps 보안
+## 4. 비교 및 트레이드오프
 
 ```
 ChatOps 보안 고려사항:
@@ -220,7 +223,7 @@ ChatOps 보안 고려사항:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 스타트업 ChatOps 구축
+## 5. 실무 적용 및 최적화 기법
 
 ```
 SaaS 스타트업 (엔지니어 15명) ChatOps:

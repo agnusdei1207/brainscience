@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 추천 시스템(Recommendation System)은 사용자의 과거 행동 데이터와 아이템 특성을 분석하여 개인화된 콘텐츠·상품·서비스를 자동으로 제시하는 알고리즘 체계로, 협업 필터링(CF, Collaborative Filtering)·콘텐츠 기반 필터링(CBF, Content-Based Filtering)·하이브리드 방식이 주요 3대 접근법이다.
+> **핵심**: 추천 시스템(Recommendation System)은 사용자의 과거 행동 데이터와 아이템 특성을 분석하여 개인화된 콘텐츠·상품·서비스를 자동으로 제시하는 알고리즘 체계로, 협업 필터링(CF, Collaborative Filtering)·콘텐츠 기반 필터링(CBF, Content-Based Filtering)·하이브리드 방식이 주요 3대 접근법이다.
 > 2. **가치**: Netflix의 80%, YouTube의 70%, Amazon의 35% 이상의 매출이 추천 시스템에서 발생하며, 장기 꼬리(Long-Tail) 아이템의 노출 기회를 확대하고 사용자 이탈률을 낮추는 비즈니스 임팩트를 제공한다.
 > 3. **판단 포인트**: Cold Start 문제(신규 사용자·아이템 추천 불가), 데이터 희소성(Sparsity) 문제, 인기 아이템 편중(Popularity Bias)이 추천 시스템의 3대 실무 과제이며, 이를 해결하지 않으면 개인화가 아닌 단순 인기 순위 재현에 그친다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 추천 시스템(Recommendation System)은 수백만 개의 아이템 중에서 특정 사용자에게 가장 적합한 소수의 아이템을 자동으로 제안하는 정보 필터링(Information Filtering) 기술이다.
 
@@ -42,7 +44,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 협업 필터링 핵심: 행렬 분해 (Matrix Factorization)
 
@@ -72,7 +74,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 문제 | 원인 | 해결책 |
 |:---|:---|:---|
@@ -88,7 +90,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 이커머스 개인화 추천 파이프라인
 일 5,000만 사용자의 행동 로그(클릭·구매·체류 시간)를 기반으로 실시간 추천을 구현한다.
@@ -110,7 +112,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 | 수치 |
 |:---|:---|:---|

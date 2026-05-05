@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Boosting은 **이전 모델이 틀린 샘플에 가중치를 높여 다음 모델이 집중 학습**하는 순차적 앙상블 기법이며, 약한 학습기를 순서대로 결합하여 강한 학습기를 만든다.
+> **핵심**: Boosting은 **이전 모델이 틀린 샘플에 가중치를 높여 다음 모델이 집중 학습**하는 순차적 앙상블 기법이며, 약한 학습기를 순서대로 결합하여 강한 학습기를 만든다.
 > 2. **가치**: Bagging이 분산을 줄이는 데 효과적이라면, Boosting은 **편향(Bias)을 줄이는 데 탁월**하여 더 정확한 모델을 만들며, XGBoost·LightGBM이 Kaggle 우승의 대부분을 차지한다.
 > 3. **판단 포인트**: AdaBoost(가중치)→Gradient Boosting(잔차)→XGBoost(정규화)→LightGBM(대용량)→CatBoost(범주형)의 발전을 이해해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -33,7 +35,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Boosting 알고리즘 발전
 
@@ -49,7 +51,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Bagging | Boosting |
 |:---|:---|:---|
@@ -60,7 +62,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### XGBoost vs LightGBM
 
@@ -73,7 +75,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Boosting은 **정형 데이터 ML의 최강 기법**이며, XGBoost/LightGBM이 산업·경진대회에서 사실상 표준이다.
 

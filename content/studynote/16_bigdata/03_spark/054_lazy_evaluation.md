@@ -5,19 +5,21 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-bigdata"
 +++
-
-# 지연 평가 (Lazy Evaluation) - 계산을 미루는 지혜의 모든 것
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 Apache Spark를 포함한 함수형 프로그래밍 언어와 분산 처리 프레임워크에서 핵심적으로 사용되는 평가 전략인 Lazy Evaluation(지연 평가)이 무엇이며, 왜"Eager Evaluation(즉시 평가)"보다 대규모 데이터 처리에서 뛰어난 효율성을 제공하는지, DAG(방향성 비순환 그래프) 기반 실행 모델과 어떻게 결합되어 불필요한 연산을 자동으로 제거하고 네트워크 데이터 이동을 최소화하는지 기술사 수준에서 심층 분석합니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# 지연 평가 (Lazy Evaluation) - 계산을 미루는 지혜의 모든 것
+
 > 1. **본질**: Lazy Evaluation은 데이터 변환 연산(map, filter, flatMap 등)을 코드에 작성하는 순간 실행하지 않고, 그저"어떤 입력을 어떤 변환으로 출력해야 한다"는 실행 계획(DAG)만 기록해 두었다가, 최종 결과가 필요한 시점(Action 호출 시)에 비로소 실제 연산을 시작하는 평가 전략이다.
 > 2. **가치**: 실제 연산을 미루기 때문에, 실행 계획 전체를鳥瞰(グローバル)하여 불필요한 중간 결과를 완전히 제거하거나(필터 누르기/필터 병합), 파이프라이닝이 가능한 단계를 하나의 Stage로 합쳐서 네트워크 Shuffle을 최소화하는 등 전체 최적화를 한 번에 수행할 수 있다.
 > 3. **확장**: Lazy Evaluation은 Spark뿐 아니라 Haskell(순수 함수형), Apache Flink, Apache Beam, Python(Generator/Lazy Iterator) 등 사실상 모든 현대적 데이터 처리 프레임워크의 근간이며, 빅데이터뿐 아니라 대용량 파일 스트리밍, 무한 시퀀스, 모듈성 관점에서도 핵심 설계 원칙이다.
 
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 1. 즉시 평가 (Eager Evaluation)의 문제점: 쓸데없는 계산을 미리 다 해버리다
 대부분의 명령형 프로그래밍 언어(Java, C, Python의 기본 변수 대입 등)는 표현식을 작성하는 순간 즉시 값을 평가(Compute)합니다. 이를 "Strict Evaluation" 또는 "Eager Evaluation"이라 합니다.
@@ -35,7 +37,7 @@ Lazy Evaluation은 수학에서"드 모르간 법칙"과 같은 원리를 프로
 
 ---
 
-## Ⅱ. 핵심 아키텍처 및 원리 (Architecture & Mechanism)
+## 2. 구성요소
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
@@ -113,7 +115,7 @@ print(next(result_gen))  # 이 줄에서 비로소 첫 번째 값만 연산
 
 ---
 
-## Ⅲ. 비교 및 기술적 트레이드오프 (Comparison & Trade-offs)
+## 3. 구조 및 동작 원리
 
 | 비교 항목 | Eager Evaluation | Lazy Evaluation |
 |:---|:---|:---|
@@ -129,7 +131,7 @@ print(next(result_gen))  # 이 줄에서 비로소 첫 번째 값만 연산
 
 ---
 
-## Ⅳ. 실무 판단 기준 (Decision Making)
+## 4. 비교 및 트레이드오프
 
 | 고려 사항 | 세부 내용 | 주요 의사결정 |
 |:---|:---|:---|
@@ -148,7 +150,7 @@ print(next(result_gen))  # 이 줄에서 비로소 첫 번째 값만 연산
 
 ---
 
-## Ⅴ. 미래 전망 및 발전 방향 (Future Trend)
+## 5. 실무 적용 및 최적화 기법
 
 1. **Adaptive Query Execution (AQE)과 Lazy Evaluation의 결합**
    Spark 3.0에서 도입된 AQE는 런타임 통계를 기반으로Lazy Evaluation이 세운 실행 계획을"재조정"하는 능동적 최적화입니다. 예를 들어, 조인 시 한쪽 데이터의 크기가 예상과 달리 매우 작은 것으로 밝혀지면, Broadcast Join(작은 쪽 전체를 네트워크로全量送信하여 모든 Executor에 복제)으로 자동으로 전환합니다. 이는 기존"계획 시점(Compile Time)"의Lazy Evaluation을"실행 시점(Runtime)"까지 확장한 것으로, 동적 최적화의 새로운 지평을 열었습니다.

@@ -7,17 +7,20 @@ date = "2024-05-24"
 tags = ["EA", "ZachmanFramework", "잭맨프레임워크", "아키텍처", "엔터프라이즈시스템"]
 categories = ["studynote", "enterprise_systems"]
 +++
+## 0. 핵심 인사이트
 
-# 12. 잭맨 프레임워크 (Zachman Framework)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 잭맨 프레임워크는 엔터프라이즈 아키텍처(EA)의 시초이자 온톨로지(Ontology)로, 6하 원칙(What, How, Where, Who, When, Why)과 관점(Planner, Owner, Designer, Builder, Implementer, Worker)을 결합한 36개 셀의 매트릭스다.
+> **핵심**: 잭맨 프레임워크는 엔터프라이즈 아키텍처(EA)의 시초이자 온톨로지(Ontology)로, 6하 원칙(What, How, Where, Who, When, Why)과 관점(Planner, Owner, Designer, Builder, Implementer, Worker)을 결합한 36개 셀의 매트릭스다.
 > 2. **가치**: 아키텍처 산출물 간의 중복과 누락(MECE 원칙)을 방지하고, 경영진의 추상적 목표가 개발자의 실제 코드로 번역되는 변환 과정을 완벽히 추적 가능하게 만든다.
 > 3. **융합**: 방법론(Methodology)이 아닌 분류 체계(Taxonomy)이므로, 실제 구축 시에는 실행 지침을 제공하는 TOGAF의 ADM이나 애자일 프로세스와 결합하여 사용해야 실무적 가치가 극대화된다.
 
+> 📝 모범 답안
+
+# 12. 잭맨 프레임워크 (Zachman Framework)
+
+##
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 **잭맨 프레임워크 (Zachman Framework)**는 1987년 존 잭맨(John Zachman)이 창안한 기업 정보시스템 아키텍처의 논리적 분류 체계이다. 과거 IT 시스템은 현업의 비즈니스 요구사항과 개발자의 기술적 구현 사이에 거대한 소통의 단절이 존재했다. 기획자는 ROI와 사업 모델을 이야기하지만, 개발자는 데이터베이스 테이블과 네트워크 프로토콜을 이야기하며 서로 다른 언어 체계를 사용했기 때문이다.
 
@@ -41,7 +44,7 @@ categories = ["studynote", "enterprise_systems"]
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 잭맨 프레임워크는 세로축(행, Rows) 6개와 가로축(열, Columns) 6개가 교차하여 총 36개의 셀(Cell)을 형성하는 거대한 매트릭스다. 각 셀은 특정 이해관계자가 특정 관점에서 바라본 하나의 아키텍처 산출물(Artifact)을 의미한다.
 
@@ -88,7 +91,7 @@ categories = ["studynote", "enterprise_systems"]
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 잭맨 프레임워크는 종종 다른 EA 프레임워크(예: TOGAF)와 경쟁 관계로 오해받지만, 실제로는 목적이 완전히 다른 보완적 성격을 지닌다.
 
@@ -120,7 +123,7 @@ categories = ["studynote", "enterprise_systems"]
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 이론적 완벽성에도 불구하고 잭맨 프레임워크를 실무에 도입할 때 자주 실패하는 이유는 '모든 빈칸을 채워야 한다'는 강박관념(Analysis Paralysis) 때문이다.
 
@@ -150,7 +153,7 @@ categories = ["studynote", "enterprise_systems"]
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 잭맨 프레임워크는 엔터프라이즈 아키텍처(EA)라는 학문을 탄생시킨 아버지로서, 그 가치는 시간이 지나도 퇴색되지 않는다. 
 

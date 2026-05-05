@@ -5,17 +5,20 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-network"
 +++
+## 0. 핵심 인사이트
 
-# 542. TACACS+ (Terminal Access Controller Access Control System Plus) - Cisco TCP 기반 AAA
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: TACACS+는 시스코(Cisco)가 독자 개발하여 범용 표준화된 프로토콜로, 신뢰성 있는 **TCP (Transmission Control Protocol) 49번 포트**를 기반으로 패킷 본문(Payload) 전체를 암호화하여 통신하는 관리자 전용 접근 제어(AAA) 솔루션이다.
+> **핵심**: TACACS+는 시스코(Cisco)가 독자 개발하여 범용 표준화된 프로토콜로, 신뢰성 있는 **TCP (Transmission Control Protocol) 49번 포트**를 기반으로 패킷 본문(Payload) 전체를 암호화하여 통신하는 관리자 전용 접근 제어(AAA) 솔루션이다.
 > 2. **가치**: RADIUS가 단순히 네트워크에 접속할 권한(문 열기)을 부여한다면, TACACS+는 네트워크 장비(라우터/스위치)에 접속한 엔지니어가 타이핑하는 **명령어 한 줄 한 줄(Command-level)**에 대해 인가(Authorization) 여부를 심사하여, 내부자 실수나 악의적 파괴 행위를 원천 차단한다.
 > 3. **융합**: 인증(Authentication), 인가(Authorization), 과금(Accounting)의 세 가지 프로세스가 아키텍처 상 완벽히 분리(Decoupling)되어 있어, 인증은 사내 Active Directory(AD)를 쓰고, 인가는 TACACS+ 서버 정책을 쓰는 식의 융합적 하이브리드 설계가 가능해 거대 데이터센터 인프라 통제에 필수적이다.
 
+> 📝 모범 답안
+
+# 542. TACACS+ (Terminal Access Controller Access Control System Plus) - Cisco TCP 기반 AAA
+
+##
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: TACACS+는 기존의 구형 TACACS와 XTACACS를 대체하기 위해 1990년대 Cisco에서 백지상태부터 새로 설계한 프로토콜이다. 네트워크 접근을 시도하는 주체에 대해 인증(Authentication), 각 명령어 실행 권한의 부여(Authorization), 그리고 누가 언제 무슨 명령을 쳤는지의 기록(Accounting)을 철저하게 분할하여 관리한다.
 - **필요성**: 데이터센터에는 수백 대의 네트워크 장비가 있다. 입사 1년 차 주니어 네트워크 엔지니어와 10년 차 시니어 아키텍트가 같은 라우터에 SSH로 붙어 동일하게 최고 관리자 권한(`enable` 모드)을 획득한다면, 주니어의 명령어 타이핑 실수 하나가 전국의 서비스망을 마비시킬 수 있다. RADIUS는 "접속 자체"만을 허용/차단하므로, 한 번 콘솔에 들어온 후의 행위를 통제할 수 없다.
@@ -46,7 +49,7 @@ categories = "studynote-network"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -101,7 +104,7 @@ TACACS+는 UDP 통신 실패에 따른 재전송(Retransmission)을 클라이언
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### RADIUS vs TACACS+ 심층 아키텍처 비교표 (기술사 단골 이슈)
 
@@ -143,7 +146,7 @@ TACACS+는 UDP 통신 실패에 따른 재전송(Retransmission)을 클라이언
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 금융권 데이터센터의 특권 권한 관리 (Privileged Access Management)
 
@@ -163,7 +166,7 @@ TACACS+는 UDP 통신 실패에 따른 재전송(Retransmission)을 클라이언
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,27 +5,30 @@ date = "2024-03-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> (2) Data Understanding
+
+> 📝 모범 답안
+
 1. **데이터 기반 가치 창출**: 데이터 마이닝 프레임워크는 방대한 데이터 속에 숨겨진 유의미한 패턴과 지식을 발견하기 위한 체계적인 절차를 제공한다.
 2. **반복적 및 단계적 프로세스**: 데이터의 이해부터 전처리, 모델링, 평가에 이르기까지 일관된 단계를 거치며, 필요시 이전 단계로 회귀하는 유연성을 지닌다.
 3. **글로벌 표준 CRISP-DM**: 비즈니스 이해를 최우선으로 하는 CRISP-DM은 산업계에서 가장 널리 쓰이며, 학술적인 KDD와 함께 데이터 분석의 양대 산맥을 이룬다.
 
 ---
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 데이터 마이닝(Data Mining)은 단순히 도구를 돌리는 것이 아니라, 비즈니스 목적을 달성하기 위한 지식 발견의 여정이다. 이를 위해 **KDD(Knowledge Discovery in Databases)**는 데이터 중심의 학술적 절차를, **CRISP-DM(Cross-Industry Standard Process for Data Mining)**은 비즈니스 실행 중심의 산업 표준 절차를 제안하여 분석의 성공률을 높인다.
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 CRISP-DM은 6단계의 순환 구조를 가지며, KDD는 데이터 선택부터 평가까지의 흐름을 강조한다.
 
 ```text
 [ CRISP-DM Cycle ]
-(1) Business Understanding <---> (2) Data Understanding
-             |                           |
+(1) Business Understanding <---             |                           |
              +-----------+---------------+
                          |
                 (3) Data Preparation <---> (4) Modeling
@@ -46,7 +49,7 @@ CRISP-DM은 6단계의 순환 구조를 가지며, KDD는 데이터 선택부터
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 비교 항목 | KDD (Knowledge Discovery) | CRISP-DM (Business Standard) | SEMMA (SAS Method) |
 | :--- | :--- | :--- | :--- |
@@ -57,14 +60,14 @@ CRISP-DM은 6단계의 순환 구조를 가지며, KDD는 데이터 선택부터
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 1. **분석 과제 성격에 따른 선택**: 프로젝트가 비즈니스 가치 창출 중심이라면 CRISP-DM을, 원천 데이터의 새로운 특성을 찾는 탐색적 성격이 강하다면 KDD를 추천한다.
 2. **데이터 거버넌스와의 연계**: 데이터 준비(Preparation) 단계는 전체 시간의 60~80%를 차지하므로, 평소에 잘 정제된 데이터 레이크나 마스터 데이터 관리(MDM)가 구축되어 있어야 한다.
 3. **기술사적 판단**: 최근 MLOps의 확산으로 인해 Deployment 단계 이후의 **지속적 모니터링(Monitoring)**과 **재학습(Retraining)** 단계가 CRISP-DM의 7번째 단계로 실질적으로 추가되고 있는 추세이다.
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 데이터 마이닝 프레임워크는 데이터 팀과 현업 부서 간의 **공통 언어**를 제공한다. 향후 생성형 AI와 자동화된 ML(AutoML) 환경에서도 이러한 기초적인 분석 프로세스는 여전히 프로젝트의 성패를 가르는 나침반 역할을 할 것이다. 결론적으로 절차의 준수가 곧 분석 품질의 신뢰도로 이어진다.
 
 ---

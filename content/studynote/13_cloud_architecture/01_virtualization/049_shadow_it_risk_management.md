@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 클라우드 시대의 섀도 IT는 개인 SaaS 사용을 넘어 무단 클라우드 인프라 프로비저닝(Shadow Cloud)으로 확대 — 개발자가 신용카드로 AWS 계정을 직접 개설하거나, 팀이 IT 승인 없이 Azure 구독을 생성하면서 기업 보안 경계가 무너진다.
 > 2. CSPM(Cloud Security Posture Management)이 클라우드 섀도 IT 탐지와 거버넌스의 핵심 도구 — 다중 클라우드 환경에서 리소스 구성 오류(Misconfiguration), 공개 S3 버킷, 과도한 권한을 자동으로 탐지하고 컴플라이언스 위반을 실시간으로 모니터링한다.
 > 3. FinOps와 클라우드 거버넌스의 결합이 클라우드 섀도 IT의 비용 최적화 접근법 — 승인되지 않은 클라우드 리소스는 비용 추적이 안 되어 예산 초과와 낭비로 이어지며, 태깅(Tagging) 정책과 비용 할당이 가시성 확보의 첫걸음이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 클라우드 섀도 IT
+## 1. 개요 및 필요성
 
 ```
 클라우드 섀도 IT:
@@ -57,7 +60,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. CSPM
+## 2. 구성요소
 
 ```
 CSPM (Cloud Security Posture Management):
@@ -107,7 +110,7 @@ CSPM (Cloud Security Posture Management):
 
 ---
 
-## Ⅲ. 클라우드 거버넌스 프레임워크
+## 3. 구조 및 동작 원리
 
 ```
 클라우드 거버넌스 핵심 요소:
@@ -156,7 +159,7 @@ CSPM (Cloud Security Posture Management):
 
 ---
 
-## Ⅳ. 멀티클라우드 가시성
+## 4. 비교 및 트레이드오프
 
 ```
 멀티클라우드 섀도 IT 문제:
@@ -195,7 +198,7 @@ Prisma Cloud:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 클라우드 거버넌스 구축
+## 5. 실무 적용 및 최적화 기법
 
 ```
 글로벌 제조기업 멀티클라우드 거버넌스:

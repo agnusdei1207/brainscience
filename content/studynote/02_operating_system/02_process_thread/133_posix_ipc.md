@@ -5,15 +5,17 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: POSIX IPC (Inter-Process Communication)는 IEEE Std 1003.1 (POSIX.1) 표준에 규격화된 프로세스 간 통신 메커니즘 세트로, 공유 메모리 (Shared Memory), 세마포어 (Semaphore), 메시지 큐 (Message Queue)를 파일 디스크립터 (File Descriptor) 기반으로 제공하여 System V IPC의 API 복잡성과 이식성 문제를 근본적으로 해결한 차세대 표준이다.
+> **핵심**: POSIX IPC (Inter-Process Communication)는 IEEE Std 1003.1 (POSIX.1) 표준에 규격화된 프로세스 간 통신 메커니즘 세트로, 공유 메모리 (Shared Memory), 세마포어 (Semaphore), 메시지 큐 (Message Queue)를 파일 디스크립터 (File Descriptor) 기반으로 제공하여 System V IPC의 API 복잡성과 이식성 문제를 근본적으로 해결한 차세대 표준이다.
 > 2. **가치**: 파일 디스크립터 기반이므로 `select()`/`poll()`/`epoll()` 등 기존 I/O 멀티플렉싱 (I/O Multiplexing) 프레임워크와 자연스럽게 통합되며, 마지막 프로세스가 파일 디스크립터를 닫으면 커널이 자동으로 객체를 정리하므로 System V IPC의 메모리 누수 문제가 원천적으로 방지된다.
 > 3. **융합**: POSIX 메시지 큐의 우선순위 기반 메시지 순서 기능은 실시간 운영체제 (RTOS, Real-Time Operating System)의 우선순위 스케줄링과 연계되어, 네트워크 패킷 처리, 금융 거래 시스템의 주문 큐, 멀티미디어 스트리밍의 프레임 버퍼 관리 등 지연 민감형 (Latency-Sensitive) 시스템에서 핵심 역할을 수행한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: POSIX IPC는 POSIX (Portable Operating System Interface) 표준의 일부로 정의된 세 가지 IPC 메커니즘 -- POSIX 공유 메모리, POSIX 세마포어 (명명된/익명), POSIX 메시지 큐 -- 의 총칭이다. System V IPC가 정수 키 (`key_t`)와 전용 API (`xxxget`/`xxxop`/`xxxctl`)를 사용하는 반면, POSIX IPC는 파일 시스템 네임스페이스에 객체를 생성하고 파일 디스크립터 (`int fd`)로 접근한다는 근본적 차이가 있다. `shm_open()`은 `/dev/shm` (Linux) 또는 `/tmp` (macOS)에 파일 형태로 공유 메모리 객체를 생성하며, `sem_open()`은 명명된 세마포어를 파일 경로로 식별하고, `mq_open()`은 마운트된 파일 시스템 (일반적으로 `/dev/mqueue`)에 메시지 큐를 생성한다.
 
@@ -75,7 +77,7 @@ POSIX IPC의 세 가지 메커니즘과 System V IPC의 대응 관계를 비교 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -183,7 +185,7 @@ POSIX 메시지 큐는 System V 메시지 큐와 달리 메시지에 우선순�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: POSIX 메시지 큐 vs System V 메시지 큐
 
@@ -269,7 +271,7 @@ POSIX IPC가 파일 디스크립터 기반이라는 특성을 이벤트 루프 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -337,7 +339,7 @@ POSIX IPC 도입 시 선택 기준과 주의사항을 판단하는 의사결정 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

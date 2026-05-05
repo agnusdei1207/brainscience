@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: LwM2M은 **OMA(Open Mobile Alliance)**가 정의한 **CoAP 기반 IoT 디바이스 관리 프로토콜**로, 디바이스의 **등록·펌웨어 업데이트(FOTA)·원격 설정·모니터링**을 표준화한다.
+> **핵심**: LwM2M은 **OMA(Open Mobile Alliance)**가 정의한 **CoAP 기반 IoT 디바이스 관리 프로토콜**로, 디바이스의 **등록·펌웨어 업데이트(FOTA)·원격 설정·모니터링**을 표준화한다.
 > 2. **가치**: IoT 디바이스가 수만~수억 대로 확장되면 개별 관리가 불가능하므로, LwM2M 서버에서 **원격으로 디바이스 프로비저닝·설정 변경·펌웨어 업데이트**를 일괄 수행할 수 있다.
 > 3. **판단 포인트**: LwM2M은 **Object/Resource 모델**로 센서 데이터(온도=3303/0/5700)를 표준화하며, CoAP의 경량성 + DTLS 보안을 활용한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -35,7 +37,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### LwM2M 핵심 기능
 
@@ -51,7 +53,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | LwM2M | MQTT | HTTP |
 |:---|:---|:---|:---|
@@ -61,7 +63,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 적용 시나리오
 1. **스마트 미터**: 수만 대 전력 계량기 원격 관리.
@@ -70,7 +72,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 LwM2M은 **대규모 IoT 디바이스 관리의 사실상 표준**이며, AWS IoT Device Management·Azure IoT Hub에서도 LwM2M 호환을 지원하는 방향으로 발전하고 있다.
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: A05 Security Misconfiguration (보안 설정 오류) 심화는 기본 오류를 넘어 클라우드 IAM (Identity and Access Management) 과다 권한, HTTP 보안 헤더 누락, XML 외부 엔티티(XXE, XML External Entity) 처리 오설정 등 복잡한 설정 오류 유형을 다룬다.
+> **핵심**: A05 Security Misconfiguration (보안 설정 오류) 심화는 기본 오류를 넘어 클라우드 IAM (Identity and Access Management) 과다 권한, HTTP 보안 헤더 누락, XML 외부 엔티티(XXE, XML External Entity) 처리 오설정 등 복잡한 설정 오류 유형을 다룬다.
 > 2. **가치**: 2021 OWASP에서 A05로 5위를 유지했으며, 클라우드 전환으로 오설정 공격 표면이 폭발적으로 증가했다. CSPM (Cloud Security Posture Management) 도구의 필요성이 급증한 배경이다.
 > 3. **판단 포인트**: HTTP 보안 헤더(CSP, HSTS, X-Frame-Options), XML 파서 보안 설정, 클라우드 IAM 최소 권한이 심화 대응의 3대 축이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Security Misconfiguration 심화는 단순 기본 비밀번호 미변경을 넘어, 더 복잡하고 탐지하기 어려운 설정 오류들을 다룬다.
 
@@ -28,7 +30,7 @@ Security Misconfiguration 심화는 단순 기본 비밀번호 미변경을 넘�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 **HTTP 보안 헤더 효과**:
 
@@ -59,7 +61,7 @@ Security Misconfiguration 심화는 단순 기본 비밀번호 미변경을 넘�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 심화 오설정 | 위험 | 방어 |
 |:---|:---|:---|
@@ -72,7 +74,7 @@ Security Misconfiguration 심화는 단순 기본 비밀번호 미변경을 넘�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **XXE 방어 (Java SAXParserFactory)**:
 ```java
@@ -91,7 +93,7 @@ factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 HTTP 보안 헤더 자동 적용, XXE 방어 설정, IAM 최소 권한 자동화를 파이프라인에 통합하면 심화 오설정 취약점을 사전에 차단할 수 있다. securityheaders.com을 통한 정기적인 헤더 점수 확인, Prowler/ScoutSuite를 통한 클라우드 설정 감사가 현대적 운영 방법이다.
 

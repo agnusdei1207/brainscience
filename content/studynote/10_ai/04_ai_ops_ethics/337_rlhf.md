@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: RLHF (Reinforcement Learning from Human Feedback) 는 사전 학습된 LLM (Large Language Model) 이 "사람이 선호하는 응답"을 생성하도록 유도하는 3단계 파이프라인으로, SFT (Supervised Fine-Tuning) → 보상 모델 (Reward Model) 학습 → PPO (Proximal Policy Optimization) 강화학습 순으로 진행된다.
+> **핵심**: RLHF (Reinforcement Learning from Human Feedback) 는 사전 학습된 LLM (Large Language Model) 이 "사람이 선호하는 응답"을 생성하도록 유도하는 3단계 파이프라인으로, SFT (Supervised Fine-Tuning) → 보상 모델 (Reward Model) 학습 → PPO (Proximal Policy Optimization) 강화학습 순으로 진행된다.
 > 2. **가치**: 언어 모델의 유해성 감소, 사실성 향상, 지시 따르기 (Instruction Following) 능력 향상을 동시에 달성해 ChatGPT, Claude, Gemini 의 공통 핵심 기술이 됐다.
 > 3. **판단 포인트**: PPO 는 정책 업데이트 폭을 클리핑 (Clipping) 으로 제한해 안정성을 확보하고, KL 패널티로 SFT 모델과 지나치게 멀어지는 것을 방지한다는 이중 안전장치를 반드시 서술해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 정렬 (Alignment) 문제란?
 
@@ -30,7 +32,7 @@ GPT 류 모델은 다음 토큰 예측 (Next Token Prediction) 으로 사전 학
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### RLHF 3단계 파이프라인
 
@@ -83,7 +85,7 @@ KL 발산 (KL Divergence) 을 패널티로 추가하지 않으면 모델이 보�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### RLHF 대안 방법론 비교
 
@@ -104,7 +106,7 @@ KL 발산 (KL Divergence) 을 패널티로 추가하지 않으면 모델이 보�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### RLHF 구현 오픈소스 생태계
 
@@ -127,7 +129,7 @@ KL 발산 (KL Divergence) 을 패널티로 추가하지 않으면 모델이 보�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 - **정렬 달성**: 지시 따르기, 유해성 감소, 사실성 향상 동시 실현
 - **확장성**: SFT 데이터 수천 건으로도 큰 효과 (데이터 효율 높음)

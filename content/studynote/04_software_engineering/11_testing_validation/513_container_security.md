@@ -6,15 +6,17 @@ description = "이미지 스캐닝, non-root 실행, 네임스페이스 샌드�
 taxonomy = ""
 tags = ["Software Engineering", "Security", "Container", "Kubernetes", "Hardening"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 컨테이너 보안은 이미지, 실행 권한, 격리 경계를 함께 보는 일이다.
+> **핵심**: 컨테이너 보안은 이미지, 실행 권한, 격리 경계를 함께 보는 일이다.
 > 2. **가치**: 취약 이미지와 과도한 권한을 줄인다.
 > 3. **판단 포인트**: 컨테이너가 가볍다고 해서 안전한 것은 아니다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 컨테이너는 편리하지만, 잘못 설정하면 호스트까지 위험해진다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Security", "Container", "Kubernetes", "Hardenin
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 컨테이너는 이미지, 런타임, 네임스페이스, cgroups로 구성된 보호층 위에서 동작한다.
 
@@ -42,7 +44,7 @@ tags = ["Software Engineering", "Security", "Container", "Kubernetes", "Hardenin
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 컨테이너는 VM과 다르게 호스트 커널을 공유한다.
 
@@ -58,7 +60,7 @@ tags = ["Software Engineering", "Security", "Container", "Kubernetes", "Hardenin
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 취약 이미지 차단, 최소 권한, 읽기 전용 파일시스템, 보안 정책을 적용한다.
 
@@ -71,7 +73,7 @@ tags = ["Software Engineering", "Security", "Container", "Kubernetes", "Hardenin
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 컨테이너 보안은 배포 속도와 안전성을 같이 지킨다.
 

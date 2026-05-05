@@ -7,16 +7,19 @@ date = 2024-01-01
 [extra]
 categories = ["studynote-software-engineering"]
 +++
-+++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 격리 수준(Isolation Level)은 동시 실행되는 트랜잭션 간의 간섭 정도를 조절하는 수준으로, READ UNCOMMITTED, READ COMMITTED, REPEATABLE READ, SERIALIZABLE의 네 가지 표준 수준이 있다.
+> **핵심**: 격리 수준(Isolation Level)은 동시 실행되는 트랜잭션 간의 간섭 정도를 조절하는 수준으로, READ UNCOMMITTED, READ COMMITTED, REPEATABLE READ, SERIALIZABLE의 네 가지 표준 수준이 있다.
 > 2. **가치**: 높은 격리 수준은 데이터 일관성을 보장하지만 성능(동시성)이 저하되고, 낮은 격리 수준은 성능은 좋지만 일관성 위험이 증가한다.
 > 3. **융합**: 격리 수준은 2PL과 결합되어 구현되며, 각 수준에서 발생할 수 있는 이상 현상(Dirty Read, Non-repeatable Read, Phantom Read)이 정의되어 있다.
 
+> 📝 모범 답안
+
++++
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념
 격리 수준(Isolation Level)은 ANSI SQL 표준에서 정의한 트랜잭션 간 간섭 허용 정도로, 네 가지 수준이 있다. 각 수준은 특정 종류의 이상 현상(Anomaly)을 허용하거나 방지한다.
@@ -41,7 +44,7 @@ categories = ["studynote-software-engineering"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 각 격리 수준 상세 동작
 
@@ -92,7 +95,7 @@ categories = ["studynote-software-engineering"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교: 격리 수준 vs 동시성/일관성
 
@@ -108,7 +111,7 @@ categories = ["studynote-software-engineering"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -127,7 +130,7 @@ categories = ["studynote-software-engineering"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 격리 수준 선택 가이드
 

@@ -5,8 +5,12 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> **핵심**: (개념 본질)
+> **비유**: (개념 비유)
+
+> 📝 모범 답안
 
 - **본질**: Apache Superset은 Airbnb에서 시작하여 2021년 Apache Top-Level Project로 승격된 오픈소스 BI 플랫폼으로, SQL Lab(고급 SQL 에디터)과 40개 이상의 차트 유형을 무료로 제공하며 엔터프라이즈 도구와 기능적으로 경쟁 가능하다.
 - **가치**: Druid·ClickHouse·Trino/Presto·BigQuery 등 현대 분석 데이터베이스와의 네이티브 통합으로 서브세컨드 대화형 분석을 지원하며, 완전 커스터마이징 가능한 오픈소스 특성이 자체 BI 플랫폼 구축의 핵심 기반이 된다.
@@ -14,7 +18,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### Apache Superset의 역사
 
@@ -26,7 +30,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Superset 기술 아키텍처
 
@@ -97,7 +101,7 @@ Superset의 차트 제작 흐름:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Superset vs Metabase 비교
 
@@ -127,7 +131,7 @@ Superset이 특히 강점을 보이는 현대 분석 데이터베이스:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 보안 모델
 
@@ -160,7 +164,7 @@ Superset 보안 계층:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### Superset 도입 효과
 

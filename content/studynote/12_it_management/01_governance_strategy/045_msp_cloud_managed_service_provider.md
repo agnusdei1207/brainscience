@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. MSP(Managed Service Provider)는 고객 IT 인프라·서비스를 대신 관리·운영하는 아웃소싱 파트너 — 클라우드 시대의 MSP는 단순 인프라 관리를 넘어 클라우드 아키텍처 설계·최적화·보안·거버넌스까지 통합 제공하는 전략적 파트너로 진화했다.
 > 2. MSP의 핵심 가치는 규모의 경제와 전문성 — 중소기업이 확보하기 어려운 클라우드 보안·FinOps·DevOps 전문 인력을 MSP를 통해 구독형으로 활용하며, AWS/Azure/GCP 공식 파트너십(APM, Expert MSP 등)이 역량을 보증한다.
 > 3. MSP 계약의 핵심은 SLA(서비스 수준 협약)와 책임 범위 명확화 — 공유 책임 모델에서 CSP(클라우드 서비스 제공자)와 MSP·고객 간 책임 경계를 명확히 정의하지 않으면 장애 시 책임 공백이 발생한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. MSP 개요
+## 1. 개요 및 필요성
 
 ```
 MSP (Managed Service Provider):
@@ -54,7 +57,7 @@ MSP 서비스 범위:
 
 ---
 
-## Ⅱ. MSP 서비스 모델
+## 2. 구성요소
 
 ```
 MSP 서비스 티어:
@@ -101,7 +104,7 @@ MSP SLA 주요 지표:
 
 ---
 
-## Ⅲ. FinOps와 비용 최적화
+## 3. 구조 및 동작 원리
 
 ```
 FinOps (Financial Operations for Cloud):
@@ -152,7 +155,7 @@ MSP FinOps 도구:
 
 ---
 
-## Ⅳ. 공유 책임 모델과 MSP
+## 4. 비교 및 트레이드오프
 
 ```
 공유 책임 모델 (Shared Responsibility):
@@ -199,7 +202,7 @@ MSSP (Managed Security Service Provider):
 
 ---
 
-## Ⅴ. 실무 시나리오 — 제조업 MSP 전환
+## 5. 실무 적용 및 최적화 기법
 
 ```
 중견 제조업체 On-Premise → AWS MSP 전환:

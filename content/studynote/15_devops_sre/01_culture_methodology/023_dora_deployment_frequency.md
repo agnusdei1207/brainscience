@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: DORA (DevOps Research and Assessment) 배포 빈도(Deployment Frequency)는 조직이 프로덕션 환경에 코드를 배포하는 빈도를 측정하는 핵심 DevOps 성과 지표로, 팀의 소프트웨어 전달 역량(Software Delivery Capability)과 DevOps 성숙도를 직접적으로 반영한다.
+> **핵심**: DORA (DevOps Research and Assessment) 배포 빈도(Deployment Frequency)는 조직이 프로덕션 환경에 코드를 배포하는 빈도를 측정하는 핵심 DevOps 성과 지표로, 팀의 소프트웨어 전달 역량(Software Delivery Capability)과 DevOps 성숙도를 직접적으로 반영한다.
 > 2. **가치**: DORA 연구(2019 State of DevOps Report)는 Elite 팀이 하루 여러 번 배포(On Demand)하며, 이 팀들이 Low 팀(수개월에 1회)보다 배포 속도 208배, 리드 타임 106배, 서비스 복구 시간 2604배 우수하다는 것을 수만 개 조직 데이터로 검증했다.
 > 3. **판단 포인트**: 배포 빈도를 높이기 위한 전제 조건은 MSA(마이크로서비스 아키텍처), CI/CD 파이프라인 자동화, Feature Flag, 자동화 테스트 커버리지이며, 높은 배포 빈도 달성 없이는 짧은 MTTR(Mean Time To Recovery)과 낮은 변경 실패율(Change Failure Rate)도 달성하기 어렵다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 DORA 배포 빈도(Deployment Frequency)는 조직이 프로덕션(또는 최종 사용자)에게 코드 변경을 성공적으로 릴리스하는 빈도를 측정하는 DORA 4개 핵심 메트릭 중 첫 번째 지표다.
 
@@ -40,7 +42,7 @@ DORA 배포 빈도(Deployment Frequency)는 조직이 프로덕션(또는 최종
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### DORA 성숙도 4단계
 
@@ -78,7 +80,7 @@ DORA 배포 빈도(Deployment Frequency)는 조직이 프로덕션(또는 최종
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 접근 방식 | 배포 단위 | 리스크 | 롤백 시간 | 배포 빈도 |
 |:---|:---|:---|:---|:---|
@@ -93,7 +95,7 @@ DORA 배포 빈도(Deployment Frequency)는 조직이 프로덕션(또는 최종
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 레거시 모노리스에서 고빈도 배포로 전환
 국내 전자상거래 플랫폼이 월 1회 배포에서 일 수 회 배포로 전환한다.
@@ -116,7 +118,7 @@ DORA 배포 빈도(Deployment Frequency)는 조직이 프로덕션(또는 최종
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 | 수치 |
 |:---|:---|:---|

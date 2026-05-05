@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 장기 의존성 (Long-term Dependency) 문제는 RNN이 긴 시퀀스를 처리할 때, 역전파 (Backpropagation) 과정에서 기울기(Gradient)가 시간을 거슬러 올라가며 반복 곱셈으로 인해 0에 수렴하거나 (기울기 소실, Vanishing Gradient) 무한대로 폭발하는 (기울기 폭발, Exploding Gradient) 현상이다.
+> **핵심**: 장기 의존성 (Long-term Dependency) 문제는 RNN이 긴 시퀀스를 처리할 때, 역전파 (Backpropagation) 과정에서 기울기(Gradient)가 시간을 거슬러 올라가며 반복 곱셈으로 인해 0에 수렴하거나 (기울기 소실, Vanishing Gradient) 무한대로 폭발하는 (기울기 폭발, Exploding Gradient) 현상이다.
 > 2. **가치**: 이 문제를 인식하고 해결책(LSTM, GRU, Transformer)을 선택하는 것이 시계열/NLP 모델 설계의 핵심 판단이며, 기울기 소실은 모델이 학습을 멈추는 조용한 죽음이다.
 > 3. **판단 포인트**: 기울기 소실은 소실(vanish)이므로 가중치가 갱신되지 않아 학습이 중단되고, 기울기 폭발은 폭발(explode)이므로 가중치가 터무니없이 커져 손실함수가 NaN(Not a Number)으로 발산한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 "고양이가 길을 건너다가 차에 치여서 병원에 실려 갔다. 수의사가 진단한 결과, **그것은** 골절이었다."에서 '그것'이 '고양이'를 지칭한다는 것을 이해하려면, 수십 단어 앞을 기억해야 한다. 이처럼 정보를 오래 유지해야 하는 관계를 **장기 의존성 (Long-term Dependency)**이라 한다.
 
@@ -23,7 +25,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```text
 ┌──────────────────────────────────────────────────────────────┐
@@ -57,7 +59,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 - **기울기 소실 (Vanishing Gradient)**: CNN의 깊은 층에서도 발생하며, ResNet의 Skip Connection이 해결책이다. RNN에서는 LSTM의 셀 상태(Cell State)가 덧셈(+) 경로를 만들어 기울기가 소실 없이 직통으로 흐르게 한다.
 - **기울기 폭발 (Exploding Gradient)**: Gradient Clipping으로 기울기의 L2-norm이 임계값(보통 1.0)을 초과하면 스케일을 강제로 줄이는 방법으로 해결한다.
@@ -67,7 +69,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **기울기 소실 탐지 방법**: 훈련 중 각 레이어의 기울기 norm을 로깅하여 앞쪽 레이어 기울기가 뒤쪽보다 수십 배 작으면 소실이 발생하고 있다는 신호다. TensorBoard의 Gradient Histogram을 통해 시각적으로 확인 가능하다.
 
@@ -81,7 +83,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 장기 의존성 문제는 딥러닝 역사에서 가장 중요한 병목 현상 중 하나였다. 이 문제의 발견과 해결 여정이 LSTM(1997) → GRU(2014) → Transformer(2017)로 이어지는 NLP 혁명의 로드맵을 그렸다. 오늘날 GPT, BERT 등 초거대 언어 모델이 수천 개 토큰에 걸친 맥락을 완벽히 이해하는 것은 장기 의존성 문제를 Transformer의 Self-Attention으로 근본 해소한 결과다.
 

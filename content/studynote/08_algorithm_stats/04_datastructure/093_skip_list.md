@@ -4,15 +4,18 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-algorithm"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 스킵 리스트(Skip List)는 확률적 다중 레벨 연결 리스트로, 균형 이진 탐색 트리와 동일한 O(log n) 평균 성능을 단순한 구조로 달성하는 자료구조다.
 > 2. 각 노드가 확률 p(=0.5)로 상위 레벨에 복사되어 "고속도로 레이어"를 형성하며, 이 확률적 균형이 결정적 균형 트리(AVL·RB)의 복잡한 회전 연산을 대체한다.
 > 3. Redis의 Sorted Set(zset), LevelDB의 MemTable, MemSQL 등에서 실제로 사용되며, 병렬 처리·락프리(Lock-free) 구현에 유리해 동시성 데이터 구조로 주목받는다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 스킵 리스트의 구조와 개념
+## 1. 개요 및 필요성
 
 스킵 리스트(Skip List)는 **William Pugh(1990)**가 제안한 확률적 자료구조다.
 
@@ -35,7 +38,7 @@ categories = "studynote-algorithm"
 
 ---
 
-## Ⅱ. 스킵 리스트 탐색 알고리즘
+## 2. 구성요소
 
 ```python
 def search(skip_list, target):
@@ -67,7 +70,7 @@ def search(skip_list, target):
 
 ---
 
-## Ⅲ. 삽입과 삭제
+## 3. 구조 및 동작 원리
 
 ### 삽입 (Insert)
 
@@ -94,7 +97,7 @@ def search(skip_list, target):
 
 ---
 
-## Ⅳ. 성능 분석
+## 4. 비교 및 트레이드오프
 
 ### 시간 복잡도
 
@@ -119,7 +122,7 @@ def search(skip_list, target):
 
 ---
 
-## Ⅴ. 실제 활용 — Redis Sorted Set
+## 5. 실무 적용 및 최적화 기법
 
 ### Redis ZADD/ZRANGE 구현
 

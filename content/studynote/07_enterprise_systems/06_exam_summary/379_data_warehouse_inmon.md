@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: W.H. Inmon의 데이터 웨어하우스(Data Warehouse)는 기업 전체의 데이터를 주제 지향(Subject-oriented)·통합(Integrated)·시간 변이(Time-variant)·비휘발성(Non-volatile) 4대 특성으로 정의하며, 3NF 정규화 기반 EDW(Enterprise Data Warehouse)를 구축하는 하향식(Top-down) 접근법이다.
+> **핵심**: W.H. Inmon의 데이터 웨어하우스(Data Warehouse)는 기업 전체의 데이터를 주제 지향(Subject-oriented)·통합(Integrated)·시간 변이(Time-variant)·비휘발성(Non-volatile) 4대 특성으로 정의하며, 3NF 정규화 기반 EDW(Enterprise Data Warehouse)를 구축하는 하향식(Top-down) 접근법이다.
 > 2. **가치**: 전사 데이터의 단일 진실 원천(Single Source of Truth)을 먼저 구축하고 그로부터 부서별 데이터 마트(Data Mart)를 파생시킴으로써 데이터 일관성과 거버넌스를 최우선으로 달성한다.
 > 3. **판단 포인트**: Inmon 방식은 EDW 구축에 시간·비용이 많이 드는 대신 데이터 일관성과 유연성이 높으며, Kimball(상향식, 스타 스키마)과 비교하여 프로젝트 규모·기간·팀 역량에 따라 선택한다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 1990년 Bill Inmon이 "Building the Data Warehouse"에서 데이터 웨어하우스의 개념을 처음 공식화했다. 기업의 의사결정 지원 시스템(DSS)에서 온라인 트랜잭션 처리(OLTP)와 분석 처리(OLAP)를 분리해야 한다는 필요성에서 출발했다.
 
@@ -27,7 +28,7 @@ OLTP 시스템에서 직접 분석 쿼리를 실행하면 ①트랜잭션 성능
 
 📢 **섹션 요약 비유**: 데이터 웨어하우스는 도서관처럼, 여러 출판사(소스 시스템)의 책을 표준 분류 체계(통합 스키마)로 정리해두고, 오래된 책도 폐기하지 않고(비휘발성) 보관하는 공간이다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Inmon 하향식 아키텍처
 
@@ -78,7 +79,7 @@ ELT (Extract→Load→Transform):
 
 📢 **섹션 요약 비유**: Inmon 3NF EDW는 도서관 사서처럼, 모든 책을 표준 분류 체계로 정리해야 하므로 처음 구축에 시간이 걸리지만 나중에 어떤 책이든 찾기 쉽다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Inmon vs Kimball 방법론 비교
 
@@ -102,7 +103,7 @@ ELT (Extract→Load→Transform):
 
 📢 **섹션 요약 비유**: Inmon과 Kimball의 차이는 집 건설처럼, 설계도 완성 후 착공(Inmon, 체계적)과 방 하나씩 먼저 짓고 나중에 연결(Kimball, 빠른 가치)의 차이다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### DW 구축 방법론 선택 기준
 
@@ -128,7 +129,7 @@ Data Lake(원시 데이터 저장)와 Data Warehouse(구조화 분석)를 통합
 
 📢 **섹션 요약 비유**: Data Lakehouse는 도서관+창고처럼, 정리된 도서관(DW)의 분석 편의성과 창고(Data Lake)의 방대한 원시 데이터 보관을 동시에 제공한다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Inmon EDW 구축으로 ①전사 데이터 단일 진실 원천 확보, ②이종 소스 데이터 통합 및 표준화, ③장기 이력 데이터 분석 가능(5~10년+), ④데이터 거버넌스 강화 등의 효과를 거둔다. 금융·공공 분야처럼 데이터 일관성과 감사 추적이 중요한 조직에서 Inmon EDW는 여전히 핵심 데이터 인프라다.
 

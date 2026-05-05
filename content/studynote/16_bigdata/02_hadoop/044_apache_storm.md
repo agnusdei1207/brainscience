@@ -5,16 +5,20 @@ date = "2024-03-24"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+>  [     Bolt 1      ] ----> [   Final DB     ]
+
+> 📝 모범 답안
+
 - **네이티브 스트리밍:** 마이크로배치 방식이 아닌, 데이터 하나하나를 즉시 처리하는 이벤트 기반 분산 실시간 연산 프레임워크.
 - **토폴로지 구조:** Spout(데이터 수집)와 Bolt(데이터 변환/집계)를 DAG(비순환 방향 그래프)로 묶어 중단 없는 스트림 처리 흐름 구현.
 - **결함 허용(Fault Tolerance):** 튜플(Tuple) 단위의 신뢰성 보장 메커니즘을 통해 데이터 유실 없는 안정적인 스트리밍 서비스 제공.
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 빅데이터 초기, 하둡 맵리듀스는 디스크 기반 배치 처리에는 강력했으나 실시간 응답이 필요한 시스템에는 부적합했습니다. Apache Storm은 "실시간 하둡(Real-time Hadoop)"이라 불리며 등장하여, 데이터가 유입되는 즉시 수 밀리초(ms) 내에 연산을 수행할 수 있는 환경을 제공했습니다. 이는 금융 거래 사기 탐지, 실시간 대시보드 업데이트, IoT 센서 데이터 모니터링 분야의 혁신을 이끌었습니다.
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 Storm은 영구적으로 실행되는 토폴로지(Topology) 아키텍처를 기반으로 합니다.
 
 ```text
@@ -22,8 +26,7 @@ Storm은 영구적으로 실행되는 토폴로지(Topology) 아키텍처를 기
 
    (Data Source)         (Processing Unit)        (Storage/Output)
    -------------        -------------------      ------------------
-   [   Spout   ] ---->  [     Bolt 1      ] ----> [   Final DB     ]
-   (Data Ingest)        (Filtering/Logic)        [ (Result Store) ]
+   [   Spout   ] ----   (Data Ingest)        (Filtering/Logic)        [ (Result Store) ]
        |                       |
        |                [     Bolt 2      ]
        +--------------> (Aggregation/Joins)
@@ -41,7 +44,7 @@ Storm은 영구적으로 실행되는 토폴로지(Topology) 아키텍처를 기
 2. **신뢰성 전파(Ack/Fail):** 튜플 처리가 성공하면 Ack를 보내고, 실패 시 처음부터 재시도하여 최소 1회 처리(At-least-once) 보장.
 3. **무한 루프 실행:** 배치와 달리 작업이 종료되지 않고 데이터가 들어올 때까지 대기하며 지속 실행.
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 비교 항목 | Hadoop MapReduce | Apache Storm | Apache Spark Streaming |
 | :--- | :--- | :--- | :--- |
@@ -51,11 +54,11 @@ Storm은 영구적으로 실행되는 토폴로지(Topology) 아키텍처를 기
 | **상태 보장** | Exactly-once | At-least-once (기본) | Exactly-once |
 | **주요 용도** | 대규모 통계 분석 | 초저지연 알람, 실시간 처리 | 복잡한 분석 및 머신러닝 |
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 - **실무 적용:** 웹 서비스의 실시간 로그 분석 시, Spout로 카프카 메시지를 읽고 Bolt에서 특정 에러 키워드를 필터링하여 이상 징후 발생 시 0.1초 내에 관리자에게 푸시 알림을 보내는 시스템에 적합합니다.
 - **기술사적 판단:** Storm은 상태 관리(State Management) 기능이 약해 Flink나 Spark에 밀려나는 추세였으나, 단순하고 빠른 처리가 필요한 영역에서는 여전히 유효합니다. 기술사는 "복잡한 윈도우 연산이나 정확한 상태 유지가 필요하다면 Storm 보다는 Trident(Storm의 고차원 추상화)나 Flink를 선택해야 한다"는 설계 가이드라인을 제시해야 합니다.
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 Apache Storm은 실시간 분산 컴퓨팅의 원형을 정립한 도구입니다. 비록 최근에는 Apache Flink나 Spark Structured Streaming에 주류 자리를 넘겨주었지만, 데이터 흐름 지향(Dataflow) 프로그래밍 모델의 기초 지식으로서 가치가 높으며, 경량화된 실시간 파이프라인 구축 시 효율적인 대안으로 지속 활용될 것입니다.
 
 ### 📌 관련 개념 맵 (Knowledge Graph)

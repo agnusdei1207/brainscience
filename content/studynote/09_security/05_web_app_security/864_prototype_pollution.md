@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Prototype Pollution은 JavaScript의 프로토타입 체인 메커니즘을 악용해 `Object.prototype`을 오염시킴으로써, 애플리케이션 전체 객체에 악성 속성을 주입하는 취약점이다.
+> **핵심**: Prototype Pollution은 JavaScript의 프로토타입 체인 메커니즘을 악용해 `Object.prototype`을 오염시킴으로써, 애플리케이션 전체 객체에 악성 속성을 주입하는 취약점이다.
 > 2. **가치**: 서버 측(Node.js)에서는 Prototype Pollution이 RCE로 이어질 수 있고, 클라이언트 측에서는 XSS (Cross-Site Scripting) 방어 우회로 활용된다.
 > 3. **판단 포인트**: `__proto__`, `constructor`, `prototype` 키를 사용자 입력에서 필터링하거나, `Object.create(null)`로 프로토타입 없는 객체를 생성하는 것이 핵심 방어다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 JavaScript에서 모든 객체는 `prototype`을 통해 상위 객체의 속성을 상속받는다. 이 메커니즘 덕분에 `{}.toString()`처럼 모든 객체에서 공통 메서드를 사용할 수 있다.
 
@@ -44,7 +46,7 @@ Prototype Pollution은 이 메커니즘을 역이용한다. 공격자가 `obj.__
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 취약한 코드 패턴
 
@@ -74,7 +76,7 @@ Prototype Pollution은 이 메커니즘을 역이용한다. 공격자가 `obj.__
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 공격 컨텍스트 | 영향 | 방어 |
 |:---|:---|:---|
@@ -88,7 +90,7 @@ Python의 경우에도 `__class__`, `__base__`, `__subclasses__` 를 통한 유�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **방어 코드 패턴**:
 ```javascript
@@ -116,7 +118,7 @@ Object.freeze(Object.prototype);  // 오염 시도 시 에러 또는 무시
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Prototype Pollution 방어를 통해 인증 우회, 권한 상승, Node.js RCE, XSS 방어 우회 등 광범위한 공격 체인을 차단할 수 있다. lodash 4.17.21+, jQuery 3.4+, 최신 Node.js 라이브러리들은 이미 패치됐으므로, 의존성 최신화가 가장 빠른 완화 방법이다.
 

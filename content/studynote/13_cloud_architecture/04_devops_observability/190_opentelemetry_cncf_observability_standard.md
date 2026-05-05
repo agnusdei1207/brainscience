@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: OpenTelemetry(OTel)는 메트릭, 로그, 트레이스(MELT의 M·L·T) 데이터를 생성·수집·전송하는 벤더 중립 CNCF(Cloud Native Computing Foundation, 클라우드 네이티브 컴퓨팅 재단) 오픈소스 표준으로, "한 번 계측하면 어떤 백엔드로도 전송 가능"한 옵저버빌리티 인프라 표준이다.
+> **핵심**: OpenTelemetry(OTel)는 메트릭, 로그, 트레이스(MELT의 M·L·T) 데이터를 생성·수집·전송하는 벤더 중립 CNCF(Cloud Native Computing Foundation, 클라우드 네이티브 컴퓨팅 재단) 오픈소스 표준으로, "한 번 계측하면 어떤 백엔드로도 전송 가능"한 옵저버빌리티 인프라 표준이다.
 > 2. **가치**: 벤더 종속(Vendor Lock-in)을 방지하여 Datadog에서 Prometheus/Jaeger로 또는 그 반대로 언제든 백엔드를 교체할 수 있으며, 자동 계측으로 코드 수정 없이 대부분의 프레임워크에 트레이스·메트릭을 즉시 추가할 수 있다.
 > 3. **판단 포인트**: OTel SDK + OTel Collector 조합이 현재 최선의 아키텍처이며, Collector를 중간에 두어 백엔드를 결합·분기·필터링하는 파이프라인을 유연하게 구성할 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 분산 추적의 초기 시대에는 Jaeger, Zipkin, Datadog APM 등 각 도구가 자체 SDK를 제공했다. 회사가 Datadog을 쓰다가 Jaeger로 교체하려면 모든 서비스의 계측 코드를 다시 작성해야 했다. 이것이 벤더 종속 문제다.
 
@@ -25,7 +27,7 @@ OTel의 설계 철학은 "수집(Instrumentation)과 저장(Backend)의 분리"�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### OTel 전체 아키텍처
 
@@ -63,7 +65,7 @@ OTel Collector
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### OTel vs 이전 표준·도구
 
@@ -113,7 +115,7 @@ service:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **언어별 자동 계측 방법:**
 
@@ -147,7 +149,7 @@ node -r @opentelemetry/auto-instrumentations-node app.js
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 OpenTelemetry 도입은 옵저버빌리티 인프라의 장기 투자 관점에서 필수적이다. 표준 SDK를 사용하면 어떤 백엔드 도구를 선택해도 재계측 없이 전환이 가능하여 도구 선택의 자유도가 극적으로 높아진다.
 

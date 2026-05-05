@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# SJF 기아 (Starvation) 발생
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SJF(Shortest Job First) 또는 SRTF(Shortest Remaining Time First) 스케줄링은 수학적으로 평균 대기 시간을 가장 짧게 만들어주는 최고의 알고리즘이지만, **처리 시간이 긴 프로세스는 영원히 CPU를 할당받지 못할 수 있는 치명적인 약점인 기아 현상(Starvation)**을 유발한다.
+> **핵심**: SJF(Shortest Job First) 또는 SRTF(Shortest Remaining Time First) 스케줄링은 수학적으로 평균 대기 시간을 가장 짧게 만들어주는 최고의 알고리즘이지만, **처리 시간이 긴 프로세스는 영원히 CPU를 할당받지 못할 수 있는 치명적인 약점인 기아 현상(Starvation)**을 유발한다.
 > 2. **원인**: 시스템에 짧은 처리 시간을 가진 새로운 I/O 바운드 프로세스들이 쉴 새 없이 쏟아져 들어오면, 긴 처리 시간을 가진 CPU 바운드 프로세스는 우선순위에서 계속 밀려나 영원히 큐의 뒷자리에 머물게 되기 때문이다.
 > 3. **해결책 (에이징, Aging)**: 이 잔인한 차별을 막기 위해, 기다린 시간이 길어질수록 나이(Age)를 먹게 하여 **시간이 지남에 따라 프로세스의 우선순위를 점진적으로 높여주는 에이징(Aging) 기법**을 필수적으로 결합해야만 시스템이 정상적으로 돌아간다.
 
+> 📝 모범 답안
+
+# SJF 기아 (Starvation) 발생
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **SJF (Shortest Job First)**: 큐에 대기 중인 프로세스들 중에서, 앞으로 CPU를 가장 짧게 쓸 것 같은 프로세스에게 먼저 CPU를 주는 스케줄링 방식.
@@ -39,7 +41,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 기아 현상(Starvation) 시뮬레이션
 
@@ -84,7 +86,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 교착 상태(Deadlock) vs 기아 상태(Starvation)
 
@@ -106,7 +108,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -148,7 +150,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

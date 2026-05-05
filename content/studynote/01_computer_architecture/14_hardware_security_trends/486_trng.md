@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# TRNG (진성 난수 생성기)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: TRNG (True Random Number Generator)는 열잡음(Thermal Noise), 광자의 양자적振る舞い, 클럭 지터(Clock Jitter) 등 예측이 불가능한 물리적 현상을 하드웨어로 측정하여 진정한 무작위성(Entropy)을 제공하는 난수 생성기다.
+> **핵심**: TRNG (True Random Number Generator)는 열잡음(Thermal Noise), 광자의 양자적振る舞い, 클럭 지터(Clock Jitter) 등 예측이 불가능한 물리적 현상을 하드웨어로 측정하여 진정한 무작위성(Entropy)을 제공하는 난수 생성기다.
 > 2. **한계**: PRNG (Pseudo-Random Number Generator)는 수학적 알고리즘으로 유사 난수를 생성하여高速이지만 Seed가 노출되면 전체 수열이 예측 가능하지만, TRNG는 물리 법칙에 기반하여 신조차 예측할 수 없는 완전한 무작위성을 제공한다.
 > 3. **융합**: 실제 시스템에서는 TRNG의 완벽한 Entropy를 Seed로 활용하여 고속 PRNG를 구동하는 하이브리드 방식이 사용되며, Intel RDRAND 명령어 등을 통해 CPU 내부에 내장되어 운영체제에 초고속 난수를 제공한다.
 
+> 📝 모범 답안
+
+# TRNG (진성 난수 생성기)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 문제의식: 컴퓨터는 본질적으로 결정론적 기계다
 
@@ -57,7 +59,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### TRNG의 동작 원리: 물리적 현상에서 무작위성 추출
 
@@ -130,7 +132,7 @@ TRNG는 자연계의 완전한 무작위성(Entropy)을 측정하는 전용 하�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### TRNG vs PRNG vs QRNG 비교
 
@@ -151,7 +153,7 @@ TRNG는 자연계의 완전한 무작위성(Entropy)을 측정하는 전용 하�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -176,7 +178,7 @@ TRNG는 자연계의 완전한 무작위성(Entropy)을 측정하는 전용 하�
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### TRNG 도입 효과
 

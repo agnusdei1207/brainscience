@@ -5,15 +5,17 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: More than Moore는 트랜지스터 선폭 미세화에만 의존하던 기존의 성능 향상 방식(More Moore)을 넘어, 이종 칩 결합(Heterogeneous Integration)과 첨단 패키징을 통해 시스템 가치를 극대화하는 새로운 발전 패러다임이다.
+> **핵심**: More than Moore는 트랜지스터 선폭 미세화에만 의존하던 기존의 성능 향상 방식(More Moore)을 넘어, 이종 칩 결합(Heterogeneous Integration)과 첨단 패키징을 통해 시스템 가치를 극대화하는 새로운 발전 패러다임이다.
 > 2. **가치**: 양자 터널링에 의한 물리적 한계와 천문학적인 공정 비용(Economic Wall) 문제를 칩렛(Chiplet), 3D적층, 도메인 특화 아키텍처(DSA)로 정면 돌파하여 지속적인 성능 성장을 가능케 한다.
 > 3. **판단 포인트**: 단순히 '더 작게'가 아니라 '더 지혜롭게' 배치하는 기술이 핵심이며, 하드웨어와 소프트웨어가 결합된 시스템 전체의 효율성(System-level Efficiency)이 국가와 기업의 반도체 경쟁력을 좌우한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 무어의 법칙의 황금기와 종말
 무어의 법칙(Moore's Law)은 "반도체 칩에 집적되는 트랜지스터 수가 18~24개월마다 2배씩 증가한다"는 경험적 법칙이다. 지난 50년간 이 법칙은 '데너드 스케일링(Dennard Scaling)'과 결합하여, 칩을 작게 만들면 성능은 오르고 가격과 전력은 낮아지는 마법 같은 시대를 이끌었다.
@@ -30,7 +32,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 세 가지 발전 트랙 (More Moore / More than Moore / Beyond Moore)
 
@@ -71,7 +73,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 1. 수평적 미세화 vs 수직적 적층
  More Moore가 평면 도화지에 더 얇은 펜으로 그림을 그리는 것이라면, More than Moore는 팝업북처럼 입체적인 구조를 만드는 것이다.
@@ -86,7 +88,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1. 기술사의 전략적 제언: '후공정(OSAT)의 중요성'
 이제 반도체 주도권은 '누가 더 작게 그리냐'가 아니라 '누가 더 잘 붙이느냐'로 이동했다.
@@ -102,7 +104,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 주요 기대효과
 - **성능 유지**: 무어의 법칙 한계 상황에서도 시스템 수준에서는 2배 이상의 성능 향상을 지속할 수 있다.

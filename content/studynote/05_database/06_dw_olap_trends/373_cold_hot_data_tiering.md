@@ -5,17 +5,19 @@ weight = 373
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-# 콜드 데이터 vs 핫 데이터 계층화(Tiering) 스토리지 아키텍처
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 데이터 계층화 (Data Tiering)는 데이터의 접근 빈도(Hot, Warm, Cold)와 비즈니스 가치 변화에 따라, 고성능-고비용 저장소(NVMe SSD)에서 저성능-저비용 저장소(HDD, Object Storage, Tape)로 데이터를 물리적으로 재배치하는 스토리지 수명 주기 최적화 아키텍처다.
+> **핵심**: 데이터 계층화 (Data Tiering)는 데이터의 접근 빈도(Hot, Warm, Cold)와 비즈니스 가치 변화에 따라, 고성능-고비용 저장소(NVMe SSD)에서 저성능-저비용 저장소(HDD, Object Storage, Tape)로 데이터를 물리적으로 재배치하는 스토리지 수명 주기 최적화 아키텍처다.
 > 2. **가치**: 대용량 빅데이터 환경에서 모든 데이터를 단일 고성능 스토리지에 유지할 때 발생하는 천문학적인 인프라 TCO (Total Cost of Ownership)를 최대 80% 이상 절감하면서도, 최신 데이터에 대한 쿼리 레이턴시 (Latency)를 보장한다.
 > 3. **융합**: 이 패턴은 단순한 파일 백업을 넘어 클라우드 네이티브 환경의 S3 수명 주기 정책, Elasticsearch의 ILM (Index Lifecycle Management), 그리고 클라우드 데이터 웨어하우스(Snowflake, Redshift)의 스토리지-컴퓨팅 분리 아키텍처와 결합하여 데이터 레이크 (Data Lake) 생태계의 핵심 기반으로 작동한다.
 
+> 📝 모범 답안
+
+# 콜드 데이터 vs 핫 데이터 계층화(Tiering) 스토리지 아키텍처
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 데이터 계층화 (Tiering) 시스템은 데이터가 생성된 시점부터 폐기될 때까지의 수명 주기를 '온도(Temperature)'라는 메타포로 분류하여, 각 온도에 가장 적합한 I/O 성능과 비용 구조를 가진 스토리지 계층(Tier)으로 데이터를 자동 또는 반자동으로 마이그레이션 (Migration)하는 데이터 관리 전략이다.
 
@@ -70,7 +72,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 계층별 구성 요소 및 특성 매트릭스
 
@@ -131,7 +133,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 클라우드 환경 스토리지 계층 비교 (AWS S3 기준)
 
@@ -153,7 +155,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 의사결정
 
@@ -200,7 +202,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

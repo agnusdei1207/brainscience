@@ -7,16 +7,19 @@ date = 2024-01-01
 [extra]
 categories = ["studynote-software-engineering"]
 +++
-+++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Hive는 Hadoop 위에 구축된 데이터 웨어하우스로, SQL(HiveQL) 인터페이스를 제공하여 개발자가 MapReduce를 몰라도 대규모 데이터 분석이 가능하다.
+> **핵심**: Hive는 Hadoop 위에 구축된 데이터 웨어하우스로, SQL(HiveQL) 인터페이스를 제공하여 개발자가 MapReduce를 몰라도 대규모 데이터 분석이 가능하다.
 > 2. **가치**: 기존 RDBMS 사용자가 학습 곡선 없이 대규모 데이터를 SQL로 분석할 수 있게 하며, HCatalog와 메타스토어를 통해 다양한 도구와 통합을 지원한다.
 > 3. **융합**: Hive는批処理(batch processing)에 최적화된 архитек처로, 실시간查询には向いていない。
 
+> 📝 모범 답안
+
++++
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념
 Hive는 Facebook(현재 Meta)에서 개발하고 Apache Software Foundation에 기증한 데이터 웨어하우스 솔루션으로, SQL과 유사한 HiveQL이라는 查询言語를 제공한다. HiveQL은 내부적으로 MapReduce 작업으로 변환되어 Hadoop 클러스터에서実行된다.
@@ -32,7 +35,7 @@ Hive는 通訳사와 같아서, 영어(SQL)를 못하는 사람(MR 개발자)에
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Hive 아키텍처
 
@@ -96,7 +99,7 @@ HiveQL의 파티셔닝은 식료품店的商品 配置と 같아서, 채소, 육
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교: Hive vs Traditional DW
 
@@ -118,7 +121,7 @@ Hive vs Traditional DWは大型버스 vs 택시と 같아서, 대량の人・화
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -137,7 +140,7 @@ Hive의实时查询误用는 고속버스로 택시 호출하는 것과 같다. 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### Hive strengths
 

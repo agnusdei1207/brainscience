@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 앙상블 학습은 **여러 약한 학습기(Weak Learner)를 결합하여 하나의 강한 학습기(Strong Learner)**를 만드는 기법이며, Bagging·Boosting·Stacking이 3대 전략이다.
+> **핵심**: 앙상블 학습은 **여러 약한 학습기(Weak Learner)를 결합하여 하나의 강한 학습기(Strong Learner)**를 만드는 기법이며, Bagging·Boosting·Stacking이 3대 전략이다.
 > 2. **가치**: 단일 의사결정 트리는 과적합되기 쉽지만, 100개 트리를 앙상블(Random Forest)하면 **과적합↓·정확도↑·안정성↑**이 동시에 달성된다.
 > 3. **판단 포인트**: Bagging(병렬, 분산↓)은 Random Forest, Boosting(순차, 편향↓)은 XGBoost/LightGBM이 대표이며, **Kaggle 대회 우승 솔루션의 90%+가 앙상블**이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -36,7 +38,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Bagging vs Boosting
 
@@ -51,7 +53,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 단일 모델 | 앙상블 |
 |:---|:---|:---|
@@ -61,7 +63,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 주요 앙상블 알고리즘
 
@@ -74,7 +76,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 앙상블은 **정형 데이터 ML의 사실상 최강 기법**이며, XGBoost/LightGBM이 Kaggle·실무에서 표준으로 사용된다.
 

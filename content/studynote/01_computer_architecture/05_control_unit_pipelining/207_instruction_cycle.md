@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 207. 명령어 사이클 (Instruction Cycle)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 명령어 사이클 (Instruction Cycle)은 CPU가 메모리에서 하나의 명령어를 가져와 해독하고 실행한 뒤, 다음 명령어를 가져오기 직전까지의 전체 과정을 의미하는 시스템의 기본 심장 박동이다.
+> **핵심**: 명령어 사이클 (Instruction Cycle)은 CPU가 메모리에서 하나의 명령어를 가져와 해독하고 실행한 뒤, 다음 명령어를 가져오기 직전까지의 전체 과정을 의미하는 시스템의 기본 심장 박동이다.
 > 2. **가치**: 인출(Fetch), 해독(Decode), 실행(Execute)이라는 일관된 생명 주기를 통해 소프트웨어의 논리적 흐름을 물리적 하드웨어의 시간축 위에 규칙적으로 매핑한다.
 > 3. **융합**: 간접 사이클(Indirect Cycle)을 통한 복잡한 주소 지정과 인터럽트 사이클(Interrupt Cycle)을 통한 예외/I/O 처리가 결합되어, 단순한 계산기를 넘어 외부 환경과 상호작용하는 진정한 멀티태스킹 운영체제 구동 환경을 제공한다.
 
+> 📝 모범 답안
+
+# 207. 명령어 사이클 (Instruction Cycle)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 - **개념**: 명령어 사이클 (Instruction Cycle, 또는 기계 사이클 - Machine Cycle)은 프로세서가 하나의 명령어를 인출(Fetch)하여 해독(Decode)하고, 연산을 수행(Execute)한 뒤 다음 명령어를 준비하기까지 거치는 일련의 표준화된 반복 단계를 의미한다.
 
@@ -56,7 +58,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 구성 요소 (4대 하위 사이클)
 
@@ -107,7 +109,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 마이크로 오퍼레이션 (Micro-operation) 단위의 분석
 
@@ -149,7 +151,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -170,7 +172,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

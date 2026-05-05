@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: OUTER JOIN은 **매칭되지 않는 행도 NULL로 채워서 포함**하는 JOIN이며, LEFT(왼쪽 전체)·RIGHT(오른쪽 전체)·FULL(양쪽 전체)로 구분된다.
+> **핵심**: OUTER JOIN은 **매칭되지 않는 행도 NULL로 채워서 포함**하는 JOIN이며, LEFT(왼쪽 전체)·RIGHT(오른쪽 전체)·FULL(양쪽 전체)로 구분된다.
 > 2. **가치**: "주문이 없는 고객 목록"·"담당자가 없는 프로젝트 목록" 등 **비매칭 데이터를 찾는 데 필수**이며, LEFT JOIN이 가장 빈번하게 사용된다.
 > 3. **판단 포인트**: LEFT JOIN + WHERE right.id IS NULL → **비매칭만 추출**하는 Anti-Join 패턴이 실무에서 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 LEFT JOIN:  왼쪽 전체 + 오른쪽 매칭 (없으면 NULL)

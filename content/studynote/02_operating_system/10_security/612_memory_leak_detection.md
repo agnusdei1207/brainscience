@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 메모리 누수 (Memory Leak) 탐지 도구 구조 (Valgrind 등)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 메모리 누수(Memory Leak)는 동적 할당된 메모리(malloc/new)가 더 이상 참조되지 않음에도 해제(free/delete)되지 않아 프로세스의 RSS(Resident Set Size)가 지속적으로 증가하는 결함으로, 장기간 실행 서버에서 OOM(Out-Of-Memory) Kill을 유발하는 치명적 버그다.
+> **핵심**: 메모리 누수(Memory Leak)는 동적 할당된 메모리(malloc/new)가 더 이상 참조되지 않음에도 해제(free/delete)되지 않아 프로세스의 RSS(Resident Set Size)가 지속적으로 증가하는 결함으로, 장기간 실행 서버에서 OOM(Out-Of-Memory) Kill을 유발하는 치명적 버그다.
 > 2. **가치**: Valgrind Memcheck, AddressSanitizer(ASan), LeakSanitizer(LSan) 등은 각각 시뮬레이션 기반·컴파일러 계측 기반으로 동작하여, 힙(Heap) 할당-해제 불일치, use-after-free, double-free 등을 정적·동적으로 탐지한다.
 > 3. **융합**: eBPF (#615) 기반 memleak 도구는 프로덕션 환경에서 오버헤드 <5%로 실시간 메모리 누수 탐지가 가능하여, 개발 단계(Valgrind)와 운영 단계(eBPF)의互补적(complementary) 메모리 안전망을 구성한다.
 
+> 📝 모범 답안
+
+# 메모리 누수 (Memory Leak) 탐지 도구 구조 (Valgrind 등)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념
 메모리 누수는 프로그램이 동적 할당한 메모리 블록에 대한 포인터를 잃어버려(또는 해제를 누락하여) 해당 메모리가 반환되지 않는 현상이다. C/C++처럼 수동 메모리 관리 언어에서 특히 빈번하다.
@@ -55,7 +57,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 탐지 도구 비교
 
@@ -133,7 +135,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### Valgrind vs ASan 상세 비교
 
@@ -151,7 +153,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -181,7 +183,7 @@ bpftrace -e 'uprobe:/path/bin:malloc { @alloc[arg0] = arg1 }'
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 | 항목 | 도입 전 | 도입 후 |
 |:---|:---|:---|

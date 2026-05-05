@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 1st Party Data 전략은 3rd Party 쿠키 폐지(Chrome 2025)에 대응하여, 기업이 **자사 채널(웹·앱·매장·이메일)에서 고객 동의 하에 직접 수집한 데이터**를 활용하여 마케팅·분석·개인화를 수행하는 전략이다.
+> **핵심**: 1st Party Data 전략은 3rd Party 쿠키 폐지(Chrome 2025)에 대응하여, 기업이 **자사 채널(웹·앱·매장·이메일)에서 고객 동의 하에 직접 수집한 데이터**를 활용하여 마케팅·분석·개인화를 수행하는 전략이다.
 > 2. **가치**: 3rd Party 쿠키로 다른 사이트의 행동을 추적하던 시대가 끝나면서, **자사 데이터의 품질·양·활용 역량**이 마케팅 경쟁력의 핵심이 되었다. CDP(Customer Data Platform)가 1st Party Data를 수집·통합·활성화하는 핵심 인프라다.
 > 3. **판단 포인트**: 1st Party(자사 직접 수집) vs Zero Party(고객 자발적 제공) vs 2nd Party(파트너 공유) vs 3rd Party(쿠키·DMP) 데이터를 구분하고, **동의 관리(CMP, Consent Management Platform)**와 개인정보보호법(GDPR·PIPA) 준수가 필수다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -36,7 +38,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1st Party Data 활용 체계
 
@@ -52,7 +54,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 3rd Party | 1st Party | Zero Party |
 |:---|:---|:---|:---|
@@ -63,7 +65,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1st Party Data 확보 전략
 1. **회원가입 유도**: 로그인 시 풍부한 이벤트 데이터 확보.
@@ -72,7 +74,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 3rd Party 쿠키 폐지는 마케팅 산업의 지각 변동이며, 1st Party Data를 체계적으로 수집·통합·활용하는 기업만이 개인화 마케팅 경쟁력을 유지할 수 있다. Google Privacy Sandbox·Apple SKAdNetwork 등 대안 기술이 부상하고 있지만, **1st Party Data의 자사 확보가 근본적 해법**이다.
 

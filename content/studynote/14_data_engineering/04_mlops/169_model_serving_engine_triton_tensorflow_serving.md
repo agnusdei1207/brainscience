@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 모델 서빙 엔진 (Model Serving Engine)은 학습된 ML 모델을 REST/gRPC API로 실시간 제공하는 인프라로, TensorFlow Serving과 NVIDIA Triton Inference Server가 각각 단일 프레임워크와 멀티 프레임워크 서빙의 대표 솔루션이다.
+> **핵심**: 모델 서빙 엔진 (Model Serving Engine)은 학습된 ML 모델을 REST/gRPC API로 실시간 제공하는 인프라로, TensorFlow Serving과 NVIDIA Triton Inference Server가 각각 단일 프레임워크와 멀티 프레임워크 서빙의 대표 솔루션이다.
 > 2. **가치**: 동적 배치 (Dynamic Batching)로 GPU 활용률을 극대화하고, 모델 압축(Quantization)과 TensorRT 변환으로 지연시간을 수십 배 단축하여 대규모 서비스의 SLA를 충족한다.
 > 3. **판단 포인트**: GPU 단일 모델에는 TF Serving, 멀티 프레임워크/고성능 GPU 추론에는 Triton, 쿠버네티스 환경의 멀티 프레임워크에는 KServe가 적합하며, 지연시간 vs 처리량 트레이드오프를 비즈니스 SLA에 맞게 튜닝해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 모델 서빙이란?
 
@@ -47,7 +49,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 TensorFlow Serving
 
@@ -221,7 +223,7 @@ TensorRT Plan (.plan)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 서빙 솔루션 전체 비교
 
@@ -258,7 +260,7 @@ TensorRT Plan (.plan)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 모델 서빙 아키텍처 설계 패턴
 
@@ -324,7 +326,7 @@ TensorRT는 GPU 특화 딥러닝 추론 최적화 라이브러리다. 변환 시
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 모델 서빙 최적화 효과
 

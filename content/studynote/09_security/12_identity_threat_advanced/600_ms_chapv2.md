@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: MS-CHAPv2 (Microsoft Challenge Handshake Authentication Protocol v2)는 주로 VPN(PPTP)이나 무선랜(802.1X/PEAP) 인증에 사용되는 NTLM 기반의 양방향 상호 인증 프로토콜이다.
+> **핵심**: MS-CHAPv2 (Microsoft Challenge Handshake Authentication Protocol v2)는 주로 VPN(PPTP)이나 무선랜(802.1X/PEAP) 인증에 사용되는 NTLM 기반의 양방향 상호 인증 프로토콜이다.
 > 2. **가치**: 클라이언트뿐만 아니라 서버도 신원을 증명하도록 설계되어 초기 버전(v1)의 취약점을 보완했으나, 내부적으로 여전히 약한 DES 암호화 구조를 사용하여 보안 위협이 존재한다.
 > 3. **판단 포인트**: 2012년 이후 구조적 결함이 증명되어 단독 사용은 위험하며, 반드시 TLS 터널(PEAP, EAP-TLS) 내부에 캡슐화하여 사용하거나 최신 프로토콜로 대체해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 MS-CHAPv2는 마이크로소프트가 원격 접속 보안을 위해 만든 프로토콜이다. 과거 전화선 연결(PPP)이나 초기 VPN(PPTP) 시절, 사용자가 정말 그 사용자가 맞는지 확인하기 위해 등장했다.
 
@@ -23,7 +25,7 @@ NTLM의 챌린지-응답 방식을 차용하면서도, 서버도 클라이언트
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 MS-CHAPv2는 챌린지와 응답을 양방향으로 주고받는 4단계 과정을 거친다.
 
@@ -53,7 +55,7 @@ MS-CHAPv2는 챌린지와 응답을 양방향으로 주고받는 4단계 과정�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 MS-CHAPv2는 다른 EAP(Extensible Authentication Protocol) 인증 방식과 비교된다.
 
@@ -70,7 +72,7 @@ MS-CHAPv2는 다른 EAP(Extensible Authentication Protocol) 인증 방식과 비
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 기술사적 관점에서 MS-CHAPv2는 **"단독 사용 금지"**가 핵심 판단 기준이다. 특히 PPTP VPN은 MS-CHAPv2를 기반으로 하는데, 이는 현재 기술력으로 하루 안에 모든 통신 내용을 복호화할 수 있는 수준이다.
 
@@ -83,7 +85,7 @@ MS-CHAPv2는 다른 EAP(Extensible Authentication Protocol) 인증 방식과 비
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 MS-CHAPv2는 윈도우 원격 접속 역사에서 상호 인증의 개념을 대중화한 중요한 프로토콜이다. 하지만 기반 암호 기술의 노후화로 인해 더 이상 단독으로는 신뢰할 수 없는 상태가 되었다.
 

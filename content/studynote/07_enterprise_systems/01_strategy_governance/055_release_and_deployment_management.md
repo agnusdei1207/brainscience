@@ -5,16 +5,17 @@ date = "2026-05-01"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 릴리스 관리 (Release Management)는 변경을 묶어 안정적으로 배포 가능한 단위로 준비하는 활동이다.
+> **핵심**: 릴리스 관리 (Release Management)는 변경을 묶어 안정적으로 배포 가능한 단위로 준비하는 활동이다.
 > 2. **가치**: 배포 관리 (Deployment Management)는 실제 환경에 안전하게 반영하는 실행 절차다.
 > 3. **판단 포인트**: 릴리스와 배포를 분리해야 계획, 승인, 롤백이 명확해진다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 소프트웨어는 만들기만 하면 끝이 아니다. 배포 전 검증, 묶음 구성, 릴리스 노트, 배포 순서가 필요하다.
 
@@ -24,7 +25,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 릴리스는 변경 집합과 버전, 배포는 실제 설치와 반영을 관리한다. 둘은 연결되지만 역할이 다르다.
 
@@ -45,7 +46,7 @@ Change → Build → Release Package → Deployment → Verification → Rollbac
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 릴리스 관리와 배포 관리는 Change Management, CAB, CI/CD와 연결된다. 배포가 빠를수록 자동화와 검증이 더 중요하다.
 
@@ -61,7 +62,7 @@ Change → Build → Release Package → Deployment → Verification → Rollbac
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 릴리스 캘린더, 배포 창, 승인 기록, 체크리스트, 롤백 절차가 필요하다. 운영 환경이 커질수록 표준화가 중요하다.
 
@@ -84,7 +85,7 @@ Change → Build → Release Package → Deployment → Verification → Rollbac
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 릴리스와 배포 관리가 분리되면 변경이 체계적이고 안전해진다. 대규모 서비스일수록 필수다.
 

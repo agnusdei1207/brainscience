@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: MapReduce는 대용량 데이터를 Map(필터링·변환)과 Reduce(집계·합산) 두 단계로 분할하여 수천 노드에 병렬 처리하는 분산 연산 프레임워크로, 구글 논문(2004)을 기반으로 Hadoop이 구현했다.
+> **핵심**: MapReduce는 대용량 데이터를 Map(필터링·변환)과 Reduce(집계·합산) 두 단계로 분할하여 수천 노드에 병렬 처리하는 분산 연산 프레임워크로, 구글 논문(2004)을 기반으로 Hadoop이 구현했다.
 > 2. **가치**: 복잡한 분산 처리의 세부 사항(장애 복구, 데이터 분배, 병렬화)을 프레임워크가 처리하므로, 개발자는 Map 함수와 Reduce 함수만 작성하면 수천 노드에서 병렬 실행되는 프로그램을 만들 수 있다.
 > 3. **판단 포인트**: MapReduce의 핵심 병목은 매 Map-Shuffle-Reduce 단계마다 디스크(HDFS)에 중간 결과를 써야 한다는 점이다. 이 디스크 I/O가 Apache Spark(메모리 기반)로 대체되는 주된 이유다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 구글은 2004년 발표한 논문 "MapReduce: Simplified Data Processing on Large Clusters"에서 수천 대 서버에서 페타바이트 데이터를 처리하는 방법을 제시했다. 핵심 아이디어는 단순하다: **데이터를 잘게 쪼개어 병렬로 처리하고, 결과를 한 곳에 모아 합산한다.**
 
@@ -26,7 +27,7 @@ MapReduce는 함수형 프로그래밍의 map()과 reduce() 개념을 분산 시
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### MapReduce 처리 단계
 
@@ -113,7 +114,7 @@ public class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritab
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### MapReduce vs Apache Spark
 
@@ -139,7 +140,7 @@ public class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritab
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **MapReduce 실행 최적화**:
 ```
@@ -177,7 +178,7 @@ aws emr add-steps \
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 설명 |
 |:---|:---|

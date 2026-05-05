@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: RELRO(Relocation Read-Only)는 ELF 바이너리의 GOT(Global Offset Table)와 링커 관련 섹션을 읽기 전용(Read-Only)으로 설정하여, 공격자가 GOT를 덮어써 실행 흐름을 탈취하는 GOT 오버라이트(GOT Overwrite) 공격을 방어하는 링커 보안 기법이다.
+> **핵심**: RELRO(Relocation Read-Only)는 ELF 바이너리의 GOT(Global Offset Table)와 링커 관련 섹션을 읽기 전용(Read-Only)으로 설정하여, 공격자가 GOT를 덮어써 실행 흐름을 탈취하는 GOT 오버라이트(GOT Overwrite) 공격을 방어하는 링커 보안 기법이다.
 > 2. **가치**: 스택 카나리·ASLR·NX를 우회한 공격자가 최종적으로 시도하는 GOT 덮어쓰기 공격을 차단함으로써, 다층 방어의 마지막 레이어로 임의 함수 실행을 방지한다.
 > 3. **판단 포인트**: Partial RELRO는 `.got` 섹션만 보호하고 `.got.plt`는 쓰기 가능 상태로 두어 여전히 공격 가능하므로, 보안을 위해서는 전체 GOT를 읽기 전용으로 만드는 Full RELRO가 권고된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 GOT(Global Offset Table)는 ELF 실행 파일에서 공유 라이브러리 함수(printf, malloc 등)의 실제 주소를 저장하는 테이블이다. 런타임 링커(Dynamic Linker)는 프로그램 시작 시 또는 함수 최초 호출 시 GOT에 실제 주소를 채운다.
 
@@ -25,7 +27,7 @@ RELRO는 이 공격 표면을 제거하기 위해 링커 시 GOT 관련 섹션�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Partial RELRO vs Full RELRO 비교
 
@@ -63,7 +65,7 @@ Full RELRO에서는 **Lazy Binding이 비활성화**된다. Lazy Binding은 함�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### RELRO와 다른 방어 기법의 조합
 
@@ -80,7 +82,7 @@ Full RELRO가 활성화된 환경에서 공격자는 GOT 대신 함수 포인터
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **RELRO 활성화 방법:**
 - Partial RELRO: `-Wl,-z,relro` (GCC 기본값)
@@ -99,7 +101,7 @@ Full RELRO가 활성화된 환경에서 공격자는 GOT 대신 함수 포인터
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Full RELRO는 GOT 오버라이트라는 강력한 공격 기법을 완전히 차단하여, 임의 쓰기 프리미티브를 가진 공격자가 시스템 제어권을 탈취하는 경로를 제거한다. 성능 영향은 대부분의 프로그램에서 미미하여, 보안 민감한 모든 소프트웨어에서 Full RELRO를 기본으로 적용해야 한다.
 

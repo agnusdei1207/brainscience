@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Vulnerable and Outdated Components (취약하고 구식인 구성 요소, A06)는 알려진 CVE (Common Vulnerabilities and Exposures) 취약점을 가진 라이브러리·프레임워크·런타임을 계속 사용해 공격자가 공개된 익스플로잇을 실행할 수 있게 되는 취약점이다.
+> **핵심**: Vulnerable and Outdated Components (취약하고 구식인 구성 요소, A06)는 알려진 CVE (Common Vulnerabilities and Exposures) 취약점을 가진 라이브러리·프레임워크·런타임을 계속 사용해 공격자가 공개된 익스플로잇을 실행할 수 있게 되는 취약점이다.
 > 2. **가치**: 2021 Log4Shell (CVE-2021-44228, CVSS 10.0), 2017 Equifax 침해(Apache Struts CVE-2017-5638)처럼 단일 라이브러리 취약점이 수천만 명의 데이터 침해로 이어진 역사적 사례가 존재한다.
 > 3. **판단 포인트**: SBOM (Software Bill of Materials) 관리, SCA (Software Composition Analysis) CI/CD 통합, 자동 의존성 업데이트(Dependabot, Renovate)가 현대적 대응의 3대 축이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 현대 소프트웨어의 80% 이상이 오픈소스 라이브러리로 구성된다. 이 라이브러리들은 지속적으로 새로운 취약점이 발견되며, 패치 없이 사용하면 공격자가 공개된 PoC (Proof of Concept) 코드로 즉시 공격할 수 있다.
 
@@ -29,7 +31,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 SCA (Software Composition Analysis) 도구 생태계:
 
@@ -63,7 +65,7 @@ SCA (Software Composition Analysis) 도구 생태계:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | A06 Vulnerable Components | A08 Integrity Failures |
 |:---|:---|:---|
@@ -76,7 +78,7 @@ SCA (Software Composition Analysis) 도구 생태계:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **의존성 관리 전략**:
 1. **버전 고정(Version Pinning)**: `package-lock.json`, `requirements.txt`에 정확한 버전과 해시 고정
@@ -89,7 +91,7 @@ SCA (Software Composition Analysis) 도구 생태계:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 SCA + SBOM + 자동 패치 봇 조합은 취약한 구성 요소 위험을 구조적으로 관리할 수 있는 현대적 체계다. 미국 정부의 SBOM 의무화 정책과 EU CRA (Cyber Resilience Act)는 이를 규제 수준으로 강제하고 있으며, 이에 대비한 선제적 도입이 필요하다.
 

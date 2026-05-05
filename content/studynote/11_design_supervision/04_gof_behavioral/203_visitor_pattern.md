@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Visitor (방문자) 패턴은 데이터 구조(Element)와 그 위에서 수행되는 연산(Visitor)을 분리하여, 데이터 구조를 변경하지 않고도 새로운 연산을 추가할 수 있게 한다.
+> **핵심**: Visitor (방문자) 패턴은 데이터 구조(Element)와 그 위에서 수행되는 연산(Visitor)을 분리하여, 데이터 구조를 변경하지 않고도 새로운 연산을 추가할 수 있게 한다.
 > 2. **가치**: OCP (Open-Closed Principle, 개방-폐쇄 원칙)의 비용을 캡슐화가 지불하는 트레이드오프 패턴 — 연산 추가는 쉽지만, 새 Element 추가는 모든 Visitor를 수정해야 한다.
 > 3. **판단 포인트**: 데이터 구조가 안정적이고 연산이 자주 추가되는 경우, 특히 컴파일러 AST (Abstract Syntax Tree) 처리처럼 다양한 분석·변환이 필요한 상황에 적합하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1-1. 문제 상황: 연산 추가 시의 고통
 
@@ -48,7 +49,7 @@ Visitor의 핵심 메커니즘. 일반적인 단일 디스패치(Single Dispatch
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. 구조 (UML 요약)
 
@@ -127,7 +128,7 @@ class EvaluateVisitor implements ExpressionVisitor {
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. 핵심 트레이드오프 비교표
 
@@ -151,7 +152,7 @@ class EvaluateVisitor implements ExpressionVisitor {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. XML/DOM 탐색 예시
 
@@ -198,7 +199,7 @@ class EvaluateVisitor implements ExpressionVisitor {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5-1. 기대 효과
 

@@ -4,11 +4,14 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. FAIR 원칙은 2016년 Nature Scientific Data에 발표된 데이터 관리 원칙으로, 연구 및 오픈데이터가 기계 처리 가능하도록 F(Findable)·A(Accessible)·I(Interoperable)·R(Reusable) 4원칙을 충족해야 한다는 기준이다.
 > 2. FAIR는 데이터를 '공개'하는 것이 아니라 '재사용 가능하게' 만드는 것에 중점을 두며, 데이터를 공개하지 않더라도 메타데이터를 FAIR하게 유지할 수 있다.
 > 3. EU의 연구 데이터 정책, 공공 데이터 포털, 과학 데이터 저장소에 FAIR 원칙이 의무적으로 적용되고 있으며, AI 학습 데이터의 품질 기준으로도 확산되고 있다.
+
+> 📝 모범 답안
 
 ---
 

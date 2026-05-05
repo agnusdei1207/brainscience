@@ -4,11 +4,14 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. init(PID 1)은 커널 부팅 후 처음 실행되는 프로세스로 모든 다른 프로세스의 조상이며, 전통적인 SysV init은 순차적 런레벨(Runlevel) 기반 서비스 시작으로 부팅이 느린 한계가 있었다.
 > 2. systemd는 의존성 기반 병렬 부팅, 소켓/D-Bus 활성화, cgroup 자원 제어, 저널 로깅을 통합 제공하는 현대적 초기화 시스템으로, 부팅 시간을 수 분에서 수 초로 단축했다.
 > 3. systemd vs sysvinit의 핵심 차이: SysV는 "스크립트 실행 순서", systemd는 "의존성 그래프 기반 병렬 시작" — 현재 RHEL/Ubuntu/Debian 등 거의 모든 주요 Linux 배포판이 systemd를 채택했다.
+
+> 📝 모범 답안
 
 ---
 

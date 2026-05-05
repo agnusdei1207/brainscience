@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 2PC(Two-Phase Commit)는 **분산 트랜잭션의 원자성을 보장하는 프로토콜(Prepare→Commit/Rollback)**이지만, MSA에서는 **서비스 자율성 침해·성능 저하·단일 장애점(Coordinator)** 문제로 부적합하다.
+> **핵심**: 2PC(Two-Phase Commit)는 **분산 트랜잭션의 원자성을 보장하는 프로토콜(Prepare→Commit/Rollback)**이지만, MSA에서는 **서비스 자율성 침해·성능 저하·단일 장애점(Coordinator)** 문제로 부적합하다.
 > 2. **가치**: 2PC는 DB 간 트랜잭션에서는 동작하지만, MSA의 **HTTP/gRPC 서비스 간에는 롤백이 불가능**하고, 하나의 서비스가 느려지면 전체가 블로킹되므로 **Saga 패턴**이 대안이다.
 > 3. **판단 포인트**: Choreography Saga(이벤트 기반, 각 서비스 독립)와 Orchestration Saga(중앙 오케스트레이터)를 구분하고, 보상 트랜잭션(Compensating Transaction)이 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 2PC: Coordinator → Prepare(모든 참여자) → Commit/Rollback
@@ -27,7 +29,7 @@ Saga: 서비스별 로컬 트랜잭션 + 실패 시 보상 트랜잭션
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 비교 | 2PC | Saga |
 |:---|:---|:---|

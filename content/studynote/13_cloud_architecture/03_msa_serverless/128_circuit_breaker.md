@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Circuit Breaker는 **원격 서비스 호출 실패가 임계치를 초과하면 자동으로 회로를 열어(Open) 호출을 차단**하고, 일정 시간 후 반 열림(Half-Open)으로 복구를 시도하는 MSA 복원력(Resilience) 패턴이다.
+> **핵심**: Circuit Breaker는 **원격 서비스 호출 실패가 임계치를 초과하면 자동으로 회로를 열어(Open) 호출을 차단**하고, 일정 시간 후 반 열림(Half-Open)으로 복구를 시도하는 MSA 복원력(Resilience) 패턴이다.
 > 2. **가치**: Circuit Breaker 없이 서비스 B가 장애이면 서비스 A가 **타임아웃까지 대기→스레드 고갈→A도 장애(Cascading Failure)**가 발생하지만, Circuit Breaker가 **즉시 폴백(Fallback) 응답**을 반환하여 장애 전파를 차단한다.
 > 3. **판단 포인트**: Closed(정상)→Open(차단)→Half-Open(복구 시도)의 3가지 상태를 이해하고, Hystrix(Netflix, 레거시)→Resilience4j(Java 표준)→Istio(서비스 메시)의 구현 진화를 파악해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -37,7 +39,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Fallback 전략
 
@@ -52,7 +54,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | CB 없음 | CB 있음 |
 |:---|:---|:---|
@@ -62,7 +64,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Circuit Breaker 구현
 
@@ -74,7 +76,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Circuit Breaker는 **MSA 복원력의 가장 기본적이고 중요한 패턴**이며, Retry·Timeout·Bulkhead와 함께 복합 적용한다.
 

@@ -6,15 +6,17 @@ description = "코드를 실행하지 않고 문서, 리뷰, 정적 분석으로
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "Static Testing", "Review", "Analysis"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 정적 테스팅(Static Testing)은 프로그램을 실행하지 않고 산출물 자체를 검토하는 검증 방식이다.
+> **핵심**: 정적 테스팅(Static Testing)은 프로그램을 실행하지 않고 산출물 자체를 검토하는 검증 방식이다.
 > 2. **가치**: 초기에 결함을 잡아 수정 비용을 줄이고, 실행 전에 구조적 문제를 드러낸다.
 > 3. **판단 포인트**: 코드 실행이 필요 없는 결함, 문서 불일치, 규칙 위반을 찾는 데 특히 강하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 정적 테스팅은 코드, 요구사항, 설계서 같은 산출물을 대상으로 한다. 실행 결과를 기다리지 않고도 결함의 흔적을 찾을 수 있어, 개발 초기에 특히 유용하다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "Static Testing", "Review", "Analysis
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 정적 테스팅의 대표 활동은 인스펙션(Inspection), 워크스루(Walkthrough), 정적 분석(Static Analysis)이다. 이들은 모두 실행 없이 결함을 찾는다.
 
@@ -44,7 +46,7 @@ tags = ["Software Engineering", "Testing", "Static Testing", "Review", "Analysis
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 정적 테스팅은 동적 테스팅과 함께 써야 균형이 맞는다. 정적 테스팅은 실행 전, 동적 테스팅은 실행 중/후를 본다.
 
@@ -60,7 +62,7 @@ tags = ["Software Engineering", "Testing", "Static Testing", "Review", "Analysis
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 코드 리뷰, 린트, 아키텍처 리뷰, 요구사항 검토에 정적 테스팅을 쓴다. 결함이 큰 비용으로 번지기 전에 막는 것이 핵심이다.
 
@@ -73,7 +75,7 @@ tags = ["Software Engineering", "Testing", "Static Testing", "Review", "Analysis
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 정적 테스팅은 조기 결함 발견과 품질 표준화에 강하다. 다만 실제 런타임 동작을 보지 못하므로 동적 테스팅과 조합해야 한다.
 

@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. COCOMO(Constructive Cost Model)는 Barry Boehm이 1981년 제안한 소프트웨어 개발 비용 추정 모델 — 소스 코드 라인 수(KLOC)를 기반으로 개발 공수(Person-Month)와 일정(Duration)을 계산하며, 프로젝트 규모와 유형에 따라 Basic→Intermediate→Detailed 3단계로 구성된다.
 > 2. COCOMO II(1995)는 객체 지향과 재사용 기반 개발을 반영한 현대화 버전 — KLOC 대신 기능 점수(Function Point)와 객체 점수(Object Point)를 지원하고, 22개 비용 드라이버(Cost Driver)로 보정 계수를 계산하는 더 정교한 모델이다.
 > 3. COCOMO의 본질적 한계는 추정 정확도 — 동일 KLOC라도 언어, 팀 역량, 도메인 복잡도에 따라 실제 비용이 3~10배 차이날 수 있으며, COCOMO는 역사 데이터 없이는 ±50% 이상 오차가 일반적이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. COCOMO 기본 모델
+## 1. 개요 및 필요성
 
 ```
 COCOMO Basic 모델:
@@ -62,7 +65,7 @@ Embedded (엄격한 제약, 복잡한 하드웨어):
 
 ---
 
-## Ⅱ. COCOMO Intermediate와 비용 드라이버
+## 2. 구성요소
 
 ```
 COCOMO Intermediate:
@@ -112,7 +115,7 @@ EAF 계산 예:
 
 ---
 
-## Ⅲ. COCOMO II
+## 3. 구조 및 동작 원리
 
 ```
 COCOMO II (1995, USC-CSE):
@@ -163,7 +166,7 @@ COCOMO II 공수 공식:
 
 ---
 
-## Ⅳ. 다른 추정 기법과 비교
+## 4. 비교 및 트레이드오프
 
 ```
 비용 추정 기법 비교:
@@ -210,7 +213,7 @@ COCOMO II 공수 공식:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 공공 SI 프로젝트 견적
+## 5. 실무 적용 및 최적화 기법
 
 ```
 공공기관 ERP 구축 사업 비용 추정:

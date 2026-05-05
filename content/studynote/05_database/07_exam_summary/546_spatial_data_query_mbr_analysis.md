@@ -3,6 +3,11 @@ title: 공간 데이터 쿼리 기하 연산 MBR 근접 분석 기술 구조
 date: 2026-04-10
 weight: 546
 ---
+## 0. 핵심 인사이트
+
+> [Leaf Objects]│
+
+> 📝 모범 답안
 
 ### Core Insight
 공간 데이터베이스(Spatial DB)는 단순 텍스트나 숫자가 아닌 기하학적 객체(Point, Line, Polygon)를 저장하며, 대용량 공간 쿼리의 성능 최적화를 위해 객체를 감싸는 최소 경계 사각형인 MBR(Minimum Bounding Box)과 이를 활용한 R-Tree 계열의 인덱싱 및 필터-정제(Filter-Refine) 2단계 처리 구조를 핵심 기술로 사용한다.
@@ -35,8 +40,7 @@ weight: 546
 2. **R-Tree 인덱스**:
    - MBR들을 계층적으로 그룹화하여 트리 구조로 저장.
    - ┌─────────────────────────────────────────┐
-     │ Root MBR ┬ Child MBR A -> [Leaf Objects]│
-     │          └ Child MBR B -> [Leaf Objects]│
+     │ Root MBR ┬ Child MBR A -     │          └ Child MBR B -> [Leaf Objects]│
      └─────────────────────────────────────────┘
 3. **인덱스 활용**: 트리 탐색을 통해 쿼리 영역과 겹치지 않는 MBR 가지를 빠르게 제거.
 

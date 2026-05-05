@@ -5,16 +5,17 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 프로세스 상태(Process State)는 프로세스가 생성부터 종료까지 어떤 단계에 있는지 보여 준다.
+> **핵심**: 프로세스 상태(Process State)는 프로세스가 생성부터 종료까지 어떤 단계에 있는지 보여 준다.
 > 2. **가치**: Ready, Running, Waiting, Terminated를 이해하면 Scheduler, Dispatcher, Context Switch가 연결된다.
 > 3. **판단 포인트**: PCB (Process Control Block)와 대기 큐를 같이 봐야 상태 전이가 정확해진다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 프로세스 상태는 “지금 CPU (Central Processing Unit)를 쓰는가, 기다리는가, 끝났는가”를 보여 준다. 상태를 구분해야 스케줄러가 누구에게 CPU를 줄지 결정할 수 있다.
 
 결국 이 개념은 자원 사용의 흐름을 읽는 일이다.
@@ -22,7 +23,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 | 상태 | 의미 | 전이 트리거 |
 |:---|:---|:---|
 | New | 생성 직후 | admit |
@@ -45,7 +46,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 | 비교 항목 | Ready | Running | Waiting | Terminated |
 |:---|:---|:---|:---|:---|
 | CPU 점유 | 없음 | 있음 | 없음 | 없음 |
@@ -57,7 +58,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 - [ ] Ready와 Waiting을 혼동하지 않는다.
 - [ ] Context Switch가 비용이 드는 전환임을 이해한다.
 - [ ] PCB에 레지스터와 프로그램 카운터가 저장된다는 점을 설명한다.
@@ -70,7 +71,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 프로세스 상태는 한 사람의 일과표처럼 보면 쉽다. 준비 중인지, 일하는 중인지, 기다리는지, 끝났는지를 알아야 다음 행동을 정할 수 있다.
 - **📢 섹션 요약 비유**: 상태를 알면 운영체제의 흐름이 보인다.
 

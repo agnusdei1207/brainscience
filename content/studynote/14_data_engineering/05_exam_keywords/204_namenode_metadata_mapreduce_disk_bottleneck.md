@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: HDFS NameNode는 전체 파일시스템 메타데이터를 RAM에 단독으로 유지하는 구조로 인해 SPOF (Single Point of Failure)와 메모리 확장 한계를 내포하며, MapReduce는 Shuffle 단계의 반복적 디스크 I/O (Input/Output)가 성능 병목이 된다.
+> **핵심**: HDFS NameNode는 전체 파일시스템 메타데이터를 RAM에 단독으로 유지하는 구조로 인해 SPOF (Single Point of Failure)와 메모리 확장 한계를 내포하며, MapReduce는 Shuffle 단계의 반복적 디스크 I/O (Input/Output)가 성능 병목이 된다.
 > 2. **가치**: HA (High Availability) NameNode + YARN (Yet Another Resource Negotiator) 전환으로 SPOF를 해소하고, Spark의 인메모리(In-Memory) 처리로 디스크 병목을 근본적으로 극복했다.
 > 3. **판단 포인트**: 기술사 논술에서는 "어떤 문제가 있었고, 어떤 기술적 진화가 이루어졌으며, 남은 트레이드오프는 무엇인가"를 구조적으로 서술하는 것이 고득점의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### NameNode의 구조적 취약점
 
@@ -54,7 +56,7 @@ MapReduce 다단계 처리의 디스크 I/O
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### NameNode 메타데이터 관리 메커니즘
 
@@ -145,7 +147,7 @@ Hadoop 1.x (MapReduce v1) vs Hadoop 2.x (YARN)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Secondary NameNode vs HA Standby NameNode
 
@@ -185,7 +187,7 @@ MapReduce vs Spark 처리 방식
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### NameNode HA 설계 시 고려사항
 
@@ -222,7 +224,7 @@ NameNode HA 설계 체크리스트
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### HDFS HA와 YARN 도입 효과
 

@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 하이퍼바이저 링 레벨 (Ring -1 모드 VMX Root/Non-Root 모드)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 기존 x86 아키텍처의 링(Ring) 보호 모델(Ring 0~3)은 가상화를 고려하지 않고 설계되어, 게스트 OS가 자신이 하드웨어를 독점한다고 착각하게 만드는 반가상화(Paravirtualization)나 이진 변환(Binary Translation)이라는 복잡한 소프트웨어적 우회(Trap-and-Emulate)를 강제했다.
+> **핵심**: 기존 x86 아키텍처의 링(Ring) 보호 모델(Ring 0~3)은 가상화를 고려하지 않고 설계되어, 게스트 OS가 자신이 하드웨어를 독점한다고 착각하게 만드는 반가상화(Paravirtualization)나 이진 변환(Binary Translation)이라는 복잡한 소프트웨어적 우회(Trap-and-Emulate)를 강제했다.
 > 2. **혁신**: 인텔 VT-x와 AMD-V 등 하드웨어 보조 가상화(Hardware-Assisted Virtualization)는 기존 커널 모드(Ring 0)보다 더 높은 권한인 **VMX Root 모드 (속칭 Ring -1)**를 신설하여, 게스트 OS가 Ring 0에서 원래대로 돌면서도 위험한 명령어를 실행할 때만 하이퍼바이저로 제어권을 넘기게 만들었다.
 > 3. **가치**: 이 아키텍처 확장을 통해 게스트 OS를 단 한 줄도 수정하지 않고 네이티브(Native)에 가까운 속도로 안전하게 가상머신을 구동하는 전가상화(Full Virtualization)가 완벽하게 실현되었으며, 이는 현대 클라우드 컴퓨팅(IaaS) 인프라의 근간이 되었다.
 
+> 📝 모범 답안
+
+# 하이퍼바이저 링 레벨 (Ring -1 모드 VMX Root/Non-Root 모드)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: x86 CPU는 보안을 위해 권한 레벨을 Ring 0(가장 높음, 커널)부터 Ring 3(가장 낮음, 유저)까지 나눈다. 하이퍼바이저 링 레벨(Ring -1)은 가상화 환경에서 하이퍼바이저(VMM)가 게스트 OS(커널)보다 더 높은 권한을 가지도록 물리적 CPU에 추가된 **새로운 실행 모드(VMX Root / Non-Root)**를 의미한다.
 
@@ -35,7 +37,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -119,7 +121,7 @@ Intel VT-x(Virtualization Technology)는 기존 Ring 0~3 모델을 수평적으�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 보호 링(Ring) 레벨 비교
 
@@ -141,7 +143,7 @@ Intel VT-x(Virtualization Technology)는 기존 Ring 0~3 모델을 수평적으�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -187,7 +189,7 @@ Intel VT-x(Virtualization Technology)는 기존 Ring 0~3 모델을 수평적으�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

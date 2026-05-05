@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 슬랩 할당기와 객체 캐싱 (Slab Allocator & Object Caching)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 슬랩 할당기 (Slab Allocator)는 운영체제 커널이 메모리를 할당할 때 발생하는 빈번한 초기화 오버헤드와 내부 단편화를 막기 위해, **자주 쓰이는 커널 객체(예: 프로세스 제어 블록, 파일 디스크립터 등)의 '빈 껍데기'를 미리 캐싱(Caching)해 두고 재사용**하는 고성능 메모리 관리 기법이다.
+> **핵심**: 슬랩 할당기 (Slab Allocator)는 운영체제 커널이 메모리를 할당할 때 발생하는 빈번한 초기화 오버헤드와 내부 단편화를 막기 위해, **자주 쓰이는 커널 객체(예: 프로세스 제어 블록, 파일 디스크립터 등)의 '빈 껍데기'를 미리 캐싱(Caching)해 두고 재사용**하는 고성능 메모리 관리 기법이다.
 > 2. **가치**: 4KB라는 크고 투박한 단위(Page)로만 메모리를 주는 하부 버디 시스템(Buddy System)의 단점을 보완하여, 수십 바이트 단위의 자잘한 커널 객체들을 퍼즐 맞추듯 꽉꽉 채워 넣어 **메모리 낭비(내부 단편화)를 0에 가깝게 줄인다**.
 > 3. **융합**: 객체 지향 프로그래밍의 '오브젝트 풀(Object Pool)' 패턴을 커널 메모리 할당의 철학으로 끌어들였으며, 다중 코어 환경의 캐시 일관성(Cache Coherence) 충돌을 막기 위해 코어별(Per-CPU) 캐시를 두는 현대적 SLUB/SLQB 할당기로 진화했다.
 
+> 📝 모범 답안
+
+# 슬랩 할당기와 객체 캐싱 (Slab Allocator & Object Caching)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - 커널 내에서 특정 자료구조(예: `task_struct`, `inode`)를 담을 공간을 만들 때 쓰는 전용 메모리 할당 방식이다.
@@ -65,7 +67,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 슬랩 할당기의 객체 재사용(Object Caching) 원리
 
@@ -109,7 +111,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 리눅스 슬랩 할당기 패밀리 (SLAB vs SLUB vs SLOB)
 
@@ -132,7 +134,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 트러블슈팅
 
@@ -174,7 +176,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

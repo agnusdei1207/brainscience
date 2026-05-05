@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 대기 모드(Standby/Sleep Mode)는 OS가 시스템 전력을 절감하면서도 빠른 복귀를 보장하는 전력 관리 상태 — ACPI(Advanced Configuration and Power Interface) 표준이 S0(완전 활성)부터 S5(소프트 파워오프)까지 6단계를 정의한다.
 > 2. CPU P-State와 C-State는 OS 전력 관리의 핵심 — C-State는 CPU 유휴 시 코어별 절전(C0~C10), P-State는 DVFS(Dynamic Voltage Frequency Scaling)로 성능-전력 균형을 조절하며 Linux의 cpufreq 드라이버가 이를 제어한다.
 > 3. 현대 OS의 전력 관리는 반응성과 효율의 트레이드오프 — Windows Modern Standby(S0ix)는 스마트폰처럼 네트워크 연결을 유지하면서 저전력을 달성하나, 배경 프로세스 관리가 불충분하면 배터리 드레인 문제가 발생한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. ACPI 전력 상태
+## 1. 개요 및 필요성
 
 ```
 ACPI (Advanced Configuration and Power Interface):
@@ -61,7 +64,7 @@ Windows 대응:
 
 ---
 
-## Ⅱ. CPU C-State와 P-State
+## 2. 구성요소
 
 ```
 CPU 절전 상태 (C-States):
@@ -109,7 +112,7 @@ Package C-State:
 
 ---
 
-## Ⅲ. Modern Standby (S0ix)
+## 3. 구조 및 동작 원리
 
 ```
 Modern Standby (Windows S0ix):
@@ -155,7 +158,7 @@ Android Doze 모드:
 
 ---
 
-## Ⅳ. OS 전력 관리 메커니즘
+## 4. 비교 및 트레이드오프
 
 ```
 OS 전력 관리 소프트웨어 스택:
@@ -203,7 +206,7 @@ macOS:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 배터리 드레인 진단
+## 5. 실무 적용 및 최적화 기법
 
 ```
 노트북 배터리 빠른 방전 문제 해결:

@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CoAP은 **UDP 기반의 경량 RESTful 프로토콜**로, HTTP와 유사한 GET/PUT/POST/DELETE를 지원하면서도 **4바이트 고정 헤더**로 제약 디바이스(센서·액추에이터)에 최적화되었다.
+> **핵심**: CoAP은 **UDP 기반의 경량 RESTful 프로토콜**로, HTTP와 유사한 GET/PUT/POST/DELETE를 지원하면서도 **4바이트 고정 헤더**로 제약 디바이스(센서·액추에이터)에 최적화되었다.
 > 2. **가치**: MQTT가 Pub/Sub(이벤트 전달)에 강하다면, CoAP은 **Request/Response(리소스 조회·제어)**에 강하며, HTTP-CoAP 프록시를 통해 웹 서비스와 직접 연동이 가능하다.
 > 3. **판단 포인트**: UDP 기반이므로 **신뢰성을 Confirmable/Non-Confirmable 메시지로 구분**하며, DTLS(Datagram TLS)로 보안을 확보한다. MQTT와 경쟁이 아닌 **보완 관계**이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -34,7 +36,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### CoAP 메시지 유형
 
@@ -58,7 +60,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | HTTP | CoAP | MQTT |
 |:---|:---|:---|:---|
@@ -68,7 +70,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 활용 시나리오
 - CoAP: 센서 값 GET 요청, 액추에이터 PUT 제어.
@@ -77,7 +79,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 CoAP은 **IoT의 RESTful 표준**으로서 웹 서비스와의 자연스러운 연동을 가능케 하며, LwM2M(경량 디바이스 관리) 프로토콜의 전송 계층으로 채택되어 IoT 디바이스 관리의 기반이 되고 있다.
 

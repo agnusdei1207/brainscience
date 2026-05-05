@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Measured Boot는 부팅 과정의 각 단계(UEFI 펌웨어→부트로더→OS 커널→드라이버)의 해시를 TPM (Trusted Platform Module)의 PCR (Platform Configuration Register)에 순차적으로 누적 기록해 부팅 무결성을 측정·증명하는 기술이다.
+> **핵심**: Measured Boot는 부팅 과정의 각 단계(UEFI 펌웨어→부트로더→OS 커널→드라이버)의 해시를 TPM (Trusted Platform Module)의 PCR (Platform Configuration Register)에 순차적으로 누적 기록해 부팅 무결성을 측정·증명하는 기술이다.
 > 2. **가치**: Secure Boot가 "차단"이라면 Measured Boot는 "기록"—Secure Boot로 막지 못한 변조를 원격 증명(Remote Attestation)으로 사후 탐지할 수 있으며, 변조된 환경에서 암호화 키 해제를 차단하는 BitLocker/TPM 시일링(sealing)의 기반이 된다.
 > 3. **판단 포인트**: PCR 체인은 순차적 확장(extend) 방식으로 설계돼 이전 값을 변경할 수 없으며, 최종 PCR 값은 전체 부팅 과정의 지문(fingerprint)이 된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Measured Boot (측정된 부팅)는 UEFI 플랫폼에서 TPM과 연동해 부팅 무결성을 수학적으로 증명하는 기술이다. TCG (Trusted Computing Group) 표준에 정의되어 있으며, Intel TXT (Trusted Execution Technology)·Microsoft Windows Measured Boot·Android Verified Boot 등에 구현됐다.
 
@@ -25,7 +27,7 @@ Secure Boot가 미허가 코드의 실행을 "차단"하는 예방 메커니즘�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 **PCR 확장 연산**  
 ```
@@ -74,7 +76,7 @@ PCR_new = SHA256(PCR_old || measurement)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | Measured Boot | Secure Boot |
 |:---|:---|:---|
@@ -88,7 +90,7 @@ PCR_new = SHA256(PCR_old || measurement)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **BitLocker + TPM 시일링**  
 BitLocker는 볼륨 암호화 키를 TPM의 PCR 0·2·4·7·11·12·13에 봉인한다. 부팅 환경이 변조되면 PCR 값이 달라져 TPM이 키 해제를 거부—부트킷·UEFI 루트킷 설치 후 재부팅 시 BitLocker가 복구 키를 요구하게 된다.
@@ -102,7 +104,7 @@ BitLocker는 볼륨 암호화 키를 TPM의 PCR 0·2·4·7·11·12·13에 봉인
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Measured Boot는 제로트러스트 아키텍처에서 "디바이스 신뢰 검증"의 핵심 기술이다. 엔드포인트가 신뢰할 수 있는 상태로 부팅됐음을 수학적으로 증명하지 않으면 기업 리소스 접근을 허용하지 않는 정책에서, Measured Boot + 원격 증명이 디바이스 컴플라이언스 검증의 기반이 된다.
 

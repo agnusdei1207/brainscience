@@ -4,11 +4,14 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. NoSQL (Not Only SQL)은 관계형 DB의 고정 스키마와 ACID 트랜잭션을 일부 포기하는 대신, 수평 확장(Scale-Out)·고가용성·대용량 비정형 데이터 처리에 최적화된 데이터 저장 패러다임이다.
 > 2. NoSQL은 단일 기술이 아니라 문서(Document), 키-값(Key-Value), 열(Column-Family), 그래프(Graph) 등 4가지 주요 모델로 구성되며, 각 모델은 특정 워크로드에 최적화된다.
 > 3. CAP 정리(Consistency-Availability-Partition Tolerance)에 따라 NoSQL은 대부분 AP(가용성·파티션 허용)를 선택하며, 결과적 일관성(Eventual Consistency)을 제공한다.
+
+> 📝 모범 답안
 
 ---
 

@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 소스코드 난독화(Obfuscation)는 리버스 엔지니어링(Reverse Engineering)의 비용을 높이는 "시간 지연(Time-Cost) 전략"이지, 완전한 방어가 아니다.
+> **핵심**: 소스코드 난독화(Obfuscation)는 리버스 엔지니어링(Reverse Engineering)의 비용을 높이는 "시간 지연(Time-Cost) 전략"이지, 완전한 방어가 아니다.
 > 2. **가치**: 모바일 앱·임베디드 시스템에서는 바이너리가 공개되므로, 난독화 없이 배포 시 핵심 알고리즘과 API 키가 수 분 내에 추출된다.
 > 3. **판단 포인트**: 난독화 레벨(클래스명/문자열/제어흐름/패킹)과 루트 감지(Root Detection), 무결성 검증(Integrity Check) 조합 여부를 계층별로 진단한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 난독화(Obfuscation)는 소프트웨어의 논리적 구조와 의미를 분석하기 어렵게 변환하는 기술이다. 주요 적용 대상은 Android APK, iOS IPA, JavaScript 번들, Java JAR 파일이다. 감리 맥락에서는 금융·의료·공공 앱의 핵심 로직 보호와 악의적 수정(Tampering) 방지가 목적이다.
 
@@ -40,7 +41,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. 난독화 계층 구조
 
@@ -117,7 +118,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. 난독화 기법 비교
 
@@ -143,7 +144,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. 감리 진단 항목
 
@@ -173,7 +174,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 난독화와 리버스 엔지니어링 방어를 계층적으로 적용하면 공격자의 분석 시간이 수 분에서 수 주 이상으로 늘어나 경제적 타당성을 잃게 만든다. 특히 금융·의료·공공 모바일 앱에서 API 키 노출, 인증 로직 우회, 위변조 앱 배포를 방지하는 핵심 수단이다.
 

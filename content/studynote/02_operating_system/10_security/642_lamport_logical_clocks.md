@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 람포트 논리적 시계 (Lamport's Logical Clocks) 분산 환경 동기화 정렬
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 분산 시스템에서는 네트워크 지연과 각 노드의 수정 진동자(Oscillator) 오차 때문에 **물리적 시간(Physical Time)을 완벽하게 동기화하는 것은 불가능**하다. 레슬리 람포트(Leslie Lamport)는 이를 극복하기 위해 물리적 시간을 버리고 '사건의 선후 관계'만을 따지는 **논리적 시계(Logical Clocks)**를 제안했다.
+> **핵심**: 분산 시스템에서는 네트워크 지연과 각 노드의 수정 진동자(Oscillator) 오차 때문에 **물리적 시간(Physical Time)을 완벽하게 동기화하는 것은 불가능**하다. 레슬리 람포트(Leslie Lamport)는 이를 극복하기 위해 물리적 시간을 버리고 '사건의 선후 관계'만을 따지는 **논리적 시계(Logical Clocks)**를 제안했다.
 > 2. **메커니즘**: "사건 A가 사건 B의 원인이 되었다면, A의 시계 값은 반드시 B의 시계 값보다 작아야 한다"는 **Happens-before ($a \rightarrow b$) 관계**를 정의하고, 모든 노드가 내부 카운터를 유지하며 메시지를 주고받을 때마다 카운터를 보정하여 시스템 전체의 인과율(Causality)을 정렬한다.
 > 3. **가치**: 람포트의 시계는 분산 데이터베이스, 동시성 제어, 트랜잭션의 직렬화(Serialization) 등 현대 분산 시스템이 공유 자원의 무결성을 보장하기 위해 반드시 거쳐야 하는 **사건 정렬(Event Ordering)의 수학적 기초**를 제공했다.
 
+> 📝 모범 답안
+
+# 람포트 논리적 시계 (Lamport's Logical Clocks) 분산 환경 동기화 정렬
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 람포트 논리적 시계는 1978년 분산 컴퓨팅의 아버지 레슬리 람포트가 고안한 알고리즘으로, 분산 환경의 독립적인 프로세스들이 물리적 시계의 오차와 무관하게 시스템 전체의 사건(Event) 발생 순서를 일관되게 정렬(Partial/Total Ordering)할 수 있게 해주는 카운터 동기화 메커니즘이다.
 
@@ -38,7 +40,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Happens-before 관계 ($a \rightarrow b$)
 
@@ -100,7 +102,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 분산 동기화 알고리즘 비교
 
@@ -120,7 +122,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -171,7 +173,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

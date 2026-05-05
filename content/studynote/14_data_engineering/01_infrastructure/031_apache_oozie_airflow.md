@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Apache Oozie는 Hadoop 생태계 전용 XML 기반 워크플로 스케줄러이고, Apache Airflow는 Python DAG 기반 범용 오케스트레이터다. 현대 데이터 엔지니어링에서는 Airflow가 사실상 표준(de facto)이 됐다.
+> **핵심**: Apache Oozie는 Hadoop 생태계 전용 XML 기반 워크플로 스케줄러이고, Apache Airflow는 Python DAG 기반 범용 오케스트레이터다. 현대 데이터 엔지니어링에서는 Airflow가 사실상 표준(de facto)이 됐다.
 > 2. **가치**: Airflow의 핵심 강점은 ① Python 코드로 복잡한 의존성 표현, ② 풍부한 Operator(200+), ③ 강력한 모니터링 UI, ④ 클라우드 네이티브 통합(AWS/GCP/Azure)이다. 반면 Oozie는 레거시 Hadoop 환경에서 여전히 현역이다.
 > 3. **판단 포인트**: 마이그레이션 결정 기준: 온프레미스 Hadoop 전용이면 Oozie 유지, 클라우드 이전 계획이 있거나 클라우드 서비스 통합이 필요하면 Airflow 마이그레이션이 합리적이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 워크플로 스케줄러 비교:
@@ -36,7 +38,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Airflow 핵심 컴포넌트
 
@@ -82,7 +84,7 @@ with DAG(
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Oozie | Airflow | Prefect | Dagster |
 |:---|:---|:---|:---|:---|
@@ -96,7 +98,7 @@ with DAG(
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Oozie → Airflow 마이그레이션 전략
 
@@ -138,7 +140,7 @@ Azure Data Factory:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:Episcopal: 내용 |

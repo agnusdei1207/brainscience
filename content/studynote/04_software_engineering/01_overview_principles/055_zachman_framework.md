@@ -5,16 +5,17 @@ date = "2026-05-01"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Zachman Framework는 기업 아키텍처를 질문 축과 관점 축으로 정리하는 분류 체계다.
+> **핵심**: Zachman Framework는 기업 아키텍처를 질문 축과 관점 축으로 정리하는 분류 체계다.
 > 2. **가치**: What/How/Where/Who/When/Why와 Planner/Owner/Designer/Builder/Subcontractor/Functioning Enterprise를 교차시켜 누락을 줄인다.
 > 3. **판단 포인트**: 절차 모델이 아니라 아키텍처 산출물의 분류표로 이해해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 기업 아키텍처는 범위가 넓고 이해관계자가 많다. Zachman Framework는 서로 다른 시각의 산출물을 체계적으로 정리하기 위해 쓰인다.
 
@@ -24,7 +25,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Zachman은 질문 축(What, How, Where, Who, When, Why)과 관점 축(Planner, Owner, Designer, Builder, Subcontractor, Functioning Enterprise)을 교차시킨다.
 
@@ -50,7 +51,7 @@ How                ○       ○       ○         ○          ○            �
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Zachman은 방법론이라기보다 분류 체계다. TOGAF 같은 프레임워크와 함께 쓰이기도 하지만 역할이 다르다.
 
@@ -66,7 +67,7 @@ Zachman은 산출물의 위치를 정리하는 데 강하고, 변환 절차는 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 모든 산출물을 Zachman 행/열에 매핑해 누락을 찾는다. 특히 대규모 전환 프로젝트에서 유용하다.
 
@@ -89,7 +90,7 @@ Zachman은 산출물의 위치를 정리하는 데 강하고, 변환 절차는 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Zachman Framework는 기업 아키텍처의 누락을 줄이고, 다양한 이해관계자 관점을 연결한다. 큰 조직일수록 유용하다.
 

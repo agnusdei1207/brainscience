@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Microkernel Architecture (마이크로커널 아키텍처)는 최소한의 Core System (코어 시스템)만 두고 나머지 기능을 독립 배포 가능한 Plug-in (플러그인)으로 분리해 조립하는 확장 중심 설계이다.
+> **핵심**: Microkernel Architecture (마이크로커널 아키텍처)는 최소한의 Core System (코어 시스템)만 두고 나머지 기능을 독립 배포 가능한 Plug-in (플러그인)으로 분리해 조립하는 확장 중심 설계이다.
 > 2. **가치**: 기능 확장 시 코어를 수정하지 않고 플러그인만 추가·교체하므로 OCP (Open-Closed Principle, 개방-폐쇄 원칙)를 가장 직접적으로 실현하는 아키텍처이다.
 > 3. **판단 포인트**: 사용자별·고객별로 기능 조합이 달라지는 제품(IDE, 브라우저, ERP)이나 핫 스왑(Hot Swap)이 필요한 시스템에 최적이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 소프트웨어 제품이 성장하면서 모든 기능을 단일 코드베이스에 포함하면 빌드 시간 증가, 배포 리스크 확대, 팀 간 코드 충돌이 발생한다. 마이크로커널 아키텍처는 이 문제를 **코어(Core)와 플러그인(Plug-in)의 명확한 분리**로 해결한다.
 
@@ -34,7 +35,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 마이크로커널 아키텍처 구조
 
@@ -78,7 +79,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Monolith vs Microkernel vs Microservices
 
@@ -95,7 +96,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### OSGi (Open Services Gateway initiative) 프레임워크
 
@@ -128,7 +129,7 @@ Java 환경의 표준 플러그인 프레임워크. 번들(Bundle = JAR + 메타
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 마이크로커널 아키텍처는 코어를 안정적으로 유지하면서 기능을 무한히 확장할 수 있는 **개방형 플랫폼(Open Platform)** 설계의 핵심 패턴이다. Eclipse, VS Code, Chrome 등 성공적인 개발자 도구들이 이 패턴을 채택한 것은 우연이 아니다.
 

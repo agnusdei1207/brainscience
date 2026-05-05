@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: COBIT 2019(Control Objectives for Information and Related Technology — 정보 및 관련 기술 통제 목표)는 IT 거버넌스와 IT 관리를 위한 40개의 목표(Objective)를 6개 도메인(EDM·APO·BAI·DSS·MEA)으로 구조화한 ISACA의 종합 프레임워크다.
+> **핵심**: COBIT 2019(Control Objectives for Information and Related Technology — 정보 및 관련 기술 통제 목표)는 IT 거버넌스와 IT 관리를 위한 40개의 목표(Objective)를 6개 도메인(EDM·APO·BAI·DSS·MEA)으로 구조화한 ISACA의 종합 프레임워크다.
 > 2. **가치**: COBIT은 단순 IT 통제 체크리스트가 아니라, 이사회의 거버넌스 목표(EDM 5개)와 경영진의 관리 목표(35개)를 명확히 분리해 각 계층의 책임을 구체화한다. 기업 규모·목표에 따라 40개 중 우선순위 목표를 선택적으로 적용하는 맞춤형 설계가 COBIT 2019의 혁신이다.
 > 3. **판단 포인트**: COBIT 5와 COBIT 2019의 핵심 차이는 유연성이다. COBIT 5는 모든 조직에 동일 프레임워크를 적용했지만, COBIT 2019는 설계 요인(Design Factor) 11개를 고려해 조직별 맞춤 거버넌스 시스템을 설계한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### COBIT의 역사 — COBIT 1에서 2019까지
 ISACA(Information Systems Audit and Control Association — 정보 시스템 감사 및 통제 협회)는 1996년 COBIT 1을 발표했다. 이후 1998년 COBIT 2, 2000년 COBIT 3, 2005년 COBIT 4.0/4.1, 2012년 COBIT 5, 2019년 COBIT 2019로 진화했다. 각 버전은 IT 환경의 변화를 반영해 범위와 구조를 발전시켰다. COBIT 2019는 클라우드·애자일·DevOps·사이버보안 등 디지털 전환 요구사항을 전면 반영했다.
@@ -28,7 +30,7 @@ COBIT 2019는 11개 설계 요인을 기반으로 조직 맞춤형 거버넌스 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### COBIT 2019 6대 도메인 구조
 
@@ -86,7 +88,7 @@ COBIT 2019는 11개 설계 요인을 기반으로 조직 맞춤형 거버넌스 
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### COBIT 5 vs COBIT 2019 핵심 차이
 
@@ -114,7 +116,7 @@ COBIT 2019는 11개 설계 요인을 기반으로 조직 맞춤형 거버넌스 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### COBIT 2019 구현 7단계 (Implementation Guide)
 1. **What are the drivers?** 변화 필요성 파악 (규제·사고·경영 요구)
@@ -138,7 +140,7 @@ COBIT 2019는 11개 설계 요인을 기반으로 조직 맞춤형 거버넌스 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### IT 통제의 표준화와 감사 효율화
 COBIT 2019를 기반으로 IT 통제 체계를 구축하면 내·외부 감사, 규제 기관 검사에서 표준화된 언어로 대응할 수 있다. IT 감사인(CISA — Certified Information Systems Auditor)이 COBIT을 감사 기준으로 사용하므로, 기업이 COBIT 체계를 갖추면 감사 효율이 극적으로 향상된다.

@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Web Cache Deception은 웹 서버와 캐시 서버(CDN 등)가 경로를 해석하는 방식의 차이를 악용하여, 사용자의 개인정보를 공용 캐시에 강제로 저장시키는 공격이다.
+> **핵심**: Web Cache Deception은 웹 서버와 캐시 서버(CDN 등)가 경로를 해석하는 방식의 차이를 악용하여, 사용자의 개인정보를 공용 캐시에 강제로 저장시키는 공격이다.
 > 2. **가치**: 공격자는 인증이 필요한 민감한 페이지를 '정적 파일(.css, .jpg 등)'인 것처럼 속여 캐싱되게 만든 후, 이를 직접 호출하여 타인의 개인정보를 탈취한다.
 > 3. **판단 포인트**: 파일 확장자 기반의 캐싱 정책을 지양하고, `Cache-Control: no-store` 설정과 `X-Content-Type-Options: nosniff`를 통해 엄격한 응답 제어를 수행해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 **Web Cache Deception (WCD)**은 2017년 Omer Gil에 의해 발표된 공격 기법으로, 현대 웹의 복잡한 경로 파싱 로직을 파고든다. 웹 서버는 유연성을 위해 `URL/profile.php/nonexistent.css`와 같은 요청이 들어오면 `profile.php`를 실행하고 나머지를 무시한다. 반면, 그 앞에 있는 캐시 서버(CDN)는 URL 끝에 붙은 `.css` 확장자만 보고 이를 "누구나 봐도 되는 정적 파일"로 오인하여 결과를 캐시에 저장해 버린다.
 
@@ -23,7 +25,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 공격의 핵심은 **경로 파싱 불일치(Path Parsing Discrepancy)**와 **공격자 유도**에 있다.
 
@@ -48,7 +50,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Web Cache Deception은 **Web Cache Poisoning**과 혼동하기 쉽지만, '누구의 데이터가 캐시되는가'와 '공격 범위'에서 큰 차이가 있다.
 
@@ -63,7 +65,7 @@ Web Cache Deception은 **Web Cache Poisoning**과 혼동하기 쉽지만, '누�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 기술사는 성능(Caching)과 보안(Private Data Isolation) 사이의 트레이드오프를 관리해야 한다. 모든 동적 페이지는 명시적인 보안 헤더를 가져야 한다.
 
@@ -81,7 +83,7 @@ Web Cache Deception은 **Web Cache Poisoning**과 혼동하기 쉽지만, '누�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Web Cache Deception 방어는 계정 탈취와 대규모 정보 유출을 예방하는 필수 단계이다. 특히 클라우드 환경에서 CDN 도입이 일반화된 현재, 인프라 계층(캐시)과 애플리케이션 계층(웹 서버) 간의 통신 규약을 명확히 하는 것이 중요하다.
 

@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 보안 엔클레이브 (TrustZone, SGX)와 OS TEE (Trusted Execution Environment) 연동 구조
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 운영체제(OS) 커널마저 해커에게 뚫릴 수 있다는 전제하에, CPU 하드웨어 내부에 OS조차 접근할 수 없는 절대적인 '비밀의 방'을 만들어 민감한 연산(암호화, 생체 인증)을 수행하는 아키텍처가 **보안 엔클레이브(Secure Enclave) 및 TEE**다.
+> **핵심**: 운영체제(OS) 커널마저 해커에게 뚫릴 수 있다는 전제하에, CPU 하드웨어 내부에 OS조차 접근할 수 없는 절대적인 '비밀의 방'을 만들어 민감한 연산(암호화, 생체 인증)을 수행하는 아키텍처가 **보안 엔클레이브(Secure Enclave) 및 TEE**다.
 > 2. **메커니즘**: ARM의 **TrustZone**은 전체 시스템을 '일반 세상(Normal World)'과 '안전한 세상(Secure World)' 두 개의 논리적 CPU로 쪼개며, Intel의 **SGX**는 앱의 메모리 일부를 암호화된 엔클레이브로 만들어 다른 앱이나 OS가 읽으려 하면 쓰레기값만 보이게 만든다.
 > 3. **가치**: 모바일 기기의 지문/안면 인식(FIDO), 삼성페이/애플페이 결제, DRM 영상 재생 등 현대 IT 서비스의 가장 민감한 **루트 오브 트러스트(Root of Trust)**를 담당하며, 제로 트러스트(Zero Trust) 시대의 궁극적 하드웨어 방어막으로 작용한다.
 
+> 📝 모범 답안
+
+# 보안 엔클레이브 (TrustZone, SGX)와 OS TEE (Trusted Execution Environment) 연동 구조
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **TEE (Trusted Execution Environment)**: 메인 프로세서 내부에 격리된 안전한 실행 구역. 데이터의 기밀성(Confidentiality)과 무결성(Integrity)을 하드웨어 수준에서 보장한다.
@@ -40,7 +42,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### ARM TrustZone: 두 개의 세상 (Two Worlds)
 
@@ -91,7 +93,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### TEE 아키텍처 구현체 비교
 
@@ -113,7 +115,7 @@ Apple의 SEP(Secure Enclave Processor)는 TrustZone보다 한발 더 나아가, 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -164,7 +166,7 @@ Apple의 SEP(Secure Enclave Processor)는 TrustZone보다 한발 더 나아가, 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> 5% 서비스 필터
+
+> 📝 모범 답안
 
 - **본질**: Grafana는 메트릭(Metrics)·로그(Logs)·추적(Traces)의 3대 관측성(Observability) 기둥을 단일 UI에서 통합 시각화하는 플랫폼으로, LGTM 스택(Loki+Grafana+Tempo+Mimir)을 통해 완전한 오픈소스 관측성 환경을 구성할 수 있다.
 - **가치**: Prometheus의 PromQL로 쿠버네티스 클러스터 메트릭, Loki의 LogQL로 애플리케이션 로그, Tempo로 분산 추적을 하나의 Grafana 대시보드에서 상관 분석하여 장애 근본 원인을 분 단위로 파악할 수 있다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 관측성(Observability)의 3대 기둥
 
@@ -44,7 +47,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### LGTM 스택 아키텍처
 
@@ -89,8 +92,7 @@ PromQL 예시:
   # 5분 평균 CPU 사용률 (전체 서비스)
   avg(rate(cpu_usage_seconds_total[5m])) by (service)
 
-  # 오류율 > 5% 서비스 필터
-  sum(rate(http_requests_total{status=~"5.."}[5m]))
+  # 오류율   sum(rate(http_requests_total{status=~"5.."}[5m]))
   / sum(rate(http_requests_total[5m])) > 0.05
 
 LogQL 예시:
@@ -105,7 +107,7 @@ LogQL 예시:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Grafana vs Kibana 비교
 
@@ -135,7 +137,7 @@ export default function() {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 쿠버네티스 모니터링 스택
 
@@ -178,7 +180,7 @@ export default function() {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### Grafana 도입 효과
 

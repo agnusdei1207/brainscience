@@ -4,11 +4,14 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. ECAB (Emergency Change Advisory Board)는 ITIL 변경 관리 체계에서 긴급 변경(Emergency Change)을 신속하게 승인·검토하는 소규모·권한 위임 위원회로, 전체 CAB (Change Advisory Board)를 소집할 시간이 없을 때 대안적 거버넌스를 제공한다.
 > 2. 긴급 변경은 일반 변경 절차를 우회하지만 완전히 생략하는 것이 아니라, 사후 검토(Post-Implementation Review)를 통해 정식 변경 기록으로 등록해야 한다.
 > 3. ECAB의 핵심 가치는 속도(Speed)와 통제(Control)의 균형 — 비즈니스 중단을 최소화하면서도 승인 없는 무단 변경(Unauthorized Change)을 방지한다.
+
+> 📝 모범 답안
 
 ---
 

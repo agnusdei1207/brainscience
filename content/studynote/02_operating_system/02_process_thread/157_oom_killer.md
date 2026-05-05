@@ -5,16 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
+
+> **비유**: OOM Killer는 "비상시 배를 가볍게 하기 위해 화물을 바다에 던지는 선장"이다. 배(시스템)가 침몰하는 것보다 일부 화물(프로세스)을 희생하는 것이 낫다.
+
+> 📝 모범 답안
 
 # OOM Killer 프로세스 종료 정책 (OOM Killer Process Termination Policy)
 
-## Ⅰ. OOM Killer의 개념
+## 1. 개요 및 필요성
 
 ### 1. 정의
 
 OOM Killer (Out-Of-Memory Killer)는 Linux 커널이 시스템의 물리 메모리 및 스왑 영역이 완전히 고갈되었을 때, 메모리를 확보하기 위해 특정 프로세스를 강제 종료(Kill)하는 커널 메커니즘이다. OOM 상태에서는 새로운 메모리 할당이 불가능하므로, 커널이 직접 개입하여 시스템 전체의 다운(Crash)을 방지한다.
-
-> **비유**: OOM Killer는 "비상시 배를 가볍게 하기 위해 화물을 바다에 던지는 선장"이다. 배(시스템)가 침몰하는 것보다 일부 화물(프로세스)을 희생하는 것이 낫다.
 
 ### 2. OOM 발생 조건
 
@@ -55,7 +58,7 @@ OOM 발생 과정
 
 ---
 
-## Ⅱ. OOM 점수 산정 (oom_score)
+## 2. 구성요소
 
 ### 1. oom_badness() 알고리즘
 
@@ -113,7 +116,7 @@ ps -eo pid,comm,rss,oom_score | sort -k4 -rn | head -10
 
 ---
 
-## Ⅲ. oom_score_adj를 통한 제어
+## 3. 구조 및 동작 원리
 
 ### 1. oom_score_adj
 
@@ -175,7 +178,7 @@ ExecStart=/usr/bin/myapp
 
 ---
 
-## Ⅳ. cgroup 기반 OOM 제어
+## 4. 비교 및 트레이드오프
 
 ### 1. cgroup v1: memory.oom_control
 
@@ -247,7 +250,7 @@ oom_kill_disable=1 설정 시 동작
 
 ---
 
-## Ⅴ. OOM Killer 로그 분석 및 대응
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. OOM Killer 로그
 

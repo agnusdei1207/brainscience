@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: EL (Expression Language) Injection (표현식 언어 인젝션)은 Java EE (Enterprise Edition) 의 JSP (JavaServer Pages) EL, Spring SpEL (Spring Expression Language), JSF (JavaServer Faces) EL 등 표현식 언어 엔진에 사용자 입력이 직접 평가될 때 임의 코드를 실행하는 취약점이다.
+> **핵심**: EL (Expression Language) Injection (표현식 언어 인젝션)은 Java EE (Enterprise Edition) 의 JSP (JavaServer Pages) EL, Spring SpEL (Spring Expression Language), JSF (JavaServer Faces) EL 등 표현식 언어 엔진에 사용자 입력이 직접 평가될 때 임의 코드를 실행하는 취약점이다.
 > 2. **가치**: EL 인젝션은 단순 데이터 조작을 넘어 서버 측 Java 코드를 직접 실행할 수 있어 원격 코드 실행(RCE, Remote Code Execution)으로 이어질 수 있다.
 > 3. **판단 포인트**: 사용자 입력을 EL 표현식 컨텍스트에 직접 포함하지 않고, 입력값을 EL 처리 전에 이스케이프하거나, SpEL의 경우 SimpleEvaluationContext를 사용해 평가 컨텍스트를 제한해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Java 웹 프레임워크(Spring, JSF, Thymeleaf 등)는 표현식 언어를 통해 서버 사이드 데이터를 HTML 템플릿에 동적으로 바인딩한다. 그러나 사용자 입력이 표현식으로 평가되는 맥락에 포함되면, 공격자가 임의 Java 코드를 서버에서 실행할 수 있다.
 
@@ -34,7 +36,7 @@ JSP EL의 경우 `${userInput}` 형태로 출력할 때, 입력이 다시 EL로 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 EL 인젝션 공격 경로:
 
@@ -63,7 +65,7 @@ EL 인젝션 공격 경로:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | EL Injection | SSTI (Server-Side Template Injection) |
 |:---|:---|:---|
@@ -76,7 +78,7 @@ EL 인젝션 공격 경로:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **Spring SpEL 안전 사용**:
 1. **SimpleEvaluationContext 사용**: `StandardEvaluationContext` 대신 제한된 컨텍스트 사용
@@ -88,7 +90,7 @@ EL 인젝션 공격 경로:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 EL 인젝션은 적절한 컨텍스트 제한과 사용자 입력을 표현식으로 처리하지 않는 아키텍처 원칙으로 방어할 수 있다. 특히 Spring 기반 애플리케이션에서 SpEL이 필요한 경우 SimpleEvaluationContext를 기본값으로 사용하는 팀 코딩 표준이 중요하다.
 

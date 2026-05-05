@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 하둡(Hadoop)은 단일 서버 한계를 넘기 위해 수천 대의 범용 서버에 데이터를 분산 저장(HDFS)하고 분산 처리(MapReduce)하는 오픈소스 프레임워크로, Apache Software Foundation(ASF)의 핵심 프로젝트다.
+> **핵심**: 하둡(Hadoop)은 단일 서버 한계를 넘기 위해 수천 대의 범용 서버에 데이터를 분산 저장(HDFS)하고 분산 처리(MapReduce)하는 오픈소스 프레임워크로, Apache Software Foundation(ASF)의 핵심 프로젝트다.
 > 2. **가치**: HDFS·MapReduce·YARN이라는 3개의 핵심 레이어 위에 Hive(SQL)·Pig(스크립트)·HBase(NoSQL)·Spark(고속 처리)·Kafka(스트리밍) 등이 에코시스템을 형성하여 모든 빅데이터 처리 요구를 커버한다.
 > 3. **판단 포인트**: 현재 하둡은 직접 운영보다 클라우드 관리형 서비스(AWS EMR, GCP Dataproc)로 사용하는 것이 주류다. 하둡을 알아야 하는 이유는 클라우드 서비스의 내부 동작 원리를 이해하기 위해서다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 하둡은 2006년 Doug Cutting과 Mike Cafarella가 구글의 두 논문(GFS: Google File System, 2003; MapReduce, 2004)을 영감받아 개발했다. 이름의 유래는 Cutting의 아들이 노란 코끼리 장난감에 붙인 이름이다.
 
@@ -26,7 +27,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 하둡 에코시스템 구조도
 
@@ -71,7 +72,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 하둡 vs 기존 RDBMS
 
@@ -96,7 +97,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **클라우드에서의 하둡 사용 (AWS EMR)**:
 ```
@@ -141,7 +142,7 @@ ORDER BY total DESC;
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 설명 |
 |:---|:---|

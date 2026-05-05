@@ -5,16 +5,17 @@ date = "2026-04-10"
 [extra]
 categories = "studynote-devops"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 아티팩트 (Artifact)는 빌드가 끝난 결과물이고, Nexus Repository Manager와 Docker Registry는 그 결과물을 버전·검사·배포 단계별로 안전하게 보관하는 창고다.
+> **핵심**: 아티팩트 (Artifact)는 빌드가 끝난 결과물이고, Nexus Repository Manager와 Docker Registry는 그 결과물을 버전·검사·배포 단계별로 안전하게 보관하는 창고다.
 > 2. **가치**: 내부 저장소를 쓰면 외부 의존성을 캐시하고 재현 가능한 빌드를 만들 수 있으며, digest 기준 승격으로 "같은 이름 다른 파일" 문제를 막는다.
 > 3. **판단 포인트**: 운영 배포에는 mutable tag보다 immutable digest를 기준으로 하고, 공급망 보안은 저장이 아니라 검증까지 포함해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 CI/CD (Continuous Integration/Continuous Deployment) 파이프라인은 빌드 결과물을 믿을 수 있게 남겨야 다음 단계가 안정된다. 아티팩트 관리는 단순 보관이 아니라, 어떤 산출물이 어느 검증을 통과했는지 추적하는 일이다.
 
@@ -32,7 +33,7 @@ build -> store -> scan -> promote -> deploy
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Nexus Repository Manager는 여러 패키지 형식의 local, proxy, group repository를 관리한다. Docker Registry는 이미지와 manifest를 digest 기준으로 보관해 컨테이너 배포를 안정화한다.
 
@@ -48,7 +49,7 @@ Nexus Repository Manager는 여러 패키지 형식의 local, proxy, group repos
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 태그(tag)는 사람이 보기 편하지만 바뀔 수 있고, digest는 내용 기반이라 변하지 않는다. 운영 배포는 반드시 digest를 기준으로 잡는 편이 안전하다.
 
@@ -64,7 +65,7 @@ Nexus Repository Manager는 여러 패키지 형식의 local, proxy, group repos
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 스냅샷과 릴리즈를 분리하고, 이미지 서명과 취약점 스캔을 통과한 것만 승격한다. 개발·스테이징·운영 레포지토리도 따로 두는 편이 좋다.
 
@@ -79,7 +80,7 @@ Nexus Repository Manager는 여러 패키지 형식의 local, proxy, group repos
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 아티팩트 관리는 배포 속도보다 공급망 신뢰를 지키는 일이다. 좋은 저장소는 "무엇이 만들어졌고, 무엇이 검증됐고, 무엇이 배포됐는가"를 남긴다.
 

@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: API 스로틀링(API Throttling)은 서비스 과부하와 남용을 막는 보호 메커니즘이고, BFF(Backend for Frontend)는 각 클라이언트에 최적화된 API 계층을 분리하여 오버패칭(Overfetching)과 언더패칭(Underfetching)을 해결한다.
+> **핵심**: API 스로틀링(API Throttling)은 서비스 과부하와 남용을 막는 보호 메커니즘이고, BFF(Backend for Frontend)는 각 클라이언트에 최적화된 API 계층을 분리하여 오버패칭(Overfetching)과 언더패칭(Underfetching)을 해결한다.
 > 2. **가치**: 토큰 버킷(Token Bucket), 리키 버킷(Leaky Bucket), 슬라이딩 윈도(Sliding Window) 알고리즘은 각각 버스트 허용, 균일 속도, 시간 정확성의 트레이드오프를 가진다.
 > 3. **판단 포인트**: BFF 패턴은 클라이언트 종류가 다양(모바일/웹/IoT)하고 각각의 API 요구사항이 다를 때 효과적이며, 그렇지 않으면 GraphQL이 더 단순한 대안이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 **API 스로틀링 필요성**: 공개 API나 내부 MSA API 모두 무제한 요청을 허용하면 서버 과부하, DDOS(Distributed Denial of Service), 특정 클라이언트의 자원 독점이 발생한다. Rate Limiting(속도 제한)은 단위 시간당 요청 수를 제한하여 공정한 자원 배분과 서비스 안정성을 동시에 확보한다.
 
@@ -27,7 +28,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 **Rate Limiting 알고리즘 비교**:
 
@@ -73,7 +74,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **BFF vs GraphQL**:
 
@@ -94,7 +95,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **기술사 시험 판단 포인트**:
 1. 세 가지 Rate Limiting 알고리즘의 트레이드오프(버스트 허용, 구현 복잡도, 정확성)를 표로 비교한다.
@@ -107,7 +108,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 API 스로틀링과 BFF 패턴을 적용하면:
 - **서비스 안정성**: Rate Limiting으로 과부하, 남용, DDOS 부분 방어

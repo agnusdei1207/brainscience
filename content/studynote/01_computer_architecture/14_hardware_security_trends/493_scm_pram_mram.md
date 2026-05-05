@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# SCM (차세대 비휘발성 메모리: PRAM, MRAM, ReRAM)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SCM (Storage Class Memory)은 DRAM의 빠른 속도와 NAND 플래시의 비휘발성(전원 차단 시에도 데이터 유지)을 동시에 갖춘, 메모리와 스토리지 사이의 거대한 성능 격차를 메우는 차세대 메모리다.
+> **핵심**: SCM (Storage Class Memory)은 DRAM의 빠른 속도와 NAND 플래시의 비휘발성(전원 차단 시에도 데이터 유지)을 동시에 갖춘, 메모리와 스토리지 사이의 거대한 성능 격차를 메우는 차세대 메모리다.
 > 2. **가치**: SCM은 DRAM에 필적하는 빠른 읽기/쓰기 속도와 바이트 단위 접근성을 가지면서도 전원을 차단해도 데이터가 지워지지 않는 비휘발성을 동시에 갖추어, 메모리-스토리지 병목을 혁신적으로 해결한다.
 > 3. **융합**: 물질의 상변화(PRAM), 자성(MRAM), 저항 변화(ReRAM) 등 다양한 원리로 구현되며, 특히 MRAM은 쓰기 수명이 반영구적(무한대)이라 향후 SRAM(L3 캐시) 대체가 유력한 후보로 꼽힌다.
 
+> 📝 모범 답안
+
+# SCM (차세대 비휘발성 메모리: PRAM, MRAM, ReRAM)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 문제의식: 메모리 계층 구조의 치명적 간극
 
@@ -60,7 +62,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### SCM의 3대 기술: PRAM, MRAM, ReRAM
 
@@ -164,7 +166,7 @@ SCM을 구현하기 위해 전자(Electron)를 가두는 기존 방식에서 벗
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### SCM 기술 3종류 비교
 
@@ -186,7 +188,7 @@ SCM을 구현하기 위해 전자(Electron)를 가두는 기존 방식에서 벗
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -211,7 +213,7 @@ TSMC와 Samsung은 MRAM을 L3 캐시 레벨에 적용하는 것을 연구 중이
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### SCM의 미래 전망
 

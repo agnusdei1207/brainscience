@@ -6,15 +6,17 @@ description = "실패가 반복되면 회로를 끊어 장애 전파를 막는 �
 taxonomy = ""
 tags = ["Software Engineering", "Observability", "Circuit Breaker", "Resilience4j", "Fault Tolerance"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 서킷 브레이커는 장애가 커지면 호출을 차단한다.
+> **핵심**: 서킷 브레이커는 장애가 커지면 호출을 차단한다.
 > 2. **가치**: 연쇄 실패와 자원 고갈을 막는다.
 > 3. **판단 포인트**: 상태 전이, 임계치, 복구 시도 간격을 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 반복 실패가 계속되면 더 이상 호출하지 않는 것이 낫다. 서킷 브레이커는 이 결정을 자동화한다.
 
@@ -22,7 +24,7 @@ tags = ["Software Engineering", "Observability", "Circuit Breaker", "Resilience4
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 상태는 Closed, Open, Half-Open으로 바뀐다. 실패율이 기준을 넘으면 Open으로 전환된다.
 
@@ -40,7 +42,7 @@ Closed -> Open -> Half-Open -> Closed
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 서킷 브레이커는 timeout, retry와 함께 쓰인다. retry만 많아지면 오히려 장애를 키울 수 있다.
 
@@ -54,7 +56,7 @@ Closed -> Open -> Half-Open -> Closed
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 실패율과 대기 시간을 기준으로 상태 전환을 조정한다.
 
@@ -67,7 +69,7 @@ Closed -> Open -> Half-Open -> Closed
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 서킷 브레이커는 장애 확산을 끊어 시스템을 보호한다.
 

@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. PACELC(파셀크) 정리는 Daniel Abadi(2012)가 CAP 정리의 한계를 극복하기 위해 제안한 확장 모델로, 파티션 발생 시(P) 가용성(A)/일관성(C) 트레이드오프 외에 정상 상태에서도 지연(L, Latency)/일관성(C, Consistency) 트레이드오프가 존재함을 명시한다.
 > 2. CAP 정리가 "파티션 발생"이라는 극단적 상황만 다루는 반면, PACELC는 파티션이 없는 정상 운영 상황에서도 "낮은 지연(L) vs 강한 일관성(C)"의 선택이 필요함을 보여줌으로써 분산 데이터베이스 선택의 실무적 기준을 제시한다.
 > 3. DynamoDB·Cassandra(PA/EL), HBase·VoltDB(PC/EC)처럼 실제 NoSQL/분산 DB는 PACELC 분류로 그 특성을 명확히 설명할 수 있으며, 애플리케이션 요구사항에 따라 PA/EL(가용성·저지연 우선) vs PC/EC(일관성 우선)를 선택해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. CAP 정리와 한계
+## 1. 개요 및 필요성
 
 ```
 CAP 정리 복습:
@@ -41,7 +44,7 @@ PACELC 등장 배경:
 
 ---
 
-## Ⅱ. PACELC 정리 구조
+## 2. 구성요소
 
 ```
 PACELC 정리:
@@ -76,7 +79,7 @@ PC/EL (혼합):
 
 ---
 
-## Ⅲ. 주요 DB PACELC 분류
+## 3. 구조 및 동작 원리
 
 ```
 분산 데이터베이스 PACELC 분류:
@@ -116,7 +119,7 @@ Tunable Consistency (Cassandra):
 
 ---
 
-## Ⅳ. 실무 DB 선택 기준
+## 4. 비교 및 트레이드오프
 
 ```
 PACELC 기반 DB 선택 기준:
@@ -154,7 +157,7 @@ Eventual Consistency vs Strong Consistency:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 글로벌 이커머스
+## 5. 실무 적용 및 최적화 기법
 
 ```
 글로벌 이커머스 C사 DB 설계:

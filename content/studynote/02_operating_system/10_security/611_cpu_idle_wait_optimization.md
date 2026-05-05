@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# CPU 유휴 (Idle) 대기 루프 최적화
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CPU 유휴(Idle) 상태는 실행 가능한 프로세스가 없을 때 커널이 CPU를 저전력 모드(C-State)로 전환하는 메커니즘으로, 단순한 "쉬는 상태"가 아니라 전력 소비와 응답 성능의 균형을 맞추는 **적극적 전력 관리(Active Power Management)** 과정이다.
+> **핵심**: CPU 유휴(Idle) 상태는 실행 가능한 프로세스가 없을 때 커널이 CPU를 저전력 모드(C-State)로 전환하는 메커니즘으로, 단순한 "쉬는 상태"가 아니라 전력 소비와 응답 성능의 균형을 맞추는 **적극적 전력 관리(Active Power Management)** 과정이다.
 > 2. **가치**: 현대 서버 CPU에서 유휴 전력은 총 전력의 30~60%를 차지하며, C-State(C0~C10) 깊이와 idle governor(menu/teo) 선택에 따라 전력을 50W~200W까지 절감하면서도 웨이크업 레이턴시를 마이크로초 이내로 유지할 수 있다.
 > 3. **융합**: DVFS (Dynamic Voltage and Frequency Scaling, #651), 틱리스 커널(Tickless Kernel), cpuidle 프레임워크가 결합하여 모바일~데이터센터 전 범위의 에너지 효율을 최적화한다.
 
+> 📝 모범 답안
+
+# CPU 유휴 (Idle) 대기 루프 최적화
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념
 CPU 유휴(Idle) 최적화는 실행할 태스크가 없을 때 CPU를 가장 적절한 저전력 상태로 전환하고, 새 작업이 도착하면 최소 지연으로 복귀시키는 커널 서브시스템이다.
@@ -61,7 +63,7 @@ CPU가 100% 활용되지 않는 시간(대부분의 서버/모바일)에 전력�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -132,7 +134,7 @@ Tickless (NO_HZ_IDLE):
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### menu vs teo governor 비교
 
@@ -156,7 +158,7 @@ Tickless (NO_HZ_IDLE):
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -180,7 +182,7 @@ Tickless (NO_HZ_IDLE):
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 | 항목 | 최적화 전 | 최적화 후 |
 |:---|:---|:---|

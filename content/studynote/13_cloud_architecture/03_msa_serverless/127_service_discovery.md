@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Service Discovery는 **MSA에서 동적으로 변하는 서비스 인스턴스의 위치(IP:Port)를 자동으로 등록·탐색·갱신**하는 메커니즘이며, 서비스 레지스트리(Service Registry)가 핵심 컴포넌트이다.
+> **핵심**: Service Discovery는 **MSA에서 동적으로 변하는 서비스 인스턴스의 위치(IP:Port)를 자동으로 등록·탐색·갱신**하는 메커니즘이며, 서비스 레지스트리(Service Registry)가 핵심 컴포넌트이다.
 > 2. **가치**: 컨테이너 환경에서 서비스 인스턴스는 스케일링·재배포 시 **IP가 수시로 변경**되므로 하드코딩이 불가능하며, Service Discovery가 **"주문 서비스 어디 있어?"에 실시간 답변**한다.
 > 3. **판단 포인트**: **Client-side(클라이언트가 레지스트리 조회)** vs **Server-side(로드밸런서가 레지스트리 조회)**를 구분하고, K8s의 DNS 기반 Service Discovery가 사실상 표준이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -32,7 +34,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Client-side vs Server-side
 
@@ -49,7 +51,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 하드코딩 | Service Discovery |
 |:---|:---|:---|
@@ -59,7 +61,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 대표 도구
 - **Consul** (HashiCorp): Service Discovery + Config.
@@ -69,7 +71,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Service Discovery는 **MSA의 서비스 간 통신의 기본 인프라**이며, K8s 환경에서는 DNS 기반으로 투명하게 제공된다.
 

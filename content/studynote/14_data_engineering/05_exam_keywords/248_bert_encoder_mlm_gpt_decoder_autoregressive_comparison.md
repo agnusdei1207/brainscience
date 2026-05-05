@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: BERT(Bidirectional Encoder Representations from Transformers)는 양방향 문맥을 이해하는 인코더, GPT(Generative Pre-trained Transformer)는 왼쪽에서 오른쪽으로만 처리하는 자동 회귀(Autoregressive) 디코더로, 설계 목적이 근본적으로 다르다.
+> **핵심**: BERT(Bidirectional Encoder Representations from Transformers)는 양방향 문맥을 이해하는 인코더, GPT(Generative Pre-trained Transformer)는 왼쪽에서 오른쪽으로만 처리하는 자동 회귀(Autoregressive) 디코더로, 설계 목적이 근본적으로 다르다.
 > 2. **가치**: BERT는 MLM(Masked Language Model)과 NSP(Next Sentence Prediction)로 문장 이해·분류에 특화되고, GPT는 자동 회귀 다음 토큰 예측으로 텍스트 생성에 탁월하다.
 > 3. **판단 포인트**: T5·BART는 인코더-디코더 구조를 유지해 이해와 생성을 동시에 처리하며, 현재 실무에서는 GPT 계열 자동 회귀 모델이 생성 AI의 주류를 이룬다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 2018년은 NLP(Natural Language Processing) 혁명의 원년이다. BERT(Google, 2018)와 GPT(OpenAI, 2018)가 거의 동시에 등장하며 사전 학습-파인튜닝 패러다임을 확립했다. 두 모델은 같은 Transformer 기반이지만 어텐션 방향과 사전 학습 목표가 반대다.
 
@@ -29,7 +31,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### BERT 아키텍처 및 사전 학습
 
@@ -96,7 +98,7 @@ GPT-4      (2023):  비공개, ~1.8T 추정   (멀티모달)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### BERT vs GPT 적합 태스크 매핑
 
@@ -145,7 +147,7 @@ BART (Bidirectional and Auto-Regressive Transformers): Meta 2019
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### BERT 파인튜닝 구조 예시
 
@@ -182,7 +184,7 @@ BERT 문서 분류 파인튜닝
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### NLP 리더보드 성능 비교 (GLUE 벤치마크)
 

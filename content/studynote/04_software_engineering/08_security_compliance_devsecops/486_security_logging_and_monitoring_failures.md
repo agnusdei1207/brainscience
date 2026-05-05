@@ -2,17 +2,19 @@
 weight = 486
 title = "486. Security Logging and Monitoring Failures (보안 로깅 및 모니터링 실패)"
 +++
+## 0. 핵심 인사이트
 
-# 486. Security Logging and Monitoring Failures (보안 로깅 및 모니터링 실패)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 보안 로깅 및 모니터링 실패(Security Logging and Monitoring Failures)는 방화벽이나 시큐어 코딩이 뚫리는 것을 넘어서, 해커가 우리 집 안방(DB)에서 3달 동안 텐트를 치고 고객 정보를 매일 엑셀로 빼가고 있는데도 **CCTV(로깅)가 꺼져 있고, 경보 알람(모니터링)이 울리지 않아 회사가 '내가 털리고 있다는 사실조차 모르는' 가장 치욕스러운 눈먼 장님 상태**를 말한다.
+> **핵심**: 보안 로깅 및 모니터링 실패(Security Logging and Monitoring Failures)는 방화벽이나 시큐어 코딩이 뚫리는 것을 넘어서, 해커가 우리 집 안방(DB)에서 3달 동안 텐트를 치고 고객 정보를 매일 엑셀로 빼가고 있는데도 **CCTV(로깅)가 꺼져 있고, 경보 알람(모니터링)이 울리지 않아 회사가 '내가 털리고 있다는 사실조차 모르는' 가장 치욕스러운 눈먼 장님 상태**를 말한다.
 > 2. **가치**: 세상에 절대 안 뚫리는 시스템은 존재하지 않는다(Assume Breach 철학). 해커의 1차 침투(로그인 실패, 포트 스캐닝)를 기록하고 조기 경보를 울려주어, 단순한 문 따기 시도가 수억 원의 DB 통째 증발(Data Breach) 대참사로 번지기 전 '골든 타임(MTTD)' 내에 해커의 목덜미를 낚아채는 최후의 방어선이다.
 > 3. **융합**: 개발자가 로그 한 줄 덜 치는 코딩 문제에서 벗어나, **ELK(Elasticsearch, Logstash, Kibana) / Splunk** 같은 중앙 집중식 로그 수집 인프라, 위변조 불가능한 블록체인(WORM) 스토리지, 그리고 이상 징후를 감지하면 슬랙(Slack)으로 비명을 지르는 **SIEM(보안 정보 및 이벤트 관리)** 보안 관제 아키텍처와 거대하게 융합된다.
 
+> 📝 모범 답안
+
+# 486. Security Logging and Monitoring Failures (보안 로깅 및 모니터링 실패)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 시스템에서 벌어지는 치명적인 사건들(비밀번호 5회 틀림, 관리자 권한 로그인, 10만 건 엑셀 다운로드)을 하드디스크에 기록(Logging)하지 않거나, 기록은 해놨지만 아무도 그 로그 파일을 쳐다보지 않아(Monitoring 실패) 해킹이 발생해도 속수무책으로 방치되는 상태다.
 
@@ -29,7 +31,7 @@ title = "486. Security Logging and Monitoring Failures (보안 로깅 및 모니
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 1. 보안 로깅의 3대 핵심 타겟 (무엇을 남겨야 하는가?)
 
@@ -67,7 +69,7 @@ title = "486. Security Logging and Monitoring Failures (보안 로깅 및 모니
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 1. 보안 로깅 실패(A09) vs 소프트웨어 무결성 실패(A08)
 
@@ -88,7 +90,7 @@ title = "486. Security Logging and Monitoring Failures (보안 로깅 및 모니
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -109,7 +111,7 @@ title = "486. Security Logging and Monitoring Failures (보안 로깅 및 모니
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

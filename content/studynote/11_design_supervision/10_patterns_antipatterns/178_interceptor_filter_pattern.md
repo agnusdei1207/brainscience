@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 인터셉터 (Interceptor)와 필터 (Filter)는 AOP (Aspect-Oriented Programming)의 횡단 관심사(인증, 로깅, 인코딩)를 요청/응답 처리 파이프라인에서 분리하는 체인 패턴이다.
+> **핵심**: 인터셉터 (Interceptor)와 필터 (Filter)는 AOP (Aspect-Oriented Programming)의 횡단 관심사(인증, 로깅, 인코딩)를 요청/응답 처리 파이프라인에서 분리하는 체인 패턴이다.
 > 2. **가치**: 핵심 비즈니스 로직에 영향을 주지 않고 공통 처리를 추가/제거할 수 있어 개방-폐쇄 원칙(OCP, Open-Closed Principle)을 실현한다.
 > 3. **판단 포인트**: Filter는 서블릿 컨테이너 레벨(모든 요청 대상), Interceptor는 Spring 컨텍스트 레벨(Spring Bean 접근 가능)이라는 위치 차이가 선택 기준이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 횡단 관심사 문제
 
@@ -47,7 +48,7 @@ Filter와 Interceptor는 이 횡단 관심사를 **파이프라인의 특정 시
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Filter와 Interceptor의 위치 비교
 
@@ -114,7 +115,7 @@ Spring HandlerInterceptor는 3개의 메서드로 요청 처리 전/후를 감�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Filter vs Spring Interceptor 비교
 
@@ -144,7 +145,7 @@ Response ◄── [Filter1] ◄── [Filter2] ◄── [Filter3] ◄── �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Spring Interceptor 구현 예시
 
@@ -205,7 +206,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 도입 기대효과
 

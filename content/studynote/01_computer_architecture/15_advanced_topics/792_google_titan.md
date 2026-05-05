@@ -5,15 +5,17 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Google Titan은 데이터 센터 서버와 모바일 기기의 신뢰 자점 (RoT, Root of Trust)을 하드웨어 수준에서 구현하기 위해 설계된 전용 보안 마이크로컨트롤러 (MCU, Microcontroller Unit)이다.
+> **핵심**: Google Titan은 데이터 센터 서버와 모바일 기기의 신뢰 자점 (RoT, Root of Trust)을 하드웨어 수준에서 구현하기 위해 설계된 전용 보안 마이크로컨트롤러 (MCU, Microcontroller Unit)이다.
 > 2. **가치**: 부팅 과정에서 바이오스 (BIOS, Basic Input/Output System)와 펌웨어의 무결성을 검증하고, 물리적 공격 및 공급망 공격 (Supply Chain Attack)으로부터 인프라를 보호하며 시스템의 보안 상태를 결정론적으로 보장한다.
 > 3. **융합**: 하드웨어 보안 모듈 (HSM, Hardware Security Module), 신뢰 플랫폼 모듈 (TPM, Trusted Platform Module), 그리고 클라우드 보안 아키텍처와 결합하여 종단간 (End-to-End) 하드웨어 기반 보안 계층을 형성하는 핵심 기술이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: Google Titan 보안 칩은 서버 메인보드에 장착되어 시스템 부팅 시 가장 먼저 실행되는 저전력 전용 보안 칩이다. 이 칩은 중앙 처리 장치 (CPU, Central Processing Unit)가 첫 번째 명령어를 실행하기 전, 시스템의 펌웨어가 변조되지 않았는지 검증하는 하드웨어 신뢰 자점 (Hardware Root of Trust) 역할을 수행한다.
 
@@ -57,7 +59,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -134,7 +136,7 @@ Titan이 시스템의 신뢰를 구축하는 과정은 다단계의 검증 절�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 기술 비교: Google Titan vs 표준 TPM
 
@@ -157,7 +159,7 @@ Titan이 시스템의 신뢰를 구축하는 과정은 다단계의 검증 절�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -178,7 +180,7 @@ Titan이 시스템의 신뢰를 구축하는 과정은 다단계의 검증 절�
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

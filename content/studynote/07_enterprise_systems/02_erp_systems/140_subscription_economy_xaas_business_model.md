@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 구독 경제(Subscription Economy)는 **제품을 소유하는 대신 정기적으로 비용을 지불하고 서비스를 이용**하는 비즈니스 모델이며, SaaS·XaaS(Everything as a Service)가 기술 기반이다.
+> **핵심**: 구독 경제(Subscription Economy)는 **제품을 소유하는 대신 정기적으로 비용을 지불하고 서비스를 이용**하는 비즈니스 모델이며, SaaS·XaaS(Everything as a Service)가 기술 기반이다.
 > 2. **가치**: 일회성 판매 대비 **예측 가능한 반복 수익(ARR·MRR)**과 **높은 고객 생애 가치(LTV)**를 제공하며, 넷플릭스·Adobe·AWS가 대표이다.
 > 3. **판단 포인트**: CAC(고객 획득 비용) < LTV가 핵심 지표이며, Churn Rate(이탈률) 관리가 구독 비즈니스의 생존을 결정한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 구독 모델: 월/연 정기 결제 → 지속적 서비스 이용

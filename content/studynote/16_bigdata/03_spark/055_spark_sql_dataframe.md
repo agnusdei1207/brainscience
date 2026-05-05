@@ -5,19 +5,21 @@ date = "2026-04-14"
 [extra]
 categories = "studynote-bigdata"
 +++
-
-# Spark SQL & DataFrame - 정형 데이터 처리 및 Catalyst 최적화
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 RDD의 한계(스키마 부재, 최적화 어려움)를 극복하고 대규모 정형 데이터를 SQL과 DataFrame API로 초고속 처리하는 Spark SQL의 핵심 아키텍처, Catalyst 옵티마이저, 그리고 Tungsten 실행 엔진의 물리적 최적화 메커니즘을 기술사 수준에서 심층 분석합니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# Spark SQL & DataFrame - 정형 데이터 처리 및 Catalyst 최적화
+
 > 1. **본질**: Spark SQL은 RDD 위에 데이터 스키마(Schema) 레이어를 추가하여, 사용자가 SQL이나 DataFrame API로 작성한 논리적 의사를 Catalyst 옵티마이저를 통해 최적화된 물리적 실행 계획으로 자동 변환해주는 고수준 정형 데이터 처리 엔진이다.
 > 2. **가치**: 개발자가 직접 파티셔닝이나 조인 방식을 고민하지 않아도 '카탈리스트(Catalyst)'가 실행 계획을 최적화하고, '텅스텐(Tungsten)' 엔진이 자바 객체 오버헤드를 제거한 바이너리 수준의 메모리 관리를 수행하여 RDD 대비 압도적인 성능과 생산성을 제공한다.
 > 3. **융합**: 외부 데이터 소스(Parquet, Avro, JDBC, JSON)와 결합하여 데이터 레이크의 비정형 데이터와 DW의 정형 데이터를 하나의 쿼리로 통합 분석하며, 현대 데이터 레이크하우스(Lakehouse) 아키텍처의 핵심 연산 표준으로 자리 잡았다.
 
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 1. RDD의 한계와 Spark SQL의 탄생
 초기 스파크의 RDD는 강력한 분산 처리 기능을 제공했지만, 두 가지 결정적인 숙제가 있었습니다.
@@ -33,7 +35,7 @@ Spark SQL은 이러한 RDD의 한계를 넘어서기 위해 탄생했습니다.
 
 ---
 
-## Ⅱ. 핵심 아키텍처 및 원리 (Architecture & Mechanism)
+## 2. 구성요소
 
 Spark SQL의 성능을 결정짓는 두 핵심 기둥은 **Catalyst 옵티마이저**와 **Tungsten 실행 엔진**입니다.
 
@@ -78,7 +80,7 @@ Spark SQL의 성능을 결정짓는 두 핵심 기둥은 **Catalyst 옵티마이
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### DataFrame vs SQL 연산 비교
 
@@ -101,7 +103,7 @@ Spark SQL의 성능을 결정짓는 두 핵심 기둥은 **Catalyst 옵티마이
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 기술사적 판단: Spark SQL 튜닝 및 의사결정 시나리오
 
@@ -128,7 +130,7 @@ Spark SQL의 성능을 결정짓는 두 핵심 기둥은 **Catalyst 옵티마이
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### Spark SQL 도입의 정량적 가치
 1. **성능 향상**: RDD 대비 복잡한 조인 연산에서 5~10배 이상의 스루풋(Throughput) 개선.

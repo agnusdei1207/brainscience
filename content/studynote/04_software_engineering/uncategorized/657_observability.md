@@ -2,17 +2,19 @@
 title = "657. 옵저버빌리티 로그, 메트릭, 분산 추적(Tracing)"
 weight = 657
 +++
+## 0. 핵심 인사이트
 
-# 옵저버빌리티 (Observability) - 로그, 메트릭, 분산 추적
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 옵저버빌리티 (Observability)는 시스템의 외부 출력(로그, 메트릭, 추적)을 통해 내부 상태를 파악하고 예측 불가능한 장애의 근본 원인을 신속하게 디버깅할 수 있게 하는 아키텍처적 특성이다.
+> **핵심**: 옵저버빌리티 (Observability)는 시스템의 외부 출력(로그, 메트릭, 추적)을 통해 내부 상태를 파악하고 예측 불가능한 장애의 근본 원인을 신속하게 디버깅할 수 있게 하는 아키텍처적 특성이다.
 > 2. **가치**: 마이크로서비스 아키텍처 (MSA) 환경에서 수십 개의 분산된 서비스 간 호출 흐름을 가시화하여, 평균 복구 시간 (MTTR, Mean Time To Recovery)을 획기적으로 단축하고 서비스 신뢰성 수준 (SLO, Service Level Objective)을 보장한다.
 > 3. **융합**: 옵저버빌리티는 단순 모니터링을 넘어 AIOps (Artificial Intelligence for IT Operations)와 결합하여 이상 징후를 자동 탐지하고, SRE (Site Reliability Engineering) 관행의 기반 데이터로 활용되어 인프라 자동화 및 자가 치유 (Self-healing) 시스템의 핵심이 된다.
 
+> 📝 모범 답안
+
+# 옵저버빌리티 (Observability) - 로그, 메트릭, 분산 추적
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 옵저버빌리티 (Observability)는 제어 이론 (Control Theory)에서 유래한 개념으로, 시스템의 외부로 배출되는 텔레메트리 (Telemetry) 데이터인 로그 (Logs), 메트릭 (Metrics), 분산 추적 (Distributed Tracing)의 세 가지 기둥(Three Pillars)을 수집, 상관분석하여 시스템 내부의 복잡한 상태를 추론하는 역량이다. 단순 모니터링이 "무엇이 고장 났는가(알려진 문제)"를 알려준다면, 옵저버빌리티는 "왜 고장 났는가(알려지지 않은 문제)"에 대한 해답을 제공한다.
 
@@ -54,7 +56,7 @@ weight = 657
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (Three Pillars)
 
@@ -154,7 +156,7 @@ public class PaymentService {
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 3대 기둥(Three Pillars)의 특징 비교
 
@@ -200,7 +202,7 @@ public class PaymentService {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -255,7 +257,7 @@ public class PaymentService {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

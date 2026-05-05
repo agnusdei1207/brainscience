@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# Secure Boot (보안 부팅)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Secure Boot는 UEFI 펌웨어가 부팅 과정에서 실행되는 모든 코드(펌웨어, 부트로더, OS 커널)의 디지털 서명을 검증하여, 변조되거나 서명되지 않은 코드의 실행을 원천 차단하는 하드웨어 기반 보안 메커니즘이다.
+> **핵심**: Secure Boot는 UEFI 펌웨어가 부팅 과정에서 실행되는 모든 코드(펌웨어, 부트로더, OS 커널)의 디지털 서명을 검증하여, 변조되거나 서명되지 않은 코드의 실행을 원천 차단하는 하드웨어 기반 보안 메커니즘이다.
 > 2. **가치**: 부트킷(Bootkit), 루트킷(Rootkit)이 OS보다 먼저 실행되어 시스템을 장악하는 것을 방지하며, Secure Boot 없이는 Firmware Rootkit이 시스템 BIOS 수준에서 지속 존재할 수 있어 제거가 불가능하다.
 > 3. **융합**: Microsoft Windows, Apple macOS (Startup Security), Linux distributions (Shim GRUB)가 모두 Secure Boot를 지원하며, Chain of Trust는 Hardware Root of Trust에서 시작되어 OS까지 릴레이 방식으로 연결된다.
 
+> 📝 모범 답안
+
+# Secure Boot (보안 부팅)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 문제의식: BIOS의 야만적 시대와 부트킷의 탄생
 
@@ -29,7 +31,7 @@ Secure Boot는 "변조된 코드는 아예 실행조차 하지 못하게 하자"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Chain of Trust의 동작 구조
 
@@ -102,7 +104,7 @@ Linux는 Microsoft 서명을 보유하고 있지 않기 때문에, Microsoft가 
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### Secure Boot vs TPM Measured Boot — 보완적 관계
 
@@ -115,7 +117,7 @@ Secure Boot와 TPM Measured Boot는 상호 보완적인 보안 기능을 제공�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -140,7 +142,7 @@ Linux 서버에서 Secure Boot를 활성화하려면, 서명된 Shim과 GRUB을 
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### Secure Boot 도입 효과
 

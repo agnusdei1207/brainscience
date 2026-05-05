@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: PPO (Proximal Policy Optimization, 근위 정책 최적화)는 정책 업데이트의 크기를 클리핑 (Clipping)으로 제한해 신뢰 영역 (Trust Region) 을 근사하며, TRPO (Trust Region Policy Optimization)의 계산 복잡성을 극적으로 줄인 강화학습 알고리즘이다.
+> **핵심**: PPO (Proximal Policy Optimization, 근위 정책 최적화)는 정책 업데이트의 크기를 클리핑 (Clipping)으로 제한해 신뢰 영역 (Trust Region) 을 근사하며, TRPO (Trust Region Policy Optimization)의 계산 복잡성을 극적으로 줄인 강화학습 알고리즘이다.
 > 2. **가치**: 구현이 단순하고 다양한 연속/이산 행동 공간에서 안정적으로 학습하며, RLHF (Reinforcement Learning from Human Feedback)의 표준 정책 최적화 알고리즘으로 GPT-4, Claude, LLaMA 등 LLM 정렬 (Alignment)에 핵심 역할을 한다.
 > 3. **판단 포인트**: 클리핑 파라미터 ε (보통 0.1~0.2)이 너무 크면 TRPO의 안전성 상실, 너무 작으면 학습이 느려지며, 어드밴티지 추정의 정확성이 전체 성능을 좌우한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 정책 그래디언트 (Policy Gradient) 방법의 핵심 문제: 한 번의 큰 업데이트가 정책을 급격히 변화시켜 학습이 불안정해진다. TRPO는 KL 제약으로 이를 해결했지만, 2차 도함수 계산이 필요해 느리다.
 
@@ -23,7 +25,7 @@ PPO는 클리핑만으로 비슷한 안정성을 달성한다. 단순하지만 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 정책 비율 (Policy Ratio)
 
@@ -97,7 +99,7 @@ c₁, c₂: 가중치 계수
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **RLHF (강화학습 기반 인간 피드백)**에서의 PPO:
 1. SFT (Supervised Fine-Tuning)로 초기 정책 학습
@@ -109,7 +111,7 @@ c₁, c₂: 가중치 계수
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **GAE (Generalized Advantage Estimation)**: λ로 어드밴티지 편향-분산 균형 조절
 ```
@@ -123,7 +125,7 @@ c₁, c₂: 가중치 계수
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 PPO는 단순함과 안정성을 겸비한 강화학습 알고리즘의 현재 표준이다. 게임 플레이(OpenAI Five, AlphaStar 등), 로봇 제어, LLM 정렬까지 광범위하게 활용된다. 특히 RLHF를 통해 LLM의 안전성·유용성을 높이는 핵심 알고리즘으로서 현대 AI 시스템의 필수 구성 요소가 됐다.
 

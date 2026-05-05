@@ -4,11 +4,14 @@ date = "2026-03-04"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. KVM(Kernel-based Virtual Machine)은 Linux 커널에 내장된 하이퍼바이저로, 하드웨어 가상화 지원(Intel VT-x/AMD-V)을 활용하여 최소 오버헤드로 완전 가상화를 제공하며, QEMU와 결합하여 OpenStack·AWS Nitro·Google Cloud의 기반 기술로 사용된다.
 > 2. OVF(Open Virtualization Format)는 VMware·Red Hat·IBM 등이 공동 개발한 가상 어플라이언스 패키징 표준으로, 하이퍼바이저 독립적인 VM 이미지 배포를 가능하게 하는 인터오퍼러빌리티의 핵심이다.
 > 3. KVM의 핵심 구성 요소는 커널 모듈(kvm.ko) + QEMU(에뮬레이터) + libvirt(관리 API)의 3계층 — 이 분리 구조 덕분에 컨테이너(Docker/Kubernetes)와 공존하며 클라우드 인프라의 실질적 기반이 되었다.
+
+> 📝 모범 답안
 
 ---
 

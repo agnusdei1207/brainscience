@@ -5,15 +5,18 @@ description = "CISO와 CDO의 역할 정의, 조직 내 독립성 요건, CIO와
 categories = "studynote-it-mgmt"
 tags = ["CISO", "CDO", "CIO", "information security", "data governance", "independence", "C-suite", "IT governance"]
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. CISO(Chief Information Security Officer)는 정보보안 전략 및 위험 관리 총괄 임원으로, CIO나 CTO의 하위 보고 라인에서 독립된 구조일 때 실효성이 높다.
 > 2. CDO(Chief Data Officer)는 데이터 자산 전략·거버넌스·품질 책임자로, 디지털 전환 가속화에 따라 독립적 C-suite 직책으로 급부상했다.
 > 3. CISO와 CDO의 역할 충돌(보안 vs 데이터 활용)을 해결하기 위한 거버넌스 체계와 협업 프로토콜이 현대 IT 조직의 핵심 설계 과제다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. CISO — 최고 정보보안 책임자
+## 1. 개요 및 필요성
 
 ### 1.1 역할과 책임
 
@@ -40,7 +43,7 @@ tags = ["CISO", "CDO", "CIO", "information security", "data governance", "indepe
 
 ---
 
-## Ⅱ. CDO — 최고 데이터 책임자
+## 2. 구성요소
 
 ### 2.1 역할과 책임
 
@@ -65,7 +68,7 @@ CDO 신설 (대형 기업 2010s~, 공공기관 2020s~)
 
 ---
 
-## Ⅲ. CIO·CISO·CDO 관계
+## 3. 구조 및 동작 원리
 
 ### 3.1 역할 비교
 
@@ -90,7 +93,7 @@ CIO: 인프라 비용·안정성 우선
 
 ---
 
-## Ⅳ. 거버넌스 구조 설계
+## 4. 비교 및 트레이드오프
 
 ### 4.1 데이터·보안 거버넌스 위원회
 
@@ -116,7 +119,7 @@ CIO: 인프라 비용·안정성 우선
 
 ---
 
-## Ⅴ. 국내 현황과 법적 요건
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 관련 법령
 

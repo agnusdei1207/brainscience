@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 피처 플래그(Feature Flag)는 코드에 **if/else 스위치를 삽입**하여, 배포(Deploy)와 릴리즈(Release)를 분리하고 **런타임에 기능 ON/OFF를 즉시 전환**할 수 있게 하는 소프트웨어 배포 전략이다.
+> **핵심**: 피처 플래그(Feature Flag)는 코드에 **if/else 스위치를 삽입**하여, 배포(Deploy)와 릴리즈(Release)를 분리하고 **런타임에 기능 ON/OFF를 즉시 전환**할 수 있게 하는 소프트웨어 배포 전략이다.
 > 2. **가치**: 코드는 이미 프로덕션에 배포되었지만 플래그가 OFF이므로 사용자에게 보이지 않는 **다크 런칭(Dark Launching)**이 가능하며, 문제 발생 시 **코드 롤백 없이 플래그만 OFF**하면 즉시 무력화된다.
 > 3. **판단 포인트**: Release Toggle(단기)·Experiment Toggle(A/B 테스트)·Ops Toggle(운영 제어)·Permission Toggle(사용자별 기능 제한)의 **4가지 유형**을 구분하고, 사용 후 반드시 제거하여 **토글 부채(Toggle Debt)**를 방지해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 새 결제 시스템을 개발 완료했지만, 모든 사용자에게 한 번에 공개하기 두렵다. 피처 플래그로 **사내 직원 10명에게만 ON** → 검증 → **1% 카나리** → **100% 릴리즈**로 점진 공개할 수 있다.
 
@@ -37,7 +39,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 4가지 토글 유형
 
@@ -60,7 +62,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 코드 롤백 | 피처 플래그 OFF |
 |:---|:---|:---|
@@ -71,7 +73,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 토글 부채 (Toggle Debt) 방지
 1. **만료일 설정**: Release Toggle에 2주 만료일 지정, 자동 알림.
@@ -83,7 +85,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | 플래그 미사용 | 플래그 사용 | 개선 |
 |:---|:---|:---|:---|

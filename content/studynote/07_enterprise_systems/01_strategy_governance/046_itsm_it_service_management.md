@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. ITSM(IT Service Management)은 IT 서비스를 비즈니스 관점에서 설계·제공·개선하는 통합 접근법 — 기술 운영(Technology Operations)이 아닌 서비스 가치 창출에 초점을 맞추며, ITIL이 사실상 표준 프레임워크를 제공한다.
 > 2. ITSM의 핵심 KPI는 MTTR·MTBF·SLA 준수율·FCR — 이 지표들이 IT 서비스 품질을 정량화하며, 개선 목표와 투자 우선순위 결정의 기준이 된다.
 > 3. 현대 ITSM은 DevOps·SRE와 통합 — 전통 ITSM의 변경관리는 DevOps CI/CD와 충돌할 수 있으며, "경량 변경 관리(Light-Weight CAB)"와 "자동화된 변경 승인"으로 속도와 안정성을 동시에 확보하는 방향으로 진화하고 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. ITSM 가치 체계
+## 1. 개요 및 필요성
 
 ```
 ITSM 가치 창출 모델:
@@ -63,7 +66,7 @@ ITSM 가치 지표:
 
 ---
 
-## Ⅱ. 핵심 ITSM KPI
+## 2. 구성요소
 
 ```
 ITSM 핵심 성과 지표:
@@ -118,7 +121,7 @@ SLA:
 
 ---
 
-## Ⅲ. ITSM과 DevOps 통합
+## 3. 구조 및 동작 원리
 
 ```
 전통 ITSM vs DevOps 충돌:
@@ -170,7 +173,7 @@ SRE와 ITSM 융합:
 
 ---
 
-## Ⅳ. ITSM 도구 선택
+## 4. 비교 및 트레이드오프
 
 ```
 ITSM 도구 비교:
@@ -221,7 +224,7 @@ SMB:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 통신사 ITSM 혁신
+## 5. 실무 적용 및 최적화 기법
 
 ```
 대형 통신사 ITSM 최적화:

@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: EduTech는 **교육에 AI·빅데이터·VR을 적용**하는 기술이며, 적응형 학습(Adaptive Learning)은 **학습자의 수준·패턴을 AI가 분석하여 맞춤 콘텐츠·속도·난이도를 자동 조절**하는 개인화 학습 시스템이다.
+> **핵심**: EduTech는 **교육에 AI·빅데이터·VR을 적용**하는 기술이며, 적응형 학습(Adaptive Learning)은 **학습자의 수준·패턴을 AI가 분석하여 맞춤 콘텐츠·속도·난이도를 자동 조절**하는 개인화 학습 시스템이다.
 > 2. **가치**: 일률적 교육(One-size-fits-all)은 상위권에는 지루하고 하위권에는 어렵지만, 적응형 학습은 **각자의 수준에 맞는 최적 경로**를 제공하여 학습 효율을 극대화한다.
 > 3. **판단 포인트**: LMS(Learning Management System, 학습 관리)→LXP(Learning Experience Platform, 학습 경험)로 진화하고 있으며, AI 튜터·VR 실습이 핵심 트렌드이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 LMS: 강좌 관리·출석·성적 (관리자 중심)

@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 뮤텍스 락 (Mutex Lock)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 뮤텍스(Mutex, Mutual Exclusion) 락은 스핀락(Spinlock)의 "무한 루프 대기(Busy-waiting)"로 인한 CPU 자원 낭비를 막기 위해, 락 획득에 실패한 스레드를 **OS 스케줄러가 대기 큐(Wait Queue)로 보내 강제로 잠재우는(Sleep/Block) 상위 레벨의 동기화 객체**다.
+> **핵심**: 뮤텍스(Mutex, Mutual Exclusion) 락은 스핀락(Spinlock)의 "무한 루프 대기(Busy-waiting)"로 인한 CPU 자원 낭비를 막기 위해, 락 획득에 실패한 스레드를 **OS 스케줄러가 대기 큐(Wait Queue)로 보내 강제로 잠재우는(Sleep/Block) 상위 레벨의 동기화 객체**다.
 > 2. **메커니즘**: 뮤텍스는 "락의 상태를 나타내는 불리언 변수"와 "잠든 스레드들을 보관하는 큐(Queue)"로 구성되며, 락을 쥔 스레드가 작업을 끝내고 `unlock()`을 호출하면 커널이 큐에서 자고 있던 스레드 하나를 깨워(Wake-up) 락을 넘겨준다.
 > 3. **소유권(Ownership)**: 세마포어와 달리 뮤텍스는 **"락을 건 스레드만이 그 락을 풀 수 있다"**는 철저한 소유권 개념을 가지며, 이 속성 덕분에 '우선순위 상속(Priority Inheritance)' 기법을 통해 우선순위 역전 버그를 방어할 수 있는 유일한 자물쇠다.
 
+> 📝 모범 답안
+
+# 뮤텍스 락 (Mutex Lock)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **Mutex (Mutual Exclusion)**: 한 번에 오직 하나의 스레드만 임계 구역에 접근하게 하는 자물쇠 메커니즘.
@@ -39,7 +41,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Mutex의 내부 자료구조와 동작 파이프라인
 
@@ -86,7 +88,7 @@ struct mutex {
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### Mutex vs Spinlock vs Semaphore 최종 비교
 
@@ -109,7 +111,7 @@ struct mutex {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -159,7 +161,7 @@ struct mutex {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

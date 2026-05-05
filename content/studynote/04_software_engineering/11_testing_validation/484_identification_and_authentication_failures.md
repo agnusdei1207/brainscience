@@ -6,15 +6,17 @@ description = "사용자 식별, 인증, 세션 관리가 약해 계정 탈취�
 taxonomy = ""
 tags = ["Software Engineering", "Security", "Authentication", "Session", "OWASP"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Identification and Authentication Failures는 사용자 확인 과정이 약한 상태다.
+> **핵심**: Identification and Authentication Failures는 사용자 확인 과정이 약한 상태다.
 > 2. **가치**: 계정 탈취와 세션 악용을 막는 기본 방어선이다.
 > 3. **판단 포인트**: 비밀번호만 보지 말고 세션 전체를 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 인증 (Authentication)은 사용자가 누구인지 확인하는 절차다. 이 과정이나 세션 관리가 약하면 공격자가 계정을 빼앗을 수 있다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Security", "Authentication", "Session", "OWASP"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 식별 (Identification), 인증, 세션 관리가 연결되어 있다.
 
@@ -44,7 +46,7 @@ ID 입력 -> 인증 -> 세션 발급 -> 요청마다 세션 검증
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 인가(Authorization) 실패와 자주 헷갈리지만, 인증 실패는 "누구인지 확인" 단계에서의 문제다.
 
@@ -60,7 +62,7 @@ OWASP Top 10에서 자격 증명과 세션은 항상 핵심 주제다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 MFA (Multi-Factor Authentication), 강한 비밀번호 정책, 세션 만료, 재인증이 중요하다.
 
@@ -73,7 +75,7 @@ OWASP Top 10에서 자격 증명과 세션은 항상 핵심 주제다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 인증과 세션 관리를 잘하면 계정 탈취와 세션 하이재킹 위험을 크게 줄일 수 있다.
 

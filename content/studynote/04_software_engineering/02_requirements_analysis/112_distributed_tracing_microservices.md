@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 분산 트레이싱은 MSA 환경에서 하나의 사용자 요청이 **N개 서비스를 거치는 전체 경로(Trace)**를 고유 ID(Trace ID)로 추적하고, 각 서비스 내 처리 구간(Span)의 **레이턴시·에러를 시각화**하여 병목을 특정하는 기법이다.
+> **핵심**: 분산 트레이싱은 MSA 환경에서 하나의 사용자 요청이 **N개 서비스를 거치는 전체 경로(Trace)**를 고유 ID(Trace ID)로 추적하고, 각 서비스 내 처리 구간(Span)의 **레이턴시·에러를 시각화**하여 병목을 특정하는 기법이다.
 > 2. **가치**: 모놀리스에서는 하나의 스택트레이스로 디버깅이 가능하지만, MSA에서는 "주문→결제→배송→알림" 4개 서비스 중 **어디서 500ms가 추가됐는지** 찾는 것 자체가 난제이며, 분산 트레이싱이 유일한 해법이다.
 > 3. **판단 포인트**: OpenTelemetry(OTel)가 CNCF 표준으로 계측(Instrumentation)을 통일하고, Jaeger·Tempo·Zipkin이 백엔드 저장·시각화를 담당하며, **Context Propagation(W3C Trace Context)**으로 서비스 간 Trace ID를 전파한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 MSA에서 API Gateway → Auth → Order → Payment → Notification으로 이어지는 요청 체인에서, 전체 응답이 2초 걸린다. "어디서 느린가?"를 찾으려면 각 서비스의 로그를 일일이 시간순으로 대조해야 한다.
 
@@ -36,7 +38,7 @@ MSA에서 API Gateway → Auth → Order → Payment → Notification으로 이�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 핵심 개념
 
@@ -56,7 +58,7 @@ W3C Trace Context 표준: HTTP 헤더 `traceparent: 00-{trace-id}-{span-id}-{fla
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 로그 (Logs) | 메트릭 (Metrics) | 트레이싱 (Traces) |
 |:---|:---|:---|:---|
@@ -67,7 +69,7 @@ W3C Trace Context 표준: HTTP 헤더 `traceparent: 00-{trace-id}-{span-id}-{fla
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 도입 체크리스트
 1. **OTel SDK 계측**: 각 서비스에 OpenTelemetry SDK 추가 (Auto-instrumentation 권장).
@@ -80,7 +82,7 @@ W3C Trace Context 표준: HTTP 헤더 `traceparent: 00-{trace-id}-{span-id}-{fla
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | 트레이싱 미도입 | 트레이싱 도입 | 개선 |
 |:---|:---|:---|:---|

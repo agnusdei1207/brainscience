@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Kayenta는 Netflix/Google이 개발한 **자동화된 카나리 분석(Automated Canary Analysis, ACA)** 도구로, 카나리 버전과 베이스라인의 **메트릭(레이턴시·에러율·CPU)을 통계적으로 비교**하여 배포 진행/롤백을 **자동 판단**한다.
+> **핵심**: Kayenta는 Netflix/Google이 개발한 **자동화된 카나리 분석(Automated Canary Analysis, ACA)** 도구로, 카나리 버전과 베이스라인의 **메트릭(레이턴시·에러율·CPU)을 통계적으로 비교**하여 배포 진행/롤백을 **자동 판단**한다.
 > 2. **가치**: 수동 카나리 분석은 "대시보드를 보고 감으로 판단"하므로 주관적이지만, Kayenta는 **Mann-Whitney U 검정 등 통계 기법**으로 "카나리가 베이스라인보다 유의미하게 나쁜가?"를 객관적으로 판정한다.
 > 3. **판단 포인트**: Kayenta는 Spinnaker CD에 내장되며, **Judge(판정 엔진)·Canary Config(메트릭 선정)·Score Threshold(합격 기준 점수)**를 설정하여 "95점 이상이면 Promote, 60점 이하면 Rollback" 같은 **자동 의사결정**을 실현한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -36,7 +38,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Kayenta 워크플로
 
@@ -52,7 +54,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 수동 카나리 | Kayenta ACA |
 |:---|:---|:---|
@@ -63,7 +65,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Canary Config 설계
 1. **핵심 메트릭**: 레이턴시 p99, 에러율(5xx), CPU 사용률.
@@ -75,7 +77,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | 수동 카나리 | Kayenta ACA | 개선 |
 |:---|:---|:---|:---|

@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: EA (Enterprise Architecture) Zachman Framework는 기업 아키텍처를 6개 관점(Planner→Worker) × 6개 질문(What/How/Where/Who/When/Why)의 36셀로 분류하는 온톨로지(분류 체계)다.
+> **핵심**: EA (Enterprise Architecture) Zachman Framework는 기업 아키텍처를 6개 관점(Planner→Worker) × 6개 질문(What/How/Where/Who/When/Why)의 36셀로 분류하는 온톨로지(분류 체계)다.
 > 2. **가치**: 각 이해관계자가 필요한 관점에서 아키텍처를 일관되게 이해·소통할 수 있는 공통 언어를 제공하며, 산출물 간 추적성(Traceability)을 보장한다.
 > 3. **판단 포인트**: Zachman은 분류 체계이지 방법론이 아니므로 TOGAF ADM 같은 절차적 방법론과 병행해야 완전한 EA 실행이 가능하다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 EA (Enterprise Architecture)는 조직의 비즈니스 목표와 IT 시스템을 정렬하기 위한 청사진으로, John Zachman이 1987년 IBM Systems Journal에 "A Framework for Information Systems Architecture"를 발표하면서 현대 EA의 기초가 마련되었다.
 
@@ -29,7 +30,7 @@ EA (Enterprise Architecture)는 조직의 비즈니스 목표와 IT 시스템을
 
 📢 **섹션 요약 비유**: Zachman Framework는 건물 설계의 도면 체계처럼 — 건축주, 설계사, 시공사, 인테리어 업체가 같은 건물을 각자 다른 수준의 상세도로 바라보는 공통 언어다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Zachman 6×6 매트릭스 요약
 
@@ -72,7 +73,7 @@ EA (Enterprise Architecture)는 조직의 비즈니스 목표와 IT 시스템을
 
 📢 **섹션 요약 비유**: 같은 건물을 건축주는 "투자 수익", 설계사는 "도면", 현장 벽돌공은 "오늘 쌓을 벽돌 수"로 각자 다르게 보는 것처럼, Zachman은 같은 시스템을 관점별·주제별로 분류한 지도다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 항목 | Zachman | TOGAF | DODAF | FEAF |
 |:---|:---|:---|:---|:---|
@@ -91,7 +92,7 @@ EA (Enterprise Architecture)는 조직의 비즈니스 목표와 IT 시스템을
 
 📢 **섹션 요약 비유**: Zachman이 "어떤 도면이 필요한가"를 정의하는 목록이라면, TOGAF는 "그 도면을 어떤 순서로 그릴 것인가"의 공정표다 — 두 가지가 합쳐져야 완성된 EA가 된다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **Zachman 적용 체크리스트**:
 - [ ] 핵심 관점 2~3개 우선 선정 후 점진적 확장
@@ -110,7 +111,7 @@ EA (Enterprise Architecture)는 조직의 비즈니스 목표와 IT 시스템을
 
 📢 **섹션 요약 비유**: Zachman을 실무에 적용할 때는 36칸 수납장을 전부 채우려 하지 말고, 지금 당장 필요한 칸만 먼저 채우는 실용적 접근이 필요하다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 **기대 효과**:
 - **추적성**: 비즈니스 요구→데이터→시스템→인프라 추적 → 변경 영향 분석 시간 60% 단축

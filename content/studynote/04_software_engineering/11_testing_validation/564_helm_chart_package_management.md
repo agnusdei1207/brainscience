@@ -6,15 +6,17 @@ description = "Kubernetes 배포를 Helm 차트로 패키징하고 재사용하�
 taxonomy = ""
 tags = ["Software Engineering", "Architecture", "Helm", "Kubernetes", "Package Management"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Helm은 Kubernetes용 패키지 매니저다.
+> **핵심**: Helm은 Kubernetes용 패키지 매니저다.
 > 2. **가치**: 템플릿과 값 분리로 배포 재사용성을 높인다.
 > 3. **판단 포인트**: 값 관리, 릴리스 추적, 템플릿 복잡도를 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 쿠버네티스 리소스를 반복적으로 만들 때 매니페스트를 그냥 복붙하면 유지보수가 어렵다. Helm은 이를 차트(Chart)로 패키징한다.
 
@@ -22,7 +24,7 @@ tags = ["Software Engineering", "Architecture", "Helm", "Kubernetes", "Package M
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 차트는 템플릿과 values.yaml을 분리한다. 배포 시 값만 바꿔 여러 환경에 재사용한다.
 
@@ -40,7 +42,7 @@ Chart + values.yaml -> Rendered Manifests -> Kubernetes
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Helm은 반복 배포에 강하지만, 템플릿이 복잡해지면 디버깅이 어려워질 수 있다.
 
@@ -54,7 +56,7 @@ Helm은 반복 배포에 강하지만, 템플릿이 복잡해지면 디버깅이
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 공통 템플릿을 너무 과하게 만들지 말고, 환경별 values를 명확히 분리한다.
 
@@ -67,7 +69,7 @@ Helm은 반복 배포에 강하지만, 템플릿이 복잡해지면 디버깅이
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Helm은 Kubernetes 배포를 패키지화해 재사용과 운영을 쉽게 한다.
 

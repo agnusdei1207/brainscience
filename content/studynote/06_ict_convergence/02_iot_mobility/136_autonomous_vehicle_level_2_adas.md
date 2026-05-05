@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ADAS(Advanced Driver Assistance System)는 **카메라·레이더·초음파 센서로 운전자를 보조**하는 SAE Level 1~2 시스템이며, ACC(적응형 크루즈)·LKA(차선 유지)·AEB(자동 긴급제동)가 핵심이다.
+> **핵심**: ADAS(Advanced Driver Assistance System)는 **카메라·레이더·초음파 센서로 운전자를 보조**하는 SAE Level 1~2 시스템이며, ACC(적응형 크루즈)·LKA(차선 유지)·AEB(자동 긴급제동)가 핵심이다.
 > 2. **가치**: L2는 **종방향(가감속) + 횡방향(조향)을 동시 보조**하지만 운전자가 항상 감시해야 하며(Hands-on), 법적 책임은 운전자에게 있다. Tesla Autopilot·Hyundai HDA2가 대표이다.
 > 3. **판단 포인트**: L2와 L3의 결정적 차이는 **책임 주체**이다. L2는 운전자, L3+는 시스템이며, L2+는 마케팅 용어이지 공식 SAE 등급이 아니다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 L2 ADAS 핵심 기능:

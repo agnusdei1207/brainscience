@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: K8s QoS Class는 Pod의 리소스 요청(requests)·제한(limits) 설정에 따라 **Guaranteed·Burstable·BestEffort** 3등급으로 자동 분류되며, 노드 리소스 부족 시 **QoS 등급이 낮은 Pod부터 Eviction(퇴거)**된다.
+> **핵심**: K8s QoS Class는 Pod의 리소스 요청(requests)·제한(limits) 설정에 따라 **Guaranteed·Burstable·BestEffort** 3등급으로 자동 분류되며, 노드 리소스 부족 시 **QoS 등급이 낮은 Pod부터 Eviction(퇴거)**된다.
 > 2. **가치**: 노드의 메모리가 부족하면 K8s가 Pod를 강제 종료(OOMKilled)하는데, QoS Class에 따라 **중요 Pod(Guaranteed)는 보호**하고 **비중요 Pod(BestEffort)부터 제거**하여 서비스 안정성을 유지한다.
 > 3. **판단 포인트**: `requests == limits`이면 **Guaranteed**, `requests < limits`이면 **Burstable**, 설정 없으면 **BestEffort**이며, 프로덕션 워크로드는 반드시 **Guaranteed 또는 Burstable(requests 필수)**로 설정해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -36,7 +38,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Eviction 순서
 
@@ -62,7 +64,7 @@ resources:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | BestEffort | Burstable | Guaranteed |
 |:---|:---|:---|:---|
@@ -72,7 +74,7 @@ resources:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Best Practice
 1. **프로덕션**: Guaranteed (requests == limits).
@@ -82,7 +84,7 @@ resources:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | QoS 미설정 | QoS 설정 | 개선 |
 |:---|:---|:---|:---|

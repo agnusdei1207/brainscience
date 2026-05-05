@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Parquet은 컬럼형(Columnar) 저장 포맷으로, 분석 쿼리가 필요한 컬럼만 읽고(Column Pruning), 통계 기반으로 불필요한 Row Group을 건너뛰어(Predicate Pushdown) I/O를 최소화한다.
+> **핵심**: Parquet은 컬럼형(Columnar) 저장 포맷으로, 분석 쿼리가 필요한 컬럼만 읽고(Column Pruning), 통계 기반으로 불필요한 Row Group을 건너뛰어(Predicate Pushdown) I/O를 최소화한다.
 > 2. **가치**: RLE (Run-Length Encoding)·Dictionary Encoding·Snappy 압축 조합으로 원본 데이터 대비 5~10배 압축하면서도 쿼리 성능은 행 기반 포맷(CSV/Avro) 대비 10~100배 향상된다.
 > 3. **판단 포인트**: ORC는 Hive/MapReduce 생태계에, Parquet은 Spark/Presto/Flink 멀티 엔진에, Avro는 스키마 진화가 잦은 스트리밍 직렬화에 최적이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 행 기반 vs 컬럼 기반 저장
 
@@ -51,7 +53,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 Parquet 파일 구조
 
@@ -179,7 +181,7 @@ Parquet 통계 기반 스킵:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 Parquet vs ORC vs Avro
 
@@ -236,7 +238,7 @@ Parquet Bloom Filter (v2.0+):
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 Spark Parquet 최적화 설정
 
@@ -305,7 +307,7 @@ df.write \
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 Parquet 도입 효과
 

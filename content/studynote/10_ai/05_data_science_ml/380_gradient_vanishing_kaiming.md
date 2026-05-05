@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 기울기 소실 (Vanishing Gradient)은 역전파 시 깊은 레이어로 갈수록 기울기가 0에 수렴하고, 기울기 폭발 (Exploding Gradient)은 기울기가 지수적으로 커지는 현상으로 깊은 신경망 학습을 방해한다.
+> **핵심**: 기울기 소실 (Vanishing Gradient)은 역전파 시 깊은 레이어로 갈수록 기울기가 0에 수렴하고, 기울기 폭발 (Exploding Gradient)은 기울기가 지수적으로 커지는 현상으로 깊은 신경망 학습을 방해한다.
 > 2. **가치**: Kaiming He 초기화 (Kaiming He Initialization)는 ReLU (Rectified Linear Unit) 계열 활성화 함수의 특성을 반영해 각 레이어 출력의 분산을 일정하게 유지하여 이 문제를 구조적으로 해결한다.
 > 3. **판단 포인트**: ReLU는 Kaiming/He 초기화, Sigmoid·Tanh는 Xavier/Glorot 초기화가 표준이며, 잔차 연결 (Residual Connection)과 배치 정규화 (Batch Normalization)를 병행하면 수백 레이어 학습이 가능하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 역전파 (Backpropagation)에서 기울기는 연쇄 법칙 (Chain Rule)으로 계산된다:
 
@@ -27,7 +29,7 @@ L번의 행렬-벡터 곱이 연속되면, 각 활성화 도함수의 절댓값�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 소실/폭발 발생 조건
 
@@ -84,7 +86,7 @@ nᵢₙ = 현재 레이어의 입력 차원 수 (fan-in)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 문제 | 증상 | 주요 해결책 |
 |:---|:---|:---|
@@ -96,7 +98,7 @@ nᵢₙ = 현재 레이어의 입력 차원 수 (fan-in)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **PyTorch 기본값**: Kaiming Uniform 초기화 (`nn.Linear`, `nn.Conv2d`)
 **TensorFlow/Keras 기본값**: Glorot Uniform (Xavier)
@@ -109,7 +111,7 @@ nᵢₙ = 현재 레이어의 입력 차원 수 (fan-in)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Kaiming He 초기화는 ReLU 기반 딥러닝의 필수 설정으로, ResNet이 152층 학습을 가능하게 한 핵심 요소 중 하나다. 기울기 소실/폭발 문제의 이론적 이해는 새로운 아키텍처 설계와 학습 실패 디버깅의 핵심 역량이다.
 

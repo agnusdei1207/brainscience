@@ -6,15 +6,17 @@ description = "명세에만 갇히지 않고 테스트 설계와 실행을 동�
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "Exploratory Testing", "Charter", "Timebox"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 탐색적 테스팅(Exploratory Testing)은 계획된 스크립트에만 기대지 않고, 실행하면서 동시에 다음 테스트를 설계하는 방식이다.
+> **핵심**: 탐색적 테스팅(Exploratory Testing)은 계획된 스크립트에만 기대지 않고, 실행하면서 동시에 다음 테스트를 설계하는 방식이다.
 > 2. **가치**: 예상하지 못한 결함과 사용자 관점의 문제를 빠르게 발견한다.
 > 3. **판단 포인트**: 명세가 불완전하거나 새 기능의 감을 잡아야 할 때 특히 유효하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 탐색적 테스팅은 "배우면서 테스트하는" 방식이다. 테스트를 미리 전부 고정하지 않고, 실행하면서 의문이 생기면 바로 다음 행동을 바꾼다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "Exploratory Testing", "Charter", "Ti
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 탐색적 테스팅은 차터(Charter), 타임박스(Timebox), 기록 메모가 핵심이다. 목표는 느슨하되, 탐색은 체계적으로 한다.
 
@@ -44,7 +46,7 @@ tags = ["Software Engineering", "Testing", "Exploratory Testing", "Charter", "Ti
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 스크립트 기반 테스트와 달리, 탐색적 테스팅은 학습과 테스트가 같이 간다. 그래서 경험이 많은 테스터의 직관이 큰 힘을 발휘한다.
 
@@ -60,7 +62,7 @@ tags = ["Software Engineering", "Testing", "Exploratory Testing", "Charter", "Ti
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 초기 릴리스, 요구사항이 바뀌는 화면, 복잡한 장애 재현에 잘 맞는다. 특히 사용자의 행동 패턴을 따라가며 결함을 찾을 때 강하다.
 
@@ -73,7 +75,7 @@ tags = ["Software Engineering", "Testing", "Exploratory Testing", "Charter", "Ti
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 탐색적 테스팅은 예상 밖 결함을 발견하는 힘이 강하다. 다만 재현성과 문서화가 약해질 수 있으므로 기록을 꼭 남겨야 한다.
 

@@ -5,16 +5,17 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: ACPI (Advanced Configuration and Power Interface)는 펌웨어와 운영체제 (OS, Operating System) 사이에서 장치 설명과 전원 정책을 표준화한 계약이다.
+> **핵심**: ACPI (Advanced Configuration and Power Interface)는 펌웨어와 운영체제 (OS, Operating System) 사이에서 장치 설명과 전원 정책을 표준화한 계약이다.
 > 2. **가치**: OS가 전원 상태를 직접 제어할 수 있어 절전·재개·열 관리·핫플러그를 플랫폼마다 따로 짤 필요가 없다.
 > 3. **판단 포인트**: ACPI 문제는 대개 OS가 못하는 문제가 아니라 BIOS (Basic Input/Output System)·UEFI (Unified Extensible Firmware Interface) 테이블이나 드라이버 해석이 어긋난 문제다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ACPI는 하드웨어가 무엇을 할 수 있는지와 운영체제가 무엇을 통제할 수 있는지를 합의하는 표준이다. 옛 APM (Advanced Power Management)처럼 펌웨어가 전원을 전부 쥐는 방식이 아니라, OS가 정책을 갖고 펌웨어는 능력을 공개하는 구조로 바뀌었다.
 
@@ -32,7 +33,7 @@ Firmware -> ACPI Tables -> OS Kernel -> Drivers -> Devices
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ACPI는 테이블과 상태로 움직인다. DSDT와 SSDT는 장치와 메서드를 설명하고, FADT는 고정 기능을 알려 주며, 시스템 상태와 CPU 상태는 전원 동작을 나눈다.
 
@@ -50,7 +51,7 @@ OS는 이 정보를 읽어 장치 트리와 전원 정책을 만든다. 그래�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ACPI와 APM의 차이는 누가 정책을 결정하느냐에 있다. APM은 펌웨어 중심이고, ACPI는 OS 중심이다. 이 차이 때문에 최신 시스템은 더 세밀한 전원 제어를 할 수 있다.
 
@@ -67,7 +68,7 @@ ACPI와 APM의 차이는 누가 정책을 결정하느냐에 있다. APM은 펌�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 먼저 BIOS/UEFI 업데이트와 로그를 본다. 재개 실패나 배터리 급소모는 커널보다 펌웨어 테이블 문제인 경우가 많기 때문이다.
 
@@ -82,7 +83,7 @@ ACPI와 APM의 차이는 누가 정책을 결정하느냐에 있다. APM은 펌�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ACPI는 하드웨어와 OS의 경계를 부드럽게 만든다. 덕분에 절전, 장치 열거, 팬 제어, 핫플러그가 공통 규칙 위에서 움직인다.
 

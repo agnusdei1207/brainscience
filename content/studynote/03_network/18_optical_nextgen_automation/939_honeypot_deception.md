@@ -2,17 +2,20 @@
 title = "939. 포니팟 (Honeypot) 허니넷(Honeynet) 유인 분리망 분석 시스템 / 사이버 기만 기술 (Deception Technology)"
 weight = 939
 +++
+## 0. 핵심 인사이트
 
-# 939. 포니팟 (Honeypot) 허니넷(Honeynet) 유인 분리망 분석 시스템 / 사이버 기만 기술 (Deception Technology)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 사이버 기만 기술 (Deception Technology)은 공격자를 가상의 유인 환경인 허니팟 (Honeypot)과 허니넷 (Honeynet)으로 유도하여, 공격 기법(TTPs)을 수집하고 실제 자산을 보호하는 적극적 방어 (Active Defense) 체계이다.
+> **핵심**: 사이버 기만 기술 (Deception Technology)은 공격자를 가상의 유인 환경인 허니팟 (Honeypot)과 허니넷 (Honeynet)으로 유도하여, 공격 기법(TTPs)을 수집하고 실제 자산을 보호하는 적극적 방어 (Active Defense) 체계이다.
 > 2. **가치**: 기존 시그니처 기반 탐지의 한계를 극복하고, 제로데이 (Zero-Day) 공격 및 지능형 지속 위협 (APT, Advanced Persistent Threat)의 내부 정찰(Lateral Movement)을 조기에 식별하여 체류 시간(Dwell Time)을 획기적으로 단축한다.
 > 3. **융합**: SDN (Software Defined Networking) 및 AI (Artificial Intelligence)와 결합하여, 공격자의 행위에 따라 동적으로 가짜 자산과 네트워크 토폴로지를 할당하는 지능형 표적 교란망 (Dynamic Decoy Network)으로 진화하고 있다.
 
+> 📝 모범 답안
+
+# 939. 포니팟 (Honeypot) 허니넷(Honeynet) 유인 분리망 분석 시스템 / 사이버 기만 기술 (Deception Technology)
+
+##
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 허니팟 (Honeypot)은 의도적으로 취약점을 노출시켜 공격자의 침입을 유도하는 가짜 시스템이며, 허니넷 (Honeynet)은 다수의 허니팟을 연동하여 구성한 가상의 기만 네트워크다. 이를 포괄하는 사이버 기만 기술 (Deception Technology)은 공격자가 식별할 수 없는 가짜 식별자(Decoy, Breadcrumb 등)를 분산 배치하여 공격 표적을 교란하고 위협 인텔리전스(CTI, Cyber Threat Intelligence)를 확보하는 시스템 설계 방법론이다.
 
@@ -58,7 +61,7 @@ weight = 939
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -130,7 +133,7 @@ weight = 939
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 기존 탐지 시스템(IDS/IPS) vs 기만 기술(Deception)
 
@@ -173,7 +176,7 @@ weight = 939
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 운영 의사결정
 
@@ -225,7 +228,7 @@ weight = 939
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

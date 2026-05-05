@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. Rehost(Lift & Shift)는 클라우드 6R 전략 중 가장 빠르고 위험이 낮은 방법으로, 온프레미스 워크로드를 코드 수정 없이 클라우드 VM으로 이전하지만 클라우드 네이티브 최적화(PaaS, 서버리스, 오토스케일링)를 활용하지 못해 비용 절감 효과가 제한적이다.
 > 2. AWS MGN(Application Migration Service), Azure Migrate, Google Migrate for Compute Engine 같은 자동화 도구가 Rehost를 대폭 단순화했으나, 성공적인 Rehost는 반드시 네트워크 설계(VPC, 서브넷), 보안 그룹, 스토리지 용량 계획을 사전에 수립해야 한다.
 > 3. Rehost는 종착점이 아닌 출발점 — 이전 후 안정화 기간(보통 3~6개월)을 거쳐 Re-platform 또는 Re-architect로 진화하는 단계적 클라우드 여정의 첫 번째 관문이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. Rehost 개념 및 6R 위치
+## 1. 개요 및 필요성
 
 ```
 클라우드 6R 전략 (AWS 기준):
@@ -41,7 +44,7 @@ Rehost = Lift & Shift:
 
 ---
 
-## Ⅱ. Rehost 도구 및 기술
+## 2. 구성요소
 
 ```
 주요 Rehost 자동화 도구:
@@ -81,7 +84,7 @@ Google Migrate for Compute Engine:
 
 ---
 
-## Ⅲ. 사전 설계 — 네트워크 및 보안
+## 3. 구조 및 동작 원리
 
 ```
 Rehost 전 필수 설계 항목:
@@ -120,7 +123,7 @@ Rehost 전 필수 설계 항목:
 
 ---
 
-## Ⅳ. Rehost 절차 및 컷오버
+## 4. 비교 및 트레이드오프
 
 ```
 Rehost 표준 절차:
@@ -163,7 +166,7 @@ RTO/RPO 목표:
 
 ---
 
-## Ⅴ. 실무 한계 및 다음 단계
+## 5. 실무 적용 및 최적화 기법
 
 ```
 Rehost 한계:

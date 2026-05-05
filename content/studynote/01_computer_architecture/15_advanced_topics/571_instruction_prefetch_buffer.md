@@ -5,15 +5,17 @@ weight = 571
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 명령어 프리패치 버퍼(Instruction Prefetch Buffer)는 CPU가 현재 명령어를 실행하는 동안 다음에 실행될 명령어들을 메모리에서 미리 읽어와 저장하는 초고속 FIFO(First-In-First-Out) 하드웨어 큐다.
+> **핵심**: 명령어 프리패치 버퍼(Instruction Prefetch Buffer)는 CPU가 현재 명령어를 실행하는 동안 다음에 실행될 명령어들을 메모리에서 미리 읽어와 저장하는 초고속 FIFO(First-In-First-Out) 하드웨어 큐다.
 > 2. **가치**: 메모리 접근 지연시간(Memory Latency)을 실행 시간 뒤로 숨겨 파이프라인의 굶주림(Starvation)을 방지하며, 명령어 인출(Fetch)과 실행(Execute) 단계를 병렬화하는 기초 토대를 제공한다.
 > 3. **판단 포인트**: 분기문(Branch) 발생 시의 버퍼 플러시(Flush) 오버헤드와 분기 예측기(Branch Predictor)와의 정교한 협업 여부가 전체 시스템의 IPC(Instructions Per Clock) 향상폭을 결정한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 폰 노이만 병목(Von Neumann Bottleneck)의 극복
 컴퓨터 아키텍처의 고질적인 문제는 '연산 속도'와 '기억 장치 접근 속도' 사이의 거대한 격차입니다. CPU가 수 GHz의 속도로 명령어를 처리할 준비가 되어 있어도, 메모리에서 명령어를 가져오는(Fetch) 과정이 느리다면 CPU 파이프라인은 할 일 없이 대기하는 스톨(Stall) 상태에 빠지게 됩니다. 명령어 프리패치 버퍼는 이 병목을 해결하기 위해 고안된 '지능형 완충 지대'입니다.
@@ -28,7 +30,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 명령어 프리패치 버퍼의 구조와 흐름
 프리패치 버퍼는 보통 L1 명령어 캐시(I-Cache)와 명령어 디코더(Decoder) 사이에 위치합니다.
@@ -75,7 +77,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 1. 명령어 프리패치(Instruction) vs. 데이터 프리패치(Data)
 두 프리패치는 목적은 같지만 동작 패턴이 완전히 다릅니다.
@@ -99,7 +101,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1. 기술사적 통찰: 분기 미예측(Branch Misprediction)의 재앙
 프리패치 버퍼의 가장 큰 적은 '틀린 예측'입니다.
@@ -120,7 +122,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 기대효과
 잘 설계된 명령어 프리패치 버퍼는 CPU의 IPC를 비약적으로 상승시킵니다. 특히 파이프라인이 깊은 아키텍처일수록 그 가치는 커지며, 메모리 지연이 발생해도 연산 유닛이 멈추지 않고 최대 성능을 내도록 보장하는 최전방 방어선 역할을 수행합니다.

@@ -5,15 +5,17 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 파이프 (Pipe)는 UNIX 계열 운영체제에서 부모 프로세스(Parent Process)와 자식 프로세스(Child Process) 간에 반수신(Half-Duplex) 방식으로 바이트 스트림(Byte Stream) 데이터를 전달하는 가장 기본적인 IPC (Inter-Process Communication) 메커니즘이다.
+> **핵심**: 파이프 (Pipe)는 UNIX 계열 운영체제에서 부모 프로세스(Parent Process)와 자식 프로세스(Child Process) 간에 반수신(Half-Duplex) 방식으로 바이트 스트림(Byte Stream) 데이터를 전달하는 가장 기본적인 IPC (Inter-Process Communication) 메커니즘이다.
 > 2. **가치**: `pipe()` 시스템 콜 한 번으로 두 개의 파일 디스크립터(File Descriptor, 쓰기 전용과 읽기 전용)를 생성하여 프로세스 간 통신 채널을 즉시 확보할 수 있으며, 커널 내부의 순환 버퍼(Circular Buffer)를 기반으로 동작하므로 디스크 I/O 없이 메모리 상에서만 데이터가 전달된다.
 > 3. **융합**: 쉘(Shell)의 파이프라인 연산자 `|`의 근간이 되며, `PIPE_BUF` 크기 이하의 쓰기는 원자성(Atomicity)이 보장된다. 명명된 파이프(Named Pipe / FIFO)로 확장하면 혈연 관계가 없는 임의의 프로세스 간 통신도 가능해진다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 파이프 (Pipe)는 운영체제 커널이 관리하는 순환 버퍼(Circular Buffer)를 매개로, 한 프로세스가 쓰기 전용 파일 디스크립터(fd[1])에 데이터를 쓰면 다른 프로세스가 읽기 전용 파일 디스크립터(fd[0])를 통해 데이터를 읽는 단방향 통신 채널이다. 반수신(Half-Duplex) 동작이 원칙이므로 한 번에 한 방향으로만 데이터가 흐른다.
 - **필요성**: UNIX 철학의 핵심인 "하나의 프로그램은 하나의 일만 잘하라"를 실현하기 위해, 작고 단일 목적의 명령어(Command)들을 조합하여 복잡한 작업을 수행하는 파이프라인(Pipeline) 패러다임이 필요했다. 예를 들어 `ls | grep "txt" | sort | wc -l`처럼 네 개의 독립 프로세스가 파이프를 통해 데이터를 순차적으로 가공하는 모델에서, 각 프로세스 간의 데이터 전달을 안전하고 효율적으로 수행하는 메커니즘이 필수적이었다.
@@ -60,7 +62,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 파이프의 핵심 동작 특성
 
@@ -147,7 +149,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 파이프 vs 소켓 vs 공유 메모리 비교
 
@@ -164,7 +166,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -183,7 +185,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

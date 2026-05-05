@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Transformer는 RNN을 완전히 제거하고 셀프 어텐션(Self-Attention)만으로 시퀀스 내 모든 위치 간의 의존성을 O(1)의 경로 길이로 포착하는, 현대 딥러닝의 핵심 아키텍처다.
+> **핵심**: Transformer는 RNN을 완전히 제거하고 셀프 어텐션(Self-Attention)만으로 시퀀스 내 모든 위치 간의 의존성을 O(1)의 경로 길이로 포착하는, 현대 딥러닝의 핵심 아키텍처다.
 > 2. **가치**: Q(Query)·K(Key)·V(Value) 행렬 연산을 통한 스케일드 닷-프로덕트 어텐션(Scaled Dot-Product Attention)과 멀티헤드(Multi-Head) 병렬 어텐션이 다양한 관계를 동시에 포착한다.
 > 3. **판단 포인트**: 포지셔널 인코딩(Positional Encoding)은 순서 정보가 없는 어텐션에 위치 정보를 삽입하는 핵심 설계 결정이며, 사인·코사인 함수 기반 절대 인코딩과 RoPE 같은 상대적 방법이 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 2017년 구글의 논문 "Attention Is All You Need"(Vaswani et al.)는 RNN/LSTM의 두 가지 근본적 한계를 어텐션만으로 해결했다.
 
@@ -28,7 +30,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 스케일드 닷-프로덕트 어텐션 (Scaled Dot-Product Attention)
 
@@ -124,7 +126,7 @@ X_input = Token_Embedding + Positional_Encoding
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 인코더-디코더 전체 아키텍처
 
@@ -158,7 +160,7 @@ Masked Attention: 미래 토큰 차단 (자동회귀 생성 보장)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 어텐션 계산 복잡도와 긴 시퀀스 문제
 
@@ -190,7 +192,7 @@ n=32768: 1G 연산      (책 한 권 → 메모리 부족!)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### Transformer가 가능하게 한 것들
 

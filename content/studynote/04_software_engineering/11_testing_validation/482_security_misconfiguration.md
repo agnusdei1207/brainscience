@@ -6,15 +6,17 @@ description = "기본 설정, 디버그 모드, 과도한 권한 등 잘못된 �
 taxonomy = ""
 tags = ["Software Engineering", "Security", "Configuration", "OWASP", "Hardening"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Security Misconfiguration은 설정을 안전하게 바꾸지 않아 생기는 문제다.
+> **핵심**: Security Misconfiguration은 설정을 안전하게 바꾸지 않아 생기는 문제다.
 > 2. **가치**: 배포 후 바로 노출되는 현실적인 사고 원인이다.
 > 3. **판단 포인트**: 기본값, 디버그, 접근 권한, 헤더를 점검한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 보안 설정 오류는 "기능은 켜졌지만 안전은 꺼진" 상태다. 기본 계정, 불필요한 포트, 테스트용 엔드포인트가 대표적이다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Security", "Configuration", "OWASP", "Hardening
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 설정은 개발, 배포, 운영 전 구간에서 관리해야 한다.
 
@@ -45,7 +47,7 @@ tags = ["Software Engineering", "Security", "Configuration", "OWASP", "Hardening
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 이 문제는 코드보다 운영 환경에서 더 많이 드러난다.
 
@@ -61,7 +63,7 @@ OWASP Top 10에서 꾸준히 등장하는 이유가 배포 현실 때문이다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 하드닝 (Hardening), 보안 기준선, IaC (Infrastructure as Code) 검사가 중요하다.
 
@@ -74,7 +76,7 @@ OWASP Top 10에서 꾸준히 등장하는 이유가 배포 현실 때문이다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 보안 설정 오류를 줄이면 배포 직후의 사고를 많이 막을 수 있다. 자동화된 점검이 특히 효과적이다.
 

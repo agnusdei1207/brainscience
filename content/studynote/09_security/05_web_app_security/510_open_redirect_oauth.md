@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 사용자를 신뢰할 수 없는 외부 사이트로 강제 리다이렉션시키는 취약점으로, OAuth 환경에서는 인가 코드(Code)나 토큰을 공격자의 서버로 가로채는 통로로 악용된다.
+> **핵심**: 사용자를 신뢰할 수 없는 외부 사이트로 강제 리다이렉션시키는 취약점으로, OAuth 환경에서는 인가 코드(Code)나 토큰을 공격자의 서버로 가로채는 통로로 악용된다.
 > 2. **가치**: 피싱 사이트로의 유도를 넘어, OAuth 파라미터가 URL에 포함된 채 공격자 서버로 전송되게 함으로써 계정 탈취의 직접적인 원인이 된다.
 > 3. **판단 포인트**: 인증 서버는 사전 등록된 `redirect_uri` 목록과 요청된 URI를 **문자열 단위로 엄격히(Strict Match)** 대조하여 부분 일치나 와일드카드 허용을 차단해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Open Redirect는 단순한 피싱 기법으로 보일 수 있지만, OAuth 2.0에서는 치명적인 '정보 유출' 경로가 된다. 인증 서버가 `redirect_uri`를 느슨하게 검증하면, 공격자는 피해자의 브라우저를 자신의 서버로 돌려보내며 URL에 붙은 `code`나 `access_token`을 고스란히 가로챌 수 있다.
 
@@ -26,7 +28,7 @@ Open Redirect는 단순한 피싱 기법으로 보일 수 있지만, OAuth 2.0�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. OAuth Open Redirect 공격 시나리오
 공격자는 피해자에게 조작된 링크를 클릭하도록 유도한다.
@@ -52,7 +54,7 @@ https://auth.com/authorize?client_id=123&redirect_uri=https://trust.com/logout?u
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | 일반적인 Open Redirect | OAuth 기반 Open Redirect |
 |:---|:---|:---|
@@ -66,7 +68,7 @@ https://auth.com/authorize?client_id=123&redirect_uri=https://trust.com/logout?u
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 방어 체크리스트
 1. **Strict Matching**: `redirect_uri`는 도메인뿐만 아니라 전체 경로(Path)까지 등록된 값과 100% 일치해야 한다.
@@ -80,7 +82,7 @@ https://auth.com/authorize?client_id=123&redirect_uri=https://trust.com/logout?u
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Open Redirect 방어는 OAuth 보안의 '입구'를 지키는 일이다. 아무리 강력한 암호화와 PKCE를 써도, 입구에서 주소를 뺏기면 모든 보안 장치가 무력화된다.
 

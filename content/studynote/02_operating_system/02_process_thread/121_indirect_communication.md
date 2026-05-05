@@ -5,15 +5,17 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 간접 통신 (Indirect Communication)은 메시지를 송수신 프로세스가 직접 주고받지 않고, 운영체제가 관리하는 우편함(Mailbox) 또는 포트(Port)라는 중간 매개체(Intermediate Entity)를 경유하여 통신하는 방식이다.
+> **핵심**: 간접 통신 (Indirect Communication)은 메시지를 송수신 프로세스가 직접 주고받지 않고, 운영체제가 관리하는 우편함(Mailbox) 또는 포트(Port)라는 중간 매개체(Intermediate Entity)를 경유하여 통신하는 방식이다.
 > 2. **가치**: 송신자와 수신자가 서로의 존재나 식별자를 알 필요 없이, 공유된 우편함 ID만으로 통신할 수 있으므로 시스템의 결합도(Coupling)를 획기적으로 낮추고 1:1, 1:N, N:1, N:N 등 다양한 통신 토폴로지(Topology)를 유연하게 지원한다.
 > 3. **융합**: POSIX 메시지 큐, 마이크로커널의 포트(Port) 시스템, 그리고 RabbitMQ/Kafka와 같은 메시지 브로커(Message Broker)의 근간이 되며, 발행-구독(Publish-Subscribe) 패턴을 구현하는 핵심 기반 기술이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 간접 통신에서 메시지는 송신자가 수신자에게 직접 전달되지 않고, 커널이 관리하는 우편함(Mailbox) 또는 포트(Port)라는 추상적인 중간 객체를 거친다. 송신자는 `send(A, msg)`(우편함 A에 메시지를 보냄) 형태로 호출하고, 수신자는 `receive(A, msg)`(우편함 A에서 메시지를 받음) 형태로 호출한다.
 - **필요성**: 직접 통신(Direct Communication)은 송신자가 수신자의 PID나 이름을 알아야 하므로 모듈 간 결합도가 높고, 새로운 수신자가 추가되면 송신자 코드를 수정해야 하는 유연성 문제가 있다. 또한 1:N(하나의 송신자가 여러 수신자에게 전송) 통신을 직접 통신으로 구현하려면 송신자가 모든 수신자의 ID를 관리해야 한다. 간접 통신은 우편함이라는 추상 계층을 도입하여 이러한 문제를 근본적으로 해결한다. 송신자는 우편함 ID만 알면 되고, 수신자가 몇 명이든 상관없다.
@@ -60,7 +62,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 우편함(Mailbox)의 소유권과 생명주기
 
@@ -106,7 +108,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 발행-구독 (Publish-Subscribe) 패턴과의 관계
 
@@ -123,7 +125,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -142,7 +144,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 섀도 IT(Shadow IT)는 IT 부서의 공식 승인 없이 직원이 업무에 사용하는 기술·서비스를 뜻하며, 생산성 향상 욕구와 IT 거버넌스의 긴장에서 발생 — Google Drive, Slack, Notion 등 SaaS의 폭발적 증가로 섀도 IT의 범위가 전례 없이 확대됐다.
 > 2. 섀도 IT의 위험은 "보이지 않는 데이터 흐름"에서 발생 — 승인되지 않은 클라우드 서비스에 민감 데이터가 저장되거나, 보안 패치 없는 앱이 기업 네트워크에 연결되어도 IT가 인지하지 못한다.
 > 3. 섀도 IT를 단순 차단이 아닌 "안전한 혁신 채널"로 전환하는 것이 현대 CIO의 접근법 — CASB(Cloud Access Security Broker)로 가시성을 확보하고, 빠른 서비스 카탈로그 승인 프로세스로 합법적 경로를 제공해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 섀도 IT 현황
+## 1. 개요 및 필요성
 
 ```
 섀도 IT (Shadow IT):
@@ -51,7 +54,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅱ. 리스크 유형
+## 2. 구성요소
 
 ```
 섀도 IT 리스크 유형:
@@ -94,7 +97,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅲ. CASB와 가시성 확보
+## 3. 구조 및 동작 원리
 
 ```
 CASB (Cloud Access Security Broker):
@@ -144,7 +147,7 @@ CASB (Cloud Access Security Broker):
 
 ---
 
-## Ⅳ. 거버넌스 전략
+## 4. 비교 및 트레이드오프
 
 ```
 섀도 IT 거버넌스 전략:
@@ -184,7 +187,7 @@ CASB (Cloud Access Security Broker):
 
 ---
 
-## Ⅴ. 실무 시나리오 — CASB 도입 효과
+## 5. 실무 적용 및 최적화 기법
 
 ```
 IT 기업 CASB 도입 사례:

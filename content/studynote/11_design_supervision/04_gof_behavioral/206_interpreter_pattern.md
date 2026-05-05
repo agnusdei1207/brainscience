@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Interpreter (해석자) 패턴은 언어나 문법의 각 규칙을 클래스로 표현하고, 해당 언어로 작성된 문장을 AST (Abstract Syntax Tree, 추상 구문 트리)로 파싱한 뒤 평가(Evaluate)하는 구조를 제공한다.
+> **핵심**: Interpreter (해석자) 패턴은 언어나 문법의 각 규칙을 클래스로 표현하고, 해당 언어로 작성된 문장을 AST (Abstract Syntax Tree, 추상 구문 트리)로 파싱한 뒤 평가(Evaluate)하는 구조를 제공한다.
 > 2. **가치**: 도메인 특화 언어(DSL, Domain-Specific Language)나 규칙 엔진을 구현할 때, 문법 규칙을 코드와 1:1 매핑하여 이해·확장이 쉬운 인터프리터를 만든다.
 > 3. **판단 포인트**: 정규 표현식, SQL WHERE절, 수식 파서처럼 반복적으로 사용되는 간단한 문법이 있을 때 적용하되, 복잡한 문법에는 전용 파서 생성기(ANTLR 등)를 사용한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1-1. 해석자 패턴의 적용 조건
 
@@ -45,7 +46,7 @@ BNF 문법 예시 (산술 표현식):
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. 4요소 구조
 
@@ -130,7 +131,7 @@ class AndRule implements RuleExpression {
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. Interpreter 패턴 적용 범위 비교
 
@@ -155,7 +156,7 @@ class AndRule implements RuleExpression {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. 비즈니스 규칙 엔진 구현
 
@@ -197,7 +198,7 @@ Spring의 SpEL (Spring Expression Language)은 Interpreter 패턴의 실제 구�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5-1. 기대 효과
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: OKR(Objectives and Key Results — 목표와 핵심 결과)은 "무엇을 달성할 것인가(O)"와 "어떻게 확인할 것인가(KR)"를 분기 단위로 명확히 정렬하는 도전적 목표 관리 프레임워크다. 70% 달성이 성공이라는 역설이 혁신을 촉진한다.
+> **핵심**: OKR(Objectives and Key Results — 목표와 핵심 결과)은 "무엇을 달성할 것인가(O)"와 "어떻게 확인할 것인가(KR)"를 분기 단위로 명확히 정렬하는 도전적 목표 관리 프레임워크다. 70% 달성이 성공이라는 역설이 혁신을 촉진한다.
 > 2. **가치**: 상향식 목표 설정(개인 OKR)과 하향식 전략 방향(회사 OKR)이 만나는 중간 지점에서 자율성과 정렬이 동시에 실현된다. 구글이 15명에서 20만 명으로 성장하면서도 방향을 잃지 않은 비결이 OKR이었다.
 > 3. **판단 포인트**: OKR을 인사 평가(보상)와 직결하면 구성원이 달성 가능한 낮은 목표를 설정하게 된다. OKR은 성장 도구이지 평가 도구가 아님을 조직 문화로 정착시켜야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### OKR의 역사 — Intel에서 구글로
 OKR은 1970년대 Intel의 CEO Andy Grove가 MBO(Management By Objectives)를 발전시켜 고안했다. Grove는 기존 MBO의 느린 리뷰 주기와 연봉 연계 문제를 인식하고, "도전적 목표 + 빠른 피드백" 구조를 설계했다. 1999년 벤처 투자가 John Doerr가 Google 창업팀(Larry Page, Sergey Brin)에게 OKR을 소개했고, Google은 이를 현재까지 핵심 경영 도구로 사용한다.
@@ -29,7 +31,7 @@ OKR은 1970년대 Intel의 CEO Andy Grove가 MBO(Management By Objectives)를 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### OKR 구조 다이어그램
 
@@ -89,7 +91,7 @@ OKR은 1970년대 Intel의 CEO Andy Grove가 MBO(Management By Objectives)를 �
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### BSC vs OKR 비교 (기술사 빈출)
 
@@ -117,7 +119,7 @@ OKR은 1970년대 Intel의 CEO Andy Grove가 MBO(Management By Objectives)를 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### IT 기업 OKR 사례 — Google Chrome 팀
 - **O**: "세계 최고의 브라우저가 된다"
@@ -140,7 +142,7 @@ OKR은 1970년대 Intel의 CEO Andy Grove가 MBO(Management By Objectives)를 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 조직 민첩성 확보
 OKR의 분기 사이클은 시장 변화에 빠르게 반응하는 조직 구조를 만든다. 전략 변화가 발생하면 다음 분기 OKR을 재설정해 전사가 새 방향에 신속히 정렬할 수 있다. 이는 코로나19 팬데믹처럼 예측 불가한 환경 변화 시 특히 빛을 발했다.

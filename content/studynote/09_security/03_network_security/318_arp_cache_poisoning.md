@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ARP 캐시 오염(ARP Cache Poisoning)은 ARP (Address Resolution Protocol)의 인증 없는 설계를 악용해 가짜 MAC 주소를 네트워크 이웃에게 브로드캐스트하고, 피해자의 ARP 캐시(Cache) 테이블을 오염시켜 트래픽을 탈취하는 L2 계층 공격이다.
+> **핵심**: ARP 캐시 오염(ARP Cache Poisoning)은 ARP (Address Resolution Protocol)의 인증 없는 설계를 악용해 가짜 MAC 주소를 네트워크 이웃에게 브로드캐스트하고, 피해자의 ARP 캐시(Cache) 테이블을 오염시켜 트래픽을 탈취하는 L2 계층 공격이다.
 > 2. **가치**: 동일 L2 네트워크 내에서 암호화되지 않은 트래픽(HTTP, Telnet, FTP)을 실시간 도청하거나, HTTPS 세션도 SSLStrip 공격과 결합하면 탈취 가능하므로, 내부 네트워크 보안에서 핵심 방어 대상이다.
 > 3. **판단 포인트**: DAI (Dynamic ARP Inspection)가 핵심 방어 기술이며, DHCP 스누핑(DHCP Snooping) 바인딩 테이블과 연동하여 IP-MAC 매핑 신뢰성을 검증하는 원리를 정확히 이해해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ARP는 1982년 RFC 826으로 정의된 프로토콜로, IP 주소를 MAC (Media Access Control) 주소로 변환하는 L2/L3 경계 역할을 한다. 문제는 ARP가 "무신뢰(Stateless)" 설계라는 점이다. ARP Reply는 Request가 없어도 보낼 수 있으며(Gratuitous ARP), 수신 측은 이를 그대로 캐시에 저장한다. 인증이나 검증 메커니즘이 전혀 없다.
 
@@ -25,7 +27,7 @@ ARP는 1982년 RFC 826으로 정의된 프로토콜로, IP 주소를 MAC (Media 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### ARP 캐시 오염 공격 흐름
 
@@ -77,7 +79,7 @@ ARP는 1982년 RFC 826으로 정의된 프로토콜로, IP 주소를 MAC (Media 
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### DAI (Dynamic ARP Inspection) 동작 상세
 
@@ -110,7 +112,7 @@ ARP 캐시 오염
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Cisco 스위치 DAI 설정 예시
 
@@ -154,7 +156,7 @@ interface GigabitEthernet0/2
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 DAI와 DHCP Snooping을 스위치 레벨에서 활성화하면, 내부 네트워크에서 발생하는 ARP 캐시 오염 공격의 대부분을 자동으로 차단할 수 있다. 공격자가 동일 L2 세그먼트에 물리적으로 접근했더라도, 트래픽 탈취가 불가능해진다.
 

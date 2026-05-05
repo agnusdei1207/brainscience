@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 지도 학습은 **입력(X)과 정답 라벨(y)의 쌍**으로 구성된 학습 데이터를 통해 모델이 **X→y 매핑 함수를 학습**하는 ML 패러다임이며, 분류(Classification)와 회귀(Regression)로 나뉜다.
+> **핵심**: 지도 학습은 **입력(X)과 정답 라벨(y)의 쌍**으로 구성된 학습 데이터를 통해 모델이 **X→y 매핑 함수를 학습**하는 ML 패러다임이며, 분류(Classification)와 회귀(Regression)로 나뉜다.
 > 2. **가치**: 정답 라벨이 주어지므로 **명확한 평가 기준(정확도·MSE)**이 있어 모델 성능을 객관적으로 측정할 수 있으며, 가장 성숙하고 실무에서 널리 사용되는 ML 방식이다.
 > 3. **판단 포인트**: 지도 학습의 핵심 과제는 **라벨링 비용(인건비·시간)**이며, 이를 줄이기 위한 Semi-supervised Learning·Self-supervised Learning·Active Learning이 대안으로 발전했다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -33,7 +35,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 학습 패러다임 비교
 
@@ -48,7 +50,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 분류 | 회귀 |
 |:---|:---|:---|
@@ -58,7 +60,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 라벨링 비용 절감 전략
 1. **Active Learning**: 불확실한 샘플만 라벨링 요청.
@@ -67,7 +69,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 지도 학습은 ML의 **가장 기본이자 실무 적용이 가장 광범위한 패러다임**이며, Self-supervised Learning(BERT·GPT)이 라벨링 비용 문제를 혁신적으로 해결하면서 새로운 지평을 열고 있다.
 

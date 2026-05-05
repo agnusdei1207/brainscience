@@ -2,17 +2,19 @@
 title = "257. BASE 속성 - Basically Available, Soft-state, Eventually consistent (NoSQL의 특성, ACID의 반대)"
 weight = 257
 +++
+## 0. 핵심 인사이트
 
-# 257. BASE 속성 (BASE Properties)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: BASE 속성은 Basically Available, Soft-state, Eventually consistent의 세 단어로 구성된 NoSQL 및 분산 시스템의 설계 철학으로, ACID의 반대되는 개념으로 강철 일관성 대신 결과적 일관성을 채택한다.
+> **핵심**: BASE 속성은 Basically Available, Soft-state, Eventually consistent의 세 단어로 구성된 NoSQL 및 분산 시스템의 설계 철학으로, ACID의 반대되는 개념으로 강철 일관성 대신 결과적 일관성을 채택한다.
 > 2. **가치**: 대규모 분산 시스템에서 가용성과 확장성을 우선시하면서도, 궁극적으로는 일관된 상태에 도달할 수 있게 해주는 현실적 설계 원칙이다.
 > 3. **융합**: CAP 정리, 결과적 일관성, NoSQL, 분산 시스템과 밀접하게 연관되며, ACID와 함께 데이터베이스 설계의 두 축을 형성한다.
 
+> 📝 모범 답안
+
+# 257. BASE 속성 (BASE Properties)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 BASE는 Eric Brewer가 2010년 O'Reilly conferences에서 CAP 정리를 설명하면서 사용한 약어로, Basically Available, Soft-state, Eventually consistent의 세 가지 특성을 나타낸다. BASE는 ACID(원자성, 일관성, 격리성, 영속성)와 대비되는 개념으로, 강한 일관성 대신 결과적 일관성을 채택하고 가용성과 확장성을 우선시하는 설계 철학이다.
@@ -73,7 +75,7 @@ ACID는 "모든 계좌 잔고가 동시에 정확히 일치해야 한다"는 은
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### BASE 세 가지 속성 상세
 
@@ -187,7 +189,7 @@ BASE의 세 가지 속성은 상호 보완적으로 작동한다. Basically Avai
 
 ---
 
-## Ⅲ. 구현 및 실무 응용 (Implementation & Practice)
+## 3. 구조 및 동작 원리
 
 ### Cassandra에서의 BASE 구현
 
@@ -268,7 +270,7 @@ USING CONSISTENCY ANY;
 
 ---
 
-## Ⅳ. 품질 관리 및 테스트 (Quality & Testing)
+## 4. 비교 및 트레이드오프
 
 ### BASE 시스템 테스트
 
@@ -309,7 +311,7 @@ USING CONSISTENCY ANY;
 
 ---
 
-## Ⅴ. 최신 트렌드 및 결론 (Trends & Conclusion)
+## 5. 실무 적용 및 최적화 기법
 
 ### NewSQL의 도전
 
@@ -326,8 +328,6 @@ BASE는 대규모 분산 시스템의 설계 철학으로, 강철 일관성(ACID
 📢 섹션 요약: BASE는 ACID와 대비되는 분산 시스템의 설계 철학으로, 가용성과 확장성을 우선시하지만 결과적 일관성만 보장한다. 시스템 요구사항에 맞게 ACID와 BASE 중 선택해야 한다.
 
 ---
-
-## 핵심 인사이트 ASCII 다이어그램 (Concept Map)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐

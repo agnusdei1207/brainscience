@@ -6,15 +6,17 @@ description = "임계점을 넘는 과부하를 줘서 시스템 붕괴와 복�
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "Stress Test", "Recovery", "Performance"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 스트레스 테스트(Stress Test)는 시스템 한계를 넘는 부하를 주어 붕괴와 복구를 본다.
+> **핵심**: 스트레스 테스트(Stress Test)는 시스템 한계를 넘는 부하를 주어 붕괴와 복구를 본다.
 > 2. **가치**: 장애 시 어떤 식으로 망가지는지, 얼마나 빨리 회복하는지 확인한다.
 > 3. **판단 포인트**: 정상 동작보다 실패 양상과 복구 능력이 더 중요하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 스트레스 테스트는 "정상 범위 밖"을 본다. 시스템이 무너질 때 어떤 형태로 무너지는지 알면 장애 대응이 쉬워진다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "Stress Test", "Recovery", "Performan
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 스트레스 테스트는 부하를 계속 올리거나 이상한 조건을 줘서 시스템이 어떻게 반응하는지 본다.
 
@@ -45,7 +47,7 @@ tags = ["Software Engineering", "Testing", "Stress Test", "Recovery", "Performan
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 스트레스 테스트는 부하 테스트보다 한 단계 더 강하다. 부하는 "버티는가", 스트레스는 "깨질 때 어떻게 되는가"를 본다.
 
@@ -61,7 +63,7 @@ tags = ["Software Engineering", "Testing", "Stress Test", "Recovery", "Performan
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 트래픽 급증, 장애 주입, 비정상 요청 폭주를 통해 한다. 복구 경로와 알림 체계를 함께 봐야 한다.
 
@@ -74,7 +76,7 @@ tags = ["Software Engineering", "Testing", "Stress Test", "Recovery", "Performan
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 스트레스 테스트는 한계와 취약점을 드러낸다. 그래서 실제 사고 전에 대비책을 세울 수 있다.
 

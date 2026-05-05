@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: `~/.ssh/known_hosts`는 한 번이라도 연결한 SSH 서버의 호스트 공개키를 저장하는 신뢰 데이터베이스로, 이후 접속 시 서버의 키가 바뀌면 MITM (Man-in-the-Middle) 공격 경고를 발생시켜 사용자를 보호한다.
+> **핵심**: `~/.ssh/known_hosts`는 한 번이라도 연결한 SSH 서버의 호스트 공개키를 저장하는 신뢰 데이터베이스로, 이후 접속 시 서버의 키가 바뀌면 MITM (Man-in-the-Middle) 공격 경고를 발생시켜 사용자를 보호한다.
 > 2. **가치**: TOFU (Trust On First Use) 원칙을 구현해 별도의 PKI (Public Key Infrastructure) 없이도 서버 인증을 할 수 있으며, 대규모 환경에서는 SSHFP (SSH Fingerprint) DNS 레코드로 첫 접속 시점의 신뢰성을 강화할 수 있다.
 > 3. **판단 포인트**: 자동화 환경(CI/CD, Ansible)에서 `StrictHostKeyChecking no`를 사용하면 MITM 방어가 완전히 무력화되므로, 대신 사전에 검증된 호스트 키를 `known_hosts`에 프로비저닝하거나 SSHFP DNS 레코드를 활용해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 SSH (Secure Shell)가 Telnet보다 우월한 핵심 이유 중 하나가 서버 인증이다. Telnet은 접속 대상이 진짜 서버인지 확인하지 않아 공격자가 중간에서 트래픽을 가로채는 MITM 공격에 무방비다. SSH는 서버가 고유한 호스트 키 쌍(Host Key Pair)을 보유하고, 클라이언트가 이를 `known_hosts` 파일로 관리해 서버의 신원을 지속적으로 검증한다.
 
@@ -25,7 +27,7 @@ SSH (Secure Shell)가 Telnet보다 우월한 핵심 이유 중 하나가 서버 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### known_hosts 파일 구조
 
@@ -94,7 +96,7 @@ Client                                       Server
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### SSHFP (SSH Fingerprint) DNS 레코드
 
@@ -132,7 +134,7 @@ Host *.example.com
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **자동화 환경에서 안전한 known_hosts 관리**
 
@@ -180,7 +182,7 @@ ssh-keygen -l -E sha256 -f /etc/ssh/ssh_host_ed25519_key.pub
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 `known_hosts` 기반의 서버 인증은 별도의 PKI 인프라 없이도 MITM 공격을 방어하는 현실적인 메커니즘이다. TOFU의 한계는 SSHFP+DNSSEC 또는 SSH CA를 통해 보완할 수 있으며, 자동화 환경에서는 `StrictHostKeyChecking no` 대신 사전 프로비저닝된 `known_hosts`를 사용하는 것이 모범 사례다.
 

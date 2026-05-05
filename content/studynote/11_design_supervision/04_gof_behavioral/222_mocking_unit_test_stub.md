@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Test Double (테스트 더블)은 외부 의존성(DB, 네트워크, 외부 API)을 가짜(Fake) 객체로 대체하여, 테스트 대상 코드(SUT, System Under Test)만을 순수하게 검증하는 단위 테스트(Unit Test) 격리 기법이다.
+> **핵심**: Test Double (테스트 더블)은 외부 의존성(DB, 네트워크, 외부 API)을 가짜(Fake) 객체로 대체하여, 테스트 대상 코드(SUT, System Under Test)만을 순수하게 검증하는 단위 테스트(Unit Test) 격리 기법이다.
 > 2. **가치**: 외부 시스템 없이도 빠르고(ms 단위) 신뢰성 있는 테스트를 실행할 수 있어, TDD(Test-Driven Development)와 CI/CD 파이프라인의 기반이 된다.
 > 3. **판단 포인트**: Stub은 "반환 값을 미리 지정", Mock은 "호출 여부/인수를 검증" — 두 개념의 차이를 명확히 구분하는 것이 테스트 설계의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 단위 테스트와 의존성 문제
 
@@ -59,7 +60,7 @@ OrderService.createOrder()
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 5가지 Test Double 비교
 
@@ -116,7 +117,7 @@ verify(mockRepo, never()).delete(any());
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Given-When-Then (GWT) 패턴
 
@@ -169,7 +170,7 @@ class UserRepositoryIntegrationTest {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Mockito + JUnit5 실전 설정
 
@@ -216,7 +217,7 @@ class OrderServiceTest {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 모킹과 단위 테스트는 고품질 소프트웨어의 기반이다:
 

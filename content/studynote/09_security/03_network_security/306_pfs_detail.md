@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: PFS (Perfect Forward Secrecy)는 세션마다 수명이 짧은 임시 키(Ephemeral Key)를 생성해, 장기 서버 개인키가 나중에 유출되더라도 과거 세션 데이터는 영원히 해독 불가능하게 만드는 특성이다.
+> **핵심**: PFS (Perfect Forward Secrecy)는 세션마다 수명이 짧은 임시 키(Ephemeral Key)를 생성해, 장기 서버 개인키가 나중에 유출되더라도 과거 세션 데이터는 영원히 해독 불가능하게 만드는 특성이다.
 > 2. **가치**: 대량 트래픽을 수동적으로 녹화해두다가 나중에 키를 입수해 일괄 복호화하는 "레코드 나우, decrypt 레이터(Record Now, Decrypt Later)" 공격을 원천 차단한다.
 > 3. **판단 포인트**: DHE (Ephemeral Diffie-Hellman)는 PFS를 제공하지만 큰 소수 연산으로 CPU 비용이 높고, ECDHE (Ephemeral Elliptic Curve Diffie-Hellman)는 더 짧은 키로 동등한 보안 강도를 달성해 사실상 표준으로 자리잡았다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 전통적인 RSA 키 교환에서는 클라이언트가 세션 키(Pre-Master Secret)를 서버 공개키로 암호화해 전송한다. 이 방식의 치명적 약점은 서버의 개인키만 확보하면 과거에 녹화해둔 모든 TLS (Transport Layer Security) 트래픽을 일괄 복호화할 수 있다는 점이다. NSA (National Security Agency) 등 국가 기관이나 고급 위협 행위자는 이런 "캡처 후 복호화" 전략을 실제로 사용해왔다.
 
@@ -25,7 +27,7 @@ NIST SP 800-52 Rev. 2와 BSI (Bundesamt für Sicherheit in der Informationstechn
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### RSA 키 교환 vs ECDHE 키 교환
 
@@ -115,7 +117,7 @@ NIST SP 800-52 Rev. 2와 BSI (Bundesamt für Sicherheit in der Informationstechn
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 키 교환 방식 | PFS | CPU 비용 | 양자 내성 | TLS 1.3 |
 |:---|:---|:---|:---|:---|
@@ -131,7 +133,7 @@ X25519는 Curve25519 기반 ECDHE로 타이밍 공격 저항성이 설계에 내
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **서버 측 PFS 확인 명령어**
 
@@ -163,7 +165,7 @@ ssl_prefer_server_ciphers on;
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 PFS 도입의 효과는 시간 차원의 보안 격리다. 공격자가 서버 인증서와 개인키를 탈취하는 데 성공하더라도, 그 이전에 이루어진 모든 TLS 세션은 수학적으로 복호화가 불가능하다. 이는 기밀성 침해 피해 범위를 "현재 세션 이후"로 시간적으로 제한하는 효과를 갖는다.
 

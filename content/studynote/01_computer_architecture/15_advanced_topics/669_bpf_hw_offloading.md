@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 669. eBPF 하드웨어 오프로딩 (eBPF Hardware Offloading)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: eBPF 하드웨어 오프로딩은 커널 내 가상 머신에서 실행되던 eBPF 프로그램을 **SmartNIC(지능형 랜카드)이나 FPGA와 같은 외부 하드웨어 가속기에서 직접 실행**하도록 넘기는 기술이다.
+> **핵심**: eBPF 하드웨어 오프로딩은 커널 내 가상 머신에서 실행되던 eBPF 프로그램을 **SmartNIC(지능형 랜카드)이나 FPGA와 같은 외부 하드웨어 가속기에서 직접 실행**하도록 넘기는 기술이다.
 > 2. **가치**: 패킷이 호스트 CPU와 커널 네트워킹 스택에 도달하기도 전에 하드웨어 수준에서 필터링, 라우팅, 암호화를 처리함으로써 호스트 자원 소모를 '0'에 가깝게 줄이고 극도의 저지연(Ultra-low Latency)을 실현한다.
 > 3. **융합**: XDP(eXpress Data Path) 기술과 결합하여 테라비트(Tbps)급 데이터센터 트래픽을 효율적으로 관리하며, 가상화 환경에서 하드웨어 기반의 보안 정책 강제(Security Policy Enforcement)의 핵심 수단이 된다.
 
+> 📝 모범 답안
+
+# 669. eBPF 하드웨어 오프로딩 (eBPF Hardware Offloading)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 소프트웨어 네트워킹의 한계: "CPU는 이미 너무 바쁘다"
 - **현상**: 현대 데이터센터의 대역폭은 100Gbps를 넘어 400Gbps 시대로 가고 있다.
@@ -61,7 +63,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. BPF 검증기와 하드웨어 제약 사항
 - 하드웨어 오프로딩을 위해서는 BPF 프로그램이 하드웨어가 지원하는 명령어 집합(Instruction Set)만 사용해야 한다.
@@ -83,7 +85,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### eBPF (Kernel) vs XDP (Driver) vs eBPF Offload (HW)
 
@@ -104,7 +106,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -126,7 +128,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **CPU 절감**: 네트워크 집약적 워크로드에서 전체 CPU 사용량의 **20~40% 회수**.

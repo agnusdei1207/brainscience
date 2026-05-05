@@ -5,15 +5,17 @@ date = "2026-03-19"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 레지스터 주소 지정(Register Addressing)은 연산에 필요한 데이터가 메모리가 아닌 **CPU 내부의 범용 레지스터(GPR)에 보관되어 있음**을 명시하는 방식이다.
+> **핵심**: 레지스터 주소 지정(Register Addressing)은 연산에 필요한 데이터가 메모리가 아닌 **CPU 내부의 범용 레지스터(GPR)에 보관되어 있음**을 명시하는 방식이다.
 > 2. **가치**: 메모리 버스를 타지 않고 CPU 내부에서 직접 데이터를 읽어오므로 **연산 지연 시간(Latency)이 거의 없으며**, 명령어 비트 수를 적게 차지하여 코드 조밀도를 높인다.
 > 3. **융합**: 현대 RISC 아키텍처의 **로드-스토어(Load-Store) 모델**과 핵심적으로 융합되어 있으며, 연산 장치(ALU)와 레지스터 파일 간의 초고속 데이터 패스를 형성하는 주력 주소 지정 모드이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 레지스터 주소 지정(Register Addressing)은 연산에 필요한 피연산자가 메모리가 아닌 CPU 내부의 범용 레지스터(GPR)에 보관되어 있음을 명시하는 방식이다. 명령어 내에는 실제 데이터 대신 해당 레지스터의 식별 번호가 포함된다.
 
@@ -50,7 +52,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (레지스터 지정을 지탱하는 3대 하드웨어 유닛)
 
@@ -89,7 +91,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 심층 기술 비교: 레지스터 주소(Register) vs 직접 주소(Direct)
 
@@ -128,7 +130,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -177,7 +179,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

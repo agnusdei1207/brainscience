@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: MQTT는 **Pub/Sub(발행/구독) 기반 경량 메시징 프로토콜**로, 대역폭이 제한된 IoT 환경에서 센서 데이터를 **최소 2바이트 헤더**로 전송할 수 있는 사실상 IoT 메시징 표준이다.
+> **핵심**: MQTT는 **Pub/Sub(발행/구독) 기반 경량 메시징 프로토콜**로, 대역폭이 제한된 IoT 환경에서 센서 데이터를 **최소 2바이트 헤더**로 전송할 수 있는 사실상 IoT 메시징 표준이다.
 > 2. **가치**: HTTP는 헤더만 수백 바이트이지만, MQTT는 **고정 헤더 2바이트 + 가변 헤더**로 페이로드 대비 오버헤드가 극히 작아 저전력·저대역폭 디바이스에 최적이다.
 > 3. **판단 포인트**: QoS 3단계(0: At most once, 1: At least once, 2: Exactly once)와 **Retained Message·Last Will·Topic 계층 구조**를 이해하고, MQTT 5.0의 Shared Subscription(로드밸런싱)을 숙지해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -33,7 +35,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### QoS 3단계
 
@@ -56,7 +58,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | MQTT | CoAP | AMQP |
 |:---|:---|:---|:---|
@@ -67,7 +69,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### MQTT 5.0 주요 개선
 - **Shared Subscription**: 같은 Topic을 여러 Subscriber가 분산 처리 (로드밸런싱).
@@ -76,7 +78,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | HTTP 폴링 | MQTT | 개선 |
 |:---|:---|:---|:---|

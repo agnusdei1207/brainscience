@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: CMDB (Configuration Management Database)는 IT 환경의 모든 구성 항목(CI, Configuration Item)과 그 상호 관계를 중앙 집중으로 저장·관리하는 데이터베이스로, 변경 관리·인시던트·문제 관리의 기반 인프라다.
+> **핵심**: CMDB (Configuration Management Database)는 IT 환경의 모든 구성 항목(CI, Configuration Item)과 그 상호 관계를 중앙 집중으로 저장·관리하는 데이터베이스로, 변경 관리·인시던트·문제 관리의 기반 인프라다.
 > 2. **가치**: CMDB는 IT 환경의 "진실의 단일 소스(Single Source of Truth)"로서 변경 영향 분석, 장애 근본 원인 분석(RCA), 보안 취약점 식별에 핵심 데이터를 제공한다.
 > 3. **판단 포인트**: CMDB의 성공은 구축보다 유지에 달려 있으며, 자동 발견(Auto Discovery) 도구와 변경 관리 프로세스를 연계하지 않으면 CMDB는 빠르게 현실과 괴리된다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 CMDB (Configuration Management Database)는 ITIL의 서비스 자산·구성 관리(SACM, Service Asset and Configuration Management) 프로세스의 핵심 산출물이다.
 
@@ -32,7 +33,7 @@ CMDB (Configuration Management Database)는 ITIL의 서비스 자산·구성 관
 
 📢 **섹션 요약 비유**: CMDB는 건물 관리사무소의 "건물 도면 + 입주자 목록 + 설비 현황" — 냉난방이 고장 났을 때 어느 층 어느 방의 어떤 설비인지 즉시 알아야 빠르게 수리할 수 있다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### CMDB CI 관계도 구조
 
@@ -77,7 +78,7 @@ CMDB (Configuration Management Database)는 ITIL의 서비스 자산·구성 관
 
 📢 **섹션 요약 비유**: CMDB의 관계도는 전기 배선도처럼 — 한 스위치(서버)를 끄면 어떤 방(서비스)에 불이 꺼지는지를 사전에 알아야 정전 피해를 최소화할 수 있다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 항목 | CMDB | ITSM 자산 관리 | IT Inventory | 보안 취약점 DB |
 |:---|:---|:---|:---|:---|
@@ -92,7 +93,7 @@ CMDB (Configuration Management Database)는 ITIL의 서비스 자산·구성 관
 
 📢 **섹션 요약 비유**: CMDB 베이스라인은 정기 건강검진 기준치 — 현재 IT 상태와 기준을 비교하여 무엇이 바뀌었는지 이상 징후를 잡아낸다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **CMDB 구축 체크리스트**:
 - [ ] CI 유형 분류 기준과 필수 속성 정의가 완료되었는가?
@@ -116,7 +117,7 @@ CMDB (Configuration Management Database)는 ITIL의 서비스 자산·구성 관
 
 📢 **섹션 요약 비유**: CMDB 없이 IT 환경을 관리하는 것은 지도 없이 도시 교통 체증을 해결하는 것 — 어디서 막히는지(의존성), 어떤 도로가 연결되어 있는지 알아야 해결책을 찾을 수 있다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 **기대 효과**:
 - 인시던트 해결 시간: 영향 분석 자동화로 MTTR 40~60% 단축

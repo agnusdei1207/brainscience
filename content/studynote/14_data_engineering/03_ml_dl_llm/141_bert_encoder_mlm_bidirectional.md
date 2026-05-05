@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: BERT Encoder는 **Transformer Encoder를 12/24층 쌓아** MLM(15% 마스킹)과 NSP로 양방향 사전 학습한 모델이며, [CLS] 토큰으로 분류·유사도, 각 토큰 출력으로 NER·QA를 수행한다.
+> **핵심**: BERT Encoder는 **Transformer Encoder를 12/24층 쌓아** MLM(15% 마스킹)과 NSP로 양방향 사전 학습한 모델이며, [CLS] 토큰으로 분류·유사도, 각 토큰 출력으로 NER·QA를 수행한다.
 > 2. **가치**: BERT-Base(110M)·BERT-Large(340M)의 사전 학습 후, **소량의 라벨 데이터로 Fine-tuning**하면 11개 NLU 벤치마크를 동시 갱신(2018)하여 "사전 학습+미세 조정" 패러다임을 확립했다.
 > 3. **판단 포인트**: WordPiece 토크나이저(30K vocab), 최대 512 토큰, [CLS]+[SEP] 특수 토큰이 입력 구조이며, Sentence-BERT로 임베딩·검색에 특화된 변형이 활용된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 BERT 입력: [CLS] 문장A [SEP] 문장B [SEP]

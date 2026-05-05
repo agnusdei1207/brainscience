@@ -5,17 +5,20 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-network"
 +++
+## 0. 핵심 인사이트
 
-# 543. LDAP (Lightweight Directory Access Protocol) - X.500 기반 디렉터리 접근 권한 중앙관리
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: LDAP은 분산된 네트워크 환경에서 조직의 인물, 부서, 직급, 시스템 자원 등의 '주소록(Directory)' 정보를 트리(Tree) 계층 구조로 체계화하고, 이를 빠르게 검색·인증할 수 있도록 돕는 **TCP 389(평문) / 636(보안)** 기반의 응용 계층 프로토콜이다.
+> **핵심**: LDAP은 분산된 네트워크 환경에서 조직의 인물, 부서, 직급, 시스템 자원 등의 '주소록(Directory)' 정보를 트리(Tree) 계층 구조로 체계화하고, 이를 빠르게 검색·인증할 수 있도록 돕는 **TCP 389(평문) / 636(보안)** 기반의 응용 계층 프로토콜이다.
 > 2. **가치**: 사내 이메일, 그룹웨어, VPN, 서버 접속, Wi-Fi 인증 등 수많은 이기종 사내 시스템들이 각자의 독자적인 계정 DB를 갖는 대신, 중앙의 LDAP 서버를 한 번만 참조하게 하여 사내 **단일 로그인(SSO, Single Sign-On)**과 '계정 통합 관리의 성배'를 달성하게 해준다.
 > 3. **융합**: 마이크로소프트의 Active Directory (AD)는 LDAP을 핵심 뼈대로 삼아 커버로스(Kerberos)와 융합된 전 세계 기업 인프라의 절대적 지배자로 군림했으며, 현재는 Azure AD, Okta 등 클라우드 기반의 IAM (Identity and Access Management) 서비스로 그 유산이 진화하고 있다.
 
+> 📝 모범 답안
+
+# 543. LDAP (Lightweight Directory Access Protocol) - X.500 기반 디렉터리 접근 권한 중앙관리
+
+##
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: LDAP (Lightweight Directory Access Protocol)은 무겁고 방대한 국제 통신 표준인 X.500 디렉터리 접근 프로토콜(DAP)을 IP 네트워크(TCP/IP) 환경에 맞게 다이어트시킨 경량화 표준이다. 관계형 데이터베이스(RDBMS)와 달리 복잡한 조인(Join)이나 트랜잭션보다는 엄청나게 **빠른 '읽기(Read)와 검색'**에 극단적으로 최적화된 계층형 데이터 스토리지 규격이다.
 - **필요성**: 기업 규모가 커지면 한 직원이 사내 메일, ERP, 메신저, 리눅스 서버, Wi-Fi 접속 등에 필요한 패스워드를 10개씩 외워야 하는 참사가 발생한다. 직원이 퇴사할 때 이 10군데의 계정을 일일이 지우지 못해 보안 구멍(Ghost Account)이 뚫린다. 따라서 전사 조직도와 계정을 한곳에 모아두고 모든 시스템이 그곳을 참조하게 만드는 거대한 '디지털 전화번호부'가 절실했다.
@@ -46,7 +49,7 @@ categories = "studynote-network"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (LDAP 트리 구조)
 
@@ -98,7 +101,7 @@ LDAP 데이터는 표(Table)가 아니라, **DIT (Directory Information Tree)**�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### RDBMS (관계형 DB) vs LDAP 디렉터리 비교
 
@@ -140,7 +143,7 @@ LDAP 데이터는 표(Table)가 아니라, **DIT (Directory Information Tree)**�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: Active Directory (AD) 중심의 엔터프라이즈 제국 구축
 
@@ -161,7 +164,7 @@ LDAP 데이터는 표(Table)가 아니라, **DIT (Directory Information Tree)**�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

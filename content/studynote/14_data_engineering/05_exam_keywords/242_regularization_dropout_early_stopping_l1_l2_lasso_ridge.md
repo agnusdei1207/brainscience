@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 정규화(Regularization)는 모델이 훈련 데이터에만 과도하게 적합하는 과적합(Overfitting)을 막아 새로운 데이터에도 잘 작동하게 만드는 제약 전략이다.
+> **핵심**: 정규화(Regularization)는 모델이 훈련 데이터에만 과도하게 적합하는 과적합(Overfitting)을 막아 새로운 데이터에도 잘 작동하게 만드는 제약 전략이다.
 > 2. **가치**: L1 정규화(Lasso)는 불필요한 특성을 0으로 제거하는 특성 선택 효과를, L2 정규화(Ridge)는 가중치를 고르게 작게 만드는 안정성 효과를 제공한다.
 > 3. **판단 포인트**: 드롭아웃(Dropout)은 훈련 때 뉴런을 무작위 비활성화해 앙상블 효과를 내며, 조기 종료(Early Stopping)는 검증 손실이 증가하기 시작하는 순간 훈련을 멈춰 최적 일반화 지점을 보존한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 과적합(Overfitting)은 모델이 훈련 데이터의 노이즈까지 암기하여 새로운 데이터에서 성능이 급락하는 현상이다.
 
@@ -45,7 +47,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### L1 정규화 (Lasso — Least Absolute Shrinkage and Selection Operator)
 
@@ -120,7 +122,7 @@ L_total = L_original + λ·Σw_i²
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 조기 종료 (Early Stopping)
 
@@ -161,7 +163,7 @@ for epoch in range(max_epochs):
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 과적합 진단 및 처방 플로우
 
@@ -200,7 +202,7 @@ for epoch in range(max_epochs):
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정규화 적용 효과 정량적 예시
 

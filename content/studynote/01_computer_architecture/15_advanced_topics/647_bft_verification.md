@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 647. BFT 검증 가속 (Byzantine Fault Tolerance Verification)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: BFT(Byzantine Fault Tolerance) 검증 가속은 분산 합의 알고리즘에서 발생하는 **수천 개의 디지털 서명 검증 및 투표 메시지 처리 오버헤드를 전용 하드웨어(FPGA, ASIC, GPU)를 통해 해결**하는 기술이다.
+> **핵심**: BFT(Byzantine Fault Tolerance) 검증 가속은 분산 합의 알고리즘에서 발생하는 **수천 개의 디지털 서명 검증 및 투표 메시지 처리 오버헤드를 전용 하드웨어(FPGA, ASIC, GPU)를 통해 해결**하는 기술이다.
 > 2. **가치**: 네트워크 내 악의적인 노드나 오작동 노드가 존재하더라도, 하드웨어 수준의 초고속 서명 병렬 처리를 통해 합의 시간(Finality)을 단축하고 전체 네트워크의 신뢰성을 보장한다.
 > 3. **융합**: 고성능 암호화 엔진(ECC, EdDSA 가속기)과 하드웨어 RoT(Root of Trust)가 결합되어, 소프트웨어 가로채기 공격을 방어하면서도 수만 TPS 이상의 고성능 블록체인 및 분산 시스템 구현을 가능케 한다.
 
+> 📝 모범 답안
+
+# 647. BFT 검증 가속 (Byzantine Fault Tolerance Verification)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 분산 합의의 고질적 난제: 서명 폭풍
 - **현상**: 비잔틴 장애 허용(BFT) 알고리즘은 노드 간에 수많은 투표 메시지를 주고받는다. 각 메시지는 '누가 보냈는지'를 증명하기 위해 디지털 서명이 포함되며, 수신 노드는 이를 모두 검증해야 한다.
@@ -48,7 +50,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 서명 병렬 처리 (Parallel Signature Verification)
 - 디지털 서명 검증(주로 ECDSA 또는 Ed25519)은 복잡한 타원곡선 연산을 수반한다. 
@@ -72,7 +74,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 소프트웨어 BFT vs 하드웨어 가속 BFT
 
@@ -92,7 +94,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -113,7 +115,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **Finality 단축**: 합의 완료까지 걸리는 시간을 90% 이상 단축.

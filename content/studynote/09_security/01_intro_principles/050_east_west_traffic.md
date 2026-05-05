@@ -5,15 +5,18 @@ description = "데이터센터 내부 이스트-웨스트 트래픽의 개념, �
 categories = "studynote-security"
 tags = ["east west traffic", "lateral movement", "micro segmentation", "Zero Trust", "SDN", "data center security", "NSX"]
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 이스트-웨스트(East-West) 트래픽은 데이터센터 내부 서버 간 통신으로, 전통적 경계 보안이 이를 신뢰하여 내부 침투 후 측면 이동(Lateral Movement)이 쉬웠다.
 > 2. 이스트-웨스트 트래픽은 현대 데이터센터에서 전체 트래픽의 70~80%를 차지하며, 기존 노스-사우스 방화벽으로는 제어 불가하다.
 > 3. Zero Trust와 마이크로 세그먼테이션이 이스트-웨스트 보안의 핵심으로, 모든 내부 통신을 명시적으로 인증·인가하고 최소 권한 정책을 적용한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 이스트-웨스트 트래픽 개요
+## 1. 개요 및 필요성
 
 ### 1.1 방향 정의
 
@@ -39,7 +42,7 @@ tags = ["east west traffic", "lateral movement", "micro segmentation", "Zero Tru
 
 ---
 
-## Ⅱ. 측면 이동 (Lateral Movement) 위협
+## 2. 구성요소
 
 ### 2.1 공격 흐름
 
@@ -60,7 +63,7 @@ tags = ["east west traffic", "lateral movement", "micro segmentation", "Zero Tru
 
 ---
 
-## Ⅲ. 마이크로 세그먼테이션
+## 3. 구조 및 동작 원리
 
 ### 3.1 개념
 
@@ -84,7 +87,7 @@ tags = ["east west traffic", "lateral movement", "micro segmentation", "Zero Tru
 
 ---
 
-## Ⅳ. Zero Trust + 이스트-웨스트 보안
+## 4. 비교 및 트레이드오프
 
 ### 4.1 Zero Trust 원칙 적용
 
@@ -110,7 +113,7 @@ tags = ["east west traffic", "lateral movement", "micro segmentation", "Zero Tru
 
 ---
 
-## Ⅴ. 모니터링과 탐지
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 이스트-웨스트 트래픽 가시성
 

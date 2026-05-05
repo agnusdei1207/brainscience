@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: AV(Anti-Virus)+EDR(Endpoint Detection and Response)+NDR(Network Detection and Response)+UEBA(User and Entity Behavior Analytics)는 각각의 탐지 공백을 상호 보완하는 4중 방어 레이어 조합이다.
+> **핵심**: AV(Anti-Virus)+EDR(Endpoint Detection and Response)+NDR(Network Detection and Response)+UEBA(User and Entity Behavior Analytics)는 각각의 탐지 공백을 상호 보완하는 4중 방어 레이어 조합이다.
 > 2. **가치**: 단일 도구는 공격 킬 체인의 일부만 볼 수 있지만, 4가지 기술을 통합하면 초기 침투부터 데이터 유출까지 전 단계를 커버하는 포괄적 가시성을 확보한다.
 > 3. **판단 포인트**: 통합 효과를 최대화하려면 각 솔루션의 이벤트를 SIEM(Security Information and Event Management) 또는 XDR 플랫폼에서 상관 분석해야 하며, 데이터 표준화(STIX/TAXII)가 선행되어야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 현대 사이버 공격은 단일 벡터(Vector)로 이루어지지 않는다. 2024년 Verizon DBIR(Data Breach Investigations Report)에 따르면 대부분의 침해 사고는 ① 피싱·취약점 악용(초기 침투) → ② 악성코드 실행(엔드포인트 감염) → ③ 네트워크 측면 이동(Lateral Movement) → ④ 자격증명 탈취·데이터 유출의 복합 단계를 거친다.
 
@@ -25,7 +27,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 4가지 솔루션 역할 분담
 
@@ -59,7 +61,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 공격 단계별 탐지 도구 매핑
 
@@ -77,7 +79,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **통합 구축 로드맵:**
 1. AV/EPP 기반 구축 (즉시 예방 효과)
@@ -95,7 +97,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 AV+EDR+NDR+UEBA 통합 구축 시 공격 킬 체인의 전 단계를 커버할 수 있으며, 단일 솔루션 대비 위협 탐지율이 3배 이상 향상된다는 산업 보고서가 다수 발표되었다. 또한 각 솔루션의 상관 분석을 통해 오탐(False Positive)도 40% 이상 감소한다.
 

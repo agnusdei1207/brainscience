@@ -5,17 +5,19 @@ weight = 188
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-# 클라우드 배포 모델 (Cloud Deployment Models) - 퍼블릭, 프라이빗, 하이브리드
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 클라우드 배포 모델(Deployment Model)은 클라우드 인프라가 '어디에 물리적으로 위치'하고, '누구에게 소유권과 접근 권한'이 주어지느냐에 따라 인프라의 거주지(Location)와 통제권(Control)을 4가지(Public, Private, Hybrid, Community)로 규정한 아키텍처 분류법이다.
+> **핵심**: 클라우드 배포 모델(Deployment Model)은 클라우드 인프라가 '어디에 물리적으로 위치'하고, '누구에게 소유권과 접근 권한'이 주어지느냐에 따라 인프라의 거주지(Location)와 통제권(Control)을 4가지(Public, Private, Hybrid, Community)로 규정한 아키텍처 분류법이다.
 > 2. **가치**: 기업은 이 모델을 저울질하여, 무한대의 확장성이 필요한 대국민 웹 서비스는 밖으로 빼고(Public), 절대 유출되면 안 되는 금융 원장이나 고객 개인정보는 사내 전산실 울타리 안에 가두는(Private) 극단적 '비용 최적화'와 '보안 규제(Compliance)'의 타협점을 달성할 수 있다.
 > 3. **융합**: 이 모델들은 서로 배타적이지 않다. 오히려 현대의 엔터프라이즈 IT는 평소엔 안전한 사내망(Private)을 쓰다가 쇼핑몰 세일로 트래픽이 터지면 넘치는 물량을 아마존 퍼블릭(Public) 망으로 자동 방류(Cloud Bursting)해 버리는 **'하이브리드 클라우드(Hybrid Cloud)'**라는 거대한 융합 방죽으로 수렴하고 있다.
 
+> 📝 모범 답안
+
+# 클라우드 배포 모델 (Cloud Deployment Models) - 퍼블릭, 프라이빗, 하이브리드
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: NIST(미국 국립표준기술연구소)는 클라우드 컴퓨팅을 제공 형태(IaaS/PaaS/SaaS)뿐만 아니라 배포 형태에 따라서도 분류했다. **퍼블릭(Public)**은 누구나 돈만 내면 쓰는 대중목욕탕, **프라이빗(Private)**은 우리 회사만 쓰는 1인용 욕조, **커뮤니티(Community)**는 특정 목적을 가진 조합원들만 쓰는 사우나, **하이브리드(Hybrid)**는 이들을 파이프로 연결해 필요할 때마다 섞어 쓰는 온천장이다.
 
@@ -61,7 +63,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 4대 클라우드 배포 모델(Deployment Model) 매트릭스 비교
 
@@ -87,7 +89,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 클라우드 3대 배포 모델 TCO (총소유비용) 트레이드오프 분석
 
@@ -109,7 +111,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 설계 안티패턴
 
@@ -167,7 +169,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

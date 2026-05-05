@@ -5,15 +5,18 @@ date = "2026-03-19"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. CAP 정리(CAP Theorem, Brewer 2000)는 분산 데이터베이스 시스템이 일관성(Consistency)·가용성(Availability)·파티션 내성(Partition Tolerance) 세 가지를 동시에 완벽히 보장할 수 없으며, 파티션(네트워크 분리)은 실제 환경에서 불가피하므로 CP 또는 AP 중 하나를 선택해야 한다는 근본 제약이다.
 > 2. CP 시스템(MongoDB, HBase, ZooKeeper)은 파티션 발생 시 가용성을 희생해 일관성을 유지하고, AP 시스템(Cassandra, DynamoDB, CouchDB)은 가용성을 유지하되 결과적 일관성(Eventual Consistency)을 허용한다.
 > 3. 현실 설계에서 CAP는 이진 선택이 아닌 스펙트럼이며, PACELC 모델(2012)이 파티션 없는 상황에서도 지연(Latency)과 일관성 트레이드오프를 추가로 고려하는 더 실용적 프레임워크다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. CAP 세 축
+## 1. 개요 및 필요성
 
 ```
 CAP 정리의 세 속성:
@@ -43,7 +46,7 @@ P (Partition Tolerance, 파티션 내성):
 
 ---
 
-## Ⅱ. CP 시스템
+## 2. 구성요소
 
 ```
 CP (Consistency + Partition Tolerance):
@@ -78,7 +81,7 @@ CP (Consistency + Partition Tolerance):
 
 ---
 
-## Ⅲ. AP 시스템
+## 3. 구조 및 동작 원리
 
 ```
 AP (Availability + Partition Tolerance):
@@ -114,7 +117,7 @@ AP (Availability + Partition Tolerance):
 
 ---
 
-## Ⅳ. PACELC 모델
+## 4. 비교 및 트레이드오프
 
 ```
 PACELC (Daniel Abadi, 2012):
@@ -148,7 +151,7 @@ PACELC:
 
 ---
 
-## Ⅴ. 실무 시나리오 — E-commerce 시스템 설계
+## 5. 실무 적용 및 최적화 기법
 
 ```
 이커머스 데이터베이스 설계 CAP 선택:

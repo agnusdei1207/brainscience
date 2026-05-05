@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 락-프리 자료구조 (Lock-Free Data Structures)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 락-프리 (Lock-Free) 자료구조는 뮤텍스 없이 CAS (Compare-And-Swap) 같은 하드웨어 원자적 명령어만으로 동시성을 제어하여, 스레드 중 최소 하나는 항상 전진한다는 Live 보장을 제공한다.
+> **핵심**: 락-프리 (Lock-Free) 자료구조는 뮤텍스 없이 CAS (Compare-And-Swap) 같은 하드웨어 원자적 명령어만으로 동시성을 제어하여, 스레드 중 최소 하나는 항상 전진한다는 Live 보장을 제공한다.
 > 2. **가치**: 뮤텍스의 스케줄러 암전(Preemption Under Lock), 우선순위 역전, 데드락 문제를 완전히 제거하며, 멀티코어 확장성이 극도로 높아 고성능 시스템에서 핵심 알고리즘으로 사용된다.
 > 3. **융합**: Java의 `ConcurrentLinkedQueue`, `LongAdder`, Linux 커널의 `ring buffer`, Go runtime의 goroutine 채널 내부, Rust std의 `Mutex`-free 타입들이 락-프리 알고리즘 기반이다.
 
+> 📝 모범 답안
+
+# 락-프리 자료구조 (Lock-Free Data Structures)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 전통적인 뮤텍스 기반 동기화의 핵심 문제는 **스케줄러 암전 (Preemption Under Lock)** 이다. 뮤텍스를 보유한 스레드가 선점당하면, 뮤텍스를 기다리는 모든 스레드가 선점된 스레드가 재실행될 때까지 차단된다. 이로 인해 최악의 경우 스레드 100개가 1개 스레드가 재실행되기를 기다리는 병목이 발생한다.
 
@@ -49,7 +51,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### CAS 루프 기반 카운터
 
@@ -133,7 +135,7 @@ bool success = atomic_compare_exchange_strong(&counter, &expected, desired);
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 동시성 보장 수준 비교
 
@@ -158,7 +160,7 @@ bool success = atomic_compare_exchange_strong(&counter, &expected, desired);
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **고처리량 메시지 큐**: 뮤텍스 기반 큐는 생산자-소비자 수 증가 시 락 경합으로 처리량 감소. `ConcurrentLinkedQueue`(락-프리)는 코어 수 증가에 선형 확장.
@@ -172,7 +174,7 @@ bool success = atomic_compare_exchange_strong(&counter, &expected, desired);
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 구분 | 뮤텍스 | 락-프리 CAS |
 |:---|:---|:---|

@@ -5,15 +5,19 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> (Hash/Conditioning) --> (Accumulate)
+
+> 📝 모범 답안
+
 1. **본질**: 암호학적으로 안전한 난수를 생성하기 위해 시스템이 외부 또는 내부에서 수집하는 '날것 그대로의 무작위성(Raw Randomness)'의 기원을 의미한다.
 2. **가치**: 아무리 훌륭한 암호 알고리즘이라도 엔트로피 소스가 빈약하면 난수의 품질이 낮아져 공격자에게 예측될 수 있으므로, 보안의 신뢰 사슬(Chain of Trust)에서 가장 첫 번째 고리 역할을 한다.
 3. **판단 포인트**: 환경적 제약(클라우드, 임베디드)에 따라 사용 가능한 소스가 다르므로, 여러 독립적인 엔트로피 소스를 혼합하여 '단일 장애점(Single Point of Failure)'을 방지하는 설계가 핵심이다.
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 암호학에서의 '안전성'은 공격자가 다음 비트를 예측할 확률이 정확히 $1/2$이어야 한다는 조건에서 출발한다. **Entropy Source**는 이 확률적 불확실성을 제공하는 원재료다. 컴퓨터 시스템은 본질적으로 결정론적(Deterministic)이지만, 물리적 환경이나 사용자의 비결정론적 행위로부터 이 원재료를 조달한다.
 
@@ -23,7 +27,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 엔트로피 소스는 크게 물리적 소스와 비물리적 소스로 나뉜다.
 
@@ -40,8 +44,7 @@ categories = "studynote-security"
 
 [ Source A: Keyboard ] ---┐
 [ Source B: Thermal ] ----┤    [ Mixing Function ]    [ Entropy Pool ]
-[ Source C: Disk I/O ] ---┼--> (Hash/Conditioning) --> (Accumulate)
-[ Source D: RDRAND ] -----┘            |                     |
+[ Source C: Disk I/O ] ---┼--[ Source D: RDRAND ] -----┘            |                     |
                                        |                     v
                                [ Quality Check ]      [ Output to CSPRNG ]
 ```
@@ -51,7 +54,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 엔트로피 소스의 품질은 암호 알고리즘의 안전성 수준을 결정한다.
 
@@ -68,7 +71,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 기술사는 시스템의 특성에 맞는 엔트로피 소스 확보 전략을 수립해야 한다.
 
@@ -84,7 +87,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 고품질의 엔트로피 소스를 확보하면 암호화 키의 추측 공격(Guessing Attack)을 원천 차단하고, 시스템 보안의 '최초 신뢰점'을 견고하게 다질 수 있다. 이는 결과적으로 전체 IT 인프라의 보안 수준을 비약적으로 상향시킨다.
 

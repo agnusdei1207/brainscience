@@ -7,16 +7,19 @@ date = 2024-01-01
 [extra]
 categories = ["studynote-software-engineering"]
 +++
-+++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: MongoDB는 JSON과 유사한 BSON(Binary JSON) 형식의 문서(Document)를 저장하는 문서 지향적(Document-Oriented) NoSQL 데이터베이스로,灵活한 스키마와 수평 확장을 지원한다.
+> **핵심**: MongoDB는 JSON과 유사한 BSON(Binary JSON) 형식의 문서(Document)를 저장하는 문서 지향적(Document-Oriented) NoSQL 데이터베이스로,灵活한 스키마와 수평 확장을 지원한다.
 > 2. **가치**: 반정형 데이터의快速 저장과 검색에 최적화되어 있으며,Replica Set과Sharded Cluster를 통해 가용성과 확장성을 제공한다.
 > 3. **융합**: MongoDB는 CAP 이론에서 CP(일관성 + 분단 내성)를 선택하며,強い 일관성을 기본으로 제공한다.
 
+> 📝 모범 답안
+
++++
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념
 MongoDB는"humongous"의 약자로, 대규모 데이터 처리를 위해 설계된 문서 지향적 NoSQL 데이터베이스다. 관계형 데이터베이스의 테이블-행-열 구조 대신, Collection-Document-Field 구조를 사용하며, 각 문서는 유연한 스키마(Schema-less)를 가질 수 있다.
@@ -32,7 +35,7 @@ MongoDB는 도감과 같다. 각 페이지(문서)마다 그림(데이터)이 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### MongoDB 아키텍처
 
@@ -81,7 +84,7 @@ MongoDB의 Shard Key 선택은 도서관의分類표 선택과 같다."书名"�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교: MongoDB vs 관계형 DB
 
@@ -103,7 +106,7 @@ MongoDB vs RDBMS는 자유 형식 노트 vs 격자 정서 노트의 차이와 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -122,7 +125,7 @@ MongoDB 사용 시 Shard Key 부적절은 편식하는 사람과 같다. 좋아�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

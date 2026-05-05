@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: RegTech(Regulatory Technology)는 **금융 규제 준수(Compliance)를 AI·빅데이터·자동화로 효율화**하는 기술이며, AML(자금세탁방지)·KYC(고객확인)·규제 보고가 핵심 영역이다.
+> **핵심**: RegTech(Regulatory Technology)는 **금융 규제 준수(Compliance)를 AI·빅데이터·자동화로 효율화**하는 기술이며, AML(자금세탁방지)·KYC(고객확인)·규제 보고가 핵심 영역이다.
 > 2. **가치**: 수작업 규제 준수는 비용이 막대(글로벌 은행 연간 수십조)하고 오류 위험이 높지만, RegTech는 **실시간 자동 모니터링·보고로 비용 70%+ 절감**과 정확도 향상을 동시 달성한다.
 > 3. **판단 포인트**: AI 이상 거래 탐지(AML), 생체 인증 eKYC, 규제 변경 자동 적용(Regulatory Change Management)이 핵심 기능이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 RegTech 3대 영역:

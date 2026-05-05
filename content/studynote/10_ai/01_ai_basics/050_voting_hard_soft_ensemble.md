@@ -5,15 +5,18 @@ description = "하드 보팅(Hard Voting)과 소프트 보팅(Soft Voting)의 �
 categories = "studynote-ai"
 tags = ["voting ensemble", "hard voting", "soft voting", "weighted voting", "scikit-learn", "VotingClassifier", "ensemble learning"]
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 하드 보팅(Hard Voting)은 각 분류기의 클래스 예측(다수결)을 집계하고, 소프트 보팅(Soft Voting)은 각 분류기의 확률값을 평균해 더 정확한 결과를 낸다.
 > 2. 소프트 보팅은 분류기가 보정된 확률(calibrated probability)을 출력할 때 효과적이며, 하드 보팅보다 일반적으로 성능이 높다.
 > 3. 가중 보팅(Weighted Voting)은 성능이 높은 분류기에 더 높은 가중치를 부여해 단순 다수결의 한계를 극복한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 앙상블과 보팅 개요
+## 1. 개요 및 필요성
 
 ### 1.1 보팅 앙상블 구조
 
@@ -35,7 +38,7 @@ tags = ["voting ensemble", "hard voting", "soft voting", "weighted voting", "sci
 
 ---
 
-## Ⅱ. 하드 보팅 (Hard Voting)
+## 2. 구성요소
 
 ### 2.1 원리
 
@@ -59,7 +62,7 @@ tags = ["voting ensemble", "hard voting", "soft voting", "weighted voting", "sci
 
 ---
 
-## Ⅲ. 소프트 보팅 (Soft Voting)
+## 3. 구조 및 동작 원리
 
 ### 3.1 원리
 
@@ -91,7 +94,7 @@ clf = VotingClassifier(estimators=[...], voting='soft')
 
 ---
 
-## Ⅳ. 가중 보팅 (Weighted Voting)
+## 4. 비교 및 트레이드오프
 
 ### 4.1 가중 하드 보팅
 
@@ -131,7 +134,7 @@ vc.fit(X_train, y_train)
 
 ---
 
-## Ⅴ. 성능 비교와 활용 전략
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 보팅 방식 비교
 

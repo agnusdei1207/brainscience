@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: 공간 컴퓨팅(Spatial Computing)은 XR(eXtended Reality — AR/VR/MR)을 통해 디지털 정보를 물리 공간에 중첩시키고, 디지털 트윈(Digital Twin)은 물리 객체를 실시간으로 디지털 공간에 복제해 시뮬레이션한다.
+> **핵심**: 공간 컴퓨팅(Spatial Computing)은 XR(eXtended Reality — AR/VR/MR)을 통해 디지털 정보를 물리 공간에 중첩시키고, 디지털 트윈(Digital Twin)은 물리 객체를 실시간으로 디지털 공간에 복제해 시뮬레이션한다.
 > 2. **가치**: CPS(Cyber-Physical Systems) 관점에서 두 기술의 결합은 '제어 루프(Control Loop)'를 완성한다 — 현실을 디지털로, 디지털 분석 결과를 현실로 피드백한다.
 > 3. **판단 포인트**: 디지털 트윈의 가치는 데이터 실시간성(Latency < 1s)과 모델 정확도(Fidelity)에 비례하며, 스마트 시티·제조·의료·국방에서 예지 보전(Predictive Maintenance)과 의사결정 지원 효과를 극대화한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 디지털 트윈은 NASA가 1960년대 아폴로 우주선의 지상 복제 모델에서 기원하며, 현재는 ISO 23247(제조 디지털 트윈 표준), IEC 63278(Asset Administration Shell) 등으로 표준화되고 있다. 물리 자산(Physical Asset), 디지털 모델(Digital Model), 연결 데이터 채널(Data Connection)의 3요소로 구성되며, 단순 가시화(Visualization)를 넘어 '예측-처방-자율 제어'까지 진화한다.
 
@@ -25,7 +27,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 디지털 트윈 성숙도 모델
 
@@ -76,7 +78,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 디지털 트윈 적용 도메인 비교
 
@@ -102,7 +104,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 디지털 트윈 구축 방법론
 
@@ -134,7 +136,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 IDC 분석에 따르면 2026년까지 글로벌 디지털 트윈 시장은 480억 달러 규모로 성장하며, 제조·스마트 시티·에너지 섹터가 견인할 것으로 전망된다. 한국은 스마트 제조(K-스마트 팩토리 보급 사업), 스마트 시티(세종·부산 실증 단지), 국방 MRO(Maintenance, Repair, Overhaul) 분야에서 디지털 트윈 투자를 집중하고 있다.
 

@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Window Frame은 **ROWS(물리적 행 수)/RANGE(논리적 값 범위)로 현재 행 기준 참조 범위를 정의**하며, UNBOUNDED PRECEDING·CURRENT ROW·N FOLLOWING 등으로 세밀하게 제어한다.
+> **핵심**: Window Frame은 **ROWS(물리적 행 수)/RANGE(논리적 값 범위)로 현재 행 기준 참조 범위를 정의**하며, UNBOUNDED PRECEDING·CURRENT ROW·N FOLLOWING 등으로 세밀하게 제어한다.
 > 2. **가치**: SUM(sal) OVER (ORDER BY date ROWS BETWEEN 2 PRECEDING AND CURRENT ROW)처럼 **이동 평균·누적합·연속 N일 집계**를 SQL만으로 구현할 수 있어 별도 프로그래밍이 불필요하다.
 > 3. **판단 포인트**: ROWS(물리적 행 수, 동점 무관)와 RANGE(논리적 값, 동점 포함)의 차이를 이해하고, 기본 Frame(RANGE UNBOUNDED PRECEDING)을 명시적으로 지정하는 것이 안전하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 누적합: SUM(sal) OVER (ORDER BY id ROWS UNBOUNDED PRECEDING)

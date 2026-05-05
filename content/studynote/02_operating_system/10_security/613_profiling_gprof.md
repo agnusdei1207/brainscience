@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 프로파일링 (Profiling) 도구 Gprof 커널 후킹 작동 원리
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 프로파일링(Profiling)은 프로그램 실행 중 함수별 CPU 시간·호출 횟수·호출 그래프(Call Graph)를 수집하여 성능 병목(핫스팟, Hotspot)을 식별하는 기법이며, Gprof(GNU Profiler)는 컴파일러 계측(-pg 플래그)과 OS 타이머 인터럽트(Sigprof)를 결합하여 동작한다.
+> **핵심**: 프로파일링(Profiling)은 프로그램 실행 중 함수별 CPU 시간·호출 횟수·호출 그래프(Call Graph)를 수집하여 성능 병목(핫스팟, Hotspot)을 식별하는 기법이며, Gprof(GNU Profiler)는 컴파일러 계측(-pg 플래그)과 OS 타이머 인터럽트(Sigprof)를 결합하여 동작한다.
 > 2. **가치**: Gprof의 호출 그래프 분석으로 "전체 실행 시간의 80%를 차지하는 핵심 함수 2~3개"를 식별할 수 있어, 최적화 투자 대비 효과(ROI)를 극대화하는 80/20 법칙 기반 성능 튜닝이 가능하다.
 > 3. **융합**: Gprof(정적 프로파일링) → perf(동적 샘플링) → eBPF(#615, 커널 트레이싱)로 이어지는 프로파일링 진화의 출발점이며, 성능 모니터링(#609) 체계의 핵심 구성요소다.
 
+> 📝 모범 답안
+
+# 프로파일링 (Profiling) 도구 Gprof 커널 후킹 작동 원리
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념
 Gprof(GNU Profiler)는 GCC 컴파일러와 연동하여 프로그램의 함수 호출 빈도, 실행 시간, 호출 그래프를 분석하는 도구다. -pg 컴파일 플래그로 계측 코드를 삽입하고, 실행 후 gmon.out 파일을 생성하여 분석한다.
@@ -54,7 +56,7 @@ Gprof(GNU Profiler)는 GCC 컴파일러와 연동하여 프로그램의 함수 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Gprof 작동 메커니즘
 
@@ -125,7 +127,7 @@ index %time    self  children  called     name
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### Gprof vs perf vs eBPF 비교
 
@@ -142,7 +144,7 @@ index %time    self  children  called     name
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -169,7 +171,7 @@ bpftrace -e 'profile:hz:99 { @[ustack] = count(); }'
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 | 항목 | 도입 전 | 도입 후 |
 |:---|:---|:---|

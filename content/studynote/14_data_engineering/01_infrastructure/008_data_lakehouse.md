@@ -7,17 +7,20 @@ date = "2024-05-15"
 tags = ["Data Lakehouse", "Delta Lake", "Apache Iceberg", "ACID", "Data Architecture", "Big Data"]
 categories = ["studynote-bigdata"]
 +++
+## 0. 핵심 인사이트
 
-# 데이터 레이크하우스 (Data Lakehouse)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 데이터 레이크의 무한한 확장성(비용 효율성, 비정형 데이터 지원)과 데이터 웨어하우스의 데이터 관리 기능(ACID 트랜잭션, 데이터 품질 보장)을 단일 시스템으로 결합한 차세대 개방형 데이터 아키텍처입니다.
+> **핵심**: 데이터 레이크의 무한한 확장성(비용 효율성, 비정형 데이터 지원)과 데이터 웨어하우스의 데이터 관리 기능(ACID 트랜잭션, 데이터 품질 보장)을 단일 시스템으로 결합한 차세대 개방형 데이터 아키텍처입니다.
 > 2. **가치**: 데이터가 레이크와 DW로 이중 복제되는 투 투어(2-Tier) 구조의 사일로 현상과 막대한 ETL 병목을 제거하여, 스토리지 비용을 최소화하면서 실시간 BI 분석과 머신러닝을 하나의 단일 플랫폼에서 동시에 처리합니다.
 > 3. **융합**: AWS S3 같은 클라우드 객체 스토리지 위에 Apache Iceberg, Delta Lake 등 트랜잭션 로그를 통제하는 '오픈 테이블 포맷(Open Table Format)' 메타데이터 계층을 융합하여 구현됩니다.
 
+> 📝 모범 답안
+
+# 데이터 레이크하우스 (Data Lakehouse)
+
+##
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 **데이터 레이크하우스 (Data Lakehouse)**는 전통적인 데이터 웨어하우스(DW)와 1세대 데이터 레이크(Data Lake)가 가진 각각의 치명적 한계를 극복하기 위해 탄생한 융합형 아키텍처입니다.
 
@@ -48,7 +51,7 @@ categories = ["studynote-bigdata"]
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 데이터 레이크하우스를 가능하게 하는 마법의 핵심은 하드웨어가 아니라, 클라우드 스토리지와 연산 엔진 사이에 끼어들어가는 **오픈 테이블 포맷 (Open Table Format)**이라는 논리적 메타데이터 계층입니다. 대표적으로 **Delta Lake (Databricks 주도)**, **Apache Iceberg (Netflix 주도)**, **Apache Hudi (Uber 주도)**가 있습니다.
 
@@ -87,7 +90,7 @@ categories = ["studynote-bigdata"]
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 데이터 레이크하우스는 과거의 플랫폼들과 명확한 스펙 차이를 가지며, 아키텍처 진화의 종착점으로 평가받고 있습니다.
 
@@ -108,7 +111,7 @@ categories = ["studynote-bigdata"]
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 실무에서 데이터 레이크하우스를 도입할 때 가장 치열하게 고민하는 지점은 **어떤 오픈 테이블 포맷(Iceberg, Delta, Hudi)을 표준으로 채택할 것인가**와 스몰 파일 병목(Small File Problem)의 방어입니다.
 
@@ -138,7 +141,7 @@ categories = ["studynote-bigdata"]
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 데이터 레이크하우스는 현존하는 데이터 엔지니어링 아키텍처의 최종 진화 형태로 평가받습니다.
 

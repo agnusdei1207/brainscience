@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ZFS와 Btrfs 같은 자가 치유 파일시스템 (Self-Healing Filesystem)은 데이터 무결성 체크섬 (Checksum), 쓰기 시 복사 (Copy-on-Write, CoW), 자동 RAID 패리티 복구를 내장하여 하드웨어 에러를 파일시스템 레이어에서 자동으로 탐지하고 수정한다.
+> **핵심**: ZFS와 Btrfs 같은 자가 치유 파일시스템 (Self-Healing Filesystem)은 데이터 무결성 체크섬 (Checksum), 쓰기 시 복사 (Copy-on-Write, CoW), 자동 RAID 패리티 복구를 내장하여 하드웨어 에러를 파일시스템 레이어에서 자동으로 탐지하고 수정한다.
 > 2. **가치**: 전통적인 RAID는 어느 블록에 에러가 발생했는지 알 수 없어 침묵하는 데이터 손상 (Silent Data Corruption)이 누적될 수 있다. ZFS의 scrub은 모든 블록의 체크섬을 주기적으로 검증하고 자동으로 복구한다.
 > 3. **판단 포인트**: ZFS는 기능이 풍부하지만 메모리 집약적 (ARC 캐시)이고, Btrfs는 리눅스 커널 내장이지만 RAID-5/6 안정성이 완전하지 않다. 프로덕션 NAS/스토리지 서버에서는 ZFS, Kubernetes PV 기반 클라우드 환경에서는 Ceph가 더 적합하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 데이터 센터에서 스토리지는 가장 신뢰할 수 없는 컴포넌트 중 하나다. HDD는 연간 1~2% 고장률을 보이고, SSD도 낸드 플래시 셀 마모로 비트 플립 (Bit Flip)이 발생한다. DRAM 메모리도 우주선 (Cosmic Ray)으로 인한 단일 비트 오류가 발생할 수 있다.
 
@@ -25,7 +27,7 @@ ZFS (Zettabyte File System)는 Sun Microsystems가 2005년 설계한 파일시�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 ZFS 자가 치유 메커니즘
 
@@ -77,7 +79,7 @@ ZFS (Zettabyte File System)는 Sun Microsystems가 2005년 설계한 파일시�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 ZFS vs 전통적 RAID 비교
 
@@ -97,7 +99,7 @@ ZFS (Zettabyte File System)는 Sun Microsystems가 2005년 설계한 파일시�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 ZFS 모니터링 알람 설정
 
@@ -125,7 +127,7 @@ zfs_pool_allocated_bytes # 할당된 공간
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ZFS를 스토리지 서버에 적용하면 침묵하는 데이터 손상을 자동으로 탐지하고 수정하여 데이터 무결성이 보장된다. 정기 scrub으로 디스크 장애를 RAID 재구성 전에 미리 발견할 수 있다. 스냅샷 기능으로 데이터 손상 발생 직전 상태로 즉시 복구할 수 있다.
 

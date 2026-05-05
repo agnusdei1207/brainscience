@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 그래프 분석 (Graph Analytics)은 노드 (Node)와 엣지 (Edge)로 구성된 그래프 구조 데이터에서 PageRank·커뮤니티 탐지·최단 경로·삼각형 수 (Triangle Count) 등의 알고리즘을 적용하여 구조적 패턴과 영향력을 분석하는 기법이다.
+> **핵심**: 그래프 분석 (Graph Analytics)은 노드 (Node)와 엣지 (Edge)로 구성된 그래프 구조 데이터에서 PageRank·커뮤니티 탐지·최단 경로·삼각형 수 (Triangle Count) 등의 알고리즘을 적용하여 구조적 패턴과 영향력을 분석하는 기법이다.
 > 2. **가치**: 지식 그래프 (Knowledge Graph), 소셜 네트워크, 공급망, 사기 탐지 네트워크, 추천 시스템 등 관계가 본질인 모든 데이터에서 일반 테이블 기반 분석이 놓치는 구조적 인사이트를 제공한다.
 > 3. **판단 포인트**: 소규모 그래프는 NetworkX, 대규모 분산 처리는 Apache Spark GraphX·Apache Flink Gelly, 실시간 그래프 쿼리는 TigerGraph·Amazon Neptune을 선택하며, 속성 그래프 (Property Graph) vs RDF (Resource Description Framework) 모델 선택이 아키텍처의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 구글 검색의 핵심인 PageRank, 페이스북의 친구 추천, 넷플릭스의 영화 추천, 금융 사기 탐지—이 모두는 데이터를 그래프로 보는 관점에서 태어났다. 테이블에 저장된 데이터는 "각 행의 속성"을 잘 표현하지만, "행들 간의 관계"는 조인을 거듭해도 한계가 있다.
 
@@ -23,7 +25,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 그래프 알고리즘 분류
 
@@ -70,7 +72,7 @@ N = 전체 노드 수
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | 그래프 DB (Neo4j/Neptune) | RDBMS | 그래프 처리 엔진 (GraphX/Gelly) |
 |:---|:---|:---|:---|
@@ -86,7 +88,7 @@ GNN (Graph Neural Network)과 그래프 분석의 결합이 최신 트렌드다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 적용 시나리오
 
@@ -109,7 +111,7 @@ GNN (Graph Neural Network)과 그래프 분석의 결합이 최신 트렌드다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 | 내용 |
 |:---|:---|
@@ -136,7 +138,6 @@ GNN (Graph Neural Network)과 그래프 분석의 결합이 최신 트렌드다.
 | 지식 그래프 (Knowledge Graph) | 엔티티-관계 구조로 지식 표현 |
 | Apache Spark GraphX | 분산 환경 대규모 그래프 처리 |
 | RDF (Resource Description Framework) | 시맨틱 웹 표준 그래프 데이터 모델 |
-
 
 ### 📈 관련 키워드 및 발전 흐름도
 

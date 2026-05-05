@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 652. UPS 아키텍처 (Uninterruptible Power Supply Architecture)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: UPS(Uninterruptible Power Supply, 무정전 전원 장치)는 상용 전원에 장애가 발생했을 때 **에너지 저장 장치(배터리, 플라이휠 등)를 통해 IT 장비에 즉각적이고 안정적인 전력을 공급**하여 데이터 유실과 하드웨어 손상을 방지하는 핵심 전력 인프라다.
+> **핵심**: UPS(Uninterruptible Power Supply, 무정전 전원 장치)는 상용 전원에 장애가 발생했을 때 **에너지 저장 장치(배터리, 플라이휠 등)를 통해 IT 장비에 즉각적이고 안정적인 전력을 공급**하여 데이터 유실과 하드웨어 손상을 방지하는 핵심 전력 인프라다.
 > 2. **가치**: 단순히 정전 대응을 넘어, 전압 강하(Sag), 급등(Surge), 주파수 변동 등 전력 품질 문제를 실시간으로 정화(Conditioning)하여 민감한 반도체 기반 서버의 수명과 안정성을 보장한다.
 > 3. **융합**: 리튬 이온 배터리 기술의 도입으로 더 작고 가벼워진 모듈형(Modular) UPS가 대세로 자리 잡았으며, 데이터 센터의 수요 반응(Demand Response) 서비스와 결합하여 에너지를 저장했다가 되파는 VPP(가상 발전소)의 구성 요소로 진화하고 있다.
 
+> 📝 모범 답안
+
+# 652. UPS 아키텍처 (Uninterruptible Power Supply Architecture)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 전력은 디지털의 산소다
 - **현상**: 서버는 0.01초의 전력 끊김에도 리부팅되거나 데이터가 깨질 수 있다. 
@@ -53,7 +55,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 온라인 이중 변환 방식 (Online Double Conversion)
 - **원리**: 들어오는 AC를 DC로 바꿨다가 다시 AC로 만든다. 
@@ -78,7 +80,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### UPS 방식별 비교표
 
@@ -98,7 +100,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -120,7 +122,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **가동 중지 시간(Downtime) 0**: 전력 장애로 인한 서비스 중단 원천 차단.

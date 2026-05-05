@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# Side-channel Attack (사이드 채널 공격)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 사이드 채널 공격(Side-channel Attack)은 암호算法的 수학적脆弱性を対象とするのではなく、演算 수행 시 시스템이 방출하는 물리적 정보(전력 소모, 연산 시간, 전자기파, 소리, 열 분포)를 측정하여 내부에서 처리되는 데이터를 유추하는 해킹 기법이다.
+> **핵심**: 사이드 채널 공격(Side-channel Attack)은 암호算法的 수학적脆弱性を対象とするのではなく、演算 수행 시 시스템이 방출하는 물리적 정보(전력 소모, 연산 시간, 전자기파, 소리, 열 분포)를 측정하여 내부에서 처리되는 데이터를 유추하는 해킹 기법이다.
 > 2. **가치**: AES, RSA, ECC 같은 표준 암호算法조차 사이드 채널 공격에脆弱할 수 있으며, 실제攻撃では数千 TPS에서 수십 만 TPS까지의 Encryption 연산을 수행하는 동안 방출되는 미량의 Physical 정보를統計적으로 분석하여 Encryption 키를 복원할 수 있다.
 > 3. **융합**: Constant-time 암호実装, Masking, Random Precharge, Hardware Shuffling 등의Defense 기술과 결합하여, 算法変更 없이도 Implementation 수준에서 사이드 채널 정보를 제거하는 하드웨어-소프트웨어 co-design이 필수적이다.
 
+> 📝 모범 답안
+
+# Side-channel Attack (사이드 채널 공격)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 전통적 암호解読과의 차이
 
@@ -29,7 +31,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 전력 분석 공격 (Power Analysis Attack)
 
@@ -131,7 +133,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 사이드 채널 공격 유형 비교
 
@@ -151,7 +153,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -176,7 +178,7 @@ AES 구현에서 S-Box 조회는 常量大의 전력 소비를 수반하며, 이
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 사이드 채널攻撃防御 기술
 

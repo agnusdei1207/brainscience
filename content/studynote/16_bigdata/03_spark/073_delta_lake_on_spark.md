@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> 기존 데이터 레이크는 "책상 위 메모지 더미"다 — 누가 언제 추가했는지 기억이 없다. Delta Lake는 "공증 사무실의 거래 장부" — 모든 변경이 날짜·서명과 함께 순서대로 기록된다.
+
+> 📝 모범 답안
 
 - **본질**: Delta Lake는 Parquet 기반 저장소 위에 트랜잭션 로그(`_delta_log`)를 추가하여 ACID 트랜잭션, 스키마 강제(Schema Enforcement), 타임 트래블(Time Travel), MERGE/UPDATE/DELETE 연산을 Spark에서 사용할 수 있게 하는 오픈 소스 스토리지 레이어다.
 - **가치**: 기존 데이터 레이크는 "쓰고 잊어버리는(Write-once)" 구조라 잘못 쓴 데이터를 수정하거나 두 스트림이 동시에 같은 테이블에 쓸 때 데이터 무결성을 보장할 수 없었는데, Delta Lake는 이 문제를 Data Warehouse 수준의 ACID 보장으로 해결한다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 전통적 데이터 레이크의 한계
 
@@ -39,11 +42,10 @@ categories = "studynote-bigdata"
 이 모든 문제는 트랜잭션 로그(`_delta_log/`) 하나로 해결된다. 모든 쓰기 작업이 로그에 기록되고, 원자적으로 커밋되므로 ACID 보장이 가능해진다.
 
 **📢 섹션 요약 비유**
-> 기존 데이터 레이크는 "책상 위 메모지 더미"다 — 누가 언제 추가했는지 기억이 없다. Delta Lake는 "공증 사무실의 거래 장부" — 모든 변경이 날짜·서명과 함께 순서대로 기록된다.
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. Delta Lake 디렉토리 구조
 
@@ -110,7 +112,7 @@ WHEN NOT MATCHED THEN INSERT *;
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 1. Delta Lake vs Apache Iceberg vs Apache Hudi
 
@@ -129,7 +131,7 @@ WHEN NOT MATCHED THEN INSERT *;
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1. Delta Lake 운영 명령어
 
@@ -160,7 +162,7 @@ DESCRIBE TABLE EXTENDED orders;
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 기대효과
 

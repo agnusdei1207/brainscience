@@ -4,15 +4,18 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-devops"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 콘웨이의 법칙(Conway's Law)은 "조직이 설계하는 시스템은 해당 조직의 커뮤니케이션 구조를 그대로 반영한다"는 원칙으로, 1967년 Mel Conway가 제시했다.
 > 2. 역 콘웨이 기동(Inverse Conway Maneuver)은 원하는 아키텍처(마이크로서비스)를 먼저 설계하고, 그에 맞게 팀 구조를 재편해 시스템이 아키텍처를 따르게 하는 전략이다.
 > 3. Team Topologies 프레임워크는 콘웨이의 법칙을 의도적으로 활용해 Stream-aligned·Platform·Enabling·Complicated-subsystem 4가지 팀 유형으로 조직을 최적화한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 콘웨이의 법칙 원문과 의미
+## 1. 개요 및 필요성
 
 > *"Any organization that designs a system will produce a design whose structure is a copy of the organization's communication structure."*
 > — Mel Conway, 1967
@@ -36,7 +39,7 @@ categories = "studynote-devops"
 
 ---
 
-## Ⅱ. 콘웨이의 법칙 실제 사례
+## 2. 구성요소
 
 ### 사례 1 — 모놀리식 → 마이크로서비스 실패
 
@@ -63,7 +66,7 @@ categories = "studynote-devops"
 
 ---
 
-## Ⅲ. 역 콘웨이 기동 (Inverse Conway Maneuver)
+## 3. 구조 및 동작 원리
 
 역 콘웨이 기동(Inverse Conway Maneuver)은 **원하는 시스템 아키텍처를 먼저 정의하고, 그 아키텍처를 자연스럽게 만들어낼 수 있는 팀 구조로 조직을 재편**하는 전략이다.
 
@@ -83,7 +86,7 @@ categories = "studynote-devops"
 
 ---
 
-## Ⅳ. Team Topologies — 콘웨이 법칙의 의도적 활용
+## 4. 비교 및 트레이드오프
 
 Matthew Skelton·Manuel Pais가 제시한 **Team Topologies 프레임워크**는 4가지 팀 유형으로 조직을 최적화한다.
 
@@ -106,7 +109,7 @@ Facilitating: 지식 전수 (한시적)
 
 ---
 
-## Ⅴ. 콘웨이 법칙과 DevOps 문화
+## 5. 실무 적용 및 최적화 기법
 
 ### 조직 사일로(Silo) 문제
 

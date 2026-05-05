@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Monitor Object (모니터 객체) 패턴은 멀티스레드 환경에서 객체의 메서드를 **상호 배제(Mutual Exclusion)**로 실행하도록 보장하며, Java의 `synchronized` 키워드가 바로 이 패턴의 언어 내장 구현이다.
+> **핵심**: Monitor Object (모니터 객체) 패턴은 멀티스레드 환경에서 객체의 메서드를 **상호 배제(Mutual Exclusion)**로 실행하도록 보장하며, Java의 `synchronized` 키워드가 바로 이 패턴의 언어 내장 구현이다.
 > 2. **가치**: 객체 자신이 동기화 메커니즘을 캡슐화하여, 사용자가 명시적 락 관리 없이 스레드 안전(Thread-Safe)한 객체를 사용할 수 있게 한다.
 > 3. **판단 포인트**: 모니터의 4요소(상호 배제, 진입 대기열, 조건 대기열, 조건 변수)를 이해하면 `synchronized` + `wait/notify` 동작을 완전히 예측하고 제어할 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1-1. 동기화 없이 공유 상태에 접근하는 문제
 
@@ -54,7 +55,7 @@ Hoare(1974)가 제안한 Monitor 개념을 Java(1995)가 언어 수준으로 통
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. Monitor의 4요소
 
@@ -134,7 +135,7 @@ public static synchronized void staticMethod() {
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. Mutex vs Monitor vs Semaphore 비교
 
@@ -161,7 +162,7 @@ public static synchronized void staticMethod() {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. Monitor 패턴으로 Thread-Safe 객체 설계
 
@@ -222,7 +223,7 @@ public class MonitorCounter {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5-1. 기대 효과
 

@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 뮤텍스 (Mutex, Mutual Exclusion Object)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 뮤텍스(Mutex)는 임계 구역(Critical Section)을 단 하나의 스레드만 접근할 수 있도록 운영체제 커널이 제공하는 소프트웨어 자물쇠(Lock) 객체로, 스핀락의 CPU 낭비 문제를 해결하기 위해 대기자를 **수면(Sleep)** 상태로 전환시키는 블로킹(Blocking) 동기화 기법이다.
+> **핵심**: 뮤텍스(Mutex)는 임계 구역(Critical Section)을 단 하나의 스레드만 접근할 수 있도록 운영체제 커널이 제공하는 소프트웨어 자물쇠(Lock) 객체로, 스핀락의 CPU 낭비 문제를 해결하기 위해 대기자를 **수면(Sleep)** 상태로 전환시키는 블로킹(Blocking) 동기화 기법이다.
 > 2. **가치**: 뮤텍스는 **'소유권(Ownership)'**이라는 강력한 철학을 가진다. 자물쇠를 잠근(Lock) 스레드만이 자물쇠를 풀(Unlock) 수 있으며, 이 소유권 추적 기능 덕분에 OS는 우선순위 역전(Priority Inversion)과 같은 심각한 버그를 우선순위 상속(PI)으로 자동 치료할 수 있다.
 > 3. **융합**: 락 대기 시간이 문맥 교환(Context Switch) 시간보다 짧을 때는 오히려 성능이 폭락하는 단점이 있어, 현대 OS는 락을 얻기 위해 잠시 스핀(Spin)을 돌다가 안 되면 수면(Sleep)으로 빠지는 **어댑티브 뮤텍스(Adaptive Mutex)**로 진화하여 두 방식의 장점을 융합했다.
 
+> 📝 모범 답안
+
+# 뮤텍스 (Mutex, Mutual Exclusion Object)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: Mutual Exclusion(상호 배제)의 축약어로, 공유 자원(데이터, 파일, DB 레코드 등)에 대한 동시 접근을 막기 위해 운영체제나 프로그래밍 언어 차원에서 제공하는 가장 대중적인 락(Lock) 객체다. 
 - **필요성**: 스핀락(Spinlock)은 락을 얻을 때까지 `while` 루프를 돌며 CPU 사이클과 전력을 100% 태워버린다. 만약 락을 쥔 스레드가 I/O 작업을 하느라 1초 동안 안 나온다면, 밖에서 기다리는 스레드는 1초 동안 CPU를 무의미하게 불태우며 시스템을 마비시킨다. 따라서 "문이 잠겨있으면 쓸데없이 문 앞에서 서성이지 말고, 대기실(Wait Queue)에 가서 잠을 자라! 문 열리면 깨워줄게!"라는 **자원 절약형 대기 매커니즘**이 절실했다.
@@ -45,7 +47,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 뮤텍스의 자료 구조와 커널 시스템 콜
 뮤텍스는 단순한 boolean 변수 1개가 아니다. 내부적으로 복잡한 구조체를 가진다.
@@ -86,7 +88,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 뮤텍스의 치명적 오버헤드: 문맥 교환 (Context Switch)
 
@@ -110,7 +112,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **Java의 Synchronized와 ReentrantLock**: 자바 개발자가 가장 많이 쓰는 `synchronized` 블록은 과거에는 무조건 OS 뮤텍스를 호출하는 아주 무거운 락(Heavyweight Lock)이었다. 
@@ -155,7 +157,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 뮤텍스(Mutex)를 시스템의 공유 변수에 적재적소로 배치하면, 데이터가 동시에 수정되어 오염되는 경쟁 조건(Race Condition)을 100% 논리적으로 방어할 수 있으며, 스레드들이 쓸데없는 뺑뺑이(Busy Waiting)를 돌지 않고 편안하게 잠들게 하여 시스템 CPU 이용률을 생산적인 유저 로직 연산에 극한으로 집중시킬 수 있다.

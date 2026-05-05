@@ -4,11 +4,14 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 클라우드 기반 감리는 전통적 현장 방문 대신 원격 접속·클라우드 산출물 검토·API 기반 자동화 도구를 활용해 SaaS·PaaS·IaaS 환경의 정보시스템을 검증하는 현대화된 감리 방식이다.
 > 2. 클라우드 공유 책임 모델(Shared Responsibility Model)에 따라 감리 범위가 명확히 구분되어야 하며, CSP(Cloud Service Provider)의 책임 영역(물리 인프라)은 CSP의 감사 보고서(SOC 2, ISO 27001)로 대체된다.
 > 3. IaC (Infrastructure as Code) 코드 검토, CI/CD 파이프라인 감사, CSPM(Cloud Security Posture Management) 리포트가 클라우드 감리의 핵심 산출물이 되고 있다.
+
+> 📝 모범 답안
 
 ---
 

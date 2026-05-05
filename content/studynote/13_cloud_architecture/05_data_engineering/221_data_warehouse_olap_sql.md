@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 데이터 웨어하우스(DW)는 경영 의사결정을 위한 **정제·통합 정형 데이터의 중앙 저장소**로, BI 리포트와 OLAP 분석에 최적화된 고비용 고성능 플랫폼이다.
+> **핵심**: 데이터 웨어하우스(DW)는 경영 의사결정을 위한 **정제·통합 정형 데이터의 중앙 저장소**로, BI 리포트와 OLAP 분석에 최적화된 고비용 고성능 플랫폼이다.
 > 2. **가치**: ETL을 통해 여러 운영 시스템의 데이터를 단일 진실의 공급원(Single Source of Truth)으로 통합하여, **일관된 기업 지표**를 전사에 제공한다.
 > 3. **판단 포인트**: 클라우드 DW(Snowflake·BigQuery·Redshift)는 스토리지와 컴퓨팅을 분리하여 독립적 스케일링이 가능하며, 온프레미스 DW 대비 **운영 비용과 확장성에서 혁신적 우위**를 제공한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 1980년대 Bill Inmon이 제창하고 1990년대 Ralph Kimball이 차원 모델링 방법론으로 체계화한 데이터 웨어하우스(Data Warehouse, DW)는, 기업의 다양한 운영 시스템(ERP, CRM, SCM 등)에 흩어진 데이터를 **통합·정제·구조화**하여 경영 분석에 제공하는 플랫폼이다.
 
@@ -43,7 +45,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 클라우드 DW 아키텍처 (스토리지-컴퓨팅 분리)
 
@@ -83,7 +85,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 클라우드 DW 3대 서비스 비교
 
@@ -111,7 +113,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### DW 설계: Star Schema vs Snowflake Schema
 
@@ -146,7 +148,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

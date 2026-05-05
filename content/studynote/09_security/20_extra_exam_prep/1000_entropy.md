@@ -5,15 +5,19 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> [ Entropy Estimator ] --> [ Entropy Pool ]
+
+> 📝 모범 답안
+
 1. **본질**: 시스템 내 데이터의 무작위성(Randomness) 또는 불확실성의 정도를 나타내는 척도로, 현대 암호 체계에서 예측 불가능한 암호 키를 생성하기 위한 핵심 원천이다.
 2. **가치**: 엔트로피가 부족하면 생성된 난수가 일정한 패턴을 갖게 되어, 아무리 강력한 알고리즘을 써도 공격자가 키를 추측(Guessing)할 수 있는 보안 취약점이 발생한다.
 3. **판단 포인트**: 클라우드나 임베디드 환경처럼 하드웨어 자원이 제한된 곳에서는 '엔트로피 고갈(Entropy Starvation)' 문제를 해결하기 위해 별도의 하드웨어 난수 발생기(TRNG)나 엔트로피 보충 기법을 적용해야 한다.
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 암호학에서 '비밀'의 힘은 '예측 불가능함'에서 나온다. **엔트로피(Entropy)**는 바로 이 예측 불가능함을 수치화한 것이다. 정보 이론적으로 엔트로피가 높을수록 해당 데이터에서 정보를 얻기가 어려워지며, 이는 곧 암호학적으로 안전한 난수가 됨을 의미한다.
 
@@ -23,7 +27,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 컴퓨터 시스템은 엔트로피 풀(Entropy Pool)을 관리하여 난수의 품질을 유지한다.
 
@@ -37,8 +41,7 @@ categories = "studynote-security"
 ```text
 [ Entropy Life Cycle in Linux ]
 [ Interrupts ] \
-[ Keyboard   ] --> [ Entropy Estimator ] --> [ Entropy Pool ]
-[ HW TRNG    ] /      (Quality Check)        (Store Bits)
+[ Keyboard   ] --[ HW TRNG    ] /      (Quality Check)        (Store Bits)
                                                  |
                                      ┌───────────┴───────────┐
                                      v                       v
@@ -52,7 +55,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 엔트로피를 이용한 난수 발생 방식은 크게 두 가지로 나뉜다.
 
@@ -69,7 +72,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무적으로 엔트로피 부족은 시스템 성능 저하나 보안 사고로 이어진다.
 
@@ -85,7 +88,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 충분한 엔트로피를 확보하면 공격자의 무차별 대입 공격(Brute-force)과 사전 공격(Dictionary Attack)으로부터 암호 시스템을 안전하게 방어할 수 있다. 이는 암호화 키의 생명력을 결정짓는 가장 중요한 정량적 지표가 된다.
 

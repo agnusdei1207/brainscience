@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 클라이언트가 Access Token을 직접 받지 않고, 중간 매개체인 'Authorization Code'를 먼저 획득한 뒤 서버 대 서버 통신으로 토큰을 교환하는 방식이다.
+> **핵심**: 클라이언트가 Access Token을 직접 받지 않고, 중간 매개체인 'Authorization Code'를 먼저 획득한 뒤 서버 대 서버 통신으로 토큰을 교환하는 방식이다.
 > 2. **가치**: 브라우저(Front-end)에 토큰이 노출되는 시간을 원천 차단하고, 백엔드에서만 클라이언트 자격증명(Secret)을 사용하여 토큰을 안전하게 교환한다.
 > 3. **판단 포인트**: 응답이 전달되는 `redirect_uri`의 엄격한 화이트리스트 검증과, CSRF 방지를 위한 `state` 파라미터 유효성 확인이 보안의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 브라우저 환경은 공격자가 스크립트(XSS)를 통해 데이터를 가로채기 쉽다. 만약 인증 서버가 브라우저로 직접 Access Token을 보낸다면, 중간에 탈취될 확률이 매우 높다. Authorization Code 방식은 이 위험을 줄이기 위해 도입되었다.
 
@@ -26,7 +28,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 이 방식은 사용자의 브라우저를 통한 **Front Channel**과 서버 간 직접 통신인 **Back Channel**을 분리하여 사용한다.
 
@@ -66,7 +68,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | Authorization Code | Implicit Grant |
 |:---|:---|:---|
@@ -81,7 +83,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 보안 강화 전략
 1. **Strict Redirect URI**: 패턴 매칭(`*.example.com`) 대신 완전 일치(`https://app.example.com/callback`) 방식을 사용해야 한다.
@@ -95,7 +97,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Authorization Code Grant는 사용자의 자격 증명을 보호하면서도 유연한 권한 위임을 가능하게 한다. 브라우저라는 불안전한 통로를 거치면서도 토큰의 안전성을 확보할 수 있는 가장 균형 잡힌 방식이다.
 

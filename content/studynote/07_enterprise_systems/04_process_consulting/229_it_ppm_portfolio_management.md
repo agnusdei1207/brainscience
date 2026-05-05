@@ -5,17 +5,19 @@ date = 2024-03-01
 [taxonomies]
 tags = ["IT PPM", "Portfolio Management", "IT Strategy", "Enterprise Systems"]
 +++
+## 0. 핵심 인사이트
 
-# 229. 기업 정보화 투자 포트폴리오 관리 (IT PPM)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: IT 프로젝트 포트폴리오 관리 (IT PPM, Project Portfolio Management)는 기업의 한정된 자원(예산, 인력)을 비즈니스 전략 목표에 부합하는 IT 투자에 집중적으로 배분하여 전체 포트폴리오의 가치를 극대화하는 동적 의사결정 체계다.
+> **핵심**: IT 프로젝트 포트폴리오 관리 (IT PPM, Project Portfolio Management)는 기업의 한정된 자원(예산, 인력)을 비즈니스 전략 목표에 부합하는 IT 투자에 집중적으로 배분하여 전체 포트폴리오의 가치를 극대화하는 동적 의사결정 체계다.
 > 2. **가치**: 개별 프로젝트를 단편적으로 성공시키는 것(Doing projects right)을 넘어, "올바른 프로젝트들을 선택하여 수행하고 있는가(Doing the right projects)"를 묻고 평가함으로써 IT 투자의 낭비를 막고 전략적 정렬(Strategic Alignment)을 보장한다.
 > 3. **융합**: 금융의 포트폴리오 이론(리스크 분산)을 IT에 접목한 것으로, IT 거버넌스(Val IT 프레임워크), 엔터프라이즈 아키텍처(EA, Enterprise Architecture), 그리고 애자일 자원 관리 체계(Lean Portfolio Management)와 통합되어 기업의 디지털 혁신 속도를 결정한다.
 
+> 📝 모범 답안
+
+# 229. 기업 정보화 투자 포트폴리오 관리 (IT PPM)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: IT PPM (Project Portfolio Management)은 조직 내에서 진행 중이거나 제안된 모든 IT 프로젝트, 프로그램, 운영 유지보수 자산을 하나의 '투자 바구니(Portfolio)'로 묶어 거시적인 관점에서 평가하고 최적화하는 관리 기법이다. 리스크, 예상 수익률, 비즈니스 전략 부합도를 종합적으로 고려하여 우선순위를 매기고 자원을 재배치한다.
 
@@ -62,7 +64,7 @@ tags = ["IT PPM", "Portfolio Management", "IT Strategy", "Enterprise Systems"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소: PPM의 3대 핵심 프로세스 (McFarlan 모델 변형)
 
@@ -130,7 +132,7 @@ PPM 체계는 식별-평가-배분의 순환 사이클로 동작하며, 다음 �
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: IT 자산 포트폴리오 모델 (McFarlan의 전략 그리드 응용)
 
@@ -174,7 +176,7 @@ CIO의 핵심 과제는 '지원(Support)' 영역에 낭비되는 예산(Run the 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -222,7 +224,7 @@ CIO의 핵심 과제는 '지원(Support)' 영역에 낭비되는 예산(Run the 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

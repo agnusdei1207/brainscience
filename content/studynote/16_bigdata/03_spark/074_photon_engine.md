@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Photon Engine은 Databricks가 개발한 C++ 기반 네이티브 벡터화 실행 엔진(Vectorized Execution Engine)으로, Apache Spark의 JVM(Java Virtual Machine) 오버헤드를 제거하고 CPU SIMD (Single Instruction Multiple Data) 명령어를 활용하여 SQL/데이터프레임 연산을 최대 12배 가속화한다.
+> **핵심**: Photon Engine은 Databricks가 개발한 C++ 기반 네이티브 벡터화 실행 엔진(Vectorized Execution Engine)으로, Apache Spark의 JVM(Java Virtual Machine) 오버헤드를 제거하고 CPU SIMD (Single Instruction Multiple Data) 명령어를 활용하여 SQL/데이터프레임 연산을 최대 12배 가속화한다.
 > 2. **가치**: Photon은 Databricks Runtime에 투명하게 통합되어 기존 Spark SQL 코드 변경 없이 I/O 집약적 ETL(Extract-Transform-Load), 대용량 집계(Aggregation), 조인(Join) 연산의 처리량을 대폭 향상시키고 클라우드 컴퓨팅 비용을 절감한다.
 > 3. **판단 포인트**: Photon은 CPU 계산 집약적 연산(필터, 정렬, 해시 집계)에서 극적인 성능 향상을 보이지만, UDF (User-Defined Function, 사용자 정의 함수)나 Python 기반 연산은 여전히 JVM으로 폴백되므로 Photon 이점을 극대화하려면 네이티브 SQL/DataFrame API 사용이 필수다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Photon Engine은 Databricks가 2021년 공개한 C++ 네이티브 쿼리 실행 엔진으로, Apache Spark의 기본 Tungsten 실행 엔진을 대체하는 Databricks Runtime의 핵심 가속화 구성 요소다.
 
@@ -43,7 +45,7 @@ Spark는 JVM 위에서 실행되기 때문에 가비지 컬렉션(GC, Garbage Co
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 벡터화 실행(Vectorized Execution)의 원리
 
@@ -82,7 +84,7 @@ Photon의 핵심은 컬럼형(Columnar) 배치 처리와 SIMD 명령어 활용�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 엔진 | 언어 | 벡터화 | Spark 호환 | 주요 플랫폼 |
 |:---|:---|:---|:---|:---|
@@ -98,7 +100,7 @@ Photon은 Delta Lake (오픈 테이블 포맷)와 긴밀하게 통합되어 Delt
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 일 단위 대규모 ETL 비용 최적화
 일 1TB의 로그 데이터를 집계하는 Databricks ETL 잡의 클라우드 비용이 과다하다.
@@ -121,7 +123,7 @@ Photon은 Delta Lake (오픈 테이블 포맷)와 긴밀하게 통합되어 Delt
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 | 수치 |
 |:---|:---|:---|

@@ -5,15 +5,17 @@ date = "2026-03-26"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
 > 1. 인터럽트(Interrupt)는 CPU(Central Processing Unit)가 프로그램을 실행하는 도중 예기치 않은 사건이 발생했을 때, 현재 작업을 즉시 중단하고 해당 사건을 우선 처리하도록 유도하는 **비동기적 통지 메커니즘**이다.
 > 2. 무한 반복하며 상태를 확인하는 폴링(Polling) 방식의 자원 낭비를 완전히 제거하여, CPU가 연산에만 집중할 수 있게 함으로써 **현대적 멀티태스킹(Multitasking)과 시분할 시스템의 기술적 토대**를 제공한다.
 > 3. 상태 보존(Context Save)과 인터럽트 서비스 루틴(ISR, Interrupt Service Routine) 실행, 그리고 상태 복구(Context Restore)로 이어지는 정교한 흐름을 통해 시스템의 안정성과 실시간 응답성을 보장한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 인터럽트의 개요 및 필요성
+## 1. 개요 및 필요성
 
 초기 컴퓨터 시스템에서 CPU(Central Processing Unit)가 외부 I/O(Input/Output) 장치의 데이터를 읽기 위해서는 장치가 준비되었는지 끊임없이 확인하는 폴링(Polling) 방식을 사용했습니다. 이는 마치 중요한 회의 중인 사장이 택배가 왔는지 확인하려 1분마다 현관문을 열어보는 것과 같은 막대한 자원 낭비를 초래했습니다. CPU의 연산 속도는 나노초(ns) 단위인 반면, 하드웨어 장치의 반응 속도는 밀리초(ms) 단위이기에 수백만 번의 CPU 사이클이 아무 의미 없는 대기 상태로 소모되었습니다.
 
@@ -24,7 +26,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 인터럽트 시스템은 하드웨어와 소프트웨어가 긴밀하게 협력하는 구조로 설계되어 있습니다. CPU 내부의 상태 레지스터(Status Register)와 인터럽트 컨트롤러(Interrupt Controller)가 물리적 신호를 중계하며, 메모리 상의 인터럽트 벡터 테이블(IVT, Interrupt Vector Table)이 논리적 처리를 담당합니다.
 
@@ -79,7 +81,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 시스템 시너지
+## 3. 구조 및 동작 원리
 
 인터럽트는 단순히 하드웨어 신호를 넘어 운영체제의 스케줄링, 예외 처리, 가상 메모리 시스템과 깊게 융합되어 있습니다.
 
@@ -111,7 +113,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 트러블슈팅
+## 4. 비교 및 트레이드오프
 
 실무 환경, 특히 임베디드나 실시간 시스템(RTOS) 설계 시 인터럽트의 효율적 관리는 시스템 안정성의 성패를 결정합니다.
 
@@ -154,7 +156,7 @@ End (IRET)
 
 ---
 
-## Ⅴ. 기대효과 및 향후 전망
+## 5. 실무 적용 및 최적화 기법
 
 인터럽트 기술은 단순한 IRQ 라인 방식에서 MSI(Message Signaled Interrupts)와 같은 진보된 형태로 진화하고 있습니다.
 

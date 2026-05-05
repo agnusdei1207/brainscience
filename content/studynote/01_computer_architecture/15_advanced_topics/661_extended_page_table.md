@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 661. 확장 페이지 테이블 (Extended Page Table - Intel EPT)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 확장 페이지 테이블(Extended Page Table, EPT)은 인텔 VT-x 기술의 일부로, 게스트 OS의 물리 주소(GPA)를 실제 호스트 물리 주소(HPA)로 변환하는 과정을 **하드웨어 MMU가 직접 수행**하게 하는 2계층 주소 변환 매커니즘이다.
+> **핵심**: 확장 페이지 테이블(Extended Page Table, EPT)은 인텔 VT-x 기술의 일부로, 게스트 OS의 물리 주소(GPA)를 실제 호스트 물리 주소(HPA)로 변환하는 과정을 **하드웨어 MMU가 직접 수행**하게 하는 2계층 주소 변환 매커니즘이다.
 > 2. **가치**: 소프트웨어 기반의 '섀도 페이지 테이블' 유지에 필요한 복잡한 동기화 오버헤드를 제거하며, 특히 메모리 쓰기 시 발생하는 VM-Exit을 획기적으로 줄여 가상화 성능을 네이티브 대비 90% 이상으로 끌어올린다.
 > 3. **융합**: VPID(Virtual Processor Identifier)와 결합하여 TLB 플러시를 방지하고, PML(Page Modification Logging) 기능을 통해 실시간 라이브 마이그레이션의 효율성을 극대화하는 현대 가상화 인프라의 핵심 축이다.
 
+> 📝 모범 답안
+
+# 661. 확장 페이지 테이블 (Extended Page Table - Intel EPT)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 가상화 메모리 관리의 난제: "Shadowing의 고통"
 - **배경**: 하드웨어 지원(EPT)이 없던 시절, 하이퍼바이저는 게스트 OS의 페이지 테이블을 감시하고, 이를 실제 물리 주소로 매핑한 별도의 '섀도 페이지 테이블(Shadow Page Table)'을 소프트웨어적으로 유지해야 했다.
@@ -58,7 +60,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. EPTP (EPT Pointer)와 VMCS
 - **EPTP**: VMCS(Virtual Machine Control Structure) 내에 존재하는 필드로, 현재 실행 중인 가상 머신이 사용할 EPT의 루트 주소를 가리킨다.
@@ -84,7 +86,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Intel EPT vs AMD NPT vs Shadow Paging
 
@@ -104,7 +106,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -126,7 +128,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **애플리케이션 처리량**: 섀도 페이지 테이블 대비 최대 **2배 이상 향상**.

@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: STI (Single Table Inheritance, 싱글 테이블 상속) 는 클래스 상속 계층 전체를 단일 DB (Database) 테이블로 평탄화(Flatten) 하고, `DTYPE` 구분자 컬럼으로 각 행이 어떤 하위 클래스인지 식별한다.
+> **핵심**: STI (Single Table Inheritance, 싱글 테이블 상속) 는 클래스 상속 계층 전체를 단일 DB (Database) 테이블로 평탄화(Flatten) 하고, `DTYPE` 구분자 컬럼으로 각 행이 어떤 하위 클래스인지 식별한다.
 > 2. **가치**: 조인이 없어 조회 성능이 빠르고, JPA (Java Persistence API) 구현이 간단하지만, 모든 하위 클래스의 컬럼이 한 테이블에 모여 NULL이 많아지고 스키마가 지저분해진다.
 > 3. **판단 포인트**: 하위 클래스 간 공유 컬럼이 많고 차이가 적을 때 적합하며, 하위 클래스별 고유 속성이 많아지면 CTI (Class Table Inheritance, 클래스 테이블 상속) 로 전환을 고려해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 객체지향 설계에서 상속(Inheritance)은 자연스러운 추상화 수단이다. `Employee → FullTimeEmployee`, `Employee → PartTimeEmployee`, `Employee → Contractor` 같은 계층이 코드에 존재할 때, 이를 관계형 DB (Relational Database) 에 어떻게 매핑할지가 ORM (Object-Relational Mapping) 의 핵심 문제 중 하나다.
 
@@ -35,7 +36,7 @@ Employee (추상 클래스)
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### STI 테이블 구조
 
@@ -96,7 +97,7 @@ public class PartTimeEmployee extends Employee {
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### JPA 상속 전략 3가지 비교
 
@@ -125,7 +126,7 @@ public class PartTimeEmployee extends Employee {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 성능 트레이드오프
 
@@ -159,7 +160,7 @@ Dog.create(name: "Rex", breed: "Lab")
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 STI 패턴의 선택 근거 요약:
 

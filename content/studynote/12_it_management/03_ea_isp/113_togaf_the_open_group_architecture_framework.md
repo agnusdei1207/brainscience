@@ -5,19 +5,21 @@ date = "2026-04-10"
 [extra]
 categories = "studynote-it-management"
 +++
-
-# 113. TOGAF (The Open Group Architecture Framework)
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 조직의 비즈니스 목표와 IT 인프라가 엉망으로 꼬이는 것을 막기 위해, 단순히 '어떤 문서를 만들어야 하는지(자크만 프레임워크)'의 이론적 틀을 넘어 **"실제로 기업의 아키텍처를 어떤 순서로 설계하고, 어떻게 시스템을 교체하며, 어떻게 유지보수해야 하는지"에 대한 실천적 행동 지침(ADM)을 제공하는 현존하는 세계 1위의 엔터프라이즈 아키텍처(EA) 표준 프레임워크인 'TOGAF'**를 다룹니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# 113. TOGAF (The Open Group Architecture Framework)
+
 > 1. **본질**: 글로벌 컨소시엄인 '오픈 그룹(The Open Group)'이 1995년부터 수많은 세계적 기업들의 노하우를 집대성하여 만든 무료(오픈) 아키텍처 개발 방법론이다. 이론서라기보다는 당장 현장에 투입할 수 있는 실전 매뉴얼에 가깝다.
 > 2. **가치**: "우리 회사가 클라우드로 넘어가려는데 어디서부터 시작해야 하지?"라는 막막한 질문에, 9단계의 피자 조각 모양 프로세스(ADM)를 따라가다 보면 자연스럽게 현재의 문제점(AS-IS)이 파악되고 목표 시스템(TO-BE)의 로드맵이 완성되는 내비게이션 역할을 한다.
 > 3. **기술 체계**: 핵심 엔진인 **ADM (Architecture Development Method)**을 중심으로, **4대 아키텍처 도메인 (BDAT: Business, Data, Application, Technology)**을 차례대로 설계하며 기업의 모든 자산을 '엔터프라이즈 연속체(Continuum)'라는 저장소에 재사용 가능하게 쌓아 나간다.
 
 ---
 
-### Ⅰ. 자크만(Zachman)의 한계와 TOGAF의 실용성
+### 1. 개요 및 필요성
 완벽한 표(Matrix)를 채우다 지친 사람들에게 '행동하는 법'을 쥐여주다.
 
 1. **자크만 프레임워크의 한계**:
@@ -30,7 +32,7 @@ categories = "studynote-it-management"
 
 ---
 
-### Ⅱ. TOGAF의 엔진: ADM (Architecture Development Method) 9단계
+### 2. 구성요소
 시계 방향으로 돌아가는 이 피자 조각 프로세스가 EA 구축의 모든 것이다.
 
 1. **사전 준비 및 비전 (Phase 0 ~ A)**:
@@ -50,7 +52,7 @@ categories = "studynote-it-management"
 
 ---
 
-### Ⅲ. 엔터프라이즈 연속체 (Enterprise Continuum)와 재사용
+### 3. 구조 및 동작 원리
 수레바퀴를 처음부터 다시 발명하지 마라. 남의 것을 베끼고 진화시켜라.
 
 1. **연속체의 개념 (추상화 $\rightarrow$ 구체화)**:

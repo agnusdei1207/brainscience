@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Context Propagation은 **Trace ID·Span ID·Baggage를 HTTP 헤더·gRPC 메타데이터·메시지 큐 속성으로 서비스 간 전파**하여, 분산 요청의 전체 호출 체인을 하나의 Trace로 연결하는 메커니즘이다.
+> **핵심**: Context Propagation은 **Trace ID·Span ID·Baggage를 HTTP 헤더·gRPC 메타데이터·메시지 큐 속성으로 서비스 간 전파**하여, 분산 요청의 전체 호출 체인을 하나의 Trace로 연결하는 메커니즘이다.
 > 2. **가치**: 전파가 없으면 각 서비스의 로그·메트릭이 **독립적으로 분산**되어 상관 분석이 불가능하지만, Trace ID 전파로 **Metrics↔Logs↔Traces 3축 상관**이 가능해진다.
 > 3. **판단 포인트**: W3C traceparent(표준)·B3(Zipkin 레거시)·Jaeger 헤더의 3가지 형식이 있으며, OTel SDK가 자동 전파를 제공한다. 비동기(Kafka)에서는 메시지 헤더로 전파한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 HTTP: traceparent: 00-{traceId}-{spanId}-{flags}

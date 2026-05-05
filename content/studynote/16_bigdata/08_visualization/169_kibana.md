@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Kibana는 Elasticsearch에 저장된 데이터를 시각화하는 레이어로, 로그 탐색·대시보드·APM (Application Performance Monitoring)을 하나의 UI로 통합한다.
+> **핵심**: Kibana는 Elasticsearch에 저장된 데이터를 시각화하는 레이어로, 로그 탐색·대시보드·APM (Application Performance Monitoring)을 하나의 UI로 통합한다.
 > 2. **가치**: ELK (Elasticsearch-Logstash-Kibana) 스택의 가시성(observability) 허브 역할을 하며, 수십억 건 로그를 실시간으로 검색하고 이상치를 경보로 전환한다.
 > 3. **판단 포인트**: 이미 Elasticsearch를 사용하는 조직에는 최적이지만, 메트릭·추적까지 통합할 경우 Grafana + Prometheus 스택과의 역할 분담을 명확히 해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Kibana는 2013년 Elastic이 공개한 오픈소스 데이터 탐색·시각화 플랫폼이다. Elasticsearch의 REST API 위에서 동작하며, 대규모 로그·이벤트 데이터를 대화형 방식으로 분석할 수 있게 한다. 로그 분석이 단순히 grep 명령어 수준에 머물던 시대에, 수백 대 서버의 로그를 초 단위로 집계하고 시각화하는 요구가 급증하면서 등장했다.
 
@@ -23,7 +25,7 @@ Kibana는 2013년 Elastic이 공개한 오픈소스 데이터 탐색·시각화 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 아래 다이어그램은 Elastic Stack의 데이터 흐름과 Kibana의 위치를 보여준다.
 
@@ -69,7 +71,7 @@ KQL (Kibana Query Language)은 Elasticsearch 쿼리를 추상화한 DSL이다. `
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | Kibana | Grafana |
 |:---|:---|:---|
@@ -85,7 +87,7 @@ Kibana는 SIEM (Security Information and Event Management) 기능도 포함한�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **채택 시나리오**: MSA 환경에서 중앙화된 로그 분석이 필요하고, 이미 Elasticsearch를 사용 중인 경우. 보안 SIEM 요건이 있는 경우.
 
@@ -101,7 +103,7 @@ Kibana는 SIEM (Security Information and Event Management) 기능도 포함한�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Kibana 도입 시 MTTR (Mean Time To Resolution)이 평균 40~60% 단축된다는 사례가 보고된다. 분산된 로그를 수동으로 SSH 접속해 grep하던 방식 대비, 수백 대 서버 로그를 1초 내에 통합 조회하는 효과가 크다. ML 이상 탐지는 규칙 기반 알림의 한계를 보완해 알 수 없는 패턴의 장애도 조기 감지한다.
 

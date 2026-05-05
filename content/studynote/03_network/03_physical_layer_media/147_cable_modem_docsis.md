@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-network"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 케이블 모뎀(Cable Modem)은 기존 케이블 TV(CATV, Community Antenna Television) 동축 케이블 인프라를 재활용해 광대역 인터넷을 제공하는 장치이며, DOCSIS(Data Over Cable Service Interface Specification) 표준이 데이터 전송 방식을 정의한다.
+> **핵심**: 케이블 모뎀(Cable Modem)은 기존 케이블 TV(CATV, Community Antenna Television) 동축 케이블 인프라를 재활용해 광대역 인터넷을 제공하는 장치이며, DOCSIS(Data Over Cable Service Interface Specification) 표준이 데이터 전송 방식을 정의한다.
 > 2. **가치**: 새로운 배선 없이 기존 케이블망을 통해 수백 Mbps ~ 수 Gbps의 인터넷을 제공할 수 있어, **라스트 마일(Last Mile) 광대역 접속의 핵심 인프라**로 자리잡았다.
 > 3. **판단 포인트**: 케이블 모뎀은 헤드엔드(Headend)와 HFC(Hybrid Fiber-Coaxial, 광동축 복합망)를 통해 연결되며, 업스트림(Upstream)과 다운스트림(Downstream) 주파수 대역이 비대칭으로 할당된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 케이블 모뎀은 CATV 인프라를 데이터 통신에 재활용하는 기술이다. 1990년대 중반, 전화선 기반 DSL(Digital Subscriber Line)이 좁은 대역폭으로 한계를 보이던 시절, CATV 사업자들은 이미 가정까지 구축된 동축 케이블(Coaxial Cable)망을 인터넷 서비스에 활용하는 방안을 모색했다.
 
@@ -28,7 +30,7 @@ categories = "studynote-network"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. HFC(Hybrid Fiber-Coaxial) 망 구조
 
@@ -78,7 +80,7 @@ categories = "studynote-network"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 케이블 모뎀 vs. DSL vs. FTTH
 
@@ -101,7 +103,7 @@ CATV 동축망 → HFC 구조 → CMTS (헤드엔드) → DOCSIS 표준 → 케�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 의사결정 기준
 
@@ -122,7 +124,7 @@ CATV 동축망 → HFC 구조 → CMTS (헤드엔드) → DOCSIS 표준 → 케�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 케이블 모뎀과 DOCSIS 표준은 기존 CATV 인프라를 최대한 재활용하면서 광대역 인터넷 보급을 앞당긴 핵심 기술이다. DOCSIS 3.1의 OFDM 도입은 최대 10 Gbps 이론 속도를 가능하게 했으며, DOCSIS 4.0의 풀 듀플렉스(Full Duplex ESD) 기술은 업스트림도 대폭 향상시켜 FTTH와의 격차를 줄이고 있다.
 

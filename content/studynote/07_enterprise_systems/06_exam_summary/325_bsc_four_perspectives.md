@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: BSC (Balanced Scorecard)는 Kaplan & Norton(1992)이 개발한 전략 성과 관리 프레임워크로, 재무(Financial)·고객(Customer)·내부프로세스(Internal Process)·학습성장(Learning & Growth) 4관점의 KPI를 균형 있게 관리한다.
+> **핵심**: BSC (Balanced Scorecard)는 Kaplan & Norton(1992)이 개발한 전략 성과 관리 프레임워크로, 재무(Financial)·고객(Customer)·내부프로세스(Internal Process)·학습성장(Learning & Growth) 4관점의 KPI를 균형 있게 관리한다.
 > 2. **가치**: 단기 재무 성과에만 집중하는 기존 성과 관리의 한계를 극복하여 Strategy Map(전략 인과관계 지도)을 통해 장기적 가치 창출 경로를 가시화한다.
 > 3. **판단 포인트**: 각 관점의 KPI는 인과관계(cause-effect linkage)로 연결되어야 하며, 학습성장 관점이 내부프로세스→고객→재무 성과로 이어지는 선행 지표 역할을 한다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 BSC (Balanced Scorecard)는 Robert Kaplan (Harvard Business School)과 David Norton이 1992년 Harvard Business Review에 "The Balanced Scorecard — Measures That Drive Performance"를 발표하면서 전략 관리의 혁명을 가져왔다.
 
@@ -28,7 +29,7 @@ BSC (Balanced Scorecard)는 Robert Kaplan (Harvard Business School)과 David Nor
 
 📢 **섹션 요약 비유**: BSC는 자동차 계기판처럼 속도(재무), 연료(고객), 엔진 온도(프로세스), 배터리(학습성장) — 한 계기만 보면 위험하고, 네 가지를 동시에 봐야 안전하다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### BSC 4관점 KPI 구조 (관점별 5개, 총 20개)
 
@@ -73,7 +74,7 @@ BSC (Balanced Scorecard)는 Robert Kaplan (Harvard Business School)과 David Nor
 
 📢 **섹션 요약 비유**: BSC Strategy Map은 체인처럼 연결된 도미노다 — 직원 역량(학습) → 좋은 프로세스 → 고객 만족 → 재무 성과로 이어지는 연쇄 반응이다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 항목 | BSC | MBO | OKR | KPI 단독 |
 |:---|:---|:---|:---|:---|
@@ -97,7 +98,7 @@ BSC (Balanced Scorecard)는 Robert Kaplan (Harvard Business School)과 David Nor
 
 📢 **섹션 요약 비유**: BSC Cascade는 회사 목표를 팀장, 팀원 순서로 이어받는 릴레이 바통처럼 — 모든 사람이 같은 방향을 향해 뛰어야 팀이 이긴다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **BSC 도입 체크리스트**:
 - [ ] 경영진이 Strategy Map 작성에 직접 참여하는가?
@@ -121,7 +122,7 @@ BSC (Balanced Scorecard)는 Robert Kaplan (Harvard Business School)과 David Nor
 
 📢 **섹션 요약 비유**: BSC를 제대로 운영하는 것은 4기통 엔진을 균형 있게 조율하는 것 — 재무 한 실린더만 무리하게 돌리면 엔진이 망가진다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 **기대 효과**:
 - **전략 정렬**: 전사 전략이 현장까지 연결되어 전략 실행률 평균 40% 향상 (Kaplan&Norton 조사)

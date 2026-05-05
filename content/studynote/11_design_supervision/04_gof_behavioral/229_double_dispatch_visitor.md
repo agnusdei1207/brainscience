@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Double Dispatch (더블 디스패치)는 메서드 호출이 **두 객체의 런타임 타입** 모두를 기반으로 결정되는 메커니즘이며, Visitor (방문자) 패턴은 Java의 단일 디스패치(Single Dispatch) 한계를 `accept(visitor) → visitor.visit(this)` 두 번의 가상 호출(Virtual Call)로 더블 디스패치를 구현하는 GoF 패턴이다.
+> **핵심**: Double Dispatch (더블 디스패치)는 메서드 호출이 **두 객체의 런타임 타입** 모두를 기반으로 결정되는 메커니즘이며, Visitor (방문자) 패턴은 Java의 단일 디스패치(Single Dispatch) 한계를 `accept(visitor) → visitor.visit(this)` 두 번의 가상 호출(Virtual Call)로 더블 디스패치를 구현하는 GoF 패턴이다.
 > 2. **가치**: 요소(Element) 클래스 계층을 변경하지 않고 새로운 연산(Visitor)을 추가할 수 있어, **Open/Closed Principle(개방-폐쇄 원칙)** 을 지키면서 타입별 동작을 확장한다.
 > 3. **판단 포인트**: 요소 타입은 고정적이지만 연산이 자주 추가되는 경우 Visitor — 반대로 연산은 고정적이지만 타입이 자주 추가되는 경우 Visitor는 부적합 (모든 Visitor 클래스 수정 필요).
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### Single Dispatch의 한계
 
@@ -53,7 +54,7 @@ renderer.render(shape);     // 컴파일 타임 타입: Shape → render(Shape) 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Visitor 패턴 구조 다이어그램
 
@@ -134,7 +135,7 @@ class DrawVisitor implements ShapeVisitor {
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Visitor 패턴의 트레이드오프
 
@@ -167,7 +168,7 @@ class DrawVisitor implements ShapeVisitor {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Java 14+ sealed class와 pattern matching (Visitor 대안)
 
@@ -221,7 +222,7 @@ class TypeChecker implements AstVisitor {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Visitor 패턴과 더블 디스패치는 타입 계층이 안정적이고 연산이 다양한 시스템에서 강력한 확장성을 제공한다:
 

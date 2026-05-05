@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CORS (Cross-Origin Resource Sharing) Misconfiguration은 웹 서버가 교차 출처 요청의 `Origin` 헤더를 무분별하게 신뢰해, 악의적인 외부 도메인이 인증된 사용자의 자격으로 민감한 API에 접근할 수 있게 하는 취약점이다.
+> **핵심**: CORS (Cross-Origin Resource Sharing) Misconfiguration은 웹 서버가 교차 출처 요청의 `Origin` 헤더를 무분별하게 신뢰해, 악의적인 외부 도메인이 인증된 사용자의 자격으로 민감한 API에 접근할 수 있게 하는 취약점이다.
 > 2. **가치**: CORS 오설정은 사용자가 악성 사이트를 방문하는 것만으로도 자신의 인증 토큰·쿠키를 통한 API 호출이 공격자에게 가능하게 하므로, 데이터 유출·계정 탈취로 직결된다.
 > 3. **판단 포인트**: `Access-Control-Allow-Origin: *`과 `withCredentials: true`의 조합은 브라우저가 차단하지만, Origin을 동적으로 반사하거나 `null` Origin을 허용하는 설정이 실제 공격 벡터가 된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 브라우저의 SOP (Same-Origin Policy) 는 다른 출처(Origin)의 리소스 접근을 기본적으로 차단한다. CORS는 서버가 특정 출처를 명시적으로 허용해 이 제한을 완화하는 메커니즘이다. 하지만 CORS 설정이 잘못되면 원래 막아야 할 교차 출처 접근을 오히려 허용하게 된다.
 
@@ -27,7 +29,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 CORS Misconfiguration 공격 흐름:
 
@@ -59,7 +61,7 @@ CORS Misconfiguration 공격 흐름:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 CORS Misconfiguration과 CSRF (Cross-Site Request Forgery)의 차이를 명확히 해야 한다.
 
@@ -74,7 +76,7 @@ CORS Misconfiguration과 CSRF (Cross-Site Request Forgery)의 차이를 명확�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **안전한 CORS 설정 원칙**:
 1. **엄격한 화이트리스트**: 허용 Origin을 정적 목록으로 관리, 요청 Origin과 비교
@@ -95,7 +97,7 @@ if ($http_origin ~* "^https://(trusted-app.com|api.trusted.com)$") {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 엄격한 CORS 정책과 SameSite 쿠키를 조합하면 교차 출처 데이터 탈취와 CSRF를 동시에 방어할 수 있다. 특히 API Gateway 수준에서 통합 CORS 정책을 관리하면 개별 서비스별 오설정 위험을 줄일 수 있다.
 

@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SQL(Structured Query Language)은 **관계형 데이터베이스를 정의(DDL)·조작(DML)·제어(DCL)**하는 ANSI/ISO 국제 표준 언어이며, SQL-86부터 SQL:2023까지 지속 발전하고 있다.
+> **핵심**: SQL(Structured Query Language)은 **관계형 데이터베이스를 정의(DDL)·조작(DML)·제어(DCL)**하는 ANSI/ISO 국제 표준 언어이며, SQL-86부터 SQL:2023까지 지속 발전하고 있다.
 > 2. **가치**: 표준 SQL 덕분에 Oracle·MySQL·PostgreSQL 등 **서로 다른 DBMS에서도 기본 문법이 동일**하여 이식성이 보장된다. 단, 각 벤더의 확장(PL/SQL, T-SQL)은 호환되지 않는다.
 > 3. **판단 포인트**: SQL:1999(OLAP, CTE), SQL:2003(Window Function), SQL:2016(JSON), SQL:2023(그래프 패턴 매칭)의 주요 버전별 추가 기능을 파악해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 SQL 구분: DDL (CREATE/ALTER/DROP) + DML (SELECT/INSERT/UPDATE/DELETE)
@@ -24,7 +26,7 @@ SQL 구분: DDL (CREATE/ALTER/DROP) + DML (SELECT/INSERT/UPDATE/DELETE)
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 버전 | 핵심 추가 |
 |:---|:---|

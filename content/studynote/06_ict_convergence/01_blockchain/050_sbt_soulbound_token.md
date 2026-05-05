@@ -5,15 +5,18 @@ description = "SBT의 개념, 비양도성(non-transferable) 특성, 탈중앙�
 categories = "studynote-ict"
 tags = ["SBT", "soulbound token", "DeSoc", "NFT", "non-transferable", "DID", "verifiable credential", "Web3 identity"]
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. SBT(Soulbound Token)는 특정 지갑(Soul)에 영구 귀속되어 양도·판매할 수 없는 비양도성 토큰으로, Web3 신원·자격 증명의 핵심 도구다.
 > 2. 학력증명, 직업 이력, 의료 기록 등 개인의 사회적 자본을 온체인 표현으로 관리해 탈중앙화 사회(DeSoc, Decentralized Society)를 지향한다.
 > 3. 비양도성이 개인정보 보호와 충돌하는 문제(영구 온체인 기록)를 해결하기 위해 영지식 증명(ZKP)과 결합한 프라이버시 SBT가 연구 중이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. SBT 개요
+## 1. 개요 및 필요성
 
 ### 1.1 배경과 제안
 
@@ -33,7 +36,7 @@ tags = ["SBT", "soulbound token", "DeSoc", "NFT", "non-transferable", "DID", "ve
 
 ---
 
-## Ⅱ. Soul과 DeSoc 구조
+## 2. 구성요소
 
 ### 2.1 Soul (소울) 개념
 
@@ -58,7 +61,7 @@ Soul (지갑/DID)
 
 ---
 
-## Ⅲ. 기술 구현
+## 3. 구조 및 동작 원리
 
 ### 3.1 EIP-5192 (최소 SBT 표준)
 
@@ -87,7 +90,7 @@ ERC-721 기반에 `locked()` 함수 추가 → transferFrom 시 locked=true면 r
 
 ---
 
-## Ⅳ. 개인정보 이슈와 ZKP
+## 4. 비교 및 트레이드오프
 
 ### 4.1 온체인 공개 문제
 
@@ -112,7 +115,7 @@ ZK 증명: 졸업 SBT 보유 증명 + 내용 숨김
 
 ---
 
-## Ⅴ. 현황과 한계
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 실사례
 

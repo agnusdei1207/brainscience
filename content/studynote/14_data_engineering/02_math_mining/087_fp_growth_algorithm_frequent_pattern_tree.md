@@ -5,16 +5,18 @@ weight = 87
 [extra]
 categories = ["studynote-data-engineering", "math-mining"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> **핵심**: FP-Growth (Frequent Pattern Growth)는 후보집합을 대량 생성하지 않고 Frequent Pattern Tree (FP-tree)를 통해 빈발 항목집합을 찾는 알고리즘이다.
 
-    > 1. **본질**: FP-Growth (Frequent Pattern Growth)는 후보집합을 대량 생성하지 않고 Frequent Pattern Tree (FP-tree)를 통해 빈발 항목집합을 찾는 알고리즘이다.
-    > 2. **가치**: 거래 수가 많고 항목이 자주 함께 등장할수록 FP-tree 압축 효과가 커져 Apriori보다 빠르게 동작한다.
+> 📝 모범 답안
+
+        > 2. **가치**: 거래 수가 많고 항목이 자주 함께 등장할수록 FP-tree 압축 효과가 커져 Apriori보다 빠르게 동작한다.
     > 3. **판단 포인트**: 최소 지지도 (Minimum Support)가 너무 낮으면 트리와 조건부 트리가 폭발할 수 있으므로, 데이터 밀도와 메모리를 함께 봐야 한다.
 
     ---
 
-    ## Ⅰ. 개요 및 필요성
+    ## 1. 개요 및 필요성
 
     FP-Growth (Frequent Pattern Growth)은 연관 규칙 학습에서 빈발 항목집합을 찾는 대표적인 방법이다. Apriori처럼 후보를 여러 단계로 만들어 검증하지 않고, 거래를 압축한 FP-tree를 한 번 구성한 뒤 재귀적으로 조건부 패턴을 찾는다.
 
@@ -24,7 +26,7 @@ categories = ["studynote-data-engineering", "math-mining"]
 
     ---
 
-    ## Ⅱ. 아키텍처 및 핵심 원리
+    ## 2. 구성요소
 
     FP-Growth의 흐름은 1차 스캔으로 항목 빈도를 세고, 2차 스캔으로 정렬된 거래를 FP-tree에 넣는 것이다. 그다음 Header Table을 따라 특정 항목의 조건부 패턴 베이스를 만들고, 조건부 FP-tree를 재귀적으로 파고든다.
 
@@ -51,7 +53,7 @@ Header Table: f → a → c → m → b → p
 
     ---
 
-    ## Ⅲ. 비교 및 연결
+    ## 3. 구조 및 동작 원리
 
     Apriori와 비교하면 차이가 분명하다.
 
@@ -68,7 +70,7 @@ FP-Growth는 연관 규칙에서 빈발 항목집합을 먼저 찾고, 그 뒤 c
 
     ---
 
-    ## Ⅳ. 실무 적용 및 기술사 판단
+    ## 4. 비교 및 트레이드오프
 
     실무에서는 다음 조건이면 FP-Growth를 먼저 검토한다. 거래 수가 많고, 각 거래의 길이가 길며, 자주 함께 사는 조합이 반복될 때다.
 
@@ -87,7 +89,7 @@ FP-Growth는 연관 규칙에서 빈발 항목집합을 먼저 찾고, 그 뒤 c
 
     ---
 
-    ## Ⅴ. 기대효과 및 결론
+    ## 5. 실무 적용 및 최적화 기법
 
     FP-Growth는 데이터베이스를 더 많이 읽지 않으면서도 의미 있는 반복 패턴을 찾게 해 준다. 그래서 시장 바구니 분석, 추천 후보 추출, 로그 패턴 탐색에 모두 유용하다.
 

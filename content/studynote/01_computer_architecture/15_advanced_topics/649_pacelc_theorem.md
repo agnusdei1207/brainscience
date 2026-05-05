@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 649. PACELC 정리 (PACELC Theorem)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: PACELC 정리는 CAP 정리의 한계를 보완하여, 네트워크 분단(Partition) 시의 선택(Availability vs Consistency)뿐만 아니라 **정상 상황(Else)에서의 지연시간(Latency)과 일관성(Consistency) 사이의 트레이드오프**를 추가로 정의한 이론이다.
+> **핵심**: PACELC 정리는 CAP 정리의 한계를 보완하여, 네트워크 분단(Partition) 시의 선택(Availability vs Consistency)뿐만 아니라 **정상 상황(Else)에서의 지연시간(Latency)과 일관성(Consistency) 사이의 트레이드오프**를 추가로 정의한 이론이다.
 > 2. **가치**: 장애 상황뿐만 아니라 99%의 정상 운영 시간 동안 시스템이 "얼마나 빨리 응답할 것인가"와 "얼마나 정확한 데이터를 줄 것인가" 사이의 설계를 최적화할 수 있는 구체적인 프레임워크를 제공한다.
 > 3. **융합**: 고성능 NVMe 스토리지, RDMA 네트워크 등 하드웨어 가속 기술이 발전함에 따라 Latency를 물리적으로 줄여 일관성을 확보하거나, 혹은 일관성을 포기하고 극한의 성능을 추구하는 현대 분산 데이터베이스 설계의 핵심 나침반 역할을 한다.
 
+> 📝 모범 답안
+
+# 649. PACELC 정리 (PACELC Theorem)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. CAP의 한계: 평상시는 어떡할 건데?
 - **현상**: CAP 정리는 '네트워크 분단(P)'이라는 비정상 상황에만 초점을 맞춘다. 하지만 시스템은 대부분의 시간 동안 정상적으로 작동한다.
@@ -52,7 +54,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. PA/EL 시스템 (Availability + Latency 중심)
 - **철학**: 서비스는 무조건 빨라야 하고, 절대 죽으면 안 된다. 데이터는 좀 틀려도 나중에 맞추면 된다.
@@ -72,7 +74,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### CAP vs PACELC
 
@@ -94,7 +96,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -115,7 +117,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **응답 속도(P99 Latency) 개선**: 서비스 성격에 맞는 L/C 선택을 통해 사용자 체감 속도 50% 이상 향상.

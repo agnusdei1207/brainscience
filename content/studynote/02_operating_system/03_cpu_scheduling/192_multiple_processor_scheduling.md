@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 다중 처리기 스케줄링 (Multiple-Processor Scheduling)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 다중 처리기 스케줄링은 CPU가 1개인 환경(단일 코어)을 넘어, 여러 개의 물리적 CPU 코어에 프로세스들을 어떻게 분배하고 할당할 것인가를 다루는 거시적 자원 관리 아키텍처다.
+> **핵심**: 다중 처리기 스케줄링은 CPU가 1개인 환경(단일 코어)을 넘어, 여러 개의 물리적 CPU 코어에 프로세스들을 어떻게 분배하고 할당할 것인가를 다루는 거시적 자원 관리 아키텍처다.
 > 2. **가치**: 단순히 코어 수가 늘어났다고 속도가 배가 되는 것이 아니라, 메모리 캐시 적중률 유지(Cache Affinity)와 여러 코어 간의 처리량 균형(Load Balancing)이라는 고도의 동기화(Synchronization) 난제를 풀어야만 진정한 병렬 처리(Parallelism) 성능을 획득할 수 있다.
 > 3. **융합**: 초기 마스터-슬레이브(비대칭) 구조에서 벗어나 모든 코어가 평등하게 동작하는 **SMP (대칭형 다중 처리)**가 현대의 표준이 되었으며, 나아가 CPU와 메모리의 물리적 거리를 따지는 NUMA (Non-Uniform Memory Access) 아키텍처와 결합하여 극한의 스케줄링 최적화로 진화하고 있다.
 
+> 📝 모범 답안
+
+# 다중 처리기 스케줄링 (Multiple-Processor Scheduling)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 시스템 내에 2개 이상의 독립된 프로세서(Processor, Core)가 존재할 때, Ready 큐에 있는 프로세스들을 이 다수의 코어들에게 적절히 배분(Mapping)하는 스케줄링 기법 및 정책이다.
 - **필요성**: 단일 프로세서 스케줄링이 1차선 도로의 신호등 제어였다면, 다중 처리기 스케줄링은 8차선 고속도로의 톨게이트 배분과 같다. 만약 8개의 코어 중 1번 코어에만 작업이 몰리고 나머지 7개가 놀고 있다면(Load Imbalance), 아무리 비싼 CPU를 사도 시스템 성능은 1코어 때와 다를 바 없는 참담한 자원 낭비가 발생한다.
@@ -41,7 +43,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 큐의 구조적 선택: SQA vs MQA
 
@@ -83,7 +85,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 프로세서 친화도 (Processor Affinity)의 두 가지 얼굴
 
@@ -103,7 +105,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **Redis 및 Nginx의 강성 친화도(CPU Pinning) 튜닝**: 싱글 스레드 기반으로 초당 10만 건을 처리하는 Redis 서버나 Nginx 워커 프로세스를 운영할 때, OS 스케줄러가 부하 분산을 한답시고 코어 0번에 있던 Redis를 코어 1번으로 이주(Migration)시키는 순간 엄청난 캐시 미스(Cache Miss) 스파이크가 튀며 지연이 발생한다.
@@ -142,7 +144,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 다중 큐(MQA)와 NUMA 인지 스케줄링을 성공적으로 결합하면, 수십~수백 개의 거대 코어 시스템에서도 스케줄러 자체의 락(Lock) 병목 없이 선형적인 성능 확장(Linear Scalability)을 이끌어내며, 99% 이상의 물리적 CPU 이용률과 극한의 메모리 접근 속도(Zero Remote Node Access)를 획득할 수 있다.

@@ -6,15 +6,17 @@ description = "분산 추적에서 Trace ID와 Span ID를 서비스 간에 전�
 taxonomy = ""
 tags = ["Software Engineering", "Observability", "Tracing", "Context Propagation", "OpenTelemetry"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Trace ID는 요청 전체, Span ID는 구간을 식별한다.
+> **핵심**: Trace ID는 요청 전체, Span ID는 구간을 식별한다.
 > 2. **가치**: 서비스 간 경로를 하나의 흐름으로 묶는다.
 > 3. **판단 포인트**: 헤더 규격, 전파 누락, 비동기 경로를 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 분산 시스템에서는 서비스마다 요청이 끊겼다가 이어진다. Trace와 Span이 계속 전달되어야 전체 경로를 추적할 수 있다.
 
@@ -22,7 +24,7 @@ tags = ["Software Engineering", "Observability", "Tracing", "Context Propagation
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Trace ID는 하나의 트랜잭션을 묶고, Span ID는 각 단계의 작업을 구분한다.
 
@@ -40,7 +42,7 @@ Request Header -> Trace ID / Span ID -> Next Service
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 전파가 잘 되면 추적이 쉬워지고, 누락되면 경로가 끊긴다.
 
@@ -54,7 +56,7 @@ Request Header -> Trace ID / Span ID -> Next Service
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 HTTP 헤더, 메시지 헤더, 비동기 큐 메시지 모두에 동일한 원칙을 적용한다.
 
@@ -67,7 +69,7 @@ Request Header -> Trace ID / Span ID -> Next Service
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Context Propagation은 분산 추적의 뼈대다.
 

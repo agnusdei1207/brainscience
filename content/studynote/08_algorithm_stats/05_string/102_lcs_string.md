@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-algorithm"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: LCS (Longest Common Subsequence)는 두 문자열에서 순서를 유지하면서(연속일 필요 없음) 공통으로 존재하는 가장 긴 부분수열을 동적 프로그래밍 (Dynamic Programming)으로 O(mn)에 구하는 알고리즘이다.
+> **핵심**: LCS (Longest Common Subsequence)는 두 문자열에서 순서를 유지하면서(연속일 필요 없음) 공통으로 존재하는 가장 긴 부분수열을 동적 프로그래밍 (Dynamic Programming)으로 O(mn)에 구하는 알고리즘이다.
 > 2. **가치**: git diff의 두 파일 비교, DNA 서열 정렬, 문서 버전 관리의 변경 사항 추적이 모두 LCS를 기반으로 하며, 두 시퀀스의 공통 구조를 발견하는 범용 문제 해결 도구다.
 > 3. **판단 포인트**: LCS는 부분수열(비연속 가능), LCS (Longest Common Substring)는 부분 문자열(연속 필수), 편집 거리(Edit Distance)는 변환 비용으로 세 개념을 명확히 구분하는 것이 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 두 DNA 서열 "AGGTAB"과 "GXTXAYB"에서 공통 진화 코드를 찾거나, 두 파일 버전에서 공통 줄을 찾아 diff를 생성하는 문제가 LCS다. 순서를 유지하지만 연속일 필요가 없으므로 단순 부분 문자열 탐색과 다르다. 중복 부분 문제 구조(Optimal Substructure + Overlapping Subproblems)를 가지므로 DP가 최적 해법이다.
 
@@ -35,7 +36,7 @@ categories = "studynote-algorithm"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### LCS DP 점화식
 
@@ -88,7 +89,7 @@ dp 테이블 전체 O(mn)이 불필요한 경우:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### LCS vs LIS vs Edit Distance
 
@@ -129,7 +130,7 @@ git diff는 LCS 기반 Myers 알고리즘 사용:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 주요 활용 사례
 
@@ -153,7 +154,7 @@ git diff는 LCS 기반 Myers 알고리즘 사용:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 LCS는 두 시퀀스의 공통 구조를 추출하는 핵심 DP 알고리즘으로, git diff·DNA 분석·표절 검사의 이론적 기반이다. O(mn) 시간과 공간은 큰 파일에서 부담이 되지만, Hirschberg 알고리즘으로 공간을 O(min(m,n))으로 줄이거나 Myers 알고리즘으로 편집 횟수(d)에 비례한 O(nd) 복잡도를 달성할 수 있다.
 

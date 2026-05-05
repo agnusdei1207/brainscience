@@ -7,17 +7,19 @@ date = 2026-03-26
 [taxonomies]
 tags = ["database", "normalization", "3nf", "third-normal-form", "transitive-dependency"]
 +++
+## 0. 핵심 인사이트
 
-# 제3정규형 (3NF)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 제3정규형 (Third Normal Form, 3NF)은 2NF를 만족하며, 모든 비키 속성이 기본 키에 이행적으로 종속되지 않는 상태다.
+> **핵심**: 제3정규형 (Third Normal Form, 3NF)은 2NF를 만족하며, 모든 비키 속성이 기본 키에 이행적으로 종속되지 않는 상태다.
 > 2. **가치**: 3NF는 이행적 종속성 (Transitive Dependency)을 제거하여 데이터 중복을 더욱 줄이고, 갱�신 이상의 추가 원인을 제거한다.
 > 3. **융합**: 3NF는 실무에서 가장 일반적으로 적용되는 정규형으로, 대부분의 테이블 설계에서 이 수준까지 정규화하면 충분한 경우가 많다.
 
+> 📝 모범 답안
+
+# 제3정규형 (3NF)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 
@@ -66,7 +68,7 @@ tags = ["database", "normalization", "3nf", "third-normal-form", "transitive-dep
 
 ---
 
-## Ⅱ. 3NF 분해 과정
+## 2. 구성요소
 
 ### 분해 전 (2NF, but not 3NF)
 
@@ -125,7 +127,7 @@ tags = ["database", "normalization", "3nf", "third-normal-form", "transitive-dep
 
 ---
 
-## Ⅲ. 3NF vs BCNF
+## 3. 구조 및 동작 원리
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐

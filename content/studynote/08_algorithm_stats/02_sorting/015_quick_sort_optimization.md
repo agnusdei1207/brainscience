@@ -5,24 +5,27 @@ date = "2026-03-25"
 [extra]
 categories = "studynote-algorithm"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> Sort these 3 and pick the Middle value!
+
+> 📝 모범 답안
+
 - 퀵 정렬의 최악의 시간 복잡도 O(n²)를 방지하기 위해 피벗 선택 전략과 파티셔닝 기법을 고도화함
 - 3-Way Partitioning을 통해 중복 키가 많은 데이터셋에서 효율성을 극대화함
 - Median-of-Three와 무작위 피벗 선택을 통해 불균형한 분할을 억제하고 평균적인 성능을 보장함
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 퀵 정렬(Quick Sort)은 분할 정복(Divide and Conquer) 기반의 고속 정렬 알고리즘이나, 이미 정렬된 데이터나 역순 데이터에서 피벗이 한쪽으로 치우칠 경우 O(n²)의 성능 저하가 발생한다. 이를 극복하기 위해 피벗 선택의 지능화와 파티셔닝 방식의 개선이 필수적이다.
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 ```text
 [Quick Sort Optimization - Pivot Selection & 3-Way Partitioning]
 
 1. Median-of-Three Pivot Selection
    [Left] ---- [Center] ---- [Right]
      |           |            |
-     +-----------+------------+---> Sort these 3 and pick the Middle value!
-
+     +-----------+------------+---
 2. 3-Way Partitioning (Dijkstra's Approach)
    [ < Pivot ] [ == Pivot ] [ > Pivot ]
    ^           ^            ^
@@ -31,7 +34,7 @@ categories = "studynote-algorithm"
 - **Median-of-Three:** 배열의 첫 번째, 중간, 마지막 원소 중 중간값을 피벗으로 설정하여 최악의 시나리오를 방지함
 - **3-Way Partitioning:** 데이터를 피벗보다 작은 구역, 같은 구역, 큰 구역의 세 부분으로 나누어 중복 원소가 많은 경우 불필요한 재귀를 제거함
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 | 최적화 기법 | 핵심 원리 | 효과 |
 | :--- | :--- | :--- |
 | Median-of-Three | 첫/중/끝 3개 원소의 중앙값 선택 | 피벗 불균형 방지, O(n log n) 안정화 |
@@ -39,11 +42,11 @@ categories = "studynote-algorithm"
 | 3-Way Partition | Dutch National Flag 알고리즘 응용 | 중복 데이터 처리 속도 비약적 향상 |
 | Insertion Hybrid | 소규모 부분 배열(예: n<10)에서 삽입 정렬 수행 | 재귀 오버헤드 감소 및 캐시 효율 향상 |
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 - **실무 적용:** Java의 `DualPivotQuicksort`나 C++의 `std::sort` (Introsort)는 이러한 최적화 기법들을 복합적으로 사용하여 범용적인 정렬 안정성을 확보함
 - **기술사적 판단:** 알고리즘의 최악 상황은 보안 위협(Algorithmic Complexity Attack)으로 이어질 수 있으므로, 결정론적 피벗보다는 무작위성을 부여하거나 하이브리드 방식(IntroSort)을 채택하는 것이 합리적임
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 - **기대효과:** 데이터 분포에 관계없이 일관된 O(n log n) 성능을 제공하며, 중복 데이터가 많은 실무 데이터 환경에서 극적인 성능 개선을 달성함
 - **결론:** 퀵 정렬은 단순 구현을 넘어 피벗 전략과 하이브리드 구성을 통해 현대 프로그래밍 언어의 표준 정렬 라이브러리로서의 지위를 공고히 하고 있음
 

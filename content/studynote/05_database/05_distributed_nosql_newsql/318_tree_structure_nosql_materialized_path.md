@@ -5,17 +5,19 @@ date = "2026-04-07"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-# 트리 구조 저장을 위한 NoSQL 모델 (Materialized Path, Nested Sets)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 조직도, 카테고리, 대댓글(Thread)과 같은 계층적(Hierarchical) 트리 구조 데이터를 NoSQL(MongoDB 등)에 저장할 때, 무한한 탐색과 조인(Join)의 부하를 피하기 위해 **경로(Path) 자체를 문자열로 구워 넣거나(Materialized Path), 집합의 범위(Left/Right)를 수학적으로 쪼개 넣는(Nested Sets) 역정규화 데이터 모델링 기법**이다.
+> **핵심**: 조직도, 카테고리, 대댓글(Thread)과 같은 계층적(Hierarchical) 트리 구조 데이터를 NoSQL(MongoDB 등)에 저장할 때, 무한한 탐색과 조인(Join)의 부하를 피하기 위해 **경로(Path) 자체를 문자열로 구워 넣거나(Materialized Path), 집합의 범위(Left/Right)를 수학적으로 쪼개 넣는(Nested Sets) 역정규화 데이터 모델링 기법**이다.
 > 2. **가치**: RDBMS처럼 `parent_id` 하나만 덜렁 저장해 두면(Adjacency List) 하위 노드 전체를 찾기 위해 악몽 같은 재귀 쿼리(Recursive Query)나 N+1 조인을 수십 번 날려 시스템이 마비된다. 이 패턴들은 트리의 뼈대 정보를 각 노드에 미리 복제해 둠으로써 **단 한 번의 O(1) 정규표현식 쿼리만으로 특정 부서의 모든 하위 조직이나 모든 자식 댓글을 광속으로 조회**하게 해준다.
 > 3. **융합**: 읽기(조회) 성능은 극적으로 상승하지만 데이터의 이동이나 삭제(Update) 시 관련된 수많은 노드의 경로/값을 갱신해야 하는 '쓰기 병목(Write Penalty)'이 필연적으로 발생하므로, 도메인의 특성(읽기 위주인가 쓰기 위주인가)에 따라 **Array of Ancestors** 패턴과 융합하여 적절히 선택하는 아키텍트의 결단이 요구된다.
 
+> 📝 모범 답안
+
+# 트리 구조 저장을 위한 NoSQL 모델 (Materialized Path, Nested Sets)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 트리(Tree) 구조 데이터란 뿌리(Root)부터 나뭇가지(Node)로 뻗어 나가는 데이터다 (예: 전자제품 > 컴퓨터 > 노트북 > 맥북). NoSQL은 테이블 간의 Join을 지양하기 때문에, ಈ 트리를 어떻게 설계하느냐가 시스템 성능의 성패를 가른다. 대표적인 해법으로 `부모 배열(Array of Ancestors)`, `구체화된 경로(Materialized Path)`, `중첩 집합(Nested Sets)`이 쓰인다.
 
@@ -34,7 +36,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 패턴 1: Materialized Path (구체화된 경로)
 
@@ -105,7 +107,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅲ. 실무 적용 및 기술사적 판단
+## 3. 구조 및 동작 원리
 
 ### 트리 모델링 전략의 황금률 (Use Case)
 
@@ -134,7 +136,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅳ. 기대효과 및 결론
+## 4. 비교 및 트레이드오프
 
 ### 정량/정성 기대효과
 

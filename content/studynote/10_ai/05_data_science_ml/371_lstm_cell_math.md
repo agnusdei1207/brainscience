@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: LSTM (Long Short-Term Memory)은 망각 게이트(Forget Gate), 입력 게이트(Input Gate), 출력 게이트(Output Gate)의 세 게이트 구조와 별도의 셀 상태(Cell State) 경로를 통해 장기 의존성(Long-term Dependency)을 학습한다.
+> **핵심**: LSTM (Long Short-Term Memory)은 망각 게이트(Forget Gate), 입력 게이트(Input Gate), 출력 게이트(Output Gate)의 세 게이트 구조와 별도의 셀 상태(Cell State) 경로를 통해 장기 의존성(Long-term Dependency)을 학습한다.
 > 2. **가치**: 셀 상태 C_t = f_t⊙C_{t-1} + i_t⊙C̃_t의 덧셈 구조는 그래디언트가 시간 역방향으로 전파될 때 소실 없이 흐를 수 있는 "고속도로(Highway)"를 제공하여 BPTT의 그래디언트 소실 문제를 해결한다.
 > 3. **판단 포인트**: GRU (Gated Recurrent Unit)는 LSTM의 망각 게이트와 입력 게이트를 하나의 업데이트 게이트(Update Gate)로 합쳐 파라미터를 줄인 경량화 버전으로, 짧은 시퀀스에서 LSTM과 유사한 성능을 낸다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 표준 RNN (Recurrent Neural Network)의 은닉 상태(Hidden State)는 h_t = tanh(W_h·h_{t-1} + W_x·x_t)로, 오직 하나의 상태 벡터가 현재 정보와 과거 기억을 동시에 담당한다. 이 구조는 긴 시퀀스에서 그래디언트 소실로 인해 장기 의존성을 학습하지 못한다.
 
@@ -27,7 +29,7 @@ LSTM은 1997년 Hochreiter와 Schmidhuber가 제안한 구조로, 두 개의 분
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### LSTM 게이트 수식
 
@@ -101,7 +103,7 @@ f_t ≈ 1이면 그래디언트 = 1 (소실 없음!)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### LSTM vs GRU (Gated Recurrent Unit)
 
@@ -127,7 +129,7 @@ h_t = (1 - z_t) ⊙ h_{t-1} + z_t ⊙ h̃_t
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **자연어 처리 적용 예시**:
 - 기계 번역(Machine Translation): 인코더(Encoder) LSTM이 입력 문장 의미를 셀 상태에 압축, 디코더(Decoder) LSTM이 순차적으로 번역 생성
@@ -145,7 +147,7 @@ h_t = (1 - z_t) ⊙ h_{t-1} + z_t ⊙ h̃_t
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 LSTM은 1997년 제안 이후 NLP, 음성 인식, 시계열 예측 분야의 표준 모델로 20년 이상 군림했다. 게이트 메커니즘의 도입으로 100~1000 토큰 이상의 장거리 의존성 학습이 가능해져 기계 번역, 언어 모델 등에 혁신을 가져왔다.
 

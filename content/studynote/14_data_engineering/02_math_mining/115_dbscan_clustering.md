@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: DBSCAN(Density-Based Spatial Clustering of Applications with Noise)은 **데이터 밀도가 높은 영역을 클러스터로 묶고**, 밀도가 낮은 영역의 데이터를 **노이즈(이상치)**로 자동 분리하는 밀도 기반 클러스터링 알고리즘이다.
+> **핵심**: DBSCAN(Density-Based Spatial Clustering of Applications with Noise)은 **데이터 밀도가 높은 영역을 클러스터로 묶고**, 밀도가 낮은 영역의 데이터를 **노이즈(이상치)**로 자동 분리하는 밀도 기반 클러스터링 알고리즘이다.
 > 2. **가치**: K-Means가 K(클러스터 수)를 사전 지정해야 하고 원형 클러스터만 탐지하는 반면, DBSCAN은 **K를 자동 결정**하고 **비구형(초승달·고리 형태) 클러스터**도 탐지하며 **노이즈를 자동 분리**한다.
 > 3. **판단 포인트**: 두 파라미터 **ε(epsilon, 반경)**과 **MinPts(최소 이웃 수)**가 결과를 결정하며, ε이 너무 크면 모든 데이터가 1개 클러스터, 너무 작으면 모두 노이즈가 되는 민감성이 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -37,7 +39,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### DBSCAN vs K-Means
 
@@ -53,7 +55,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | K-Means | DBSCAN | HDBSCAN |
 |:---|:---|:---|:---|
@@ -64,7 +66,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### ε·MinPts 설정 가이드
 - **ε**: k-distance 그래프의 "팔꿈치(elbow)" 지점.
@@ -76,7 +78,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 DBSCAN은 K-Means가 실패하는 **비구형·노이즈 혼재 데이터**에서 강력하며, HDBSCAN으로 확장하면 밀도 변화까지 대응 가능하다.
 

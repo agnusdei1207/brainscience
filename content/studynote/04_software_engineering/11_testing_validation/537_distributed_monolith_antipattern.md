@@ -6,15 +6,17 @@ description = "독립 배포가 불가능한 가짜 마이크로서비스 구조
 taxonomy = ""
 tags = ["Software Engineering", "Architecture", "Distributed Monolith", "Anti-pattern", "Microservices"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 분산 모놀리스는 서비스는 나눴지만 실제로는 한 덩어리처럼 묶인 상태다.
+> **핵심**: 분산 모놀리스는 서비스는 나눴지만 실제로는 한 덩어리처럼 묶인 상태다.
 > 2. **가치**: 복잡도만 늘고 독립성이 없다.
 > 3. **판단 포인트**: 배포, 변경, 장애가 서로 얽혀 있는지 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 마이크로서비스를 잘못 나누면 분산 모놀리스가 된다. 서비스 간 의존이 너무 강하면 독립 배포의 장점이 사라진다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Architecture", "Distributed Monolith", "Anti-pa
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 의존성이 너무 촘촘하면 변경이 한꺼번에 번진다.
 
@@ -43,7 +45,7 @@ tags = ["Software Engineering", "Architecture", "Distributed Monolith", "Anti-pa
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 진짜 마이크로서비스는 독립 배포와 독립 확장이 가능해야 한다.
 
@@ -59,7 +61,7 @@ tags = ["Software Engineering", "Architecture", "Distributed Monolith", "Anti-pa
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 팀 구조, 데이터 소유권, API 의존, 배포 단위를 본다.
 
@@ -72,7 +74,7 @@ tags = ["Software Engineering", "Architecture", "Distributed Monolith", "Anti-pa
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 분산 모놀리스를 피하면 마이크로서비스의 장점을 살릴 수 있다.
 

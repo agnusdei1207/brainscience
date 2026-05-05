@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 서브도메인이 가리키는 외부 리소스(GitHub Pages, S3, Heroku 등)가 제거된 후에도 DNS (Domain Name System) CNAME (Canonical Name) 레코드가 남아 있으면 공격자가 해당 리소스를 등록하여 서브도메인을 탈취할 수 있다.
+> **핵심**: 서브도메인이 가리키는 외부 리소스(GitHub Pages, S3, Heroku 등)가 제거된 후에도 DNS (Domain Name System) CNAME (Canonical Name) 레코드가 남아 있으면 공격자가 해당 리소스를 등록하여 서브도메인을 탈취할 수 있다.
 > 2. **가치**: 피싱·쿠키 탈취·브랜드 사칭에 직접 활용되며, 신뢰 도메인 아래에서 실행되므로 SOP (Same-Origin Policy) 우회와 CSP (Content Security Policy) 우회까지 연계된다.
 > 3. **판단 포인트**: CNAME 체인이 댕글링(dangling)인지 확인하는 프로세스와 서브도메인 폐기 전 DNS 레코드 삭제 절차가 핵심 통제 포인트이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Subdomain Takeover(서브도메인 탈취)는 조직이 외부 SaaS(Software as a Service) 플랫폼(예: GitHub Pages, AWS S3, Heroku, Fastly)에 서브도메인을 연결한 뒤 해당 외부 서비스를 해지하면서도 DNS CNAME 레코드를 삭제하지 않아 발생하는 취약점이다.
 
@@ -25,7 +27,7 @@ Subdomain Takeover(서브도메인 탈취)는 조직이 외부 SaaS(Software as 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 단계 | 상황 | 취약 포인트 |
 |:---|:---|:---|
@@ -58,7 +60,7 @@ Subdomain Takeover(서브도메인 탈취)는 조직이 외부 SaaS(Software as 
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | 댕글링 CNAME | 댕글링 A/AAAA 레코드 |
 |:---|:---|:---|
@@ -72,7 +74,7 @@ Subdomain Takeover(서브도메인 탈취)는 조직이 외부 SaaS(Software as 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **탐지 자동화**: Subjack, SubFinder, can-i-take-over-xyz 같은 도구로 조직의 모든 CNAME을 스캔하고 응답이 없거나 플랫폼 오류 페이지를 반환하는 레코드를 식별한다.
 
@@ -87,7 +89,7 @@ Subdomain Takeover(서브도메인 탈취)는 조직이 외부 SaaS(Software as 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 DNS 수명주기 관리를 자동화하면 댕글링 레코드 발생을 원천 차단한다. CNAME 모니터링을 CI/CD 파이프라인에 통합하면 서비스 삭제 즉시 알람을 받아 즉각 대응할 수 있다. 서브도메인 탈취는 비용 대비 피해가 크므로 기술사 시험에서 DNS 보안과 함께 출제되는 빈도가 높다.
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SQLMap은 SQL (Structured Query Language) 인젝션 취약점을 자동으로 탐지하고 익스플로잇하는 오픈소스 도구로, Error-based·Boolean-based·Time-based·Union-based 등 다양한 기법을 지원한다.
+> **핵심**: SQLMap은 SQL (Structured Query Language) 인젝션 취약점을 자동으로 탐지하고 익스플로잇하는 오픈소스 도구로, Error-based·Boolean-based·Time-based·Union-based 등 다양한 기법을 지원한다.
 > 2. **가치**: 수동으로 수 시간이 걸리는 SQL 인젝션 분석을 자동화하여 DB (Database) 스키마·데이터 덤프, OS 명령 실행까지 가능하다.
 > 3. **판단 포인트**: SQLMap은 취약점 탐지 후 자동으로 악용(exploitation)까지 진행하므로, 반드시 서면 허가를 받은 대상에만 사용해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 SQLMap은 2006년 처음 공개된 이후 SQL 인젝션 자동화 도구의 사실상 표준이 되었다. Python으로 작성되어 모든 OS에서 동작하며, MySQL·PostgreSQL·Oracle·MSSQL·SQLite 등 주요 DBMS (Database Management System)를 지원한다.
 
@@ -23,7 +25,7 @@ SQLMap은 2006년 처음 공개된 이후 SQL 인젝션 자동화 도구의 사�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 기법 | 동작 원리 | 속도 |
 |:---|:---|:---|
@@ -58,7 +60,7 @@ DB 정보 추출
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 옵션 | 기능 |
 |:---|:---|
@@ -73,7 +75,7 @@ DB 정보 추출
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **방어 관점 활용**: WAF (Web Application Firewall) 규칙 효과 검증, 입력 검증 우회 가능 여부 확인, 파라미터화 쿼리(Parameterized Query) 적용 여부 테스트에 활용한다.
 
@@ -89,7 +91,7 @@ sqlmap --delay=2 --timeout=30          # 타이밍 조절
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 방어자 관점에서 SQLMap은 자신의 시스템에 SQL 인젝션 취약점이 있는지 빠르게 검증하는 데 매우 유용하다. 파라미터화 쿼리와 ORM (Object-Relational Mapping)을 적용했을 때 SQLMap이 데이터를 추출하지 못하면 방어가 성공적으로 이루어진 것이다.
 

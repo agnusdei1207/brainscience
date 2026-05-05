@@ -6,15 +6,17 @@ description = "프로그램을 실제로 실행해 동작 결과와 런타임 �
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "Dynamic Testing", "Execution", "Runtime"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 동적 테스팅(Dynamic Testing)은 코드를 실행해 실제 결과를 확인하는 검증 방식이다.
+> **핵심**: 동적 테스팅(Dynamic Testing)은 코드를 실행해 실제 결과를 확인하는 검증 방식이다.
 > 2. **가치**: 런타임 오류, 성능 문제, 상호작용 결함을 직접 잡아낸다.
 > 3. **판단 포인트**: 실제 사용 환경에 가까운 검증이 필요할 때 필수다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 동적 테스팅은 실행된 프로그램의 입력과 출력, 상태 변화를 확인한다. 정적 테스팅이 보지 못하는 런타임 문제를 드러낸다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "Dynamic Testing", "Execution", "Runt
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 동적 테스팅은 입력을 주고, 실행 결과를 관찰하고, 기대 결과와 비교하는 흐름이다.
 
@@ -45,7 +47,7 @@ tags = ["Software Engineering", "Testing", "Dynamic Testing", "Execution", "Runt
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 정적 테스팅과 대비되며, 둘은 서로 보완적이다. 정적 테스팅은 미리 거르고, 동적 테스팅은 실제로 움직여 본다.
 
@@ -61,7 +63,7 @@ tags = ["Software Engineering", "Testing", "Dynamic Testing", "Execution", "Runt
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 배포 전 검증, 장애 재현, 성능 확인에 동적 테스팅을 쓴다. 사용자 시나리오와 운영 환경을 최대한 닮게 만드는 것이 중요하다.
 
@@ -74,7 +76,7 @@ tags = ["Software Engineering", "Testing", "Dynamic Testing", "Execution", "Runt
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 동적 테스팅은 실제 동작 신뢰성을 확인하는 마지막 보루다. 실행 기반이므로 정적 테스팅보다 비용은 들지만, 현실 문제를 더 잘 잡는다.
 

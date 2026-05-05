@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Saga는 **여러 마이크로서비스에 걸친 비즈니스 트랜잭션을 로컬 트랜잭션의 시퀀스로 분해**하고, 실패 시 **보상 트랜잭션(Compensating Transaction)**으로 롤백하는 패턴이다.
+> **핵심**: Saga는 **여러 마이크로서비스에 걸친 비즈니스 트랜잭션을 로컬 트랜잭션의 시퀀스로 분해**하고, 실패 시 **보상 트랜잭션(Compensating Transaction)**으로 롤백하는 패턴이다.
 > 2. **가치**: 2PC의 블로킹·단일 장애점 문제 없이 **서비스 자율성을 유지**하면서 데이터 일관성(Eventual Consistency)을 달성한다.
 > 3. **판단 포인트**: **Choreography(이벤트 기반, 각 서비스 독립)** vs **Orchestration(중앙 오케스트레이터)** — 서비스 수가 적으면 Choreography, 복잡하면 Orchestration(Temporal/Cadence).
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Choreography: 주문→이벤트→결제→이벤트→배송 (각자 독립)

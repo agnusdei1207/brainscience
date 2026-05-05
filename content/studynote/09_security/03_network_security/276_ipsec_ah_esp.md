@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: AH (Authentication Header)는 인증·무결성만, ESP (Encapsulating Security Payload)는 인증·무결성·기밀성을 모두 제공하며, 현대 IPsec에서는 NAT (Network Address Translation) 호환성과 암호화 필요성으로 인해 ESP가 사실상 표준이다.
+> **핵심**: AH (Authentication Header)는 인증·무결성만, ESP (Encapsulating Security Payload)는 인증·무결성·기밀성을 모두 제공하며, 현대 IPsec에서는 NAT (Network Address Translation) 호환성과 암호화 필요성으로 인해 ESP가 사실상 표준이다.
 > 2. **가치**: AH가 NAT 환경에서 사용 불가능한 이유는 IP 헤더를 포함한 전체 패킷에 서명하기 때문으로, NAT가 IP 주소를 변경하면 서명 검증이 실패한다. ESP는 IP 헤더를 서명 범위에서 제외해 NAT를 허용한다.
 > 3. **판단 포인트**: AH와 ESP의 헤더 구조, 보호 범위, NAT 호환성을 정확히 구별하고, ESP+AH 동시 사용 시나리오를 설명할 수 있어야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 IPsec은 두 개의 독립적인 보안 프로토콜을 제공한다. AH (RFC 4302)는 무결성(Integrity)과 데이터 출처 인증(Data Origin Authentication)에 특화되며, ESP (RFC 4303)는 이에 더해 기밀성(Confidentiality)을 추가한다.
 
@@ -25,7 +27,7 @@ AH와 ESP의 설계 철학 차이는 "무엇을 보호하는가"에 있다. AH�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### AH 헤더 구조 (IPv4 기준)
 
@@ -87,7 +89,7 @@ AH와 ESP의 설계 철학 차이는 "무엇을 보호하는가"에 있다. AH�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### NAT-T (NAT Traversal) 메커니즘
 
@@ -115,7 +117,7 @@ IP 헤더 | UDP(4500) | ESP 헤더 | 암호화 페이로드
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **ESP 암호 스위트 선택 기준 (RFC 8221 기준)**
 
@@ -146,7 +148,7 @@ AEAD (Authenticated Encryption with Associated Data) 알고리즘인 AES-GCM은 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 AH와 ESP는 서로 다른 보안 목표를 위해 설계됐지만, 현실 인터넷에서는 ESP가 AH의 기능을 완전히 포함하면서 NAT 환경도 지원하기 때문에 ESP가 유일한 실용적 선택이 됐다. AH는 주로 학술적·이론적 맥락에서 언급된다.
 

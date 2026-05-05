@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 소프트웨어 비용 산정은 프로젝트 시작 전 개발 공수(PM, Person-Month)·일정·원가를 예측하는 활동으로 — Boehm의 COCOMO 연구에 따르면 초기 산정 오차가 ±4배에 달하지만, 요구사항이 명확해질수록 ±25% 이내로 수렴한다.
 > 2. 기능 점수(FP — Function Point)와 COCOMO는 가장 널리 쓰이는 산정 기법으로 — FP는 사용자 관점의 기능 규모를 측정하는 반면, COCOMO는 LOC(Lines of Code) 기반 통계 모델로 규모·복잡도·팀 능력 등 비용 유발 요소(Cost Driver)를 반영한다.
 > 3. 소프트웨어 산정의 근본 어려움은 "눈에 보이지 않는 제품을 미래에 만드는 비용을 현재 추정"하는 것으로 — 이 때문에 애자일은 스토리 포인트를 통한 상대적 추정과 속도(Velocity) 기반 적응형 계획으로 전통적 산정 한계를 보완한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 비용 산정 개요
+## 1. 개요 및 필요성
 
 ```
 소프트웨어 비용 산정 (Cost Estimation):
@@ -55,7 +58,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 기능 점수 (FP)
+## 2. 구성요소
 
 ```
 기능 점수 (FP — Function Point):
@@ -105,7 +108,7 @@ FP 측정 요소:
 
 ---
 
-## Ⅲ. COCOMO 모델
+## 3. 구조 및 동작 원리
 
 ```
 COCOMO (Constructive Cost Model):
@@ -152,7 +155,7 @@ COCOMO II (개선 모델):
 
 ---
 
-## Ⅳ. 애자일 산정
+## 4. 비교 및 트레이드오프
 
 ```
 애자일 산정 (Agile Estimation):
@@ -204,7 +207,7 @@ PERT 산정 (전통적):
 
 ---
 
-## Ⅴ. 실무 시나리오 — ERP 시스템 산정
+## 5. 실무 적용 및 최적화 기법
 
 ```
 ERP 시스템 비용 산정 사례:

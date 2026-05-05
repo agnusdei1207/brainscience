@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 배열 프로세서 (Array Processor)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 단 하나의 중앙 제어 유닛(Control Unit)의 지휘 아래, 물리적으로 독립된 수십~수백 개의 멍청한 산술논리연산장치(ALU, Processing Element)들이 2차원 격자(Array) 형태로 배열되어 동기화된 연산을 수행하는 하드웨어 아키텍처다.
+> **핵심**: 단 하나의 중앙 제어 유닛(Control Unit)의 지휘 아래, 물리적으로 독립된 수십~수백 개의 멍청한 산술논리연산장치(ALU, Processing Element)들이 2차원 격자(Array) 형태로 배열되어 동기화된 연산을 수행하는 하드웨어 아키텍처다.
 > 2. **가치**: 파이프라인의 깊이를 늘리는 시간적 병렬성(벡터 프로세서)을 넘어, 기계 자체의 개수를 늘려버리는 공간적 병렬성(Spatial Parallelism)을 극대화하여 기상 예측이나 영상 처리 같은 거대 행렬 데이터(Matrix)를 단일 클럭에 썰어버린다.
 > 3. **융합**: 초창기 슈퍼컴퓨터(ILLIAC IV 등)에서 출발했으나, 현재는 엔비디아(NVIDIA) GPU의 스트리밍 멀티프로세서(SM)와 구글 TPU의 시스톨릭 어레이(Systolic Array) 형태로 현대 인공지능(AI) 딥러닝 하드웨어의 가장 거대한 척추로 융합 발전했다.
 
+> 📝 모범 답안
+
+# 배열 프로세서 (Array Processor)
+
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 배열 프로세서 (Array Processor)는 SIMD(단일 명령어 다중 데이터) 철학을 물리적인 하드웨어 물량 공세로 현실화한 극단적인 아키텍처다.
 
@@ -51,7 +53,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 배열 프로세서의 내부 구조는 중앙 집권적인 통제력과, 연산 유닛(PE)들 간의 데이터 교환을 위한 내부 통신망(Interconnection Network)으로 구성된다.
 
@@ -87,7 +89,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 배열 프로세서는 똑같이 SIMD 철학을 따르는 '벡터 프로세서'와 자주 혼동된다. 두 아키텍처는 목표는 같지만 병렬성을 구현하는 물리적 방식이 완전히 융합/대척점을 이룬다.
 
@@ -126,7 +128,7 @@ NPU / TPU (Tensor Processing Unit)
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 실무에서 데이터 과학자나 AI 엔지니어가 텐서플로우(TensorFlow)나 파이토치(PyTorch)를 다룰 때, 코드가 배열 프로세서(GPU/TPU)의 공간적 격자에 정확히 얹혀지는지를 이해해야 메모리 부족(OOM)이나 병목을 피할 수 있다.
 
@@ -166,7 +168,7 @@ NPU / TPU (Tensor Processing Unit)
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 배열 프로세서는 1970년대에 시대를 너무 앞서가서 빛을 보지 못하다가, 세상의 데이터가 '텍스트'에서 '픽셀과 행렬(멀티미디어, AI)'로 바뀌면서 황제로 등극한 늦깎이 대기만성 아키텍처다.
 

@@ -5,15 +5,19 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> 📢 **섹션 요약 비유**: 메달리온은 올림픽 선발 과정이다. 지역 예선(Bronze)→전국 선발전(Silver)→국가 대표 확정(Gold) 순으로 점진적으로 검증된 선수(데이터)만 최종 무대에 선다.
+
+> 📝 모범 답안
+
 1. 메달리온 아키텍처(Medallion Architecture)는 Databricks가 제시한 Delta Lake 기반 **Bronze→Silver→Gold 3계층 데이터 파이프라인 설계 표준**으로, 각 계층이 점진적으로 데이터 품질을 높인다.
 2. **AutoLoader**와 **COPY INTO**로 Bronze 계층에 증분 적재하고, MERGE INTO로 Silver의 SCD (Slowly Changing Dimension) 이력을 관리하며, dbt나 Spark SQL로 Gold 집계 테이블을 선언적으로 생성한다.
 3. Delta Live Tables (DLT)를 활용하면 Bronze→Silver→Gold 전 파이프라인을 의존성 그래프 기반으로 선언하고, 데이터 품질 기대값(Expectations)을 코드로 관리할 수 있다.
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Multi-Tier Architecture(009)가 개념적 설계 원칙이라면, 메달리온 아키텍처는 이를 **Delta Lake 위에 구현한 Databricks 공식 패턴**이다. Medallion이라는 이름은 Bronze→Silver→Gold가 올림픽 메달처럼 품질이 높아진다는 비유에서 유래했다.
 
@@ -26,11 +30,9 @@ Multi-Tier Architecture(009)가 개념적 설계 원칙이라면, 메달리온 �
 | Gold | 집계·KPI | Spark SQL + dbt + DLT |
 | 오케스트레이션 | 계층 간 의존성 | Databricks Workflows / DLT |
 
-> 📢 **섹션 요약 비유**: 메달리온은 올림픽 선발 과정이다. 지역 예선(Bronze)→전국 선발전(Silver)→국가 대표 확정(Gold) 순으로 점진적으로 검증된 선수(데이터)만 최종 무대에 선다.
-
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -82,7 +84,7 @@ Multi-Tier Architecture(009)가 개념적 설계 원칙이라면, 메달리온 �
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **AutoLoader vs COPY INTO 비교**
 
@@ -105,7 +107,7 @@ Multi-Tier Architecture(009)가 개념적 설계 원칙이라면, 메달리온 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **Silver 계층 SCD Type 2 구현 패턴**
 ```sql
@@ -134,7 +136,7 @@ WHEN NOT MATCHED THEN
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 | 내용 |
 |:---|:---|

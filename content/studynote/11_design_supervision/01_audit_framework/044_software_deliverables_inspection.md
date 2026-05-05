@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 소프트웨어 산출물 검사(Software Deliverables Inspection)는 개발 생명주기의 각 단계에서 작성되는 문서·코드·테스트 결과물을 체계적으로 검토하여 결함을 조기 발견하는 품질 보증 활동으로 — Fagan이 증명한 바와 같이 결함을 개발 단계에서 발견하면 운영 단계보다 100배 저렴하다.
 > 2. 검사 유형은 동료 검토(Peer Review), 워크스루(Walkthrough), 인스펙션(Inspection), 감사(Audit)로 구분되며 — Fagan 인스펙션은 가장 공식적인 절차(계획→개요→준비→검사→수정→추적)로 역할 분리(작성자, 검사자, 진행자, 기록자)를 통해 결함 발견율을 최대화한다.
 > 3. ISO/IEC 20246(소프트웨어 검토 표준)과 CMMI의 검증·확인(V&V) 활동은 산출물 검사를 조직 프로세스로 내재화하는 체계를 제공하며 — 코드 리뷰 도구(GitHub PR, Gerrit, Crucible)의 확산으로 과거 수작업 검사가 자동화·통합된 CI/CD 기반 품질 게이트로 발전했다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 산출물 검사 개요
+## 1. 개요 및 필요성
 
 ```
 소프트웨어 산출물 검사:
@@ -57,7 +60,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. Fagan 인스펙션
+## 2. 구성요소
 
 ```
 Fagan 인스펙션 (Fagan Inspection):
@@ -110,7 +113,7 @@ Fagan 인스펙션 (Fagan Inspection):
 
 ---
 
-## Ⅲ. 코드 검토
+## 3. 구조 및 동작 원리
 
 ```
 코드 검토 (Code Review):
@@ -171,7 +174,7 @@ Fagan 인스펙션 (Fagan Inspection):
 
 ---
 
-## Ⅳ. 감사
+## 4. 비교 및 트레이드오프
 
 ```
 소프트웨어 감사 (Software Audit):
@@ -219,7 +222,7 @@ ISO 15504 (SPICE):
 
 ---
 
-## Ⅴ. 실무 시나리오 — CI/CD 품질 게이트
+## 5. 실무 적용 및 최적화 기법
 
 ```
 CI/CD 통합 산출물 품질 게이트:

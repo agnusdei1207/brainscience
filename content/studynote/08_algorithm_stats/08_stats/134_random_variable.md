@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-algorithm"
 +++
-
-## 핵심 인사이트
+## 0. 핵심 인사이트
 
 > 확률 변수 (Random Variable) 는 "실험의 결과를 숫자로 번역하는 함수"다 — 동전 앞뒷면이라는 질적 결과를 0/1 이라는 수치로 바꿔야 수학을 적용할 수 있다.
 > 이산 (Discrete) 과 연속 (Continuous) 의 차이는 단순히 "정수 vs 실수"가 아니라, PMF (Probability Mass Function) 와 PDF (Probability Density Function) 라는 서로 다른 확률 표현 방식의 차이다.
 > ML 모델의 출력(예: 소프트맥스 확률), 몬테카를로 시뮬레이션, 변분 추론 (Variational Inference) 은 모두 확률 변수 개념 위에 구축된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 확률 변수의 정의와 구분
+## 1. 개요 및 필요성
 
 ### 형식적 정의
 
@@ -43,7 +44,7 @@ X: Ω → ℝ
 
 ---
 
-## Ⅱ. 이산 확률 변수 — PMF와 CDF
+## 2. 구성요소
 
 ### PMF (Probability Mass Function, 확률 질량 함수)
 
@@ -94,7 +95,7 @@ F(x)
 
 ---
 
-## Ⅲ. 연속 확률 변수 — PDF와 구간 확률
+## 3. 구조 및 동작 원리
 
 ### PDF (Probability Density Function, 확률 밀도 함수)
 
@@ -141,7 +142,7 @@ F(x) = P(X ≤ x) = ∫₋∞^x f(t) dt
 
 ---
 
-## Ⅳ. 기댓값과 분산 (간략 개요)
+## 4. 비교 및 트레이드오프
 
 ### 기댓값 (Expectation) E[X]
 
@@ -173,7 +174,7 @@ Y = g(X) 로 새로운 확률 변수를 만들 수 있다:
 
 ---
 
-## Ⅴ. 결합 분포·주변 분포·몬테카를로 응용
+## 5. 실무 적용 및 최적화 기법
 
 ### 결합 분포 (Joint Distribution)
 

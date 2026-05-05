@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CI/CD는 코드 변경 시 **빌드·테스트를 자동 실행(CI: Continuous Integration)**하고, 검증된 코드를 **스테이징·프로덕션에 자동 배포(CD: Continuous Delivery/Deployment)**하는 소프트웨어 엔지니어링의 핵심 자동화 체계다.
+> **핵심**: CI/CD는 코드 변경 시 **빌드·테스트를 자동 실행(CI: Continuous Integration)**하고, 검증된 코드를 **스테이징·프로덕션에 자동 배포(CD: Continuous Delivery/Deployment)**하는 소프트웨어 엔지니어링의 핵심 자동화 체계다.
 > 2. **가치**: 수동 빌드·배포는 인적 오류·시간 낭비·릴리스 공포(Fear of Release)를 유발하지만, CI/CD 파이프라인은 **커밋→빌드→테스트→배포를 30분 이내에 자동 완료**하여 DORA 지표(배포 빈도·리드 타임)를 극적으로 개선한다.
 > 3. **판단 포인트**: CI(통합) vs CD-Delivery(수동 승인 후 배포) vs CD-Deployment(완전 자동 배포)를 구분하고, 트렁크 기반 개발(Trunk-Based Dev) + 피처 플래그 조합이 Elite 팀의 표준이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -35,7 +37,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### CI vs CD 비교
 
@@ -58,7 +60,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 수동 배포 | CI만 | CI/CD |
 |:---|:---|:---|:---|
@@ -68,7 +70,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 파이프라인 설계 Best Practice
 1. **빠른 피드백**: 단위 테스트 먼저, 느린 E2E 테스트는 나중에.
@@ -77,7 +79,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | 수동 | CI/CD | 개선 |
 |:---|:---|:---|:---|

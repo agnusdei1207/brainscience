@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 상속 거부 (Refused Bequest) 는 자식 클래스가 부모의 메서드나 속성을 사용하지 않거나 빈 구현으로 오버라이드함으로써 리스코프 치환 원칙 (LSP: Liskov Substitution Principle) 을 위반하는 패턴이다.
+> **핵심**: 상속 거부 (Refused Bequest) 는 자식 클래스가 부모의 메서드나 속성을 사용하지 않거나 빈 구현으로 오버라이드함으로써 리스코프 치환 원칙 (LSP: Liskov Substitution Principle) 을 위반하는 패턴이다.
 > 2. **가치**: "is-a 관계"가 실제로는 성립하지 않는 상속을 발견·제거함으로써 시스템의 다형성 (Polymorphism) 신뢰성을 회복한다.
 > 3. **판단 포인트**: "부모 타입 변수에 자식 인스턴스를 대입해도 프로그램이 올바르게 동작하는가?" — No라면 LSP 위반이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 LSP (Liskov Substitution Principle) 정의
 
@@ -56,7 +57,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 LSP 위반 유형
 
@@ -108,7 +109,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 상속 vs 구성 비교
 
@@ -134,7 +135,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 Java Stack 클래스 교훈
 
@@ -156,7 +157,7 @@ Java 표준 라이브러리의 `Stack<E>` 가 `Vector<E>` 를 상속하는 것�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 리팩토링 효과
 

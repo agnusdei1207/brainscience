@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 분산 로깅은 **수십~수백 개 마이크로서비스의 로그를 중앙 수집·저장·검색하는 시스템**이며, ELK(Elasticsearch·Logstash·Kibana)·EFK(Elasticsearch·Fluentd·Kibana)·Grafana Loki가 대표 스택이다.
+> **핵심**: 분산 로깅은 **수십~수백 개 마이크로서비스의 로그를 중앙 수집·저장·검색하는 시스템**이며, ELK(Elasticsearch·Logstash·Kibana)·EFK(Elasticsearch·Fluentd·Kibana)·Grafana Loki가 대표 스택이다.
 > 2. **가치**: MSA에서 각 서비스가 개별 로그 파일을 가지면 장애 시 **수십 서버를 일일이 SSH 접속**해야 하지만, 중앙 로깅은 **한 곳에서 전체 로그를 검색·필터·상관 분석**한다.
 > 3. **판단 포인트**: ELK는 **전문 검색에 강하지만 비용↑**, Loki는 **레이블 기반 경량(인덱스 없음)**이며, Fluentd/Fluent Bit가 CNCF 표준 로그 수집기이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ELK: Logstash(수집·파싱) → Elasticsearch(저장·검색) → Kibana(시각화)

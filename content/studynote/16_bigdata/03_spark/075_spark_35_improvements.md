@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Apache Spark 3.5는 2023년 릴리스되어 Python API (PySpark)의 기능 강화, Spark Connect (원격 클라이언트 연결), ANSI SQL 지원 확대, 구조화된 스트리밍(Structured Streaming) 고도화를 통해 데이터 엔지니어링·ML 워크플로우의 생산성과 이식성을 높인 메이저 버전이다.
+> **핵심**: Apache Spark 3.5는 2023년 릴리스되어 Python API (PySpark)의 기능 강화, Spark Connect (원격 클라이언트 연결), ANSI SQL 지원 확대, 구조화된 스트리밍(Structured Streaming) 고도화를 통해 데이터 엔지니어링·ML 워크플로우의 생산성과 이식성을 높인 메이저 버전이다.
 > 2. **가치**: Spark Connect는 Spark 서버에 경량 클라이언트로 원격 접속하여 Jupyter Notebook·로컬 IDE에서 클러스터 Spark를 직접 활용할 수 있게 하여 개발 경험(DX)을 대폭 향상시키며, Python UDTF (User-Defined Table Function)와 PyArrow 기반 최적화로 PySpark 성능 격차를 줄였다.
 > 3. **판단 포인트**: Spark 3.5의 ANSI 모드 강화는 기존 Spark 코드와의 호환성 이슈를 일으킬 수 있다 — 기존 코드에서 NULL 처리·정수 오버플로우 등 ANSI 미준수 동작에 의존했다면 마이그레이션 전 회귀 테스트가 필수다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Apache Spark 3.5는 Spark 3.x 시리즈의 주요 기능 업데이트로, 사용 편의성·성능·SQL 표준 준수를 중점적으로 개선했다.
 
@@ -34,7 +36,7 @@ Apache Spark 3.5는 Spark 3.x 시리즈의 주요 기능 업데이트로, 사용
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Spark Connect 아키텍처
 
@@ -71,7 +73,7 @@ spark.sql("SELECT * FROM squared(5)").show()
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 버전 | 주요 특징 |
 |:---|:---|
@@ -87,7 +89,7 @@ AQE (Adaptive Query Execution, 적응형 쿼리 실행)는 Spark 3.0에서 도�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: Spark Connect 기반 노트북 개발 환경 구축
 데이터 과학 팀의 Jupyter Notebook에서 원격 Spark 클러스터 직접 활용.
@@ -105,7 +107,7 @@ AQE (Adaptive Query Execution, 적응형 쿼리 실행)는 Spark 3.0에서 도�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

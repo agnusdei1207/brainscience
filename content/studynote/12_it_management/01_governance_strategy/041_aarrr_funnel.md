@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. AARRR 퍼널(Pirate Metrics)은 Dave McClure(500 Startups)가 제안한 고객 여정 5단계 측정 프레임워크로, Acquisition(획득)→Activation(활성화)→Retention(유지)→Referral(추천)→Revenue(수익)의 흐름을 정량 지표로 관리한다.
 > 2. 그로스 해킹(Growth Hacking)은 마케팅·제품·데이터를 통합하여 최소 비용으로 최대 성장을 달성하는 방법론으로, AARRR 퍼널에서 가장 취약한 단계를 찾아 실험(A/B 테스트)으로 빠르게 개선하는 것이 핵심이다.
 > 3. AARRR에서 가장 중요한 단계는 R(Retention)으로, 새 사용자를 끊임없이 획득(Acquisition)하더라도 유지하지 못하면 "밑 빠진 독에 물 붓기"이며, PMF(Product-Market Fit) 달성 여부가 Retention으로 판별된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. AARRR 퍼널 5단계
+## 1. 개요 및 필요성
 
 ```
 AARRR 퍼널 (Pirate Metrics):
@@ -51,7 +54,7 @@ AARRR 퍼널 (Pirate Metrics):
 
 ---
 
-## Ⅱ. 그로스 해킹 방법론
+## 2. 구성요소
 
 ```
 그로스 해킹 프레임워크:
@@ -93,7 +96,7 @@ Famous Growth Hacks:
 
 ---
 
-## Ⅲ. 핵심 지표 체계
+## 3. 구조 및 동작 원리
 
 ```
 PMF (Product-Market Fit) 측정:
@@ -132,7 +135,7 @@ Viral Coefficient (K-factor):
 
 ---
 
-## Ⅳ. A/B 테스트 설계
+## 4. 비교 및 트레이드오프
 
 ```
 A/B 테스트 방법론:
@@ -168,7 +171,7 @@ A/B 테스트 방법론:
 
 ---
 
-## Ⅴ. 실무 시나리오 — SaaS 그로스 해킹
+## 5. 실무 적용 및 최적화 기법
 
 ```
 B2B SaaS A사 그로스 해킹 사례:

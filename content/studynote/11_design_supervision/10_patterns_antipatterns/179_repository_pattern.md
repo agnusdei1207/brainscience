@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 레파지토리 (Repository) 패턴은 DDD (Domain-Driven Design)에서 도메인 객체의 컬렉션처럼 동작하는 추상화 레이어로, 인프라 기술(DB)을 도메인으로부터 완전히 격리한다.
+> **핵심**: 레파지토리 (Repository) 패턴은 DDD (Domain-Driven Design)에서 도메인 객체의 컬렉션처럼 동작하는 추상화 레이어로, 인프라 기술(DB)을 도메인으로부터 완전히 격리한다.
 > 2. **가치**: "인메모리 컬렉션(List, Map)처럼 도메인 객체를 다룰 수 있다"는 추상화가 도메인 모델의 순수성을 지키고, JPA 교체나 DB 변경을 도메인 코드 수정 없이 가능하게 한다.
 > 3. **판단 포인트**: DAO는 DB 테이블 중심(기술 관점), Repository는 도메인 Aggregate(비즈니스 관점) 중심이다. DDD를 적용하는 시스템에서는 DAO보다 Repository가 더 적합하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### DDD와 Repository
 
@@ -49,7 +50,7 @@ DAO는 "SQL을 실행한다"는 사고, Repository는 "컬렉션에서 찾아서
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Repository 구조 다이어그램
 
@@ -125,7 +126,7 @@ JpaRepository<T, ID>
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Repository vs DAO 상세 비교
 
@@ -152,7 +153,7 @@ JpaRepository<T, ID>
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Spring Data JPA 구현 예시
 
@@ -221,7 +222,7 @@ public class InMemoryUserRepository implements UserRepository {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### Repository 패턴 도입 기대효과
 

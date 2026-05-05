@@ -4,11 +4,14 @@ date = "2026-03-04"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 감리에서 전수 검토(100% 검사)는 비용·시간상 불가능한 경우가 많으므로, 통계적 샘플링(Statistical Sampling)을 통해 모집단(Population)의 특성을 신뢰 수준(Confidence Level)과 허용 오차(Tolerable Error) 내에서 추론한다.
 > 2. 샘플링 리스크(Sampling Risk)는 샘플이 모집단을 대표하지 못할 위험으로, 표본 크기(Sample Size)가 클수록 줄어들지만 영구적으로 제거되지는 않는다 — 이것이 샘플링 기반 감리 의견의 근본적 한계이자 전제이다.
 > 3. 속성 샘플링(Attribute Sampling)은 통제의 준수율 평가에, 변수 샘플링(Variables Sampling)은 금액적 오류의 규모 추정에 사용 — 감리 목적에 따라 방법을 선택해야 한다.
+
+> 📝 모범 답안
 
 ---
 

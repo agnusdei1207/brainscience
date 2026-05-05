@@ -5,15 +5,18 @@ description = "P2P 시스템의 구조, 순수/혼합 P2P, DHT 기반 분산 해
 categories = "studynote-os"
 tags = ["P2P", "peer to peer", "DHT", "BitTorrent", "IPFS", "distributed hash table", "Napster", "Gnutella"]
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. P2P(Peer-to-Peer) 시스템은 중앙 서버 없이 노드(peer)들이 클라이언트와 서버 역할을 동시에 수행하는 분산 아키텍처다.
 > 2. DHT(Distributed Hash Table)는 키-값 쌍을 노드들에게 분산 저장해 O(log N) 검색을 보장하는 P2P의 핵심 자료구조다.
 > 3. BitTorrent의 조각(piece) 스와핑과 IPFS의 콘텐츠 주소 지정(CID)은 P2P 데이터 공유의 두 대표 진화 방향이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. P2P 시스템 개요
+## 1. 개요 및 필요성
 
 ### 1.1 정의와 특성
 
@@ -44,7 +47,7 @@ DHT 기반 구조 P2P
 
 ---
 
-## Ⅱ. DHT — 분산 해시 테이블
+## 2. 구성요소
 
 ### 2.1 Chord 알고리즘
 
@@ -74,7 +77,7 @@ Ring 구조: 노드와 키 모두 0~2^m -1 ID 공간
 
 ---
 
-## Ⅲ. BitTorrent — 콘텐츠 분산 공유
+## 3. 구조 및 동작 원리
 
 ### 3.1 동작 흐름
 
@@ -93,7 +96,7 @@ Ring 구조: 노드와 키 모두 0~2^m -1 ID 공간
 
 ---
 
-## Ⅳ. IPFS — 콘텐츠 주소 지정 파일 시스템
+## 4. 비교 및 트레이드오프
 
 ### 4.1 핵심 아이디어
 
@@ -115,7 +118,7 @@ IPFS = 콘텐츠 기반 (Content-based): `/ipfs/QmHash`
 
 ---
 
-## Ⅴ. P2P 보안과 과제
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 주요 보안 위협
 

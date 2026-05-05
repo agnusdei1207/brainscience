@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: XAI(Explainable AI)는 블랙박스 AI 모델의 예측 근거를 인간이 이해할 수 있는 방식으로 설명하는 기술 체계로, 신뢰·디버깅·규제 준수의 세 가지 요구를 동시에 충족한다.
+> **핵심**: XAI(Explainable AI)는 블랙박스 AI 모델의 예측 근거를 인간이 이해할 수 있는 방식으로 설명하는 기술 체계로, 신뢰·디버깅·규제 준수의 세 가지 요구를 동시에 충족한다.
 > 2. **가치**: LIME(Local Interpretable Model-agnostic Explanations)과 SHAP(SHapley Additive exPlanations)은 모델에 독립적으로 어떤 피처가 예측에 얼마나 기여했는지 정량적으로 측정한다.
 > 3. **판단 포인트**: EU AI Act 고위험 AI 시스템에 XAI가 의무화됨에 따라, 설명 충실성(Faithfulness)과 사람이 이해하기 쉬운 단순성(Simplicity) 사이의 트레이드오프 설계가 기술사 핵심 판단이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 블랙박스 문제(Black Box Problem)
 
@@ -35,7 +37,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 LIME(Local Interpretable Model-agnostic Explanations)
 
@@ -103,7 +105,7 @@ SHAP은 협력 게임 이론(Cooperative Game Theory)의 샤플리 값(Shapley V
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 XAI 기법 전체 분류
 
@@ -127,7 +129,7 @@ SHAP은 협력 게임 이론(Cooperative Game Theory)의 샤플리 값(Shapley V
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 도메인별 XAI 적용 사례
 
@@ -158,7 +160,7 @@ SHAP은 협력 게임 이론(Cooperative Game Theory)의 샤플리 값(Shapley V
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 XAI 도입 기대효과
 

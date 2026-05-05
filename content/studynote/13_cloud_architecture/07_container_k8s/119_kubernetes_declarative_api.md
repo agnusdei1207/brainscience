@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: K8s 선언적 API는 **"무엇을 원하는가(Desired State)"를 YAML로 선언**하면, K8s 컨트롤러가 현재 상태를 Desired State에 **자동으로 수렴시키는(Reconciliation)** 운영 모델이다.
+> **핵심**: K8s 선언적 API는 **"무엇을 원하는가(Desired State)"를 YAML로 선언**하면, K8s 컨트롤러가 현재 상태를 Desired State에 **자동으로 수렴시키는(Reconciliation)** 운영 모델이다.
 > 2. **가치**: 명령형(Imperative)은 "Pod를 3개 만들어라"(How)이고, 선언적(Declarative)은 "Pod가 3개인 상태를 유지하라"(What)이다. Pod가 죽으면 선언적 모델은 **자동으로 3개를 복원**하지만, 명령형은 수동 개입이 필요하다.
 > 3. **판단 포인트**: Reconciliation Loop(관찰→비교→행동)가 K8s 컨트롤러의 핵심이며, Custom Resource + Custom Controller로 **어떤 리소스든 선언적으로 관리**할 수 있다(Operator Pattern).
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -38,7 +40,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Reconciliation Loop
 
@@ -58,7 +60,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 명령형 | 선언적 |
 |:---|:---|:---|
@@ -69,7 +71,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 선언적 관리 Best Practice
 1. 모든 리소스를 YAML로 정의 → Git 관리.
@@ -78,7 +80,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 선언적 API는 K8s의 **철학적 핵심**이며, 이 원칙 덕분에 GitOps·Operator·Self-healing이 자연스럽게 구현된다. 모든 클라우드 네이티브 도구가 이 패러다임을 따른다.
 

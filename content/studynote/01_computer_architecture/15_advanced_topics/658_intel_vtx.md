@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 658. 인텔 VT-x (Intel Virtualization Technology for x86)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 인텔 VT-x는 x86 아키텍처의 고질적인 '가상화 불가능한 명령어' 문제를 하드웨어 수준에서 해결하기 위해 도입된 **하드웨어 보조 가상화(Hardware-Assisted Virtualization)** 기술의 집합체다.
+> **핵심**: 인텔 VT-x는 x86 아키텍처의 고질적인 '가상화 불가능한 명령어' 문제를 하드웨어 수준에서 해결하기 위해 도입된 **하드웨어 보조 가상화(Hardware-Assisted Virtualization)** 기술의 집합체다.
 > 2. **가치**: 기존의 복잡한 소프트웨어 바이너리 번역(Binary Translation) 없이도 게스트 운영체제가 하드웨어에서 직접 실행되게 함으로써, 오버헤드를 획기적으로 줄이고 '링 에일리어싱(Ring Aliasing)' 문제를 원천 봉쇄한다.
 > 3. **융합**: VMX(Virtual Machine Extensions) 명령어 세트, VMCS(Virtual Machine Control Structure), EPT(Extended Page Tables) 등의 기술이 유기적으로 결합되어 현대 클라우드 컴퓨팅의 고성능 가상화 기반을 형성한다.
 
+> 📝 모범 답안
+
+# 658. 인텔 VT-x (Intel Virtualization Technology for x86)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. x86 가상화의 고전적 난제: "Popek and Goldberg 규정 미달"
 - **현상**: 1974년 포펙(Popek)과 골드버그(Goldberg)는 가상화 가능한 아키텍처의 조건을 정의했다. "모든 민감한 명령어(Sensitive Instruction)는 특권 명령어(Privileged Instruction)여야 한다"는 것이다.
@@ -67,7 +69,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. VMX (Virtual Machine Extensions) 명령어 세트
 인텔은 가상화 관리를 위해 새로운 명령어들을 추가했다.
@@ -95,7 +97,7 @@ VMCS는 각 가상 머신마다 할당되는 4KB 크기의 메모리 영역으�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 소프트웨어 가상화 vs 반가상화 vs VT-x 기반 전가상화
 
@@ -115,7 +117,7 @@ VMCS는 각 가상 머신마다 할당되는 4KB 크기의 메모리 영역으�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -137,7 +139,7 @@ VMCS는 각 가상 머신마다 할당되는 4KB 크기의 메모리 영역으�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **CPU 오버헤드**: 소프트웨어 방식(20~30%) -> VT-x(5% 미만).

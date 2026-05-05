@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 다중 프로그래밍 (Multiprogramming) 한계 자원
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 다중 프로그래밍(Multiprogramming)은 디스크(I/O) 대기 시간 동안 CPU가 노는 것을 막기 위해, 메모리에 여러 개의 프로그램(Job)을 동시에 올려놓고 번갈아 가며 실행시켜 **CPU 활용률(Utilization)**을 극대화하는 1960년대의 혁명적 OS 아키텍처다.
+> **핵심**: 다중 프로그래밍(Multiprogramming)은 디스크(I/O) 대기 시간 동안 CPU가 노는 것을 막기 위해, 메모리에 여러 개의 프로그램(Job)을 동시에 올려놓고 번갈아 가며 실행시켜 **CPU 활용률(Utilization)**을 극대화하는 1960년대의 혁명적 OS 아키텍처다.
 > 2. **한계 자원 (메모리와 디스크)**: CPU를 쉬지 않게 하려면 메모리에 프로그램을 최대한 많이 올려야(다중 프로그래밍 정도 상승) 하지만, 물리적 램(RAM)의 크기 제한이라는 치명적 **한계 자원(Bottleneck Resource)**에 부딪히게 된다.
 > 3. **가치/진화**: 이 메모리 한계를 극복하기 위해 운영체제는 램의 일부만 사용해 프로그램을 돌리는 **가상 메모리(Virtual Memory)**와 스와핑(Swapping) 기술을 발명하게 되었으며, 이는 현대 모든 운영체제 메모리 관리의 근원이 되었다.
 
+> 📝 모범 답안
+
+# 다중 프로그래밍 (Multiprogramming) 한계 자원
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **Uniprogramming (단일 프로그래밍)**: 한 번에 오직 하나의 프로그램만 메모리에 올려 실행하는 방식 (예: MS-DOS).
@@ -40,7 +42,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 다중 프로그래밍의 수학적 효과 (CPU 활용률)
 
@@ -97,7 +99,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 다중 프로그래밍 vs 다중 처리 vs 다중 작업
 
@@ -120,7 +122,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -169,7 +171,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

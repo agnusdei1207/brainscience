@@ -7,17 +7,19 @@ date = 2026-03-26
 [taxonomies]
 tags = ["database", "normalization", "2nf", "second-normal-form", "partial-dependency"]
 +++
+## 0. 핵심 인사이트
 
-# 제2정규형 (2NF)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 제2정규형 (Second Normal Form, 2NF)은 1NF를 만족하며, 기본 키가 복합 키인 경우 모든 비키 속성이 기본 키에 완전 종속하는 상태다.
+> **핵심**: 제2정규형 (Second Normal Form, 2NF)은 1NF를 만족하며, 기본 키가 복합 키인 경우 모든 비키 속성이 기본 키에 완전 종속하는 상태다.
 > 2. **가치**: 2NF는 부분 종속성 (Partial Dependency)을 제거하여 데이터 중복을 줄이고, 갱신 이상의 한 원인를 제거한다.
 > 3. **융합**: 2NF 적용은 복합 키를 가지는 테이블 (주문항목, 수강 내역 등)에서 특히 중요하며, E-R 모델에서 관계의분해理论基础가 된다.
 
+> 📝 모범 답안
+
+# 제2정규형 (2NF)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 
@@ -61,7 +63,7 @@ tags = ["database", "normalization", "2nf", "second-normal-form", "partial-depen
 
 ---
 
-## Ⅱ. 2NF 분해 과정
+## 2. 구성요소
 
 ### 분해 전 (1NF, but not 2NF)
 
@@ -122,7 +124,7 @@ tags = ["database", "normalization", "2nf", "second-normal-form", "partial-depen
 
 ---
 
-## Ⅲ. 2NF 충족 조건 요약
+## 3. 구조 및 동작 원리
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐

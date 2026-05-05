@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 데이터 품질 진단은 정보 시스템 내 데이터가 의사결정과 업무 수행에 적합한지를 6대 품질 지표(완전성·유효성·일관성·정확성·적시성·보안성)로 체계적으로 측정하고 개선하는 활동이다.
 > 2. 데이터 품질 문제는 "Garbage In, Garbage Out(GIGO)" 원칙에 따라 분석·AI·의사결정 시스템의 신뢰성을 직접 훼손하므로, 디지털 전환 시대에 데이터 품질 관리는 소프트웨어 품질 관리와 동등한 중요성을 갖는다.
 > 3. ISO 8000(데이터 품질), DQM(Data Quality Management) 국제 표준에서는 데이터 품질을 "목적 적합성(Fitness for Purpose)"으로 정의하며, 절대적 정확성보다 사용 목적에 맞는 품질 수준이 중요하다고 강조한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 데이터 품질 6대 지표
+## 1. 개요 및 필요성
 
 ```
 데이터 품질 6대 지표:
@@ -53,7 +56,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 데이터 품질 진단 프로세스
+## 2. 구성요소
 
 ```
 데이터 품질 진단 절차:
@@ -93,7 +96,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅲ. 데이터 품질 문제 유형
+## 3. 구조 및 동작 원리
 
 ```
 대표적 품질 문제:
@@ -127,7 +130,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅳ. DQM 체계와 데이터 거버넌스
+## 4. 비교 및 트레이드오프
 
 ```
 DQM (Data Quality Management) 체계:
@@ -161,7 +164,7 @@ DQM (Data Quality Management) 체계:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 공공 데이터 품질 진단
+## 5. 실무 적용 및 최적화 기법
 
 ```
 A 기관 고객 DB 품질 진단 사례:

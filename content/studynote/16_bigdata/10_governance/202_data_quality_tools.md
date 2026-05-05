@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+>= 1000)
+
+> 📝 모범 답안
 
 - **본질**: Great Expectations(Python), AWS Deequ(Spark), Soda Core(YAML) 세 도구는 각각 다른 기술 스택에 최적화된 오픈소스 데이터 품질(DQ) 자동화 도구로, DataOps 파이프라인에 "품질 게이트"를 삽입한다.
 - **가치**: CI/CD (Continuous Integration/Continuous Delivery) 파이프라인에 DQ 체크를 통합함으로써 품질 문제를 프로덕션 적재 전에 조기 감지·차단하는 자동화된 방어선을 구축한다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 데이터 품질 관리 도구(Data Quality Tools)는 데이터 파이프라인 내에서 **자동화된 품질 검사·모니터링·리포팅**을 수행하는 소프트웨어다. 수동 SQL 쿼리로 품질을 확인하는 방식은 확장성이 없고, 새로운 데이터 소스 추가 시마다 검사 스크립트를 재작성해야 하는 문제가 있다.
 
@@ -29,7 +32,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 3대 DQ 도구 비교
 
@@ -87,8 +90,7 @@ val verificationResult = VerificationSuite()
   .onData(dataset)
   .addCheck(
     Check(CheckLevel.Error, "customer_check")
-      .hasSize(_ >= 1000)
-      .isComplete("email")
+      .hasSize(_       .isComplete("email")
       .isUnique("customer_id")
       .satisfies("age >= 0 AND age <= 150", "age range")
   )
@@ -99,7 +101,7 @@ val verificationResult = VerificationSuite()
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 도구 선택 가이드
 
@@ -133,7 +135,7 @@ val verificationResult = VerificationSuite()
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### CI/CD 통합 패턴 (DataOps)
 
@@ -177,7 +179,7 @@ Monte Carlo는 통계 기반 **이상 감지(Anomaly Detection)**를 통해 품�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### DQ 도구 도입 효과
 

@@ -5,30 +5,33 @@ date = "2024-03-23"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> Logical Plan --> Logical Plan -->  Plans  --> [Code Generation]
+
+> 📝 모범 답안
+
 - Catalyst는 Apache Spark SQL의 핵심 쿼리 최적화 엔진으로, Scala의 함수형 프로그래밍 특성을 활용해 쿼리 실행 계획을 자동으로 개선한다.
 - 논리적 실행 계획을 물리적 실행 계획으로 변환하는 과정에서 Rule-based 및 Cost-based 최적화를 수행하여 분산 처리 성능을 극대화한다.
 - 확장 가능한 구조를 가지고 있어, 데이터 소스 개발자들이 자신만의 최적화 규칙을 쉽게 추가할 수 있는 유연성을 제공한다.
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 - **정의**: Spark SQL과 DataFrame/Dataset API의 하단에서 작동하는 확장 가능한 쿼리 옵티마이저 프레임워크다.
 - **배경**: 개발자가 작성한 SQL이나 DataFrame 코드는 항상 최적의 성능을 보장하지 않는다. Catalyst는 이를 분석하여 데이터 필터링 시점 최적화(Predicate Pushdown), 필요한 열만 선택(Projection Pruning) 등을 자동으로 수행한다.
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 ```text
 [ Catalyst Optimization Pipeline ]
 
  (Unresolved)     (Resolved)      (Optimized)      (Physical)
- Logical Plan --> Logical Plan --> Logical Plan -->  Plans  --> [Code Generation]
-      |               |               |               |              |
+ Logical Plan --      |               |               |               |              |
   [Analyzer]      [Catalyst]      [Optimizer]    [Cost Model]    [Tungsten]
       |               |               |               |              |
   Catalog info    Standard Rules   CBO/RBO        Selection       Java Bytecode
 ```
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 단계 | 주요 역할 | 최적화 예시 |
 | :--- | :--- | :--- |
@@ -37,11 +40,11 @@ categories = "studynote-bigdata"
 | **Physical Planning** | 실제 실행 가능한 여러 계획 생성 및 CBO 적용 | Broadcast Join vs Shuffle Join 선택 |
 | **Code Generation** | 런타임에 최적화된 Java 바이트코드 생성 | 전체 쿼리를 하나의 함수처럼 실행 (Whole-stage CodeGen) |
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 - **CBO(Cost-Based Optimizer) 활성화**: 데이터 통계 정보가 최신일 때 최적의 성능을 낸다. `ANALYZE TABLE` 명령을 통해 통계를 생성하면 Catalyst가 조인 순서를 더 지능적으로 결정한다.
 - **디버깅 전략**: `explain(true)` 명령을 사용하면 분석 전(Parsed), 분석 후(Analyzed), 최적화 후(Optimized), 물리적(Physical) 계획을 모두 확인하여 병목 지점을 파악할 수 있다.
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 - Catalyst 덕분에 Spark는 언어(Python, Scala, SQL)에 상관없이 동일한 고성능을 보장할 수 있게 되었다. 최근에는 기계 학습 모델을 쿼리 최적화에 도입하거나, 런타임 상황에 따라 계획을 수정하는 AQE(Adaptive Query Execution)와 결합되어 더욱 진화하고 있다.
 
 ### 📌 관련 개념 맵 (Knowledge Graph)

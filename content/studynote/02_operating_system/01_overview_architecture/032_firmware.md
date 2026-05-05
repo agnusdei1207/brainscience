@@ -4,15 +4,18 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 펌웨어(Firmware)는 하드웨어에 내장된 소프트웨어로, ROM/Flash에 저장되어 기기 전원 투입 시 가장 먼저 실행되는 저수준 제어 코드다.
 > 2. BIOS → UEFI → Secure Boot로 발전하며, 부트 프로세스·하드웨어 초기화·드라이버 추상화 계층을 제공한다.
 > 3. IoT·임베디드 환경에서 펌웨어 보안 취약점은 공급망 공격(Supply Chain Attack)의 가장 깊은 침투 경로가 된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 펌웨어의 정의와 분류
+## 1. 개요 및 필요성
 
 펌웨어(Firmware)는 **하드웨어를 직접 제어하기 위해 ROM·Flash·EEPROM에 내장된 소프트웨어**다. 하드웨어(HW)와 소프트웨어(SW)의 중간 계층으로, 기기가 켜지면 CPU가 가장 먼저 실행하는 코드다.
 
@@ -27,7 +30,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. BIOS → UEFI 발전과 부트 프로세스
+## 2. 구성요소
 
 ### BIOS (Basic Input/Output System) 한계
 
@@ -57,7 +60,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. Secure Boot와 신뢰 체인 (Chain of Trust)
+## 3. 구조 및 동작 원리
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -78,7 +81,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 임베디드·IoT 펌웨어 아키텍처
+## 4. 비교 및 트레이드오프
 
 ### 임베디드 펌웨어 구조
 
@@ -109,7 +112,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 펌웨어 보안 취약점과 대응
+## 5. 실무 적용 및 최적화 기법
 
 ### 주요 공격 유형
 

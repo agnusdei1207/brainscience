@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Interpreter (인터프리터) 패턴은 언어의 문법을 객체 계층(Object Hierarchy)으로 표현하고, 각 객체가 자신의 해석(Interpret)을 담당하여 표현식을 평가하는 패턴이다 — Boolean Parser는 이 패턴의 가장 실용적인 구현 예다.
+> **핵심**: Interpreter (인터프리터) 패턴은 언어의 문법을 객체 계층(Object Hierarchy)으로 표현하고, 각 객체가 자신의 해석(Interpret)을 담당하여 표현식을 평가하는 패턴이다 — Boolean Parser는 이 패턴의 가장 실용적인 구현 예다.
 > 2. **가치**: 비개발자도 이해할 수 있는 도메인 특화 언어(DSL, Domain Specific Language)를 설계하여, 복잡한 비즈니스 규칙을 코드 변경 없이 외부에서 표현하고 변경할 수 있다.
 > 3. **판단 포인트**: 렉서(Lexer) → 파서(Parser, 재귀 하강) → AST (Abstract Syntax Tree, 추상 구문 트리) → 평가기(Evaluator)의 4단계 파이프라인이 인터프리터의 표준 구조다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 인터프리터 패턴의 등장 배경
 
@@ -51,7 +52,7 @@ boolean eligible = interpreter.evaluate(rule, user);
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 4단계 파이프라인 아키텍처
 
@@ -149,7 +150,7 @@ class AndExpression implements Expression {
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 인터프리터 패턴의 GoF 구조
 
@@ -175,7 +176,7 @@ class AndExpression implements Expression {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 권한 표현식 DSL 구현 예시
 
@@ -223,7 +224,7 @@ boolean allowed = engine.evaluate(rule, new PermissionContext(currentUser, targe
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Boolean Parser Interpreter 패턴은 비즈니스 규칙의 외부화(Externalize)를 통해 시스템 유연성을 극대화한다:
 

@@ -7,16 +7,17 @@ date = "2026-03-30"
 tags = ["Network", "OFDM", "OFDMA", "5G", "Wi-Fi"]
 categories = ["studynote"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: OFDM (Orthogonal Frequency Division Multiplexing)은 넓은 대역을 서로 직교하는 많은 부반송파로 나눠 전송하는 다중화 방식이다.
+> **핵심**: OFDM (Orthogonal Frequency Division Multiplexing)은 넓은 대역을 서로 직교하는 많은 부반송파로 나눠 전송하는 다중화 방식이다.
 > 2. **가치**: 다중경로가 심한 채널을 좁은 대역의 단순한 문제들로 바꾸므로, 등화가 쉬워지고 스펙트럼 효율이 높아진다.
 > 3. **판단 포인트**: 대신 동기화, PAPR (Peak-to-Average Power Ratio), FFT/IFFT 처리와 같은 비용을 감당할 수 있어야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 OFDM (Orthogonal Frequency Division Multiplexing)은 하나의 고속 데이터를 여러 저속 부반송파로 나누어 보내는 방식이다. 각 부반송파는 직교하도록 배치되므로 서로 간섭하지 않으면서도 좁은 간격으로 촘촘히 채울 수 있다. 무선 채널이 다중경로와 주파수 선택적 페이딩으로 복잡해질수록 OFDM의 장점이 커진다.
 
@@ -36,7 +37,7 @@ OFDM (Orthogonal Frequency Division Multiplexing)은 하나의 고속 데이터�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 OFDM은 송신 측에서 직렬 데이터를 병렬로 나눈 뒤 IFFT (Inverse Fast Fourier Transform)로 시간 신호를 만들고, 수신 측에서 FFT (Fast Fourier Transform)로 다시 주파수 영역으로 돌린다. 이때 부반송파 간격은 유효 심볼 시간의 역수와 맞춰 직교성을 유지한다. 또한 CP (Cyclic Prefix)를 앞에 붙여 다중경로 지연이 심볼 사이 간섭으로 번지는 것을 줄인다.
 
@@ -60,7 +61,7 @@ OFDM은 송신 측에서 직렬 데이터를 병렬로 나눈 뒤 IFFT (Inverse 
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 OFDM을 이해하려면 단일 반송파, 전통 FDM (Frequency Division Multiplexing), 그리고 OFDMA (Orthogonal Frequency Division Multiple Access)를 함께 봐야 한다. 단일 반송파는 구현이 단순하지만 다중경로에 약하고, FDM은 보호대역 때문에 스펙트럼 효율이 떨어지며, OFDMA는 OFDM을 사용자 단위 자원 할당으로 확장한 형태다.
 
@@ -77,7 +78,7 @@ OFDM을 이해하려면 단일 반송파, 전통 FDM (Frequency Division Multipl
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 OFDM의 장점보다 약점이 더 먼저 문제로 드러나기도 한다. 동기화가 맞지 않으면 직교성이 깨지고, PAPR (Peak-to-Average Power Ratio)이 높으면 전력 증폭기가 비효율적이 된다. 그래서 수신기 설계에서는 채널 추정, 주파수 오프셋 보정, 파일럿 배치가 중요하다.
 
@@ -98,7 +99,7 @@ OFDM을 이해하려면 단일 반송파, 전통 FDM (Frequency Division Multipl
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 OFDM의 기대효과는 다중경로 환경에서 높은 데이터율과 비교적 단순한 수신 구조를 동시에 확보하는 데 있다. 그러나 동기화 비용과 전력 증폭기 제약까지 포함해 봐야 진짜 성능을 판단할 수 있다. 결국 OFDM은 빠른 전송을 위한 꼼수가 아니라, 복잡한 무선 채널을 다루기 위한 체계적인 분해 전략이다.
 

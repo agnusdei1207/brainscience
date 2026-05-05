@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 일괄 처리 시스템 (Batch Processing System) 성능 지표
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 일괄 처리 시스템(Batch Processing System)은 사용자와의 상호작용(Interaction) 없이, 비슷한 성격의 작업들을 한데 모아두었다가 컴퓨터가 한가할 때 순차적으로 한 번에 처리하는 가장 고전적이자 대용량 데이터 처리에 특화된 운영체제 방식이다.
+> **핵심**: 일괄 처리 시스템(Batch Processing System)은 사용자와의 상호작용(Interaction) 없이, 비슷한 성격의 작업들을 한데 모아두었다가 컴퓨터가 한가할 때 순차적으로 한 번에 처리하는 가장 고전적이자 대용량 데이터 처리에 특화된 운영체제 방식이다.
 > 2. **성능 지표**: 일괄 처리 시스템의 가장 핵심적인 성능 지표는 단위 시간당 완료된 작업의 수를 의미하는 **처리량(Throughput)**과, 작업이 제출된 시점부터 완료될 때까지 걸린 총시간인 **반환 시간(Turnaround Time)**이다. 응답 시간(Response Time)은 전혀 중요하지 않다.
 > 3. **가치**: 1960년대 천공 카드 시절에 탄생했지만, 현재에도 은행의 야간 결제 정산, 통신사 요금 청구, 대규모 머신러닝 데이터 전처리(Hadoop MapReduce) 등 '실시간성'보다는 '대규모 데이터의 완벽한 처리'가 필요한 모든 엔터프라이즈 백엔드의 근간을 이룬다.
 
+> 📝 모범 답안
+
+# 일괄 처리 시스템 (Batch Processing System) 성능 지표
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **일괄 처리 (Batch Processing)**: 여러 개의 작업(Job)이나 데이터를 모아두었다가, 일정량(Batch)이 되거나 정해진 시간(주로 야간)이 되면 시스템이 개입 없이 자동으로 순차 처리하는 방식.
@@ -38,7 +40,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 일괄 처리 시스템의 기본 아키텍처
 
@@ -116,7 +118,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 일괄 처리와 다중 프로그래밍(Multiprogramming)의 결합
 
@@ -133,7 +135,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -182,7 +184,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

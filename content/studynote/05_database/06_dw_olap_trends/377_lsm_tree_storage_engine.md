@@ -5,17 +5,19 @@ weight = 377
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-# LSM-Tree (Log-Structured Merge-Tree) 저장 엔진
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: LSM-Tree (Log-Structured Merge-Tree)는 전통적인 관계형 DB의 B-Tree가 유발하는 디스크 무작위 쓰기(Random Write)의 치명적 병목을 극복하기 위해, 모든 데이터를 메모리(MemTable)에 정렬된 상태로 모아두었다가 디스크로 한 번에 순차적으로 밀어내는(Sequential Write) 쓰기 최적화 스토리지 엔진 아키텍처다.
+> **핵심**: LSM-Tree (Log-Structured Merge-Tree)는 전통적인 관계형 DB의 B-Tree가 유발하는 디스크 무작위 쓰기(Random Write)의 치명적 병목을 극복하기 위해, 모든 데이터를 메모리(MemTable)에 정렬된 상태로 모아두었다가 디스크로 한 번에 순차적으로 밀어내는(Sequential Write) 쓰기 최적화 스토리지 엔진 아키텍처다.
 > 2. **가치**: 초당 수만 건 이상의 로그, 센서 메트릭, 대용량 트랜잭션이 쏟아지는 빅데이터 및 NoSQL 환경에서 하드웨어의 I/O 대역폭 한계를 돌파하여 압도적인 쓰기 처리량(Write Throughput)을 보장하며, 데이터베이스 락(Lock) 경합을 극단적으로 줄인다.
 > 3. **융합**: 읽기 속도가 저하되는 LSM-Tree의 태생적 단점을 상쇄하기 위해, 디스크 탐색 비용을 0으로 만들어주는 암호학적 확률 구조인 블룸 필터(Bloom Filter) 및 주기적인 백그라운드 파일 병합(Compaction) 알고리즘과 융합되어 Cassandra, RocksDB, InfluxDB 등 현대 분산 저장소의 표준 엔진으로 자리 잡았다.
 
+> 📝 모범 답안
+
+# LSM-Tree (Log-Structured Merge-Tree) 저장 엔진
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: LSM-Tree는 데이터를 수정할 때 디스크의 원래 위치를 찾아가 덮어쓰는(In-place Update) 대신, 무조건 새로운 데이터를 로그처럼 파일의 맨 끝에 덧붙여 기록(Append-only)하는 자료 구조다. 메모리 상의 정렬된 버퍼인 MemTable과 디스크에 순차적으로 기록되는 불변 파일인 SSTable(Sorted String Table)로 이원화되어 작동한다.
 
@@ -57,7 +59,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### LSM-Tree의 3대 핵심 구성 요소
 
@@ -109,7 +111,7 @@ LSM-Tree의 생명은 쓰기의 단순함과, 그로 인해 복잡해져 버린 
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 스토리지 엔진 양대 산맥: B+Tree vs LSM-Tree
 
@@ -132,7 +134,7 @@ LSM-Tree의 생명은 쓰기의 단순함과, 그로 인해 복잡해져 버린 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 의사결정
 
@@ -182,7 +184,7 @@ LSM-Tree의 생명은 쓰기의 단순함과, 그로 인해 복잡해져 버린 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -4,15 +4,18 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-enterprise"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 맥킨지 7S 모델은 조직 변화를 단순히 전략·구조만이 아닌 7가지 상호 의존적 요소(Strategy·Structure·Systems·Shared Values·Style·Staff·Skills)로 분석하는 프레임워크다.
 > 2. 핵심은 Shared Values(공유 가치)가 중심에 위치해 나머지 6개 요소를 연결한다는 점으로, 조직 문화가 전략 실행의 성패를 결정한다.
 > 3. IT 시스템 전환·디지털 변혁·M&A 통합 시 7S 정렬 진단이 실패 예방의 핵심 도구로 활용된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 맥킨지 7S 모델의 개요
+## 1. 개요 및 필요성
 
 맥킨지 7S 모델은 **Tom Peters와 Robert Waterman(맥킨지)이 1980년대 제안한 조직 분석·변화 관리 프레임워크**다.
 
@@ -47,7 +50,7 @@ categories = "studynote-enterprise"
 
 ---
 
-## Ⅱ. 하드 S 3요소 — 전략·구조·시스템
+## 2. 구성요소
 
 ### Strategy (전략)
 
@@ -73,7 +76,7 @@ categories = "studynote-enterprise"
 
 ---
 
-## Ⅲ. 소프트 S 4요소 — 가치·스타일·인력·기술
+## 3. 구조 및 동작 원리
 
 ### Shared Values (공유 가치) — 중심 요소
 
@@ -97,7 +100,7 @@ categories = "studynote-enterprise"
 
 ---
 
-## Ⅳ. 7S 정렬 진단 활용
+## 4. 비교 및 트레이드오프
 
 ### 디지털 전환 7S 진단 예시
 
@@ -115,7 +118,7 @@ categories = "studynote-enterprise"
 
 ---
 
-## Ⅴ. M&A 통합과 IT 전환에서의 7S
+## 5. 실무 적용 및 최적화 기법
 
 ### M&A 후 통합 실패 원인 (7S 시각)
 

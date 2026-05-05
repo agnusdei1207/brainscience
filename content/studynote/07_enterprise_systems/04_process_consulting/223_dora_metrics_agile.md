@@ -2,17 +2,19 @@
 title = "223. 애자일 성과 관리 지표 DORA Metrics 도입"
 weight = 223
 +++
+## 0. 핵심 인사이트
 
-# 223. 애자일 성과 관리 지표 DORA Metrics (배포 빈도, 리드 타임, MTTR, 변경 실패율) 도입
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: DORA (DevOps Research and Assessment) Metrics는 조직의 소프트웨어 개발 및 배포 역량을 '속도 (Throughput)'와 '안정성 (Stability)'이라는 상충되는 두 축으로 나누어 객관적으로 정량화하는 글로벌 표준 성과 지표다.
+> **핵심**: DORA (DevOps Research and Assessment) Metrics는 조직의 소프트웨어 개발 및 배포 역량을 '속도 (Throughput)'와 '안정성 (Stability)'이라는 상충되는 두 축으로 나누어 객관적으로 정량화하는 글로벌 표준 성과 지표다.
 > 2. **가치**: 기존의 개발자 개인 생산성(코드 라인 수, 커밋 수 등)을 측정하던 낡은 방식에서 벗어나, 시스템 관점에서 고객에게 가치가 전달되는 '배포 파이프라인의 효율성'을 측정함으로써 병목 구간을 과학적으로 식별하고 제거할 수 있다.
 > 3. **융합**: DORA 지표는 단순한 측정 도구가 아니라, CI/CD (Continuous Integration/Continuous Deployment) 자동화, 마이크로서비스 아키텍처 (MSA), 그리고 실패를 허용하는 포스트모텀 (Post-mortem) 문화와 결합되어 조직을 엘리트 성과자 (Elite Performer)로 진화시키는 촉매제로 작용한다.
 
+> 📝 모범 답안
+
+# 223. 애자일 성과 관리 지표 DORA Metrics (배포 빈도, 리드 타임, MTTR, 변경 실패율) 도입
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: DORA Metrics는 구글 클라우드 (Google Cloud) 산하의 DORA 연구팀이 수만 개의 전 세계 IT 조직을 7년간 분석하여 도출한 4가지 핵심 지표다. 이 4가지 지표는 속도를 측정하는 **배포 빈도 (DF: Deployment Frequency)**, **변경 리드 타임 (LTFC: Lead Time for Changes)**과 안정성을 측정하는 **서비스 복구 시간 (MTTR: Mean Time to Recovery)**, **변경 실패율 (CFR: Change Failure Rate)**로 구성된다.
 
@@ -61,7 +63,7 @@ DORA의 4대 지표가 해결하고자 하는 전통적 개발 환경의 모순(
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (DORA 4대 지표)
 
@@ -153,7 +155,7 @@ DORA 지표는 단순한 '결과(Lagging Indicator)'다. 이 지표를 엘리트
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 비교 1: DORA vs SPACE 프레임워크 vs 플로우 매트릭스 (Flow Metrics)
 
@@ -205,7 +207,7 @@ DORA 지표는 단순한 '결과(Lagging Indicator)'다. 이 지표를 엘리트
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -256,7 +258,7 @@ DORA 지표는 단순한 '결과(Lagging Indicator)'다. 이 지표를 엘리트
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Null Object (널 객체) 패턴은 `null` 참조 대신 "아무 일도 하지 않는" 기본 객체(NoOp, No-Operation 객체)를 반환하여, 호출자가 `null` 체크를 하지 않아도 되게 만든다.
+> **핵심**: Null Object (널 객체) 패턴은 `null` 참조 대신 "아무 일도 하지 않는" 기본 객체(NoOp, No-Operation 객체)를 반환하여, 호출자가 `null` 체크를 하지 않아도 되게 만든다.
 > 2. **가치**: NPE (NullPointerException)를 원천 차단하고, `if (obj != null)` 방어 코드를 제거하여 코드를 더 깔끔하고 안전하게 만든다.
 > 3. **판단 포인트**: 객체가 없을 때 아무것도 하지 않거나 기본값을 반환해야 하는 상황에 적합하다. 오류 상황을 숨기면 안 될 때는 Optional이나 예외를 사용한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1-1. null의 문제
 
@@ -61,7 +62,7 @@ logger.log("message");        // NullLogger.log() → 아무것도 안 함, NPE 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. 구조
 
@@ -143,7 +144,7 @@ logger.log("start");  // 항상 안전
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. Null Object vs Java Optional vs 예외 처리 비교
 
@@ -174,7 +175,7 @@ logger.log("start");  // 항상 안전
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. Spring의 Null Object 활용 사례
 
@@ -225,7 +226,7 @@ ApplicationEventPublisher publisher = isTest
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5-1. 기대 효과
 

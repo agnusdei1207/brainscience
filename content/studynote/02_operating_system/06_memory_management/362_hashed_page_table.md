@@ -5,17 +5,19 @@ date = "2026-03-23"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 해시 페이지 테이블 (Hashed Page Table)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 해시 페이지 테이블(Hashed Page Table)은 광활한 64비트 주소 공간에서 페이지 테이블의 크기 폭발을 막기 위해, 가상 페이지 번호를 해시 함수(Hash Function)에 통과시켜 **일정한 크기의 해시 테이블(Hash Table)에 매핑(Mapping)하는 딕셔너리형 자료구조**다.
+> **핵심**: 해시 페이지 테이블(Hashed Page Table)은 광활한 64비트 주소 공간에서 페이지 테이블의 크기 폭발을 막기 위해, 가상 페이지 번호를 해시 함수(Hash Function)에 통과시켜 **일정한 크기의 해시 테이블(Hash Table)에 매핑(Mapping)하는 딕셔너리형 자료구조**다.
 > 2. **가치**: 다단계 페이징(Hierarchical Paging)이 깊어질수록 램을 4번, 5번 접근해야 하는 최악의 오버헤드(Page Walk Penalty)를 줄이고, 이론적으로 **$O(1)$에 수렴하는 빠른 평균 탐색 속도와 적은 메모리 사용량을 동시에 달성**한다.
 > 3. **융합**: 충돌(Collision)을 해결하기 위해 연결 리스트(Linked List)로 여러 엔트리를 엮어두는 체이닝(Chaining) 기법을 융합하며, 희소(Sparse) 주소 공간을 쓰는 초대형 서버 환경에서 다단계 페이징의 강력한 대안으로 쓰인다.
 
+> 📝 모범 답안
+
+# 해시 페이지 테이블 (Hashed Page Table)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 해시 페이지 테이블은 주소 번역 장부를 1차원 배열이나 다단계 트리로 만들지 않고, 자료구조 해시맵(HashMap) 형태로 만든다. CPU가 요청한 논리 주소의 `페이지 번호(p)`를 해시 함수에 집어넣어 나온 결과값을 인덱스로 사용하여 테이블의 특정 칸을 찔러보는 방식이다.
 - **필요성**: 64비트 컴퓨팅 시대가 오면서 주소 공간이 천문학적으로 커졌다. 다단계 페이징(4-Level)은 램 용량을 줄이는 데는 성공했지만, TLB 미스가 날 때마다 램을 4번이나 왔다 갔다 하며 읽어야(Page Table Walk) 해서 CPU 성능이 박살 났다. "장부 크기도 줄이면서 램 접근 횟수도 1~2번으로 줄일 수 있는 마법의 자료구조는 없을까?"라는 고민 끝에 소프트웨어 공학의 꽃인 해시(Hash)가 하드웨어 아키텍처에 도입되었다.
@@ -50,7 +52,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 해시 테이블의 구조와 체이닝 (Chaining)
 
@@ -93,7 +95,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 다단계 페이징 vs 해시 페이지 테이블
 
@@ -128,7 +130,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: KVM 가상화 머신과 주소 변환 지옥
 클라우드 서버(VMware, KVM) 환경에서는 페이지 테이블이 2차원(Extended Page Table)으로 겹친다.
@@ -145,7 +147,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

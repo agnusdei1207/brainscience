@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 황의 법칙(Hwang's Law)은 전원이 꺼져도 데이터가 보존되는 **NAND 플래시 메모리(NAND Flash Memory)의 집적도가 1년마다 2배씩 증가**한다는 관찰 모델로, 무어의 법칙(Moore's Law, 2년 주기)보다 두 배 빠른 메모리 스토리지 진화를 예측했다.
+> **핵심**: 황의 법칙(Hwang's Law)은 전원이 꺼져도 데이터가 보존되는 **NAND 플래시 메모리(NAND Flash Memory)의 집적도가 1년마다 2배씩 증가**한다는 관찰 모델로, 무어의 법칙(Moore's Law, 2년 주기)보다 두 배 빠른 메모리 스토리지 진화를 예측했다.
 > 2. **가치**: 고용량 낸드 플래시를 경제적으로 공급함으로써 MP3, 디지털카메라, 스마트폰, SSD(Solid State Drive) 혁명을 촉발한 **모바일·스토리지 경제학의 핵심 성장 공식**이다.
 > 3. **판단 포인트**: 평면(2D) 미세 공정이 10nm 이하에서 물리적 한계에 도달하자, 칩을 수직으로 쌓는 **3D V-NAND(Vertical NAND)** 구조로 진화하면서 법칙의 연장선이 형성됐다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 황의 법칙은 2002년 삼성전자 황창규 사장이 국제고체회로학회(ISSCC, International Solid-State Circuits Conference)에서 발표한 경험적 예측으로, "낸드 플래시 메모리의 집적도는 매년 2배씩 증가한다"는 명제다.
 
@@ -32,7 +34,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 메모리 집적도를 높이는 두 가지 경로, 즉 **공정 미세화**와 **셀 다중화(Multi-Level Cell)** 가 황의 법칙을 구동한 핵심 메커니즘이다.
 
@@ -79,7 +81,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 황의 법칙 vs. 무어의 법칙 vs. 구스타프슨의 법칙
 
@@ -98,7 +100,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 의사결정 체크리스트
 
@@ -119,7 +121,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 황의 법칙이 실효성을 가졌던 2000년대 초반부터 2010년대 초반까지, 낸드 플래시 GB당 단가가 기하급수적으로 하락했다. 128MB USB 메모리에서 1TB 스마트폰으로의 진화는 바로 이 법칙이 관통한 10년의 산물이다.
 

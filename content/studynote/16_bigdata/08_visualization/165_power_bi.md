@@ -5,8 +5,12 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> **핵심**: (개념 본질)
+> **비유**: (개념 비유)
+
+> 📝 모범 답안
 
 - **본질**: Power BI는 Power Query(M 언어 데이터 변환)·DAX(Data Analysis Expressions 계산)·시각화의 3레이어로 구성되며, Microsoft 365·Azure·Fabric 생태계와의 깊은 통합을 통해 엔터프라이즈 BI의 표준 플랫폼으로 자리잡았다.
 - **가치**: DAX의 필터 컨텍스트(Filter Context)와 행 컨텍스트(Row Context) 개념을 이해하고 CALCULATE로 필터를 조작하는 능력이 Power BI 고급 사용자와 기초 사용자를 구분하는 핵심 역량이다.
@@ -14,7 +18,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### Power BI의 위치와 성장
 
@@ -30,7 +34,7 @@ Power BI의 핵심 경쟁 우위:
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Power BI 3레이어 아키텍처
 
@@ -99,7 +103,7 @@ YTD 매출 = TOTALYTD([총 매출], '날짜'[Date])
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 데이터 저장 모드 비교
 
@@ -133,7 +137,7 @@ Microsoft Fabric (2023) = 통합 분석 플랫폼
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 행 수준 보안 (RLS: Row-Level Security)
 
@@ -160,7 +164,7 @@ RLS는 사용자 역할에 따라 볼 수 있는 데이터 행을 제한하는 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### Power BI 도입 효과
 

@@ -5,15 +5,18 @@ description = "BizDevOps의 개념, DevOps에서 비즈니스 팀 통합 필요�
 categories = "studynote-devops"
 tags = ["BizDevOps", "DevOps", "business alignment", "OKR", "value stream mapping", "continuous feedback", "product thinking"]
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. BizDevOps는 DevOps의 개발-운영 협업에 비즈니스 팀(기획·마케팅·영업)을 통합하여 IT와 비즈니스 목표를 단일 가치 흐름으로 연결하는 문화·방법론이다.
 > 2. DevOps가 "빠른 배포"에 집중했다면 BizDevOps는 "올바른 것을 빠르게 배포"로 진화하며, OKR(Objective & Key Results) 기반의 목표 정렬이 핵심이다.
 > 3. 가치 흐름 매핑(VSM, Value Stream Mapping)으로 아이디어에서 운영까지의 낭비를 가시화하고, 비즈니스 피드백 루프를 배포 파이프라인에 직접 통합한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. BizDevOps 개요
+## 1. 개요 및 필요성
 
 ### 1.1 DevOps → BizDevOps 진화
 
@@ -39,7 +42,7 @@ BizDevOps:
 
 ---
 
-## Ⅱ. OKR 기반 정렬
+## 2. 구성요소
 
 ### 2.1 OKR 구조
 
@@ -67,7 +70,7 @@ Company OKR:
 
 ---
 
-## Ⅲ. 가치 흐름 매핑 (VSM)
+## 3. 구조 및 동작 원리
 
 ### 3.1 VSM 아이디어→운영 흐름
 
@@ -91,7 +94,7 @@ Company OKR:
 
 ---
 
-## Ⅳ. 지속적 비즈니스 피드백
+## 4. 비교 및 트레이드오프
 
 ### 4.1 피드백 루프 통합
 
@@ -121,7 +124,7 @@ else:
 
 ---
 
-## Ⅴ. 조직 설계와 장애물
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 BizDevOps 팀 구조
 

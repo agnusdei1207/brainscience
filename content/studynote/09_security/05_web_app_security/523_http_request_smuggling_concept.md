@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: HTTP Request Smuggling은 프론트엔드(Proxy/CDN)와 백엔드 서버가 **HTTP 요청의 경계를 서로 다르게 해석**하여 생기는 데이터 불일치(Desynchronization) 취약점이다.
+> **핵심**: HTTP Request Smuggling은 프론트엔드(Proxy/CDN)와 백엔드 서버가 **HTTP 요청의 경계를 서로 다르게 해석**하여 생기는 데이터 불일치(Desynchronization) 취약점이다.
 > 2. **가치**: 공격자가 보낸 악의적인 요청의 일부가 다음 사용자의 정상적인 요청 앞에 '밀수(Smuggling)'되어 실행되게 함으로써 세션 하이재킹, 권한 상승 등을 유발한다.
 > 3. **판단 포인트**: `Content-Length (CL)`와 `Transfer-Encoding (TE)` 헤더가 동시에 존재할 때의 우선순위 처리 로직을 통일하거나, 가급적 HTTP/2를 사용하여 메시지 경계를 명확히 해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 현대 웹 아키텍처는 효율성을 위해 하나의 커넥션을 통해 여러 요청을 보내는 'HTTP Keep-Alive'와 'Pipelining'을 사용한다. 이때 앞단(FE)과 뒷단(BE) 서버가 "어디까지가 하나의 요청인가?"에 대해 합의하지 못하면, 공격자가 보낸 요청의 찌꺼기가 서버 메모리에 남아 다음 사용자의 요청을 오염시킨다.
 
@@ -26,7 +28,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 발생 원리 (The Desync Concept)
 공격자는 하나의 HTTP 요청 안에 교묘하게 두 번째 요청을 숨겨서 보낸다.
@@ -57,7 +59,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | HTTP Request Smuggling | HTTP Response Splitting |
 |:---|:---|:---|
@@ -71,7 +73,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 방어 전략
 1. **HTTP/2 사용**: HTTP/2는 메시지 길이를 프레임 단위로 명확히 정의하므로 Smuggling 공격이 원천적으로 불가능에 가깝다.
@@ -85,7 +87,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 HTTP Request Smuggling은 발견하기 매우 어렵지만, 한 번 성공하면 전체 사용자의 세션을 위협할 수 있는 고위험 취약점이다. 특히 복잡한 마이크로서비스 아키텍처(MSA) 환경에서 서버 간 통신이 잦아질수록 그 위험성은 커진다.
 

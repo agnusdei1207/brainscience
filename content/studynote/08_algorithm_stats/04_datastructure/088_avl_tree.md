@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-algorithm-stats"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: AVL 트리는 모든 노드에서 왼쪽·오른쪽 서브트리 높이 차이(Balance Factor)가 최대 1인 자가 균형(Self-balancing) BST(Binary Search Tree)다. Adelson-Velsky & Landis(1962)가 발명했다.
+> **핵심**: AVL 트리는 모든 노드에서 왼쪽·오른쪽 서브트리 높이 차이(Balance Factor)가 최대 1인 자가 균형(Self-balancing) BST(Binary Search Tree)다. Adelson-Velsky & Landis(1962)가 발명했다.
 > 2. **가치**: BST의 최악 O(N) 검색을 방지한다. 삽입·삭제 후 불균형이 생기면 회전(Rotation)으로 즉시 균형을 복구하여 항상 O(log N) 검색·삽입·삭제를 보장한다.
 > 3. **판단 포인트**: AVL vs Red-Black Tree — AVL은 더 엄격한 균형(BF = -1·0·1)으로 검색이 약간 빠르고, Red-Black은 균형이 덜 엄격하지만 삽입·삭제가 빠르다. STL map/set(C++)은 Red-Black, Java TreeMap도 Red-Black을 사용한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 BST 불균형 문제:
@@ -36,7 +38,7 @@ AVL 트리: 자동 균형 유지
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Balance Factor와 회전
 
@@ -77,7 +79,7 @@ N개 노드 AVL 트리:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | AVL | Red-Black | B-Tree |
 |:---|:---|:---|:---|
@@ -90,7 +92,7 @@ N개 노드 AVL 트리:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### AVL 트리 Python 삽입 핵심
 
@@ -136,7 +138,7 @@ def insert(root, key):
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

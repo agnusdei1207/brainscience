@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 데이터베이스 사용자는 DB와 상호작용하는 방식에 따라 최종 사용자(Naive/Sophisticated/Standalone), 응용 프로그래머(Application Programmer), DBA(Database Administrator)로 분류된다.
+> **핵심**: 데이터베이스 사용자는 DB와 상호작용하는 방식에 따라 최종 사용자(Naive/Sophisticated/Standalone), 응용 프로그래머(Application Programmer), DBA(Database Administrator)로 분류된다.
 > 2. **가치**: 사용자 유형에 따라 접근 방식·권한·인터페이스가 달라야 한다. 일반 사용자는 GUI 폼(Form)으로 데이터를 입력하고, 응용 프로그래머는 API를 통해 접근하며, DBA는 직접 DDL/DCL 명령을 실행한다. 이 차별화된 접근 제어가 DB 보안의 핵심이다.
 > 3. **판단 포인트**: 현대 DB 아키텍처에서 사용자 유형이 확장됐다. AI/ML 파이프라인이 서비스 계정(Service Account)으로 대량 데이터를 읽고, CDC(변경 데이터 캡처) 커넥터가 스트리밍으로 데이터를 소비하며, 데이터 사이언티스트가 Jupyter Notebook에서 SQL을 직접 실행하는 등 다양한 유형이 등장했다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌──────────────────────────────────────────────────────┐
@@ -36,7 +38,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 사용자 유형별 권한 매핑
 
@@ -61,7 +63,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | DBA | DB 설계자 | DA |
 |:---|:---|:---|:---|
@@ -73,7 +75,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 현대 DB 접근 패턴 확장
 - **서비스 계정**: 마이크로서비스·배치 잡이 DB에 접근하는 비인간 사용자.
@@ -85,7 +87,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

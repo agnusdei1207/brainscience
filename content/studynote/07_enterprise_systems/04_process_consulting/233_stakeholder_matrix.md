@@ -5,17 +5,19 @@ description = "성공적인 프로젝트 관리를 위한 이해관계자 식별
 [taxonomies]
 tags = ["Project Management", "Stakeholder", "Power-Interest Grid", "Salience Model", "Communication"]
 +++
+## 0. 핵심 인사이트
 
-# 233. 이해관계자 (Stakeholder) 식별 매트릭스 (영향력-관심도 행렬 맵)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 이해관계자 (Stakeholder)는 프로젝트의 의사결정, 활동 또는 결과에 영향을 미치거나 영향을 받는 개인, 그룹, 조직을 의미하며, 이들을 정확히 식별하고 분류하는 것이 프로젝트 관리의 출발점이다.
+> **핵심**: 이해관계자 (Stakeholder)는 프로젝트의 의사결정, 활동 또는 결과에 영향을 미치거나 영향을 받는 개인, 그룹, 조직을 의미하며, 이들을 정확히 식별하고 분류하는 것이 프로젝트 관리의 출발점이다.
 > 2. **가치**: 영향력-관심도 매트릭스 (Power-Interest Grid)를 활용하여 수많은 이해관계자를 4개의 사분면으로 분류함으로써, 한정된 소통 자원을 핵심 인물에게 집중하고 반대파의 저항을 예측/통제하는 전략적 소통 계획을 수립할 수 있다.
 > 3. **융합**: 프로젝트 관리를 넘어 소프트웨어 요구공학의 요구사항 도출 대상 식별, 비즈니스 분석(BA), 그리고 서비스 기획의 페르소나 설정 및 갈등 관리(Conflict Management)의 핵심 프레임워크로 융합된다.
 
+> 📝 모범 답안
+
+# 233. 이해관계자 (Stakeholder) 식별 매트릭스 (영향력-관심도 행렬 맵)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 이해관계자 식별 매트릭스는 식별된 이해관계자들을 특정 기준(일반적으로 권력/영향력과 관심도)에 따라 2차원 평면상에 매핑하여, 각 그룹에 대한 차별화된 참여(Engagement) 및 의사소통 전략을 도출하기 위한 분석 도구다.
 - **필요성**: 대형 IT 프로젝트나 인프라 구축에는 스폰서, 개발팀, 엔드 유저뿐만 아니라 규제 기관, 환경 단체, 경쟁 부서 등 수백 명의 이해관계자가 얽혀 있다. 모든 사람에게 동일한 수준의 보고를 하고 요구사항을 100% 수용하는 것은 불가능하다. 만약 강력한 권한을 가진 반대자를 초기에 식별하지 못해 방치하면, 프로젝트 막바지에 단 한 명의 결재 거부로 전체 프로젝트가 엎어지는 참사가 발생한다.
@@ -57,7 +59,7 @@ tags = ["Project Management", "Stakeholder", "Power-Interest Grid", "Salience Mo
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 권력-관심도 그리드 (Power-Interest Grid) 구성
 
@@ -130,7 +132,7 @@ tags = ["Project Management", "Stakeholder", "Power-Interest Grid", "Salience Mo
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 분석 모델별 심층 비교
 
@@ -181,7 +183,7 @@ tags = ["Project Management", "Stakeholder", "Power-Interest Grid", "Salience Mo
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 의사결정
 
@@ -232,7 +234,7 @@ tags = ["Project Management", "Stakeholder", "Power-Interest Grid", "Salience Mo
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

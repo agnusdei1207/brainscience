@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SOA(Service Oriented Architecture)는 **ESB(Enterprise Service Bus) 중심의 서비스 통합**이고, MSA는 **ESB 없이 서비스가 직접 경량 통신(REST/gRPC/이벤트)**하는 경량 분산 아키텍처이다.
+> **핵심**: SOA(Service Oriented Architecture)는 **ESB(Enterprise Service Bus) 중심의 서비스 통합**이고, MSA는 **ESB 없이 서비스가 직접 경량 통신(REST/gRPC/이벤트)**하는 경량 분산 아키텍처이다.
 > 2. **가치**: SOA의 ESB는 프로토콜 변환·라우팅을 중앙에서 처리하지만, **ESB가 SPOF(단일 장애점)·병목**이 되며, MSA는 ESB를 제거하고 **스마트 엔드포인트·덤 파이프** 원칙으로 서비스 자율성을 극대화했다.
 > 3. **판단 포인트**: SOA→MSA는 "ESB 제거 + 서비스 세분화 + DevOps 문화"의 진화이며, 서비스 크기·거버넌스·데이터 소유권에서 근본적 차이가 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -33,7 +35,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### SOA vs MSA 비교
 
@@ -50,7 +52,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 모놀리식 | SOA | MSA |
 |:---|:---|:---|:---|
@@ -60,7 +62,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 선택 기준
 - **SOA**: 레거시 시스템 통합, 이기종 프로토콜 변환 필요 시.
@@ -68,7 +70,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 SOA→MSA는 **"중앙 집중(ESB) → 분산 자율(Smart Endpoints)"**의 패러다임 전환이며, 현대 클라우드 네이티브 환경에서는 MSA가 표준이지만, 레거시 통합에는 SOA 접근이 여전히 유효하다.
 

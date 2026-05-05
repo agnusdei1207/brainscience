@@ -6,15 +6,17 @@ description = "Prepared Statement와 ORM 프레임워크로 SQL 인젝션을 방
 taxonomy = ""
 tags = ["Software Engineering", "Security", "SQL Injection", "Prepared Statement", "ORM"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SQL Injection은 쿼리와 데이터를 분리하면 크게 줄일 수 있다.
+> **핵심**: SQL Injection은 쿼리와 데이터를 분리하면 크게 줄일 수 있다.
 > 2. **가치**: Prepared Statement (파라미터화된 쿼리)가 핵심 방어다.
 > 3. **판단 포인트**: ORM (Object-Relational Mapping)도 안전하게 써야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 SQL Injection은 입력이 SQL 문법으로 해석될 때 발생한다. 가장 기본적인 방어는 파라미터 분리다.
 
@@ -24,7 +26,7 @@ Prepared Statement와 ORM은 많이 쓰이지만, 사용법이 잘못되면 여�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Prepared Statement는 쿼리 템플릿과 값 바인딩을 분리한다.
 
@@ -42,7 +44,7 @@ SQL 템플릿 + 파라미터 -> DB 실행
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ORM은 SQL을 직접 쓰지 않게 도와주지만, 동적 쿼리 문자열을 만들면 여전히 위험하다.
 
@@ -58,7 +60,7 @@ Input Validation과 함께 적용해야 효과가 크다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 검색, 로그인, 필터링, 관리자 기능에서 특히 주의한다.
 
@@ -71,7 +73,7 @@ Input Validation과 함께 적용해야 효과가 크다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Prepared Statement와 ORM의 올바른 사용은 SQL Injection 방어의 핵심이다.
 

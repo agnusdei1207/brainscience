@@ -5,19 +5,21 @@ date = "2026-04-02"
 [extra]
 categories = "studynote-security"
 +++
-
-# 심리적 사용성 원칙 (Psychological Acceptability)
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 정보보안 설계의 핵심 원칙(Saltzer and Schroeder의 8대 보안 원칙) 중 하나로, 보안 통제가 사용자의 정상적인 업무 흐름을 방해하지 않고 직관적으로 수용되어야 한다는 '심리적 사용성 원칙(Psychological Acceptability)'을 심층 분석합니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# 심리적 사용성 원칙 (Psychological Acceptability)
+
 > 1. **본질**: 심리적 사용성 원칙은 "보안 메커니즘은 사용하기 쉬워야 하며, 만약 보안 절차가 사용자의 핵심 목표(업무 처리)를 과도하게 방해하면, 사용자는 필연적으로 그 보안을 우회(Bypass)하려 한다"는 인간 행동 심리학에 기반한 공학 원칙이다.
 > 2. **가치**: 보안을 단순히 '통제와 차단'의 도구가 아닌 '사용자 경험(UX)과 융합된 투명한 방어선'으로 재정의함으로써, 섀도우 IT(Shadow IT)의 발생을 막고 보안 사고의 가장 큰 구멍인 '인적 오류(Human Error)'를 근원적으로 차단한다.
 > 3. **융합**: 현대 엔터프라이즈 환경에서 이 원칙은 패스워드리스(Passwordless, FIDO), 단일 로그인(SSO), 생체 인식(Biometrics) 기술 및 투명한 제로 트러스트(ZTA) 아키텍처와 결합하여 '보이지 않는 튼튼한 방어막'을 구현하는 핵심 철학이 되었다.
 
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 1. 보안과 편의성의 딜레마 (Trade-off)
 전통적으로 정보보안 시스템은 기밀성(Confidentiality)과 무결성(Integrity)을 최우선으로 설계되었습니다. 
@@ -33,7 +35,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 핵심 아키텍처 및 원리 (Architecture & Mechanism)
+## 2. 구성요소
 
 ### 1. 심리적 사용성 침해의 3대 안티패턴 (Anti-patterns)
 보안 설계자가 피해야 할 인간 공학적 실패 유형은 다음과 같습니다.
@@ -66,7 +68,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 기술적 트레이드오프 (Comparison & Trade-offs)
+## 3. 구조 및 동작 원리
 
 ### 보안 메커니즘의 사용성 vs 보안성 트레이드오프
 
@@ -81,7 +83,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 실무 판단 기준 (Decision Making)
+## 4. 비교 및 트레이드오프
 
 | 고려 사항 | 세부 내용 | 주요 아키텍처 의사결정 |
 |:---|:---|:---|
@@ -97,7 +99,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅴ. 미래 전망 및 발전 방향 (Future Trend)
+## 5. 실무 적용 및 최적화 기법
 
 1. **패스워드리스(Passwordless)의 사실상 표준화 (FIDO/WebAuthn)**
    인간의 기억력을 쥐어짜는 텍스트 기반 패스워드는 곧 멸종할 것입니다. 애플, 구글, 마이크로소프트가 주도하는 FIDO 연합의 패스키(Passkey) 표준이 확산되면서, 이제 스마트폰 기기 자체의 보안 칩셋(Secure Enclave)과 생체 인식을 이용해 완벽한 사용성과 비대칭키 수준의 강력한 보안을 동시에 달성하는 아키텍처가 모든 엔터프라이즈의 표준으로 안착 중입니다.

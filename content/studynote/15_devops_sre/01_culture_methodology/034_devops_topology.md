@@ -4,15 +4,18 @@ date = "2026-03-04"
 [extra]
 categories = "studynote-devops"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. DevOps 토폴로지(DevOps Topology)는 조직이 DevOps를 구현하는 다양한 팀 구조 패턴을 분류한 프레임워크로, "Anti-Type A(Dev와 Ops 완전 분리)"부터 "Type 5(NoOps·서버리스)"까지 조직 성숙도별 모델을 제시한다.
 > 2. Team Topologies와 연계해 조직의 인지 부하·팀 간 의존성·플랫폼 성숙도를 종합 고려해 적절한 DevOps 토폴로지를 선택해야 하며, 하나의 정답 패턴은 존재하지 않는다.
 > 3. 가장 흔한 안티패턴은 "Dev-QA-Ops 3단 사일로"와 "DevOps팀 = Ops팀 이름 변경"으로, 이는 조직 경계를 강화할 뿐 DevOps의 목표인 협업·흐름·피드백 개선을 달성하지 못한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. DevOps 토폴로지 유형
+## 1. 개요 및 필요성
 
 ### 주요 DevOps 토폴로지 패턴 (Matthew Skelton 분류)
 
@@ -37,7 +40,7 @@ Type 5 — NoOps:
 
 ---
 
-## Ⅱ. DevOps 안티패턴 (Anti-Type)
+## 2. 구성요소
 
 ### 가장 흔한 안티패턴
 
@@ -63,7 +66,7 @@ Anti-Type D — QA/Ops 격리:
 
 ---
 
-## Ⅲ. SRE 모델 — Google의 DevOps 토폴로지
+## 3. 구조 및 동작 원리
 
 ```
 Google SRE 모델:
@@ -84,7 +87,7 @@ Google SRE 모델:
 
 ---
 
-## Ⅳ. Platform Engineering 토폴로지
+## 4. 비교 및 트레이드오프
 
 ```
 Platform Engineering 모델:
@@ -103,7 +106,7 @@ Platform Engineering 모델:
 
 ---
 
-## Ⅴ. DevOps 토폴로지 성숙도 진화
+## 5. 실무 적용 및 최적화 기법
 
 ```
 단계 1 (초기):

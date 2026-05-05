@@ -5,16 +5,17 @@ title = "58. HPA / VPA - 쿠버네티스 자동 확장 전략"
 tags = ["Cloud", "Kubernetes", "K8s", "HPA", "VPA", "Autoscaling"]
 categories = ["13_cloud_architecture"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: HPA (Horizontal Pod Autoscaler)는 파드 수를 조절하고, VPA (Vertical Pod Autoscaler)는 파드의 리소스 요청량을 조절한다.
+> **핵심**: HPA (Horizontal Pod Autoscaler)는 파드 수를 조절하고, VPA (Vertical Pod Autoscaler)는 파드의 리소스 요청량을 조절한다.
 > 2. **가치**: 트래픽 변화에 맞춰 자동으로 자원을 늘리거나 줄여 비용과 성능을 동시에 관리한다.
 > 3. **판단 포인트**: 메트릭 기준, 리소스 경계, Cluster Autoscaler와의 조합을 함께 봐야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 서비스 트래픽은 늘 일정하지 않다. 피크를 대비해 과도하게 배치하면 비용이 낭비되고, 부족하면 장애가 난다.
 
@@ -24,7 +25,7 @@ categories = ["13_cloud_architecture"]
 
 ---
 
-## Ⅱ. HPA와 VPA
+## 2. 구성요소
 
 두 오토스케일러는 역할이 다르다.
 
@@ -44,7 +45,7 @@ VPA: 파드당 리소스 조정
 
 ---
 
-## Ⅲ. 클러스터 레벨 확장
+## 3. 구조 및 동작 원리
 
 파드가 늘어도 노드가 부족하면 배치할 자리가 없다. 이때 Cluster Autoscaler가 노드를 추가한다.
 
@@ -64,7 +65,7 @@ Cluster Autoscaler
 
 ---
 
-## Ⅳ. 적용 시 주의점
+## 4. 비교 및 트레이드오프
 
 HPA와 VPA는 동시에 쓰기 까다로운 경우가 있다.
 
@@ -79,7 +80,7 @@ HPA와 VPA는 동시에 쓰기 까다로운 경우가 있다.
 
 ---
 
-## Ⅴ. 실무 기준과 비교
+## 5. 실무 적용 및 최적화 기법
 
 HPA는 사용자 수나 CPU 사용률처럼 수평 확장에 적합하고, VPA는 단일 파드의 자원 부족을 채울 때 유용하다.
 

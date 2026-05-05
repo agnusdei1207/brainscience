@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Intel TXT (Trusted Execution Technology)는 CPU·칩셋·TPM 하드웨어를 결합해 DRTM (Dynamic Root of Trust for Measurement) 기반의 신뢰 실행 환경을 구축하는 Intel의 하드웨어 보안 기술로, 신뢰할 수 없는 소프트웨어 스택 위에서도 안전한 코드 실행을 보장한다.
+> **핵심**: Intel TXT (Trusted Execution Technology)는 CPU·칩셋·TPM 하드웨어를 결합해 DRTM (Dynamic Root of Trust for Measurement) 기반의 신뢰 실행 환경을 구축하는 Intel의 하드웨어 보안 기술로, 신뢰할 수 없는 소프트웨어 스택 위에서도 안전한 코드 실행을 보장한다.
 > 2. **가치**: 클라우드·가상화 환경에서 하이퍼바이저 무결성을 검증하고, 고위험 데이터 처리 환경에서 소프트웨어 공격에 강건한 격리 실행 영역을 제공한다.
 > 3. **판단 포인트**: Intel TXT는 SGX(프로세스 수준 격리)와 달리 하이퍼바이저·OS 수준의 신뢰 부팅을 제공하며, SINIT ACM의 서명 검증이 신뢰의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Intel TXT (Trusted Execution Technology)는 2007년 처음 도입된 Intel의 하드웨어 보안 기술이다. Safer Computing Initiative의 일환으로, DRTM을 통해 특정 실행 환경(MLE: Measured Launch Environment)의 무결성을 CPU 수준에서 보장한다.
 
@@ -25,7 +27,7 @@ TXT가 필요한 이유는 기존 소프트웨어 신뢰 체인의 한계다. UE
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 구성 요소 | 역할 | 설명 |
 |:---|:---|:---|
@@ -75,7 +77,7 @@ TXT가 필요한 이유는 기존 소프트웨어 신뢰 체인의 한계다. UE
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | Intel TXT | Intel SGX |
 |:---|:---|:---|
@@ -89,7 +91,7 @@ TXT가 필요한 이유는 기존 소프트웨어 신뢰 체인의 한계다. UE
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **tboot (Trusted Boot) 활용**  
 - Xen·KVM 하이퍼바이저 앞에 배치되는 TXT 기반 신뢰 부트로더  
@@ -107,7 +109,7 @@ Intel은 TXT의 일부 기능을 SGX·Trust Domain Extensions (TDX)로 통합·�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Intel TXT는 신뢰할 수 없는 인프라 위에서 신뢰 실행 환경을 구축하는 핵심 기술로, Confidential Computing의 이론적 기반을 제공했다. 현재는 SGX·TDX로 진화하고 있지만, TXT의 DRTM 개념과 SINIT ACM 신뢰 체인은 여전히 현대 하드웨어 보안의 기본 원리로 남아있다. 기술사 답안에서는 "하드웨어 신뢰 루트 → DRTM → PCR 측정 → 원격 증명"의 흐름으로 서술하면 완성도가 높다.
 

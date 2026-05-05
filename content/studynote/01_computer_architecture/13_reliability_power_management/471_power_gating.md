@@ -5,18 +5,19 @@ date = 2026-03-22
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 전력 게이팅 (Power Gating)
-
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 전력 게이팅(Power Gating)은 사용하지 않는 회로 블록의 전원 공급 자체를 물리적인 스위치(슬립 트랜지스터)로 끊어 동적 전력과 정적 전력을 모두 0에 가깝게 차단하는 절전 기술이다.
+> **핵심**: 전력 게이팅(Power Gating)은 사용하지 않는 회로 블록의 전원 공급 자체를 물리적인 스위치(슬립 트랜지스터)로 끊어 동적 전력과 정적 전력을 모두 0에 가깝게 차단하는 절전 기술이다.
 > 2. **가치**: 클럭 게이팅이 동적 전력만 줄이는 데 비해, 전력 게이팅은 누설 전류(Static Power)까지 완벽 차단하여 90% 이상의 대기 전력을 절감할 수 있다.
 > 3. **비용**: 전원 차단 시 내부 상태(State)가 소멸되므로 Wake-up 지연(수천 클럭)과 상태 저장/복원 오버헤드가 발생하며, 이 트레이드오프를 C-State로 정밀 관리한다.
 
+> 📝 모범 답안
+
+# 전력 게이팅 (Power Gating)
+
 ---
 
-## Ⅰ. 대두 배경 — 왜 전력 게이팅이 필요한가
+## 1. 개요 및 필요성
 
 ### 클럭 게이팅의 한계
 
@@ -56,7 +57,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 동작 원리 및 하드웨어 구조
+## 2. 구성요소
 
 ### 슬립 트랜지스터(Sleep Transistor)
 
@@ -105,7 +106,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 상태 보존 및 Wake-up 트레이드오프
+## 3. 구조 및 동작 원리
 
 ### 상태 손실(State Loss) 문제
 
@@ -170,7 +171,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 구현 방식 — Fine-grain vs Coarse-grain
+## 4. 비교 및 트레이드오프
 
 ### Fine-grain Power Gating
 
@@ -203,7 +204,7 @@ Coarse-grain (블록 단위):
 
 ---
 
-## Ⅴ. 저전력 기술 비교 및 종합
+## 5. 실무 적용 및 최적화 기법
 
 전력 게이팅은 저전력 기술의 가장 강력한 축이지만, 단독으로는 완전한 절전 솔루션이 아니다. 클럭 게이팅, DVFS와 상호 보완적으로 동작한다:
 

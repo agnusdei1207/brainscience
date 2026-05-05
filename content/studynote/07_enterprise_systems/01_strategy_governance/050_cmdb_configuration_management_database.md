@@ -5,15 +5,18 @@ description = "CMDB의 구성 항목(CI), ITSM/ITIL과의 관계, 자동 탐색(
 categories = "studynote-enterprise"
 tags = ["CMDB", "CI", "ITIL", "ITSM", "ServiceNow", "auto discovery", "configuration management", "asset management"]
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. CMDB(Configuration Management Database)는 IT 인프라의 모든 구성 항목(CI, Configuration Item)과 그 관계를 저장·관리하는 중앙 저장소다.
 > 2. ITIL v4에서 CMDB는 ITSM 프로세스(변경, 인시던트, 문제 관리)의 공통 기반 데이터로 작동하며 자동 탐색(Auto-Discovery)이 정확도의 핵심이다.
 > 3. CMDB의 성패는 데이터 품질(정확성·최신성)에 달려 있으며, 인간 수동 입력보다 자동화된 에이전트·API 연동이 필수적이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. CMDB 개요
+## 1. 개요 및 필요성
 
 ### 1.1 구성 항목 (CI)
 
@@ -38,7 +41,7 @@ CMDB
 
 ---
 
-## Ⅱ. ITIL과 CMDB 통합
+## 2. 구성요소
 
 ### 2.1 ITSM 프로세스와의 연계
 
@@ -68,7 +71,7 @@ CMDB에서 변경 대상 CI 조회
 
 ---
 
-## Ⅲ. 자동 탐색 (Auto-Discovery)
+## 3. 구조 및 동작 원리
 
 ### 3.1 탐색 방법
 
@@ -93,7 +96,7 @@ CMDB에서 변경 대상 CI 조회
 
 ---
 
-## Ⅳ. ServiceNow CMDB 구현
+## 4. 비교 및 트레이드오프
 
 ### 4.1 CMDB 기본 클래스 계층
 
@@ -120,7 +123,7 @@ ServiceNow CMDB Health 점수 (0~100):
 
 ---
 
-## Ⅴ. CMDB 거버넌스와 성공 요소
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 공통 실패 원인
 

@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 전력 인식(Power-aware) 스케줄러 동적 전압/주파수 스케일링(DVFS) 통합형 CPU 제어
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 전력 인식(Power-aware) 스케줄러는 단순히 프로세스를 빨리 끝내는 것을 넘어, **CPU의 전력 소모를 최소화**하기 위해 스케줄러(어느 코어에 할당할지)와 DVFS(전압/주파수를 얼마나 조절할지)를 하나로 융합한 현대 운영체제의 핵심 에너지 관리 프레임워크다.
+> **핵심**: 전력 인식(Power-aware) 스케줄러는 단순히 프로세스를 빨리 끝내는 것을 넘어, **CPU의 전력 소모를 최소화**하기 위해 스케줄러(어느 코어에 할당할지)와 DVFS(전압/주파수를 얼마나 조절할지)를 하나로 융합한 현대 운영체제의 핵심 에너지 관리 프레임워크다.
 > 2. **메커니즘**: 과거에는 스케줄러와 CPU 주파수 조절기(CPUFreq)가 따로 놀아서 성능과 전비의 엇박자가 났지만, 리눅스 커널의 **EAS (Energy Aware Scheduling)**는 `PELT (Per-Entity Load Tracking)`를 통해 스레드의 부하를 예측하고, 전력을 덜 먹는 코어(예: ARM big.LITTLE의 LITTLE 코어)에 프로세스를 배치함과 동시에 주파수를 실시간으로 맞춤 조절한다.
 > 3. **가치**: 이 통합형 제어를 통해 모바일 기기(Android)의 배터리 수명을 극대화할 뿐만 아니라, 클라우드 데이터센터의 막대한 전기/냉각 비용(TCO)을 혁신적으로 절감하는 친환경 컴퓨팅(Green Computing)의 중추 역할을 한다.
 
+> 📝 모범 답안
+
+# 전력 인식(Power-aware) 스케줄러 동적 전압/주파수 스케일링(DVFS) 통합형 CPU 제어
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **DVFS (Dynamic Voltage and Frequency Scaling)**: 칩의 온도가 오르거나 부하가 변할 때, CPU의 클럭 주파수(Hz)와 인가 전압(V)을 동적으로 조절하여 전력 소모를 줄이는 하드웨어 기술. (예: Intel SpeedStep, AMD Cool'n'Quiet)
@@ -39,7 +41,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 전력 소모의 물리학 (DVFS의 원리)
 
@@ -101,7 +103,7 @@ EAS(Energy Aware Scheduling)는 스마트폰(ARM)처럼 이종 코어(Heterogene
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### CPU Governor (주파수 조절기) 진화 비교
 
@@ -121,7 +123,7 @@ EAS(Energy Aware Scheduling)는 스마트폰(ARM)처럼 이종 코어(Heterogene
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -171,7 +173,7 @@ EAS(Energy Aware Scheduling)는 스마트폰(ARM)처럼 이종 코어(Heterogene
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

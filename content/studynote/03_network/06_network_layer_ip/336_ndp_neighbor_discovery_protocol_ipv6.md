@@ -2,15 +2,17 @@
 title = "336. NDP (Neighbor Discovery Protocol) - IPv6의 ARP/ICMP 대체, RS/RA/NS/NA 교환"
 weight = 336
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: NDP(Neighbor Discovery Protocol)는 IPv4 시절 난잡하게 흩어져 있던 **ARP(MAC 찾기), ICMP 라우터 찾기, DAD(IP 충돌 검사) 기능들을 ICMPv6라는 하나의 거대한 통제 센터 안으로 깔끔하게 통합한 IPv6 전용 이웃 탐색 프로토콜**이다.
+> **핵심**: NDP(Neighbor Discovery Protocol)는 IPv4 시절 난잡하게 흩어져 있던 **ARP(MAC 찾기), ICMP 라우터 찾기, DAD(IP 충돌 검사) 기능들을 ICMPv6라는 하나의 거대한 통제 센터 안으로 깔끔하게 통합한 IPv6 전용 이웃 탐색 프로토콜**이다.
 > 2. **브로드캐스트의 소멸**: IPv4의 ARP는 동네 전체를 시끄럽게 하는 브로드캐스트 방식이었으나, NDP는 내가 찾고자 하는 대상에게만 콕 집어서 묻는 **'솔리시티드 노드 멀티캐스트(Solicited-Node Multicast)'** 방식을 도입해 네트워크 소음(CPU 인터럽트)을 완벽히 제거했다.
 > 3. **4대 핵심 메시지 (RS/RA, NS/NA)**: 라우터를 찾고 앞자리 IP를 받아오는 **RS/RA (Router Solicitation / Advertisement)** 세트와, 옆자리 PC의 MAC 주소를 찾고 IP 충돌을 검사하는 **NS/NA (Neighbor Solicitation / Advertisement)** 세트의 핑퐁 교환으로 모든 통신 인프라가 완성된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: IPv6 환경에서 같은 링크(서브넷) 상에 있는 호스트나 라우터의 존재, 주소, 상태를 탐색하고 유지하는 핵심 제어 프로토콜 (RFC 4861). ICMPv6를 기반으로 동작한다.
 - **필요성**: IPv4는 낡은 아파트였다. MAC 주소를 찾으려면 ARP라는 독립된 방송 시스템을 써야 했고, 핑을 치려면 ICMP를 썼으며, 공유기에서 IP를 받으려면 DHCP라는 외부 용역을 불러야 했다. 게다가 이들은 틈만 나면 동네방네 브로드캐스트(방송)를 때려대서 아파트가 항상 시끄러웠다. IPv6 설계자들은 "차세대 인터넷은 우아해야 한다! **잡다한 기능들을 다 부수고 '이웃 탐색(NDP)'이라는 하나의 우아한 카카오톡 단톡방(멀티캐스트) 시스템으로 통합해 버리자!**"라고 결심했다.
@@ -23,7 +25,7 @@ weight = 336
 
 ---
 
-## Ⅱ. NDP의 4대 핵심 메시지와 동작 원리 (Deep Dive)
+## 2. 구성요소
 
 NDP는 크게 라우터와 소통하는 부분(RS/RA)과 이웃 PC와 소통하는 부분(NS/NA)으로 나뉜다.
 

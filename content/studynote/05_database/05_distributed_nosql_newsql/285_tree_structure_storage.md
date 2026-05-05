@@ -2,17 +2,19 @@
 title = "285. 그래프 쿼리 언어 - Cypher (Neo4j), Gremlin, SPARQL"
 weight = 285
 +++
+## 0. 핵심 인사이트
 
-# 285. 트리 구조 저장 - Materialized Path, Nested Sets
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 트리 구조 저장(Tree Structure Storage)은 계층적(Hierarchical) 데이터인 조직도, 카테고리, 댓글 대댓글 등을 데이터베이스에 효율적으로 저장하고 조회하는 기법이다.
+> **핵심**: 트리 구조 저장(Tree Structure Storage)은 계층적(Hierarchical) 데이터인 조직도, 카테고리, 댓글 대댓글 등을 데이터베이스에 효율적으로 저장하고 조회하는 기법이다.
 > 2. **가치**: Materialized Path, Nested Sets, Adjacency List 등 다양한 모델링 기법으로 트리 연산을 최적화하며, 조회 깊이 제한, 하위 트리 추출, 경로 조회 등이 가능하다.
 > 3. **융합**: NoSQL 모델링, 몽고DB "$graphLookup", 재귀 CTE, 조직도/카테고리 관리, 메뉴 시스템과 밀접하게 연관된다.
 
+> 📝 모범 답안
+
+# 285. 트리 구조 저장 - Materialized Path, Nested Sets
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 트리 구조 저장(Tree Structure Storage)은 계층적(Hierarchical) 데이터 구조를 데이터베이스에 저장하고管理하는 기법이다. 조직도(Organization Chart), 카테고리(Category Tree), 댓글 대댓글(Threaded Comments), 파일 시스템(File System) 등이 트리 구조의 대표적用例다. 이러한 계층적 데이터를 관계형 데이터베이스나 문서 데이터베이스에 어떻게 효율적으로 저장하고, 빠른 조회와 수정을 지원하는지가 핵심 과제이다.
@@ -30,7 +32,7 @@ weight = 285
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Adjacency List 모델
 
@@ -257,15 +259,13 @@ weight = 285
 
 ---
 
-## Ⅲ. 결론
+## 3. 구조 및 동작 원리
 
 트리 구조 저장은 계층적 데이터를 데이터베이스에 효율적으로 저장하고 조회하는 중요한 기법이다. Adjacency List, Materialized Path, Nested Sets 각 모델은 읽기/쓰기 성능에서 서로 다른 트레이드오프를 가진다. 읽기 위주이고 변경이 드문 구조(카테고리, 조직도)에는 Nested Sets이나 Materialized Path가 적합하고, 쓰기가 많은 구조에는 Adjacency List가 적합하다. 몽고DB의 "$graphLookup"이나 Closure Table 같은 고급 기법도 있으며, 실무에서는 Hybrid 접근을 선택하는 경우가 많다.
 
 📢 섹션 요약: 트리 구조 저장 기법은 Adjacency List, Materialized Path, Nested Sets으로 나뉘며, 각각 읽기/쓰기 성능 트레이드오프가 다르므로用例에 맞게 선택해야 한다.
 
 ---
-
-## 핵심 인사이트 ASCII 다이어그램 (Concept Map)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐

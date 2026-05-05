@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: OpenTelemetry는 **Metrics·Logs·Traces 3축 텔레메트리 데이터의 수집·전파·내보내기를 통합 표준화**한 CNCF 프로젝트이며, OpenTracing+OpenCensus의 통합체이다.
+> **핵심**: OpenTelemetry는 **Metrics·Logs·Traces 3축 텔레메트리 데이터의 수집·전파·내보내기를 통합 표준화**한 CNCF 프로젝트이며, OpenTracing+OpenCensus의 통합체이다.
 > 2. **가치**: 기존에는 Prometheus(Metrics)·ELK(Logs)·Jaeger(Traces)가 **각각 다른 SDK·포맷**을 사용했지만, OTel은 **하나의 SDK로 3축을 모두 계측**하고 백엔드를 자유롭게 교체할 수 있다(Vendor-neutral).
 > 3. **판단 포인트**: OTel SDK(계측)→OTel Collector(수집·처리·내보내기)→Backend(Prometheus·Jaeger·Loki)의 3계층이며, Auto-instrumentation으로 코드 변경 없이 계측할 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 OTel 아키텍처:

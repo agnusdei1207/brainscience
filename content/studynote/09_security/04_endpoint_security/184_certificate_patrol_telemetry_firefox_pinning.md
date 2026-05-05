@@ -5,17 +5,19 @@ date = "2026-04-07"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-# Certificate Patrol과 Firefox 브라우저 동적 핀닝 (Telemetry)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Certificate Patrol은 과거 파이어폭스(Firefox) 브라우저 확장 프로그램으로, 사용자가 방문한 웹사이트의 SSL/TLS 인증서 지문(Fingerprint)을 로컬에 저장(Pinning)해 두고, 다음 방문 시 **인증서가 갑자기 바뀌면 해킹(MITM) 가능성을 경고하는 동적 감시 도구**였다.
+> **핵심**: Certificate Patrol은 과거 파이어폭스(Firefox) 브라우저 확장 프로그램으로, 사용자가 방문한 웹사이트의 SSL/TLS 인증서 지문(Fingerprint)을 로컬에 저장(Pinning)해 두고, 다음 방문 시 **인증서가 갑자기 바뀌면 해킹(MITM) 가능성을 경고하는 동적 감시 도구**였다.
 > 2. **가치**: HPKP 같은 서버 주도형(Server-driven) 강제 핀닝이 등장하기 전에, 사용자(Client)가 스스로 해커의 가짜 인증서(정상적인 CA가 발급한 위조 인증서) 가로채기 공격을 능동적으로 탐지하고 방어하려 했던 풀뿌리 보안(Crowd-sourced Security)의 시초격 모델이다.
 > 3. **융합(한계)**: 하지만 정상적인 인증서 갱신 시에도 무조건 "해킹 의심!"이라며 수많은 거짓 경보(False Positive)를 울려 사용자를 피로하게(Security Fatigue) 만들었고, 결국 브라우저 제조사 주도의 텔레메트리(Telemetry) 감시와 전역적인 **인증서 투명성(CT, Certificate Transparency)** 인프라로 그 책무가 넘어가며 역사 속으로 사라졌다(Deprecated).
 
+> 📝 모범 답안
+
+# Certificate Patrol과 Firefox 브라우저 동적 핀닝 (Telemetry)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: Certificate Patrol은 클라이언트(웹 브라우저) 측에서 동작하는 단순 무식하면서도 확실한 인증서 감시자(Patrol)다. 첫 방문 시 사이트의 인증서 정보를 DB에 기록(Trust on First Use, TOFU)한 뒤, 두 번째 방문부터 "저번에 본 그 인증서가 맞는지" 비교 대조하는 동적 핀닝(Dynamic Pinning)의 초기 형태다.
 
@@ -33,7 +35,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### TOFU 기반 클라이언트 핀닝 아키텍처의 동작 방식
 
@@ -79,7 +81,7 @@ Certificate Patrol 몰락의 가장 큰 원인은 **거짓 양성(False Positive
 
 ---
 
-## Ⅲ. 실무 적용 및 기술사적 판단
+## 3. 구조 및 동작 원리
 
 ### 텔레메트리 (Telemetry)를 통한 집단 지성으로의 진화
 
@@ -96,7 +98,7 @@ Certificate Patrol 몰락의 가장 큰 원인은 **거짓 양성(False Positive
 
 ---
 
-## Ⅳ. 기대효과 및 결론
+## 4. 비교 및 트레이드오프
 
 ### 정량/정성 기대효과 (클라이언트 자경단 vs 브라우저 텔레메트리)
 

@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 클러스터 시스템(Cluster System)은 여러 독립 컴퓨터(노드)를 고속 네트워크로 연결해 하나의 단일 시스템처럼 동작시키는 아키텍처 — 단일 고성능 컴퓨터(SMP, Scale-Up)의 비용과 한계를 극복하기 위해 상용 하드웨어(Scale-Out)를 활용한다.
 > 2. 클러스터의 두 핵심 목표는 고가용성(HA, High Availability)과 고성능(HP, High Performance) — HA 클러스터는 노드 장애 시 자동 페일오버(Failover)로 서비스 무중단을 보장하고, HP 클러스터는 작업을 병렬 분산해 처리량(Throughput)을 극대화한다.
 > 3. 클러스터 vs SMP vs NUMA — SMP는 공유 메모리 멀티프로세서(하나의 OS), NUMA는 분산 메모리이지만 단일 이미지 OS, 클러스터는 각 노드가 독립 OS를 가진 분산 시스템으로 확장성이 가장 크지만 프로그래밍이 복잡하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 클러스터 시스템 개요
+## 1. 개요 및 필요성
 
 ```
 클러스터 시스템 구조:
@@ -48,7 +51,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. HA 클러스터 — 고가용성
+## 2. 구성요소
 
 ```
 HA 클러스터 (High Availability Cluster):
@@ -93,7 +96,7 @@ HA 소프트웨어:
 
 ---
 
-## Ⅲ. HPC 클러스터 — 고성능 컴퓨팅
+## 3. 구조 및 동작 원리
 
 ```
 HPC 클러스터 (High-Performance Computing):
@@ -135,7 +138,7 @@ HPC 클러스터 (High-Performance Computing):
 
 ---
 
-## Ⅳ. SMP vs NUMA vs 클러스터
+## 4. 비교 및 트레이드오프
 
 ```
 비교: SMP, NUMA, 클러스터
@@ -165,7 +168,7 @@ OS 이미지     단일             단일            복수 (노드별)
 
 ---
 
-## Ⅴ. 실무 시나리오 — 전자상거래 클러스터 설계
+## 5. 실무 적용 및 최적화 기법
 
 ```
 대규모 전자상거래 클러스터 (일 1,000만 주문):

@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: BCP(Business Continuity Plan)는 재난 시 핵심 업무 지속을 위한 전사 계획이며, BIA(Business Impact Analysis)는 업무 중단 시 재무·운영적 피해를 정량화하여 복구 우선순위를 결정하는 선행 분석이다.
+> **핵심**: BCP(Business Continuity Plan)는 재난 시 핵심 업무 지속을 위한 전사 계획이며, BIA(Business Impact Analysis)는 업무 중단 시 재무·운영적 피해를 정량화하여 복구 우선순위를 결정하는 선행 분석이다.
 > 2. **가치**: RTO(Recovery Time Objective)와 RPO(Recovery Point Objective)라는 두 지표를 명확히 설정하면 재해 복구 솔루션의 비용과 성능 간 트레이드오프를 객관적으로 의사결정할 수 있다.
 > 3. **판단 포인트**: BCP 설계의 핵심은 BIA에서 도출된 우선 업무(Tier 1/2/3) 분류에 따라 RTO/RPO 차등을 적용하고, 연간 복구 훈련(Tabletop/Full-Scale Test)으로 계획의 실효성을 검증하는 것이다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 2011년 동일본 대지진 당시 도요타는 공급망 붕괴로 2개월간 생산이 멈추고 손실 규모가 수조 엔에 달했다. 반면 BCP를 구축한 기업들은 동일한 재해에도 2주 내 업무를 재개했다. BCP는 더 이상 선택사항이 아닌 기업 생존의 필수 전략이다.
 
@@ -22,7 +23,7 @@ categories = "studynote-enterprise-systems"
 
 �� **섹션 요약 비유**: BCP는 '소방 훈련 매뉴얼'처럼, 불이 났을 때 당황하지 않고 모두가 어디로, 어떤 순서로 대피하는지 미리 정해둔 체계적 약속이다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### BCM(Business Continuity Management) 프레임워크
 
@@ -64,7 +65,7 @@ categories = "studynote-enterprise-systems"
 
 📢 **섹션 요약 비유**: RTO와 RPO는 마치 '배달 시간 보장'과 '신선도 보장'처럼, 얼마나 빨리 받을 수 있는지(RTO)와 얼마나 신선한 음식을 받는지(RPO)라는 두 가지 품질 기준이다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### BIA 수행 단계 및 산출물
 
@@ -85,7 +86,7 @@ categories = "studynote-enterprise-systems"
 
 📢 **섹션 요약 비유**: BCP가 '회사 전체의 생존 계획'이라면, DRP는 '컴퓨터 시스템만 살리는 기술 매뉴얼'이다. 서버가 살아도 직원이 출근 못하면 소용없으므로 BCP가 더 넓은 개념이다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 금융기관 BCP 구축 시나리오
 
@@ -102,7 +103,7 @@ categories = "studynote-enterprise-systems"
 
 📢 **섹션 요약 비유**: BCP 훈련은 '소방 훈련'처럼, 실제 불이 날 때를 대비해 정기적으로 연습해야 당황하지 않는다. 단 한 번도 훈련 안 한 BCP 문서는 불난 현장에서 아무도 읽지 않는 종이 뭉치에 불과하다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 **기대효과**:
 - 재해 시 업무 중단 손실 최대 80% 절감 (Tier 1 Hot Standby 기준)

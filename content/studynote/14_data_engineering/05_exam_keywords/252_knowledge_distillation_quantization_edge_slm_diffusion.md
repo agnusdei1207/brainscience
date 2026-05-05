@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 거대 LLM(Large Language Model)의 지식을 지식 증류(Knowledge Distillation)와 양자화(Quantization)로 압축하면 엣지(Edge) 디바이스에서도 고품질 추론이 가능해진다.
+> **핵심**: 거대 LLM(Large Language Model)의 지식을 지식 증류(Knowledge Distillation)와 양자화(Quantization)로 압축하면 엣지(Edge) 디바이스에서도 고품질 추론이 가능해진다.
 > 2. **가치**: SLM(Small Language Model)과 경량화 기법은 클라우드 의존도를 낮추고 온디바이스(On-device) 프라이버시와 저지연(Low-latency) 추론을 동시에 실현한다.
 > 3. **판단 포인트**: 경량화 기법별 정확도 손실(Accuracy Drop)과 압축률(Compression Ratio) 트레이드오프를 정량적으로 측정하고, 목표 하드웨어 사양에 맞는 기법을 선택해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 대형 모델의 배포 한계
 
@@ -34,7 +36,7 @@ GPT-4 수준의 모델은 수백 GB 파라미터로 구성되어 데이터센터
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 지식 증류(Knowledge Distillation) 구조
 
@@ -99,7 +101,7 @@ W_int8 = round(W_fp32 / scale)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 SLM(Small Language Model) 대표 모델 비교
 
@@ -132,7 +134,7 @@ X_T    →    X_{T-1}    →  ...  →  X_0
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 경량화 기법 선택 기준
 
@@ -166,7 +168,7 @@ X_T    →    X_{T-1}    →  ...  →  X_0
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 경량화 기술의 미래 임팩트
 

@@ -5,16 +5,17 @@ date = "2026-05-01"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: TOGAF (The Open Group Architecture Framework)는 기업 아키텍처를 체계적으로 설계/운영하기 위한 프레임워크다.
+> **핵심**: TOGAF (The Open Group Architecture Framework)는 기업 아키텍처를 체계적으로 설계/운영하기 위한 프레임워크다.
 > 2. **가치**: ADM (Architecture Development Method)을 통해 비즈니스/데이터/애플리케이션/기술 아키텍처를 단계적으로 정리한다.
 > 3. **판단 포인트**: 표준, 거버넌스, 로드맵이 함께 있어야 실무 적용이 가능하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 기업 아키텍처는 복잡한 시스템을 한 방향으로 정렬하는 작업이다. TOGAF는 이를 위한 대표적인 프레임워크다.
 
@@ -24,7 +25,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 TOGAF의 중심은 ADM이다. 요구사항을 받아 아키텍처를 개발하고, 구현과 거버넌스를 통해 반복 개선한다.
 
@@ -45,7 +46,7 @@ Preliminary → Vision → Business → Data → Application → Technology → 
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 TOGAF는 Zachman처럼 전체 아키텍처를 다루지만, Zachman이 분류 체계라면 TOGAF는 절차와 방법론이 더 강하다.
 
@@ -61,7 +62,7 @@ TOGAF는 거버넌스와 표준화에 유리하며, 큰 조직에서 특히 유�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 Architecture Vision, Requirements, Roadmap, Governance를 함께 관리한다. 조직의 변화관리와 함께 가야 한다.
 
@@ -84,7 +85,7 @@ TOGAF는 거버넌스와 표준화에 유리하며, 큰 조직에서 특히 유�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 TOGAF는 전사 아키텍처를 체계적으로 정렬하고, 변화에 대한 로드맵을 제공한다.
 

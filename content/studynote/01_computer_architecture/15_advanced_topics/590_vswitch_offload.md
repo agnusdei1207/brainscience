@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 590. vSwitch 오프로드 (Virtual Switch Offload)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: vSwitch 오프로드(Virtual Switch Offload)는 서버 내부의 가상 머신(VM)이나 컨테이너 간의 통신을 중재하는 **소프트웨어 가상 스위치(vSwitch)의 패킷 포워딩 로직을 하드웨어(NIC)로 옮겨 처리**하는 기술이다.
+> **핵심**: vSwitch 오프로드(Virtual Switch Offload)는 서버 내부의 가상 머신(VM)이나 컨테이너 간의 통신을 중재하는 **소프트웨어 가상 스위치(vSwitch)의 패킷 포워딩 로직을 하드웨어(NIC)로 옮겨 처리**하는 기술이다.
 > 2. **가치**: 패킷 한 개를 전달할 때마다 CPU가 수행하던 수천 번의 연산 과정을 하드웨어가 대신함으로써 **CPU 자원을 확보하고 네트워크 지연 시간(Latency)을 획기적으로 단축**시킨다.
 > 3. **융합**: 가상화 기술인 SR-IOV, OVS-DPDK 등과 결합되어 작동하며, 클라우드 환경에서 물리 서버의 네트워크 성능을 리얼 머신(Bare-metal) 수준으로 끌어올리는 중추적인 역할을 한다.
 
+> 📝 모범 답안
+
+# 590. vSwitch 오프로드 (Virtual Switch Offload)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 - **개념**: 서버 한 대 안에 수십 개의 가상 머신이 들어있는 클라우드 환경에서, 각 VM끼리 데이터를 주고받을 때 이를 배달해 주는 '가상 우체국'이 vSwitch다. 이 우체국 업무를 CPU가 아닌 랜카드(NIC)에 맡기는 것이 vSwitch 오프로드다.
 - **필요성**: 소프트웨어 방식의 vSwitch(예: Open vSwitch)는 패킷이 들어올 때마다 CPU를 깨워 "이거 어디로 보낼까?"라고 물어본다. 트래픽이 많아지면 CPU는 연산은 안 하고 패킷 배달만 하다가 지쳐버린다. 이를 해결하기 위해 **"이미 가야 할 길이 정해진 패킷은 하드웨어가 직접 배달하게 하자"**는 발상에서 탄생했다.
@@ -44,7 +46,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 플로우 테이블(Flow Table) 이식
 - 소프트웨어 vSwitch가 가지고 있던 "어떤 패킷은 어디로 보낸다"라는 규칙 리스트(Flow Table)를 NIC 내부의 고속 메모리(TCAM)에 그대로 복사한다.
@@ -62,7 +64,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 소프트웨어 vSwitch vs vSwitch 오프로드
 
@@ -83,7 +85,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -103,7 +105,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **CPU 가용 자원 20~40% 회복**: 네트워크 배달에 낭비되던 CPU 코어들을 돈이 되는 서비스 연산에 투입할 수 있다.

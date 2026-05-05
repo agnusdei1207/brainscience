@@ -5,8 +5,12 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> **핵심**: (개념 본질)
+> **비유**: (개념 비유)
+
+> 📝 모범 답안
 
 - **본질**: Tableau는 VizQL (Visual Query Language, 시각화 질의 언어)이라는 독자 기술로 드래그앤드롭 동작을 데이터베이스 쿼리로 자동 변환하여 SQL 없이 복잡한 분석을 가능하게 하는 업계 선도적 셀프서비스 시각화 플랫폼이다.
 - **가치**: LOD (Level of Detail, 세부 수준) 표현식(FIXED/INCLUDE/EXCLUDE)은 시각화 집계 수준과 독립적인 계산을 가능하게 하여, "고객당 첫 구매일" 같은 복잡한 비즈니스 질문을 SQL 없이 해결하는 핵심 차별화 기능이다.
@@ -14,7 +18,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### Tableau의 역사와 위치
 
@@ -26,7 +30,7 @@ Gartner Magic Quadrant BI & Analytics 분야에서 지속적 리더 위치를 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Tableau 플랫폼 아키텍처
 
@@ -82,7 +86,7 @@ First Order Date = {FIXED [Customer ID]: MIN([Order Date])}
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Tableau vs Power BI 비교
 
@@ -108,7 +112,7 @@ Tableau Prep은 **비주얼 데이터 준비 도구**로, 플로우 캔버스에
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 테이블 계산(Table Calculation) 활용
 
@@ -132,7 +136,7 @@ Tableau Pulse는 AI 기반 **데이터 스토리텔링 자동화** 기능:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### Tableau 도입 효과
 

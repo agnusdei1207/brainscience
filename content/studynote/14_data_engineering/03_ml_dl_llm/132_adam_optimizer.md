@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Adam(Adaptive Moment Estimation)은 **Momentum(1차 모멘트, 이동 평균) + RMSProp(2차 모멘트, 기울기 제곱 이동 평균)**을 결합한 적응형 옵티마이저이며, 파라미터별로 **학습률을 자동 조정**한다.
+> **핵심**: Adam(Adaptive Moment Estimation)은 **Momentum(1차 모멘트, 이동 평균) + RMSProp(2차 모멘트, 기울기 제곱 이동 평균)**을 결합한 적응형 옵티마이저이며, 파라미터별로 **학습률을 자동 조정**한다.
 > 2. **가치**: SGD는 모든 파라미터에 같은 학습률을 적용하여 **희소 기울기·비등방 공간에서 수렴이 느리지만**, Adam은 각 파라미터에 적합한 학습률을 자동 계산하여 **빠르고 안정적**으로 수렴한다.
 > 3. **판단 포인트**: AdamW(Weight Decay 분리)가 Transformer 학습의 사실상 표준이며, β₁=0.9·β₂=0.999·lr=1e-3이 기본 하이퍼파라미터이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Adam = Momentum + RMSProp
@@ -26,7 +28,7 @@ Adam = Momentum + RMSProp
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 비교 | SGD | Adam |
 |:---|:---|:---|

@@ -5,24 +5,27 @@ date = "2026-03-25"
 [extra]
 categories = ["studynote-security"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> [ Attack Vectors ] -> [ Security Weakness ]
+
+> 📝 모범 답안
+
 - **글로벌 웹 보안 표준**: OWASP Top 10은 전 세계 웹 애플리케이션에서 가장 빈번하고 치명적인 10대 보안 위협을 선정하여 대응 방안을 제시하는 표준 가이드입니다.
 - **리스크 기반 우선순위**: 취약점의 발생 빈도(Prevalence)와 비즈니스 영향도(Impact)를 결합하여 개발자와 보안 전문가가 집중해야 할 영역을 정의합니다.
 - **지속적 업데이트**: 2021년판에서는 '취약한 접근 제어(Broken Access Control)'가 1위로 올라서는 등 현대 웹 아키텍처의 변화에 맞춘 패러다임 전환을 반영합니다.
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 OWASP(Open Web Application Security Project)는 오픈소스 웹 애플리케이션 보안 프로젝트로, 전 세계의 보안 전문가들이 참여하여 웹 보안 가이드를 제작합니다. 그중 'OWASP Top 10'은 3~4년 주기로 업데이트되며, 수천 개의 기업 데이터와 수만 건의 취약점 분석 결과를 토대로 가장 위험한 위협을 순위별로 나열합니다. 이는 단순한 리스트를 넘어, 기업의 보안 정책 수립, 개발자 교육, 보안 도구(WAF, 스캐너)의 기준점 역할을 수행하는 현대 사이버 보안의 핵심 컴플라이언스 지표입니다.
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 OWASP Top 10은 공격 표면(Attack Surface)과 취약점(Vulnerability), 그리고 위협(Threat) 간의 상관관계를 분석하여 정의됩니다.
 
 ```text
 +-------------------------------------------------------------+
 |               OWASP Top 10 Risk Assessment                  |
 |                                                             |
-|  [ Threat Actors ] -> [ Attack Vectors ] -> [ Security Weakness ]
-|                                                      |      |
+|  [ Threat Actors ] -|                                                      |      |
 |  +---------------------------------------------------+      |
 |  | 1. Broken Access Control (A01:2021)               | <----+
 |  | 2. Cryptographic Failures (A02:2021)              |      |
@@ -39,7 +42,7 @@ OWASP Top 10은 공격 표면(Attack Surface)과 취약점(Vulnerability), 그�
 2. **A03: Injection**: 신뢰할 수 없는 데이터가 쿼리나 명령의 일부로 전달되어 비정상적인 동작을 유발하는 현상(SQLi, OS Command Injection 등).
 3. **A10: SSRF (Server-Side Request Forgery)**: 서버가 외부 리소스를 가져올 때, 공격자가 지정한 임의의 URL로 요청을 보내 내부망을 침투하는 최신 위협입니다.
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 분류 (2021 vs 2017) | 주요 변화 (Key Changes) | 대응 전략 (Mitigation Strategy) |
 | :--- | :--- | :--- |
@@ -48,10 +51,10 @@ OWASP Top 10은 공격 표면(Attack Surface)과 취약점(Vulnerability), 그�
 | **A04. Insecure Design** | 2021년 신규 항목 (설계 단계 보안) | 위협 모델링(STRIDE), 보안 설계 검토 |
 | **A08. Software Integrity** | 신규 항목 (공급망 보안, CI/CD) | 코드 서명 검증, 종속성 라이브러리 스캔 |
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 실무 현장에서는 OWASP Top 10을 기준으로 보안 취약점 점검표를 구성하고, 코드 정적 분석(SAST) 및 동적 분석(DAST) 도구의 룰셋을 최적화해야 합니다. 기술사적 관점에서 보안은 'Bolt-on(나중에 덧붙임)'이 아닌 'Security by Design(설계부터 반영)'이 되어야 함을 강조합니다. 특히 2021년 신설된 '안전하지 않은 설계(Insecure Design)' 항목은 개발 초기 단계의 위협 모델링과 비즈니스 로직에 대한 보안성 검토가 기술적 취약점 해결만큼이나 중요하다는 사실을 시사합니다.
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 OWASP Top 10은 웹 보안의 최소한의 기준선(Baseline)입니다. 이를 준수함으로써 기업은 대규모 데이터 유출 사고를 방지하고 브랜드 신뢰도를 제고할 수 있습니다. 미래의 웹 환경은 마이크로서비스(MSA)와 클라우드 네이티브로 진화하고 있으며, 이에 따라 API 보안 및 서버 간 통신(SSRF 등) 위협이 더욱 거세질 것입니다. 따라서 OWASP Top 10을 주기적으로 학습하고 조직 내 보안 내재화(SecDevOps)를 실천하는 것이 사이버 복원력(Cyber Resilience) 확보의 지름길입니다.
 
 ### 📌 관련 개념 맵 (Knowledge Graph)

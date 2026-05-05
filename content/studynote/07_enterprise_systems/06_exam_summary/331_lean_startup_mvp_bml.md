@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Lean Startup은 Eric Ries가 제안한 스타트업 방법론으로, MVP (Minimum Viable Product)를 빠르게 출시하고 BML (Build-Measure-Learn) 루프를 통해 검증된 학습(Validated Learning)을 반복하며 사업 가설을 검증한다.
+> **핵심**: Lean Startup은 Eric Ries가 제안한 스타트업 방법론으로, MVP (Minimum Viable Product)를 빠르게 출시하고 BML (Build-Measure-Learn) 루프를 통해 검증된 학습(Validated Learning)을 반복하며 사업 가설을 검증한다.
 > 2. **가치**: 수개월의 완성품 개발 대신 몇 주 단위의 MVP 실험으로 시장 피드백을 얻음으로써 실패 비용을 90% 이상 줄이고, 피벗(Pivot) 또는 지속(Persevere) 결정을 데이터 기반으로 수행한다.
 > 3. **판단 포인트**: MVP는 "가장 빈약한 제품"이 아니라 "핵심 가설을 검증하기 위한 최소 기능 실험"이며, 허영 지표(Vanity Metrics)가 아닌 실행 지표(Actionable Metrics)로 학습을 측정해야 한다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 Lean Startup은 Eric Ries가 2011년 저서 "The Lean Startup"에서 체계화한 방법론으로, Toyota의 Lean Manufacturing 원칙(낭비 제거, 지속적 개선)을 소프트웨어·스타트업에 적용한 것이다.
 
@@ -34,7 +35,7 @@ Lean Startup은 Eric Ries가 2011년 저서 "The Lean Startup"에서 체계화�
 
 📢 **섹션 요약 비유**: Lean Startup의 MVP는 완성된 식당 오픈 전에 시장에서 음식 샘플을 팔아보는 것 — 셰프의 요리 실력을 검증하는 것이 아니라 손님이 그 음식을 실제로 돈 내고 먹을 의향이 있는지를 확인하는 것이다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### BML 루프 다이어그램
 
@@ -80,7 +81,7 @@ Lean Startup은 Eric Ries가 2011년 저서 "The Lean Startup"에서 체계화�
 
 📢 **섹션 요약 비유**: 허영 지표는 "이 식당에 10만 명이 방문했어요"이고, 실행 지표는 "재방문율이 30%이고 평균 객단가가 2만원이에요" — 진짜 사업의 건강을 알 수 있는 숫자가 달라요.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 항목 | Lean Startup | 전통 개발 | Agile Scrum | Design Thinking |
 |:---|:---|:---|:---|:---|
@@ -95,7 +96,7 @@ Lean Startup은 Eric Ries가 2011년 저서 "The Lean Startup"에서 체계화�
 
 📢 **섹션 요약 비유**: 전통 개발이 "설계도를 완벽하게 그린 후 건물을 짓는 것"이라면, Lean Startup은 "작은 임시 구조물로 손님이 이 위치를 좋아하는지 먼저 확인하는 것"이다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **MVP 설계 체크리스트**:
 - [ ] 검증하려는 핵심 가설이 1~2개로 명확하게 정의되어 있는가?
@@ -123,7 +124,7 @@ Lean Startup은 Eric Ries가 2011년 저서 "The Lean Startup"에서 체계화�
 
 📢 **섹션 요약 비유**: 피벗은 실패가 아니라 방향 수정이에요 — GPS가 막힌 도로를 감지하고 새 경로를 안내하는 것처럼, 데이터 기반으로 방향을 바꾸는 것이 Lean Startup의 핵심이다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 **기대 효과**:
 - 실패 비용 절감: 완성품 대신 MVP 실험으로 개발 낭비 90% 감소

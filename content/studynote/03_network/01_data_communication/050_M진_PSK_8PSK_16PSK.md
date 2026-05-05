@@ -5,15 +5,18 @@ description = "8PSK, 16PSK 등 M진 PSK의 성상도, 비트 당 심볼 수, 오
 categories = "studynote-nw"
 tags = ["PSK", "8PSK", "16PSK", "MPSK", "constellation", "QAM", "BER", "spectral efficiency"]
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. M진 PSK(M-ary PSK)는 M개의 위상(phase)으로 log₂M 비트를 하나의 심볼에 실어 전송하는 대역폭 효율적 변조 방식이다.
 > 2. M이 커질수록 주파수 효율은 높아지지만 성상도(constellation) 포인트 간격이 좁아져 잡음에 취약해진다.
 > 3. 8PSK는 3G UMTS 업링크에, 16QAM/64QAM은 LTE/5G에서 사용되며, 고차 변조일수록 높은 SNR이 필요하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. PSK 기초와 M진 확장
+## 1. 개요 및 필요성
 
 ### 1.1 BPSK → QPSK → 8PSK 흐름
 
@@ -42,7 +45,7 @@ tags = ["PSK", "8PSK", "16PSK", "MPSK", "constellation", "QAM", "BER", "spectral
 
 ---
 
-## Ⅱ. 8PSK 상세
+## 2. 구성요소
 
 ### 2.1 Gray 코딩
 
@@ -62,7 +65,7 @@ M이 커지면 같은 BER을 위해 더 높은 Eb/N₀ 필요.
 
 ---
 
-## Ⅲ. 16PSK vs 16QAM 비교
+## 3. 구조 및 동작 원리
 
 ### 3.1 왜 16QAM이 선호되는가?
 
@@ -85,7 +88,7 @@ M이 커지면 같은 BER을 위해 더 높은 Eb/N₀ 필요.
 
 ---
 
-## Ⅳ. 실제 시스템 적용
+## 4. 비교 및 트레이드오프
 
 ### 4.1 표준별 변조 방식
 
@@ -106,7 +109,7 @@ M이 커지면 같은 BER을 위해 더 높은 Eb/N₀ 필요.
 
 ---
 
-## Ⅴ. 스펙트럼 효율과 Shannon 한계
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 스펙트럼 효율 (Spectral Efficiency)
 

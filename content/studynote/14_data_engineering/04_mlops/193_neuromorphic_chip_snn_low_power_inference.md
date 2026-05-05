@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 뉴로모픽 컴퓨팅(Neuromorphic Computing)은 인간 뇌의 신경 회로를 모방한 비폰노이만(Non-von Neumann) 아키텍처로, 이벤트 구동(Event-Driven) 처리로 대기 전력을 거의 제로로 만든다.
+> **핵심**: 뉴로모픽 컴퓨팅(Neuromorphic Computing)은 인간 뇌의 신경 회로를 모방한 비폰노이만(Non-von Neumann) 아키텍처로, 이벤트 구동(Event-Driven) 처리로 대기 전력을 거의 제로로 만든다.
 > 2. **가치**: SNN(Spiking Neural Network)은 스파이크(전기 펄스)가 있을 때만 연산하므로 기존 ANN 대비 에너지 효율이 100~1,000배 높아 배터리 기반 엣지 디바이스에 혁신적이다.
 > 3. **판단 포인트**: 현재는 학습 어려움과 정확도 한계로 실용화 초기 단계이나, IoT/웨어러블/자율주행 저전력 추론 분야에서 GPU 대체 후보로 부상하고 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 뉴로모픽 컴퓨팅 (Neuromorphic Computing) 정의
 
@@ -49,7 +51,7 @@ IoT 디바이스 배터리: 수십 mWh
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 SNN (Spiking Neural Network) 원리
 
@@ -137,7 +139,7 @@ SNN (Spiking Neural Network)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 GPU vs NPU vs 뉴로모픽 비교
 
@@ -187,7 +189,7 @@ SNN 학습 도전:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 뉴로모픽 컴퓨팅 성숙도 평가 (Gartner Hype Cycle)
 
@@ -264,7 +266,7 @@ dense = Dense.Dense(weights=W)       # 시냅스 가중치
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 뉴로모픽 컴퓨팅 기대효과
 

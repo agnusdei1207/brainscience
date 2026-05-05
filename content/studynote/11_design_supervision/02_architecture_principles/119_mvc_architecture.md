@@ -5,23 +5,26 @@ date = "2024-03-20"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> Controller -------------> Model
+
+> 📝 모범 답안
+
 - 비즈니스 로직(Model), 사용자 인터페이스(View), 흐름 제어(Controller)를 분리하여 시스템의 **결합도를 낮추고 재사용성**을 극대화함.
 - 사용자 요청 시 Controller가 흐름을 제어하고, Model이 데이터를 처리하며, View가 결과를 시각적으로 표현하는 명확한 **관심사 분리** 구조임.
 - 웹 애플리케이션 및 모바일 앱의 가장 기초적이고 필수적인 아키텍처 패턴으로, 개발 및 유지보수의 효율성을 보장함.
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 - 1970년대 스몰토크(Smalltalk) 언어에서 GUI 프로그래밍을 위해 처음 제안되었으며, 이후 웹 프레임워크(Spring, Django 등)의 표준으로 자리 잡음.
 - 코드의 복잡성을 관리하고, 디자인과 로직의 독립적인 개발을 가능하게 하여 대규모 프로젝트 운영에 필수적인 구조임.
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 ```text
 [ MVC Pattern Interaction ]
 
        (Request)      (Route/Control)      (Handle Data)
-  User --------> Controller -------------> Model
-                   ^   |                     |
+  User --------                   ^   |                     |
                    |   | (Update View)       | (Provide Data)
                    |   v                     |
                    +-- View <----------------+
@@ -33,7 +36,7 @@ categories = "studynote-design-supervision"
 - **View**: 사용자에게 보여지는 화면(UI). Model의 데이터를 시각적으로 렌더링함.
 - **Controller**: 사용자의 입력을 받아 해석하고 Model과 View를 연결하여 전체적인 흐름을 조정함.
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 비교 항목 | MVC (Web Standard) | MVP (Mobile focused) | MVVM (Modern Frontend) |
 | :--- | :--- | :--- | :--- |
@@ -42,11 +45,11 @@ categories = "studynote-design-supervision"
 | **의존성** | View와 Model 간 간접 의존 | View와 Presenter 강결합 | View와 Model 완전 독립 |
 | **주 사용처** | Spring MVC, Rails | 초기 Android 앱 | Vue.js, React, Swift(SwiftUI) |
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 - **판단 지표**: 단순한 CRUD 기능 중심의 프로젝트부터 복잡한 엔터프라이즈 시스템까지 광범위하게 적용 가능하며, 특히 서버 사이드 렌더링(SSR) 환경에서 최적임.
 - **적용 전략**: Controller에 비즈니스 로직을 넣지 않는 'Fat Model, Skinny Controller' 원칙을 준수하여 도메인 중심 설계를 유지해야 함.
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 - 시스템의 **유연성(Flexibility)**과 **확장성(Extensibility)**을 확보하여 다양한 디바이스 및 인터페이스 환경에 대응 가능함.
 - 향후 MSA 환경에서도 각 마이크로서비스 내부의 견고한 구현 패턴으로 지속적으로 사용될 핵심 아키텍처임.
 

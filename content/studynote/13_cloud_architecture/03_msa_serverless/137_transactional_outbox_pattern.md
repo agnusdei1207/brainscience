@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Transactional Outbox는 **비즈니스 데이터와 이벤트를 같은 DB 트랜잭션으로 저장(Outbox 테이블)**한 후, 별도 프로세스(CDC·Polling)가 Outbox에서 이벤트를 읽어 메시지 브로커로 발행하는 패턴이다.
+> **핵심**: Transactional Outbox는 **비즈니스 데이터와 이벤트를 같은 DB 트랜잭션으로 저장(Outbox 테이블)**한 후, 별도 프로세스(CDC·Polling)가 Outbox에서 이벤트를 읽어 메시지 브로커로 발행하는 패턴이다.
 > 2. **가치**: "주문 저장 + Kafka 발행"을 별도로 하면 **DB 저장 성공·Kafka 발행 실패** 시 불일치가 발생하지만, Outbox는 **단일 트랜잭션으로 원자성을 보장**한다.
 > 3. **판단 포인트**: Debezium(CDC 기반)이 Outbox 이벤트를 실시간 캡처하여 Kafka로 전달하는 것이 표준 구현이며, Polling 방식은 지연이 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 1. 비즈니스 로직: INSERT orders + INSERT outbox (같은 트랜잭션)

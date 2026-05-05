@@ -2,17 +2,19 @@
 weight = 482
 title = "482. Security Misconfiguration (보안 설정 오류)"
 +++
+## 0. 핵심 인사이트
 
-# 482. Security Misconfiguration (보안 설정 오류)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 보안 설정 오류(Security Misconfiguration)는 개발자가 코드를 완벽하고 안전하게 짰음에도 불구하고, 애플리케이션을 감싸고 있는 **웹 서버, DB, 클라우드(AWS S3), 프레임워크의 환경 설정(Configuration)을 디폴트(Default) 값 그대로 방치하거나 귀찮다고 권한을 열어두어 해커에게 무혈입성을 허락하는 허무한 인프라 관리 붕괴** 현상이다.
+> **핵심**: 보안 설정 오류(Security Misconfiguration)는 개발자가 코드를 완벽하고 안전하게 짰음에도 불구하고, 애플리케이션을 감싸고 있는 **웹 서버, DB, 클라우드(AWS S3), 프레임워크의 환경 설정(Configuration)을 디폴트(Default) 값 그대로 방치하거나 귀찮다고 권한을 열어두어 해커에게 무혈입성을 허락하는 허무한 인프라 관리 붕괴** 현상이다.
 > 2. **가치**: 아무리 비싼 방탄조끼(시큐어 코딩)를 입어도 머리(인프라 설정)에 철모를 안 쓰면 즉사한다. "admin/admin" 같은 초기 비밀번호 미변경, 디버그 모드(Debug=True) 활성화로 인한 치명적 서버 정보 유출 등, **가장 어이없는 휴먼 에러(Human Error)가 시스템의 가장 큰 붕괴 원인**임을 폭로하며 인프라 보안의 경각심을 때린다.
 > 3. **융합**: 인간의 손가락(마우스 클릭)을 믿지 않고, 서버 설정과 클라우드 인프라 자체를 텍스트 코드로 강제하는 **IaC(Infrastructure as Code, Terraform 등)** 아키텍처와, 이를 젠킨스(CI/CD) 단에서 기계적으로 감시하는 **DevSecOps의 린팅(Checkov, TFSec)** 기술과 완벽하게 융합되어 자동화된 무결점 방어벽을 완성한다.
 
+> 📝 모범 답안
+
+# 482. Security Misconfiguration (보안 설정 오류)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: Misconfiguration(설정 오류)은 코딩 버그가 아니다. 제품 매뉴얼을 안 읽어서 생기는 사고다. 
   - **톰캣(Tomcat)** 웹 서버를 처음 깔면 관리자 계정이 `admin` / `admin` 이다. 안 바꾸고 라이브 서버에 올렸다.
@@ -32,7 +34,7 @@ title = "482. Security Misconfiguration (보안 설정 오류)"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 1. 보안 설정 오류가 터지는 3대 폭탄 스위치 (주요 현상)
 
@@ -56,7 +58,7 @@ title = "482. Security Misconfiguration (보안 설정 오류)"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 1. 보안 설정 오류 (Misconfiguration) vs 안전하지 않은 설계 (Insecure Design)
 
@@ -78,7 +80,7 @@ title = "482. Security Misconfiguration (보안 설정 오류)"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -99,7 +101,7 @@ title = "482. Security Misconfiguration (보안 설정 오류)"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

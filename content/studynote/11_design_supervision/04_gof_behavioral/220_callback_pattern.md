@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Callback (콜백) 패턴은 함수를 인수로 전달하여 특정 이벤트나 작업 완료 시점에 호출되도록 하는 역전된 제어(Inversion of Control) 메커니즘이다 — "나중에 전화해줄게" 방식의 비동기 통지.
+> **핵심**: Callback (콜백) 패턴은 함수를 인수로 전달하여 특정 이벤트나 작업 완료 시점에 호출되도록 하는 역전된 제어(Inversion of Control) 메커니즘이다 — "나중에 전화해줄게" 방식의 비동기 통지.
 > 2. **가치**: 비동기 작업 완료 후 취해야 할 행동을 호출자가 직접 정의하고 전달할 수 있어, 호출자와 비동기 실행자를 느슨하게 결합한다.
 > 3. **판단 포인트**: 콜백 지옥(Callback Hell / Pyramid of Doom)은 중첩 콜백이 만드는 가독성·유지보수성 붕괴다 — Promise, async/await, Observable이 이를 해결하는 발전된 패턴이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 콜백이 필요한 이유
 
@@ -58,7 +59,7 @@ element.addEventListener("click", () => console.log("클릭됨")); // 이벤트 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 콜백 패턴 흐름
 
@@ -125,7 +126,7 @@ getUser(userId, function(err, user) {
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 비동기 처리 패턴 비교
 
@@ -155,7 +156,7 @@ getUser(userId, function(err, user) {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Java Callback 패턴 구현
 
@@ -209,7 +210,7 @@ fs.readFile('file.txt', 'utf8', (err, data) => {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 콜백 패턴은 비동기 프로그래밍의 출발점이자, 현대 비동기 패턴들(Promise, async/await, Reactive Streams)의 원형이다:
 

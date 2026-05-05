@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 1×1 합성곱(1x1 Convolution, Pointwise Convolution)은 공간 정보(Spatial Information)를 그대로 유지하면서 채널(Channel) 수만 선택적으로 변환하는 연산으로, 채널 간 선형 결합(Linear Combination)을 학습한다.
+> **핵심**: 1×1 합성곱(1x1 Convolution, Pointwise Convolution)은 공간 정보(Spatial Information)를 그대로 유지하면서 채널(Channel) 수만 선택적으로 변환하는 연산으로, 채널 간 선형 결합(Linear Combination)을 학습한다.
 > 2. **가치**: 차원 축소(Dimensionality Reduction)로 계산량을 대폭 줄이고, 비선형 활성화 함수(Non-linear Activation)와 결합하여 표현력을 높이면서도 파라미터를 효율적으로 사용한다.
 > 3. **판단 포인트**: 시험에서는 1×1 합성곱이 채널 차원 축소로 어떻게 연산량을 줄이는지 계산, 보틀넥 구조(Bottleneck Architecture)에서의 역할, NIN (Network in Network), GoogLeNet(Inception), ResNet에서의 활용 맥락을 묻는다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1×1 합성곱의 등장 배경
 
@@ -35,7 +37,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1×1 합성곱 연산 원리
 
@@ -128,7 +130,7 @@ Concatenate (채널 방향 결합)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 관련 기법과의 비교
 
@@ -151,7 +153,7 @@ MobileNet은 일반 합성곱을 깊이별 합성곱(Depthwise Conv)과 1×1 합
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 설계 사용 시나리오
 
@@ -181,7 +183,7 @@ ResNet의 스킵 연결(Skip Connection)에서 입력과 출력의 채널 수가
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1×1 합성곱의 3대 효과
 

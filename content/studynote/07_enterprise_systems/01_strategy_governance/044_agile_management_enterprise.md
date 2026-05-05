@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 기업 애자일(Enterprise Agile)은 소프트웨어 개발팀의 스크럼/칸반을 넘어 — 포트폴리오, 제품, 팀의 세 계층에서 반복적 가치 전달과 지속적 개선을 조직 전체로 확장하는 경영 패러다임이다.
 > 2. SAFe(Scaled Agile Framework), LeSS(Large-Scale Scrum), Spotify 모델 등 확장 프레임워크는 수십~수백 개 팀 간의 의존성 조율, 릴리즈 동기화, 지속적 통합 문제를 해결하지만 — 각 조직의 문화·구조에 맞지 않는 무비판적 도입이 "Agile 극장(Agile Theater)"으로 이어지는 위험이 있다.
 > 3. 기업 애자일의 핵심은 프로세스 준수가 아닌 "고객 가치 흐름을 중단 없이 가속"하는 것이며 — OKR(Objectives and Key Results)과의 결합을 통해 전략 목표에서 팀 스프린트까지의 정렬(Alignment)이 달성될 때 진정한 비즈니스 애자일리티가 실현된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 기업 애자일 개요
+## 1. 개요 및 필요성
 
 ```
 기업 애자일 (Enterprise Agile):
@@ -53,7 +56,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅱ. SAFe — 확장 애자일 프레임워크
+## 2. 구성요소
 
 ```
 SAFe (Scaled Agile Framework):
@@ -93,7 +96,7 @@ SAFe의 장단점:
 
 ---
 
-## Ⅲ. Spotify 모델 & OKR
+## 3. 구조 및 동작 원리
 
 ```
 Spotify 모델:
@@ -145,7 +148,7 @@ OKR (Objectives and Key Results):
 
 ---
 
-## Ⅳ. 기업 애자일 전환 실패 패턴
+## 4. 비교 및 트레이드오프
 
 ```
 기업 애자일 전환 실패 패턴:
@@ -191,7 +194,7 @@ OKR (Objectives and Key Results):
 
 ---
 
-## Ⅴ. 실무 시나리오 — 은행 디지털 전환
+## 5. 실무 적용 및 최적화 기법
 
 ```
 대형 은행 디지털 전환 기업 애자일:

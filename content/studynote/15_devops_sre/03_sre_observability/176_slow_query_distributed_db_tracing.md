@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 분산 DB에서 슬로우 쿼리는 단일 노드 문제가 아니라 여러 샤드·레플리카·네트워크 홉이 뒤얽힌 복합 지연이다.
+> **핵심**: 분산 DB에서 슬로우 쿼리는 단일 노드 문제가 아니라 여러 샤드·레플리카·네트워크 홉이 뒤얽힌 복합 지연이다.
 > 2. **가치**: 분산 추적(OpenTelemetry Span)과 쿼리 플랜(EXPLAIN)을 결합하면 "어느 노드의 어떤 인덱스 스캔이 병목"인지 밀리초 단위로 역추적할 수 있다.
 > 3. **판단 포인트**: 쿼리 실행 시간 P99 > SLO 임계값일 때 Full Table Scan 여부, 인덱스 선택 오류, 통계 불일치(Stale Statistics)를 순서대로 점검한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 분산 데이터베이스 환경에서 단일 쿼리는 수십 개의 샤드(Shard)와 레플리카(Replica)에 분산 실행된다. 이때 슬로우 쿼리(Slow Query)는 단순한 "느린 SQL"이 아니라 네트워크 레이턴시, 잠금 대기(Lock Wait), 플랜 캐시 미스(Plan Cache Miss), 파티션 프루닝(Partition Pruning) 실패 등 여러 요인이 겹쳐 발생한다.
 
@@ -27,7 +29,7 @@ OpenTelemetry의 DB Span Attributes(`db.statement`, `db.operation`, `db.sql.tabl
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 분산 쿼리 실행 흐름 및 추적 포인트
 
@@ -86,7 +88,7 @@ OpenTelemetry의 DB Span Attributes(`db.statement`, `db.operation`, `db.sql.tabl
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 단일 DB vs 분산 DB 슬로우 쿼리 분석 비교
 
@@ -111,7 +113,7 @@ OpenTelemetry의 DB Span Attributes(`db.statement`, `db.operation`, `db.sql.tabl
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 슬로우 쿼리 탐지 Prometheus Alert 예시
 
@@ -147,7 +149,7 @@ groups:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 분산 DB 슬로우 쿼리 역추적 체계를 구축하면 P99 레이턴시 SLO 위반 사전 감지율이 크게 향상된다. 쿼리 핑거프린트(Fingerprint) 집계를 통해 동일 패턴의 반복 슬로우 쿼리를 조기에 발견하고 인덱스 최적화나 쿼리 리팩토링으로 선제 대응할 수 있다.
 

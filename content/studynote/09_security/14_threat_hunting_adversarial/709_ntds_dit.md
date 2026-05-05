@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: NTDS.dit 추출은 Active Directory의 모든 사용자 계정, 그룹 정보, NTLM 비밀번호 해시가 담긴 데이터베이스 파일을 복사하여 자격증명을 탈취하는 공격이다.
+> **핵심**: NTDS.dit 추출은 Active Directory의 모든 사용자 계정, 그룹 정보, NTLM 비밀번호 해시가 담긴 데이터베이스 파일을 복사하여 자격증명을 탈취하는 공격이다.
 > 2. **가치**: 도메인 컨트롤러(DC)를 직접 장악한 후 수행하는 '최후의 탈취' 단계로, 도메인 내 수만 명의 사용자 해시를 오프라인으로 덤프할 수 있게 한다.
 > 3. **판단 포인트**: DC의 로컬 관리자 권한 방어와 더불어 볼륨 섀도 복사본(VSS) 생성 및 ntdsutil 실행과 같은 비정상적인 데이터베이스 접근 행위를 모니터링해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 `NTDS.dit` 파일은 Active Directory의 '심장'과 같다. 도메인의 모든 객체 정보가 이 파일 하나에 저장되어 있으며, 당연히 모든 도메인 사용자의 비밀번호 해시도 포함된다. 공격자가 DC의 로컬 관리자 권한을 얻으면, 이 파일을 훔쳐서 도메인 전체의 자격증명을 한꺼번에 손에 넣으려 한다.
 
@@ -23,7 +25,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 `NTDS.dit` 파일은 `%SystemRoot%\NTDS\NTDS.dit`에 위치한다. 이를 성공적으로 파싱하여 해시를 얻으려면, 암호화 키가 들어있는 `SYSTEM` 레지스트리 하이브 파일이 반드시 함께 필요하다.
 
@@ -62,7 +64,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 `708. DCSync`와 `NTDS.dit 추출`은 모두 AD의 모든 정보를 노리지만 실행 환경이 다르다.
 
@@ -79,7 +81,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 방어자는 DC 내에서 `ntdsutil.exe`, `vssadmin.exe`와 같은 도구가 실행되는 것을 극도로 경계해야 한다. 백업 솔루션이 사용하는 정기적인 스케줄 외의 실행은 100% 공격으로 간주해야 한다.
 
@@ -96,7 +98,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 NTDS.dit 보호의 핵심은 DC 자체의 물리적/논리적 보안이다. 'Read-Only Domain Controller (RODC)'를 지점(Branch Office)에 배치하여 NTDS.dit가 탈취되더라도 위험을 최소화하거나, 'Privileged Access Workstations (PAW)'를 통해 DC 접근을 엄격히 통제해야 한다.
 

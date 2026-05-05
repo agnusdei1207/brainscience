@@ -5,15 +5,20 @@ weight = 83
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> **핵심**: (개념 본질)
+> **비유**: (개념 비유)
+
+> 📝 모범 답안
+
 - **본질**: AES (Advanced Encryption Standard)는 128비트 블록을 10/12/14라운드로 섞는 대칭키 블록 암호이며, Rijndael 설계를 표준화한 것이다.
 - **가치**: NIST (National Institute of Standards and Technology) 표준과 AES-NI (AES New Instructions) 덕분에 강한 보안성과 높은 성능을 동시에 얻는다.
 - **판단 포인트**: AES 코어만 보고 안전하다고 끝내면 안 되고, ECB (Electronic Codebook)/CBC (Cipher Block Chaining)/CTR (Counter)/GCM (Galois/Counter Mode) 같은 운용 모드와 nonce/IV (Initialization Vector)/키 관리가 실제 보안을 결정한다.
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 AES (Advanced Encryption Standard)는 56비트 DES (Data Encryption Standard)가 더 이상 버티지 못하던 상황에서 나온 차세대 표준이다. 1990년대 후반에는 병렬 컴퓨팅으로 DES를 짧은 시간에 깨는 것이 가능해졌고, 이에 따라 NIST (National Institute of Standards and Technology)는 공개 경쟁을 통해 새 표준을 뽑았다. 그 결과 2001년 Rijndael이 AES로 채택되었다.
 
@@ -27,7 +32,7 @@ DES(56bit) ─► 전수조사 취약 ─► NIST 공모전 ─► Rijndael ─�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 AES는 4x4 바이트 행렬(State) 위에서 동작한다. 블록 크기는 128비트로 고정이고, 키 길이에 따라 라운드 수가 달라진다. AES-128은 10라운드, AES-192는 12라운드, AES-256은 14라운드를 수행한다.
 
@@ -52,7 +57,7 @@ AES-NI (AES New Instructions)는 이 과정을 CPU 명령어로 가속한다. �
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 AES가 DES와 다른 점은 키 길이뿐 아니라 구조다. DES는 Feistel 구조였고, AES는 SPN (Substitution-Permutation Network) 구조다. SPN은 전체 블록을 한 번에 비선형 치환과 확산으로 섞기 때문에 하드웨어 구현과 병렬화에 유리하다.
 
@@ -71,7 +76,7 @@ AES는 TLS, VPN (Virtual Private Network), 파일 암호화, 디스크 암호화
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 보통 AES-128-GCM이 기본 선택이다. 일반적인 웹/모바일 트래픽에서는 처리량과 보안의 균형이 좋고, AES-NI가 있으면 더 유리하다. 반면 장기 보존이 필요하거나, 키 노출 후 회복 여지가 작거나, 양자 위협을 길게 보아야 하면 AES-256-GCM이 더 안전하다.
 
@@ -88,7 +93,7 @@ Grover 알고리즘은 양자 컴퓨터에서 전수조사의 효율을 사실�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 AES의 강점은 표준화, 성능, 구현 용이성이다. 하지만 "AES를 쓴다"가 곧 "안전하다"를 의미하지는 않는다. 모드, nonce, IV, 키 관리가 같이 맞아야 실무 보안이 완성된다.
 

@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Refresh Token은 수명이 짧은 Access Token이 만료되었을 때, 사용자의 개입(ID/PW 입력) 없이 새로운 Access Token을 안전하게 발급받기 위한 장기 인증 증명서이다.
+> **핵심**: Refresh Token은 수명이 짧은 Access Token이 만료되었을 때, 사용자의 개입(ID/PW 입력) 없이 새로운 Access Token을 안전하게 발급받기 위한 장기 인증 증명서이다.
 > 2. **가치**: Access Token의 유효 기간을 극단적으로 단축하여 탈취 시 피해를 최소화하면서도, 빈번한 로그아웃을 방지하여 사용자 경험(UX)을 유지하는 보안-편의성 균형 도구이다.
 > 3. **판단 포인트**: Refresh Token 탈취 시 무한 재발급 위험이 있으므로, 한 번 사용된 Refresh Token을 즉시 폐기하고 새 토큰을 주는 **RTR (Refresh Token Rotation)** 기법 도입을 필수적으로 검토해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Access Token은 클라이언트가 자원 서버에 접근할 때마다 전송되므로 노출 위험이 크다. 이를 방어하기 위해 Access Token의 수명을 짧게(예: 30분) 설정하는데, 이때마다 사용자가 다시 로그인해야 한다면 서비스 사용이 불가능해진다. Refresh Token은 이러한 문제를 해결하기 위해 등장했다.
 
@@ -26,7 +28,7 @@ Access Token은 클라이언트가 자원 서버에 접근할 때마다 전송�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Refresh Token은 인증 서버(Authorization Server)에만 전송되며, 자원 서버(Resource Server)에는 전달되지 않는다.
 
@@ -61,7 +63,7 @@ Refresh Token은 인증 서버(Authorization Server)에만 전송되며, 자원 
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | Access Token | Refresh Token |
 |:---|:---|:---|
@@ -76,7 +78,7 @@ Refresh Token은 인증 서버(Authorization Server)에만 전송되며, 자원 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 보안 체크리스트
 1. **HttpOnly 쿠키 사용**: 자바스크립트에서 접근할 수 없도록 설정하여 XSS로부터 RT 보호.
@@ -90,7 +92,7 @@ Refresh Token은 인증 서버(Authorization Server)에만 전송되며, 자원 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Refresh Token은 분실 위험이 큰 Access Token의 약점을 보완하며 서비스의 영속성을 보장한다. 하지만 RT 자체가 탈취되면 공격자가 지속적으로 권한을 유지할 수 있다는 치명적인 약점이 있다.
 

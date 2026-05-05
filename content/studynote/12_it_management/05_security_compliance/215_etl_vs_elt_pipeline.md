@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: ETL(Extract-Transform-Load, 추출·변환·적재)은 변환을 별도 서버에서 수행 후 DW에 적재하는 전통 방식이고, ELT(Extract-Load-Transform, 추출·적재·변환)는 원시 데이터를 먼저 클라우드 DW/Lakehouse에 적재한 뒤 DW의 분산 연산 능력으로 변환하는 현대적 패턴이다.
+> **핵심**: ETL(Extract-Transform-Load, 추출·변환·적재)은 변환을 별도 서버에서 수행 후 DW에 적재하는 전통 방식이고, ELT(Extract-Load-Transform, 추출·적재·변환)는 원시 데이터를 먼저 클라우드 DW/Lakehouse에 적재한 뒤 DW의 분산 연산 능력으로 변환하는 현대적 패턴이다.
 > 2. **가치**: ELT는 클라우드 DW(Snowflake, BigQuery, Redshift)의 MPP(Massively Parallel Processing, 대규모 병렬 처리) 능력을 활용하여 ETL 전용 서버 비용을 제거하고, 원시 데이터를 보존하여 재처리·탐색적 분석을 가능케 한다.
 > 3. **판단 포인트**: 온프레미스·레거시 DW 환경이거나 변환 로직이 복잡하고 데이터 보안·마스킹이 적재 전에 필수라면 ETL이 적합하며, 클라우드 DW 중심·빅데이터 규모·빠른 반복 개발이 필요하면 ELT가 우세하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 ETL의 탄생과 클라우드로의 전환
 1990년대 데이터 웨어하우스 도입과 함께 탄생한 ETL은 Informatica, IBM DataStage, Talend 등 전용 서버에서 데이터를 추출·정제·변환한 뒤 DW에 적재했다. 이 방식은 DW의 저장·연산 비용이 높던 시대에 최적이었다.
@@ -33,7 +35,7 @@ Fivetran (Extract+Load) → Raw Layer (S3/Snowflake) → dbt (Transform) → Mar
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 ETL vs ELT 처리 흐름 비교
 
@@ -91,7 +93,7 @@ Fivetran (Extract+Load) → Raw Layer (S3/Snowflake) → dbt (Transform) → Mar
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 배치(Batch) vs 스트리밍(Streaming) vs 마이크로배치(Micro-batch)
 
@@ -114,7 +116,7 @@ Fivetran (Extract+Load) → Raw Layer (S3/Snowflake) → dbt (Transform) → Mar
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 ETL/ELT 선택 판단 기준
 
@@ -144,7 +146,7 @@ Fivetran (Extract+Load) → Raw Layer (S3/Snowflake) → dbt (Transform) → Mar
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 ELT 도입 효과
 

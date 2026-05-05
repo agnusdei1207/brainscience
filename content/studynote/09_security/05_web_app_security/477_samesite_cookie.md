@@ -5,28 +5,31 @@ date = "2025-05-14"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> |      Site B       |
+
+> 📝 모범 답안
+
 1. SameSite 쿠키는 브라우저가 교차 사이트 요청(Cross-Site Request) 시 쿠키를 전송할지 여부를 결정하는 보안 속성이다.
 2. CSRF(Cross-Site Request Forgery) 공격을 방어하는 가장 현대적이고 강력한 브라우저 레벨의 방어 수단이다.
 3. Chrome 80 버전부터 'Lax'가 기본값이 되어, 명시적으로 설정하지 않아도 기본적인 보안이 강화되었다.
 
 ---
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 - **정의**: HTTP 응답 헤더 `Set-Cookie`에 추가되는 속성으로, 제3자 사이트에서 발생한 요청 시 쿠키 전송 범위를 제한한다.
 - **등장 배경**: 전통적인 쿠키 메커니즘은 사이트의 출처(Origin)와 관계없이 무조건 쿠키를 함께 전송하는 특성 때문에 CSRF 공격에 취약했다. 이를 해결하기 위해 브라우저가 스스로 쿠키를 필터링하도록 설계되었다.
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 - **전송 메커니즘**: 사용자가 Site A에서 Site B로 요청을 보낼 때, 브라우저는 Site B의 쿠키가 SameSite 속성을 가지고 있는지 확인한다.
 
 ```text
 [ Browser SameSite Cookie Decision ]
 +-------------------+       (1) Cross-Site Request      +-------------------+
-|      Site A       | --------------------------------> |      Site B       |
-| (Attacker's Site) |                                   |  (Target Server)  |
+|      Site A       | --------------------------------| (Attacker's Site) |                                   |  (Target Server)  |
 +-------------------+                                   +-------------------+
           |                                                       ^
           | [ Browser Policy Engine ]                             |
@@ -46,7 +49,7 @@ categories = "studynote-security"
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 구분 | Strict | Lax (Default) | None |
 | :--- | :--- | :--- | :--- |
@@ -58,7 +61,7 @@ categories = "studynote-security"
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 - **기술사적 판단**: SameSite 속성은 'Defense in Depth' 관점에서 1차 방어선이다. 브라우저 파편화(구형 브라우저 미지원)를 고려하여 CSRF Token과 병행하여 사용하는 것이 표준이다.
 - **실무 적용 전략**:
     - **Chrome 정책 대응**: `SameSite=None` 설정 시 반드시 `Secure` 속성을 추가하지 않으면 쿠키가 거부되므로 HTTPS 환경 구축이 필수적이다.
@@ -66,7 +69,7 @@ categories = "studynote-security"
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 - **기대효과**: 서버 측의 복잡한 로직 없이 브라우저 단에서 CSRF 및 정보 유출(XS-Leaks) 위험을 획기적으로 낮춘다.
 - **결론**: SameSite는 현대 웹 보안의 'Default Secure' 철학을 반영하는 핵심 기술이며, 웹 개발 시 필수적으로 고려해야 할 표준 명세이다.
 

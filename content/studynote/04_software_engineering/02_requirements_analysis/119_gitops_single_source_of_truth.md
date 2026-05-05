@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: GitOps는 **Git 리포지토리를 인프라·애플리케이션의 단일 진실 원천(Single Source of Truth)**으로 삼고, Git에 선언된 상태와 실제 클러스터 상태를 **자동으로 동기화(Reconciliation)**하는 운영 패러다임이다.
+> **핵심**: GitOps는 **Git 리포지토리를 인프라·애플리케이션의 단일 진실 원천(Single Source of Truth)**으로 삼고, Git에 선언된 상태와 실제 클러스터 상태를 **자동으로 동기화(Reconciliation)**하는 운영 패러다임이다.
 > 2. **가치**: 수동 `kubectl apply`·콘솔 조작은 변경 이력이 없고 리뷰가 불가능하지만, GitOps는 **모든 변경이 PR→리뷰→머지→자동 적용** 흐름을 따르므로 감사 가능성·재현성·롤백이 보장된다.
 > 3. **판단 포인트**: **Push 방식(CI가 kubectl push)** vs **Pull 방식(ArgoCD/Flux가 Git을 감시)**을 구분하고, Pull 방식이 보안(클러스터 외부에 kubectl 크레덴셜 불필요)에서 우수하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -31,7 +33,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Push vs Pull 방식
 
@@ -51,7 +53,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 수동 운영 | CI/CD | GitOps |
 |:---|:---|:---|:---|
@@ -61,7 +63,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 리포지토리 구조
 - **App Repo**: 소스코드 + Dockerfile.
@@ -70,7 +72,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | 수동 | GitOps | 개선 |
 |:---|:---|:---|:---|

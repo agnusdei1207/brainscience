@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 메모리 매핑 파일 (mmap, Memory-Mapped File)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 메모리 매핑 파일 (mmap)은 하드 디스크에 있는 파일의 내용을 프로세스의 가상 주소 공간(Virtual Address Space)에 논리적으로 1:1 연결(매핑)하여, **파일 I/O를 마치 메모리 배열(Array)에 접근하는 것처럼 처리하는 커널 기술**이다.
+> **핵심**: 메모리 매핑 파일 (mmap)은 하드 디스크에 있는 파일의 내용을 프로세스의 가상 주소 공간(Virtual Address Space)에 논리적으로 1:1 연결(매핑)하여, **파일 I/O를 마치 메모리 배열(Array)에 접근하는 것처럼 처리하는 커널 기술**이다.
 > 2. **가치**: 지루하고 무거운 `read()`, `write()` 시스템 콜과 데이터의 중복 복사(CPU Copy) 과정을 완전히 제거함으로써, 대용량 파일 처리와 데이터베이스 엔진의 I/O 성능을 극한으로 끌어올리는 제로 카피(Zero-copy)의 근간이 된다.
 > 3. **융합**: 가상 메모리의 요구 페이징(Demand Paging) 메커니즘과 파일 시스템의 페이지 캐시(Page Cache)를 물리적으로 통합시킨 운영체제 아키텍처의 걸작이며, 프로세스 간 초고속 공유 메모리(Shared Memory) 구현에도 널리 쓰인다.
 
+> 📝 모범 답안
+
+# 메모리 매핑 파일 (mmap, Memory-Mapped File)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: UNIX/Linux의 `mmap()` (Memory Mapped) 시스템 콜은 특정 파일의 일부나 전체를 프로세스의 가상 메모리 영역으로 끌어들인다. 매핑이 끝나면 개발자는 파일 식별자(File Descriptor)를 통한 함수 호출 대신, 단순한 포인터 변수(`char *p`)에 값을 대입하는 것만으로 디스크의 파일을 수정할 수 있다.
 
@@ -67,7 +69,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### mmap의 내부 동작 파이프라인 (요구 페이징과의 결합)
 
@@ -116,7 +118,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### Mmap (제로 카피) vs 일반 파일 I/O 시스템 콜 성능 비교
 
@@ -139,7 +141,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 최적화 함정
 
@@ -186,7 +188,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

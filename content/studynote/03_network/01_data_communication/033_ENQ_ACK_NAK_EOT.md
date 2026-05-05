@@ -4,15 +4,18 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-network"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. ENQ·ACK·NAK·EOT는 BSC(Binary Synchronous Communication) 프로토콜의 핵심 제어 문자로, 데이터 링크 계층의 회선 확보·긍정/부정 응답·전송 종료를 담당한다.
 > 2. 이 제어 문자 체계는 반이중 통신에서 양방향 데이터 교환을 위한 기본 핸드셰이킹 메커니즘의 원형이며, 현대 ARQ 프로토콜의 직접적 선조다.
 > 3. TCP의 SYN/ACK, HTTP의 요청/응답, Modbus RTU 등 현대 프로토콜에서도 같은 개념이 다른 형태로 살아있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. ASCII 제어 문자 개요
+## 1. 개요 및 필요성
 
 BSC(Binary Synchronous Communication)에서 사용하는 제어 문자는 **ASCII 코드 표준(1963)**으로 정의된 비인쇄 문자들이다.
 
@@ -30,7 +33,7 @@ BSC(Binary Synchronous Communication)에서 사용하는 제어 문자는 **ASCI
 
 ---
 
-## Ⅱ. BSC 데이터 전송 시퀀스
+## 2. 구성요소
 
 ### 정상 전송 시나리오
 
@@ -62,7 +65,7 @@ BSC(Binary Synchronous Communication)에서 사용하는 제어 문자는 **ASCI
 
 ---
 
-## Ⅲ. ACK0 / ACK1 — 교대 확인 응답
+## 3. 구조 및 동작 원리
 
 BSC에서는 오류 감지를 위해 **ACK0과 ACK1을 교대로 사용**해 블록 번호를 구분한다.
 
@@ -79,7 +82,7 @@ BSC에서는 오류 감지를 위해 **ACK0과 ACK1을 교대로 사용**해 블
 
 ---
 
-## Ⅳ. ENQ/ACK에서 TCP/IP까지 — 발전 계보
+## 4. 비교 및 트레이드오프
 
 ```
 BSC ENQ/ACK (1960년대)
@@ -105,7 +108,7 @@ QUIC (2018~) — UDP + ACK, 0-RTT, 손실 기반 혼잡 제어
 
 ---
 
-## Ⅴ. Modbus RTU — 산업 현장의 ENQ/ACK
+## 5. 실무 적용 및 최적화 기법
 
 산업 자동화에서는 **Modbus RTU 프로토콜**이 ENQ/ACK 개념을 계승한다.
 

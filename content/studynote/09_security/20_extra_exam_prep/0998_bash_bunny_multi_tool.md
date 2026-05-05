@@ -5,15 +5,19 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> 2. Emulate HID Keyboard -> Opens Terminal
+
+> 📝 모범 답안
+
 1. **본질**: 고성능 임베디드 리눅스(Debian) 시스템을 USB 외형에 담아, HID 키보드, 네트워크 어댑터, 저장 장치 등 다양한 장치로 동시에 위장하여 복합적인 공격을 수행하는 도구다.
 2. **가치**: 단순한 키보드 입력을 넘어, 가짜 네트워크 게이트웨이를 만들어 트래픽을 가로채거나(MITM), 메모리 덤프를 네트워크로 즉시 전송하는 등 '포켓 사이즈의 해킹 워크스테이션' 역할을 한다.
 3. **판단 포인트**: 다단계 페이로드와 복합 인터페이스를 지원하므로, 물리 포트 보안 정책 수립 시 가장 강력한 위협 모델로 상정하고 대응 시나리오를 짜야 한다.
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Bash Bunny(배쉬 버니)는 Rubber Ducky를 개발한 Hak5의 또 다른 강력한 하드웨어 침투 도구다. Rubber Ducky가 '빠른 키보드'라면, Bash Bunny는 '똑똑한 컴퓨터'다. 쿼드코어 CPU와 RAM을 갖춘 독립된 리눅스 머신이 USB 포트에 꽂히는 순간, 타겟 시스템은 이 장치를 단순한 주변 장치가 아닌 '신뢰할 수 있는 네트워크 어댑터'나 '고성능 스토리지'로 인식하게 된다.
 
@@ -23,7 +27,7 @@ Bash Bunny(배쉬 버니)는 Rubber Ducky를 개발한 Hak5의 또 다른 강력
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Bash Bunny의 강력함은 여러 가상 장치를 동시에 띄울 수 있는 '멀티 페이로드' 기능에서 나온다.
 
@@ -36,8 +40,7 @@ Bash Bunny의 강력함은 여러 가상 장치를 동시에 띄울 수 있는 '
 
 ```text
 [ Bash Bunny Complex Attack ]
-1. Plugin -> 2. Emulate HID Keyboard -> Opens Terminal
-3. Emulate Ethernet Adapter (CDC-ECM) -> Target OS sets it as Default Gateway
+1. Plugin -3. Emulate Ethernet Adapter (CDC-ECM) -> Target OS sets it as Default Gateway
 4. Bash Bunny runs 'Responder' inside -> Sniffs LLMNR/NBT-NS hashes
 5. Bash Bunny Emulates Mass Storage -> Saves captured hashes to internal storage
 6. Attack Finished (LED turns Green)
@@ -49,7 +52,7 @@ Bash Bunny의 강력함은 여러 가상 장치를 동시에 띄울 수 있는 '
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Bash Bunny는 다른 침투 도구들과 확실히 차별화되는 고기능성을 제공한다.
 
@@ -67,7 +70,7 @@ Bash Bunny는 **MITM (Man-In-The-Middle)** 공격과 결합될 때 무서운 위
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 Bash Bunny와 같은 고성능 도구에 대응하기 위해서는 단순한 포트 차단 이상의 전략이 필요하다.
 
@@ -84,7 +87,7 @@ Bash Bunny와 같은 고성능 도구에 대응하기 위해서는 단순한 포
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Bash Bunny 대응 체계를 구축하면 물리적 보안 사고로 인한 대규모 정보 유출 리스크를 획기적으로 낮출 수 있다. 이는 단순한 침입 탐지를 넘어, 공격자가 시스템 내부에 발을 붙이지 못하게 하는 '철벽 방어'의 시작이 된다.
 

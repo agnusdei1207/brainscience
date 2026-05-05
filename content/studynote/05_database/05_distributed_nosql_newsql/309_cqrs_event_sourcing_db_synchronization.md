@@ -5,17 +5,19 @@ date = "2026-04-07"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-# CQRS 아키텍처와 DB 동기화 (Event Sourcing 연동)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CQRS(명령 조회 책임 분리) 환경에서 **DB 동기화**는 쓰기 전용 DB(Command Model)에 발생한 상태 변경 내역을 읽기 전용 DB(Query Model, View DB)로 전파하여 두 물리적 데이터베이스 간의 데이터 무결성을 맞추는 비동기 아키텍처 매커니즘이다.
+> **핵심**: CQRS(명령 조회 책임 분리) 환경에서 **DB 동기화**는 쓰기 전용 DB(Command Model)에 발생한 상태 변경 내역을 읽기 전용 DB(Query Model, View DB)로 전파하여 두 물리적 데이터베이스 간의 데이터 무결성을 맞추는 비동기 아키텍처 매커니즘이다.
 > 2. **가치**: 쓰기(RDBMS)와 읽기(NoSQL, Search Engine)에 가장 특화된 이기종 데이터베이스의 장점을 극대화하면서도, 두 시스템 간의 결합도를 끊어내어 어느 한쪽의 장애나 병목이 다른 쪽에 영향을 주지 않도록 시스템의 고가용성(High Availability)을 보장한다.
 > 3. **융합**: 완벽한 DB 동기화를 위해서는 트랜잭션 도중 메시지 유실을 막는 **아웃박스(Outbox) 패턴**과, 데이터의 진실의 원천(Source of Truth)을 확보하는 **이벤트 소싱(Event Sourcing)**을 결합하여, **최종 일관성(Eventual Consistency)**을 100% 보장하는 파이프라인(Kafka 등)을 구축하는 것이 핵심이다.
 
+> 📝 모범 답안
+
+# CQRS 아키텍처와 DB 동기화 (Event Sourcing 연동)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: CQRS 아키텍처는 쓰기(Write) DB와 읽기(Read) DB를 물리적으로 완전히 분리한다. 클라이언트가 데이터를 수정하면 Write DB만 업데이트된다. 이때 Read DB는 여전히 과거의 데이터를 가지고 있으므로, Write DB에서 변경된 사실을 Read DB 쪽으로 넘겨주어 화면에 뿌려질 모양(Materialized View)으로 즉각 반영(Projection)해야 한다. 이 일련의 비동기 흐름이 CQRS의 DB 동기화다.
 
@@ -32,7 +34,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### CQRS DB 동기화의 3대 핵심 패턴
 
@@ -97,7 +99,7 @@ Outbox 패턴이나 이벤트 소싱을 통해 이벤트를 읽기 DB로 넘길 
 
 ---
 
-## Ⅲ. 실무 적용 및 기술사적 판단
+## 3. 구조 및 동작 원리
 
 ### 실무 시나리오
 
@@ -115,7 +117,7 @@ Outbox 패턴이나 이벤트 소싱을 통해 이벤트를 읽기 DB로 넘길 
 
 ---
 
-## Ⅳ. 기대효과 및 결론
+## 4. 비교 및 트레이드오프
 
 ### 정량/정성 기대효과
 

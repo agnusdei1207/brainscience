@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 커널 권한 상승은 커널 공간의 취약점(UAF, 오버플로우, 레이스 조건)을 이용해 커널 자료구조(cred, token)를 조작하여 프로세스에 루트/SYSTEM 권한을 부여하는 가장 강력한 로컬 권한 상승이다.
+> **핵심**: 커널 권한 상승은 커널 공간의 취약점(UAF, 오버플로우, 레이스 조건)을 이용해 커널 자료구조(cred, token)를 조작하여 프로세스에 루트/SYSTEM 권한을 부여하는 가장 강력한 로컬 권한 상승이다.
 > 2. **가치**: 커널은 시스템의 모든 권한을 관장하므로, 커널 익스플로잇 성공은 모든 보안 경계(AppArmor, SELinux, 컨테이너)를 무력화한다.
 > 3. **판단 포인트**: 방어는 커널 패치 즉시 적용, KASLR(커널 ASLR), SMEP/SMAP(커널←사용자 공간 실행·접근 방지), seccomp-bpf로 시스템 콜 필터링이 핵심 4층이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 커널 권한 상승 공격은 사용자 공간(ring 3)에서 커널 공간(ring 0)의 취약점을 트리거하여 현재 프로세스의 자격증명 구조체(`struct cred`)를 수정한다. `cred->uid/euid`를 0으로 바꾸면 즉시 루트 프로세스가 된다. Windows에서는 `EPROCESS.Token`을 SYSTEM 토큰으로 교체하는 "token stealing" 기법이 동일 목적을 수행한다.
 
@@ -23,7 +25,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 커널 LPE 공격 단계 (Linux cred 조작)
 
@@ -54,7 +56,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 방어 기술 | 설명 | 우회 방법 |
 |:---|:---|:---|
@@ -67,7 +69,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 커널 보안 강화 실무: ① `CONFIG_SECURITY_YAMA` + ptrace 스코프 제한으로 KASLR 우회를 위한 `/proc/kallsyms` 제한, ② 컨테이너 환경에서 seccomp-bpf 프로파일 적용, ③ gVisor 같은 커널 격리 VM으로 컨테이너-호스트 커널 공격 표면 제거, ④ LKRG(Linux Kernel Runtime Guard)로 cred 조작 실시간 탐지.
 
@@ -77,7 +79,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 커널 LPE 방어의 핵심은 공격자가 커널 주소를 알 수 없게(KASLR), 설령 안다고 해도 사용자 공간에서 커널로 실행 흐름이 넘어오지 않게(SMEP), 커널이 사용자 메모리를 직접 신뢰하지 않게(SMAP) 하는 3중 구조다. 장기적으로 eBPF 검증기 강화, Rust for Linux의 메모리 안전 커널 드라이버가 커널 취약점 근원을 줄이는 방향이다.
 

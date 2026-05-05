@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: HPKP (HTTP Public Key Pinning)는 서버가 브라우저에게 "앞으로 이 공개키만 신뢰하라"고 강제하는 헤더였으나, 잘못 설정 시 사이트가 영구 차단되는 치명적 위험으로 Chrome 68+ 이후 완전 제거됐다.
+> **핵심**: HPKP (HTTP Public Key Pinning)는 서버가 브라우저에게 "앞으로 이 공개키만 신뢰하라"고 강제하는 헤더였으나, 잘못 설정 시 사이트가 영구 차단되는 치명적 위험으로 Chrome 68+ 이후 완전 제거됐다.
 > 2. **가치**: HPKP가 해결하려 했던 불법 CA (Certification Authority) 발급 인증서 문제는 이제 CAA (Certification Authority Authorization) DNS 레코드와 CT (Certificate Transparency)로 더 안전하게 대체된다.
 > 3. **판단 포인트**: 기술사 시험에서 HPKP 언급 시 "왜 실패했나"와 "무엇으로 대체됐나" 두 축을 반드시 서술해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 SSL/TLS (Secure Sockets Layer / Transport Layer Security) 생태계는 수백 개의 CA가 존재하며, 그 중 하나라도 침해되면 공격자가 임의 도메인에 대한 유효한 인증서를 발급받을 수 있다. 2011년 DigiNotar 해킹 사건이 대표적으로, 공격자는 *.google.com 인증서를 획득해 이란 사용자를 중간자 공격(MITM, Man-In-The-Middle Attack)으로 감청했다.
 
@@ -25,7 +27,7 @@ SSL/TLS (Secure Sockets Layer / Transport Layer Security) 생태계는 수백 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### HPKP 동작 흐름
 
@@ -64,7 +66,7 @@ SPKI Fingerprint 생성: `openssl x509 -pubkey -noout | openssl pkey -pubin -out
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### HPKP vs 대체 기술 비교
 
@@ -89,7 +91,7 @@ example.com. CAA 0 iodef "mailto:security@example.com"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **HPKP 폐기 교훈 3가지**
 
@@ -114,7 +116,7 @@ MTA-STS (Mail Transfer Agent Strict Transport Security)     → 이메일 채널
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 HPKP의 실패는 보안 기술 설계에서 **"오류 허용성(Fault Tolerance)"과 "운영 복잡성(Operational Complexity)"을 함께 고려해야 한다**는 중요한 교훈을 남겼다. PKI (Public Key Infrastructure) 생태계의 신뢰 문제는 여전히 진화 중이며, CAA + CT + DANE의 조합이 현재 최선의 답에 가깝다.
 

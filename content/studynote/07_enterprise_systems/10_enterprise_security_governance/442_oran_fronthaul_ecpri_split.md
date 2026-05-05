@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: O-RAN(Open Radio Access Network)은 기지국의 소프트웨어와 하드웨어를 분리하여 다양한 벤더의 장비가 표준 인터페이스로 협동하는 개방형 이동통신 아키텍처로, eCPRI(enhanced Common Public Radio Interface)가 O-DU와 O-RU 간 프론트홀(Fronthaul) 링크의 핵심 전송 프로토콜이다.
+> **핵심**: O-RAN(Open Radio Access Network)은 기지국의 소프트웨어와 하드웨어를 분리하여 다양한 벤더의 장비가 표준 인터페이스로 협동하는 개방형 이동통신 아키텍처로, eCPRI(enhanced Common Public Radio Interface)가 O-DU와 O-RU 간 프론트홀(Fronthaul) 링크의 핵심 전송 프로토콜이다.
 > 2. **가치**: 단일 벤더 종속(Vendor Lock-in)을 탈피하고, 클라우드 기반의 가상화된 RAN(vRAN)을 구현하여 운영 비용을 40% 이상 절감하는 동시에 5G·6G 네트워크의 빠른 기능 혁신을 가능케 한다.
 > 3. **판단 포인트**: O-RAN의 핵심 기술적 도전은 Split Option 7-2x 기준으로 전송망 지연 시간(Latency)을 100µs 이내로 보장하는 것이며, 이 지연 요건이 전송망 설계의 모든 의사결정을 지배한다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 전통적인 이동통신 기지국은 안테나, 기저대역 처리, 코어망 연동이 단일 벤더의 독점 장비 내에 통합되어 있었다. 이는 네트워크 장비 교체 시 사실상 전체 인프라를 교체해야 하는 막대한 비용을 의미했다.
 
@@ -24,7 +25,7 @@ categories = "studynote-enterprise-systems"
 
 📢 **섹션 요약 비유**: O-RAN은 PC 산업의 IBM 호환 기종 등장과 같다. 독점 메인프레임(기존 기지국)을 표준 부품을 조합하는 PC(개방형 RAN)로 전환하여 비용 혁신과 혁신 가속을 동시에 달성한 역사적 패러다임 전환이다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### O-RAN 계층 구조 및 인터페이스
 
@@ -72,7 +73,7 @@ categories = "studynote-enterprise-systems"
 
 📢 **섹션 요약 비유**: eCPRI Split 7-2x는 마치 요리사(O-DU)가 레시피만 보내고, 현장 요리(O-RU)는 주방에서 직접 하되, 식재료 배달(데이터 전송량)을 최소화하는 방식이다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Open Fronthaul vs 전통 Fronthaul
 
@@ -91,7 +92,7 @@ categories = "studynote-enterprise-systems"
 
 📢 **섹션 요약 비유**: RIC는 스마트 신호등 제어 시스템처럼, 교통 흐름(트래픽) 데이터를 실시간 분석하여 신호 타이밍(자원 할당)을 AI로 최적화하는 '기지국의 두뇌'이다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 시나리오: 통신 사업자 O-RAN 도입 전략 수립
 
@@ -103,7 +104,7 @@ categories = "studynote-enterprise-systems"
 
 📢 **섹션 요약 비유**: O-RAN 도입은 LEGO 블록으로 집을 짓는 것과 같다. 다양한 회사의 블록을 쓸 수 있지만, 블록의 홈(인터페이스)이 표준화되어 있어야 서로 맞아 떨어진다는 전제가 필요하다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 **기대효과**:
 - 기지국 CAPEX 30~40% 절감 (멀티 벤더 경쟁 조달)

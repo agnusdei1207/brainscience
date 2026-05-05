@@ -6,15 +6,17 @@ description = "PBKDF2, bcrypt, scrypt, Argon2 같은 KDF와 솔트를 사용해 
 taxonomy = ""
 tags = ["Software Engineering", "Security", "Password Storage", "KDF", "Salt"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 비밀번호는 암호화가 아니라 해시 기반 KDF (Key Derivation Function)로 저장한다.
+> **핵심**: 비밀번호는 암호화가 아니라 해시 기반 KDF (Key Derivation Function)로 저장한다.
 > 2. **가치**: 솔트(Salt)와 느린 연산으로 무차별 대입을 어렵게 한다.
 > 3. **판단 포인트**: 복구보다 검증을 목표로 설계한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 비밀번호는 원문 복호화가 가능하면 안 된다. 그래서 저장할 때는 되돌릴 수 없는 형태로 바꾼다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Security", "Password Storage", "KDF", "Salt"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 KDF는 입력 비밀번호를 느리고 강하게 변환한다.
 
@@ -44,7 +46,7 @@ PBKDF2 (Password-Based Key Derivation Function 2), bcrypt, scrypt, Argon2가 대
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 해시는 비밀번호 저장의 기본이지만, 속도만 빠르면 위험하다.
 
@@ -60,7 +62,7 @@ PBKDF2 (Password-Based Key Derivation Function 2), bcrypt, scrypt, Argon2가 대
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 파라미터 튜닝, 알고리즘 선택, 마이그레이션 정책이 중요하다.
 
@@ -73,7 +75,7 @@ PBKDF2 (Password-Based Key Derivation Function 2), bcrypt, scrypt, Argon2가 대
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 비밀번호 저장을 제대로 하면 유출 사고의 피해를 줄인다.
 

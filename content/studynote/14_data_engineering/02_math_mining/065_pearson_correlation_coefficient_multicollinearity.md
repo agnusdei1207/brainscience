@@ -5,16 +5,17 @@ date = "2026-04-10"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 피어슨 상관 계수(Pearson Correlation Coefficient)는 두 변수의 선형적 관계를 -1부터 1까지의 값으로 나타낸다.
+> **핵심**: 피어슨 상관 계수(Pearson Correlation Coefficient)는 두 변수의 선형적 관계를 -1부터 1까지의 값으로 나타낸다.
 > 2. **가치**: 상관이 높은 독립 변수들은 다중공선성(Multicollinearity)을 유발해 회귀 분석을 불안정하게 만들 수 있다.
 > 3. **판단**: Pearson만 보지 말고 Spearman, 산점도, VIF(Variance Inflation Factor)까지 함께 봐야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 데이터 분석에서 변수 간 관계를 먼저 보는 것은 매우 중요하다. 피어슨 상관은 가장 널리 쓰이는 선형 관계 지표다.
 
@@ -24,7 +25,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```text
 X, Y
@@ -48,7 +49,7 @@ Interpretation
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | Pearson | Spearman | Kendall |
 | :-- | :-- | :-- | :-- |
@@ -68,7 +69,7 @@ Interpretation
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 체크리스트
 
@@ -91,7 +92,7 @@ Interpretation
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 피어슨 상관 계수와 다중공선성을 함께 보면 변수 관계를 더 안전하게 해석할 수 있다. 모델링 전 진단 도구로 매우 유용하다.
 

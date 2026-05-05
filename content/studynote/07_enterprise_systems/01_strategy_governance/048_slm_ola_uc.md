@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. SLM(Service Level Management)은 SLA·OLA·UC 계층으로 이루어진 서비스 수준 보증 체계 — SLA는 고객 대면 계약, OLA는 내부 팀 간 합의, UC는 외부 공급자와의 계약으로, 세 계층이 정합성을 가져야 SLA 이행이 가능하다.
 > 2. OLA(Operational Level Agreement)가 SLA 이행의 실질적 기반 — 서비스 데스크, 네트워크팀, 서버팀 간 내부 SLA가 없으면 고객 SLA가 깨지는 병목을 어디서도 파악하지 못한다.
 > 3. SLM 구현의 함정 — 계약서에만 SLA를 명시하고 OLA 합의와 측정 도구를 갖추지 않으면 SLA 위반 시 책임 소재를 찾을 수 없는 "서류상의 SLM"으로 전락한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. SLM 계층 구조
+## 1. 개요 및 필요성
 
 ```
 SLM (Service Level Management):
@@ -52,7 +55,7 @@ SLA 체인 원칙:
 
 ---
 
-## Ⅱ. SLA 설계
+## 2. 구성요소
 
 ```
 SLA (Service Level Agreement) 구성요소:
@@ -95,7 +98,7 @@ SLA 작성 원칙:
 
 ---
 
-## Ⅲ. OLA 설계
+## 3. 구조 및 동작 원리
 
 ```
 OLA (Operational Level Agreement):
@@ -138,7 +141,7 @@ OLA 거버넌스:
 
 ---
 
-## Ⅳ. SLM 성숙도와 자동화
+## 4. 비교 및 트레이드오프
 
 ```
 SLM 성숙도 모델:
@@ -183,7 +186,7 @@ Datadog SLO Tracking:
 
 ---
 
-## Ⅴ. 실무 시나리오 — SLM 체계 구축
+## 5. 실무 적용 및 최적화 기법
 
 ```
 제조업 IT 부서 SLM 체계 구축:

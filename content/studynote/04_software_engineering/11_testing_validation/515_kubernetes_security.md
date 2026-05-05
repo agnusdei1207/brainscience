@@ -6,15 +6,17 @@ description = "RBAC, Network Policy, Pod Security Admission으로 쿠버네티�
 taxonomy = ""
 tags = ["Software Engineering", "Security", "Kubernetes", "RBAC", "Network Policy"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 쿠버네티스 보안은 제어면, 네트워크, 파드 정책을 함께 보는 일이다.
+> **핵심**: 쿠버네티스 보안은 제어면, 네트워크, 파드 정책을 함께 보는 일이다.
 > 2. **가치**: RBAC (Role-Based Access Control), Network Policy, Pod Security Admission이 핵심이다.
 > 3. **판단 포인트**: 클러스터 내부도 신뢰하지 않는다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 쿠버네티스는 편리하지만, 설정이 느슨하면 큰 사고로 이어진다. 특히 권한과 네트워크 경계를 잘 나눠야 한다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Security", "Kubernetes", "RBAC", "Network Polic
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 쿠버네티스 보안은 여러 계층으로 나뉜다.
 
@@ -42,7 +44,7 @@ tags = ["Software Engineering", "Security", "Kubernetes", "RBAC", "Network Polic
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 쿠버네티스 보안은 컨테이너 보안보다 운영 범위가 넓다.
 
@@ -58,7 +60,7 @@ Service Account, Secret, Admission Controller와도 연결된다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 최소 권한, 네임스페이스 분리, 네트워크 격리, 정책 코드화가 중요하다.
 
@@ -71,7 +73,7 @@ Service Account, Secret, Admission Controller와도 연결된다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 쿠버네티스 보안은 클라우드 네이티브 환경의 기본 방어선이다.
 

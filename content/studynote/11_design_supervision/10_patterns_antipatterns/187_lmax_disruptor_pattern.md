@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: LMAX 디스럽터 (Disruptor)는 링버퍼(Ring Buffer) 기반의 락프리(Lock-Free) 인메모리 큐로, CAS (Compare-And-Swap) 연산으로 동시성을 제어하여 초저지연(Ultra-Low Latency) 처리를 달성하는 아키텍처 패턴이다.
+> **핵심**: LMAX 디스럽터 (Disruptor)는 링버퍼(Ring Buffer) 기반의 락프리(Lock-Free) 인메모리 큐로, CAS (Compare-And-Swap) 연산으로 동시성을 제어하여 초저지연(Ultra-Low Latency) 처리를 달성하는 아키텍처 패턴이다.
 > 2. **가치**: 전통적 `BlockingQueue`(락 기반)보다 수십 배 빠른 처리량(수백만 TPS)을 달성하며, 금융 거래 시스템처럼 마이크로초 단위 응답이 필요한 시스템에 적용된다.
 > 3. **판단 포인트**: 디스럽터의 성능 비결은 캐시 라인 패딩(Cache Line Padding)으로 폴스 셰어링(False Sharing)을 방지하고, 락 대신 CAS로 동시성을 제어하는 하드웨어 친화적 설계에 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 전통 메시지 큐의 한계
 
@@ -41,7 +42,7 @@ LMAX Exchange는 이 문제를 링버퍼 + CAS로 해결했다.
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 링버퍼 (Ring Buffer) 구조
 
@@ -123,7 +124,7 @@ CPU L1 캐시 라인 = 64 bytes
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Disruptor vs 전통 큐 성능 비교
 
@@ -159,7 +160,7 @@ Producer ──► [RB] ──► Consumer2
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Java Disruptor 사용 예시
 
@@ -219,7 +220,7 @@ try {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### Disruptor 도입 기대효과
 

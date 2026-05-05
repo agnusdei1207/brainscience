@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 엔드포인트 보안(Endpoint Security)은 네트워크 경계 방어에서 벗어나 PC·모바일·서버 등 단말 자체를 공격 차단의 최후 방어선으로 삼는 패러다임이다.
+> **핵심**: 엔드포인트 보안(Endpoint Security)은 네트워크 경계 방어에서 벗어나 PC·모바일·서버 등 단말 자체를 공격 차단의 최후 방어선으로 삼는 패러다임이다.
 > 2. **가치**: 재택근무·BYOD(Bring Your Own Device) 확산으로 경계 소멸(perimeter dissolution) 시대에 제로트러스트(Zero Trust) 아키텍처의 기반 계층을 형성한다.
 > 3. **판단 포인트**: AV(시그니처)→EPP(예방)→EDR(탐지·대응)→XDR(확장)으로 진화했으며, 기술사 답안에서는 "커버리지 범위·대응 속도·가시성"을 기준으로 비교 서술한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 엔드포인트 보안(Endpoint Security)은 조직 네트워크에 연결되는 모든 단말 장치—PC, 노트북, 스마트폰, 태블릿, 서버, IoT 기기 등—를 악성 코드·침해 시도로부터 보호하는 보안 도메인이다. 과거에는 방화벽·IPS(Intrusion Prevention System) 등 네트워크 경계 장비만으로 내부를 보호할 수 있었으나, 클라우드 전환·재택근무·BYOD(Bring Your Own Device) 확산으로 경계(perimeter)가 사실상 소멸했다.
 
@@ -25,7 +27,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 엔드포인트 보안 진화 계층
 
@@ -53,7 +55,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | AV | EPP | EDR | XDR |
 |:---|:---|:---|:---|:---|
@@ -68,7 +70,7 @@ AV(Anti-Virus)는 알려진 악성코드 시그니처를 비교하는 1세대 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 대규모 기업 환경에서는 단일 벤더의 EPP+EDR 통합 솔루션(예: CrowdStrike Falcon, Microsoft Defender for Endpoint)을 채택하여 에이전트 중복을 줄이고 상관 분석 품질을 높인다. XDR 도입 시에는 기존 SIEM(Security Information and Event Management)과의 역할 중복을 사전에 정의해야 한다.
 
@@ -78,7 +80,7 @@ AV(Anti-Virus)는 알려진 악성코드 시그니처를 비교하는 1세대 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 엔드포인트 보안 고도화는 침해 사고 평균 탐지 시간인 MTTD(Mean Time to Detect)를 수개월에서 수분·수시간으로 단축하고, 평균 대응 시간인 MTTR(Mean Time to Respond)도 자동화를 통해 크게 줄인다. 특히 랜섬웨어 공격에서 EDR의 행위 기반 차단은 암호화 프로세스 초기에 격리하여 피해를 최소화한다.
 

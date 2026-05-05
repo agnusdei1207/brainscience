@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: DCSync는 도메인 컨트롤러(DC) 간의 복제 프로토콜(DRSR)을 악용하여, 공격자가 마치 추가 DC인 것처럼 위장해 특정 사용자의 비밀번호 해시를 요청하는 공격이다.
+> **핵심**: DCSync는 도메인 컨트롤러(DC) 간의 복제 프로토콜(DRSR)을 악용하여, 공격자가 마치 추가 DC인 것처럼 위장해 특정 사용자의 비밀번호 해시를 요청하는 공격이다.
 > 2. **가치**: DC에 대한 직접적인 파일 접근(NTDS.dit 추출)이나 코드 실행 없이도, 네트워크 통신만으로 도메인 내 모든 계정(특히 krbtgt)의 자격증명을 탈취할 수 있다.
 > 3. **판단 포인트**: 'Replicating Directory Changes' 권한을 가진 계정을 엄격히 관리하고, 비-DC IP에서 발생하는 복제 트래픽을 실시간 탐지해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 DCSync는 Mimikatz의 개발자들에 의해 대중화된 기법으로, Active Directory의 데이터 동기화 메커니즘을 역이용한다. 원래 DC들은 서로 최신 정보를 유지하기 위해 MS-DRSR (Directory Replication Service Remote Protocol)을 사용하는데, 공격자가 이 권한을 획득하면 원하는 계정의 자격증명을 DC에게 "동기화해달라"고 요청할 수 있다.
 
@@ -23,7 +25,7 @@ DCSync는 Mimikatz의 개발자들에 의해 대중화된 기법으로, Active D
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 공격의 핵심은 `DS-Replication-Get-Changes`와 `DS-Replication-Get-Changes-All`이라는 두 가지 확장 권한이다. 공격자가 이 권한을 가진 채로 DC에 `IDL_DRSGetNCChanges` 함수 호출을 보내면, DC는 요청한 객체의 모든 속성(해시 포함)을 응답한다.
 
@@ -64,7 +66,7 @@ DCSync는 Mimikatz의 개발자들에 의해 대중화된 기법으로, Active D
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 DCSync는 고전적인 자격증명 추출 방식인 `709. NTDS.dit 추출`과 비교될 수 있다.
 
@@ -81,7 +83,7 @@ DCSync를 통해 얻은 `krbtgt` 해시는 `Golden Ticket`을 만드는 데 사�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 방어자는 도메인 루트 객체의 권한(ACL)을 주기적으로 점검하여, 'Domain Controllers' 그룹 이외의 계정이 복제 권한을 가지고 있지 않은지 확인해야 한다.
 
@@ -98,7 +100,7 @@ DCSync를 통해 얻은 `krbtgt` 해시는 `Golden Ticket`을 만드는 데 사�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 DCSync 방어는 Active Directory 보안의 '마지막 방어선'이다. 이 공격을 허용한다는 것은 도메인 전체의 신뢰가 무너졌음을 의미한다. 따라서 엄격한 티어형 관리 모델(Tiered Administration)을 통해 복제 권한이 있는 계정을 물리적으로 격리해야 한다.
 

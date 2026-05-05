@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: XXE (XML External Entity) 공격 흐름은 DTD 외부 엔티티 선언 삽입 → XML 파서 트리거 → 로컬 파일·내부 서비스·OOB 채널 활용의 단계로 진행된다.
+> **핵심**: XXE (XML External Entity) 공격 흐름은 DTD 외부 엔티티 선언 삽입 → XML 파서 트리거 → 로컬 파일·내부 서비스·OOB 채널 활용의 단계로 진행된다.
 > 2. **가치**: 공격 흐름을 단계별로 이해하면 각 단계에서의 방어 포인트와 탐지 규칙을 정확하게 설계할 수 있다.
 > 3. **판단 포인트**: Blind XXE에서는 파라미터 엔티티와 OOB 채널을 결합해 방화벽 내부 파일도 추출 가능하므로, 외부 엔티티 자체를 비활성화하는 것이 유일한 완전 방어책이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 XXE (XML External Entity Injection) 공격은 XML 파서의 DTD (Document Type Definition) 처리 과정을 악용한다. 공격자가 XML 입력에 악성 외부 엔티티 선언을 포함시키면, 파서가 이를 처리하면서 공격자가 의도한 파일 읽기·내부 서비스 접근·서비스 거부(DoS) 등을 실행한다.
 
@@ -48,7 +50,7 @@ XXE (XML External Entity Injection) 공격은 XML 파서의 DTD (Document Type D
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 고급 XXE 기법
 
@@ -85,7 +87,7 @@ XXE (XML External Entity Injection) 공격은 XML 파서의 DTD (Document Type D
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 공격 유형 | 응답 가시성 | 탐지 난이도 | 데이터 추출 방식 |
 |:---|:---|:---|:---|
@@ -100,7 +102,7 @@ XXE (XML External Entity Injection) 공격은 XML 파서의 DTD (Document Type D
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **취약 코드 vs. 안전 코드 비교**:
 
@@ -126,7 +128,7 @@ $dom->loadXML($userInput, LIBXML_NONET | LIBXML_NOENT);
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 XXE 공격 흐름을 단계별로 이해하고 각 단계에서의 방어를 적용하면 기본 XXE부터 고급 Blind XXE OOB까지 모든 변형을 차단할 수 있다. XML 파서 설정 한 줄이 가장 효과적인 방어이며, 추가로 SVG·DOCX 등 XML 기반 파일 형식을 업로드받을 때는 반드시 파서 설정을 재확인해야 한다.
 

@@ -7,17 +7,20 @@ date = "2024-05-15"
 tags = ["Data Mart", "Kimball Model", "Star Schema", "Data Warehouse", "BI", "OLAP"]
 categories = ["studynote-bigdata"]
 +++
+## 0. 핵심 인사이트
 
-# 데이터 마트 (Data Mart)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 데이터 웨어하우스 (DW)의 하위 집합으로, 전사 데이터 중 특정 부서(영업, 재무 등)나 비즈니스 도메인의 요구사항에 맞게 구조화된 소규모 분석용 데이터베이스입니다.
+> **핵심**: 데이터 웨어하우스 (DW)의 하위 집합으로, 전사 데이터 중 특정 부서(영업, 재무 등)나 비즈니스 도메인의 요구사항에 맞게 구조화된 소규모 분석용 데이터베이스입니다.
 > 2. **가치**: 방대한 전사 데이터에서 필요한 정보만 추출·가공해 제공함으로써 분석 쿼리 응답 시간을 단축하고, 현업(Business User)의 데이터 접근성과 BI (Business Intelligence) 도구 활용의 직관성을 극대화합니다.
 > 3. **융합**: 상향식 (Bottom-up)인 킴볼 (Kimball) 아키텍처의 핵심 요소이며, 최근에는 클라우드 네이티브 DW 내에서 물리적 복제를 줄이는 가상 데이터 마트(Virtual Data Mart) 형태로 융합 발전하고 있습니다.
 
+> 📝 모범 답안
+
+# 데이터 마트 (Data Mart)
+
+##
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 **데이터 마트 (Data Mart)**는 전사적 통합 데이터 저장소인 데이터 웨어하우스(DW)와 달리, 단일 부서나 특정 비즈니스 프로세스의 분석 요구에 초점을 맞춘 목적 지향적 데이터 저장소입니다. 과거 RDBMS 환경에서 방대한 전사 DW에 직접 복잡한 분석 쿼리를 날릴 경우, 극심한 성능 저하와 병목 현상이 발생했습니다. 이를 해결하기 위해 현업이 자주 사용하는 데이터만 미리 집계하고 다차원 모델링(Dimensional Modeling)을 적용하여 분리해 낸 것이 데이터 마트의 시작입니다. 
 
@@ -44,7 +47,7 @@ categories = ["studynote-bigdata"]
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 데이터 마트 설계의 근간은 Ralph Kimball이 제안한 **다차원 모델링 (Dimensional Modeling)**입니다. 이 기법은 데이터를 '측정 가능한 수치(Fact)'와 '이를 설명하는 텍스트 맥락(Dimension)'으로 엄격히 분리합니다.
 
@@ -86,7 +89,7 @@ categories = ["studynote-bigdata"]
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 데이터 플랫폼을 설계할 때 가장 많이 대립하는 철학이 Bill Inmon의 하향식(Top-down) 접근과 Ralph Kimball의 상향식(Bottom-up) 데이터 마트 접근입니다.
 
@@ -122,7 +125,7 @@ categories = ["studynote-bigdata"]
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 실무에서 데이터 마트를 운영할 때 가장 큰 기술적 난제는 과거의 이력 데이터를 어떻게 보존할 것인가를 다루는 **SCD (Slowly Changing Dimension, 느리게 변하는 차원)** 처리입니다.
 
@@ -152,7 +155,7 @@ categories = ["studynote-bigdata"]
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 데이터 마트 아키텍처는 데이터의 비즈니스적 가치를 폭발시키는 라스트 마일(Last Mile) 딜리버리 시스템입니다.
 

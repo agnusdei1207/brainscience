@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Time-based Blind SQL Injection (시간 기반 블라인드 SQL 인젝션)은 조건이 참일 때 DB (Database)가 의도적으로 응답을 지연(SLEEP)하게 해, 응답 시간의 차이로 데이터를 한 비트씩 추출하는 공격이다.
+> **핵심**: Time-based Blind SQL Injection (시간 기반 블라인드 SQL 인젝션)은 조건이 참일 때 DB (Database)가 의도적으로 응답을 지연(SLEEP)하게 해, 응답 시간의 차이로 데이터를 한 비트씩 추출하는 공격이다.
 > 2. **가치**: 에러 메시지도, 응답 내용의 차이도 없는 완전 Blind 환경에서 유일하게 동작하는 인젝션 기법으로, 완벽하게 에러를 숨기고 응답을 균일화한 애플리케이션에서도 취약할 수 있다.
 > 3. **판단 포인트**: SLEEP() 함수 직접 차단보다 파라미터화 쿼리가 근본 해결책이며, Rate Limiting과 응답 시간 모니터링으로 공격 탐지를 병행해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Time-based Blind SQLi는 DB에서 SLEEP() 또는 WAITFOR DELAY 함수를 조건부로 실행시켜 응답 시간을 관찰하는 방식이다. 조건이 참이면 지정된 시간만큼 응답이 늦어지고, 거짓이면 즉시 응답한다. 이 차이로 데이터를 추출한다.
 
@@ -34,7 +36,7 @@ Time-based Blind SQLi는 DB에서 SLEEP() 또는 WAITFOR DELAY 함수를 조건�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | DB 유형 | 지연 함수 | 예시 |
 |:---|:---|:---|
@@ -59,7 +61,7 @@ Time-based Blind SQLi는 DB에서 SLEEP() 또는 WAITFOR DELAY 함수를 조건�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | Boolean Blind | Time-based Blind |
 |:---|:---|:---|
@@ -73,7 +75,7 @@ Time-based Blind SQLi는 DB에서 SLEEP() 또는 WAITFOR DELAY 함수를 조건�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **탐지 전략**:
 1. **응답 시간 모니터링**: APM (Application Performance Monitoring) 도구로 비정상적 응답 시간 급증 탐지
@@ -86,7 +88,7 @@ Time-based Blind SQLi는 DB에서 SLEEP() 또는 WAITFOR DELAY 함수를 조건�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Time-based Blind SQLi는 파라미터화 쿼리만이 완벽한 방어책이다. WAF와 SLEEP 함수 제한은 우회 가능하다. 추가로 응답 시간 이상 탐지와 Rate Limiting을 조합하면 공격 탐지 및 완화가 가능하다. DB 수준에서 쿼리 실행 시간 제한(Statement Timeout)을 설정하면 서버 부하 위험도 줄일 수 있다.
 

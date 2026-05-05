@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 오브젝트 스토리지와 메타데이터 분리 (Object Storage & Metadata Decoupling)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 오브젝트 스토리지 (Object Storage)는 기존 파일 시스템의 깊은 폴더-트리 구조나 블록 디스크의 조각 방식(섹터)을 버리고, 데이터를 **단일한 통짜 덩어리(Object)와 꼬리표(고유 ID), 그리고 풍부한 메타데이터(Metadata) 묶음으로 평평하게(Flat) 관리하는 아키텍처**다.
+> **핵심**: 오브젝트 스토리지 (Object Storage)는 기존 파일 시스템의 깊은 폴더-트리 구조나 블록 디스크의 조각 방식(섹터)을 버리고, 데이터를 **단일한 통짜 덩어리(Object)와 꼬리표(고유 ID), 그리고 풍부한 메타데이터(Metadata) 묶음으로 평평하게(Flat) 관리하는 아키텍처**다.
 > 2. **가치**: 데이터가 저장되는 물리적 '데이터 공간(Data Pool)'과 파일의 위치/속성을 검색하는 '메타데이터 공간(Metadata Server)'을 아키텍처적으로 완벽히 쪼개어(분리), 수십 페타바이트(PB) 규모로 무한정 늘어나는 클라우드 환경에서 폴더 검색 병목 없이 선형적인 확장성(Scalability)을 보장한다.
 > 3. **융합**: 운영체제의 고전적 VFS 트리 구조가 인터넷 스케일에서 한계에 부딪히자, HTTP(S) 기반의 REST API와 분산 해시 테이블(DHT)이 결합되어 AWS S3, Ceph와 같은 현대 클라우드 네이티브 애플리케이션의 절대적 데이터 댐으로 진화했다.
 
+> 📝 모범 답안
+
+# 오브젝트 스토리지와 메타데이터 분리 (Object Storage & Metadata Decoupling)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - 사진, 영상, 로그 파일 등 크기가 다양하고 수정할 일이 거의 없는 비정형 데이터를 저장하는 데 특화된 스토리지다.
@@ -65,7 +67,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 메타데이터와 데이터 노드의 완전 분리 (Decoupling) 아키텍처
 
@@ -107,7 +109,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 스토리지 3대장 (Block vs File vs Object) 총정리
 
@@ -129,7 +131,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 트러블슈팅
 
@@ -173,7 +175,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,19 +5,21 @@ date = "2026-04-10"
 [extra]
 categories = "studynote-enterprise"
 +++
-
-# 179. CQRS (Command Query Responsibility Segregation) 패턴
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 마이크로서비스 아키텍처(MSA)에서 데이터베이스가 분리됨에 따라 복잡한 조인(Join) 조회가 불가능해지는 한계를 극복하기 위해, '상태를 변경하는 명령(Command)'과 '데이터를 조회하는 질의(Query)'의 책임을 완전히 분리하는 **CQRS 패턴**을 다룹니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# 179. CQRS (Command Query Responsibility Segregation) 패턴
+
 > 1. **본질**: 하나의 동일한 데이터 모델(엔티티)과 DB로 CRUD를 모두 처리하던 전통적인 방식에서 벗어나, 쓰기 전용 모델/DB와 읽기 전용 모델/DB를 물리적 또는 논리적으로 분리하는 아키텍처 설계 기법이다.
 > 2. **가치**: 쓰기 트래픽(주문 생성)과 읽기 트래픽(주문 내역 조회)이 서로의 성능을 간섭하지 않으며, 각 화면의 성격에 맞게 읽기 전용 DB를 NoSQL 등으로 최적화하여 MSA 환경에서 극한의 조회 성능을 이끌어낸다.
 > 3. **기술 체계**: 쓰기 DB에 데이터가 저장되면, 이벤트 기반(Event-Driven) 메시징(Kafka 등)을 통해 읽기 DB로 데이터가 비동기적으로 동기화(Eventual Consistency)되는 구조를 주로 사용한다.
 
 ---
 
-### Ⅰ. MSA의 저주: 쪼개진 DB와 사라진 Join
+### 1. 개요 및 필요성
 모놀리식(Monolithic) 시스템에서는 하나의 거대한 RDBMS가 모든 것을 해결했다.
 
 1. **Database per Service의 한계**:
@@ -31,7 +33,7 @@ categories = "studynote-enterprise"
 
 ---
 
-### Ⅱ. CQRS의 개념과 읽기 전용 뷰(View)의 탄생
+### 2. 구성요소
 이 문제를 해결하기 위해 CQRS는 '조회 전용' 데이터베이스를 따로 구축한다.
 
 1. **책임의 분리 (Segregation)**:
@@ -50,7 +52,7 @@ categories = "studynote-enterprise"
 
 ---
 
-### Ⅲ. CQRS의 트레이드오프: Eventual Consistency
+### 3. 구조 및 동작 원리
 CQRS는 공짜가 아니다. 치명적인 부작용을 감수해야 한다.
 
 1. **데이터 동기화 지연 (Replication Lag)**:

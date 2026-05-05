@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Zachman Framework는 **6가지 관점(Planner·Owner·Designer·Builder·Subcontractor·User) × 6가지 질문(What·How·Where·Who·When·Why)**의 36셀 매트릭스로 엔터프라이즈 아키텍처를 **체계적으로 분류·정리**하는 분류 체계다.
+> **핵심**: Zachman Framework는 **6가지 관점(Planner·Owner·Designer·Builder·Subcontractor·User) × 6가지 질문(What·How·Where·Who·When·Why)**의 36셀 매트릭스로 엔터프라이즈 아키텍처를 **체계적으로 분류·정리**하는 분류 체계다.
 > 2. **가치**: 데이터 아키텍처를 설계할 때 "누구의 관점에서, 무엇을 정의하는가"를 명확히 하여, **개념→논리→물리 모델링의 각 산출물이 어디에 위치하는지** 체계적으로 관리할 수 있다.
 > 3. **판단 포인트**: Zachman은 **방법론이 아닌 분류 체계(Taxonomy)**이며, TOGAF(방법론)과 함께 사용하여 "어떻게 진행하는가"를 보완한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -33,7 +35,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Zachman vs TOGAF
 
@@ -47,7 +49,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Zachman | TOGAF | DoDAF |
 |:---|:---|:---|:---|
@@ -56,7 +58,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 데이터 아키텍처에서의 활용
 - What(데이터) × Planner = 주제 영역(Subject Area).
@@ -66,7 +68,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Zachman Framework는 **EA(Enterprise Architecture)의 원조 분류 체계**로서, 데이터·프로세스·네트워크·조직 등 모든 아키텍처 산출물을 체계적으로 관리하는 데 필수적이다.
 

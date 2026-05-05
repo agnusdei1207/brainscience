@@ -5,16 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
+
+> **비유**: oom_score_adj는 "위험도 점수에 더하거나 빼는 보너스/패널티 점수"다. -1000점을 받으면 "무적 쉴드"가 씌워지고, +1000점을 받으면 "가장 먼저 퇴장" 대상이 된다.
+
+> 📝 모범 답안
 
 # oom_score_adj
 
-## Ⅰ. oom_score_adj의 개념
+## 1. 개요 및 필요성
 
 ### 1. 정의
 
 **oom_score_adj**는 Linux 커널이 OOM (Out-Of-Memory) 상태에서 프로세스를 강제 종료할 때의 우선순위를 관리자가 수동으로 조정할 수 있는 파라미터이다. `/proc/[pid]/oom_score_adj` 파일을 통해 -1000부터 +1000 사이의 정수값을 설정할 수 있으며, 이 값은 커널이 계산한 `oom_score`에 더해져 최종 OOM 점수를 결정한다.
-
-> **비유**: oom_score_adj는 "위험도 점수에 더하거나 빼는 보너스/패널티 점수"다. -1000점을 받으면 "무적 쉴드"가 씌워지고, +1000점을 받으면 "가장 먼저 퇴장" 대상이 된다.
 
 ### 2. oom_score와 oom_score_adj의 관계
 
@@ -42,7 +45,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. oom_score_adj 값의 범위와 의미
+## 2. 구성요소
 
 ### 1. 상세 범위별 동작
 
@@ -100,7 +103,7 @@ done
 
 ---
 
-## Ⅲ. systemd와의 연동
+## 3. 구조 및 동작 원리
 
 ### 1. systemd의 OOMScoreAdjust 지시자
 
@@ -155,7 +158,7 @@ done
 
 ---
 
-## Ⅳ. Kubernetes와의 연동
+## 4. 비교 및 트레이드오프
 
 ### 1. Pod QoS (Quality of Service)와 oom_score_adj 매핑
 
@@ -245,7 +248,7 @@ Kubernetes 노드 OOM 발생 시 처리 흐름
 
 ---
 
-## Ⅴ. 실무 운영 가이드
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 모니터링 설정
 

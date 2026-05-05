@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: AIOps(AI for IT Operations)는 ML로 IT 이벤트를 분석·자동 치유하고, LLMOps는 대형 언어 모델(LLM, Large Language Model) 특화 MLOps이며, 옵저버빌리티(Observability)는 로그·메트릭·트레이스 3원칙으로 시스템 내부 상태를 외부에서 추론 가능하게 만드는 설계 철학이다.
+> **핵심**: AIOps(AI for IT Operations)는 ML로 IT 이벤트를 분석·자동 치유하고, LLMOps는 대형 언어 모델(LLM, Large Language Model) 특화 MLOps이며, 옵저버빌리티(Observability)는 로그·메트릭·트레이스 3원칙으로 시스템 내부 상태를 외부에서 추론 가능하게 만드는 설계 철학이다.
 > 2. **가치**: 마이크로서비스 환경에서 단일 요청이 수십 개 서비스를 경유하므로, 분산 추적(Distributed Tracing)과 옵저버빌리티 없이는 장애 원인을 찾을 수 없다.
 > 3. **판단 포인트**: 기술사 논술에서 OpenTelemetry 오픈 표준, LLMOps의 환각(Hallucination) 모니터링·토큰 비용 관리, AIOps의 이상 감지(Anomaly Detection) 알고리즘 선택을 핵심 기술 근거로 제시한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 클라우드 네이티브 환경에서 서비스는 수백 개의 마이크로서비스(Microservice)로 분해된다. 전통적인 모니터링 도구는 개별 서비스 지표는 보여주지만, 요청이 서비스 체인을 따라 흐르는 **인과 관계**를 추적하지 못한다. 동시에 LLM 기반 서비스는 토큰 비용·환각률·지연 시간 등 기존 ML과 다른 운영 지표를 필요로 한다.
 
@@ -22,7 +23,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 옵저버빌리티 3원칙 구조
 
@@ -58,7 +59,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 축 | 전통 모니터링 | 옵저버빌리티 |
 |:---|:---|:---|
@@ -77,7 +78,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **AIOps 도입 단계**:
 1. 데이터 수집 통합(로그+메트릭+트레이스 → OpenTelemetry)
@@ -93,7 +94,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 AIOps는 IT 운영팀이 이벤트 홍수 속에서 진짜 장애를 빠르게 식별하고, 자동 치유로 MTTR을 수 시간에서 수 분으로 단축한다. LLMOps는 LLM 서비스의 품질·비용·안전성을 지속적으로 관리해 AI 서비스의 신뢰성을 확보한다. 옵저버빌리티는 분산 시스템의 블랙박스를 유리 상자로 전환해 엔지니어가 미지의 실패를 추론할 수 있게 한다.
 

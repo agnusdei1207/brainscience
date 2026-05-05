@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. TOGAF(The Open Group Architecture Framework)는 엔터프라이즈 아키텍처(EA)를 개발·관리하는 세계 표준 프레임워크로 — 비즈니스·데이터·애플리케이션·기술의 4개 아키텍처 도메인과 ADM(Architecture Development Method) 9단계 사이클로 구성된다.
 > 2. ADM(Architecture Development Method)은 예비 단계 → A(비전) → B(비즈니스) → C(정보시스템) → D(기술) → E(기회/해결) → F(마이그레이션) → G(거버넌스) → H(변경 관리)의 순환 사이클로 — 아키텍처가 비즈니스 전략과 IT 구현 사이의 단절을 메우는 체계적 접근법이다.
 > 3. TOGAF의 아키텍처 저장소(Architecture Repository)와 아키텍처 역량 프레임워크(ACF)는 조직이 EA 역량을 성숙시키는 로드맵을 제공하며 — IT 거버넌스, 비용 최적화, 비즈니스-IT 정렬의 실질적 도구로 금융·공공·제조 등 대규모 조직에서 광범위하게 활용된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. TOGAF 개요
+## 1. 개요 및 필요성
 
 ```
 TOGAF (The Open Group Architecture Framework):
@@ -52,7 +55,7 @@ TOGAF (The Open Group Architecture Framework):
 
 ---
 
-## Ⅱ. ADM 사이클
+## 2. 구성요소
 
 ```
 ADM (Architecture Development Method):
@@ -103,7 +106,7 @@ H. 아키텍처 변경 관리:
 
 ---
 
-## Ⅲ. TOGAF 핵심 개념
+## 3. 구조 및 동작 원리
 
 ```
 아키텍처 빌딩 블록 (ABB vs SBB):
@@ -147,7 +150,7 @@ H. 아키텍처 변경 관리:
 
 ---
 
-## Ⅳ. TOGAF와 보안
+## 4. 비교 및 트레이드오프
 
 ```
 TOGAF와 보안 아키텍처 통합:
@@ -187,7 +190,7 @@ Zero Trust 통합:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 공공기관 차세대 EA
+## 5. 실무 적용 및 최적화 기법
 
 ```
 공공기관 차세대 시스템 TOGAF 적용:

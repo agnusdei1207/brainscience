@@ -6,15 +6,17 @@ description = "서로 다른 OS, 브라우저, 기기, 버전에서 시스템이
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "Compatibility Test", "Cross Platform", "Environment"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 호환성 테스트(Compatibility Test)는 다양한 환경에서 시스템이 정상 동작하는지 확인하는 테스트다.
+> **핵심**: 호환성 테스트(Compatibility Test)는 다양한 환경에서 시스템이 정상 동작하는지 확인하는 테스트다.
 > 2. **가치**: 같은 코드라도 환경이 다르면 다르게 깨질 수 있음을 잡아낸다.
 > 3. **판단 포인트**: 운영 환경 조합을 넓게 잡되, 우선순위를 둬야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 호환성 테스트는 다른 환경에서도 같은 기능이 유지되는지 본다. OS, 브라우저, 디바이스, 해상도, 버전 차이가 핵심이다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "Compatibility Test", "Cross Platform
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 호환성은 기능이 아니라 환경 적합성이다. 각 조합에서 핵심 기능이 깨지지 않아야 한다.
 
@@ -44,7 +46,7 @@ tags = ["Software Engineering", "Testing", "Compatibility Test", "Cross Platform
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 호환성 테스트는 이식성 테스트와 비슷하지만 다르다. 호환성은 "현재 환경들"에서, 이식성은 "다른 환경으로 옮겼을 때"를 본다.
 
@@ -60,7 +62,7 @@ tags = ["Software Engineering", "Testing", "Compatibility Test", "Cross Platform
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 지원 매트릭스를 만들고, 우선순위가 높은 조합부터 본다. 모든 조합을 다 보기 어렵기 때문이다.
 
@@ -73,7 +75,7 @@ tags = ["Software Engineering", "Testing", "Compatibility Test", "Cross Platform
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 호환성 테스트는 환경 차이로 생기는 결함을 줄인다. 출시 후 "내 폰에서는 되는데요" 문제를 줄이는 데 중요하다.
 

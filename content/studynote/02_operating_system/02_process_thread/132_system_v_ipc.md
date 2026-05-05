@@ -5,15 +5,17 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: System V IPC (Inter-Process Communication)는 AT&T Bell Laboratories의 System V UNIX에서 표준화된 세 가지 상호 보완적 IPC 메커니즘 -- 공유 메모리 (Shared Memory), 세마포어 (Semaphore), 메시지 큐 (Message Queue) -- 의 총칭이다. 이들 모두 커널 공간에 객체로 생성되며, 파일 시스템 경로가 아닌 정수 키 (Key)를 통해 식별된다는 것이 특징이다.
+> **핵심**: System V IPC (Inter-Process Communication)는 AT&T Bell Laboratories의 System V UNIX에서 표준화된 세 가지 상호 보완적 IPC 메커니즘 -- 공유 메모리 (Shared Memory), 세마포어 (Semaphore), 메시지 큐 (Message Queue) -- 의 총칭이다. 이들 모두 커널 공간에 객체로 생성되며, 파일 시스템 경로가 아닌 정수 키 (Key)를 통해 식별된다는 것이 특징이다.
 > 2. **가치**: 파일 시스템을 경유하지 않고 커널 공간에서 직접 관리되므로 디스크 I/O 오버헤드가 없고, `ftok()` 함수를 통해 파일 경로에서 키를 생성함으로써 서로 관련 없는 프로세스가 사전 합의 없이도 동일 IPC 객체를 발견하고 연결할 수 있어 "생성 순서 의존성" 문제를 해결한다.
 > 3. **융합**: 공유 메모리는 세마포어와 결합하여 고속 대용량 데이터 교환의 표준 패턴을 형성하며, 데이터베이스 관리 시스템 (Oracle, PostgreSQL의 shared_buffers), 고성능 메시징 미들웨어, 운영체제 커널 내부의 동기화 구조 등 산업계 전반에 걸쳐 핵심 기반 인프라로 활용된다。
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: System V IPC는 1980년대 AT&T의 System V UNIX에서 처음 도입된 운영체제 수준의 IPC 메커니즘 세트다. 파이프 (Pipe)나 FIFO가 스트림 기반의 단순한 바이트 통로인 반면, System V IPC는 각각 고유한 목적과 API를 가진 세 가지 독립적인 메커니즘을 제공한다. 공유 메모리 (Shared Memory)는 여러 프로세스가 동일 물리 메모리 영역을 각자의 가상 주소 공간에 매핑하여 직접 읽고 쓸 수 있게 하고, 세마포어 (Semaphore)는 이러한 공유 자원에 대한 상호 배제 (Mutual Exclusion)와 동기화를 보장하며, 메시지 큐 (Message Queue)는 타입이 지정된 구조화 메시지를 큐잉하여 프로세스 간에 순서 있는 데이터 교환을 가능하게 한다. 이 세 가지는 공통적으로 `ftok()`로 생성한 키 (key_t)로 식별되며, `xxxget` / `xxxop` / `xxxctl` 패턴의 API를 따른다。
 
@@ -68,7 +70,7 @@ System V IPC의 세 가지 메커니즘과 그 관계를 개요 다이어그램�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -179,7 +181,7 @@ System V 세마포어의 P/V 연산이 공유 메모리 접근 동기화에 어�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: System V IPC vs POSIX IPC
 
@@ -253,7 +255,7 @@ System V IPC 전체 메커니즘의 관리와 관찰을 `ipcs` 명령어 출력 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -313,7 +315,7 @@ System V IPC 도입 시 안전성 검증 플로우를 시각화하면, 흔히 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

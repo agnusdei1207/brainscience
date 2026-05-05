@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 앙상블 학습(Ensemble Learning)은 여러 약한 학습기(Weak Learner)를 결합하여 단일 강한 학습기보다 우수한 예측 성능을 달성하는 기법으로, "다수결의 지혜"를 알고리즘으로 구현한 것이다.
 > 2. Bagging(Bootstrap Aggregating)은 분산(Variance)을 줄여 과적합을 방지하고(Random Forest), Boosting은 편향(Bias)을 줄여 강한 예측기를 만들며(XGBoost), Stacking은 이질적 모델의 예측을 메타 학습기로 결합한다.
 > 3. XGBoost·LightGBM·CatBoost는 Gradient Boosting의 현대적 구현으로 Kaggle 경진대회의 70% 이상 우승 솔루션에서 사용되었으며, 표 형태(Tabular) 데이터에서는 여전히 딥러닝을 능가하는 경우가 많다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 앙상블 학습 원리
+## 1. 개요 및 필요성
 
 ```
 앙상블 학습의 핵심:
@@ -40,7 +43,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. Bagging (배깅)
+## 2. 구성요소
 
 ```
 Bagging (Bootstrap Aggregating):
@@ -72,7 +75,7 @@ Bootstrap 샘플 특성:
 
 ---
 
-## Ⅲ. Boosting (부스팅)
+## 3. 구조 및 동작 원리
 
 ```
 Boosting (부스팅):
@@ -109,7 +112,7 @@ CatBoost:
 
 ---
 
-## Ⅳ. Stacking (스태킹)
+## 4. 비교 및 트레이드오프
 
 ```
 Stacking (Stacked Generalization):
@@ -144,7 +147,7 @@ Stacking (Stacked Generalization):
 
 ---
 
-## Ⅴ. 실무 시나리오 — 신용 리스크 예측
+## 5. 실무 적용 및 최적화 기법
 
 ```
 금융 신용 리스크 예측 앙상블:

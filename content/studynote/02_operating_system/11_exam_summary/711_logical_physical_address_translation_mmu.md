@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 논리 주소 물리 주소 변환 MMU
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CPU 안에서 도는 애플리케이션은 자기가 실제 램(RAM)의 어디에 있는지 모른 채 항상 0번지부터 시작하는 가짜 주소, 즉 **논리 주소(Logical Address)**만을 사용하여 연산한다.
+> **핵심**: CPU 안에서 도는 애플리케이션은 자기가 실제 램(RAM)의 어디에 있는지 모른 채 항상 0번지부터 시작하는 가짜 주소, 즉 **논리 주소(Logical Address)**만을 사용하여 연산한다.
 > 2. **해결사 (MMU)**: CPU 칩 내부에는 이 가짜 주소를 램의 진짜 주소인 **물리 주소(Physical Address)**로 눈 깜짝할 새(1클럭) 번역해 주는 하드웨어 칩셋인 **MMU(Memory Management Unit)**가 존재한다.
 > 3. **보호 메커니즘**: MMU는 단순히 더하기 빼기만 하는 게 아니라, 변환 과정에서 주소가 남의 메모리 영역을 침범했는지(Limit Register 초과) 검사하여, 선을 넘는 즉시 CPU에 총(Trap)을 쏴서 프로그램을 강제 종료(Segfault)시키는 철통 보안관 역할도 겸한다.
 
+> 📝 모범 답안
+
+# 논리 주소 물리 주소 변환 MMU
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **논리 주소 (Logical / Virtual Address)**: 컴파일러와 CPU가 보는 주소. 프로그램마다 독립적으로 0번지부터 시작하는 가상 공간.
@@ -41,7 +43,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### MMU의 가장 기초적인 동작: 동적 재배치 (Dynamic Relocation)
 
@@ -84,7 +86,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 메모리 보호: OS vs 하드웨어(MMU)
 
@@ -105,7 +107,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -152,7 +154,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 바운디드 컨텍스트(Bounded Context)는 DDD (Domain-Driven Design)의 핵심 전략 패턴으로, 동일한 단어가 다른 의미를 가질 수 있는 경계를 명시적으로 정의하여 도메인 모델의 혼선을 방지한다.
+> **핵심**: 바운디드 컨텍스트(Bounded Context)는 DDD (Domain-Driven Design)의 핵심 전략 패턴으로, 동일한 단어가 다른 의미를 가질 수 있는 경계를 명시적으로 정의하여 도메인 모델의 혼선을 방지한다.
 > 2. **가치**: MSA (Microservices Architecture)에서 서비스 경계를 바운디드 컨텍스트와 일치시키면 모델 오염 없이 팀별 자율성과 독립 배포가 가능해진다.
 > 3. **판단 포인트**: 컨텍스트 맵(Context Map)의 패턴(Shared Kernel, ACL 등)을 통해 컨텍스트 간 관계를 명시하고, 팀 역학과 의존성 방향을 함께 고려해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### "고객"이라는 단어의 위기
 
@@ -36,7 +37,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 바운디드 컨텍스트와 MSA 서비스 대응
 
@@ -82,7 +83,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 컨텍스트 맵 패턴 선택 가이드
 
@@ -107,7 +108,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 이커머스 바운디드 컨텍스트 도출 사례
 
@@ -143,7 +144,7 @@ OrderBC ──Published Language─▶ ShippingBC (배송사 API)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

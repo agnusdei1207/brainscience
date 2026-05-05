@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 659. AMD-V (AMD Virtualization / Secure Virtual Machine)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: AMD-V는 AMD 아키텍처에 내장된 하드웨어 보조 가상화 기술로, **SVM(Secure Virtual Machine)** 아키텍처를 통해 게스트 운영체제를 낮은 권한의 컨텍스트에서 안전하게 실행한다.
+> **핵심**: AMD-V는 AMD 아키텍처에 내장된 하드웨어 보조 가상화 기술로, **SVM(Secure Virtual Machine)** 아키텍처를 통해 게스트 운영체제를 낮은 권한의 컨텍스트에서 안전하게 실행한다.
 > 2. **가치**: 인텔의 VT-x와 유사한 목적을 가지나, **VMCB(Virtual Machine Control Block)**라는 단일 데이터 구조를 통해 제어 구조를 단순화하고, **RVI(Rapid Virtualization Indexing)**를 통해 메모리 가상화 성능을 극대화했다.
 > 3. **융합**: 보안 부팅 기술인 SKINIT과 결합하여 신뢰할 수 있는 실행 환경을 구축하며, 현대의 EPYC 프로세서에서는 SEV(Secure Encrypted Virtualization)와 같은 기밀 컴퓨팅 기술의 근간이 된다.
 
+> 📝 모범 답안
+
+# 659. AMD-V (AMD Virtualization / Secure Virtual Machine)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. AMD의 가상화 도전: "단순함과 효율성"
 - **배경**: 인텔이 VT-x를 발표할 당시, AMD는 자사 CPU에 최적화된 가상화 확장 기능을 설계했다. 이를 초기에는 'Pacifica'라는 코드명으로 불렀으며, 공식 명칭은 AMD-V(AMD Virtualization)가 되었다.
@@ -62,7 +64,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. SVM (Secure Virtual Machine) 명령어
 AMD-V의 핵심은 SVM 명령어 세트다.
@@ -90,7 +92,7 @@ AMD-V의 핵심은 SVM 명령어 세트다.
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### AMD-V (SVM) vs Intel VT-x (VMX)
 
@@ -111,7 +113,7 @@ AMD-V의 핵심은 SVM 명령어 세트다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -133,7 +135,7 @@ AMD-V의 핵심은 SVM 명령어 세트다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **가상화 성능 손실**: 하드웨어 가속 미사용 시 40% 이상 발생하던 오버헤드를 **2~4% 수준**으로 감소.

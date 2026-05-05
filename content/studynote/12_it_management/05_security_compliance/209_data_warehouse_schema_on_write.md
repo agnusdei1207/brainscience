@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: 데이터 웨어하우스(DW)는 Schema-on-Write(쓰기 시점 스키마 정의) 방식으로 이질적인 운영 시스템의 데이터를 통합 정제하여 분석 전용 관계형 저장소에 적재하는 의사결정 지원 시스템이다.
+> **핵심**: 데이터 웨어하우스(DW)는 Schema-on-Write(쓰기 시점 스키마 정의) 방식으로 이질적인 운영 시스템의 데이터를 통합 정제하여 분석 전용 관계형 저장소에 적재하는 의사결정 지원 시스템이다.
 > 2. **가치**: OLAP(Online Analytical Processing, 온라인 분석 처리) 쿼리 최적화를 위해 스타/스노우플레이크 스키마로 설계된 DW는 수십억 건 데이터에서 수초 내 집계를 가능케 하며, Kimball/Inmon 두 방법론은 각각 비즈니스 프로세스 중심·기업 통합 중심으로 상호 보완적이다.
 > 3. **판단 포인트**: 정형 데이터·고정 스키마·반복 집계 쿼리 환경이면 DW가 최적이며, 비정형·유연 스키마·탐색적 분석 요구 시 Data Lake 또는 Lakehouse로 전환을 검토해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 데이터 웨어하우스의 탄생 배경
 기업의 ERP(Enterprise Resource Planning), CRM(Customer Relationship Management), SCM(Supply Chain Management) 등 운영 시스템은 OLTP(Online Transaction Processing, 온라인 트랜잭션 처리)에 최적화되어 있어, 수천 개 테이블에 정규화된 데이터를 빠르게 삽입·수정·삭제한다. 그러나 경영진이 원하는 "지난 5년간 분기별 제품 카테고리별 수익성 추이"와 같은 분석 쿼리는 수십 개 테이블을 조인하며 운영 시스템에 과부하를 준다.
@@ -27,7 +29,7 @@ DW의 핵심 패러다임은 Schema-on-Write(쓰기 시점 스키마 확정)이�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 Kimball vs Inmon 방법론
 
@@ -77,7 +79,7 @@ OLAP(Online Analytical Processing) 큐브는 다차원 데이터 모델로, Dril
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 DW vs 운영 DB vs Data Lake
 
@@ -103,7 +105,7 @@ OLAP(Online Analytical Processing) 큐브는 다차원 데이터 모델로, Dril
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 클라우드 DW 솔루션 비교
 
@@ -136,7 +138,7 @@ OLAP(Online Analytical Processing) 큐브는 다차원 데이터 모델로, Dril
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 DW 도입 기대효과
 

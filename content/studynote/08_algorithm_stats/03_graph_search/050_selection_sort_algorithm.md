@@ -5,19 +5,21 @@ date = "2026-04-02"
 [extra]
 categories = "studynote-algorithm"
 +++
-
-# 선택 정렬 (Selection Sort) 알고리즘
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 데이터의 최솟값(또는 최댓값)을 탐색하여 지정된 위치로 교환하는 방식의 비교 기반(Comparison-based) 알고리즘인 '선택 정렬(Selection Sort)'의 구조, 수학적 복잡도, 그리고 메모리 관점의 특징을 심층 분석합니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# 선택 정렬 (Selection Sort) 알고리즘
+
 > 1. **본질**: 선택 정렬은 정렬되지 않은 배열의 전체 구간을 순회하며 '가장 작은 값(Min)'을 찾아낸 뒤, 이를 배열의 맨 앞(정렬된 영역의 끝) 원소와 위치를 맞바꾸는(Swap) 직관적인 탐색-교환 알고리즘이다.
 > 2. **가치**: 시간 복잡도가 무조건 O(N²)으로 고정되어 데이터 규모가 커질수록 치명적인 성능 저하를 보이지만, 교환(Swap) 연산의 횟수가 최대 N-1번으로 매우 적어 쓰기 연산(Memory Write) 비용이 극단적으로 비싼 특수 환경에서는 의미를 가진다.
 > 3. **융합**: 선택 정렬의 '최솟값 탐색'이라는 단순한 선형 탐색(O(N)) 로직을 이진 트리 기반의 우선순위 큐(O(log N))로 업그레이드하면, 빅데이터 처리에 필수적인 '힙 정렬(Heap Sort)'이라는 강력한 아키텍처로 진화하게 된다.
 
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 1. 선택 정렬(Selection Sort)의 개념
 선택 정렬은 제자리 정렬(In-place sorting) 알고리즘의 하나로, 배열을 '정렬된 부분(Sorted part)'과 '정렬되지 않은 부분(Unsorted part)'으로 논리적으로 나눕니다. 
@@ -31,7 +33,7 @@ categories = "studynote-algorithm"
 
 ---
 
-## Ⅱ. 핵심 아키텍처 및 원리 (Architecture & Mechanism)
+## 2. 구성요소
 
 ### 1. 선택 정렬의 동작 메커니즘 (Step-by-Step)
 배열 크기가 N일 때, 총 N-1번의 패스(Pass)를 거칩니다.
@@ -67,7 +69,7 @@ categories = "studynote-algorithm"
 
 ---
 
-## Ⅲ. 비교 및 기술적 트레이드오프 (Comparison & Trade-offs)
+## 3. 구조 및 동작 원리
 
 ### 1. 시간 복잡도 (Time Complexity) 분석
 
@@ -85,7 +87,7 @@ categories = "studynote-algorithm"
 
 ---
 
-## Ⅳ. 실무 판단 기준 (Decision Making)
+## 4. 비교 및 트레이드오프
 
 | 고려 사항 | 세부 내용 | 주요 아키텍처 의사결정 |
 |:---|:---|:---|
@@ -101,7 +103,7 @@ categories = "studynote-algorithm"
 
 ---
 
-## Ⅴ. 미래 전망 및 발전 방향 (Future Trend)
+## 5. 실무 적용 및 최적화 기법
 
 1. **힙 정렬(Heap Sort)로의 완전한 승계**
    선택 정렬의 근본적인 문제는 "N개 중에서 제일 작은 것을 찾는데 O(N)이나 걸린다"는 점입니다. 이 선형 탐색의 비효율을 트리 구조(Complete Binary Tree)를 이용해 O(log N)으로 확 줄여버린 것이 바로 **힙 정렬(Heap Sort)**입니다. 힙 정렬은 사실상 '선택 정렬의 완전체 진화형'이며, 실무에서 선택 정렬이 설 자리를 100% 빼앗았습니다.

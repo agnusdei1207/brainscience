@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CNN(Convolutional Neural Network)은 합성곱 필터(Convolution Filter)로 공간적 지역성(Spatial Locality)과 이동 불변성(Translation Invariance)을 활용해 이미지 특성을 계층적으로 추출하는 신경망이다.
+> **핵심**: CNN(Convolutional Neural Network)은 합성곱 필터(Convolution Filter)로 공간적 지역성(Spatial Locality)과 이동 불변성(Translation Invariance)을 활용해 이미지 특성을 계층적으로 추출하는 신경망이다.
 > 2. **가치**: ResNet의 잔차 연결(Residual Connection)은 기울기 소실(Vanishing Gradient) 문제를 극복해 100층 이상의 초심층 네트워크 훈련을 가능하게 했으며, 현대 비전 모델의 기반이 되었다.
 > 3. **판단 포인트**: YOLO(You Only Look Once)는 단일 패스(Single Pass)로 전체 이미지를 처리해 실시간 객체 탐지를 달성하며, 전이 학습(Transfer Learning)으로 소량 데이터 문제를 해결한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 이미지 데이터에 단순 MLP(Multi-Layer Perceptron)를 적용하면 공간 구조 정보가 소실되고 파라미터 수가 폭증한다. CNN은 이를 해결하기 위해 세 가지 핵심 아이디어를 도입했다.
 
@@ -27,7 +29,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 합성곱 연산 (Convolution Operation)
 
@@ -97,7 +99,7 @@ Average: 평균값 → 전체적 특성 유지
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 주요 CNN 아키텍처 발전사
 
@@ -144,7 +146,7 @@ YOLO 1-Stage 탐지
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 전이 학습 (Transfer Learning)
 
@@ -180,7 +182,7 @@ YOLO 1-Stage 탐지
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 비전 AI 파이프라인
 

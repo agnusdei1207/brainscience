@@ -2,15 +2,17 @@
 title = "226. NCP (Network Control Protocol) - 네트워크 계층 동적 설정 (IPCP, IPXCP)"
 weight = 226
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: NCP (Network Control Protocol)는 PPP (Point-to-Point Protocol) 연결의 마지막 단계에서, IP나 IPX 등 상위 네트워크 계층 프로토콜을 협상하고 동적으로 설정하기 위한 제어 프로토콜의 집합이다.
+> **핵심**: NCP (Network Control Protocol)는 PPP (Point-to-Point Protocol) 연결의 마지막 단계에서, IP나 IPX 등 상위 네트워크 계층 프로토콜을 협상하고 동적으로 설정하기 위한 제어 프로토콜의 집합이다.
 > 2. **역할**: LCP가 물리적 링크를 구성하고 인증을 마친 후, NCP(예: IPCP)가 IP 주소를 할당하고 라우팅 정보를 교환함으로써 비로소 데이터 패킷이 전송될 수 있는 완벽한 통신 환경을 구축한다.
 > 3. **유연성**: 다양한 네트워크 프로토콜(IPv4, IPv6, AppleTalk 등)을 단일 PPP 링크 위에서 동시에 다중화하여 전송할 수 있게 해주는 모듈식 아키텍처의 핵심 요소다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: NCP (Network Control Protocol)는 데이터 링크 계층(Layer 2) 통신 규약인 PPP 내에서, 상위 3계층 네트워크 프로토콜을 초기화하고 협상하기 위해 사용되는 하위 프로토콜들의 총칭이다. IP용으로는 IPCP (IP Control Protocol), IPv6용으로는 IPv6CP가 사용된다.
 
@@ -22,7 +24,7 @@ weight = 226
 
 ---
 
-## Ⅱ. NCP의 동작 원리와 LCP와의 관계 (Deep Dive)
+## 2. 구성요소
 
 ### 1. PPP 연결 프로세스 내 NCP의 위치
 PPP 연결은 크게 세 단계를 거친다.

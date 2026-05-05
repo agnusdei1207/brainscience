@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: IPsec ESP (Encapsulating Security Payload)는 포트 번호가 없어 NAT 장비가 주소 변환을 할 수 없다. NAT-T (NAT Traversal)는 ESP 패킷을 UDP 포트 4500으로 감싸 이 문제를 해결한다.
+> **핵심**: IPsec ESP (Encapsulating Security Payload)는 포트 번호가 없어 NAT 장비가 주소 변환을 할 수 없다. NAT-T (NAT Traversal)는 ESP 패킷을 UDP 포트 4500으로 감싸 이 문제를 해결한다.
 > 2. **가치**: 기업 환경의 90% 이상이 NAT를 사용하므로, NAT-T 없이는 IPsec VPN이 인터넷을 통해 동작할 수 없다. NAT-T는 IPsec의 실용성을 보장하는 핵심 메커니즘이다.
 > 3. **판단 포인트**: NAT 탐지는 IKE 협상 중 양측이 서로의 Hash 값을 비교해 자동으로 수행되므로, 관리자는 별도 설정 없이 NAT 유무를 알 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 NAT (Network Address Translation)는 프라이빗 IP를 퍼블릭 IP로 변환하는 기술로, 현재 거의 모든 인터넷 접속 환경에 존재한다. 문제는 IPsec의 핵심 프로토콜인 ESP (IP 프로토콜 번호 50)가 TCP/UDP와 달리 포트 번호를 가지지 않는다는 점이다. NAT 장비는 포트 번호를 기준으로 여러 내부 호스트를 구분하는데, ESP에는 포트가 없으므로 NAT 테이블에 정상적으로 등록할 수 없다.
 
@@ -25,7 +27,7 @@ RFC 3948에서 정의한 NAT-T는 ESP 패킷 앞에 UDP 헤더(포트 4500)를 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### NAT 탐지 메커니즘 (IKE Phase 1)
 
@@ -80,7 +82,7 @@ Initiator                         NAT 장비              Responder
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | ESP (NAT-T 없음) | ESP-in-UDP (NAT-T) | AH |
 |:---|:---|:---|:---|
@@ -95,7 +97,7 @@ Initiator                         NAT 장비              Responder
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **설계 시 주요 고려사항:**
 
@@ -113,7 +115,7 @@ Initiator                         NAT 장비              Responder
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 NAT-T는 IPsec VPN을 인터넷 환경에서 실용적으로 사용할 수 있게 하는 필수 구성 요소다. UDP 캡슐화라는 단순한 방법으로 ESP와 NAT의 근본적 충돌을 해결하며, IKEv2에서는 자동으로 NAT를 탐지하고 활성화된다. 현대 엔터프라이즈 VPN 설계에서 NAT-T는 옵션이 아니라 기본값이며, AH 프로토콜 대신 ESP+NAT-T를 표준으로 채택하는 것이 올바른 기술사 판단이다.
 

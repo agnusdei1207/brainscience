@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ICO (Initial Coin Offering), STO (Security Token Offering), IEO (Initial Exchange Offering)는 블록체인 기반 디지털 자산을 발행하여 프로젝트 자금을 조달하는 세 가지 방식으로, 규제 강도와 투자자 보호 수준에서 큰 차이가 있다.
+> **핵심**: ICO (Initial Coin Offering), STO (Security Token Offering), IEO (Initial Exchange Offering)는 블록체인 기반 디지털 자산을 발행하여 프로젝트 자금을 조달하는 세 가지 방식으로, 규제 강도와 투자자 보호 수준에서 큰 차이가 있다.
 > 2. **가치**: ICO → STO → IEO로의 진화는 "블록체인 자금 조달의 제도화" 방향을 보여준다. ICO는 규제 없이 빠른 자금 조달이 가능하지만 사기(Scam) 위험이 높고, STO는 증권법 적용으로 투자자 보호가 강화되며, IEO는 거래소가 중개자 역할을 하여 신뢰성을 높인다.
 > 3. **판단 포인트**: 한국에서는 ICO가 2017년부터 사실상 금지 상태이고, STO는 토큰 증권 가이드라인(2023)에 따라 제도권 진입 중이다. 디지털 자산 관련 법제도 동향을 파악하는 것이 기술사 시험과 실무 모두에서 중요하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌─────────────────────────────────────────────────────────┐
@@ -31,7 +33,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### ICO (Initial Coin Offering)
 - 스마트 컨트랙트로 토큰 발행 → 직접 투자자에게 판매.
@@ -52,7 +54,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | ICO | STO | IEO |
 |:---|:---|:---|:---|
@@ -65,7 +67,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 한국 토큰 증권(STO) 제도화
 - 금융위원회 2023년 가이드라인: 증권형 토큰 발행·유통 허용.
@@ -80,7 +82,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

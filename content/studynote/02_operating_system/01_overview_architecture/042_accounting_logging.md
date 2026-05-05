@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. OS 회계(Accounting)는 프로세스별 CPU 시간·메모리 사용량·I/O 횟수 등 자원 소비를 측정·기록하는 커널 기능으로, 과금(Billing)·성능 분석·보안 감사의 기반 데이터를 제공한다.
 > 2. 시스템 로깅(Logging)은 커널 메시지·시스템 이벤트·오류를 시간 순서로 기록하여 장애 원인 분석(Post-mortem Analysis)·보안 침해 탐지·규제 컴플라이언스(GDPR, ISO 27001)에 활용하는 핵심 운영 인프라다.
 > 3. 현대 시스템에서 로그는 단순 텍스트 파일에서 구조화된 JSON 로그→ELK Stack(Elasticsearch·Logstash·Kibana)·OpenTelemetry로 진화했으며, "관찰가능성(Observability) 3기둥"(Metrics·Traces·Logs)의 하나로 SRE 핵심 실천이 됐다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. OS 회계 (Process Accounting)
+## 1. 개요 및 필요성
 
 ```
 프로세스 회계 (Process Accounting):
@@ -47,7 +50,7 @@ Linux 프로세스 회계:
 
 ---
 
-## Ⅱ. 시스템 로깅 아키텍처
+## 2. 구성요소
 
 ```
 Linux 로깅 아키텍처:
@@ -85,7 +88,7 @@ Facility (시설):
 
 ---
 
-## Ⅲ. 구조화 로그와 현대 로깅
+## 3. 구조 및 동작 원리
 
 ```
 전통 vs 구조화 로그:
@@ -128,7 +131,7 @@ OpenTelemetry:
 
 ---
 
-## Ⅳ. 로그 보안과 규제
+## 4. 비교 및 트레이드오프
 
 ```
 보안 감사 로그 (Audit Log):
@@ -167,7 +170,7 @@ Linux 감사 시스템 (auditd):
 
 ---
 
-## Ⅴ. 실무 시나리오 — SRE 로그 분석
+## 5. 실무 적용 및 최적화 기법
 
 ```
 금융 서비스 장애 원인 분석 사례:

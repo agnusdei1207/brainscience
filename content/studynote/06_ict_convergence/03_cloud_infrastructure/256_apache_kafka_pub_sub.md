@@ -2,17 +2,19 @@
 title = "256. 카프카 (Apache Kafka) 대규모 실시간 로그 및 이벤트 스트리밍 분산 메시지 큐"
 weight = 256
 +++
+## 0. 핵심 인사이트
 
-# 카프카 (Apache Kafka) 대규모 실시간 로그 및 이벤트 스트리밍 분산 메시지 큐
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 아파치 카프카 (Apache Kafka)는 발행-구독 (Pub/Sub) 모델을 기반으로 대규모 실시간 이벤트 스트림을 처리하기 위해 링크드인 (LinkedIn)에서 개발한 고성능, 분산형 이벤트 스트리밍 플랫폼 (Event Streaming Platform)이다.
+> **핵심**: 아파치 카프카 (Apache Kafka)는 발행-구독 (Pub/Sub) 모델을 기반으로 대규모 실시간 이벤트 스트림을 처리하기 위해 링크드인 (LinkedIn)에서 개발한 고성능, 분산형 이벤트 스트리밍 플랫폼 (Event Streaming Platform)이다.
 > 2. **가치**: 메시지를 메모리가 아닌 디스크 (Disk)에 순차적으로 영속화 (Persist)하고, 파티션 (Partition)을 통해 데이터를 다중 노드에 분산 처리함으로써 초당 수백만 건의 이벤트를 밀리초 (ms) 수준의 지연 시간으로 처리하면서도 데이터 유실을 방지하는 극강의 처리량 (Throughput)과 내결함성 (Fault Tolerance)을 제공한다.
 > 3. **융합**: 기존의 단순한 메시지 전달 큐 (Message Queue) 역할을 넘어, 마이크로서비스 아키텍처 (MSA, Microservices Architecture) 간의 이벤트 기반 통신 (Event-Driven Communication), 스트림 프로세싱 (Spark Streaming, Flink), 로그 수집 (ELK Stack)의 중앙 데이터 허브(Central Nervous System)로써 엔터프라이즈 데이터 파이프라인의 핵심 백본(Backbone) 역할을 수행한다.
 
+> 📝 모범 답안
+
+# 카프카 (Apache Kafka) 대규모 실시간 로그 및 이벤트 스트리밍 분산 메시지 큐
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 카프카 (Kafka)는 데이터의 생성자 (Producer)와 소비자 (Consumer)를 완벽히 분리(Decoupling)하는 발행-구독 (Pub/Sub, Publish-Subscribe) 패턴의 분산 메시징 시스템이다. 데이터를 토픽 (Topic)이라는 논리적 단위로 분류하고, 이를 물리적인 파티션 (Partition)으로 쪼개어 여러 브로커 (Broker) 서버에 분산 저장함으로써 수평적 확장 (Scale-out)을 극대화한다.
 
@@ -61,7 +63,7 @@ weight = 256
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -146,7 +148,7 @@ weight = 256
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 메시지 브로커 방식 비교 (Apache Kafka vs RabbitMQ)
 
@@ -193,7 +195,7 @@ weight = 256
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -244,7 +246,7 @@ weight = 256
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

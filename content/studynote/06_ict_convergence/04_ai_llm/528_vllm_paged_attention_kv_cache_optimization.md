@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: vLLM(Variable-length Large Language Model inference)의 PagedAttention은 OS 가상 메모리 페이징 개념을 KV 캐시에 적용해 GPU 메모리 단편화를 제거하고 처리량을 최대 24배 향상시킨다.
+> **핵심**: vLLM(Variable-length Large Language Model inference)의 PagedAttention은 OS 가상 메모리 페이징 개념을 KV 캐시에 적용해 GPU 메모리 단편화를 제거하고 처리량을 최대 24배 향상시킨다.
 > 2. **가치**: 연속 배치(Continuous Batching)와 PagedAttention의 결합으로, 다양한 시퀀스 길이의 요청을 동적으로 스케줄링해 GPU 활용률을 획기적으로 높인다.
 > 3. **판단 포인트**: vLLM의 Tensor Parallelism으로 모델을 여러 GPU에 분산하고, Pipeline Parallelism으로 레이어를 분산할 때 통신 오버헤드와 처리량 간 트레이드오프를 설계 단계에서 결정해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 LLM 서빙의 전통적 문제: 각 요청의 KV 캐시 크기는 생성 완료 전까지 알 수 없어 과다 할당(Over-provisioning) 또는 미리 최대 시퀀스 길이만큼 연속 메모리를 예약해야 했다. 이로 인해 GPU 메모리의 **20~40%가 내부 단편화(Internal Fragmentation)**로 낭비됐다.
 
@@ -24,7 +25,7 @@ vLLM은 UC Berkeley 연구팀이 2023년 발표한 오픈소스 추론 엔진으
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌──────────────────────────────────────────────────────┐
@@ -69,7 +70,7 @@ vLLM은 UC Berkeley 연구팀이 2023년 발표한 오픈소스 추론 엔진으
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 모델 병렬화 전략
 
@@ -91,7 +92,7 @@ vLLM은 UC Berkeley 연구팀이 2023년 발표한 오픈소스 추론 엔진으
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **vLLM 배포 구성 예시**
 
@@ -113,7 +114,7 @@ vllm serve meta-llama/Llama-3-70B-Instruct \
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 vLLM의 PagedAttention과 연속 배치는 LLM 서빙 인프라의 패러다임을 바꿨다. 동일한 GPU로 최대 24배 많은 요청을 처리할 수 있어 클라우드 서빙 비용이 획기적으로 절감됐다. OpenAI·Anthropic·Google 등 주요 서빙 인프라도 유사 최적화 기법을 채택했다. 향후 Speculative Decoding과 프리픽스 캐싱의 결합이 TTFT를 더욱 단축할 전망이다.
 

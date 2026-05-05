@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Thundering Herd (캐시 스탬피드)는 캐시가 만료된 순간 수천 개의 요청이 동시에 DB를 공격하여 DB를 마비시키는 장애 패턴이다.
+> **핵심**: Thundering Herd (캐시 스탬피드)는 캐시가 만료된 순간 수천 개의 요청이 동시에 DB를 공격하여 DB를 마비시키는 장애 패턴이다.
 > 2. **가치**: Redis SETNX 기반 분산 락과 Probabilistic Early Expiration, TTL Jitter를 조합하면 초당 10,000 req/s 환경에서도 DB 쿼리를 1~5건으로 제한할 수 있다.
 > 3. **판단 포인트**: 캐시 TTL이 짧고 동시 접속자가 많을수록 위험도가 높으며, 핫 키(Hot Key)에 대한 사전 예방 설계가 필수다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 캐시(Redis)는 DB 부하를 90% 이상 감소시키지만, 캐시 만료(TTL 0)와 대량 동시 요청이 겹치면 모든 요청이 동시에 DB를 호출하는 Cache Stampede (캐시 스탬피드, Thundering Herd)가 발생한다.
 
@@ -30,7 +31,7 @@ Dog-pile Effect라고도 불리며, 인기 있는 콘텐츠(핫 키)일수록 �
 
 📢 **섹션 요약 비유**: Thundering Herd는 건물 비상구가 갑자기 열리는 순간 모두가 동시에 달려가 문이 막히는 상황이다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 해결 전략 비교
 
@@ -117,7 +118,7 @@ redis.setex(key, base_ttl + jitter, value)
 
 📢 **섹션 요약 비유**: TTL Jitter는 시험 종료 시간을 학생마다 살짝 다르게 해서 모두가 동시에 문을 향해 달리는 혼잡을 방지하는 것이다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 핫 키 (Hot Key) 문제
 
@@ -133,7 +134,7 @@ redis.setex(key, base_ttl + jitter, value)
 
 📢 **섹션 요약 비유**: 핫 키는 한 창구에 모든 손님이 몰리는 것이다. 창구를 늘리거나(Read Replica) 번호표로 분산하거나(Key Sharding), 손님이 직접 정보를 갖고 오게 해야 한다(L1 Cache).
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Thundering Herd 방지 체크리스트
 
@@ -153,7 +154,7 @@ redis.setex(key, base_ttl + jitter, value)
 
 📢 **섹션 요약 비유**: Lock TTL이 너무 짧은 건 화장실 잠금장치 비밀번호가 문 열리기 전에 초기화되는 것이다. 다음 사람이 들어와 혼잡해진다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 항목 | Thundering Herd 미방지 | 방지 후 |
 |:---|:---|:---|

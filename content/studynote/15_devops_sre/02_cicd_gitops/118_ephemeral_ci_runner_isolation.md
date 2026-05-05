@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Ephemeral CI Runner는 **빌드마다 새로운 러너(컨테이너/VM)를 생성하고, 빌드 완료 후 즉시 삭제**하는 CI 실행 전략으로, 이전 빌드의 잔여물(캐시·파일·프로세스)이 다음 빌드에 영향을 주지 않는 **완전 격리(Clean Room)**를 보장한다.
+> **핵심**: Ephemeral CI Runner는 **빌드마다 새로운 러너(컨테이너/VM)를 생성하고, 빌드 완료 후 즉시 삭제**하는 CI 실행 전략으로, 이전 빌드의 잔여물(캐시·파일·프로세스)이 다음 빌드에 영향을 주지 않는 **완전 격리(Clean Room)**를 보장한다.
 > 2. **가치**: 영구 러너(Persistent Runner)는 이전 빌드의 `node_modules`·악성 파일·환경 변수가 남아 **빌드 오염(Build Pollution)·보안 침해**를 유발하지만, Ephemeral 러너는 매번 깨끗한 상태에서 시작한다.
 > 3. **판단 포인트**: GitHub Actions(기본 Ephemeral)·GitLab Runner(Docker executor)·Jenkins(K8s Pod agent)가 대표 구현이며, **빌드 시간 vs 격리 보안**의 트레이드오프(캐시 활용 어려움)를 관리해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -35,7 +37,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### CI 도구별 Ephemeral 구현
 
@@ -57,7 +59,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Persistent | Ephemeral |
 |:---|:---|:---|
@@ -68,7 +70,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Best Practice
 1. **러너**: Ephemeral 기본, 캐시는 외부 저장소(S3) 활용.
@@ -77,7 +79,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | Persistent | Ephemeral | 개선 |
 |:---|:---|:---|:---|

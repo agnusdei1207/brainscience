@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: RNN(Recurrent Neural Network)은 순환 구조(Recurrent Structure)로 시퀀스 데이터의 시간 의존성을 포착하지만, 역전파(Backpropagation Through Time)에서 기울기 소실(Vanishing Gradient) 문제가 발생한다.
+> **핵심**: RNN(Recurrent Neural Network)은 순환 구조(Recurrent Structure)로 시퀀스 데이터의 시간 의존성을 포착하지만, 역전파(Backpropagation Through Time)에서 기울기 소실(Vanishing Gradient) 문제가 발생한다.
 > 2. **가치**: LSTM(Long Short-Term Memory)은 셀 상태(Cell State)라는 고속도로와 입력·망각·출력 게이트(Gate) 3개로 장기 의존성(Long-Term Dependency)을 선택적으로 기억·망각·출력하는 메커니즘을 구현한다.
 > 3. **판단 포인트**: GRU(Gated Recurrent Unit)는 LSTM을 2개 게이트로 간소화해 파라미터를 줄이면서도 유사한 성능을 제공하며, Transformer 등장 이후 장기 의존성 처리의 주류는 어텐션 메커니즘으로 전환되었다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 시퀀스 데이터(텍스트, 음성, 주가, 센서 신호)는 순서 정보가 핵심이다. CNN이나 MLP(Multi-Layer Perceptron)는 입력의 순서를 고려하지 않으므로 이런 데이터에 부적합하다.
 
@@ -47,7 +49,7 @@ y_t = W_y · h_t
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 기울기 소실/폭발 문제 (Vanishing/Exploding Gradient)
 
@@ -104,7 +106,7 @@ h_t = o_t ⊙ tanh(C_t)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### GRU (Gated Recurrent Unit) — LSTM 간소화
 
@@ -138,7 +140,7 @@ GRU 구조 (게이트 2개)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 시계열 예측 파이프라인
 
@@ -183,7 +185,7 @@ model = Sequential([
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### LSTM → Transformer 전환 배경
 

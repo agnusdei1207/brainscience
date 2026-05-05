@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 우선순위 올림 프로토콜 (Priority Ceiling Protocol)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: PCP (Priority Ceiling Protocol)는 각 자원(락)에 해당 자원을 사용할 수 있는 최고 우선순위 프로세스의 우선순위를 미리 부여(천장값)하여, 락 획득 시 보유 프로세스의 우선순위를 즉시 그 천장값으로 올리는 실시간 동기화 기법이다.
+> **핵심**: PCP (Priority Ceiling Protocol)는 각 자원(락)에 해당 자원을 사용할 수 있는 최고 우선순위 프로세스의 우선순위를 미리 부여(천장값)하여, 락 획득 시 보유 프로세스의 우선순위를 즉시 그 천장값으로 올리는 실시간 동기화 기법이다.
 > 2. **가치**: 우선순위 역전 (Priority Inversion)과 교착 상태 (Deadlock) 모두를 단일 프로토콜로 예방할 수 있으며, RTOS (Real-Time Operating System) 환경에서 마감시간 (Deadline) 보장의 핵심 메커니즘이다.
 > 3. **융합**: PIP (Priority Inheritance Protocol)가 역전 발생 후 사후 처리라면, PCP는 사전 예방으로서 POSIX (Portable Operating System Interface) 실시간 확장과 AUTOSAR OS에서 표준으로 채택된다.
 
+> 📝 모범 답안
+
+# 우선순위 올림 프로토콜 (Priority Ceiling Protocol)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 PCP (Priority Ceiling Protocol)는 자원 기반 우선순위 조정 기법이다. 시스템 설계 시점에 각 뮤텍스에 **천장 우선순위 (Ceiling Priority)** — 해당 뮤텍스를 사용할 수 있는 모든 태스크 중 최고 우선순위 — 를 정적으로 할당한다. 프로세스가 뮤텍스를 획득하는 순간, OS는 그 프로세스의 실행 우선순위를 뮤텍스의 천장값으로 즉시 상승시킨다. 이 승격은 뮤텍스를 반납할 때까지 유지된다.
 
@@ -48,7 +50,7 @@ PIP (Priority Inheritance Protocol)가 우선순위 역전이 실제 발생한 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -97,7 +99,7 @@ PCP는 순환 대기 (Circular Wait)를 구조적으로 차단한다. 태스크�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### PIP vs PCP 비교
 
@@ -125,7 +127,7 @@ PCP는 순환 대기 (Circular Wait)를 구조적으로 차단한다. 태스크�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -144,7 +146,7 @@ PCP는 순환 대기 (Circular Wait)를 구조적으로 차단한다. 태스크�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

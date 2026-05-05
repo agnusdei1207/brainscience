@@ -6,15 +6,17 @@ description = "모든 입력에 대해 정확한 기대 결과를 제공하는 �
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "True Oracle", "Expected Result", "Ideal"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 참 오라클(True Oracle)은 모든 입력에 대한 정답을 정확히 알고 있는 이상적인 오라클이다.
+> **핵심**: 참 오라클(True Oracle)은 모든 입력에 대한 정답을 정확히 알고 있는 이상적인 오라클이다.
 > 2. **가치**: 테스트 결과를 가장 명확하게 판정할 수 있다.
 > 3. **판단 포인트**: 이론적으로는 완벽하지만, 실제 시스템에서는 만들기 어렵다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 참 오라클은 모든 입력에 대해 기대 결과를 완전히 아는 경우다. 말 그대로 "정답을 다 아는 채점자"다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "True Oracle", "Expected Result", "Id
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 참 오라클은 입력 하나하나에 대해 기대 결과를 정확히 제공한다. 따라서 판정이 매우 명확하다.
 
@@ -44,7 +46,7 @@ tags = ["Software Engineering", "Testing", "True Oracle", "Expected Result", "Id
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 참 오라클은 오라클 유형 중 가장 이상적이다. 대신 샘플링 오라클이나 휴리스틱 오라클은 현실적인 타협안이다.
 
@@ -60,7 +62,7 @@ tags = ["Software Engineering", "Testing", "True Oracle", "Expected Result", "Id
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 계산식이 단순한 모듈, 규칙이 명확한 변환기, 정답 테이블이 있는 부분에서만 참 오라클에 가깝게 쓸 수 있다.
 
@@ -73,7 +75,7 @@ tags = ["Software Engineering", "Testing", "True Oracle", "Expected Result", "Id
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 참 오라클은 이상적인 테스트 기준이지만, 실제로는 드물다. 그래서 오라클의 한계를 아는 것이 더 중요하다.
 

@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Argo CD는 **Git 레포지토리를 단일 진실 원천(Single Source of Truth)**으로 삼아, Git의 매니페스트와 K8s 클러스터 상태를 **실시간 비교(Diff)하고 자동 동기화(Sync)**하는 CNCF 졸업 GitOps CD 도구다.
+> **핵심**: Argo CD는 **Git 레포지토리를 단일 진실 원천(Single Source of Truth)**으로 삼아, Git의 매니페스트와 K8s 클러스터 상태를 **실시간 비교(Diff)하고 자동 동기화(Sync)**하는 CNCF 졸업 GitOps CD 도구다.
 > 2. **가치**: 전통 CI/CD(Jenkins)가 "Push 기반(파이프라인이 클러스터에 적용)"이라면, Argo CD는 **"Pull 기반(클러스터가 Git을 감시하여 스스로 동기화)"**하므로, 클러스터 접근 권한을 CI 시스템에 노출하지 않아 **보안이 강화**된다.
 > 3. **판단 포인트**: Argo CD는 K8s 매니페스트(YAML/Helm/Kustomize)를 관리하며, Argo Rollouts와 결합하여 **카나리·블루/그린 배포를 선언적으로** 수행한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -34,7 +36,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Argo CD 핵심 개념
 
@@ -53,7 +55,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Jenkins CD | Argo CD | Flux |
 |:---|:---|:---|:---|
@@ -64,7 +66,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 도입 체크리스트
 1. **Git 레포 분리**: 앱 코드 레포 + 매니페스트 레포 분리 (Config Repo 패턴).
@@ -76,7 +78,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | Jenkins CD | Argo CD | 개선 |
 |:---|:---|:---|:---|

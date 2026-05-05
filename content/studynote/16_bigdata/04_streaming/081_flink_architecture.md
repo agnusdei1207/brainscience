@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> Flink의 등장은 "1세대 스마트폰과 현재 스마트폰의 차이"다. Storm이 통화만 되는 구형 스마트폰이라면, Flink는 GPS·카메라·앱 모두 갖춘 최신 스마트폰이다.
+
+> 📝 모범 답안
 
 - **본질**: Apache Flink (아파치 플링크)의 아키텍처는 클러스터를 조율하는 JobManager (잡매니저)와 실제 연산을 실행하는 TaskManager (태스크매니저)의 마스터-워커 구조로, 사용자 프로그램을 JobGraph (잡 그래프, DAG)로 변환하고 각 연산자(Operator)를 태스크로 분해하여 분산 실행한다.
 - **가치**: Flink는 진정한 이벤트 단위(Per-Event) 처리와 정밀한 상태(State) 관리 메커니즘을 제공하여, Spark의 마이크로배치 대비 지연 시간이 수 배 낮고 이벤트 시간(Event Time) 처리의 정확도가 높다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. Flink의 탄생 배경
 
@@ -30,11 +33,10 @@ categories = "studynote-bigdata"
 | 이벤트 시간 처리 | 미지원 | 제한적 | 완전 지원 (Watermark) |
 
 **📢 섹션 요약 비유**
-> Flink의 등장은 "1세대 스마트폰과 현재 스마트폰의 차이"다. Storm이 통화만 되는 구형 스마트폰이라면, Flink는 GPS·카메라·앱 모두 갖춘 최신 스마트폰이다.
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. Flink 클러스터 아키텍처
 
@@ -106,7 +108,7 @@ TaskManager의 Task Slot에 배포·실행
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 1. Flink vs Spark 아키텍처 비교
 
@@ -132,7 +134,7 @@ TaskManager의 Task Slot에 배포·실행
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1. Flink 클러스터 구성 체크리스트
 
@@ -158,7 +160,7 @@ high-availability.zookeeper.path.root: /flink
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 기대효과
 

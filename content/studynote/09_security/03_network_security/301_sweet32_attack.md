@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Sweet32(CVE-2016-2183)는 3DES(Triple Data Encryption Standard)·Blowfish처럼 64비트 블록 크기를 사용하는 블록 암호가 CBC(Cipher Block Chaining) 모드에서 생일 역설(Birthday Paradox)에 따라 약 2³² ≈ 32GB 트래픽 이후 블록 충돌(Collision)이 통계적으로 발생하고, 이 충돌을 사이드 채널로 삼아 일부 평문을 복원하는 공격이다.
+> **핵심**: Sweet32(CVE-2016-2183)는 3DES(Triple Data Encryption Standard)·Blowfish처럼 64비트 블록 크기를 사용하는 블록 암호가 CBC(Cipher Block Chaining) 모드에서 생일 역설(Birthday Paradox)에 따라 약 2³² ≈ 32GB 트래픽 이후 블록 충돌(Collision)이 통계적으로 발생하고, 이 충돌을 사이드 채널로 삼아 일부 평문을 복원하는 공격이다.
 > 2. **가치**: 3DES는 PCI DSS(Payment Card Industry Data Security Standard)·정부 시스템 등 레거시 환경에서 오랫동안 "충분히 안전하다"고 간주됐으나, 장기 세션(인터넷 뱅킹, HTTPS 영상 스트리밍)에서 32GB는 수 시간이면 도달하는 현실적 임계치다.
 > 3. **판단 포인트**: AES-128/256 GCM(Galois/Counter Mode) 또는 ChaCha20-Poly1305 전환이 근본 해결이다. 128비트 블록 크기에서 생일 충돌 임계치는 2⁶⁴ ≈ 1.8×10¹⁹ 바이트로 사실상 도달 불가능하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 2016년 8월 Karthikeyan Bhargavan(INRIA)과 Gaëtan Leurent가 발표한 Sweet32는 암호학 교과서에서 오래전부터 알려진 생일 역설을 실용적 공격으로 전환한 사례다.
 
@@ -25,7 +27,7 @@ TLS에서 3DES(DES-EDE3-CBC)는 "NULL 암호나 RC4보다는 낫다"는 이유�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 생일 역설과 블록 충돌
 
@@ -85,7 +87,7 @@ P_j(요청에 포함된 알려진 쿠키 추측)이면:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 블록 암호 생일 공격 비교
 
@@ -102,7 +104,7 @@ P_j(요청에 포함된 알려진 쿠키 추측)이면:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **즉시 조치**
 
@@ -126,7 +128,7 @@ cipher AES-256-GCM
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Sweet32는 암호학에서 이론적으로 알려진 "블록 크기 제한" 문제를 처음으로 실용적 공격으로 전환한 사례다. 이는 수십 년간 "충분히 안전하다"고 간주되어 온 3DES의 수명이 다했음을 공식 선언한 것과 같다.
 

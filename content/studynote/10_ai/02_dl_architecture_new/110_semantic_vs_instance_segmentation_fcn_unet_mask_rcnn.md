@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Semantic Segmentation은 픽셀을 **클래스(종류)별로만 색칠**(고양이 3마리 = 전부 파란색 1덩어리)하고, Instance Segmentation은 **클래스+개체별로 각각 다른 색**으로 분리(고양이 1=빨강, 고양이 2=노랑)하여 동일 클래스 내 개별 객체를 식별한다.
+> **핵심**: Semantic Segmentation은 픽셀을 **클래스(종류)별로만 색칠**(고양이 3마리 = 전부 파란색 1덩어리)하고, Instance Segmentation은 **클래스+개체별로 각각 다른 색**으로 분리(고양이 1=빨강, 고양이 2=노랑)하여 동일 클래스 내 개별 객체를 식별한다.
 > 2. **가치**: 종양 영역 분할(Semantic)과 도로 위 차량 개수 세기(Instance)처럼 **도메인에 따라 적합한 분할 유형이 달라지며**, 최근 Panoptic Segmentation이 둘을 통합하여 배경+개체를 동시에 분석한다.
 > 3. **판단 포인트**: FCN(최초 E2E)→U-Net(Skip Connection)→Mask R-CNN(Instance)→SAM(Foundation Model)으로 아키텍처가 진화했으며, **엣지 디바이스 배포 시 경량화(MobileNet 백본) 필수**.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 객체 탐지(YOLO)가 "어디에 무엇이 있는지" Bounding Box로 알려준다면, 이미지 분할은 "어떤 픽셀이 무엇인지"까지 정밀하게 색칠한다. 의료 MRI에서 종양 경계를 **1픽셀 단위로** 추출하거나, 자율주행에서 차선·보행자·차량을 동시에 분리하는 데 필수적이다.
 
@@ -35,7 +37,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 모델 | 유형 | 핵심 혁신 | 한계 |
 |:---|:---|:---|:---|
@@ -55,7 +57,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Classification | Detection | Semantic Seg. | Instance Seg. |
 |:---|:---|:---|:---|:---|
@@ -66,7 +68,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 도메인별 선택 가이드
 1. **의료 MRI**: U-Net (Semantic) — 종양 영역 vs 정상 조직 분류.
@@ -78,7 +80,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | Detection (Box) | Instance Seg. | 개선 |
 |:---|:---|:---|:---|

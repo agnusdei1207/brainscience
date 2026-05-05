@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 캐시 미스 오버헤드 측정 분석망 구조 적용
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 캐시 미스 (Cache Miss)는 CPU (Central Processing Unit)가 필요한 데이터를 캐시 (Cache)에서 찾지 못해 주기억장치 (DRAM, Dynamic Random Access Memory) 이하의 계층에서 데이터를 가져오는 현상으로, 한 번의 L3 미스만으로도 수백 클럭 사이클 (Clock Cycle)의 지연 (Latency)이 발생하여 전체 시스템 처리량 (Throughput)을 급락시키는 치명적 병목이다.
+> **핵심**: 캐시 미스 (Cache Miss)는 CPU (Central Processing Unit)가 필요한 데이터를 캐시 (Cache)에서 찾지 못해 주기억장치 (DRAM, Dynamic Random Access Memory) 이하의 계층에서 데이터를 가져오는 현상으로, 한 번의 L3 미스만으로도 수백 클럭 사이클 (Clock Cycle)의 지연 (Latency)이 발생하여 전체 시스템 처리량 (Throughput)을 급락시키는 치명적 병목이다.
 > 2. **가치**: 캐시 미스 오버헤드 (Cache Miss Overhead)를 정량적으로 측정하고 분석하는 체계적인 분석망 (Analysis Framework)을 구축하면, 성능 저하의 근원을 핀포인트로 식별하여 최적화 투자 대비 효과 (ROI, Return on Investment)를 극대화할 수 있다. 실무에서 전체 실행 시간의 20~30%가 캐시 미스 대기 시간인 경우가 흔하다.
 > 3. **융합**: 캐시 미스 분석은 하드웨어 성능 카운터 (HPC, Hardware Performance Counter)를 활용한 실시간 프로파일링 (Profiling) 기법과 결합되며, 운영체제 (OS, Operating System)의 스케줄링, 메모리 관리, 인터럽트 처리 경로와 깊게 연관된다.
 
+> 📝 모범 답안
+
+# 캐시 미스 오버헤드 측정 분석망 구조 적용
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 **개념 및 정의**
 현대 CPU 아키텍처에서 캐시 계층 (Cache Hierarchy)은 L1 (Level 1), L2 (Level 2), L3 (Level 3)의 3단계로 구성되며, 각 단계마다 접근 지연 시간 (Access Latency)이 기하급수적으로 증가한다. L1 캐시 적중 (Hit)은 약 1~4 클럭 사이클, L2는 10~20 사이클, L3는 30~50 사이클, 그리고 주기억장치 (DRAM) 접근은 100~300 사이클이 소요된다. 캐시 미스 (Cache Miss)가 발생하면 CPU는 파이프라인 (Pipeline)을 멈추고 (Stall) 데이터가 도착할 때까지 대기해야 하므로, 미스 비율 (Miss Rate)이 단 몇 %만 증가해도 전체 성능이 수십 %까지 저하될 수 있다.
@@ -53,7 +55,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 하드웨어 성능 카운터 (HPC, Hardware Performance Counter) 기반 미스 측정
 
@@ -144,7 +146,7 @@ AMAT (Average Memory Access Time) = Hit Time + Miss Rate × Miss Penalty
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 측정 도구 비교
 
@@ -193,7 +195,7 @@ AMAT (Average Memory Access Time) = Hit Time + Miss Rate × Miss Penalty
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오별 분석 접근법
 
@@ -259,7 +261,7 @@ AMAT (Average Memory Access Time) = Hit Time + Miss Rate × Miss Penalty
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

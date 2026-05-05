@@ -6,15 +6,17 @@ description = "권한 확인이 부족해 다른 사용자의 데이터나 기�
 taxonomy = ""
 tags = ["Software Engineering", "Security", "Access Control", "OWASP", "Authorization"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Broken Access Control은 권한 검사가 틀려서 생기는 취약점이다.
+> **핵심**: Broken Access Control은 권한 검사가 틀려서 생기는 취약점이다.
 > 2. **가치**: 가장 자주 악용되는 웹 보안 문제 중 하나다.
 > 3. **판단 포인트**: 로그인 여부가 아니라 "이 사용자가 이 자원에 접근 가능한가"를 확인한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 접근 제어 (Access Control)는 자원과 기능을 누구에게 허용할지 정하는 장치다. 이게 깨지면 다른 사람의 데이터 조회, 수정, 삭제가 가능해진다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Security", "Access Control", "OWASP", "Authoriz
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 핵심은 인증(Authentication)과 인가(Authorization)를 분리해서 생각하는 것이다.
 
@@ -44,7 +46,7 @@ tags = ["Software Engineering", "Security", "Access Control", "OWASP", "Authoriz
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Broken Access Control은 "로그인만 하면 된다"는 오해에서 자주 생긴다.
 
@@ -60,7 +62,7 @@ OWASP Top 10에서 반복적으로 강조되는 이유도 여기에 있다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 모든 민감 API와 관리 기능에 서버 측 권한 검사를 넣어야 한다.
 
@@ -73,7 +75,7 @@ OWASP Top 10에서 반복적으로 강조되는 이유도 여기에 있다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Broken Access Control을 막으면 데이터 유출과 기능 오용을 크게 줄일 수 있다.
 

@@ -5,15 +5,17 @@ date = "2026-03-19"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 무조건 분기(Unconditional Branch)는 조건의 참/거짓을 묻지도 따지지도 않고, 명령어를 만나는 즉시 프로그램 카운터(PC)를 **지정된 목적지 주소로 강제로 덮어쓰는(Jump)** 명령어다.
+> **핵심**: 무조건 분기(Unconditional Branch)는 조건의 참/거짓을 묻지도 따지지도 않고, 명령어를 만나는 즉시 프로그램 카운터(PC)를 **지정된 목적지 주소로 강제로 덮어쓰는(Jump)** 명령어다.
 > 2. **가치**: 주로 루프(Loop)의 맨 끝에서 다시 처음으로 돌아가거나, 함수(Function) 실행이 끝난 후 원래의 자리로 복귀(Return)할 때 사용되어 **코드의 반복과 재사용**을 물리적으로 연결한다.
 > 3. **융합**: 어셈블리어의 꽃이자 독인 `GOTO` 문의 실체이며, 남용할 경우 코드 흐름을 완전히 박살 내는 스파게티 코드를 유발하므로 현대 컴파일러에서는 **철저히 숨겨진 채 구조적 제어의 뒤치다꺼리**를 담당한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 무조건 분기(Unconditional Branch)는 조건의 참/거짓을 따지지 않고, 명령어를 만나는 즉시 프로그램 카운터(PC)를 지정된 목적지 주소로 강제로 덮어씌워(Jump) 실행 경로를 변경하는 명령어다.
 
@@ -48,7 +50,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 무조건 분기의 3가지 목적지 지정 방식
 
@@ -93,7 +95,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 심층 기술 비교: 정적(Static) Jump vs 동적(Dynamic/Indirect) Jump
 
@@ -135,7 +137,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -180,7 +182,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

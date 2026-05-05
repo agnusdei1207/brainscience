@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ReLU(Rectified Linear Unit)는 **f(x) = max(0, x)**로 정의되는 활성화 함수이며, 양수는 그대로 통과, 음수는 0으로 차단하는 단순한 구조로 **Vanishing Gradient 문제를 해결**하여 딥러닝을 실용화했다.
+> **핵심**: ReLU(Rectified Linear Unit)는 **f(x) = max(0, x)**로 정의되는 활성화 함수이며, 양수는 그대로 통과, 음수는 0으로 차단하는 단순한 구조로 **Vanishing Gradient 문제를 해결**하여 딥러닝을 실용화했다.
 > 2. **가치**: Sigmoid의 기울기 소실로 깊은 신경망 학습이 불가능했던 한계를 ReLU가 극복하여 **2012년 AlexNet의 ImageNet 우승**을 이끌었다.
 > 3. **판단 포인트**: Dead Neuron(음수 영역 영구 0) 문제가 있어 Leaky ReLU·PReLU·ELU 등 변형이 존재하며, Transformer에서는 GELU·SwiGLU가 표준이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ReLU: f(x) = max(0, x)
@@ -26,7 +28,7 @@ ReLU: f(x) = max(0, x)
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 변형 | 수식 | 특징 |
 |:---|:---|:---|

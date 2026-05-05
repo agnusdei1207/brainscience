@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# NUMA 인지형 메모리 할당기 커널 페이지 이동 정책 프레임워크 설계
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 현대의 멀티 소켓/매니코어 서버는 CPU 코어와 메모리가 짝을 지어 묶인 **NUMA (Non-Uniform Memory Access)** 아키텍처를 따른다. 내 코어에 달린 메모리(Local)를 읽는 것은 빠르지만, 남의 코어에 달린 메모리(Remote)를 읽으면 버스(QPI/UPI) 지연 때문에 성능이 크게 떨어진다.
+> **핵심**: 현대의 멀티 소켓/매니코어 서버는 CPU 코어와 메모리가 짝을 지어 묶인 **NUMA (Non-Uniform Memory Access)** 아키텍처를 따른다. 내 코어에 달린 메모리(Local)를 읽는 것은 빠르지만, 남의 코어에 달린 메모리(Remote)를 읽으면 버스(QPI/UPI) 지연 때문에 성능이 크게 떨어진다.
 > 2. **해결 (할당 및 이동 정책)**: 이를 해결하기 위해 리눅스 커널은 **NUMA-Aware Allocator**를 통해 스레드가 돌고 있는 코어의 로컬 메모리에 우선 할당(First-touch)하며, 스레드가 다른 코어로 이주(Migration)하면 백그라운드 스레드(`numad`)가 해당 스레드가 자주 쓰는 메모리 페이지도 새 코어 근처로 이주시키는 **자동 페이지 이동(AutoNUMA)** 정책을 수행한다.
 > 3. **가치**: 빅데이터, 인메모리 DB(SAP HANA), 고성능 가상화 환경에서 개발자의 코드 수정 없이도 OS 스스로 메모리 지연(Latency)을 최소화하여 시스템 전체의 처리량(Throughput)을 수십 % 끌어올리는 현대 OS 스케줄링의 꽃이다.
 
+> 📝 모범 답안
+
+# NUMA 인지형 메모리 할당기 커널 페이지 이동 정책 프레임워크 설계
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **NUMA 노드(Node)**: 물리적인 CPU 소켓과 그 소켓에 직접 연결된 RAM 슬롯의 묶음.
@@ -42,7 +44,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### NUMA 하드웨어 토폴로지 (Topology)
 
@@ -103,7 +105,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 할당기(Allocator) 수준의 구조 비교
 
@@ -124,7 +126,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -171,7 +173,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

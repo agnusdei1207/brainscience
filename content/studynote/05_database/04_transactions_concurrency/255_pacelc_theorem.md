@@ -2,17 +2,19 @@
 title = "255. PACELC 정리 - CAP 확장판 (분할 P 시 A/C 대안, 정상 작동 E 시 L(지연)/C(일관성) 상충 관계)"
 weight = 255
 +++
+## 0. 핵심 인사이트
 
-# 255. PACELC 정리 (PACELC Theorem)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: PACELC 정리는 CAP 정리(PAC)의 확장으로, 네트워크 분단이 없을 때에도 일관성(Consistency)과 지연 시간(Latency) 사이의 트레이드오프가 존재함을 보여주는 이론이다.
+> **핵심**: PACELC 정리는 CAP 정리(PAC)의 확장으로, 네트워크 분단이 없을 때에도 일관성(Consistency)과 지연 시간(Latency) 사이의 트레이드오프가 존재함을 보여주는 이론이다.
 > 2. **가치**: CAP이 다루지 않는 정상 작동 시의 시스템 동작을 설명하여, 분산 데이터베이스 설계 시 더 현실적인 트레이드오프 분석이 가능하다.
 > 3. **융합**: CAP 정리, 동시성 제어, 복제 지연, 일관성 수준과 밀접하게 연관되며, PACELC 모델을 이해해야만 시스템 성능 특성을 정확히 예측할 수 있다.
 
+> 📝 모범 답안
+
+# 255. PACELC 정리 (PACELC Theorem)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 PACELC는 2010년 Daniel Abadi가 제안한 이론으로, "If there is a Partition (P), how does the system trade off Availability (A) vs Consistency (C)? Else (E), how does the system trade off Latency (L) vs Consistency (C)?"라는 질문에서 유래했다. PACELC는 네트워크가 정상일 때에도 일관성과 응답 지연 사이의 트레이드오프가 존재함을 보여준다.
@@ -30,7 +32,7 @@ PACELC는 맑은 날씨와 악천후의 두 가지 시나리오를 모두 설명
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### PACELC 모델 구조
 
@@ -186,7 +188,7 @@ PACELC 분류에서 PC-EL 시스템은 쓰기 시 모든 복제본에 기록될 
 
 ---
 
-## Ⅲ. 구현 및 실무 응용 (Implementation & Practice)
+## 3. 구조 및 동작 원리
 
 ### DynamoDB의 Tunable Consistency
 
@@ -287,7 +289,7 @@ db.collection.insertOne(
 
 ---
 
-## Ⅳ. 품질 관리 및 테스트 (Quality & Testing)
+## 4. 비교 및 트레이드오프
 
 ### PACELC 관련 테스트
 
@@ -322,7 +324,7 @@ db.collection.insertOne(
 
 ---
 
-## Ⅴ. 최신 트렌드 및 결론 (Trends & Conclusion)
+## 5. 실무 적용 및 최적화 기법
 
 ### NewSQL의 PACELC 도전
 
@@ -339,8 +341,6 @@ PACELC 정리는 CAP의 확장으로서, 분산 데이터베이스 설계 시 �
 📢 섹션 요약: PACELC 정리는 CAP의 확장으로, 분산 데이터베이스 설계 시 정상 작동 시의 지연 시간 vs 일관성 트레이드오프까지 반드시 고려해야 한다.
 
 ---
-
-## 핵심 인사이트 ASCII 다이어그램 (Concept Map)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐

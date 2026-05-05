@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: DID(Decentralized Identity, 탈중앙화 신원)는 중앙 서버 없이 개인이 자신의 신원을 **자기 주권(Self-Sovereign Identity, SSI)**으로 관리하는 W3C 표준 기술이다.
+> **핵심**: DID(Decentralized Identity, 탈중앙화 신원)는 중앙 서버 없이 개인이 자신의 신원을 **자기 주권(Self-Sovereign Identity, SSI)**으로 관리하는 W3C 표준 기술이다.
 > 2. **가치**: VC(Verifiable Credential, 검증 가능 자격증명)는 Issuer(발급자)→Holder(보유자)→Verifier(검증자) 신뢰 삼각형으로 **중앙 서버 조회 없이 오프라인 검증**이 가능한 디지털 자격증이다.
 > 3. **판단 포인트**: DID Document의 공개키(Public Key)와 DID Method(체인별 등록 방식)가 검증의 핵심 요소이며, 마이데이터(MyData)·모바일 신분증과의 연계가 실무 적용의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 중앙화 신원 관리의 문제
 
@@ -29,7 +30,7 @@ SSI(Self-Sovereign Identity) 원칙:
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### DID 시스템 전체 흐름
 
@@ -67,7 +68,7 @@ SSI(Self-Sovereign Identity) 원칙:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 중앙화 신원 vs DID 비교
 
@@ -94,7 +95,7 @@ SSI(Self-Sovereign Identity) 원칙:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### DID Method별 특성
 
@@ -115,7 +116,7 @@ SSI(Self-Sovereign Identity) 원칙:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 항목 | 내용 |
 |:---|:---|

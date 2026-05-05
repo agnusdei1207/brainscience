@@ -5,14 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SQL 인젝션 (SQL Injection, SQLi)은 애플리케이션이 사용자 입력을 적절히 검증·이스케이프하지 않아, 공격자가 의도하지 않은 SQL (Structured Query Language) 쿼리를 DB (Database) 서버에 직접 실행시키는 취약점이다.
+## 0. 핵심 인사이트
+
+> **핵심**: SQL 인젝션 (SQL Injection, SQLi)은 애플리케이션이 사용자 입력을 적절히 검증·이스케이프하지 않아, 공격자가 의도하지 않은 SQL (Structured Query Language) 쿼리를 DB (Database) 서버에 직접 실행시키는 취약점이다.
 > 2. **가치**: OWASP (Open Web Application Security Project) Top 10에서 지속적으로 상위권을 유지하며, 데이터 유출·위변조·인증 우회·심지어 서버 탈취까지 이어지는 고위험 취약점이다.
 > 3. **판단 포인트**: 입력값을 쿼리 문자열에 직접 연결(Concatenation)하는 코드가 있으면 무조건 의심해야 하며, 파라미터화 쿼리(Parameterized Query)와 ORM (Object-Relational Mapping) 사용이 근본 대책이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 SQL 인젝션은 1998년 Phrack 매거진에서 처음 공식 소개된 이후, 25년이 넘도록 웹 애플리케이션 보안의 최상위 위협으로 자리를 지키고 있다. 그 이유는 단순하다. 웹 애플리케이션의 핵심이 DB 연동이고, 개발자가 입력값 처리를 단 한 줄만 실수해도 공격 경로가 열리기 때문이다.
 
@@ -31,7 +34,7 @@ SELECT * FROM users WHERE id = '" + userInput + "'
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 SQL 인젝션의 공격 경로는 입력 지점(Entry Point)에서 시작해 쿼리 생성 → DB 실행 → 결과 반환으로 이어진다.
 
@@ -64,7 +67,7 @@ SQL 인젝션의 공격 경로는 입력 지점(Entry Point)에서 시작해 쿼
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 SQL 인젝션은 더 넓은 인젝션 공격군의 일부다. OWASP A03:2021 인젝션 카테고리에는 SQL 외에도 LDAP (Lightweight Directory Access Protocol), XPath, OS 명령, NoSQL 인젝션 등이 포함된다.
 
@@ -80,7 +83,7 @@ SQL 인젝션은 더 넓은 인젝션 공격군의 일부다. OWASP A03:2021 인
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **시나리오**: 금융기관 웹 로그인 페이지에서 SQLi 취약점이 발견됐다. 공격자는 `' OR '1'='1'--` 을 ID 필드에 입력해 비밀번호 없이 관리자로 로그인했고, 고객 계좌 정보 50만 건을 덤프했다.
 
@@ -96,7 +99,7 @@ SQL 인젝션은 더 넓은 인젝션 공격군의 일부다. OWASP A03:2021 인
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 파라미터화 쿼리와 ORM을 전면 도입하면 SQL 인젝션을 구조적으로 제거할 수 있다. 추가적으로 WAF와 DAST (Dynamic Application Security Testing) 도구를 CI/CD (Continuous Integration/Continuous Delivery) 파이프라인에 통합하면 신규 취약점의 조기 발견이 가능하다.
 

@@ -2,17 +2,19 @@
 weight = 475
 title = "475. STRIDE 모델 - Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege"
 +++
+## 0. 핵심 인사이트
 
-# 475. STRIDE 모델 - Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: STRIDE 모델은 보안 아키텍트가 설계 단계에서 위협 모델링(Threat Modeling)을 할 때, 막연하게 "어디가 털릴까?" 고민하는 대신 **기계적이고 누락 없이 모든 보안 위협을 찾아낼 수 있도록 마이크로소프트가 고안한 6가지 궁극의 해킹 공격 분류 체계**다.
+> **핵심**: STRIDE 모델은 보안 아키텍트가 설계 단계에서 위협 모델링(Threat Modeling)을 할 때, 막연하게 "어디가 털릴까?" 고민하는 대신 **기계적이고 누락 없이 모든 보안 위협을 찾아낼 수 있도록 마이크로소프트가 고안한 6가지 궁극의 해킹 공격 분류 체계**다.
 > 2. **가치**: 스푸핑(Spoofing), 탬퍼링(Tampering) 등 6가지 키워드를 체크리스트로 삼아, 시스템 아키텍처 다이어그램(DFD)의 '신뢰 경계선(Trust Boundary)'을 통과하는 모든 데이터 흐름에 돋보기를 들이댄다. 이를 통해 주먹구구식 뇌피셜(직감) 보안을 **수학적이고 체계적인 논리적 방어벽 설계(Secure by Design)로 승격**시킨다.
 > 3. **융합**: 각 위협(Threat)은 반드시 1:1로 대응되는 **보안 속성 방어 기술(인증, 무결성, 부인방지, 기밀성, 가용성, 인가)**과 완벽한 퍼즐처럼 융합되며, 이후 **DREAD 모델**(위험도 평가)로 넘겨져 한정된 개발 인력을 어디에 투입할지 우선순위를 정하는 애자일 백로그(Backlog)로 직결된다.
 
+> 📝 모범 답안
+
+# 475. STRIDE 모델 - Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 세상의 모든 소프트웨어 해킹 기법은 수만 가지(SQL 인젝션, XSS, 패킷 스니핑 등)가 있지만, 그 뼈대(목적)를 추려보면 결국 딱 6가지로 귀결된다. 이 6가지 카테고리의 앞 글자를 딴 것이 **STRIDE**다. 
   `S(신분 위조) / T(데이터 변조) / R(오리발 내밀기) / I(정보 훔쳐보기) / D(서버 터뜨리기) / E(권한 빼앗기)`
@@ -30,7 +32,7 @@ title = "475. STRIDE 모델 - Spoofing, Tampering, Repudiation, Information Disc
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 1. STRIDE 6원칙과 대응 방어(Mitigation) 1:1 매핑 ★ (가장 중요)
 
@@ -57,7 +59,7 @@ STRIDE는 무턱대고 들이대는 게 아니라, 아키텍처 다이어그램(
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 1. STRIDE (위협 도출) vs DREAD (위협 평가)
 
@@ -78,7 +80,7 @@ STRIDE는 무턱대고 들이대는 게 아니라, 아키텍처 다이어그램(
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -103,7 +105,7 @@ STRIDE는 무턱대고 들이대는 게 아니라, 아키텍처 다이어그램(
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

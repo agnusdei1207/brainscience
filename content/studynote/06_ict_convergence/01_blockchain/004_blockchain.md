@@ -2,17 +2,19 @@
 title = "4. 블록체인 (Blockchain) - 분산 원장 기술(DLT, Distributed Ledger Technology)"
 weight = 4
 +++
+## 0. 핵심 인사이트
 
-# 04. 블록체인 (Blockchain)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 블록체인은 분산 원장 기술(DLT, Distributed Ledger Technology)의一種로서, 거래 데이터를 블록(Block) 단위로 묶고 이를 시간 순서대로 사슬(Chain)처럼 연결하여 모든 참여 노드가同一한 장부副本을 보유하는 탈중앙화 데이터 저장 기술이다.
+> **핵심**: 블록체인은 분산 원장 기술(DLT, Distributed Ledger Technology)의一種로서, 거래 데이터를 블록(Block) 단위로 묶고 이를 시간 순서대로 사슬(Chain)처럼 연결하여 모든 참여 노드가同一한 장부副本을 보유하는 탈중앙화 데이터 저장 기술이다.
 > 2. **가치**:改竄 불가능성(Immutability), 투명성(Transparency), 탈중앙화(Decentralization)라는 세 가지 핵심 특성을 통해 중개자 없이도 신뢰할 수 있는 거래가 가능하며, 금융, 공급망 관리, 디지털 신원증명 등 광범위한 분야에 적용된다.
 > 3. **융합**: IoT(사물인터넷), AI(인공지능), Big Data(빅데이터), IoT 등 타 기술과 결합하여 신뢰 기반의 차세대 디지털 인프라로 활용되며, 특히 스마트 컨트랙트(Smart Contract)와의 결합으로 자동화된 탈중앙화 애플리케이션(DApp) 생태계를構築한다.
 
+> 📝 모범 답안
+
+# 04. 블록체인 (Blockchain)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념의 정의
 
@@ -36,7 +38,7 @@ weight = 4
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 블록 구조
 
@@ -88,7 +90,7 @@ weight = 4
 
 ---
 
-## Ⅲ. 구현 및 실무 응용 (Implementation & Practice)
+## 3. 구조 및 동작 원리
 
 ### 암호화폐
 
@@ -108,7 +110,7 @@ weight = 4
 
 ---
 
-## Ⅳ. 품질 관리 및 테스트 (Quality & Testing)
+## 4. 비교 및 트레이드오프
 
 ### Consensus算法安全性审计
 
@@ -128,7 +130,7 @@ weight = 4
 
 ---
 
-## Ⅴ. 최신 트렌드 및 결론 (Trends & Conclusion)
+## 5. 실무 적용 및 최적화 기법
 
 ### 레이어 2 솔루션의 부상
 

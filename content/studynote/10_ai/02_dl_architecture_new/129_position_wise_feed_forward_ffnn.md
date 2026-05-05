@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Position-wise FFN은 Transformer 블록에서 Self-Attention 후 **각 위치에 독립적으로 적용되는 2층 MLP(Linear→ReLU→Linear)**이며, 비선형 변환과 표현력 확장을 담당한다.
+> **핵심**: Position-wise FFN은 Transformer 블록에서 Self-Attention 후 **각 위치에 독립적으로 적용되는 2층 MLP(Linear→ReLU→Linear)**이며, 비선형 변환과 표현력 확장을 담당한다.
 > 2. **가치**: Self-Attention만으로는 **선형 변환의 합**에 불과하므로, FFN의 비선형 활성화(ReLU/GELU)가 있어야 복잡한 패턴을 학습할 수 있다.
 > 3. **판단 포인트**: FFN의 내부 차원(d_ff)은 보통 d_model×4이며, 최신 LLM에서는 **SwiGLU 활성화**로 성능을 개선한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 FFN(x) = W₂ · ReLU(W₁ · x + b₁) + b₂
@@ -24,7 +26,7 @@ d_model=512, d_ff=2048 (4배 확장 후 축소)
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 요소 | 역할 |
 |:---|:---|
@@ -37,7 +39,7 @@ d_model=512, d_ff=2048 (4배 확장 후 축소)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Attention만 | Attention + FFN |
 |:---|:---|:---|
@@ -46,14 +48,14 @@ d_model=512, d_ff=2048 (4배 확장 후 축소)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 - Transformer 파라미터의 ~66%가 FFN에 집중.
 - MoE(Mixture of Experts)는 FFN을 전문가로 분리하여 효율화.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 FFN은 **Transformer의 비선형 표현력을 담당하는 핵심 구성 요소**이며, SwiGLU·MoE로 효율화·성능 개선이 진행되고 있다.
 

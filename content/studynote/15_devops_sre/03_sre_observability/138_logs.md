@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 로그는 **시스템·애플리케이션이 발생시킨 이벤트의 시간순 텍스트 기록**이며, Observability 3대 축(Metrics·Logs·Traces) 중 가장 상세한 정보를 제공한다.
+> **핵심**: 로그는 **시스템·애플리케이션이 발생시킨 이벤트의 시간순 텍스트 기록**이며, Observability 3대 축(Metrics·Logs·Traces) 중 가장 상세한 정보를 제공한다.
 > 2. **가치**: 메트릭은 "무엇이 이상한가", 트레이스는 "어디서 느린가"를 알려주지만, 로그는 **"왜 발생했는가"의 상세 맥락(에러 메시지·스택 트레이스·요청 파라미터)**을 제공한다.
 > 3. **판단 포인트**: 구조화 로깅(JSON)이 필수이며, ELK(Elasticsearch·Logstash·Kibana) 또는 Grafana Loki가 중앙 집중 로그 관리의 표준 스택이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 비구조화: "2024-01-15 ERROR: Payment failed for user 123"

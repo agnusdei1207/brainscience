@@ -5,15 +5,17 @@ date = "2026-05-03"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: PMBOK(Project Management Body of Knowledge)의 10대 지식 영역은 일정, 비용, 리스크 등 거대한 프로젝트를 성공으로 이끌기 위해 PM(프로젝트 관리자)이 통제해야 할 모든 관리 분야를 논리적으로 분류한 실무 지식 체계 표준이다.
+> **핵심**: PMBOK(Project Management Body of Knowledge)의 10대 지식 영역은 일정, 비용, 리스크 등 거대한 프로젝트를 성공으로 이끌기 위해 PM(프로젝트 관리자)이 통제해야 할 모든 관리 분야를 논리적으로 분류한 실무 지식 체계 표준이다.
 > 2. **가치**: 10개의 지식 영역은 제각각 노는 것이 아니라 '통합관리(Integration)'를 허브로 삼아 유기적으로 연결되어, 범위(Scope) 하나가 변경되면 일정과 비용이 연쇄적으로 자동 수정되어야 하는 거대한 톱니바퀴 시스템 구조를 갖는다.
 > 3. **판단 포인트**: 감리 및 PMP 기술사 시험의 뼈대로서, 각 지식 영역의 핵심 산출물(프로젝트 헌장, WBS, 리스크 등록부 등)이 어느 프로세스 그룹(계획, 실행, 통제)에서 튀어나오고 어떻게 상호 연동되는지를 맵핑하여 파악하는 것이 공부의 최우선 타겟이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 PMBOK (Project Management Body of Knowledge)은 글로벌 PMI (Project Management Institute) 협회가 전 세계 수많은 프로젝트의 성공과 실패 경험을 집대성하여 만든 프로젝트 관리의 헌법(표준 가이드)이다.
 
@@ -23,7 +25,7 @@ PMBOK (Project Management Body of Knowledge)은 글로벌 PMI (Project Managemen
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 10대 지식 영역은 단순히 병렬로 나열된 것이 아니다. **통합관리(Integration)**라는 중앙 대뇌가 나머지 9개 신경망을 완벽하게 오케스트레이션 지휘하는 종속적 구조를 갖는다.
 
@@ -61,7 +63,7 @@ PMBOK (Project Management Body of Knowledge)은 글로벌 PMI (Project Managemen
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 프로젝트 관리 표준의 삼국지. PMBOK과 유럽의 PRINCE2, 그리고 애자일(PMI-ACP) 방법론의 차이를 이해해야 현대 관리의 방향이 보인다.
 
@@ -77,7 +79,7 @@ PMBOK (Project Management Body of Knowledge)은 글로벌 PMI (Project Managemen
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서 대규모 차세대 SI 프로젝트가 실패하는 가장 큰 이유는 10대 지식 영역 간의 '통합 연결고리'가 끊어지기 때문이다.
 
@@ -95,7 +97,7 @@ PMBOK (Project Management Body of Knowledge)은 글로벌 PMI (Project Managemen
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 PMBOK 10대 지식 영역을 체계적으로 뇌에 이식한 PM은 프로젝트가 미쳐 돌아가는 혼돈의 카오스 속에서도 길을 잃지 않는다.
 

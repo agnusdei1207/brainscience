@@ -6,15 +6,15 @@ description = "스마트폰과 노트북의 배터리를 아끼기 위해, CPU �
 taxonomy =  ""
 tags = ["Computer Architecture", "Advanced Topics", "Power Management", "C-States", "Intel"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
 > 1. CPU가 일하지 않을 때 전기를 아끼는 모드를 **C-State (Core State)**라고 한다. (C0는 일하는 중, C1~C7은 자는 중)
 > 2. 하지만 코어 4개가 모두 깊은 잠(C7)에 빠졌다고 해서 전기가 0이 되진 않는다. CPU 칩(Package) 껍데기 안에는 코어 말고도 **L3 캐시, 메모리 컨트롤러, PCIe 버스 제어기 등 '비-코어(Uncore)' 부품**들이 여전히 살아서 전기를 엄청나게 먹기 때문이다.
 > 3. **패키지 C-States (Package C-States, PC-States)**는 칩 안의 모든 코어가 잠들었을 때 비로소 이 '비-코어' 부품들까지 통째로 전원을 끊어버려 칩 전체의 전력 소모를 0W에 가깝게 만드는 기술이다.
 
+> 📝 모범 답안
 
-
-## Ⅰ. 코어만 자면 끝이 아니다 (Uncore의 전력 낭비)
+## 1. 개요 및 필요성
 
 4코어짜리 인텔 CPU가 있습니다. 밤에 컴퓨터를 가만히 놔두면, 코어 4개는 모두 **Core C7 (클럭 정지 + 코어 전압 차단 + L1/L2 캐시 전원 차단)**이라는 깊은 잠에 빠집니다.
 
@@ -24,9 +24,7 @@ tags = ["Computer Architecture", "Advanced Topics", "Power Management", "C-State
 
 > 📢 **섹션 요약 비유**: 4인 가족(코어 4개)이 모두 각자의 방에 들어가 불을 끄고 잠들었습니다(Core C7). 하지만 아파트 거실 불(L3 캐시)과 현관문 센서등(메모리 컨트롤러)이 밤새도록 환하게 켜져 있어서 관리비(전력)가 계속 줄줄 새는 상황입니다.
 
-
-
-## Ⅱ. Package C-States의 발동 조건과 깊이
+## 2. 구성요소
 
 가족이 모두 잠들면, 가장의 뇌(Power Control Unit, PCU)가 거실 불까지 모조리 꺼버리는 마법이 바로 **Package C-States (PC-State)**입니다.
 
@@ -56,9 +54,7 @@ tags = ["Computer Architecture", "Advanced Topics", "Power Management", "C-State
 
 > 📢 **섹션 요약 비유**: 4명이 모두 자는 걸 확인한 순간(Core C6), 중앙 통제 시스템이 거실 불을 끄고(PC2), 냉장고 코드를 뽑고(PC3), 아예 집 밖으로 나가는 메인 두꺼비집까지 내려버리는(PC8) 소름 돋는 짠돌이 절전 기술입니다.
 
-
-
-## Ⅲ. 트레이드오프: 깊은 수면의 대가 (Wake-up Latency)
+## 3. 구조 및 동작 원리
 
 거실 불까지 다 끄면 배터리는 10시간, 20시간을 가지만 치명적인 단점이 있습니다. **깨어나는 데 걸리는 시간(Wake-up Latency)**이 기하급수적으로 늘어납니다.
 

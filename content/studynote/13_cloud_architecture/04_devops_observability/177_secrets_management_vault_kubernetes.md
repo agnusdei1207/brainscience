@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 시크릿 관리(Secrets Management)는 DB 비밀번호, API 키, TLS 인증서 같은 민감 자격 증명을 소스 코드·환경 변수가 아닌 전용 키 저장소(HashiCorp Vault 등)에서 런타임에 동적으로 주입하는 방식이다.
+> **핵심**: 시크릿 관리(Secrets Management)는 DB 비밀번호, API 키, TLS 인증서 같은 민감 자격 증명을 소스 코드·환경 변수가 아닌 전용 키 저장소(HashiCorp Vault 등)에서 런타임에 동적으로 주입하는 방식이다.
 > 2. **가치**: 자격 증명이 Git 히스토리에 한 번 포함되면 삭제 후에도 영구적으로 위험하므로, 코드에서 완전히 분리하고 중앙에서 접근 제어·감사·자동 갱신하는 것이 필수다.
 > 3. **판단 포인트**: Kubernetes Secret은 Base64 인코딩에 불과해 보안 수준이 낮으므로, Vault Agent Injector나 External Secrets Operator를 통해 진정한 시크릿 관리를 구현해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 2022년 GitGuardian 보고서에 따르면 GitHub에서 공개 저장소의 코드 100만 건당 6,000개 이상의 시크릿이 발견된다. `AWS_SECRET_KEY=xxx`가 코드에 한 줄 들어가는 순간 봇이 수분 내로 스캔하여 악용한다.
 
@@ -25,7 +27,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### HashiCorp Vault 동작 구조
 
@@ -60,7 +62,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 시크릿 주입 방법 비교
 
@@ -82,7 +84,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **시크릿 탐지 자동화:**
 - **Gitleaks**: Git 커밋에서 AWS 키, GitHub 토큰 등 패턴 탐지
@@ -107,7 +109,7 @@ Vault → 앱에 임시 사용자명/비밀번호 반환
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 시크릿 관리 체계를 구축하면 자격 증명 유출로 인한 데이터 침해 위험이 근본적으로 감소한다. 동적 시크릿으로 자격 증명 수명이 최소화되고, 감사 로그로 모든 접근이 추적된다. SOC2, PCI-DSS, ISO 27001 같은 보안 규정 준수에도 필수적으로 요구되는 영역이다.
 

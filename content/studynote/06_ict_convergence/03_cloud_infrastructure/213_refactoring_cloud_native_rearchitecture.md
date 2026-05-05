@@ -5,17 +5,19 @@ weight = 213
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-# 리팩토링 (Refactor / Rearchitect) - 클라우드 네이티브 아키텍처 전면 수술
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 마이그레이션 6R 전략의 최종 보스인 리팩터(Refactor)는 낡은 서버를 단순히 구름 위로 들어 옮기는 짓(Lift & Shift)을 혐오하며, **거대한 통짜(Monolithic) 소스 코드를 바닥부터 부수고 마이크로서비스(MSA), 도커(Docker), 서버리스(Serverless)라는 클라우드 원주민(Native)의 뼈대로 100% 환골탈태시키는 가장 고통스러운 전면 개조 수술**이다.
+> **핵심**: 마이그레이션 6R 전략의 최종 보스인 리팩터(Refactor)는 낡은 서버를 단순히 구름 위로 들어 옮기는 짓(Lift & Shift)을 혐오하며, **거대한 통짜(Monolithic) 소스 코드를 바닥부터 부수고 마이크로서비스(MSA), 도커(Docker), 서버리스(Serverless)라는 클라우드 원주민(Native)의 뼈대로 100% 환골탈태시키는 가장 고통스러운 전면 개조 수술**이다.
 > 2. **가치**: 초기 개발 인건비 수십억 원과 1~2년의 뼈 깎는 시간이 갈려 나가지만, 한 번 수술이 끝나면 코드가 10MB짜리 컨테이너 조각들로 흩어져 **트래픽이 100만 명 몰리면 1초 만에 1만 개로 복제되고(Auto-scaling), 유저가 없으면 서버비가 0원으로 수렴하는(Scale-to-Zero) 불멸의 비용/성능 절대 우위**를 회사에 영구적으로 선물한다.
 > 3. **융합**: 이 끔찍한 코드 대수술 도중 회사의 매출(라이브 서비스)이 1초도 끊기지 않게 하기 위해, 낡은 코드 옆에 새 코드를 기생충처럼 붙여서 트래픽을 야금야금 뺏어오다 낡은 서버를 질식시켜 죽이는 **'스트랭글러 피그 패턴(Strangler Fig Pattern)'**이라는 극한의 무중단 배포(Routing) 공학이 심장 수술의 바이패스(Bypass)처럼 완벽히 융합된다.
 
+> 📝 모범 답안
+
+# 리팩토링 (Refactor / Rearchitect) - 클라우드 네이티브 아키텍처 전면 수술
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 클라우드 마이그레이션 6R 중 리팩터(Refactor, 또는 Rearchitect)는 애플리케이션을 클라우드 환경으로 단순히 이동시키는 것을 넘어, 클라우드 컴퓨팅의 핵심 이점(무한 확장성, 탄력성, 고가용성)을 한 방울도 남김없이 쥐어짜 내기 위해 애플리케이션의 내부 아키텍처와 코드를 클라우드 네이티브 사상(12-Factor, MSA)에 맞게 뼛속부터 근본적으로 재설계하는 궁극의 전략이다.
 
@@ -67,7 +69,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 리팩터링(Cloud Native)을 위한 수술대: 4대 핵심 절제 수술법
 
@@ -95,7 +97,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 클라우드 이관 철학 대격돌 (Lift & Shift vs Cloud Native Refactoring)
 
@@ -120,7 +122,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 설계 안티패턴
 
@@ -174,7 +176,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

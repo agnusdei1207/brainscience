@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 최소 권한(Least Privilege) 원칙은 사용자·시스템이 업무 수행에 필요한 최소한의 권한만을 부여받아야 한다는 접근 통제의 핵심 원리이며, Need-to-Know 원칙과 함께 정보보안의 기반이 된다.
+> **핵심**: 최소 권한(Least Privilege) 원칙은 사용자·시스템이 업무 수행에 필요한 최소한의 권한만을 부여받아야 한다는 접근 통제의 핵심 원리이며, Need-to-Know 원칙과 함께 정보보안의 기반이 된다.
 > 2. **가치**: 과도한 권한은 내부자 위협(Insider Threat)과 계정 탈취 시 피해 범위를 폭발적으로 확대하므로, 최소 권한 이행은 침해 사고의 피해를 근본적으로 제한한다.
 > 3. **판단 포인트**: 접근 통제 행렬(Access Control Matrix)의 완전성, 특권 계정(Privileged Account) 수와 관리 방법, 접근 권한 주기적 재검토(Access Review) 이행 여부가 핵심 점검 항목이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 최소 권한 원칙의 배경
 
@@ -32,7 +33,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 접근 통제 행렬 (Access Control Matrix)
 
@@ -88,7 +89,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 접근 통제 모델 비교
 
@@ -112,7 +113,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 접근 통제 감리 체크리스트
 
@@ -164,7 +165,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 기대효과
 

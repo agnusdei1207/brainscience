@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 데이터베이스 퍼 서비스(Database per Service) 패턴은 각 마이크로서비스가 자체 데이터베이스를 소유하고, 다른 서비스가 해당 DB에 직접 접근하지 못하도록 강제 격리하는 MSA의 핵심 데이터 원칙이다.
+> **핵심**: 데이터베이스 퍼 서비스(Database per Service) 패턴은 각 마이크로서비스가 자체 데이터베이스를 소유하고, 다른 서비스가 해당 DB에 직접 접근하지 못하도록 강제 격리하는 MSA의 핵심 데이터 원칙이다.
 > 2. **가치**: DB 스키마 변경이 하나의 서비스에만 영향을 미치도록 격리하여 독립 배포를 보장하고, 각 서비스가 워크로드에 최적화된 DB 기술(Polyglot Persistence)을 자유롭게 선택할 수 있게 한다.
 > 3. **판단 포인트**: 서비스 간 조인이 불가능해지므로 API Composition(서비스 계층 조인) 또는 CQRS(읽기 모델 분리)로 데이터 집계 문제를 해결해야 하며, 트랜잭션 일관성은 Saga 패턴으로 대체한다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 모놀리식 아키텍처에서는 모든 도메인이 단일 DB를 공유하여 JOIN 쿼리로 손쉽게 데이터를 조합할 수 있다. 그러나 MSA에서 공유 DB를 유지하면 ①스키마 변경이 모든 서비스에 영향, ②공유 DB가 병목이자 SPOF, ③서비스 독립 배포 불가(DB 마이그레이션 공동 조율 필요) 등의 문제가 발생한다.
 
@@ -27,7 +28,7 @@ Database per Service 원칙은 Chris Richardson의 MSA Patterns에서 핵심 패
 
 📢 **섹션 요약 비유**: Database per Service는 각 가게(서비스)가 자체 금고(DB)를 가지는 것처럼, 다른 가게 직원이 마음대로 금고를 열 수 없는 독립 소유 원칙이다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Database per Service 구조
 
@@ -83,7 +84,7 @@ Database per Service 원칙은 Chris Richardson의 MSA Patterns에서 핵심 패
 
 📢 **섹션 요약 비유**: API Composition은 각 과목 선생님(서비스)에게 각자 성적을 물어보고 담임 선생님(API GW)이 종합 성적표를 만드는 방식이다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 공유 DB vs Database per Service
 
@@ -97,7 +98,7 @@ Database per Service 원칙은 Chris Richardson의 MSA Patterns에서 핵심 패
 
 📢 **섹션 요약 비유**: 공유 DB와 Database per Service는 공용 주방(공유 DB, 모든 요리사 공용)과 각자 주방(DB per Service, 각 요리사 독립)의 트레이드오프처럼, 협업 편의성과 독립성이 상충한다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 도입 시 핵심 고려사항
 
@@ -114,7 +115,7 @@ Database per Service 원칙은 Chris Richardson의 MSA Patterns에서 핵심 패
 
 📢 **섹션 요약 비유**: 서비스 간 데이터 복제 허용은 은행 지점처럼, 고객 기본 정보를 각 지점이 복사본으로 가져도 변경 시 이벤트로 동기화하면 업무 처리가 빨라진다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Database per Service 원칙을 적용하면 ①서비스별 독립 DB 스키마 변경·마이그레이션, ②서비스 특성별 최적 DB 기술 선택, ③DB 레벨 확장(Read Replica, 샤딩)을 서비스별로 독립 수행, ④팀 자율성 강화(각 팀이 자신의 DB 전략 결정) 등의 효과를 거둔다.
 

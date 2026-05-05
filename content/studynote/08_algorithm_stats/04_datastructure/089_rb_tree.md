@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-algorithm-stats"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Red-Black Tree는 각 노드에 색(Red/Black)을 부여하는 5가지 규칙으로 균형을 유지하는 자가 균형 BST다. AVL보다 균형 조건이 덜 엄격하지만, 삽입·삭제가 더 빠르다.
+> **핵심**: Red-Black Tree는 각 노드에 색(Red/Black)을 부여하는 5가지 규칙으로 균형을 유지하는 자가 균형 BST다. AVL보다 균형 조건이 덜 엄격하지만, 삽입·삭제가 더 빠르다.
 > 2. **가치**: Red-Black Tree의 높이는 2 log₂(N+1) 이하로 보장된다. 따라서 검색·삽입·삭제 모두 O(log N)이다. C++ STL의 map/set/multimap, Java의 TreeMap/TreeSet, Linux 커널의 CFS 스케줄러가 Red-Black Tree를 사용한다.
 > 3. **판단 포인트**: Red-Black Tree의 규칙 중 핵심은 "빨간 노드의 자녀는 반드시 검정"이다. 이를 위반하면 삽입 후 회전(Rotation) + 재색칠(Recoloring)로 규칙을 복구한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Red-Black Tree 5가지 규칙:
@@ -32,7 +34,7 @@ Red-Black Tree 5가지 규칙:
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 삽입 후 규칙 복구
 
@@ -69,7 +71,7 @@ std::map<key, value> 내부:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | AVL | Red-Black | Skip List |
 |:---|:---|:---|:---|
@@ -83,7 +85,7 @@ std::map<key, value> 내부:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Linux CFS 스케줄러의 RB Tree
 
@@ -116,7 +118,7 @@ System.out.println(ranking.subMap(800, 1100)); // 800-1100 범위
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

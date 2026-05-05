@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# Fog Computing Hardware (포그 컴퓨팅 하드웨어)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 포그 컴퓨팅은 클라우드와 엣지 사이에 위치하여, 엣지 기기 수백 대가 생성하는 데이터를 지역 단위에서 취합, 필터링, 1차 분석하는 중간 허브(Middle Hub) 아키텍처를 말한다.
+> **핵심**: 포그 컴퓨팅은 클라우드와 엣지 사이에 위치하여, 엣지 기기 수백 대가 생성하는 데이터를 지역 단위에서 취합, 필터링, 1차 분석하는 중간 허브(Middle Hub) 아키텍처를 말한다.
 > 2. **가치**: 포그 하드웨어는 엣지보다 강력한 성능(마이크로 데이터센터 급)을 가지며, 클라우드보다 현장에 가까워 지연 시간(Latency)을 줄이고 네트워크 대역폭을 절약한다.
 > 3. **융합**: 5G 기지국, 공장 게이트웨이, 아파트 단지 관제 서버 등에 적용되며, Rugged 디자인(방진/방수, 극한 온도 대응)과 이질적 네트워크 연결(블루투스, Zigbee, Wi-Fi, 5G)이 핵심 요구사항이다.
 
+> 📝 모범 답안
+
+# Fog Computing Hardware (포그 컴퓨팅 하드웨어)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 문제의식: 엣지와 클라우드 사이의=dead zone
 
@@ -61,7 +63,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 포그 하드웨어의 특징과 요구사항
 
@@ -145,7 +147,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### Edge vs Fog vs Cloud 비교
 
@@ -165,7 +167,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -190,7 +192,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 포그 컴퓨팅 도입 효과
 

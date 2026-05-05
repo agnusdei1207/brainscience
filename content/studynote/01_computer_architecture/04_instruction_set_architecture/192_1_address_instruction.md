@@ -5,15 +5,17 @@ date = "2026-03-19"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 1-주소 명령어(One-Address Instruction)는 명령어 포맷 안에 연산 대상을 가리키는 **주소 필드가 딱 1개만 존재하는** 명령어 형식이다.
+> **핵심**: 1-주소 명령어(One-Address Instruction)는 명령어 포맷 안에 연산 대상을 가리키는 **주소 필드가 딱 1개만 존재하는** 명령어 형식이다.
 > 2. **가치**: 피연산자가 2개 필요한 이항 연산(ADD, SUB)을 수행하기 위해, CPU 내부에 **누산기(Accumulator, AC)**라는 단 1개의 특수 암묵적 레지스터를 고정 파트너로 사용한다.
 > 3. **융합**: 레지스터가 비싸서 1개밖에 못 달던 극초기 컴퓨터의 표준(Accumulator Machine)이었으며, 오늘날에는 메인 연산보다는 단항 연산(NOT, INC)이나 분기(JUMP) 명령어의 기본 포맷으로 명맥을 유지하고 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 1-주소 명령어(One-Address Instruction)는 명령어 포맷 안에 연산 대상(피연산자)을 가리키는 주소 필드가 딱 1개만 존재하는 형식이다. CPU 내부에 **누산기(Accumulator)**라는 단 하나의 고정된 암묵적 레지스터를 두고, 모든 연산이 이를 거쳐 가도록 설계된 구조다.
 
@@ -48,7 +50,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (누산기 머신을 지탱하는 단일 축)
 
@@ -86,7 +88,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 심층 기술 비교: 1-주소(Accumulator) vs 2-주소(GPR) 머신
 
@@ -126,7 +128,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -171,7 +173,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

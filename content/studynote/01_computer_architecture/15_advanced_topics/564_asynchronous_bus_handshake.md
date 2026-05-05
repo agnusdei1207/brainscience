@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 564. 비동기 버스 핸드셰이크 (Asynchronous Bus Handshake)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 비동기 버스 핸드셰이크(Asynchronous Bus Handshake)는 공통의 클럭(Clock) 신호 없이, **마스터와 슬레이브가 제어 신호(Request/Acknowledge)를 주고받으며 서로의 상태를 확인**하고 데이터를 전송하는 상호 동기화 기법이다.
+> **핵심**: 비동기 버스 핸드셰이크(Asynchronous Bus Handshake)는 공통의 클럭(Clock) 신호 없이, **마스터와 슬레이브가 제어 신호(Request/Acknowledge)를 주고받으며 서로의 상태를 확인**하고 데이터를 전송하는 상호 동기화 기법이다.
 > 2. **가치**: 장치 간의 속도 차이가 극심하거나 클럭 신호를 공유하기 어려운 먼 거리 통신에서 유연성을 제공하며, 클럭 스큐(Clock Skew) 문제로부터 자유로워 **서로 다른 속도의 하드웨어를 안정적으로 연결**한다.
 > 3. **융합**: 'Full Handshake(4-phase)' 및 'Strobe' 기법과 결합되어 하드웨어 상태 기계(FSM)를 제어하며, 현대 인터페이스 중 클럭 도메인이 다른 시스템 간의 통신(CDC) 핵심 로직으로 활용된다.
 
+> 📝 모범 답안
+
+# 564. 비동기 버스 핸드셰이크 (Asynchronous Bus Handshake)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 - **개념**: "언제 데이터를 보낼지"와 "언제 데이터를 받았는지"를 클럭이라는 심장 박동 대신, 장치들끼리 직접 대화(Handshake)하여 결정하는 방식이다.
 - **필요성**: 동기식 버스는 모든 장치가 같은 박자에 맞춰야 한다. 하지만 아주 느린 구형 프린터와 아주 빠른 최신 CPU를 연결할 때, CPU 박자에 프린터를 맞추면 프린터가 터지고, 프린터 박자에 CPU를 맞추면 CPU가 노는 비효율이 발생한다. 비동기 핸드셰이크는 **"준비됐니?" "응 됐어!"**라는 대화를 통해 각자의 속도대로 일할 수 있게 해 준다.
@@ -44,7 +46,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 4단계 핸드셰이크 (Full Handshake / 4-Phase)
 - 가장 신뢰성이 높은 방식이다.
@@ -63,7 +65,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 비동기식 버스 vs 동기식 버스 (Synchronous)
 
@@ -82,7 +84,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -102,7 +104,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **통신 신뢰성 100% 보장**: 핸드셰이크가 완료되지 않으면 다음 데이터가 오지 않으므로, 속도 차이로 인한 데이터 덮어쓰기(Overwrite) 오류가 완벽히 차단된다.

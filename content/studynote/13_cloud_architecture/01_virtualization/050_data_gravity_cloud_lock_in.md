@@ -5,15 +5,18 @@ description = "데이터 중력 개념, 클라우드 벤더 종속(Lock-In)의 �
 categories = "studynote-cloud"
 tags = ["data gravity", "cloud lock-in", "multi-cloud", "vendor lock-in", "portability", "egress cost", "open source cloud"]
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 데이터 중력(Data Gravity)은 데이터가 커질수록 애플리케이션과 서비스가 그 주변에 집결하는 물리학 중력 유사 현상으로, 클라우드 이동을 어렵게 만드는 핵심 요인이다.
 > 2. 클라우드 Lock-In은 기술적(전용 API), 데이터적(이동 비용), 운영적(기술 스택 종속) 세 층위에서 발생하며, 이중 데이터 Egress 비용이 실질적 이동 장벽이다.
 > 3. 멀티클라우드 전략과 오픈소스 표준(Kubernetes, Terraform, OpenTelemetry) 활용이 Lock-In을 줄이는 현실적 접근이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 데이터 중력 개념
+## 1. 개요 및 필요성
 
 ### 1.1 정의
 
@@ -40,7 +43,7 @@ tags = ["data gravity", "cloud lock-in", "multi-cloud", "vendor lock-in", "porta
 
 ---
 
-## Ⅱ. 클라우드 Lock-In 유형
+## 2. 구성요소
 
 ### 2.1 세 가지 Lock-In 층위
 
@@ -69,7 +72,7 @@ PB 규모에서는 수십억 원 이상의 이전 비용 발생.
 
 ---
 
-## Ⅲ. 탈출 전략
+## 3. 구조 및 동작 원리
 
 ### 3.1 멀티클라우드 (Multi-Cloud)
 
@@ -94,7 +97,7 @@ AWS (컴퓨팅)  Azure (AI)  GCP (데이터)
 
 ---
 
-## Ⅳ. 하이브리드·엣지 전략
+## 4. 비교 및 트레이드오프
 
 ### 4.1 데이터 중력 대응 아키텍처
 
@@ -116,7 +119,7 @@ AWS (컴퓨팅)  Azure (AI)  GCP (데이터)
 
 ---
 
-## Ⅴ. 규제와 주권 클라우드
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 데이터 주권 (Data Sovereignty)
 

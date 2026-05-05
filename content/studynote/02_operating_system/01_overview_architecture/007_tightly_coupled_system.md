@@ -5,15 +5,17 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 강결합 시스템 (Tightly Coupled System)은 여러 개의 프로세서가 단일 메인 메모리를 공유하며, 동일한 운영체제 하에서 매우 낮은 지연 시간(Low Latency)으로 데이터를 주고받는 고성능 병렬 시스템이다.
+> **핵심**: 강결합 시스템 (Tightly Coupled System)은 여러 개의 프로세서가 단일 메인 메모리를 공유하며, 동일한 운영체제 하에서 매우 낮은 지연 시간(Low Latency)으로 데이터를 주고받는 고성능 병렬 시스템이다.
 > 2. **가치**: 메모리 공유를 통한 직접 통신으로 데이터 전송 오버헤드를 최소화하여 실시간성 및 고속 연산이 가능하지만, 자원 경합(Resource Contention)으로 인한 물리적 확장성의 한계가 명확하다.
 > 3. **융합**: 단일 칩 내의 멀티코어 설계부터 고성능 서버의 공유 메모리 아키텍처까지 현대 컴퓨팅의 핵심이며, 데이터 일관성(Consistency) 유지와 동기화(Synchronization) 기법이 시스템 성능의 핵심 지표가 된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 강결합 시스템 (Tightly Coupled System)은 두 개 이상의 프로세서가 물리적으로 하나의 메모리 (Shared Memory)와 클럭 (Clock)을 공유하며 동작하는 시스템 아키텍처다. 프로세서 간의 통신이 별도의 네트워크 없이 메모리 읽기/쓰기를 통해 직접 이루어지므로 통신 속도가 매우 빠르며, 일반적으로 단일 운영체제 (OS, Operating System)에 의해 제어된다.
 
@@ -50,7 +52,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -115,7 +117,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 강결합 (Tightly Coupled) vs 약결합 (Loosely Coupled)
 
@@ -134,7 +136,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -155,7 +157,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

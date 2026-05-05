@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: TOGAF(The Open Group Architecture Framework) ADM(Architecture Development Method — 아키텍처 개발 방법론)은 EA를 실제로 개발하고 유지·관리하는 반복(Iterative) 사이클 방법론으로, 전 세계 80% 이상의 Fortune 500 기업이 활용한다.
+> **핵심**: TOGAF(The Open Group Architecture Framework) ADM(Architecture Development Method — 아키텍처 개발 방법론)은 EA를 실제로 개발하고 유지·관리하는 반복(Iterative) 사이클 방법론으로, 전 세계 80% 이상의 Fortune 500 기업이 활용한다.
 > 2. **가치**: ADM의 8단계 사이클은 비즈니스 아키텍처(BA)부터 기술 아키텍처(TA)까지 순서대로 개발하고, 변경 관리를 통해 지속적으로 아키텍처를 진화시키는 완전한 라이프사이클을 제공한다.
 > 3. **판단 포인트**: TOGAF ADM의 핵심은 '요구사항 관리(Requirements Management)'가 중심 허브로 모든 단계에 연결된다는 점이다. 아키텍처 결정은 항상 비즈니스 요구사항에서 출발해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 TOGAF는 The Open Group이 1995년 발표한 EA 표준 프레임워크로, 현재 TOGAF 10(2022년)이 최신 버전이다. ADM은 TOGAF의 핵심 구성 요소로, EA를 단계별로 개발하는 반복 사이클이다.
 
@@ -25,7 +27,7 @@ TOGAF 자격증(Foundation Level, Practitioner Level)은 EA 분야의 국제 표
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### TOGAF ADM 8단계 사이클
 
@@ -82,7 +84,7 @@ TOGAF 자격증(Foundation Level, Practitioner Level)은 EA 분야의 국제 표
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### TOGAF 4대 구성 요소
 
@@ -107,7 +109,7 @@ TOGAF 자격증(Foundation Level, Practitioner Level)은 EA 분야의 국제 표
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### TOGAF ADM 실무 적용 포인트
 
@@ -126,7 +128,7 @@ TOGAF 자격증(Foundation Level, Practitioner Level)은 EA 분야의 국제 표
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 TOGAF ADM을 통해 조직은 아키텍처 개발의 체계적 반복 사이클을 확보하고, 이해관계자 간 아키텍처 합의를 구조화된 방식으로 달성할 수 있다. The Open Group 통계에 따르면 TOGAF를 도입한 조직은 IT 프로젝트 복잡성 관리 역량이 40% 향상되고, 아키텍처 관련 재작업 비용이 35% 감소했다.
 

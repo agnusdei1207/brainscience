@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> 약간의 정확도 손실 허용
+
+> 📝 모범 답안
 
 - **본질**: 데이터 윤리(Data Ethics)는 공정성(Fairness)·투명성(Transparency)·책임성(Accountability)·프라이버시(Privacy)·선익(Beneficence)의 5원칙으로 구성되며, AI 시스템이 사회적 편견을 강화·증폭하지 않도록 방어하는 규범 체계다.
 - **가치**: SHAP (SHapley Additive exPlanations), LIME (Local Interpretable Model-Agnostic Explanations) 등 XAI(Explainable AI) 기법과 EU AI Act(2024) 리스크 분류 체계가 결합하여 책임 있는 AI 구현의 기술·규제 프레임워크를 형성한다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 알고리즘 편향의 현실 사례
 
@@ -28,7 +31,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 편향 유형별 AI 파이프라인 매핑
 
@@ -75,7 +78,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### XAI (Explainable AI, 설명 가능한 AI) 기법 비교
 
@@ -111,7 +114,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 알고리즘 영향 평가(Algorithmic Impact Assessment, AIA)
 
@@ -135,8 +138,7 @@ Accuracy-Fairness Frontier:
   ↑──────────────────────→ 공정성 ↑
   
   현실적 선택:
-  - 의료 AI: 공정성 > 약간의 정확도 손실 허용
-  - 추천 시스템: 상업적 정확도 > 인구통계 다양성
+  - 의료 AI: 공정성   - 추천 시스템: 상업적 정확도 > 인구통계 다양성
   - 채용 AI: 법적 요건상 Equal Opportunity 필수
 ```
 
@@ -144,7 +146,7 @@ Accuracy-Fairness Frontier:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 데이터 윤리 내재화 기대효과
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: MLOps(Machine Learning Operations)는 ML 모델의 개발→훈련→검증→배포→모니터링→재훈련 전체 생명주기를 DevOps 원칙으로 자동화하여 실험실의 모델이 안정적인 프로덕션 서비스로 전환되도록 하는 엔지니어링 실천이다.
+> **핵심**: MLOps(Machine Learning Operations)는 ML 모델의 개발→훈련→검증→배포→모니터링→재훈련 전체 생명주기를 DevOps 원칙으로 자동화하여 실험실의 모델이 안정적인 프로덕션 서비스로 전환되도록 하는 엔지니어링 실천이다.
 > 2. **가치**: ML 모델 87%가 프로덕션에 배포되지 못한다는 통계처럼, 개발과 운영 사이의 간극을 메우는 것이 MLOps의 본질 — 특히 Concept Drift(개념 드리프트)가 발생하면 자동으로 재훈련을 트리거하는 지속적 학습 파이프라인이 핵심이다.
 > 3. **판단 포인트**: MLOps 성숙도 3단계 — Level 0(수동 프로세스) → Level 1(ML 파이프라인 자동화) → Level 2(CI/CD 완전 자동화) — 조직의 현재 수준을 파악하고 단계별 개선 로드맵을 제시하는 것이 기술사 답안의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 데이터 과학자가 Jupyter 노트북에서 정확도 95%의 사기 탐지 모델을 개발했다. 이 모델을 프로덕션에서 실행하기까지의 여정:
 
@@ -44,7 +46,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### MLOps 3대 핵심 구성요소
 
@@ -96,7 +98,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### MLOps 도구 생태계
 
@@ -123,7 +125,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### MLflow 실험 추적 예시
 
@@ -177,7 +179,7 @@ if drift_results["metrics"][0]["result"]["dataset_drift"]:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

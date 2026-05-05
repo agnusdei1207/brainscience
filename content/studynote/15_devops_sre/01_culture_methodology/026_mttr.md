@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: MTTR (Mean Time to Recover/Repair, 평균 복구 시간)은 시스템 장애 발생부터 정상 복구까지 걸린 평균 시간으로, SRE(Site Reliability Engineering)의 4대 DORA 메트릭 중 "복원력(Reliability)"을 측정하는 핵심 지표다.
+> **핵심**: MTTR (Mean Time to Recover/Repair, 평균 복구 시간)은 시스템 장애 발생부터 정상 복구까지 걸린 평균 시간으로, SRE(Site Reliability Engineering)의 4대 DORA 메트릭 중 "복원력(Reliability)"을 측정하는 핵심 지표다.
 > 2. **가치**: MTTR은 단순히 빠른 복구만을 의미하지 않는다. 장애 탐지(Detection) → 대응(Response) → 원인 파악(Diagnosis) → 복구(Recovery)의 4단계 파이프라인 전체를 최적화해야 낮출 수 있다. 어느 한 단계의 병목이 전체 MTTR을 지배한다.
 > 3. **판단 포인트**: MTTR이 낮다고 무조건 좋은 것은 아니다. 빠른 복구를 위해 원인 파악을 건너뛰면 재발 빈도(MTBF 단축)가 높아진다. 이상적인 SRE 팀은 "빠른 일시 복구(Rollback) + 철저한 사후 분석(Post-mortem)"을 병행하여 MTTR과 MTBF 모두 개선한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌────────────────────────────────────────────────────────┐
@@ -33,7 +35,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### MTTR 단계별 단축 기법
 
@@ -59,7 +61,7 @@ MTTF (Mean Time to Failure)  : 최초 가동 ~ 첫 장애까지
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 메트릭 | DORA 분류 | 측정 대상 |
 |:---|:---|:---|
@@ -72,7 +74,7 @@ MTTF (Mean Time to Failure)  : 최초 가동 ~ 첫 장애까지
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### SRE 팀 MTTR 개선 로드맵
 1. **현황 측정**: MTTD, 대응 시간, 진단 시간, 복구 시간 각각 측정.
@@ -90,7 +92,7 @@ MTTF (Mean Time to Failure)  : 최초 가동 ~ 첫 장애까지
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 버퍼 오버플로우 공격 스택 (Buffer Overflow Attack Stack)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 버퍼 오버플로우 (Buffer Overflow)는 프로그램이 할당된 메모리 공간(버퍼)의 경계를 넘어 데이터를 쓸 때 발생하는 취약점으로, 주로 스택 (Stack) 영역의 함수 리턴 주소 (Return Address)를 악의적으로 덮어쓰는 데 사용된다.
+> **핵심**: 버퍼 오버플로우 (Buffer Overflow)는 프로그램이 할당된 메모리 공간(버퍼)의 경계를 넘어 데이터를 쓸 때 발생하는 취약점으로, 주로 스택 (Stack) 영역의 함수 리턴 주소 (Return Address)를 악의적으로 덮어쓰는 데 사용된다.
 > 2. **가치**: C/C++ 언어의 태생적 한계(문자열 경계 검사 부재)를 노린 가장 고전적이고 치명적인 원격 코드 실행(RCE) 기법으로, 현대 시스템의 보안 방어 기술(ASLR, DEP/NX)을 발전시킨 핵심 원동력이다.
 > 3. **융합**: 운영체제의 프로세스 주소 공간 레이아웃, CPU의 레지스터 (EIP/RIP, ESP, EBP) 제어 메커니즘, 그리고 가상 메모리 보호 기법이 총망라된 주제로, 악성코드 동작의 0순위 진입점(Entry Point)이다.
 
+> 📝 모범 답안
+
+# 버퍼 오버플로우 공격 스택 (Buffer Overflow Attack Stack)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 메모리 버퍼에 할당된 용량보다 더 큰 데이터를 입력받을 때, 인접한 메모리 영역을 덮어쓰는 (Overwrite) 현상. 이 중 **스택 기반 버퍼 오버플로우 (Stack-based Buffer Overflow)**는 함수 호출 시 생성되는 스택 프레임(Stack Frame)의 제어 데이터를 조작하여 프로그램의 실행 흐름을 해커가 원하는 코드로 돌리는 공격이다.
 - **필요성(문제의식)**: 
@@ -65,7 +67,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 버퍼 오버플로우 공격의 핵심 구성 요소
 
@@ -108,7 +110,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 메모리 보호 기법 (Mitigation) 비교
 
@@ -129,7 +131,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 시큐어 코딩
 
@@ -171,7 +173,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

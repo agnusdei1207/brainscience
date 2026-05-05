@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 자가 설명 네이밍 (Self-Documenting Naming) 은 코드 자체가 문서가 되도록 변수·함수·클래스 이름을 의도(Why/What)를 드러내는 이름으로 짓는 클린 코드 (Clean Code) 의 핵심 원칙이다.
+> **핵심**: 자가 설명 네이밍 (Self-Documenting Naming) 은 코드 자체가 문서가 되도록 변수·함수·클래스 이름을 의도(Why/What)를 드러내는 이름으로 짓는 클린 코드 (Clean Code) 의 핵심 원칙이다.
 > 2. **가치**: 주석 과잉 (Excessive Comments) 을 제거하고 코드의 진실 (Truth) 과 문서를 단일 소스로 일치시켜 유지보수 비용과 인지 부하를 동시에 줄인다.
 > 3. **판단 포인트**: "이 이름이 없어도 주석이 의도를 설명해야 하는가?" — Yes라면 이름을 다시 지어야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 주석 과잉의 역설
 
@@ -49,7 +50,7 @@ int daysSinceLastModification;
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 네이밍 품질 스펙트럼
 
@@ -97,7 +98,7 @@ int daysSinceLastModification;
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 좋은 이름 vs 나쁜 이름 패턴
 
@@ -124,7 +125,7 @@ int daysSinceLastModification;
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 도메인 언어 (Ubiquitous Language) 활용
 
@@ -155,7 +156,7 @@ DDD (Domain-Driven Design) 의 유비쿼터스 언어 (Ubiquitous Language) 개�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 정량적 효과
 

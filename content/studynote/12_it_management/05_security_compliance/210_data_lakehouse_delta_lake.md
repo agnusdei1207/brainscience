@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: 데이터 레이크하우스(Data Lakehouse)는 데이터 레이크(Data Lake)의 저비용 유연성과 데이터 웨어하우스(Data Warehouse)의 ACID 트랜잭션·스키마 강제·쿼리 성능을 단일 스토리지 계층에서 통합 실현하는 차세대 데이터 아키텍처다.
+> **핵심**: 데이터 레이크하우스(Data Lakehouse)는 데이터 레이크(Data Lake)의 저비용 유연성과 데이터 웨어하우스(Data Warehouse)의 ACID 트랜잭션·스키마 강제·쿼리 성능을 단일 스토리지 계층에서 통합 실현하는 차세대 데이터 아키텍처다.
 > 2. **가치**: Delta Lake, Apache Iceberg, Apache Hudi는 오브젝트 스토리지(S3/GCS/ADLS) 위에 트랜잭션 로그 레이어를 추가하여 ACID 보장·타임 트래블(Time Travel)·스키마 진화(Schema Evolution)를 제공하며, ML/AI 워크로드와 SQL 분석을 동일 데이터셋에서 수행 가능하게 한다.
 > 3. **판단 포인트**: 기존 Data Lake에 거버넌스·신뢰성이 필요하거나, DW와 ML 파이프라인이 동일 원시 데이터를 공유해야 할 때 Lakehouse가 최적이며, 완전 관리형 서비스를 원하면 Databricks Lakehouse 또는 Snowflake를 검토한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 두 세계의 한계와 통합 요구
 데이터 레이크는 원시 데이터를 저렴하게 저장하지만, ACID 부재로 인한 "데이터 스왐프(Data Swamp)" 문제, 스키마 불일치, ML과 SQL 간 도구 분리가 단점이다. 반면 DW는 정형 데이터에 강하지만 비정형·반정형 데이터 처리, ML 피처(Feature) 데이터 통합, 클라우드 오브젝트 스토리지 직접 활용에 제약이 있다.
@@ -32,7 +34,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 Delta Lake 아키텍처
 
@@ -85,7 +87,7 @@ RESTORE TABLE sales TO VERSION AS OF 5;
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 Delta Lake vs Apache Iceberg vs Apache Hudi
 
@@ -110,7 +112,7 @@ RESTORE TABLE sales TO VERSION AS OF 5;
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 Lakehouse 도입 판단 기준
 
@@ -144,7 +146,7 @@ df.write.format("delta") \
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 Lakehouse 도입 효과
 

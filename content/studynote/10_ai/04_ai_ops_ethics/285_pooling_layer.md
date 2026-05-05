@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 풀링(Pooling)은 특징 맵(Feature Map)의 공간 해상도를 줄이는 다운샘플링(Downsampling) 연산으로, **학습 파라미터 없이** 이동·변형에 강건한 공간 불변성(Spatial Invariance)을 제공한다.
+> **핵심**: 풀링(Pooling)은 특징 맵(Feature Map)의 공간 해상도를 줄이는 다운샘플링(Downsampling) 연산으로, **학습 파라미터 없이** 이동·변형에 강건한 공간 불변성(Spatial Invariance)을 제공한다.
 > 2. **가치**: 계산량과 메모리를 줄이고, 소규모 위치 변화에 대한 불변성을 부여하여 분류(Classification) 정확도를 높인다.
 > 3. **판단 포인트**: 시험에서는 최대 풀링(Max Pooling)과 평균 풀링(Average Pooling)의 차이, 전역 평균 풀링(GAP, Global Average Pooling)이 완전 연결 계층(FC Layer)을 대체하는 원리, 최근 스트라이드 합성곱이 풀링을 대체하는 트렌드를 묻는다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 풀링의 탄생 배경
 
@@ -37,7 +39,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 최대 풀링 (Max Pooling)
 
@@ -109,7 +111,7 @@ $$O = \left\lfloor \frac{I - F}{S} \right\rfloor + 1$$
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 풀링 vs 스트라이드 합성곱 (최신 트렌드)
 
@@ -132,7 +134,7 @@ $$O = \left\lfloor \frac{I - F}{S} \right\rfloor + 1$$
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 설계 선택 기준
 
@@ -159,7 +161,7 @@ GAP → FC(softmax) → 클래스 예측
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 풀링의 핵심 기여
 

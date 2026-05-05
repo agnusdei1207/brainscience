@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> 데이터 스큐는 "은행 창구 10개 중 1번 창구에만 고객 100명이 몰리는 상황"이다. 나머지 9개 창구는 놀고 있는데 1번 창구 때문에 모두가 기다린다.
+
+> 📝 모범 답안
 
 - **본질**: Skew Join(데이터 쏠림 조인)은 분산 조인(Distributed Join)에서 특정 키(Key)에 데이터가 극단적으로 편중될 때 해당 파티션의 단일 태스크가 전체 쿼리 완료를 가로막는 문제를 해결하기 위한 최적화 기법이다.
 - **가치**: AQE (Adaptive Query Execution)가 런타임 통계를 분석해 스큐 파티션을 자동으로 분할·병렬화하고, 수동으로는 솔팅(Salting) 기법으로 키를 인위적으로 분산하여 작업 시간을 수십 배 단축할 수 있다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 데이터 스큐(Data Skew)란?
 
@@ -31,11 +34,10 @@ categories = "studynote-bigdata"
 - `SELECT count(*), key FROM table GROUP BY key ORDER BY count DESC LIMIT 10` → 상위 키 집중 여부 파악
 
 **📢 섹션 요약 비유**
-> 데이터 스큐는 "은행 창구 10개 중 1번 창구에만 고객 100명이 몰리는 상황"이다. 나머지 9개 창구는 놀고 있는데 1번 창구 때문에 모두가 기다린다.
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. AQE 자동 Skew Join 최적화 (Spark 3.0+)
 
@@ -108,7 +110,7 @@ result = skewed_df.join(normal_df_replicated, "salted_key")
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 1. Skew Join과 Broadcast Join의 선택 기준
 
@@ -130,7 +132,7 @@ result = skewed_df.join(normal_df_replicated, "salted_key")
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1. Skew Join 진단 및 해결 프로세스
 
@@ -162,7 +164,7 @@ result = skewed_df.join(normal_df_replicated, "salted_key")
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 기대효과
 
@@ -190,7 +192,6 @@ Skew Join 최적화는 대규모 분산 조인을 다루는 모든 데이터 엔
 | Salting | 수동 대안 | 키 인위 분산으로 스큐 방지 |
 | Shuffle Optimization | 연관 문제 | 셔플 자체를 줄이면 스큐 영향도 줄어듦 |
 | 파티션 최적화 | 연관 문제 | 적정 파티션 수 설계가 스큐 예방에 기여 |
-
 
 ### 📈 관련 키워드 및 발전 흐름도
 

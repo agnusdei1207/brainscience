@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# Chiplet (칩렛) 아키텍처
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 칩렛(Chiplet) 아키텍처는 하나의 거대한 칩(Monolithic Die)을 만드는 대신, CPU, GPU, 캐시, I/O 등의 구성 요소를 기능별로 작은 조각(Chiplet)으로 분리하여 레고 블록처럼 조립하는 설계 패러다임이다.
+> **핵심**: 칩렛(Chiplet) 아키텍처는 하나의 거대한 칩(Monolithic Die)을 만드는 대신, CPU, GPU, 캐시, I/O 등의 구성 요소를 기능별로 작은 조각(Chiplet)으로 분리하여 레고 블록처럼 조립하는 설계 패러다임이다.
 > 2. **가치**: 거대한 칩은 미세한 먼지 하나만 떨어져도 전체를 버려야 해서 수율(Yield)이 낮고 원가가 폭증하지만, 작게 쪼개어 만들면 불량률을 크게 줄여 제조 비용을 절감하고, 각 조각에最适合한 공정을 선택적으로 적용할 수 있다.
 > 3. **융합**: AMD가 Ryzen과 EPYC에率先적으로 도입하여 Intel을 추격했으며, TSMC, Intel 등 주요 파운드리에서 칩렛 집적 기술을 제공하고, 차세대 소자 간 인터커넥트(보조 기눈) 기술인 UCIe까지 등장하여 생태계를 확대하고 있다.
 
+> 📝 모범 답안
+
+# Chiplet (칩렛) 아키텍처
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 문제의식: Monolithic 칩의 수율 한계
 
@@ -62,7 +64,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### AMD Zen 아키텍처의 칩렛 구조
 
@@ -139,7 +141,7 @@ AMD는 라이젠(Ryzen)과 에픽(EPYC) 프로세서에 이 칩렛 구조를 선
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### Intel vs AMD의 칩렛 전략 비교
 
@@ -158,7 +160,7 @@ AMD는 라이젠(Ryzen)과 에픽(EPYC) 프로세서에 이 칩렛 구조를 선
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -183,7 +185,7 @@ Apple M2 Ultra는 두 개의 M2 Max 칩을 UltraFusion으로 결합하여 192GB�
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### UCIe (Universal Chiplet Interconnect Express)
 

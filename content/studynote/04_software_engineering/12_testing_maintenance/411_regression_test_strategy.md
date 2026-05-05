@@ -5,19 +5,21 @@ weight = 411
 [extra]
 categories = "studynote-software-engineering"
 +++
-
-# 411. 리그레션 테스트 자동화 및 선택적 수행 (Retest All vs Selective)
+## 0. 핵심 인사이트
 
 > ⚠️ 한정된 시간과 컴퓨팅 자원 내에서 회귀 테스트의 효율성을 극대화하기 위해, 테스트 범위를 결정하는 두 가지 핵심 전략(전체 테스트와 선택적 테스트)과 이를 가능하게 하는 자동화 프레임워크 설계에 대해 다룹니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# 411. 리그레션 테스트 자동화 및 선택적 수행 (Retest All vs Selective)
+
 > 1. **본질**: 리그레션 테스트 전략은 '안전성을 위해 모든 것을 다시 테스트할 것인가(Retest All)' 아니면 '효율성을 위해 변경된 코드와 연관된 테스트만 골라낼 것인가(Selective)' 사이의 트레이드오프(Trade-off)를 다루는 최적화 문제다.
 > 2. **가치**: 지속적 배포 (Continuous Deployment) 환경에서는 테스트 실행 시간이 곧 릴리즈 리드타임(Lead Time)을 결정한다. 선택적 수행은 테스트 피드백을 수십 분에서 수 분 단위로 단축시켜 애자일(Agile) 조직의 민첩성을 유지한다.
 > 3. **기술 체계**: 선택적 수행을 위해서는 콜 그래프(Call Graph) 기반의 '영향도 분석(Impact Analysis)' 기술이 필수적이며, 이는 CI/CD (Continuous Integration / Continuous Deployment) 파이프라인에서 테스트 자동화 도구와 결합하여 동적으로 테스트 스위트(Test Suite)를 구성한다.
 
 ---
 
-## Ⅰ. 회귀 테스트의 딜레마: 완벽함 vs 신속함
+## 1. 개요 및 필요성
 
 - **개념**: 소프트웨어의 규모가 커지면 테스트 케이스(Test Case)의 수도 수만 개로 증가한다. 코드를 한 줄 고칠 때마다 수만 개의 테스트를 모두 실행하는 것은 논리적으로는 가장 완벽한 방어책이지만, 물리적인 시간과 비용 측면에서는 재앙에 가깝다. 이 딜레마를 해결하기 위해 '전체 재테스트 (Retest All)'와 '선택적 테스트 (Selective Testing)' 전략이 대립한다.
 - **필요성**: 만약 테스트 실행에 5시간이 걸린다면, 개발자는 코드를 수정한 후 결과를 확인하기 위해 다음 날까지 기다려야 한다. 이는 개발자의 몰입(Context Flow)을 깨뜨리고, 하루에 여러 번 배포해야 하는 현대의 마이크로서비스 아키텍처 (Microservices Architecture, MSA) 환경에 정면으로 위배된다. 
@@ -27,7 +29,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 전략 1: 전체 테스트 (Retest All)
+## 2. 구성요소
 
 - **정의**: 기존에 만들어진 모든 테스트 케이스를 예외 없이 다시 실행하는 가장 직관적이고 무식(Brute-force)하지만 확실한 방법이다.
 - **적용 시기**:
@@ -60,7 +62,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅲ. 전략 2: 선택적 테스트 (Selective Regression Testing)
+## 3. 구조 및 동작 원리
 
 - **정의**: 변경된 코드와 수학적, 논리적 의존성(Dependency)이 있는 부분만을 도출하여 연관된 테스트 케이스만 선별적으로 실행하는 최적화 기법이다.
 - **동작 메커니즘**:
@@ -97,7 +99,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅳ. 전략 3: 우선순위 및 위험 기반 테스트 (Test Case Prioritization)
+## 4. 비교 및 트레이드오프
 
 - **정의**: 선택적 테스트로 걸러낸 스위트조차 너무 클 경우, 비즈니스 리스크와 결함 발생 이력을 바탕으로 테스트 케이스에 가중치(우선순위)를 부여하여 가장 중요한 것부터 실행하는 기법이다.
 - **우선순위 산정 기준 (Metrics)**:
@@ -116,7 +118,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅴ. 자동화 환경 구축 (CI 파이프라인 최적화)
+## 5. 실무 적용 및 최적화 기법
 
 선택적 테스트와 우선순위 기반 테스트는 인간이 직접 계산해서 실행할 수 없다. 이는 최신 CI (Continuous Integration) 프레임워크와 결합될 때만 의미가 있다.
 

@@ -5,15 +5,17 @@ date = "2024-10-27"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 트랜스포머 (Transformer)는 순차적 처리를 탈피하고 **셀프 어텐션 (Self-Attention)** 메커니즘을 통해 문장 내 모든 단어 간의 관계를 동시에 계산하는 병렬 연산 기반 신경망 구조다.
+> **핵심**: 트랜스포머 (Transformer)는 순차적 처리를 탈피하고 **셀프 어텐션 (Self-Attention)** 메커니즘을 통해 문장 내 모든 단어 간의 관계를 동시에 계산하는 병렬 연산 기반 신경망 구조다.
 > 2. **가치**: RNN의 고질적 문제인 장기 의존성(Long-term Dependency) 소실을 해결하고, GPU 병렬 처리에 최적화되어 초거대 AI(LLM) 시대를 연 결정적 기술이다.
 > 3. **판단 포인트**: 연산 복잡도가 문장 길이의 제곱($O(n^2)$)에 비례하므로, 긴 문맥(Long-context) 처리 시 메모리 효율을 높이기 위한 Flash Attention이나 Sparse Attention 등의 최적화 기법 적용이 필수적이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 2017년 구글이 발표한 "Attention Is All You Need" 논문에서 제안된 모델로, 기존 NLP의 주류였던 RNN과 LSTM을 완전히 대체했다.
 
@@ -23,7 +25,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 트랜스포머는 **인코더 (Encoder)**와 **디코더 (Decoder)** 구조로 나뉘며, 핵심은 **Multi-Head Self-Attention**이다.
 
@@ -44,7 +46,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 트랜스포머는 RNN의 한계를 극복하며 AI의 표준 아키텍처가 되었다.
 
@@ -59,7 +61,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 현재 거의 모든 생성형 AI(GPT, BERT, Gemini)는 트랜스포머의 변형이다.
 
@@ -76,7 +78,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 트랜스포머의 등장은 인공지능이 인간의 언어를 이해하는 방식에 혁명을 가져왔다. 병렬 연산의 효율성은 거대 모델의 등장을 가능케 했으며, 이는 곧 AGI(범용 인공지능)로 가는 가장 강력한 도구가 되었다. 향후에는 트랜스포머의 연산 복잡도를 줄이면서도 더 긴 문맥을 기억할 수 있는 **차세대 아키텍처(Mamba 등)**와의 경쟁 및 융합이 기대된다.
 

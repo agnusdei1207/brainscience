@@ -4,11 +4,14 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 관계 대수(Relational Algebra)는 Edgar F. Codd가 정의한 관계형 데이터베이스의 이론적 기반으로, 테이블(릴레이션)에 적용하는 8개 연산자의 집합이며, SQL의 SELECT·FROM·WHERE·JOIN·GROUP BY가 모두 관계 대수 연산의 직접 구현이다.
 > 2. 기본 연산(선택·사영·카티션 곱·합집합·차집합)만으로 모든 관계형 쿼리를 표현할 수 있으며, JOIN·교차·나누기는 이들로부터 유도된다 — 쿼리 최적화기(Query Optimizer)는 관계 대수 표현식을 변환해 최적 실행 계획을 탐색한다.
 > 3. 관계 대수를 이해하면 SQL의 실행 순서(FROM→WHERE→GROUP BY→HAVING→SELECT→ORDER BY)와 인덱스 설계의 논리적 근거를 파악할 수 있으며, 쿼리 최적화 사고의 기반이 된다.
+
+> 📝 모범 답안
 
 ---
 

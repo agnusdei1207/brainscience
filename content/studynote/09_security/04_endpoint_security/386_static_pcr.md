@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Static PCR (Platform Configuration Register)은 컴퓨터 전원 투입 시점부터 OS 부팅 완료까지의 정적 부팅 과정을 측정한 값들을 TPM PCR 0-7에 저장하며, CRTM (Core Root of Trust for Measurement)에서 시작하는 신뢰 체인을 형성한다.
+> **핵심**: Static PCR (Platform Configuration Register)은 컴퓨터 전원 투입 시점부터 OS 부팅 완료까지의 정적 부팅 과정을 측정한 값들을 TPM PCR 0-7에 저장하며, CRTM (Core Root of Trust for Measurement)에서 시작하는 신뢰 체인을 형성한다.
 > 2. **가치**: "정적"이라 함은 시스템이 시작될 때 한 번 측정되고 이후 변경되지 않는 부팅 코드 영역을 의미하며, UEFI 펌웨어·Secure Boot 상태·부트로더의 무결성 기준값이 된다.
 > 3. **판단 포인트**: PCR 0-7은 UEFI/BIOS가 측정하는 정적 영역이고 PCR 8-15는 OS/부트로더가 측정하는 동적 영역이며, BitLocker 봉인 시 어떤 PCR을 사용하는지 이해하는 것이 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 TCG (Trusted Computing Group) 플랫폼 사양에서 PCR (Platform Configuration Register)은 TPM 내부의 176비트(SHA-256 기준) 레지스터로, 부팅 과정 각 단계의 해시를 누적 기록한다. 전원 투입 시 PCR은 모두 0으로 초기화되고, CRTM (Core Root of Trust for Measurement)—일반적으로 UEFI 펌웨어—이 측정의 첫 번째 신뢰 앵커가 된다.
 
@@ -23,7 +25,7 @@ TCG (Trusted Computing Group) 플랫폼 사양에서 PCR (Platform Configuration
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | PCR 번호 | 측정 주체 | 측정 내용 |
 |:---|:---|:---|
@@ -67,7 +69,7 @@ TCG (Trusted Computing Group) 플랫폼 사양에서 PCR (Platform Configuration
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | Static PCR (PCR 0-7) | Dynamic PCR (PCR 17-22) |
 |:---|:---|:---|
@@ -80,7 +82,7 @@ TCG (Trusted Computing Group) 플랫폼 사양에서 PCR (Platform Configuration
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **BitLocker PCR 봉인 프로파일**  
 - 기본값(레거시): PCR 0, 2, 4, 11  
@@ -103,7 +105,7 @@ Get-TpmEndorsementKeyInfo
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Static PCR은 부팅 무결성 검증의 기반 인프라로, BitLocker·원격 증명·제로트러스트 디바이스 컴플라이언스의 핵심 구성 요소다. PCR 값의 예측 가능성과 재현 가능성을 확보하는 것이 실무에서 중요하며, 하드웨어 교체·BIOS 업데이트·드라이버 변경 시 예상 PCR 변화를 미리 계획해야 한다.
 

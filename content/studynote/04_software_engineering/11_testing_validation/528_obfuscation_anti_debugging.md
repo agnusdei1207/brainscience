@@ -6,15 +6,17 @@ description = "모바일 앱 보안에서 역공학을 어렵게 하는 난독�
 taxonomy = ""
 tags = ["Software Engineering", "Security", "Obfuscation", "Anti-debugging", "Mobile Security"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 난독화와 안티 디버깅은 역공학 비용을 높인다.
+> **핵심**: 난독화와 안티 디버깅은 역공학 비용을 높인다.
 > 2. **가치**: 모바일 앱에서 코드 노출과 분석을 어렵게 한다.
 > 3. **판단 포인트**: 방어를 숨기는 것과 완전히 막는 것은 다르다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 모바일 앱은 클라이언트에 코드가 배포되므로 분석 대상이 되기 쉽다. 그래서 난독화와 안티 디버깅이 쓰인다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Security", "Obfuscation", "Anti-debugging", "Mo
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 난독화는 이름과 흐름을 읽기 어렵게 만들고, 안티 디버깅은 디버깅 시도를 감지한다.
 
@@ -43,7 +45,7 @@ tags = ["Software Engineering", "Security", "Obfuscation", "Anti-debugging", "Mo
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 난독화는 비밀 보호가 아니라 분석 지연이다.
 
@@ -59,7 +61,7 @@ tags = ["Software Engineering", "Security", "Obfuscation", "Anti-debugging", "Mo
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 중요한 로직, 문자열, 키 관련 부분에 적용한다.
 
@@ -72,7 +74,7 @@ tags = ["Software Engineering", "Security", "Obfuscation", "Anti-debugging", "Mo
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 난독화와 안티 디버깅은 분석 비용을 높이는 실용적 방어다.
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SAST(Static Application Security Testing, 정적 애플리케이션 보안 테스팅)는 소스 코드를 실행하지 않고 취약점 패턴을 탐지하고, SCA(Software Composition Analysis, 소프트웨어 구성 분석)는 의존 오픈소스 라이브러리의 알려진 CVE를 스캔한다.
+> **핵심**: SAST(Static Application Security Testing, 정적 애플리케이션 보안 테스팅)는 소스 코드를 실행하지 않고 취약점 패턴을 탐지하고, SCA(Software Composition Analysis, 소프트웨어 구성 분석)는 의존 오픈소스 라이브러리의 알려진 CVE를 스캔한다.
 > 2. **가치**: 코드 리뷰 단계에서 SQL Injection, XSS 패턴을 자동 탐지하고, `log4j` 같은 오픈소스 취약점을 사용 여부와 함께 즉시 파악하여 배포 전 위험 제거가 가능하다.
 > 3. **판단 포인트**: SAST는 자체 코드 취약점을, SCA는 의존성 취약점을 각각 담당하므로 두 도구를 모두 파이프라인에 통합해야 완전한 코드 보안 커버리지가 확보된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 현대 애플리케이션은 80~90%가 오픈소스 라이브러리로 구성된다는 연구 결과가 있다. 따라서 보안 취약점의 경로도 자체 작성 코드와 외부 의존성(Dependencies) 두 가지로 나뉜다.
 
@@ -25,7 +27,7 @@ SCA는 두 번째 경로를 다룬다. `package.json`, `pom.xml`, `requirements.
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### SAST와 SCA의 분석 위치
 
@@ -56,7 +58,7 @@ SCA는 두 번째 경로를 다룬다. `package.json`, `pom.xml`, `requirements.
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### SAST vs DAST vs SCA 비교
 
@@ -78,7 +80,7 @@ SCA는 두 번째 경로를 다룬다. `package.json`, `pom.xml`, `requirements.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **SonarQube 운영 방식:**
 - Quality Gate: 임계값(Critical 0건, Coverage 80% 이상)을 통과해야 PR 머지 허용
@@ -104,7 +106,7 @@ SCA는 두 번째 경로를 다룬다. `package.json`, `pom.xml`, `requirements.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 SAST + SCA 통합으로 코드 레벨과 의존성 레벨의 보안 취약점을 개발 초기에 체계적으로 차단할 수 있다. 특히 오픈소스 의존성 취약점(SCA)은 매년 수천 건의 새 CVE가 공개되므로 자동화된 모니터링 없이는 인력으로 추적이 불가능하다.
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: uRPF (Unicast Reverse Path Forwarding)는 수신 인터페이스에서 패킷 출발지 IP를 라우팅 테이블로 역방향 검증해 IP 스푸핑(Spoofing)을 차단하는 라우터 수준의 방어 기술이다.
+> **핵심**: uRPF (Unicast Reverse Path Forwarding)는 수신 인터페이스에서 패킷 출발지 IP를 라우팅 테이블로 역방향 검증해 IP 스푸핑(Spoofing)을 차단하는 라우터 수준의 방어 기술이다.
 > 2. **가치**: 소스 위조 트래픽이 네트워크 내부로 진입하는 것을 업스트림에서 막아 DDoS Amplification·반사 공격의 연료를 차단한다.
 > 3. **판단 포인트**: Strict 모드는 단일 경로 환경에 최적이고, Loose 모드는 비대칭 라우팅 환경에서 False Positive 없이 적용 가능하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 IP 스푸핑(Spoofing)은 패킷의 출발지 IP를 위조해 추적을 어렵게 하거나 반사 공격(Reflection Attack)의 도구로 악용된다. DNS Amplification, NTP (Network Time Protocol) Amplification 등 대규모 볼류메트릭 DDoS 공격은 대부분 소스 IP 위조에 의존한다. 위조된 소스 IP를 가진 패킷이 네트워크에 유입되지 못하도록 막는 것이 근본적인 해결책이다.
 
@@ -25,7 +27,7 @@ BCP 38은 "네트워크 진입 필터링(Network Ingress Filtering)"을 정의�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Strict vs Loose 모드 비교
 
@@ -76,7 +78,7 @@ BCP 38 (RFC 2827)은 "내 네트워크에서 나가는 트래픽의 소스 IP가
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 항목 | uRPF Strict | uRPF Loose | ACL (Access Control List) 기반 |
 |:---|:---|:---|:---|
@@ -90,7 +92,7 @@ BCP 38 (RFC 2827)은 "내 네트워크에서 나가는 트래픽의 소스 IP가
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **배포 권장 위치**:
 - **고객 액세스 링크 (Customer-facing Edge)**: Strict 모드로 고객 IP 블록 이외의 소스를 즉시 차단.
@@ -119,7 +121,7 @@ interface GigabitEthernet0/0
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 uRPF는 라우터의 기존 FIB 인프라를 재활용하므로 추가 하드웨어 없이 소스 위조 트래픽을 대규모로 차단할 수 있다. ISP 레벨에서 전 세계적으로 uRPF + BCP 38을 준수한다면 반사·증폭 공격의 대부분이 원천 차단된다.
 

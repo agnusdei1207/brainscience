@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> 1000).map(lambda x: (x[0], x[2]))
+
+> 📝 모범 답안
 
 - **본질**: Spark SQL은 분산 데이터셋(RDD, Parquet, JSON, Hive 테이블 등)에 대해 표준 SQL과 DataFrame/Dataset API를 동일한 실행 엔진으로 처리하는 스파크의 구조적 처리 계층으로, 스키마 정보를 알기 때문에 Catalyst 옵티마이저가 최적 실행 계획을 자동으로 수립한다.
 - **가치**: 데이터 엔지니어는 Hive 메타스토어와 연동하여 기존 SQL 워크로드를 코드 변경 없이 스파크로 이관하고, 데이터 과학자는 `spark.sql("SELECT ...")` 한 줄로 페타바이트 규모 데이터를 쿼리할 수 있어 분석 생산성이 획기적으로 향상된다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. RDD 시대의 한계
 
@@ -29,8 +32,7 @@ Spark SQL (Apache Spark 1.3, 2014)은 **데이터에 스키마를 부여**함으
 
 ```python
 # RDD 방식 (최적화 불가)
-rdd.filter(lambda x: x[2] > 1000).map(lambda x: (x[0], x[2]))
-
+rdd.filter(lambda x: x[2] 
 # Spark SQL 방식 (Catalyst가 최적화)
 spark.sql("SELECT user_id, amount FROM transactions WHERE amount > 1000")
 df.filter(df.amount > 1000).select("user_id", "amount")
@@ -41,7 +43,7 @@ df.filter(df.amount > 1000).select("user_id", "amount")
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. Spark SQL 실행 파이프라인
 
@@ -113,7 +115,7 @@ result = spark.sql("SELECT * FROM hive_db.sales WHERE year = 2024")
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 1. Spark SQL vs Apache Hive
 
@@ -138,7 +140,7 @@ result = spark.sql("SELECT * FROM hive_db.sales WHERE year = 2024")
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1. Spark SQL 성능 튜닝 체크리스트
 
@@ -161,7 +163,7 @@ Spark 3.0+부터 `spark.sql.ansi.enabled=true` 설정 시 표준 SQL 동작을 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 기대효과
 

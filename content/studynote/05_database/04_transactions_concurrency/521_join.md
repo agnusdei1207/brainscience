@@ -7,17 +7,19 @@ date = 2026-03-26
 [taxonomies]
 tags = ["database", "sql", "join"]
 +++
+## 0. 핵심 인사이트
 
-# JOIN 연산
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: JOIN은 두 개 이상의 테이블에서 관련 데이터를 결합하는 연산으로, 관계 대수의 Cartesian Product와 Selection을 조합한 것과 동등하다.
+> **핵심**: JOIN은 두 개 이상의 테이블에서 관련 데이터를 결합하는 연산으로, 관계 대수의 Cartesian Product와 Selection을 조합한 것과 동등하다.
 > 2. **가치**: 정규화된 테이블을 다시 결합하여 원하는 정보视野를提供하며, 외래 키 관계를 통해 데이터 무결성을 유지하면서도 유연한 조회가 가능하다.
 > 3. **융합**: ANSI SQL과 Oracle, MySQL, PostgreSQL 등 각 DBMS의JOIN 최적화 엔진이 내부적으로 hash join, merge join, nested loop join 등을 선택하여 성능을 최적화한다.
 
+> 📝 모범 답안
+
+# JOIN 연산
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 
@@ -66,7 +68,7 @@ JOIN은 **주소록과 달력 앱의 연결**과 같다. 주소록에는 이름,
 
 ---
 
-## Ⅱ. JOIN의 유형
+## 2. 구성요소
 
 ### 1. INNER JOIN
 
@@ -192,7 +194,7 @@ CROSS JOIN products p;
 
 ---
 
-## Ⅲ. JOIN 성능 최적화
+## 3. 구조 및 동작 원리
 
 ### JOIN 실행 전략
 
@@ -224,7 +226,7 @@ CROSS JOIN products p;
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -246,7 +248,7 @@ CROSS JOIN products p;
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

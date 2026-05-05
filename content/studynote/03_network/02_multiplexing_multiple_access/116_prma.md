@@ -7,17 +7,20 @@ date = "2026-03-04"
 tags = ["PRMA", "MAC", "TDMA", "ALOHA", "Network", "Wireless"]
 categories = ["studynote-network"]
 +++
+## 0. 핵심 인사이트
 
-# 116. PRMA (Packet Reservation Multiple Access)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: PRMA (Packet Reservation Multiple Access)는 슬롯 알로하(Slotted ALOHA)의 무작위 접근 방식과 TDMA(Time Division Multiple Access)의 슬롯 예약 방식을 결합한 하이브리드 다중 접속 프로토콜이다.
+> **핵심**: PRMA (Packet Reservation Multiple Access)는 슬롯 알로하(Slotted ALOHA)의 무작위 접근 방식과 TDMA(Time Division Multiple Access)의 슬롯 예약 방식을 결합한 하이브리드 다중 접속 프로토콜이다.
 > 2. **가치**: 음성과 데이터가 혼재된 무선 환경에서 음성 트래픽의 지연 민감성을 해결하기 위해 타임 슬롯을 예약(Reservation)함으로써 QoS를 보장하고 스펙트럼 효율을 높인다.
 > 3. **융합**: 현대 무선 이동통신 및 VoIP 환경에서 트래픽 특성(연속성 vs 버스트성)에 따라 동적으로 자원을 할당하는 MAC 계층 스케줄링 메커니즘의 기반이 된다.
 
+> 📝 모범 답안
+
+# 116. PRMA (Packet Reservation Multiple Access)
+
+##
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 PRMA (Packet Reservation Multiple Access)는 근거리 무선 통신 및 이동 통신 환경에서 음성(Voice)과 데이터(Data) 패킷을 효율적으로 전송하기 위해 고안된 매체 접근 제어(MAC) 프로토콜이다. 전통적인 TDMA는 트래픽이 없어도 슬롯을 고정 할당하여 대역폭 낭비가 심했고, 알로하(ALOHA) 방식은 트래픽 부하가 높을 때 충돌로 인해 지연이 급증하는 치명적인 한계가 있었다. 이를 해결하기 위해 음성처럼 주기적이고 연속적인 트래픽에 대해서는 첫 패킷 전송 시에만 경쟁을 통해 슬롯을 확보하고, 이후에는 해당 슬롯을 예약하여 사용하는 방식이 등장하였다. 이 패러다임은 VAD(Voice Activity Detection) 기술과 결합하여, 사용자가 말을 하지 않는 묵음(Silence) 구간에는 슬롯 예약을 해제하고 데이터 트래픽이 이를 사용하도록 함으로써 자원 활용도를 극대화하는 비즈니스적 요구를 완벽히 충족시킨다.
 
 다음은 기존 고정 할당 방식과 PRMA 방식의 타임 슬롯 활용 차이를 보여주는 비교 시각화이다.
@@ -40,7 +43,7 @@ Frame 2: [User A (예약됨)] [User D (음성 경쟁)] [User C (데이터)]
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 PRMA 프로토콜은 기지국(Base Station)과 단말기(Mobile Station) 간의 상호작용으로 동작하며, 프레임 단위의 타임 슬롯을 관리한다.
 
 | 구성 요소 | 역할 | 내부 동작 | 비유 |
@@ -83,7 +86,7 @@ PRMA의 동작은 크게 '경쟁(Contention)', '예약(Reservation)', '해제(Re
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 PRMA는 전통적인 방식들과 명확한 트레이드오프를 가진다.
 
 | 항목 | TDMA (Time Division) | Slotted ALOHA | PRMA (Packet Reservation) |
@@ -117,7 +120,7 @@ PRMA는 전통적인 방식들과 명확한 트레이드오프를 가진다.
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 실제 무선 패킷 통신망을 설계할 때 PRMA 방식을 적용하기 위해서는 정밀한 파라미터 튜닝과 예외 상황 관리가 필수적이다.
 
 **실무 시나리오 의사결정 트리**
@@ -148,7 +151,7 @@ PRMA는 전통적인 방식들과 명확한 트레이드오프를 가진다.
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 PRMA의 개념은 초기 무선 패킷 데이터 통신에서 스펙트럼 효율을 극대화하는 중요한 이정표가 되었다.
 
 | 구분 | 기대 효과 및 기술적 가치 |

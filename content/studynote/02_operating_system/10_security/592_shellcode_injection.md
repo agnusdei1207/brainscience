@@ -5,17 +5,19 @@ date = "2026-03-25"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 셸코드 (Shellcode) 인젝션
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 셸코드 (Shellcode)는 소프트웨어의 취약점(예: 버퍼 오버플로우)을 익스플로잇 (Exploit)할 때 목표 시스템에서 공격자가 원하는 명령을 실행하도록 주입하는 아주 작은 크기의 기계어 (Machine Code) 조각이다.
+> **핵심**: 셸코드 (Shellcode)는 소프트웨어의 취약점(예: 버퍼 오버플로우)을 익스플로잇 (Exploit)할 때 목표 시스템에서 공격자가 원하는 명령을 실행하도록 주입하는 아주 작은 크기의 기계어 (Machine Code) 조각이다.
 > 2. **가치**: 성공적인 셸코드 인젝션은 공격자에게 대상 시스템의 제어권(대개 루트 셸, Shell)을 즉각적으로 부여하며, 시스템의 무결성을 완전히 붕괴시키는 가장 치명적인 보안 침해의 근원이다.
 > 3. **융합**: 운영체제 (OS, Operating System)의 가상 메모리 관리, 시스템 콜 (System Call) 인터페이스, 그리고 컴퓨터구조 (CA, Computer Architecture)의 레지스터 및 스택(Stack) 동작 원리가 융합되어 작동하는 공격 기법으로, 이를 방어하기 위해 DEP (Data Execution Prevention)와 ASLR (Address Space Layout Randomization) 같은 OS 레벨의 방어 체계가 발전해왔다.
 
+> 📝 모범 답안
+
+# 셸코드 (Shellcode) 인젝션
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 **개념 및 정의**
 셸코드 (Shellcode) 인젝션은 취약한 애플리케이션의 메모리 공간에 악성 기계어 코드(셸코드)를 주입하고, 프로그램의 실행 흐름(Instruction Pointer)을 조작하여 해당 코드를 실행시키는 해킹 기법이다. 전통적으로 공격자가 대상 시스템의 셸(명령어 인터프리터, 예: `/bin/sh` 또는 `cmd.exe`)을 획득하기 위해 사용했기 때문에 '셸코드'라는 이름이 붙었으나, 현대에는 셸 획득뿐만 아니라 포트 바인딩, 악성코드 다운로드 등 다양한 목적의 페이로드(Payload)를 통칭한다.
@@ -55,7 +57,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (셸코드 인젝션 페이로드 구조)
 
@@ -109,7 +111,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 로컬 셸코드 vs 리모트 셸코드
 
@@ -154,7 +156,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 다형성 셸코드(Polymorphic Shellcode)를 이용한 IDS 우회
 
@@ -177,7 +179,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과 (방어 메커니즘 도입 시)
 

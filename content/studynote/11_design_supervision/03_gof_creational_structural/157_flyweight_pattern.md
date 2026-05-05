@@ -5,24 +5,27 @@ date = "2025-05-22"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> [ Flyweight Factory ]
+
+> 📝 모범 답안
+
 1. **메모리 최적화(Memory Optimization):** 다수의 작은 객체가 반복 생성될 때, 공통 속성(Intrinsic State)을 공유하여 메모리 낭비를 방지함.
 2. **상태 분리(State Separation):** 변경되지 않는 '내부 상태'는 공유하고, 호출 시마다 바뀌는 '외부 상태'는 외부에서 주입받아 처리함.
 3. **성능 향상:** 객체 생성 비용을 줄이고 캐싱을 활용하여 대규모 데이터 처리 시스템의 응답성을 개선함.
 
 ---
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 대규모 게임이나 워드프로세서와 같이 수천 개의 유사한 객체(예: 글자, 나뭇잎, 총알 등)를 화면에 그려야 하는 경우, 모든 객체를 개별적으로 인스턴스화하면 메모리 부족(OOM) 문제가 발생할 수 있다. **플라이웨이트 패턴(Flyweight Pattern)**은 '객체를 최대한 가볍게(Flyweight)' 유지하기 위해 공유 가능한 정보를 풀(Pool)에 저장하고 재사용함으로써 자원을 효율적으로 관리하는 구조 패턴이다.
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 ```text
-[ Client ] ----> [ Flyweight Factory ]
-                       | (Check Pool)
+[ Client ] ----                       | (Check Pool)
                 +------+------+
                 |             |
         [ Flyweight A ] [ Flyweight B ] (Shared / Intrinsic)
@@ -57,7 +60,7 @@ Bilingual ASCII Diagram:
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 비교 항목 | 플라이웨이트 (Flyweight) | 싱글톤 (Singleton) | 프로토타입 (Prototype) |
 | :--- | :--- | :--- | :--- |
@@ -67,7 +70,7 @@ Bilingual ASCII Diagram:
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 **기술사적 판단:** 플라이웨이트 패턴은 **자원 제약 환경(Resource-Constrained Environment)**에서의 시스템 안정성 확보를 위한 핵심 기술이다.
 1. **Java String Pool:** 자바의 `String` 리터럴 상수가 내부적으로 이 패턴을 사용하여 중복 문자열 메모리를 절약함.
 2. **Connection Pooling:** DB 커넥션 풀이나 스레드 풀(Thread Pool)의 기본 사상이 플라이웨이트의 '객체 재사용' 원리에 기반함.
@@ -75,7 +78,7 @@ Bilingual ASCII Diagram:
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 클라우드 네이티브 환경에서 마이크로서비스가 증가함에 따라 개별 서비스의 경량화가 중요해지고 있다. 플라이웨이트 패턴은 데이터 중심의 아키텍처에서 불필요한 객체 생성을 막아 시스템의 전체적인 **풋프린트(Footprint)**를 줄이는 데 기여한다. 미래의 엣지 컴퓨팅이나 IoT 기기와 같은 저전력 환경에서 이 패턴은 더욱 강력한 설계 표준이 될 것이다.
 
 ---

@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. DBSCAN(Density-Based Spatial Clustering of Applications with Noise)은 밀도가 높은 지역을 군집으로 인식하는 알고리즘 — k-means와 달리 군집 수(k)를 사전에 지정할 필요 없고, 임의 형태의 군집과 이상치(Noise)를 자동으로 식별한다.
 > 2. 핵심 매개변수 ε(엡실론)과 minPts — ε(이웃 반경)과 minPts(최소 이웃 점 수)의 조합이 군집 품질을 결정하며, k-거리 그래프(k-distance graph)로 최적 ε을 찾는 방법이 실무에서 널리 사용된다.
 > 3. DBSCAN의 한계: 고차원·가변 밀도 군집 — 차원이 높아질수록 거리 계산 의미 감소(차원의 저주)하고, 밀도가 다른 군집이 혼재할 때 단일 ε로 모든 군집을 적절히 잡기 어렵다. HDBSCAN이 이 한계를 개선한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. DBSCAN 개요
+## 1. 개요 및 필요성
 
 ```
 밀도 기반 군집화 직관:
@@ -62,7 +65,7 @@ DBSCAN 핵심 아이디어:
 
 ---
 
-## Ⅱ. 알고리즘 동작
+## 2. 구성요소
 
 ```
 DBSCAN 알고리즘:
@@ -110,7 +113,7 @@ DBSCAN 알고리즘:
 
 ---
 
-## Ⅲ. 매개변수 튜닝
+## 3. 구조 및 동작 원리
 
 ```
 ε (Epsilon)과 minPts 선택:
@@ -153,7 +156,7 @@ minPts 선택:
 
 ---
 
-## Ⅳ. HDBSCAN과 발전
+## 4. 비교 및 트레이드오프
 
 ```
 DBSCAN 한계:
@@ -201,7 +204,7 @@ OPTICS (Ordering Points To Identify Clustering Structure):
 
 ---
 
-## Ⅴ. 실무 시나리오 — 이상 거래 탐지
+## 5. 실무 적용 및 최적화 기법
 
 ```
 금융 거래 이상치 탐지 (DBSCAN 활용):

@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 정상성(Stationarity) — 평균·분산이 시간에 따라 변하지 않음 — 은 ARIMA 모델링의 전제 조건이며, ADF 검정(Augmented Dickey-Fuller Test)으로 확인 후 차분(Differencing)으로 달성한다.
+> **핵심**: 정상성(Stationarity) — 평균·분산이 시간에 따라 변하지 않음 — 은 ARIMA 모델링의 전제 조건이며, ADF 검정(Augmented Dickey-Fuller Test)으로 확인 후 차분(Differencing)으로 달성한다.
 > 2. **가치**: ARIMA(Autoregressive Integrated Moving Average)의 p, d, q 파라미터는 ACF(Autocorrelation Function)/PACF(Partial ACF) 패턴으로 체계적으로 결정하고, AIC/BIC로 최적 모델을 선택한다.
 > 3. **판단 포인트**: 계절성이 있으면 SARIMA, 딥러닝이 필요하면 LSTM·TCN(Temporal Convolutional Network) — 단, 데이터 양이 충분해야 딥러닝이 통계 모델을 능가한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 시계열 데이터(Time Series Data)는 시간 순서가 의미를 갖는 데이터다. 주가, 기온, 서버 트래픽 등이 대표 예시다. 일반 ML 모델과 달리 시간적 의존성을 명시적으로 모델링해야 한다.
 
@@ -35,7 +36,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### ARIMA(p, d, q) 파라미터 결정 흐름
 
@@ -74,7 +75,7 @@ ARIMA(p,d,q) 적합 → AIC/BIC 최소 모델 선택
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 지수 평활법 (Exponential Smoothing) 비교
 
@@ -98,7 +99,7 @@ ARIMA(p,d,q) 적합 → AIC/BIC 최소 모델 선택
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **시나리오 - 소매점 매출 예측**:
 - 3년치 주간 매출 데이터 분석.
@@ -120,7 +121,7 @@ ARIMA(p,d,q) 적합 → AIC/BIC 최소 모델 선택
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ARIMA 계열 모델과 딥러닝 시계열 모델을 데이터 특성에 맞게 선택하면 재고 관리·에너지 수요 예측·금융 리스크 관리 등 다양한 영역에서 예측 정확도를 높일 수 있다.
 

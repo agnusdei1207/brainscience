@@ -6,17 +6,19 @@ date = 2024-05-24
 [taxonomies]
 tags = ["AI", "LLM", "Optimization", "System Architecture"]
 +++
+## 0. 핵심 인사이트
 
-# 292. 페이즈드 어텐션 (PagedAttention / vLLM)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 페이즈드 어텐션 (PagedAttention)은 운영체제 (OS)의 가상 메모리 페이징 (Paging) 개념을 딥러닝 서빙 엔진에 차용하여, LLM (Large Language Model)의 KV 캐시를 연속된 거대 텐서가 아닌 비연속적인 고정 크기의 '블록(Block)' 단위로 쪼개어 동적 할당하는 메모리 관리 아키텍처다.
+> **핵심**: 페이즈드 어텐션 (PagedAttention)은 운영체제 (OS)의 가상 메모리 페이징 (Paging) 개념을 딥러닝 서빙 엔진에 차용하여, LLM (Large Language Model)의 KV 캐시를 연속된 거대 텐서가 아닌 비연속적인 고정 크기의 '블록(Block)' 단위로 쪼개어 동적 할당하는 메모리 관리 아키텍처다.
 > 2. **가치**: 기존 방식의 고질적 문제였던 내부/외부 메모리 파편화 (Fragmentation)와 사전 과할당 (Over-allocation)으로 인한 VRAM (Video RAM) 낭비를 원천 제거하여, 동일 하드웨어 대비 배치 크기를 늘리고 시스템 처리량 (Throughput)을 최대 2~4배까지 폭발적으로 향상시켰다.
 > 3. **융합**: 메모리 주소 매핑을 수행하는 Block Table 구조는 복사-온-라이트 (CoW, Copy-on-Write) 같은 OS 최적화 기법을 가능케 하여, 빔 서치 (Beam Search)나 다중 프롬프트 샘플링 환경에서 메모리 공유를 통한 극강의 시너지를 발휘한다.
 
+> 📝 모범 답안
+
+# 292. 페이즈드 어텐션 (PagedAttention / vLLM)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 페이즈드 어텐션은 vLLM 프로젝트에서 제안된 혁신적인 주의력(Attention) 연산 알고리즘 및 메모리 구조다. 모델이 문장을 생성할 때 커져가는 KV 캐시를 하나의 거대한 연속된 메모리 공간에 우겨넣지 않고, 작은 단위(예: 16토큰 묶음)의 논리적 블록으로 분할한 뒤 실제 VRAM의 물리적 블록 주소표(Block Table)에 매핑하여 관리한다.
 - **필요성**: 기존 허깅페이스(HuggingFace)나 기본 PyTorch 기반 서빙 환경은 각 사용자의 최대 생성 가능 토큰 길이(Max Length)만큼 미리 연속된 메모리 공간을 덩어리째 예약(할당)해 버린다. 그러나 실제 사용자는 그 절반도 쓰지 않고 대화를 끝내는 경우가 허다하다. 남은 공간은 다른 요청이 쓸 수 없는 '내부 파편화(Internal Fragmentation)' 공간이 되어 엄청난 VRAM 낭비율(연구에 따르면 60~80%)을 보였다. 메모리 부족은 곧 병렬 처리(Batching)를 막아 서비스 단가를 기하급수적으로 높이는 주범이었다.
@@ -54,7 +56,7 @@ tags = ["AI", "LLM", "Optimization", "System Architecture"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -107,7 +109,7 @@ tags = ["AI", "LLM", "Optimization", "System Architecture"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 트레이드오프 및 아키텍처 비교
 
@@ -155,7 +157,7 @@ tags = ["AI", "LLM", "Optimization", "System Architecture"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 운영 위기
 
@@ -197,7 +199,7 @@ tags = ["AI", "LLM", "Optimization", "System Architecture"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

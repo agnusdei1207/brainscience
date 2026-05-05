@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 실시간 OLAP(Real-Time OLAP)은 초 단위 이하 지연 시간으로 대용량 이벤트 데이터를 분석하는 시스템 — Hadoop/Hive 기반 배치 분석(시간 단위 지연)의 한계를 극복하고, "지금 이 순간" 수십억 행을 집계·필터링하는 능력이 핵심이다.
 > 2. 컬럼형 저장소 + 벡터화 실행 + 사전 집계(Pre-aggregation)의 조합 — ClickHouse는 컬럼형 압축 저장 + SIMD 벡터화로 초당 수억 행 처리, Druid/Pinot은 인제스트 시 사전 집계로 쿼리 시 부하를 최소화하는 전략 차이가 있다.
 > 3. 워크로드 특성이 엔진 선택을 결정 — 고빈도 업데이트(UPDATE/DELETE) → ClickHouse, 이벤트 스트림 실시간 인제스트 + 밀리초 응답 → Druid/Pinot, 기존 데이터 웨어하우스 대체 → StarRocks가 각각 강점을 가진다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 실시간 OLAP 등장 배경
+## 1. 개요 및 필요성
 
 ```
 전통 분석 아키텍처의 한계:
@@ -50,7 +53,7 @@ Lambda 아키텍처:
 
 ---
 
-## Ⅱ. ClickHouse
+## 2. 구성요소
 
 ```
 ClickHouse (클릭하우스):
@@ -102,7 +105,7 @@ ClickHouse (클릭하우스):
 
 ---
 
-## Ⅲ. Apache Druid와 Pinot
+## 3. 구조 및 동작 원리
 
 ```
 Apache Druid:
@@ -157,7 +160,7 @@ Apache Pinot:
 
 ---
 
-## Ⅳ. StarRocks
+## 4. 비교 및 트레이드오프
 
 ```
 StarRocks (스타록스):
@@ -215,7 +218,7 @@ StarRocks (스타록스):
 
 ---
 
-## Ⅴ. 실무 시나리오 — 광고 기술 실시간 분석
+## 5. 실무 적용 및 최적화 기법
 
 ```
 광고 플랫폼 실시간 OLAP 아키텍처:

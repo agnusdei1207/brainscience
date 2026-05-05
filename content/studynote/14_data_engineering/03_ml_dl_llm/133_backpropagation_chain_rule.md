@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 역전파(Backpropagation)는 **출력층에서 입력층 방향으로 손실의 기울기(Gradient)를 전파**하여 각 가중치가 손실에 기여하는 정도를 계산하는 알고리즘이며, 미적분의 연쇄 법칙(Chain Rule)이 핵심 수학이다.
+> **핵심**: 역전파(Backpropagation)는 **출력층에서 입력층 방향으로 손실의 기울기(Gradient)를 전파**하여 각 가중치가 손실에 기여하는 정도를 계산하는 알고리즘이며, 미적분의 연쇄 법칙(Chain Rule)이 핵심 수학이다.
 > 2. **가치**: 역전파 없이는 수백만 파라미터의 **최적 가중치를 찾는 것이 불가능**하며, 1986년 Rumelhart의 역전파 논문이 신경망 학습의 실용적 돌파구였다.
 > 3. **판단 포인트**: 역전파의 Vanishing/Exploding Gradient 문제를 이해하고, ReLU·BatchNorm·Residual Connection·Gradient Clipping이 해결 기법이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 순전파: x → 은닉층 → 출력 → 손실(L)
@@ -25,7 +27,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 문제 | 현상 | 해결 |
 |:---|:---|:---|

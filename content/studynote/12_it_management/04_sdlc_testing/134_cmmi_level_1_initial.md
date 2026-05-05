@@ -5,24 +5,27 @@ date = "2026-03-04"
 [extra]
 categories = ["studynote-it-management"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> (Black Box / Ad-hoc Process) -> [Output/Result] |
+
+> 📝 모범 답안
+
 1. **CMMI 레벨 1(Initial)**은 조직 내에 공식적으로 정의되거나 문서화된 표준 개발 프로세스가 존재하지 않는 가장 원시적인 상태입니다.
 2. 프로젝트의 성공이 프로세스의 우수성이 아닌, 뛰어난 소수 개발자(영웅)의 개인 역량에 전적으로 의존합니다.
 3. 일정이 지연되거나 예산을 초과하는 리스크가 매우 크며, 성공 경험을 다른 프로젝트로 반복하거나 재현하기 불가능합니다.
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 CMMI(Capability Maturity Model Integration)는 조직의 소프트웨어 개발 및 시스템 구축 능력의 성숙도를 5단계로 평가하는 국제 표준 모델입니다. 레벨 1은 평가의 가장 밑바닥 단계로, 대부분의 초기 스타트업이나 프로세스가 정립되지 않은 개발 조직이 여기에 속합니다.
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 레벨 1 조직의 프로세스는 'Ad-hoc(임시 방편적)'이고 '혼돈(Chaotic)' 상태입니다.
 
 ```text
 +-------------------------------------------------------------+
 |                CMMI Level 1 Characteristics                 |
 |                                                             |
-|  [Input] -> (Black Box / Ad-hoc Process) -> [Output/Result] |
-|                                                             |
+|  [Input] -|                                                             |
 |  * No standardized procedures                               |
 |  * Over-reliance on "Heroes"                                |
 |  * Reactive management (Fire-fighting)                      |
@@ -30,7 +33,7 @@ CMMI(Capability Maturity Model Integration)는 조직의 소프트웨어 개발 
 +-------------------------------------------------------------+
 ```
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 평가 요소 | CMMI 레벨 1 (초기) | CMMI 레벨 2 (관리됨) |
 |---|---|---|
@@ -39,11 +42,11 @@ CMMI(Capability Maturity Model Integration)는 조직의 소프트웨어 개발 
 | **위기 대응 방식** | 사후약방문 (소방수 역할, Fire-fighting) | 요구사항 및 형상 관리 기반 통제 |
 | **조직의 상태** | 혼돈(Chaotic), 일관성 없음 | 기율(Disciplined), 프로젝트 관리 통제 |
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 * **레벨 2로의 도약 전략**: 레벨 1에서 벗어나기 위해서는 기본 프로젝트 관리 프로세스(요구사항 관리, 프로젝트 계획, 형상 관리, 품질 보증 등)를 수립해야 합니다.
 * **리스크 식별**: 품질 관리자(QA)나 감리인이 조직을 심사할 때, 문서화된 산출물이 없고 코드로만 소통하려 한다면 전형적인 레벨 1의 징후로 판단합니다.
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 CMMI 레벨 1 상태를 방치하면 기술 부채가 기하급수적으로 쌓이고 조직 확장이 불가능해집니다. 최소한의 베이스라인과 형상 관리를 도입하여 개인의 역량을 조직의 자산(프로세스)으로 내재화하는 첫걸음이 시급합니다.
 
 ### 📌 관련 개념 맵 (Knowledge Graph)

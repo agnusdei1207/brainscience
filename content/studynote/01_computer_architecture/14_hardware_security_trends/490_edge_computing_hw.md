@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# Edge Computing Hardware (엣지 컴퓨팅 하드웨어)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 엣지 컴퓨팅 하드웨어는 모든 데이터를 중앙 클라우드로 보내지 않고, 데이터가 생성되는 현장(자율주행차, 공장 로봇, 스마트폰 등) 주변에서 1차적으로 처리하는 아키텍처를 구현하기 위한 소형, 저전력, 고성능 하드웨어다.
+> **핵심**: 엣지 컴퓨팅 하드웨어는 모든 데이터를 중앙 클라우드로 보내지 않고, 데이터가 생성되는 현장(자율주행차, 공장 로봇, 스마트폰 등) 주변에서 1차적으로 처리하는 아키텍처를 구현하기 위한 소형, 저전력, 고성능 하드웨어다.
 > 2. **가치**: 클라우드 서버와 달리 크기(Area), 전력(Power), 실시간성(Latency)이라는 가혹한 제약 조건을 극복해야 하며, 특히 AI 추론(Inference)을 위한 NPU(신경망 처리 장치) 탑재가 필수 트렌드가 되었다.
 > 3. **융합**: SoC (System on Chip) 통합, 저정밀도 연산 (INT8/INT4), 초대형 SRAM 중심 구조 등으로 전력 효율을 극대화하며, Apple M/A 시리즈, Snapdragon, Tesla FSD 등이 대표적인 사례다.
 
+> 📝 모범 답안
+
+# Edge Computing Hardware (엣지 컴퓨팅 하드웨어)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 문제의식: 클라우드-first의 지연 시간 한계
 
@@ -45,7 +47,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 엣지 하드웨어의 필수 제약 조건: SWaP-C
 
@@ -151,7 +153,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 엣지 AI 하드웨어 비교
 
@@ -170,7 +172,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -195,7 +197,7 @@ Tesla FSD 칩은 카메라 8대에서 들어오는 영상을 Neural Network로 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 엣지 AI 하드웨어의 발전
 

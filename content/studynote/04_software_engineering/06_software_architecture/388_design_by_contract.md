@@ -3,17 +3,19 @@ title = "388. 디자인 바이 컨트랙트 (Design by Contract) - 사전조건,
 date = 2026-04-05
 weight = 388
 +++
+## 0. 핵심 인사이트
 
-# 388. 디자인 바이 컨트랙트 (Design by Contract)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 디자인 바이 컨트랙트(Design by Contract, DbC)는 베르트랑 메이어(Bertrand Meyer)가 1988년 저서에서 제안한 소프트웨어 설계 방법론으로, 메서드(함수)의 계약(Contract)을 명시적으로 정의하여 사전조건(Precondition), 사후조건(Postcondition), 불변조건(Invariant)을 계약으로 취급한다.
+> **핵심**: 디자인 바이 컨트랙트(Design by Contract, DbC)는 베르트랑 메이어(Bertrand Meyer)가 1988년 저서에서 제안한 소프트웨어 설계 방법론으로, 메서드(함수)의 계약(Contract)을 명시적으로 정의하여 사전조건(Precondition), 사후조건(Postcondition), 불변조건(Invariant)을 계약으로 취급한다.
 > 2. **가치**: 메서드 호출자와 피호출자 간의 의무와 기대를 명확히 하여, 버그 발생 시 책임 소재를 명확히 하고, 형식적 검증(Formal Verification)을 통해 코드의 정확성을 математи적으로 입증할 수 있다.
 > 3. **융합**: 스프트웨어 테스팅(Unit Test, TDD),正式的 명세(Formal Specification), 고성능 언어(Eiffel, Ada), modern 언어의 Contract 라이브러리(Java Bean Validation, .NET Code Contract)로 확장되어 활용된다.
 
+> 📝 모범 답안
+
+# 388. 디자인 바이 컨트랙트 (Design by Contract)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 디자인 바이 컨트랙트는 소프트웨어 모듈(클래스, 메서드) 간의 관계를 비즈니스 계약(Business Contract)으로 보는 관점이다. 계약에는 세 가지 요소가 있다. 첫째, **사전조건(Precondition)**: 호출자가 메서드를 호출하기 전에 반드시 만족해야 하는 조건이다. 둘째, **사후조건(Postcondition)**: 메서드 실행이 완료된 후 반드시 성립해야 하는 조건이다. 셋째, **불변조건(Invariant)**: 객체의 생명주기 전반에 걸쳐 항상 성립해야 하는 조건이다.
 
@@ -31,7 +33,7 @@ weight = 388
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Design by Contract 3대 요소
 
@@ -130,7 +132,7 @@ weight = 388
 
 ---
 
-## Ⅲ. 구현 및 실무 응용 (Implementation & Practice)
+## 3. 구조 및 동작 원리
 
 ### Java Bean Validation 기반 계약 구현
 
@@ -237,7 +239,7 @@ weight = 388
 
 ---
 
-## Ⅳ. 품질 관리 및 테스트 (Quality & Testing)
+## 4. 비교 및 트레이드오프
 
 ### 계약 기반 테스트 전략
 
@@ -279,7 +281,7 @@ weight = 388
 
 ---
 
-## Ⅴ. 최신 트렌드 및 결론 (Trends & Conclusion)
+## 5. 실무 적용 및 최적화 기법
 
 ### 최신 동향
 

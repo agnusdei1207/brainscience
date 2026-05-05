@@ -7,17 +7,20 @@ date = "2024-05-20"
 tags = ["Cloud", "Virtualization", "Hypervisor", "VMM", "Architecture"]
 categories = ["Cloud Architecture"]
 +++
+## 0. 핵심 인사이트
 
-# 하이퍼바이저 (Hypervisor / VMM)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 하이퍼바이저 (Hypervisor) 또는 VMM (Virtual Machine Monitor)은 단일 물리적 하드웨어 상에서 여러 가상 머신(VM)을 생성, 실행 및 관리하는 시스템 소프트웨어이다.
+> **핵심**: 하이퍼바이저 (Hypervisor) 또는 VMM (Virtual Machine Monitor)은 단일 물리적 하드웨어 상에서 여러 가상 머신(VM)을 생성, 실행 및 관리하는 시스템 소프트웨어이다.
 > 2. **가치**: 물리적 자원의 추상화 및 분할(Pooling)을 통해 하드웨어 활용률을 극대화하고, 클라우드 IaaS(Infrastructure as a Service)의 근간을 이룬다.
 > 3. **융합**: 컨테이너 런타임, SDN(Software Defined Networking), SDS(Software Defined Storage)와 결합하여 현대적인 SDDC(Software Defined Data Center) 아키텍처를 완성한다.
 
+> 📝 모범 답안
+
+# 하이퍼바이저 (Hypervisor / VMM)
+
+##
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 하이퍼바이저 (Hypervisor)는 물리적 컴퓨터 하드웨어(CPU, 메모리, 네트워크, 스토리지)와 운영체제(OS) 사이에 위치하여 자원을 가상화(Virtualization)하는 핵심 커널 또는 소프트웨어 계층이다. 과거의 온프레미스(On-Premise) 환경에서는 1대의 물리 서버에 1개의 OS와 애플리케이션만 구동되었기에, 평균 하드웨어 활용률이 10~20%에 불과한 막대한 자원 낭비가 발생했다. 
 
@@ -44,7 +47,7 @@ categories = ["Cloud Architecture"]
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 하이퍼바이저의 구조는 크게 호스트의 물리 자원을 스케줄링하는 제어 모듈과, Guest OS에게 가상의 하드웨어를 제공하는 에뮬레이션 계층으로 나뉜다. 
 
@@ -86,7 +89,7 @@ categories = ["Cloud Architecture"]
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 하이퍼바이저는 설치되는 위치와 구조에 따라 Type 1(Bare-metal)과 Type 2(Hosted)로 분류되며, 최근 클라우드 환경에서는 컨테이너(Container) 기술과의 비교가 필수적이다.
 
@@ -125,7 +128,7 @@ Type 1 방식은 OS 커널이 완전히 분리되어 있어 악성코드가 하�
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 실제 클라우드 인프라 구축이나 데이터센터 현대화 프로젝트에서 하이퍼바이저를 어떻게 운영하고 트러블슈팅할 것인지에 대한 아키텍트의 판단이 중요하다.
 
@@ -158,7 +161,7 @@ Type 1 방식은 OS 커널이 완전히 분리되어 있어 악성코드가 하�
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 하이퍼바이저의 성숙은 물리 인프라의 종말을 알리고 클라우드 시대의 서막을 열었다. 도입 전후를 비교하면 그 효과는 압도적이다.
 
@@ -180,7 +183,6 @@ Type 1 방식은 OS 커널이 완전히 분리되어 있어 악성코드가 하�
 * **vMotion / Live Migration** | 하이퍼바이저 간 상태 정보 동기화를 통해 서비스 무중단으로 VM을 물리 서버 간 이동시키는 기술
 * **하드웨어 보조 가상화 (Intel VT-x / AMD-V)** | CPU가 자체적으로 VMM의 트랩 앤 에뮬레이트 부하를 줄여주는 필수 명령어 셋
 * **서버리스 (Serverless)** | 인프라 가상화를 고객이 모를 정도로 완전히 추상화하여, 코드 실행 순간에만 마이크로VM을 할당하는 클라우드 최종 배포 형태
-
 
 ### 📈 관련 키워드 및 발전 흐름도
 

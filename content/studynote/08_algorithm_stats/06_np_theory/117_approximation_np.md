@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-algorithm-stats"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. NP-하드 문제의 근사 알고리즘은 "완벽하지 않지만 보장된 품질"을 빠르게 계산 — ρ-근사(Approximation Ratio) 알고리즘은 최적해의 ρ배 이하(최소화) 또는 이상(최대화)을 다항 시간에 보장하며, 이론적 최적 추구보다 실용적 접근이다.
 > 2. 대표 근사 알고리즘과 보장 — 버텍스 커버: 2-근사, TSP(삼각 부등식): 1.5-근사(Christofides), 집합 커버: O(log n)-근사, 배낭: FPTAS(임의 ε 근사), 2-SAT: 다항 시간 정확해.
 > 3. 근사 불가능성(Inapproximability)도 중요 — 집합 커버는 O(log n)보다 나은 근사가 P≠NP 가정 하에 불가능하며, Clique는 n^(1-ε) 근사도 불가능(ZPP≠NP). 근사 한계도 이론적으로 정의된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 근사 알고리즘 기초
+## 1. 개요 및 필요성
 
 ```
 근사 알고리즘 (Approximation Algorithm):
@@ -52,7 +55,7 @@ categories = "studynote-algorithm-stats"
 
 ---
 
-## Ⅱ. 버텍스 커버 2-근사
+## 2. 구성요소
 
 ```
 버텍스 커버 (Vertex Cover):
@@ -94,7 +97,7 @@ categories = "studynote-algorithm-stats"
 
 ---
 
-## Ⅲ. 집합 커버 로그 근사
+## 3. 구조 및 동작 원리
 
 ```
 집합 커버 (Set Cover):
@@ -137,7 +140,7 @@ categories = "studynote-algorithm-stats"
 
 ---
 
-## Ⅳ. TSP 1.5-근사 (Christofides)
+## 4. 비교 및 트레이드오프
 
 ```
 TSP (여행하는 외판원 문제):
@@ -180,7 +183,7 @@ Christofides 알고리즘 (1976, 삼각 부등식 가정):
 
 ---
 
-## Ⅴ. 실무 시나리오 — 물류 최적화
+## 5. 실무 적용 및 최적화 기법
 
 ```
 택배 회사 배송 경로 최적화:

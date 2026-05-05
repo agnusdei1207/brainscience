@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: AWS SAM(Serverless Application Model)은 **CloudFormation의 확장 문법**으로, Lambda·API Gateway·DynamoDB·Step Functions 등 서버리스 리소스를 **간결한 YAML로 선언**하고 `sam deploy`로 배포하는 AWS 공식 IaC 도구다.
+> **핵심**: AWS SAM(Serverless Application Model)은 **CloudFormation의 확장 문법**으로, Lambda·API Gateway·DynamoDB·Step Functions 등 서버리스 리소스를 **간결한 YAML로 선언**하고 `sam deploy`로 배포하는 AWS 공식 IaC 도구다.
 > 2. **가치**: CloudFormation으로 Lambda를 배포하면 50+ 줄 YAML이 필요하지만, SAM은 `AWS::Serverless::Function` 매크로로 **10줄로 축약**하며, `sam local invoke`로 **로컬에서 Lambda를 Docker 에뮬레이션**하여 배포 전 테스트가 가능하다.
 > 3. **판단 포인트**: SAM은 AWS 전용(벤더 종속)이지만 CloudFormation 네이티브이므로 **기존 CF 스택과 완벽 호환**되며, Serverless Framework(멀티클라우드)·SST(TypeScript 네이티브)와 비교하여 AWS 올인 전략에서 가장 자연스러운 선택이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 CloudFormation으로 Lambda + API Gateway를 배포하려면 `AWS::Lambda::Function`, `AWS::Lambda::Permission`, `AWS::ApiGateway::RestApi`, `AWS::ApiGateway::Method` 등 **5~10개 리소스를 각각 정의**해야 한다.
 
@@ -41,7 +43,7 @@ CloudFormation으로 Lambda + API Gateway를 배포하려면 `AWS::Lambda::Funct
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### SAM 핵심 리소스 타입
 
@@ -66,7 +68,7 @@ CloudFormation으로 Lambda + API Gateway를 배포하려면 `AWS::Lambda::Funct
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | SAM | Serverless Framework | SST |
 |:---|:---|:---|:---|
@@ -77,7 +79,7 @@ CloudFormation으로 Lambda + API Gateway를 배포하려면 `AWS::Lambda::Funct
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### CI/CD 통합
 ```yaml
@@ -91,7 +93,7 @@ CloudFormation으로 Lambda + API Gateway를 배포하려면 `AWS::Lambda::Funct
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | CF 직접 | SAM | 개선 |
 |:---|:---|:---|:---|

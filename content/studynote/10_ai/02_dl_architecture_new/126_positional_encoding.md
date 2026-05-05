@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Positional Encoding은 **Self-Attention이 순서를 모르는 한계를 보완**하기 위해 각 토큰의 위치 정보를 **sin/cos 함수 또는 학습 벡터**로 임베딩에 더하는 기법이다.
+> **핵심**: Positional Encoding은 **Self-Attention이 순서를 모르는 한계를 보완**하기 위해 각 토큰의 위치 정보를 **sin/cos 함수 또는 학습 벡터**로 임베딩에 더하는 기법이다.
 > 2. **가치**: "I love you" vs "You love I"는 Self-Attention만으로는 동일하게 처리되지만, Positional Encoding이 **1번 위치·2번 위치·3번 위치를 구분**하여 어순의 의미를 보존한다.
 > 3. **판단 포인트**: **Sinusoidal(고정형)**은 학습 불필요·임의 길이 확장 가능, **Learned(학습형)**은 데이터 적응적이나 최대 길이 고정, **RoPE(회전형)**는 상대 위치 인코딩으로 최신 LLM(Llama)에서 표준이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -34,7 +36,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### PE 유형 비교
 
@@ -49,7 +51,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | PE 없음 | PE 있음 |
 |:---|:---|:---|
@@ -58,7 +60,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 최신 LLM에서의 PE
 - GPT-2/3: Learned PE.
@@ -67,7 +69,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Positional Encoding은 **Transformer가 순서를 이해하게 하는 유일한 장치**이며, RoPE가 최신 LLM의 사실상 표준이다.
 

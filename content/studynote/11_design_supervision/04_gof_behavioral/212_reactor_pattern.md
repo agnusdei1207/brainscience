@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Reactor (리액터) 패턴은 단일 스레드의 이벤트 루프(Event Loop)가 I/O Multiplexing(다중화)을 통해 다수의 I/O 이벤트를 동시에 감시하고, 이벤트 발생 시 등록된 핸들러를 즉시 호출하는 비동기 I/O 아키텍처다.
+> **핵심**: Reactor (리액터) 패턴은 단일 스레드의 이벤트 루프(Event Loop)가 I/O Multiplexing(다중화)을 통해 다수의 I/O 이벤트를 동시에 감시하고, 이벤트 발생 시 등록된 핸들러를 즉시 호출하는 비동기 I/O 아키텍처다.
 > 2. **가치**: 스레드 생성 없이 수만 개의 동시 연결을 처리할 수 있어, C10K (Concurrent 10,000 connections) 문제를 해결하는 핵심 기술이다.
 > 3. **판단 포인트**: CPU 집중 작업이 아닌 I/O 대기가 많은 상황(네트워크 서버, API 게이트웨이 등)에서 최적이다. CPU 집중 작업은 Worker Thread Pool과 결합한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1-1. C10K 문제와 전통적 Thread-Per-Connection 방식의 한계
 
@@ -50,7 +51,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. Reactor 패턴 4요소
 
@@ -130,7 +131,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. Reactor vs Proactor vs Thread-Per-Connection 비교
 
@@ -157,7 +158,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. Netty Reactor 구조 (Java)
 
@@ -216,7 +217,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5-1. 기대 효과
 

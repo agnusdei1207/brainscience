@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: SWOT 교차 분석(TOWS Matrix)은 강점·약점(내부 요인)과 기회·위협(외부 요인)을 교차하여 SO(공격)/ST(다각화)/WO(전환)/WT(방어) 4가지 전략 유형을 도출하는 전략 수립 도구다.
+> **핵심**: SWOT 교차 분석(TOWS Matrix)은 강점·약점(내부 요인)과 기회·위협(외부 요인)을 교차하여 SO(공격)/ST(다각화)/WO(전환)/WT(방어) 4가지 전략 유형을 도출하는 전략 수립 도구다.
 > 2. **가치**: 단순한 SWOT 목록 작성을 넘어 내·외부 요인의 상호 작용에서 실행 가능한 전략 과제를 체계적으로 도출하여 경영 의사결정의 논리적 기반을 제공한다.
 > 3. **판단 포인트**: SWOT 교차 분석의 품질은 각 요인의 중요도 가중치 부여(Weighting Matrix)와 전략 과제의 실행 가능성 검증에 달려 있다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 SWOT (Strengths, Weaknesses, Opportunities, Threats) 분석은 Albert Humphrey가 1960~70년대 스탠퍼드 연구에서 체계화한 전략 분석 도구로, 조직의 내부 역량과 외부 환경을 4가지 범주로 정리한다. TOWS Matrix는 Heinz Weihrich(1982)가 SWOT의 단순 목록화 한계를 극복하기 위해 교차 분석을 체계화한 것이다.
 
@@ -30,7 +31,7 @@ SWOT (Strengths, Weaknesses, Opportunities, Threats) 분석은 Albert Humphrey�
 
 📢 **섹션 요약 비유**: SWOT 교차 분석은 카드 게임에서 내 패(강점/약점)와 상대방 패(기회/위협)를 교차 확인하여 "지금 어떤 전략으로 게임을 이길 것인가"를 결정하는 것과 같다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### TOWS Matrix (교차 분석 구조)
 
@@ -76,7 +77,7 @@ SWOT (Strengths, Weaknesses, Opportunities, Threats) 분석은 Albert Humphrey�
 
 📢 **섹션 요약 비유**: TOWS Matrix는 체스 경기에서 내 말의 강점과 상대방의 약점을 교차하여 다음 수를 결정하는 것처럼 — 단순히 상황 목록이 아니라 전략적 선택을 만드는 도구다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 항목 | SWOT | 5 Forces | PESTLE | Ansoff Matrix |
 |:---|:---|:---|:---|:---|
@@ -92,7 +93,7 @@ SWOT (Strengths, Weaknesses, Opportunities, Threats) 분석은 Albert Humphrey�
 
 📢 **섹션 요약 비유**: SWOT이 "우리가 어디에 있는가"를 진단한다면, TOWS는 "거기서 어디로 가야 하는가"를 결정하는 전략 나침반이다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **SWOT 교차 분석 체크리스트**:
 - [ ] 각 요인이 구체적이고 검증 가능한 사실에 기반하는가?
@@ -118,7 +119,7 @@ SWOT (Strengths, Weaknesses, Opportunities, Threats) 분석은 Albert Humphrey�
 
 📢 **섹션 요약 비유**: SWOT 교차 분석은 4단계 요리 레시피 — 재료(강점)와 부족한 것(약점)을 파악하고, 시장의 트렌드(기회)와 위험(위협)을 교차하여 오늘의 메뉴(전략)를 결정한다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 **기대 효과**:
 - 전략 과제 도출의 논리성 확보: SO/ST/WO/WT 교차로 전략에 근거 제공

@@ -5,17 +5,19 @@ description = "프로젝트의 공식적 승인과 비즈니스 목표 정렬을
 [taxonomies]
 tags = ["Project Management", "PMBOK", "Project Charter", "Sponsor", "Integration Management"]
 +++
+## 0. 핵심 인사이트
 
-# 232. 프로젝트 헌장 (Project Charter) 제정 및 스폰서 역할
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 프로젝트 헌장 (Project Charter)은 프로젝트의 존재를 조직 내에 공식적으로 승인하고, 프로젝트 매니저(PM)에게 조직 자원 투입의 권한을 합법적으로 부여하는 최고 수준의 선언 문서다.
+> **핵심**: 프로젝트 헌장 (Project Charter)은 프로젝트의 존재를 조직 내에 공식적으로 승인하고, 프로젝트 매니저(PM)에게 조직 자원 투입의 권한을 합법적으로 부여하는 최고 수준의 선언 문서다.
 > 2. **가치**: 스폰서 (Sponsor)에 의해 발행되며, 모호한 비즈니스 요구사항을 가시적인 프로젝트 범위와 상위 수준의 예산/일정으로 구체화하여 착수 초기부터 경영진과 PM 간의 눈높이(Alignment)를 맞추는 방어막 역할을 한다.
 > 3. **융합**: PMBOK (Project Management Body of Knowledge)의 통합 관리 프로세스의 첫 단추이자, 요구공학에서의 비즈니스 케이스(Business Case)와 IT 거버넌스를 연결하는 핵심 브릿지로 작용한다.
 
+> 📝 모범 답안
+
+# 232. 프로젝트 헌장 (Project Charter) 제정 및 스폰서 역할
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 프로젝트 헌장은 프로젝트의 목적, 상위 수준의 요구사항, 가정 및 제약 조건, 마일스톤, 예산, 이해관계자 명단, 그리고 프로젝트 관리자(PM)의 이름과 권한 수준을 명시하여 발행하는 단일 문서다. 프로젝트의 헌법과도 같다.
 - **필요성**: 많은 IT 프로젝트가 구두 지시나 모호한 이메일로 시작되어, 중간에 요구사항이 무한정 팽창(Scope Creep)하거나 타 부서의 협조를 얻지 못해 자원 부족으로 좌초된다. 프로젝트 헌장은 PM에게 "이 프로젝트는 회사의 공식 업무이며, 이 PM에게 자원을 배분할 권한을 준다"는 경영진(스폰서)의 도장이 찍힌 출입증 역할을 하여 이러한 위험을 원천 차단한다.
@@ -55,7 +57,7 @@ tags = ["Project Management", "PMBOK", "Project Charter", "Sponsor", "Integratio
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 프로젝트 헌장의 필수 구성 요소
 
@@ -133,7 +135,7 @@ tags = ["Project Management", "PMBOK", "Project Charter", "Sponsor", "Integratio
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 관련 문서 간의 심층 비교
 
@@ -178,7 +180,7 @@ tags = ["Project Management", "PMBOK", "Project Charter", "Sponsor", "Integratio
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 의사결정
 
@@ -222,7 +224,7 @@ tags = ["Project Management", "PMBOK", "Project Charter", "Sponsor", "Integratio
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

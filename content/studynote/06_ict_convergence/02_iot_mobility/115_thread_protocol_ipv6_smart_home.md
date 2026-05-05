@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Thread는 IEEE 802.15.4 PHY/MAC 위에 **IPv6 + 6LoWPAN**을 구현한 저전력 메시 네트워크 프로토콜로, 각 디바이스가 **IP 주소를 가져 인터넷과 직접 통신** 가능하다.
+> **핵심**: Thread는 IEEE 802.15.4 PHY/MAC 위에 **IPv6 + 6LoWPAN**을 구현한 저전력 메시 네트워크 프로토콜로, 각 디바이스가 **IP 주소를 가져 인터넷과 직접 통신** 가능하다.
 > 2. **가치**: Zigbee·Z-Wave가 게이트웨이를 통해야 인터넷에 접속하는 반면, Thread 디바이스는 **Border Router만으로 IPv6 인터넷에 네이티브 연결**되어 프로토콜 변환 없이 클라우드와 직접 통신한다.
 > 3. **판단 포인트**: **Matter 프로토콜의 핵심 전송 계층**으로 채택되어 Apple·Google·Amazon이 Thread를 지원하며, Self-healing 메시·~250개 디바이스·수 ms 전환으로 스마트 홈의 차세대 표준이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -34,7 +36,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Thread 네트워크 역할
 
@@ -58,7 +60,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Thread | Wi-Fi | BLE |
 |:---|:---|:---|:---|
@@ -69,7 +71,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Matter + Thread 시나리오
 - Google Nest Hub → Thread Border Router 역할 → Thread 센서·조명 직접 제어.
@@ -77,7 +79,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Thread는 **IPv6 네이티브 + 저전력 메시**라는 두 마리 토끼를 잡았으며, Matter의 핵심 전송 계층으로 채택되어 스마트 홈 인프라의 사실상 표준으로 자리잡고 있다.
 

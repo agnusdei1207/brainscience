@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 도커(Docker) 컨테이너는 Guest OS 없이 리눅스 커널의 Namespace와 cgroups(Control Groups)만으로 프로세스를 격리하여 VM 대비 극적으로 가볍다.
+> **핵심**: 도커(Docker) 컨테이너는 Guest OS 없이 리눅스 커널의 Namespace와 cgroups(Control Groups)만으로 프로세스를 격리하여 VM 대비 극적으로 가볍다.
 > 2. **가치**: 이미지 레이어 구조(Union FS)로 수 초 안에 환경을 재현하고, OCI(Open Container Initiative) 표준으로 어떤 런타임에서도 동일하게 실행된다.
 > 3. **판단 포인트**: 컨테이너는 VM만큼 강한 격리를 제공하지 않으므로, 멀티 테넌트 고보안 환경에서는 VM 또는 마이크로VM(Firecracker)과 병행을 검토해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 **VM(Virtual Machine) vs 컨테이너(Container)**의 가장 큰 차이는 Guest OS 유무다. VM은 하이퍼바이저(Hypervisor) 위에 완전한 OS를 올리므로 격리 수준이 높지만 기동에 수 분, 이미지 크기는 GB 단위다. 반면 컨테이너는 호스트 OS 커널을 공유하므로 기동 시간 수 초, 이미지 크기 수십~수백 MB다.
 
@@ -27,7 +28,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 **리눅스 격리 기술**:
 - **Namespace**: PID, Network, Mount, IPC, UTS, User 네임스페이스로 프로세스별 독립적인 OS 뷰 제공
@@ -62,7 +63,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **컨테이너 보안**:
 - **이미지 서명(Image Signing)**: Docker Content Trust(DCT), Cosign — 위변조된 이미지 실행 방지
@@ -76,7 +77,7 @@ AWS Lambda와 Fargate는 각 함수 실행을 Firecracker 마이크로VM으로 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **기술사 시험 판단 포인트**:
 1. Namespace + cgroups 조합으로 격리를 기술적으로 설명할 수 있어야 한다.
@@ -89,7 +90,7 @@ AWS Lambda와 Fargate는 각 함수 실행을 Firecracker 마이크로VM으로 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 도커 컨테이너 기술을 도입하면:
 - **배포 일관성**: 환경 차이로 인한 장애 80% 이상 감소 경험치

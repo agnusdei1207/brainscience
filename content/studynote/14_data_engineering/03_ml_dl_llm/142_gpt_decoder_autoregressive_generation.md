@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: GPT Decoder는 **Transformer Decoder에서 Masked Self-Attention(Causal Mask)을 사용**하여 왼→오 방향으로만 문맥을 참조하며 다음 토큰을 예측(CLM)하는 자기회귀 생성 모델이다.
+> **핵심**: GPT Decoder는 **Transformer Decoder에서 Masked Self-Attention(Causal Mask)을 사용**하여 왼→오 방향으로만 문맥을 참조하며 다음 토큰을 예측(CLM)하는 자기회귀 생성 모델이다.
 > 2. **가치**: BERT(양방향)는 생성 불가이지만, GPT(단방향)는 **토큰을 하나씩 순차 생성**하여 텍스트·코드·대화를 자연스럽게 만들어낸다. 생성 시 Temperature·Top-k·Top-p로 다양성을 제어한다.
 > 3. **판단 포인트**: KV Cache로 이전 토큰의 Key·Value를 재사용하여 **추론 속도를 O(n²)→O(n)으로 최적화**하며, Speculative Decoding이 추가 가속 기법이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 GPT 생성: "나는" → "학교에" → "갔다" (순차)

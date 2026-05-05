@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 12 Factor App은 Heroku 공동창업자가 정리한 **SaaS/클라우드 네이티브 애플리케이션 설계의 12가지 Best Practice**이며, 이식성·확장성·개발-운영 일관성을 보장한다.
+> **핵심**: 12 Factor App은 Heroku 공동창업자가 정리한 **SaaS/클라우드 네이티브 애플리케이션 설계의 12가지 Best Practice**이며, 이식성·확장성·개발-운영 일관성을 보장한다.
 > 2. **가치**: 12 Factor를 따르지 않은 앱은 **환경 의존성·설정 하드코딩·로그 파일 직접 관리** 등으로 클라우드 배포 시 문제가 발생하지만, 12 Factor를 따르면 **어떤 PaaS/K8s에서도 동일하게 동작**한다.
 > 3. **판단 포인트**: 특히 **III. Config(환경 변수)·VI. Processes(Stateless)·XI. Logs(stdout 스트림)**가 가장 자주 위반되며, 컨테이너 환경에서 12 Factor 준수가 필수이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -38,7 +40,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 가장 중요한 3가지
 
@@ -52,7 +54,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 전통 앱 | 12 Factor 앱 |
 |:---|:---|:---|
@@ -63,7 +65,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### K8s와의 매핑
 - Config → ConfigMap/Secret.
@@ -73,7 +75,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 12 Factor App은 **클라우드 네이티브 설계의 기본 교과서**이며, K8s·Docker·CI/CD 환경에서 필수 준수 사항이다.
 

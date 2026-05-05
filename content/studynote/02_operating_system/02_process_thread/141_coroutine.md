@@ -5,15 +5,17 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 코루틴 (Coroutine)은 협력적 멀티태스킹(Cooperative Multitasking)을 구현하는 제어 구조로, 함수가 실행 도중에 자발적으로 중단(yield)하고 나중에 재개(resume)할 수 있는 진입점을 여러 개 가지는 특수한 서브루틴이다.
+> **핵심**: 코루틴 (Coroutine)은 협력적 멀티태스킹(Cooperative Multitasking)을 구현하는 제어 구조로, 함수가 실행 도중에 자발적으로 중단(yield)하고 나중에 재개(resume)할 수 있는 진입점을 여러 개 가지는 특수한 서브루틴이다.
 > 2. **가치**: OS 스레드보다 가벼운 문맥 교환 비용(수백 ns vs 수 μs)으로 수만~수십만 개의 동시 작업을 효율적으로 관리할 수 있어, 고동시성 서버와 게임 엔진에서 핵심 동시성 기법으로 사용된다.
 > 3. **융합**: Python async/await, JavaScript Promise, Kotlin Coroutines, C++20 Coroutines 등 현대 언어의 비동기 프로그래밍 모델이 코루틴을 기반으로 구현되며, 이벤트 루프와 결합하여 단일 스레드에서 고동시성을 달성한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 일반적인 서브루틴(함수)은 단일 진입점(entry point)에서 시작하여 return 시점에서 종료되는 일방향 실행이다. 반면 코루틴은 진입점이 여러 개이며, 실행 중에 yield를 통해 제어를 호출자(caller)에게 반환하고, 나중에 resume으로 중단 지점부터 재개할 수 있다.
 
@@ -54,7 +56,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 코루틴 유형
 
@@ -99,7 +101,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교: 스레드 vs 코루틴 vs 고루틴
 
@@ -119,7 +121,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 안티패턴
 - **블로킹 연산을 코루틴 내부에서 수행**: time.sleep()이나 동기 I/O를 코루틴 내에서 호출하면 이벤트 루프 전체가 블로킹된다. 반드시 비동기 버전(asyncio.sleep(), aio)을 사용해야 한다.
@@ -129,7 +131,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 참고 표준
 - **C++20**: std::coroutine (코루틴 TS 승격)

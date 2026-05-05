@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: PARTITION BY는 **Window 함수의 그룹화 기준**이고, ORDER BY는 **각 파티션 내 정렬 기준**이며, 이 두 절이 Window 함수의 계산 범위와 순서를 결정한다.
+> **핵심**: PARTITION BY는 **Window 함수의 그룹화 기준**이고, ORDER BY는 **각 파티션 내 정렬 기준**이며, 이 두 절이 Window 함수의 계산 범위와 순서를 결정한다.
 > 2. **가치**: PARTITION BY 없이 ORDER BY만 쓰면 **전체를 하나의 파티션**으로 처리하고, PARTITION BY만 쓰면 **정렬 없이 그룹별 집계**만 수행한다. 조합에 따라 결과가 완전히 달라진다.
 > 3. **판단 포인트**: ROW_NUMBER·RANK·DENSE_RANK는 **ORDER BY 필수**, SUM·AVG는 **ORDER BY 유무에 따라 누적합/전체합**이 결정된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ROW_NUMBER() OVER (PARTITION BY dept ORDER BY sal DESC)

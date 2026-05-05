@@ -5,15 +5,19 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> 📢 **섹션 요약 비유**: Databricks는 스위스 아미 나이프다. 데이터 처리(Spark), ML 실험(MLflow), SQL 분석(Databricks SQL), 거버넌스(Unity Catalog)가 하나의 손잡이에 모두 달려 있다.
+
+> 📝 모범 답안
+
 1. Databricks는 Apache Spark 창시자들이 설립한 회사로, Delta Lake·Unity Catalog·MLflow·Photon Engine을 통합한 **레이크하우스 올인원 플랫폼**을 제공하며 컴퓨팅 네이티브(Compute-Native) 아키텍처로 차별화된다.
 2. **Photon Engine**은 C++ 기반 벡터화 쿼리 엔진으로 기존 Spark 대비 SQL 워크로드에서 최대 8배 성능을 달성하며, **Auto Scaling** 클러스터가 워크로드에 따라 노드를 자동으로 조정한다.
 3. AWS·Azure·GCP 모두에서 동일한 API로 동작하는 멀티 클라우드 전략과, SQL 친화적 Snowflake와 코드 친화적 Databricks의 포지셔닝 차별화가 핵심 시장 대립 구도를 형성한다.
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Apache Spark는 뛰어난 성능에도 불구하고 클러스터 설정, 라이브러리 호환성, ML 실험 관리, 데이터 거버넌스를 모두 직접 구성해야 하는 운영 복잡성이 있었다. Databricks는 이 모든 요소를 통합 플랫폼으로 제공하여, 데이터 엔지니어·데이터 과학자·BI 분석가가 하나의 환경에서 협업할 수 있게 한다.
 
@@ -27,11 +31,9 @@ Databricks Lakehouse Platform은 Delta Lake(저장), Unity Catalog(거버넌스)
 | 별도 오케스트레이터 (Airflow) | Databricks Workflows |
 | 별도 BI 도구 연결 | Databricks SQL + Serverless |
 
-> 📢 **섹션 요약 비유**: Databricks는 스위스 아미 나이프다. 데이터 처리(Spark), ML 실험(MLflow), SQL 분석(Databricks SQL), 거버넌스(Unity Catalog)가 하나의 손잡이에 모두 달려 있다.
-
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -82,7 +84,7 @@ Databricks Lakehouse Platform은 Delta Lake(저장), Unity Catalog(거버넌스)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **Databricks vs Snowflake — 핵심 대립 구도**
 
@@ -106,7 +108,7 @@ Databricks Lakehouse Platform은 Delta Lake(저장), Unity Catalog(거버넌스)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **클러스터 유형별 최적 사용 시나리오**
 
@@ -130,7 +132,7 @@ Databricks Lakehouse Platform은 Delta Lake(저장), Unity Catalog(거버넌스)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 | 내용 |
 |:---|:---|
@@ -157,7 +159,6 @@ Databricks는 2023년 기준 기업 가치 430억 달러로 평가되며, 2024�
 | Databricks SQL | BI 레이어 | 서버리스 SQL 웨어하우스 |
 
 ---
-
 
 ### 📈 관련 키워드 및 발전 흐름도
 

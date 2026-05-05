@@ -5,15 +5,17 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Automotive HPC는 수백 개의 저사양 ECU(Electronic Control Unit)가 분산되어 있던 전통적 차량 구조를, 소수의 강력한 중앙 집중형 컴퓨팅 유닛(Centralized/Zonal Architecture)으로 통합하는 기술이다.
+> **핵심**: Automotive HPC는 수백 개의 저사양 ECU(Electronic Control Unit)가 분산되어 있던 전통적 차량 구조를, 소수의 강력한 중앙 집중형 컴퓨팅 유닛(Centralized/Zonal Architecture)으로 통합하는 기술이다.
 > 2. **가치**: 자율주행, 인포테인먼트, 커넥티비티 등 대용량 데이터 처리가 필요한 기능을 서버급 성능으로 구현하면서도, 자동차 특유의 엄격한 안전성(ASIL)과 실시간성을 동시에 만족시킨다.
 > 3. **판단 포인트**: 하드웨어 가상화(Hypervisor)를 통해 상이한 안전 등급(Critical vs Non-critical)의 OS를 하나의 SoC에서 격리 실행하는 기술이 아키텍처 설계의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 차량용 고성능 컴퓨팅 (Automotive HPC)의 정의
 Automotive HPC는 현대 자동차를 '바퀴 달린 데이터 센터'로 진화시키는 핵심 동력이다. 기존 차량이 엔진 제어, 브레이크 등 개별 기능을 수행하는 수십~수백 개의 독립된 MCU(Micro Controller Unit)로 구성되었다면, HPC 기반 차량은 강력한 멀티코어 SoC(System on Chip)를 중심으로 모든 데이터를 통합 처리한다.
@@ -36,7 +38,7 @@ Automotive HPC는 현대 자동차를 '바퀴 달린 데이터 센터'로 진화
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. Automotive HPC SoC 내부 구조
 차량용 HPC 칩(예: NVIDIA Orin, Qualcomm Snapdragon Ride)은 범용 CPU와는 다른 독특한 구성을 가진다.
@@ -73,7 +75,7 @@ HPC 내부와 외부 노드 간의 통신은 기존 CAN으로는 감당할 수 �
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 1. 서버용 HPC vs 차량용 HPC
 둘 다 고성능을 지향하지만, 설계 철학은 완전히 다르다.
@@ -95,7 +97,7 @@ HPC가 제 기능을 하려면 차량의 배선 구조도 바뀌어야 한다. *
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1. 설계 시 고려해야 할 ASIL 등급 (ISO 26262)
 HPC 아키텍처 설계 시 가장 어려운 부분은 **ASIL (Automotive Safety Integrity Level)** 분해다.
@@ -120,7 +122,7 @@ HPC는 전력을 많이 소비하므로 발열이 심하다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 기대효과
 - **혁신적인 OTA**: 스마트폰처럼 자고 일어나면 차량의 제로백이 빨라지거나 주행 성능이 개선되는 경험 제공.

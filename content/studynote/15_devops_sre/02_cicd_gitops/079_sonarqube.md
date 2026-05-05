@@ -8,17 +8,20 @@ date = "2026-04-05"
 tags = ["DevOps", "SAST", "Static Analysis", "SonarQube", "Code Quality", "Quality Gate"]
 categories = ["studynote-devops-sre"]
 +++
+## 0. 핵심 인사이트
 
-# 79. 소스코드 정적 분석 도구 (SonarQube)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SonarQube는 코드를 빌드하거나 실행하지 않고도 소스코드를 정적(Static)으로 구문 분석하여 잠재적 버그, 코드 스멜(Code Smell), 보안 취약점(SAST), 중복 코드를 자동으로 탐지하고 품질 메트릭으로|score|하는 플랫폼이다.
+> **핵심**: SonarQube는 코드를 빌드하거나 실행하지 않고도 소스코드를 정적(Static)으로 구문 분석하여 잠재적 버그, 코드 스멜(Code Smell), 보안 취약점(SAST), 중복 코드를 자동으로 탐지하고 품질 메트릭으로|score|하는 플랫폼이다.
 > 2. **가치**: 개발자가 코드를 작성한 직후(CI 파이프라인 내에서) 결함을 발견하면 수정 비용이 극적으로 낮아지며, SonarQube의 품질 게이트(Quality Gate)는 커버리지를 포함한 다차원적 기준을 통과해야만 배포가 가능하다.
 > 3. **융합**: SonarQube는 GitHub Actions, Jenkins, GitLab CI 등 CI/CD 파이프라인에_PLUGIN연동되어 사내 코딩 컨벤션 enforce, Security Hotspot 탐지, Duplication 검사, 복잡도 분석을一次性에 수행한다.
 
+> 📝 모범 답안
+
+# 79. 소스코드 정적 분석 도구 (SonarQube)
+
+##
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 소프트웨어 개발에서 "품질"은曖昧하다. 버그가 없으면 좋은 코드인가? 성능이 빨라야 좋은 코드인가? 팀마다 기준이 다르고, 심지어 같은 팀 내에서도 컨벤션이 지켜지지 않으면 품질 논쟁은 정치적 논쟁으로 변질된다. SonarQube는 이曖昧함을 정량화하기 위해 등장했다.
 
@@ -50,7 +53,7 @@ SonarQube의 핵심 가치 proposition은 **"Quality Gate"**이다. 단순히 �
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 SonarQube는 크게 SonarQube Server(분석 엔진 + 웹 UI + 데이터베이스)와 Scanner(분석 클라이언트)로 구성된다. 개발자의 로컬 환경 또는 CI/CD 파이프라인에서 Scanner가 소스코드를 분석한 뒤, 결과를 SonarQube Server로 전송하여 대시보드에可視化한다.
 
@@ -131,7 +134,7 @@ SonarQube의 Scanner는 각 언어에 맞게 최적화된 센서(Sensor)를 사�
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 SonarQube는 정적 분석 도구 생태계의 핵심이지만, 다른 도구들과 명확한 역할分工이 있다. Security 관점의 SAST(Static Application Security Testing)과 코드 품질 관점의 정적 분석 사이의 융합과 차별점을 이해해야 한다.
 
@@ -170,7 +173,7 @@ SonarQube의 강점은 코드 품질과 보안 취약점을 **동시에** 분석
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 SonarQube를 실무에 도입할 때 흔히 부딪히는 난관과 기술적 판단 기준을 다룬다.
 
@@ -200,7 +203,7 @@ SonarQube를 실무에 도입할 때 흔히 부딪히는 난관과 기술적 판
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 SonarQube가 조직에 정착되면 다음과 같은 기대효과가 있다.
 

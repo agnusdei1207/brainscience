@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 오픈소스 소프트웨어(OSS, Open Source Software) 라이선스는 무료 사용 허락이 아니라 **법적 계약**이며, GPL(General Public License) 전염성(Copyleft) 위배 시 상용 소스코드 공개 의무가 발생한다.
+> **핵심**: 오픈소스 소프트웨어(OSS, Open Source Software) 라이선스는 무료 사용 허락이 아니라 **법적 계약**이며, GPL(General Public License) 전염성(Copyleft) 위배 시 상용 소스코드 공개 의무가 발생한다.
 > 2. **가치**: 라이선스 위반은 저작권 소송·배포 금지·브랜드 손상을 동시에 유발하므로, 감리는 납품 전 최후 방어선이다.
 > 3. **판단 포인트**: 컴포넌트 목록(BOM, Bill of Materials)과 소스코드 트리를 교차 대조하여 GPL·LGPL·AGPL 적용 여부를 계층별로 검증한다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 ### 1.1 OSS 라이선스란 무엇인가
 
@@ -34,7 +35,7 @@ categories = "studynote-design-supervision"
 
 📢 **섹션 요약 비유**: 오픈소스 라이선스는 마트 무료 시식코너 같다. 맛은 무료지만, 레시피 출처를 표시하지 않고 식당 메뉴로 팔면 법적 제재가 온다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 GPL 전염성 메커니즘
 
@@ -90,7 +91,7 @@ categories = "studynote-design-supervision"
 
 📢 **섹션 요약 비유**: GPL은 '비밀 레시피 없음' 계약서다. 그 레시피를 내 요리에 쓰면 내 비밀 레시피도 공개해야 한다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 SCA(Software Composition Analysis) 도구 비교
 
@@ -112,7 +113,7 @@ categories = "studynote-design-supervision"
 
 📢 **섹션 요약 비유**: 레시피 위반 등급은 '남의 레시피 그대로 팔기(치명)'부터 '출처 표시 안 하기(경미)'까지 단계별로 다르다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 감리 점검 체크리스트
 
@@ -140,7 +141,7 @@ categories = "studynote-design-supervision"
 
 📢 **섹션 요약 비유**: 좋은 감리는 식당이 문 열기 전에 식재료 원산지를 확인하는 것이다. 손님이 밥을 먹은 후 문제가 생기면 이미 늦다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 OSS 라이선스 감리 기대효과
 

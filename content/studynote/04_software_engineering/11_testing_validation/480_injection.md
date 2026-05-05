@@ -6,15 +6,17 @@ description = "SQL Injection, OS Command Injection, NoSQL Injection처럼 입력
 taxonomy = ""
 tags = ["Software Engineering", "Security", "Injection", "OWASP", "Input Validation"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Injection은 사용자가 넣은 입력이 명령이나 질의로 해석될 때 생긴다.
+> **핵심**: Injection은 사용자가 넣은 입력이 명령이나 질의로 해석될 때 생긴다.
 > 2. **가치**: 데이터 손상, 정보 유출, 원격 코드 실행으로 이어질 수 있다.
 > 3. **판단 포인트**: 입력값을 "데이터"로만 다루는지 확인한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 인젝션 (Injection)은 가장 오래됐지만 여전히 강력한 취약점이다. 입력값이 코드나 질의의 일부가 되면 공격자가 동작을 바꿀 수 있다.
 
@@ -24,7 +26,7 @@ SQL Injection (SQLi), OS Command Injection, NoSQL Injection이 대표적이다.
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 핵심은 "문자열 연결" 대신 "파라미터 분리"를 쓰는 것이다.
 
@@ -43,7 +45,7 @@ SQL Injection (SQLi), OS Command Injection, NoSQL Injection이 대표적이다.
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 인젝션은 입력 검증 실패의 결과이기도 하다. 하지만 단순한 길이 검사만으로는 막히지 않는다.
 
@@ -59,7 +61,7 @@ OWASP Top 10에서 반복적으로 강조되는 이유가 바로 범용성과 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 ORM (Object-Relational Mapping) 사용 여부보다, 그 ORM을 안전하게 쓰는지가 중요하다.
 
@@ -72,7 +74,7 @@ OWASP Top 10에서 반복적으로 강조되는 이유가 바로 범용성과 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 인젝션을 막으면 시스템의 가장 기본적인 신뢰 경계를 지킬 수 있다. 그래서 입력 처리 설계가 매우 중요하다.
 

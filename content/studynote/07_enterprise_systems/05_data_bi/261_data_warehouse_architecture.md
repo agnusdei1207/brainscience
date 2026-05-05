@@ -5,20 +5,24 @@ date = "2024-03-21"
 [extra]
 categories = "studynote-enterprise"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+>  [ Staging Area ]   |--( L )--> [ Enterprise DW ]
+
+> 📝 모범 답안
+
 1. **의사결정 지원의 통합 저장소**: 데이터 웨어하우스(DW)는 기업 내 여러 운영 시스템(OLTP)의 데이터를 주제별로 통합하여 분석 목적에 맞게 최적화한 비즈니스 지능의 핵심 기지이다.
 2. **4대 핵심 특징**: 주제 지향성(Subject), 통합성(Integrated), 시계열성(Time-variant), 비휘발성(Non-volatile)을 통해 장기적인 추세 분석과 전략 수립을 가능하게 한다.
 3. **ETL을 통한 가치 정제**: 원천 데이터의 추출(E), 변환(T), 적재(L) 과정을 거치며 데이터의 정합성을 확보하고 분석 가능한 형태로 정제한다.
 
 ---
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 현대 기업은 분산된 수많은 시스템에서 초 단위로 발생하는 데이터를 마주하고 있다. 하지만 운영 시스템(ERP, CRM 등)은 빠른 트랜잭션 처리가 목적이지 분석을 위한 구조가 아니다. 이를 해결하기 위해 **데이터 웨어하우스(DW)**는 분석 전용 저장 공간을 구축하여 경영진에게 과거부터 현재까지의 통합된 가시성을 제공한다.
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 엔터프라이즈 DW 아키텍처는 데이터의 흐름에 따라 **소스 - 스테이징 - DW - DM - 활용**의 계층 구조를 갖는다.
 
@@ -26,8 +30,7 @@ categories = "studynote-enterprise"
 [ Data Source ]        [ Data Integration Layer ]     [ Analysis Layer ]
 ( ERP )-----+         +---------------------+        +-----------------+
             |         |  ( ETL Engine )     |        |   ( OLAP )      |
-( CRM )-----|--( E )-->  [ Staging Area ]   |--( L )--> [ Enterprise DW ]
-            |         |  [ Transformation ] |        |                 |
+( CRM )-----|--( E )--            |         |  [ Transformation ] |        |                 |
 ( Legacy )--+         +---------------------+        +--------+--------+
                                                               |
                                                      +--------+--------+
@@ -44,7 +47,7 @@ categories = "studynote-enterprise"
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 비교 항목 | 데이터 웨어하우스 (DW) | 운영 데이터베이스 (DB) | 데이터 레이크 (Lake) |
 | :--- | :--- | :--- | :--- |
@@ -55,14 +58,14 @@ categories = "studynote-enterprise"
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 1. **클라우드 전환 (Modern DW)**: 온프레미스 DW의 용량 한계와 하드웨어 비용 문제를 해결하기 위해 Snowflake, BigQuery와 같은 클라우드 네이티브 DW로의 전환이 가속화되고 있다.
 2. **SCD(Slowly Changing Dimension) 전략**: 차원 데이터(예: 주소)가 변할 때 이력을 남길 것인가(Type 2) 아니면 덮어쓸 것인가(Type 1)에 대한 설계가 DW 분석 신뢰도의 핵심이다.
 3. **기술사적 판단**: 최근에는 DW와 Data Lake의 장점을 결합한 **Lakehouse** 아키텍처가 부상하고 있다. DW는 결과론적 분석(Descriptive)뿐만 아니라 예측 분석(Predictive)을 위한 AI 모델 학습 데이터 공급처로서 그 위상이 강화되고 있다.
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 DW 아키텍처는 기업의 데이터 자산을 지능화하는 가장 견고한 기반이다. 향후 실시간 스트리밍 데이터와의 결합(Lambda/Kappa Architecture)을 통해 **'리얼타임 엔터프라이즈(RTE)'**를 구현하는 것이 궁극적인 지향점이다. 데이터의 단순 저장을 넘어 통찰(Insight)을 뽑아내는 능력이 기업의 경쟁력이 된다.
 
 ---

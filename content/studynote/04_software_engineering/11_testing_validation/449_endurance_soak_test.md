@@ -6,15 +6,17 @@ description = "장시간 부하를 주어 메모리 누수와 성능 저하를 �
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "Endurance Test", "Soak Test", "Memory Leak"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 내구성 테스트(Endurance / Soak Test)는 장시간 같은 부하를 줘서 장기 안정성을 확인하는 테스트다.
+> **핵심**: 내구성 테스트(Endurance / Soak Test)는 장시간 같은 부하를 줘서 장기 안정성을 확인하는 테스트다.
 > 2. **가치**: 메모리 누수, 리소스 누적, 성능 저하를 잡는 데 강하다.
 > 3. **판단 포인트**: 짧게는 안 보이는 문제를 오래 돌려서 찾아야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 내구성 테스트는 오래 버티는지를 본다. 초반엔 멀쩡해도 시간이 지나면 느려지거나 멈출 수 있기 때문이다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "Endurance Test", "Soak Test", "Memor
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 내구성 테스트는 일정한 부하를 오랜 시간 유지하면서 메모리, CPU, 응답시간 변화를 관찰한다.
 
@@ -45,7 +47,7 @@ tags = ["Software Engineering", "Testing", "Endurance Test", "Soak Test", "Memor
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 내구성 테스트는 부하 테스트나 스파이크 테스트와 다르다. 목표는 순간 반응이 아니라 장기 안정성이다.
 
@@ -61,7 +63,7 @@ tags = ["Software Engineering", "Testing", "Endurance Test", "Soak Test", "Memor
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 메모리 누수, 연결 자원 누적, 로그 폭증, 캐시 팽창을 찾는다. 모니터링이 같이 있어야 의미가 있다.
 
@@ -74,7 +76,7 @@ tags = ["Software Engineering", "Testing", "Endurance Test", "Soak Test", "Memor
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 내구성 테스트는 장기 운영의 신뢰성을 높인다. 순간 성능보다 지속 가능성을 검증하는 데 필수다.
 

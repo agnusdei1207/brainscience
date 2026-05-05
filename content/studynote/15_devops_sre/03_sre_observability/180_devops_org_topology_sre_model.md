@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: DevOps 조직 토폴로지는 "누가 어떤 책임으로 운영을 담당하는가"를 정의하며, 잘못된 토폴로지는 아무리 좋은 도구도 무력화한다.
+> **핵심**: DevOps 조직 토폴로지는 "누가 어떤 책임으로 운영을 담당하는가"를 정의하며, 잘못된 토폴로지는 아무리 좋은 도구도 무력화한다.
 > 2. **가치**: 구글 SRE 모델은 개발팀이 50% 이상의 운영 부담을 SRE에 전가하지 못하도록 "운영 부하 50% 한도"를 규칙으로 두어 SRE가 자동화에 집중할 수 있게 한다.
 > 3. **판단 포인트**: 조직이 스트림 정렬 팀(Stream-Aligned Team), 플랫폼 팀(Platform Team), 인에이블링 팀(Enabling Team)으로 구성될 때 DevOps와 SRE 역할이 가장 효과적으로 분배된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 "DevOps는 도구가 아니라 문화"라는 말처럼, 조직 구조가 기술 선택보다 실제 DevOps 성숙도에 더 큰 영향을 미친다. 개발팀과 운영팀이 사일로(Silo)로 분리된 전통 IT 조직은 배포 자동화 도구를 아무리 잘 갖춰도 "개발팀이 코드를 넘기면 운영팀이 받아서 배포"하는 핸드오프 문화를 바꾸지 못한다.
 
@@ -27,7 +29,7 @@ Team Topologies(Manuel Pais & Matthew Skelton) 모델은 DevOps 조직을 네 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Team Topologies 기반 DevOps/SRE 조직 구조
 
@@ -77,7 +79,7 @@ Team Topologies(Manuel Pais & Matthew Skelton) 모델은 DevOps 조직을 네 �
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 조직 모델별 비교
 
@@ -101,7 +103,7 @@ Team Topologies(Manuel Pais & Matthew Skelton) 모델은 DevOps 조직을 네 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 기술사 판단 포인트
 
@@ -132,7 +134,7 @@ Team Topologies(Manuel Pais & Matthew Skelton) 모델은 DevOps 조직을 네 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 올바른 DevOps 조직 토폴로지는 배포 빈도(Deployment Frequency), 변경 실패율(Change Failure Rate), 복구 시간(MTTR) 등 DORA 메트릭의 직접적인 개선으로 이어진다. 2023 DORA 보고서에 따르면 Elite 조직은 하루 여러 번 배포하고, MTTR이 1시간 미만이다.
 

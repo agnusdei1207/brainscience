@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Kubeflow는 쿠버네티스(Kubernetes) 위에서 ML 워크로드를 오케스트레이션하는 플랫폼으로, 데이터 과학자가 컨테이너 기반의 재현 가능한 ML 파이프라인을 DAG (Directed Acyclic Graph)로 정의하고 실행할 수 있게 한다.
+> **핵심**: Kubeflow는 쿠버네티스(Kubernetes) 위에서 ML 워크로드를 오케스트레이션하는 플랫폼으로, 데이터 과학자가 컨테이너 기반의 재현 가능한 ML 파이프라인을 DAG (Directed Acyclic Graph)로 정의하고 실행할 수 있게 한다.
 > 2. **가치**: Kubeflow Pipelines로 ML 워크플로우를 표준화하고, Katib으로 하이퍼파라미터 자동 최적화(AutoML)를 실행하며, KServe로 멀티 프레임워크 모델을 단일 플랫폼에서 서빙함으로써 MLOps 전 과정을 쿠버네티스 생태계 안에서 통합한다.
 > 3. **판단 포인트**: Kubeflow는 강력하지만 쿠버네티스 운영 전문성이 필요하고 초기 설정이 복잡하므로, 클라우드 관리형(Vertex AI Pipelines, SageMaker)과 온프레미스/하이브리드 환경에서의 통제 필요성을 비교하여 선택해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 Kubeflow란?
 
@@ -55,7 +57,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 Kubeflow Pipelines 아키텍처
 
@@ -217,7 +219,7 @@ def ml_pipeline(data_path: str, epochs: int = 10):
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 Kubeflow vs MLflow vs SageMaker
 
@@ -267,7 +269,7 @@ PyTorchJob (분산 PyTorch 학습):
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 Kubeflow 배포 옵션
 
@@ -325,7 +327,7 @@ PyTorchJob (분산 PyTorch 학습):
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 Kubeflow 도입 기대효과
 

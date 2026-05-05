@@ -4,15 +4,18 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-enterprise"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. PEST(Political·Economic·Social·Technological) 분석은 기업 외부 거시 환경을 체계적으로 스캔해 전략 수립의 맥락을 제공하는 프레임워크다.
 > 2. STEEP은 PEST에 Environmental(환경) 요인을 추가해 ESG·탄소중립 이슈를 포함하며, PESTLE은 Legal(법적) 요인을 별도로 분리한다.
 > 3. PEST는 산업 분석(Porter 5 Forces)·경쟁 분석(SWOT)과 연계해 외부→산업→기업 순서로 분석 레이어를 쌓는 것이 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. PEST 분석의 정의와 구성 요소
+## 1. 개요 및 필요성
 
 PEST 분석은 Francis Aguilar(1967)가 제안한 **거시환경(Macro-environment) 분석 도구**다.
 
@@ -38,7 +41,7 @@ PEST 분석 프레임
 
 ---
 
-## Ⅱ. STEEP / PESTLE 확장 모델
+## 2. 구성요소
 
 ### STEEP 추가 요인
 
@@ -59,7 +62,7 @@ PEST 분석 프레임
 
 ---
 
-## Ⅲ. PEST 분석 수행 방법
+## 3. 구조 및 동작 원리
 
 ### 분석 프로세스
 
@@ -83,7 +86,7 @@ PEST 분석 프레임
 
 ---
 
-## Ⅳ. PEST와 전략 프레임워크 연계
+## 4. 비교 및 트레이드오프
 
 ```
 거시환경 (PEST/STEEP)
@@ -110,7 +113,7 @@ SWOT 통합 분석
 
 ---
 
-## Ⅴ. 실무 적용과 한계
+## 5. 실무 적용 및 최적화 기법
 
 ### 활용 시나리오
 

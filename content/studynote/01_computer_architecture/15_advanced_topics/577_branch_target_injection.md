@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 577. 분기 목적지 주입 (Branch Target Injection, Spectre v2)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 분기 목적지 주입(Branch Target Injection)은 CPU의 간접 분기 예측기(Indirect Branch Predictor)에 **해커가 의도한 가짜 주소 정보를 주입**하여, CPU가 투기적으로 민감한 데이터를 처리하게 만든 뒤 사이드 채널로 정보를 빼내는 공격 기법이다.
+> **핵심**: 분기 목적지 주입(Branch Target Injection)은 CPU의 간접 분기 예측기(Indirect Branch Predictor)에 **해커가 의도한 가짜 주소 정보를 주입**하여, CPU가 투기적으로 민감한 데이터를 처리하게 만든 뒤 사이드 채널로 정보를 빼내는 공격 기법이다.
 > 2. **가치**: 스펙터(Spectre) 변종 2로 알려진 이 공격은, 프로세스 간 격리를 하드웨어 수준에서 무너뜨리고 타 프로세스나 커널의 비밀 정보를 투기적 실행(Speculative Execution)의 흔적을 통해 훔쳐낼 수 있음을 증명했다.
 > 3. **융합**: 하드웨어의 실행 가속 기술(분기 예측)이 보안의 취약점이 된 사례로, 이를 막기 위해 소프트웨어적 우회(Retpoline)와 하드웨어적 격리(IBPB, IBRS) 기술이 융합되어 시스템 보안의 새로운 표준을 형성했다.
 
+> 📝 모범 답안
+
+# 577. 분기 목적지 주입 (Branch Target Injection, Spectre v2)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 - **개념**: CPU가 다음에 어디로 점프할지 예측하는 '간접 분기 예측기'의 학습 과정을 악용하는 공격이다. 해커가 독성 데이터를 예측기에 주입하여, CPU가 엉뚱한 곳(악성 가젯)으로 먼저 달려가게(투기적 실행) 유도한다.
 - **필요성**: 현대 CPU는 성능을 위해 분기문의 결과를 기다리지 않고 미리 실행한다. 만약 해커가 이 '미리 실행할 장소'를 마음대로 정할 수 있다면, 비록 나중에 취소되더라도 그 짧은 찰나에 CPU 캐시에는 비밀 정보의 흔적이 남게 된다. 이 **'찰나의 흔적'**이 보안의 치명적인 구멍이 된다.
@@ -48,7 +50,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 간접 분기 예측기 (Indirect Branch Predictor)
 - `jmp eax`나 `call [ptr]` 처럼 목적지가 실행 중에 바뀌는 코드를 위해, CPU는 과거의 목적지 주소를 **BTB(Branch Target Buffer)**에 저장해둔다. 
@@ -65,7 +67,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Spectre v1 vs Spectre v2 (BTI)
 
@@ -83,7 +85,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -103,7 +105,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **크로스 프로세스 데이터 유출 차단**: 서로 다른 권한을 가진 프로그램 간의 보이지 않는 벽을 다시 세운다.

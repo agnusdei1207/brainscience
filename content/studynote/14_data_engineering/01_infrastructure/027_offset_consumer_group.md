@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Kafka에서 오프셋(Offset)은 파티션 내 메시지의 순서 번호이고, 컨슈머 그룹(Consumer Group)은 하나의 토픽을 병렬로 소비하는 컨슈머 집합으로 파티션이 그룹 내 컨슈머에 1:1로 할당된다.
+> **핵심**: Kafka에서 오프셋(Offset)은 파티션 내 메시지의 순서 번호이고, 컨슈머 그룹(Consumer Group)은 하나의 토픽을 병렬로 소비하는 컨슈머 집합으로 파티션이 그룹 내 컨슈머에 1:1로 할당된다.
 > 2. **가치**: 오프셋 기반 소비는 "메시지가 한 번 전달되면 삭제되는" 전통 MQ와 달리, 컨슈머가 자신의 소비 위치를 독립적으로 관리하므로 다른 컨슈머 그룹이 같은 메시지를 독립적으로 재소비할 수 있다. 이것이 Pub/Sub 멀티 컨슈머 패턴을 가능하게 한다.
 > 3. **판단 포인트**: 오프셋 커밋(Commit)의 세 가지 의미 보장: ①At-Most-Once(최대 1회): 처리 전 커밋 → 실패 시 손실, ②At-Least-Once(최소 1회): 처리 후 커밋 → 실패 시 재처리(중복 가능), ③Exactly-Once(정확히 1회): 트랜잭션 + idempotent 프로듀서. 대부분의 실무는 At-Least-Once + 멱등 처리로 구현한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌────────────────────────────────────────────────────────┐
@@ -36,7 +38,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 컨슈머 그룹 파티션 할당 규칙
 
@@ -65,7 +67,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Kafka 오프셋 | RabbitMQ ACK | 전통 MQ |
 |:---|:---|:---|:---|
@@ -77,7 +79,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Consumer Lag 모니터링
 - Consumer Lag = Latest Offset - Committed Offset.
@@ -92,7 +94,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

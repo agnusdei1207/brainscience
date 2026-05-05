@@ -5,21 +5,24 @@ date = "2026-03-04"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> [ Domain Engine ] --(Create Event)--> [ Event Store ]
+
+> 📝 모범 답안
+
 - **상태 보존 방식의 혁신**: 데이터를 현재의 최종 상태(Current State)가 아닌, 모든 상태 변경 이력(Event Log)의 시퀀스로 저장하는 기법이다.
 - **완벽한 감사(Audit)**: 시스템의 모든 행위를 재생(Replay)할 수 있어, 장애 복구 및 비즈니스 분석(Time Travel)에 절대적인 장점을 가진다.
 - **CQRS와의 필수 결합**: 이벤트 스트림에서 현재 상태를 계산하는 비용을 줄이기 위해 조회를 전담하는 CQRS 패턴과 함께 사용된다.
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 일반적인 관계형 데이터베이스(RDBMS) 방식은 데이터가 변경될 때마다 기존 레코드를 덮어쓰기(Update)하여 최종 결과만 남긴다. 이로 인해 '누가, 언제, 왜' 이 데이터를 변경했는지에 대한 맥락(Context)이 유실된다. 이벤트 소싱은 이러한 데이터 유실 문제를 해결하고, 분산 시스템에서 데이터의 무결성과 확장성을 보장하기 위해 도입되었다.
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 이벤트 소싱 시스템은 모든 상태 변화를 **불변(Immutable) 이벤트**로 기록하며, 이를 **Append-Only** 방식으로 저장한다.
 
 ```text
-[ Command ] --(Execute)--> [ Domain Engine ] --(Create Event)--> [ Event Store ]
-                                                                      |
+[ Command ] --(Execute)--                                                                      |
 [ Snapshot ] <--(Restore)-- [ Aggregate Root ] <--(Replay)------------+
                                      |
                                      +---(Publish)---> [ External System ]
@@ -30,7 +33,7 @@ categories = "studynote-design-supervision"
 - Snapshot: 이벤트가 너무 많아질 때 일정 시점의 상태를 캐싱하여 복원 속도 향상
 ```
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 | 비교 항목 | 전통적 상태 저장 (State-based) | 이벤트 소싱 (Event-based) |
 | :--- | :--- | :--- |
 | **저장 방식** | CRUD (덮어쓰기/삭제) | Append-Only (이벤트 추가) |
@@ -39,11 +42,11 @@ categories = "studynote-design-supervision"
 | **성능 (읽기)** | 매우 빠름 (즉시 조회) | 느림 (Replay 연산 필요 -> CQRS 필요) |
 | **장애 복구** | 백업 시점으로만 복원 가능 | 특정 시점으로 완벽 복구 가능 |
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 - **감리 포인트**: 이벤트 스토어의 데이터가 위변조되지 않도록 **WORM(Write Once Read Many)** 속성을 보장하는지 점검해야 한다. 또한 이벤트 버전 관리(Upcasting) 전략이 수립되었는지 확인이 필요하다.
 - **전략적 판단**: 금융, 결제, 물류 추적과 같이 데이터의 신뢰성과 감사 추적이 비즈니스의 핵심인 도메인에 강력 추천한다. 단순한 정보 게시판 등에는 오버헤드가 크므로 지양한다.
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 이벤트 소싱은 단순히 기술적인 저장 방식을 넘어, 비즈니스의 흐름을 데이터로 포착하는 강력한 수단이다. 향후 인공지능(AI) 기반의 행위 분석이나 데이터 분석을 위한 고품질 로우 데이터(Raw Data) 공급원으로서 그 가치가 더욱 높아질 것이다.
 
 ### 📌 관련 개념 맵 (Knowledge Graph)

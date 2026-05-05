@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 부스팅(Boosting)은 이전 모델이 틀린 샘플에 더 높은 가중치를 부여하며 순차적(직렬)으로 약한 학습기(Weak Learner)를 쌓아 편향(Bias)을 줄이는 앙상블 기법이다.
+> **핵심**: 부스팅(Boosting)은 이전 모델이 틀린 샘플에 더 높은 가중치를 부여하며 순차적(직렬)으로 약한 학습기(Weak Learner)를 쌓아 편향(Bias)을 줄이는 앙상블 기법이다.
 > 2. **가치**: XGBoost(eXtreme Gradient Boosting)는 그래디언트 부스팅을 극도로 최적화하여 정규화·병렬화·결측값 처리를 통합, Kaggle 대회 최다 우승 알고리즘이 되었다.
 > 3. **판단 포인트**: 부스팅은 편향을 줄이는 데 탁월하지만 노이즈가 많은 데이터에서는 과적합(Overfitting) 위험이 크므로, 학습률(Learning Rate)과 트리 수를 신중히 조정해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 **부스팅(Boosting)**은 Robert Schapire(1990)의 이론적 증명에서 출발했다: "약한 학습기(랜덤보다 조금 나은 분류기)를 순차적으로 결합하면 임의의 강한 학습기(Strong Learner)를 만들 수 있다."
 
@@ -31,7 +33,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### AdaBoost 동작 원리
 
@@ -116,7 +118,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### AdaBoost vs Gradient Boosting 비교
 
@@ -145,7 +147,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### XGBoost 주요 하이퍼파라미터
 
@@ -177,7 +179,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 부스팅, 특히 XGBoost/LightGBM을 활용하면:
 

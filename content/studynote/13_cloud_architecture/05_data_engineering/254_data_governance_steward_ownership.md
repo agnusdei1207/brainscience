@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 데이터 거버넌스는 "데이터를 누가 소유하고, 어떻게 정의하고, 어디에 쓸 수 있는가"를 결정하는 정책·프로세스·역할 체계로, 기업 데이터 자산의 신뢰성과 가치를 보장한다.
+> **핵심**: 데이터 거버넌스는 "데이터를 누가 소유하고, 어떻게 정의하고, 어디에 쓸 수 있는가"를 결정하는 정책·프로세스·역할 체계로, 기업 데이터 자산의 신뢰성과 가치를 보장한다.
 > 2. **가치**: 부서마다 "매출" 정의가 다른 데이터 사일로(Silo) 문제를 해결하고, GDPR·개인정보보호법 컴플라이언스를 체계적으로 이행하며, 데이터 기반 의사결정의 신뢰도를 높인다.
 > 3. **판단 포인트**: 데이터 스튜어드(Steward)는 기술 담당자(DBA)가 아닌 비즈니스 도메인 전문가가 맡아야 하며, 중앙집권형 vs 분산형(Data Mesh) 거버넌스 모델 선택이 조직 규모에 따라 다르다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 대형 기업에서 "고객 수는 몇 명인가?"라는 단순한 질문에 마케팅 부서, 영업 부서, 재무 부서가 각각 다른 숫자를 제시하는 일이 빈번하다. 이는 각 부서가 "고객"을 다르게 정의하고, 서로 다른 데이터를 관리하기 때문이다.
 
@@ -43,7 +45,7 @@ DAMA(Data Management Association)의 DMBOK(Data Management Body of Knowledge) �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 거버넌스 조직 구조
 
@@ -89,7 +91,7 @@ DAMA(Data Management Association)의 DMBOK(Data Management Body of Knowledge) �
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 중앙집권형 vs 분산형(Data Mesh) 거버넌스
 
@@ -113,7 +115,7 @@ DAMA(Data Management Association)의 DMBOK(Data Management Body of Knowledge) �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 데이터 거버넌스 성숙도 모델
 
@@ -142,7 +144,7 @@ DAMA(Data Management Association)의 DMBOK(Data Management Body of Knowledge) �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

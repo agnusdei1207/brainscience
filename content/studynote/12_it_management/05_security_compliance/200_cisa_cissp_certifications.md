@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-
-> 1. **본질**: CISA (Certified Information Systems Auditor, 공인정보시스템감사사)는 IT 감사·통제·위험 관리 전문성을 인증하며, CISSP (Certified Information Systems Security Professional, 공인정보시스템보안전문가)는 정보보안 전 분야를 아우르는 관리·기술 통합 자격이다.
+> **핵심**: CISA (Certified Information Systems Auditor, 공인정보시스템감사사)는 IT 감사·통제·위험 관리 전문성을 인증하며, CISSP (Certified Information Systems Security Professional, 공인정보시스템보안전문가)는 정보보안 전 분야를 아우르는 관리·기술 통합 자격이다.
 > 2. **가치**: 두 자격증 모두 글로벌 채용 시장에서 검증된 역량 증명 수단이며, 국내 정보보호최고책임자(CISO) 지정·공공기관 감사 인력 요건에서도 공식 인정된다.
 > 3. **판단 포인트**: 기술사 시험에서는 두 자격의 도메인 구성과 목적 차이(감사 중심 vs. 보안 관리 중심), 유지 요건인 CPE (Continuing Professional Education, 지속적 전문 교육) 이수 제도, 그리고 국내 ISMS-P 체계와의 연계를 명확히 구분해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 디지털 전환과 사이버 위협의 증가로 기업과 공공기관은 IT 보안 및 감사 전문 인력에 대한 수요가 급증하고 있다. 그러나 조직이 필요한 역량 수준을 객관적으로 검증하기 어렵다는 문제가 있었고, 이를 해결하기 위해 국제 공인 자격 제도가 발전하였다. CISA와 CISSP은 각각 ISACA (Information Systems Audit and Control Association, 정보시스템감사통제협회)와 (ISC)² (International Information System Security Certification Consortium, 국제정보시스템보안자격협회)가 운영하는 가장 권위 있는 정보보안 자격증이다.
 
@@ -26,7 +27,7 @@ CISA는 1978년 처음 도입된 이래 전 세계 15만 명 이상이 취득하
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. CISA 5개 도메인 구성
 
@@ -72,7 +73,7 @@ CISA는 1978년 처음 도입된 이래 전 세계 15만 명 이상이 취득하
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. CISA vs. CISSP 핵심 비교
 
@@ -102,7 +103,7 @@ CISA는 1978년 처음 도입된 이래 전 세계 15만 명 이상이 취득하
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. CISA 활용: IT 감사 및 컴플라이언스
 
@@ -125,7 +126,7 @@ CISSP 취득자는 조직의 정보보안 정책(ISMS, Information Security Mana
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 CISA와 CISSP를 보유한 인력은 조직의 IT 감사 독립성, 보안 관리 체계 수립, 규제 준수 등 핵심 역할을 수행하며, 글로벌 시장에서도 인정받는 객관적 역량 지표로 활용된다. 특히 클라우드·AI 시대에 새롭게 등장하는 보안 위협에 대응하기 위해 두 자격 모두 도메인을 지속적으로 업데이트하고 있어, 미래에도 유효한 전문성을 보증한다.
 

@@ -6,15 +6,17 @@ description = "같은 조건에서 여러 시스템이나 버전을 비교해 �
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "Benchmark Test", "Performance", "Comparison"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 벤치마크 테스트(Benchmark Test)는 동일한 조건에서 성능을 비교하는 테스트다.
+> **핵심**: 벤치마크 테스트(Benchmark Test)는 동일한 조건에서 성능을 비교하는 테스트다.
 > 2. **가치**: 제품 간 우열이나 버전 간 향상을 정량적으로 보여 준다.
 > 3. **판단 포인트**: 비교 조건을 같게 맞추지 않으면 결과가 왜곡된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 벤치마크 테스트는 성능의 기준선을 만든다. 같은 환경에서 여러 제품을 비교해야 공정하다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "Benchmark Test", "Performance", "Com
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 핵심은 비교 조건의 통일이다. 하드웨어, 입력 데이터, 실행 시간, 측정 방식이 같아야 한다.
 
@@ -44,7 +46,7 @@ tags = ["Software Engineering", "Testing", "Benchmark Test", "Performance", "Com
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 벤치마크는 절대 성능보다 상대 성능을 본다. 부하 테스트가 "버티는가"라면, 벤치마크는 "누가 더 나은가"에 가깝다.
 
@@ -60,7 +62,7 @@ tags = ["Software Engineering", "Testing", "Benchmark Test", "Performance", "Com
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 DB 선택, 검색 엔진 튜닝, 하드웨어 교체, 라이브러리 비교에 쓴다. 조건이 조금만 달라도 비교가 틀어지므로 실험 설계가 중요하다.
 
@@ -73,7 +75,7 @@ tags = ["Software Engineering", "Testing", "Benchmark Test", "Performance", "Com
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 벤치마크는 성능 판단을 숫자로 바꿔 준다. 그래서 기술 선택을 감이 아니라 근거로 할 수 있다.
 

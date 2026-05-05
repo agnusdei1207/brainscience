@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Attention은 디코더가 출력을 생성할 때, 인코더의 **모든 Hidden State에 가중치(Attention Weight)를 부여하여 동적으로 참조**하는 메커니즘으로, 고정 컨텍스트 벡터의 정보 병목을 해소한다.
+> **핵심**: Attention은 디코더가 출력을 생성할 때, 인코더의 **모든 Hidden State에 가중치(Attention Weight)를 부여하여 동적으로 참조**하는 메커니즘으로, 고정 컨텍스트 벡터의 정보 병목을 해소한다.
 > 2. **가치**: "I love you" → "나는 너를 사랑해" 번역 시, "사랑해"를 생성할 때 **"love"에 높은 가중치**를 부여하여 해당 입력에 "주목(Attend)"한다. 이로써 긴 문장에서도 정보 손실 없이 정확한 번역이 가능해진다.
 > 3. **판단 포인트**: Bahdanau(Additive) Attention과 Luong(Multiplicative/Dot-product) Attention을 구분하고, Self-Attention(Transformer)으로의 진화를 이해해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -35,7 +37,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Attention 유형
 
@@ -57,7 +59,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 고정 컨텍스트 | Attention | Self-Attention |
 |:---|:---|:---|:---|
@@ -66,14 +68,14 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Attention의 해석 가능성
 - Attention 가중치를 시각화하면 "모델이 어디를 보고 판단했는지" 확인 가능 → 설명 가능 AI(XAI)의 초기 형태.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Attention은 **현대 AI의 가장 중요한 단일 아이디어**이며, Transformer·BERT·GPT·ViT·Diffusion 등 거의 모든 최신 모델의 기반이다.
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 피어슨 상관계수(Pearson Correlation Coefficient)는 두 연속 변수 간 선형 관계 강도와 방향을 -1~+1로 나타내며, 단순선형회귀(Simple Linear Regression)는 이 관계를 예측 모델로 발전시킨다.
+> **핵심**: 피어슨 상관계수(Pearson Correlation Coefficient)는 두 연속 변수 간 선형 관계 강도와 방향을 -1~+1로 나타내며, 단순선형회귀(Simple Linear Regression)는 이 관계를 예측 모델로 발전시킨다.
 > 2. **가치**: R²(R-Squared, 결정계수)는 모델이 종속변수 분산의 몇 %를 설명하는지 알려주며, VIF(Variance Inflation Factor, 분산팽창지수)는 다중회귀에서 독립변수 간 다중공선성(Multicollinearity) 문제를 진단한다.
 > 3. **판단 포인트**: 높은 R²가 좋은 모델을 보장하지 않는다. 과적합(Overfitting)·다중공선성·이분산성을 함께 진단해야 실용적인 회귀 모델이 된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 회귀 분석(Regression Analysis)은 데이터 분석에서 가장 많이 쓰이는 예측 도구다. 마케팅 지출이 매출에 얼마나 기여하는지, 집 크기가 가격을 얼마나 설명하는지를 수치로 표현한다.
 
@@ -35,7 +37,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. 피어슨 상관계수 (Pearson Correlation Coefficient)
 
@@ -134,7 +136,7 @@ VIF ≥ 10       → 심각한 공선성 (변수 제거·변환 필요)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. 회귀 진단 체크리스트
 
@@ -169,7 +171,7 @@ E: Equal Variance    (등분산성) → Scale-Location 플롯, BP 검정
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. 마케팅 ROI(Return on Investment) 분석 시나리오
 
@@ -205,7 +207,7 @@ R² = 0.84, Adj R² = 0.82
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 피어슨 상관·회귀·R²·VIF는 통계적 데이터 분석의 기초이자, 머신러닝 모델 해석의 기반이다. 이 개념들을 정확히 이해하면 블랙박스 모델의 특성 중요도 해석도 더 깊어진다.
 

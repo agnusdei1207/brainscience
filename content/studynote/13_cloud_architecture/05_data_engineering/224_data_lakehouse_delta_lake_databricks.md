@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 데이터 레이크하우스(Data Lakehouse)는 데이터 레이크의 **저비용·유연성**과 데이터 웨어하우스의 **ACID 트랜잭션·고성능 쿼리**를 오브젝트 스토리지(S3) 위에서 통합한 차세대 아키텍처다.
+> **핵심**: 데이터 레이크하우스(Data Lakehouse)는 데이터 레이크의 **저비용·유연성**과 데이터 웨어하우스의 **ACID 트랜잭션·고성능 쿼리**를 오브젝트 스토리지(S3) 위에서 통합한 차세대 아키텍처다.
 > 2. **가치**: DW와 레이크를 이중으로 운영하는 비용·복잡성을 제거하고 **단일 플랫폼에서 BI 분석·ML·실시간 스트리밍을 동시 지원**한다.
 > 3. **판단 포인트**: Delta Lake(Databricks), Apache Iceberg, Apache Hudi가 오브젝트 스토리지 위에 **트랜잭션 레이어**를 추가하는 방식이며, Medallion Architecture(Bronze·Silver·Gold)가 표준 설계 패턴이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 2020년대 초 Databricks가 제창한 **Data Lakehouse** 아키텍처는 데이터 레이크와 데이터 웨어하우스의 장점을 융합하려는 시도에서 출발했다.
 
@@ -41,7 +43,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Medallion Architecture (메달리온 아키텍처)
 
@@ -88,7 +90,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Delta Lake vs Apache Iceberg vs Apache Hudi
 
@@ -116,7 +118,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Databricks 기반 레이크하우스 구현 예시
 
@@ -163,7 +165,7 @@ Q3: 실시간 데이터 변경(CDC/Upsert)이 필요한가?
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

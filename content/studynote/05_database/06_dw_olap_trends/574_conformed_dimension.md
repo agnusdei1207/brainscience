@@ -5,17 +5,19 @@ weight = 574
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-# 데이터 마트 콘포밍 차원 (Conformed Dimension) 아키텍처
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 콘포밍 차원(Conformed Dimension)은 전사 데이터 웨어하우스(DW) 환경에서 영업, 재무, 마케팅 등 서로 다른 부서의 데이터 마트(Data Mart)들이 '고객', '날짜', '제품'과 같은 핵심 기준 정보(Dimension)를 완전히 동일한 스키마와 데이터 값으로 공유하도록 강제하는 아키텍처 설계 표준이다.
+> **핵심**: 콘포밍 차원(Conformed Dimension)은 전사 데이터 웨어하우스(DW) 환경에서 영업, 재무, 마케팅 등 서로 다른 부서의 데이터 마트(Data Mart)들이 '고객', '날짜', '제품'과 같은 핵심 기준 정보(Dimension)를 완전히 동일한 스키마와 데이터 값으로 공유하도록 강제하는 아키텍처 설계 표준이다.
 > 2. **가치**: 이 표준을 준수하면, 마케팅 부서의 '캠페인 팩트(Fact)' 테이블과 영업 부서의 '매출 팩트' 테이블을 하나의 쿼리로 묶어서 분석하는 '드릴 어크로스(Drill-across)'가 가능해져, 부서 간 "우리 부서 통계가 맞다"며 싸우는 데이터 정합성 붕괴(Data Silo) 현상을 원천 차단한다.
 > 3. **융합**: 이 개념은 랄프 킴볼(Ralph Kimball)의 상향식(Bottom-up) DW 버스 아키텍처(Bus Architecture)를 지탱하는 척추(Backbone)이며, 현대의 마스터 데이터 관리(MDM) 시스템 및 데이터 카탈로그(Data Catalog)와 융합되어 단일 진실 공급원(SSOT, Single Source of Truth)을 엔터프라이즈 레벨로 확장시킨다.
 
+> 📝 모범 답안
+
+# 데이터 마트 콘포밍 차원 (Conformed Dimension) 아키텍처
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 콘포밍 차원(Conformed Dimension, 일치된 차원)은 물리적 또는 논리적으로 완벽하게 동일한 속성(Attribute), 구조(Schema), 키(Surrogate Key) 값을 가지며, 회사 내의 여러 다차원 데이터 모델(Star Schema)에서 재사용되는 차원 테이블을 의미한다.
 
@@ -62,7 +64,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 콘포밍 차원을 성립시키는 3대 설계 원칙
 
@@ -86,7 +88,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### Inmon (Top-down) vs Kimball (Bottom-up) 아키텍처 비교
 
@@ -108,7 +110,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 설계 안티패턴
 
@@ -162,7 +164,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

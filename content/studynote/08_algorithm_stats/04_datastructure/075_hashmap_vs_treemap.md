@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-algorithm-stats"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: HashMap은 해시 함수(Hash Function)로 키를 배열 인덱스에 직접 매핑하여 평균 O(1) 접근을 달성하는 반면, TreeMap은 레드-블랙 트리(Red-Black Tree)를 기반으로 키를 정렬된 순서로 유지하면서 O(log n) 연산을 보장한다.
+> **핵심**: HashMap은 해시 함수(Hash Function)로 키를 배열 인덱스에 직접 매핑하여 평균 O(1) 접근을 달성하는 반면, TreeMap은 레드-블랙 트리(Red-Black Tree)를 기반으로 키를 정렬된 순서로 유지하면서 O(log n) 연산을 보장한다.
 > 2. **가치**: HashMap은 빠른 단건 조회·삽입·삭제가 필요할 때, TreeMap은 범위 조회(Range Query), 정렬된 순회, 최솟값·최댓값 조회가 필요할 때 선택하며, 두 자료구조의 선택이 알고리즘 전체 성능을 결정짓는다.
 > 3. **판단 포인트**: 해시 충돌(Hash Collision)과 리해싱(Rehashing) 비용, 정렬 여부 필요성, 메모리 사용량을 3가지 축으로 판단하며, 실시간 순위표·캐시·집계 처리에는 HashMap, 이벤트 스케줄러·범위 검색에는 TreeMap이 적합하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 HashMap은 키-값(Key-Value) 쌍을 해시 테이블에 저장하는 자료구조로, 평균 O(1)의 접근 성능을 제공한다.
 TreeMap은 동일한 키-값 쌍을 이진 탐색 트리(BST, Binary Search Tree)의 균형 변형인 레드-블랙 트리에 저장하여 키의 정렬 순서를 항상 유지한다.
@@ -43,7 +45,7 @@ TreeMap은 동일한 키-값 쌍을 이진 탐색 트리(BST, Binary Search Tree
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### HashMap 핵심 메커니즘
 
@@ -78,7 +80,7 @@ TreeMap은 동일한 키-값 쌍을 이진 탐색 트리(BST, Binary Search Tree
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | HashMap | TreeMap | LinkedHashMap |
 |:---|:---|:---|:---|
@@ -93,7 +95,7 @@ TreeMap은 동일한 키-값 쌍을 이진 탐색 트리(BST, Binary Search Tree
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 실시간 순위표 vs 이벤트 스케줄러
 
@@ -113,7 +115,7 @@ TreeMap은 동일한 키-값 쌍을 이진 탐색 트리(BST, Binary Search Tree
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | HashMap | TreeMap |
 |:---|:---|:---|

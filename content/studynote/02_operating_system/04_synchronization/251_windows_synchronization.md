@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 윈도우 동기화 (Windows Synchronization)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Windows 동기화는 유저 모드와 커널 모드 두 계층으로 나뉘며, Critical Section (유저 모드 스핀락+뮤텍스 혼합), Mutex/Semaphore/Event (커널 모드 디스패처 객체)로 성능과 기능을 분리한다.
+> **핵심**: Windows 동기화는 유저 모드와 커널 모드 두 계층으로 나뉘며, Critical Section (유저 모드 스핀락+뮤텍스 혼합), Mutex/Semaphore/Event (커널 모드 디스패처 객체)로 성능과 기능을 분리한다.
 > 2. **가치**: 커널 모드 디스패처 객체는 프로세스 간 공유와 Wait 통지를 지원하며, SRWLOCK (Slim Reader/Writer Lock)과 CONDITION_VARIABLE은 Vista 이후 저비용 고성능 동기화를 제공한다.
 > 3. **융합**: Windows I/O Completion Port (IOCP)는 비동기 I/O와 스레드 풀 동기화를 결합한 거대 규모 서버 설계의 핵심이며, ETW (Event Tracing for Windows)로 동기화 병목을 실시간 모니터링할 수 있다.
 
+> 📝 모범 답안
+
+# 윈도우 동기화 (Windows Synchronization)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Windows NT 커널은 설계 초기부터 멀티프로세서 환경을 지원하도록 설계됐다. 동기화는 두 계층으로 분리됐는데, 유저 모드 객체는 커널 호출 없이 빠르게 동작하고, 커널 모드 객체는 프로세스 경계를 넘는 동기화와 다양한 대기 패턴을 지원한다.
 
@@ -47,7 +49,7 @@ Windows NT 커널은 설계 초기부터 멀티프로세서 환경을 지원하�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Critical Section — 유저 모드 혼합 락
 
@@ -124,7 +126,7 @@ switch (dwResult) {
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### Critical Section vs Mutex 비교
 
@@ -145,7 +147,7 @@ switch (dwResult) {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **SQL Server 내부 락**: Critical Section으로 버퍼 풀 접근을, Kernel Mutex로 파일 핸들 공유를 각각 분리 관리하여 성능 최적화.
@@ -159,7 +161,7 @@ switch (dwResult) {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Windows 동기화 설계는 유저 모드와 커널 모드의 분리를 통해 성능과 기능의 트레이드오프를 명확히 한다. 현대 Windows 개발에서는 SRWLock(읽기-쓰기)과 CONDITION_VARIABLE(조건 대기)을 Critical Section과 조합하는 것이 권장 패턴이다.
 

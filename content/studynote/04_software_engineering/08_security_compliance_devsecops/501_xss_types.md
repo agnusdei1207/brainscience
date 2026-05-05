@@ -2,17 +2,19 @@
 weight = 501
 title = "501. XSS 유형 - Reflected XSS, Stored XSS, DOM-based XSS"
 +++
+## 0. 핵심 인사이트
 
-# 501. XSS 유형 - Reflected XSS, Stored XSS, DOM-based XSS
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 크로스 사이트 스크립팅(XSS)은 하나의 단일한 공격이 아니라, 해커의 독약(악성 스크립트)이 **내 시스템의 어느 부위(URL, DB, 브라우저 DOM)에 기생하다가 터지느냐에 따라 3가지의 완전히 다른 생태적 변종(Reflected, Stored, DOM-based)으로 나뉘는 해킹 기법의 족보**다.
+> **핵심**: 크로스 사이트 스크립팅(XSS)은 하나의 단일한 공격이 아니라, 해커의 독약(악성 스크립트)이 **내 시스템의 어느 부위(URL, DB, 브라우저 DOM)에 기생하다가 터지느냐에 따라 3가지의 완전히 다른 생태적 변종(Reflected, Stored, DOM-based)으로 나뉘는 해킹 기법의 족보**다.
 > 2. **가치**: 이 3가지 족보를 구별하지 못하면 방어벽을 잘못 친다. 튕겨 나오는 Reflected는 URL 이스케이프로 막고, DB에 박힌 Stored는 출력 인코딩으로 소독하며, 프론트엔드 단에서 도는 DOM-based는 서버가 아닌 자바스크립트 엔진 자체의 DOM 조작 통제로 틀어막는 **'타겟팅된(Pin-pointed) 아키텍처 수술'의 기준점**을 제시한다.
 > 3. **융합**: 서버(Backend)와 클라이언트(Frontend)의 책임이 완벽하게 찢어지는 현대 클라우드 네이티브 및 SPA(React/Vue) 환경에서, 백엔드의 **필터/인터셉터(Filter/Interceptor)**와 프론트엔드의 **자동 이스케이프(Auto-escaping)** 기술이 양면에서 융합되어야만 3개의 뱀 대가리를 한 번에 쳐낼 수 있다.
 
+> 📝 모범 답안
+
+# 501. XSS 유형 - Reflected XSS, Stored XSS, DOM-based XSS
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: XSS는 해커가 짠 `<script>alert('해킹')</script>` 코드가 희생자의 브라우저 화면에서 실행되며 세션 쿠키를 털어가는 짓이다. 그런데 이 독약이 어떻게 희생자 브라우저까지 배달될까?
   1. **Reflected (반사형)**: 해커가 URL에 독약을 섞어 링크를 보냄 ➡ 피해자가 클릭 ➡ 서버가 URL을 꿀꺽 먹고 화면에 그대로 뱉음(반사) ➡ 펑!
@@ -35,7 +37,7 @@ title = "501. XSS 유형 - Reflected XSS, Stored XSS, DOM-based XSS"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 1. Reflected XSS (반사형 - 1회성 치고 빠지기)
 - **원리**: 
@@ -62,7 +64,7 @@ title = "501. XSS 유형 - Reflected XSS, Stored XSS, DOM-based XSS"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 1. XSS 3형제 비교표 (면접/실무 절대 족보)
 
@@ -83,7 +85,7 @@ title = "501. XSS 유형 - Reflected XSS, Stored XSS, DOM-based XSS"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -104,7 +106,7 @@ title = "501. XSS 유형 - Reflected XSS, Stored XSS, DOM-based XSS"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

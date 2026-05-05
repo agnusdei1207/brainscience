@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: 엣지 컴퓨팅(Edge Computing)은 데이터 발생 지점(현장) 근처에서 연산을 수행해 클라우드 왕복 지연(Round-trip Latency)을 제거하고, 스마트팩토리(Smart Factory)는 이를 기반으로 제조 공정의 실시간 자율 제어를 실현한다.
+> **핵심**: 엣지 컴퓨팅(Edge Computing)은 데이터 발생 지점(현장) 근처에서 연산을 수행해 클라우드 왕복 지연(Round-trip Latency)을 제거하고, 스마트팩토리(Smart Factory)는 이를 기반으로 제조 공정의 실시간 자율 제어를 실현한다.
 > 2. **가치**: IIoT(Industrial IoT — Industrial Internet of Things)와 MEC(Multi-access Edge Computing)의 결합은 밀리초(ms) 단위 제어가 필요한 자율 이송 로봇(AGV: Automated Guided Vehicle), 품질 비전 검사, 예지 보전에서 클라우드로는 불가능한 실시간성을 제공한다.
 > 3. **판단 포인트**: 스마트팩토리의 성숙도는 KS X 9001(한국 스마트팩토리 수준 기준) Level 1(기초)부터 Level 5(지능형·자율형)까지 단계적으로 평가되며, OT(Operational Technology)와 IT 통합 보안이 핵심 과제다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 제조업은 전통적으로 OT(Operational Technology — PLC·SCADA·DCS)와 IT가 물리적·논리적으로 분리된 환경에서 운영되었다. 4차 산업혁명과 독일의 Industry 4.0 이니셔티브는 이 경계를 허물고, CPS(Cyber-Physical Systems)를 통해 제조 자동화를 '연결된 지능형 공장'으로 진화시켰다.
 
@@ -25,7 +27,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 엣지-포그-클라우드 계층 구조
 
@@ -77,7 +79,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 스마트팩토리 성숙도 모델 비교
 
@@ -104,7 +106,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### IIoT 보안 — IT/OT 통합 보안 아키텍처
 
@@ -135,7 +137,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 스마트팩토리와 엣지 컴퓨팅의 성숙은 제조업의 경쟁력 지형을 바꾼다. WEF(World Economic Forum) 등대공장(Lighthouse Factory) 인증 기업들은 생산성 30~50%, 품질 불량률 40~70% 개선, 에너지 소비 10~30% 감소를 달성했다. 한국의 등대공장 인증 기업(포스코, LG전자 등)은 글로벌 제조 경쟁력 상위권을 유지하고 있다.
 

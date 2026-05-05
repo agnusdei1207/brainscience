@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 반환 시간 (Turnaround), 대기 시간 (Waiting), 응답 시간 (Response)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 이 세 지표는 스케줄링 기준(Scheduling Criteria) 중 시스템의 효율성보다 **"사용자가 느끼는 체감 시간(User-oriented Criteria)"**을 계량화한 성능 척도다.
+> **핵심**: 이 세 지표는 스케줄링 기준(Scheduling Criteria) 중 시스템의 효율성보다 **"사용자가 느끼는 체감 시간(User-oriented Criteria)"**을 계량화한 성능 척도다.
 > 2. **가치**: 응답 시간은 '첫 번째 출력까지의 지연', 대기 시간은 '레디 큐에서 허송세월한 시간의 총합', 반환 시간은 '작업 시작부터 완전 종료까지의 수명'을 의미하며, 목적에 따라 서로 다른 최적화 타깃이 된다.
 > 3. **융합**: 시분할 환경(Time-sharing)의 핵심은 프로세스를 잘게 쪼개어 응답 시간(Response Time)의 평균과 편차를 최소화하는 것이나, 이로 인해 잘게 쪼개진 횟수만큼 문맥 교환이 발생하여 전체 반환 시간(Turnaround Time)은 필연적으로 늘어나게 된다.
 
+> 📝 모범 답안
+
+# 반환 시간 (Turnaround), 대기 시간 (Waiting), 응답 시간 (Response)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **반환 시간 (Turnaround Time)**: 프로세스가 시스템에 들어온 시점부터 완전히 실행을 마치고 나갈 때까지 걸린 총 시간. (CPU 연산 + I/O 대기 + Ready 큐 대기 시간 모두 합산)
@@ -50,7 +52,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 지표별 동작 메커니즘과 계산 원리
 
@@ -101,7 +103,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 타임 퀀텀 (Time Quantum) 크기에 따른 지표의 요동
 
@@ -124,7 +126,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **웹 브라우저의 렌더링 응답성 확보**: 사용자가 크롬 탭을 수십 개 띄워 둔 상황. 다른 탭에서 유튜브 영상(무거운 작업)을 돌리더라도, 현재 클릭한 탭의 렌더링 프로세스는 즉각적으로 화면을 스크롤(응답)해야 한다.
@@ -162,7 +164,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

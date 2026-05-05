@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 데이터 옵저버빌리티(Data Observability)는 파이프라인을 통해 흐르는 데이터의 상태를 실시간으로 감지·모니터링하는 능력으로 — 신선도(Freshness), 분포(Distribution), 볼륨(Volume), 스키마(Schema), 계보(Lineage) 5대 기둥으로 구성되며, 데이터 품질 이슈가 비즈니스에 도달하기 전에 사전 탐지한다.
 > 2. 데이터 다운타임(Data Downtime)은 데이터 파이프라인 오류나 품질 저하로 분석/ML 모델이 오염된 데이터를 사용하게 되는 상태를 말하며 — 조직의 79%가 경험하지만 평균 발견 시간이 9시간 이상이라는 연구 결과는, 사후 탐지보다 실시간 옵저버빌리티 체계가 필수임을 보여준다.
 > 3. Monte Carlo(오픈소스 아님, SaaS), Great Expectations(오픈소스), Soda Core(오픈소스)는 데이터 옵저버빌리티 도구의 대표 주자이며 — DataOps/MLOps 환경에서 데이터 계약(Data Contract)과 결합될 때 데이터 품질 SLA(Service Level Agreement)를 코드로 관리하는 "데이터 신뢰성 엔지니어링"으로 발전한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 데이터 옵저버빌리티 개념
+## 1. 개요 및 필요성
 
 ```
 데이터 옵저버빌리티 (Data Observability):
@@ -48,7 +51,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅱ. 5대 기둥 상세
+## 2. 구성요소
 
 ```
 5대 기둥 상세:
@@ -120,7 +123,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅲ. 도구 및 플랫폼
+## 3. 구조 및 동작 원리
 
 ```
 데이터 옵저버빌리티 도구:
@@ -179,7 +182,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅳ. 데이터 계약
+## 4. 비교 및 트레이드오프
 
 ```
 데이터 계약 (Data Contract):
@@ -230,7 +233,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅴ. 실무 시나리오 — ML 모델 데이터 모니터링
+## 5. 실무 적용 및 최적화 기법
 
 ```
 E커머스 추천 ML 모델 데이터 파이프라인 모니터링:

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: WireGuard는 약 4,000줄 코드로 구현된 초경량 VPN으로, 수십만 줄의 IPsec/OpenVPN과 달리 공격 표면(Attack Surface)을 극소화하여 보안 감사(Audit)가 쉽고 취약점 발생 가능성이 낮다.
+> **핵심**: WireGuard는 약 4,000줄 코드로 구현된 초경량 VPN으로, 수십만 줄의 IPsec/OpenVPN과 달리 공격 표면(Attack Surface)을 극소화하여 보안 감사(Audit)가 쉽고 취약점 발생 가능성이 낮다.
 > 2. **가치**: ChaCha20-Poly1305 암호화와 Curve25519 키 교환을 Linux 커널 내장 구현(Linux 5.6 이상)으로 처리하여, OpenVPN 대비 3~5배 이상의 처리 속도와 낮은 지연시간을 실현한다.
 > 3. **판단 포인트**: 정적 피어 공개키를 사전에 교환해야 하고 동적 사용자 관리 기능이 없으므로, 대규모 원격 접속 VPN에는 Tailscale·Headscale 같은 컨트롤 플레인을 추가해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 WireGuard는 Jason A. Donenfeld가 개발하여 2018년 논문으로 발표하고, 2020년 Linux 커널 5.6에 공식 통합된 VPN 프로토콜이다. Linus Torvalds는 WireGuard를 "예술 작품(a work of art)"이라고 표현했다. IPsec의 복잡한 프로토콜 협상과 OpenVPN의 userspace 오버헤드를 모두 제거한 새로운 접근 방식이다.
 
@@ -25,7 +27,7 @@ WireGuard는 UDP 기반이며 연결 상태(Stateless)에 가까운 설계로, �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### WireGuard 암호 프리미티브
 
@@ -76,7 +78,7 @@ Initiator                               Responder
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | WireGuard | OpenVPN | IPsec/IKEv2 | L2TP/IPsec |
 |:---|:---|:---|:---|:---|
@@ -95,7 +97,7 @@ Initiator                               Responder
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **기본 서버 설정 예시:**
 
@@ -128,7 +130,7 @@ AllowedIPs = 10.0.0.2/32
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 WireGuard는 VPN 기술의 패러다임을 바꿨다. 단순성, 보안성, 성능 세 가지를 동시에 달성한 최초의 VPN 프로토콜로, Linux 커널 메인라인 포함이라는 공식 인정을 받았다. Android, iOS, Windows, macOS 모두 공식 클라이언트가 제공되어 사용 편의성도 빠르게 향상되고 있다.
 

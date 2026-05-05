@@ -6,15 +6,17 @@ description = "CI/CD 파이프라인 전체에 테스트를 끼워 넣어 계속
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "Continuous Testing", "CI/CD", "Automation"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 지속적 테스팅(Continuous Testing)은 배포 흐름 전체에 테스트를 자동으로 넣는 방식이다.
+> **핵심**: 지속적 테스팅(Continuous Testing)은 배포 흐름 전체에 테스트를 자동으로 넣는 방식이다.
 > 2. **가치**: 변경이 들어올 때마다 빠르게 품질 신호를 받는다.
 > 3. **판단 포인트**: 개발, 빌드, 배포 어느 구간에서도 멈추지 않게 설계해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 지속적 테스팅은 테스트를 마지막에 몰아두지 않는다. CI/CD 과정 속에 계속 넣어 문제를 빨리 드러낸다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "Continuous Testing", "CI/CD", "Autom
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 코드가 바뀌면 단위 테스트부터 통합, 보안, 성능까지 자동으로 연동한다. 테스트는 한 번이 아니라 흐름 전체에 걸쳐 배치된다.
 
@@ -45,7 +47,7 @@ tags = ["Software Engineering", "Testing", "Continuous Testing", "CI/CD", "Autom
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 지속적 테스팅은 단일 테스트가 아니라 운영 체계다. CI/CD, DevOps, 품질 게이트와 연결된다.
 
@@ -61,7 +63,7 @@ tags = ["Software Engineering", "Testing", "Continuous Testing", "CI/CD", "Autom
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 테스트 피라미드, 품질 게이트, 배포 자동화와 함께 설계한다. 실패 시 바로 막는 기준이 중요하다.
 
@@ -74,7 +76,7 @@ tags = ["Software Engineering", "Testing", "Continuous Testing", "CI/CD", "Autom
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 지속적 테스팅은 품질을 흐름 속에 넣는다. 그래서 문제가 누적되기 전에 막는다.
 

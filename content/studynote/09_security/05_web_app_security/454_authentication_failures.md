@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: A07 Identification and Authentication Failures (인증 실패)는 OWASP 2021에서 3위에서 7위로 하락했지만 여전히 만연하며, 크리덴셜 스터핑(Credential Stuffing), 브루트 포스(Brute Force), 약한 세션 관리, 취약한 비밀번호 저장이 핵심 문제다.
+> **핵심**: A07 Identification and Authentication Failures (인증 실패)는 OWASP 2021에서 3위에서 7위로 하락했지만 여전히 만연하며, 크리덴셜 스터핑(Credential Stuffing), 브루트 포스(Brute Force), 약한 세션 관리, 취약한 비밀번호 저장이 핵심 문제다.
 > 2. **가치**: HaveIBeenPwned 데이터베이스에는 100억 개 이상의 유출 계정이 있으며, 크리덴셜 스터핑 자동화 도구로 수분 내에 수천 개 계정에 대입 공격이 가능하다.
 > 3. **판단 포인트**: MFA (Multi-Factor Authentication) 강제 적용만으로 계정 탈취 공격의 99.9%를 차단할 수 있으며, 비밀번호 저장은 반드시 bcrypt·Argon2 등 느린 해시를 사용해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 인증 실패 취약점은 공격자가 다른 사용자의 계정 권한으로 시스템에 접근하게 만드는 모든 약점을 포함한다. 인증(Authentication, "누구인가")과 인가(Authorization, "무엇을 할 수 있는가")를 구분하는 것이 이해의 출발점이다.
 
@@ -30,7 +32,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 인증 방어 다계층 구조:
 
@@ -60,7 +62,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 인증(A07)과 접근 제어(A01)의 관계:
 
@@ -75,7 +77,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **NIST SP 800-63B 권장사항**:
 1. **비밀번호 최소 길이**: 8자 이상 (사용자 선택), 최대 64자 이상 허용
@@ -88,7 +90,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 MFA 적용, Rate Limiting, 안전한 비밀번호 저장을 조합하면 실용적인 인증 방어 체계가 완성된다. 특히 FIDO2/Passkey 기반 패스워드리스 인증으로 전환하면 비밀번호 자체를 없애 크리덴셜 스터핑을 구조적으로 차단할 수 있다.
 

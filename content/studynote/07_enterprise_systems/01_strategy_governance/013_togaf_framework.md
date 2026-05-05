@@ -7,17 +7,20 @@ date = "2024-05-24"
 tags = ["EA", "TOGAF", "ADM", "아키텍처", "엔터프라이즈아키텍처", "IT전략"]
 categories = ["studynote", "enterprise_systems"]
 +++
+## 0. 핵심 인사이트
 
-# 13. TOGAF 프레임워크 및 ADM (Architecture Development Method)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: TOGAF는 전사적 아키텍처(EA)를 구축, 관리, 유지하기 위한 국제 표준 프레임워크이며, 그 심장부는 반복적이고 검증 가능한 순환 개발 방법론인 ADM(Architecture Development Method)이다.
+> **핵심**: TOGAF는 전사적 아키텍처(EA)를 구축, 관리, 유지하기 위한 국제 표준 프레임워크이며, 그 심장부는 반복적이고 검증 가능한 순환 개발 방법론인 ADM(Architecture Development Method)이다.
 > 2. **가치**: 특정 벤더나 솔루션에 종속되지 않는 개방형(Open) 표준을 제공하여, 기업이 글로벌 모범 사례(Best Practice)를 기반으로 IT 구조를 최적화하고 통제 위원회를 체계화할 수 있게 한다.
 > 3. **융합**: 아키텍처 산출물의 구조를 정의하는 잭맨 프레임워크(정적)와 완벽한 상호보완적 관계를 맺으며, 최근에는 애자일(Agile) 배포 주기와 결합한 '모듈형/지속적 아키텍처'로 진화하고 있다.
 
+> 📝 모범 답안
+
+# 13. TOGAF 프레임워크 및 ADM (Architecture Development Method)
+
+##
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 **TOGAF (The Open Group Architecture Framework)**는 기업의 IT 인프라와 비즈니스 전략을 정렬하기 위한 실천적이고 종합적인 프레임워크이다. 잭맨 프레임워크가 아키텍처 산출물의 '분류표(서랍장)'를 제시했다면, TOGAF는 실제로 그 산출물을 어떻게 기획하고, 어떤 순서로 설계하며, 운영 및 폐기까지 어떻게 관리할 것인지에 대한 상세한 '레시피(프로세스)'를 제공한다.
 
@@ -42,7 +45,7 @@ categories = ["studynote", "enterprise_systems"]
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 TOGAF의 뼈대는 4대 아키텍처 도메인(BDAT: Business, Data, Application, Technology)이며, 이를 구동하는 엔진이 **ADM (Architecture Development Method)**이다. ADM은 '예비 단계(Preliminary)'를 중심 축으로 하여 A부터 H까지 순환하는 고리 형태를 띤다.
 
@@ -88,7 +91,7 @@ TOGAF의 또 다른 핵심 개념으로, 아키텍처 자산(자료, 모델)들�
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 EA를 구현하는 양대 산맥인 TOGAF와 잭맨(Zachman) 프레임워크는 종종 비교되지만, 실무적으로는 상호 보완적 융합을 이룬다.
 
@@ -120,7 +123,7 @@ EA를 구현하는 양대 산맥인 TOGAF와 잭맨(Zachman) 프레임워크는 
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 실무에서 TOGAF를 무비판적으로 전면 도입하는 것은 거대한 재앙(Over-engineering)을 초래한다.
 
@@ -149,7 +152,7 @@ EA를 구현하는 양대 산맥인 TOGAF와 잭맨(Zachman) 프레임워크는 
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 TOGAF는 기업 단위의 거대한 IT 의사결정을 감으로 하는 것이 아니라, 구조화된 엔지니어링의 영역으로 끌어올린 업적을 지닌다.
 

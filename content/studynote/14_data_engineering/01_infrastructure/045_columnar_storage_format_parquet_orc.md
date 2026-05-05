@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 컬럼형 저장 형식(Columnar Storage Format)은 행(Row) 대신 열(Column) 단위로 데이터를 저장해 분석 쿼리의 I/O를 극적으로 줄이는 빅데이터 핵심 기술 — 수백만 행에서 특정 열 5개만 조회할 때 행 기반은 전체 행을 읽지만, 컬럼형은 해당 열만 읽는다.
 > 2. Apache Parquet와 ORC(Optimized Row Columnar)는 현재 빅데이터 생태계의 양대 표준 — Parquet는 Spark·다중 언어 생태계에서 강점, ORC는 Hive 최적화와 ACID 트랜잭션 지원에서 강점이며, 두 형식 모두 압축·술어 푸시다운(Predicate Pushdown)을 지원한다.
 > 3. Parquet/ORC의 핵심 최적화 기법은 Row Group + Column Chunk + 압축 + 통계(Min/Max/Bloom Filter) — 쿼리 엔진이 Row Group 통계를 이용해 불필요한 Row Group 자체를 건너뛰는 "스킵핑"이 성능의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 행 기반 vs 컬럼 기반
+## 1. 개요 및 필요성
 
 ```
 저장 형식 비교:
@@ -59,7 +62,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. Apache Parquet
+## 2. 구성요소
 
 ```
 Apache Parquet:
@@ -115,7 +118,7 @@ Apache Parquet:
 
 ---
 
-## Ⅲ. Apache ORC
+## 3. 구조 및 동작 원리
 
 ```
 Apache ORC (Optimized Row Columnar):
@@ -172,7 +175,7 @@ ORC 적합 환경:
 
 ---
 
-## Ⅳ. Parquet vs ORC vs CSV
+## 4. 비교 및 트레이드오프
 
 ```
 비교표:
@@ -211,7 +214,7 @@ Bloom Filter   | 없음     | 있음(선택)| 있음
 
 ---
 
-## Ⅴ. 실무 시나리오 — 데이터 레이크 최적화
+## 5. 실무 적용 및 최적화 기법
 
 ```
 전자상거래 데이터 레이크 최적화:

@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-algorithm-stats"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 에라토스테네스의 체(Sieve of Eratosthenes)는 2~N까지 소수를 한 번에 구하는 O(N log log N) 알고리즘 — "소수의 배수를 모두 제거"하는 원리로, N이 클 때 개별 소수 판별을 N번 반복하는 O(N√N)보다 압도적으로 효율적이다.
 > 2. 배수 제거 시작점이 p² — 소수 p의 배수를 제거할 때 2p, 3p, ...(p-1)p는 이미 앞선 소수에 의해 제거됐으므로, p²부터 시작하면 불필요한 연산을 줄일 수 있다.
 > 3. 비트 배열과 분할 체로 메모리와 캐시 효율을 극대화 — N=10억 범위의 소수 구하기는 Segmented Sieve로 분할하여 L1 캐시 크기에 맞춰 처리해야 실용적이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 알고리즘 원리
+## 1. 개요 및 필요성
 
 ```
 에라토스테네스의 체 동작 원리:
@@ -55,7 +58,7 @@ categories = "studynote-algorithm-stats"
 
 ---
 
-## Ⅱ. 구현
+## 2. 구성요소
 
 ```python
 # 기본 구현 O(N log log N)
@@ -118,7 +121,7 @@ Segmented Sieve: L1 캐시 크기(32KB)로 분할
 
 ---
 
-## Ⅲ. 분할 체 (Segmented Sieve)
+## 3. 구조 및 동작 원리
 
 ```
 Segmented Sieve:
@@ -185,7 +188,7 @@ def segmented_sieve(n):
 
 ---
 
-## Ⅳ. 소수 정리와 응용
+## 4. 비교 및 트레이드오프
 
 ```
 소수 정리 (Prime Number Theorem):
@@ -226,7 +229,7 @@ def segmented_sieve(n):
 
 ---
 
-## Ⅴ. 실무 시나리오 — 암호화 소수 생성
+## 5. 실무 적용 및 최적화 기법
 
 ```
 시나리오: RSA 키 생성에서 소수 판별

@@ -2,14 +2,17 @@
 title = "328. OLAP (On-Line Analytical Processing) - 대용량 다차원 분석, 비정규화(스타 스키마), 읽기 위주"
 weight = 328
 +++
+## 0. 핵심 인사이트
 
 > **💡 핵심 인사이트**
 > LSM-Tree(Log-Structured Merge-Tree)는 **"쓰기 성능을 극대화하기 위해 데이터를 먼저 메모리(MemTable)에 저장하고, 일정 크기가 되면 디스크(SSTable)로_FLUSH_한 후,Background에서 병합(Compaction)하는 쓰기 최적화 자료구조"**입니다.
 > 전통적 B-Tree가 읽기 우선(Read-Optimized)이라면, LSM-Tree는 쓰기 우선(Write-Optimized)입니다. Cassandra, RocksDB, LevelDB, MongoDB의 WiredTiger 등이 LSM-Tree를採用しており、**쓰기放量 обработка에 강한noSQL의 핵심 저장 엔진**입니다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. B-Tree의 쓰기 문제: 왜 LSM-Tree가诞았나?
+## 1. 개요 및 필요성
 
 ```
 [B-Tree의 쓰기 동작]
@@ -226,7 +229,7 @@ class SkipList:
 
 ---
 
-## Ⅴ. LSM-Tree 적용 시 고려사항と 📢 비유
+## 5. 실무 적용 및 최적화 기법
 
 **LSM-Tree를 采用하는 시스템:**
 - **Apache Cassandra**: STCS/LTCS 선택 가능

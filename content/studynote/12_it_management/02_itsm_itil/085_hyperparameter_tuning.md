@@ -7,16 +7,17 @@ date = "2026-04-05"
 tags = ["하이퍼파라미터", "Hyperparameter", "GridSearch", "RandomSearch", "Bayesian", "AutoML"]
 categories = ["studynote-bigdata"]
 +++
-
-## 핵심 인사이트 (3줄 요약)
+## 0. 핵심 인사이트
 
 > **본질**: 하이퍼파라미터 튜닝(Hyperparameter Tuning)은 학습 전에 정하는 설정값을 바꿔가며 모델의 일반화 성능을 찾는 과정이다.
 > **가치**: 데이터에 맞는 탐색 전략을 쓰면 같은 모델이라도 과적합·과소적합·학습 비용의 균형이 좋아진다.
 > **판단 포인트**: 무작정 그리드 탐색(Grid Search)만 돌리기보다, 예산·노이즈·검증 구조를 보고 Random Search나 Bayesian Optimization을 섞어야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 하이퍼파라미터는 모델이 학습을 시작하기 전에 사람이 정하는 설정값이다. 학습률, 배치 크기, 층의 깊이, 정규화 강도처럼 파라미터의 해석과 성능을 좌우하는 값은 데이터마다 최적점이 다르다.
 
@@ -26,7 +27,7 @@ categories = ["studynote-bigdata"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 HPO (Hyperparameter Optimization)는 후보 설정을 만들고, 학습과 검증을 반복해, 가장 좋은 조합을 고르는 탐색 루프다. 탐색 방식은 그리드, 랜덤, Bayesian Optimization, Hyperband처럼 다양하며, 예산이 적으면 랜덤 탐색이 의외로 강하다.
 
@@ -47,7 +48,7 @@ HPO (Hyperparameter Optimization)는 후보 설정을 만들고, 학습과 검�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 하이퍼파라미터는 모델 파라미터(Parameter)와 다르다. 파라미터는 학습으로 바뀌는 가중치이고, 하이퍼파라미터는 학습 방식을 조절하는 손잡이다. 또 Feature Engineering은 입력을 바꾸는 작업이고, AutoML (Automated Machine Learning)은 튜닝과 모델 선택을 자동화하려는 상위 개념이다.
 
@@ -64,7 +65,7 @@ HPO (Hyperparameter Optimization)는 후보 설정을 만들고, 학습과 검�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 작은 예산이면 Random Search를 먼저 쓰고, 평가가 비싸고 노이즈가 크면 Bayesian Optimization이나 조기 종료(Early Stopping)를 섞는다. 검증 데이터셋은 고정하고, 테스트 데이터는 마지막 한 번만 확인해야 한다. 또 실험 재현성을 위해 시드(seed)와 전처리 파이프라인을 함께 고정해야 한다.
 
@@ -82,7 +83,7 @@ HPO (Hyperparameter Optimization)는 후보 설정을 만들고, 학습과 검�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 잘된 튜닝은 같은 모델의 구조를 바꾸지 않고도 성능과 안정성을 크게 개선한다. 하지만 탐색 비용이 커지면 모델 개선보다 실험 관리가 더 어려워질 수 있다. 그래서 좋은 튜닝은 "더 많이 돌리는 것"이 아니라 "더 빨리 올바른 후보를 좁히는 것"이다.
 

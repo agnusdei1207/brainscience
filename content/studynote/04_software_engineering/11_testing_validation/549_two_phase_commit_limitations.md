@@ -6,15 +6,17 @@ description = "2PC가 마이크로서비스 아키텍처에서 왜 잘 맞지 �
 taxonomy = ""
 tags = ["Software Engineering", "Architecture", "2PC", "Distributed Transaction", "MSA"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 2PC는 준비와 커밋 두 단계로 다수 자원의 동시 확정을 시도한다.
+> **핵심**: 2PC는 준비와 커밋 두 단계로 다수 자원의 동시 확정을 시도한다.
 > 2. **가치**: 전통적 분산 DB에는 유용하지만 MSA에서는 장애 전파가 크다.
 > 3. **판단 포인트**: 블로킹, coordinator 의존, 운영 복잡도를 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 2PC는 참여자들이 먼저 준비(Prepare)하고, 모두 가능하다는 응답이 오면 커밋(Commit)한다. 이론적으로는 깔끔하지만 분산 시스템에서는 멈춤과 지연이 문제다.
 
@@ -22,7 +24,7 @@ tags = ["Software Engineering", "Architecture", "2PC", "Distributed Transaction"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Coordinator가 참가자들에게 준비 여부를 묻고, 모두 OK면 커밋을 지시한다. 하나라도 실패하면 롤백한다.
 
@@ -42,7 +44,7 @@ Coordinator -> Commit/Rollback
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 2PC는 강한 일관성을 주지만, 하나의 참여자가 늦어지면 모두가 대기한다. 그래서 MSA에서는 사가나 eventual consistency가 더 자주 선택된다.
 
@@ -56,7 +58,7 @@ Coordinator -> Commit/Rollback
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 2PC를 기본 선택지로 두지 않고, 정말 필요한 경우에만 제한적으로 검토한다.
 
@@ -69,7 +71,7 @@ Coordinator -> Commit/Rollback
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 2PC는 분산 일관성을 제공하지만 MSA의 빠른 독립성과는 충돌하기 쉽다.
 

@@ -6,15 +6,17 @@ description = "시스템을 다른 환경으로 옮겼을 때도 정상 동작�
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "Portability Test", "Migration", "Environment"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 이식성 테스트(Portability Test)는 시스템을 다른 환경으로 이전해도 잘 동작하는지 확인하는 테스트다.
+> **핵심**: 이식성 테스트(Portability Test)는 시스템을 다른 환경으로 이전해도 잘 동작하는지 확인하는 테스트다.
 > 2. **가치**: 운영체제, 클라우드, 브라우저, 하드웨어가 바뀌어도 서비스 연속성을 보장한다.
 > 3. **판단 포인트**: 배포 이전, 클라우드 전환, 장비 교체 때 특히 중요하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 이식성 테스트는 환경 이동 후의 동작을 본다. 한 환경에서만 잘 되는 시스템은 운영 확장에 약하다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "Portability Test", "Migration", "Env
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 이식성은 코드, 설정, 의존성, 데이터 형식이 얼마나 환경 의존적인지와 연결된다.
 
@@ -44,7 +46,7 @@ tags = ["Software Engineering", "Testing", "Portability Test", "Migration", "Env
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 호환성 테스트가 다양한 환경에서의 동작이면, 이식성 테스트는 한 환경에서 다른 환경으로 옮기는 과정의 동작이다.
 
@@ -60,7 +62,7 @@ tags = ["Software Engineering", "Testing", "Portability Test", "Migration", "Env
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 OS 업그레이드, 브라우저 전환, 클라우드 이전, 런타임 교체에서 검증한다. 설정 외부화와 의존성 관리가 중요하다.
 
@@ -73,7 +75,7 @@ tags = ["Software Engineering", "Testing", "Portability Test", "Migration", "Env
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 이식성 테스트는 전환 비용과 장애를 줄인다. 시스템을 오래 살리려면 특정 환경에만 묶이지 않아야 한다.
 

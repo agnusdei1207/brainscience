@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: LDAPS (LDAP over SSL/TLS)는 평문 LDAP 트래픽을 SSL/TLS (Secure Sockets Layer/Transport Layer Security)로 암호화해 도청(Eavesdropping)과 중간자 공격(MITM, Man-in-the-Middle)을 방어하는 보안 강화 방식이다.
+> **핵심**: LDAPS (LDAP over SSL/TLS)는 평문 LDAP 트래픽을 SSL/TLS (Secure Sockets Layer/Transport Layer Security)로 암호화해 도청(Eavesdropping)과 중간자 공격(MITM, Man-in-the-Middle)을 방어하는 보안 강화 방식이다.
 > 2. **가치**: 사용자 패스워드와 디렉터리 데이터가 네트워크 상에서 암호화되어 전송되므로, 공격자가 네트워크 패킷을 캡처해도 인증 정보를 탈취할 수 없다.
 > 3. **판단 포인트**: LDAPS(포트 636)와 StartTLS(포트 389 + STARTTLS 업그레이드)의 차이, 인증서 검증(Certificate Validation) 적용 여부가 기술사 시험의 핵심 구분점이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 LDAP는 기본적으로 TCP 389번 포트를 사용하며, 모든 데이터를 평문(Plaintext)으로 전송한다. 이는 네트워크 내부에서 Wireshark 같은 패킷 캡처 도구만 있으면 사용자 ID, 패스워드, 조직 구조 전체가 그대로 노출된다는 의미다. 특히 관리자 계정(Bind DN)의 패스워드가 평문으로 흘러다니는 환경은 내부자 공격과 APT (Advanced Persistent Threat) 침투 경로가 된다.
 
@@ -25,7 +27,7 @@ LDAP는 기본적으로 TCP 389번 포트를 사용하며, 모든 데이터를 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### LDAPS vs StartTLS 동작 흐름 비교
 
@@ -94,7 +96,7 @@ StartTLS (포트 389):
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 인증서 검증 수준별 보안 차이
 
@@ -118,7 +120,7 @@ StartTLS (포트 389):
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### OpenLDAP LDAPS 설정 예시
 
@@ -148,7 +150,7 @@ TLSVerifyClient       demand
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 LDAPS 도입으로 조직은 디렉터리 서비스 전 구간의 기밀성(Confidentiality)과 무결성(Integrity)을 확보한다. 패킷 스니핑(Packet Sniffing)으로 관리자 패스워드를 탈취하는 가장 단순한 내부자 공격이 원천 차단된다. 또한 상호 인증(mTLS, mutual TLS) 적용 시 클라이언트 위·변조도 방어할 수 있다.
 

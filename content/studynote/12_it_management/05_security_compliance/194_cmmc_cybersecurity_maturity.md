@@ -5,13 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: CMMC (Cybersecurity Maturity Model Certification, 사이버보안 성숙도 모델 인증)는 미 국방부(DoD, Department of Defense)가 방산 공급망의 CUI (Controlled Unclassified Information, 통제 비분류 정보) 보호를 위해 도입한 의무 인증 제도로, 계약 참여의 필수 요건이다.
+> **핵심**: CMMC (Cybersecurity Maturity Model Certification, 사이버보안 성숙도 모델 인증)는 미 국방부(DoD, Department of Defense)가 방산 공급망의 CUI (Controlled Unclassified Information, 통제 비분류 정보) 보호를 위해 도입한 의무 인증 제도로, 계약 참여의 필수 요건이다.
 > 2. **가치**: CMMC 2.0은 Level 1~3의 3단계로 단순화되어 중소 방산업체의 부담을 줄이면서도, Level 3(고급)에서는 NIST SP 800-172 기준의 고도화된 사이버 방어 역량을 요구한다.
 > 3. **판단 포인트**: 기술사 답안에서는 "CMMC 2.0 레벨 구조 → NIST SP 800-171 연계 → C3PAO (Certified Third-Party Assessor Organization) 평가 체계 → 한국 방산업체 영향"을 논리적으로 전개해야 한다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 미 국방부(DoD)는 약 30만 개의 방산 공급망(DIB, Defense Industrial Base) 업체와 계약을 맺고 있으며, 이들 중 많은 기업이 CUI (통제 비분류 정보)를 취급한다. 사이버 침해로 CUI가 유출될 경우 군사 전략 노출, 첨단 무기 기술 탈취 등 국가 안보에 직접적 위협이 된다.
 
@@ -21,7 +23,7 @@ categories = "studynote-it-management"
 
 📢 **섹션 요약 비유**: CMMC는 방위산업 입찰 허가증처럼 — 일정 수준의 사이버보안 능력을 증명하지 못하면 미 국방부 계약에 아예 참여할 수 없다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### CMMC 2.0 3단계 구조
 
@@ -78,7 +80,7 @@ categories = "studynote-it-management"
 
 📢 **섹션 요약 비유**: NIST SP 800-171은 방산 공장의 보안 체크리스트다 — 110가지 안전 규칙 모두를 증명해야 고급 부품을 미군에 납품할 수 있다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | CMMC 1.0 | CMMC 2.0 |
 |:---|:---|:---|
@@ -101,7 +103,7 @@ categories = "studynote-it-management"
 
 📢 **섹션 요약 비유**: CMMC는 군납 허가증이고 ISO 27001은 일반 보안 우수 기업 인증이다 — 군납을 하려면 반드시 CMMC가 있어야 하지만, ISO 27001만으로는 불충분하다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **한국 방산업체 CMMC 대응 로드맵**  
 ① **현황 진단(GAP Analysis)**: NIST SP 800-171 110개 관행 대비 현재 구현 수준 자체 평가를 수행하고 SPRS (Supplier Performance Risk System, 공급업체 성과 위험 시스템) 점수를 산출한다.  
@@ -115,7 +117,7 @@ categories = "studynote-it-management"
 
 📢 **섹션 요약 비유**: CMMC 준비는 운전면허 취득 과정과 같다 — 필기(문서화)와 실기(기술 이행)를 모두 통과해야 면허증(인증서)을 받아 도로(DoD 계약)를 달릴 수 있다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 CMMC 인증은 단순한 규정 준수를 넘어 방산업체의 사이버보안 역량을 실질적으로 향상시키는 효과가 있다. 110개 NIST 관행을 이행하는 과정에서 취약점 관리, 사고 대응, 접근 통제 체계가 고도화된다. 또한 CMMC 인증은 민간 사이버보안 역량 강화로도 이어져 기업 전체의 보안 수준을 높인다.
 

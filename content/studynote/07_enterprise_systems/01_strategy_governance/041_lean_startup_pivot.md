@@ -5,15 +5,18 @@ date = "2026-03-19"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 피벗(Pivot)은 Eric Ries의 린 스타트업 프레임워크에서 MVP 검증 결과, 현재 방향으로는 충분한 성장이 불가능하다는 데이터 기반 판단 하에 핵심 전략을 변경하지만 지금까지의 학습(Validated Learning)을 보존하는 구조적 방향 전환이다.
 > 2. 피벗과 방황(Flailing)의 차이는 데이터 기반 여부로, "숫자가 성장하지 않아서" 피벗하는 것이 아니라 "가설이 틀렸음을 증명했기 때문에" 피벗하는 것이 린 스타트업의 핵심 원칙이다.
 > 3. Instagram(위치 공유 → 사진), Twitter(팟캐스트 → 단문), Slack(게임 내부 도구 → B2B SaaS), YouTube(데이팅 → 동영상)는 피벗의 역사적 성공 사례로, "포기가 아닌 진화"라는 피벗의 본질을 보여준다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 피벗의 정의와 조건
+## 1. 개요 및 필요성
 
 ```
 피벗 (Pivot):
@@ -44,7 +47,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅱ. 피벗 유형
+## 2. 구성요소
 
 ```
 10가지 피벗 유형 (Eric Ries):
@@ -89,7 +92,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅲ. 피벗 타이밍 신호
+## 3. 구조 및 동작 원리
 
 ```
 피벗 필요 신호 (Warning Signs):
@@ -118,7 +121,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅳ. 피벗 성공 요소
+## 4. 비교 및 트레이드오프
 
 ```
 피벗 성공 공식:
@@ -153,7 +156,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅴ. 실무 시나리오 — B2B SaaS 피벗
+## 5. 실무 적용 및 최적화 기법
 
 ```
 스타트업 A사 피벗 사례:

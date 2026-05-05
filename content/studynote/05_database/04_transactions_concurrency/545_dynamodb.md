@@ -7,16 +7,19 @@ date = 2024-01-01
 [extra]
 categories = ["studynote-software-engineering"]
 +++
-+++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: DynamoDB는 AWS의 Fully Managed NoSQL 데이터베이스로, Provisioned Capacity와 On-Demand 두 가지 모델을 제공하고, 내부적으로 SSTable과 LSM-Tree를 활용하여高性能을 지원한다.
+> **핵심**: DynamoDB는 AWS의 Fully Managed NoSQL 데이터베이스로, Provisioned Capacity와 On-Demand 두 가지 모델을 제공하고, 내부적으로 SSTable과 LSM-Tree를 활용하여高性能을 지원한다.
 > 2. **가치**: 운영 부담 없는 Fully Managed 서비스로, 자동 확장과グローバル复制을 지원한다.
 > 3. **융합**: Amazon Dynamo의分散설계를 기반으로 하며, CAP 이론에서 AP(가용성 + 분단 내성)를 기본으로 제공한다.
 
+> 📝 모범 답안
+
++++
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념
 DynamoDB는 Amazon Dynamo(2007년 Bezos CEO의 내부 메모)에서インスピレーションを受けて 설계된 全管理형(fully managed) NoSQL 데이터베이스 서비스다. 키-값과 문서 데이터 모델을 지원하며, 확장성, 가용성, 성능에 최적화되어 있다.
@@ -29,7 +32,7 @@ DynamoDBは「完全放置型の图书管理システム」と같くて、本の
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### DynamoDB 아키텍처
 
@@ -81,7 +84,7 @@ DynamoDB의 파티션은大型图书馆의分散保管システムと似て、�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교: DynamoDB vs MongoDB
 
@@ -97,7 +100,7 @@ DynamoDB vs MongoDBは「お抱え厨师 vs Uber Eats」と 같くて、前者�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -116,7 +119,7 @@ DynamoDB의 Hot Partition問題は「一箇所の売場に全員押し掛ける�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### DynamoDB strengths
 

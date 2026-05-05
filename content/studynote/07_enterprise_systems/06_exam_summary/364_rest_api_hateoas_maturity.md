@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Richardson 성숙도 모델(Richardson Maturity Model)은 REST API를 Level 0~3으로 평가하며, Level 3은 HATEOAS(Hypermedia As The Engine Of Application State)로 클라이언트가 링크를 따라 API 네비게이션을 스스로 수행하는 최고 수준의 RESTful API다.
+> **핵심**: Richardson 성숙도 모델(Richardson Maturity Model)은 REST API를 Level 0~3으로 평가하며, Level 3은 HATEOAS(Hypermedia As The Engine Of Application State)로 클라이언트가 링크를 따라 API 네비게이션을 스스로 수행하는 최고 수준의 RESTful API다.
 > 2. **가치**: RESTful API 설계는 HTTP 표준(메서드·상태코드·헤더)을 올바르게 활용하여 API의 자기 설명성(Self-descriptiveness)·진화 가능성(Evolvability)·클라이언트-서버 결합도를 최적화한다.
 > 3. **판단 포인트**: Level 2(HTTP 메서드+상태코드 준수)가 현실적 목표이며, Level 3(HATEOAS)는 API 탐색성이 중요한 공개 API나 하이퍼미디어 중심 시스템에서 의미 있는 수준이다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 REST(Representational State Transfer)는 2000년 Roy Fielding의 박사 논문에서 제시된 웹 아키텍처 스타일로, HTTP 프로토콜의 본래 의도에 맞게 웹 자원(Resource)을 URI로 표현하고 HTTP 메서드로 조작하는 원칙이다. Richardson Maturity Model은 2008년 Leonard Richardson이 REST 성숙도를 4단계로 분류한 실용적 가이드라인이다.
 
@@ -29,7 +30,7 @@ REST API는 SOAP 기반 웹서비스 대비 ①가볍고 빠름(XML → JSON), �
 
 📢 **섹션 요약 비유**: Richardson 성숙도 모델은 운전 면허처럼, 1종(Level 3)이 가장 높은 수준이지만 일반 도로(Level 2)에서 충분히 잘 달릴 수 있다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Richardson 성숙도 모델 4단계
 
@@ -82,7 +83,7 @@ Level 3: 하이퍼미디어 (HATEOAS)
 
 📢 **섹션 요약 비유**: HATEOAS는 웹 페이지의 하이퍼링크처럼, 지금 이 페이지에서 다음에 무엇을 할 수 있는지(링크)를 응답에 포함시키는 자기 안내 API다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### REST vs GraphQL vs gRPC
 
@@ -109,7 +110,7 @@ Level 3: 하이퍼미디어 (HATEOAS)
 
 📢 **섹션 요약 비유**: HTTP 상태코드는 우편물 처리 결과처럼, 200(배달 성공)·404(주소 없음)·500(우체국 장애)처럼 표준화된 결과 코드다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### RESTful API 설계 가이드라인
 
@@ -132,7 +133,7 @@ Level 3: 하이퍼미디어 (HATEOAS)
 
 📢 **섹션 요약 비유**: URI 명사화는 "동사 금지"처럼, `/deleteUser` 대신 `DELETE /users/1`처럼 HTTP 메서드가 동사를 이미 담당하므로 URI엔 명사만 쓴다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Richardson Level 2 이상의 RESTful API를 설계하면 ①API 직관성 향상(학습 비용 절감), ②HTTP 캐싱 활용 가능(성능 향상), ③클라이언트-서버 독립 진화, ④표준 도구(Swagger/OpenAPI) 연동 용이 등의 효과를 얻는다. Level 3(HATEOAS)는 특히 공개 API나 복잡한 상태 전이가 있는 시스템(주문 상태 전이, 의료 워크플로)에서 클라이언트의 API 탐색 자율성을 높인다.
 

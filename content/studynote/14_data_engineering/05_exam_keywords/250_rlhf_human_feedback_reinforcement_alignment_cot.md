@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: RLHF(Reinforcement Learning from Human Feedback)는 인간이 선호하는 출력을 강화 학습 신호로 삼아 LLM(Large Language Model)이 "도움이 되고·무해하며·솔직한(HHH: Helpful, Harmless, Honest)" 응답을 생성하도록 **정렬(Alignment)**시키는 핵심 기술이다.
+> **핵심**: RLHF(Reinforcement Learning from Human Feedback)는 인간이 선호하는 출력을 강화 학습 신호로 삼아 LLM(Large Language Model)이 "도움이 되고·무해하며·솔직한(HHH: Helpful, Harmless, Honest)" 응답을 생성하도록 **정렬(Alignment)**시키는 핵심 기술이다.
 > 2. **가치**: 단순한 언어 모델링을 넘어 인간의 의도와 가치관에 맞는 AI를 만드는 **AI 정렬(AI Alignment)** 문제의 실용적 해법으로, GPT-4·Claude·Gemini 등 현대 상용 LLM의 안전성과 유용성의 기반이다.
 > 3. **판단 포인트**: RLHF의 인간 피드백 수집 비용·규모 한계를 극복하기 위한 RLAIF(AI Feedback), DPO(Direct Preference Optimization) 등 대안 정렬 방법들의 등장 이유와 트레이드오프를 논술에서 제시해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### AI 정렬 문제 (AI Alignment Problem)
 
@@ -37,7 +39,7 @@ Anthropic이 제시한 AI 정렬의 3대 원칙:
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### RLHF 3단계 파이프라인
 
@@ -91,7 +93,7 @@ r(x,y): 보상 모델 점수
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### RLHF 한계와 대안적 정렬 방법
 
@@ -141,7 +143,7 @@ CoT 프롬프팅:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 상용 LLM의 RLHF 적용 사례
 
@@ -165,7 +167,7 @@ RLHF 후 안전성 검증 프로세스:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### RLHF 도입 효과
 

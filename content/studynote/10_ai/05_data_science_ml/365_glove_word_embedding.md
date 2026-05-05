@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: GloVe(Global Vectors for Word Representation)는 전체 코퍼스의 동시 등장 행렬(Co-occurrence Matrix) X_ij를 분해하여 단어 임베딩을 학습하는 방법으로, 전역(Global) 통계를 활용해 Word2Vec의 로컬(Local) 문맥 창 한계를 극복한다.
+> **핵심**: GloVe(Global Vectors for Word Representation)는 전체 코퍼스의 동시 등장 행렬(Co-occurrence Matrix) X_ij를 분해하여 단어 임베딩을 학습하는 방법으로, 전역(Global) 통계를 활용해 Word2Vec의 로컬(Local) 문맥 창 한계를 극복한다.
 > 2. **가치**: "왕 - 남자 + 여자 = 여왕"처럼 단어 벡터 간 산술 연산으로 의미 관계를 표현하는 능력이 Word2Vec과 동등하면서, 전역 통계를 활용해 희귀 단어와 낮은 빈도 동시 등장 패턴을 더 잘 포착한다.
 > 3. **판단 포인트**: GloVe 목적 함수는 Σᵢⱼ f(X_ij)·(wᵢᵀw̃ⱼ + bᵢ + b̃ⱼ - log X_ij)²이며, 가중치 함수 f(x) = (x/x_max)^α (x ≤ x_max, else 1)로 초고빈도 동시 등장 쌍의 지배(Dominance)를 억제한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Word2Vec은 문맥 창(Window) 내에서만 학습하므로 전체 코퍼스의 전역 통계를 활용하지 못한다. "ice"와 "steam"은 서로 다르지만 둘 다 "water"와 자주 등장한다. 반면 "ice"는 "solid"와, "steam"은 "gas"와 더 자주 등장한다. 이 전역적 비율(X_ice,solid / X_ice,gas vs X_steam,solid / X_steam,gas)이 의미 차이를 담는다는 통찰이 GloVe의 핵심이다.
 
@@ -21,7 +23,7 @@ Word2Vec은 문맥 창(Window) 내에서만 학습하므로 전체 코퍼스의 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -54,7 +56,7 @@ Word2Vec은 문맥 창(Window) 내에서만 학습하므로 전체 코퍼스의 
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 FastText(Facebook AI): 단어를 문자 n-gram으로 분해하여 "play"와 "playing"을 서로 다른 단어가 아닌 공유 서브워드(sub-word)로 처리한다. 덕분에 형태소가 풍부한 한국어, 독일어에서 GloVe/Word2Vec보다 탁월하고, 훈련 중 미등장 단어(OOV, Out-Of-Vocabulary)도 서브워드 합성으로 처리 가능하다. BERT 이후에는 문맥 기반 임베딩(Contextual Embedding)이 정적 임베딩(GloVe, Word2Vec)을 대체하고 있으나, 정적 임베딩은 계산 효율성이 압도적이다.
 
@@ -62,7 +64,7 @@ FastText(Facebook AI): 단어를 문자 n-gram으로 분해하여 "play"와 "pla
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 사전 훈련된 GloVe 벡터(50d, 100d, 200d, 300d)는 Stanford NLP 웹사이트에서 무료로 다운로드 가능하며, 소규모 NLP 프로젝트의 임베딩 레이어 초기화에 활용된다. 한국어의 경우 Word2Vec 기반 ko.bin이나 FastText 기반 모델이 더 적합하다. gensim 라이브러리로 GloVe 벡터를 로드하고 유사도 검색에 사용한다.
 
@@ -70,7 +72,7 @@ FastText(Facebook AI): 단어를 문자 n-gram으로 분해하여 "play"와 "pla
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 GloVe는 전역 통계 활용이라는 강점으로 Word2Vec과 함께 2010년대 NLP를 이끌었으며, 현재도 계산 자원이 제한된 환경에서 효과적인 임베딩 방법이다. 기술사 시험에서 GloVe 목적 함수의 f(X_ij) 역할과 log X_ij를 최소화하는 의미(비율 비교), Word2Vec과의 차이점을 서술하면 높은 점수를 받는다.
 

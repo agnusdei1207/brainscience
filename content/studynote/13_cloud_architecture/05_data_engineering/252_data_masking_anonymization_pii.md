@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 개인 식별 정보(PII: Personally Identifiable Information)를 원본 데이터의 구조·형식을 유지한 채 실제 값을 숨기는 기법으로, 데이터 활용 가치를 유지하면서 개인정보를 보호한다.
+> **핵심**: 개인 식별 정보(PII: Personally Identifiable Information)를 원본 데이터의 구조·형식을 유지한 채 실제 값을 숨기는 기법으로, 데이터 활용 가치를 유지하면서 개인정보를 보호한다.
 > 2. **가치**: GDPR, 개인정보보호법 컴플라이언스를 충족하면서도 개발·테스트 환경에서 실데이터를 사용하는 것과 유사한 효과를 낸다.
 > 3. **판단 포인트**: 동적 마스킹(Dynamic)은 원본을 유지하며 뷰 단위로 적용하여 유연하지만 쿼리 성능에 영향을 주고, 정적 마스킹(Static)은 원본 자체를 변환하여 복원 불가능하나 안전하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 병원 전산 시스템에서 의사는 환자의 주민번호 전체를 볼 필요가 있지만, 개발팀은 DB 구조 테스트를 위해 주민번호 형식(NNNNNN-NNNNNNN)만 있으면 된다. 이 차이를 해결하는 것이 **데이터 마스킹(Data Masking)**이다.
 
@@ -43,7 +45,7 @@ PII(Personally Identifiable Information, 개인 식별 정보)란 이름, 주민
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 마스킹 기법 분류
 
@@ -89,7 +91,7 @@ PII(Personally Identifiable Information, 개인 식별 정보)란 이름, 주민
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 익명화(Anonymization) vs 가명화(Pseudonymization)
 
@@ -114,7 +116,7 @@ PII(Personally Identifiable Information, 개인 식별 정보)란 이름, 주민
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 클라우드 환경의 동적 마스킹 구현
 
@@ -156,7 +158,7 @@ PII(Personally Identifiable Information, 개인 식별 정보)란 이름, 주민
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

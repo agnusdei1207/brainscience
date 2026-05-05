@@ -2,17 +2,19 @@
 title = "221. ISACA 및 CISA 프레임워크"
 weight = 221
 +++
+## 0. 핵심 인사이트
 
-# 221. ISACA (정보시스템 감사 통제 협회) 및 CISA (국제 공인 정보시스템 감사사) 프레임워크
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ISACA (Information Systems Audit and Control Association)는 전 세계 IT 거버넌스, 보안, 감사의 표준을 제정하는 글로벌 협회이며, CISA (Certified Information Systems Auditor)는 정보시스템의 취약점을 진단하고 통제 및 보안 절차를 검증하는 최고 수준의 국제 공인 자격 프레임워크다.
+> **핵심**: ISACA (Information Systems Audit and Control Association)는 전 세계 IT 거버넌스, 보안, 감사의 표준을 제정하는 글로벌 협회이며, CISA (Certified Information Systems Auditor)는 정보시스템의 취약점을 진단하고 통제 및 보안 절차를 검증하는 최고 수준의 국제 공인 자격 프레임워크다.
 > 2. **가치**: 기업은 CISA의 위험 기반 감사 (Risk-based Audit) 방법론을 통해 IT 투자의 투명성을 확보하고, 규제 준수 (Compliance)를 입증함으로써 시스템 장애나 보안 사고로 인한 막대한 재무적, 법적 손실을 선제적으로 차단할 수 있다.
 > 3. **융합**: CISA 프레임워크는 단순히 회계 감사의 IT 확장을 넘어, COBIT (IT 거버넌스), ITIL (서비스 관리), ISO 27001 (정보보안 관리 체계)과 유기적으로 결합하여, 기업의 비즈니스 목표와 IT 전략이 일치하도록 보장하는 최고 수준의 경영 통제 수단으로 작용한다.
 
+> 📝 모범 답안
+
+# 221. ISACA (정보시스템 감사 통제 협회) 및 CISA (국제 공인 정보시스템 감사사) 프레임워크
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: ISACA (Information Systems Audit and Control Association)는 정보시스템 감사, 통제, 보안, 거버넌스 분야의 글로벌 전문가 협회다. CISA (Certified Information Systems Auditor)는 ISACA에서 주관하는 프레임워크이자 자격으로, 조직의 정보 기술 및 비즈니스 시스템을 감사 (Audit), 통제 (Control), 모니터링 및 평가할 수 있는 역량을 체계화한 국제 표준이다. 단순한 해킹 기술이 아니라, 거버넌스와 위험 관리 관점에서 IT 자산을 보호하는 방법론을 제시한다.
 
@@ -66,7 +68,7 @@ weight = 221
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (CISA 5개 도메인)
 
@@ -158,7 +160,7 @@ CISA 감사 시 타이밍과 절차의 연속성을 타이밍 다이어그램으
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 비교 1: CISA vs CISM vs CISSP
 
@@ -215,7 +217,7 @@ CISA 감사 시 타이밍과 절차의 연속성을 타이밍 다이어그램으
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -274,7 +276,7 @@ CISA 감사 시 타이밍과 절차의 연속성을 타이밍 다이어그램으
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

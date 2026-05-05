@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Spark의 지연 평가(Lazy Evaluation)는 트랜스포메이션(map, filter 등) 연산을 즉시 실행하지 않고 DAG(유향 비순환 그래프)에 기록했다가, 액션(count, save 등)이 호출될 때 Catalyst Optimizer가 전체 실행 계획을 최적화한 후 한 번에 실행하는 방식이다.
+> **핵심**: Spark의 지연 평가(Lazy Evaluation)는 트랜스포메이션(map, filter 등) 연산을 즉시 실행하지 않고 DAG(유향 비순환 그래프)에 기록했다가, 액션(count, save 등)이 호출될 때 Catalyst Optimizer가 전체 실행 계획을 최적화한 후 한 번에 실행하는 방식이다.
 > 2. **가치**: 개별 연산을 즉시 실행하면 불필요한 중간 데이터가 생성되지만, 지연 평가를 통해 Optimizer가 연산 순서 재배치·불필요한 단계 제거·푸시다운(Predicate Pushdown) 등의 최적화를 적용하여 실제 실행 비용을 최소화한다.
 > 3. **판단 포인트**: 지연 평가는 Spark 성능 최적화의 핵심이지만, 잘못 이해하면 `collect()`를 루프 안에서 호출하거나 불필요한 `show()`를 남발하여 오히려 성능을 해치는 함정에 빠질 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 수학에서 함수 `f(x) = 2x + 1`을 정의할 때, x 값을 알지 못해도 함수를 정의할 수 있다. x가 주어질 때(즉, 실제 계산이 필요할 때)만 결과가 계산된다. Spark의 지연 평가는 이와 정확히 같은 원리다.
 
@@ -26,7 +27,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### DAG 실행 계획 최적화 과정
 
@@ -89,7 +90,7 @@ result.explain(mode="extended")  # 논리적/물리적 계획 출력
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Eager Evaluation vs Lazy Evaluation
 
@@ -118,7 +119,7 @@ step3 = step2.map(f3)     # 1M 행 처리
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **지연 평가의 함정 - 흔한 실수**:
 ```python
@@ -164,7 +165,7 @@ df.filter(df.age > 30).groupBy("dept").count().explain()
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 설명 |
 |:---|:---|

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SEV-ES (Secure Encrypted Virtualization - Encrypted State)는 기본 SEV의 메모리 암호화에 더해 VM이 중단(VMEXIT)될 때 CPU 레지스터 상태(General Purpose Registers, XMM 등)도 암호화해 하이퍼바이저가 VM 내부 레지스터 값을 볼 수 없도록 보호하는 기술이다.
+> **핵심**: SEV-ES (Secure Encrypted Virtualization - Encrypted State)는 기본 SEV의 메모리 암호화에 더해 VM이 중단(VMEXIT)될 때 CPU 레지스터 상태(General Purpose Registers, XMM 등)도 암호화해 하이퍼바이저가 VM 내부 레지스터 값을 볼 수 없도록 보호하는 기술이다.
 > 2. **가치**: SEV만으로는 VMEXIT 시 하이퍼바이저가 RAX·RCX·RIP 등 레지스터를 읽을 수 있어 실행 컨텍스트가 노출됐으나, SEV-ES는 이 취약점을 VMSA (VM Save Area) 암호화로 해결했다.
 > 3. **판단 포인트**: SEV-ES는 VM과 하이퍼바이저 간 인터페이스(GHCB: Guest Hypervisor Communication Block)를 재정의해 필요한 정보만 공유하는 최소 공개 원칙을 구현한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 가상화 환경에서 VM이 실행되면 하이퍼바이저 이벤트(인터럽트, I/O 접근, 하이퍼콜 등)가 발생할 때 VM은 VMEXIT 상태로 전환된다. 이때 CPU는 현재 VM의 레지스터 상태를 VMSA (VM Save Area)에 저장한다. 기본 SEV에서 이 VMSA는 하이퍼바이저가 읽을 수 있어, 게스트 VM의 실행 상태(RIP, RSP, 레지스터 값)가 노출됐다.
 
@@ -23,7 +25,7 @@ SEV-ES는 VMSA를 게스트 고유 키로 암호화해 하이퍼바이저가 VMS
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 기능 | SEV | SEV-ES |
 |:---|:---|:---|
@@ -68,7 +70,7 @@ GHCB는 게스트 VM이 하이퍼바이저와 통신하기 위해 명시적으�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | SEV | SEV-ES | SEV-SNP |
 |:---|:---|:---|:---|
@@ -80,7 +82,7 @@ GHCB는 게스트 VM이 하이퍼바이저와 통신하기 위해 명시적으�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **활성화 및 확인**  
 ```bash
@@ -102,7 +104,7 @@ cat /sys/kernel/security/sevguest
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 SEV-ES는 SEV의 핵심 약점이었던 VMEXIT 시 레지스터 노출 문제를 해결해 VM 격리의 완전성을 높였다. 이를 통해 하이퍼바이저가 게스트 VM의 실행 컨텍스트를 전혀 알 수 없게 되어, "하이퍼바이저를 신뢰하지 않는" 컨피덴셜 VM 모델이 실질적으로 구현됐다. SEV-SNP와 함께 AMD 컨피덴셜 컴퓨팅 스택의 핵심을 이룬다.
 

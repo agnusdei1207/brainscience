@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. TDD(Test-Driven Development)는 "테스트 먼저 작성 → 최소 코드로 통과 → 리팩토링"의 Red-Green-Refactor 사이클로 — 테스트가 설계 도구가 되어 과도한 설계(Over-Engineering)를 방지하고, 변경에 안전한 코드베이스를 만드는 개발 방법론이다.
 > 2. BDD(Behavior-Driven Development)는 TDD의 "무엇을 테스트할지 불명확함" 문제를 해결하기 위해 Dan North가 제안한 확장으로 — Gherkin 언어(Given-When-Then)로 비즈니스 시나리오를 자연어로 작성하여 비개발자와의 공통 언어를 확보한다.
 > 3. TDD/BDD의 실질적 가치는 "버그를 코드 작성 시점에 잡는다"는 것으로 — 프로덕션 버그 1건을 수정하는 비용이 TDD로 테스트 작성하는 비용의 10~100배임을 감안할 때, CI/CD 파이프라인과 결합된 TDD는 장기적으로 개발 속도를 오히려 향상시킨다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. TDD 개념
+## 1. 개요 및 필요성
 
 ```
 TDD (Test-Driven Development):
@@ -61,7 +64,7 @@ TDD의 3 규칙 (Uncle Bob):
 
 ---
 
-## Ⅱ. BDD 개념
+## 2. 구성요소
 
 ```
 BDD (Behavior-Driven Development):
@@ -109,7 +112,7 @@ BDD의 가치:
 
 ---
 
-## Ⅲ. TDD 실천 패턴
+## 3. 구조 및 동작 원리
 
 ```
 TDD 실천 패턴:
@@ -168,7 +171,7 @@ AAA 패턴 (Arrange-Act-Assert):
 
 ---
 
-## Ⅳ. TDD/BDD와 CI/CD 통합
+## 4. 비교 및 트레이드오프
 
 ```
 TDD/BDD + CI/CD 파이프라인:
@@ -223,7 +226,7 @@ TDD 도입 장벽과 극복:
 
 ---
 
-## Ⅴ. 실무 시나리오 — API 개발 TDD+BDD
+## 5. 실무 적용 및 최적화 기법
 
 ```
 결제 API TDD+BDD 개발:

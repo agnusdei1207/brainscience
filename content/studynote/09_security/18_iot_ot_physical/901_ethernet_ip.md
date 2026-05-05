@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: EtherNet/IP는 표준 이더넷(IEEE 802.3)과 TCP/IP 위에서 CIP (Common Industrial Protocol)를 구현한 산업용 네트워크 프로토콜이다.
+> **핵심**: EtherNet/IP는 표준 이더넷(IEEE 802.3)과 TCP/IP 위에서 CIP (Common Industrial Protocol)를 구현한 산업용 네트워크 프로토콜이다.
 > 2. **가치**: 일반 상용 IT 인프라와 높은 호환성을 유지하면서도, 산업용 기기 간의 실시간 제어와 정보 교환을 동시에 처리할 수 있는 범용성을 제공한다.
 > 3. **판단 포인트**: IT 기반 기술을 적극 활용하므로 'CIP Security'와 같은 확장 표준을 통해 인증, 무결성, 기밀성을 확보하는 것이 보안의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 EtherNet/IP는 로크웰 오토메이션(Rockwell Automation) 주도로 개발되어 현재 ODVA에 의해 관리되는 개방형 표준이다. 여기서 'IP'는 Internet Protocol이 아니라 **Industrial Protocol**을 의미하며, 이는 산업용 객체 모델인 CIP를 이더넷 환경에 올렸음을 뜻한다.
 
@@ -23,7 +25,7 @@ EtherNet/IP는 로크웰 오토메이션(Rockwell Automation) 주도로 개발�
 
 ---
 
-## Ⅱ. 아키텍처 및 통신 모델
+## 2. 구성요소
 
 EtherNet/IP는 OSI 7계층 중 상위 계층에 CIP를 배치하고 하위 계층에 표준 이더넷/IP를 사용한다.
 
@@ -51,7 +53,7 @@ EtherNet/IP는 OSI 7계층 중 상위 계층에 CIP를 배치하고 하위 계�
 
 ---
 
-## Ⅲ. 비교 및 연결 (EtherNet/IP vs PROFINET)
+## 3. 구조 및 동작 원리
 
 산업용 이더넷 시장의 양대 산맥인 두 프로토콜을 비교한다.
 
@@ -67,7 +69,7 @@ EtherNet/IP는 OSI 7계층 중 상위 계층에 CIP를 배치하고 하위 계�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 기술사는 EtherNet/IP 환경에서 보안 강화를 위해 **'CIP Security'** 적용을 강력히 권고해야 한다. 이는 TLS와 DTLS를 통해 장치 간 상호 인증을 수행하고 제어 패킷의 변조를 막는 최신 보안 레이어다.
 
@@ -85,7 +87,7 @@ EtherNet/IP는 OSI 7계층 중 상위 계층에 CIP를 배치하고 하위 계�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 EtherNet/IP의 도입은 공장 하부의 제어 데이터와 상부의 경영 정보 시스템(ERP/MES) 간의 '수직적 통합'을 완성한다. 보안이 확보된 EtherNet/IP는 스마트 제조의 데이터 주권을 지키는 핵심 인프라가 된다.
 

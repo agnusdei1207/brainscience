@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CDC(Change Data Capture, 변경 데이터 캡처)는 운영 DB의 **트랜잭션 로그(Redo Log/Binlog)**를 직접 읽어 INSERT·UPDATE·DELETE 이벤트를 실시간 추출하는 기술로, DB에 추가 부하 없이 변경분만 캡처한다.
+> **핵심**: CDC(Change Data Capture, 변경 데이터 캡처)는 운영 DB의 **트랜잭션 로그(Redo Log/Binlog)**를 직접 읽어 INSERT·UPDATE·DELETE 이벤트를 실시간 추출하는 기술로, DB에 추가 부하 없이 변경분만 캡처한다.
 > 2. **가치**: 전통적 ETL의 "전체 테이블 스캔 주기 배치" 대신, **밀리초 단위 실시간 데이터 동기화**를 가능하게 하여 데이터 레이크·DW의 신선도를 획기적으로 향상한다.
 > 3. **판단 포인트**: **Debezium**이 오픈소스 CDC의 사실상 표준으로, Kafka Connect 기반으로 MySQL·PostgreSQL·Oracle·MongoDB 등 주요 DB의 로그를 Kafka 토픽으로 스트리밍한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 전통적 ETL은 주기적으로(야간) 운영 DB에서 `SELECT * WHERE updated_at > 어제`로 변경 데이터를 추출한다. 이 방식의 문제는:
 - DB 부하: 대용량 스캔 쿼리가 운영 DB 성능에 영향
@@ -40,7 +42,7 @@ Batch 쿼리 (SELECT * WHERE updated > ?)
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Debezium 아키텍처
 
@@ -102,7 +104,7 @@ Batch 쿼리 (SELECT * WHERE updated > ?)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### CDC vs 전통 ETL 배치 비교
 
@@ -130,7 +132,7 @@ Batch 쿼리 (SELECT * WHERE updated > ?)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Debezium 커넥터 설정 예시 (MySQL)
 
@@ -174,7 +176,7 @@ GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE,
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

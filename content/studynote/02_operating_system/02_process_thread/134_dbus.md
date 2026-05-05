@@ -5,17 +5,20 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 134. D-Bus (Desktop Bus)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: D-Bus (Desktop Bus)는 freedesktop.org가 표준화한 프로세스 간 통신(IPC, Inter-Process Communication) 메커니즘으로, 버스 데몬 (Bus Daemon, `dbus-daemon`)을 중심으로 메시지 라우팅 (Message Routing), 객체 모델 (Object Model), 시그널(Signal) 브로드캐스팅(Broadcasting)을 통합적으로 제공하는 고수준 IPC 시스템이다.
+> **핵심**: D-Bus (Desktop Bus)는 freedesktop.org가 표준화한 프로세스 간 통신(IPC, Inter-Process Communication) 메커니즘으로, 버스 데몬 (Bus Daemon, `dbus-daemon`)을 중심으로 메시지 라우팅 (Message Routing), 객체 모델 (Object Model), 시그널(Signal) 브로드캐스팅(Broadcasting)을 통합적으로 제공하는 고수준 IPC 시스템이다.
 > 2. **가치**: 시스템 버스 (System Bus)와 세션 버스 (Session Bus)의 두 계층으로 분리 운영되어, 시스템 수준 하드웨어 이벤트(네트워크 연결, 전원 관리)와 사용자 세션 수준 애플리케이션 이벤트를 격리하여 관리할 수 있으며, 원격 프로시저 호출 (RPC, Remote Procedure Call) 의미론을 네이티브하게 지원한다.
 > 3. **융합**: GLib 기반의 `GDBus` 라이브러리, Qt의 `QDBus`, Python의 `pydbus` 등 다양한 언어 바인딩 (Binding)을 통해 데스크탑 환경(Linux, GNOME, KDE)의 핵심 통신 인프라로 동작하며, HAL (Hardware Abstraction Layer) 및 systemd의 `dbus` 유닛 통신에서도 핵심 역할을 수행한다.
 
+> 📝 모범 답안
+
+# 134. D-Bus (Desktop Bus)
+
+##
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 - **개념**: D-Bus는 소켓 (Socket) 기반의 IPC 시스템으로, 중앙 버스 데몬이 모든 메시지를 중계(Relay)하는 허브 앤 스포크 (Hub-and-Spoke) 토폴로지 (Topology)를 사용한다. 각 프로세스는 버스 데몬에 연결하여 메서드 호출(Method Call), 시그널 방송(Signal Emission), 속성 접근(Property Access)의 세 가지 통신 유형을 수행한다.
 - **필요성**: 초기 Linux 데스크탑 환경에서는 CORBA, DCOP, X11 IPC 등 중복된 IPC 메커니즘이 혼재하여 호환성 문제가 심각했다. D-Bus는 단일 통합 IPC 버스를 제공하여, 하드웨어 이벤트 알림, 애플리케이션 간 서비스 호출, 설정 관리 등 데스크탑 환경의 모든 통신을 하나의 표준 프로토콜로 통합했다.
@@ -63,7 +66,7 @@ D-Bus의 허브 앤 스포크 토폴로지와 두 가지 버스 계층을 아키
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 D-Bus의 객체 모델은 소프트웨어 공학의 객체 지향 패러다임을 IPC 계층까지 확장한다.
 
@@ -107,7 +110,7 @@ D-Bus의 메서드 호출 RPC 흐름을 타이밍 다이어그램으로 시각�
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 D-Bus는 다른 IPC 메커니즘과 달리 '버스 중개' 구조를 채택한 점이 결정적 차이다.
 
@@ -140,7 +143,7 @@ D-Bus와 직통 IPC의 메시지 경로를 비교하면 성능 트레이드오�
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 D-Bus는 systemd 생태계와 긴밀하게 통합되어 있어 서버 운영에서도 핵심적인 역할을 수행한다.
 
@@ -182,7 +185,7 @@ D-Bus 세션 버스 데몬이 크래시하면, 해당 세션의 모든 데스크
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 D-Bus는 Linux 데스크탑 및 systemd 생태계의 표준 통신 인프라로 확고히 자리 잡았다.
 

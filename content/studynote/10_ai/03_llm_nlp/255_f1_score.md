@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: F1 스코어(F1-Score)는 정밀도(Precision)와 재현율(Recall)의 조화 평균(Harmonic Mean)으로, 두 지표가 균형을 이룰 때 가장 높아진다.
+> **핵심**: F1 스코어(F1-Score)는 정밀도(Precision)와 재현율(Recall)의 조화 평균(Harmonic Mean)으로, 두 지표가 균형을 이룰 때 가장 높아진다.
 > 2. **가치**: 불균형 데이터셋(Imbalanced Dataset)에서 정확도(Accuracy)가 왜곡될 때, F1 스코어가 실질적인 모델 성능을 반영한다.
 > 3. **판단 포인트**: 매크로 F1(Macro F1), 마이크로 F1(Micro F1), 가중 F1(Weighted F1)의 차이를 도메인 특성에 맞게 선택해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 F1 스코어는 분류 모델의 성능을 단일 숫자로 표현하는 지표로, **정밀도와 재현율을 동시에 고려**한다.
 
@@ -36,7 +38,7 @@ $$F1 = \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### F1 스코어 계산 구조
 
@@ -96,7 +98,7 @@ $$F_\beta = \frac{(1 + \beta^2) \times \text{Precision} \times \text{Recall}}{\b
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### F1 vs 정확도(Accuracy) — 불균형 데이터에서의 차이
 
@@ -124,7 +126,7 @@ PR 곡선(Precision-Recall Curve)에서 **각 임계값별 F1 최대점**이 최
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 불균형 데이터 처리와 F1 최적화
 
@@ -145,7 +147,7 @@ PR 곡선(Precision-Recall Curve)에서 **각 임계값별 F1 최대점**이 최
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 F1 스코어를 모델 평가 지표로 채택하면:
 

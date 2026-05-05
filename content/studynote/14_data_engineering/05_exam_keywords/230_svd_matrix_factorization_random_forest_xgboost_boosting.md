@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SVD(Singular Value Decomposition, 특이값 분해)는 임의의 행렬을 세 행렬의 곱으로 분해하여 잠재 구조를 추출하며, 이를 추천·압축·노이즈 제거에 활용한다.
+> **핵심**: SVD(Singular Value Decomposition, 특이값 분해)는 임의의 행렬을 세 행렬의 곱으로 분해하여 잠재 구조를 추출하며, 이를 추천·압축·노이즈 제거에 활용한다.
 > 2. **가치**: 랜덤 포레스트(Random Forest)의 배깅(Bagging, Bootstrap Aggregating)과 XGBoost의 그레이디언트 부스팅(Gradient Boosting)은 앙상블(Ensemble) 학습의 두 축으로, 개별 모델의 편향(Bias)과 분산(Variance)을 각각 다른 방향으로 감소시킨다.
 > 3. **판단 포인트**: 배깅(랜덤 포레스트)은 병렬 학습으로 분산을 줄이고, 부스팅(XGBoost)은 순차 학습으로 편향을 줄인다. 데이터가 노이즈 많으면 랜덤 포레스트, 정제된 데이터에서 성능 극대화엔 XGBoost가 유리하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 앙상블 학습의 철학
 
@@ -36,7 +38,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. SVD (Singular Value Decomposition, 특이값 분해)
 
@@ -135,7 +137,7 @@ XGBoost (eXtreme Gradient Boosting) 특징:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. 편향-분산 트레이드오프 (Bias-Variance Tradeoff)
 
@@ -180,7 +182,7 @@ E[(y - f̂(x))²] = Bias(f̂)² + Var(f̂) + 노이즈²
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. 신용 리스크 예측 시나리오 (XGBoost)
 
@@ -225,7 +227,7 @@ SHAP 분석: 신용 등급 > 부채비율 > 연체 이력 순 중요도
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 SVD·랜덤 포레스트·XGBoost는 현대 데이터 사이언스 현업에서 가장 많이 사용되는 알고리즘 군에 속한다. 특히 XGBoost는 수년간 Kaggle 대회의 최강자로 군림하며 정형 데이터 예측의 표준이 되었다.
 

@@ -6,15 +6,17 @@ description = "중요 사건을 기록하거나 탐지하지 못해 공격을 �
 taxonomy = ""
 tags = ["Software Engineering", "Security", "Logging", "Monitoring", "OWASP"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Security Logging and Monitoring Failures는 공격 흔적을 못 남기거나 못 보는 문제다.
+> **핵심**: Security Logging and Monitoring Failures는 공격 흔적을 못 남기거나 못 보는 문제다.
 > 2. **가치**: 사고 대응 속도와 원인 분석 능력을 높인다.
 > 3. **판단 포인트**: "기록했는가"보다 "찾을 수 있는가"를 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 로그 (Log)는 사건의 흔적이고, 모니터링 (Monitoring)은 그 흔적을 보는 체계다. 둘 중 하나라도 약하면 침해를 늦게 알아차린다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Security", "Logging", "Monitoring", "OWASP"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 중요한 것은 적절한 이벤트와 경보를 남기는 것이다.
 
@@ -44,7 +46,7 @@ tags = ["Software Engineering", "Security", "Logging", "Monitoring", "OWASP"]
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 이 항목은 탐지와 대응 체계의 품질을 좌우한다.
 
@@ -60,7 +62,7 @@ tags = ["Software Engineering", "Security", "Logging", "Monitoring", "OWASP"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 인증 실패, 권한 변경, 결제, 관리자 작업, 데이터 삭제 같은 이벤트를 반드시 기록한다.
 
@@ -73,7 +75,7 @@ tags = ["Software Engineering", "Security", "Logging", "Monitoring", "OWASP"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 로깅과 모니터링이 제대로 되면 침해 탐지와 포렌식이 쉬워진다.
 

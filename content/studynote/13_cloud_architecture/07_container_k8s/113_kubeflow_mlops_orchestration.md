@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Kubeflow는 Kubernetes 위에서 **ML 워크플로 전체(데이터 전처리 → 학습 → 하이퍼파라미터 튜닝 → 서빙 → 모니터링)**를 선언적으로 오케스트레이션하는 CNCF 기반 **MLOps 플랫폼**이다.
+> **핵심**: Kubeflow는 Kubernetes 위에서 **ML 워크플로 전체(데이터 전처리 → 학습 → 하이퍼파라미터 튜닝 → 서빙 → 모니터링)**를 선언적으로 오케스트레이션하는 CNCF 기반 **MLOps 플랫폼**이다.
 > 2. **가치**: 주피터 노트북에서 실험한 모델을 프로덕션에 올리려면 Docker화·스케줄링·GPU 할당·A/B 서빙 등 **"ML의 마지막 1마일"**을 해결해야 하며, Kubeflow Pipelines가 이를 **DAG(방향 비순환 그래프)로 자동화**한다.
 > 3. **판단 포인트**: Kubeflow는 K8s 운영 역량이 전제되므로 **진입 장벽이 높으며**, 소규모 팀에는 Vertex AI(GCP)·SageMaker(AWS) 같은 관리형 MLOps가 더 적합할 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 데이터 과학자의 87%가 "주피터 노트북에서 잘 되던 모델이 프로덕션에서 안 된다"고 말한다. 이 간극을 **"ML 기술 부채(Hidden Technical Debt)"**라 하며, Kubeflow는 이를 해소한다.
 
@@ -43,7 +45,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 핵심 컴포넌트
 
@@ -59,7 +61,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Kubeflow | SageMaker | Vertex AI |
 |:---|:---|:---|:---|
@@ -71,7 +73,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 도입 판단 기준
 1. **K8s 운영 팀 존재**: 있으면 Kubeflow, 없으면 관리형.
@@ -83,7 +85,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | 수동 ML 배포 | Kubeflow | 개선 |
 |:---|:---|:---|:---|

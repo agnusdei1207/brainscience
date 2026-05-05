@@ -5,15 +5,17 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ARM CCA (Confidential Compute Architecture)는 신뢰할 수 없는 하이퍼바이저로부터 가상 머신 (VM, Virtual Machine)을 물리적으로 격리하기 위해, '렐름 (Realm)'이라는 독립된 보안 실행 환경을 제공하는 하드웨어 기반 기밀 컴퓨팅 아키텍처다.
+> **핵심**: ARM CCA (Confidential Compute Architecture)는 신뢰할 수 없는 하이퍼바이저로부터 가상 머신 (VM, Virtual Machine)을 물리적으로 격리하기 위해, '렐름 (Realm)'이라는 독립된 보안 실행 환경을 제공하는 하드웨어 기반 기밀 컴퓨팅 아키텍처다.
 > 2. **가치**: RMM (Realm Management Monitor)과 GPT (Granule Protection Table)를 통해 메모리 접근 권한을 하드웨어 수준에서 동적으로 제어함으로써, 데이터가 처리되는 동안에도 기밀성과 무결성을 완벽히 보장한다.
 > 3. **융합**: 기존의 정적 격리 기술인 TrustZone을 넘어 동적 가상화 보안을 실현하며, 클라우드 서비스 제공자 (CSP, Cloud Service Provider)를 신뢰 모델에서 제외하는 '제로 트러스트 (Zero Trust)' 보안 패러다임을 하드웨어로 구현한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: ARM CCA (Confidential Compute Architecture)는 ARMv9 아키텍처의 핵심 보안 기능으로, 실행 중인 데이터와 코드를 시스템의 다른 부분(하이퍼바이저, OS 포함)으로부터 보호하기 위해 도입되었다. 이는 기존의 보안 세계(Secure World)와 일반 세계(Normal World)의 이분법적 구조를 넘어, 동적으로 생성 및 삭제가 가능한 '렐름 (Realm)'이라는 제3의 보호 영역을 도입한 것이 특징이다.
 
@@ -54,7 +56,7 @@ ARM CCA가 도입한 새로운 세계관인 '렐름 (Realm)'과 기존 세계들
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -135,7 +137,7 @@ ARM CCA 보안의 실질적인 집행관은 GPT (Granule Protection Table)이다
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 심층 기술 비교: ARM CCA vs 기존 보안 기술
 
@@ -177,7 +179,7 @@ ARM CCA는 Intel SGX의 강력한 보안성과 TrustZone의 하드웨어적 견�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -215,7 +217,7 @@ ARM CCA는 Intel SGX의 강력한 보안성과 TrustZone의 하드웨어적 견�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 도입 효과 분석 (ROI)
 

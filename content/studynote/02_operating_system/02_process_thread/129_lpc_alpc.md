@@ -5,15 +5,17 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: LPC (Local Procedure Call)은 Windows NT 커널이 동일 기기 내의 프로세스 간 통신을 위해 설계한 고성능 IPC (Inter-Process Communication) 메커니즘이며, 원격 프로시저 호출 (RPC, Remote Procedure Call)의 오버헤드 없이 함수 호출처럼 간단하게 메시지를 교환할 수 있도록 포트 (Port) 객체 기반으로 구현된다.
+> **핵심**: LPC (Local Procedure Call)은 Windows NT 커널이 동일 기기 내의 프로세스 간 통신을 위해 설계한 고성능 IPC (Inter-Process Communication) 메커니즘이며, 원격 프로시저 호출 (RPC, Remote Procedure Call)의 오버헤드 없이 함수 호출처럼 간단하게 메시지를 교환할 수 있도록 포트 (Port) 객체 기반으로 구현된다.
 > 2. **가치**: 네트워크 스택을 경유하지 않고 커널 공간에서 직접 메시지를 전달하므로, 동일 기기 내 IPC에서 파이프 (Pipe)나 소켓 (Socket) 대비 지연 시간이 수 마이크로초 수준으로 최적화되며, Windows 서브시스템 (Win32, POSIX, OS/2) 간 통신의 핵심 백본으로 동작한다.
 > 3. **융합**: ALPC (Advanced Local Procedure Call)는 기존 LPC의 성능 한계를 극복하기 위해 메시지 버퍼 재사용, 커널 모드 직접 전달, 리소스 관리 최적화 등을 도입한 차세대 구현체로, 현대 Windows (Windows 10/11)의 전체 프로세스 간 통신 아키텍처에서 핵심 역할을 담당한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: LPC (Local Procedure Call)은 Microsoft Windows NT 계열 운영체제에서 동일 머신 내의 두 프로세스가 통신하기 위해 사용하는 커널 수준의 메시지 전달 메커니즘이다. 클라이언트 프로세스가 커널의 LPC 포트 (Port) 객체를 통해 메시지를 전송하면, 서버 프로세스가 해당 메시지를 수신하고 응답을 반환하는 형태로 동작한다. 원격 호출인 RPC (Remote Procedure Call)와 달리 네트워크 프로토콜 스택을 거치지 않으므로 극히 낮은 지연을 제공한다.
 
@@ -69,7 +71,7 @@ LPC와 ALPC의 구조적 차이를 시각화하면, ALPC가 기존 LPC의 어떤
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -140,7 +142,7 @@ ALPC는 기존 LPC 대비 세 가지 핵심 최적화를 도입하여 성능을 
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: LPC/ALPC vs Unix Domain Socket vs Named Pipe
 
@@ -209,7 +211,7 @@ LPC/ALPC가 Windows 프로세스 간 통신에서 어떤 위치를 차지하는�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -262,7 +264,7 @@ ALPC 도입 시 성능과 안정성을 판단하기 위한 의사결정 플로�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

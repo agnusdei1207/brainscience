@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 보호 도메인 최소 권한 원칙 (Protection Domain & Least Privilege)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 보호 도메인 (Protection Domain)은 프로세스가 접근할 수 있는 자원(객체)과 그에 대한 권한(Access Right)의 집합을 정의하는 개념적 영역이며, 최소 권한 원칙 (Principle of Least Privilege, PoLP)은 특정 작업을 수행하는 데 필요한 '딱 그만큼의 권한'만 부여해야 한다는 시스템 보안의 대전제다.
+> **핵심**: 보호 도메인 (Protection Domain)은 프로세스가 접근할 수 있는 자원(객체)과 그에 대한 권한(Access Right)의 집합을 정의하는 개념적 영역이며, 최소 권한 원칙 (Principle of Least Privilege, PoLP)은 특정 작업을 수행하는 데 필요한 '딱 그만큼의 권한'만 부여해야 한다는 시스템 보안의 대전제다.
 > 2. **가치**: 불필요한 권한을 제거함으로써 특정 프로세스가 악성코드에 감염되거나 취약점이 노출되더라도, 해당 프로세스의 도메인을 넘어 시스템 전체로 장애나 해킹 피해가 확산(Lateral Movement)되는 것을 구조적으로 차단한다.
 > 3. **융합**: 과거에는 운영체제의 링(Ring) 아키텍처나 UNIX의 프로세스 사용자 권한(SetUID) 수준에 머물렀으나, 현대에는 클라우드 IAM (Identity and Access Management), 컨테이너 보안 컨텍스트, 제로 트러스트(Zero Trust) 아키텍처를 지탱하는 가장 기초적인 철학으로 자리 잡았다.
 
+> 📝 모범 답안
+
+# 보호 도메인 최소 권한 원칙 (Protection Domain & Least Privilege)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **보호 도메인 (Protection Domain)**: 시스템 내의 객체(파일, 메모리 세그먼트, 프린터 등)에 대해 주체(프로세스, 사용자)가 가질 수 있는 접근 권한의 묶음. 도메인은 $\langle 객체, 권한\_집합 \rangle$의 쌍으로 정의된다.
@@ -59,7 +61,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 보호 도메인의 구성 및 표현
 
@@ -111,7 +113,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 권한 통제 메커니즘 비교 (링 구조 vs Capabilities)
 
@@ -162,7 +164,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -213,7 +215,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: BCG 매트릭스(Boston Consulting Group Matrix)는 시장 성장률(Market Growth Rate)과 상대적 시장 점유율(Relative Market Share)로 사업 단위(SBU)를 Star, Cash Cow, Question Mark, Dog 4개 사분면으로 분류하는 포트폴리오 전략 도구다.
+> **핵심**: BCG 매트릭스(Boston Consulting Group Matrix)는 시장 성장률(Market Growth Rate)과 상대적 시장 점유율(Relative Market Share)로 사업 단위(SBU)를 Star, Cash Cow, Question Mark, Dog 4개 사분면으로 분류하는 포트폴리오 전략 도구다.
 > 2. **가치**: 자원 배분 우선순위 결정에 명확한 논리를 제공한다. Cash Cow의 현금을 Star 육성과 Question Mark 선별 투자에 사용하고, Dog는 철수를 검토한다. 1970년대 개발됐지만 포트폴리오 전략 논의의 기본 언어로 현재도 활용된다.
 > 3. **판단 포인트**: BCG 매트릭스의 한계는 이분법적 분류의 단순성이다. 디지털 전환 시대에는 빠른 성장률 변화(Disruption), 시장 경계 붕괴, 네트워크 효과 등으로 전통 BCG 분류가 빠르게 무력화된다. Ansoff Matrix, GE-McKinsey 9-cell Matrix와 보완 사용이 권장된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌──────────────────────────────────────────────────────────┐
@@ -37,7 +39,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 4대 분면 전략
 
@@ -63,7 +65,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | BCG 매트릭스 | GE-McKinsey | Ansoff |
 |:---|:---|:---|:---|
@@ -75,7 +77,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### IT 기업 BCG 분석 예시
 
@@ -96,7 +98,7 @@ Big Tech A사 포트폴리오:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

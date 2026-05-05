@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 비면허 대역 LPWAN은 정부가 무료 개방한 **ISM 밴드(900MHz 부근)**에서 통신사 인프라 없이 **자가 기지국으로 도시 규모 IoT 사설망을 구축**하는 기술이며, LoRaWAN(CSS 변조)과 Sigfox(UNB 변조)가 양대 산맥이다.
+> **핵심**: 비면허 대역 LPWAN은 정부가 무료 개방한 **ISM 밴드(900MHz 부근)**에서 통신사 인프라 없이 **자가 기지국으로 도시 규모 IoT 사설망을 구축**하는 기술이며, LoRaWAN(CSS 변조)과 Sigfox(UNB 변조)가 양대 산맥이다.
 > 2. **가치**: LoRaWAN은 **Chirp Spread Spectrum(CSS)**으로 넓게 펼쳐 노이즈를 뚫고, Sigfox는 **Ultra Narrow Band(UNB)**로 100Hz에 에너지를 몰빵하여 초장거리를 달성한다. 정반대 전략으로 같은 목표(원격 IoT)를 해결한다.
 > 3. **판단 포인트**: LoRaWAN은 **자체 GW 구축(자유도↑)**이 가능하여 사설 IoT에 적합하고, Sigfox는 **본사 망 독점 운영(관리 편의↑)**이지만 확장에 한계가 있어 하락세다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 국가 전파는 한정 자원으로 통신사가 수조 원에 경매하여 독점 사용(면허 대역)하지만, 정부는 일부 주파수(ISM 밴드)를 **출력 제한 하에 무료 개방**하고 있다. Wi-Fi(2.4GHz)·Bluetooth가 이 무료 도로를 쓰듯, LoRa와 Sigfox도 900MHz 비면허 대역에서 자체 규칙으로 도시 규모 IoT 사설망을 구축한다.
 
@@ -40,7 +42,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 항목 | LoRaWAN (CSS) | Sigfox (UNB) |
 |:---|:---|:---|
@@ -65,7 +67,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | LoRaWAN | Sigfox | NB-IoT (면허) |
 |:---|:---|:---|:---|
@@ -77,7 +79,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### LoRaWAN 적합 시나리오
 1. **스마트 농업**: 자가 GW 1대로 농장 전체 커버, 토양 센서 수백 개 운영.
@@ -92,7 +94,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | 셀룰러 IoT | LoRaWAN | 개선 |
 |:---|:---|:---|:---|

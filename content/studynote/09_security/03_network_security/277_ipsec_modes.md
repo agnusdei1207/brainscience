@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Transport Mode는 원본 IP 헤더를 유지한 채 페이로드만 보호하고, Tunnel Mode는 원본 IP 패킷 전체를 새 IP 패킷으로 캡슐화해 내부 IP 주소 정보까지 은폐한다.
+> **핵심**: Transport Mode는 원본 IP 헤더를 유지한 채 페이로드만 보호하고, Tunnel Mode는 원본 IP 패킷 전체를 새 IP 패킷으로 캡슐화해 내부 IP 주소 정보까지 은폐한다.
 > 2. **가치**: Site-to-Site VPN (Virtual Private Network)에는 Tunnel Mode가 필수이고, Host-to-Host 직접 암호화에는 Transport Mode가 효율적이며, 두 모드는 오버헤드와 보호 범위의 트레이드오프로 선택한다.
 > 3. **판단 포인트**: Tunnel Mode가 원본 IP 헤더를 은폐하는 것이 단순한 추가 기능이 아니라, 내부망 토폴로지 노출을 방지하는 보안 요소임을 강조해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 IPsec이 IP 패킷을 어느 수준까지 보호할 것인가를 결정하는 것이 바로 **운용 모드(Operation Mode)**다. Transport Mode와 Tunnel Mode는 AH/ESP 프로토콜 모두에 적용 가능한 독립적인 개념이다.
 
@@ -27,7 +29,7 @@ Tunnel Mode는 **게이트웨이 간 또는 게이트웨이-호스트 간 통신
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Transport Mode vs Tunnel Mode 패킷 구조 (ESP 기준)
 
@@ -72,7 +74,7 @@ Tunnel Mode는 **게이트웨이 간 또는 게이트웨이-호스트 간 통신
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Site-to-Site VPN vs Host-to-Host 시나리오
 
@@ -116,7 +118,7 @@ IPsec 정책 직접 설정, 낮은 오버헤드
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **IPsec Tunnel Mode 활용: 클라우드-온프레미스 연결**
 
@@ -151,7 +153,7 @@ IPsec 정책:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Transport Mode와 Tunnel Mode는 적용 시나리오에 따라 선택해야 하는 보완적 도구다. 기업 VPN의 95% 이상은 Tunnel Mode + ESP를 사용하며, 이는 NAT 호환성, 내부 토폴로지 은폐, 게이트웨이 집중 관리의 세 가지 장점을 동시에 충족하기 때문이다.
 

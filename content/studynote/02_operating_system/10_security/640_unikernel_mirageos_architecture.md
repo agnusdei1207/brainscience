@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 유니커널 (Unikernel) 커널 분할 오버헤드 극소화 구조체 망 보안 융합 (MirageOS)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 유니커널(Unikernel)은 범용 운영체제(Linux 등)가 가진 수백만 줄의 코드를 버리고, 오직 **단 하나의 애플리케이션 실행에 필요한 커널 기능(네트워크, 파일)만 라이브러리 형태로 묶어 단일 주소 공간(Single Address Space)의 부팅 가능한 이미지**로 굽어내는 특수 목적형 라이브러리 OS다.
+> **핵심**: 유니커널(Unikernel)은 범용 운영체제(Linux 등)가 가진 수백만 줄의 코드를 버리고, 오직 **단 하나의 애플리케이션 실행에 필요한 커널 기능(네트워크, 파일)만 라이브러리 형태로 묶어 단일 주소 공간(Single Address Space)의 부팅 가능한 이미지**로 굽어내는 특수 목적형 라이브러리 OS다.
 > 2. **성능**: 유저 모드와 커널 모드 간의 구분(Ring Transition)이 없으므로 시스템 콜 문맥 교환(Context Switch) 오버헤드가 0이며, 부팅 시간이 수 밀리초(ms) 단위로 짧아 서버리스(Serverless) 컴퓨팅이나 마이크로서비스에 최적화되어 있다.
 > 3. **보안**: 셸(Shell), 유틸리티, 쓸데없는 디바이스 드라이버가 아예 존재하지 않으므로 공격 표면(Attack Surface)이 극단적으로 작으며, 해커가 코드를 주입해도 실행할 환경(bash 등)이 없어 차세대 초고도 보안 샌드박스로 각광받고 있다. (대표작: MirageOS, OSv)
 
+> 📝 모범 답안
+
+# 유니커널 (Unikernel) 커널 분할 오버헤드 극소화 구조체 망 보안 융합 (MirageOS)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 유니커널은 애플리케이션 코드와 그 애플리케이션이 필요로 하는 OS의 조각들(TCP/IP 스택, 메모리 할당자 등)을 정적으로 링크(Static Linking)하여 만든 단일 머신 이미지(Single Machine Image)다. 이 이미지는 하이퍼바이저(Xen, KVM 등) 위에서 OS 없이 직접(Directly) 부팅된다.
 
@@ -38,7 +40,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (라이브러리 OS 스택)
 
@@ -103,7 +105,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 클라우드 인프라 워크로드 격리 기술 비교
 
@@ -124,7 +126,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -171,7 +173,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

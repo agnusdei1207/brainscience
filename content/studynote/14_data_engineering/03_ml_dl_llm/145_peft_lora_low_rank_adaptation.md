@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: LoRA는 **사전 학습된 가중치 행렬 W에 저랭크 분해 행렬(A·B)을 추가**하여, 전체 파라미터의 **0.1~1%만 학습**하면서도 Full Fine-tuning과 유사한 성능을 달성하는 PEFT(Parameter-Efficient Fine-Tuning) 기법이다.
+> **핵심**: LoRA는 **사전 학습된 가중치 행렬 W에 저랭크 분해 행렬(A·B)을 추가**하여, 전체 파라미터의 **0.1~1%만 학습**하면서도 Full Fine-tuning과 유사한 성능을 달성하는 PEFT(Parameter-Efficient Fine-Tuning) 기법이다.
 > 2. **가치**: 7B 모델 Full FT는 **GPU 메모리 112GB+(FP16)** 필요하지만, LoRA는 **추가 파라미터만 학습**하여 단일 GPU(24GB)로도 가능하다. QLoRA(4비트 양자화+LoRA)는 더 적은 메모리로 가능하다.
 > 3. **판단 포인트**: 랭크 r(4~64)이 핵심 하이퍼파라미터이며, r이 클수록 표현력↑ 비용↑. 어텐션 레이어(Q·V)에 적용하는 것이 표준이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 LoRA: W' = W + ΔW = W + B·A

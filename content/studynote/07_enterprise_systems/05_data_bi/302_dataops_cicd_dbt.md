@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: DataOps는 DevOps 원칙을 데이터 파이프라인에 적용해, 코드 변경이 자동으로 테스트되고 배포되는 문화·프로세스·기술 체계다.
+> **핵심**: DataOps는 DevOps 원칙을 데이터 파이프라인에 적용해, 코드 변경이 자동으로 테스트되고 배포되는 문화·프로세스·기술 체계다.
 > 2. **가치**: dbt (data build tool)는 SQL 기반 변환 레이어를 코드로 관리하고 버전 제어하여 데이터 신뢰성을 80% 이상 향상시킨다.
 > 3. **판단 포인트**: staging → intermediate → mart 3단계 레이어 구분이 데이터 품질 문제의 발생 지점을 즉시 특정 가능하게 한다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 전통적인 데이터 파이프라인은 단일 SQL 스크립트 수백 개를 수작업으로 실행하고, 오류 발생 시 담당자만 아는 복잡한 의존 관계 때문에 수정 비용이 폭발적으로 증가했다.
 DataOps (Data Operations)는 이 문제를 DevOps 원칙인 버전 관리, CI/CD, 자동화 테스트, 관측 가능성으로 해결한다.
@@ -27,7 +28,7 @@ DataOps 도입 효과 (Gartner 2024):
 
 📢 **섹션 요약 비유**: DataOps는 요리 레시피를 Git에 올리고 매 요리마다 자동으로 맛 테스트를 하는 식당 주방 시스템이다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### dbt 모델 레이어 구조
 
@@ -76,7 +77,7 @@ raw_orders → stg_orders → int_order_items → fct_orders → dim_customer_lt
 
 📢 **섹션 요약 비유**: dbt의 레이어 구조는 건물 시공도다. 기초(staging) → 골조(intermediate) → 인테리어(mart) 순서를 지켜야 어느 층에서 문제가 났는지 바로 찾을 수 있다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### DataOps vs DevOps
 
@@ -99,7 +100,7 @@ raw_orders → stg_orders → int_order_items → fct_orders → dim_customer_lt
 
 📢 **섹션 요약 비유**: dbt는 SQL을 아는 분석가도 쓸 수 있는 전동 드릴, Spark는 대형 굴착기다. 집 인테리어엔 전동 드릴이 충분하다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### DataOps 도입 체크리스트
 
@@ -119,7 +120,7 @@ raw_orders → stg_orders → int_order_items → fct_orders → dim_customer_lt
 
 📢 **섹션 요약 비유**: 테스트 없는 데이터 배포는 안전벨트 없이 고속도로를 달리는 것과 같다. 평소엔 괜찮지만 사고 나면 수습이 불가능하다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

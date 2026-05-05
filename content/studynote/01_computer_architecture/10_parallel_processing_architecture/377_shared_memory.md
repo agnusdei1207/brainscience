@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 공유 메모리 시스템 (Shared Memory System)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 두 개 이상의 물리적 또는 논리적 프로세서(Core)가 **단일한 전역 주소 공간(Global Address Space)**을 갖는 하나의 메인 메모리(RAM)를 공동으로 소유하고 접근하는 하드웨어 아키텍처다.
+> **핵심**: 두 개 이상의 물리적 또는 논리적 프로세서(Core)가 **단일한 전역 주소 공간(Global Address Space)**을 갖는 하나의 메인 메모리(RAM)를 공동으로 소유하고 접근하는 하드웨어 아키텍처다.
 > 2. **가치**: 데이터를 주고받기 위해 복잡한 네트워크 패킷(Message Passing)을 만들 필요 없이, 메모리 특정 주소에 값을 쓰기만 하면 다른 코어가 즉각 읽어갈 수 있어 프로그래밍 모델이 압도적으로 직관적이고 빠르다.
 > 3. **융합**: 자원의 투명한 공유라는 빛 이면에 '경합 조건(Race Condition)'과 '캐시 불일치'라는 깊은 그림자가 존재하여, 이를 방어하기 위한 운영체제의 동기화 기법(Mutex) 및 하드웨어 스누핑(Snooping) 프로토콜과 치열하게 융합해야만 생존할 수 있다.
 
+> 📝 모범 답안
+
+# 공유 메모리 시스템 (Shared Memory System)
+
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 공유 메모리 시스템 (Shared Memory System)은 인류가 단일 칩의 클럭(Clock) 한계에 부딪혔을 때 가장 먼저 꺼내든 멀티프로세서(MIMD)의 기본 청사진이다. 
 
@@ -44,7 +46,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 공유 메모리 시스템이 동작하기 위해서는 하드웨어 레벨에서 모든 코어가 메모리 공간을 충돌 없이 바라보게 만드는 버스 중재 로직과, 접근 속도에 따른 아키텍처 분화가 필요하다.
 
@@ -78,7 +80,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 공유 메모리 시스템(Tightly Coupled)은 메시지 패싱 기반의 분산 메모리 시스템(Loosely Coupled)과 뚜렷한 대척점에 서며 개발 패러다임을 양분했다.
 
@@ -118,7 +120,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 현장의 백엔드 엔지니어나 C/C++/Java 개발자가 서버 환경(AWS 등)을 세팅할 때, 메모리 공유의 특성을 고려하지 않고 막무가내로 스레드를 늘리면 오히려 서버 성능이 나락으로 떨어진다.
 
@@ -157,7 +159,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 공유 메모리 시스템은 한정된 단일 상자(PC, 단일 서버) 안에서 인간이 만들어낼 수 있는 프로그래밍 직관성의 정점과 하드웨어 복잡성의 절정을 동시에 보여주는 걸작이다.
 

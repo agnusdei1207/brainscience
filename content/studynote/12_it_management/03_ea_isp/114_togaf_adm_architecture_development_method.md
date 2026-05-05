@@ -5,19 +5,21 @@ date = "2026-04-10"
 [extra]
 categories = "studynote-it-management"
 +++
-
-# 114. TOGAF ADM (Architecture Development Method)
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 조직의 비즈니스와 IT 시스템을 새롭게 뜯어고칠 때, 백지상태에서 출발하여 "어떤 순서로 비즈니스, 데이터, 애플리케이션, 인프라를 설계하고 어떻게 이사(Migration)할 것인가?"에 대한 실천적 행동 지침을 제시하는 **글로벌 EA(엔터프라이즈 아키텍처) 표준 프레임워크인 TOGAF의 심장부, 'ADM 9단계(피자 조각 사이클)'**를 다룹니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# 114. TOGAF ADM (Architecture Development Method)
+
 > 1. **본질**: 단순히 아키텍처 '문서'의 목록을 나열한 것이 아니라, 그 문서를 '만드는 순서와 방법(Step-by-step Process)'을 둥근 원형의 끊임없는 순환 사이클(Iterative Loop)로 정의한 절차적 매뉴얼이다.
 > 2. **가치**: "서버부터 덜컥 사지 마라!" 항상 경영진의 비전과 비즈니스 프로세스를 먼저 정의하고(위에서 아래로, Top-down), 그에 맞는 데이터와 앱을 그린 뒤 마지막에 인프라(클라우드 등)를 결정하게 강제하여 비즈니스와 IT의 엇박자를 완벽하게 막아준다.
 > 3. **기술 체계**: **준비(예비) 단계**를 거쳐 **비전(A) $\rightarrow$ 비즈니스(B) $\rightarrow$ 정보시스템(C) $\rightarrow$ 기술(D)**의 설계 파트를 끝내면, 갭 분석을 통한 **해결책 및 마이그레이션(E, F)** 일정을 짜고, 구축 과정을 감독(G)하며, 완료 후 새로운 변화(H)를 맞이하는 생명주기를 가진다.
 
 ---
 
-### Ⅰ. 아키텍처 설계의 뼈대: BDAT 순차 도출 (Phase B, C, D)
+### 1. 개요 및 필요성
 집을 지을 때 땅부터 파지 말고 가족의 라이프스타일(비즈니스)부터 그려라.
 
 1. **Phase A (아키텍처 비전, Architecture Vision)**:
@@ -36,7 +38,7 @@ categories = "studynote-it-management"
 
 ---
 
-### Ⅱ. 이행과 마이그레이션 전략 (Phase E, F)
+### 2. 구성요소
 그린 도면(TO-BE)과 현재 집(AS-IS)의 차이를 메울 공사 일정을 짠다.
 
 1. **Phase E (기회 및 솔루션, Opportunities & Solutions)**:
@@ -50,7 +52,7 @@ categories = "studynote-it-management"
 
 ---
 
-### Ⅲ. 구축 감시와 끝없는 순환 (Phase G, H)
+### 3. 구조 및 동작 원리
 설계자가 현장을 떠나면 엉뚱한 집이 지어진다. 끝은 또 다른 시작이다.
 
 1. **Phase G (구현 거버넌스, Implementation Governance)**:

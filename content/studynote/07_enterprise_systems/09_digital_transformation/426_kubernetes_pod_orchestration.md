@@ -5,20 +5,21 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Kubernetes(K8s)는 컨테이너화된 애플리케이션의 배포·스케일링·자동 복구를 관리하는 오픈소스 컨테이너 오케스트레이션 플랫폼으로, Pod를 최소 배포 단위로 클러스터를 자율 관리한다.
+> **핵심**: Kubernetes(K8s)는 컨테이너화된 애플리케이션의 배포·스케일링·자동 복구를 관리하는 오픈소스 컨테이너 오케스트레이션 플랫폼으로, Pod를 최소 배포 단위로 클러스터를 자율 관리한다.
 > 2. **가치**: 자동 스케일링(HPA/VPA), 자가 치유(Self-Healing), 롤링 업데이트, 서비스 디스커버리를 선언적 API(YAML)로 관리하여 클라우드 네이티브 애플리케이션의 운영 복잡도를 자동화한다.
 > 3. **판단 포인트**: Control Plane(API Server, etcd, Scheduler, Controller Manager)과 Worker Node(kubelet, kube-proxy, Container Runtime)의 역할 분리와 리소스 요청(Request)/제한(Limit) 설계가 K8s 운영의 핵심이다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 Google이 내부 컨테이너 관리 시스템 Borg를 오픈소스화하여 2014년 Kubernetes를 공개했다. 마이크로서비스 아키텍처에서 수백 개의 컨테이너를 수동으로 관리하는 것은 불가능하므로, K8s는 선언적 API로 "원하는 상태(Desired State)"를 정의하면 현재 상태와 차이를 자동으로 해소(Reconciliation Loop)한다.
 
 📢 **섹션 요약 비유**: Kubernetes는 대규모 컨테이너 도시 관리자 — 빈 땅(노드)에 건물(Pod)을 배치하고, 무너지면 자동으로 다시 짓는다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 Kubernetes 클러스터 구조:
@@ -51,13 +52,13 @@ Worker Nodes:
 
 📢 **섹션 요약 비유**: etcd는 K8s의 뇌 — 모든 클러스터 상태를 기억하며, etcd 장애 = 클러스터 마비이므로 고가용성 필수이다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Helm: K8s 애플리케이션 패키지 매니저(apt/yum의 K8s 버전). Istio/Linkerd: 서비스 메시 — Pod 간 트래픽을 사이드카 프록시로 제어(mTLS, 트레이싱). GitOps(ArgoCD/Flux): Git을 클러스터 상태의 단일 진실 소스(Single Source of Truth)로 사용.
 
 📢 **섹션 요약 비유**: Helm은 쿠버네티스 식료품 패키지 — "NGINX+DB+App 세트"를 한 명령어로 설치·업그레이드한다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **의사결정 포인트**:
 - Resource Request/Limit 설계: OOMKill·CPU throttling 방지를 위한 정확한 설정
@@ -68,7 +69,7 @@ Helm: K8s 애플리케이션 패키지 매니저(apt/yum의 K8s 버전). Istio/L
 
 📢 **섹션 요약 비유**: Resource Limit은 아파트 수도 계량기 — 각 세대(Pod)가 쓸 수 있는 물(CPU/메모리)을 제한하여 한 세대가 독점하는 것을 방지한다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Kubernetes는 클라우드 네이티브 애플리케이션 운영 표준이 되어 배포 자동화, 자가 치유, 탄력적 스케일링을 실현한다. etcd 고가용성, 네트워크 정책, RBAC 보안 설계가 프로덕션 K8s 클러스터의 핵심 운영 요소이며, GitOps+Helm으로 선언적 클러스터 관리가 DevOps 성숙도를 높인다.
 

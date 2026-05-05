@@ -7,17 +7,19 @@ date = 2026-03-26
 [extra]
 categories = ["studynote-software-engineering"]
 +++
+## 0. 핵심 인사이트
 
-# 사고 대응 (Incident Response)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 사고 대응은 보안 사고의 영향을 최소화하기 위해 사고 탐지, 분석, 봉쇄, 근절, 복구, 사후 분석의 단계를 체계적으로 수행하는 프로세스다. NIST SP 800-61은 사고 대응 라이프사이클을 4단계로 정의한다.
+> **핵심**: 사고 대응은 보안 사고의 영향을 최소화하기 위해 사고 탐지, 분석, 봉쇄, 근절, 복구, 사후 분석의 단계를 체계적으로 수행하는 프로세스다. NIST SP 800-61은 사고 대응 라이프사이클을 4단계로 정의한다.
 > 2. **가치**: 체계적인 사고 대응 체계는 평균 대응 시간 (MTTD)과 평균 복구 시간 (MTTR)을 단축하여 사고가 비즈니스가치지 미치는 영향을 최소화한다. 또한 사고 분석을 통해 향후 방어 체계를 강화할 수 있다.
 > 3. **융합**: 사고 대응은 CSIRT (Computer Security Incident Response Team), SIEM (Security Information and Event Management), SOAR (Security Orchestration, Automation and Response) 등과紧密结合되어 운영된다.
 
+> 📝 모범 답안
+
+# 사고 대응 (Incident Response)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 개념 정의
 
@@ -77,7 +79,7 @@ categories = ["studynote-software-engineering"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 사고 대응팀 (CSIRT) 구성
 
@@ -132,7 +134,7 @@ CSIRT (Computer Security Incident Response Team)는 조직 내 보안 사고 대
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 사고 대응 도구 및 기술 스택
 
@@ -150,7 +152,7 @@ NIST CSF (Cybersecurity Framework)의 5대 기능 중**Detect**,**Respond**,**Re
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 사고 대응 플레이북
 
@@ -208,7 +210,7 @@ NIST CSF (Cybersecurity Framework)의 5대 기능 중**Detect**,**Respond**,**Re
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

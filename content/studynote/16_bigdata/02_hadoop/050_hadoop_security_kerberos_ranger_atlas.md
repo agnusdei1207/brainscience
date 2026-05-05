@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Hadoop 보안은 3개 레이어로 구성된다. Kerberos(인증 — 누구인가?), Apache Ranger(권한 부여 — 무엇을 할 수 있는가?), Apache Atlas(데이터 거버넌스 — 어떤 데이터인가·어떻게 이동하는가?)가 완전한 엔터프라이즈 보안 스택을 형성한다.
+> **핵심**: Hadoop 보안은 3개 레이어로 구성된다. Kerberos(인증 — 누구인가?), Apache Ranger(권한 부여 — 무엇을 할 수 있는가?), Apache Atlas(데이터 거버넌스 — 어떤 데이터인가·어떻게 이동하는가?)가 완전한 엔터프라이즈 보안 스택을 형성한다.
 > 2. **가치**: 초기 Hadoop은 보안이 없는 "Simple Security Mode"만 지원했다. Kerberos 통합으로 인증, Ranger로 세밀한 컬럼·행 레벨 접근 제어, Atlas로 데이터 계보(Lineage) 추적이 가능해지면서 금융·의료 규제 환경에서도 사용 가능한 플랫폼으로 발전했다.
 > 3. **판단 포인트**: 현대 클라우드 레이크하우스 환경에서는 Hadoop Kerberos 대신 IAM(Cloud Identity), Ranger 대신 Unity Catalog·LakeFormation이 대안이 된다. 온프레미스 Hadoop 클러스터 유지 조직에서는 Kerberos+Ranger+Atlas 스택이 여전히 표준이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌──────────────────────────────────────────────────────────┐
@@ -44,7 +46,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Kerberos 인증 흐름
 
@@ -78,7 +80,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 온프레미스 Hadoop | 클라우드 레이크하우스 |
 |:---|:---|:---|
@@ -90,7 +92,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Apache Atlas 데이터 계보 (Data Lineage)
 
@@ -119,7 +121,7 @@ Knox Gateway:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

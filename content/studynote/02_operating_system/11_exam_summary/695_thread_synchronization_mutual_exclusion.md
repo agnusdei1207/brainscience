@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 스레드 동기화 상호 배제
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 스레드 동기화(Thread Synchronization)의 가장 기본이 되는 **상호 배제(Mutual Exclusion)**란, 여러 스레드가 동시에 공유 자원(변수, 파일)을 건드릴 때 데이터가 깨지는 것을 막기 위해 "한 번에 하나의 스레드만 접근할 수 있도록" 물리적/논리적으로 벽을 치는 행위다.
+> **핵심**: 스레드 동기화(Thread Synchronization)의 가장 기본이 되는 **상호 배제(Mutual Exclusion)**란, 여러 스레드가 동시에 공유 자원(변수, 파일)을 건드릴 때 데이터가 깨지는 것을 막기 위해 "한 번에 하나의 스레드만 접근할 수 있도록" 물리적/논리적으로 벽을 치는 행위다.
 > 2. **해결의 딜레마**: 상호 배제를 달성하려면 락(Lock)을 걸어야 하는데, 락을 걸면 필연적으로 멀티스레드의 존재 이유인 '병렬성(Parallelism)'이 훼손되어 시스템이 직렬화(Serialization)되고 성능이 급락한다.
 > 3. **가치**: 따라서 우수한 아키텍처는 상호 배제를 포기하는 것이 아니라, **임계 구역(Critical Section)의 크기를 머리카락 굵기만큼 얇게 깎아내거나**, 아예 락을 쓰지 않는 락 프리(Lock-free) 자료구조로 우회하여 "안전함과 속도"라는 두 마리 토끼를 잡는 데 그 목적이 있다.
 
+> 📝 모범 답안
+
+# 스레드 동기화 상호 배제
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **스레드 동기화 (Thread Synchronization)**: 다수의 스레드가 협력하여 일할 때, 서로의 작업 순서를 맞추거나 공유 데이터의 파괴를 막기 위해 조율하는 모든 기법.
@@ -39,7 +41,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 상호 배제의 실패: 동시성 버그 (Race Condition)
 
@@ -90,7 +92,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 상호 배제(Mutual Exclusion) vs 교착 상태(Deadlock)의 관계
 
@@ -111,7 +113,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -161,7 +163,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

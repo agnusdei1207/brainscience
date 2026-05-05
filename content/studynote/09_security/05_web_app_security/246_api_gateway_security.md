@@ -5,16 +5,20 @@ weight = 246
 [extra]
 categories = ["studynote-security"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> | | 1. Rate Limiting (DDoS 방어)  | | ----------> | Microserv A|
+
+> 📝 모범 답안
+
 - API 게이트웨이는 수많은 마이크로서비스(MSA)로 들어오는 트래픽의 단일 진입점(Single Point of Entry)으로, 중앙 집중식 인증, 인가, 트래픽 제어를 수행합니다.
 - Rate Limiting(속도 제한), JWT 검증, OAuth 연동을 통해 무차별 대입 공격(Brute Force) 및 API 남용(DDoS)을 선제적으로 차단합니다.
 - 백엔드 서비스의 비즈니스 로직과 보안/라우팅 로직을 분리하여, 시스템 확장성과 개발 생산성을 극대화하는 아키텍처 필수 요소입니다.
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 클라우드 네이티브 아키텍처와 마이크로서비스(MSA)의 확산으로 인해, 클라이언트와 통신하는 API 엔드포인트가 기하급수적으로 증가했습니다. 개별 마이크로서비스마다 인증과 보안 로직을 구현하는 것은 비효율적이며 관리 사각지대를 초래합니다. API 게이트웨이는 클라이언트와 백엔드 서버 중간에 위치하는 리버스 프록시(Reverse Proxy)로, 요청 라우팅뿐만 아니라 보안 정책 강제, 스로틀링(Throttling), 페이로드 검증을 통합 수행하는 핵심 방어선입니다.
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 API 게이트웨이는 클라이언트 요청을 받아 토큰(예: JWT) 유효성을 검증하고, 허용된 호출량 내인지 Rate Limiting 정책을 확인한 후 이상이 없을 때만 내부망의 목적지 마이크로서비스로 라우팅합니다.
 
 ```text
@@ -23,15 +27,14 @@ API 게이트웨이는 클라이언트 요청을 받아 토큰(예: JWT) 유효�
                       +----------------------------------+
                       |        API GATEWAY LAYER         |
 +---------+  HTTPS    | +------------------------------+ |  HTTP/gRPC  +------------+
-| Mobile/ | --------> | | 1. Rate Limiting (DDoS 방어)  | | ----------> | Microserv A|
-| Web App |           | | 2. Auth & AuthZ (JWT / OAuth)| |             +------------+
+| Mobile/ | --------| Web App |           | | 2. Auth & AuthZ (JWT / OAuth)| |             +------------+
 +---------+           | | 3. Payload Validation        | |
                       | | 4. SSL Termination           | |             +------------+
                       | +------------------------------+ | ----------> | Microserv B|
                       +----------------------------------+             +------------+
 ```
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 비교 항목 | API 게이트웨이 (API Gateway) | 웹 애플리케이션 방화벽 (WAF) |
 | :--- | :--- | :--- |
@@ -41,10 +44,10 @@ API 게이트웨이는 클라이언트 요청을 받아 토큰(예: JWT) 유효�
 | **아키텍처 위치** | 클라이언트와 MSA 사이의 앞단 (Business Edge) | API Gateway 앞단 혹은 웹 서버 경계망 |
 | **시너지 효과** | WAF가 악성 페이로드를 거르고, API 게이트웨이가 인증된 사용자만 통과시켜 이중 심층 방어(Defense in Depth) 구성 |
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 실무적으로 Kong, AWS API Gateway, Nginx 기반의 게이트웨이를 구축할 때, B2B/B2C API 공개 시 할당량(Quota) 제어로 과금을 유도하고 DoS 공격을 방어합니다. 기술사적 관점에서 볼 때, API 게이트웨이에 모든 트래픽이 몰리므로 이 계층 자체가 단일 장애점(SPOF, Single Point of Failure)이 될 수 있습니다. 따라서 고가용성(HA) 구성, 오토 스케일링, 서킷 브레이커(Circuit Breaker) 패턴 연계가 분산 시스템 설계의 필수 불가결한 안전망입니다.
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 API 중심 경제(API Economy)의 도래로 API 보안의 중요성은 OWASP API Security Top 10이 별도로 제정될 만큼 커졌습니다. 향후 서비스 메시(Service Mesh) 환경과의 결합을 통해, 외부 트래픽(North-South)은 API 게이트웨이가 전담하고 내부 트래픽(East-West)은 사이드카 프록시가 담당하는 제로 트러스트(Zero Trust) 아키텍처의 핵심 라우팅 허브로 지속 발전할 것입니다.
 
 ### 📌 관련 개념 맵 (Knowledge Graph)

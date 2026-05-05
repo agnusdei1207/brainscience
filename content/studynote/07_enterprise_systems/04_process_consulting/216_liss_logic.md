@@ -2,17 +2,20 @@
 title = "216. LISS (Linearly Independent, Spatially Spanning) 논리 원리"
 weight = 216
 +++
+## 0. 핵심 인사이트
 
-# 216. LISS (Linearly Independent, Spatially Spanning) 논리 원리
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: LISS 원리는 선형대수학의 기저(Basis) 개념을 차용하여, 엔터프라이즈 시스템이나 비즈니스 로직을 설계할 때 구성 요소 간 중복이 없고(Linearly Independent), 전체 요구사항의 누락이 없는(Spatially Spanning) 완벽한 직교(Orthogonal) 구조를 달성하기 위한 구조화 방법론이다.
+> **핵심**: LISS 원리는 선형대수학의 기저(Basis) 개념을 차용하여, 엔터프라이즈 시스템이나 비즈니스 로직을 설계할 때 구성 요소 간 중복이 없고(Linearly Independent), 전체 요구사항의 누락이 없는(Spatially Spanning) 완벽한 직교(Orthogonal) 구조를 달성하기 위한 구조화 방법론이다.
 > 2. **가치**: 경영 전략의 MECE (Mutually Exclusive, Collectively Exhaustive)를 시스템 아키텍처 및 데이터베이스 정규화 영역으로 구체화한 모델로, 모듈 간 결합도(Coupling)를 최소화하고 응집도(Cohesion)를 극대화하여 마이크로서비스(MSA)의 완벽한 경계(Bounded Context)를 정의하는 핵심 기준이 된다.
 > 3. **융합**: 객체 지향의 SOLID 원칙(특히 단일 책임 원칙, SRP)과 관계형 데이터베이스의 정규화(Normalization), 도메인 주도 설계(DDD)와 결합하여 변경의 여파(Side Effect)가 전파되지 않는 확장 가능한 엔터프라이즈 아키텍처의 논리적 뼈대를 구성한다.
 
+> 📝 모범 답안
+
+# 216. LISS (Linearly Independent, Spatially Spanning) 논리 원리
+
+##
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: LISS (Linearly Independent, Spatially Spanning) 논리는 복잡한 문제나 시스템을 분해할 때 요구되는 두 가지 수학적 엄밀성의 결합이다. **선형 독립성 (Linearly Independent)** 은 어떤 구성 모듈도 다른 모듈들의 조합으로 대체될 수 없음을 의미하며(기능의 중복, 교집합 제로), **공간 포괄성 (Spatially Spanning)** 은 분해된 모듈들의 합이 전체 비즈니스 도메인 공간을 완벽하게 커버해야 함을 의미한다(기능의 누락, 합집합 = 전체).
 
@@ -66,7 +69,7 @@ LISS 논리가 무너진 시스템(스파게티)과 LISS가 완벽히 적용된 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (개념적 분해)
 
@@ -127,7 +130,7 @@ LISS는 데이터베이스의 정규화 이론과 완벽히 수학적 동형(Iso
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: MECE 전략 vs LISS 로직 vs SOLID 원칙
 
@@ -169,7 +172,7 @@ LISS의 두 가지 축(LI, SS)을 기준으로 시스템의 현재 품질 상태
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 운영 의사결정
 
@@ -221,7 +224,7 @@ LISS의 두 가지 축(LI, SS)을 기준으로 시스템의 현재 품질 상태
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

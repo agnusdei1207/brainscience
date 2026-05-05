@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 결과적 일관성 (Eventual Consistency)이란 분산 시스템에서 즉각적인 강일관성(Strong Consistency) 대신 "충분한 시간이 흐르면 모든 노드의 데이터가 일치하게 된다"는 사상으로, CAP 이론의 A(가용성)와 P(분산 내성) 선택 시 C(일관성)를 완화한 결과다.
+> **핵심**: 결과적 일관성 (Eventual Consistency)이란 분산 시스템에서 즉각적인 강일관성(Strong Consistency) 대신 "충분한 시간이 흐르면 모든 노드의 데이터가 일치하게 된다"는 사상으로, CAP 이론의 A(가용성)와 P(분산 내성) 선택 시 C(일관성)를 완화한 결과다.
 > 2. **가치**: 분산 트랜잭션 없이도 높은 가용성과 성능을 유지하면서 최종적으로 데이터 정합성을 보장하므로, MSA 환경의 비동기 이벤트 기반 아키텍처와 완벽하게 부합한다.
 > 3. **판단 포인트**: 잠시 오래된 데이터를 보여줘도 비즈니스 영향이 없는(SNS 좋아요 수 등) 시스템은 Eventual Consistency가 최선이나, 금융 이체처럼 순간적으로도 데이터가 틀려서는 안 되는 경우에는 여전히 강일관성 또는 2PC (Two-Phase Commit)가 필요하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 단일 RDBMS (Relational Database Management System)에서는 ACID (Atomicity, Consistency, Isolation, Durability) 트랜잭션이 즉각적인 데이터 일관성을 보장한다. 그러나 마이크로서비스 환경에서 각 서비스가 독립된 DB를 소유하면, 여러 서비스에 걸친 트랜잭션을 원자적으로 처리하기 위한 분산 트랜잭션 (2PC)은 성능 병목과 가용성 저하를 초래한다.
 
@@ -25,7 +27,7 @@ BASE (Basically Available, Soft State, Eventual Consistency) 모델은 이 철�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 항목 | ACID (강일관성) | BASE (결과적 일관성) |
 |:---|:---|:---|
@@ -62,7 +64,7 @@ BASE (Basically Available, Soft State, Eventual Consistency) 모델은 이 철�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | 2PC (Two-Phase Commit) | SAGA 패턴 | Eventual Consistency |
 |:---|:---|:---|:---|
@@ -82,7 +84,7 @@ CAP 정리 정리:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **도메인별 일관성 수준 선택**
 - 금융 이체·재고 감소 → ACID 또는 SAGA 패턴 (보상 필수)
@@ -98,7 +100,7 @@ CAP 정리 정리:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 결과적 일관성은 인터넷 규모의 분산 시스템이 높은 가용성과 성능을 유지하면서도 데이터 정합성을 달성하는 실용적 타협점이다. MSA에서 SAGA 패턴, Outbox 패턴, 이벤트 소싱 (Event Sourcing)과 결합하면 비즈니스 요구를 충족하면서도 분산 트랜잭션의 성능 병목을 피할 수 있다.
 

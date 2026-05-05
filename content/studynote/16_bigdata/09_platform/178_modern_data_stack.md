@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> 📢 **섹션 요약 비유**: MDS는 요리사(팀)가 재료 손질(ETL 서버)을 직접 하지 않고, 손질된 재료(ELT)를 받아 자신의 주방(DW)에서 원하는 대로 요리(dbt 변환)하는 방식이다.
+
+> 📝 모범 답안
 
 - MDS (Modern Data Stack)는 클라우드 네이티브 구성 요소를 결합한 데이터 인프라로, Fivetran/Airbyte(ELT 수집) + Snowflake/BigQuery(클라우드 DW) + dbt(SQL 변환) + Tableau/Looker(BI)의 조합이 사실상 표준으로 자리잡았다.
 - ETL (Extract-Transform-Load)에서 ELT (Extract-Load-Transform)로의 전환이 MDS의 핵심으로, 클라우드 DW의 강력한 SQL 처리 능력을 변환 계층으로 활용한다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1-1. MDS의 등장 배경
 
@@ -30,11 +33,9 @@ categories = "studynote-bigdata"
 | 구축 기간 | 수개월 | 수주 |
 | 비용 모델 | CapEx 중심 | OpEx (SaaS 구독) |
 
-> 📢 **섹션 요약 비유**: MDS는 요리사(팀)가 재료 손질(ETL 서버)을 직접 하지 않고, 손질된 재료(ELT)를 받아 자신의 주방(DW)에서 원하는 대로 요리(dbt 변환)하는 방식이다.
-
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. MDS 핵심 파이프라인
 
@@ -90,7 +91,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### MDS 핵심 도구 비교
 
@@ -113,7 +114,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. MDS 도입 단계
 
@@ -138,7 +139,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 | 내용 |
 |:---|:---|

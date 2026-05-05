@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> e.getUserId())
+
+> 📝 모범 답안
 
 - **본질**: Kappa Architecture (카파 아키텍처)는 Jay Kreps (링크드인, 2014)가 제안한 빅데이터 아키텍처로, Lambda Architecture의 배치 레이어를 제거하고 **스트리밍 단일 파이프라인**만으로 배치와 실시간 처리를 통합하며, 재처리(Reprocessing)는 Kafka의 오프셋 0부터 재생(Replay)하여 달성한다.
 - **가치**: 동일한 비즈니스 로직을 배치용·실시간용으로 이중 구현하는 Lambda의 코드 이중화 문제를 완전히 해소하고, 단일 스트리밍 코드베이스로 유지보수 비용을 절반 이하로 줄이면서 코드 일관성을 보장한다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. Lambda Architecture의 핵심 문제
 
@@ -28,8 +31,7 @@ Lambda의 핵심 문제:
     SELECT user_id, SUM(amount) FROM orders GROUP BY user_id
   
   실시간 코드 (Flink Java):
-    stream.keyBy(e -> e.getUserId())
-          .window(TumblingEventTimeWindows.of(Time.hours(1)))
+    stream.keyBy(e -          .window(TumblingEventTimeWindows.of(Time.hours(1)))
           .sum("amount")
   
   → 비즈니스 규칙이 바뀌면 두 곳을 모두 수정
@@ -54,7 +56,7 @@ Kappa 제안:
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. Kappa Architecture 다이어그램
 
@@ -108,7 +110,7 @@ Step 5: v1 잡과 v1 출력 테이블 종료/삭제
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 1. Lambda vs Kappa 심층 비교
 
@@ -137,7 +139,7 @@ Step 5: v1 잡과 v1 출력 테이블 종료/삭제
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1. Kappa Architecture 도입 체크리스트
 
@@ -160,7 +162,7 @@ Step 5: v1 잡과 v1 출력 테이블 종료/삭제
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 기대효과
 

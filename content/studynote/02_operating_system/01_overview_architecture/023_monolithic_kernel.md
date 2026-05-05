@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 모놀리식 커널 (Monolithic Kernel)은 프로세스 관리, 메모리 관리, 파일 시스템, 장치 드라이버 등 OS의 모든 핵심 서비스를 단일 커널 주소 공간 (Kernel Address Space)에서 실행하는 일체형 아키텍처다.
+> **핵심**: 모놀리식 커널 (Monolithic Kernel)은 프로세스 관리, 메모리 관리, 파일 시스템, 장치 드라이버 등 OS의 모든 핵심 서비스를 단일 커널 주소 공간 (Kernel Address Space)에서 실행하는 일체형 아키텍처다.
 > 2. **가치**: 커널 내부 서비스 호출이 모드 전환 (Mode Switch) 없이 직접 함수 호출 (Direct Function Call)로 처리되어 IPC (Inter-Process Communication) 오버헤드가 없고, Linux가 서버 시장을 지배한 결정적 이유인 극한의 I/O 처리량 (Throughput)을 달성한다.
 > 3. **판단 포인트**: 단일 모듈 오류가 커널 전체 크래시 (Kernel Panic)로 이어지는 밀결합 (Tight Coupling) 구조의 취약점을 LKM (Loadable Kernel Module) 동적 로딩과 eBPF (Extended Berkeley Packet Filter) 샌드박싱 기술로 점진적으로 보완하며 진화하고 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 모놀리식 커널은 운영체제의 모든 기능 — 프로세스 스케줄링, 메모리 페이징, 파일 시스템, 네트워크 스택, 장치 드라이버 — 을 단일한 커널 주소 공간이라는 하나의 거대한 메모리 영역에 집어넣고 실행하는 방식이다.
 
@@ -56,7 +58,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 주요 구성 요소
 
@@ -127,7 +129,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 모놀리식 커널 vs 마이크로 커널 vs 하이브리드 커널
 
@@ -153,7 +155,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 1: GPU 드라이버로 인한 Kernel Panic
 
@@ -205,7 +207,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 구분 | 도입 전 (마이크로 커널 비교) | 도입 후 (모놀리식 최적화) | 개선 효과 |
 |:---|:---|:---|:---|

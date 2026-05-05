@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Elastic SIEM은 오픈소스 기반의 검색 엔진인 Elasticsearch(ELK Stack)를 보안 분야로 확장한 솔루션으로, 빠른 검색 속도와 뛰어난 가성비가 특징이다.
+> **핵심**: Elastic SIEM은 오픈소스 기반의 검색 엔진인 Elasticsearch(ELK Stack)를 보안 분야로 확장한 솔루션으로, 빠른 검색 속도와 뛰어난 가성비가 특징이다.
 > 2. **가치**: ECS (Elastic Common Schema)를 통해 이기종 로그의 형식을 표준화하며, 강력한 시각화 도구인 Kibana를 활용해 위협 헌팅(Threat Hunting) 환경을 제공한다.
 > 3. **판단 포인트**: 라이선스 비용 부담이 큰 엔터프라이즈 SIEM의 대안으로 적합하지만, 안정적인 클러스터 운영을 위한 전문 기술 인력 확보가 선행되어야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Elastic SIEM은 Elasticsearch, Logstash, Kibana, 그리고 데이터 수집기인 Beats로 구성된 소위 'ELK 스택'을 기반으로 하는 차세대 SIEM 솔루션이다. 무료로 시작할 수 있는 오픈소스 버전이 존재하여 많은 기업이 초기 로그 통합 관리 도구로 채택한다.
 
@@ -23,7 +25,7 @@ Elastic SIEM은 Elasticsearch, Logstash, Kibana, 그리고 데이터 수집기�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Elastic SIEM은 데이터 수집(Beats/Logstash), 저장 및 분석(Elasticsearch), 가시화 및 관리(Kibana)의 유기적인 결합으로 작동한다.
 
@@ -52,7 +54,7 @@ Elastic SIEM은 데이터 수집(Beats/Logstash), 저장 및 분석(Elasticsearc
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Elastic SIEM은 Splunk와 가장 많이 비교되며, '검색 성능'과 '비용 효율성' 사이에서 선택의 기준이 된다.
 
@@ -69,7 +71,7 @@ Elastic SIEM은 최근 엔드포인트 보안(Elastic Endpoint Security)과 통�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서 Elastic SIEM 도입 시 가장 큰 난관은 '샤딩(Sharding)'과 '인덱스 생명주기 관리(ILM)'다. 설정이 잘못되면 검색 속도가 급격히 느려지거나 저장 공간 부족으로 시스템이 멈출 수 있다.
 
@@ -86,7 +88,7 @@ Elastic SIEM은 최근 엔드포인트 보안(Elastic Endpoint Security)과 통�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Elastic SIEM은 대규모 데이터를 저렴한 비용으로 실시간 분석하려는 조직에 최적의 해답을 제공한다. 특히 오픈소스 커뮤니티에서 공유되는 수많은 시각화 템플릿과 탐지 룰(Detection Rules)을 즉시 활용할 수 있다는 점이 매력적이다.
 

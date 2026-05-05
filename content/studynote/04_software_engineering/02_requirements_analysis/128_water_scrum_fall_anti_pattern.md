@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Water-Scrum-Fall은 **요구사항은 Waterfall식(상의하달), 개발만 Scrum, 배포는 다시 Waterfall식(긴 릴리스 주기)**으로 운영되는 안티패턴이며, Agile의 외형만 차용하고 핵심 원칙은 실행하지 않는다.
+> **핵심**: Water-Scrum-Fall은 **요구사항은 Waterfall식(상의하달), 개발만 Scrum, 배포는 다시 Waterfall식(긴 릴리스 주기)**으로 운영되는 안티패턴이며, Agile의 외형만 차용하고 핵심 원칙은 실행하지 않는다.
 > 2. **가치**: 조직이 "우리는 Agile을 한다"고 주장하지만 **실제로는 계획·배포에서 Waterfall을 유지**하면 Agile의 이점(빠른 피드백·적응)이 사라지고, 개발팀만 스프린트 압박을 받는 악순환이 발생한다.
 > 3. **판단 포인트**: 진정한 Agile 전환은 **요구사항 발견(Discovery)·배포(CI/CD)·조직 문화까지 전체 흐름**의 변화가 필요하며, 개발 프로세스만 바꾸는 것은 부분 적용에 불과하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -34,7 +36,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 진정한 Agile vs Water-Scrum-Fall
 
@@ -49,7 +51,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Waterfall | Agile | WSF |
 |:---|:---|:---|:---|
@@ -59,7 +61,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### WSF 탈출 방법
 1. 요구사항: Discovery Sprint 도입 (지속적 탐색).
@@ -69,7 +71,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Water-Scrum-Fall은 **"Agile 흉내"의 대표 안티패턴**이며, 진정한 Agile은 개발뿐 아니라 **요구사항 발견·배포·조직 문화의 총체적 전환**을 요구한다.
 

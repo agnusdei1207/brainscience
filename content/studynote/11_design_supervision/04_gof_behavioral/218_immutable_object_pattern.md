@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Immutable Object (불변 객체) 패턴은 한번 생성된 객체의 상태를 절대 변경하지 않도록 설계하여, 공유 가능한 안전한 값(Value)으로 사용하는 패턴이다.
+> **핵심**: Immutable Object (불변 객체) 패턴은 한번 생성된 객체의 상태를 절대 변경하지 않도록 설계하여, 공유 가능한 안전한 값(Value)으로 사용하는 패턴이다.
 > 2. **가치**: 불변 객체는 Thread-Safe (스레드 안전)를 보장하고, 부수효과(Side Effect)를 원천 차단하여 멀티스레드, 함수형 프로그래밍, 캐싱 시나리오에서 동기화 비용 없이 안전하게 공유 가능하다.
 > 3. **판단 포인트**: 상태 변경이 필요할 때는 기존 객체를 수정하는 대신 "변경된 내용을 담은 새 객체를 반환"한다 — Java `String.toUpperCase()`가 원본 String을 바꾸지 않고 새 String을 반환하는 것이 대표적인 예다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 가변 객체(Mutable Object)의 문제점
 
@@ -49,7 +50,7 @@ Thread B: user.setName("Bob");     ──┼── 동시 실행 → Race Condit
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 불변 객체 구현 패턴
 
@@ -118,7 +119,7 @@ public final class Money {                    // 1. final class
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 가변 vs 불변 객체 비교
 
@@ -157,7 +158,7 @@ public final class Money {                    // 1. final class
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Java 16+ Record — 불변 객체의 간결한 표현
 
@@ -195,7 +196,7 @@ public record Money(long amount, Currency currency) {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 불변 객체 패턴은 멀티코어 CPU 시대에 필수적인 설계 기법이다:
 

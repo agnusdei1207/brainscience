@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 프로세스 친화성 스케줄링 (CPU Affinity Scheduling)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 프로세스 친화성(CPU Affinity / Pinning)은 멀티 코어(SMP) 시스템에서 운영체제 스케줄러가 특정 프로세스나 스레드를 이리저리 코어를 옮겨 다니게(Migration) 내버려 두지 않고, **특정 CPU 코어 하나(또는 그룹)에 딱 달라붙어서 평생 그곳에서만 실행되도록 족쇄(Pinning)를 채우는 고성능 스케줄링 튜닝 기법**이다.
+> **핵심**: 프로세스 친화성(CPU Affinity / Pinning)은 멀티 코어(SMP) 시스템에서 운영체제 스케줄러가 특정 프로세스나 스레드를 이리저리 코어를 옮겨 다니게(Migration) 내버려 두지 않고, **특정 CPU 코어 하나(또는 그룹)에 딱 달라붙어서 평생 그곳에서만 실행되도록 족쇄(Pinning)를 채우는 고성능 스케줄링 튜닝 기법**이다.
 > 2. **가치**: 스레드가 0번 코어에서 1번 코어로 이사 갈 때 발생하는 치명적인 L1/L2 캐시 오염(Cache Miss)과 TLB 플러시 오버헤드를 완벽히 제거하여, 데이터베이스나 고빈도 네트워크 장비의 메모리 접근 레이턴시를 나노초(ns) 단위로 고정(Deterministic)시킨다.
 > 3. **융합**: 현대 매니코어(Many-core) 서버의 핵심 구조인 NUMA(불균일 메모리 접근) 아키텍처와 결합하여, CPU 코어와 그 코어에 직결된 물리 램(Local RAM) 간의 최단 거리 고속도로를 강제로 열어주는 인프라 엔지니어링의 최고급 최적화 칼날로 활용된다.
 
+> 📝 모범 답안
+
+# 프로세스 친화성 스케줄링 (CPU Affinity Scheduling)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **친화성(Affinity)**: "특정 프로세스가 특정 CPU 코어를 얼마나 사랑하고 찰싹 달라붙고 싶어 하는가"를 나타내는 척도.
@@ -66,7 +68,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### NUMA 아키텍처와의 필연적 결합 (초격차의 비밀)
 
@@ -103,7 +105,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### CPU 격리(Isolation) vs CPU 친화성(Affinity)
 
@@ -125,7 +127,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 트러블슈팅
 
@@ -170,7 +172,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: 초자동화(Hyperautomation)는 Gartner가 정의한 개념으로, 프로세스 마이닝(Process Mining), RPA(Robotic Process Automation — 로보틱 프로세스 자동화), AI/ML, 챗봇, BPM(Business Process Management)을 통합해 "자동화할 수 있는 모든 것을 자동화"하는 전략적 접근이다.
+> **핵심**: 초자동화(Hyperautomation)는 Gartner가 정의한 개념으로, 프로세스 마이닝(Process Mining), RPA(Robotic Process Automation — 로보틱 프로세스 자동화), AI/ML, 챗봇, BPM(Business Process Management)을 통합해 "자동화할 수 있는 모든 것을 자동화"하는 전략적 접근이다.
 > 2. **가치**: 단일 RPA를 넘어 발굴(Process Mining) → 설계(BPM) → 실행(RPA+AI) → 모니터링(Process Intelligence)의 완전한 자동화 사이클을 구축해 운영 비용 20~40% 절감과 하이브리드 인력(Hybrid Workforce — 인간+디지털 워커 협업)을 실현한다.
 > 3. **판단 포인트**: 초자동화의 ROI는 자동화 후보 프로세스 선정의 정확성에 달려 있으며, 프로세스 마이닝이 "어떤 프로세스가 자동화로 가장 큰 효과를 내는가"를 데이터 기반으로 식별하는 핵심 도구다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 디지털 전환의 핵심 과제 중 하나는 반복적·규칙 기반(Rule-based) 업무를 자동화해 인적 자원을 고부가가치 업무로 이동시키는 것이다. RPA만으로는 구조화된 반복 작업에 한정되고, AI만으로는 프로세스 실행 능력이 없으며, BPM만으로는 비정형 예외 처리가 어렵다.
 
@@ -25,7 +27,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 초자동화 구성 요소 및 역할
 
@@ -82,7 +84,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### RPA vs AI vs 초자동화 비교
 
@@ -110,7 +112,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 초자동화 도입 방법론 4단계
 
@@ -146,7 +148,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 초자동화는 "디지털 전환의 엔진"이다. Deloitte 조사에 따르면 RPA를 도입한 기업의 78%가 3년 내 투자 회수를 달성했으며, 초자동화(RPA+AI+PM 통합)는 단순 RPA 대비 평균 2.5배 높은 ROI를 기록했다. 주요 절감 효과는 인건비(40~60%), 오류 감소(90% 이상), 처리 속도(80% 단축)다.
 

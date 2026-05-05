@@ -5,15 +5,17 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 캐시 라인 프리패치(Cache Line Prefetching)는 CPU가 실제 데이터를 필요로 하기 전, 메모리 접근 패턴을 분석하여 데이터를 미리 상위 캐시 계층으로 로드함으로써 '메모리 벽(Memory Wall)' 문제를 해결하는 하드웨어 최적화 기술이다.
+> **핵심**: 캐시 라인 프리패치(Cache Line Prefetching)는 CPU가 실제 데이터를 필요로 하기 전, 메모리 접근 패턴을 분석하여 데이터를 미리 상위 캐시 계층으로 로드함으로써 '메모리 벽(Memory Wall)' 문제를 해결하는 하드웨어 최적화 기술이다.
 > 2. **가치**: 성공적인 프리패치는 메모리 지연 시간(Memory Latency)을 연산 파이프라인에서 은폐(Hiding)하여 IPC(Instructions Per Cycle)를 극적으로 향상시키지만, 실패 시 캐시 오염(Cache Pollution)과 대역폭 낭비를 초래한다.
 > 3. **판단 포인트**: 현대의 고성능 프로세서에서는 단순 순차(Sequential) 방식을 넘어 스트라이드(Stride), 상관관계(Correlation), 그리고 AI 기반의 적응형 프리패처를 통해 공격성(Aggressiveness)과 정확도 사이의 트레이드오프를 동적으로 관리한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 메모리 벽(Memory Wall)과 지연 시간의 불일치
 현대 컴퓨터 아키텍처의 가장 큰 난제 중 하나는 프로세서의 연산 속도와 메인 메모리(DRAM, Dynamic Random Access Memory)의 접근 속도 사이의 거대한 격차입니다. CPU 클럭 주파수가 GHz 단위로 발전하는 동안, DRAM의 지연 시간은 상대적으로 느리게 개선되었습니다. 이로 인해 CPU가 데이터를 요청하고 받을 때까지 수백 사이클을 대기하게 되는 '프로세서-메모리 성능 격차(Processor-Memory Performance Gap)'가 발생하며, 이를 흔히 **메모리 벽(Memory Wall)**이라 부릅니다.
@@ -35,7 +37,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 하드웨어 프리패처의 내부 구조 및 파이프라인
 하드웨어 프리패처는 일반적으로 L1, L2, L3 각 캐시 계층 근처에 위치하며, 메모리 버스의 트래픽을 모니터링합니다. 주요 구성 요소로는 참조 주소를 저장하는 테이블, 패턴을 분석하는 로직, 그리고 프리패치 요청을 생성하는 생성기가 있습니다.
@@ -104,7 +106,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 하드웨어 vs 소프트웨어 프리패치 비교 분석
 프로그램의 특성에 따라 최적의 프리패치 주체는 달라질 수 있습니다.
@@ -130,7 +132,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 성능 저하의 주범: 캐시 오염(Cache Pollution)
 프리패치가 항상 좋은 것은 아닙니다. 잘못된 예측으로 가져온 데이터가 기존의 유용한 데이터를 캐시에서 쫓아내면, 오히려 전체적인 미스율이 증가합니다. 이를 **캐시 오염(Cache Pollution)**이라 합니다. 특히 연관도(Associativity)가 낮은 캐시에서 이러한 현상이 심화됩니다.
@@ -156,7 +158,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 시스템 전체에 미치는 기대효과
 - **IPC(Instructions Per Cycle) 극대화**: 메모리 바운드(Memory-bound) 워크로드에서 성능을 50% 이상 향상시킬 수 있습니다.

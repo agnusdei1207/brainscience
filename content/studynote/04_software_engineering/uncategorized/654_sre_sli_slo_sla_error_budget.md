@@ -7,19 +7,21 @@ date = 2024-05-24
 tags = ["Software Engineering", "SRE", "SLO", "SLA", "Error Budget"]
 categories = ["Software Engineering"]
 +++
-
-# SRE 핵심 지표 및 에러 예산 (SLI, SLO, SLA, Error Budget)
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 SRE (Site Reliability Engineering)의 핵심 지표인 SLI, SLO, SLA 및 에러 예산에 대한 실무적 가이드라인입니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# SRE 핵심 지표 및 에러 예산 (SLI, SLO, SLA, Error Budget)
+
 > 1. **본질**: SRE의 핵심은 완벽한 무장애가 아니라, '허용 가능한 실패(Error Budget)'를 정의하고 개발 속도와 서비스 안정성 간의 균형을 정량적 지표(SLI, SLO)로 통제하는 것이다.
 > 2. **가치**: 감각이나 경험이 아닌 데이터 기반의 의사결정을 가능하게 하여, 에러 예산이 남아있을 때는 기능 출시에 집중하고 고갈 시에는 안정성 확보에 리소스를 강제 할당함으로써 비즈니스 리스크를 통제한다.
 > 3. **융합**: 클라우드 네이티브 아키텍처 및 DevOps 파이프라인과 결합하여, 모니터링 알람(Prometheus/Grafana)부터 배포 자동화 차단(CI/CD)까지 시스템의 자율적 복원력을 구축하는 기반 척도가 된다.
 
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: SRE (Site Reliability Engineering)는 소프트웨어 엔지니어링의 접근 방식을 IT 운영에 적용한 구글의 방법론이다. 그 핵심 운영 도구가 바로 SLI (Service Level Indicator, 서비스 수준 지표), SLO (Service Level Objective, 서비스 수준 목표), SLA (Service Level Agreement, 서비스 수준 협약)로 이어지는 지표 체계와, 이를 바탕으로 산출되는 에러 예산 (Error Budget)이다. 이는 시스템의 신뢰성을 수학적이고 정량적으로 모델링하는 기반이다.
 
@@ -65,7 +67,7 @@ categories = ["Software Engineering"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 및 지표 계층 구조
 
@@ -154,7 +156,7 @@ SLI, SLO, SLA는 독립적인 개념이 아니라 좁은 범위에서 넓은 범
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 심층 기술 비교 1: 기존 모니터링 vs SRE 지표 체계
 
@@ -207,7 +209,7 @@ SLI, SLO, SLA는 독립적인 개념이 아니라 좁은 범위에서 넓은 범
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 1: 에러 예산 고갈 시의 의사결정 프로세스
 
@@ -261,7 +263,7 @@ SLI, SLO, SLA는 독립적인 개념이 아니라 좁은 범위에서 넓은 범
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

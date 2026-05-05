@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 다중 큐 SSD NVMe 프로토콜의 장점 (Multi-Queue SSD & NVMe)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: NVMe (Non-Volatile Memory Express)는 과거 뱅글뱅글 도는 하드디스크(HDD) 시절에 만들어진 좁고 느린 AHCI/SATA 통신 규격을 버리고, 빛처럼 빠른 **플래시 메모리(SSD)를 PCIe 버스에 직접 직결하여 초고속으로 대화하기 위해 백지부터 새로 설계한 스토리지 프로토콜**이다.
+> **핵심**: NVMe (Non-Volatile Memory Express)는 과거 뱅글뱅글 도는 하드디스크(HDD) 시절에 만들어진 좁고 느린 AHCI/SATA 통신 규격을 버리고, 빛처럼 빠른 **플래시 메모리(SSD)를 PCIe 버스에 직접 직결하여 초고속으로 대화하기 위해 백지부터 새로 설계한 스토리지 프로토콜**이다.
 > 2. **가치**: 기존에 딱 1개(단일 큐)밖에 없던 대기줄을 **64,000개의 거대한 다중 큐(Multi-Queue)**로 쪼개고 각 큐마다 64,000개의 명령을 구겨 넣게 함으로써, 수십 개의 CPU 코어가 락(Lock) 경합 없이 동시에 디스크 I/O를 쏟아낼 수 있는 미친 병렬성(Parallelism)을 완성했다.
 > 3. **융합**: 하드웨어의 발전(PCIe)과 운영체제 커널의 블록 I/O 스택 개조(Linux Multi-Queue Block Layer, `blk-mq`), 그리고 락-프리(Lock-free) 폴링 기술이 융합되어 수백만 IOPS라는 기적적인 스루풋을 달성해 클라우드 데이터센터의 표준이 되었다.
 
+> 📝 모범 답안
+
+# 다중 큐 SSD NVMe 프로토콜의 장점 (Multi-Queue SSD & NVMe)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **NVMe**는 저장장치를 메인보드의 PCIe(PCI Express) 슬롯에 직결하여 CPU와 최단 거리로 통신하는 논리적 디바이스 인터페이스 규격이다.
@@ -59,7 +61,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### NVMe의 SQ (Submission Queue)와 CQ (Completion Queue)
 
@@ -108,7 +110,7 @@ NVMe 프로토콜은 데이터를 주고받는 방식 자체를 극도로 얇고
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### AHCI (SATA) vs NVMe (PCIe) 기술 스펙의 잔혹한 차이
 
@@ -131,7 +133,7 @@ NVMe는 조금 빠른 기술이 아니라, 스토리지 패러다임 자체를 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 트러블슈팅
 
@@ -175,7 +177,7 @@ NVMe는 조금 빠른 기술이 아니라, 스토리지 패러다임 자체를 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

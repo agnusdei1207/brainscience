@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 상속된 위험(Inherited Risk)은 조직이 직접 통제할 수 없는 외부 요소(공급망, 클라우드 서비스, 오픈소스 라이브러리, 인수합병된 기업)로부터 이전(移轉)되어 오는 위험으로, 현대 IT 환경에서 전체 위험의 상당 부분을 차지한다.
 > 2. 고유 위험(Inherent Risk) → 통제(Control) 적용 → 잔존 위험(Residual Risk) 체계에서, 상속된 위험은 통제 전 원시 위험 상태가 외부에서 유입되는 특수 형태이며, SolarWinds·Log4Shell 같은 공급망 공격이 대표적 사례다.
 > 3. 상속된 위험 관리의 핵심은 공급업체 위험 관리(Third-Party Risk Management, TPRM)와 소프트웨어 자재 명세서(SBOM, Software Bill of Materials)로, SBOM 의무화는 미국 행정명령(EO 14028, 2021)과 EU CRA(사이버복원력법)의 핵심 요구사항이 됐다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 위험 계층 구조
+## 1. 개요 및 필요성
 
 ```
 위험 계층 (Risk Hierarchy):
@@ -45,7 +48,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 상속된 위험 유형
+## 2. 구성요소
 
 ```
 유형별 사례:
@@ -75,7 +78,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 제3자 위험 관리 (TPRM)
+## 3. 구조 및 동작 원리
 
 ```
 TPRM (Third-Party Risk Management):
@@ -111,7 +114,7 @@ TPRM (Third-Party Risk Management):
 
 ---
 
-## Ⅳ. SBOM (소프트웨어 자재 명세서)
+## 4. 비교 및 트레이드오프
 
 ```
 SBOM (Software Bill of Materials):
@@ -146,7 +149,7 @@ SBOM 포함 정보:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 금융기관 공급망 보안
+## 5. 실무 적용 및 최적화 기법
 
 ```
 금융기관 A사 공급망 보안 강화 사례:

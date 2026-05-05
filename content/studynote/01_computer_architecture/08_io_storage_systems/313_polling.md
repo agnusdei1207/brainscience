@@ -5,15 +5,17 @@ date = "2026-03-26"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
 > 1. 폴링(Polling)은 CPU (Central Processing Unit)가 주기적으로 I/O (Input/Output) 장치의 상태 레지스터(Status Register)를 확인하여 데이터 전송 준비 여부를 판단하는 동기식 제어 방식이다.
 > 2. 별도의 하드웨어 인터럽트 컨트롤러 없이 소프트웨어만으로 구현이 가능하지만, 무한 루프를 통한 '바쁜 대기(Busy-Waiting)'로 인해 심각한 CPU 자원 낭비를 초래한다.
 > 3. 현대 고성능 시스템에서는 인터럽트 폭풍(Interrupt Storm)을 방지하기 위해 NAPI (New API)나 DPDK (Data Plane Development Kit) 환경에서 전략적 하이브리드 방식으로 재조명받고 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 폴링의 개요 및 필요성
+## 1. 개요 및 필요성
 
 폴링(Polling)은 컴퓨터 시스템에서 중앙처리장치(CPU, Central Processing Unit)가 입출력 장치(I/O Device)의 상태를 능동적으로 확인하며 통신하는 가장 고전적이면서도 직관적인 방식이다. 프로그램에 의한 입출력(Programmed I/O)의 핵심 메커니즘으로, 하드웨어 장치의 컨트롤러 내부에 존재하는 상태 레지스터(Status Register)를 CPU가 루프(Loop)를 돌며 지속적으로 읽어 들이는 과정을 거친다.
 
@@ -23,7 +25,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 폴링의 구조는 CPU와 I/O 컨트롤러 간의 긴밀한 레지스터 상호작용을 기반으로 한다. CPU는 시스템 버스(System Bus)를 통해 장치의 주소 영역에 접근하여 데이터를 주고받는다.
 
@@ -76,7 +78,7 @@ Utilization | ############################## (CPU 100% 점유)
 
 ---
 
-## Ⅲ. 융합 비교 및 기술적 시너지
+## 3. 구조 및 동작 원리
 
 폴링은 독립적으로 존재하기보다 인터럽트(Interrupt) 및 DMA (Direct Memory Access)와 비교될 때 그 특성이 명확해진다.
 
@@ -107,7 +109,7 @@ Packet Empty -> 인터럽트 모드 복귀 -> CPU 휴식
 
 ---
 
-## Ⅳ. 실무 적용 및 최적화 시나리오
+## 4. 비교 및 트레이드오프
 
 실무에서 폴링을 적용할 때는 CPU 사용률과 응답 속도 사이의 트레이드오프(Trade-off)를 정교하게 설계해야 한다.
 
@@ -148,7 +150,7 @@ Packet Empty -> 인터럽트 모드 복귀 -> CPU 휴식
 
 ---
 
-## Ⅴ. 기대효과 및 향후 전망
+## 5. 실무 적용 및 최적화 기법
 
 폴링 기술은 고전적 기법에서 현대 고성능 컴퓨팅의 핵심 최적화 도구로 진화하고 있다.
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: OLAP(Online Analytical Processing)는 다차원 데이터 큐브를 통해 대규모 데이터를 다양한 관점에서 빠르게 집계·분석하는 기술로, OLTP(Online Transaction Processing)의 행(Row) 중심과 달리 열(Column)·차원(Dimension) 중심의 읽기 최적화 구조다.
+> **핵심**: OLAP(Online Analytical Processing)는 다차원 데이터 큐브를 통해 대규모 데이터를 다양한 관점에서 빠르게 집계·분석하는 기술로, OLTP(Online Transaction Processing)의 행(Row) 중심과 달리 열(Column)·차원(Dimension) 중심의 읽기 최적화 구조다.
 > 2. **가치**: 드릴다운(Drill-Down)·롤업(Roll-Up)·슬라이스(Slice)·다이스(Dice) 연산으로 비즈니스 인텔리전스(BI, Business Intelligence) 분석가가 억 건 데이터를 수초 내에 탐색하며, 서로게이트 키(Surrogate Key)로 차원 테이블의 변경 이력을 추적한다.
 > 3. **판단 포인트**: MOLAP(Multidimensional OLAP)은 사전 집계로 속도가 빠르나 공간 낭비가 크고, ROLAP(Relational OLAP)은 유연하나 느리다 — 데이터 규모·갱신 빈도·쿼리 패턴으로 선택한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 OLTP vs OLAP — 두 세계의 설계 철학 차이
 
@@ -49,7 +51,7 @@ OLAP의 핵심은 **데이터 큐브(Data Cube)** — 측정값(Measure)을 여�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 OLAP 유형 비교
 
@@ -126,7 +128,7 @@ OLAP의 핵심은 **데이터 큐브(Data Cube)** — 측정값(Measure)을 여�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 MDX (Multidimensional Expressions) 쿼리
 
@@ -158,7 +160,7 @@ WHERE ([지역].[도시].[서울])
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 DW 설계 시 서로게이트 키 전략
 
@@ -196,7 +198,7 @@ C-00456    →  C-00456          →  1002
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 OLAP 도입 효과
 

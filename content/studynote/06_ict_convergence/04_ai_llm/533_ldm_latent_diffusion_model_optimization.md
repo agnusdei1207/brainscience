@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: LDM(Latent Diffusion Model)은 픽셀 공간이 아닌 VAE(Variational Autoencoder)로 압축된 잠재 공간(Latent Space)에서 디퓨전(확산/역확산) 과정을 수행해 고해상도 이미지 생성 비용을 획기적으로 낮춘다.
+> **핵심**: LDM(Latent Diffusion Model)은 픽셀 공간이 아닌 VAE(Variational Autoencoder)로 압축된 잠재 공간(Latent Space)에서 디퓨전(확산/역확산) 과정을 수행해 고해상도 이미지 생성 비용을 획기적으로 낮춘다.
 > 2. **가치**: Stable Diffusion의 핵심 구조로, 512×512 이미지를 64×64 잠재 벡터에서 생성해 메모리와 연산을 수십 배 절감하면서도 픽셀 수준 디퓨전과 유사한 품질을 달성한다.
 > 3. **판단 포인트**: CFG(Classifier-Free Guidance) 스케일 값이 높을수록 텍스트 프롬프트 충실도가 높아지지만 다양성이 감소하며, DDIM·DPM-Solver로 샘플링 스텝을 50→20 단계로 줄여 속도와 품질을 균형있게 조정해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 픽셀 공간 디퓨전(DDPM, Imagen)은 1024×1024 이미지에서 직접 노이즈 제거를 반복하므로 메모리 수요가 방대하고, 학습 비용이 수백~수천만 달러에 달한다. LDM은 이 병목을 잠재 공간으로의 압축으로 해결했다.
 
@@ -26,7 +27,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -72,7 +73,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### CFG(Classifier-Free Guidance) 스케일
 
@@ -101,7 +102,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **파인튜닝 기법**
 
@@ -123,7 +124,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 LDM은 잠재 공간으로의 이동으로 디퓨전 모델의 상용화를 가능하게 했다. Stable Diffusion의 오픈소스 공개 이후 수만 개의 파인튜닝 모델과 생태계가 형성됐다. DiT(Diffusion Transformer) 기반 SD 3.0·Flux로의 발전이 차세대 아키텍처를 이끌고 있으며, 비디오 생성(Sora, Gen-3)으로 응용 범위가 확장되고 있다.
 

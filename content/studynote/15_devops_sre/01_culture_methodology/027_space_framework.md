@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SPACE 프레임워크는 GitHub Research와 Microsoft가 2021년 발표한 개발자 생산성(Developer Productivity) 측정 모델로, Satisfaction & Wellbeing, Performance, Activity, Communication & Collaboration, Efficiency & Flow의 5차원을 통해 생산성을 다면적으로 측정한다.
+> **핵심**: SPACE 프레임워크는 GitHub Research와 Microsoft가 2021년 발표한 개발자 생산성(Developer Productivity) 측정 모델로, Satisfaction & Wellbeing, Performance, Activity, Communication & Collaboration, Efficiency & Flow의 5차원을 통해 생산성을 다면적으로 측정한다.
 > 2. **가치**: SPACE 이전에는 커밋 수, PR 수 같은 활동(Activity) 지표만으로 개발자 생산성을 측정했다. 이 접근은 "바쁜 것처럼 보이지만 실제 가치를 안 만드는" 문제를 유발한다. SPACE는 만족도·성과·흐름(Flow) 같은 질적 차원을 포함하여 진정한 생산성을 측정한다.
 > 3. **판단 포인트**: DORA 메트릭(배포 주기·변경 리드 타임·CFR·MTTR)이 팀/시스템 수준 성과를 측정한다면, SPACE는 개발자 개인·팀·조직 수준의 다차원 생산성을 측정한다. 두 프레임워크를 함께 사용하면 기술적 성과와 인적 요소를 통합 분석할 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌────────────────────────────────────────────────────────┐
@@ -31,7 +33,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### SPACE 5차원 측정 방법
 
@@ -58,7 +60,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | SPACE | DORA Metrics |
 |:---|:---|:---|
@@ -70,7 +72,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 엔지니어링 리더십 활용
 1. **Efficiency & Flow**: 회의 최소화, 딥 워크 보호 시간 블록.
@@ -87,7 +89,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

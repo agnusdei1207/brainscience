@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 실시간 커널 (Real-time Kernel) / PREEMPT_RT
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 실시간 커널(Real-time Kernel)은 범용 커널의 치명적 약점인 "커널 내부 코드 실행 중 선점 불가(Non-preemptible)" 족쇄를 박살 내고, 언제 어떠한 상황에서도(인터럽트 컨텍스트 제외) 최우선 실시간 태스크가 즉각적으로 CPU를 탈취할 수 있도록 개조된 **완전 선점형(Fully Preemptible)** 아키텍처다.
+> **핵심**: 실시간 커널(Real-time Kernel)은 범용 커널의 치명적 약점인 "커널 내부 코드 실행 중 선점 불가(Non-preemptible)" 족쇄를 박살 내고, 언제 어떠한 상황에서도(인터럽트 컨텍스트 제외) 최우선 실시간 태스크가 즉각적으로 CPU를 탈취할 수 있도록 개조된 **완전 선점형(Fully Preemptible)** 아키텍처다.
 > 2. **가치**: 스케줄링의 가장 큰 블랙박스인 **'디스패치 지연(Dispatch Latency)'의 최댓값을 마이크로초(μs) 단위의 상수(Bounded)로 확정** 지어, 미사일 궤도 수정이나 자율주행 브레이크 같은 하드 리얼타임(Hard Real-time)의 무조건적 데드라인 방어를 보증(Guarantee)한다.
 > 3. **융합**: 리눅스 생태계에서는 이 철학을 구현한 **PREEMPT_RT** 패치가 산업 표준이 되었으며, 모든 스핀락(Spinlock)을 수면 가능한 뮤텍스(Sleepable Mutex)로 변환하고 우선순위 상속(Priority Inheritance)을 강제하여 무한 대기 버그를 원천 봉쇄했다.
 
+> 📝 모범 답안
+
+# 실시간 커널 (Real-time Kernel) / PREEMPT_RT
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 일반 범용 운영체제(General Purpose OS)의 커널은 시스템의 처리량(Throughput)과 데이터 무결성 보호를 중시한다. 반면 실시간 커널은 그 모든 것을 희생해서라도 오직 **'예측 가능성(Predictability)'과 '지연의 상한선(Bounded Latency)' 보장**을 최우선 목적으로 재설계된 커널이다.
 - **필요성**: 센서에서 "장애물 발견!"이라는 하드웨어 인터럽트가 떴을 때, 범용 OS는 우연히 디스크 백업 데몬이 커널 깊숙한 곳에서 거대한 락(Lock)을 쥐고 있다면 그 락을 놓을 때까지 수십 밀리초(ms)를 멍때리고 기다린다. 그 10ms 동안 자율주행차는 사람을 치고 지나간다. 따라서 커널이 락을 쥐고 있든 말든 무조건 쫓아내고 브레이크를 밟게 해주는 무자비한 강제력(Preemptibility)이 필요했다.
@@ -39,7 +41,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### PREEMPT_RT의 3대 핵심 마법 (어떻게 100% 선점을 달성했는가?)
 
@@ -78,7 +80,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 전용 RTOS (VxWorks/QNX) vs 패치형 RTOS (PREEMPT_RT Linux)
 
@@ -97,7 +99,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **ROS2 (Robot Operating System)의 운영체제 선정**: 로봇 팔이 초당 1000번(1ms)씩 관절 모터를 제어해야 한다. 우분투(Ubuntu) 22.04 기본 커널에서 돌리면 1000번 중 1번씩 5ms 렉이 튀어 로봇이 커피잔을 부숴버린다(Jitter 발생).
@@ -134,7 +136,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 `PREEMPT_RT`와 같은 실시간 커널 기술을 도입하면, 값비싼 전용 하드웨어(DSP)나 폐쇄적인 상용 RTOS 없이도 범용 PC 하드웨어 위에서 소프트웨어만으로 마이크로초(μs) 단위의 엄격한 모터 제어, 자율주행 판단, 고주파수 금융 트레이딩(HFT)이 가능해지는 압도적인 범용성과 비용 절감 효과를 거둔다.

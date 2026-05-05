@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 2.5D 및 3D 패키징 기술
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 2.5D 패키징은 실리콘 인터포저(Interposer) 위에 CPU와 HBM 같은 여러 칩을 수평으로 바짝 붙여 초고속으로 통신하게 하는 기술이며, 3D 패키징은 칩 위에 다른 칩을 수직으로 직접 포개어 TSV로 직결하는 기술이다.
+> **핵심**: 2.5D 패키징은 실리콘 인터포저(Interposer) 위에 CPU와 HBM 같은 여러 칩을 수평으로 바짝 붙여 초고속으로 통신하게 하는 기술이며, 3D 패키징은 칩 위에 다른 칩을 수직으로 직접 포개어 TSV로 직결하는 기술이다.
 > 2. **가치**: 반도체 회로를 가늘게 그리는 미세 공정(摩尔定律)이 물리적 한계에 부딪히면서, 만들어진 칩들을 어떻게 포장하고 연결할 것인가(后공정, Packaging)가 성능을 결정짓는 핵심 요소가 되었다.
 > 3. **융합**: TSMC의 CoWoS, InFO, Intel의 Foveros, EMIB 등이 대표적인 2.5D/3D 패키징 기술이며, Nvidia GPU, AMD CPU, Apple Silicon 등 현대 반도체 제품의 핵심 경쟁력이 되었다.
 
+> 📝 모범 답안
+
+# 2.5D 및 3D 패키징 기술
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 문제의식: 패키징이 반도체의 새로운 전장이 되다
 
@@ -76,7 +78,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 2.5D 패키징: 옆으로 바짝 붙이기
 
@@ -165,7 +167,7 @@ Intel EMIB (Embedded Multi-Die Interconnect Bridge)는 인터포저를局部적�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 주요 2.5D/3D 패키징 기술 비교
 
@@ -185,7 +187,7 @@ Intel EMIB (Embedded Multi-Die Interconnect Bridge)는 인터포저를局部적�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -210,7 +212,7 @@ Intel Lakefield 프로세서는 Foveros 3D 패키징을 활용하여, 최상단�
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 패키징 기술의 미래
 

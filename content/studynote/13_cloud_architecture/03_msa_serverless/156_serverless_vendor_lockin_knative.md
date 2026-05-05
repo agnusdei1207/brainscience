@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 서버리스 FaaS (Function as a Service)는 각 벤더 고유의 이벤트 API, 설정 형식, SDK에 종속되어 코드·인프라를 다른 클라우드로 이식하기 어려운 벤더 락인 (Vendor Lock-in) 리스크를 내포한다.
+> **핵심**: 서버리스 FaaS (Function as a Service)는 각 벤더 고유의 이벤트 API, 설정 형식, SDK에 종속되어 코드·인프라를 다른 클라우드로 이식하기 어려운 벤더 락인 (Vendor Lock-in) 리스크를 내포한다.
 > 2. **가치**: Knative, OpenFaaS 같은 오픈소스 FaaS 프레임워크를 활용하면 Kubernetes 위에서 벤더 중립적 서버리스 환경을 구축해 이식성을 보장할 수 있다.
 > 3. **판단 포인트**: 단일 벤더 생태계를 깊이 활용할수록 생산성이 높지만 전환 비용도 증가하므로, 전략적 이식성 요구 수준과 운영 복잡도를 기준으로 락인 허용 범위를 결정해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 AWS Lambda, Azure Functions, Google Cloud Functions는 강력하지만 각기 다른 API 인터페이스, 트리거 이벤트 형식, 배포 도구를 사용한다. Lambda의 이벤트 핸들러 함수 서명, EventBridge 규칙 설정, SAM (Serverless Application Model) 템플릿은 다른 벤더로 그대로 이전할 수 없다.
 
@@ -25,7 +27,7 @@ AWS Lambda, Azure Functions, Google Cloud Functions는 강력하지만 각기 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 항목 | 벤더 종속 FaaS | Knative (오픈소스) |
 |:---|:---|:---|
@@ -63,7 +65,7 @@ AWS Lambda, Azure Functions, Google Cloud Functions는 강력하지만 각기 �
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | AWS Lambda | Knative | OpenFaaS |
 |:---|:---|:---|:---|
@@ -84,7 +86,7 @@ AWS Lambda, Azure Functions, Google Cloud Functions는 강력하지만 각기 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **락인 수준별 대응 전략**
 - **전략적 락인 허용**: 단일 벤더 올인으로 생산성 극대화, 탈출 비용은 장기 계획에 반영
@@ -101,7 +103,7 @@ AWS Lambda, Azure Functions, Google Cloud Functions는 강력하지만 각기 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 벤더 락인 리스크를 인식하고 적절한 수준의 이식성 전략을 설계하면, 비즈니스 요구가 변할 때 클라우드 전환 비용과 중단 리스크를 최소화할 수 있다. Knative는 특히 멀티클라우드·하이브리드 클라우드 전략을 채택한 대기업에서 실질적인 대안으로 채택되고 있다.
 

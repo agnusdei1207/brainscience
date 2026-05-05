@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> Flink의 두 계층은 "자동 변속기(Table/SQL)와 수동 변속기(DataStream API)"와 같다. 일반 운전에는 자동이 편리하지만, 험한 오프로드(복잡한 비즈니스 로직)는 수동이 더 정밀하게 제어된다.
+
+> 📝 모범 답안
 
 - **본질**: Apache Flink는 두 가지 프로그래밍 계층을 제공한다. DataStream API (데이터스트림 API)는 이벤트 단위의 세밀한 스트림 처리를 위한 저수준 API이고, Table API & SQL (테이블 API)은 관계형 테이블 개념을 스트림에 적용한 고수준 선언적 API로, 두 계층은 내부적으로 동일한 DataStream 실행 엔진으로 컴파일된다.
 - **가치**: SQL을 아는 데이터 엔지니어는 Table API/SQL로 스트리밍 집계·조인·윈도우를 신속하게 개발하고, 복잡한 상태 관리나 커스텀 타임스탬프 추출이 필요한 경우 DataStream API로 세밀하게 제어하는 **계층화된 유연성**이 Flink의 큰 장점이다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. Flink API 계층 구조
 
@@ -38,11 +41,10 @@ categories = "studynote-bigdata"
 - **DataStream API**: 커스텀 타임스탬프 추출, 복잡한 상태 로직, ML 모델 인라인 실행
 
 **📢 섹션 요약 비유**
-> Flink의 두 계층은 "자동 변속기(Table/SQL)와 수동 변속기(DataStream API)"와 같다. 일반 운전에는 자동이 편리하지만, 험한 오프로드(복잡한 비즈니스 로직)는 수동이 더 정밀하게 제어된다.
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. DataStream API 핵심 구조
 
@@ -117,7 +119,7 @@ DataStream<Row> outputStream = tableEnv.toDataStream(result);
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 1. Table API SQL의 Flink 고유 SQL 확장
 
@@ -157,7 +159,7 @@ Table backToTable = tableEnv.fromDataStream(processed);
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1. API 선택 가이드
 
@@ -185,7 +187,7 @@ Table backToTable = tableEnv.fromDataStream(processed);
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 기대효과
 

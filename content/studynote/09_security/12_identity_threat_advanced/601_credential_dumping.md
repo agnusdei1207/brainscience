@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 크리덴셜 덤핑 (Credential Dumping)은 메모리(LSASS)나 파일 시스템(SAM hive)에 저장된 사용자 계정 정보를 무단으로 추출하는 행위다.
+> **핵심**: 크리덴셜 덤핑 (Credential Dumping)은 메모리(LSASS)나 파일 시스템(SAM hive)에 저장된 사용자 계정 정보를 무단으로 추출하는 행위다.
 > 2. **가치**: 공격자는 이를 통해 평문 비밀번호, NTLM 해시, Kerberos 티켓 등을 획득하여 네트워크 내에서의 횡적 이동(Lateral Movement)을 수행한다.
 > 3. **판단 포인트**: LSASS 보호(PPL), 원격 크리덴셜 가드(Remote Credential Guard), 자격 증명 제한 모드 등을 적용하여 탈취 위협을 원천적으로 봉쇄해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 크리덴셜 덤핑은 운영체제가 인증을 위해 메모리나 디스크에 유지하고 있는 기밀 정보(Credentials)를 가로채는 기법이다. Windows 시스템은 사용자 편의를 위해 로그인 정보를 일정 기간 캐싱하거나 메모리에 상주시키는데, 공격자는 관리자 권한을 획득한 후 이러한 영역을 '덤프'하여 비밀번호를 재구성한다.
 
@@ -36,7 +38,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 가장 대표적인 덤핑 대상은 **LSASS (Local Security Authority Subsystem Service)** 프로세스와 **SAM (Security Accounts Manager)** 데이터베이스다.
 
@@ -75,7 +77,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 크리덴셜 덤핑의 결과물은 이후 어떤 공격으로 이어지느냐에 따라 분류된다.
 
@@ -92,7 +94,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 보안 담당자는 단순히 덤핑 도구(Mimikatz 등)를 차단하는 데 그치지 말고, 아키텍처 수준의 방어 전략을 수립해야 한다.
 
@@ -111,7 +113,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 크리덴셜 덤핑 방어는 현대 보안의 핵심인 **'Zero Trust'**와 **'Assume Breach'** 관점에서 필수적이다. 아무리 강력한 비밀번호 정책을 세워도 메모리에서 해시가 덤프되면 무용지물이 되기 때문이다.
 

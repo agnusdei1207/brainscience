@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: WordPiece는 언어 모델 우도(Log-Likelihood) 증가량을 기준으로 서브워드를 병합하고, SentencePiece는 공백을 특수 문자로 처리해 언어에 독립적인 원시 텍스트 토크나이징을 구현한다.
+> **핵심**: WordPiece는 언어 모델 우도(Log-Likelihood) 증가량을 기준으로 서브워드를 병합하고, SentencePiece는 공백을 특수 문자로 처리해 언어에 독립적인 원시 텍스트 토크나이징을 구현한다.
 > 2. **가치**: BERT의 WordPiece는 `##` 접두사로 서브워드 경계를 명시해 NLU (Natural Language Understanding) 태스크에 최적화되고, SentencePiece는 BPE/Unigram을 언어 독립적으로 구현해 다국어 모델의 표준이 됐다.
 > 3. **판단 포인트**: 세 알고리즘(BPE·WordPiece·Unigram)의 병합/분할 기준 차이와 `##` vs `▁` 표기법, Sentencepiece의 역정규화 특성을 구분해서 설명할 수 있어야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 같은 서브워드 토크나이징 계열이지만, WordPiece와 SentencePiece는 알고리즘과 사용 맥락이 다르다. 실무에서 BERT 계열 모델을 다루면 WordPiece, T5·LLaMA 계열은 SentencePiece를 만나게 된다.
 
@@ -23,7 +25,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### WordPiece (BERT)
 
@@ -93,7 +95,7 @@ BPE와 반대 방향: 큰 어휘에서 시작해 제거
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 다국어 처리 측면:
 - SentencePiece는 언어별 전처리(공백, 형태소 분석) 없이 원시 텍스트 직접 처리
@@ -104,7 +106,7 @@ BPE와 반대 방향: 큰 어휘에서 시작해 제거
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **BERT fine-tuning 시**: `##` 표기 토큰의 오프셋 매핑 주의 (NER 등 span 예측 태스크)
 **T5/LLaMA fine-tuning**: SentencePiece의 ▁ 처리로 공백 복원이 자동
@@ -116,7 +118,7 @@ BPE와 반대 방향: 큰 어휘에서 시작해 제거
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 WordPiece와 SentencePiece는 BPE의 발전 형태로, 각각 BERT와 T5/LLaMA 생태계의 표준 토크나이저가 됐다. 서브워드 알고리즘의 선택은 모델 성능, 다국어 지원, 디토크나이징 편의성에 직접 영향을 미친다. 실무에서 올바른 토크나이저 이해는 파인튜닝과 프롬프트 엔지니어링의 토대다.
 

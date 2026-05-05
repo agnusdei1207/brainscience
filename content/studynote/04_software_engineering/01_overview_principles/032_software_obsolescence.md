@@ -4,15 +4,18 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 소프트웨어 노후화(Software Obsolescence)는 기술적 부채·엔트로피 축적·환경 변화로 시스템이 유지보수 불가 상태에 도달하는 현상이다.
 > 2. 레거시 마이그레이션 전략(리팩토링·리아키텍처링·교체·은퇴)의 선택은 비즈니스 가치 vs 기술 부채 비율로 결정한다.
 > 3. 소프트웨어 나이(Software Age)는 캘린더 시간이 아닌 변경 요청 누적량과 결함 밀도로 측정해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 소프트웨어 노후화의 정의와 원인
+## 1. 개요 및 필요성
 
 소프트웨어 노후화(Software Obsolescence)는 **시간이 지남에 따라 소프트웨어의 유지보수성·적합성·기술 지원이 저하**되는 현상이다.
 
@@ -30,7 +33,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 기술적 부채 (Technical Debt)
+## 2. 구성요소
 
 기술적 부채(Technical Debt)는 Ward Cunningham이 제안한 개념으로, **빠른 개발을 위해 취한 지름길이 미래 유지보수 비용 증가**로 되돌아오는 현상이다.
 
@@ -50,7 +53,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅲ. 레거시 시스템 평가 모델
+## 3. 구조 및 동작 원리
 
 ### 레거시 포트폴리오 매트릭스
 
@@ -79,7 +82,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅳ. 소프트웨어 노후화 측정 지표
+## 4. 비교 및 트레이드오프
 
 | 지표                  | 측정 방법                      | 임계값 예시           |
 |--------------------|-------------------------------|----------------------|
@@ -93,7 +96,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅴ. 현대화 전략과 사례
+## 5. 실무 적용 및 최적화 기법
 
 ### 점진적 현대화 패턴
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 텐서 코어 (Tensor Core) 는 NVIDIA GPU 에 내장된 전용 행렬 곱셈 가속기로, WMMA (Warp Matrix Multiply Accumulate) 연산을 FP16 입력 + FP32 누산 방식으로 단일 클록에 수행해 CUDA Core 대비 수십 배 FLOPS 를 달성한다.
+> **핵심**: 텐서 코어 (Tensor Core) 는 NVIDIA GPU 에 내장된 전용 행렬 곱셈 가속기로, WMMA (Warp Matrix Multiply Accumulate) 연산을 FP16 입력 + FP32 누산 방식으로 단일 클록에 수행해 CUDA Core 대비 수십 배 FLOPS 를 달성한다.
 > 2. **가치**: FP16/BF16 혼합 정밀도 (Mixed Precision Training) 를 활성화하면 VRAM 사용량 절반 감소 + 텐서 코어 풀 가속이라는 이중 이득이 발생한다.
 > 3. **판단 포인트**: TF32 (TensorFloat-32) 는 FP32 범위에 FP16 정밀도를 결합한 NVIDIA 독자 포맷으로, Ampere 이상 GPU 에서 코드 변경 없이 자동 적용된다는 점이 출제 포인트다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 딥러닝 연산의 병목: 행렬 곱셈
 
@@ -29,7 +31,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### WMMA (Warp Matrix Multiply Accumulate) 연산 구조
 
@@ -93,7 +95,7 @@ FP16 의 최솟값 약 6×10⁻⁵ 보다 작은 그래디언트는 **언더플�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### cuDNN / cuBLAS 와 텐서 코어 연동
 
@@ -114,7 +116,7 @@ FP16 의 최솟값 약 6×10⁻⁵ 보다 작은 그래디언트는 **언더플�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### PyTorch AMP (Automatic Mixed Precision) 활성화 예시
 
@@ -142,7 +144,7 @@ for batch in dataloader:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 - **속도**: FP16 Mixed Precision 으로 학습 속도 2~3배 향상
 - **메모리**: VRAM 사용량 약 40~50% 절감

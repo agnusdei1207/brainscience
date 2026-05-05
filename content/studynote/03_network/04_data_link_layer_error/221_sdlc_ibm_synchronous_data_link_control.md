@@ -2,15 +2,17 @@
 title = "221. SDLC (Synchronous Data Link Control) - IBM"
 weight = 221
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SDLC (Synchronous Data Link Control)는 IBM이 1970년대에 개발한 비트 지향형 동기식 데이터 링크 제어 프로토콜로, 메인프레임 통신 구조인 SNA (Systems Network Architecture)의 핵심 요소다.
+> **핵심**: SDLC (Synchronous Data Link Control)는 IBM이 1970년대에 개발한 비트 지향형 동기식 데이터 링크 제어 프로토콜로, 메인프레임 통신 구조인 SNA (Systems Network Architecture)의 핵심 요소다.
 > 2. **가치**: 기존 문자 지향형 프로토콜의 한계를 극복하고 데이터의 투명성을 보장하는 비트 스터핑 (Bit Stuffing) 기술을 도입하여 신뢰성 있고 효율적인 데이터 전송을 가능하게 했으며, 이후 HDLC 등 다양한 프로토콜의 모태가 되었다.
 > 3. **융합**: SDLC는 주국 (Primary)과 종국 (Secondary)의 철저한 마스터-슬레이브 구조를 가지며, 현대 네트워크 아키텍처에서는 역할이 줄어들었으나 폴링 (Polling) 및 신뢰성 있는 링크 제어의 기초 개념으로 여전히 교훈을 제공한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: SDLC (Synchronous Data Link Control)는 점대점 (Point-to-Point) 및 다중점 (Multipoint) 링크에서 동기식 (Synchronous) 직렬 데이터 전송을 제어하기 위해 IBM에서 설계한 데이터 링크 계층 (Data Link Layer) 프로토콜이다. 
 - **필요성**: 1970년대 이전의 프로토콜 (예: BSC)은 데이터 전송 시 특정 제어 문자 집합에 의존하는 문자 지향 (Character-oriented) 방식이어서, 데이터 안에 제어 문자와 동일한 비트 패턴이 포함될 경우 오동작하는 투명성 (Transparency) 문제가 있었다. 이를 해결하고 임의의 비트 스트림을 안전하게 전송할 체계가 필요했다.
@@ -36,7 +38,7 @@ weight = 221
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -88,7 +90,7 @@ SDLC는 단일 주국 (Primary Station)과 하나 이상의 종국 (Secondary St
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교: SDLC vs HDLC
 
@@ -105,7 +107,7 @@ HDLC는 SDLC를 모태로 하였으나, 피어투피어(Peer-to-Peer) 통신이 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 과거 금융권이나 대기업의 레거시 메인프레임 시스템에서 터미널(지점)을 관리할 때 SDLC가 광범위하게 쓰였다. 만약 어느 한 지점의 단말기가 고장 나면 주국의 폴링에 응답하지 못하므로, 해당 링크의 시간 지연이 발생하지만 전체 네트워크의 충돌로는 이어지지 않는다. 현대에는 이러한 레거시 시스템을 TCP/IP (Transmission Control Protocol/Internet Protocol) 위에서 캡슐화하여 전송하는 DLSw (Data Link Switching) 같은 기술이 사용된다.
@@ -118,7 +120,7 @@ HDLC는 SDLC를 모태로 하였으나, 피어투피어(Peer-to-Peer) 통신이 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 | 구분 | 내용 | 개선 효과 |

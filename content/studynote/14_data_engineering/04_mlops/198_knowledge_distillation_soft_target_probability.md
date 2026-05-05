@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 지식 증류(Knowledge Distillation)는 대형 교사 모델(Teacher Model)의 확률 분포(소프트 타겟)를 소형 학생 모델(Student Model)이 모방하여, 크기를 줄이면서도 성능을 최대한 유지하는 경량화 기법이다.
+> **핵심**: 지식 증류(Knowledge Distillation)는 대형 교사 모델(Teacher Model)의 확률 분포(소프트 타겟)를 소형 학생 모델(Student Model)이 모방하여, 크기를 줄이면서도 성능을 최대한 유지하는 경량화 기법이다.
 > 2. **가치**: BERT → DistilBERT처럼 파라미터 40% 감소 시 성능 97% 유지가 가능하며, 온도 매개변수(Temperature)로 클래스 간 관계 정보까지 전이하는 것이 일반 Hard Label 학습 대비 핵심 차별점이다.
 > 3. **판단 포인트**: 응답 기반(Response-based), 피처 기반(Feature-based), 관계 기반(Relation-based) 3가지 증류 방식을 태스크와 모델 구조에 맞게 선택해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 모델 경량화의 필요성
 
@@ -58,7 +60,7 @@ Soft Target (교사 모델 출력):
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 지식 증류 손실 함수
 
@@ -168,7 +170,7 @@ DistilBERT 증류 과정
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 지식 증류 적용 사례
 
@@ -209,7 +211,7 @@ Born Again Networks (BAN):
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 엣지 배포를 위한 모델 경량화 전략 비교
 
@@ -252,7 +254,6 @@ def distillation_loss(student_logits, teacher_logits,
     # 최종 손실 조합
     return alpha * distill_loss + (1 - alpha) * hard_loss
 
-
 # 학습 루프
 teacher_model.eval()  # 교사는 고정 (그래디언트 없음)
 for inputs, labels in dataloader:
@@ -279,7 +280,7 @@ for inputs, labels in dataloader:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 지식 증류 기대효과
 

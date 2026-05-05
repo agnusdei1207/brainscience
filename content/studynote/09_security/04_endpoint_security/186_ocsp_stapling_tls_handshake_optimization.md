@@ -5,17 +5,19 @@ date = "2026-04-07"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-# OCSP Stapling (Stapling of OCSP Response) TLS 핸드셰이크 최적화
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: OCSP Stapling은 클라이언트(브라우저)가 서버의 SSL/TLS 인증서가 폐기(Revoked)되었는지 확인하기 위해 인증 기관(CA) 서버에 매번 직접 물어보는 대신, **웹 서버가 미리 CA로부터 받아놓은 '인증서 정상 확인 영수증(OCSP 응답)'을 자신의 인증서에 스탬플러로 찍듯(Stapling) 함께 묶어서 클라이언트에게 건네주는 최적화 기술**이다.
+> **핵심**: OCSP Stapling은 클라이언트(브라우저)가 서버의 SSL/TLS 인증서가 폐기(Revoked)되었는지 확인하기 위해 인증 기관(CA) 서버에 매번 직접 물어보는 대신, **웹 서버가 미리 CA로부터 받아놓은 '인증서 정상 확인 영수증(OCSP 응답)'을 자신의 인증서에 스탬플러로 찍듯(Stapling) 함께 묶어서 클라이언트에게 건네주는 최적화 기술**이다.
 > 2. **가치**: 브라우저가 CA 서버로 검증 요청(HTTP)을 보내느라 낭비하는 네트워크 지연 시간(Round Trip Time)을 제거하여 **초기 접속 속도(TLS 핸드셰이크)를 극적으로 단축**시키고, 사용자 접속 프라이버시(내가 어떤 사이트에 접속하는지 CA가 알게 되는 문제) 유출을 차단한다.
 > 3. **융합**: 과거의 무식한 인증서 해지 목록(CRL) 다운로드 방식의 한계를 극복한 실시간 통신 규약(OCSP)마저 서버 부하로 인해 한계에 봉착하자, 통신 주체의 책임을 웹 서버로 위임(Offloading)하여 성능과 보안의 트레이드오프를 깬 현대 웹 서버(Nginx, Apache) 보안 아키텍처의 필수 설정값이다.
 
+> 📝 모범 답안
+
+# OCSP Stapling (Stapling of OCSP Response) TLS 핸드셰이크 최적화
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: HTTPS 통신을 할 때 웹 서버는 브라우저에게 인증서를 건넨다. 하지만 인증서 기간이 남아있더라도, 서버가 해킹당해 개인키(Private Key)가 유출되었다면 그 인증서는 즉각 폐기(Revocation)되어야 한다. OCSP(Online Certificate Status Protocol)는 브라우저가 "이 인증서 아직 유효해?"라고 인증기관(CA)에 실시간으로 물어보는 프로토콜이다. OCSP Stapling은 이 "물어보는 숙제"를 사용자가 아니라 웹 서버가 대신 주기적으로 해놓고, 그 결괏값(CA의 전자서명이 담긴 응답)을 인증서와 함께 묶어(Stapling) 사용자에게 넘겨주는 방식이다.
 
@@ -34,7 +36,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### TLS Handshake 통신 흐름 비교 (OCSP vs OCSP Stapling)
 
@@ -80,7 +82,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 실무 적용 및 기술사적 판단
+## 3. 구조 및 동작 원리
 
 ### 실무 시나리오
 
@@ -98,7 +100,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 기대효과 및 결론
+## 4. 비교 및 트레이드오프
 
 ### 정량/정성 기대효과
 

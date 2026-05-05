@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: UEFI Secure Boot는 부트 프로세스에서 로드되는 모든 실행 코드(UEFI 드라이버, 부트로더, OS 로더)의 디지털 서명을 검증해 서명되지 않거나 신뢰하지 않는 코드의 실행을 차단하는 펌웨어 수준 무결성 보호 메커니즘이다.
+> **핵심**: UEFI Secure Boot는 부트 프로세스에서 로드되는 모든 실행 코드(UEFI 드라이버, 부트로더, OS 로더)의 디지털 서명을 검증해 서명되지 않거나 신뢰하지 않는 코드의 실행을 차단하는 펌웨어 수준 무결성 보호 메커니즘이다.
 > 2. **가치**: 부트킷·UEFI 루트킷·오염된 OS 로더를 초기 부팅 단계에서 차단해 OS 보안 소프트웨어가 시작되기 전의 공격을 막는 최초 방어선 역할을 한다.
 > 3. **판단 포인트**: Secure Boot의 한계는 UEFI 펌웨어 자체가 변조됐거나 유효한 서명 인증서가 탈취된 경우—TPM Measured Boot와 함께 적용해야 더 강력한 부팅 무결성을 보장한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 UEFI (Unified Extensible Firmware Interface) Secure Boot는 UEFI 2.3.1 Errata C 사양에 정의된 표준으로, 2012년 Windows 8 출시와 함께 상용 PC에 광범위하게 도입됐다. 기존 BIOS/MBR 환경에서는 부트 코드 서명 검증이 없어 부트킷(Bootkit)이 OS 로더를 교체하는 것이 가능했다.
 
@@ -23,7 +25,7 @@ Secure Boot의 핵심 아이디어는 "신뢰 체인(Chain of Trust)"이다. UEF
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 **Secure Boot 키 데이터베이스**  
 
@@ -68,7 +70,7 @@ Secure Boot의 핵심 아이디어는 "신뢰 체인(Chain of Trust)"이다. UEF
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | Secure Boot | Measured Boot (TPM) |
 |:---|:---|:---|
@@ -81,7 +83,7 @@ Secure Boot의 핵심 아이디어는 "신뢰 체인(Chain of Trust)"이다. UEF
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **Secure Boot 관리**  
 1. PK·KEK는 하드웨어 보안 모듈(HSM)에서 관리—키 탈취 방지  
@@ -96,7 +98,7 @@ Secure Boot의 핵심 아이디어는 "신뢰 체인(Chain of Trust)"이다. UEF
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 UEFI Secure Boot는 현대 엔드포인트 보안의 기반이며, Windows 11이 TPM 2.0과 함께 Secure Boot를 필수 요건으로 지정한 것은 이 중요성을 반영한다. Secure Boot + TPM Measured Boot의 조합은 부팅 무결성 보증을 강화하며, 하드웨어 신뢰 루트(HW RoT)에서 OS까지 이어지는 완전한 신뢰 체인 구축이 가능하다.
 

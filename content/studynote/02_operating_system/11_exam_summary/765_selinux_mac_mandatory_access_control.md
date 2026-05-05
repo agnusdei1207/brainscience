@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# SELinux와 강제 접근 통제 (SELinux & MAC)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SELinux (Security-Enhanced Linux)는 기존 리눅스의 허술한 임의 접근 통제(DAC)를 대체하기 위해, 미국 국가안보국(NSA)이 개발한 **커널 레벨의 강제 접근 통제 (MAC, Mandatory Access Control) 보안 아키텍처**다.
+> **핵심**: SELinux (Security-Enhanced Linux)는 기존 리눅스의 허술한 임의 접근 통제(DAC)를 대체하기 위해, 미국 국가안보국(NSA)이 개발한 **커널 레벨의 강제 접근 통제 (MAC, Mandatory Access Control) 보안 아키텍처**다.
 > 2. **가치**: 해커가 시스템 관리자(Root) 권한을 탈취하거나 애플리케이션의 취약점을 뚫더라도, 사전에 정의된 '보안 정책(Policy)'에 없는 행동(예: 웹 서버가 쉘 스크립트를 실행)이라면 무조건 차단하여 시스템 전체가 장악되는 것을 방지한다.
 > 3. **융합**: 모든 프로세스, 파일, 네트워크 포트에 '보안 컨텍스트(Security Context, 라벨)'를 부여하고, 이를 주체(Subject)와 객체(Object) 간의 매트릭스로 검증하는 린눅스 커널 모듈(LSM) 프레임워크의 가장 성공적인 융합 사례다.
 
+> 📝 모범 답안
+
+# SELinux와 강제 접근 통제 (SELinux & MAC)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **DAC (임의 접근 통제)**: 리눅스의 기본 권한 체계(`rwxr-xr-x`). 파일의 '소유자(Owner)'가 마음대로 권한을 바꿀 수 있다. Root는 무적이다.
@@ -68,7 +70,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### SELinux 보안 컨텍스트 (Security Context / Label)
 
@@ -125,7 +127,7 @@ SELinux는 독자적으로 돌지 않고, 리눅스 커널의 보안 프레임�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### MAC 솔루션 비교 (SELinux vs AppArmor)
 
@@ -147,7 +149,7 @@ SELinux는 독자적으로 돌지 않고, 리눅스 커널의 보안 프레임�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 트러블슈팅
 
@@ -191,7 +193,7 @@ SELinux는 독자적으로 돌지 않고, 리눅스 커널의 보안 프레임�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

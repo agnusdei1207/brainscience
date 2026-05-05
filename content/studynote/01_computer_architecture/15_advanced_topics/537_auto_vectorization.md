@@ -5,15 +5,17 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 오토 벡터라이제이션은 컴파일러가 순차적인 스칼라(Scalar) 코드를 분석하여, 하드웨어의 SIMD(Single Instruction Multiple Data) 유닛을 활용하는 병렬 벡터 코드로 자동 변환하는 최적화 기술이다.
+> **핵심**: 오토 벡터라이제이션은 컴파일러가 순차적인 스칼라(Scalar) 코드를 분석하여, 하드웨어의 SIMD(Single Instruction Multiple Data) 유닛을 활용하는 병렬 벡터 코드로 자동 변환하는 최적화 기술이다.
 > 2. **가치**: 개발자가 난해한 SIMD 내장 함수(Intrinsics)나 어셈블리를 직접 작성하지 않고도, 하드웨어의 병렬 연산 성능을 4배에서 16배 이상 끌어낼 수 있게 한다.
 > 3. **판단 포인트**: 루프 내 데이터 의존성(Dependency) 분석과 포인터 앨리어싱(Aliasing) 여부가 벡터화의 성패를 결정하며, 이를 돕기 위한 `restrict` 키워드나 프라그마(Pragma)의 적절한 사용이 필수적이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 스칼라 연산의 한계와 SIMD의 등장
 전통적인 CPU 연산은 한 번에 하나의 데이터만 처리하는 스칼라 방식이었다. 하지만 멀티미디어 처리, 암호학, 특히 최근의 AI/ML 워크로드에서는 동일한 연산을 수만 번 반복하는 패턴이 지배적이다. 이를 해결하기 위해 하나의 명령어로 여러 데이터를 동시에 처리하는 SIMD 유닛(Intel AVX, ARM NEON/SVE 등)이 하드웨어에 탑재되었다.
@@ -28,7 +30,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 벡터화의 핵심: 데이터 의존성 분석 (Data Dependency)
 컴파일러가 루프를 벡터화하기 위해서는 "여러 루프를 동시에 실행해도 결과가 같은가?"를 증명해야 한다.
@@ -66,7 +68,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 1. 주요 SIMD 아키텍처의 진화
 
@@ -90,7 +92,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1. 벡터화 방해 요소 (Vectorization Inhibitors)
 실무에서 성능이 안 나온다면 다음을 체크해야 한다.
@@ -111,7 +113,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 주요 기대효과
 - **비약적인 처리량(Throughput) 향상**: 동일한 시간 내에 4~16배의 데이터를 처리하여 실시간 미디어 스트리밍, 기상 예측 등의 서비스 수준을 높인다.

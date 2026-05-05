@@ -6,15 +6,17 @@ description = "취약점이 알려졌거나 지원이 끝난 라이브러리와 
 taxonomy = ""
 tags = ["Software Engineering", "Security", "Dependencies", "OWASP", "Supply Chain"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 취약하거나 오래된 의존성은 시스템 전체의 약점이 된다.
+> **핵심**: 취약하거나 오래된 의존성은 시스템 전체의 약점이 된다.
 > 2. **가치**: 직접 작성하지 않은 코드도 공급망 리스크를 만든다.
 > 3. **판단 포인트**: 버전 관리와 패치 정책을 함께 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 현대 소프트웨어는 대부분 외부 컴포넌트에 의존한다. 그래서 오래된 라이브러리 하나가 큰 사고로 이어질 수 있다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Security", "Dependencies", "OWASP", "Supply Cha
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 핵심은 "의존성은 코드가 아니라 자산"으로 관리하는 것이다.
 
@@ -44,7 +46,7 @@ SBOM (Software Bill of Materials)이 중요한 이유도 여기에 있다.
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 컴포넌트 위험은 단순 기능 문제가 아니라 공급망 (Supply Chain) 보안 문제다.
 
@@ -60,7 +62,7 @@ SBOM (Software Bill of Materials)이 중요한 이유도 여기에 있다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 Dependency Scan, SCA (Software Composition Analysis), 패치 일정 관리가 필요하다.
 
@@ -73,7 +75,7 @@ SBOM (Software Bill of Materials)이 중요한 이유도 여기에 있다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 의존성 관리를 잘하면 재발성 취약점을 줄이고 유지보수성을 높일 수 있다.
 

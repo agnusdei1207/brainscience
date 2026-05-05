@@ -4,11 +4,14 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 클라우드 마이그레이션 6R은 Rehost(리호스트)·Replatform(리플랫폼)·Repurchase(리퍼채스)·Refactor(리팩터)·Retire(리타이어)·Retain(리테인)으로 구성된 워크로드별 마이그레이션 전략 프레임워크다.
 > 2. 모든 워크로드에 동일한 전략을 적용하는 것이 아니라 비즈니스 가치·기술적 복잡성·TCO(Total Cost of Ownership)를 기준으로 각 애플리케이션에 적합한 R을 선택해야 한다.
 > 3. 대부분의 기업은 Rehost(리프트앤시프트)로 빠른 마이그레이션을 시작하고, 이후 Replatform·Refactor로 클라우드 네이티브 최적화를 진행하는 2단계 접근을 취한다.
+
+> 📝 모범 답안
 
 ---
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: MLOps (Machine Learning Operations)는 ML 모델의 개발(Dev)과 운영(Ops)을 통합하여, 실험실 모델을 신뢰할 수 있는 프로덕션 서비스로 자동화하는 전체 생명주기 관리 체계다.
+> **핵심**: MLOps (Machine Learning Operations)는 ML 모델의 개발(Dev)과 운영(Ops)을 통합하여, 실험실 모델을 신뢰할 수 있는 프로덕션 서비스로 자동화하는 전체 생명주기 관리 체계다.
 > 2. **가치**: CI/CD에 CT (Continuous Training)을 더해 데이터·코드·모델 3축을 동시에 버전 관리하고, 모델 드리프트에 자동으로 반응함으로써 운영 비용을 절감하고 서비스 품질을 지속 보장한다.
 > 3. **판단 포인트**: MLOps 성숙도(Level 0→2)가 높을수록 자동화 범위가 넓어지고 재현성(Reproducibility)·감사 추적(Audit Trail)이 강화되나, 초기 인프라 투자와 조직 문화 변화가 선행되어야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 MLOps란?
 
@@ -57,7 +59,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 MLOps 3대 자동화 축
 
@@ -149,7 +151,7 @@ Level 0 (수동)              Level 1 (자동 파이프라인)    Level 2 (CI/CD
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 MLOps vs DataOps vs AIOps
 
@@ -198,7 +200,7 @@ Level 0 (수동)              Level 1 (자동 파이프라인)    Level 2 (CI/CD
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 MLOps 도입 단계별 로드맵
 
@@ -246,7 +248,7 @@ Kafka → Spark Streaming → 피처 스토어 (Feast)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 MLOps 도입 기대효과
 

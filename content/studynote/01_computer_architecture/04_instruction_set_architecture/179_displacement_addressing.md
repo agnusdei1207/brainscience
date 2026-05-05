@@ -5,15 +5,17 @@ date = "2026-03-19"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 변위 주소 지정(Displacement Addressing)은 레지스터의 내용인 **베이스 주소에 명령어 내의 변위(Displacement / Offset) 값을 더하여** 데이터의 유효 주소(Effective Address)를 결정하는 방식이다.
+> **핵심**: 변위 주소 지정(Displacement Addressing)은 레지스터의 내용인 **베이스 주소에 명령어 내의 변위(Displacement / Offset) 값을 더하여** 데이터의 유효 주소(Effective Address)를 결정하는 방식이다.
 > 2. **가치**: 직접 주소 지정의 좁은 주소 범위를 극복하고 **메모리 전체 영역을 유연하게 참조**할 수 있게 하며, 구조체(Struct)나 배열(Array)의 특정 요소에 접근하는 하드웨어적 최적화 수단을 제공한다.
 > 3. **융합**: 용도에 따라 **상대 주소(PC 기준), 베이스 레지스터, 인덱스 주소** 방식 등으로 융합 분화되며, 현대의 모든 고성능 CPU 아키텍처에서 가장 빈번하게 사용되는 주력 주소 지정 모드이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 변위 주소 지정(Displacement Addressing)은 레지스터의 내용인 **베이스 주소에 명령어 내의 변위(Displacement / Offset) 값을 더하여** 데이터의 실제 위치인 유효 주소(Effective Address)를 결정하는 방식이다. 기준점과 상대적 거리를 결합한 이원적 주소 체계다.
 
@@ -45,7 +47,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (변위 지정을 완성하는 3대 연산 유닛)
 
@@ -84,7 +86,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 심층 기술 비교: 직접 주소(Direct) vs 변위 주소(Displacement)
 
@@ -122,7 +124,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -171,7 +173,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

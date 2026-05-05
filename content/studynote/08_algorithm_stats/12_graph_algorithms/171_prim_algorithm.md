@@ -5,25 +5,28 @@ date = "2024-03-21"
 [extra]
 categories = ["Algorithm", "Graph"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> MST={A,C}
+
+> 📝 모범 답안
+
 - **정점 중심의 탐욕법**: 최소 신장 트리(MST)를 구축하기 위해 임의의 정점에서 시작하여 연결된 간선 중 최소 가중치를 가진 정점을 단계적으로 선택하는 알고리즘임.
 - **우선순위 큐 활용**: 인접한 정점들 사이의 최소 가중치를 효율적으로 추출하기 위해 Min-Priority Queue를 사용하여 시간 복잡도를 $O(E \log V)$ 수준으로 최적화함.
 - **밀집 그래프에 유리**: 간선의 수가 많은 밀집 그래프(Dense Graph)에서 간선 중심인 크루스칼 알고리즘보다 성능 우위를 점하는 경우가 많음.
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 - **MST의 정의**: 무방향 가중치 그래프에서 모든 정점을 포함하되 사이클이 없으며, 간선 가중치의 합이 최소인 트리임.
 - **알고리즘의 위치**: 그리디 알고리즘(Greedy Algorithm)의 전형적인 사례로, 매 순간 최적의 선택이 전체 최적해를 보장함(Matroid 구조).
 - **역사적 배경**: 1930년 보이테흐 야르니크가 처음 고안하고 1957년 로버트 프림이 재발견하여 대중화됨.
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 ```text
 [ Prim's Algorithm Flow: Vertex Expansion ]
 
  (A)---5---(B)      1. Start at Vertex {A}
   | \     / |       2. Adjacent Edges: (A,B):5, (A,C):2, (A,D):8
-  2  10  8  6       3. Pick Minimum: (A,C):2 -> MST={A,C}
-  |    \    |       4. From {A,C}, Adjacent Edges to others:
+  2  10  8  6       3. Pick Minimum: (A,C):2 -  |    \    |       4. From {A,C}, Adjacent Edges to others:
  (C)---3---(D)         (A,B):5, (A,D):8, (C,B):10, (C,D):3
                     5. Pick Minimum: (C,D):3 -> MST={A,C,D}
 
@@ -42,7 +45,7 @@ categories = ["Algorithm", "Graph"]
   3. 새로 추가된 정점과 연결된 간선들을 큐에 갱신(Relaxation)함.
   4. 모든 정점이 포함될 때까지 반복함.
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 비교 항목 | 프림 (Prim) | 크루스칼 (Kruskal) |
 | :--- | :--- | :--- |
@@ -52,12 +55,12 @@ categories = ["Algorithm", "Graph"]
 | **그래프 적합성** | 밀집 그래프 (Dense Graph)에 유리 | 희소 그래프 (Sparse Graph)에 유리 |
 | **구현 난이도** | 상대적으로 복잡 (Priority Queue 관리) | 직관적이고 쉬움 (Sorting + Union-Find) |
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 - **네트워크 설계**: 최소 비용으로 전력망, 통신망, 상수도망을 연결해야 하는 인프라 구축 설계의 기본 모델로 활용됨.
 - **이미지 세그멘테이션**: 픽셀을 정점으로, 픽셀 간 유사도를 가중치로 설정하여 유사한 영역을 MST 기반으로 그룹화하는 컴퓨터 비전 기술에 응용됨.
 - **선택 전략**: 간선의 개수가 $V^2$에 가까운 경우 피보나치 힙(Fibonacci Heap)을 사용한 프림 알고리즘을 선택하여 성능을 극대화함.
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 - **최적성 보장**: 프림 알고리즘은 단일 연결 성분에 대해 항상 최적의 MST를 보장하며, 가중치가 중복되지 않을 경우 유일한 MST를 도출함.
 - **확장성**: 유클리드 공간에서의 MST(EMST)나 Steiner Tree 문제 등 복잡한 기하 알고리즘의 기초가 됨.
 - **기술사적 결론**: 알고리즘 선택은 그래프의 밀도(Density)와 데이터 구조적 제약 사항을 고려하여 프림과 크루스칼 중 최적의 복잡도를 가진 것을 택하는 것이 PE의 역량임.
@@ -67,7 +70,6 @@ categories = ["Algorithm", "Graph"]
 - **Kruskal's Algorithm**: 경쟁 알고리즘
 - **Dijkstra's Algorithm**: 구조적 유사 알고리즘 (최단 경로)
 - **Fibonacci Heap**: 성능 최적화 도구
-
 
 ### 📈 관련 키워드 및 발전 흐름도
 

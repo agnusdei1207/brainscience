@@ -5,6 +5,11 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
+
+> **��:** �� ���� "��� � ��" ���� �����, ��� ���� "��� 30� ��" ��� ���� �����.
+
+> 📝 모범 답안
 
 # ��� ���� (Real-time Process)
 
@@ -13,8 +18,6 @@ categories = "studynote-operating-system"
 ### 1. �� � ��
 
 ��� ���(Real-time System)� �� ��� ��� ��� ��� ��(Timing Constraint)� ���� �� �����. ��� "��" ���� ��� "�� ��� �� ��"� ���� �� ����.
-
-> **��:** �� ���� "��� � ��" ���� �����, ��� ���� "��� 30� ��" ��� ���� �����.
 
 ```
  Real-time vs General Purpose 

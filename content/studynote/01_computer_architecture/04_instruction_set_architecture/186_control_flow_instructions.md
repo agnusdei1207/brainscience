@@ -5,15 +5,17 @@ date = "2026-03-19"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 제어 흐름 명령어(Control Flow Instructions)는 단순히 위에서 아래로 순차 실행되던 프로그램 카운터(PC)의 값을 강제로 변경하여, **프로그램의 실행 순서를 동적으로 조작**하는 명령어다.
+> **핵심**: 제어 흐름 명령어(Control Flow Instructions)는 단순히 위에서 아래로 순차 실행되던 프로그램 카운터(PC)의 값을 강제로 변경하여, **프로그램의 실행 순서를 동적으로 조작**하는 명령어다.
 > 2. **가치**: 소프트웨어에게 '판단(If-Else)'과 '반복(Loop)', 그리고 '모듈화(Function Call)'라는 지능을 부여하는 튜링 완전성(Turing Completeness)의 핵심 기둥이다.
 > 3. **융합**: 이 명령어들로 인해 발생하는 파이프라인의 붕괴(Control Hazard)를 막기 위해, 현대 CPU에는 **분기 예측기(Branch Predictor)**라는 고도의 인공지능 하드웨어가 융합된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 제어 흐름 명령어(Control Flow Instructions)는 단순히 위에서 아래로 순차 실행되던 프로그램 카운터(PC)의 값을 강제로 변경하여, 프로그램의 실행 순서를 동적으로 조작하는 명령어군이다. 조건부 분기(Branch), 무조건 점프(Jump), 서브루틴 호출(Call) 및 복귀(Return) 등이 여기에 속한다.
 
@@ -47,7 +49,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 제어 흐름 명령어의 3대 분류 (The Big Three)
 
@@ -88,7 +90,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 심층 기술 비교: 조건부(Branch) vs 호출(Call)의 구조적 차이
 
@@ -129,7 +131,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -175,7 +177,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

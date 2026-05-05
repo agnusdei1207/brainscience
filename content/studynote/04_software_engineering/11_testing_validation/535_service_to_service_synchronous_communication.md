@@ -6,15 +6,17 @@ description = "REST API와 gRPC를 이용한 서비스 간 동기 통신"
 taxonomy = ""
 tags = ["Software Engineering", "Architecture", "REST API", "gRPC", "Microservices"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 동기 통신은 요청 후 응답을 기다리는 방식이다.
+> **핵심**: 동기 통신은 요청 후 응답을 기다리는 방식이다.
 > 2. **가치**: 단순하고 이해하기 쉬우나 지연에 민감하다.
 > 3. **판단 포인트**: 응답 시간, 계약, 장애 전파를 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 서비스 간 동기 통신은 직관적이고 구현이 쉽다. REST API와 gRPC가 대표적이다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Architecture", "REST API", "gRPC", "Microservic
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 REST는 HTTP (Hypertext Transfer Protocol)와 리소스 중심 설계이고, gRPC는 Protocol Buffers를 쓰는 고성능 RPC다.
 
@@ -42,7 +44,7 @@ REST는 HTTP (Hypertext Transfer Protocol)와 리소스 중심 설계이고, gRP
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 동기 통신은 개발이 쉽지만, 서비스 수가 늘면 복잡해진다.
 
@@ -58,7 +60,7 @@ REST는 HTTP (Hypertext Transfer Protocol)와 리소스 중심 설계이고, gRP
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 timeout, retry, circuit breaker, idempotency를 고려한다.
 
@@ -71,7 +73,7 @@ REST는 HTTP (Hypertext Transfer Protocol)와 리소스 중심 설계이고, gRP
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 동기 통신은 단순한 호출 구조를 제공한다.
 

@@ -4,15 +4,18 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 의사결정 트리(Decision Tree)는 특성 기반 조건 분기를 통해 분류·회귀를 수행하는 화이트박스 모델로, 결과 해석이 직관적이다.
 > 2. 정보 이득(IG)·지니 불순도·분산 감소를 분기 기준으로 사용하며, 가지치기(Pruning)로 과적합을 방지한다.
 > 3. 랜덤 포레스트·XGBoost·LightGBM 등 앙상블 기법의 기반 학습기(Base Learner)로 사용되어 현대 ML 경진대회에서 압도적 성능을 발휘한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 의사결정 트리의 구조와 용어
+## 1. 개요 및 필요성
 
 의사결정 트리(Decision Tree)는 **트리 구조로 데이터를 반복 분할해 분류·회귀 문제를 해결**하는 지도학습 알고리즘이다.
 
@@ -41,7 +44,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 분기 기준 — 정보 이득과 지니 불순도
+## 2. 구성요소
 
 ### 정보 이득 (Information Gain, IG)
 
@@ -76,7 +79,7 @@ Gini(S) = 1 - Σ p_i²
 
 ---
 
-## Ⅲ. 과적합과 가지치기 (Pruning)
+## 3. 구조 및 동작 원리
 
 ```
 과적합 문제:
@@ -101,7 +104,7 @@ Gini(S) = 1 - Σ p_i²
 
 ---
 
-## Ⅳ. 코드 구현 (Python / scikit-learn)
+## 4. 비교 및 트레이드오프
 
 ```python
 from sklearn.tree import DecisionTreeClassifier, export_text
@@ -131,7 +134,7 @@ print(export_text(clf, feature_names=load_iris().feature_names))
 
 ---
 
-## Ⅴ. 앙상블로 확장 — 랜덤 포레스트와 부스팅
+## 5. 실무 적용 및 최적화 기법
 
 ```
 단일 의사결정 트리

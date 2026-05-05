@@ -7,19 +7,21 @@ date = 2024-05-24
 tags = ["Network", "Security", "PKI", "Cryptography"]
 categories = ["3_network"]
 +++
-
-# PKI (Public Key Infrastructure)
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 PKI (Public Key Infrastructure)의 개념, 아키텍처, 그리고 통신 보안 인프라로서의 실무적 적용을 심층적으로 분석합니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# PKI (Public Key Infrastructure)
+
 > 1. **본질**: PKI (Public Key Infrastructure)는 디지털 세계에서 '신뢰'를 구조화하는 근간으로, 비대칭키 암호 체계를 기반으로 인증서(Certificate)를 발급, 검증, 관리하는 일련의 정책과 기술적 인프라이다.
 > 2. **가치**: 불특정 다수가 참여하는 오픈 네트워크(인터넷) 상에서 상호 인증, 기밀성, 무결성, 부인 방지를 보장하여 전자상거래, HTTPS 통신, 전자서명의 기술적 신뢰를 완성한다.
 > 3. **융합**: X.509 인증서 형식과 TLS (Transport Layer Security) 프로토콜에 결합되어 작동하며, 양자 컴퓨터 시대의 도래와 함께 PQC (Post-Quantum Cryptography) 기반의 새로운 PKI 체계로 진화하고 있다.
 
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: PKI (Public Key Infrastructure)는 제3자 신뢰 기관 (TTP, Trusted Third Party)인 인증기관 (CA, Certificate Authority)을 통해 각 주체의 공개키 (Public Key)와 신원을 바인딩하는 전자 인증서 체계를 의미한다. 이를 통해 수신자는 전달받은 공개키가 정말로 자신이 통신하고자 하는 상대방의 것임을 암호학적으로 확신할 수 있다.
 
@@ -62,7 +64,7 @@ categories = ["3_network"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -162,7 +164,7 @@ PKI 시스템의 핵심은 사용자가 인증서를 발급받는 과정과, 다
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: 인증서 상태 검증 프로토콜 비교 (CRL vs OCSP vs OCSP Stapling)
 
@@ -187,7 +189,7 @@ PKI 시스템의 핵심은 사용자가 인증서를 발급받는 과정과, 다
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -238,7 +240,7 @@ PKI 시스템의 핵심은 사용자가 인증서를 발급받는 과정과, 다
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Mediator (중재자)의 **중앙 집중 라우팅**과 Observer (옵저버)의 **느슨한 결합 이벤트 구독**을 결합하면, 확장성과 유연성을 모두 갖춘 이벤트 기반 아키텍처가 탄생한다.
+> **핵심**: Mediator (중재자)의 **중앙 집중 라우팅**과 Observer (옵저버)의 **느슨한 결합 이벤트 구독**을 결합하면, 확장성과 유연성을 모두 갖춘 이벤트 기반 아키텍처가 탄생한다.
 > 2. **가치**: Mediator가 이벤트 채널 역할을 하고 Colleague들이 Observer로 등록함으로써, 새로운 구독자 추가 시 Mediator 코드를 수정하지 않아도 된다.
 > 3. **판단 포인트**: God Object (갓 오브젝트) 위험이 있을 때 Observer 패턴으로 Mediator를 내부 분해하면 책임을 분산시킬 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1-1. 두 패턴만으로는 부족한 상황
 
@@ -50,7 +51,7 @@ Node.js의 `EventEmitter`, Spring의 `ApplicationEventPublisher`, Java의 `java.
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. 혼합 패턴 전체 구조
 
@@ -127,7 +128,7 @@ bus.emit('order.created', newOrder); // 모든 구독자에게 전파
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. 단독 패턴 vs 혼합 패턴 비교
 
@@ -153,7 +154,7 @@ bus.emit('order.created', newOrder); // 모든 구독자에게 전파
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. God Object 방지 전략
 
@@ -209,7 +210,7 @@ Spring에서 `@Async + @EventListener` 조합으로 비동기 Mediator-Observer�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5-1. 기대 효과
 

@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Atlantis는 Terraform/OpenTofu의 **PR(Pull Request) 기반 자동 Plan/Apply 워크플로**를 제공하는 OSS 도구로, PR을 열면 자동으로 `terraform plan` 결과를 코멘트로 달고, 승인 후 `atlantis apply`로 적용한다.
+> **핵심**: Atlantis는 Terraform/OpenTofu의 **PR(Pull Request) 기반 자동 Plan/Apply 워크플로**를 제공하는 OSS 도구로, PR을 열면 자동으로 `terraform plan` 결과를 코멘트로 달고, 승인 후 `atlantis apply`로 적용한다.
 > 2. **가치**: 개발자가 로컬에서 `terraform apply`를 실행하면 State 충돌·감사 불가·리뷰 없는 변경이 발생하지만, Atlantis는 **모든 인프라 변경을 PR 리뷰 프로세스**에 통합하여 IaC의 GitOps를 실현한다.
 > 3. **판단 포인트**: Atlantis는 자체 호스팅(GitHub/GitLab Webhook 연동)이 필요하며, Terraform Cloud/Spacelift 같은 SaaS 대안과 비교하여 **비용 0 + 완전 제어**가 장점이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -34,7 +36,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Atlantis 핵심 기능
 
@@ -60,7 +62,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 로컬 apply | Atlantis | Terraform Cloud |
 |:---|:---|:---|:---|
@@ -70,7 +72,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 배포 체크리스트
 1. Atlantis 서버를 K8s/Docker에 배포.
@@ -80,7 +82,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | 로컬 apply | Atlantis | 개선 |
 |:---|:---|:---|:---|

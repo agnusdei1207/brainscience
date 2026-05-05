@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: OTel (OpenTelemetry)은 Traces·Metrics·Logs 세 기둥을 표준화된 단일 API/SDK로 수집하여 벤더 종속 없이 관측 가능성(Observability)을 구현하는 CNCF 표준이다.
+> **핵심**: OTel (OpenTelemetry)은 Traces·Metrics·Logs 세 기둥을 표준화된 단일 API/SDK로 수집하여 벤더 종속 없이 관측 가능성(Observability)을 구현하는 CNCF 표준이다.
 > 2. **가치**: 4 Golden Signals (지연, 트래픽, 오류율, 포화도)가 모두 실시간 수집될 때 장애 MTTR (평균 복구 시간)이 평균 60% 이상 단축된다.
 > 3. **판단 포인트**: Tail Sampling은 오류·지연 트레이스만 선택 보존해 저장 비용을 90% 절감하지만, Collector 메모리를 많이 소비하므로 Collector 스케일링 계획이 필요하다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 마이크로서비스 환경에서 수십~수백 개 서비스의 로그, 메트릭, 트레이스를 각기 다른 방식으로 수집하면 도구 파편화와 데이터 불일치가 발생한다.
 
@@ -31,7 +32,7 @@ Observability 3 기둥 (Three Pillars):
 
 📢 **섹션 요약 비유**: OTel은 모든 센서가 같은 규격 커넥터를 쓰는 자동차 진단 포트다. 어떤 진단기(백엔드)를 꽂아도 같은 데이터를 읽을 수 있다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### OTel Collector 파이프라인
 
@@ -97,7 +98,7 @@ Observability 3 기둥 (Three Pillars):
 
 📢 **섹션 요약 비유**: OTel Collector는 여러 센서의 신호를 받아 필터링하고 여러 모니터링 시스템에 동시에 전달하는 지능형 신호 교환기다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### OTel vs 기존 APM 도구
 
@@ -111,7 +112,7 @@ Observability 3 기둥 (Three Pillars):
 
 📢 **섹션 요약 비유**: OTel은 표준 USB 포트, Datadog은 독자 규격 충전기다. USB는 어디서나 쓰지만 충전 속도는 독자 규격이 더 빠를 수 있다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 텔레메트리 도입 체크리스트
 
@@ -131,7 +132,7 @@ Observability 3 기둥 (Three Pillars):
 
 📢 **섹션 요약 비유**: 고카디널리티 레이블은 100만 명의 이름을 서랍 라벨로 쓰는 것이다. 서랍장이 폭발한다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

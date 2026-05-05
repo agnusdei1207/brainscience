@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 강화 학습(Reinforcement Learning)은 시행착오(Trial-and-Error)를 통해 누적 보상(Cumulative Reward)을 최대화하는 정책(Policy)을 스스로 학습하는 패러다임이다.
+> **핵심**: 강화 학습(Reinforcement Learning)은 시행착오(Trial-and-Error)를 통해 누적 보상(Cumulative Reward)을 최대화하는 정책(Policy)을 스스로 학습하는 패러다임이다.
 > 2. **가치**: MDP(Markov Decision Process) 수학적 프레임워크와 Q러닝(Q-Learning)·DQN(Deep Q-Network)은 게임·로봇 제어·금융 트레이딩 등 순차적 의사결정 문제를 자동화한다.
 > 3. **판단 포인트**: 탐색(Exploration)과 활용(Exploitation)의 균형, 보상 설계(Reward Shaping)의 품질, 샘플 효율성(Sample Efficiency)이 강화 학습 시스템의 성패를 가른다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 강화 학습의 세 가지 핵심 구성요소
 
@@ -36,7 +38,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 MDP(Markov Decision Process) 수학적 정의
 
@@ -124,7 +126,7 @@ MDP는 (S, A, P, R, γ) 다섯 요소의 튜플로 정의된다.
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 강화 학습 알고리즘 계보
 
@@ -153,7 +155,7 @@ UCB (Upper Confidence Bound):
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 알파고(AlphaGo) 강화 학습 적용 사례
 
@@ -191,7 +193,7 @@ AlphaGo 학습 파이프라인:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 강화 학습 미래 전망
 

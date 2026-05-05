@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. LSM(Log-Structured Merge-Tree) 트리는 쓰기 집약적 워크로드에 최적화된 데이터 구조 — 임의 쓰기(Random Write)를 순차 쓰기(Sequential Write)로 변환해 HDD/SSD에서 극적인 쓰기 성능을 달성하며, RocksDB·Cassandra·HBase·LevelDB의 스토리지 엔진으로 사용된다.
 > 2. LSM의 핵심 트레이드오프는 쓰기↑ vs 읽기↓ — 컴팩션(Compaction) 과정 없이는 여러 레벨에 데이터가 분산되어 읽기 성능이 저하되며, Bloom Filter가 불필요한 디스크 읽기를 방지하는 핵심 최적화 도구다.
 > 3. B-Tree vs LSM: 워크로드 특성에 따른 선택 — 읽기 많은 OLTP(MySQL, PostgreSQL)는 B-Tree, 쓰기 집약적(IoT, 로그, 이벤트 스트림)은 LSM이 적합하며, 현대 NoSQL 대부분이 LSM을 채택한 이유가 여기에 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. LSM 트리 개요
+## 1. 개요 및 필요성
 
 ```
 쓰기 문제와 LSM 솔루션:
@@ -58,7 +61,7 @@ LSM 단점:
 
 ---
 
-## Ⅱ. LSM 구조와 동작
+## 2. 구성요소
 
 ```
 LSM 트리 구성:
@@ -112,7 +115,7 @@ SSTable (Sorted String Table):
 
 ---
 
-## Ⅲ. Compaction과 Bloom Filter
+## 3. 구조 및 동작 원리
 
 ```
 Compaction (컴팩션):
@@ -165,7 +168,7 @@ Write Amplification:
 
 ---
 
-## Ⅳ. B-Tree vs LSM 비교
+## 4. 비교 및 트레이드오프
 
 ```
 B-Tree vs LSM 비교:
@@ -212,7 +215,7 @@ RUM Conjecture:
 
 ---
 
-## Ⅴ. 실무 시나리오 — RocksDB IoT 데이터 수집
+## 5. 실무 적용 및 최적화 기법
 
 ```
 스마트 공장 IoT 데이터 저장 (RocksDB + LSM):

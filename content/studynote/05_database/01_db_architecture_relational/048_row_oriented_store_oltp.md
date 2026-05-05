@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 행 지향 저장소(Row-Oriented Store)는 한 행의 모든 컬럼 데이터를 연속 저장 — 특정 행의 전체 속성을 한 번에 읽는 OLTP(Online Transaction Processing) 워크로드에 최적화되어 있으며, INSERT/UPDATE/DELETE 시 단일 I/O로 행 전체를 처리한다.
 > 2. OLTP와 OLAP는 완전히 다른 최적화 방향 — OLTP는 행 지향(단일 행 빠른 접근), OLAP는 컬럼 지향(대용량 컬럼 집계). 같은 물리적 데이터를 두 방향으로 저장하는 HTAP(Hybrid)가 현대 트렌드다.
 > 3. 버퍼 풀(Buffer Pool)이 OLTP 성능의 핵심 — 행 지향 DB의 메인 성능 메커니즘은 자주 쓰는 페이지를 메모리에 캐싱하는 버퍼 풀이며, 버퍼 풀 히트율 99% 이상이 고성능 OLTP의 목표다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 행 지향 저장소 구조
+## 1. 개요 및 필요성
 
 ```
 행 지향 (Row-Oriented) 저장:
@@ -58,7 +61,7 @@ OLAP에서의 단점:
 
 ---
 
-## Ⅱ. OLTP 특성과 최적화
+## 2. 구성요소
 
 ```
 OLTP (Online Transaction Processing):
@@ -111,7 +114,7 @@ OLTP 최적화 기법:
 
 ---
 
-## Ⅲ. OLTP vs OLAP 비교
+## 3. 구조 및 동작 원리
 
 ```
 비교표:
@@ -154,7 +157,7 @@ HTAP (Hybrid Transaction/Analytical Processing):
 
 ---
 
-## Ⅳ. InnoDB 행 지향 구현
+## 4. 비교 및 트레이드오프
 
 ```
 MySQL InnoDB 행 저장 상세:
@@ -198,7 +201,7 @@ MVCC (Multi-Version Concurrency Control):
 
 ---
 
-## Ⅴ. 실무 시나리오 — 전자상거래 OLTP 최적화
+## 5. 실무 적용 및 최적화 기법
 
 ```
 전자상거래 주문 시스템 OLTP 튜닝:

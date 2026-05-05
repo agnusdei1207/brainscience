@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 마테크(MarTech)는 **마케팅(Marketing) + 기술(Technology)**의 합성어로, 마케팅 자동화·분석·개인화·고객 경험(CX) 관리를 수행하는 **소프트웨어 도구와 플랫폼의 총체적 생태계**를 의미한다.
+> **핵심**: 마테크(MarTech)는 **마케팅(Marketing) + 기술(Technology)**의 합성어로, 마케팅 자동화·분석·개인화·고객 경험(CX) 관리를 수행하는 **소프트웨어 도구와 플랫폼의 총체적 생태계**를 의미한다.
 > 2. **가치**: 마테크 랜드스케이프(Landscape)에는 **14,000개 이상의 도구**(2024 기준)가 존재하며, CDP·MA(Marketing Automation)·CMS·분석·ABM·소셜 등 카테고리로 분류된다. 기업은 이들을 조합하여 **마테크 스택(MarTech Stack)**을 구성한다.
 > 3. **판단 포인트**: "Best of Breed(최적 도구 조합)" vs "All-in-One(통합 플랫폼, HubSpot·Salesforce)" 전략을 선택해야 하며, 도구 간 **데이터 통합(CDP)과 워크플로 연동(iPaaS)**이 성공의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -36,7 +38,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 마테크 핵심 카테고리
 
@@ -52,7 +54,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Best of Breed | All-in-One |
 |:---|:---|:---|
@@ -63,7 +65,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 마테크 스택 설계 원칙
 1. **CDP 중심**: 데이터 통합을 먼저 확보한 후 실행 도구 연결.
@@ -72,7 +74,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 마테크는 마케팅을 "감(Gut feeling)"에서 "데이터 기반 과학"으로 전환하는 핵심이며, GenAI의 등장으로 콘텐츠 생성·개인화·예측이 자동화되는 **AI 마테크** 시대가 도래하고 있다.
 

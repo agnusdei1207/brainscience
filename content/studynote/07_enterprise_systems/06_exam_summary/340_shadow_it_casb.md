@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 섀도우 IT (Shadow IT)는 IT 부서의 승인 없이 사용되는 클라우드 앱·서비스를 의미하며, CASB (Cloud Access Security Broker)는 기업 데이터가 미승인 클라우드로 유출되지 않도록 가시성·컴플라이언스·데이터 보안·위협 방어를 제공하는 보안 솔루션이다.
+> **핵심**: 섀도우 IT (Shadow IT)는 IT 부서의 승인 없이 사용되는 클라우드 앱·서비스를 의미하며, CASB (Cloud Access Security Broker)는 기업 데이터가 미승인 클라우드로 유출되지 않도록 가시성·컴플라이언스·데이터 보안·위협 방어를 제공하는 보안 솔루션이다.
 > 2. **가치**: 기업 평균 1,000개 이상의 섀도우 IT 앱이 존재하며, CASB는 이를 가시화하고 통제함으로써 데이터 유출 위험을 70% 이상 감소시키고 GDPR, HIPAA 등 컴플라이언스 위반을 방지한다.
 > 3. **판단 포인트**: CASB는 금지(Block) 위주가 아닌 "허용-모니터링-조건부 허용"의 균형 정책으로 운영해야 직원 생산성을 해치지 않으면서 보안을 달성할 수 있으며, Zero Trust 아키텍처와 연계가 필수다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 Shadow IT는 HR(Slack, Google Forms), 마케팅(HubSpot, Canva), 개발팀(GitHub, AWS 개인 계정) 등 각 부서가 IT 부서 승인 없이 사용하는 클라우드 서비스를 지칭한다. Gartner 연구에 따르면 기업의 IT 지출 중 40% 이상이 Shadow IT이며, 평균 1,000개 이상의 미승인 앱이 동시에 사용된다.
 
@@ -28,7 +29,7 @@ CASB (Cloud Access Security Broker)는 Gartner가 2012년 정의한 보안 솔�
 
 📢 **섹션 요약 비유**: Shadow IT는 회사 보안 카드 없이 뒷문으로 들어오는 직원처럼 — 편리하지만 누가 들어오는지, 무엇을 들고 나가는지 아무도 모르는 상태다. CASB는 그 뒷문에 설치된 카메라와 잠금장치다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### CASB 4가지 핵심 기둥 (Gartner)
 
@@ -71,7 +72,7 @@ CASB + SWG (Secure Web Gateway) + ZTNA (Zero Trust Network Access)를 통합한 
 
 �� **섹션 요약 비유**: CASB의 3가지 배포 모드는 건물 보안 시스템처럼 — API Mode는 CCTV(사후 모니터링), Forward Proxy는 정문 보안 검색대(실시간 통제), Reverse Proxy는 손님이 직접 오지 않고 대리인이 대신 들어오는 방식(외부 접속 통제)이다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 항목 | CASB | SWG | ZTNA | DLP |
 |:---|:---|:---|:---|:---|
@@ -93,7 +94,7 @@ CASB + SWG (Secure Web Gateway) + ZTNA (Zero Trust Network Access)를 통합한 
 
 📢 **섹션 요약 비유**: CASB는 공항 보안대처럼 — 모든 승객(앱 트래픽)을 검사하되, 일반 승객(승인 앱)은 빠르게 통과시키고 위험 물질(민감 데이터 유출)은 차단한다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **CASB 도입 체크리스트**:
 - [ ] 현재 사용 중인 클라우드 앱 인벤토리가 수행되었는가?
@@ -116,7 +117,7 @@ CASB + SWG (Secure Web Gateway) + ZTNA (Zero Trust Network Access)를 통합한 
 
 📢 **섹션 요약 비유**: Shadow IT를 모두 차단하면 직원들이 집에서 WhatsApp으로 업무 파일을 주고받게 된다 — 규제와 편리함의 균형을 잡는 정책이 진짜 보안이다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 **CASB 도입 기대 효과**:
 - 데이터 유출 위험 감소: Shadow IT 데이터 유출 경로 70% 가시화·차단

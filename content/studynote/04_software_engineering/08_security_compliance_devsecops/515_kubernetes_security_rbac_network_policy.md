@@ -2,17 +2,19 @@
 weight = 515
 title = "515. 쿠버네티스 (Kubernetes) 보안 - RBAC, Network Policy, Pod Security Admission"
 +++
+## 0. 핵심 인사이트
 
-# 515. 쿠버네티스 (Kubernetes) 보안 - RBAC, Network Policy, Pod Security Admission
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 쿠버네티스(K8s) 보안은 컨테이너(Docker) 하나를 방어하는 수준을 넘어, **수만 개의 컨테이너가 얽혀 돌아가는 거대한 '해상 도시(Cluster)' 전체의 헌법(Policy)을 세우고, 주민(Service Account)의 직업과 이동 경로를 중앙에서 기계적으로 통제하는 클라우드 인프라 방어의 끝판왕**이다.
+> **핵심**: 쿠버네티스(K8s) 보안은 컨테이너(Docker) 하나를 방어하는 수준을 넘어, **수만 개의 컨테이너가 얽혀 돌아가는 거대한 '해상 도시(Cluster)' 전체의 헌법(Policy)을 세우고, 주민(Service Account)의 직업과 이동 경로를 중앙에서 기계적으로 통제하는 클라우드 인프라 방어의 끝판왕**이다.
 > 2. **가치**: 해커가 앱(Web)의 취약점을 뚫고 들어오더라도, K8s 보안 3대장이 버티고 있으면 해커는 **아무 권한도 없고(RBAC 차단), 옆집 DB 서버로 가지도 못하며(Network Policy 차단), 무기(Root 컨테이너)를 추가로 소환하지도 못하는(PSA 차단)** '3중 독방'에 갇혀 질식사하게 만드는 치명적 횡적 이동(Lateral Movement) 방어망을 제공한다.
 > 3. **융합**: 인간 개발자의 실수를 믿지 않는 **제로 트러스트(Zero Trust)** 및 **IaC(Infrastructure as Code)** 철학과 융합되어, YAML 파일로 적힌 보안 룰 자체가 인프라의 물리적 뼈대가 되고, OPA(Open Policy Agent)와 결합하여 "룰에 안 맞는 파드(Pod)는 아예 부팅조차 불가능"한 완벽한 자동화 차단 생태계를 완성한다.
 
+> 📝 모범 답안
+
+# 515. 쿠버네티스 (Kubernetes) 보안 - RBAC, Network Policy, Pod Security Admission
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 쿠버네티스(K8s)는 배의 조타실이다. 배 안에는 수천 개의 컨테이너(Pod)가 실려있다. K8s 보안은 1) 이 조타실(API Server)에 누가 접근할 수 있는가(RBAC), 2) 배 안의 컨테이너들끼리 서로 말을 걸 수 있는가(Network Policy), 3) 컨테이너가 위험한 화약(Root 권한)을 품고 배에 탈 수 있는가(Pod Security)를 통제하는 3대 핵심 룰(Rule)이다.
 
@@ -32,7 +34,7 @@ title = "515. 쿠버네티스 (Kubernetes) 보안 - RBAC, Network Policy, Pod Se
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 1. K8s의 조타실을 지켜라: RBAC (Role-Based Access Control)
 
@@ -73,7 +75,7 @@ K8s의 가장 충격적인 디폴트 설정: **"클러스터 안의 모든 파�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 1. 보안 인프라 삼국지: WAF vs Network Policy vs Service Mesh (mTLS)
 
@@ -94,7 +96,7 @@ K8s의 가장 충격적인 디폴트 설정: **"클러스터 안의 모든 파�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -115,7 +117,7 @@ K8s의 가장 충격적인 디폴트 설정: **"클러스터 안의 모든 파�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 실시간 스케줄링과 마감 시간 (Real-Time Scheduling & Deadline)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 실시간 스케줄링 (Real-Time Scheduling)은 시스템의 성능이 연산을 얼마나 빨리 끝내느냐(속도)가 아니라, **정해진 마감 시간(Deadline) 안에 반드시 논리적 결과를 도출해 낼 수 있느냐(정확성/타이밍)**에 따라 성공과 실패가 갈리는 스케줄링 철학이다.
+> **핵심**: 실시간 스케줄링 (Real-Time Scheduling)은 시스템의 성능이 연산을 얼마나 빨리 끝내느냐(속도)가 아니라, **정해진 마감 시간(Deadline) 안에 반드시 논리적 결과를 도출해 낼 수 있느냐(정확성/타이밍)**에 따라 성공과 실패가 갈리는 스케줄링 철학이다.
 > 2. **가치**: 미사일 요격, 심박 조율기, 자율 주행 자동차처럼 0.01초의 지연이 대형 참사나 인명 피해로 직결되는 '하드 실시간(Hard Real-Time)' 시스템에서 100%의 결정론적(Deterministic) 보장을 제공한다.
 > 3. **융합**: 고전적인 정적 우선순위 방식인 RM (Rate Monotonic)과 동적 마감 시간 방식인 EDF (Earliest Deadline First) 알고리즘이 현대 리눅스의 `SCHED_DEADLINE` 클래스로 융합되어 로봇 공학과 엣지(Edge) 인프라의 표준 스케줄러로 진화했다.
 
+> 📝 모범 답안
+
+# 실시간 스케줄링과 마감 시간 (Real-Time Scheduling & Deadline)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - 일반적인 범용 OS(Windows, 일반 Linux)는 여러 프로그램에 공평하게(Fairness) 자원을 나누어주고 응답 시간을 '최대한' 줄이는 데(Best-effort) 집중한다.
@@ -66,7 +68,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 주기적 태스크(Periodic Task)의 수학적 모델
 
@@ -106,7 +108,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 일반 Linux 스케줄러(CFS) vs RT 스케줄러(SCHED_DEADLINE)
 
@@ -128,7 +130,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 트러블슈팅
 
@@ -173,7 +175,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

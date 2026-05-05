@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: DAO(Decentralized Autonomous Organization, 탈중앙화 자율 조직)는 스마트 컨트랙트가 조직의 규칙을 코드화하여, **CEO 없이 토큰 홀더의 투표로 의사결정**이 이루어지는 새로운 조직 형태다.
+> **핵심**: DAO(Decentralized Autonomous Organization, 탈중앙화 자율 조직)는 스마트 컨트랙트가 조직의 규칙을 코드화하여, **CEO 없이 토큰 홀더의 투표로 의사결정**이 이루어지는 새로운 조직 형태다.
 > 2. **가치**: 거버넌스 토큰(Governance Token)과 타임락(Timelock) 메커니즘이 결합되어 악의적 프로포절을 차단하고, 위임 투표(Delegate Voting)로 일반 홀더도 의사결정에 참여할 수 있다.
 > 3. **판단 포인트**: The DAO 해킹(2016, $6000만 손실)이 보여주듯 스마트 컨트랙트 취약점이 거버넌스 공격 벡터가 되므로, 보안 감사(Audit)와 타임락이 모든 DAO의 필수 요건이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 전통 조직 vs DAO
 
@@ -29,7 +30,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### DAO 거버넌스 프로세스
 
@@ -70,7 +71,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### The DAO 해킹 사건 (2016)
 
@@ -95,7 +96,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### DAO 설계 핵심 파라미터
 
@@ -114,7 +115,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 항목 | 내용 |
 |:---|:---|

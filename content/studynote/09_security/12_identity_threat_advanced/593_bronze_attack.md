@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Kerberos Bronze Attack(주로 AS-REP Roasting으로 지칭)은 '사전 인증'이 비활성화된 계정의 AS-REP 응답을 가로채서 오프라인에서 비밀번호를 깨뜨리는 공격이다.
+> **핵심**: Kerberos Bronze Attack(주로 AS-REP Roasting으로 지칭)은 '사전 인증'이 비활성화된 계정의 AS-REP 응답을 가로채서 오프라인에서 비밀번호를 깨뜨리는 공격이다.
 > 2. **가치**: KDC에 가짜 티켓을 보내거나 로그인을 시도할 필요 없이, 단순히 인증 요청에 대한 응답값만 받아오면 되므로 탐지가 매우 어렵고 은밀하다.
 > 3. **판단 포인트**: 'Do not require Kerberos preauthentication' 옵션이 설정된 계정이 타겟이며, 강력한 비밀번호 정책과 사전 인증 강제가 유일한 방어책이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Kerberos Bronze Attack(AS-REP Roasting)은 Kerberos의 초기 인증 단계인 AS(Authentication Service) 단계의 취약한 설정을 악용한다. 정상적인 Kerberos 인증에서는 사용자가 비밀번호로 시간을 암호화하여 보내야 하는 '사전 인증(Pre-authentication)' 과정을 거친다.
 
@@ -23,7 +25,7 @@ Kerberos Bronze Attack(AS-REP Roasting)은 Kerberos의 초기 인증 단계인 A
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 이 공격은 Kerberos 6단계 흐름 중 1~2단계에서 발생하며, '사전 인증'이 누락된 것이 핵심이다.
 
@@ -54,7 +56,7 @@ Kerberos Bronze Attack(AS-REP Roasting)은 Kerberos의 초기 인증 단계인 A
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 AS-REP Roasting은 또 다른 유명한 공격인 Kerberoasting과 자주 비교된다.
 
@@ -71,7 +73,7 @@ AS-REP Roasting은 또 다른 유명한 공격인 Kerberoasting과 자주 비교
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 기술사적 관점에서 이 공격을 방어하는 가장 확실한 방법은 **"사전 인증의 강제"**다.
 
@@ -84,7 +86,7 @@ AS-REP Roasting은 또 다른 유명한 공격인 Kerberoasting과 자주 비교
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Bronze Attack(AS-REP Roasting)은 사소한 설정 오류가 시스템 전체의 신뢰를 얼마나 쉽게 무너뜨릴 수 있는지 보여주는 사례다. 비밀번호를 직접 묻지 않는 Kerberos의 특성을 역이용하여 비밀번호를 알아내는 지능적인 기법이다.
 

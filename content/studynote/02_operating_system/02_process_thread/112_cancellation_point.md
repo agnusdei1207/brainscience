@@ -5,15 +5,17 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 취소 점(Cancellation Point)은 지연 취소(Deferred Cancellation) 모드에서 스레드가 자신에게 설정된 취소 요청을 검사하고 반응하는 특정 지점이다. 이 지점에서 pthread_testcancel()가 호출되거나 블로킹 시스템 콜이 내부적으로 검사를 수행한다.
+> **핵심**: 취소 점(Cancellation Point)은 지연 취소(Deferred Cancellation) 모드에서 스레드가 자신에게 설정된 취소 요청을 검사하고 반응하는 특정 지점이다. 이 지점에서 pthread_testcancel()가 호출되거나 블로킹 시스템 콜이 내부적으로 검사를 수행한다.
 > 2. **가치**: 취소 점점이 없으면 스레드는 영원히 취소되지 않아 자원 누수가 발생한다. 반면 너무 자주 검사하면 오버헤드가 증가하므로, 블로킹 API를 자연스러운 취소 점으로 활용하는 것이 POSIX의 설계 철학이다.
 > 3. **융합**: POSIX 표준은 select(), poll(), pthread_cond_wait(), pthread_mutex_lock(), sleep(), read(), write() 등을 표준 취소 점점으로 정의하며, 커널은 이들 호출 전에 자동으로 취소 플래그를 검사한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 - **개념**: 취소 점은 스레드가 취소 요청을 처리하기 위해 검사하는 지점이다. 명시적 점점은 pthread_testcancel()이며, 암시적 점점은 블로킹 시스템 콜 내부에서 커널이 자동으로 수행한다.
 
@@ -58,7 +60,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 취소 점점 내부 동작
 
@@ -89,7 +91,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 융합 비교
+## 3. 구조 및 동작 원리
 
 | 비교 항목 | 명시적 (testcancel) | 암시적 (POSIX API) |
 |:---|:---|:---|
@@ -102,7 +104,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용
+## 4. 비교 및 트레이드오프
 
 ### 안티패턴
 - **순수 루프에 취소 점점 없음**: 무한 루프를 돌며 I/O가 없는 스레드는 암시적 점점에 도달하지 못해 취소되지 않는다. 반드시 pthread_testcancel()을 삽입하거나 전역 플래그를 주기적으로 검사해야 한다.
@@ -111,7 +113,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 - **📢 섹션 요약 비유**: 취소 점점 설계는 "안전 설계의 핵심"입니다. 적절한 검사 지점 배치는 응답성과 안전성의 균형을 맞추는 열쇠입니다.
 

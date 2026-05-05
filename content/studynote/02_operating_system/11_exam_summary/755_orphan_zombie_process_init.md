@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 고아 프로세스와 좀비 프로세스 (Orphan & Zombie Process)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 고아 프로세스 (Orphan Process)는 자식보다 부모가 먼저 죽어버려 갈 곳을 잃은 프로세스이며, 좀비 프로세스 (Zombie Process)는 자식이 죽었는데도 부모가 사망 신고(wait)를 해주지 않아 시스템에 잔해(PCB)가 남은 프로세스다.
+> **핵심**: 고아 프로세스 (Orphan Process)는 자식보다 부모가 먼저 죽어버려 갈 곳을 잃은 프로세스이며, 좀비 프로세스 (Zombie Process)는 자식이 죽었는데도 부모가 사망 신고(wait)를 해주지 않아 시스템에 잔해(PCB)가 남은 프로세스다.
 > 2. **가치**: UNIX 계열 운영체제의 독특한 부모-자식 계층 구조(Tree)에서 비롯된 필연적인 생명주기(Lifecycle)의 부작용을 설명하며, OS가 자원 누수(Resource Leak)를 막기 위해 어떻게 프로세스를 거두어들이는지(Reaping)를 보여준다.
 > 3. **융합**: 고아를 입양해 대신 죽여주는 최상위 `init` (또는 `systemd`) 프로세스의 역할은 데몬(Daemon) 백그라운드 프로세스를 생성하는 아키텍처적 기법으로 승화되었다.
 
+> 📝 모범 답안
+
+# 고아 프로세스와 좀비 프로세스 (Orphan & Zombie Process)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - UNIX 계열 시스템에서 모든 프로세스는 부모가 `fork()`를 호출하여 자식을 낳는 트리(Tree) 구조로 생성된다.
@@ -63,7 +65,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 좀비 처리와 시그널 (SIGCHLD)
 
@@ -106,7 +108,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 쓰레드(Thread) 생명주기와의 비교 (좀비 스레드)
 
@@ -127,7 +129,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 트러블슈팅
 
@@ -175,7 +177,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

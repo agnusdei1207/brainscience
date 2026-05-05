@@ -5,15 +5,17 @@ weight = 565
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 메시지 패싱 하드웨어 큐 (Message Passing Hardware Queue)는 매니코어(Many-core) 시스템에서 캐시 일관성 유지 비용을 제거하기 위해 코어 간 데이터를 직접 전송하는 고속 FIFO(First-In-First-Out) 하드웨어 구조체다.
+> **핵심**: 메시지 패싱 하드웨어 큐 (Message Passing Hardware Queue)는 매니코어(Many-core) 시스템에서 캐시 일관성 유지 비용을 제거하기 위해 코어 간 데이터를 직접 전송하는 고속 FIFO(First-In-First-Out) 하드웨어 구조체다.
 > 2. **가치**: 공유 메모리 방식의 스누핑(Snooping) 병목과 디렉토리 오버헤드를 우회하여, 수백 개 이상의 코어 확장성(Scalability)과 마이크로초 미만의 통신 지연시간을 보장한다.
 > 3. **판단 포인트**: 프로그래밍 복잡도는 증가하나, 데이터 중심(Data-centric) 가속기나 초거대 AI 연산 장치에서는 전력 효율과 처리량 확보를 위한 필수적인 아키텍처적 선택이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 공유 메모리 아키텍처의 한계와 Scalability Wall
 전통적인 컴퓨터 구조는 모든 코어가 하나의 거대한 공유 메모리를 바라보는 SMP(Symmetric Multiprocessing) 모델을 기반으로 발전해 왔습니다. 이 구조에서 데이터 일관성을 유지하기 위한 **MESI(Modified, Exclusive, Shared, Invalid)** 프로토콜이나 스누핑(Snooping) 메커니즘은 코어 수가 적을 때는 효율적이지만, 코어 수가 수십 개를 넘어 수백, 수천 개에 이르는 매니코어(Many-core) 시대에 접어들면서 심각한 확장성 문제에 직면하게 되었습니다.
@@ -28,7 +30,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 하드웨어 메시지 패싱의 내부 구조
 하드웨어 메시지 패싱 시스템은 크게 **네트워크 온 칩(NoC, Network-on-Chip)**, **네트워크 인터페이스(NI, Network Interface)**, 그리고 데이터를 일시 저장하는 **하드웨어 FIFO 큐(Hardware FIFO Queue)**로 구성됩니다.
@@ -73,7 +75,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 1. 공유 메모리(Shared Memory) vs. 메시지 패싱(Message Passing)
 두 모델은 병렬 컴퓨팅의 근간을 이루는 서로 다른 철학을 가집니다.
@@ -96,7 +98,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1. 실무적 채택 기준 (Decision Matrix)
 기술사적 관점에서 하드웨어 메시지 패싱 큐를 도입할 때는 다음을 고려해야 합니다.
@@ -118,7 +120,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 기대효과
 메시지 패싱 하드웨어 큐는 매니코어 시스템의 아킬레스건인 '통신 비용'을 획기적으로 낮춥니다. 이를 통해 AI 딥러닝과 같은 대규모 병렬 연산에서 선형적인 성능 향상을 기대할 수 있으며, 불필요한 캐시 일관성 방송 신호를 줄여 전성비(전력 대비 성능비)를 극대화할 수 있습니다.

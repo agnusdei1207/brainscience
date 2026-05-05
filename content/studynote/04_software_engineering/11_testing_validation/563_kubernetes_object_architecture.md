@@ -6,15 +6,17 @@ description = "쿠버네티스의 핵심 오브젝트가 어떻게 배포와 노
 taxonomy = ""
 tags = ["Software Engineering", "Architecture", "Kubernetes", "Pod", "Deployment"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Kubernetes (쿠버네티스)는 선언한 상태를 실제 상태로 맞춘다.
+> **핵심**: Kubernetes (쿠버네티스)는 선언한 상태를 실제 상태로 맞춘다.
 > 2. **가치**: Pod, Service, Deployment, Ingress가 각자 역할을 분담한다.
 > 3. **판단 포인트**: 상태 관리, 서비스 노출, 롤아웃 제어를 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 컨테이너를 여러 개 운영하면 단순 실행만으로는 부족하다. 쿠버네티스 오브젝트는 배포와 노출을 선언적으로 관리한다.
 
@@ -22,7 +24,7 @@ tags = ["Software Engineering", "Architecture", "Kubernetes", "Pod", "Deployment
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Pod는 실행 단위, Service는 안정적 접근점, Deployment는 복제/롤아웃, Ingress는 외부 노출을 담당한다.
 
@@ -43,7 +45,7 @@ Ingress -> Service -> Pod x N
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 오브젝트들은 서로 연결되어 원하는 상태를 유지한다. Deployment가 Pod를 만들고, Service가 그 앞에 붙는다.
 
@@ -57,7 +59,7 @@ Ingress -> Service -> Pod x N
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 오브젝트 간 책임을 분명히 하고, 라벨/셀렉터를 정확히 맞춘다.
 
@@ -70,7 +72,7 @@ Ingress -> Service -> Pod x N
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 쿠버네티스 오브젝트 아키텍처는 컨테이너 운영을 선언적으로 단순화한다.
 

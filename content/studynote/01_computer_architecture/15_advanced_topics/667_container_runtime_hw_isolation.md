@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 667. 컨테이너 런타임 하드웨어 격리 (Container Runtime Hardware Isolation)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 컨테이너 런타임 하드웨어 격리는 기존 OS 수준의 소프트웨어 격리(Namespace, Cgroups)의 한계를 넘어, **하드웨어 가상화 기술(VT-x, SVM)을 컨테이너에 도입하여 독립된 커널과 메모리 공간을 보장하는 기술**이다.
+> **핵심**: 컨테이너 런타임 하드웨어 격리는 기존 OS 수준의 소프트웨어 격리(Namespace, Cgroups)의 한계를 넘어, **하드웨어 가상화 기술(VT-x, SVM)을 컨테이너에 도입하여 독립된 커널과 메모리 공간을 보장하는 기술**이다.
 > 2. **가치**: 인접한 컨테이너가 커널 취약점을 통해 다른 컨테이너를 공격하는 '컨테이너 탈출(Container Escape)' 공격을 하드웨어 수준에서 원천 차단하며, 멀티테넌트 클라우드 환경에서 강력한 보안 경계를 제공한다.
 > 3. **융합**: Kata Containers나 Firecracker와 같은 마이크로VM(MicroVM) 기술과 결합되어, 컨테이너의 빠른 시작 속도와 가상 머신의 강력한 격리 성능을 동시에 확보하는 '샌드박스 런타임'의 표준이 되고 있다.
 
+> 📝 모범 답안
+
+# 667. 컨테이너 런타임 하드웨어 격리 (Container Runtime Hardware Isolation)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 전통적 컨테이너의 아킬레스건: "공유 커널"
 - **현상**: 도커(Docker)나 쿠버네티스(Kubernetes)에서 쓰이는 일반적인 컨테이너(runC)는 호스트의 리눅스 커널을 모든 컨테이너가 공유한다.
@@ -58,7 +60,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 마이크로VM (MicroVM) 기술
 - **Firecracker**: AWS가 람다(Lambda) 서비스를 위해 만든 초경량 VMM(Virtual Machine Monitor). 부팅에 필요한 최소한의 장치(Net, Block, Serial)만 에뮬레이션하여 100ms 이내에 VM을 시작한다.
@@ -80,7 +82,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 소프트웨어 컨테이너(runC) vs 하드웨어 격리 컨테이너(Kata)
 
@@ -100,7 +102,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -122,7 +124,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **보안 사고 전파 확률**: 커널 공유 방식 대비 **99% 이상 감소**.

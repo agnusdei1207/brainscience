@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 협업 필터링(Collaborative Filtering)은 "비슷한 취향의 사용자들이 비슷한 아이템을 좋아할 것"이라는 가정으로 작동하며, 행렬 분해(Matrix Factorization)로 희소 평점 행렬(Sparse Rating Matrix)의 잠재 요인을 학습한다.
+> **핵심**: 협업 필터링(Collaborative Filtering)은 "비슷한 취향의 사용자들이 비슷한 아이템을 좋아할 것"이라는 가정으로 작동하며, 행렬 분해(Matrix Factorization)로 희소 평점 행렬(Sparse Rating Matrix)의 잠재 요인을 학습한다.
 > 2. **가치**: 콜드 스타트(Cold Start) — 신규 유저/아이템에 대한 이력 데이터 부족 — 는 콘텐츠 기반 필터링(Content-Based Filtering) 또는 인기도 기반으로 보완하고, 장기적으로 하이브리드 방식으로 해결한다.
 > 3. **판단 포인트**: 평가 지표 선택이 핵심 — 정렬 품질(NDCG, MAP@K)은 추천 순위를 반영하고, 클릭률(CTR)·구매 전환율은 실무 비즈니스 지표와 직결된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 추천 시스템(Recommendation System)은 사용자가 직접 탐색하지 않아도 관심 있는 콘텐츠·상품을 발견하게 돕는다. 넷플릭스, 유튜브, 쿠팡 매출의 35~40%가 추천 시스템에 의해 발생한다.
 
@@ -31,7 +32,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 행렬 분해 (Matrix Factorization)
 
@@ -64,7 +65,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 콜드 스타트 대응 전략
 
@@ -84,7 +85,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **시나리오 - OTT 플랫폼 추천 시스템**:
 - 데이터: 100만 유저, 10만 아이템, 5억 건 시청 이력.
@@ -104,7 +105,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 추천 시스템의 전략적 설계는 플랫폼 매출 증대, 사용자 체류 시간 증가, 콘텐츠 발견 확률 향상으로 직결된다.
 

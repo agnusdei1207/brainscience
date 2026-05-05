@@ -2,17 +2,19 @@
 title = "293. 티아이디비 (TiDB) - HTAP (Hybrid Transactional/Analytical Processing) 지원 NewSQL"
 weight = 293
 +++
+## 0. 핵심 인사이트
 
-# 293. ELT 프로세스
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ELT(Extract, Load, Transform)는 데이터를 먼저 대상 시스템(주로 Cloud DW)에 적재한 후, 대상 시스템 내부에서 SQL 등을 활용하여 변환을 수행하는 현대적 데이터 통합 패러다임이다.
+> **핵심**: ELT(Extract, Load, Transform)는 데이터를 먼저 대상 시스템(주로 Cloud DW)에 적재한 후, 대상 시스템 내부에서 SQL 등을 활용하여 변환을 수행하는 현대적 데이터 통합 패러다임이다.
 > 2. **가치**: Cloud DW의强大한 컴퓨팅 파워 활용, 별도 ETL 서버 불필요, 대량 데이터 처리 효율성, SQL 기반 낮은 학습 곡선, 빠른 개발 속도.
 > 3. **융합**: Cloud DW (Redshift, BigQuery, Snowflake), 데이터 레이크, 스키마 온 리드, SQL 기반 변환, 데이터 파이프라인과 밀접하게 연관된다.
 
+> 📝 모범 답안
+
+# 293. ELT 프로세스
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 ELT(Extract, Load, Transform)는 ETL(Extract, Transform, Load)의变形으로, 데이터를 먼저 대상 시스템에 적재한 후 해당 시스템 내부에서 변환을 수행하는 데이터 통합 접근 방식이다. 특히 Cloud Data Warehouse(Redshift, BigQuery, Snowflake 등)의 등장으로 DW 자체가 massive 병렬 처리(MPP) 컴퓨팅 파워를 갖추게 되면서, 별도의 ETL 서버 없이 DW 내부에서 대량 데이터 변환이 가능해졌다. ELT는 이趋势를 반영한 modern한 데이터 통합 방법론이다.
@@ -30,7 +32,7 @@ ELT는大型호텔의 세탁소 운영 방식과 같다. 전통적인 ETL은hote
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### ELT 아키텍처 vs ETL 아키텍처
 
@@ -255,15 +257,13 @@ ELT의 핵심 장점은 Cloud DW의 저장/컴퓨팅 분리(Separation of Storag
 
 ---
 
-## Ⅲ. 결론
+## 3. 구조 및 동작 원리
 
 ELT(Extract, Load, Transform)는 Cloud DW 시대에 부상한 modern 데이터 통합 방식으로, raw 데이터를 먼저 DW에 적재한 후 SQL 기반 transformation을 수행한다. ETL 대비 Cloud DW 컴퓨팅 파워 활용, 별도 서버 불필요, 대량 데이터 처리 효율성, 낮은 학습 곡선 등의 장점이 있다. dbt(Data Build Tool)는 modern ELT 파이프라인의 표준 transformation 도구로, SQL 기반 변환을 조직화·관리할 수 있게 한다. 다만 ELT가 ETL을 완전히 대체하는 것은 아니며, 전통적인 온프레미스 환경이나 복잡한 변환 로직이 필요한 경우에는 여전히 ETL이 유용하다.
 
 📢 섹션 요약: ELT는 Cloud DW 시대의 modern 데이터 통합 방식으로, DW 내부 컴퓨팅으로 변환을 수행하여 ETL 대비 효율성과 비용 효율성을 제공한다.
 
 ---
-
-## 핵심 인사이트 ASCII 다이어그램 (Concept Map)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐

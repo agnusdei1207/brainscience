@@ -7,15 +7,17 @@ date = 2026-04-03
 tags = ["HTTPS", "TLS", "SSL", "보안", "네트워크"]
 categories = ["Network"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: HTTPS (HyperText Transfer Protocol Secure)는 새로운 프로토콜이 아니라, 기존 HTTP 프로토콜 하부에 데이터 암호화 및 신원 검증을 수행하는 **TLS (Transport Layer Security) 계층을 덧씌운 아키텍처**이다. (포트 443 사용)
+> **핵심**: HTTPS (HyperText Transfer Protocol Secure)는 새로운 프로토콜이 아니라, 기존 HTTP 프로토콜 하부에 데이터 암호화 및 신원 검증을 수행하는 **TLS (Transport Layer Security) 계층을 덧씌운 아키텍처**이다. (포트 443 사용)
 > 2. **가치**: 비대칭키(RSA/ECC)를 이용한 서버 인증 및 세션 키 교환, 대칭키(AES)를 이용한 초고속 데이터 암호화, 해시(MAC)를 통한 데이터 무결성 검증을 융합하여 네트워크 상의 도청(Sniffing)과 변조(Spoofing)를 원천 차단한다.
 > 3. **융합**: 검색 엔진 최적화(SEO) 및 HTTP/2, HTTP/3 도입의 필수 전제 조건이며, Let's Encrypt와 같은 무료 CA 체계 확산으로 인해 현재 글로벌 웹 트래픽의 90% 이상을 차지하는 기본 인프라로 자리 잡았다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: HTTPS (HyperText Transfer Protocol Secure)는 웹 통신에서 오가는 데이터를 암호화하여 기밀성(Confidentiality), 무결성(Integrity), 서버 인증(Authentication)을 제공하는 통신 규약이다. HTTP 통신이 TCP로 내려가기 직전, TLS(과거 SSL) 계층을 거치며 암호화되는 구조다.
 
@@ -59,7 +61,7 @@ categories = ["Network"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -123,7 +125,7 @@ HTTPS는 이 둘을 절묘하게 결합한 **하이브리드(Hybrid) 암호화**
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: HTTP vs HTTPS 트레이드오프
 
@@ -146,7 +148,7 @@ HTTPS는 강력한 보안을 대가로 "핸드셰이크 지연"과 "서버 CPU �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -195,7 +197,7 @@ HTTPS는 강력한 보안을 대가로 "핸드셰이크 지연"과 "서버 CPU �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -7,17 +7,19 @@ date = 2026-03-26
 [taxonomies]
 tags = ["database", "data-dictionary", "metadata", "catalog"]
 +++
+## 0. 핵심 인사이트
 
-# 데이터 딕셔너리 (Data Dictionary)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 데이터 딕셔너리 (Data Dictionary)는 데이터베이스의 구조, 제약조건, 사용자,スキema 등 메타데이터를 저장하는 시스템 데이터베이스다.
+> **핵심**: 데이터 딕셔너리 (Data Dictionary)는 데이터베이스의 구조, 제약조건, 사용자,スキema 등 메타데이터를 저장하는 시스템 데이터베이스다.
 > 2. **가치**: DBMS와 사용자에게 데이터베이스의 모든 요소에 대한 정보를 제공하여, 데이터 관리의 기준점 역할을 한다.
 > 3. **융합**: 자동화된 메타데이터 관리, 데이터 계보 (Data Lineage), 데이터 품질 관리와 결합하여 데이터 거버넌스의 핵심 인프라로 진화하고 있다.
 
+> 📝 모범 답안
+
+# 데이터 딕셔너리 (Data Dictionary)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 
@@ -74,7 +76,7 @@ tags = ["database", "data-dictionary", "metadata", "catalog"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 데이터 딕셔너리의 구조
 
@@ -164,7 +166,7 @@ tags = ["database", "data-dictionary", "metadata", "catalog"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교: 데이터 딕셔너리 vs 일반 테이블
 
@@ -188,7 +190,7 @@ tags = ["database", "data-dictionary", "metadata", "catalog"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -209,7 +211,7 @@ tags = ["database", "data-dictionary", "metadata", "catalog"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

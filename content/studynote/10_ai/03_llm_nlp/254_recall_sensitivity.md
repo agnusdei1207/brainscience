@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 재현율(Recall)은 실제 Positive 중 모델이 올바르게 Positive로 예측한 비율 — FN(False Negative)을 최소화하는 지표.
+> **핵심**: 재현율(Recall)은 실제 Positive 중 모델이 올바르게 Positive로 예측한 비율 — FN(False Negative)을 최소화하는 지표.
 > 2. **가치**: 암 진단·사기 탐지처럼 "놓치면 안 되는" 상황에서 정밀도보다 재현율을 우선시해야 한다.
 > 3. **판단 포인트**: 임계값(Threshold)을 낮추면 재현율이 오르지만 정밀도가 떨어지는 트레이드오프를 반드시 이해해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 재현율(Recall)은 **실제 Positive 샘플 중 모델이 Positive로 맞게 예측한 비율**을 측정하는 평가 지표다. 의학 통계에서는 동일한 개념을 **민감도(Sensitivity)**라고 부른다.
 
@@ -37,7 +39,7 @@ $$\text{Recall} = \frac{TP}{TP + FN}$$
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 혼동 행렬 (Confusion Matrix)과 재현율 위치
 
@@ -89,7 +91,7 @@ $$\text{Specificity} = \frac{TN}{TN + FP}$$
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 정밀도-재현율 트레이드오프 (Precision-Recall Tradeoff)
 
@@ -126,7 +128,7 @@ $$F1 = \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 임상 진단 시스템 설계 사례
 
@@ -147,7 +149,7 @@ $$F1 = \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 재현율(Recall / Sensitivity)을 올바르게 이해하고 활용하면:
 

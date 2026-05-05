@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: TDD (Test-Driven Development, 테스트 주도 개발) 는 리팩토링의 **안전망 (Safety Net)** 으로, "외부 동작 불변" 이라는 리팩토링의 전제 조건을 테스트 스위트 (Test Suite) 가 자동으로 검증한다.
+> **핵심**: TDD (Test-Driven Development, 테스트 주도 개발) 는 리팩토링의 **안전망 (Safety Net)** 으로, "외부 동작 불변" 이라는 리팩토링의 전제 조건을 테스트 스위트 (Test Suite) 가 자동으로 검증한다.
 > 2. **가치**: 테스트 없는 리팩토링은 낙하산 없는 스카이다이빙이며, 충분한 테스트 커버리지 (Test Coverage) 가 확보된 상태에서만 리팩토링을 안전하게 반복할 수 있다.
 > 3. **판단 포인트**: "리팩토링 후 모든 테스트가 녹색(Green)인가?" — Yes라면 동작이 보존되었다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 리팩토링과 테스트의 관계
 
@@ -46,7 +47,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 테스트 피라미드 (Test Pyramid) 와 리팩토링
 
@@ -93,7 +94,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 테스트 전략 비교
 
@@ -129,7 +130,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 레거시 코드에 안전망 구축
 
@@ -163,7 +164,7 @@ CI (Continuous Integration) 파이프라인에 테스트를 통합하면 리팩�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 측정 지표
 

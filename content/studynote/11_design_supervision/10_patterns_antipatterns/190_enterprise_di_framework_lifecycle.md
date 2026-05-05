@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: DI (Dependency Injection, 의존성 주입)는 IoC (Inversion of Control, 제어의 역전) 원칙의 구현으로, 객체가 의존성을 직접 생성하지 않고 컨테이너가 주입하는 구조다. Spring Bean의 생명주기 관리가 그 완성체다.
+> **핵심**: DI (Dependency Injection, 의존성 주입)는 IoC (Inversion of Control, 제어의 역전) 원칙의 구현으로, 객체가 의존성을 직접 생성하지 않고 컨테이너가 주입하는 구조다. Spring Bean의 생명주기 관리가 그 완성체다.
 > 2. **가치**: 의존성 주입으로 결합도를 낮추고 테스트 용이성을 높이며, IoC 컨테이너가 생성-의존성 주입-초기화-사용-소멸의 전체 생명주기를 관리하여 개발자는 비즈니스 로직에만 집중한다.
 > 3. **판단 포인트**: 생성자 주입(Constructor Injection) > 세터 주입(Setter Injection) > 필드 주입(Field Injection) 순서로 권장되며, 생성자 주입이 테스트 용이성과 불변성(Immutability) 모두를 보장한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 의존성 직접 생성의 문제
 
@@ -68,7 +69,7 @@ IoC 컨테이너 방식 (제어 역전):
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Spring Bean 전체 생명주기
 
@@ -148,7 +149,7 @@ public class OrderService {
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### BeanFactory vs ApplicationContext 비교
 
@@ -176,7 +177,7 @@ public class OrderService {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 생명주기 콜백 실제 코드
 
@@ -245,7 +246,7 @@ public class DatabaseConnectionPool implements InitializingBean, DisposableBean 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### DI 프레임워크 도입 기대효과
 

@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Serverless Framework는 AWS Lambda·Azure Functions·GCP Cloud Functions 등 **FaaS(Function as a Service)의 인프라·코드·이벤트 트리거를 `serverless.yml` 하나로 선언**하고, `sls deploy` 한 줄로 클라우드에 배포하는 오픈소스 IaC(Infrastructure as Code) 도구다.
+> **핵심**: Serverless Framework는 AWS Lambda·Azure Functions·GCP Cloud Functions 등 **FaaS(Function as a Service)의 인프라·코드·이벤트 트리거를 `serverless.yml` 하나로 선언**하고, `sls deploy` 한 줄로 클라우드에 배포하는 오픈소스 IaC(Infrastructure as Code) 도구다.
 > 2. **가치**: Lambda 함수 1개를 수동 배포하려면 IAM Role·API Gateway·CloudWatch·DLQ를 콘솔에서 각각 설정해야 하지만, Serverless Framework는 YAML 선언만으로 **모든 종속 리소스를 CloudFormation 스택으로 자동 생성**한다.
 > 3. **판단 포인트**: Serverless Framework(범용)·AWS SAM(AWS 전용)·SST(TypeScript 네이티브)의 트레이드오프를 이해하고, **Cold Start 최적화·모니터링 통합·CI/CD 파이프라인 연결**까지 고려해야 프로덕션 수준이 된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 FaaS는 서버 관리 없이 함수 단위로 코드를 실행하지만, 실제 배포 시에는 **IAM 정책·API Gateway 엔드포인트·DLQ(Dead Letter Queue)·VPC 설정·환경 변수** 등 수십 가지 인프라를 구성해야 한다.
 
@@ -37,7 +39,7 @@ FaaS는 서버 관리 없이 함수 단위로 코드를 실행하지만, 실제 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### serverless.yml 핵심 구조
 
@@ -71,7 +73,7 @@ functions:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 수동 콘솔 | Serverless Framework |
 |:---|:---|:---|
@@ -82,7 +84,7 @@ functions:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### CI/CD 통합 체크리스트
 1. **GitHub Actions**: `on: push` → `sls deploy --stage prod`.
@@ -95,7 +97,7 @@ functions:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | 수동 배포 | Serverless Framework | 개선 |
 |:---|:---|:---|:---|

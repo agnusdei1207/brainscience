@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-algorithm-stats"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. NP-Hard(NP-어려움)는 모든 NP 문제보다 최소한 동등하게 어려운 문제 집합으로, NP-Complete는 반드시 NP에 속하지만 NP-Hard는 NP 밖(결정 문제가 아닌 최적화 문제 등)에도 존재할 수 있어 더 광범위한 개념이다.
 > 2. NP-Hard 문제는 "해 존재 여부 결정(Yes/No)"이 아닌 "최적값 찾기"인 최적화 문제가 많아 현실 세계 공학 문제(스케줄링, 경로 최적화, 자원 배분)의 상당수가 NP-Hard임을 의미한다.
 > 3. NP-Hard와 NP-Complete의 관계는 포함 관계(NP-Complete ⊆ NP-Hard)로, NP-Complete는 "NP-Hard이면서 NP에도 속하는" 문제이며 NP-Hard에서 결정 문제 부분이 NP-Complete가 된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. NP-Hard의 정의와 위치
+## 1. 개요 및 필요성
 
 ```
 NP-Hard (NP-어려움):
@@ -53,7 +56,7 @@ NP-Hard \ NP : 존재 (최적화 NP-Hard 등)
 
 ---
 
-## Ⅱ. NP-Complete vs NP-Hard 차이
+## 2. 구성요소
 
 ```
 NP-Complete vs NP-Hard:
@@ -86,7 +89,7 @@ PSPACE-Hard:
 
 ---
 
-## Ⅲ. 대표적 NP-Hard 문제
+## 3. 구조 및 동작 원리
 
 ```
 NP-Hard (최적화 버전) 대표 문제:
@@ -125,7 +128,7 @@ EXPTIME-Complete:
 
 ---
 
-## Ⅳ. 실용적 접근법
+## 4. 비교 및 트레이드오프
 
 ```
 NP-Hard 실용 해법:
@@ -165,7 +168,7 @@ NP-Complete와 공통 방법 + 추가:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 제조 스케줄링
+## 5. 실무 적용 및 최적화 기법
 
 ```
 제조업 A사 생산 스케줄링:

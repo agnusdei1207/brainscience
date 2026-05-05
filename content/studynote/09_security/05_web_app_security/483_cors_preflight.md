@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CORS (Cross-Origin Resource Sharing) Preflight는 브라우저가 실제 요청 전에 `OPTIONS` 메서드로 서버에 허용 여부를 사전 확인하는 메커니즘으로, SOP (Same-Origin Policy) 완화를 안전하게 수행하기 위한 장치이다.
+> **핵심**: CORS (Cross-Origin Resource Sharing) Preflight는 브라우저가 실제 요청 전에 `OPTIONS` 메서드로 서버에 허용 여부를 사전 확인하는 메커니즘으로, SOP (Same-Origin Policy) 완화를 안전하게 수행하기 위한 장치이다.
 > 2. **가치**: 서버가 명시적으로 허용한 출처·메서드·헤더만 크로스 오리진 요청이 가능하므로, 무분별한 크로스 오리진 요청으로 인한 CSRF (Cross-Site Request Forgery) 유사 공격을 방지한다.
 > 3. **판단 포인트**: `Access-Control-Allow-Origin: *`와 `Access-Control-Allow-Credentials: true`를 동시에 설정하면 보안 취약점이 발생하며 브라우저도 이를 거부한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 SOP는 기본적으로 다른 출처로의 요청을 차단하지만, 현대 웹(API 서버, CDN, 마이크로서비스)은 크로스 오리진 요청이 필수적이다. CORS는 W3C (World Wide Web Consortium) 표준으로 이를 안전하게 허용한다.
 
@@ -26,7 +28,7 @@ Preflight 요청은 다음 조건 중 하나가 해당될 때 발생한다.
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 응답 헤더 | 역할 | 예시 |
 |:---|:---|:---|
@@ -59,7 +61,7 @@ API 서버 처리
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 요청 유형 | Preflight 발생 여부 | 이유 |
 |:---|:---|:---|
@@ -74,7 +76,7 @@ Simple Request(단순 요청)는 Preflight 없이 바로 전송되므로 CSRF와
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **잘못된 설정(취약)**:
 ```
@@ -95,7 +97,7 @@ Access-Control-Allow-Methods: GET, POST, PUT
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Preflight 메커니즘과 명시적 CORS 설정을 통해 신뢰된 출처만 API에 접근하도록 제한하면 크로스 오리진 공격 표면이 최소화된다. `Access-Control-Max-Age` 설정으로 Preflight 캐시를 활용하면 성능과 보안을 동시에 달성한다.
 

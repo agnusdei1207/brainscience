@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Self JOIN은 같은 테이블을 **별칭(Alias)을 달리하여 자기 자신과 조인**하는 것이고, Recursive CTE(Common Table Expression)는 **WITH RECURSIVE로 계층·트리 구조를 재귀 탐색**하는 SQL:1999 표준 문법이다.
+> **핵심**: Self JOIN은 같은 테이블을 **별칭(Alias)을 달리하여 자기 자신과 조인**하는 것이고, Recursive CTE(Common Table Expression)는 **WITH RECURSIVE로 계층·트리 구조를 재귀 탐색**하는 SQL:1999 표준 문법이다.
 > 2. **가치**: 조직도(직원-상사)·부품 BOM(Part-SubPart)·카테고리 계층 등 **트리 구조 데이터를 SQL로 탐색**하는 데 필수이며, Oracle의 CONNECT BY보다 Recursive CTE가 표준이다.
 > 3. **판단 포인트**: 무한 루프 방지를 위해 **MAX RECURSION DEPTH** 설정이 필수이며, PostgreSQL·MySQL 8+·SQL Server 모두 지원한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Recursive CTE:

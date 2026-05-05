@@ -5,15 +5,17 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Confidential Computing (기밀 컴퓨팅)은 데이터가 처리되는 동안(Data in Use) 하드웨어 기반의 TEE (Trusted Execution Environment)를 사용하여 메모리 내 데이터를 보호하고 격리하는 보안 기술이다.
+> **핵심**: Confidential Computing (기밀 컴퓨팅)은 데이터가 처리되는 동안(Data in Use) 하드웨어 기반의 TEE (Trusted Execution Environment)를 사용하여 메모리 내 데이터를 보호하고 격리하는 보안 기술이다.
 > 2. **가치**: 기존의 저장 중 데이터 (Data at Rest) 및 전송 중 데이터 (Data in Transit) 보호를 넘어, 실행 중인 데이터까지 암호화함으로써 데이터 생명주기 전반에 걸친 '종단 간 보안 (End-to-End Security)'을 완성한다.
 > 3. **융합**: 클라우드 사업자조차 고객의 실행 중인 데이터를 볼 수 없는 '제로 트러스트 (Zero Trust)' 클라우드 환경을 구축하며, Intel SGX (Software Guard Extensions), AMD SEV (Secure Encrypted Virtualization) 등의 하드웨어 기술과 결합하여 발전하고 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: Confidential Computing (기밀 컴퓨팅)은 프로세서 내부의 하드웨어적으로 격리된 신뢰 실행 환경인 TEE (Trusted Execution Environment)를 구축하여, 애플리케이션 실행 중에 메모리에 상주하는 민감한 데이터를 외부의 접근으로부터 보호하는 기술이다. 이는 운영체제 (OS: Operating System)나 하이퍼바이저 (Hypervisor)가 침해되더라도 데이터의 기밀성과 무결성을 유지하는 것을 목표로 한다.
 
@@ -53,7 +55,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -115,7 +117,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 보안 연산 기술 비교: TEE vs FHE vs MPC
 
@@ -136,7 +138,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **시나리오 — 멀티 클라우드 환경의 데이터 주권 확보**: 기업이 AWS와 Azure를 동시에 사용하면서, 특정 클라우드 사업자가 자사의 기밀 데이터에 접근하는 것을 막고 싶을 때 기밀 컴퓨팅 VM을 사용하여 인프라 관리자와 데이터를 완전히 격리한다.
@@ -156,7 +158,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

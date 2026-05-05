@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 시계열 분석 (Time Series Analysis)은 시간 순서로 측정된 데이터에서 추세 (Trend), 계절성 (Seasonality), 주기성 (Cyclicity), 잔차 (Residual) 네 가지 성분을 분리·모델링하여 미래 값을 예측하는 시간 의존적 데이터 분석 기법이다.
+> **핵심**: 시계열 분석 (Time Series Analysis)은 시간 순서로 측정된 데이터에서 추세 (Trend), 계절성 (Seasonality), 주기성 (Cyclicity), 잔차 (Residual) 네 가지 성분을 분리·모델링하여 미래 값을 예측하는 시간 의존적 데이터 분석 기법이다.
 > 2. **가치**: 수요 예측, 주가 예측, 기온 예측, 서버 부하 예측 등 "과거 패턴이 미래에도 반복된다"는 가정이 성립하는 모든 영역에서 ARIMA (AutoRegressive Integrated Moving Average)부터 Transformer 기반 모델까지 폭넓게 활용된다.
 > 3. **판단 포인트**: 정상성 (Stationarity) 검정 후 ARIMA 파라미터 (p, d, q)를 결정하고, 계절성이 명확하면 SARIMA/Prophet, 비선형 장기 패턴이 복잡하면 LSTM, 다변량 고해상도라면 Temporal Fusion Transformer를 선택한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 주식 가격, 월별 판매량, 일일 기온, 시간당 서버 요청 수—이 모두는 시간 축을 따라 변화하는 시계열 데이터다. 과거 패턴이 미래에 반복될 것이라는 가정이 성립할 때, 시계열 분석은 강력한 예측 도구가 된다.
 
@@ -23,7 +25,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 시계열 분해 (Time Series Decomposition)
 
@@ -62,7 +64,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | 전통 통계 (ARIMA/SARIMA) | 딥러닝 (LSTM/Transformer) |
 |:---|:---|:---|
@@ -79,7 +81,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 적용 시나리오
 
@@ -100,7 +102,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 | 내용 |
 |:---|:---|

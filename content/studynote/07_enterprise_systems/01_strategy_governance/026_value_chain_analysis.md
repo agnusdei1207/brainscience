@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 가치 사슬(Value Chain)은 마이클 포터(Michael Porter)가 1985년 《경쟁 우위(Competitive Advantage)》에서 제시한 프레임워크로, 기업이 제품·서비스를 생산하고 고객에게 전달하는 과정을 주활동(Primary Activities)과 지원 활동(Support Activities)으로 분해하여 경쟁 우위(Cost Advantage 또는 Differentiation)의 원천을 파악한다.
+> **핵심**: 가치 사슬(Value Chain)은 마이클 포터(Michael Porter)가 1985년 《경쟁 우위(Competitive Advantage)》에서 제시한 프레임워크로, 기업이 제품·서비스를 생산하고 고객에게 전달하는 과정을 주활동(Primary Activities)과 지원 활동(Support Activities)으로 분해하여 경쟁 우위(Cost Advantage 또는 Differentiation)의 원천을 파악한다.
 > 2. **가치**: 가치 사슬 분석은 "어느 활동에서 비용을 낮추거나 차별화를 창출할 수 있는가?"를 체계적으로 진단한다. 디지털 전환(DX) 맥락에서 각 가치 사슬 활동에 IT/AI를 접목하여 경쟁 우위를 창출하는 "디지털 가치 사슬(Digital Value Chain)" 분석이 ERP·SCM·CRM 투자 정당화의 핵심 도구가 된다.
 > 3. **판단 포인트**: PEST 분석(외부 환경) → 포터 5 Forces(산업 구조) → 가치 사슬 분석(내부 역량) → SWOT(종합) 순서로 전략 분석을 진행하면 완전한 전략 수립 프레임워크가 완성된다. 기술사 시험에서 이 4단계의 순서와 연계성을 이해하는 것이 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌──────────────────────────────────────────────────────────┐
@@ -36,7 +38,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 디지털 가치 사슬 매핑 (IT 접목)
 
@@ -54,7 +56,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 분석 도구 | 목적 | 가치 사슬과의 연계 |
 |:---|:---|:---|
@@ -67,7 +69,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 아마존의 가치 사슬 혁신
 - **입고/출고 물류**: Kiva 로봇(현 Amazon Robotics)으로 창고 피킹 시간 60% 단축 → 비용 우위.
@@ -82,7 +84,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

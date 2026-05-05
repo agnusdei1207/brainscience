@@ -7,17 +7,20 @@ date = "2025-02-24"
 tags = ["OT Security", "IoT", "ICS", "SCADA", "IEC 62443"]
 categories = ["studynote-security"]
 +++
+## 0. 핵심 인사이트
 
-# IoT, OT, ICS 및 물리적 보안 (IoT, OT, ICS & Physical Security)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: OT(Operational Technology) 및 ICS 보안의 핵심은 기밀성(Confidentiality)이 아닌, 인간의 생명 및 공정의 연속성과 직결되는 가용성(Availability)과 무결성(Integrity)을 사수하는 것이다.
+> **핵심**: OT(Operational Technology) 및 ICS 보안의 핵심은 기밀성(Confidentiality)이 아닌, 인간의 생명 및 공정의 연속성과 직결되는 가용성(Availability)과 무결성(Integrity)을 사수하는 것이다.
 > 2. **가치**: 에어갭(Air Gap)이 붕괴된 스마트 팩토리 환경에서 Purdue 모델과 IEC 62443 표준을 적용하여 사이버 위협이 물리적 피해로 전이되는 것을 차단한다.
 > 3. **융합**: 기존의 단순 통제 시스템이 클라우드 및 5G와 결합하면서, 사이버-물리 시스템(CPS)이라는 초연결 환경으로 진화하고 있어 제로 트러스트 관점의 기기 인증이 필수가 되었다.
 
+> 📝 모범 답안
+
+# IoT, OT, ICS 및 물리적 보안 (IoT, OT, ICS & Physical Security)
+
+##
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 전통적으로 공장의 생산 라인(OT)과 발전소의 제어 시스템(ICS/SCADA)은 기업의 인터넷망(IT)과 물리적으로 단절된 '에어갭(Air Gap)' 상태를 유지해왔다. 그러나 인더스트리 4.0(Industry 4.0)의 도래와 함께 빅데이터 분석, 예지 보전(Predictive Maintenance), 원격 제어가 필수가 되면서 IT와 OT의 융합이 급격하게 진행되었다. 문제는 OT 환경의 장비들(PLC, RTU 등)이 설계 당시부터 보안을 전혀 고려하지 않은 평문 프로토콜(Modbus, DNP3 등)을 사용하며, 패치조차 쉽지 않은 레거시 OS를 기반으로 동작한다는 점이다. 스턱스넷(Stuxnet) 사태나 미국 콜로니얼 파이프라인(Colonial Pipeline) 랜섬웨어 사건은, IT 망을 통해 침투한 사이버 위협이 어떻게 국가 기반 시설의 '물리적 마비'를 초래할 수 있는지 여실히 보여주었다.
 
@@ -40,7 +43,7 @@ categories = ["studynote-security"]
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 ICS/OT 보안 아키텍처의 글로벌 표준은 **Purdue Model** (퍼듀 모델, ISA-99)과 이를 현대화한 **IEC 62443** 규격이다. 이 모델은 공장 네트워크를 수직적인 계층으로 나누어 위협의 하향 전파를 차단한다.
 
@@ -77,7 +80,7 @@ ICS/OT 보안 아키텍처의 글로벌 표준은 **Purdue Model** (퍼듀 모�
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 IT 보안과 OT 보안은 보호하고자 하는 최우선 가치가 완전히 다르기 때문에, 접근 방식(Paradigm)에 근본적인 차이가 존재한다.
 
@@ -103,7 +106,7 @@ IT 보안과 OT 보안은 보호하고자 하는 최우선 가치가 완전히 �
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 OT/ICS 보안을 실무에 적용할 때, IT 보안의 관행을 그대로 이식하려다 치명적인 공정 중단을 유발하는 안티패턴(Anti-pattern)이 자주 발생한다.
 
@@ -126,7 +129,7 @@ OT/ICS 보안을 실무에 적용할 때, IT 보안의 관행을 그대로 이�
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 산업 제어 시스템에 대한 선제적 보안 아키텍처 구축은 기업의 생산 연속성을 담보하고, 인명 피해라는 최악의 파국을 방지하는 안전판 역할을 한다.
 

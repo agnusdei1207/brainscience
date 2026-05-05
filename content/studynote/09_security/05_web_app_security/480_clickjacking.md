@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Clickjacking(UI Redressing)은 공격자가 투명한 iframe으로 합법적 페이지를 덮어 피해자가 보이지 않는 버튼을 클릭하게 만드는 시각적 기만 공격이다.
+> **핵심**: Clickjacking(UI Redressing)은 공격자가 투명한 iframe으로 합법적 페이지를 덮어 피해자가 보이지 않는 버튼을 클릭하게 만드는 시각적 기만 공격이다.
 > 2. **가치**: JavaScript 취약점 없이도 피해자의 클릭 행위를 가로채 의도치 않은 작업(계좌 이체, 권한 부여 등)을 실행시킬 수 있다.
 > 3. **판단 포인트**: X-Frame-Options 또는 CSP frame-ancestors 헤더로 해당 사이트가 iframe 안에 삽입될 수 없도록 차단하는 것이 핵심 방어이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Clickjacking은 UI Redressing 또는 Iframe Overlay Attack으로도 불린다. 공격자는 `opacity:0`으로 투명하게 처리한 대상 사이트의 iframe을 자신의 페이지 위에 올려놓는다. 피해자는 매력적인 버튼을 클릭한다고 생각하지만 실제로는 투명 iframe의 버튼(예: 구매, 이체, 친구 추가)을 클릭하게 된다.
 
@@ -23,7 +25,7 @@ Clickjacking은 UI Redressing 또는 Iframe Overlay Attack으로도 불린다. �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 구성 요소 | 역할 | 공격자 코드 예시 |
 |:---|:---|:---|
@@ -50,7 +52,7 @@ Clickjacking은 UI Redressing 또는 Iframe Overlay Attack으로도 불린다. �
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 방어 헤더 | 효과 | 지원 브라우저 |
 |:---|:---|:---|
@@ -65,7 +67,7 @@ CSP `frame-ancestors`가 X-Frame-Options보다 더 세밀한 제어(특정 도�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **서버 설정 예시 (Nginx)**:
 ```
@@ -84,7 +86,7 @@ Frame Busting은 `sandbox` 속성 iframe으로 우회 가능하므로 헤더 기
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 X-Frame-Options와 CSP frame-ancestors를 함께 적용하면 모든 브라우저에서 클릭재킹 공격이 차단된다. 중요한 결제·권한 페이지에는 반드시 이 헤더를 설정해야 한다.
 

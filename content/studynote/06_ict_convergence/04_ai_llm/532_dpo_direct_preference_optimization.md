@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: DPO(Direct Preference Optimization)는 RLHF(Reinforcement Learning from Human Feedback)에서 필요하던 별도 보상 모델과 PPO 강화학습을 제거하고, 선호/비선호 응답 쌍으로 LLM을 직접 분류 손실로 최적화한다.
+> **핵심**: DPO(Direct Preference Optimization)는 RLHF(Reinforcement Learning from Human Feedback)에서 필요하던 별도 보상 모델과 PPO 강화학습을 제거하고, 선호/비선호 응답 쌍으로 LLM을 직접 분류 손실로 최적화한다.
 > 2. **가치**: RLHF의 불안정한 강화학습 훈련을 표준 지도 학습(Supervised Learning) 파이프라인으로 대체해 구현 복잡도를 크게 낮추면서 유사한 정렬(Alignment) 성능을 달성한다.
 > 3. **판단 포인트**: DPO는 데이터 효율적이고 안정적이지만, 분포 외(Out-of-Distribution) 응답에 대한 보상 과적합 위험이 있으며 매우 복잡한 인간 선호 반영에는 RLHF 품질이 우세할 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ChatGPT·Claude·Gemini 등 인간 친화적 LLM은 단순 언어 모델링 훈련만으로는 유해·거짓·부적절한 응답을 생성한다. 이를 방지하기 위해 **인간 선호에 정렬(Alignment)**하는 훈련이 필요하다.
 
@@ -33,7 +34,7 @@ PPO(Proximal Policy Optimization)는 하이퍼파라미터 민감성, 분산 훈
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -77,7 +78,7 @@ $$\mathcal{L}_{DPO} = -\mathbb{E}\left[\log\sigma\left(\beta\log\frac{\pi_\theta
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### DPO 후속 변형
 
@@ -104,7 +105,7 @@ $$\mathcal{L}_{DPO} = -\mathbb{E}\left[\log\sigma\left(\beta\log\frac{\pi_\theta
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **실제 적용 사례**
 
@@ -129,7 +130,7 @@ $$\mathcal{L}_{DPO} = -\mathbb{E}\left[\log\sigma\left(\beta\log\frac{\pi_\theta
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 DPO는 LLM 정렬 훈련의 접근성을 민주화했다. 보상 모델 없이 표준 파인튜닝 인프라만으로 ChatGPT 수준의 대화형 LLM 구축이 가능해졌다. SimPO·ORPO 등 변형의 발전으로 단일 GPU에서도 7B 모델 정렬이 가능하다. 향후 멀티모달 선호 정렬과 자동화된 AI 피드백 생성이 핵심 연구 방향이다.
 

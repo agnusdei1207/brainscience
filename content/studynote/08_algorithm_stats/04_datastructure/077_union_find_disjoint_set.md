@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-algorithm-stats"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Union-Find (또는 Disjoint Set Union, DSU)는 여러 원소들을 서로소 집합(Disjoint Set)으로 관리하며, Union(두 집합 합치기)과 Find(원소의 소속 집합 루트 찾기) 연산을 효율적으로 지원하는 자료구조다.
+> **핵심**: Union-Find (또는 Disjoint Set Union, DSU)는 여러 원소들을 서로소 집합(Disjoint Set)으로 관리하며, Union(두 집합 합치기)과 Find(원소의 소속 집합 루트 찾기) 연산을 효율적으로 지원하는 자료구조다.
 > 2. **가치**: Union-Find는 그래프의 연결 요소(Connected Components) 판별, 크루스칼(Kruskal) MST (Minimum Spanning Tree, 최소 신장 트리) 알고리즘의 사이클 검출에 핵심 역할을 한다. 경로 압축(Path Compression)과 랭크 기반 합집합(Union by Rank)을 적용하면 거의 상수 시간(아커만 함수의 역함수, α(n)≈4)에 각 연산을 처리한다.
 > 3. **판단 포인트**: 두 노드가 같은 집합에 속하는지 판별하는 Find 연산이 O(α(n))≈O(1)에 수행되어, 동적으로 변하는 네트워크에서의 연결성 검사에 매우 효율적이다. BFS/DFS가 정적 그래프 연결성 검사라면, Union-Find는 동적 간선 추가 시 연결성 유지에 최적화되어 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌──────────────────────────────────────────────────────────┐
@@ -36,7 +38,7 @@ categories = "studynote-algorithm-stats"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 경로 압축 (Path Compression)
 
@@ -73,7 +75,7 @@ def union(parent, rank, x, y):
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 연산 | Union-Find | BFS/DFS |
 |:---|:---|:---|
@@ -86,7 +88,7 @@ def union(parent, rank, x, y):
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 네트워크 구성 요소 실시간 모니터링
 ```python
@@ -114,7 +116,7 @@ def is_connected(u, v):
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

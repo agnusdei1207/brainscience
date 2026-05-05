@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 커널 메모리 컴팩션 (Compaction) 외부 단편화 런타임 제거 백그라운드 스레드 구조
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 리눅스 커널의 메모리 컴팩션(Memory Compaction)은 장기간 실행된 시스템에서 4KB 페이지들이 뿔뿔이 흩어져 **외부 단편화(External Fragmentation)**가 발생했을 때, 흩어진 페이지들을 한쪽으로 몰아서(조각 모음) 큰 덩어리의 연속된 빈 메모리를 만들어내는 기술이다.
+> **핵심**: 리눅스 커널의 메모리 컴팩션(Memory Compaction)은 장기간 실행된 시스템에서 4KB 페이지들이 뿔뿔이 흩어져 **외부 단편화(External Fragmentation)**가 발생했을 때, 흩어진 페이지들을 한쪽으로 몰아서(조각 모음) 큰 덩어리의 연속된 빈 메모리를 만들어내는 기술이다.
 > 2. **메커니즘**: `kcompactd`라는 백그라운드 스레드가 메모리 존(Zone)의 양 끝에서 출발하여, 한쪽은 사용 중인(Movable) 페이지를 찾고 다른 한쪽은 빈(Free) 페이지를 찾아 중간에서 만나며 사용 중인 페이지를 빈 공간으로 **이사(Migration)**시킨다.
 > 3. **가치**: THP(Transparent Huge Pages)와 같이 연속된 2MB 단위의 거대 페이지 할당이 필수적인 현대 고성능 워크로드(DB, KVM)가 재부팅 없이도 성능 저하 늪에 빠지지 않고 안정적으로 메모리를 확보할 수 있게 해 주는 핵심 기반 기술이다.
 
+> 📝 모범 답안
+
+# 커널 메모리 컴팩션 (Compaction) 외부 단편화 런타임 제거 백그라운드 스레드 구조
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 메모리 컴팩션(Compaction)은 디스크의 조각 모음(Defragmentation)과 똑같은 원리를 램(RAM)에 적용한 것이다. 사용 중인 물리 메모리 페이지들을 이동시켜 빈 공간을 연속적으로 확보하는 커널의 런타임 서브시스템이다.
 
@@ -39,7 +41,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 리눅스 페이지의 이동성 (Mobility) 분류
 
@@ -107,7 +109,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 커널 메모리 회수(Reclaim) 삼형제 비교
 
@@ -130,7 +132,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -179,7 +181,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

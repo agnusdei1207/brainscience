@@ -2,16 +2,17 @@
 title = "1057. NETCONF / YANG 모델링 규격체 - 차세대 네트워크 자동화"
 weight = 1057
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: YANG은 네트워크 설정의 구조와 규칙을 정의하는 모델이고, NETCONF는 그 모델을 장비에 안전하게 주입하는 전송 프로토콜이다.
+> **핵심**: YANG은 네트워크 설정의 구조와 규칙을 정의하는 모델이고, NETCONF는 그 모델을 장비에 안전하게 주입하는 전송 프로토콜이다.
 > 2. **가치**: CLI 수작업과 SNMP (Simple Network Management Protocol) 중심의 한계를 넘어, 선언형 설정과 트랜잭션 롤백을 가능하게 한다.
 > 3. **판단 포인트**: 데이터 모델의 검증, SSH (Secure Shell) 기반 전송, candidate/running datastore 분리가 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 기존 CLI (Command Line Interface) 방식은 장비마다 명령어가 다르고, 사람이 직접 타이핑해야 해서 실수가 잦다.
 
@@ -21,7 +22,7 @@ SNMP (Simple Network Management Protocol)는 모니터링에는 강하지만, �
 
 ---
 
-## Ⅱ. YANG의 역할
+## 2. 구성요소
 
 YANG은 데이터 모델링 언어다. 즉, 네트워크 장비의 설정이 어떤 트리 구조를 가져야 하는지, 어떤 값이 허용되는지 정의한다.
 
@@ -40,7 +41,7 @@ YANG은 설정 값의 범위, 필수 항목, 중복 여부까지 표현할 수 �
 
 ---
 
-## Ⅲ. NETCONF의 전송과 트랜잭션
+## 3. 구조 및 동작 원리
 
 NETCONF는 YANG 모델을 실제 장비에 전달하는 프로토콜이다. 보통 SSH 위에서 동작하고, XML (Extensible Markup Language) 형식으로 메시지를 주고받는다.
 
@@ -63,7 +64,7 @@ Network Device
 
 ---
 
-## Ⅳ. RESTCONF와 현대 자동화
+## 4. 비교 및 트레이드오프
 
 RESTCONF는 NETCONF의 모델을 HTTP (Hypertext Transfer Protocol)와 JSON (JavaScript Object Notation) 스타일로 다루게 한 방식이다.
 
@@ -75,7 +76,7 @@ RESTCONF는 NETCONF의 모델을 HTTP (Hypertext Transfer Protocol)와 JSON (Jav
 
 ---
 
-## Ⅴ. 실무 적용과 비교
+## 5. 실무 적용 및 최적화 기법
 
 NETCONF/YANG는 장비 간 설정 일관성이 중요할 때 강하다. 대규모 라우터, 스위치, WAN 구성, 정책 배포에 특히 적합하다.
 

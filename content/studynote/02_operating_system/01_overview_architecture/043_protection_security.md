@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. OS에서 보호(Protection)는 "합법적인 사용자가 리소스에 올바르게 접근하도록 제어"하는 메커니즘이고, 보안(Security)은 "외부 위협으로부터 시스템을 방어"하는 정책 — 두 개념은 목적과 대상이 다르며 계층적으로 보안이 보호를 포함한다.
 > 2. 보호 도메인(Protection Domain)과 접근 행렬(Access Matrix)은 OS 보호의 이론적 기반으로, 주체(Subject)-객체(Object)-권한(Right)의 삼각 관계를 체계적으로 모델링하며 ACL(Access Control List)과 Capability List로 구현된다.
 > 3. 링 구조(Ring Architecture)는 x86 CPU의 권한 레벨(Ring 0~3)을 통해 OS 커널(Ring 0)과 사용자 프로그램(Ring 3)을 분리하는 하드웨어 보호 메커니즘으로, 특권 명령어 실행, 메모리 접근, I/O 제어를 계층적으로 제어한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 보호 vs 보안 개념 구분
+## 1. 개요 및 필요성
 
 ```
 보호 (Protection):
@@ -47,7 +50,7 @@ OS 보안 요구사항 (CIA):
 
 ---
 
-## Ⅱ. 보호 도메인과 접근 행렬
+## 2. 구성요소
 
 ```
 보호 도메인 (Protection Domain):
@@ -87,7 +90,7 @@ OS 보안 요구사항 (CIA):
 
 ---
 
-## Ⅲ. 링 구조 (Ring Architecture)
+## 3. 구조 및 동작 원리
 
 ```
 x86 CPU 링 구조 (Privilege Levels):
@@ -133,7 +136,7 @@ Ring 3 — 사용자 모드 (User Mode):
 
 ---
 
-## Ⅳ. 보안 위협 유형과 대응
+## 4. 비교 및 트레이드오프
 
 ```
 OS 보안 위협 분류:
@@ -170,7 +173,7 @@ OS 보안 위협 분류:
 
 ---
 
-## Ⅴ. 실무 시나리오 — Linux SELinux/AppArmor
+## 5. 실무 적용 및 최적화 기법
 
 ```
 Linux 강제 접근 제어 (MAC) 구현:

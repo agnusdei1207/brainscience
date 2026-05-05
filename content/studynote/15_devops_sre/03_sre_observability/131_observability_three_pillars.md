@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Metrics(수치 시계열)·Logs(텍스트 이벤트)·Traces(분산 요청 추적)는 관측 가능성의 **3대 필러(Three Pillars)**이며, 세 가지를 **상관 분석(Correlation)**해야 장애 근본 원인을 파악할 수 있다.
+> **핵심**: Metrics(수치 시계열)·Logs(텍스트 이벤트)·Traces(분산 요청 추적)는 관측 가능성의 **3대 필러(Three Pillars)**이며, 세 가지를 **상관 분석(Correlation)**해야 장애 근본 원인을 파악할 수 있다.
 > 2. **가치**: Metrics만으로는 "CPU 80%"를 알지만 원인을 모르고, Logs만으로는 에러는 보지만 어디서 발생했는지 모르며, Traces만으로는 느린 구간은 보지만 왜 느린지 모른다. **세 가지를 연결**해야 완전한 진단이 가능하다.
 > 3. **판단 포인트**: TraceID·SpanID로 3 Pillars를 연결(Correlation)하고, Grafana LGTM Stack(Loki·Grafana·Tempo·Mimir)이 오픈소스 관측 표준이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Metrics: "무엇이" — 에러율 5%↑
@@ -26,7 +28,7 @@ Traces:  "어디서" — Order→Payment→DB 3번째 구간에서 지연
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | Pillar | 형태 | 도구 |
 |:---|:---|:---|

@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 클라우드 네이티브(Cloud Native)는 단순히 클라우드에서 실행되는 것이 아니라, 클라우드의 탄력성·자동화·분산성을 최대한 활용하도록 **설계부터** 클라우드를 위해 만들어진 애플리케이션/아키텍처 방식이다.
 > 2. CNCF(Cloud Native Computing Foundation)의 정의에 따르면, 마이크로서비스·컨테이너·동적 오케스트레이션·지속적 전달(CI/CD)의 4대 기둥이 클라우드 네이티브의 핵심이며, 12-Factor App이 구현 원칙의 표준이다.
 > 3. Cloud Native vs Cloud-Enabled(기존 앱을 클라우드로 이전)의 차이가 핵심으로, Cloud-Enabled는 클라우드 비용은 쓰지만 클라우드 탄력성 이점은 못 누리는 "리프트앤시프트(Lift-and-Shift)" 함정에 빠지는 반면, Cloud Native는 스케일 아웃·자동 복구·무중단 배포를 기본 내장한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. Cloud Native 4대 기둥
+## 1. 개요 및 필요성
 
 ```
 CNCF Cloud Native 정의의 4대 요소:
@@ -43,7 +46,7 @@ CNCF Cloud Native 정의의 4대 요소:
 
 ---
 
-## Ⅱ. 12-Factor App
+## 2. 구성요소
 
 ```
 12-Factor App (Heroku, 2011):
@@ -72,7 +75,7 @@ CNCF Cloud Native 정의의 4대 요소:
 
 ---
 
-## Ⅲ. Cloud Native vs Cloud-Enabled
+## 3. 구조 및 동작 원리
 
 ```
 비교:
@@ -99,7 +102,7 @@ CNCF Cloud Native 정의의 4대 요소:
 
 ---
 
-## Ⅳ. Kubernetes 핵심 개념
+## 4. 비교 및 트레이드오프
 
 ```
 Kubernetes (K8s) Cloud Native 오케스트레이션:
@@ -130,7 +133,7 @@ Cloud Native 패턴:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 금융 서비스 Cloud Native 전환
+## 5. 실무 적용 및 최적화 기법
 
 ```
 금융 서비스 A사 Cloud Native 전환 사례:

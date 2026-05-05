@@ -5,17 +5,19 @@ date = "2026-04-07"
 [extra]
 categories = "studynote-se"
 +++
+## 0. 핵심 인사이트
 
-# 바운디드 컨텍스트 (Bounded Context) 마이크로서비스 식별 기준
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 바운디드 컨텍스트 (Bounded Context)는 도메인 주도 설계 (DDD, Domain-Driven Design)에서 유비쿼터스 언어 (Ubiquitous Language)가 일관되게 적용되는 논리적, 의미적 경계로, 마이크로서비스 아키텍처 (MSA, Microservices Architecture)에서 서비스를 식별하고 분리하는 가장 강력한 기준점이다.
+> **핵심**: 바운디드 컨텍스트 (Bounded Context)는 도메인 주도 설계 (DDD, Domain-Driven Design)에서 유비쿼터스 언어 (Ubiquitous Language)가 일관되게 적용되는 논리적, 의미적 경계로, 마이크로서비스 아키텍처 (MSA, Microservices Architecture)에서 서비스를 식별하고 분리하는 가장 강력한 기준점이다.
 > 2. **가치**: 모놀리식 (Monolithic) 시스템을 데이터베이스 테이블이나 단순 기능 위주로 무분별하게 쪼개어 분산 모놀리스 (Distributed Monolith)가 되는 안티패턴을 방지하고, 각 서비스가 자율성과 독립적인 생명주기를 가지도록 아키텍처적 결합도를 낮춘다.
 > 3. **융합**: 컨텍스트 간의 상호작용은 컨텍스트 매핑 (Context Mapping)을 통해 정의되며, 이는 API 게이트웨이 (API Gateway), 안티 코럽션 레이어 (ACL, Anti-Corruption Layer), 비동기 이벤트 기반 통신 (EDA, Event-Driven Architecture)과 결합되어 MSA의 복잡성을 통제하는 핵심 설계 원리로 작용한다.
 
+> 📝 모범 답안
+
+# 바운디드 컨텍스트 (Bounded Context) 마이크로서비스 식별 기준
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 바운디드 컨텍스트 (Bounded Context)는 도메인 모델과 그 도메인 모델을 설명하는 언어 (유비쿼터스 언어)가 완벽하게 일치하는 명확한 경계를 의미한다. 동일한 단어라도 컨텍스트가 다르면 완전히 다른 의미와 속성을 가진다.
 
@@ -32,7 +34,7 @@ categories = "studynote-se"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -131,7 +133,7 @@ categories = "studynote-se"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 마이크로서비스 식별 기준: 바운디드 컨텍스트 vs 기능 vs 데이터
 
@@ -149,7 +151,7 @@ categories = "studynote-se"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -199,7 +201,7 @@ categories = "studynote-se"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

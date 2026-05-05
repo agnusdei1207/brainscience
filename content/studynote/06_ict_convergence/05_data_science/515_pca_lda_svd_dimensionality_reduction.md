@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: PCA(Principal Component Analysis, 주성분 분석)는 비지도 방식으로 분산을 최대화하는 직교 축을 찾고, LDA(Linear Discriminant Analysis, 선형 판별 분석)는 클래스 레이블을 활용해 클래스 간 분리를 최대화한다.
+> **핵심**: PCA(Principal Component Analysis, 주성분 분석)는 비지도 방식으로 분산을 최대화하는 직교 축을 찾고, LDA(Linear Discriminant Analysis, 선형 판별 분석)는 클래스 레이블을 활용해 클래스 간 분리를 최대화한다.
 > 2. **가치**: SVD(Singular Value Decomposition, 특이값 분해)는 PCA의 수학적 토대이자 추천 시스템·이미지 압축·NLP에 범용으로 쓰이는 행렬 분해의 핵심 도구다.
 > 3. **판단 포인트**: 레이블 없으면 PCA, 레이블 있고 분류 목적이면 LDA — 스크리 플롯(Scree Plot)으로 주성분 수를 결정하고 누적 설명 분산 비율 ≥ 95% 기준을 적용한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 고차원 데이터는 차원의 저주(Curse of Dimensionality) — 데이터 희소성, 과적합, 계산 비용 증가 — 를 유발한다. 차원 축소는 중요한 정보를 보존하면서 차원을 줄이는 해법이다.
 
@@ -31,7 +32,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### PCA vs LDA vs SVD 구조
 
@@ -69,7 +70,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### PCA vs LDA 핵심 비교
 
@@ -91,7 +92,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **시나리오 1 - 이미지 압축 (SVD)**:
 - 1,000 × 1,000 픽셀 이미지 → SVD 분해.
@@ -115,7 +116,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 PCA·LDA·SVD를 목적에 맞게 선택하면 차원의 저주를 극복하고 모델 성능·계산 효율·시각화 가능성을 동시에 확보할 수 있다.
 

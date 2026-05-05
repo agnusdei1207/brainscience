@@ -7,16 +7,19 @@ date = 2024-01-01
 [extra]
 categories = ["studynote-software-engineering"]
 +++
-+++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: HBase는 Google's BigTable에 영향을 받은 칼럼너(Column-Oriented) NoSQL 데이터베이스로, Hadoop HDFS 위에 구축되어 수십억 행规模的 대용량 데이터를 지원하는分散型 스토어다.
+> **핵심**: HBase는 Google's BigTable에 영향을 받은 칼럼너(Column-Oriented) NoSQL 데이터베이스로, Hadoop HDFS 위에 구축되어 수십억 행规模的 대용량 데이터를 지원하는分散型 스토어다.
 > 2. **가치**: 페타바이트 규모의 반정형/비정형 데이터를 효과적으로 저장하고, 임의의 행과 칼럼으로高速な随即 조회와 범위 스캔을 지원한다.
 > 3. **융합**: HBase는 CAP 이론에서 CP(일관성 + 분단 내성)를 선택하며, Hadoop 에코시스템(Hive, Spark, Phoenix 등)과 긴밀히 통합된다.
 
+> 📝 모범 답안
+
++++
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념
 HBase는 Apache Software Foundation의 오픈소스 프로젝트로, Hadoop Distributed File System(HDFS) 기반으로 동작하는 분산 칼럼너 NoSQL 데이터베이스다. 수십억 개의 행과 수백만 개의 칼럼을 보유한 대규모 데이터를 지원하며, 수평 확장에 뛰어나다.
@@ -32,7 +35,7 @@ HBase는 우주 inúmerа的东西の目録과 같다. 은하계에 수는 많�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### HBase 아키텍처
 
@@ -86,7 +89,7 @@ HBase의 Region 분할은大型百貨店の楼层 разделениеと같다.
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교: HBase vs Cassandra
 
@@ -113,7 +116,7 @@ HBase와 Hadoop生态계의 관계는大型itzer와その附件の関係と같�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -132,7 +135,7 @@ HBase Row Key 설계 실수는 우편번호 없이 편지를 보내는 것과 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### HBase strengths
 

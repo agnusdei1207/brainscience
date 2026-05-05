@@ -6,15 +6,15 @@ description = "CPU 코어 내부의 반도체(실리콘)가 견딜 수 있는 �
 taxonomy =  ""
 tags = ["Computer Architecture", "Advanced Topics", "Thermal Management", "TjMax", "Hardware"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
 > 1. CPU 스펙 시트의 **TjMax (Tjunction Max)**는 실리콘 칩 가장 깊숙한 트랜지스터 접합부(Junction)가 녹아내리지 않고 버틸 수 있는 '공장 출고 시 정해진 최대 온도'를 뜻한다. (보통 $100^\circ C \sim 105^\circ C$)
 > 2. CPU 내부의 디지털 온도 센서는 절대 온도를 재는 게 아니라, **"현재 온도와 TjMax까지 몇 도가 남았는가(Distance to TjMax)"**라는 거꾸로 된 숫자를 OS에 보고한다.
 > 3. 이 여유 공간(여백)이 0에 도달하는 순간, 하드웨어는 OS를 무시하고 살기 위해 강제 스로틀링(다운클럭)을 걸거나 전원을 끊어버린다.
 
+> 📝 모범 답안
 
-
-## Ⅰ. Tjunction (접합부 온도)의 의미
+## 1. 개요 및 필요성
 
 컴퓨터 온도를 말할 때 흔히 케이스 온도(Tcase, CPU 겉껍데기 쇳덩어리 온도)를 떠올리지만, 진짜 중요한 건 **실리콘 알맹이 내부의 온도(Tjunction)**입니다.
 
@@ -23,9 +23,7 @@ tags = ["Computer Architecture", "Advanced Topics", "Thermal Management", "TjMax
 
 > 📢 **섹션 요약 비유**: Tcase(껍데기) 온도가 '내 피부 체온(36.5도)'이라면, Tjunction 온도는 피가 끓고 심장이 터질 것 같은 '장기 내부의 진짜 온도'입니다. 겉은 멀쩡해 보여도 속이 터지면 죽습니다.
 
-
-
-## Ⅱ. 온도 센서의 작동 방식 (DTS와 여백)
+## 2. 구성요소
 
 최신 CPU는 메인보드에 온도를 알려줄 때 "나 지금 80도야"라고 정직하게 말하지 않습니다.
 대신 **DTS (Digital Thermal Sensor)**라는 내장 센서가 **"PROCHOT# (TjMax)까지 딱 25도 남았어!"**라고 여유분(Margin)을 보고합니다. 
@@ -40,9 +38,7 @@ tags = ["Computer Architecture", "Advanced Topics", "Thermal Management", "TjMax
 
 > 📢 **섹션 요약 비유**: 낭떠러지(TjMax)를 향해 달리는 자동차입니다. 내비게이션은 현재 위치를 알려주지 않고 오직 **"낭떠러지까지 25m 남았습니다, 10m 남았습니다"**만 다급하게 외칩니다. 0m가 되면 자동차(하드웨어)가 브레이크를 혼자 강제로 밟고, 그래도 낭떠러지를 넘어가면 엔진 시동을 통째로 꺼버립니다.
 
-
-
-## Ⅲ. TjMax 조작의 불가능성
+## 3. 구조 및 동작 원리
 
 오버클럭커들이 아무리 메인보드 전압 락(PL1, PL2)을 풀어버려도, **이 TjMax 값만큼은 인간이 절대 수정할 수 없도록 CPU 실리콘 내부에 하드코딩(퓨즈 절단 방식 등)되어 있습니다.**
 

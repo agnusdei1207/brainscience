@@ -5,17 +5,19 @@ date = "2026-04-07"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-# 클라우드 관리형 DB (DBaaS, Database as a Service)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 클라우드 관리형 데이터베이스(DBaaS, Database as a Service)는 기존 온프레미스에서 DBA가 수행하던 서버 프로비저닝, OS 패치, DB 설치, 백업, 다중화(HA), 페일오버(Failover) 등의 무거운 **인프라 운영 관리(Undifferentiated Heavy Lifting) 작업을 클라우드 벤더(AWS, GCP 등)가 100% 대행해 주는 서비스**다.
+> **핵심**: 클라우드 관리형 데이터베이스(DBaaS, Database as a Service)는 기존 온프레미스에서 DBA가 수행하던 서버 프로비저닝, OS 패치, DB 설치, 백업, 다중화(HA), 페일오버(Failover) 등의 무거운 **인프라 운영 관리(Undifferentiated Heavy Lifting) 작업을 클라우드 벤더(AWS, GCP 등)가 100% 대행해 주는 서비스**다.
 > 2. **가치**: 고객(개발팀)은 하드웨어나 OS 계층에 접속(SSH)할 권한은 빼앗기지만, 그 대가로 클릭 몇 번 만에 클릭 몇 번 만에 이중화된(Multi-AZ) 고가용성 DB를 수 분 내에 찍어내고, 스토리지 확장을 무중단으로 수행하며, 오직 **스키마 설계와 쿼리 최적화(비즈니스 로직)**에만 전념할 수 있는 압도적인 애자일(Agile) 속도를 얻게 된다.
 > 3. **융합**: 초기에는 MySQL 등 오픈소스 DB를 감싸는 형태(Amazon RDS)로 시작했으나, 최근에는 클라우드 인프라에 최적화하여 스토리지 계층을 분리한 **Cloud-Native DB (Amazon Aurora, Google Spanner)**와 트래픽에 따라 요금을 내는 **서버리스(Serverless) DB** 형태로 융합/진화하며 분산 데이터베이스의 끝판왕으로 군림하고 있다.
 
+> 📝 모범 답안
+
+# 클라우드 관리형 DB (DBaaS, Database as a Service)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: DBaaS는 클라우드 컴퓨팅 모델(IaaS, PaaS, SaaS) 중 플랫폼(PaaS) 레벨에 속하는 데이터베이스 전용 서비스다. 대표적으로 AWS RDS(Relational Database Service), Azure SQL Database, GCP Cloud SQL 등이 있다. 사용자는 DB 서버(VM)를 직접 띄우지 않고, 그냥 "MySQL 8.0, 4코어 16GB, 스토리지 100GB짜리 데이터베이스 끝점(Endpoint) 하나 만들어줘"라고 요청하기만 하면 된다.
 
@@ -34,7 +36,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 책임 공유 모델 (Shared Responsibility Model): EC2-DB vs DBaaS
 
@@ -90,7 +92,7 @@ DBaaS가 비싼 돈(수수료)값을 하는 가장 큰 이유는 **다중 가용
 
 ---
 
-## Ⅲ. 실무 적용 및 기술사적 판단
+## 3. 구조 및 동작 원리
 
 ### 실무 시나리오
 
@@ -108,7 +110,7 @@ DBaaS가 비싼 돈(수수료)값을 하는 가장 큰 이유는 **다중 가용
 
 ---
 
-## Ⅳ. 기대효과 및 결론
+## 4. 비교 및 트레이드오프
 
 ### 정량/정성 기대효과
 

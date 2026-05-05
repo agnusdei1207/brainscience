@@ -5,16 +5,17 @@ date = "2026-05-01"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 오픈 테이블 포맷은 데이터 레이크에 ACID (Atomicity, Consistency, Isolation, Durability)와 테이블 관리 기능을 더한 표준 계층이다.
+> **핵심**: 오픈 테이블 포맷은 데이터 레이크에 ACID (Atomicity, Consistency, Isolation, Durability)와 테이블 관리 기능을 더한 표준 계층이다.
 > 2. **가치**: Iceberg, Delta Lake, Hudi는 스키마 진화, 타임 트래블, 업데이트/삭제를 지원한다.
 > 3. **판단 포인트**: 엔진 호환성, 스트리밍/배치, 메타데이터 규모를 함께 고려해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 데이터 레이크는 원시 파일을 싸게 저장할 수 있지만, 테이블처럼 다루기 어렵다. 오픈 테이블 포맷은 그 위에 메타데이터와 트랜잭션 계층을 얹는다.
 
@@ -24,7 +25,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 이 포맷들은 데이터 파일과 메타데이터를 분리하고, 스냅샷/커밋 로그로 일관성을 유지한다. 그래서 파일 단위 저장소를 테이블처럼 다룰 수 있다.
 
@@ -44,7 +45,7 @@ Data Files + Metadata Log → Table Snapshot → Query Engine
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 원시 파켓/CSV 파일만 두면 스키마 진화나 삭제가 어렵다. 오픈 테이블 포맷은 이를 해결하지만, 각 포맷의 엔진 지원과 운영 성숙도는 다르다.
 
@@ -59,7 +60,7 @@ Data Files + Metadata Log → Table Snapshot → Query Engine
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 엔진 호환성(Spark, Flink, Trino 등), 파일 크기, 파티션 설계, compaction, GC, snapshot 관리가 중요하다.
 
@@ -82,7 +83,7 @@ Data Files + Metadata Log → Table Snapshot → Query Engine
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 오픈 테이블 포맷은 데이터 레이크의 유연성과 데이터 웨어하우스의 관리성을 함께 가져온다. 그래서 현대 데이터 플랫폼의 핵심 기반이 된다.
 

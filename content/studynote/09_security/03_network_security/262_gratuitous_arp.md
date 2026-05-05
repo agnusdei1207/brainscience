@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Gratuitous ARP (GARP, 무상 ARP)는 자신의 IP 주소를 목적지로 하는 ARP 요청 또는 응답으로, 정상 목적(IP 충돌 감지, 장애 절체 MAC 갱신)과 악의적 목적(ARP 캐시 오염) 양면을 가진 이중적 프로토콜 동작이다.
+> **핵심**: Gratuitous ARP (GARP, 무상 ARP)는 자신의 IP 주소를 목적지로 하는 ARP 요청 또는 응답으로, 정상 목적(IP 충돌 감지, 장애 절체 MAC 갱신)과 악의적 목적(ARP 캐시 오염) 양면을 가진 이중적 프로토콜 동작이다.
 > 2. **가치**: GARP는 VRRP (Virtual Router Redundancy Protocol), HSRP (Hot Standby Router Protocol) 등 HA (High Availability) 시나리오에서 필수적으로 사용되므로 무조건 차단할 수 없고 맥락에 따른 선택적 제어가 요구된다.
 > 3. **판단 포인트**: 비신뢰 포트에서 발생하는 GARP는 DAI (Dynamic ARP Inspection)로 차단하고, 신뢰 포트(업링크, HA 피어)에서만 GARP를 허용하는 것이 실무 원칙이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 일반 ARP는 "이 IP를 가진 장치의 MAC 주소를 알려 달라"는 질의 응답이다. 반면 Gratuitous ARP는 자신의 IP를 다시 브로드캐스트하는 자기 발신(Self-Addressed) ARP다. 이름의 "Gratuitous(무상의)"는 "요청받지 않았음에도 불구하고 전송한다"는 의미다.
 
@@ -28,7 +30,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### GARP 패킷 구조
 
@@ -82,7 +84,7 @@ DAI는 GARP 패킷도 DHCP Snooping 바인딩 테이블과 대조한다. 바인�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | 정상 GARP | 악의적 GARP |
 |:---|:---|:---|
@@ -96,7 +98,7 @@ DAI는 GARP 패킷도 DHCP Snooping 바인딩 테이블과 대조한다. 바인�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **GARP 제한 보안 설정**:
 
@@ -124,7 +126,7 @@ sysctl -w net.ipv4.conf.all.drop_gratuitous_arp=1
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 GARP의 이중성을 이해하면 ARP 기반 보안 설계에서 "차단"과 "허용"의 경계를 정확히 설정할 수 있다. 무조건 차단하면 HA 인프라가 마비되고, 무조건 허용하면 ARP 스푸핑에 무방비 상태가 된다.
 

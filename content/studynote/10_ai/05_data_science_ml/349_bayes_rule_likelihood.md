@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 베이즈 룰(Bayes Rule)은 P(θ|X) = P(X|θ)·P(θ)/P(X)로, 사전 지식(Prior)과 관측 데이터(Likelihood)를 결합해 사후 확률(Posterior)을 갱신하는 확률 추론의 핵심 엔진이다.
+> **핵심**: 베이즈 룰(Bayes Rule)은 P(θ|X) = P(X|θ)·P(θ)/P(X)로, 사전 지식(Prior)과 관측 데이터(Likelihood)를 결합해 사후 확률(Posterior)을 갱신하는 확률 추론의 핵심 엔진이다.
 > 2. **가치**: 데이터가 적은 상황에서 도메인 사전 지식을 Prior로 주입해 불확실성을 정량화하는 베이즈 추론은 의료 진단, 스팸 필터, 강화학습 등에서 빛을 발한다.
 > 3. **판단 포인트**: MAP(Maximum A Posteriori, 최대 사후 확률) 추정은 MLE(Maximum Likelihood Estimation)에 사전 분포 정규화를 더한 것과 동치이며, 가우시안 Prior → L2, 라플라스 Prior → L1 정규화다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 스팸 메일 필터를 만들 때 "이 메일에 '무료'라는 단어가 있다면 스팸일 확률이 얼마인가?"를 계산하려면 베이즈 룰이 필요하다. 사전 확률(Prior) P(스팸)=0.3, 우도 P('무료'|스팸)=0.8, 증거 P('무료')=0.4를 알면 사후 확률 P(스팸|'무료')=0.8×0.3/0.4=0.6을 정확히 계산할 수 있다. 베이즈 추론(Bayesian Inference)은 새 데이터가 올 때마다 Prior를 업데이트하여 점점 정교해지는 적응형 학습의 토대다.
 
@@ -21,7 +23,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌──────────────────────────────────────────────────────┐
@@ -55,7 +57,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 켤레 사전 분포(Conjugate Prior)는 Prior와 Posterior가 같은 분포 계열을 가지도록 설계된 Prior다. 이진 분류에서 베타 분포(Beta Distribution)가 베르누이 우도의 켤레 Prior다. 이는 사후 분포 계산을 해석적으로 가능하게 해준다. 반면 복잡한 딥러닝 모델은 해석적 계산이 불가능해 MCMC(Markov Chain Monte Carlo, 마르코프 체인 몬테카를로)나 변분 추론(Variational Inference)으로 근사한다.
 
@@ -63,7 +65,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 나이브 베이즈(Naive Bayes) 분류기는 특성 간 조건부 독립(Conditional Independence) 가정 하에 베이즈 룰을 적용한 실용적 텍스트 분류기다. P(클래스|단어들) ∝ P(단어들|클래스)·P(클래스)로 계산하며, 라플라스 스무딩(Laplace Smoothing)으로 제로 확률 문제를 해결한다. 베이즈 최적화(Bayesian Optimization)는 하이퍼파라미터 탐색에서 Posterior를 대리 모델(Surrogate Model)로 사용해 효율적 탐색을 수행한다.
 
@@ -71,7 +73,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 베이즈 룰은 AI의 불확실성 정량화(Uncertainty Quantification)를 위한 철학적 토대다. 딥러닝이 점 추정(Point Estimate)으로 단일 답을 내놓는 반면, 베이즈 딥러닝(Bayesian Deep Learning)은 파라미터의 사후 분포 전체를 추론해 "이 예측에 얼마나 확신하는가?"까지 답할 수 있다. 자율주행, 의료 AI 등 고위험 도메인에서 불확실성 추정은 생사를 가르는 핵심 기능이다.
 

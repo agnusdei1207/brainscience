@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: ISP (Information Strategy Planning)는 조직의 현재 정보화 수준(AS-IS)을 진단하고 목표 상태(TO-BE)를 설계한 뒤 단계적 이행 계획으로 연결하는 IT 전략 수립 방법론이다.
+> **핵심**: ISP (Information Strategy Planning)는 조직의 현재 정보화 수준(AS-IS)을 진단하고 목표 상태(TO-BE)를 설계한 뒤 단계적 이행 계획으로 연결하는 IT 전략 수립 방법론이다.
 > 2. **가치**: 비즈니스 목표와 IT 역량을 정렬함으로써 IT 투자 ROI를 평균 1.5~2.5배 향상시키고 중복·비효율 시스템을 40% 이상 감축한다.
 > 3. **판단 포인트**: ISP 성공은 AS-IS 분석의 객관성(현업 인터뷰 + 데이터 기반), TO-BE 설계의 현실성(6개월 Quick Win 포함), 이행 로드맵의 우선순위 체계화에 달려 있다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 ISP (Information Strategy Planning)는 기업·공공기관이 중장기 정보화 전략을 수립하기 위해 수행하는 체계적 컨설팅 방법론이다. 1990년대 McKinsey와 IBM이 체계화하였으며, 국내에서는 행정안전부 표준 ISP 방법론(2005, 2015 개정)으로 공공기관 도입이 의무화되었다.
 
@@ -28,7 +29,7 @@ McKinsey 7-S 모델(Strategy, Structure, Systems, Shared Values, Style, Staff, S
 
 📢 **섹션 요약 비유**: ISP는 집을 리모델링하기 전에 현재 구조를 정밀 측량하고(AS-IS), 새 도면을 그린 뒤(TO-BE), 방 하나씩 순서를 정해 고치는 공사 계획서(Roadmap)를 만드는 과정과 같다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### ISP 방법론 3단계 산출물 구조
 
@@ -72,7 +73,7 @@ McKinsey 7-S 모델(Strategy, Structure, Systems, Shared Values, Style, Staff, S
 
 📢 **섹션 요약 비유**: GAP 분석은 현재 내 키(AS-IS)와 롤러코스터 최소 탑승 키(TO-BE)의 차이를 재는 것이고, 로드맵은 "몇 달 동안 우유를 마시면 탈 수 있는지" 계획하는 것이다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 항목 | ISP | EA (Enterprise Architecture) | BPR |
 |:---|:---|:---|:---|
@@ -92,7 +93,7 @@ McKinsey 7-S 모델(Strategy, Structure, Systems, Shared Values, Style, Staff, S
 
 📢 **섹션 요약 비유**: ISP, EA, BPR은 건물 신축의 "시공 전략(ISP)", "설계 도면(EA)", "기존 건물 철거 공법(BPR)"처럼 각자 역할이 다르지만 하나의 프로젝트에서 협력한다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **ISP 성공 체크리스트**:
 - [ ] CEO/CIO 스폰서십 확보 (경영진 참여율 > 80%)
@@ -116,7 +117,7 @@ McKinsey 7-S 모델(Strategy, Structure, Systems, Shared Values, Style, Staff, S
 
 📢 **섹션 요약 비유**: ISP 실패는 헬스장 PT 플랜만 짜고 실제로 운동하지 않는 것과 같다 — 완벽한 계획서가 실행력을 보장하지는 않는다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 **기대 효과**:
 - **비용 절감**: 중복 시스템 통합으로 운영비용 30~40% 절감

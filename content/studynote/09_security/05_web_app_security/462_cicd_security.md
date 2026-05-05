@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CI/CD (Continuous Integration/Continuous Delivery) 보안은 자동화된 소프트웨어 빌드·테스트·배포 파이프라인이 악용되지 않도록 각 단계의 무결성과 최소 권한을 보장하는 것이다.
+> **핵심**: CI/CD (Continuous Integration/Continuous Delivery) 보안은 자동화된 소프트웨어 빌드·테스트·배포 파이프라인이 악용되지 않도록 각 단계의 무결성과 최소 권한을 보장하는 것이다.
 > 2. **가치**: 파이프라인은 소스 코드에서 프로덕션까지 모든 것을 제어하므로, 여기가 침해되면 단일 지점 공격으로 전체 인프라를 장악할 수 있다.
 > 3. **판단 포인트**: 시크릿 관리, 최소 권한 원칙, 코드 서명, 파이프라인 자체 코드 리뷰가 CI/CD 보안의 4대 기둥이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 현대 소프트웨어 개발에서 CI/CD 파이프라인은 코드 병합부터 프로덕션 배포까지를 몇 분 안에 자동 처리한다. 이 속도와 자동화는 생산성의 핵심이지만, 동시에 공격 표면 (Attack Surface)을 크게 넓힌다.
 
@@ -37,7 +39,7 @@ OWASP Top 10 CI/CD Security Risks에서는 파이프라인 취약점을 10가지
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### CI/CD 보안 위협 10대 항목 (OWASP)
 
@@ -74,7 +76,7 @@ OWASP Top 10 CI/CD Security Risks에서는 파이프라인 취약점을 10가지
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 보안 원칙 | CI/CD 적용 | 미적용 시 위험 |
 |:---|:---|:---|
@@ -90,7 +92,7 @@ GitHub Actions에서는 `permissions: read-all` 기본 설정과 `OIDC (OpenID C
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **시나리오**: GitHub Actions 워크플로우에서 `pull_request_target` 이벤트를 사용하는데 외부 포크(fork)에서 악성 PR을 보내 시크릿에 접근하는 공격(PWN Request)이 가능한 상황이다.
 
@@ -105,7 +107,7 @@ GitHub Actions에서는 `permissions: read-all` 기본 설정과 `OIDC (OpenID C
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 CI/CD 보안이 성숙해지면 공급망 공격 노출면을 크게 줄이고, 침해 발생 시 빠른 원인 추적이 가능하다. SLSA (Supply chain Levels for Software Artifacts) 레벨 4 달성 시 모든 빌드가 변조 불가한 서명 체인으로 보증된다.
 

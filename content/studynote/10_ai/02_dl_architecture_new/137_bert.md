@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: BERT는 **Transformer의 Encoder만 사용**하여 양방향(Bidirectional)으로 문맥을 이해하는 사전 학습 언어 모델이며, MLM(Masked Language Model)과 NSP(Next Sentence Prediction)로 학습한다.
+> **핵심**: BERT는 **Transformer의 Encoder만 사용**하여 양방향(Bidirectional)으로 문맥을 이해하는 사전 학습 언어 모델이며, MLM(Masked Language Model)과 NSP(Next Sentence Prediction)로 학습한다.
 > 2. **가치**: GPT(→방향)는 왼쪽 문맥만 보지만, BERT는 **양쪽 문맥을 동시에** 참조하여 "bank"가 은행인지 강둑인지 정확히 판별하며, NLU(자연어 이해) 11개 벤치마크를 동시 갱신(2018)했다.
 > 3. **판단 포인트**: BERT는 **이해(Classification·NER·QA)에 강하고 생성에 약하며**, GPT는 생성에 강하다. 현재는 Encoder-Decoder(T5)·Decoder-only(GPT)가 주류이나 BERT 계열은 임베딩·검색에 여전히 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 BERT = Transformer Encoder × 12/24 Layer

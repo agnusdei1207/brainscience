@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 유스케이스 다이어그램(Use Case Diagram)은 UML(Unified Modeling Language) 행위 다이어그램의 하나로, **시스템이 어떤 기능(유스케이스)을 누구(액터)에게 제공하는지를 외부 관점에서 시각화**한다.
+> **핵심**: 유스케이스 다이어그램(Use Case Diagram)은 UML(Unified Modeling Language) 행위 다이어그램의 하나로, **시스템이 어떤 기능(유스케이스)을 누구(액터)에게 제공하는지를 외부 관점에서 시각화**한다.
 > 2. **가치**: 기능 요구사항(Functional Requirement)을 개발자·고객 모두가 이해할 수 있는 공통 언어로 표현하여 **요구사항 누락과 범위 논쟁(Scope Creep)을 조기에 방지**한다.
 > 3. **판단 포인트**: 포함(«include»)은 공통 필수 기능의 재사용, 확장(«extend»)은 조건부 선택 기능의 분리에 사용하며, 이 둘의 방향성 혼동이 가장 흔한 오류다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 유스케이스 다이어그램은 시스템을 사용하는 사람(Actor)과 시스템이 제공하는 기능(Use Case) 사이의 관계를 명시한 UML의 요구사항 모델링 도구다. Ivar Jacobson이 1992년 객체지향 소프트웨어 공학에서 처음 제안했으며, 현재 UML 2.x 표준에 포함되어 있다.
 
@@ -28,7 +30,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 구성 요소
 
@@ -88,7 +90,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### UML 다이어그램 유형별 역할
 
@@ -112,7 +114,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 의사결정 체크리스트
 
@@ -138,7 +140,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 유스케이스 다이어그램은 요구사항 분석 초기의 소통 도구로서, 고객과 개발팀이 "우리가 만들 것"에 대한 **공통 이해를 확립**하는 데 핵심 역할을 한다. 특히 계약 기반 개발, 공공 SI 프로젝트에서 기능 범위(Scope) 합의의 법적 근거로 활용된다.
 

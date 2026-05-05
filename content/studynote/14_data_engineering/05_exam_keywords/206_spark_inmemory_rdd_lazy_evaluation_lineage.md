@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Apache Spark의 RDD (Resilient Distributed Dataset)는 불변성(Immutability)·분산성(Distribution)·내결함성(Fault Tolerance)을 가진 분산 데이터 컬렉션으로, 지연 평가(Lazy Evaluation)와 DAG (Directed Acyclic Graph) 스케줄러를 통해 MapReduce 대비 10~100배 성능을 달성한다.
+> **핵심**: Apache Spark의 RDD (Resilient Distributed Dataset)는 불변성(Immutability)·분산성(Distribution)·내결함성(Fault Tolerance)을 가진 분산 데이터 컬렉션으로, 지연 평가(Lazy Evaluation)와 DAG (Directed Acyclic Graph) 스케줄러를 통해 MapReduce 대비 10~100배 성능을 달성한다.
 > 2. **가치**: 계보(Lineage) 기반 복구 메커니즘은 체크포인팅 없이도 장애를 복구할 수 있게 하며, 반복적 머신러닝 알고리즘에서 중간 결과를 메모리에 캐싱해 디스크 I/O를 근본적으로 제거한다.
 > 3. **판단 포인트**: 기술사 논술에서 Transformation(변환)과 Action(액션)의 구분, Lineage Graph의 장애 복구 원리, DAG 최적화가 어떻게 실행 계획을 개선하는지를 구체적으로 서술해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### Apache Spark 등장 배경
 
@@ -49,7 +51,7 @@ K-Means 100 이터레이션 성능 비교
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### RDD (Resilient Distributed Dataset) 특성
 
@@ -155,7 +157,7 @@ Lineage 복구 메커니즘
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Spark API 발전: RDD → DataFrame → Dataset
 
@@ -202,7 +204,7 @@ Catalyst 최적화 파이프라인
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Spark 캐싱 전략
 
@@ -239,7 +241,7 @@ Catalyst 최적화 파이프라인
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### Spark 도입 효과
 

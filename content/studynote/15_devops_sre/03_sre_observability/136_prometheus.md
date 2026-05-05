@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Prometheus는 **Pull 방식으로 서비스의 /metrics 엔드포인트에서 시계열 메트릭을 수집·저장**하는 CNCF 졸업 프로젝트이며, 클라우드 네이티브 모니터링의 사실상 표준이다.
+> **핵심**: Prometheus는 **Pull 방식으로 서비스의 /metrics 엔드포인트에서 시계열 메트릭을 수집·저장**하는 CNCF 졸업 프로젝트이며, 클라우드 네이티브 모니터링의 사실상 표준이다.
 > 2. **가치**: Push 기반(StatsD)은 서비스가 모니터링 시스템에 종속되지만, Prometheus의 Pull은 **서비스가 메트릭을 노출만 하면** Prometheus가 주기적으로 가져가므로 느슨한 결합이다.
 > 3. **판단 포인트**: PromQL(쿼리 언어)·Alertmanager(알림)·Service Discovery(K8s 자동 발견)·장기 저장(Thanos·Mimir)이 핵심 에코시스템이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 서비스 → /metrics 노출 → Prometheus (Pull, 15초 주기)

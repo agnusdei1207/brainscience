@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 668. cgroups와 하드웨어 자원 할당 (Control Groups HW Resource Allocation)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: cgroups(Control Groups)는 리눅스 커널에서 프로세스들을 그룹화하여 **CPU, 메모리, 입출력(I/O), 네트워크와 같은 물리적 하드웨어 자원의 사용량을 제한하고 우선순위를 제어**하는 핵심 프레임워크다.
+> **핵심**: cgroups(Control Groups)는 리눅스 커널에서 프로세스들을 그룹화하여 **CPU, 메모리, 입출력(I/O), 네트워크와 같은 물리적 하드웨어 자원의 사용량을 제한하고 우선순위를 제어**하는 핵심 프레임워크다.
 > 2. **가치**: 특정 프로세스가 시스템 전체의 자원을 독점하는 '시끄러운 이웃(Noisy Neighbor)' 문제를 방지하며, 가상화 및 컨테이너 환경에서 서비스 수준 협약(SLA)을 보장하는 기초 토대가 된다.
 > 3. **융합**: CFS(Completely Fair Scheduler)와 같은 CPU 스케줄링 알고리즘, 페이지 캐시 관리, 블록 계층의 I/O 스로틀링 기술과 밀접하게 결합되어 하드웨어 추상화 및 자원 분배의 정수를 보여준다.
 
+> 📝 모범 답안
+
+# 668. cgroups와 하드웨어 자원 할당 (Control Groups HW Resource Allocation)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 자원 공유의 무질서: "만인에 대한 만인의 투쟁"
 - **현상**: 운영체제 위에서는 수많은 프로세스가 돌아간다. 만약 어떤 프로세스에 무한 루프 버그가 있거나 과도하게 파일을 읽어댄다면, 다른 중요한 서비스들은 자원을 할당받지 못해 멈추게 된다.
@@ -54,7 +56,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 주요 서브시스템 (Controllers)
 - **cpu**: CFS(Completely Fair Scheduler)를 사용하여 프로세스 그룹에 할당되는 CPU 시간 비율을 제어한다.
@@ -79,7 +81,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### cgroups vs 가상화(Hypervisor) vs ulimit
 
@@ -99,7 +101,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -121,7 +123,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **서버 밀집도(Density)**: 자원 제한을 통해 한 대의 서버에 수용 가능한 컨테이너 수 **2~3배 증가**.

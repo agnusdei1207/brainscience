@@ -6,15 +6,17 @@ description = "서비스 간 통신을 인프라 계층에서 제어하는 서�
 taxonomy = ""
 tags = ["Software Engineering", "Architecture", "Service Mesh", "Istio", "Envoy"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 서비스 메시는 애플리케이션 코드 밖에서 서비스 간 통신을 제어한다.
+> **핵심**: 서비스 메시는 애플리케이션 코드 밖에서 서비스 간 통신을 제어한다.
 > 2. **가치**: 인증, 암호화, 트래픽 정책을 공통화해 운영을 단순화한다.
 > 3. **판단 포인트**: 제어 복잡도, 성능 오버헤드, 학습 비용을 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 MSA(Microservices Architecture)에서는 서비스마다 통신 정책이 달라지기 쉽다. 서비스 메시는 이러한 공통 통신 기능을 인프라 계층으로 내린다.
 
@@ -22,7 +24,7 @@ MSA(Microservices Architecture)에서는 서비스마다 통신 정책이 달라
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 서비스 메시에서는 애플리케이션 옆에 프록시를 두고 통신을 우회시킨다. 정책은 제어 평면(Control Plane)에서, 실제 전달은 데이터 평면(Data Plane)에서 처리한다.
 
@@ -41,7 +43,7 @@ App -> Sidecar Proxy -> Other Service
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 서비스 메시와 API Gateway는 역할이 다르다. 게이트웨이는 외부 진입점, 메시지는 내부 서비스 간 통신을 다룬다.
 
@@ -55,7 +57,7 @@ App -> Sidecar Proxy -> Other Service
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 mTLS (mutual TLS), retries, circuit breaker, traffic shifting을 공통 정책으로 넣는다.
 
@@ -68,7 +70,7 @@ App -> Sidecar Proxy -> Other Service
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 서비스 메시는 보안과 트래픽 제어를 일관되게 만들고, 서비스 코드의 부담을 줄인다.
 

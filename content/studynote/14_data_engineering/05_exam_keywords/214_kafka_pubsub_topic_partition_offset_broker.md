@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Apache Kafka는 Pub-Sub(Publish-Subscribe) 메시징 패턴 기반의 분산 이벤트 스트리밍 플랫폼으로, 토픽(Topic)을 파티션(Partition)으로 분할해 수평 확장하며, 오프셋(Offset)으로 각 컨슈머의 읽기 위치를 독립적으로 추적한다.
+> **핵심**: Apache Kafka는 Pub-Sub(Publish-Subscribe) 메시징 패턴 기반의 분산 이벤트 스트리밍 플랫폼으로, 토픽(Topic)을 파티션(Partition)으로 분할해 수평 확장하며, 오프셋(Offset)으로 각 컨슈머의 읽기 위치를 독립적으로 추적한다.
 > 2. **가치**: 파티션 단위 병렬 처리와 리플리케이션(Replication)으로 초당 수백만 건 메시지를 내결함성(Fault Tolerance)을 유지하며 처리하고, Kafka Connect·Kafka Streams 에코시스템이 데이터 파이프라인 전반을 담당한다.
 > 3. **판단 포인트**: Kafka는 "메시지를 소비해도 삭제하지 않는다" — 이 원칙이 멀티 컨슈머 독립 처리, 재처리, 이벤트 소싱(Event Sourcing)을 가능하게 하는 핵심 설계 철학이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 전통적 메시지 큐 vs Kafka
 
@@ -45,7 +47,7 @@ Kafka 토픽 = 무한히 이어지는 기록지(Append-Only Log)
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 Kafka 핵심 구성 요소
 
@@ -132,7 +134,7 @@ Kafka 토픽 = 무한히 이어지는 기록지(Append-Only Log)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 Kafka vs 경쟁 기술
 
@@ -155,7 +157,7 @@ Kafka 토픽 = 무한히 이어지는 기록지(Append-Only Log)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 Kafka 파티션 수 설계 가이드
 
@@ -185,7 +187,7 @@ Kafka Connect는 소스(Source)와 싱크(Sink) 커넥터로 외부 시스템과
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 Kafka 도입 효과
 

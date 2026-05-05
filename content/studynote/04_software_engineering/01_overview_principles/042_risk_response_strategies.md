@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 위험 대응 전략의 4가지 유형(회피·전가·완화·수용)은 위험 확률과 영향도의 매트릭스에서 최적 전략을 선택하며, PMBOK 7판과 ISO 31000은 이를 리스크 처리(Risk Treatment) 활동으로 표준화하고 있다.
 > 2. 회피(Avoid)는 위험 원인을 제거하는 가장 강력한 전략이지만 사업 기회도 함께 포기할 수 있으며, 전가(Transfer)는 보험·계약으로 재무적 책임을 이전하지만 위험 자체는 사라지지 않는다는 점이 핵심 차이다.
 > 3. 실무에서 대부분의 위험은 단일 전략이 아닌 복합 전략(완화 + 수용 한계치 설정)으로 관리되며, 완화 후 남는 "잔류 위험(Residual Risk)"에 대한 수용 한계 정의가 리스크 관리 완성의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 위험 대응 전략 4유형
+## 1. 개요 및 필요성
 
 ```
 위험 대응 전략 (PMBOK, ISO 31000):
@@ -51,7 +54,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 위험 매트릭스와 전략 선택
+## 2. 구성요소
 
 ```
 위험 매트릭스 (Risk Matrix):
@@ -85,7 +88,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅲ. 잔류 위험과 보조 위험
+## 3. 구조 및 동작 원리
 
 ```
 잔류 위험 (Residual Risk):
@@ -121,7 +124,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅳ. 위험 대응 계획 수립
+## 4. 비교 및 트레이드오프
 
 ```
 위험 대응 계획 (Risk Response Plan):
@@ -157,7 +160,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅴ. 실무 시나리오 — IT 프로젝트 위험 관리
+## 5. 실무 적용 및 최적화 기법
 
 ```
 금융 앱 리뉴얼 프로젝트 위험 관리 사례:

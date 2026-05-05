@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. AARRR(Acquisition → Activation → Retention → Referral → Revenue)은 Dave McClure가 2007년 제안한 스타트업 성장 지표 프레임워크로 — 각 단계별 전환율을 측정하고 병목(Bottleneck) 단계를 식별해 집중 개선하는 데이터 기반 성장 전략의 핵심이다.
 > 2. AARRR의 핵심 통찰은 "가장 약한 단계가 전체 성장을 제한한다"는 병목 이론으로 — Activation 단계에서 30%를 잃으면 이후 아무리 Retention을 개선해도 시작 사용자가 적어 효과가 제한되므로 단계 순서대로 개선 우선순위를 정해야 한다.
 > 3. 현대 PLG(Product-Led Growth) 시대에 AARRR은 RARRA(Retention → Activation → Referral → Revenue → Acquisition)로 재정렬되는 경향이 있으며 — Retention이 모든 것의 기초임을 강조하고, 기존 사용자 유지가 신규 획득보다 비용 효율이 높다는 실증 연구 결과를 반영한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. AARRR 5단계 프레임워크
+## 1. 개요 및 필요성
 
 ```
 AARRR (Pirate Metrics) 프레임워크:
@@ -56,7 +59,7 @@ R - Revenue (수익):
 
 ---
 
-## Ⅱ. 코호트 분석과 병목 탐지
+## 2. 구성요소
 
 ```
 코호트 분석 (Cohort Analysis):
@@ -99,7 +102,7 @@ R - Revenue (수익):
 
 ---
 
-## Ⅲ. North Star Metric과 지표 계층
+## 3. 구조 및 동작 원리
 
 ```
 North Star Metric (NSM):
@@ -143,7 +146,7 @@ Guardrail Metric:
 
 ---
 
-## Ⅳ. RARRA와 현대적 재해석
+## 4. 비교 및 트레이드오프
 
 ```
 RARRA 재정렬:
@@ -181,7 +184,7 @@ AARRR 2.0 — 커뮤니티 추가:
 
 ---
 
-## Ⅴ. 실무 시나리오 — SaaS 성장 전략
+## 5. 실무 적용 및 최적화 기법
 
 ```
 B2B SaaS 그로스 해킹 AARRR 분석:

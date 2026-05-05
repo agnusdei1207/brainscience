@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: RNN은 **은닉 상태(Hidden State)를 이전 시점에서 현재 시점으로 순환(Recurrence)하여 시퀀스 데이터(텍스트·시계열·음성)의 순서 의존성을 학습**하는 신경망이다.
+> **핵심**: RNN은 **은닉 상태(Hidden State)를 이전 시점에서 현재 시점으로 순환(Recurrence)하여 시퀀스 데이터(텍스트·시계열·음성)의 순서 의존성을 학습**하는 신경망이다.
 > 2. **가치**: CNN은 공간 패턴, RNN은 **시간 패턴**을 처리하며, 기계 번역·음성 인식·시계열 예측의 초기 핵심 아키텍처였다. 단, 장기 의존성(Long-term Dependency)에 취약하다.
 > 3. **판단 포인트**: Vanilla RNN의 Vanishing Gradient → LSTM/GRU가 해결 → 현재는 **Transformer가 RNN을 거의 대체**했으나, 시계열·온디바이스에서는 여전히 사용된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 RNN: h_t = f(W·h_{t-1} + U·x_t)

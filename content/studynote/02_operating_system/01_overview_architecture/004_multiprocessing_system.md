@@ -5,17 +5,19 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 다중 처리 시스템 (Multiprocessing System)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 다중 처리 시스템 (Multiprocessing System)은 두 개 이상의 CPU (Central Processing Unit)가 메모리와 입출력 장치 등을 공유하며 여러 작업을 동시에 병렬 (Parallel)로 처리하는 고성능 컴퓨팅 아키텍처다.
+> **핵심**: 다중 처리 시스템 (Multiprocessing System)은 두 개 이상의 CPU (Central Processing Unit)가 메모리와 입출력 장치 등을 공유하며 여러 작업을 동시에 병렬 (Parallel)로 처리하는 고성능 컴퓨팅 아키텍처다.
 > 2. **가치**: 단일 프로세서의 물리적 성능 한계를 극복하여 처리량 (Throughput)을 획기적으로 높이고, 특정 CPU 장애 시에도 다른 CPU가 작업을 승계하는 결함 허용 (Fault Tolerance)을 통해 시스템 가용성을 보장한다.
 > 3. **융합**: 현대의 멀티코어 (Multi-core) 프로세서와 대규모 서버 클러스터의 핵심 기반이며, 캐시 일관성 (Cache Coherency) 및 부하 분산 (Load Balancing) 기술과 결합하여 데이터 집약적 연산을 가속화한다.
 
+> 📝 모범 답안
+
+# 다중 처리 시스템 (Multiprocessing System)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 다중 처리 시스템 (Multiprocessing System)은 하나의 컴퓨터 시스템 내에 물리적으로 독립된 두 개 이상의 프로세서 (CPU)를 탑재하고, 이들이 공통의 버스 (Bus), 메모리, 주변 장치들을 공유하며 협력하여 작업을 수행하는 방식이다. 이는 여러 프로그램을 동시에 실행하는 다중 프로그래밍 (Multiprogramming)을 넘어, 물리적인 병렬 실행 (Parallel Execution)을 실현한다.
 
@@ -48,7 +50,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -107,7 +109,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### SMP (대칭) vs ASMP (비대칭) 시스템 비교
 
@@ -130,7 +132,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 적용 시나리오 및 설계 고려사항
 
@@ -151,7 +153,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 다중 처리 시스템 도입의 정량/정성적 효과
 

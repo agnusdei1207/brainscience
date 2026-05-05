@@ -5,15 +5,17 @@ date = "2026-03-19"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 명령어 형식(Instruction Format)은 CPU가 실행할 명령어를 구성하는 비트(Bit)들의 **논리적 구획과 배치 방식**을 규정한 설계 도면이다.
+> **핵심**: 명령어 형식(Instruction Format)은 CPU가 실행할 명령어를 구성하는 비트(Bit)들의 **논리적 구획과 배치 방식**을 규정한 설계 도면이다.
 > 2. **가치**: 명령어의 길이를 고정하거나 가변적으로 설계하여 **메모리 대역폭의 사용 효율과 명령어 해독(Decoding)의 복잡도** 사이의 트레이드오프를 결정짓는 핵심 아키텍처 요소이다.
 > 3. **융합**: 연산 코드(Opcode), 피연산자(Operand), 주소 지정 방식(Addressing Mode) 필드가 유기적으로 융합되어 있으며, 명령어 한 줄에 담기는 **주소의 개수(0, 1, 2, 3주소 방식)**에 따라 시스템의 연산 패러다임이 달라진다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 명령어 형식(Instruction Format)은 CPU가 실행할 명령어를 구성하는 비트(Bit)들의 **논리적 구획과 배치 방식**을 규정한 설계 규격이다. 연산 코드(Opcode), 피연산자(Operand), 주소 지정 방식(Addressing Mode) 등의 정보가 명령어 비트 내의 어느 위치에 어떤 크기로 담길지를 정의한다.
 
@@ -46,7 +48,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (명령어 형식을 이루는 3대 필드)
 
@@ -86,7 +88,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 심층 기술 비교: 고정 길이 vs 가변 길이 명령어 형식
 
@@ -124,7 +126,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -173,7 +175,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,17 +5,19 @@ date = "2026-04-07"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-# Authenticode — Microsoft 코드 서명 기술 및 무결성 검증
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Authenticode(어센티코드)는 마이크로소프트(Microsoft)가 개발한 코드 서명(Code Signing) 기술의 핵심 브랜드이자 프레임워크로, X.509 인증서와 암호학적 해시(Hash) 기술을 이용해 **Windows 생태계(EXE, DLL, CAB, MSI 등)에서 실행 파일의 '배포자 신원(Identity)'과 '파일의 변조되지 않음(Integrity)'을 보증**하는 윈도우 보안의 중추 신경이다.
+> **핵심**: Authenticode(어센티코드)는 마이크로소프트(Microsoft)가 개발한 코드 서명(Code Signing) 기술의 핵심 브랜드이자 프레임워크로, X.509 인증서와 암호학적 해시(Hash) 기술을 이용해 **Windows 생태계(EXE, DLL, CAB, MSI 등)에서 실행 파일의 '배포자 신원(Identity)'과 '파일의 변조되지 않음(Integrity)'을 보증**하는 윈도우 보안의 중추 신경이다.
 > 2. **가치**: 사용자가 인터넷에서 무분별하게 다운로드한 악성코드가 시스템을 파괴하는 것을 막기 위해 윈도우 커널과 융합되어 작동하며, 사용자 화면에 띄우는 "게시자를 알 수 없는 앱" 시뻘건 경고창(SmartScreen)을 없애고 쾌적한 설치 경험을 제공하는 **소프트웨어 상업 배포의 필수 통행증** 역할을 한다.
 > 3. **융합**: 인증서 만료 후에도 서명의 유효성을 영구히 보장받기 위한 **타임스탬프(Timestamping) 프로토콜**과 결합되며, 최신 Windows 10/11 커널 모드 드라이버 등은 반드시 마이크로소프트 윈도우 하드웨어 개발자 센터(WHDC)의 까다로운 교차 서명(Cross-signing)을 한 번 더 거치도록 보안 아키텍처가 철통같이 진화하고 있다.
 
+> 📝 모범 답안
+
+# Authenticode — Microsoft 코드 서명 기술 및 무결성 검증
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: Authenticode는 단순한 알고리즘 하나가 아니라, 마이크로소프트가 설계한 서명 검증 아키텍처 전체를 말한다. 개발자가 만든 프로그램 코드(.exe)를 잘게 부수어 지문(해시)을 만들고, 공인 인증기관(CA, 예: VeriSign, DigiCert)에서 발급받은 개발자 인증서의 개인키(Private Key)로 그 지문을 암호화하여 파일 끝부분에 찰싹 붙여놓는(Embed) 기술의 총체적 명칭이다.
 
@@ -34,7 +36,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Authenticode의 구조와 해시 서명(Sign) 매커니즘
 
@@ -81,7 +83,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 실무 적용 및 기술사적 판단
+## 3. 구조 및 동작 원리
 
 ### 실무 시나리오
 
@@ -98,7 +100,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 기대효과 및 결론
+## 4. 비교 및 트레이드오프
 
 ### 정량/정성 기대효과
 

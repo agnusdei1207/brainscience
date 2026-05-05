@@ -6,15 +6,17 @@ description = "목표 부하까지 사용자를 늘리며 시스템이 정상적
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "Load Test", "Capacity", "Performance"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 부하 테스트(Load Test)는 목표 부하까지 시스템을 올려 정상 동작을 확인하는 테스트다.
+> **핵심**: 부하 테스트(Load Test)는 목표 부하까지 시스템을 올려 정상 동작을 확인하는 테스트다.
 > 2. **가치**: 실제 운영 규모에서 얼마나 버티는지 알려 준다.
 > 3. **판단 포인트**: 목표 처리량과 응답시간 기준이 명확해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 부하 테스트는 "정상적으로 예상되는 최대치"를 기준으로 한다. 시스템이 견딜 수 있는 운영 한계를 확인하는 데 쓰인다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "Load Test", "Capacity", "Performance
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 부하 테스트는 사용자 수, 요청 수, 데이터량을 점차 올리며 본다. 목표 부하에서 응답시간과 오류율이 기준 안에 있는지 확인한다.
 
@@ -45,7 +47,7 @@ tags = ["Software Engineering", "Testing", "Load Test", "Capacity", "Performance
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 부하 테스트는 스트레스 테스트와 다르다. 부하는 정상 최대치, 스트레스는 그 이상이다.
 
@@ -61,7 +63,7 @@ tags = ["Software Engineering", "Testing", "Load Test", "Capacity", "Performance
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 배포 전, 프로모션 전, 시즌 피크 전에 수행한다. 기준값을 정하지 않으면 테스트 결과를 해석하기 어렵다.
 
@@ -74,7 +76,7 @@ tags = ["Software Engineering", "Testing", "Load Test", "Capacity", "Performance
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 부하 테스트는 운영 한계를 안전하게 미리 확인한다. 그래서 "얼마까지 정상인가"를 알게 해 준다.
 

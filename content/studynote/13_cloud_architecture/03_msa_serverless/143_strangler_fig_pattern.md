@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Strangler Fig는 **기존 모놀리스 시스템을 한 번에 교체하지 않고, 새 기능을 MSA로 만들어 점진적으로 모놀리스를 교살(Strangle)**하여 최종적으로 대체하는 마이그레이션 패턴이다(Martin Fowler).
+> **핵심**: Strangler Fig는 **기존 모놀리스 시스템을 한 번에 교체하지 않고, 새 기능을 MSA로 만들어 점진적으로 모놀리스를 교살(Strangle)**하여 최종적으로 대체하는 마이그레이션 패턴이다(Martin Fowler).
 > 2. **가치**: 빅뱅 교체(Big Bang Rewrite)는 **고위험·장기간·실패 확률 높음**이지만, Strangler Fig는 **점진적·저위험**으로 운영 중인 시스템을 중단 없이 전환한다.
 > 3. **판단 포인트**: API Gateway/Proxy가 라우팅을 담당하여 **기능별로 새 서비스→모놀리스 트래픽을 점진 전환**하며, Anti-corruption Layer(ACL)로 신·구 시스템 간 데이터 변환을 처리한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 1단계: 새 기능 → MSA로 개발 (모놀리스 옆에)

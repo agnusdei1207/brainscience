@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 성능 모니터링 (Performance Monitoring) 및 튜닝 방법론
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 성능 모니터링(Performance Monitoring)은 운영체제(OS)의 CPU, 메모리, 디스크 I/O, 네트워크 등 핵심 자원의 사용률(Utilization), 처리량(Throughput), 지연 시간(Latency)을 지속적으로 측정하고 분석하여, 병목 현상(Bottleneck)을 식별하고 최적화하는 체계적 방법론이다.
+> **핵심**: 성능 모니터링(Performance Monitoring)은 운영체제(OS)의 CPU, 메모리, 디스크 I/O, 네트워크 등 핵심 자원의 사용률(Utilization), 처리량(Throughput), 지연 시간(Latency)을 지속적으로 측정하고 분석하여, 병목 현상(Bottleneck)을 식별하고 최적화하는 체계적 방법론이다.
 > 2. **가치**: USE 방법론(Utilization-Saturation-Errors)과 같은 구조적 접근법을 적용하면, 수십 개의 성능 지표 중 "지금 가장 시급한 문제가 무엇인가?"를 체계적으로 파악하여, 직관에 의존하지 않는 데이터 기반 성능 튜닝(Data-Driven Performance Tuning)이 가능하다.
 > 3. **융합**: 성능 모니터링은 운영체제의 커널 통계(Perf Events, /proc 파일시스템), 하드웨어 성능 카운터(PMU, Performance Monitoring Unit), 그리고 분산 시스템의 observability 프레임워크(Prometheus, OpenTelemetry)가 융합된 다계층 측정 아키텍처다.
 
+> 📝 모범 답안
+
+# 성능 모니터링 (Performance Monitoring) 및 튜닝 방법론
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 **개념 및 정의**
 성능 모니터링(Performance Monitoring)은 시스템의 동작 상태를 정량적 지표(Metrics)로 지속 측정하고 기록하는 활동이며, 성능 튜닝(Performance Tuning)은 측정 결과를 바탕으로 시스템 매개변수(Parameter)를 조정하여 성능 목표(응답 시간, 처리량, 자원 효율)를 달성하는 최적화 과정이다. 이 둘은 "측정(Measure) → 분석(Analyze) → 조정(Tune) → 검증(Verify)"의 반복적 사이클(PDCA, Plan-Do-Check-Act)로 수행된다.
@@ -55,7 +57,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 핵심 성능 지표(Metrics) 분류
 
@@ -146,7 +148,7 @@ Brendan Gregg가 제안한 USE 방법론은 모든 자원 유형에 대해 세 �
 
 ---
 
-## Ⅲ. 비교 분석 (Comparative Analysis)
+## 3. 구조 및 동작 원리
 
 ### 성능 튜닝 접근법 비교
 
@@ -196,7 +198,7 @@ Brendan Gregg가 제안한 USE 방법론은 모든 자원 유형에 대해 세 �
 
 ---
 
-## Ⅳ. 실무 판단 (Practical Judgment)
+## 4. 비교 및 트레이드오프
 
 ### 실무 적용 시나리오 및 의사결정
 
@@ -253,7 +255,7 @@ Brendan Gregg가 제안한 USE 방법론은 모든 자원 유형에 대해 세 �
 
 ---
 
-## Ⅴ. 결론 (Conclusion)
+## 5. 실무 적용 및 최적화 기법
 
 성능 모니터링과 튜닝은 운영체제의 안정적 운영과 서비스 품질 보장을 위한 필수 활동이다. USE 방법론은 "Utilization(사용률) → Saturation(포화도) → Errors(오류)"의 체계적 분석 프레임워크를 제공하여, 직관에 의존하지 않는 데이터 기반 성능 분석을 가능하게 한다.
 

@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 디렉터리 기반 프로토콜 (Directory-based Protocol)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 스누핑 프로토콜의 버스 마비 한계를 극복하기 위해, 메인 메모리나 특정 칩 구역에 '어떤 코어가 어떤 캐시 라인을 가지고 있는지' 기록하는 중앙 장부(Directory)를 두고 통신을 1:1(Unicast)로 제어하는 캐시 일관성 기법이다.
+> **핵심**: 스누핑 프로토콜의 버스 마비 한계를 극복하기 위해, 메인 메모리나 특정 칩 구역에 '어떤 코어가 어떤 캐시 라인을 가지고 있는지' 기록하는 중앙 장부(Directory)를 두고 통신을 1:1(Unicast)로 제어하는 캐시 일관성 기법이다.
 > 2. **가치**: 무의미한 브로드캐스트(Broadcast) 트래픽을 원천 차단하여, 64코어~수백 코어에 달하는 거대 NUMA 서버 환경에서도 네트워크 병목 없이 완벽한 캐시 일관성(ccNUMA)을 보장하는 유일한 해법이다.
 > 3. **융합**: 중앙 장부를 저장하기 위한 거대한 추가 SRAM 용량(Directory Overhead)이 필요하며, 분산 데이터베이스의 메타데이터(Metadata) 관리 철학과 완벽히 융합되는 매니코어(Many-core) 시대의 핵심 아키텍처다.
 
+> 📝 모범 답안
+
+# 디렉터리 기반 프로토콜 (Directory-based Protocol)
+
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 디렉터리 기반 프로토콜 (Directory-based Protocol)은 "동네방네 소리 지르는(Snooping) 방식은 사람이 적을 때나 먹힌다"는 뼈저린 교훈에서 탄생한 대형 인프라 기술이다.
 
@@ -45,7 +47,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 디렉터리 아키텍처가 동작하려면 메인 메모리(RAM)나 L3 공유 캐시 옆에 거대한 '상태 저장용 장부(SRAM)'가 반드시 하드웨어적으로 추가되어야 한다.
 
@@ -79,7 +81,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 디렉터리 아키텍처의 역사는 "이 엄청난 장부의 크기(디렉터리 오버헤드)를 어떻게 압축하고 줄일 것인가?"에 대한 하드웨어 엔지니어들의 뼈 깎는 융합적 투쟁의 역사다.
 
@@ -115,7 +117,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 실무 클라우드 아키텍트가 대규모 NUMA 서버(예: 128코어 AMD EPYC)에 고성능 코드를 배포할 때, 이 디렉터리 지연(Directory Latency)의 늪을 피하지 못하면 1억 원짜리 장비가 100만 원짜리 데스크탑보다 버벅거리게 된다.
 
@@ -154,7 +156,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 디렉터리 기반 프로토콜은 트랜지스터 면적을 희생하여 "통신 버스의 붕괴"라는 물리학적 한계를 극복해 낸 엔터프라이즈 서버 아키텍처의 구원자다.
 

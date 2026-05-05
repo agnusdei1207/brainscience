@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 666. VFIO 프레임워크 (Virtual Function I/O Framework)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: VFIO는 리눅스 커널에서 사용자 공간(User-space) 프로그램(예: QEMU, DPDK)이 **PCI 장치 등에 직접 접근하여 제어할 수 있게 해주는 안전한 장치 드라이버 인터페이스**다.
+> **핵심**: VFIO는 리눅스 커널에서 사용자 공간(User-space) 프로그램(예: QEMU, DPDK)이 **PCI 장치 등에 직접 접근하여 제어할 수 있게 해주는 안전한 장치 드라이버 인터페이스**다.
 > 2. **가치**: IOMMU(I/O Memory Management Unit)를 기반으로 장치 간 메모리 격리를 강제함으로써, 사용자 공간 드라이버가 실수나 악의적인 의도로 호스트 메모리를 침범하는 것을 방지하는 강력한 보안 모델을 제공한다.
 > 3. **융합**: 가상화의 패스스루(Pass-through) 기술과 고성능 사용자 공간 네트워킹의 핵심 기반이며, 기존의 불안정한 `pci-assign` 방식을 대체하여 현대 클라우드 인프라의 표준 장치 할당 모델로 자리 잡았다.
 
+> 📝 모범 답안
+
+# 666. VFIO 프레임워크 (Virtual Function I/O Framework)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. 사용자 공간 드라이버의 꿈과 현실
 - **배경**: 보통 장치 드라이버는 커널 모드에서 돌아간다. 하지만 성능을 극대화하고 싶은 개발자들은 사용자 공간에서 직접 장치를 다루고 싶어 한다. (커널-유저 전환 오버헤드를 없애기 위해)
@@ -55,7 +57,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. IOMMU 그룹 (IOMMU Groups)
 - **개념**: 현대 PC 아키텍처에서 여러 장치는 하나의 PCI 익스프레스 스위치나 브리지에 묶여 있을 수 있다. 이들은 하드웨어적으로 완전히 분리하기 어려울 때가 있다.
@@ -76,7 +78,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### VFIO vs UIO vs pci-assign
 
@@ -96,7 +98,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -118,7 +120,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **성능**: 가상화 오버헤드 거의 0% (네이티브와 동일한 I/O 성능).

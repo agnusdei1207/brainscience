@@ -5,15 +5,19 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> [Valid Bootloader] -> [Kernel] -> [User Login]
+
+> 📝 모범 답안
+
 1. **본질**: 기기가 주인의 손을 떠나 공격자의 물리적 접근이 허용된 짧은 시간 동안 부팅 프로세스나 펌웨어를 조작하여 백도어를 설치하는 공격이다.
 2. **가치**: 풀 디스크 암호화(FDE)가 되어 있더라도, 부트로더나 커널 로드 시점의 취약점을 이용해 복호화 키를 탈취할 수 있다는 점에서 보안의 물리적 한계를 시사한다.
 3. **판단 포인트**: 신뢰할 수 없는 장소(호텔 등)에 기기를 방치하지 않는 것이 최선이며, 하드웨어 수준의 Secure Boot와 TPM 기반의 원격 검증(Attestation)으로 방어해야 한다.
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Evil Maid Attack(이브이 메이드 공격)은 공격자가 타겟의 전산 기기에 물리적으로 접근할 수 있을 때 발생한다. '호텔 방에 노트북을 두고 나간 사이 청소부(Maid)로 위장한 공격자가 기기를 조작한다'는 시나리오에서 유래했다. 이 공격은 네트워크를 통한 원격 공격이 아니라, 직접적인 하드웨어 조작을 통해 보안 체계를 무력화한다.
 
@@ -23,7 +27,7 @@ Evil Maid Attack(이브이 메이드 공격)은 공격자가 타겟의 전산 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Evil Maid Attack은 주로 부팅 순서(Boot Order)의 최상단에 공격용 USB를 위치시키거나, BIOS/UEFI 설정을 변경하여 악성 부트로더를 실행시킨다.
 
@@ -36,8 +40,7 @@ Evil Maid Attack은 주로 부팅 순서(Boot Order)의 최상단에 공격용 U
 
 ```text
 [ Evil Maid Attack Flow ]
-Normal: [BIOS/UEFI] -> [Valid Bootloader] -> [Kernel] -> [User Login]
-Evil:   [BIOS/UEFI] -> [Evil Bootloader] -> [Valid Bootloader] -> [User Login]
+Normal: [BIOS/UEFI] -Evil:   [BIOS/UEFI] -> [Evil Bootloader] -> [Valid Bootloader] -> [User Login]
                              |
                              └─> [Keylogging / Memory Dump / Backdoor]
 ```
@@ -48,7 +51,7 @@ Evil:   [BIOS/UEFI] -> [Evil Bootloader] -> [Valid Bootloader] -> [User Login]
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Evil Maid Attack은 다른 물리적 공격들과 밀접하게 연관되어 있다.
 
@@ -64,7 +67,7 @@ Evil Maid Attack은 다른 물리적 공격들과 밀접하게 연관되어 있�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무적으로 Evil Maid Attack을 완벽히 막기는 매우 어렵다. 하지만 다층 방어 체계를 통해 공격 난이도를 높일 수 있다.
 
@@ -81,7 +84,7 @@ Evil Maid Attack은 다른 물리적 공격들과 밀접하게 연관되어 있�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Evil Maid Attack 방어 체계를 구축하면 물리적 도난이나 일시적 분실 시에도 데이터의 기밀성을 보장할 수 있다. 특히 기업의 고위 임원이나 민감 데이터를 다루는 연구원의 기기에 대해 강력한 하드웨어 기반 무결성 검증을 적용하는 것은 필수적이다.
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: IKE (Internet Key Exchange)는 IPsec SA (Security Association)를 자동으로 협상·생성·갱신·삭제하는 프로토콜로, ISAKMP (Internet Security Association and Key Management Protocol) 프레임워크 위에서 동작한다.
+> **핵심**: IKE (Internet Key Exchange)는 IPsec SA (Security Association)를 자동으로 협상·생성·갱신·삭제하는 프로토콜로, ISAKMP (Internet Security Association and Key Management Protocol) 프레임워크 위에서 동작한다.
 > 2. **가치**: 수동으로 SA를 관리(Manual Keying)하면 키가 정적으로 고정돼 탈취 시 복구가 불가능하지만, IKE는 DH (Diffie-Hellman) 키 교환으로 동적 세션 키를 생성하고 주기적으로 재협상해 PFS (Perfect Forward Secrecy)를 실현한다.
 > 3. **판단 포인트**: IKEv1의 Phase 1/Phase 2 구조와 IKEv2의 단순화된 교환 구조(IKE_SA_INIT + IKE_AUTH)를 구별하고, 각각의 취약점과 개선 사항을 설명해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 IPsec이 보안 통신을 제공하려면 두 피어 간에 "어떤 알고리즘과 키를 사용할 것인가"를 사전에 합의해야 한다. 이 합의의 결과물이 SA (Security Association)이며, SA를 수동으로 생성하는 것은 규모에 맞지 않는다. 수천 개의 VPN 터널을 가진 기업에서 모든 SA를 수동 관리하는 것은 실질적으로 불가능하다.
 
@@ -31,7 +33,7 @@ ISAKMP는 SA 관리의 일반적 프레임워크(구문, 상태, 프로토콜 �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### IKEv1 vs IKEv2 구조 비교
 
@@ -83,7 +85,7 @@ ISAKMP는 SA 관리의 일반적 프레임워크(구문, 상태, 프로토콜 �
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### IKE DH (Diffie-Hellman) 키 교환 원리
 
@@ -122,7 +124,7 @@ DH의 핵심: a, b는 절대 전송되지 않는다. K를 계산하는 데 a, b 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **IKEv2 설정 예시 (strongSwan)**
 
@@ -164,7 +166,7 @@ conn vpn-to-aws
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 IKE는 IPsec 생태계를 실용적으로 만든 핵심 컴포넌트다. IKEv2로의 전환은 메시지 수 감소, NAT 내장 지원, EAP 통합, 강화된 DoS 방지 등 운영 편의성과 보안성을 동시에 개선했다. 현재 대부분의 기업 VPN, 클라우드 VPN 서비스가 IKEv2를 기본값으로 채택한다.
 

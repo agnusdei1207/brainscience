@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ORM (Object-Relational Mapping) Injection은 ORM 프레임워크를 사용하더라도 동적 쿼리 생성, Raw 쿼리 사용, 안전하지 않은 파라미터 바인딩으로 인해 SQL 인젝션이 발생하는 취약점이다.
+> **핵심**: ORM (Object-Relational Mapping) Injection은 ORM 프레임워크를 사용하더라도 동적 쿼리 생성, Raw 쿼리 사용, 안전하지 않은 파라미터 바인딩으로 인해 SQL 인젝션이 발생하는 취약점이다.
 > 2. **가치**: "ORM을 쓰면 SQL 인젝션이 없다"는 잘못된 통념을 깨트리며, Hibernate HQL (Hibernate Query Language), JPA JPQL, Django ORM, SQLAlchemy 등 모든 ORM이 잘못 사용되면 취약하다.
 > 3. **판단 포인트**: ORM의 파라미터 바인딩 API를 올바르게 사용하고, 불가피한 Raw 쿼리는 반드시 파라미터화해야 하며, HQL/JPQL 인젝션도 SQL 인젝션과 동일한 위험도로 처리해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ORM은 SQL을 직접 작성하지 않고 객체 지향적 방식으로 DB를 조작해 SQL 인젝션을 방지한다고 알려져 있다. 하지만 이것은 ORM이 올바르게 사용될 때만 성립한다. 개발자가 동적 쿼리 필요성, 성능 최적화, 복잡한 조인 등을 위해 ORM의 Raw 쿼리 기능이나 문자열 연결을 사용하면 취약점이 생긴다.
 
@@ -39,7 +41,7 @@ query.setParameter("name", userName);
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | ORM 프레임워크 | 취약 패턴 | 안전 패턴 |
 |:---|:---|:---|
@@ -64,7 +66,7 @@ query.setParameter("name", userName);
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | 일반 SQL 인젝션 | ORM 인젝션 |
 |:---|:---|:---|
@@ -77,7 +79,7 @@ query.setParameter("name", userName);
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **대응 전략**:
 1. **ORM 기본 API 우선 사용**: filter(), get(), annotate() 등 ORM 내장 메서드 활용
@@ -90,7 +92,7 @@ query.setParameter("name", userName);
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ORM의 표준 API를 올바르게 사용하고 Raw 쿼리를 금지 또는 엄격히 통제하면 ORM Injection을 방어할 수 있다. 팀 전체에 "ORM = 자동 안전"이 아니라 "올바른 ORM 사용 = 안전"이라는 인식을 정착시키는 것이 중요하다.
 

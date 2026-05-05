@@ -2,15 +2,17 @@
 title = "229. EAP (Extensible Authentication Protocol) - PPP 확장 인증"
 weight = 229
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: EAP (Extensible Authentication Protocol)는 특정 인증 방식(PAP, CHAP 등)에 종속되지 않고, 스마트카드, 토큰, 인증서, 생체 인식 등 **다양한 인증 기법을 수용할 수 있는 보편적이고 유연한 인증 프레임워크(뼈대)**다.
+> **핵심**: EAP (Extensible Authentication Protocol)는 특정 인증 방식(PAP, CHAP 등)에 종속되지 않고, 스마트카드, 토큰, 인증서, 생체 인식 등 **다양한 인증 기법을 수용할 수 있는 보편적이고 유연한 인증 프레임워크(뼈대)**다.
 > 2. **확장성**: 이름 그대로 '확장 가능(Extensible)'하다. 새로운 보안 인증 기술이 등장할 때마다 네트워크 장비(스위치/AP)의 하드웨어나 OS를 통째로 업그레이드할 필요 없이 플러그인처럼 EAP 모듈만 추가하면 즉각 적용할 수 있다.
 > 3. **융합 (IEEE 802.1X)**: 주로 무선랜(Wi-Fi, WPA2/WPA3 엔터프라이즈)과 유선 LAN의 포트 기반 네트워크 접근 제어(IEEE 802.1X) 환경에서 사용자와 RADIUS 인증 서버 사이의 인증 메시지 운반체(Carrier) 역할을 수행한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: EAP (Extensible Authentication Protocol, RFC 3748)는 점대점 프로토콜(PPP)용으로 처음 개발되었으나, 현재는 무선 네트워크(IEEE 802.1X)의 필수 불가결한 표준 인증 구조로 자리 잡은 범용 인증 프레임워크다. EAP 자체는 특정 인증 알고리즘이 아니며, 여러 인증 알고리즘(EAP-TLS, EAP-PEAP, EAP-TTLS 등)을 담아 나르는 '그릇' 역할을 한다.
 
@@ -22,7 +24,7 @@ weight = 229
 
 ---
 
-## Ⅱ. EAP 구조 및 802.1X와의 융합 (Deep Dive)
+## 2. 구성요소
 
 ### 1. EAP의 핵심 구성 요소 (3-Tier 모델)
 EAP 인증 구조는 일반적으로 클라이언트, 스위치(또는 AP), 인증 서버의 세 부분으로 나뉜다.

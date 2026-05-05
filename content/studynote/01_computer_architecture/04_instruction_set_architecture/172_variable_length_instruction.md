@@ -5,15 +5,17 @@ date = "2026-03-19"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 가변 길이 명령어(Variable-Length Instruction)는 수행할 작업의 복잡도에 따라 **명령어의 비트 길이를 유동적으로 구성**하는 설계 방식이다.
+> **핵심**: 가변 길이 명령어(Variable-Length Instruction)는 수행할 작업의 복잡도에 따라 **명령어의 비트 길이를 유동적으로 구성**하는 설계 방식이다.
 > 2. **가치**: 단순한 명령은 짧게, 복잡한 명령은 길게 표현하여 **메모리 낭비를 최소화(High Code Density)**하며, 단일 명령어 내에 다양한 연산과 주소 지정 방식을 융합할 수 있는 강력한 표현력을 제공한다.
 > 3. **융합**: 현대의 **CISC(Complex Instruction Set Computer)** 아키텍처(x86 등)의 핵심 기반이며, 해독(Decoding)의 복잡성을 하드웨어적인 마이크로-오퍼레이션(uOp) 변환 기술로 보완하여 범용 컴퓨팅 성능을 유지한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 가변 길이 명령어(Variable-length Instruction)는 수행할 작업의 복잡도와 피연산자의 수에 따라 명령어의 비트 길이를 유동적으로 구성하는 설계 방식이다. 명령어의 첫 부분에 길이 정보나 확장 접두어(Prefix)를 포함하여 하드웨어가 명령어의 경계를 판단하게 한다.
 
@@ -45,7 +47,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (가변 길이 형식을 지탱하는 3대 해독 메커니즘)
 
@@ -85,7 +87,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 심층 기술 비교: 고정 길이 (RISC) vs 가변 길이 (CISC)
 
@@ -124,7 +126,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -173,7 +175,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,17 +5,19 @@ weight = 390
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-# AWS Aurora DB의 스토리지 로깅 분산 쿼럼 쓰기 (Quorum Write) 아키텍처
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 클라우드 시대의 걸작인 AWS Aurora는 기존 MySQL의 낡은 일체형(Monolithic) 아키텍처를 파괴하고, 연산(Compute)과 저장(Storage) 계층을 네트워크로 완벽히 분리한 뒤, "데이터 블록을 보내지 않고 오직 **로그(Redo Log) 기록만 스토리지로 쏘면, 스토리지가 스스로 데이터를 조립한다(The Log is The Database)**"는 천재적인 발상으로 네트워크 I/O 병목을 박살 낸 데이터베이스다.
+> **핵심**: 클라우드 시대의 걸작인 AWS Aurora는 기존 MySQL의 낡은 일체형(Monolithic) 아키텍처를 파괴하고, 연산(Compute)과 저장(Storage) 계층을 네트워크로 완벽히 분리한 뒤, "데이터 블록을 보내지 않고 오직 **로그(Redo Log) 기록만 스토리지로 쏘면, 스토리지가 스스로 데이터를 조립한다(The Log is The Database)**"는 천재적인 발상으로 네트워크 I/O 병목을 박살 낸 데이터베이스다.
 > 2. **가치**: 낡은 DB가 네트워크를 통해 복사본을 유지하느라 트래픽 폭풍에 허덕일 때, Aurora는 네트워크 I/O 페이로드를 기존 대비 최대 1/10 수준으로 압축하여 MySQL보다 5배, PostgreSQL보다 3배 빠르다는 경이로운 쓰기 처리량(Write Throughput)을 달성했다.
 > 3. **융합**: 극한의 가용성을 위해 데이터를 3개의 가용 영역(AZ)에 6개의 복제본으로 분산 저장하며, 이 중 단 4개만 성공(ACK) 응답을 보내면 무조건 전체 성공(Commit)으로 간주해 버리는 분산 시스템의 **4/6 쿼럼(Quorum Write)** 합의 수학을 융합하여 벼락같은 장애 시에도 절대 멈추지 않는 99.99% 생존력을 완성했다.
 
+> 📝 모범 답안
+
+# AWS Aurora DB의 스토리지 로깅 분산 쿼럼 쓰기 (Quorum Write) 아키텍처
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: AWS Aurora의 스토리지 로깅 분산 쿼럼 쓰기는, 데이터베이스 컴퓨팅 노드(EC2)가 수백 기가바이트의 물리적 데이터 페이지(Data Page)를 디스크나 복제본으로 전송하는 대신, 오직 변경된 사항을 짧게 기록한 '리두 로그(Redo Log)' 조각만 분산 스토리지(Aurora Storage Fleet) 네트워크로 던지는 클라우드 네이티브 스토리지 아키텍처다.
 
@@ -62,7 +64,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 4/6 쿼럼 (Quorum) 다수결 합의 쓰기 알고리즘
 
@@ -114,7 +116,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 클라우드 네이티브 스토리지 3대장 아키텍처 비교 매트릭스
 
@@ -135,7 +137,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 설계 안티패턴
 
@@ -189,7 +191,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

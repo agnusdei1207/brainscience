@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Fine-tuning은 **사전 학습된 Foundation Model의 가중치를 도메인 특화 데이터로 추가 학습하여 특정 작업 성능을 최적화**하는 기법이며, Full Fine-tuning·LoRA·Prompt Tuning으로 구분된다.
+> **핵심**: Fine-tuning은 **사전 학습된 Foundation Model의 가중치를 도메인 특화 데이터로 추가 학습하여 특정 작업 성능을 최적화**하는 기법이며, Full Fine-tuning·LoRA·Prompt Tuning으로 구분된다.
 > 2. **가치**: 사전 학습 모델은 범용이라 특정 도메인(의료·법률)에서 정확도가 부족하지만, Fine-tuning으로 **소량 도메인 데이터만으로도 전문 모델 수준**을 달성한다.
 > 3. **판단 포인트**: Full FT(전체 가중치)는 비용↑, LoRA(저랭크 어댑터)는 **파라미터의 1% 미만만 학습**하여 효율적이며, QLoRA(양자화+LoRA)로 소비자 GPU에서도 LLM Fine-tuning이 가능하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Full FT:     전체 가중치 재학습 (GPU 많이 필요)
@@ -26,7 +28,7 @@ Prompt Tuning: 프롬프트 벡터만 학습 (가장 경량)
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 방식 | 학습 파라미터 | GPU | 성능 |
 |:---|:---|:---|:---|

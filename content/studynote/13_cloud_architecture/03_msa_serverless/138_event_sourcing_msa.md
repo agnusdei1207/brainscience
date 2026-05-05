@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Event Sourcing은 **엔티티의 현재 상태를 저장하는 대신, 상태를 변경한 모든 이벤트(Event)를 순서대로 저장**하고, 이벤트를 재생(Replay)하여 현재 상태를 복원하는 패턴이다.
+> **핵심**: Event Sourcing은 **엔티티의 현재 상태를 저장하는 대신, 상태를 변경한 모든 이벤트(Event)를 순서대로 저장**하고, 이벤트를 재생(Replay)하여 현재 상태를 복원하는 패턴이다.
 > 2. **가치**: 상태만 저장하면 "왜 이 상태가 되었는지" 추적이 불가능하지만, Event Sourcing은 **모든 변경 이력이 이벤트로 보존**되어 감사(Audit)·디버깅·시간 여행(Time Travel) 쿼리가 가능하다.
 > 3. **판단 포인트**: CQRS(Command Query Responsibility Segregation)와 자주 함께 사용하며, 이벤트 저장소(Event Store)가 핵심 인프라이다. 스냅샷으로 재생 성능을 최적화한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 기존: orders 테이블 → UPDATE status='배송' (이전 상태 유실)

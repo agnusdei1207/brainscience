@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> 📢 **섹션 요약 비유**: 서버리스 빅데이터는 택시처럼 필요할 때만 타고 정확히 이동한 거리만큼만 요금을 내는 방식이다. 자가용(전용 클러스터) 대신 택시를 쓰면 주차비가 없다.
+
+> 📝 모범 답안
 
 - 서버리스 빅데이터는 클러스터 관리 없이 쿼리당 과금(Pay-per-query) 모델로 운영되어, 산발적 워크로드를 가진 팀에게 대폭적인 운영 비용 절감을 제공한다.
 - AWS Athena (Presto 기반, $5/TB 스캔), Google BigQuery (완전 서버리스), Redshift Serverless (RPU 기반)는 각각 고유한 과금 모델과 성능 특성을 가지며, 쿼리 패턴에 따라 적합한 도구가 다르다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1-1. 서버리스의 핵심 가치
 
@@ -35,11 +38,9 @@ categories = "studynote-bigdata"
 | **Azure Synapse Serverless** | $5/TB 처리 | ADLS |
 | **Snowflake Serverless** | 크레딧·초 단위 | Snowflake 스토리지 |
 
-> 📢 **섹션 요약 비유**: 서버리스 빅데이터는 택시처럼 필요할 때만 타고 정확히 이동한 거리만큼만 요금을 내는 방식이다. 자가용(전용 클러스터) 대신 택시를 쓰면 주차비가 없다.
-
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. AWS Athena 아키텍처
 
@@ -88,7 +89,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | AWS Athena | BigQuery | Redshift Serverless |
 |:---|:---|:---|:---|
@@ -108,7 +109,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. 비용 거버넌스 방법
 
@@ -127,7 +128,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 | 내용 |
 |:---|:---|

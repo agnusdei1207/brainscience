@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 경사 하강법(GD, Gradient Descent)은 손실 함수(Loss Function)의 기울기(Gradient) 반대 방향으로 가중치를 반복 갱신해 최솟값을 찾는 알고리즘으로, 배치 크기에 따라 Batch GD / SGD / Mini-batch GD 세 가지로 구분된다.
+> **핵심**: 경사 하강법(GD, Gradient Descent)은 손실 함수(Loss Function)의 기울기(Gradient) 반대 방향으로 가중치를 반복 갱신해 최솟값을 찾는 알고리즘으로, 배치 크기에 따라 Batch GD / SGD / Mini-batch GD 세 가지로 구분된다.
 > 2. **가치**: 미니배치 경사 하강법(Mini-batch GD)은 전체 데이터 정확성과 SGD(Stochastic Gradient Descent)의 속도를 균형 있게 결합해 현대 딥러닝의 사실상 표준 학습 방법이다.
 > 3. **판단 포인트**: 지역 최솟값(Local Minimum)과 안장점(Saddle Point) 문제는 기술사 시험 단골 주제이며, SGD의 확률적 노이즈가 이 문제를 오히려 완화하는 메커니즘을 이해해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 신경망 학습의 목표는 손실 함수 L(w)를 최소화하는 가중치 벡터 w를 찾는 것이다. 이를 위해 경사 하강법(GD, Gradient Descent)은 다음 갱신 규칙을 반복 적용한다:
 
@@ -29,7 +31,7 @@ w ← w - α · ∇L(w)
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 배치 크기에 따른 경사 하강법 분류
 
@@ -90,7 +92,7 @@ SGD(Stochastic Gradient Descent)는 1개 또는 미니배치 샘플의 기울기
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 에포크(Epoch) vs 이터레이션(Iteration) vs 배치(Batch)
 
@@ -113,7 +115,7 @@ SGD(Stochastic Gradient Descent)는 1개 또는 미니배치 샘플의 기울기
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 기술사 시험 판단 포인트
 
@@ -137,7 +139,7 @@ SGD(Stochastic Gradient Descent)는 1개 또는 미니배치 샘플의 기울기
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 미니배치 SGD는 다음 이점을 제공한다:
 

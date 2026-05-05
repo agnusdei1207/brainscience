@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Hub-and-Spoke 심화에서 Hub는 **메시지 변환(Transformation)·라우팅(Routing)·오케스트레이션(Orchestration)·프로토콜 변환**을 수행하며, 어댑터(Spoke)가 각 시스템과의 연결을 담당한다.
+> **핵심**: Hub-and-Spoke 심화에서 Hub는 **메시지 변환(Transformation)·라우팅(Routing)·오케스트레이션(Orchestration)·프로토콜 변환**을 수행하며, 어댑터(Spoke)가 각 시스템과의 연결을 담당한다.
 > 2. **가치**: Hub의 정규 데이터 모델(Canonical Data Model)로 **N개 시스템의 데이터 포맷을 통일**하면, 새 시스템 추가 시 어댑터 1개만 추가하면 된다.
 > 3. **판단 포인트**: Hub의 HA(고가용성)·성능 확장이 핵심이며, ESB는 Hub를 분산 버스로 확장한 것이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Hub 핵심 기능:

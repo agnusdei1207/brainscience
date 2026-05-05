@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 디바이스 드라이버와 모듈 인터페이스 (Device Driver & Kernel Module)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 디바이스 드라이버(Device Driver)는 운영체제 커널이 마우스, 그래픽카드, 디스크 등 수만 가지의 각기 다른 하드웨어를 **단일한 표준 명령(read/write)으로 제어할 수 있게 번역해 주는 '하드웨어 통역사'**다.
+> **핵심**: 디바이스 드라이버(Device Driver)는 운영체제 커널이 마우스, 그래픽카드, 디스크 등 수만 가지의 각기 다른 하드웨어를 **단일한 표준 명령(read/write)으로 제어할 수 있게 번역해 주는 '하드웨어 통역사'**다.
 > 2. **가치**: 커널 소스 코드를 한 줄도 고치지 않고 시스템을 재부팅할 필요도 없이, 운영 중인 서버에 새로운 하드웨어 드라이버를 레고 블록처럼 동적으로 끼웠다 뺐다 할 수 있는 **적재가능 커널 모듈 (LKM, Loadable Kernel Module) 아키텍처**를 완성했다.
 > 3. **융합**: 리눅스의 "모든 것은 파일이다(Everything is a file)"라는 VFS(가상 파일 시스템) 철학과 완벽히 융합되어, 응용 프로그램은 하드웨어의 복잡성을 전혀 모른 채 그저 파일을 열고(open) 쓰는(write) 것만으로 장치를 완벽히 조작한다.
 
+> 📝 모범 답안
+
+# 디바이스 드라이버와 모듈 인터페이스 (Device Driver & Kernel Module)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **디바이스 드라이버**: 특정 하드웨어 장치를 제어하는 소프트웨어 코드 뭉치. 하드웨어 제조사(NVIDIA, Realtek 등)가 직접 짜서 OS에 맞게 제공한다.
@@ -67,7 +69,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 리눅스의 3대 디바이스 드라이버 분류
 
@@ -117,7 +119,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### User-Space 드라이버 vs Kernel-Space 드라이버
 
@@ -139,7 +141,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 트러블슈팅
 
@@ -181,7 +183,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

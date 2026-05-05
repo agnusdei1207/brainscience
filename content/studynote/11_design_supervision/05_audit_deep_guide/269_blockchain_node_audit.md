@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 블록체인(Blockchain) 감리는 노드 아키텍처의 탈중앙화 수준, 합의(Consensus) 알고리즘의 지연 특성, ZKP (Zero-Knowledge Proof, 영지식 증명) 기반 프라이버시 보호의 적정성을 종합 진단한다.
+> **핵심**: 블록체인(Blockchain) 감리는 노드 아키텍처의 탈중앙화 수준, 합의(Consensus) 알고리즘의 지연 특성, ZKP (Zero-Knowledge Proof, 영지식 증명) 기반 프라이버시 보호의 적정성을 종합 진단한다.
 > 2. **가치**: 블록체인의 불변성(Immutability)과 투명성(Transparency)은 강점이지만, 합의 지연과 개인정보 노출 위험은 공공 시스템 적용 시 반드시 해결해야 할 구조적 한계다.
 > 3. **판단 포인트**: 노드 수 및 분포, 합의 알고리즘 TPS (Transactions Per Second) 및 지연 시간, ZKP (Zero-Knowledge Proof) 또는 채널(Channel) 기반 프라이버시 보호 여부가 핵심 점검 항목이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 블록체인 감리의 배경
 
@@ -34,7 +35,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 블록체인 노드 아키텍처
 
@@ -96,7 +97,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 온체인 vs. 오프체인 개인정보 처리
 
@@ -121,7 +122,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 블록체인 노드 아키텍처 감리 체크리스트
 
@@ -160,7 +161,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 기대효과
 

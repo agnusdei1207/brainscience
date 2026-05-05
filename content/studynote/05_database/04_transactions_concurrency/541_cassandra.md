@@ -7,16 +7,19 @@ date = 2024-01-01
 [extra]
 categories = ["studynote-software-engineering"]
 +++
-+++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Cassandra는 Amazon Dynamo의 분산 설계를 기반으로 한 列指向 (Column-Oriented) NoSQL로, 대규모 쓰기 처리에 최적화된 리더 없는(Leaderless) 아키텍처를 가진다.
+> **핵심**: Cassandra는 Amazon Dynamo의 분산 설계를 기반으로 한 列指向 (Column-Oriented) NoSQL로, 대규모 쓰기 처리에 최적화된 리더 없는(Leaderless) 아키텍처를 가진다.
 > 2. **가치**: 단일障害점(Single Point of Failure)가 없으며,线性 확장(Linear Scalability)과 constant-time 지연(latency)을 제공한다.
 > 3. **융합**: Cassandra는 CAP 이론에서 AP(가용성 + 분단 내성)를 선택하며,.Eventual Consistency를 기본으로 제공한다.
 
+> 📝 모범 답안
+
++++
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념
 Cassandra는 Facebook(현재 Meta)에서 개발하고 Apache Software Foundation에 기증한 분산 NoSQL 데이터베이스다. Google's BigTable의 데이터 모델과 Amazon Dynamo의 분산 설계를 결합한 것으로, 열 중심(Column-Family) 데이터 모델을 사용한다.
@@ -32,7 +35,7 @@ Cassandra는 다중 지도 제작과 같다. 여러 제작자(노드)가 동시�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Cassandra 아키텍처
 
@@ -84,7 +87,7 @@ CQL은 Cassandra의界面로, SQL과 유사하지만"partition key 없으면 전
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교: Cassandra vs MongoDB
 
@@ -111,7 +114,7 @@ W+R > N 공식은宝物 발견 공식과 같다.treasure map가 3개 있는데(�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -130,7 +133,7 @@ Cassandra의 Partition Key 설계 실수는 우편번호를 잘못 쓴 것과 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### Cassandra strengths
 

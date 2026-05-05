@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 실시간 OLAP (Real-time OLAP, Online Analytical Processing)은 스트리밍으로 유입되는 데이터를 수초~수 밀리초의 지연으로 즉시 컬럼형(Columnar) 스토어에 적재하고 서브초(Sub-second) 내에 집계·분석 쿼리를 처리하는 분석 아키텍처로, Apache Druid·Apache Pinot·ClickHouse가 대표 구현체다.
+> **핵심**: 실시간 OLAP (Real-time OLAP, Online Analytical Processing)은 스트리밍으로 유입되는 데이터를 수초~수 밀리초의 지연으로 즉시 컬럼형(Columnar) 스토어에 적재하고 서브초(Sub-second) 내에 집계·분석 쿼리를 처리하는 분석 아키텍처로, Apache Druid·Apache Pinot·ClickHouse가 대표 구현체다.
 > 2. **가치**: 기존 OLAP(DW Batch 적재 → 야간 집계)은 T+1 데이터만 분석 가능하지만, 실시간 OLAP는 방금 발생한 이벤트(T+수초)를 즉시 분석하여 실시간 사용자 행동 분석·광고 성과 실시간 대시보드·이상 탐지 같은 즉각적인 비즈니스 인사이트를 제공한다.
 > 3. **판단 포인트**: 실시간 OLAP은 "최신성(Freshness)"과 "쿼리 성능"을 동시에 달성하는 도구이지만, 완전한 ACID 트랜잭션과 복잡한 JOIN은 지원이 제한적이다. 이벤트 기반 집계·필터·분석에 최적화되어 있으며, 복잡한 다단계 JOIN이 필요하면 전통적 DW가 적합하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 기존 OLAP(배치 기반 DW)은 데이터 적재부터 분석까지 T+1(다음 날)이 표준이었다. 실시간 마케팅·운영·IoT 환경에서 T+1 분석은 너무 늦다.
 
@@ -35,7 +37,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Apache Druid 아키텍처
 
@@ -65,7 +67,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 실시간 OLAP는 람다 아키텍처(Lambda Architecture)의 Speed Layer나 카파 아키텍처(Kappa Architecture)의 스트림 처리 레이어로 통합된다.
 
@@ -79,7 +81,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 광고 플랫폼 실시간 성과 대시보드
 1초 이내 광고 클릭·노출·전환 지표 집계.
@@ -97,7 +99,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 | 수치 |
 |:---|:---|:---|

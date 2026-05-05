@@ -5,15 +5,19 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> [ Entropy Pool ] --(Seed)--> [ ChaCha20 DRBG ]
+
+> 📝 모범 답안
+
 1. **본질**: 리눅스 커널의 엔트로피 풀을 기반으로 난수를 제공하는 캐릭터 디바이스 파일로, 엔트로피가 부족하더라도 시스템을 멈추지 않고 암호학적 난수를 지속적으로 생성하는 비차단(Non-blocking) 장치다.
 2. **가치**: 서비스의 가용성(Availability)을 보장하면서도 충분히 안전한 난수(CSPRNG)를 제공하므로, 대부분의 암호화 서비스, 세션 생성, 인증 토큰 발행에 가장 널리 권장된다.
 3. **판단 포인트**: `/dev/random`과 달리 엔트로피 고갈 시에도 출력을 멈추지 않으므로, 부팅 직후의 극초기 상태를 제외하면 사실상 거의 모든 실무 환경에서 표준으로 사용된다.
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 리눅스 시스템에서 난수를 얻는 방법은 크게 `/dev/random`과 `/dev/urandom`으로 나뉜다. 과거에는 `/dev/random`이 더 안전하다고 여겨졌으나, 엔트로피가 부족할 때 시스템 전체를 멈춰버리는(Blocking) 문제로 인해 서비스 장애의 원인이 되곤 했다.
 
@@ -23,7 +27,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 `/dev/urandom`은 커널 내부에 구현된 CSPRNG 아키텍처를 따른다.
 
@@ -36,8 +40,7 @@ categories = "studynote-security"
 
 ```text
 [ Linux Entropy Management Architecture ]
-[ Sources ] --(Add)--> [ Entropy Pool ] --(Seed)--> [ ChaCha20 DRBG ]
-                                                         |
+[ Sources ] --(Add)--                                                         |
          ┌───────────────────────────────────────────────┴───────────────┐
          v                                                               v
  [ /dev/random ]                                                 [ /dev/urandom ]
@@ -51,7 +54,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 `/dev/random`과의 비교는 보안 아키텍처 설계 시 단골 질문이다.
 
@@ -69,7 +72,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서 난수 고갈로 인한 서비스 지연은 매우 심각한 장애다.
 
@@ -85,7 +88,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 `/dev/urandom`을 사용하면 암호화 통신(HTTPS 등)의 초기 연결 속도를 안정적으로 유지할 수 있으며, 난수 고갈로 인한 애플리케이션 행(Hang) 현상을 원천 방지할 수 있다. 이는 고가용성이 요구되는 웹 서비스와 API 서버의 필수 요소다.
 

@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. Re-platform(재플랫폼)은 6R 전략 중 Rehost(그대로 이전)와 Re-architect(전면 재설계)의 중간 단계로 — 최소한의 코드 변경으로 클라우드 관리형 서비스(RDS, EKS, Elastic Beanstalk 등)로 전환하여 운영 부담을 줄이면서 클라우드 이점을 부분적으로 활용한다.
 > 2. Re-platform의 핵심 원칙은 "Core Architecture는 유지, 단 플랫폼 레이어는 매니지드로"로 — 자체 운영 PostgreSQL을 AWS RDS로 교체하면 코드 변경 없이 자동 백업, 멀티 AZ, 패치 관리를 획득하며 DBA 운영 부담을 80% 이상 줄일 수 있다.
 > 3. Re-platform은 Rehost 이후 6~12개월 안정화 기간을 거친 후 진행하는 것이 최선이며 — 무리한 동시 마이그레이션은 장애 위험을 배가시키고, 단계적 접근이 클라우드 전환의 현실적 성공 전략이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. Re-platform 개념과 위치
+## 1. 개요 및 필요성
 
 ```
 6R 전략 내 Re-platform 위치:
@@ -50,7 +53,7 @@ Rehost vs Re-platform vs Re-architect:
 
 ---
 
-## Ⅱ. 주요 Re-platform 패턴
+## 2. 구성요소
 
 ```
 Re-platform 주요 패턴:
@@ -97,7 +100,7 @@ Re-platform 시 주의:
 
 ---
 
-## Ⅲ. RDS 마이그레이션 상세
+## 3. 구조 및 동작 원리
 
 ```
 온프레미스 DB → RDS 마이그레이션:
@@ -144,7 +147,7 @@ RDS 최적화:
 
 ---
 
-## Ⅳ. EKS/ECS 컨테이너화
+## 4. 비교 및 트레이드오프
 
 ```
 VM 앱 → EKS/ECS 컨테이너화:
@@ -193,7 +196,7 @@ Fargate 활용:
 
 ---
 
-## Ⅴ. 실무 시나리오 — E-Commerce Re-platform
+## 5. 실무 적용 및 최적화 기법
 
 ```
 이커머스 플랫폼 Re-platform 사례:

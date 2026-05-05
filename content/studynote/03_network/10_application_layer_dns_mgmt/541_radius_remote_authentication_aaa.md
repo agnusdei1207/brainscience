@@ -5,17 +5,20 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-network"
 +++
+## 0. 핵심 인사이트
 
-# 541. RADIUS (Remote Authentication Dial-In 고안 User Service) - UDP 기반 관리자/사용자 인증(AAA)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: RADIUS (Remote Authentication Dial-In User Service)는 사용자가 네트워크(Wi-Fi, VPN, 다이얼업)에 접속할 때 접근 서버(NAS)를 거쳐 중앙 서버에서 자격 증명을 수행하는 **UDP (User Datagram Protocol)** 기반의 1세대 AAA (Authentication, Authorization, Accounting) 프로토콜이다.
+> **핵심**: RADIUS (Remote Authentication Dial-In User Service)는 사용자가 네트워크(Wi-Fi, VPN, 다이얼업)에 접속할 때 접근 서버(NAS)를 거쳐 중앙 서버에서 자격 증명을 수행하는 **UDP (User Datagram Protocol)** 기반의 1세대 AAA (Authentication, Authorization, Accounting) 프로토콜이다.
 > 2. **가치**: 수백 개의 무선 AP(Access Point)나 VPN 장비마다 사용자 계정을 따로 만들 필요 없이, 하나의 RADIUS 서버(또는 AD 연동)로 수만 명의 인증을 중앙 통제할 수 있어 전사적 'Single Point of Management'를 달성한다.
 > 3. **융합**: 초기 전화망 시대를 넘어, 현재는 802.1X 표준 무선랜(WPA2/3 Enterprise) 인증과 EAP (Extensible Authentication Protocol)를 운반하는 핵심 통신 규격으로 자리 잡았으며, TLS를 입힌 RadSec으로 보안성이 융합 발전하고 있다.
 
+> 📝 모범 답안
+
+# 541. RADIUS (Remote Authentication Dial-In 고안 User Service) - UDP 기반 관리자/사용자 인증(AAA)
+
+##
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: RADIUS는 클라이언트/서버 구조를 띠는 네트워크 프로토콜로, 네트워크 접근을 요청하는 사용자(Supplicant)와 이를 수락하는 네트워크 장비(NAS: Network Access Server), 그리고 실제로 권한을 심사하는 RADIUS 서버로 구성된다. (인증/인가는 UDP 1812, 과금은 UDP 1813 사용).
 - **필요성**: 기업에 스위치가 10대, VPN 라우터가 5대, 무선 AP가 50대 있다고 가정하자. 직원이 입사하거나 퇴사할 때마다 65대의 장비에 접속해 ID/PW를 생성/삭제하는 것은 불가능에 가깝다. 장비들은 단순히 출입문 역할만 하고, "이 사람이 들어와도 됩니까?"라는 질문을 중앙의 '보안 경비실(RADIUS)'로 던져서 대답을 받게 하는 표준 언어가 필요했다.
@@ -45,7 +48,7 @@ categories = "studynote-network"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -95,7 +98,7 @@ RADIUS는 패킷의 "본문(Payload) 전체"를 암호화하지 않는다. 오�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### RADIUS vs TACACS+ (Cisco) 비교
 
@@ -136,7 +139,7 @@ RADIUS는 빠르고 가벼운 UDP를 쓰므로 10만 명의 대학 캠퍼스 Wi-
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 802.1X 무선랜 보안 고도화 (WPA2/3-Enterprise)
 
@@ -157,7 +160,7 @@ RADIUS는 빠르고 가벼운 UDP를 쓰므로 10만 명의 대학 캠퍼스 Wi-
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

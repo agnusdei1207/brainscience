@@ -7,16 +7,17 @@ date = 2026-03-30
 tags = ["Network", "OFDM", "Subcarrier", "5G", "WiFi", "Physical Layer"]
 categories = ["studynote", "Network"]
 +++
-
-## 핵심 인사이트 (3줄 요약)
+## 0. 핵심 인사이트
 
 > **본질**: 부반송파(Subcarrier)는 넓은 대역을 잘게 나눈 좁은 주파수 채널로, 하나의 심볼(Symbol)을 실어 나르는 운반선이다.
 > **가치**: OFDM (Orthogonal Frequency Division Multiplexing)과 OFDMA (Orthogonal Frequency Division Multiple Access)는 많은 부반송파를 직교시키는 덕분에 다중경로에 강하다.
 > **판단 포인트**: 부반송파 간격, CP (Cyclic Prefix), 동기화가 맞지 않으면 직교성이 깨져 ISI (Inter-Symbol Interference)와 ICI (Inter-Carrier Interference)가 커진다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 부반송파는 전체 대역을 여러 개의 좁은 주파수 칸으로 쪼개 만든 개별 운반 채널이다. 한 번에 큰 신호를 보내는 대신, 여러 부반송파에 나눠 보내면 각 채널의 왜곡이 작아져 등화(Equalization)가 쉬워진다.
 
@@ -26,7 +27,7 @@ categories = ["studynote", "Network"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 OFDM은 데이터를 여러 부반송파에 나눠 실은 뒤 IFFT (Inverse Fast Fourier Transform)로 시간 영역 신호를 만들고, 수신 측에서 FFT (Fast Fourier Transform)로 다시 복원한다. 부반송파는 서로 직교하도록 배치되어, 주파수는 겹쳐 보이지만 간섭은 최소화된다.
 
@@ -49,7 +50,7 @@ OFDM은 데이터를 여러 부반송파에 나눠 실은 뒤 IFFT (Inverse Fast
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 단일 반송파는 구현이 단순하지만 채널 왜곡에 취약하다. 반면 부반송파 기반 OFDM은 채널을 잘게 나눠 다루므로 등화가 쉬워지고, OFDMA는 그 부반송파들을 사용자별로 나눠 쓰게 해 다중 접속까지 가능하게 한다. FDMA (Frequency Division Multiple Access)나 TDMA (Time Division Multiple Access)와 비교하면, OFDMA는 주파수와 사용자 배정을 더 세밀하게 조정할 수 있다.
 
@@ -67,7 +68,7 @@ OFDM은 데이터를 여러 부반송파에 나눠 실은 뒤 IFFT (Inverse Fast
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 부반송파 간격이 너무 좁으면 Doppler shift에 약해지고, 너무 넓으면 직교성과 대역 효율이 나빠진다. CP는 다중경로 지연보다 길어야 하지만, 길어질수록 유효 전송률이 떨어진다. 또 OFDM은 PAPR (Peak-to-Average Power Ratio)가 커서 전력 증폭기 선형성 관리가 중요하다.
 
@@ -85,7 +86,7 @@ OFDM은 데이터를 여러 부반송파에 나눠 실은 뒤 IFFT (Inverse Fast
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 부반송파 구조의 장점은 강인한 수신, 유연한 자원 할당, 고속 데이터 전송이다. 그러나 동기화·PAPR·CP 손실 같은 비용이 있어, 아무 채널에나 무조건 유리한 것은 아니다. 그래서 좋은 설계는 "주파수 분할"의 이득과 "동기화 복잡도"의 비용을 함께 본다.
 

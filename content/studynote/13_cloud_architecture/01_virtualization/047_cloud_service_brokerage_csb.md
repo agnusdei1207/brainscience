@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. CSB(Cloud Service Brokerage)는 클라우드 서비스 소비자와 제공자 사이에서 중개·통합·커스터마이징·거버넌스 역할을 수행하는 개체 — Gartner가 정의한 클라우드 컴퓨팅 참조 모델의 핵심 구성 요소로, 멀티 클라우드 환경의 복잡성을 관리한다.
 > 2. CSB의 세 가지 역할 — 중개(Intermediation: 서비스 부가가치 추가), 집계(Aggregation: 여러 클라우드 통합), 차익거래(Arbitrage: 비용 최적화를 위한 자동 클라우드 전환)로 구성되며, 현대 CSB는 이 세 역할을 통합 제공한다.
 > 3. FinOps와 CSB의 융합이 현대 트렌드 — 단순 중개를 넘어 클라우드 비용 최적화(FinOps), 보안 정책 일관성(CASB), 거버넌스 자동화를 통합하는 클라우드 관리 플랫폼(CMP)으로 진화하고 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. CSB 개요와 역할
+## 1. 개요 및 필요성
 
 ```
 NIST 클라우드 참조 모델:
@@ -60,7 +63,7 @@ CSB 3대 역할 (Gartner):
 
 ---
 
-## Ⅱ. 클라우드 관리 플랫폼 (CMP)
+## 2. 구성요소
 
 ```
 CMP (Cloud Management Platform):
@@ -116,7 +119,7 @@ Flexera:
 
 ---
 
-## Ⅲ. CASB (Cloud Access Security Broker)
+## 3. 구조 및 동작 원리
 
 ```
 CASB (Cloud Access Security Broker):
@@ -164,7 +167,7 @@ CASB 배포 방식:
 
 ---
 
-## Ⅳ. FinOps와 클라우드 최적화
+## 4. 비교 및 트레이드오프
 
 ```
 FinOps (Financial Operations):
@@ -214,7 +217,7 @@ ROI:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 중견기업 CSB 구축
+## 5. 실무 적용 및 최적화 기법
 
 ```
 중견 제조사 (직원 2,000명) CSB 도입:

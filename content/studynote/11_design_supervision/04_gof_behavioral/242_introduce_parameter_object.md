@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 파라미터 객체화 (Introduce Parameter Object) 는 항상 함께 전달되는 매개변수 그룹을 하나의 객체로 묶어, 메서드 시그니처를 단순화하는 리팩토링 기법이다.
+> **핵심**: 파라미터 객체화 (Introduce Parameter Object) 는 항상 함께 전달되는 매개변수 그룹을 하나의 객체로 묶어, 메서드 시그니처를 단순화하는 리팩토링 기법이다.
 > 2. **가치**: 긴 매개변수 목록 (Long Parameter List) 코드 스멜을 제거하고, 관련 데이터와 그에 속한 행동을 함께 캡슐화할 발판을 마련한다.
 > 3. **판단 포인트**: 동일한 매개변수 3개 이상이 여러 메서드에 반복 등장하면 파라미터 객체화 신호다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 정의
 
@@ -43,7 +44,7 @@ public Report generate(ReportCriteria criteria) { ... }
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 구조 변환 다이어그램
 
@@ -99,7 +100,7 @@ public Report generate(ReportCriteria criteria) { ... }
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 파라미터 처리 패턴 비교
 
@@ -118,7 +119,7 @@ public Report generate(ReportCriteria criteria) { ... }
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 Java 레코드 (Record) 활용
 
@@ -150,7 +151,7 @@ public record DateRange(LocalDate from, LocalDate to) {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 정량적 효과
 

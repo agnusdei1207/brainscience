@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 4 Golden Signals(4 골든 시그널)는 구글 SRE가 정의한 모든 서비스의 모니터링 필수 지표 4가지로, 지연 시간(Latency), 트래픽(Traffic), 에러(Errors), 포화도(Saturation)이며 이 4가지만 제대로 모니터링해도 대부분의 장애를 선제 감지할 수 있다.
+> **핵심**: 4 Golden Signals(4 골든 시그널)는 구글 SRE가 정의한 모든 서비스의 모니터링 필수 지표 4가지로, 지연 시간(Latency), 트래픽(Traffic), 에러(Errors), 포화도(Saturation)이며 이 4가지만 제대로 모니터링해도 대부분의 장애를 선제 감지할 수 있다.
 > 2. **가치**: 수십 개의 시스템 지표 중 "무엇을 봐야 하는가?"에 대한 명확한 답을 제시하며, 알람 설계와 SLI 선택의 가이드 프레임워크로 실무에서 즉시 적용 가능하다.
 > 3. **판단 포인트**: USE(Utilization, Saturation, Errors)는 인프라/리소스 관점, RED(Rate, Errors, Duration)는 마이크로서비스 관점으로 Golden Signals와 상호 보완적으로 활용한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 서비스를 모니터링하면 수백 개의 지표가 나온다. CPU, 메모리, 디스크, 네트워크, GC, 스레드 수… 어디에 집중해야 할까? 알람을 전부 걸면 알람 피로(Alert Fatigue)로 진짜 중요한 신호를 놓친다.
 
@@ -25,7 +27,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 4 Golden Signals 상세
 
@@ -65,7 +67,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 세 가지 모니터링 방법론 비교
 
@@ -84,7 +86,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **Golden Signals 기반 Grafana 대시보드 구성:**
 
@@ -116,7 +118,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 4 Golden Signals 프레임워크를 모니터링 설계의 기준으로 채택하면, 팀이 "무엇을 봐야 하는가"에 대한 합의를 빠르게 이룰 수 있다. 수백 개의 지표 중 핵심 4개에 집중함으로써 알람 피로를 줄이고 진짜 중요한 신호를 놓치지 않는다.
 

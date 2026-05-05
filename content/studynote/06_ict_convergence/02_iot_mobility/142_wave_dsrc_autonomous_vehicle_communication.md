@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: WAVE(Wireless Access in Vehicular Environments)/DSRC(Dedicated Short-Range Communications)는 **5.9GHz 전용 주파수에서 차량 간 직접 통신(V2V·V2I)**을 제공하는 IEEE 802.11p 기반 규격이다.
+> **핵심**: WAVE(Wireless Access in Vehicular Environments)/DSRC(Dedicated Short-Range Communications)는 **5.9GHz 전용 주파수에서 차량 간 직접 통신(V2V·V2I)**을 제공하는 IEEE 802.11p 기반 규격이다.
 > 2. **가치**: 셀룰러(4G/5G)는 기지국 경유로 **수십ms 지연**이 있지만, DSRC는 **직접 통신으로 수ms 이내 저지연**을 제공하여 긴급 제동 경고 등 안전 메시지에 적합하다.
 > 3. **판단 포인트**: FCC가 5.9GHz 대역 일부를 Wi-Fi에 재배정(2020)하면서 DSRC의 미래가 불투명해졌고, **C-V2X(5G NR)가 주류로 전환** 중이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 DSRC: 5.9GHz 전용 대역, 802.11p

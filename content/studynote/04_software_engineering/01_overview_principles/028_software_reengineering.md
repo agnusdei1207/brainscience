@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 소프트웨어 리엔지니어링(Software Reengineering)은 기존 레거시 시스템을 분석(역공학, Reverse Engineering)하여 이해한 뒤, 개선된 형태로 재구조화(Restructuring)하거나 재구현(Forward Engineering)하는 소프트웨어 진화 활동이다.
+> **핵심**: 소프트웨어 리엔지니어링(Software Reengineering)은 기존 레거시 시스템을 분석(역공학, Reverse Engineering)하여 이해한 뒤, 개선된 형태로 재구조화(Restructuring)하거나 재구현(Forward Engineering)하는 소프트웨어 진화 활동이다.
 > 2. **가치**: 레거시 시스템을 완전히 교체하면 비용·리스크가 크고 비즈니스 연속성이 위협받는다. 리엔지니어링은 기존 시스템의 비즈니스 로직을 보존하면서 기술 부채를 해소하고 현대화한다는 점에서 완전 재개발(Greenfield)보다 실용적인 경우가 많다.
 > 3. **판단 포인트**: 리엔지니어링 vs. 완전 재개발 선택 기준 — 비즈니스 로직이 복잡하고 문서화가 미흡하면 리엔지니어링이 유리. 기술 스택이 완전히 구식이거나 아키텍처 자체가 현대화 불가능하면 재개발을 선택. 실무에서는 스트랭글러 피그(Strangler Fig) 패턴으로 점진적 교체가 권장된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌──────────────────────────────────────────────────────┐
@@ -32,7 +34,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 리엔지니어링 주요 활동
 
@@ -60,7 +62,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 리엔지니어링 | 완전 재개발 | 유지보수 |
 |:---|:---|:---|:---|
@@ -73,7 +75,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 레거시 COBOL → Java 마이그레이션
 - 역공학으로 COBOL 비즈니스 로직 추출 → UML 다이어그램 생성.
@@ -88,7 +90,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

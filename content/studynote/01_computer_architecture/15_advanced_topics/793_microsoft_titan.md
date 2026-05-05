@@ -5,15 +5,17 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Microsoft Titan(Azure Hardware RoT)은 Azure 클라우드 서버의 무결성을 보장하기 위해 설계된 전용 보안 하드웨어로, NIST SP 800-193 가이드라인인 플랫폼 펌웨어 회복력 (PFR, Platform Firmware Resiliency)을 하드웨어 수준에서 구현한다.
+> **핵심**: Microsoft Titan(Azure Hardware RoT)은 Azure 클라우드 서버의 무결성을 보장하기 위해 설계된 전용 보안 하드웨어로, NIST SP 800-193 가이드라인인 플랫폼 펌웨어 회복력 (PFR, Platform Firmware Resiliency)을 하드웨어 수준에서 구현한다.
 > 2. **가치**: 호스트 시스템의 플래시 메모리와 칩셋 사이에서 통신을 감시(Interposition)하여 인가되지 않은 펌웨어 쓰기 시도를 차단하고, 공격 시도 감지 및 안전한 상태로의 자동 복구를 지원한다.
 > 3. **융합**: Microsoft Pluton (PC용 보안 프로세서) 및 Project Cerberus (오픈 소스 하드웨어 RoT 표준)와 기술적 근예를 공유하며, 클라우드 인프라의 투명성과 신뢰성을 물리적 계층부터 확립하는 핵심 요소다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: Microsoft Titan(Azure 하드웨어 RoT)은 Azure 데이터 센터의 서버 메인보드에 탑재되는 보안 마이크로컨트롤러다. 이 칩은 서버의 모든 펌웨어(BIOS, BMC, 네트워크 카드 펌웨어 등)가 실행되기 전과 실행되는 동안 그 무결성을 지속적으로 감시하며, 플랫폼 펌웨어 회복력 (PFR, Platform Firmware Resiliency) 표준에 따라 보호(Protect), 감지(Detect), 복구(Recover)의 3대 기능을 수행한다.
 
@@ -58,7 +60,7 @@ Titan 보안 칩이 서버 아키텍처 상에서 어떻게 위치하여 감시�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -126,7 +128,7 @@ Titan은 호스트 시스템의 전원이 켜지는 순간부터 운영체제가
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 기술 비교: Microsoft Titan vs Microsoft Pluton
 
@@ -149,7 +151,7 @@ Microsoft는 소비자용 기기에는 CPU 내부에 통합된 Pluton을 사용�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -170,7 +172,7 @@ Microsoft는 소비자용 기기에는 CPU 내부에 통합된 Pluton을 사용�
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-network"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. B8ZS(Bipolar with 8-Zero Substitution)와 HDB3(High-Density Bipolar 3)은 T1/E1 통신에서 연속 0 비트의 동기화 손실을 방지하기 위한 회선 코딩 규칙으로, 정규 신호를 위반하는 특수 패턴(Violation)을 삽입해 수신측이 0 대체 위치를 역으로 식별한다.
 > 2. AMI(Alternate Mark Inversion) 규칙에서 연속된 0은 전압이 없으므로 수신측이 클럭을 잃어버리는데, B8ZS는 8개 0을 4칸 패턴으로 대체하고 HDB3은 4개 0을 V(Violation)+B(Balancing) 조합으로 대체한다.
 > 3. B8ZS는 북미 T1(1.544Mbps), HDB3은 유럽 E1(2.048Mbps)의 표준 스크램블링 방식으로 — 각각 ITU-T G.703 표준에 포함되어 있으며 DSL, ISDN, T1/E1 인터페이스 장비에 필수 구현된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. AMI와 연속 0 문제
+## 1. 개요 및 필요성
 
 ```
 AMI (Alternate Mark Inversion) 코딩:
@@ -43,7 +46,7 @@ AMI (Alternate Mark Inversion) 코딩:
 
 ---
 
-## Ⅱ. B8ZS (Bipolar with 8-Zero Substitution)
+## 2. 구성요소
 
 ```
 B8ZS 규칙:
@@ -82,7 +85,7 @@ B8ZS 규칙:
 
 ---
 
-## Ⅲ. HDB3 (High-Density Bipolar 3)
+## 3. 구조 및 동작 원리
 
 ```
 HDB3 규칙:
@@ -121,7 +124,7 @@ HDB3 규칙:
 
 ---
 
-## Ⅳ. B8ZS vs HDB3 비교
+## 4. 비교 및 트레이드오프
 
 ```
 비교표:
@@ -152,7 +155,7 @@ DC 균형           | V 2개로 자동 균형     | B bit로 균형 유지
 
 ---
 
-## Ⅴ. 실무 시나리오 — T1/E1 인터페이스
+## 5. 실무 적용 및 최적화 기법
 
 ```
 기업 전용선 T1/E1 구성:

@@ -4,11 +4,14 @@ date = "2026-03-04"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 디자인 씽킹(Design Thinking)은 인간 중심(Human-Centered) 문제 해결 접근법으로, 기술 가능성(Feasibility)·사업 타당성(Viability)보다 사람의 요구(Desirability)를 먼저 이해하고, 빠른 프로토타이핑과 테스트로 해결책을 반복 개선한다.
 > 2. IDEO/Stanford d.school의 5단계(Empathize→Define→Ideate→Prototype→Test)는 선형 프로세스가 아닌 반복 루프 — 테스트 결과가 초기 공감 단계로 되돌아가는 것이 올바른 디자인 씽킹이다.
 > 3. IT 제품 개발에서 디자인 씽킹의 실질적 가치는 '올바른 문제를 정의하는 것' — 개발팀이 생각한 문제와 사용자가 실제로 겪는 문제가 다른 경우(Product-Solution Fit 실패)를 방지하는 전략적 도구다.
+
+> 📝 모범 답안
 
 ---
 

@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: IaC(Infrastructure as Code)는 인프라 구성을 코드로 선언하여 버전 관리, 재현성, 자동화를 확보하는 방법론이며, Terraform은 그 사실상 표준 도구다.
+> **핵심**: IaC(Infrastructure as Code)는 인프라 구성을 코드로 선언하여 버전 관리, 재현성, 자동화를 확보하는 방법론이며, Terraform은 그 사실상 표준 도구다.
 > 2. **가치**: 불변 인프라(Immutable Infrastructure)는 서버를 수정하는 대신 새 이미지로 교체하여 구성 편류(Configuration Drift)를 근본적으로 차단한다.
 > 3. **판단 포인트**: GitOps 파이프라인에서 인프라 변경도 PR/코드 리뷰를 거치게 하면, 감사 추적(Audit Trail)과 협업이 동시에 실현된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 전통적인 인프라 관리는 담당자가 수동으로 서버에 접속하여 설정을 변경하는 방식이었다. 이 방식은 시간이 지남에 따라 서버마다 설정이 달라지는 **구성 편류(Configuration Drift)** 문제를 유발한다. 어느 서버는 Apache 2.4.29, 다른 서버는 2.4.41이 설치되어 있는 식이다.
 
@@ -28,7 +29,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 **Terraform(HCL) Plan-Apply 워크플로**:
 
@@ -63,7 +64,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **Terraform 모듈(Module)**: 반복 사용하는 인프라 패턴을 재사용 가능한 코드 블록으로 캡슐화. 예: VPC 모듈, EKS 클러스터 모듈. Terraform Registry에서 공개 모듈 활용 가능.
 
@@ -75,7 +76,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **기술사 시험 판단 포인트**:
 1. 선언적(Declarative) vs 절차적(Procedural) IaC의 차이를 Terraform vs Ansible로 대비 설명한다.
@@ -88,7 +89,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 IaC와 불변 인프라를 도입하면:
 - **재현성 100%**: 동일 코드 → 동일 환경, 재난 복구 시 수 분 내 인프라 재생성

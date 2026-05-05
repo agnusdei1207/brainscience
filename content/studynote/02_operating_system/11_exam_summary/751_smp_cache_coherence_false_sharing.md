@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# SMP 캐시 일관성과 폴스 셰어링 (Cache Coherence & False Sharing)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 대칭형 다중 처리 (SMP, Symmetric Multiprocessing) 아키텍처에서 각 CPU 코어는 자신만의 독립적인 캐시(L1/L2)를 갖는다. 여러 코어가 동일한 메모리를 바라볼 때 발생하는 **캐시 불일치 문제를 해결하는 하드웨어 규칙이 캐시 일관성(Cache Coherence)**이며, 이 규칙 때문에 발생하는 **소프트웨어적 성능 저하의 함정이 폴스 셰어링(False Sharing)**이다.
+> **핵심**: 대칭형 다중 처리 (SMP, Symmetric Multiprocessing) 아키텍처에서 각 CPU 코어는 자신만의 독립적인 캐시(L1/L2)를 갖는다. 여러 코어가 동일한 메모리를 바라볼 때 발생하는 **캐시 불일치 문제를 해결하는 하드웨어 규칙이 캐시 일관성(Cache Coherence)**이며, 이 규칙 때문에 발생하는 **소프트웨어적 성능 저하의 함정이 폴스 셰어링(False Sharing)**이다.
 > 2. **가치**: 캐시 일관성(MESI 프로토콜) 덕분에 프로그래머는 멀티코어 환경에서도 메모리가 꼬이는 것을 덜 걱정하며 개발할 수 있지만, 캐시 라인(64 Byte)이라는 최소 전송 단위 때문에 의도치 않은 '가짜 공유(False Sharing)' 병목이 터진다.
 > 3. **융합**: 이는 컴퓨터 구조의 캐시 하드웨어 매커니즘과 운영체제의 스레드 스케줄링, 그리고 고성능 C/C++ 멀티스레딩 프로그래밍(메모리 정렬, 패딩)이 완벽하게 맞물려 폭발하는 극한의 트러블슈팅 주제다.
 
+> 📝 모범 답안
+
+# SMP 캐시 일관성과 폴스 셰어링 (Cache Coherence & False Sharing)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **캐시 일관성 (Cache Coherence)**: 여러 CPU 코어가 각각 자신의 L1 캐시를 가지고 있을 때, 코어 1이 변수 `A`를 수정하면, 코어 2의 캐시에 들어있는 옛날 변수 `A`의 값이 '쓰레기(Invalid)'가 됨을 즉시 알려주어 데이터의 무결성을 유지하는 하드웨어 동기화 프로토콜(예: MESI).
@@ -65,7 +67,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### MESI 캐시 일관성 프로토콜의 4가지 상태
 
@@ -115,7 +117,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 진성 공유 (True Sharing) vs 폴스 셰어링 (False Sharing)
 
@@ -136,7 +138,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 최적화 아키텍처
 
@@ -179,7 +181,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

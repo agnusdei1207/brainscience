@@ -2,15 +2,17 @@
 title = "227. PAP (Password Authentication Protocol) - 클리어텍스트 인증"
 weight = 227
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: PAP (Password Authentication Protocol)는 점대점 프로토콜(PPP) 링크 설정 과정에서 사용되는 가장 기초적인 2-Way 핸드셰이크 기반의 평문(Cleartext) 인증 방식이다.
+> **핵심**: PAP (Password Authentication Protocol)는 점대점 프로토콜(PPP) 링크 설정 과정에서 사용되는 가장 기초적인 2-Way 핸드셰이크 기반의 평문(Cleartext) 인증 방식이다.
 > 2. **취약점**: 클라이언트가 아이디와 비밀번호를 암호화 없이 네트워크 상으로 그대로 전송하므로, 스니핑(Sniffing)이나 중간자 공격(MITM)에 극도로 취약하다는 치명적인 약점이 있다.
 > 3. **용도**: 보안성이 보장된 폐쇄망이나 낡은 레거시 장비에서만 제한적으로 사용되며, 최신 네트워크 환경에서는 거의 반드시 CHAP(Challenge Handshake Authentication Protocol) 등 상위 인증 프로토콜로 대체된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: PAP (Password Authentication Protocol)는 PPP (Point-to-Point Protocol) 연결의 LCP 협상 이후에 수행되는 간단한 사용자 인증 프로토콜이다. 접속을 요청하는 클라이언트가 서버에게 자신의 ID와 Password를 전송하면, 서버가 이를 확인하고 승인(ACK) 또는 거절(NAK)을 응답한다.
 
@@ -22,7 +24,7 @@ weight = 227
 
 ---
 
-## Ⅱ. PAP의 동작 원리와 한계 (Deep Dive)
+## 2. 구성요소
 
 ### 1. 2-Way 핸드셰이크 구조
 PAP는 클라이언트가 능동적으로 자격 증명을 제시하는 방식(Client-driven)이다. 연결 과정은 매우 단순한 두 단계(요청-응답)로 이루어진다.

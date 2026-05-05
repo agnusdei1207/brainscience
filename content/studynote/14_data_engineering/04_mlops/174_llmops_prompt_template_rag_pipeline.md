@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: LLMOps (Large Language Model Operations)는 LLM (Large Language Model)의 생산 배포·운영에 특화된 MLOps로, 프롬프트 관리·RAG 파이프라인·PEFT 파인튜닝·할루시네이션 모니터링을 포괄한다.
+> **핵심**: LLMOps (Large Language Model Operations)는 LLM (Large Language Model)의 생산 배포·운영에 특화된 MLOps로, 프롬프트 관리·RAG 파이프라인·PEFT 파인튜닝·할루시네이션 모니터링을 포괄한다.
 > 2. **가치**: RAG (Retrieval-Augmented Generation)는 지식 업데이트 비용을 파인튜닝 대비 1/100 이하로 절감하고, PEFT (Parameter-Efficient Fine-Tuning)는 전체 파라미터의 1% 미만 학습으로 도메인 적응을 가능하게 한다.
 > 3. **판단 포인트**: RAG는 자주 변하는 최신 지식 반영, Fine-tuning은 모델 행동 양식(말투·형식)·도메인 전문성 학습에 적합하므로, 두 가지를 상황에 따라 조합해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 LLMOps의 등장 배경
 
@@ -46,7 +48,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 RAG (Retrieval-Augmented Generation) 파이프라인
 
@@ -167,7 +169,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 RAG vs Fine-tuning 선택 기준
 
@@ -204,7 +206,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 LangChain RAG 구현
 
@@ -300,7 +302,7 @@ model.print_trainable_parameters()
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 LLMOps 도입 효과
 

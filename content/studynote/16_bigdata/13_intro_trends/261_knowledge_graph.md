@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 지식 그래프(Knowledge Graph)는 현실 세계의 개체(Entity)와 관계(Relation)를 그래프 구조로 표현하는 시맨틱 데이터 모델 — "구글은 미국의 회사이다", "팀 쿡은 애플의 CEO이다"처럼 삼중항(Triple: Subject-Predicate-Object)으로 사실을 구조화한다.
 > 2. 지식 그래프가 LLM의 환각(Hallucination)을 보완하는 신뢰성 있는 지식 기반으로 부상 — 벡터 DB가 의미적 유사성으로 검색한다면, 지식 그래프는 논리적 추론과 명시적 관계 탐색으로 더 정확하고 설명 가능한 결과를 제공한다.
 > 3. 구글 지식 패널, ChatGPT의 사실 기반 응답, Wikidata, DBpedia 등 현대 검색·AI의 핵심 인프라 — 2012년 구글이 "Knowledge Graph"를 공식 발표하며 검색을 "키워드 매칭"에서 "개체 이해"로 전환한 것이 패러다임 전환의 분기점이었다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 지식 그래프 기본 구조
+## 1. 개요 및 필요성
 
 ```
 지식 그래프 (Knowledge Graph):
@@ -65,7 +68,7 @@ RDF (Resource Description Framework):
 
 ---
 
-## Ⅱ. 주요 지식 그래프
+## 2. 구성요소
 
 ```
 주요 지식 그래프:
@@ -109,7 +112,7 @@ RDF (Resource Description Framework):
 
 ---
 
-## Ⅲ. 지식 그래프 임베딩
+## 3. 구조 및 동작 원리
 
 ```
 지식 그래프 임베딩 (KGE):
@@ -151,7 +154,7 @@ TransE (2013):
 
 ---
 
-## Ⅳ. Graph RAG
+## 4. 비교 및 트레이드오프
 
 ```
 Graph RAG (Knowledge Graph + RAG):
@@ -201,7 +204,7 @@ Neo4j + LLM:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 금융 지식 그래프
+## 5. 실무 적용 및 최적화 기법
 
 ```
 글로벌 은행 금융 지식 그래프 구축:

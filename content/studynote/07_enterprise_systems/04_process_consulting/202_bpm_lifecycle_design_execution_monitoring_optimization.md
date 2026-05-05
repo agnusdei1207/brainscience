@@ -5,19 +5,21 @@ date = "2026-04-10"
 [extra]
 categories = "studynote-enterprise"
 +++
-
-# 202. BPM (Business Process Management) 라이프사이클 
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 기업의 업무 흐름(프로세스)을 한 번 시스템으로 뚝딱 만들고 끝내는 과거의 SI 방식을 버리고, **마치 생명체처럼 "업무 그림을 그린다(설계) $\rightarrow$ 시스템으로 돌린다(실행) $\rightarrow$ 어디서 병목이 터지는지 본다(모니터링) $\rightarrow$ 다시 그림을 수정해서 뜯어고친다(최적화)"라는 4단계를 무한히 뱅글뱅글 반복(순환)하며 회사의 체질을 영원히 진화시키는 'BPM 라이프사이클'**을 다룹니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# 202. BPM (Business Process Management) 라이프사이클 
+
 > 1. **본질**: 비즈니스 업무 흐름(대출 심사, 환불 처리 등)을 코딩(하드코딩)의 영역에서 빼내어, 마우스로 그리는 그림(BPMN)으로 바꾼 뒤 이를 끝없이 개선해 나가는 경영학적이고 소프트웨어적인 애자일(Agile) 순환 고리다.
 > 2. **가치**: "우리 회사 환불 처리는 왜 3일이나 걸려?"라는 사장님의 분노에, "데이터를 보니 2번 부서 결재에서 이틀이 썩고 있네요. 이 단계를 AI 자동 승인으로 오늘 바로 교체하겠습니다"라고 즉각 응답하고 개선할 수 있는 통제력과 민첩성(Agility)을 획득한다.
 > 3. **기술 체계**: **설계(Design) $\rightarrow$ 실행(Execution/Orchestration) $\rightarrow$ 모니터링(BAM, 가시성) $\rightarrow$ 최적화(Optimization, BPR)**라는 4단계 톱니바퀴가 끊임없이 맞물려 돌아가며 시스템(IT)과 현업(비즈니스)의 간극을 0으로 수렴시킨다.
 
 ---
 
-### Ⅰ. 1단계 설계(Design) & 2단계 실행(Execution)
+### 1. 개요 및 필요성
 그림이 곧 코드가 되어 컨베이어 벨트를 굴린다.
 
 1. **설계 (Process Design & Modeling)**:
@@ -33,7 +35,7 @@ categories = "studynote-enterprise"
 
 ---
 
-### Ⅱ. 3단계 모니터링(Monitoring)과 병목(Bottleneck) 추적
+### 2. 구성요소
 엔진이 돌아가면 엑스레이 카메라를 켜고 핏줄이 막힌 곳을 찾는다.
 
 1. **가시성의 결여 (이메일 릴레이의 한계)**:
@@ -48,7 +50,7 @@ categories = "studynote-enterprise"
 
 ---
 
-### Ⅲ. 4단계 최적화(Optimization): 무한 진화의 굴레
+### 3. 구조 및 동작 원리
 막힌 핏줄을 발견했으면, 그림을 지우개로 지우고 새 핏줄을 뚫는다.
 
 1. **BPR (Business Process Reengineering)로의 연결**:

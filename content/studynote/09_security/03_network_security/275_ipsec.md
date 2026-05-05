@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: IPsec (Internet Protocol Security)은 IP 패킷 자체를 인증·암호화하는 **네트워크 레이어(Layer 3)** 보안 프레임워크로, 상위 애플리케이션이 변경 없이 투명하게 보호받는 것이 핵심 가치다.
+> **핵심**: IPsec (Internet Protocol Security)은 IP 패킷 자체를 인증·암호화하는 **네트워크 레이어(Layer 3)** 보안 프레임워크로, 상위 애플리케이션이 변경 없이 투명하게 보호받는 것이 핵심 가치다.
 > 2. **가치**: RFC 4301로 표준화된 IPsec은 VPN (Virtual Private Network)의 핵심 프로토콜로, AH (Authentication Header)와 ESP (Encapsulating Security Payload) 두 프로토콜을 Transport/Tunnel 두 모드로 운용한다.
 > 3. **판단 포인트**: IPsec은 구성 요소(AH/ESP/IKE)와 모드(Transport/Tunnel)의 조합이 복잡하므로, 각 컴포넌트의 역할과 적용 시나리오를 매트릭스로 정리해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 인터넷의 기반 프로토콜인 IP는 보안을 전혀 고려하지 않고 설계됐다. 패킷 위조, 도청, 재전송 공격에 원천적으로 취약하다. TLS (Transport Layer Security)가 응용 레이어에서 특정 애플리케이션을 보호하는 반면, IPsec은 **IP 계층에서 모든 트래픽을 투명하게 보호**한다는 차별점이 있다.
 
@@ -27,7 +29,7 @@ IPsec은 1990년대 IETF (Internet Engineering Task Force)에서 IPv6 필수 요
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### IPsec 컴포넌트 구조
 
@@ -78,7 +80,7 @@ IPsec은 1990년대 IETF (Internet Engineering Task Force)에서 IPv6 필수 요
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### IPsec vs TLS vs SSH 비교
 
@@ -104,7 +106,7 @@ IPsec은 1990년대 IETF (Internet Engineering Task Force)에서 IPv6 필수 요
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **Linux strongSwan 기반 IPsec VPN 설정 예시**
 
@@ -137,7 +139,7 @@ conn site-to-site
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 IPsec은 네트워크 인프라 수준의 보안을 제공하는 성숙한 표준으로, 기업 VPN의 70% 이상이 IPsec 기반이다. 특히 MPLS (Multiprotocol Label Switching) 대체 SD-WAN (Software-Defined WAN) 솔루션이 증가하면서 IPsec over 인터넷의 중요성이 더 커졌다.
 

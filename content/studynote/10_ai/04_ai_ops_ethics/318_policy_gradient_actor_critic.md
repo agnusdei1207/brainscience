@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 정책 경사 (Policy Gradient)는 Q값을 통해 행동을 간접 유도하는 Q-러닝과 달리, **정책(Policy) π_θ(a|s)를 파라미터 θ로 직접 표현하고 기대 보상의 그래디언트로 정책 파라미터를 직접 최적화**하는 강화 학습 방법론이다.
+> **핵심**: 정책 경사 (Policy Gradient)는 Q값을 통해 행동을 간접 유도하는 Q-러닝과 달리, **정책(Policy) π_θ(a|s)를 파라미터 θ로 직접 표현하고 기대 보상의 그래디언트로 정책 파라미터를 직접 최적화**하는 강화 학습 방법론이다.
 > 2. **가치**: 연속 행동 공간(로봇 관절 토크, 자율주행 핸들 각도)에서 DQN이 불가능한 문제를 처리 가능하고, Actor-Critic(AC) 구조는 정책 경사의 분산(Variance) 문제를 가치 함수(Critic)로 안정화하여 현대 Deep RL의 표준 구조가 됐다.
 > 3. **판단 포인트**: RLHF (Reinforcement Learning from Human Feedback)에서 LLM 정렬에 사용되는 PPO (Proximal Policy Optimization)가 Actor-Critic의 대표 알고리즘이며, ChatGPT·Claude·Gemini 모두 PPO 기반 RLHF로 정렬됐다는 것이 기술사 필수 지식이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 로봇 팔이 공을 잡으려면 관절 토크를 연속 실수값으로 출력해야 한다. DQN은 "버튼 3번 누르기" 같은 이산 행동에만 적합하고, 이런 연속 제어에는 부적합하다. 또한 DQN은 Q값 최대화를 통해 정책을 간접 유도하여, Q값 과대추정 등의 문제가 있다.
 
@@ -23,7 +25,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```text
 ┌──────────────────────────────────────────────────────────────────┐
@@ -70,7 +72,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **RLHF (Reinforcement Learning from Human Feedback)**:
 1. SFT (Supervised Fine-Tuning): 이상적 응답으로 LLM 파인 튜닝
@@ -83,7 +85,7 @@ ChatGPT, Claude, Gemini 모두 이 3단계 RLHF 파이프라인을 사용하여 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **PPO 하이퍼파라미터 설계**:
 - `clip_range` ε: 0.1~0.2. 정책 변화 허용 범위. 클수록 빠르지만 불안정
@@ -97,7 +99,7 @@ ChatGPT, Claude, Gemini 모두 이 3단계 RLHF 파이프라인을 사용하여 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 정책 경사와 Actor-Critic은 Deep RL의 연속 제어 문제를 해결하고, RLHF를 통해 LLM 정렬의 핵심이 됐다. PPO는 구현 단순성과 강건성 덕분에 OpenAI Gym부터 ChatGPT까지 거의 모든 RL 응용의 첫 번째 선택지로 자리 잡았다. Actor(생성)와 Critic(평가)의 이중 구조는 GAN의 생성자-판별자와 개념적으로 유사하며, "두 네트워크의 경쟁·협력으로 최적화"하는 철학이 현대 AI의 핵심 패턴으로 자리 잡고 있다.
 

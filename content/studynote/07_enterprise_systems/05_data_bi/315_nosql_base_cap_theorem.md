@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: CAP 정리는 분산 시스템이 Consistency(일관성), Availability(가용성), Partition Tolerance(분단 내성) 셋 중 둘만 동시에 완전히 보장할 수 있다는 이론이다.
+> **핵심**: CAP 정리는 분산 시스템이 Consistency(일관성), Availability(가용성), Partition Tolerance(분단 내성) 셋 중 둘만 동시에 완전히 보장할 수 있다는 이론이다.
 > 2. **가치**: BASE (Basically Available, Soft state, Eventually consistent)는 CAP의 AP 선택 결과로, 높은 가용성과 수평 확장을 택하는 대신 일시적 불일관성을 허용한다.
 > 3. **판단 포인트**: 금융 거래·재고 관리는 ACID/CP가 필수이고, 소셜 피드·장바구니는 BASE/AP로 가용성 우선이 적합하다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 단일 서버 관계형 DB는 ACID (Atomicity, Consistency, Isolation, Durability) 트랜잭션으로 강한 일관성을 보장한다.
 그러나 수평 확장이 필요한 분산 시스템에서는 네트워크 분단(Partition)이 반드시 발생하므로, Eric Brewer가 2000년에 발표한 CAP 정리에 따라 C 또는 A 중 하나를 타협해야 한다.
@@ -26,7 +27,7 @@ CAP 정리 3 속성:
 
 📢 **섹션 요약 비유**: CAP는 "맛있고, 빠르고, 저렴한" 식당의 삼각형이다. 세 가지를 동시에 모두 갖추기는 불가능하다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### CP vs AP 시스템 분류
 
@@ -88,7 +89,7 @@ CAP 정리 3 속성:
 
 📢 **섹션 요약 비유**: 결과적 일관성은 소문이다. 처음엔 사람마다 다르게 알지만, 시간이 지나면 모두 같은 내용을 알게 된다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### PACELC 확장 정리
 
@@ -105,7 +106,7 @@ CAP의 한계를 보완한 PACELC (Partition → AP or CP, Else → Latency or C
 
 📢 **섹션 요약 비유**: PACELC는 CAP보다 현실적인 지도다. 평상시 운전 규칙(Else)과 사고 시 대응(Partition)을 모두 다룬다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 일관성 모델 선택 체크리스트
 
@@ -123,7 +124,7 @@ CAP의 한계를 보완한 PACELC (Partition → AP or CP, Else → Latency or C
 
 📢 **섹션 요약 비유**: 재고 차감에 AP DB를 쓰는 건 여러 계산대에서 동시에 마지막 상품을 판매하는 것이다. 손님 2명이 같은 물건을 사고 집에 가면 한 명은 빈손이다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### BASE 설계 적합 영역
 

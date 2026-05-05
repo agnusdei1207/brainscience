@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Transformer는 **순환(RNN) 없이 Self-Attention만으로 시퀀스를 병렬 처리**하는 아키텍처이며, "Attention Is All You Need"(Vaswani, 2017)에서 제안되어 현대 AI의 **사실상 유일한 기반 아키텍처**가 되었다.
+> **핵심**: Transformer는 **순환(RNN) 없이 Self-Attention만으로 시퀀스를 병렬 처리**하는 아키텍처이며, "Attention Is All You Need"(Vaswani, 2017)에서 제안되어 현대 AI의 **사실상 유일한 기반 아키텍처**가 되었다.
 > 2. **가치**: RNN은 시퀀스를 순차 처리하여 **병렬화 불가·장거리 의존성 약화**라는 근본 한계가 있었으나, Transformer는 **모든 위치를 동시에 참조(Self-Attention)**하고 **GPU 병렬화가 가능**하여 학습 속도와 성능을 혁신적으로 개선했다.
 > 3. **판단 포인트**: **인코더-디코더 구조**(기계 번역), **인코더만**(BERT, 분류), **디코더만**(GPT, 생성)의 3가지 변형을 구분하고, Multi-Head Attention·Positional Encoding·Layer Normalization이 핵심 구성 요소이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -37,7 +39,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 핵심 구성 요소
 
@@ -61,7 +63,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | RNN | LSTM | Transformer |
 |:---|:---|:---|:---|
@@ -71,7 +73,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Transformer 적용 분야
 - NLP: BERT·GPT·T5.
@@ -81,7 +83,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Transformer는 **현대 AI의 단일 기반 아키텍처**이며, NLP를 넘어 Vision·Audio·Multimodal까지 적용되어 AI 패러다임을 완전히 바꾸었다.
 

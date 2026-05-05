@@ -5,15 +5,17 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 약결합 시스템 (Loosely Coupled System)은 각 프로세서가 자신만의 독립된 메모리(Local Memory)를 가지며, 네트워크를 통한 메시지 패싱(Message Passing) 방식으로 협업하는 분산 컴퓨팅 시스템이다.
+> **핵심**: 약결합 시스템 (Loosely Coupled System)은 각 프로세서가 자신만의 독립된 메모리(Local Memory)를 가지며, 네트워크를 통한 메시지 패싱(Message Passing) 방식으로 협업하는 분산 컴퓨팅 시스템이다.
 > 2. **가치**: 자원 공유로 인한 병목이 없어 무한에 가까운 수평적 확장(Scale-out)이 가능하고, 특정 노드 장애가 전체로 전파되지 않는 높은 결함 허용(Fault Tolerance) 능력을 제공한다.
 > 3. **융합**: 현대의 클라우드 컴퓨팅, 마이크로서비스 아키텍처(MSA), 빅데이터 분산 처리(Hadoop/Spark)의 물리적 근간이며, 네트워크 지연 시간(Latency)과 데이터 일관성(Consistency) 관리가 성능의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 약결합 시스템 (Loosely Coupled System)은 여러 개의 독립적인 컴퓨터 노드들이 고속 네트워크로 연결되어 하나의 시스템처럼 동작하는 아키텍처다. 각 노드는 자체 프로세서, 메모리, 운영체제 (OS, Operating System)를 독립적으로 보유하며, 데이터 공유는 공유 메모리가 아닌 네트워크를 통한 메시지 교환 (Message Passing)으로 이루어진다.
 
@@ -50,7 +52,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -119,7 +121,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 약결합 (Loosely Coupled) vs 강결합 (Tightly Coupled) 심층 비교
 
@@ -138,7 +140,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -159,7 +161,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

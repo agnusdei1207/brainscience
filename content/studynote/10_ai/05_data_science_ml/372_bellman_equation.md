@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 벨만 방정식(Bellman Equation)은 강화학습(Reinforcement Learning)에서 "현재 상태의 가치 = 즉각 보상 + 미래 최적 가치의 할인합"이라는 재귀적(Recursive) 관계로 최적 정책(Optimal Policy)을 수식화한다.
+> **핵심**: 벨만 방정식(Bellman Equation)은 강화학습(Reinforcement Learning)에서 "현재 상태의 가치 = 즉각 보상 + 미래 최적 가치의 할인합"이라는 재귀적(Recursive) 관계로 최적 정책(Optimal Policy)을 수식화한다.
 > 2. **가치**: Q-러닝(Q-Learning) 업데이트 Q(s,a) ← Q(s,a) + α[R + γ·max_a'Q(s',a') - Q(s,a)]는 벨만 최적 방정식의 반복적 근사로, 모델(환경 동역학) 없이도 최적 행동 가치 함수(Optimal Action-Value Function)를 학습한다.
 > 3. **판단 포인트**: 할인 인수(Discount Factor) γ는 미래 보상의 현재 가치를 결정하며, γ = 1이면 미래와 현재를 동등하게 보고(무한 수평선 문제), γ = 0이면 즉각 보상만 고려한다. 탐험-착취 균형(Exploration-Exploitation Tradeoff)은 Q-러닝 수렴의 전제 조건이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 강화학습(RL, Reinforcement Learning)의 목표는 에이전트(Agent)가 환경(Environment)과 상호작용하며 누적 보상(Cumulative Reward)을 최대화하는 정책(Policy) π를 학습하는 것이다.
 
@@ -27,7 +29,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 벨만 기대 방정식 (Bellman Expectation Equation)
 
@@ -90,7 +92,7 @@ Q(s,a) ← Q(s,a) + α · [R + γ · max_{a'} Q(s', a') - Q(s,a)]
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 방법 | 모델 필요 | 업데이트 방식 | 특징 |
 |:---|:---|:---|:---|
@@ -108,7 +110,7 @@ Q(s,a) ← Q(s,a) + α · [R + γ · max_{a'} Q(s', a') - Q(s,a)]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **DQN (Deep Q-Network) 확장**: Q-테이블(Q-Table) 대신 신경망으로 Q(s,a;θ) 근사. DeepMind의 Atari 게임 학습에 적용하여 인간 수준 성능 달성.
 
@@ -127,7 +129,7 @@ DQN의 핵심 기법:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 벨만 방정식은 강화학습 알고리즘의 수학적 기반으로, Q-러닝, SARSA, 정책 그래디언트(Policy Gradient) 등 모든 방법의 이론적 출발점이다. 재귀적 최적성 원칙은 복잡한 순차 결정 문제를 단일 단계 최적화로 분해하는 강력한 도구다.
 

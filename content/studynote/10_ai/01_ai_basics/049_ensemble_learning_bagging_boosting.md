@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 앙상블 학습(Ensemble Learning)은 여러 약한 학습기(Weak Learner)를 결합하여 하나의 강한 학습기(Strong Learner)를 만드는 방법 — "두 머리가 하나보다 낫다"는 집단 지성의 수학적 구현이며, 단일 모델보다 낮은 분산(Variance) 또는 편향(Bias)을 달성한다.
 > 2. 배깅(Bagging)은 분산을 줄이고, 부스팅(Boosting)은 편향을 줄이는 상이한 메커니즘 — 배깅은 부트스트랩 샘플로 독립적 모델을 병렬 훈련하여 과적합을 방지하고, 부스팅은 이전 모델의 오류에 집중하여 순차적으로 편향을 낮춘다.
 > 3. XGBoost·LightGBM·CatBoost가 정형 데이터 경진 대회의 절대 강자인 이유가 바로 부스팅의 편향-분산 최적화 — 딥러닝이 이미지·자연어를 석권한 이후에도 표 형식 데이터(Tabular Data)에서 그래디언트 부스팅 기반 모델이 가장 높은 성능을 보인다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 앙상블 개요
+## 1. 개요 및 필요성
 
 ```
 앙상블 학습 (Ensemble Learning):
@@ -53,7 +56,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 배깅 (Bagging)
+## 2. 구성요소
 
 ```
 Bagging (Bootstrap Aggregating):
@@ -103,7 +106,7 @@ Random Forest (랜덤 포레스트):
 
 ---
 
-## Ⅲ. 부스팅 (Boosting)
+## 3. 구조 및 동작 원리
 
 ```
 Boosting:
@@ -157,7 +160,7 @@ CatBoost:
 
 ---
 
-## Ⅳ. 스태킹과 비교
+## 4. 비교 및 트레이드오프
 
 ```
 스태킹 (Stacking):
@@ -199,7 +202,7 @@ CatBoost:
 
 ---
 
-## Ⅴ. 실무 시나리오 — Kaggle 신용 위험 예측
+## 5. 실무 적용 및 최적화 기법
 
 ```
 Kaggle Credit Risk 대회 앙상블 전략:

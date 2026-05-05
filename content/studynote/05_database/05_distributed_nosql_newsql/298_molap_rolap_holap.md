@@ -2,17 +2,19 @@
 title = "298. 몽고DB (MongoDB) 아키텍처 - 레플리카 셋 (Replica Set), 샤드 클러스터 (mongos, config server, shard)"
 weight = 298
 +++
+## 0. 핵심 인사이트
 
-# 298. MOLAP, ROLAP, HOLAP
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: MOLAP, ROLAP, HOLAP는 OLAP를 구현하는 3가지 주요 방식으로, 데이터 저장 위치와 연산 수행 위치에 따라 구분된다. MOLAP는 사전 집계된 큐브를 메모리에, ROLAP는 관계형 DB에 직접 查询하고, HOLAP는 둘의 hybrid이다.
+> **핵심**: MOLAP, ROLAP, HOLAP는 OLAP를 구현하는 3가지 주요 방식으로, 데이터 저장 위치와 연산 수행 위치에 따라 구분된다. MOLAP는 사전 집계된 큐브를 메모리에, ROLAP는 관계형 DB에 직접 查询하고, HOLAP는 둘의 hybrid이다.
 > 2. **가치**: MOLAP는 빠른 查询 성능, ROLAP는 대량 데이터 처리, HOLAP는 둘의 균형점을 제공한다.
 > 3. **융합**: 다차원 큐브, 스타 스키마, 관계형 DB, 파티셔닝, 인덱싱, 스토리지 아키텍처와 밀접하게 연관된다.
 
+> 📝 모범 답안
+
+# 298. MOLAP, ROLAP, HOLAP
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 MOLAP(Multidimensional OLAP), ROLAP(Relational OLAP), HOLAP(Hybrid OLAP)는 OLAP(On-Line Analytical Processing)를 구현하는 3가지アーキテク처 방식이다. OLAP의核心機能은 다차원 데이터 모델(스타 스키마 기반)에서 빠른 분석 查询을 수행하는 것이지만, 이를 구현하는 방법은 다양하다. MOLAP는 다차원 큐브를 사전에 생성하여 메모리/디스크에 저장하고 빠른 응답을 제공하고, ROLAP는 관계형 DB(스타 스키마)에 直接 SQL을 실행하여 데이터를 가져오며, HOLAP는 둘을 결합하여 상황에 따라 최적의 접근 방식을 선택한다.
@@ -30,7 +32,7 @@ MOLAP, ROLAP, HOLAP의 차이는大型超市의 식품 진열 방식과 같다. 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 3가지 OLAP 방식 비교
 
@@ -249,15 +251,13 @@ MOLAP, ROLAP, HOLAP는 각각 다른 트레이드오프를 가진다. MOLAP는 �
 
 ---
 
-## Ⅲ. 결론
+## 3. 구조 및 동작 원리
 
 MOLAP, ROLAP, HOLAP는 OLAP를 구현하는 세 가지主要 방식으로, 각각 고유한 특성과 적합한场景이 있다. MOLAP는 빠른 查询 성능이 필요한 KPI 대시보드, 사전 정의된 보고서 등에 적합하고, ROLAP는 대량의 상세 데이터에 대한 Ad-hoc 분석이 필요한 경우에 적합하다. HOLAP는 둘의 균형을 이루어,Enterprise 환경에서 다양한 분석 필요에 대응할 수 있다. Modern Cloud DW의 등장으로 전통적인 구분은 희미해지고 있지만, 이러한 트레이드오프 개념은 여전히 OLAP 시스템 설계에서 중요한 판단 기준이다.
 
 📢 섹션 요약: MOLAP/ROLAP/HOLAP는 查询性能, 데이터 量, fresheness에서 서로 다른 트레이드오프를 가지며, 조직의 분석 필요에 따라 적절한 방식을 선택해야 한다.
 
 ---
-
-## 핵심 인사이트 ASCII 다이어그램 (Concept Map)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐

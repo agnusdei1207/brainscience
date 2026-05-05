@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Jaeger(Uber, CNCF)와 Zipkin(Twitter, 오픈소스)은 **분산 트레이스 데이터를 수집·저장·시각화**하는 트레이싱 백엔드이며, Waterfall UI로 서비스 간 호출 체인의 지연·에러를 분석한다.
+> **핵심**: Jaeger(Uber, CNCF)와 Zipkin(Twitter, 오픈소스)은 **분산 트레이스 데이터를 수집·저장·시각화**하는 트레이싱 백엔드이며, Waterfall UI로 서비스 간 호출 체인의 지연·에러를 분석한다.
 > 2. **가치**: 로그만으로는 **MSA의 어느 서비스가 병목인지** 알 수 없지만, Jaeger/Zipkin은 **전체 호출 체인을 Gantt 차트로 시각화**하여 병목 서비스·쿼리를 즉시 식별한다.
 > 3. **판단 포인트**: Jaeger(Go, CNCF, Kafka 지원)가 K8s 환경에서 주류이며, Grafana Tempo(저비용, 오브젝트 스토리지)가 차세대 대안이다. OTel SDK로 계측하면 백엔드를 자유롭게 교체할 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Jaeger 아키텍처:

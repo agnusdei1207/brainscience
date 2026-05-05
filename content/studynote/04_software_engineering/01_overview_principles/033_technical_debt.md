@@ -4,15 +4,18 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 기술 부채(Technical Debt)는 Ward Cunningham(1992)이 제안한 개념으로, 더 나은 설계 대신 빠른 구현을 선택할 때 발생하는 미래 추가 비용의 은유다.
 > 2. 기술 부채는 의도적·비의도적으로 발생하며, 방치하면 이자(유지보수 비용 증가)가 쌓여 최초 부채보다 큰 비용이 된다.
 > 3. 측정(코드 메트릭·SQALE 모델)→분류(4분면)→리팩토링 로드맵→지속적 SonarQube 모니터링이 현대적 기술 부채 관리의 표준 사이클이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 기술 부채의 정의와 은유
+## 1. 개요 및 필요성
 
 기술 부채(Technical Debt)는 **소프트웨어 개발에서 단기 이익을 위해 선택한 차선책이 장기적으로 추가 비용을 유발하는 현상**이다.
 
@@ -42,7 +45,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 기술 부채 유형 분류
+## 2. 구성요소
 
 | 유형            | 발생 원인                    | 예시                         |
 |---------------|-----------------------------|-----------------------------|
@@ -57,7 +60,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅲ. 기술 부채 측정 — SQALE / SonarQube
+## 3. 구조 및 동작 원리
 
 ### SQALE (Software Quality Assessment based on Lifecycle Expectations)
 
@@ -89,7 +92,7 @@ SonarQube 대시보드:
 
 ---
 
-## Ⅳ. 기술 부채 관리 전략
+## 4. 비교 및 트레이드오프
 
 ### 부채 관리 사이클
 
@@ -118,7 +121,7 @@ SonarQube 대시보드:
 
 ---
 
-## Ⅴ. 현대적 기술 부채 예방
+## 5. 실무 적용 및 최적화 기법
 
 ### DevOps/CI·CD 파이프라인 통합
 

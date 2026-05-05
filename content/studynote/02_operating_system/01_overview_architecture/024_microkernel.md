@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 마이크로커널(Microkernel)은 OS 커널에서 메모리 관리·프로세스 스케줄링·IPC(Inter-Process Communication)만 남기고, 파일 시스템·디바이스 드라이버·네트워크 스택 등 나머지 서비스를 사용자 공간(User Space) 서버로 분리하여 커널 크기를 최소화하는 아키텍처다.
+> **핵심**: 마이크로커널(Microkernel)은 OS 커널에서 메모리 관리·프로세스 스케줄링·IPC(Inter-Process Communication)만 남기고, 파일 시스템·디바이스 드라이버·네트워크 스택 등 나머지 서비스를 사용자 공간(User Space) 서버로 분리하여 커널 크기를 최소화하는 아키텍처다.
 > 2. **가치**: 커널 서비스를 사용자 공간에서 실행하면 단일 서비스 장애가 전체 시스템 크래시로 이어지지 않아 고가용성이 확보되며, 각 서비스를 독립적으로 교체·업데이트할 수 있어 QNX·L4·MINIX 등의 안전 필수 시스템(Safety-critical System)에서 선호된다.
 > 3. **판단 포인트**: 마이크로커널의 가장 큰 약점은 IPC 오버헤드다. 모놀리식 커널(Monolithic Kernel)이 같은 주소 공간에서 함수 호출로 서비스를 요청하는 것과 달리, 마이크로커널은 메시지 패싱(Message Passing)을 통해 서비스를 요청하므로 문맥 교환(Context Switch)이 빈번하게 발생한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 마이크로커널(Microkernel)은 1980년대 말 모놀리식 커널의 거대화·불안정성 문제를 해결하기 위해 등장했다. 앤드루 타넨바움(Andrew Tanenbaum)의 MINIX와 카네기멜론의 Mach 프로젝트가 대표적인 초기 구현체다.
 
@@ -37,7 +39,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 마이크로커널의 최소 기능 집합
 
@@ -68,7 +70,7 @@ Context Switch: 2회 (App→Kernel→Server, Server→Kernel→App)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | 모놀리식 커널 | 마이크로커널 | 하이브리드 커널 |
 |:---|:---|:---|:---|
@@ -81,7 +83,7 @@ Context Switch: 2회 (App→Kernel→Server, Server→Kernel→App)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 항공기 비행 제어 SW 선택
 실시간성(Hard Real-time)과 고가용성(High Availability)이 동시에 요구되는 항공기 비행 제어 시스템 OS 선택.
@@ -98,7 +100,7 @@ Context Switch: 2회 (App→Kernel→Server, Server→Kernel→App)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

@@ -5,15 +5,19 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> Cipher: "0x1234"
+
+> 📝 모범 답안
+
 1. **본질**: 암호문을 본 공격자가 평문에 대해 유의미한 정보를 단 1비트도 얻을 수 없어야 한다는 현대 암호학의 핵심 보안 정의다.
 2. **가치**: "평문이 무엇인가"를 알아내는 것뿐만 아니라, "평문의 길이가 짝수인가?", "첫 글자가 A인가?"와 같은 아주 사소한 통계적 힌트조차 차단함을 의미한다.
 3. **판단 포인트**: 결정론적(Deterministic) 암호는 같은 평문에 대해 항상 같은 암호문을 만드므로 Semantic Security를 만족하지 못하며, 이를 위해 반드시 무작위성(Salt/IV)이 가미되어야 한다.
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 과거의 암호화 성공 기준은 "공격자가 평문을 읽을 수 있는가?"였다. 하지만 현대 암호학은 더 엄격한 기준을 요구한다. **Semantic Security (의미론적 보안)**는 공격자가 암호문으로부터 평문에 관한 그 어떤 정보(의미)도 이끌어낼 수 없는 상태를 말한다. 1982년 Goldwasser와 Micali에 의해 정립되었다.
 
@@ -23,7 +27,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Semantic Security는 '확률적 암호화(Probabilistic Encryption)'를 통해 달성된다.
 
@@ -35,8 +39,7 @@ Semantic Security는 '확률적 암호화(Probabilistic Encryption)'를 통해 �
 [ Deterministic vs Probabilistic Encryption ]
 
 1. Deterministic (ECB Mode, RSA without Padding)
-   Plain: "YES" -> Cipher: "0x1234"
-   Plain: "YES" -> Cipher: "0x1234" (패턴 노출!)
+   Plain: "YES" -   Plain: "YES" -> Cipher: "0x1234" (패턴 노출!)
 
 2. Probabilistic (CBC Mode, CTR Mode, RSA-OAEP)
    Plain: "YES" + Nonce A -> Cipher: "0x8891"
@@ -49,7 +52,7 @@ Semantic Security는 '확률적 암호화(Probabilistic Encryption)'를 통해 �
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Semantic Security는 다른 보안 수준들과 긴밀히 연결되어 있다.
 
@@ -66,7 +69,7 @@ Semantic Security는 다른 보안 수준들과 긴밀히 연결되어 있다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 기술사는 암호 알고리즘뿐만 아니라 '운용 모드'와 '패딩'을 통해 Semantic Security를 확보해야 한다.
 
@@ -82,7 +85,7 @@ Semantic Security는 다른 보안 수준들과 긴밀히 연결되어 있다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Semantic Security를 확보하면 통계적 분석 공격과 재전송 공격(Replay Attack)으로부터 시스템을 보호할 수 있다. 암호문이 매번 달라지기 때문에 공격자는 데이터를 가로채도 그것이 어떤 의미를 갖는지 전혀 알 수 없게 된다.
 

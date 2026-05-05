@@ -5,16 +5,18 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> **핵심**: 부동소수점 (Floating Point)은 아주 큰 수와 아주 작은 수를 같은 형식으로 다루기 위해 가수와 지수를 분리한 근사 표현이다.
 
-    > 1. **본질**: 부동소수점 (Floating Point)은 아주 큰 수와 아주 작은 수를 같은 형식으로 다루기 위해 가수와 지수를 분리한 근사 표현이다.
-    > 2. **가치**: IEEE 754 (Institute of Electrical and Electronics Engineers 754)는 표현 범위, 반올림, 특수값을 표준화해 서로 다른 시스템 간 호환성을 높였다.
+> 📝 모범 답안
+
+        > 2. **가치**: IEEE 754 (Institute of Electrical and Electronics Engineers 754)는 표현 범위, 반올림, 특수값을 표준화해 서로 다른 시스템 간 호환성을 높였다.
     > 3. **판단 포인트**: 실수처럼 보인다고 정확한 실수가 아니므로, 금액·비교·누적 계산에서는 오차 한계를 전제로 설계해야 한다.
 
     ---
 
-    ## Ⅰ. 개요 및 필요성
+    ## 1. 개요 및 필요성
 
     고정 소수점이나 정수는 작은 값에는 강하지만, 범위가 넓어지면 자릿수가 부족하다. 부동소수점 (Floating Point)은 숫자를 `(-1)^sign × 1.fraction × 2^(exponent-bias)` 형태로 저장해, 범위와 정밀도를 절충한다.
 
@@ -24,7 +26,7 @@ categories = "studynote-computer-architecture"
 
     ---
 
-    ## Ⅱ. 아키텍처 및 핵심 원리
+    ## 2. 구성요소
 
     IEEE 754의 기본 구조는 sign, exponent, fraction이다. exponent는 bias를 더해 저장하고, fraction은 정규화된 경우 숨은 1을 포함해 실제 유효숫자를 표현한다.
 
@@ -47,7 +49,7 @@ categories = "studynote-computer-architecture"
 
     ---
 
-    ## Ⅲ. 비교 및 연결
+    ## 3. 구조 및 동작 원리
 
     부동소수점은 정수나 고정 소수점보다 범위가 넓지만, 정밀도가 균일하지 않다. 값이 커질수록 인접한 수 사이 간격이 벌어지므로, `0.1 + 0.2 == 0.3` 같은 비교가 실패할 수 있다.
 
@@ -63,7 +65,7 @@ categories = "studynote-computer-architecture"
 
     ---
 
-    ## Ⅳ. 실무 적용 및 기술사 판단
+    ## 4. 비교 및 트레이드오프
 
     실무에서는 오차 허용 범위를 먼저 정하고, 비교는 절대 오차와 상대 오차를 함께 사용해야 한다. 또한 합산 순서가 결과를 바꾸므로, 큰 값과 작은 값을 섞어 더할 때는 보정 합산을 고려한다.
 
@@ -82,7 +84,7 @@ categories = "studynote-computer-architecture"
 
     ---
 
-    ## Ⅴ. 기대효과 및 결론
+    ## 5. 실무 적용 및 최적화 기법
 
     부동소수점은 "완벽한 실수"가 아니라 "계산 가능한 근사 실수"다. 이 사실을 이해하면 정밀도 예산을 설계할 수 있고, 오차를 버그가 아니라 모델의 일부로 다룰 수 있다.
 

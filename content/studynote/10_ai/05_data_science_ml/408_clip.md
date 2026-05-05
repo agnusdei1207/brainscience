@@ -5,15 +5,17 @@ date = "2026-04-22"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CLIP (Contrastive Language-Image Pre-training)은 인터넷의 방대한 이미지-텍스트 쌍(Image-Text Pairs)을 대조 학습(Contrastive Learning)하여, 텍스트와 이미지 사이의 공통된 의미 공간(Joint Embedding Space)을 학습하는 멀티모달 모델이다.
+> **핵심**: CLIP (Contrastive Language-Image Pre-training)은 인터넷의 방대한 이미지-텍스트 쌍(Image-Text Pairs)을 대조 학습(Contrastive Learning)하여, 텍스트와 이미지 사이의 공통된 의미 공간(Joint Embedding Space)을 학습하는 멀티모달 모델이다.
 > 2. **가치**: 특정 클래스 라벨(Label) 없이도 학습이 가능하며, 한 번도 본 적 없는 물체에 대해서도 텍스트 설명을 통해 인식할 수 있는 제로샷(Zero-shot) 성능이 매우 뛰어나다.
 > 3. **판단 포인트**: 이미지 인코더와 텍스트 인코더를 결합하여 두 벡터 간의 코사인 유사도를 극대화하는 방식이며, 현대 생성형 AI(DALL-E, Stable Diffusion 등)의 눈(Eye)과 뇌(Brain)를 연결하는 핵심 아키텍처다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 기존의 컴퓨터 비전 모델은 '강아지', '고양이'와 같이 미리 정의된 수백 개의 라벨로만 세상을 이해했다. 하지만 현실의 사물은 무한하며, 이를 일일이 라벨링하는 것은 불가능하다. OpenAI가 발표한 CLIP은 인간이 언어를 통해 사물을 배우듯, 자연어 설명을 이미지와 연관 지어 학습함으로써 이 한계를 돌파했다.
 
@@ -26,7 +28,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 CLIP은 두 개의 독립적인 인코더(Image Encoder, Text Encoder)를 대조 학습 방식으로 최적화한다.
 
@@ -60,7 +62,7 @@ CLIP은 두 개의 독립적인 인코더(Image Encoder, Text Encoder)를 대조
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | 기존 Classification (ResNet 등) | CLIP (멀티모달) |
 |:---|:---|:---|
@@ -75,7 +77,7 @@ CLIP은 408번의 **대조 학습(Contrastive Learning)** 기법을 활용하며
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 고려 사항
 1. **Prompt Engineering**: "dog"라고만 하는 것보다 "A photo of a dog"라고 구체적으로 묘사하는 것이 성능이 더 잘 나온다.
@@ -89,7 +91,7 @@ CLIP은 408번의 **대조 학습(Contrastive Learning)** 기법을 활용하며
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 CLIP의 등장은 컴퓨터 비전의 패러다임을 '분류'에서 '이해'로 바꿨다. 이제 AI는 인간이 만든 수천 개의 카테고리에 갇히지 않고, 풍부한 언어의 세계를 통해 세상을 바라본다.
 

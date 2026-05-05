@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 리드 타임(Lead Time)은 고객 요청부터 배포까지 총 시간이고, 사이클 타임(Cycle Time)은 개발 시작부터 배포까지 시간이다. Lead Time ≥ Cycle Time이며, 둘의 차이가 "요청 대기 시간"이다.
+> **핵심**: 리드 타임(Lead Time)은 고객 요청부터 배포까지 총 시간이고, 사이클 타임(Cycle Time)은 개발 시작부터 배포까지 시간이다. Lead Time ≥ Cycle Time이며, 둘의 차이가 "요청 대기 시간"이다.
 > 2. **가치**: DORA(DevOps Research and Assessment) 메트릭의 4대 지표 중 하나가 "변경 리드 타임(Lead Time for Changes)"이다. Elite 팀은 리드 타임이 1시간 미만이고, Low 팀은 6개월 이상이다.
 > 3. **판단 포인트**: 리드 타임 단축의 최대 레버는 배치 크기(Batch Size) 축소다. 작은 변경을 자주 배포하면(Continuous Delivery) 리드 타임이 극적으로 줄고 롤백 위험도 낮아진다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 리드 타임 vs 사이클 타임:
@@ -32,7 +34,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### DORA 메트릭 성숙도 등급
 
@@ -62,7 +64,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 리드 타임 | 사이클 타임 | 처리량 |
 |:---|:---|:---|:---|
@@ -74,7 +76,7 @@ categories = "studynote-devops-sre"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 리드 타임 측정 도구
 
@@ -113,7 +115,7 @@ LinearB / Swarmia:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

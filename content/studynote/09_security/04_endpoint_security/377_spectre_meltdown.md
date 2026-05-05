@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Spectre와 Meltdown은 현대 CPU의 성능 최적화 기법인 투기적 실행(Speculative Execution)과 비순서 실행(Out-of-Order Execution)의 부작용을 악용해 다른 프로세스나 커널의 메모리를 사이드 채널(Side Channel)로 읽어내는 하드웨어 취약점이다.
+> **핵심**: Spectre와 Meltdown은 현대 CPU의 성능 최적화 기법인 투기적 실행(Speculative Execution)과 비순서 실행(Out-of-Order Execution)의 부작용을 악용해 다른 프로세스나 커널의 메모리를 사이드 채널(Side Channel)로 읽어내는 하드웨어 취약점이다.
 > 2. **가치**: 소프트웨어 패치만으로는 완전 해결이 불가능하며 CPU 성능 저하를 감수해야 하므로, 하드웨어 보안 설계의 한계를 드러낸 역사적 사건이다.
 > 3. **판단 포인트**: Meltdown은 커널 메모리 읽기(주로 Intel), Spectre는 다른 프로세스 메모리 읽기(Intel·AMD·ARM 모두 영향)로 영향 범위와 완화 방법이 다르다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 2018년 1월 공개된 Spectre(CVE-2017-5753, CVE-2017-5715)와 Meltdown(CVE-2017-5754)은 1990년대부터 설계된 현대 CPU의 근본적인 아키텍처 결함을 드러냈다. Google Project Zero, Graz University of Technology 등 여러 연구팀이 독립적으로 발견했다.
 
@@ -23,7 +25,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 취약점 | CVE | 메커니즘 | 영향 CPU |
 |:---|:---|:---|:---|
@@ -59,7 +61,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | Meltdown | Spectre |
 |:---|:---|:---|
@@ -73,7 +75,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **완화 조치**  
 1. **KPTI (Kernel Page Table Isolation)**: Meltdown 완화—커널과 사용자 페이지 테이블 분리, 성능 저하 동반  
@@ -88,7 +90,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Spectre/Meltdown은 30년간 쌓인 CPU 아키텍처의 숨겨진 가정을 무너뜨린 사건이다. 이후 MDS, SWAPGS, L1TF 등 유사 마이크로아키텍처 취약점이 연속으로 발견됐다. 근본적 해결은 하드웨어 설계 단계에서의 투기적 실행 보안 검증이며, 현재는 완화 기법의 지속적 업데이트와 마이크로코드 패치가 최선이다.
 

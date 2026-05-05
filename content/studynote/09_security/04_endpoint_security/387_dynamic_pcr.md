@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Dynamic PCR은 Intel TXT (Trusted Execution Technology)나 AMD SKINIT 명령어를 이용해 시스템 부팅 완료 후 특정 시점(late launch)에 DRTM (Dynamic Root of Trust for Measurement)을 확립하고, 이미 실행 중인 환경과 무관하게 신뢰할 수 있는 측정 기준점을 새로 설정하는 기술이다.
+> **핵심**: Dynamic PCR은 Intel TXT (Trusted Execution Technology)나 AMD SKINIT 명령어를 이용해 시스템 부팅 완료 후 특정 시점(late launch)에 DRTM (Dynamic Root of Trust for Measurement)을 확립하고, 이미 실행 중인 환경과 무관하게 신뢰할 수 있는 측정 기준점을 새로 설정하는 기술이다.
 > 2. **가치**: Static PCR이 UEFI 펌웨어 신뢰에 의존하는 것과 달리, Dynamic PCR은 OS가 실행 중인 상태에서도 하이퍼바이저·보안 OS를 신뢰할 수 있는 환경에서 시작할 수 있어 펌웨어 취약점 위협을 우회한다.
 > 3. **판단 포인트**: Dynamic PCR은 PCR 17-22를 사용하며, Intel TXT의 SINIT ACM (Authenticated Code Module)이 측정의 루트가 되어 MLE (Measured Launch Environment) 진입 전 시스템 상태를 검증한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Static PCR (S-CRTM)의 근본적 한계는 UEFI 펌웨어 자체를 신뢰해야 한다는 점이다. 펌웨어 루트킷이나 UEFI 변조가 있을 경우 Static 측정 전체가 오염될 수 있다. Dynamic PCR은 이 문제를 해결하기 위해 시스템이 이미 실행 중인 상태에서 별도의 하드웨어 메커니즘으로 신뢰 기준점을 새로 확립한다.
 
@@ -23,7 +25,7 @@ Intel TXT의 GETSEC[SENTER] 명령어 또는 AMD SKINIT 명령어가 실행되�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | PCR 번호 | 사용 기술 | 측정 내용 |
 |:---|:---|:---|
@@ -69,7 +71,7 @@ Intel TXT의 GETSEC[SENTER] 명령어 또는 AMD SKINIT 명령어가 실행되�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | Static PCR (S-CRTM) | Dynamic PCR (D-CRTM) |
 |:---|:---|:---|
@@ -83,7 +85,7 @@ Intel TXT의 GETSEC[SENTER] 명령어 또는 AMD SKINIT 명령어가 실행되�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **Intel TXT 기반 tboot**  
 - Xen·KVM 하이퍼바이저의 신뢰 부팅에 활용  
@@ -103,7 +105,7 @@ Intel TXT의 GETSEC[SENTER] 명령어 또는 AMD SKINIT 명령어가 실행되�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Dynamic PCR과 DRTM은 펌웨어 취약점이 난무하는 환경에서 하이퍼바이저와 보안 OS의 무결성을 보장하는 고급 기술이다. 클라우드 컨피덴셜 컴퓨팅(Confidential Computing)의 핵심 구성 요소로 부상하고 있으며, Intel SGX·AMD SEV-SNP와 결합해 "신뢰할 수 없는 클라우드 인프라에서의 기밀 컴퓨팅"을 가능하게 한다.
 

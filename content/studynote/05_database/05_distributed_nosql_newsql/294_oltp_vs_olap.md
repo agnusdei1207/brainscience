@@ -2,17 +2,19 @@
 title = "294. HTAP - OLTP(트랜잭션)와 OLAP(분석) 워크로드를 단일 데이터베이스 플랫폼에서 분리/동시 처리하는 기술 (Row+Column 하이브리드 엔진)"
 weight = 294
 +++
+## 0. 핵심 인사이트
 
-# 294. OLTP vs OLAP
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: OLTP(On-Line Transaction Processing)는 일상적业务 트랜잭션을 실시간 처리하는 시스템이고, OLAP(On-Line Analytical Processing)는 대규모 데이터를 분석하여 의사결정을 지원하는 시스템이다. 둘은 목적, 설계, 성능 지표가根本적으로 다르다.
+> **핵심**: OLTP(On-Line Transaction Processing)는 일상적业务 트랜잭션을 실시간 처리하는 시스템이고, OLAP(On-Line Analytical Processing)는 대규모 데이터를 분석하여 의사결정을 지원하는 시스템이다. 둘은 목적, 설계, 성능 지표가根本적으로 다르다.
 > 2. **가치**: OLTP는业务 운영의 지속性을, OLAP는 데이터 기반洞見의 확보를 담당하며, 기업 데이터 인프라에서 상호 보완적 역할을 수행한다.
 > 3. **융합**: DW, RDBMS, NoSQL, 스타 스키마, ETL, 파티셔닝, 인덱싱, 컬럼형 저장소와 밀접하게 연관된다.
 
+> 📝 모범 답안
+
+# 294. OLTP vs OLAP
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 OLTP(On-Line Transaction Processing)와 OLAP(On-Line Analytical Processing)는 데이터베이스 및 데이터 처리 시스템에서 가장 fundamental한 구분이다. OLTP는 은행 ATM 거래, 온라인 쇼핑 주문, 재고 更新 등 일상적业务 트랜잭션(Transaction)을 실시간으로 처리하는 시스템이고, OLAP는 이러한 OLTP 시스템에서 축적된 데이터를 기반으로 "이번 분기 매출은?", "고객層別 구매 패턴은?" 같은 분석 질의를 수행하여 경영진을 지원하는 시스템이다. OLTP의 축적된 데이터가 OLAP의 분석原料가 되고, OLAP의洞見이 OLTP业务改善에 활용되는 상호 보완적 관계이다.
@@ -30,7 +32,7 @@ OLTP와 OLAP의 관계는大型병원에서의 응급실(OLTP)과 건강검진�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### OLTP vs OLAP 핵심 비교
 
@@ -199,15 +201,13 @@ OLTP와 OLAP는根本적으로 다른 workloads를 처리하므로, 전통적으
 
 ---
 
-## Ⅲ. 결론
+## 3. 구조 및 동작 원리
 
 OLTP와 OLAP는 데이터 처리의 양대 축으로, 각각日常業務 운영과 데이터 기반 의사결정을 담당한다. OLTP는 짧은 트랜잭션, 높은 동시성, 저지연을要求하고, OLAP는 복잡한 집계, 대량 데이터, 분석 최적화를要求한다. 이 두 workloads는同一 시스템에서 모두 처리하면非효율적이므로, 전통적으로는 분리 운영되며 ETL/ELT 파이프라인으로 연결된다. 다만 HTAP(Hybrid Transaction/Analytical Processing)의 등장으로 OLTP와 OLAP를 단일 시스템에서 통합 처리하려는 시도도 활발해지고 있다.
 
 📢 섹션 요약: OLTP와 OLAP는目的과 최적화가根本적으로 다른 두 workloads로, 전통적으로는 ETL 파이프라인으로 연결된 분리 시스템에서 운영되며, HTAP은 통합 처리 시도이다.
 
 ---
-
-## 핵심 인사이트 ASCII 다이어그램 (Concept Map)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐

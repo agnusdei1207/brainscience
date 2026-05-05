@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: HSTS (HTTP Strict Transport Security)는 웹 서버가 브라우저에게 "이 도메인은 앞으로 HTTPS (HyperText Transfer Protocol Secure)로만 접속하라"고 지시하는 응답 헤더로, SSL (Secure Sockets Layer) 스트리핑 공격을 원천 차단한다.
+> **핵심**: HSTS (HTTP Strict Transport Security)는 웹 서버가 브라우저에게 "이 도메인은 앞으로 HTTPS (HyperText Transfer Protocol Secure)로만 접속하라"고 지시하는 응답 헤더로, SSL (Secure Sockets Layer) 스트리핑 공격을 원천 차단한다.
 > 2. **가치**: 첫 HTTP 요청을 HTTPS로 자동 업그레이드하던 기존 방식은 첫 연결 시점에 MitM (Man-in-the-Middle) 공격에 취약하지만, HSTS Preload를 통해 브라우저가 아예 HTTP 연결 시도를 하지 않도록 할 수 있다.
 > 3. **판단 포인트**: `max-age`를 최소 1년(31,536,000초)으로 설정하고 `includeSubDomains`·`preload` 디렉티브를 포함해야 완전한 HSTS 보호가 달성된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 사용자가 브라우저 주소창에 `bank.com`을 입력하면 기본적으로 `http://bank.com`으로 먼저 연결된다. 서버가 301 리다이렉트로 `https://bank.com`으로 보내더라도, 첫 HTTP 요청과 응답이 평문으로 오가는 순간이 존재한다. 이 순간을 공격자가 가로채 HTTPS 업그레이드 응답을 제거하고 계속 HTTP로 통신하게 만드는 것이 SSL 스트리핑(SSL Stripping) 공격이다. 2009년 Moxie Marlinspike가 sslstrip 도구로 이 공격을 시연하면서 실질적 위협으로 부각됐다.
 
@@ -25,7 +27,7 @@ HSTS (RFC 6797)는 이 문제를 해결하기 위해 2012년 표준화됐다. �
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### HSTS 헤더 구조
 
@@ -91,7 +93,7 @@ Preload 등록 요건:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 방어 기술 | 보호 범위 | TOFU 취약점 | 관리 복잡도 |
 |:---|:---|:---|:---|
@@ -105,7 +107,7 @@ Preload 등록 요건:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **서버 설정 예시**:
 
@@ -150,7 +152,7 @@ server {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 HSTS는 설정 한 줄로 SSL 스트리핑 공격을 완전히 차단할 수 있는 강력한 보안 헤더다. 구현 비용이 낮고 효과가 크기 때문에 OWASP (Open Web Application Security Project), NIST (National Institute of Standards and Technology), KISA 모두 HTTPS 필수 헤더로 권고한다.
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: VAE (Variational Autoencoder)는 입력 데이터를 잠재 공간(Latent Space)의 확률 분포 N(μ,σ²)로 인코딩하고, 그 분포에서 샘플링한 잠재 변수(Latent Variable) z를 디코딩하여 생성 모델(Generative Model)을 학습한다.
+> **핵심**: VAE (Variational Autoencoder)는 입력 데이터를 잠재 공간(Latent Space)의 확률 분포 N(μ,σ²)로 인코딩하고, 그 분포에서 샘플링한 잠재 변수(Latent Variable) z를 디코딩하여 생성 모델(Generative Model)을 학습한다.
 > 2. **가치**: 재파라미터화 트릭(Reparameterization Trick) z = μ + ε·σ (ε~N(0,1))는 샘플링 과정을 역전파 가능한 형태로 변환하여 μ와 σ²에 대한 그래디언트 계산을 가능하게 한다.
 > 3. **판단 포인트**: ELBO (Evidence Lower Bound) = 재구성 손실(Reconstruction Loss) + KLD (Kullback-Leibler Divergence) 규제의 두 항 균형이 VAE 학습의 핵심으로, KLD는 잠재 분포를 표준 정규 분포 N(0,I)에 가깝게 당기는 정규화 역할을 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 일반 오토인코더(Autoencoder, AE)는 입력 x를 인코더(Encoder)가 잠재 벡터 z로 압축하고 디코더(Decoder)가 x̂로 복원한다. 이 잠재 공간(Latent Space)은 훈련 데이터 점들로 채워지지만, **점 사이 공간은 비어** 있어 새로운 데이터를 생성하기 어렵다.
 
@@ -25,7 +27,7 @@ VAE는 이 문제를 **확률적 잠재 공간(Probabilistic Latent Space)**으�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### VAE 구조
 
@@ -97,7 +99,7 @@ KL(N(μ,σ²) || N(0,I)) = -½ Σⱼ (1 + log σ²ⱼ - μ²ⱼ - σ²ⱼ)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 구분 | AE (Autoencoder) | VAE | GAN |
 |:---|:---|:---|:---|
@@ -114,7 +116,7 @@ KL(N(μ,σ²) || N(0,I)) = -½ Σⱼ (1 + log σ²ⱼ - μ²ⱼ - σ²ⱼ)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **잠재 공간 조작(Latent Space Manipulation)**:
 - 선형 보간(Linear Interpolation): z₁과 z₂ 사이 z = λz₁ + (1-λ)z₂로 이미지 부드러운 전환
@@ -135,7 +137,7 @@ KL(N(μ,σ²) || N(0,I)) = -½ Σⱼ (1 + log σ²ⱼ - μ²ⱼ - σ²ⱼ)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 VAE의 재파라미터화 트릭은 확률적 계산 그래프를 역전파 가능하게 만드는 범용 기법으로, VAE 이후 여러 확률 모델 학습에 적용되었다. 정규화된 잠재 공간은 데이터 생성, 속성 편집, 데이터 증강, 이상 탐지(Anomaly Detection) 등 다양한 응용에 활용된다.
 

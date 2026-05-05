@@ -2,17 +2,19 @@
 title = "278. 동시성 패턴 (Concurrency Patterns) - Active Object, Monitor Object, Thread Pool"
 weight = 278
 +++
+## 0. 핵심 인사이트
 
-# 278. 동시성 패턴 (Concurrency Patterns) - Active Object, Monitor Object, Thread Pool
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 동시성 패턴(Concurrency Patterns)은 멀티스레드 및 비동기 환경에서 자원의 경합(Race Condition)과 교착 상태(Deadlock)를 방지하면서도 병렬 처리 성능과 응답성을 극대화하기 위해 검증된 멀티스레딩 아키텍처 설계 기법의 총칭이다.
+> **핵심**: 동시성 패턴(Concurrency Patterns)은 멀티스레드 및 비동기 환경에서 자원의 경합(Race Condition)과 교착 상태(Deadlock)를 방지하면서도 병렬 처리 성능과 응답성을 극대화하기 위해 검증된 멀티스레딩 아키텍처 설계 기법의 총칭이다.
 > 2. **가치**: 스레드의 생성/소멸 비용을 통제하고(Thread Pool), 메서드 호출과 실행을 비동기로 분리하며(Active Object), 공유 자원의 스레드 안전성(Thread-safe)을 투명하게 보장(Monitor Object)하여 극도로 복잡한 동시성 프로그래밍을 캡슐화한다.
 > 3. **융합**: 운영체제(OS)의 스케줄링 이론을 애플리케이션 계층에 객체 지향적으로 녹여낸 모델이며, 현대의 비동기 웹 서버(Node.js, Netty), 게임 서버, 고성능 분산 처리 시스템의 근간을 이루는 가장 난이도 높고 중요한 엔터프라이즈 패턴들이다.
 
+> 📝 모범 답안
+
+# 278. 동시성 패턴 (Concurrency Patterns) - Active Object, Monitor Object, Thread Pool
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: GoF(Gang of Four) 23개 패턴 이후 POSA(Pattern-Oriented Software Architecture) 시리즈 등에서 정립된 패턴들로, 여러 개의 스레드(Thread)가 동시에 실행될 때 발생하는 성능 최적화, 비동기 통신, 동기화 제어 문제를 해결하는 객체 지향 설계의 정수들이다.
 
@@ -29,7 +31,7 @@ weight = 278
 
 ---
 
-## Ⅱ. 핵심 동시성 패턴 3인방 (Deep Dive)
+## 2. 구성요소
 
 ### 1. 액티브 오브젝트 (Active Object) 패턴
 
@@ -77,7 +79,7 @@ weight = 278
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 1. 스레드 풀 크기(Pool Size) 설정의 황금률 (튜닝 아키텍처)
 
@@ -96,7 +98,7 @@ weight = 278
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -117,7 +119,7 @@ weight = 278
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# FAT 방식 연결 할당 최적화
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: FAT(File Allocation Table)는 기존 연결 할당(Linked Allocation)의 가장 치명적인 단점이었던 "다음 블록을 찾기 위해 디스크를 계속 읽어야 하는 탐색 지연(Seek Time)"을 해결하기 위해, **각 블록의 '포인터'들만 모아서 하나의 거대한 표(Table)로 빼내어 메모리에 올려버린 혁신적인 파일 시스템**이다.
+> **핵심**: FAT(File Allocation Table)는 기존 연결 할당(Linked Allocation)의 가장 치명적인 단점이었던 "다음 블록을 찾기 위해 디스크를 계속 읽어야 하는 탐색 지연(Seek Time)"을 해결하기 위해, **각 블록의 '포인터'들만 모아서 하나의 거대한 표(Table)로 빼내어 메모리에 올려버린 혁신적인 파일 시스템**이다.
 > 2. **메커니즘 (테이블 분리)**: 디스크의 데이터 블록 안에는 순수하게 데이터만 남겨두고, "1번 블록 다음은 5번, 5번 다음은 9번"이라는 링크 정보는 디스크 맨 앞의 FAT 테이블에 배열 형태로 기록한다. OS는 부팅 시 이 FAT 테이블을 램(RAM)에 캐싱한다.
 > 3. **가치**: 포인터 추적(Pointer Chasing)이 디스크가 아닌 램에서 빛의 속도로 이루어지므로, 연결 할당의 장점(외부 단편화 0%)을 그대로 유지하면서도 치명적이었던 **직접 접근(Random Access) 속도를 O(1)에 가깝게 끌어올린 MS-DOS와 Windows의 뼈대 기술**이 되었다.
 
+> 📝 모범 답안
+
+# FAT 방식 연결 할당 최적화
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **FAT (File Allocation Table)**: 디스크 내의 모든 클러스터(블록)들의 연결 상태(다음 블록 번호, 빈 블록 여부, 파일 끝 표시 등)를 기록해 둔 1차원 배열 형태의 테이블.
@@ -39,7 +41,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### FAT 테이블 구조와 파일 탐색 시뮬레이션
 
@@ -85,7 +87,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### FAT vs UNIX i-node (색인 할당) 비교
 
@@ -108,7 +110,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -153,7 +155,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

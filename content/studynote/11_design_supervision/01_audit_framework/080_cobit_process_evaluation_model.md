@@ -2,16 +2,21 @@
 weight = 80
 title = "80. COBIT 프로세스 평가 (APO, BAI, DSS, MEA) 모델 연계 통제 진단"
 +++
+## 0. 핵심 인사이트
 
-### 핵심 인사이트
+> **핵심**: (개념 본질)
+> **비유**: (개념 비유)
 
+> 📝 모범 답안
+
+#
 - **본질(Essence):** COBIT(Control Objectives for Information and Related Technology, 정보 및 관련 기술 통제 목표) 프로세스 평가는 IT 거버넌스 및 통제 프레임워크인 COBIT의 주요 영역(APO, BAI, DSS, MEA)을 기반으로 정보시스템의 프로세스가 적절히 통제되고 있는지를 평가하는 감리 방법론이다.
 - **가치(Value):** 조직의 IT 활동이 비즈니스 목표에 부합하는지를 체계적으로 평가하며,、IT 투자의 가치 창출과 리스크 관리를 동시에実現する國際標準의 메트릭스를 제공한다.
 - **융합(Convergence):** 감사(Audit), IT 거버넌스(IT Governance), 프로젝트 관리(Project Management)의 교차점에서 조직의 정보 자산을 효과적으로 통제하고 있는지 종합적으로 진단한다.
 
 ---
 
-### Ⅰ. COBIT 프레임워크 개요 및 발전 과정
+### 1. 개요 및 필요성
 
 COBIT은 ISACA(Information Systems Audit and Control Association, 정보시스템 감사통제협회)에서 개발한 IT 거버넌스 및 관리 프레임워크이다. 1996년 첫 번째 버전이 출시된 이후 지속적으로 업데이트되어 현재는 COBIT 2019까지 발표되었다. COBIT은 비즈니스 목표와 IT 활동 사이의 격차를 메우고, IT가 조직의 가치 창출에 기여하면서도 리스크를 적절히 관리하도록 안내하는 데 그 목적이 있다.
 
@@ -29,7 +34,7 @@ COBIT은 ISACA(Information Systems Audit and Control Association, 정보시스�
 
 ---
 
-### Ⅱ. COBIT의 5대 영역 (APO, BAI, DSS, MEA, EDM)
+### 2. 구성요소
 
 COBIT 프레임워크는 IT를 평가하는 다섯 가지 핵심 영역으로 구성된다. EDM(Evaluate, Direct, Monitor, 평가, 지시, 모니터)은 거버넌스 체계를 overarching하게 규정하며, APO, BAI, DSS, MEA는 각각 IT의 특정 측면을 다루는 관리 영역이다.
 
@@ -111,7 +116,7 @@ COBIT 프레임워크는 IT를 평가하는 다섯 가지 핵심 영역으로 �
 
 ---
 
-### Ⅲ. COBIT 프로세스 평가 방법론
+### 3. 구조 및 동작 원리
 
 COBIT 프로세스 평가는 정보시스템 감리에서 가장 널리 활용되는 방법론 중 하나이다. 이 평가는 프로세스의 성숙도(Maturity Level)를 측정하고, 현재의 통제 수준이 목표 수준에 도달하기 위한GAP를 분석하는 방식으로 진행된다.
 
@@ -171,7 +176,7 @@ COBIT은 0~5의 6단계 성숙도 모델을 사용하여 프로세스의 성숙�
 
 ---
 
-### Ⅳ. APO, BAI, DSS, MEA 주요 프로세스 상세 분석
+### 4. 비교 및 트레이드오프
 
 COBIT의 핵심 영역인 APO, BAI, DSS, MEA는 각각 특정 관점에서 IT를 통제하고 평가하는 역할을 담당한다. 감리인은 이러한 프로세스 간의 상호 관계를 이해하고, 각 영역의 대표 프로세스를 중점적으로 평가한다.
 
@@ -255,7 +260,7 @@ COBIT의 핵심 영역인 APO, BAI, DSS, MEA는 각각 특정 관점에서 IT를
 
 ---
 
-### Ⅴ. COBIT 프로세스 평가 체크리스트 및 실무 적용
+### 5. 실무 적용 및 최적화 기법
 
 COBIT 프로세스 평가를 실무에 적용하기 위해서는 체계적인 체크리스트가 필요하다. 감리인은 이를 활용하여 객관적이고 일관된 평가를 수행할 수 있다.
 

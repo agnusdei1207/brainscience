@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 분산 락 (Distributed Lock)과 ZooKeeper 합의 동기화
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 분산 락(Distributed Lock)은 단일 서버의 메모리(RAM) 위에서 동작하던 전통적인 OS 락(Mutex)의 한계를 넘어, **수십 대의 물리적으로 떨어진 서버들이 네트워크를 통해 하나의 공유 자원에 순차적으로 접근할 수 있도록 통제하는 클러스터 동기화 메커니즘**이다.
+> **핵심**: 분산 락(Distributed Lock)은 단일 서버의 메모리(RAM) 위에서 동작하던 전통적인 OS 락(Mutex)의 한계를 넘어, **수십 대의 물리적으로 떨어진 서버들이 네트워크를 통해 하나의 공유 자원에 순차적으로 접근할 수 있도록 통제하는 클러스터 동기화 메커니즘**이다.
 > 2. **가치**: 네트워크 단절(Split Brain), 서버 다운 등 예측 불가능한 분산 환경의 혼돈 속에서도, **"오직 단 하나의 클라이언트만이 락을 쥘 수 있다"는 상호 배제(Mutual Exclusion)**를 완벽하게 보장하여 데이터의 오염과 동시성 파괴를 막아낸다.
 > 3. **융합**: 이를 구현하기 위해 Apache ZooKeeper는 ZAB(Zookeeper Atomic Broadcast)라는 뗏목(Raft/Paxos) 기반의 과반수 합의(Consensus) 알고리즘과, 순차적 임시 노드(Ephemeral Sequential Znode)라는 트리 구조의 파일 시스템 철학을 융합해 절대 무너지지 않는 코디네이터를 창조했다.
 
+> 📝 모범 답안
+
+# 분산 락 (Distributed Lock)과 ZooKeeper 합의 동기화
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **단일 락 (Local Lock)**: 한 대의 컴퓨터 안에서 여러 스레드가 싸울 때 OS 커널이 정리해 주는 자물쇠 (예: Java `synchronized`, `pthread_mutex`).
@@ -63,7 +65,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### ZooKeeper의 Znode 트리 파일 시스템 모델
 
@@ -111,7 +113,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 3대 분산 락 솔루션의 아키텍처 비교 (ZooKeeper vs Redis vs DB)
 
@@ -133,7 +135,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 트러블슈팅
 
@@ -178,7 +180,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

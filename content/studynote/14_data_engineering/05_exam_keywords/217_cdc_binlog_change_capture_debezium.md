@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CDC(Change Data Capture)는 소스 데이터베이스에서 발생하는 INSERT·UPDATE·DELETE 변경 사항을 실시간으로 감지·캡처하여 다른 시스템에 전달하는 기술로, 전통적인 전체 테이블 복사(Full Dump) 대비 네트워크·DB 부하를 획기적으로 줄인다.
+> **핵심**: CDC(Change Data Capture)는 소스 데이터베이스에서 발생하는 INSERT·UPDATE·DELETE 변경 사항을 실시간으로 감지·캡처하여 다른 시스템에 전달하는 기술로, 전통적인 전체 테이블 복사(Full Dump) 대비 네트워크·DB 부하를 획기적으로 줄인다.
 > 2. **가치**: MySQL Binlog·PostgreSQL WAL(Write-Ahead Log) 기반 로그 CDC는 DB에 추가 부하 없이 변경을 캡처하며, Debezium + Kafka 조합으로 마이크로초 단위 실시간 데이터 동기화 파이프라인을 구성한다.
 > 3. **판단 포인트**: 트리거 기반 CDC는 DB 부하가 크고, 타임스탬프 기반은 DELETE를 감지 못한다 — 프로덕션 환경에서는 로그 기반 CDC(Log-based CDC)가 유일한 표준 선택이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 전통적 데이터 동기화의 한계
 
@@ -43,7 +45,7 @@ CDC 방식 (로그 기반):
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 CDC 방식 3종 비교
 
@@ -148,7 +150,7 @@ Debezium은 Red Hat이 개발한 오픈소스 CDC 플랫폼으로, Kafka Connect
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 CDC 활용 패턴
 
@@ -172,7 +174,7 @@ Debezium은 Red Hat이 개발한 오픈소스 CDC 플랫폼으로, Kafka Connect
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 Debezium 운영 시 주의사항
 
@@ -205,7 +207,7 @@ Debezium은 Red Hat이 개발한 오픈소스 CDC 플랫폼으로, Kafka Connect
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 CDC 도입 효과
 

@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 문맥 교환 TLB 플러시
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: TLB(Translation Lookaside Buffer)는 가상 주소를 물리 주소로 번역하는 속도를 높이기 위한 CPU 내부의 초고속 캐시다. 하지만 A 프로세스에서 B 프로세스로 **문맥 교환(Context Switch)**이 일어날 때, 기존 A 프로세스가 남겨놓은 TLB 찌꺼기를 B가 잘못 읽는 것을 막기 위해 캐시를 전부 날려버리는 것을 **TLB 플러시(Flush)**라 한다.
+> **핵심**: TLB(Translation Lookaside Buffer)는 가상 주소를 물리 주소로 번역하는 속도를 높이기 위한 CPU 내부의 초고속 캐시다. 하지만 A 프로세스에서 B 프로세스로 **문맥 교환(Context Switch)**이 일어날 때, 기존 A 프로세스가 남겨놓은 TLB 찌꺼기를 B가 잘못 읽는 것을 막기 위해 캐시를 전부 날려버리는 것을 **TLB 플러시(Flush)**라 한다.
 > 2. **비용**: TLB 플러시가 발생하면 B 프로세스가 처음 실행될 때 메모리 주소를 찾지 못해 극심한 **캐시 미스(TLB Miss)**를 겪게 되며, 이로 인해 메모리를 직접 뒤지는 페이지 워크(Page Walk)가 다발하여 멀티태스킹의 가장 뼈아픈 성능 저하를 유발한다.
 > 3. **해결 (ASID)**: 현대 CPU는 이 멍청한 비우기(Flush) 작업을 피하기 위해, TLB의 각 줄(Entry)에 프로세스의 고유 번호표인 **ASID(Address Space ID)**를 붙여, 플러시 없이도 A와 B의 주소 매핑을 구별해 내는 하드웨어 최적화(Tagged TLB)를 이룩했다.
 
+> 📝 모범 답안
+
+# 문맥 교환 TLB 플러시
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **Context Switch (문맥 교환)**: CPU가 프로세스 A를 멈추고 프로세스 B로 제어권을 넘기는 작업. 이때 프로세스들의 고유한 '페이지 테이블(CR3)'이 교체된다.
@@ -41,7 +43,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### TLB 플러시가 유발하는 "TLB Miss"의 악몽
 
@@ -95,7 +97,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 스레드 문맥 교환 vs 프로세스 문맥 교환
 
@@ -117,7 +119,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -163,7 +165,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

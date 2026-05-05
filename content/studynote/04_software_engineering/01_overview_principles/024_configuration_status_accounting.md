@@ -5,15 +5,17 @@ date = "2026-04-29"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CSA (Configuration Status Accounting, 형상 상태 기록)은 SCM (Software Configuration Management, 소프트웨어 형상 관리)의 4대 활동 중 하나로, 형상 항목(CI, Configuration Item)의 식별·변경·승인 이력을 체계적으로 기록하고 이해관계자에게 보고하는 가시성(Visibility) 확보 활동이다.
+> **핵심**: CSA (Configuration Status Accounting, 형상 상태 기록)은 SCM (Software Configuration Management, 소프트웨어 형상 관리)의 4대 활동 중 하나로, 형상 항목(CI, Configuration Item)의 식별·변경·승인 이력을 체계적으로 기록하고 이해관계자에게 보고하는 가시성(Visibility) 확보 활동이다.
 > 2. **가치**: CSA는 "현재 릴리스에 어떤 버전의 컴포넌트가 포함되어 있는가", "이 변경은 누가 승인했는가", "어떤 CR(Change Request)이 미해결 상태인가"를 언제든지 즉시 답할 수 있게 하여 감사(Audit)와 품질 추적성(Traceability)을 보장한다.
 > 3. **판단 포인트**: CSA의 핵심 산출물은 형상 상태 보고서(CSR, Configuration Status Report)이며, 이를 통해 변경 요청(CR) 처리 현황, 기준선(Baseline) 구성, 릴리스 포함 항목을 공식화하여 계약·인증 감사의 증적으로 제출한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 형상 상태 기록(CSA)은 SCM의 네 가지 핵심 활동(식별 → 통제 → 상태 기록 → 감사) 중 세 번째로, 식별된 CI가 어떻게 변경되고 승인되었는지의 전 이력을 데이터베이스에 기록·보관하고 필요 시 보고서를 생성하는 활동이다.
 
@@ -39,7 +41,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### CSA 기록 항목
 
@@ -69,7 +71,7 @@ DBSchema       3.2.0   ✅완료  CR-2038  04-20
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 활동 | 목적 | 산출물 |
 |:---|:---|:---|
@@ -84,7 +86,7 @@ DBSchema       3.2.0   ✅완료  CR-2038  04-20
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 항공 SW 인증 감사 대응
 DO-178C 인증 획득을 위한 항공 제어 SW CSA 수행.
@@ -101,7 +103,7 @@ DO-178C 인증 획득을 위한 항공 제어 SW CSA 수행.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 기대효과 | 내용 |
 |:---|:---|

@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SLAM(Simultaneous Localization and Mapping)은 **센서(카메라·LiDAR)로 주변 환경의 지도를 작성하면서 동시에 자신의 위치를 추정**하는 알고리즘으로, 자율주행·XR·로봇의 핵심 기술이다.
+> **핵심**: SLAM(Simultaneous Localization and Mapping)은 **센서(카메라·LiDAR)로 주변 환경의 지도를 작성하면서 동시에 자신의 위치를 추정**하는 알고리즘으로, 자율주행·XR·로봇의 핵심 기술이다.
 > 2. **가치**: GPS가 안 되는 실내·지하에서도 SLAM으로 **카메라만으로 위치를 파악**할 수 있으며, Vision Pro·Quest 등 XR 디바이스의 Inside-Out 트래킹이 SLAM 기반이다.
 > 3. **판단 포인트**: Visual SLAM(카메라)·LiDAR SLAM(라이다)을 구분하고, ORB-SLAM·RTAB-MAP이 대표적 오픈소스 구현이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 SLAM = 지도 작성(Mapping) + 위치 추정(Localization) 동시 수행
@@ -24,7 +26,7 @@ SLAM = 지도 작성(Mapping) + 위치 추정(Localization) 동시 수행
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 유형 | 센서 | 특징 |
 |:---|:---|:---|

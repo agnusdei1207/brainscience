@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Fallback은 **원격 서비스 호출 실패 시 미리 정의된 대체 응답을 반환**하는 복원력 패턴이며, Circuit Breaker·Retry와 함께 사용되어 사용자에게 **부분적이라도 서비스를 유지**한다.
+> **핵심**: Fallback은 **원격 서비스 호출 실패 시 미리 정의된 대체 응답을 반환**하는 복원력 패턴이며, Circuit Breaker·Retry와 함께 사용되어 사용자에게 **부분적이라도 서비스를 유지**한다.
 > 2. **가치**: 추천 서비스 장애 시 전체 페이지가 에러가 되는 대신, Fallback으로 **인기 상품 목록(캐시)**을 보여주면 사용자 경험 저하를 최소화한다.
 > 3. **판단 포인트**: 캐시 Fallback·기본값·대체 서비스·Graceful Degradation 전략을 상황에 맞게 선택하고, Fallback 자체의 실패도 고려(Fallback의 Fallback)해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -31,7 +33,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 전략 | 장점 | 단점 |
 |:---|:---|:---|
@@ -43,7 +45,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Fallback 없음 | Fallback 있음 |
 |:---|:---|:---|
@@ -52,7 +54,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 - Circuit Breaker Open 시 → Fallback 자동 호출.
 - Netflix: 추천 서비스 장애 → Top 10 목록(캐시) 반환.
@@ -60,7 +62,7 @@ categories = "studynote-cloud-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Fallback은 **MSA에서 사용자 경험을 지키는 마지막 방어선**이며, Circuit Breaker와 함께 복원력의 핵심이다.
 

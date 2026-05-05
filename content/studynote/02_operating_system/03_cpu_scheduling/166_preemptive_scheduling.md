@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 선점형 스케줄링 (Preemptive Scheduling)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 선점형 스케줄링 (Preemptive Scheduling)은 운영체제가 현재 실행 중인 프로세스의 CPU 제어권을 강제로 빼앗아 (Preempt) 다른 우선순위가 높거나 할당된 시간이 도래한 프로세스에게 넘겨주는 방식이다.
+> **핵심**: 선점형 스케줄링 (Preemptive Scheduling)은 운영체제가 현재 실행 중인 프로세스의 CPU 제어권을 강제로 빼앗아 (Preempt) 다른 우선순위가 높거나 할당된 시간이 도래한 프로세스에게 넘겨주는 방식이다.
 > 2. **가치**: 특정 프로세스의 CPU 독점을 방지하여 시분할 시스템 (Time-sharing System)과 실시간 시스템 (Real-time System)에서 필수적인 '빠르고 일관된 응답성 (Responsiveness)'을 보장한다.
 > 3. **융합**: 선점 동작은 타이머 인터럽트 (Timer Interrupt)라는 하드웨어의 지원에 전적으로 의존하며, 잦은 문맥 교환 (Context Switch) 오버헤드와 공유 자원 접근 시 경쟁 조건 (Race Condition)이라는 심각한 동기화 문제를 야기한다.
 
+> 📝 모범 답안
+
+# 선점형 스케줄링 (Preemptive Scheduling)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 프로세스 스케줄링 패러다임의 양대 산맥 중 하나로, 한 프로세스가 CPU를 할당받아 실행 중이더라도 커널이 개입하여 실행 상태 (Running)의 프로세스를 강제로 준비 상태 (Ready)로 쫓아내고 새로운 프로세스를 실행할 수 있는 방식이다.
 - **필요성**: 만약 비선점 (Non-preemptive) 방식만 존재한다면, 악의적이거나 무한 루프에 빠진 프로그램 하나가 전체 시스템을 멈추게 할 수 있다. 또한 수많은 사용자가 마우스 클릭이나 키보드 입력을 할 때, 커널이 즉각적으로 UI 렌더링 프로세스로 문맥을 교환해 주지 않으면 심각한 프리징 현상을 겪게 된다.
@@ -42,7 +44,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 선점이 발생하는 4가지 주요 시점 (트리거)
 1. **Running → Ready (타임 슬라이스 소진)**: 프로세스에 할당된 퀀텀(Quantum)이 만료되어 하드웨어 타이머 인터럽트가 발생했을 때.
@@ -99,7 +101,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 선점형 vs 비선점형 (Preemptive vs Non-preemptive)
 
@@ -133,7 +135,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **경쟁 조건 (Race Condition)과 락(Lock) 지옥**: A 프로세스가 공유 메모리(Linked List)의 포인터를 수정하는 도중에 타임 퀀텀이 다 되어 선점당했다. 이후 B 프로세스가 CPU를 잡고 같은 리스트에 접근하면 데이터 구조가 망가져 커널 패닉이 발생한다.
@@ -169,7 +171,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 강력한 선점 메커니즘은 특정 프로세스의 자원 독점을 원천 봉쇄함으로써, 마우스의 움직임과 키보드 타이핑이 끊기지 않는 매끄러운 사용자 경험 (UX)을 제공하며, 수백 개의 서버 데몬이 공정하게 동시에 실행되는 웹 생태계를 가능하게 만들었다.

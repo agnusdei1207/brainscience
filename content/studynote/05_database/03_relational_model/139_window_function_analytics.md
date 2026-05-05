@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Window Function은 **GROUP BY 없이 행 단위로 집계·순위·이전/다음 행 참조**를 수행하는 SQL:2003 표준 함수이며, OVER(PARTITION BY ... ORDER BY ...)로 윈도우를 정의한다.
+> **핵심**: Window Function은 **GROUP BY 없이 행 단위로 집계·순위·이전/다음 행 참조**를 수행하는 SQL:2003 표준 함수이며, OVER(PARTITION BY ... ORDER BY ...)로 윈도우를 정의한다.
 > 2. **가치**: GROUP BY는 결과를 그룹별 1행으로 축소하지만, Window Function은 **원본 행을 유지하면서 집계 결과를 함께 표시**하여 상관 서브쿼리를 대체하고 성능을 크게 향상시킨다.
 > 3. **판단 포인트**: ROW_NUMBER(순번)·RANK(순위)·SUM OVER(누적합)·LAG/LEAD(이전/다음 행)가 핵심이며, 페이지네이션·순위·이동 평균에 필수이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 SELECT name, dept, sal,

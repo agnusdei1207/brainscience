@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> Pub/Sub는 "라디오 방송국(Topic)과 청취자(Subscription)"와 같다. 방송국은 신호를 보내고, 원하는 청취자 누구든 채널(구독)을 맞추면 들을 수 있다. 청취자가 늘어도 방송국은 더 많은 장비를 설치할 필요가 없다.
+
+> 📝 모범 답안
 
 - **본질**: Google Cloud Pub/Sub (구글 클라우드 펍섭)는 완전 관리형 비동기 메시지 서비스로, 명시적 파티셔닝 없이 글로벌 분산 처리를 지원하며 Pub/Sub 의 발행-구독(Publish-Subscribe) 패턴으로 느슨한 결합(Loose Coupling) 아키텍처를 구현한다.
 - **가치**: Kafka나 Kinesis와 달리 파티션/샤드 수를 사전 계획하지 않아도 되며, 트래픽에 따라 자동으로 확장되므로 GCP 생태계(Dataflow, BigQuery, Cloud Run)에서 최단 시간으로 스트리밍 파이프라인을 구축할 수 있다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. Pub/Sub 기본 개념
 
@@ -42,11 +45,10 @@ categories = "studynote-bigdata"
 | 운영 방식 | 완전 관리형 | 자체 운영/MSK | 완전 관리형 |
 
 **📢 섹션 요약 비유**
-> Pub/Sub는 "라디오 방송국(Topic)과 청취자(Subscription)"와 같다. 방송국은 신호를 보내고, 원하는 청취자 누구든 채널(구독)을 맞추면 들을 수 있다. 청취자가 늘어도 방송국은 더 많은 장비를 설치할 필요가 없다.
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. Pub/Sub 내부 아키텍처
 
@@ -105,7 +107,7 @@ future = publisher.publish(
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 1. GCP Dataflow와의 통합
 
@@ -134,7 +136,7 @@ Pub/Sub → Dataflow (Apache Beam) → BigQuery / GCS / Bigtable
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 1. Pub/Sub 설계 체크리스트
 
@@ -161,7 +163,7 @@ Pub/Sub → Dataflow (Apache Beam) → BigQuery / GCS / Bigtable
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 1. 기대효과
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 동시 등장 행렬(Co-occurrence Matrix)은 코퍼스에서 두 단어가 윈도우(Window) 크기 k 이내에서 함께 등장한 빈도를 행렬 X_ij로 집계하는 고차원 희소 행렬(Sparse Matrix)이며, 단어 의미를 분포 가설(Distributional Hypothesis)로 인코딩한다.
+> **핵심**: 동시 등장 행렬(Co-occurrence Matrix)은 코퍼스에서 두 단어가 윈도우(Window) 크기 k 이내에서 함께 등장한 빈도를 행렬 X_ij로 집계하는 고차원 희소 행렬(Sparse Matrix)이며, 단어 의미를 분포 가설(Distributional Hypothesis)로 인코딩한다.
 > 2. **가치**: 단순 빈도 대신 PPMI(Positive Pointwise Mutual Information)로 변환하면 "the"처럼 의미 없이 자주 등장하는 단어의 영향을 제거하고, 진짜 의미적 연관성만 포착한다.
 > 3. **판단 포인트**: 어휘 크기 |V|×|V| 행렬(|V|=10만이면 100억 원소)의 메모리 문제를 SVD(Singular Value Decomposition) 또는 PPMI + Truncated SVD로 저차원 밀집 벡터로 압축한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 분포 가설(Distributional Hypothesis): "비슷한 문맥에서 사용되는 단어는 비슷한 의미를 가진다"(John Firth, 1957). 이 가설을 수치화한 것이 동시 등장 행렬이다. "은행"이라는 단어 주변에 "돈", "이자", "대출"이 자주 등장한다면, 이 공동 등장 패턴(동시 등장 벡터)이 "은행"의 의미를 담는다. Word2Vec, GloVe, BERT 모두 이 원리를 기반으로 한다.
 
@@ -21,7 +23,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -57,7 +59,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 동시 등장 행렬 기반 LSA(Latent Semantic Analysis, 잠재 의미 분석)는 TF-IDF 행렬에 Truncated SVD를 적용하여 문서-단어 행렬을 저차원으로 압축한다. 이는 GloVe 이전의 대표적 분산 표현 방법이다. 현대 언어 모델(BERT, GPT)은 동시 등장 행렬을 직접 사용하지 않지만, Transformer의 Self-Attention이 사실상 동적 동시 등장 관계를 문맥에 따라 계산한다.
 
@@ -65,7 +67,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 메모리 효율화: scipy.sparse 행렬로 저장하면 0 원소를 제외한 실제 데이터만 저장(희소 행렬 포맷). 어휘 크기 100,000에서 dense 행렬은 10GB, sparse 행렬은 실제 비zero 원소만 저장해 수십 MB로 줄어든다. 윈도우 크기 k 선택: k=2~10이 일반적. k가 크면 넓은 문맥을 포착하지만 노이즈 증가. 구문 관계는 좁은 윈도우, 의미 관계는 넓은 윈도우가 효과적이다.
 
@@ -73,7 +75,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 동시 등장 행렬은 단어 임베딩의 근본 원리(분포 가설)를 구현하는 명시적 방법으로, Word2Vec/GloVe의 암묵적 학습이 실제로는 동시 등장 행렬의 특수 분해와 동치임이 이론적으로 증명됐다. 기술사 시험에서 PPMI 변환의 의미, Truncated SVD 차원 축소, sparse 행렬 효율화를 연결해서 서술하면 완성도 높은 답안이 된다.
 

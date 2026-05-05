@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: 웹 3.0(Web 3.0)은 블록체인 기반 탈중앙화(Decentralization)로 데이터 소유권을 플랫폼이 아닌 사용자에게 돌려주는 패러다임 전환이다.
+> **핵심**: 웹 3.0(Web 3.0)은 블록체인 기반 탈중앙화(Decentralization)로 데이터 소유권을 플랫폼이 아닌 사용자에게 돌려주는 패러다임 전환이다.
 > 2. **가치**: 토큰 이코노믹스(Token Economics)는 암호 토큰으로 참여자 인센티브를 설계해 신뢰 없는 협력(Trustless Cooperation)을 가능케 한다.
 > 3. **판단 포인트**: DeFi(Decentralized Finance), NFT(Non-Fungible Token), DAO(Decentralized Autonomous Organization)는 각각 금융·소유권·거버넌스 영역에서 중앙기관 없이 작동하는 새로운 계층을 형성한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 웹의 진화는 읽기 전용(Web 1.0) → 읽기·쓰기 양방향(Web 2.0) → 읽기·쓰기·소유(Web 3.0)의 세 단계로 구분된다. Web 2.0 시대에는 구글·메타·아마존과 같은 플랫폼 기업이 사용자 데이터를 독점하고 광고 수익을 가져갔다. Web 3.0은 이 구조를 근본적으로 재편하기 위해 블록체인(Blockchain), 스마트 컨트랙트(Smart Contract), P2P(Peer-to-Peer) 네트워크를 결합한다.
 
@@ -25,7 +27,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Web 3.0 기술 스택
 
@@ -69,7 +71,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Web 1.0 / 2.0 / 3.0 비교
 
@@ -95,7 +97,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 기업 Web 3.0 도입 시 고려사항
 
@@ -123,7 +125,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Web 3.0과 토큰 이코노믹스는 데이터 주권 회복, 금융 포용성 확대, 커뮤니티 중심 혁신이라는 세 가지 가치를 동시에 제공한다. 기업의 공급망 투명성 확보(Supply Chain Transparency), 디지털 콘텐츠 창작자 수익화(Creator Economy), 탈중앙 신원 관리(DID) 등 실질적 B2B 적용이 확산되고 있다.
 

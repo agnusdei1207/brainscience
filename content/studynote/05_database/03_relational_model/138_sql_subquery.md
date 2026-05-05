@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 서브쿼리(Subquery)는 **SQL 문 안에 중첩된 또 다른 SELECT 문**이며, WHERE·FROM·SELECT·HAVING 절에서 사용할 수 있고, 스칼라·인라인 뷰·상관(Correlated) 서브쿼리로 구분된다.
+> **핵심**: 서브쿼리(Subquery)는 **SQL 문 안에 중첩된 또 다른 SELECT 문**이며, WHERE·FROM·SELECT·HAVING 절에서 사용할 수 있고, 스칼라·인라인 뷰·상관(Correlated) 서브쿼리로 구분된다.
 > 2. **가치**: JOIN으로 해결하기 어려운 **"평균보다 높은 급여의 직원"·"각 부서의 최고 급여"** 등의 복합 조건을 **직관적으로 표현**할 수 있다.
 > 3. **판단 포인트**: 상관 서브쿼리는 **외부 쿼리 행마다 실행**되어 성능이 나쁘므로, 가능하면 **JOIN이나 Window Function으로 대체**한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 스칼라:  SELECT (SELECT MAX(sal) FROM emp) FROM dual

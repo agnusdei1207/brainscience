@@ -5,23 +5,26 @@ date = "2025-05-22"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> [ Data Cleaning ] --> [ Visualization & Summary ]
+
+> 📝 모범 답안
+
 - **EDA (Exploratory Data Analysis)**: 수집된 데이터를 편견 없이 들여다보며 데이터의 구조, 특징, 이상치 및 변수 간 관계를 시각적으로 탐색하는 데이터 분석의 첫 단계.
 - **가설 생성의 장**: 엄격한 가설 검정(추론 통계)에 앞서, 데이터가 가진 잠재적 패턴을 직관적으로 발견하고 데이터에 대한 통찰(Insight)을 얻는 과정.
 - **품질 진단**: 결측치 처리, 데이터 분포의 왜곡 확인, 변수 변환(Log, Scale) 필요성 등 기계학습 모델링을 위한 전략적 의사결정의 근거를 제공함.
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 빅데이터 분석에서 가장 위험한 것은 성급한 결론입니다. EDA는 존 튜키(John Tukey)가 제안한 방법론으로, 단순히 요약 통계량(평균 등)에만 의존하지 않고 저항성(Resistancy)과 잔차(Residual) 분석 등을 통해 데이터의 '속살'을 파악합니다. 이는 분석의 정확도를 높이고 불필요한 시행착오를 줄이는 핵심 절차입니다.
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 EDA의 4대 핵심 원칙과 분석 워크플로우 아키텍처입니다.
 
 ```text
 [ EDA Iteration Loop & 4 Core Principles ]
 
-  [ Raw Data ] --> [ Data Cleaning ] --> [ Visualization & Summary ]
-                         ^                          |
+  [ Raw Data ] --                         ^                          |
                          | (Discovery)              v
                   [ Model Design ] <--- [ Insights / Hypothesis ]
 
@@ -38,7 +41,7 @@ EDA의 4대 핵심 원칙과 분석 워크플로우 아키텍처입니다.
 3. **다변량 분석 (Multivariate)**: 3개 이상의 변수 조합을 통해 복합적인 영향도 파악 (히트맵, PCA 등).
 4. **시각화의 힘**: '안스콤의 4분할(Anscombe's Quartet)' 예시처럼 요약 통계가 같아도 그래프는 완전히 다를 수 있음을 명심해야 함.
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 | 비교 항목 | 탐색적 분석 (EDA) | 확증적 분석 (CDA, Confirmatory) |
 | :--- | :--- | :--- |
 | **목적** | 패턴 발견, 가설 수립 | 가설 검증, 유의성 확정 |
@@ -47,14 +50,14 @@ EDA의 4대 핵심 원칙과 분석 워크플로우 아키텍처입니다.
 | **수행 시점** | 분석의 시작 (Pre-processing) | 분석의 결론 (Verification) |
 | **상호 작용** | EDA에서 발견한 패턴을 CDA에서 검증하는 상호보완 관계 |
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 * **적용 전략 (Implementation Strategy)**:
   * **데이터 시각화 도구 활용**: Python의 Seaborn, Plotly 등을 활용하여 동적 시각화를 수행하고, 데이터의 층(Layer)별 특징 파악.
   * **반복적 프로세스**: 한 번의 EDA로 끝나지 않고, 피처 엔지니어링(Feature Engineering) 후에 다시 EDA를 수행하여 데이터의 변화를 지속적으로 관찰.
 * **기술사적 판단 (Architectural Judgment)**:
   * 빅데이터 환경에서 모든 행을 시각화하는 것은 불가능함. 따라서 신뢰할 수 있는 무작위 샘플링(Sampling)을 통해 EDA를 수행하거나, 데이터 레이크의 메타데이터를 활용한 '프로파일링(Profiling)' 자동화 시스템 구축이 필수적임.
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 EDA는 분석 모델의 품질(Garbage In, Garbage Out 방지)을 결정짓는 가장 중요한 공정입니다. 향후에는 AI가 자동으로 데이터의 특징을 파악하여 가장 적합한 시각화와 이상 징후 보고서를 생성해 주는 'Auto-EDA' 도구들이 데이터 거버넌스 시스템의 표준 기능으로 통합될 것입니다.
 
 ### 📌 관련 개념 맵 (Knowledge Graph)

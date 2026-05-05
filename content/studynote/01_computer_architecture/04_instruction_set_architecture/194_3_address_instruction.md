@@ -5,14 +5,16 @@ date = "2026-03-19"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 3-주소 명령어(Three-Address Instruction)는 명령어 포맷 안에 데이터를 가리키는 **주소 필드가 3개(Source 2개, Destination 1개)** 존재하는 가장 이상적이고 완전한 형태의 명령어다.
+> **핵심**: 3-주소 명령어(Three-Address Instruction)는 명령어 포맷 안에 데이터를 가리키는 **주소 필드가 3개(Source 2개, Destination 1개)** 존재하는 가장 이상적이고 완전한 형태의 명령어다.
 > 2. **가치**: `C = A + B`처럼 연산 과정에서 **원본 데이터(A, B)가 전혀 파괴되지 않아** 레지스터를 재사용하기 매우 좋으며, 컴파일러가 코드를 최적화하기 가장 편안한 환경을 제공한다.
 > 3. **융합**: ARM, MIPS, RISC-V 등 **현대 RISC 아키텍처의 절대적인 표준 포맷**으로 융합되어, 고정 길이 명령어(Fixed-length)와 슈퍼스칼라(Superscalar) 병렬 처리의 물리적 토대가 되었다.
 
+> 📝 모범 답안
+
 ---
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 3-주소 명령어(Three-Address Instruction)는 명령어 포맷 안에 연산 대상인 두 개의 소스(Source) 주소와 결과를 담을 한 개의 목적지(Destination) 주소를 모두 독립적으로 명시하는 형식이다. `C = A + B`와 같이 연산 과정에서 원본 데이터가 보존되는 '비파괴적(Non-destructive)' 구조를 갖는다.
 
@@ -41,7 +43,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (RISC 파이프라인을 지탱하는 4대 필드)
 
@@ -79,7 +81,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 심층 기술 비교: 3-주소 명령어의 득과 실
 
@@ -120,7 +122,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -166,7 +168,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

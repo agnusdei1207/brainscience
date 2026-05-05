@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Actor-Critic (A2C, Advantage Actor-Critic)은 정책 함수(Policy Function) π_θ를 학습하는 행동자(Actor)와 가치 함수(Value Function) V_φ를 학습하는 비평자(Critic)를 동시에 학습하여 정책 그래디언트(Policy Gradient)의 분산(Variance)을 줄이는 강화학습 방법이다.
+> **핵심**: Actor-Critic (A2C, Advantage Actor-Critic)은 정책 함수(Policy Function) π_θ를 학습하는 행동자(Actor)와 가치 함수(Value Function) V_φ를 학습하는 비평자(Critic)를 동시에 학습하여 정책 그래디언트(Policy Gradient)의 분산(Variance)을 줄이는 강화학습 방법이다.
 > 2. **가치**: 이점 함수(Advantage Function) A(s,a) = Q(s,a) - V(s)는 특정 행동이 평균적인 행동보다 얼마나 더 좋은지를 나타내며, 비평자의 V(s) 기준선(Baseline)을 통해 그래디언트 업데이트의 분산을 극적으로 감소시킨다.
 > 3. **판단 포인트**: A3C (Asynchronous Advantage Actor-Critic)는 A2C의 비동기 병렬 버전이고, PPO (Proximal Policy Optimization)는 정책 업데이트 크기를 클리핑(Clipping)으로 제한하여 안정성을 극대화한 현재 표준 방법이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 순수 정책 그래디언트(REINFORCE 알고리즘)는 에피소드 전체의 누적 보상 G_t를 사용하여 정책을 업데이트한다:
 
@@ -33,7 +35,7 @@ Actor-Critic은 이 두 아이디어를 결합하여, 행동자(Actor)가 정책
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 이점 함수 (Advantage Function)
 
@@ -96,7 +98,7 @@ A(s_t, a_t) ≈ R_t + γ·V(s_{t+1}) - V(s_t)   (TD 오류)
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 알고리즘 | 정책 업데이트 | 병렬성 | 안정성 | 샘플 효율 |
 |:---|:---|:---|:---|:---|
@@ -120,7 +122,7 @@ r_t(θ) = π_θ(a_t|s_t) / π_θ_old(a_t|s_t)  (확률비)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **OpenAI Gym 환경 적용 예시**:
 - 연속 행동 공간(Continuous Action Space): Mujoco 로봇 제어 → PPO/SAC 적합
@@ -142,7 +144,7 @@ L = L^Actor - α_critic·L^Critic + β·H(π_θ)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Actor-Critic은 가치 기반(Value-based) 방법(Q-러닝)과 정책 기반(Policy-based) 방법(REINFORCE)의 장점을 결합한 하이브리드 아키텍처로, 현대 강화학습의 주류 패러다임이다.
 

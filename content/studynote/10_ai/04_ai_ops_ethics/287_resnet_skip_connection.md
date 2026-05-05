@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ResNet (Residual Network, He et al., 2015)은 잔차 블록(Residual Block)의 스킵 연결(Skip Connection)을 통해 **기울기 소실(Vanishing Gradient) 없이 152층 이상의 초심층 네트워크**를 학습 가능하게 한 혁신적 아키텍처다.
+> **핵심**: ResNet (Residual Network, He et al., 2015)은 잔차 블록(Residual Block)의 스킵 연결(Skip Connection)을 통해 **기울기 소실(Vanishing Gradient) 없이 152층 이상의 초심층 네트워크**를 학습 가능하게 한 혁신적 아키텍처다.
 > 2. **가치**: H(x) = F(x) + x 공식에서 네트워크는 완전한 변환 H(x) 대신 잔차(Residual) F(x) = H(x) - x만 학습하면 되므로, 최적해가 항등 함수(Identity Mapping)에 가까울 때 F(x)≈0으로 수렴하는 것이 훨씬 쉽다.
 > 3. **판단 포인트**: 시험에서는 스킵 연결이 기울기 소실을 방지하는 수학적 원리, 보틀넥(Bottleneck)과 기본(Basic) 잔차 블록의 차이, Wide ResNet·ResNeXt 등 변형과의 비교를 묻는다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 깊이와 성능의 역설
 
@@ -39,7 +41,7 @@ $$H(x) = F(x) + x$$
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 잔차 블록 (Residual Block) 구조
 
@@ -121,7 +123,7 @@ $$\frac{\partial L}{\partial x_l} = \frac{\partial L}{\partial x_L} \cdot \left(
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### ResNet 변형 아키텍처
 
@@ -157,7 +159,7 @@ x → [Conv] → [Conv] → y    x → [Conv] → [Conv] → y
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 사전 학습 (Pre-trained) ResNet 활용
 
@@ -189,7 +191,7 @@ Faster R-CNN (Region-based CNN), Mask R-CNN, Feature Pyramid Network (FPN)에서
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### ResNet의 3대 혁신
 

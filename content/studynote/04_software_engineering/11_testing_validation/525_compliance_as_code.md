@@ -6,15 +6,17 @@ description = "규정과 정책을 코드와 자동화로 관리하는 방식"
 taxonomy = ""
 tags = ["Software Engineering", "Compliance", "Policy as Code", "Automation", "Governance"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Compliance as Code는 규정을 사람이 아니라 코드로 검증하는 방식이다.
+> **핵심**: Compliance as Code는 규정을 사람이 아니라 코드로 검증하는 방식이다.
 > 2. **가치**: 정책 위반을 배포 전에 자동으로 잡는다.
 > 3. **판단 포인트**: 정책을 문서가 아니라 실행 가능한 규칙으로 만든다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 컴플라이언스는 수동 점검만으로는 지속하기 어렵다. 그래서 정책을 코드로 옮겨 자동화한다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Compliance", "Policy as Code", "Automation", "G
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 정책은 선언형 규칙과 검사 도구로 구현된다.
 
@@ -42,7 +44,7 @@ tags = ["Software Engineering", "Compliance", "Policy as Code", "Automation", "G
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Compliance as Code는 Security as Code, Infrastructure as Code와 잘 맞는다.
 
@@ -58,7 +60,7 @@ Compliance as Code는 Security as Code, Infrastructure as Code와 잘 맞는다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 IaC, 정책 엔진, 배포 파이프라인, 감사 증적 관리가 필요하다.
 
@@ -71,7 +73,7 @@ Compliance as Code는 Security as Code, Infrastructure as Code와 잘 맞는다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Compliance as Code는 규정 준수를 운영 가능한 시스템으로 바꾼다.
 

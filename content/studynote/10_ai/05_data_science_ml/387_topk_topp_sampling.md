@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Top-K 샘플링은 확률 상위 K개 토큰에서, Top-P (Nucleus Sampling, 핵 샘플링)는 누적 확률 합이 P 이상인 최소 토큰 집합에서 다음 토큰을 샘플링하여 저확률 토큰을 제거한다.
+> **핵심**: Top-K 샘플링은 확률 상위 K개 토큰에서, Top-P (Nucleus Sampling, 핵 샘플링)는 누적 확률 합이 P 이상인 최소 토큰 집합에서 다음 토큰을 샘플링하여 저확률 토큰을 제거한다.
 > 2. **가치**: Top-K는 고정 개수로 단순하지만 분포 형태 무시의 단점이 있고, Top-P는 분포 뾰족함에 적응적으로 대응해 더 자연스러운 텍스트를 생성한다.
 > 3. **판단 포인트**: Top-P=0.9와 Temperature=0.8의 조합이 일반 목적 생성의 현업 표준이며, 두 기법을 순차 적용해 사용하는 것이 일반적이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 그리디 디코딩(Greedy)은 항상 최고 확률 토큰만 선택해 반복적이고 지루한 텍스트를 생성한다. 완전 무작위 샘플링은 문법·의미 오류가 많다. 두 극단 사이의 균형을 위해 Top-K와 Top-P가 도입됐다.
 
@@ -23,7 +25,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Top-K 샘플링
 
@@ -75,7 +77,7 @@ P=0.9 예시:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Top-P는 2019년 Holtzman et al.의 "The Curious Case of Neural Text Degeneration" 논문에서 제안됐다. 이 논문은 그리디/Beam Search가 반복 루프에 빠지고, 완전 무작위 샘플링은 일관성 없는 텍스트를 생성하는 **텍스트 퇴화 (Text Degeneration)** 문제를 분석했다.
 
@@ -86,7 +88,7 @@ Top-P는 2019년 Holtzman et al.의 "The Curious Case of Neural Text Degeneratio
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **ChatGPT/GPT-4**: Top-P=1.0, Temperature=1.0 기본값 (사용자 설정 가능)
 **창의적 글쓰기**: Temperature=0.9, Top-P=0.95
@@ -99,7 +101,7 @@ Top-P는 2019년 Holtzman et al.의 "The Curious Case of Neural Text Degeneratio
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Top-K와 Top-P는 LLM 디코딩의 핵심 제어 파라미터로, 창의성과 일관성의 균형을 잡는 실용적 도구다. Top-P의 적응적 후보 선택은 분포의 형태에 관계없이 일정 수준의 텍스트 품질을 보장한다. 현대 LLM 서비스의 기본 파라미터 이해는 프롬프트 엔지니어링의 필수 기초다.
 

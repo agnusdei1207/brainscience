@@ -5,11 +5,15 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## �� ���� (3� ��)
 > 1. **��**: ��� �� (Message Passing)� ���� �� ���� ��� ��(Mediation)� �� ���� ���(Message) ��� ���� ����� IPC (Inter-Process Communication) ����.
 > 2. **��**: �� ���(Shared Memory)� �� ��� ���� ��� ��, ��(Queuing)� �����, ���(Synchronization) ��� �� ���� ���� ��� � �� ��� ���� ��� ���� ����.
 > 3. **��**: System V IPC� `msgsnd()`/`msgrcv()` API� ����, ������(Microkernel) ������ ���� � �� ��� ��� ��� ����, �� ������ RPC (Remote Procedure Call)� ��� �(Message Queue) ����� ��� ��.
+
+> 📝 모범 답안
+
+## �� ���� (3� ��)
 
 ---
 

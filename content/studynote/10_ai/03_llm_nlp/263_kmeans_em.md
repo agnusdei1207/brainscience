@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: K-Means 클러스터링(K-Means Clustering)은 데이터를 K개의 군집으로 분할하기 위해 각 점을 가장 가까운 중심점(Centroid)에 할당하고, 중심점을 반복 재계산하는 EM(Expectation-Maximization) 구조의 비지도 학습 알고리즘이다.
+> **핵심**: K-Means 클러스터링(K-Means Clustering)은 데이터를 K개의 군집으로 분할하기 위해 각 점을 가장 가까운 중심점(Centroid)에 할당하고, 중심점을 반복 재계산하는 EM(Expectation-Maximization) 구조의 비지도 학습 알고리즘이다.
 > 2. **가치**: 단순하고 빠르지만 K값을 사전에 지정해야 하고, 구형(Spherical) 클러스터 외에는 성능이 저하되는 한계를 GMM(Gaussian Mixture Model)이나 DBSCAN으로 극복할 수 있다.
 > 3. **판단 포인트**: 엘보우 방법(Elbow Method)과 실루엣 점수(Silhouette Score)로 최적 K를 선택하고, 초기화에 K-Means++ 알고리즘을 사용하면 지역 최적해(Local Optimum)에 빠지는 위험을 줄일 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 K-Means는 레이블 없이 데이터를 자동으로 그룹화하는 가장 대표적인 **비지도 학습(Unsupervised Learning)** 알고리즘이다.
 
@@ -42,7 +44,7 @@ $$\text{Inertia} = \sum_{k=1}^{K} \sum_{x \in C_k} \|x - \mu_k\|^2$$
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### K-Means 알고리즘 EM 구조
 
@@ -124,7 +126,7 @@ K-Means는 EM 알고리즘의 하드(Hard) 버전이고, GMM(Gaussian Mixture Mo
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### K-Means의 한계와 대안
 
@@ -170,7 +172,7 @@ K-Means는 EM 알고리즘의 하드(Hard) 버전이고, GMM(Gaussian Mixture Mo
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 고객 세분화 K-Means 파이프라인
 
@@ -207,7 +209,7 @@ K-Means는 EM 알고리즘의 하드(Hard) 버전이고, GMM(Gaussian Mixture Mo
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 K-Means를 올바르게 활용하면:
 

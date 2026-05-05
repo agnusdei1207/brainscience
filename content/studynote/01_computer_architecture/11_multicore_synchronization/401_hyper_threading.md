@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 하이퍼스레딩 (Hyper-Threading)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 인텔(Intel)이 **동시 멀티스레딩(SMT, Simultaneous Multithreading)** 아키텍처를 자신들의 데스크탑 및 서버 프로세서에 세계 최초로 상용화하며 붙인 고유의 상표명(브랜드)이자 구현체다.
+> **핵심**: 인텔(Intel)이 **동시 멀티스레딩(SMT, Simultaneous Multithreading)** 아키텍처를 자신들의 데스크탑 및 서버 프로세서에 세계 최초로 상용화하며 붙인 고유의 상표명(브랜드)이자 구현체다.
 > 2. **가치**: 1개의 물리적 프로세서 코어 내부에 아키텍처 상태(Registers, PC)를 2개 복제해 두어, 운영체제(Windows/Linux)가 이를 완벽한 2개의 **논리 코어(Logical Core)**로 인식하게 속이고 유휴 연산기를 100% 착취해 낸다.
 > 3. **융합**: 멀티스레딩 소프트웨어 패러다임과 융합되어 PC 시장의 혁명을 이끌었으나, 물리 자원(L1/L2 캐시)을 적나라하게 공유하는 특성상 '스펙터(Spectre)' 같은 보안 취약점과 융합되며 클라우드 환경에서는 성능 저하를 감수하고 끄기도 하는 양날의 검이 되었다.
 
+> 📝 모범 답안
+
+# 하이퍼스레딩 (Hyper-Threading)
+
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 하이퍼스레딩 (Hyper-Threading, HT)은 2002년 인텔 펜티엄 4(Pentium 4) 시대에 혜성처럼 등장한 외계인 고문 기술의 결정체다. 
 
@@ -46,7 +48,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 하이퍼스레딩이 제대로 동작하려면 하드웨어가 두 인격(스레드)의 충돌을 막고, 잉여 자원을 0.1나노초 단위로 정교하게 쪼개주는(Partitioning) 물리적 믹서기가 되어야 한다.
 
@@ -82,7 +84,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 하이퍼스레딩은 완벽한 기술이 아니다. 가짜 코어(Logical)와 진짜 코어(Physical) 사이의 극복 불가능한 물리적 차이 때문에, 최신 아키텍처에서는 빼버려야 하는 애물단지 취급을 받기도 한다.
 
@@ -117,7 +119,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 실무 백엔드 개발자나 시스템 엔지니어가 하이퍼스레딩(HT)의 본질을 모르고 OS 스레드를 찍어내면, 수천만 원짜리 서버가 지터(Jitter)의 늪에 빠져 숨을 헐떡이게 된다.
 
@@ -155,7 +157,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 하이퍼스레딩(Hyper-Threading)은 무어의 법칙이 클럭의 장벽(Power Wall)에 막혀 피를 흘릴 때, 가장 적은 트랜지스터로 가장 큰 마케팅적, 체감적 성능 향상을 가져다준 IT 역사상 최고의 꼼수이자 혁신이다.
 

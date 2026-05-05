@@ -2,8 +2,12 @@
 title = "83. MRP II (Manufacturing Resource Planning) - 자재뿐 아니라 설비, 인력 등 생산 자원 전체 포괄 계획 (1980년대)"
 weight = 83
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> **핵심**: (개념 본질)
+> **비유**: (개념 비유)
+
+> 📝 모범 답안
 
 - **본질**: MRP I (Material Requirements Planning)은 자재 소요량을 맞추는 데 강하지만, MRP II (Manufacturing Resource Planning)는 설비, 인력, 재무까지 포함해 "실행 가능한 계획"으로 확장한다.
 - **가치**: 폐쇄 루프 (Closed-Loop) 피드백이 있어야 계획이 문서에서 끝나지 않고 MPS (Master Production Schedule) → MRP → CRP (Capacity Requirements Planning) → SFC (Shop Floor Control)로 현장에 내려간다.
@@ -11,7 +15,7 @@ weight = 83
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 MRP I (Material Requirements Planning)은 "무엇을, 언제, 얼마나 주문할 것인가"를 계산하는 데 탁월했다. BOM (Bill of Materials)을 기준으로 자재를 폭발시키고 납기와 재고를 맞추는 데는 유용했지만, 실제 공장에서는 설비가 이미 가동 중이거나 작업자가 부족하거나 교대조가 맞지 않는 일이 흔했다. 즉, 자재는 있는데 못 만드는 상황이 많았다.
 
@@ -35,7 +39,7 @@ MRP I (Material Requirements Planning)은 "무엇을, 언제, 얼마나 주문�
 
 - **📢 섹션 요약 비유**: 장바구니에 재료만 정확히 담아도, 냄비와 가스불이 부족하면 밥은 못 짓는다. MRP II는 재료뿐 아니라 조리대와 요리사 시간까지 같이 보는 방식이다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 MRP II의 핵심은 폐쇄 루프 (Closed-Loop)다. 계획을 세우고, 능력을 검토하고, 현장에서 실행하고, 실제 결과를 다시 계획에 반영해야 한다. 이때 MPS는 최상위 생산 일정, MRP는 자재 소요 계산, RCCP (Rough-Cut Capacity Planning)는 거친 능력 검토, CRP (Capacity Requirements Planning)는 상세 능력 검토, SFC (Shop Floor Control)는 현장 통제와 피드백을 담당한다.
 
@@ -63,7 +67,7 @@ MRP II는 자재 데이터뿐 아니라 라우팅, 공정 시간, 교대 계획,
 
 - **📢 섹션 요약 비유**: 시험 시간표를 짤 때 교실 수와 감독 교사를 같이 봐야 한다. 자리만 맞고 교실이 없으면 실제 시험은 치를 수 없다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 MRP I, MRP II, ERP (Enterprise Resource Planning)는 같은 계열이지만 범위가 다르다. MRP I은 자재 중심, MRP II는 제조 자원 중심, ERP는 전사 자원 중심이다. 1990년대에 Gartner가 MRP II의 확장형을 ERP로 부르기 시작하면서, 제조 계획은 회사 전체 프로세스와 연결되는 개념으로 자리 잡았다.
 
@@ -86,7 +90,7 @@ MRP I, MRP II, ERP (Enterprise Resource Planning)는 같은 계열이지만 범�
 
 - **📢 섹션 요약 비유**: 자동차 내비게이션이 길만 알려주고 도로 공사와 차선 수를 무시하면 곤란하다. MRP II는 길, 차선, 정체까지 함께 보는 내비게이션이다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서 MRP II의 성패는 기능이 아니라 데이터 품질과 피드백 루프에 달려 있다. BOM (Bill of Materials) 정확도, 공정 시간, 재고 실사, 작업장 일정, 설비 가동률이 맞지 않으면 아무리 좋은 계획도 틀어진다. 그래서 도입 전에는 "모델"보다 "마스터 데이터"를 먼저 정비해야 한다.
 
@@ -108,7 +112,7 @@ MRP I, MRP II, ERP (Enterprise Resource Planning)는 같은 계열이지만 범�
 
 - **📢 섹션 요약 비유**: 레스토랑은 재료 주문만 잘해선 안 된다. 주방 불판 수, 셰프 수, 피크 시간까지 함께 봐야 손님이 안 기다린다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 MRP II의 기대효과는 재고 감소, 납기 준수, 설비 활용도 향상, 원가 통제의 정교화다. 무엇보다 자재와 능력의 불일치를 미리 드러내므로, 현장에서 "계획은 멀쩡한데 못 만든다"는 상황을 줄여 준다. 이 점에서 MRP II는 ERP로 가기 위한 제조 운영의 중간 다리라고 볼 수 있다.
 

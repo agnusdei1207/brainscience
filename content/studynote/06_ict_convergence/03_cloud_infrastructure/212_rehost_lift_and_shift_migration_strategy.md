@@ -5,17 +5,19 @@ weight = 212
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-# 리호스트 (Rehost / Lift and Shift) - 온프레미스 인프라의 강제 이주
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 리호스트(Rehost)는 사내 전산실(On-Premise)에서 돌던 낡은 애플리케이션의 소스 코드나 아키텍처를 단 1바이트도 수정하지 않고, **그대로 번쩍 들어 올려(Lift) 클라우드의 빈 가상 머신(IaaS EC2 깡통 서버)에 욱여넣는(Shift)** 가장 원시적이고 원초적인 마이그레이션 전략이다.
+> **핵심**: 리호스트(Rehost)는 사내 전산실(On-Premise)에서 돌던 낡은 애플리케이션의 소스 코드나 아키텍처를 단 1바이트도 수정하지 않고, **그대로 번쩍 들어 올려(Lift) 클라우드의 빈 가상 머신(IaaS EC2 깡통 서버)에 욱여넣는(Shift)** 가장 원시적이고 원초적인 마이그레이션 전략이다.
 > 2. **가치**: 코드 분석이나 리팩토링의 고통을 생략하므로 수백 대의 서버를 단 몇 주 만에 클라우드로 빼낼 수 있다. 당장 이번 달에 데이터센터 건물 임대 계약이 끝나 방을 빼야 하는 절박한 기업들에게, 비즈니스 중단 없이(Zero-downtime) 데이터센터를 탈출할 수 있게 해주는 유일한 생명줄이다.
 > 3. **융합**: 하지만 이 '무식한 이사'는 필연적으로 클라우드의 **오토스케일링(탄력성) 축복을 걷어차고 고정된 가상 머신 요금 폭탄(Cloud Tax)**을 맞게 되는 비극적 결말을 낳는다. 따라서 리호스트는 클라우드 네이티브(컨테이너화)로 나아가기 위한 1차 피난처(Stepping Stone)일 뿐, 결코 종착역이 되어서는 안 된다.
 
+> 📝 모범 답안
+
+# 리호스트 (Rehost / Lift and Shift) - 온프레미스 인프라의 강제 이주
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 클라우드 마이그레이션 6R 전략 중 하나인 리호스트(Rehost, 일명 Lift and Shift)는 애플리케이션의 내부 코드, 데이터베이스 스키마, 시스템 아키텍처를 전혀 수정하지 않은 상태로, 물리적 인프라 환경만 클라우드의 IaaS(Infrastructure as a Service) 환경으로 복사하여 이전하는 방식이다.
 
@@ -67,7 +69,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 리호스트 (Lift and Shift)를 선택해야만 하는 3가지 피의 상황
 
@@ -93,7 +95,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 3대 마이그레이션 진화 스펙트럼 (Rehost vs Replatform vs Refactor)
 
@@ -115,7 +117,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 설계 안티패턴
 
@@ -176,7 +178,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

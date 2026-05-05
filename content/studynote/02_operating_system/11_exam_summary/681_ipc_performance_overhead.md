@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# IPC 기법 성능 오버헤드
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: IPC(Inter-Process Communication)는 독립된 메모리 공간을 가진 프로세스들이 데이터를 주고받기 위한 운영체제 레벨의 통신 규약이다. 프로세스 간의 완벽한 격리(Isolation)를 허무는 행위이므로 필연적으로 성능 오버헤드가 발생한다.
+> **핵심**: IPC(Inter-Process Communication)는 독립된 메모리 공간을 가진 프로세스들이 데이터를 주고받기 위한 운영체제 레벨의 통신 규약이다. 프로세스 간의 완벽한 격리(Isolation)를 허무는 행위이므로 필연적으로 성능 오버헤드가 발생한다.
 > 2. **오버헤드의 근원**: IPC 성능을 갉아먹는 3대 주범은 데이터를 송신자 $\rightarrow$ 커널 $\rightarrow$ 수신자로 2번 복사하는 **메모리 카피(Memory Copy)**, 유저 모드와 커널 모드를 오가는 **문맥 교환(Context Switch)**, 그리고 다수의 프로세스가 자원을 다툴 때 발생하는 **동기화 락(Synchronization Lock)**이다.
 > 3. **최적화**: 파이프나 소켓 같은 전통적인 메시지 패싱(Message Passing)은 사용하기 쉽지만 복사 오버헤드가 크고, 공유 메모리(Shared Memory)는 복사가 0회(Zero-copy)로 가장 빠르지만 개발자가 직접 락(Mutex)을 관리해야 하는 치명적인 트레이드오프를 갖는다.
 
+> 📝 모범 답안
+
+# IPC 기법 성능 오버헤드
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **IPC (Inter-Process Communication)**: 운영체제가 제공하는 파이프(Pipe), 메시지 큐(Message Queue), 공유 메모리(Shared Memory), 소켓(Socket) 등의 프로세스 간 데이터 통신 메커니즘.
@@ -42,7 +44,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 메시지 패싱(Message Passing) 아키텍처와 오버헤드
 
@@ -100,7 +102,7 @@ POSIX `shm_open()`과 `mmap()`을 활용한 가장 빠른 IPC 방식이다.
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### IPC 기법별 성능 오버헤드 비교표
 
@@ -122,7 +124,7 @@ POSIX `shm_open()`과 `mmap()`을 활용한 가장 빠른 IPC 방식이다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -169,7 +171,7 @@ POSIX `shm_open()`과 `mmap()`을 활용한 가장 빠른 IPC 방식이다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 소프트 포크(Soft Fork)는 하위 호환(Backward Compatible) 프로토콜 업그레이드 — 업그레이드하지 않은 노드(구버전)도 새 규칙으로 만들어진 블록을 유효하다고 인식하며, 네트워크 분리 없이 규칙을 강화할 수 있다.
 > 2. 소프트 포크의 핵심은 "규칙을 강화(Tighten)"하는 것 — 이전에 허용되던 트랜잭션 유형을 새 규칙에서 제한하거나, 기존 필드를 재해석하여 새 기능을 추가한다. 구버전 노드는 새 블록이 기존 규칙을 여전히 따르는지만 검증하므로 분기 없이 동작한다.
 > 3. 비트코인의 SegWit(Segregated Witness)이 소프트 포크의 대표 사례 — 트랜잭션 서명 데이터를 별도 영역으로 분리하여 사실상 블록 크기를 늘리면서도 구버전 노드와의 호환성을 유지한 기술적 성취다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 소프트 포크 개념
+## 1. 개요 및 필요성
 
 ```
 포크 유형 비교:
@@ -55,7 +58,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. BIP (Bitcoin Improvement Proposal) 활성화
+## 2. 구성요소
 
 ```
 BIP (Bitcoin Improvement Proposal):
@@ -99,7 +102,7 @@ Taproot 활성화 (2021):
 
 ---
 
-## Ⅲ. SegWit (Segregated Witness)
+## 3. 구조 및 동작 원리
 
 ```
 SegWit (BIP141, 2017):
@@ -148,7 +151,7 @@ SegWit 해결책:
 
 ---
 
-## Ⅳ. Taproot 소프트 포크
+## 4. 비교 및 트레이드오프
 
 ```
 Taproot (BIP340/341/342, 2021):
@@ -195,7 +198,7 @@ Taproot 활성화 결과:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 거래소 SegWit 도입
+## 5. 실무 적용 및 최적화 기법
 
 ```
 암호화폐 거래소 SegWit 마이그레이션:

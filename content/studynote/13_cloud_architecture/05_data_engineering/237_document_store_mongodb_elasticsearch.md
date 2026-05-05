@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 도큐먼트 저장소(Document Store)는 JSON/BSON 형태의 **계층적 중첩 구조**를 단일 문서(Document)로 저장하며, 각 문서가 서로 다른 필드를 가질 수 있는 **스키마리스(Schema-less)** 유연성을 제공한다.
+> **핵심**: 도큐먼트 저장소(Document Store)는 JSON/BSON 형태의 **계층적 중첩 구조**를 단일 문서(Document)로 저장하며, 각 문서가 서로 다른 필드를 가질 수 있는 **스키마리스(Schema-less)** 유연성을 제공한다.
 > 2. **가치**: MongoDB는 복잡한 중첩 객체를 JOIN 없이 단일 문서로 저장해 **읽기 성능을 극대화**하고, Elasticsearch는 역인덱스(Inverted Index) 기반의 **전문 검색(Full-Text Search)**에 특화되어 있다.
 > 3. **판단 포인트**: MongoDB는 애플리케이션 데이터 저장소, Elasticsearch는 검색·분석·로그 가시성 플랫폼으로 역할이 다르며, 많은 기업이 **주 저장소(MongoDB) + 검색 인덱스(Elasticsearch)** 패턴을 병행한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 전자상거래 주문 데이터를 RDBMS로 저장하려면 orders, order_items, shipping_addresses 등 여러 테이블로 정규화하고 JOIN해야 한다. 도큐먼트 저장소는 이 데이터를 **하나의 JSON 문서**로 저장하여 JOIN 없이 단일 조회로 완성된 데이터를 반환한다.
 
@@ -42,7 +44,7 @@ Document Store (MongoDB):
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### MongoDB 아키텍처
 
@@ -123,7 +125,7 @@ P = Primary, R = Replica
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### MongoDB vs Elasticsearch 비교
 
@@ -157,7 +159,7 @@ Kibana: ES 데이터 시각화 대시보드
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### MongoDB 인덱싱 전략
 
@@ -207,7 +209,7 @@ db.orders.explain("executionStats").find({ customer_id: "U001" })
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

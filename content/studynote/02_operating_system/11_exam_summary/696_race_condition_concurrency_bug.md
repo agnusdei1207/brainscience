@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 경쟁 조건 (Race Condition)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 경쟁 조건(Race Condition)은 두 개 이상의 스레드나 프로세스가 **공유 자원(메모리, 파일)에 동시에 접근하여 수정하려 할 때**, 실행 타이밍이나 순서(Scheduling)에 따라 결과값이 제멋대로 달라지는 치명적인 동시성 버그다.
+> **핵심**: 경쟁 조건(Race Condition)은 두 개 이상의 스레드나 프로세스가 **공유 자원(메모리, 파일)에 동시에 접근하여 수정하려 할 때**, 실행 타이밍이나 순서(Scheduling)에 따라 결과값이 제멋대로 달라지는 치명적인 동시성 버그다.
 > 2. **원인**: C언어나 Java의 `count++` 같은 단 한 줄의 코드조차 CPU 내부에서는 [읽기(Read) $\rightarrow$ 수정(Modify) $\rightarrow$ 쓰기(Write)]의 3단계 기계어로 나뉘며, 이 3단계 중간에 다른 스레드가 난입(Context Switch)하기 때문에 발생한다.
 > 3. **해결책**: 이를 막기 위해서는 여러 줄의 명령어가 절대로 중간에 끊기지 않고 한 번에 실행되는 **원자성(Atomicity)**을 보장해야 하며, 이를 위해 임계 구역(Critical Section)에 **상호 배제(Mutex 락)**를 걸거나 원자적 하드웨어 명령어를 사용해야 한다.
 
+> 📝 모범 답안
+
+# 경쟁 조건 (Race Condition)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **경쟁 (Race)**: 여러 스레드가 하나의 자원을 차지하기 위해 앞다투어 달리기 경주를 하는 상황.
@@ -39,7 +41,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 경쟁 조건의 근본 원인: "Read-Modify-Write"의 비원자성
 
@@ -96,7 +98,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 경쟁 조건의 3대 전제 조건
 
@@ -117,7 +119,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -166,7 +168,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

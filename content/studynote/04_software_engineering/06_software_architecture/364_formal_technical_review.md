@@ -3,17 +3,19 @@ title = "364. 정형 기술 검토 (FTR, Formal Technical Review) 의 지침"
 date = 2026-04-05
 weight = 364
 +++
+## 0. 핵심 인사이트
 
-# 364. 정형 기술 검토 (FTR, Formal Technical Review)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 정형 기술 검토(Formal Technical Review)는 소프트웨어 산출물(설계서, 코드, 문서 등)을 공식적(Formal)으로 검토하는 구조화된 중재자(Moderator) 주도型的 리뷰 기법으로, 결함 발견과 품질 향상을 목적으로 한다.
+> **핵심**: 정형 기술 검토(Formal Technical Review)는 소프트웨어 산출물(설계서, 코드, 문서 등)을 공식적(Formal)으로 검토하는 구조화된 중재자(Moderator) 주도型的 리뷰 기법으로, 결함 발견과 품질 향상을 목적으로 한다.
 > 2. **가치**: 개인 리뷰(Individual Review)보다 다수의 전문가가 동시에 발견할 수 없는隐藏된 결함을 협력적으로 발견하며, 검토를 통해 결함 수정 비용을 동적 테스트 발견 비용의 1/10~1/100 수준으로 절감할 수 있다.
 > 3. **융합**: IEEE Standard 1028과 ISO/IEC 20246에서 FTR 절차를 표준화하며, 인스펙션(Inspection), 워크쓰루(Walkthrough)와 함께 소프트웨어 검증(V&V) 활동의核心를 구성한다.
 
+> 📝 모범 답안
+
+# 364. 정형 기술 검토 (FTR, Formal Technical Review)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: FTR은 "형식적(Formal)"이라는 단어가 의미하듯, 정해진 절차, 역할(Reviewer, Author, Moderator), 진입 기준(Entry Criteria), 종착 기준(Exit Criteria)이 존재하는 **조직적·체계적 검토 프로세스**이다. 단순히 문서를 읽고 피드백을 주는 것이 아니라, 사전 준비, 회의, 후속 조치까지 전 과정이 구조화되어 있다.
 
@@ -30,7 +32,7 @@ weight = 364
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### FTR 프로세스 4단계
 
@@ -95,7 +97,7 @@ weight = 364
 
 ---
 
-## Ⅲ. 구현 및 실무 응용 (Implementation & Practice)
+## 3. 구조 및 동작 원리
 
 ### 인스펙션 vs 워크쓰루 vs FTR 비교
 
@@ -127,7 +129,7 @@ weight = 364
 
 ---
 
-## Ⅳ. 품질 관리 및 테스트 (Quality & Testing)
+## 4. 비교 및 트레이드오프
 
 ### 결함 심각도/우선순위 분류
 
@@ -161,7 +163,7 @@ weight = 364
 
 ---
 
-## Ⅴ. 최신 트렌드 및 결론 (Trends & Conclusion)
+## 5. 실무 적용 및 최적화 기법
 
 ### 최신 동향
 

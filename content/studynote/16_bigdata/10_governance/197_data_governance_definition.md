@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> "데이터 자산 관리에 관한 의사결정권과 책임 행사를 위한 권한, 정책, 프로세스, 표준, 역할, 지표의 집합"
+
+> 📝 모범 답안
 
 - **본질**: 데이터 거버넌스(Data Governance)는 데이터 자산의 소유·관리·사용에 관한 정책, 표준, 역할, 프로세스, 도구의 체계로, "누가 어떤 데이터를 어떻게 어떤 목적으로 사용하는가"를 결정하는 프레임워크다.
 - **가치**: 데이터 품질 확보, GDPR·PIPA 규제 준수, 보안 강화, 데이터 발견성(discoverability) 향상을 동시에 달성해 조직의 데이터 신뢰도와 의사결정 속도를 높인다.
@@ -14,12 +17,11 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 정의
 
 DAMA (Data Management Association) DMBOK (Data Management Body of Knowledge v2)는 데이터 거버넌스를 다음과 같이 정의한다:
-> "데이터 자산 관리에 관한 의사결정권과 책임 행사를 위한 권한, 정책, 프로세스, 표준, 역할, 지표의 집합"
 
 데이터 거버넌스는 데이터 생성·수집·저장·가공·공유·폐기의 전 생애주기(Data Lifecycle)에 걸쳐 조직이 데이터를 신뢰·활용·보호하는 방식을 결정하는 **경영·관리 체계**다.
 
@@ -54,7 +56,7 @@ DAMA (Data Management Association) DMBOK (Data Management Body of Knowledge v2)�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 거버넌스 프레임워크 구조
 
@@ -103,7 +105,7 @@ DAMA (Data Management Association) DMBOK (Data Management Body of Knowledge v2)�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 거버넌스 vs 관련 개념
 
@@ -127,7 +129,7 @@ DAMA (Data Management Association) DMBOK (Data Management Body of Knowledge v2)�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 구현 접근 방식: 중앙집중 vs 연방 vs 하이브리드
 
@@ -158,7 +160,7 @@ DAMA (Data Management Association) DMBOK (Data Management Body of Knowledge v2)�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 기대효과
 

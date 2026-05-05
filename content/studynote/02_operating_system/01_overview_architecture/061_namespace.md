@@ -5,16 +5,17 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 네임스페이스(Namespace)는 Linux 커널이 PID, Network, Mount 같은 전역 자원을 프로세스별로 다르게 보이게 만드는 자원 격리 기술이다.
+> **핵심**: 네임스페이스(Namespace)는 Linux 커널이 PID, Network, Mount 같은 전역 자원을 프로세스별로 다르게 보이게 만드는 자원 격리 기술이다.
 > 2. **가치**: 같은 호스트 안에서도 프로세스가 자기만의 세계를 가진 것처럼 보이게 해 컨테이너 격리와 멀티 테넌시 운영을 가능하게 한다.
 > 3. **융합**: User Namespace와 cgroups(cgroup)를 함께 써야 Rootless Container 같은 현대 컨테이너 보안이 완성된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 전통적인 Linux 시스템은 모든 프로세스가 같은 자원 목록을 본다. 그러면 서로 다른 애플리케이션을 같은 호스트에 안전하게 얹기 어렵고, 한 프로세스의 오류가 다른 프로세스에 쉽게 번진다.
 
@@ -24,7 +25,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```text
 [ Host Kernel ]
@@ -51,7 +52,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | 네임스페이스 | cgroups(cgroup) | chroot | 가상 머신(VM) |
 | :-- | :-- | :-- | :-- | :-- |
@@ -65,7 +66,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 체크리스트
 
@@ -88,7 +89,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 네임스페이스는 Linux를 컨테이너 플랫폼으로 바꾼 핵심 기반이다. 같은 커널을 쓰면서도 서로 다른 세계를 제공하므로, 효율과 격리를 동시에 얻는다.
 

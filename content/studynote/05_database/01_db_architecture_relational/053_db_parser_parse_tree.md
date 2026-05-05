@@ -5,16 +5,17 @@ date = "2026-05-01"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: DB 파서 (Parser)는 SQL 문장을 문법에 맞는 파스 트리 (Parse Tree)로 변환하는 첫 단계다.
+> **핵심**: DB 파서 (Parser)는 SQL 문장을 문법에 맞는 파스 트리 (Parse Tree)로 변환하는 첫 단계다.
 > 2. **가치**: 파스 트리는 문법 오류를 잡고, 의미 분석과 최적화의 출발점을 제공한다.
 > 3. **판단 포인트**: 파스 트리, AST (Abstract Syntax Tree), 논리 계획, 실행 계획을 구분해야 DBMS (Database Management System) 설계를 정확히 설명할 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 DBMS는 SQL을 그대로 실행하지 않는다. 먼저 토큰화하고, 문법을 검사하고, 구문 구조를 트리로 만든 뒤 의미 분석과 최적화를 진행한다.
 
@@ -24,7 +25,7 @@ DBMS는 SQL을 그대로 실행하지 않는다. 먼저 토큰화하고, 문법�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 SQL 처리 흐름은 보통 lexer, parser, semantic analyzer, optimizer, executor 순서로 이어진다. 파서는 토큰을 문법 규칙에 맞춰 트리 구조로 조립한다.
 
@@ -45,7 +46,7 @@ SQL Text → Tokens → Parse Tree → Semantic Check → Query Plan
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 파스 트리는 SQL 문법 설명에, AST는 쿼리 최적화 설명에 자주 쓰인다. 또한 실행 계획은 실제로 어떤 인덱스를 쓰고 어떤 조인 순서를 택할지 보여 준다.
 
@@ -61,7 +62,7 @@ SQL Text → Tokens → Parse Tree → Semantic Check → Query Plan
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 파서가 SQL injection (SQL 삽입 공격) 방어, 에러 리포트, 쿼리 리라이트, 캐시 처리의 기초가 된다. 문법 오류를 정확히 잡을수록 사용자 경험이 좋아진다.
 
@@ -84,7 +85,7 @@ SQL Text → Tokens → Parse Tree → Semantic Check → Query Plan
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 파서와 파스 트리는 SQL 처리의 출발점이다. 문법을 정확히 구조화해야 이후 최적화와 실행이 제대로 돌아간다.
 

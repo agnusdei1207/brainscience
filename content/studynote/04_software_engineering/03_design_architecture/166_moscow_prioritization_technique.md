@@ -7,15 +7,17 @@ date = 2026-04-03
 tags = ["MoSCoW", "모스코우", "애자일", "소프트웨어 공학", "우선순위", "요구사항", "백로그", "스코프 크리프"]
 categories = ["Software Engineering"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: MoSCoW 기법은 폭주하는 프로젝트 요구사항을 4단계 계급장인 **Must Have(절대 필수), Should Have(중요함), Could Have(있으면 좋음), Won't Have(이번엔 절대 안 해)**로 명확히 분류하여 썰어버리는 우선순위(Prioritization) 매트릭스다.
+> **핵심**: MoSCoW 기법은 폭주하는 프로젝트 요구사항을 4단계 계급장인 **Must Have(절대 필수), Should Have(중요함), Could Have(있으면 좋음), Won't Have(이번엔 절대 안 해)**로 명확히 분류하여 썰어버리는 우선순위(Prioritization) 매트릭스다.
 > 2. **가치**: "다 중요해요! 다 빨리해주세요!"라며 생떼를 쓰는 비즈니스 부서(현업)의 망상을 타파하고, 한정된 개발 시간(Sprint) 안에서 개발자가 **'서버가 돌아가기 위한 가장 뼈대가 되는 최소한의 목숨줄(Must)'부터 코딩하도록 리소스 타겟팅을 100% 강제(Focusing)**한다.
 > 3. **융합**: 이 기법은 스크럼(Scrum)의 백로그(Backlog) 정제 회의에서 무기처럼 쓰이며, 'Could'와 'Won't' 바구니에 쓰레기 기능들을 영리하게 밀어 넣음으로써 프로젝트 일정을 찢어발기는 악마인 **'스코프 크리프(Scope Creep, 범위 팽창)'를 방어하는 가장 심리적이고 훌륭한 린(Lean) 융합 방패**로 기능한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: MoSCoW(모스코우) 기법은 DSDM(Dynamic Systems Development Method) 애자일 프레임워크에서 처음 창안된 시간 박스(Timeboxing) 내 요구사항 우선순위 판별 도구다. 대문자 M, S, C, W는 4개의 핵심 범주를 뜻하며 o는 발음을 위해 그냥 껴 넣은 껍데기다.
 
@@ -69,7 +71,7 @@ categories = ["Software Engineering"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 1. 시간 박스 (Timeboxing)와 우선순위의 잔인한 화학 작용
 
@@ -91,7 +93,7 @@ categories = ["Software Engineering"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 딜레마: Kano Model (카노 모델) vs MoSCoW
 
@@ -115,7 +117,7 @@ categories = ["Software Engineering"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -169,7 +171,7 @@ categories = ["Software Engineering"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

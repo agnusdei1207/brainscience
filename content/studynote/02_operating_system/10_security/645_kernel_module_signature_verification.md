@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 커널 동적 모듈 서명 (Module Signature Verification) 무결성 통제
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 커널 모듈 서명(Module Signature Verification)은 리눅스 커널이 새로운 장치 드라이버나 확장 기능(LKM: Loadable Kernel Module)을 메모리에 적재(`insmod`)할 때, **해당 모듈이 신뢰할 수 있는 자(벤더나 관리자)에 의해 서명되었는지 암호학적으로 검증**하는 무결성 방어 체계다.
+> **핵심**: 커널 모듈 서명(Module Signature Verification)은 리눅스 커널이 새로운 장치 드라이버나 확장 기능(LKM: Loadable Kernel Module)을 메모리에 적재(`insmod`)할 때, **해당 모듈이 신뢰할 수 있는 자(벤더나 관리자)에 의해 서명되었는지 암호학적으로 검증**하는 무결성 방어 체계다.
 > 2. **메커니즘**: 커널을 빌드할 때 공개키/개인키 쌍을 생성하고, `.ko` 모듈 파일 끝에 개인키로 생성한 디지털 서명(RSA/SHA-256)을 덧붙인다. 런타임에 커널은 내장된 공개키 고리(Keyring)를 사용하여 이 서명을 해독하고 해시값을 비교한 뒤 일치할 때만 `Ring 0`(최고 권한)로 진입을 허락한다.
 > 3. **가치**: 루트(Root) 권한을 탈취한 해커조차도 마음대로 커널 루트킷(Rootkit)을 심지 못하게 막는 최후의 저지선이며, UEFI Secure Boot와 결합하여 하드웨어 부팅부터 OS 실행까지 끊어지지 않는 **신뢰의 사슬(Chain of Trust)**을 완성하는 현대 보안 인프라의 핵심이다.
 
+> 📝 모범 답안
+
+# 커널 동적 모듈 서명 (Module Signature Verification) 무결성 통제
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 리눅스는 모놀리식(Monolithic) 커널이지만, 재부팅 없이 기능을 동적으로 추가/삭제할 수 있는 적재 가능한 커널 모듈(LKM)을 지원한다. 커널 모듈 서명은 이 LKM 파일(`.ko`)에 암호화된 도장을 찍어, 위변조된 가짜 모듈이 커널 공간에 침투하는 것을 차단하는 리눅스 커널 보안 옵션(`CONFIG_MODULE_SIG`)이다.
 
@@ -35,7 +37,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (PKI 암호화 체계)
 
@@ -103,7 +105,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 커널 무결성 보호 기술 스택 (Chain of Trust)
 
@@ -125,7 +127,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -176,7 +178,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

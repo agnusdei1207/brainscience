@@ -5,16 +5,17 @@ date = "2026-05-01"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: IPFS (InterPlanetary File System)는 콘텐츠 주소 기반의 분산 파일 시스템이다.
+> **핵심**: IPFS (InterPlanetary File System)는 콘텐츠 주소 기반의 분산 파일 시스템이다.
 > 2. **가치**: CID (Content Identifier), Merkle DAG (Directed Acyclic Graph), P2P (Peer-to-Peer) 구조로 위치가 아니라 내용으로 찾는다.
 > 3. **판단 포인트**: 저장과 영속성은 자동이 아니다. pinning과 복제 정책이 필요하다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 IPFS는 파일이 어디에 있는지가 아니라 어떤 내용인지로 찾는다. 그래서 링크가 바뀌어도 같은 콘텐츠를 추적할 수 있다.
 
@@ -24,7 +25,7 @@ IPFS는 파일이 어디에 있는지가 아니라 어떤 내용인지로 찾는
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 파일은 chunk로 쪼개지고, 각 chunk는 해시로 식별된다. 이 해시들이 Merkle DAG를 만들고, 최종적으로 CID가 생성된다.
 
@@ -45,7 +46,7 @@ File → Chunks → Hashes → Merkle DAG → CID → Retrieval
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 IPFS는 HTTP와 다르다. HTTP는 위치 기반이고, IPFS는 내용 기반이다. 다만 IPFS도 캐시와 가용성을 위해 게이트웨이와 pinning이 필요하다.
 
@@ -61,7 +62,7 @@ IPFS는 HTTP와 다르다. HTTP는 위치 기반이고, IPFS는 내용 기반이
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 pinning 정책, 네트워크 분산, 게이트웨이, 업로드/다운로드 성능, 콘텐츠 수명 관리를 함께 봐야 한다.
 
@@ -84,7 +85,7 @@ IPFS는 HTTP와 다르다. HTTP는 위치 기반이고, IPFS는 내용 기반이
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 IPFS는 콘텐츠 중심 배포와 분산 저장에 강하다. 검증 가능한 링크와 공유가 쉬워진다.
 

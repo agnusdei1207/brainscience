@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 요구 도출(Elicitation)→분석(Analysis)→명세(Specification, SRS)→검증(Validation)→관리(Management) 5단계를 반복 순환하며, 각 단계마다 고유한 기법과 산출물이 있다.
+> **핵심**: 요구 도출(Elicitation)→분석(Analysis)→명세(Specification, SRS)→검증(Validation)→관리(Management) 5단계를 반복 순환하며, 각 단계마다 고유한 기법과 산출물이 있다.
 > 2. **가치**: 도출 기법(인터뷰·워크숍·프로토타이핑)을 적절히 조합해야 **숨겨진 요구사항(Hidden Requirements)**을 발견할 수 있고, 명세의 품질이 전체 프로젝트 품질을 결정한다.
 > 3. **판단 포인트**: 도출 기법 선택, SRS 구조(IEEE 830), 검증(리뷰·프로토타입·테스트 케이스), RTM(요구→설계→코드→테스트 추적)이 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 도출: 인터뷰·JAD·브레인스토밍·프로토타이핑

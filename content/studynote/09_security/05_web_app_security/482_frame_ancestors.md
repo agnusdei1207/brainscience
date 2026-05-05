@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CSP (Content Security Policy) `frame-ancestors` 지시어는 X-Frame-Options의 현대적 대체제로, 페이지를 frame·iframe·object 안에 삽입할 수 있는 허용 출처를 정밀하게 제어한다.
+> **핵심**: CSP (Content Security Policy) `frame-ancestors` 지시어는 X-Frame-Options의 현대적 대체제로, 페이지를 frame·iframe·object 안에 삽입할 수 있는 허용 출처를 정밀하게 제어한다.
 > 2. **가치**: 다수의 신뢰 도메인(다른 서비스, 파트너사)을 화이트리스트로 설정할 수 있어 X-Frame-Options의 단일 ALLOW-FROM 한계를 극복한다.
 > 3. **판단 포인트**: `frame-ancestors 'none'`은 DENY와 동일하며, CSP와 X-Frame-Options가 충돌 시 현대 브라우저는 CSP를 우선 적용한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 CSP Level 2에서 도입된 `frame-ancestors` 지시어는 브라우저가 해당 응답을 frame 안에 로드하기 전에 부모 frame의 출처를 검증하도록 강제한다. X-Frame-Options와 달리 다수의 출처를 공백으로 구분해 나열할 수 있다.
 
@@ -23,7 +25,7 @@ CSP Level 2에서 도입된 `frame-ancestors` 지시어는 브라우저가 해�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 설정값 | 의미 | X-Frame-Options 대응 |
 |:---|:---|:---|
@@ -52,7 +54,7 @@ Content-Security-Policy: frame-ancestors 'self' https://dashboard.corp.com
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | X-Frame-Options | CSP frame-ancestors |
 |:---|:---|:---|
@@ -67,7 +69,7 @@ Content-Security-Policy: frame-ancestors 'self' https://dashboard.corp.com
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **설정 예시**:
 ```
@@ -84,7 +86,7 @@ Content-Security-Policy: frame-ancestors 'self' https://partner.example.com;
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 `frame-ancestors`를 통해 Clickjacking 방어와 정상 임베딩 허용을 동시에 달성할 수 있다. X-Frame-Options와 병행 설정 시 모든 브라우저 환경에서 완전한 Clickjacking 방어가 가능하다.
 

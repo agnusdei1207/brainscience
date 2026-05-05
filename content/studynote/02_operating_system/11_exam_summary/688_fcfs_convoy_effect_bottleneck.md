@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# FCFS 호위 효과 (Convoy Effect)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: FCFS(First-Come, First-Served) 스케줄링은 먼저 도착한 프로세스가 끝날 때까지 무조건 CPU를 독점하는 가장 단순한 '비선점형' 방식이다. 이때, 1개의 엄청나게 긴 CPU 바운드 프로세스 뒤에 여러 개의 짧은 I/O 바운드 프로세스들이 줄을 서서 하염없이 기다리는 병목 현상을 **호위 효과(Convoy Effect)**라 한다.
+> **핵심**: FCFS(First-Come, First-Served) 스케줄링은 먼저 도착한 프로세스가 끝날 때까지 무조건 CPU를 독점하는 가장 단순한 '비선점형' 방식이다. 이때, 1개의 엄청나게 긴 CPU 바운드 프로세스 뒤에 여러 개의 짧은 I/O 바운드 프로세스들이 줄을 서서 하염없이 기다리는 병목 현상을 **호위 효과(Convoy Effect)**라 한다.
 > 2. **피해 (자원 낭비)**: 긴 프로세스가 CPU를 잡고 있는 동안 디스크(I/O 장치)는 텅 비어 놀게 되고, 반대로 뒤늦게 짧은 프로세스들이 CPU를 잠깐 쓰고 단체로 I/O로 몰려가면 이번엔 CPU가 텅 비어 놀게 된다. 즉, CPU와 I/O 장치 모두 활용률(Utilization)이 바닥을 친다.
 > 3. **해결책**: 이 악순환의 고리를 끊기 위해서는 "앞사람이 아무리 오래 걸려도, 시간이 되면 일단 강제로 뺏고(선점) 뒷사람에게 기회를 주는" **라운드 로빈(Round Robin)** 등의 선점형(Preemptive) 스케줄링이 필수적이다.
 
+> 📝 모범 답안
+
+# FCFS 호위 효과 (Convoy Effect)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **FCFS 스케줄링**: 도착한 순서대로 프로세스에게 CPU를 할당하는 방식 (FIFO 큐 사용).
@@ -41,7 +43,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 호위 효과의 수학적 증명 (간트 차트)
 
@@ -87,7 +89,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### FCFS 호위 효과 vs 다른 스케줄링의 부작용
 
@@ -106,7 +108,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -153,7 +155,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

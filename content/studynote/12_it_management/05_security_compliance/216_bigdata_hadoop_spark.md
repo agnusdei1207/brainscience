@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: Hadoop은 HDFS(Hadoop Distributed File System, 하둡 분산 파일 시스템)와 MapReduce로 수천 대 범용 서버에 페타바이트 데이터를 분산 저장·처리하는 빅데이터 기반 프레임워크이며, Apache Spark는 인메모리(In-memory) 분산 컴퓨팅으로 MapReduce 대비 최대 100배 빠른 처리를 실현한다.
+> **핵심**: Hadoop은 HDFS(Hadoop Distributed File System, 하둡 분산 파일 시스템)와 MapReduce로 수천 대 범용 서버에 페타바이트 데이터를 분산 저장·처리하는 빅데이터 기반 프레임워크이며, Apache Spark는 인메모리(In-memory) 분산 컴퓨팅으로 MapReduce 대비 최대 100배 빠른 처리를 실현한다.
 > 2. **가치**: RDD(Resilient Distributed Dataset, 탄력적 분산 데이터셋)→DataFrame→Dataset API의 진화는 사용 편의성과 최적화를 동시에 달성했으며, Spark의 통합 엔진(배치·스트리밍·ML·그래프)은 단일 플랫폼에서 모든 빅데이터 워크로드를 처리한다.
 > 3. **판단 포인트**: MapReduce는 디스크 I/O 기반으로 반복 연산에 부적합하므로, ML·그래프·스트리밍 처리는 Spark를 사용하고, Hadoop 생태계(HDFS, YARN, Hive)는 Spark의 인프라로 활용하는 것이 현대 빅데이터 아키텍처의 표준이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 빅데이터 처리의 도전
 2000년대 인터넷 서비스 폭발로 구글은 하루 수십억 건의 웹 페이지를 크롤링·색인해야 했다. 단일 서버로는 이 규모를 처리할 수 없어, 구글은 2003년 GFS(Google File System) 논문과 2004년 MapReduce 논문을 발표했다. 이를 오픈소스로 구현한 것이 Doug Cutting이 만든 Apache Hadoop(2006)이다.
@@ -35,7 +37,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 HDFS와 MapReduce 처리 흐름
 
@@ -91,7 +93,7 @@ Spark는 MapReduce의 단계 간 디스크 I/O 문제를 **인메모리 RDD**로
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 Hadoop MapReduce vs Apache Spark
 
@@ -119,7 +121,7 @@ Spark는 MapReduce의 단계 간 디스크 I/O 문제를 **인메모리 RDD**로
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 Spark Structured Streaming 예시
 
@@ -169,7 +171,7 @@ query = agg.writeStream \
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 Spark 도입 효과
 

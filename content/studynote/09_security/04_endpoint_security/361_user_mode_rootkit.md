@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 사용자 모드 루트킷은 ring 3 사용자 공간에서 동작하며 LD_PRELOAD 환경변수·IAT(Import Address Table) 후킹·DLL 인젝션으로 프로세스의 라이브러리 함수를 가로채 탐지 회피와 악성 기능을 구현하는 루트킷이다.
+> **핵심**: 사용자 모드 루트킷은 ring 3 사용자 공간에서 동작하며 LD_PRELOAD 환경변수·IAT(Import Address Table) 후킹·DLL 인젝션으로 프로세스의 라이브러리 함수를 가로채 탐지 회피와 악성 기능을 구현하는 루트킷이다.
 > 2. **가치**: 커널 루트킷에 비해 설치가 쉽고 OS 버전 의존성이 낮으며, 루트 권한 없이도 사용자 프로세스 수준에서 동작 가능한 경우도 있다.
 > 3. **판단 포인트**: 커널 루트킷보다 탐지가 상대적으로 쉬우며, LD_PRELOAD 목록 검사·ldd 출력 분석·API 원본 함수 주소 비교로 발견할 수 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 사용자 모드 루트킷은 커널을 건드리지 않고 사용자 공간의 공유 라이브러리(libc.so, ntdll.dll 등)를 후킹하여 `open()`, `readdir()`, `getpid()` 등의 함수 반환값을 조작한다. Linux에서는 `LD_PRELOAD` 환경변수에 악성 공유 라이브러리를 등록하면 모든 프로세스 시작 시 악성 라이브러리가 먼저 로드되어 glibc 함수를 가로챈다.
 
@@ -23,7 +25,7 @@ Windows에서는 DLL Injection(CreateRemoteThread + LoadLibrary), IAT 후킹(Imp
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### LD_PRELOAD 후킹 동작 방식
 
@@ -54,7 +56,7 @@ Windows에서는 DLL Injection(CreateRemoteThread + LoadLibrary), IAT 후킹(Imp
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 루트킷 유형 | 권한 필요 | 탐지 난이도 | 지속성 |
 |:---|:---|:---|:---|
@@ -67,7 +69,7 @@ Windows에서는 DLL Injection(CreateRemoteThread + LoadLibrary), IAT 후킹(Imp
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 탐지 방법: ① `cat /etc/ld.so.preload`와 환경변수 검사, ② `ldd <process>` 로 로드된 라이브러리 확인, ③ 함수 포인터를 원본 libc 주소와 비교(glibc 섹션 해시 검증), ④ strace로 시스템 콜과 라이브러리 콜 불일치 탐지.
 
@@ -77,7 +79,7 @@ Windows에서는 DLL Injection(CreateRemoteThread + LoadLibrary), IAT 후킹(Imp
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 사용자 모드 루트킷 방어는 시스템 라이브러리 무결성 모니터링(AIDE, Tripwire), 파일 시스템 불변성(immutable flag, read-only mounts), 컨테이너 격리(Docker, gVisor)의 조합으로 효과적으로 탐지·차단할 수 있다. 커널 루트킷보다 대응이 상대적으로 용이하며, 조기 탐지 시 시스템 재설치 없이 복구가 가능한 경우도 있다.
 

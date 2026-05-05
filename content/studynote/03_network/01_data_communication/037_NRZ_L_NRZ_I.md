@@ -4,11 +4,14 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-network"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. NRZ(Non-Return to Zero)는 신호가 비트 주기 중 0V로 복귀하지 않는 라인 코딩 방식으로, NRZ-L(Level)은 비트 값 자체를 전압 레벨로, NRZ-I(Inverted)는 1 비트마다 전압을 반전시켜 표현한다.
 > 2. NRZ-L의 핵심 문제는 긴 연속 0 또는 1이 발생할 때 클락 동기화가 불가능한 기저선 천이(Baseline Wandering)와 DC 성분 발생이며, NRZ-I는 연속 1에서는 해결되지만 연속 0 문제는 여전히 존재한다.
 > 3. 이 한계 때문에 실제 물리 계층에서는 맨체스터(Ethernet), 4B/5B+NRZI(FastEthernet), 8B/10B(Gigabit Ethernet), PAM4(400GbE)처럼 클락 내장 코딩으로 발전해 왔다.
+
+> 📝 모범 답안
 
 ---
 

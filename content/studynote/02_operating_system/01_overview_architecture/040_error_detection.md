@@ -5,15 +5,18 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 오류 탐지(Error Detection)는 데이터 전송·저장 과정에서 비트 오류를 발견하는 기술로, 패리티 비트(Parity Bit)·체크섬(Checksum)·CRC(Cyclic Redundancy Check)는 중복 정보 추가량과 탐지 능력의 트레이드오프를 각각 다른 수준으로 구현한다.
 > 2. CRC는 다항식 나눗셈 원리를 이용해 1~수 바이트의 작은 FCS(Frame Check Sequence)로 버스트 오류까지 탐지할 수 있어, 이더넷·SATA·USB 등 거의 모든 디지털 통신 규격의 표준으로 채택됐다.
 > 3. 오류 탐지는 "발견만" 하고, 오류 정정(Error Correction)은 ARQ(자동 재전송)나 FEC(Forward Error Correction) 방식으로 분리 처리한다 — 이 분리 설계가 프로토콜 계층화의 핵심 원칙이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 패리티 비트
+## 1. 개요 및 필요성
 
 ```
 패리티 비트 (Parity Bit):
@@ -42,7 +45,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 체크섬
+## 2. 구성요소
 
 ```
 체크섬 (Checksum):
@@ -72,7 +75,7 @@ TCP/IP 헤더에 사용:
 
 ---
 
-## Ⅲ. CRC
+## 3. 구조 및 동작 원리
 
 ```
 CRC (Cyclic Redundancy Check):
@@ -104,7 +107,7 @@ CRC (Cyclic Redundancy Check):
 
 ---
 
-## Ⅳ. 오류 정정 방식
+## 4. 비교 및 트레이드오프
 
 ```
 오류 탐지 후 처리 전략:
@@ -133,7 +136,7 @@ FEC (Forward Error Correction):
 
 ---
 
-## Ⅴ. 실무 시나리오 — 이더넷 FCS
+## 5. 실무 적용 및 최적화 기법
 
 ```
 이더넷 프레임 전송 (CRC-32):

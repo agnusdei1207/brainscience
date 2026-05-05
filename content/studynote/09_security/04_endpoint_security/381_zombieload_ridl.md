@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ZombieLoad와 RIDL (Rogue In-Flight Data Load)은 MDS 취약점 계열 중 가장 광범위하게 알려진 변형으로, 각각 Line Fill Buffer (LFB)에서 다른 프로세스·커널·SGX 엔클레이브의 인-플라이트(in-flight) 데이터를 추출한다.
+> **핵심**: ZombieLoad와 RIDL (Rogue In-Flight Data Load)은 MDS 취약점 계열 중 가장 광범위하게 알려진 변형으로, 각각 Line Fill Buffer (LFB)에서 다른 프로세스·커널·SGX 엔클레이브의 인-플라이트(in-flight) 데이터를 추출한다.
 > 2. **가치**: ZombieLoad는 같은 물리 코어에서 실행 중인 하이퍼스레딩(HT) 상대방 스레드의 메모리 접근 데이터를 추출하며, SGX 보호 메모리까지 유출 가능해 하드웨어 신뢰 실행 환경(TEE)의 신뢰성에 타격을 줬다.
 > 3. **판단 포인트**: ZombieLoad v1은 LFB 공격, v2 (TAA)는 Intel TSX 트랜잭션 버퍼를 악용하며, 완화는 마이크로코드 업데이트 + VERW 버퍼 클리어 + HT 비활성화(선택)다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ZombieLoad라는 이름은 "좀비처럼 다시 살아나는 데이터 로드"에서 유래한다. 2019년 5월 Graz TU(오스트리아 그라츠 공대) 연구팀이 공개했으며, CVE-2018-12130 (MFBDS: Microarchitectural Fill Buffer Data Sampling)으로 등록됐다.
 
@@ -25,7 +27,7 @@ RIDL (CVE-2018-12127, 12130)은 같은 시기 암스테르담 VU(Vrije Universit
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 항목 | ZombieLoad v1 | ZombieLoad v2 (TAA) | RIDL |
 |:---|:---|:---|:---|
@@ -64,7 +66,7 @@ RIDL (CVE-2018-12127, 12130)은 같은 시기 암스테르담 VU(Vrije Universit
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | ZombieLoad | Spectre | Meltdown |
 |:---|:---|:---|:---|
@@ -77,7 +79,7 @@ RIDL (CVE-2018-12127, 12130)은 같은 시기 암스테르담 VU(Vrije Universit
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **대응 조치**  
 1. Intel 마이크로코드 업데이트 최신 버전 적용  
@@ -93,7 +95,7 @@ RIDL (CVE-2018-12127, 12130)은 같은 시기 암스테르담 VU(Vrije Universit
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ZombieLoad/RIDL은 Intel의 하이퍼스레딩 기술이 클라우드 멀티테넌트 환경에서 근본적인 보안 위협이 될 수 있음을 증명했다. Intel은 이후 출시된 CPU에서 하드웨어 수준의 MDS 완화를 적용했으며, 클라우드 제공자들은 마이크로코드 패치와 코어 스케줄링을 도입했다. TEE (Trusted Execution Environment)의 보안 보증 수준을 재평가하는 계기가 됐다.
 

@@ -5,16 +5,17 @@ weight = 489
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: MQTT(Message Queuing Telemetry Transport)와 CoAP(Constrained Application Protocol)은 제한된 IoT 환경을 위해 설계된 두 가지 경량 메시지 프로토콜로, MQTT는 TCP 기반 Pub/Sub 패턴, CoAP는 UDP 기반 RESTful 패턴을 사용한다.
+> **핵심**: MQTT(Message Queuing Telemetry Transport)와 CoAP(Constrained Application Protocol)은 제한된 IoT 환경을 위해 설계된 두 가지 경량 메시지 프로토콜로, MQTT는 TCP 기반 Pub/Sub 패턴, CoAP는 UDP 기반 RESTful 패턴을 사용한다.
 > 2. **가치**: HTTP/WebSocket 대비 수십 배 낮은 오버헤드로 수백만 IoT 기기의 안정적·저전력 메시지 교환을 실현하며, 두 프로토콜의 특성 차이를 이해해야 올바른 IoT 아키텍처를 설계할 수 있다.
 > 3. **판단 포인트**: 안정적인 이벤트 스트림·다수 구독자 시스템엔 MQTT, 자원 제약 기기의 단순 요청-응답·배터리 절약엔 CoAP가 적합하다. 두 프로토콜을 혼합하는 게이트웨이 패턴도 실무에서 자주 사용된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 **IoT 프로토콜의 필요성**
 
@@ -29,7 +30,7 @@ HTTP는 헤더 오버헤드가 수백~수천 바이트에 달해, RAM이 수십 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌────────────────────────────────────────────────────────────┐
@@ -75,7 +76,7 @@ HTTP는 헤더 오버헤드가 수백~수천 바이트에 달해, RAM이 수십 
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **MQTT와 CoAP 선택 기준**
 
@@ -94,7 +95,7 @@ HTTP는 헤더 오버헤드가 수백~수천 바이트에 달해, RAM이 수십 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **프로토콜 선택 시나리오**
 
@@ -111,7 +112,7 @@ HTTP는 헤더 오버헤드가 수백~수천 바이트에 달해, RAM이 수십 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 MQTT와 CoAP는 IoT 생태계의 메시지 교환 표준으로 자리 잡았다. AWS IoT Core·Azure IoT Hub 모두 MQTT를 네이티브 지원하며, CoAP는 LwM2M(Lightweight M2M) 디바이스 관리 프로토콜의 기반이다. 두 프로토콜의 특성과 트레이드오프를 명확히 이해하는 것이 IoT 아키텍처 설계의 기본기다.
 

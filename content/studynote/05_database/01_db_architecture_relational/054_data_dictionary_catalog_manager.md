@@ -5,16 +5,17 @@ date = "2026-05-01"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 데이터 사전 (Data Dictionary)은 DBMS (Database Management System)의 메타데이터 저장소다.
+> **핵심**: 데이터 사전 (Data Dictionary)은 DBMS (Database Management System)의 메타데이터 저장소다.
 > 2. **가치**: 카탈로그 관리자 (Catalog Manager)는 스키마, 제약, 통계, 권한을 관리해 최적화와 보안을 돕는다.
 > 3. **판단 포인트**: 사용자 데이터와 메타데이터를 분리해 설명해야 DBMS 구조가 정확해진다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 DBMS는 테이블 데이터만 저장하는 것이 아니다. 테이블 정의, 컬럼 타입, 인덱스, 권한, 통계 같은 정보를 함께 관리한다. 이 메타데이터가 데이터 사전이다.
 
@@ -24,7 +25,7 @@ DBMS는 테이블 데이터만 저장하는 것이 아니다. 테이블 정의, 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 카탈로그 매니저는 DDL (Data Definition Language)과 메타데이터를 연결한다. 쿼리 파서와 옵티마이저는 실행 전에 이 정보를 조회한다.
 
@@ -45,7 +46,7 @@ SQL → Parser/Optimizer → Catalog Manager → Data Dictionary
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 데이터 사전은 정보 스키마 (Information Schema)와 비슷하지만, 내부 구현과 표준 인터페이스의 관점이 다를 수 있다. 외부 데이터 카탈로그와도 연결되지만 범위가 다르다.
 
@@ -61,7 +62,7 @@ SQL → Parser/Optimizer → Catalog Manager → Data Dictionary
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 DDL 변경 시 메타데이터가 자동 갱신되는지, 권한과 제약이 정확히 반영되는지 확인해야 한다. 통계 갱신도 중요하다.
 
@@ -84,7 +85,7 @@ SQL → Parser/Optimizer → Catalog Manager → Data Dictionary
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 데이터 사전과 카탈로그 관리자는 DBMS가 스키마와 데이터를 일관되게 이해하게 한다. 최적화, 보안, DDL 관리를 뒷받침한다.
 

@@ -6,15 +6,17 @@ description = "빌드 시점이 아니라 런타임에 모듈을 공유하고 �
 taxonomy = ""
 tags = ["Software Engineering", "Architecture", "Module Federation", "Webpack", "Micro Frontends"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 모듈 페더레이션은 런타임에 다른 앱의 모듈을 가져온다.
+> **핵심**: 모듈 페더레이션은 런타임에 다른 앱의 모듈을 가져온다.
 > 2. **가치**: 마이크로 프론트엔드 간 공유와 독립 배포를 동시에 돕는다.
 > 3. **판단 포인트**: 버전 호환, 원격 로딩 실패, 공유 모듈 충돌을 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 정적 번들 공유만으로는 독립 배포를 유지하기 어렵다. 모듈 페더레이션은 실행 시점에 필요한 모듈을 연결한다.
 
@@ -22,7 +24,7 @@ tags = ["Software Engineering", "Architecture", "Module Federation", "Webpack", 
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Host는 Remote가 공개한 모듈을 런타임에 로드한다. Webpack의 federation 설정이 이 관계를 만든다.
 
@@ -40,7 +42,7 @@ Host -> Remote Container -> Shared Modules
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 정적 import는 빌드 시점 결합이 강하고, 모듈 페더레이션은 실행 시점 결합이 유연하다.
 
@@ -54,7 +56,7 @@ Host -> Remote Container -> Shared Modules
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 원격 모듈의 버전 변경과 장애를 감당할 수 있는지 확인해야 한다.
 
@@ -67,7 +69,7 @@ Host -> Remote Container -> Shared Modules
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 모듈 페더레이션은 프런트엔드의 독립성과 공유를 동시에 살린다.
 

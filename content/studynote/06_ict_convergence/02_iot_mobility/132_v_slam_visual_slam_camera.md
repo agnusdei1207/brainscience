@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: V-SLAM(Visual SLAM)은 **카메라 영상만으로 특징점을 추출·매칭하여 3D 지도를 작성하면서 동시에 카메라 위치를 추정**하는 기술이며, XR 헤드셋(Quest·Vision Pro)의 Inside-Out 트래킹 핵심이다.
+> **핵심**: V-SLAM(Visual SLAM)은 **카메라 영상만으로 특징점을 추출·매칭하여 3D 지도를 작성하면서 동시에 카메라 위치를 추정**하는 기술이며, XR 헤드셋(Quest·Vision Pro)의 Inside-Out 트래킹 핵심이다.
 > 2. **가치**: LiDAR SLAM 대비 **저비용(카메라만)·경량·소비 전력↓**이며, 스마트폰·AR 글래스·드론에 탑재 가능하다. 단, 조명·텍스처 부족 환경에서 정확도가 떨어질 수 있다.
 > 3. **판단 포인트**: Feature-based(ORB-SLAM) vs Direct(LSD-SLAM) vs Learning-based(Deep SLAM)를 구분하고, IMU 센서 융합(VIO, Visual-Inertial Odometry)이 실시간 정밀도를 높인다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 V-SLAM 파이프라인:
@@ -25,7 +27,7 @@ V-SLAM 파이프라인:
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 방식 | 특징 | 대표 |
 |:---|:---|:---|

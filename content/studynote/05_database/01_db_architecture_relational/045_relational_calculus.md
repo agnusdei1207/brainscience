@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 관계 해석(Relational Calculus)은 "무엇을(What)" 원하는지를 선언적으로 기술하는 비절차적 질의 언어 — 관계 대수(Relational Algebra)가 "어떻게(How)" 검색할지 절차를 기술하는 것과 대비되며, SQL은 관계 해석의 정신을 계승한 선언적 언어다.
 > 2. 관계 해석에는 튜플 관계 해석(TRC)과 도메인 관계 해석(DRC) 두 종류 — TRC는 튜플(행)을 변수로 사용해 조건을 기술하고, DRC는 속성 값을 변수로 사용하며, SQL은 TRC에 더 가깝다.
 > 3. 관계 해석의 표현력은 관계 대수와 동등(Relationally Complete) — Codd의 관계 완전성(Relational Completeness) 기준으로 두 언어는 동등한 표현력을 가지며, SQL은 이 기준을 충족한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 관계 해석 vs 관계 대수
+## 1. 개요 및 필요성
 
 ```
 관계 해석 vs 관계 대수:
@@ -53,7 +56,7 @@ SQL의 계보:
 
 ---
 
-## Ⅱ. 튜플 관계 해석 (TRC)
+## 2. 구성요소
 
 ```
 TRC (Tuple Relational Calculus):
@@ -98,7 +101,7 @@ TRC (Tuple Relational Calculus):
 
 ---
 
-## Ⅲ. 도메인 관계 해석 (DRC)
+## 3. 구조 및 동작 원리
 
 ```
 DRC (Domain Relational Calculus):
@@ -140,7 +143,7 @@ TRC vs DRC 비교:
 
 ---
 
-## Ⅳ. SQL과의 관계
+## 4. 비교 및 트레이드오프
 
 ```
 SQL = TRC의 실용적 구현:
@@ -193,7 +196,7 @@ DBMS 내부:
 
 ---
 
-## Ⅴ. 실무 시나리오 — 복잡 쿼리 이해
+## 5. 실무 적용 및 최적화 기법
 
 ```
 인사 DB 복잡 쿼리 분석:

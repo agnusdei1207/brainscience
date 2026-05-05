@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-> 1. **본질**: ESG(Environmental, Social, Governance) 경영에서 IT 부문의 탄소 인지 컴퓨팅(Carbon-aware Computing)은 전력망의 재생에너지 비율과 지역 탄소 집약도(Carbon Intensity)를 실시간으로 파악해 워크로드 시간·위치를 조정함으로써 Scope 2 배출량을 줄이는 전략이다.
+> **핵심**: ESG(Environmental, Social, Governance) 경영에서 IT 부문의 탄소 인지 컴퓨팅(Carbon-aware Computing)은 전력망의 재생에너지 비율과 지역 탄소 집약도(Carbon Intensity)를 실시간으로 파악해 워크로드 시간·위치를 조정함으로써 Scope 2 배출량을 줄이는 전략이다.
 > 2. **가치**: 글로벌 데이터센터는 전 세계 전력 소비의 1~2%, 온실가스 배출의 약 2~4%를 차지한다. 탄소 인지 컴퓨팅은 소프트웨어 레벨에서 탄소 배출을 측정·감축할 수 있는 현실적 접근법이다.
 > 3. **판단 포인트**: Scope 1(직접 배출), Scope 2(간접 전력), Scope 3(공급망 전체)의 명확한 구분과 SCI(Software Carbon Intensity) 지표 적용이 IT 탄소 회계의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 2015년 파리 협정(Paris Agreement) 이후 기업의 탄소 중립(Carbon Neutrality) 의무가 강화되었다. EU의 CSRD(Corporate Sustainability Reporting Directive), 미국 SEC의 기후 공시 규정, 한국의 K-ESG 가이드라인은 IT 자산의 탄소 배출량 공시를 의무화하는 방향으로 수렴하고 있다.
 
@@ -25,7 +27,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Scope 1 / 2 / 3 분류 체계 (GHG 프로토콜)
 
@@ -84,7 +86,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 탄소 감축 전략 비교
 
@@ -110,7 +112,7 @@ categories = "studynote-it-management"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### K-ESG 가이드라인 IT 부문 대응
 
@@ -152,7 +154,7 @@ else:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 탄소 인지 컴퓨팅의 실증 사례를 보면 구글은 워크로드 시간 이동을 통해 데이터센터 탄소 배출 15~20% 감소를 달성했으며, Spotify는 스트리밍 캐시 전략을 탄소 인지 방식으로 재설계해 에너지 소비 18% 감소를 보고했다.
 

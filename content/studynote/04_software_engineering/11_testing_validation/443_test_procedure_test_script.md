@@ -6,15 +6,17 @@ description = "테스트를 어떤 순서로 실행할지 정리한 절차와 �
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "Test Procedure", "Test Script", "Automation"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 테스트 절차(Test Procedure)는 테스트 실행 순서를, 테스트 스크립트(Test Script)는 그 실행을 코드로 옮긴 것이다.
+> **핵심**: 테스트 절차(Test Procedure)는 테스트 실행 순서를, 테스트 스크립트(Test Script)는 그 실행을 코드로 옮긴 것이다.
 > 2. **가치**: 사람마다 다른 실행 편차를 줄이고 반복 실행을 쉽게 만든다.
 > 3. **판단 포인트**: 복잡한 테스트를 표준화하고 자동화해야 할 때 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 테스트 절차는 "무엇을 어떤 순서로 할지" 정리한 문서다. 테스트 스크립트는 이를 자동화 도구나 코드로 구현한 것이다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "Test Procedure", "Test Script", "Aut
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 절차는 사람이 읽는 기준이고, 스크립트는 기계가 실행하는 기준이다.
 
@@ -44,7 +46,7 @@ tags = ["Software Engineering", "Testing", "Test Procedure", "Test Script", "Aut
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 테스트 절차는 수동 실행에 적합하고, 테스트 스크립트는 자동화에 적합하다. 둘은 대체 관계가 아니라 확장 관계다.
 
@@ -59,7 +61,7 @@ tags = ["Software Engineering", "Testing", "Test Procedure", "Test Script", "Aut
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 배포 전 점검, 야간 배치, 회귀 테스트에 많이 쓴다. 자동화가 잘되면 인적 실수를 줄일 수 있다.
 
@@ -72,7 +74,7 @@ tags = ["Software Engineering", "Testing", "Test Procedure", "Test Script", "Aut
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 테스트 절차와 스크립트는 품질의 반복성을 만든다. 사람 손이 줄어들수록 재현성과 속도가 좋아진다.
 

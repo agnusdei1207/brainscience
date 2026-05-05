@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 모듈러 블록체인(Modular Blockchain)은 실행(Execution)·합의(Consensus)·정산(Settlement)·데이터 가용성(DA, Data Availability) 계층을 분리하여 각 계층이 전문화로 트릴레마를 **계층별 최적화**로 우회하는 아키텍처다.
+> **핵심**: 모듈러 블록체인(Modular Blockchain)은 실행(Execution)·합의(Consensus)·정산(Settlement)·데이터 가용성(DA, Data Availability) 계층을 분리하여 각 계층이 전문화로 트릴레마를 **계층별 최적화**로 우회하는 아키텍처다.
 > 2. **가치**: Celestia(DA 전문), EigenLayer(재스테이킹, 보안 임대), Danksharding(이더리움 DA 확장)이 모듈러 생태계의 핵심 인프라로, 롤업과 결합하여 이더리움 확장성 로드맵을 실현한다.
 > 3. **판단 포인트**: 모놀리식(Monolithic) 블록체인은 모든 계층을 하나의 체인이 처리하여 트릴레마에 구속되지만, 모듈러 블록체인은 **계층 분리로 트릴레마를 계층별 분산**하여 전체 시스템 성능을 극대화한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 모놀리식 블록체인의 한계
 
@@ -26,7 +27,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 모듈러 블록체인 4계층 구조
 
@@ -73,7 +74,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 모놀리식 vs 모듈러 비교
 
@@ -108,7 +109,7 @@ AVS (Actively Validated Service)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 데이터 가용성(DA) 문제 이해
 
@@ -129,7 +130,7 @@ DA 해결책:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 항목 | 내용 |
 |:---|:---|

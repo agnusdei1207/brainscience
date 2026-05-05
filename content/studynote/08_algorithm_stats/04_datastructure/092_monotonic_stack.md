@@ -4,15 +4,18 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-algorithm"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 단조 스택(Monotonic Stack)은 스택 내 원소가 단조 증가 또는 단조 감소 순서를 유지하도록 관리해, 각 원소의 Next Greater/Smaller Element를 O(n)에 찾는 기법이다.
 > 2. 히스토그램 최대 직사각형·빗물 트래핑·주식 가격 스팬 등 "현재 원소보다 크거나 작은 가장 가까운 원소"를 찾는 문제 유형에 최적화된 패턴이다.
 > 3. 단조 큐(Monotonic Queue)는 슬라이딩 윈도우 최대/최소값을 O(n)에 계산해, O(n·k) 브루트 포스 대비 압도적 성능을 제공한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 단조 스택의 정의와 동작
+## 1. 개요 및 필요성
 
 단조 스택(Monotonic Stack)은 **스택의 원소가 항상 단조 증가 또는 단조 감소 순서를 유지**하는 스택이다.
 
@@ -37,7 +40,7 @@ categories = "studynote-algorithm"
 
 ---
 
-## Ⅱ. NGE (Next Greater Element) 구현
+## 2. 구성요소
 
 ```python
 def next_greater_element(nums):
@@ -65,7 +68,7 @@ print(next_greater_element(nums))  # [4, 4, 5, 5, -1]
 
 ---
 
-## Ⅲ. 히스토그램 최대 직사각형 (LeetCode 84)
+## 3. 구조 및 동작 원리
 
 가장 유명한 단조 스택 응용 문제다.
 
@@ -93,7 +96,7 @@ print(largest_rectangle([2, 1, 5, 6, 2, 3]))  # 10
 
 ---
 
-## Ⅳ. 단조 큐 (Monotonic Queue) — 슬라이딩 윈도우
+## 4. 비교 및 트레이드오프
 
 단조 큐(Monotonic Queue, Deque)는 **슬라이딩 윈도우의 최대/최소값을 O(1)에 조회**한다.
 
@@ -128,7 +131,7 @@ def sliding_window_max(nums, k):
 
 ---
 
-## Ⅴ. 단조 스택 응용 패턴
+## 5. 실무 적용 및 최적화 기법
 
 | 문제 유형              | 사용 스택     | 시간 복잡도     |
 |---------------------|------------|--------------|

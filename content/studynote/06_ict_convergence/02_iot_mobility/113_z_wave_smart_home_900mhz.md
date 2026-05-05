@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Z-Wave는 **900MHz 서브 GHz ISM 밴드**에서 동작하는 저전력 메시 네트워크 프로토콜로, 2.4GHz를 사용하는 Zigbee·Wi-Fi·BLE와 **주파수 간섭이 없다**는 고유한 강점으로 스마트 홈 시장을 공략한다.
+> **핵심**: Z-Wave는 **900MHz 서브 GHz ISM 밴드**에서 동작하는 저전력 메시 네트워크 프로토콜로, 2.4GHz를 사용하는 Zigbee·Wi-Fi·BLE와 **주파수 간섭이 없다**는 고유한 강점으로 스마트 홈 시장을 공략한다.
 > 2. **가치**: 900MHz 장파는 벽·바닥을 잘 관통하므로 **실내 커버리지가 2.4GHz 대비 2~3배 넓으며**, 4홉(Hop) 메시로 최대 232개 디바이스를 안정적으로 연결한다.
 > 3. **판단 포인트**: Z-Wave Plus(Gen 5)에서 거리 67% 향상·배터리 50% 절감을 달성했으나, **Silicon Labs 단일 칩 벤더 종속성**과 Matter 표준 부상으로 시장 점유율이 축소되고 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 2.4GHz ISM 밴드는 Wi-Fi·Zigbee·BLE·전자레인지가 동시에 사용하여 **매우 혼잡**하다. Z-Wave는 이 혼잡을 피해 900MHz(한국 920MHz)에서 단독으로 작동한다.
 
@@ -35,7 +37,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 항목 | Z-Wave | Zigbee |
 |:---|:---|:---|
@@ -52,7 +54,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Z-Wave | Zigbee | Thread | Matter |
 |:---|:---|:---|:---|:---|
@@ -63,7 +65,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Z-Wave 적합 시나리오
 - **Wi-Fi 밀집 환경**: 아파트·오피스텔에서 Wi-Fi 간섭 없는 스마트 홈 구성.
@@ -74,7 +76,7 @@ Z-Wave Alliance는 Z-Wave Long Range(ZWLR)로 800m 커버리지·2000개 노드�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Z-Wave는 900MHz 서브 GHz의 **저간섭·고관통력**이라는 물리적 강점을 보유하지만, Silicon Labs 단일 벤더 종속과 Matter 표준의 부상으로 독립 생태계 유지가 어려워지고 있다. 장기적으로는 Matter Bridge를 통한 통합이 예상된다.
 

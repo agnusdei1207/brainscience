@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: CTI (Class Table Inheritance, 클래스 테이블 상속) 는 부모 클래스와 각 자식 클래스가 별도 테이블을 갖고, 자식 테이블의 PK (Primary Key) 가 부모 테이블의 FK (Foreign Key) 를 겸해 조인으로 연결된다.
+> **핵심**: CTI (Class Table Inheritance, 클래스 테이블 상속) 는 부모 클래스와 각 자식 클래스가 별도 테이블을 갖고, 자식 테이블의 PK (Primary Key) 가 부모 테이블의 FK (Foreign Key) 를 겸해 조인으로 연결된다.
 > 2. **가치**: NULL 컬럼이 없어 데이터 정합성이 높고, NOT NULL 등 DB 제약을 제대로 활용할 수 있으며, 각 클래스의 관계가 테이블 구조에 명확히 반영된다.
 > 3. **판단 포인트**: 하위 클래스별 고유 속성이 많고 DB 정합성이 중요한 경우 CTI가 적합하지만, 다형 쿼리(전체 부모 조회) 시 조인 비용이 STI (Single Table Inheritance) 보다 크다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ORM (Object-Relational Mapping) 의 상속 매핑 전략 중 CTI (Class Table Inheritance) 는 가장 **관계형 데이터베이스 친화적인** 방식이다. 객체 세계의 클래스 계층을 그대로 테이블 계층으로 반영한다.
 
@@ -37,7 +38,7 @@ Vehicle (추상 부모)
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### CTI 테이블 구조
 
@@ -111,7 +112,7 @@ public class Truck extends Vehicle {
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### ORM 상속 전략 3가지 종합 비교
 
@@ -139,7 +140,7 @@ public class Truck extends Vehicle {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 성능 최적화
 
@@ -169,7 +170,7 @@ List<Car> cars = carRepository.findByDoorsGreaterThan(2);
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 CTI 패턴의 실무 적용 판단:
 

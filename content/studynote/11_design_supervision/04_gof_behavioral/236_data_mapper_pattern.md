@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 데이터 매퍼 (Data Mapper) 는 비즈니스 도메인 객체와 DB (Database) 영속성 레이어를 완전히 분리하여, 도메인 객체는 DB 존재를 모르고 별도 Mapper 클래스가 두 세계를 연결한다.
+> **핵심**: 데이터 매퍼 (Data Mapper) 는 비즈니스 도메인 객체와 DB (Database) 영속성 레이어를 완전히 분리하여, 도메인 객체는 DB 존재를 모르고 별도 Mapper 클래스가 두 세계를 연결한다.
 > 2. **가치**: 도메인 객체가 순수 POJO (Plain Old Java Object) 로 유지되어 단위 테스트가 용이하고, DDD (Domain-Driven Design) 에서 요구하는 도메인 모델 순수성을 보장한다.
 > 3. **판단 포인트**: 비즈니스 로직이 복잡하고 도메인 모델이 테이블 구조와 다를 경우 데이터 매퍼가 필수이며, 단순 CRUD 앱은 Active Record (액티브 레코드) 가 생산성이 높다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 액티브 레코드 패턴은 빠른 개발을 가능하게 하지만, 도메인 객체와 DB (Database) 테이블 구조가 달라지거나 비즈니스 로직이 복잡해지면 한계가 드러난다. 특히:
 
@@ -37,7 +38,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 데이터 매퍼 구조
 
@@ -109,7 +110,7 @@ public class UserJpaRepository implements UserRepository {
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Data Mapper vs Active Record 심층 비교
 
@@ -150,7 +151,7 @@ public class UserJpaRepository implements UserRepository {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Spring Data JPA의 데이터 매퍼 구현 패턴
 
@@ -190,7 +191,7 @@ class UserService {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 데이터 매퍼 패턴 도입의 효과:
 

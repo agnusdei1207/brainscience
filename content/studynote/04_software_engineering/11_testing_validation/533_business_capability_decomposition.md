@@ -6,15 +6,17 @@ description = "비즈니스 능력 기준으로 마이크로서비스를 분해�
 taxonomy = ""
 tags = ["Software Engineering", "Architecture", "Business Capability", "Microservices", "Design"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 비즈니스 능력 기준 분해는 조직의 기능을 중심으로 경계를 나누는 방법이다.
+> **핵심**: 비즈니스 능력 기준 분해는 조직의 기능을 중심으로 경계를 나누는 방법이다.
 > 2. **가치**: 팀과 서비스의 책임이 잘 맞는다.
 > 3. **판단 포인트**: 기술이 아니라 업무 의미를 기준으로 나눈다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 비즈니스 능력은 조직이 해야 하는 일을 의미한다. 이 기준으로 나누면 도메인과 팀이 잘 맞는다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Architecture", "Business Capability", "Microser
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 능력은 주문, 결제, 배송, 재고 같은 업무 단위다.
 
@@ -42,7 +44,7 @@ tags = ["Software Engineering", "Architecture", "Business Capability", "Microser
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 기술 기준 분해보다 변화 관리가 쉽다.
 
@@ -58,7 +60,7 @@ tags = ["Software Engineering", "Architecture", "Business Capability", "Microser
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 조직도, 프로세스, 사용자 흐름을 함께 본다.
 
@@ -71,7 +73,7 @@ tags = ["Software Engineering", "Architecture", "Business Capability", "Microser
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 비즈니스 능력 기준 분해는 조직과 시스템을 정렬한다.
 

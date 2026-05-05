@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: VLAN 호핑(VLAN Hopping)은 스위치의 VLAN (Virtual Local Area Network) 격리를 우회해 공격자가 속하지 않은 VLAN의 트래픽에 접근하는 L2 계층 공격으로, Switch Spoofing과 Double Tagging 두 가지 방식이 있다.
+> **핵심**: VLAN 호핑(VLAN Hopping)은 스위치의 VLAN (Virtual Local Area Network) 격리를 우회해 공격자가 속하지 않은 VLAN의 트래픽에 접근하는 L2 계층 공격으로, Switch Spoofing과 Double Tagging 두 가지 방식이 있다.
 > 2. **가치**: VLAN은 논리적 네트워크 분리로 보안 경계를 제공하지만, 스위치 설정 실수(DTP 활성화, Native VLAN 미변경)가 있으면 이 경계가 무너져 물리적 분리 없이 접근 통제가 불가능해진다.
 > 3. **판단 포인트**: 방어의 핵심은 DTP (Dynamic Trunking Protocol) 비활성화, Native VLAN 1 변경(또는 사용 금지), 사용하지 않는 포트의 명시적 접근 포트(Access Port) 설정이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 VLAN은 동일 물리 스위치에 연결된 장비들을 논리적으로 분리해 브로드캐스트 도메인을 나누고 보안 경계를 형성하는 핵심 네트워크 보안 기술이다. VLAN 10(일반 직원), VLAN 20(서버팀), VLAN 30(재무팀)으로 분리하면 서로의 트래픽이 라우터나 방화벽을 거치지 않고는 교환되지 않는다.
 
@@ -25,7 +27,7 @@ VLAN은 동일 물리 스위치에 연결된 장비들을 논리적으로 분리
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 공격 방식 1: Switch Spoofing (스위치 사칭)
 
@@ -73,7 +75,7 @@ Double Tagging 패킷 구조:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Switch Spoofing vs Double Tagging 비교
 
@@ -108,7 +110,7 @@ Double Tagging 패킷 구조:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Cisco 스위치 VLAN 호핑 방어 설정
 
@@ -150,7 +152,7 @@ VLAN 호핑 문제에서 핵심은 두 공격 방식의 차이를 명확히 구�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 VLAN 호핑 방어 설정을 통해 조직은 내부 네트워크 분리의 신뢰성을 확보한다. DTP 비활성화와 Native VLAN 변경만으로 두 가지 주요 VLAN 호핑 공격이 모두 차단된다. 이는 스위치 CLI 설정만으로 구현되어 추가 비용이 없다.
 

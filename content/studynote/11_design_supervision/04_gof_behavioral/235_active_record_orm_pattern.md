@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 액티브 레코드 (Active Record) 는 DB (Database) 테이블의 각 행(Row)을 객체로 1:1 매핑하고, 해당 객체 안에 저장(save), 삭제(delete), 조회(find) 같은 DB (Database) 접근 메서드를 직접 포함한다.
+> **핵심**: 액티브 레코드 (Active Record) 는 DB (Database) 테이블의 각 행(Row)을 객체로 1:1 매핑하고, 해당 객체 안에 저장(save), 삭제(delete), 조회(find) 같은 DB (Database) 접근 메서드를 직접 포함한다.
 > 2. **가치**: 도메인 객체와 영속성 로직이 한 클래스에 있어 CRUD (Create Read Update Delete) 구현이 빠르고 직관적이며, Rails의 ActiveRecord처럼 Convention over Configuration (설정보다 관례) 으로 생산성이 높다.
 > 3. **판단 포인트**: 도메인 로직이 단순한 CRUD 중심 앱에 적합하지만, 복잡한 비즈니스 규칙이 추가되면 비즈니스 레이어와 DB 레이어가 결합되어 유지보수가 어려워진다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 관계형 DB (Relational Database) 의 행과 객체지향 프로그래밍의 객체 사이에는 구조적 불일치가 존재한다—이를 객체-관계 임피던스 불일치 (Object-Relational Impedance Mismatch) 라고 한다. ORM (Object-Relational Mapping) 은 이 간격을 메우는 기술의 총칭이며, 액티브 레코드는 ORM 구현 전략 중 가장 단순한 형태다.
 
@@ -32,7 +33,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 액티브 레코드 구조
 
@@ -95,7 +96,7 @@ JPA의 `@Entity` 는 액티브 레코드와 유사해 보이지만, 실제로는
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Active Record vs Data Mapper 핵심 비교
 
@@ -122,7 +123,7 @@ JPA의 `@Entity` 는 액티브 레코드와 유사해 보이지만, 실제로는
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 적합 시나리오
 
@@ -148,7 +149,7 @@ JPA의 `@Entity` 는 액티브 레코드와 유사해 보이지만, 실제로는
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 액티브 레코드 패턴의 도입 판단:
 

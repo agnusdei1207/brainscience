@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Multi-Head Attention은 **QKV를 h개 헤드로 분할하여 각 헤드가 독립적으로 Attention을 수행**한 후 결합(Concat+Linear)하는 구조이며, 단일 Attention보다 **다양한 관계 패턴을 동시에 포착**한다.
+> **핵심**: Multi-Head Attention은 **QKV를 h개 헤드로 분할하여 각 헤드가 독립적으로 Attention을 수행**한 후 결합(Concat+Linear)하는 구조이며, 단일 Attention보다 **다양한 관계 패턴을 동시에 포착**한다.
 > 2. **가치**: 단일 Attention은 하나의 관점에서만 참조하지만, 8개 헤드는 각각 **문법 관계·의미 관계·위치 관계** 등 다른 패턴에 주목하여 **더 풍부한 표현**을 학습한다.
 > 3. **판단 포인트**: d_model=512, h=8이면 각 헤드는 d_k=64 차원에서 독립 Attention을 수행하며, 총 연산량은 단일 헤드와 동일하되 **표현력은 증가**한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -35,7 +37,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 계산 과정
 
@@ -52,7 +54,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 단일 Head | Multi-Head | GQA |
 |:---|:---|:---|:---|
@@ -62,7 +64,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 헤드 수 선택
 - Transformer-base: h=8, d_k=64.
@@ -71,7 +73,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Multi-Head Attention은 **Transformer의 표현력을 결정**하는 핵심 구조이며, GQA·MQA로 효율화되어 최신 LLM(GPT-4·Llama 3)에서 표준으로 사용된다.
 

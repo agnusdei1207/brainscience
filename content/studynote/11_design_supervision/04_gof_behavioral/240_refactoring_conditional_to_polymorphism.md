@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 타입에 따라 분기하는 if-else / switch 조건문 블록을 상태 패턴 (State Pattern) 이나 전략 패턴 (Strategy Pattern) 같은 다형성 (Polymorphism) 기반 클래스 계층으로 대체하여 OCP (Open/Closed Principle: 개방/폐쇄 원칙) 를 실현한다.
+> **핵심**: 타입에 따라 분기하는 if-else / switch 조건문 블록을 상태 패턴 (State Pattern) 이나 전략 패턴 (Strategy Pattern) 같은 다형성 (Polymorphism) 기반 클래스 계층으로 대체하여 OCP (Open/Closed Principle: 개방/폐쇄 원칙) 를 실현한다.
 > 2. **가치**: 새 타입이 추가될 때 기존 조건문을 수정하는 대신 새 클래스를 추가하기만 하면 되어, 기존 코드 변경 없이 기능 확장이 가능해진다.
 > 3. **판단 포인트**: 동일한 조건 블록이 여러 메서드에 반복되거나, 새 타입 추가 때마다 여러 곳을 수정해야 한다면 다형성으로 전환할 시점이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 소프트웨어 개발 초기에는 간단한 if-else로 타입을 분기하는 코드가 자연스럽게 작성된다. 그러나 타입이 추가되고 조건이 복잡해지면 이 코드는 **스위치 문 냄새 (Switch Statement Smell)** 라는 안티 패턴이 된다.
 
@@ -51,7 +52,7 @@ double getDeliveryDays(String orderType) {
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 리팩토링 전/후 구조 비교
 
@@ -140,7 +141,7 @@ public class Order {
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 관련 리팩토링 기법 비교
 
@@ -165,7 +166,7 @@ After (OCP 준수):
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 리팩토링 절차 (안전한 전환 단계)
 
@@ -199,7 +200,7 @@ After (OCP 준수):
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Replace Conditional with Polymorphism 리팩토링의 효과:
 

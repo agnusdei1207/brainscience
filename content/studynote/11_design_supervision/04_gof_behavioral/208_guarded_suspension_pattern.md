@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Guarded Suspension (가드 서스펜션) 패턴은 특정 가드 조건(Guard Condition)이 충족될 때까지 요청 스레드를 **일시 중단(suspend)**시키고, 조건이 만족되면 재개하는 동시성 제어 패턴이다.
+> **핵심**: Guarded Suspension (가드 서스펜션) 패턴은 특정 가드 조건(Guard Condition)이 충족될 때까지 요청 스레드를 **일시 중단(suspend)**시키고, 조건이 만족되면 재개하는 동시성 제어 패턴이다.
 > 2. **가치**: 생산자-소비자(Producer-Consumer) 패턴의 핵심 메커니즘으로, 빈 큐에서 소비하거나 가득 찬 큐에 넣으려는 시도를 CPU를 낭비하지 않고(busy-waiting 없이) 대기시킨다.
 > 3. **판단 포인트**: 조건이 곧 만족될 것이 예상될 때 사용한다. 조건이 절대 만족되지 않을 위험이 있다면 타임아웃(Timeout)과 함께 사용한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1-1. Busy-Waiting의 문제
 
@@ -69,7 +70,7 @@ synchronized (lock) {
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. 구조: synchronized + wait/notify
 
@@ -147,7 +148,7 @@ public class SimpleBlockingQueue<T> {
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. 대기 메커니즘 비교
 
@@ -183,7 +184,7 @@ public class SimpleBlockingQueue<T> {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. 실무 적용 패턴
 
@@ -219,7 +220,7 @@ Executors.newFixedThreadPool(4).submit(() -> {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5-1. 기대 효과
 

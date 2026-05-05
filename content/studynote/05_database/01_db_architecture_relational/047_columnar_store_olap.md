@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-database"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 컬럼 기반 스토리지(Columnar Store)는 동일 컬럼의 값을 연속으로 저장하여 OLAP 분석 쿼리에서 극적인 I/O 절감을 달성 — "SELECT AVG(price) FROM orders"처럼 특정 컬럼만 읽는 분석 쿼리는 행 기반 저장보다 100배 이상 빠를 수 있다.
 > 2. 컬럼 압축이 컬럼 스토리지의 또 다른 핵심 장점 — 동일 컬럼의 값은 타입이 동일하고 중복이 많아 RLE(Run-Length Encoding), 사전 인코딩(Dictionary Encoding), 비트맵 인덱스(Bitmap Index) 등으로 5~20배 압축이 가능하다.
 > 3. OLTP vs OLAP의 저장 방식 선택 원칙 — 행 단위 CRUD 많은 OLTP는 행 기반(InnoDB, PostgreSQL Heap), 컬럼 집계 분석 위주 OLAP는 컬럼 기반(Redshift, BigQuery, Snowflake, ClickHouse)이 적합하며, 하이브리드 HTAP 데이터베이스가 이를 통합하는 추세다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 행 기반 vs 컬럼 기반
+## 1. 개요 및 필요성
 
 ```
 저장 방식 비교:
@@ -57,7 +60,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅱ. 컬럼 압축 기법
+## 2. 구성요소
 
 ```
 컬럼 스토리지 압축:
@@ -108,7 +111,7 @@ categories = "studynote-database"
 
 ---
 
-## Ⅲ. 대표 컬럼 스토리지 DB
+## 3. 구조 및 동작 원리
 
 ```
 주요 컬럼 기반 OLAP DB:
@@ -160,7 +163,7 @@ Apache Arrow:
 
 ---
 
-## Ⅳ. HTAP — 행+컬럼 통합
+## 4. 비교 및 트레이드오프
 
 ```
 HTAP (Hybrid Transactional/Analytical Processing):
@@ -207,7 +210,7 @@ MySQL HeatWave (Oracle):
 
 ---
 
-## Ⅴ. 실무 시나리오 — 이커머스 분석 플랫폼
+## 5. 실무 적용 및 최적화 기법
 
 ```
 이커머스 DW 컬럼 스토리지 최적화:

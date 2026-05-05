@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: ROC 곡선(ROC Curve, Receiver Operating Characteristic)은 임계값(Threshold)을 변화시키면서 TPR(재현율)과 FPR의 트레이드오프를 시각화한 곡선이다.
+> **핵심**: ROC 곡선(ROC Curve, Receiver Operating Characteristic)은 임계값(Threshold)을 변화시키면서 TPR(재현율)과 FPR의 트레이드오프를 시각화한 곡선이다.
 > 2. **가치**: AUC(Area Under the Curve) 값이 0.5이면 랜덤 예측, 1.0이면 완벽한 분류기로, 단일 숫자로 모델을 서로 비교할 수 있다.
 > 3. **판단 포인트**: 불균형 데이터에서는 ROC-AUC보다 PR-AUC(Precision-Recall AUC)가 더 신뢰할 수 있는 지표임을 구분해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 이진 분류기(Binary Classifier)는 내부적으로 0~1 사이의 확률값을 출력하고, 특정 임계값(Threshold)을 기준으로 Positive/Negative를 결정한다. 임계값을 0.1부터 0.9까지 변화시키면 각 점에서의 TPR(True Positive Rate)과 FPR(False Positive Rate)이 달라진다.
 
@@ -28,7 +30,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### ROC 공간과 곡선
 
@@ -87,7 +89,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### AUC의 확률적 해석
 
@@ -122,7 +124,7 @@ AUC = P(양성 샘플의 예측 점수 > 음성 샘플의 예측 점수)
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### ROC 곡선 기반 임계값 결정 전략
 
@@ -154,7 +156,7 @@ AUC = P(양성 샘플의 예측 점수 > 음성 샘플의 예측 점수)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ROC 곡선과 AUC를 올바르게 활용하면:
 

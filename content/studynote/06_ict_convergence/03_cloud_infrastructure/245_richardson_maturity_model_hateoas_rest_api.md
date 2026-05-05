@@ -5,19 +5,21 @@ date = "2026-04-10"
 [extra]
 categories = "studynote-ict"
 +++
-
-# 245. RESTful API 성숙도 모델 (Richardson Maturity Model)
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 전 세계 개발자들이 너도나도 "우리 API는 REST API입니다!"라고 뻥을 치지만, 막상 코드를 까보면 전혀 REST의 철학을 지키지 않은 엉터리 API(단순 RPC)가 난무하는 참상을 바로잡기 위해, **레오나르드 리처드슨(Leonard Richardson)이 "진짜 100% 완벽한 REST API가 되려면 이 4가지 진화 단계(Level 0 ~ 3)를 거쳐야 한다"고 정의한 'REST 성숙도 평가 모델(RMM)'**을 다룹니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# 245. RESTful API 성숙도 모델 (Richardson Maturity Model)
+
 > 1. **본질**: 네가 만든 API가 단순한 '원격 함수 호출(RPC)' 수준인지, 아니면 진정한 '웹 철학(HTTP/URI)을 이해하는 자원(Resource) 지향 구조'인지를 판별하는 4계단짜리 성적표다.
 > 2. **가치**: 대부분의 기업 API는 Level 2에 머물러 있다. 궁극의 경지인 Level 3(HATEOAS)에 도달하면, 클라이언트(프론트엔드)는 서버의 API 주소가 바뀌어도 하드코딩을 뜯어고칠 필요 없이, 서버가 던져주는 '하이퍼링크(안내판)'만 따라가며 100% 스스로 길을 찾는 미친 자율성을 얻게 된다.
 > 3. **기술 체계**: HTTP를 그냥 껍데기로 쓰는 **Level 0**, 명사(URI)로 자원을 쪼개는 **Level 1**, 동사(HTTP Method)로 행동을 표현하는 **Level 2**, 마지막으로 응답에 다음 행동의 링크(Link)를 쥐여주는 **Level 3 (HATEOAS)**로 구성된다.
 
 ---
 
-### Ⅰ. 밑바닥부터 HTTP의 재발견까지 (Level 0 ~ Level 2)
+### 1. 개요 및 필요성
 URL에 `get_user`라고 동사를 적어놨다면 너는 REST를 모르는 자다.
 
 1. **Level 0 (The Swamp of POX) - 단순 함수 호출**:
@@ -37,7 +39,7 @@ URL에 `get_user`라고 동사를 적어놨다면 너는 REST를 모르는 자�
 
 ---
 
-### Ⅱ. 궁극의 경지 Level 3: HATEOAS의 마법
+### 2. 구성요소
 서버가 클라이언트의 손에 다음 지도를 쥐여준다.
 
 1. **Level 3 (HATEOAS)의 개념**:
@@ -65,7 +67,7 @@ URL에 `get_user`라고 동사를 적어놨다면 너는 REST를 모르는 자�
 
 ---
 
-### Ⅲ. 실무에서의 타협 (Level 3는 낭비인가?)
+### 3. 구조 및 동작 원리
 이상은 높지만 현실의 장벽은 차갑다.
 
 1. **HATEOAS 도입의 딜레마**:

@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 벡터 데이터베이스(Vector Database)는 고차원 벡터 임베딩을 저장하고 근사 최근접 이웃(ANN) 검색을 수행하도록 특화된 데이터베이스 — LLM·이미지 인식·추천 시스템에서 "의미적으로 유사한 항목을 빠르게 찾는" 핵심 인프라가 되었다.
 > 2. ANN(Approximate Nearest Neighbor) 알고리즘이 벡터 DB의 심장 — 정확한 최근접 이웃 탐색(Exact NN)은 고차원에서 O(N) 이상이지만, HNSW(계층적 탐색 그래프)·IVF·PQ 같은 ANN 알고리즘은 99%+ 리콜로 O(log N) 수준 성능을 달성한다.
 > 3. RAG(Retrieval-Augmented Generation) 아키텍처에서 벡터 DB가 필수 구성 요소 — LLM의 지식 한계를 극복하기 위해 문서를 임베딩하여 벡터 DB에 저장하고, 질의(Query) 벡터와 유사한 문서를 검색하여 LLM 컨텍스트로 제공하는 패턴이 표준화됐다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 벡터 임베딩과 유사도
+## 1. 개요 및 필요성
 
 ```
 벡터 임베딩 (Vector Embedding):
@@ -59,7 +62,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅱ. ANN 알고리즘
+## 2. 구성요소
 
 ```
 ANN (Approximate Nearest Neighbor):
@@ -121,7 +124,7 @@ ANN (Approximate Nearest Neighbor):
 
 ---
 
-## Ⅲ. 주요 벡터 DB
+## 3. 구조 및 동작 원리
 
 ```
 벡터 DB 비교:
@@ -186,7 +189,7 @@ pgvector (PostgreSQL 확장):
 
 ---
 
-## Ⅳ. RAG 아키텍처
+## 4. 비교 및 트레이드오프
 
 ```
 RAG (Retrieval-Augmented Generation):
@@ -248,7 +251,7 @@ HyDE (Hypothetical Document Embeddings):
 
 ---
 
-## Ⅴ. 실무 시나리오 — 기업 지식 검색 RAG
+## 5. 실무 적용 및 최적화 기법
 
 ```
 대기업 사내 지식 관리 RAG 구축:

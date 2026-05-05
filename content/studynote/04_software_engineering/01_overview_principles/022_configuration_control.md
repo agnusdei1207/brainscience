@@ -7,17 +7,20 @@ date = "2026-03-04"
 categories = ["studynote-se"]
 tags = ["Software Engineering", "SCM", "Configuration Control", "CCB", "변경통제"]
 +++
+## 0. 핵심 인사이트
 
-# 형상 통제 (Configuration Control)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 형상 통제는 식별된 형상 항목(CI)의 변경 사항을 무분별하게 적용하지 못하도록, 변경 통제 위원회(CCB)를 통해 검토, 승인, 반려하는 게이트키퍼 프로세스이다.
+> **핵심**: 형상 통제는 식별된 형상 항목(CI)의 변경 사항을 무분별하게 적용하지 못하도록, 변경 통제 위원회(CCB)를 통해 검토, 승인, 반려하는 게이트키퍼 프로세스이다.
 > 2. **가치**: 변경으로 인한 부작용(Side-effect)을 사전에 차단하고, 프로젝트의 범위 크리프(Scope Creep)를 방지하여 시스템의 무결성과 품질을 유지한다.
 > 3. **융합**: 최신 DevOps 환경에서는 전통적인 대면 회의 형태의 CCB 대신, 자동화된 CI/CD 파이프라인의 정책 제어(Policy-as-Code) 및 Pull Request 리뷰 과정으로 진화하고 있다.
 
+> 📝 모범 답안
+
+# 형상 통제 (Configuration Control)
+
+##
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 형상 통제 (Configuration Control)는 베이스라인(Baseline)이 설정된 형상 항목(CI)에 대한 변경 요청(CR, Change Request)이 발생했을 때, 이를 공식적인 절차에 따라 평가하고 반영 여부를 결정하는 형상 관리의 중추적 활동이다. 형상 식별이 "무엇을 관리할 것인가"를 정의한다면, 형상 통제는 "어떻게 변경을 허락할 것인가"를 규정한다.
 
@@ -29,7 +32,7 @@ tags = ["Software Engineering", "SCM", "Configuration Control", "CCB", "변경�
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 형상 통제의 핵심 메커니즘은 변경 요청(CR)의 라이프사이클 관리에 있다. 모든 변경은 엄격한 상태 전이(State Transition)를 거쳐 시스템에 반영된다.
 
@@ -76,7 +79,7 @@ tags = ["Software Engineering", "SCM", "Configuration Control", "CCB", "변경�
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 전통적인 폭포수 환경의 형상 통제와 애자일/DevOps 환경의 형상 통제는 그 승인 주체와 접근 방식에서 큰 차이를 보인다.
 
@@ -103,7 +106,7 @@ tags = ["Software Engineering", "SCM", "Configuration Control", "CCB", "변경�
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 실무에서 형상 통제는 모든 변경에 동일한 잣대를 들이대면 병목이 발생하여 프로젝트가 마비된다. 따라서 변경의 성격에 따라 차등화된 통제 전략(Tailoring)이 필수적이다.
 
@@ -133,7 +136,7 @@ tags = ["Software Engineering", "SCM", "Configuration Control", "CCB", "변경�
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 형상 통제를 철저히 수행했을 때의 도입 전후 효과는 다음과 같다.
 

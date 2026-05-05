@@ -5,16 +5,18 @@ date = "2026-04-10"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> **핵심**: Rolling update는 Kubernetes (K8s) Deployment가 새 ReplicaSet을 점진적으로 늘리고 기존 ReplicaSet을 줄여가며 서비스 가동을 유지하는 배포 방식이다.
 
-    > 1. **본질**: Rolling update는 Kubernetes (K8s) Deployment가 새 ReplicaSet을 점진적으로 늘리고 기존 ReplicaSet을 줄여가며 서비스 가동을 유지하는 배포 방식이다.
-    > 2. **가치**: readiness probe와 maxSurge/maxUnavailable 조합이 잘 맞아야 무중단에 가까운 교체가 가능하다.
+> 📝 모범 답안
+
+        > 2. **가치**: readiness probe와 maxSurge/maxUnavailable 조합이 잘 맞아야 무중단에 가까운 교체가 가능하다.
     > 3. **판단 포인트**: 버전 호환성과 종료 절차를 무시하면 롤링 업데이트는 안전한 배포가 아니라 점진적 장애 전파가 된다.
 
     ---
 
-    ## Ⅰ. 개요 및 필요성
+    ## 1. 개요 및 필요성
 
     Deployment는 Kubernetes (K8s)에서 애플리케이션 배포 상태를 선언적으로 관리한다. Rolling update는 원하는 상태를 새 버전으로 바꾸되, 모든 Pod를 한꺼번에 죽이지 않고 조금씩 교체하는 전략이다.
 
@@ -24,7 +26,7 @@ categories = "studynote-cloud-architecture"
 
     ---
 
-    ## Ⅱ. 아키텍처 및 핵심 원리
+    ## 2. 구성요소
 
     Deployment는 새 ReplicaSet을 생성하고, 설정된 비율만큼 Pod를 올린 뒤 readiness가 확인되면 기존 Pod를 내린다. 핵심 제어 변수는 `maxSurge`, `maxUnavailable`, `progressDeadlineSeconds`다.
 
@@ -49,7 +51,7 @@ Rolling update의 핵심은 "새 Pod가 준비되기 전에 옛 Pod를 내리지
 
     ---
 
-    ## Ⅲ. 비교 및 연결
+    ## 3. 구조 및 동작 원리
 
     Rolling update는 Recreate, Blue-Green, Canary와 비교해야 선택이 쉬워진다.
 
@@ -66,7 +68,7 @@ Rolling update는 서비스가 이전 버전과 새 버전을 동시에 잠깐 �
 
     ---
 
-    ## Ⅳ. 실무 적용 및 기술사 판단
+    ## 4. 비교 및 트레이드오프
 
     실무에서는 애플리케이션뿐 아니라 종료 절차까지 설계해야 한다. `preStop`, `terminationGracePeriodSeconds`, 세션 드레이닝, 캐시 동기화가 맞물려야 사용자 요청이 잘린 채 끝나지 않는다.
 
@@ -85,7 +87,7 @@ Rolling update는 서비스가 이전 버전과 새 버전을 동시에 잠깐 �
 
     ---
 
-    ## Ⅴ. 기대효과 및 결론
+    ## 5. 실무 적용 및 최적화 기법
 
     Rolling update는 서비스 가용성과 배포 속도를 동시에 챙기는 현실적인 전략이다. 특히 상태 없는 워크로드에서는 가볍고 안전하게 버전 전환을 할 수 있다.
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: DBSCAN(Density-Based Spatial Clustering of Applications with Noise, 노이즈 포함 밀도 기반 공간 군집화)은 반경 ε 내에 최소 MinPts 이상의 점이 밀집한 영역을 군집으로 연결하는 밀도 기반 군집화 알고리즘으로, 군집 개수 K를 사전에 지정할 필요가 없다.
+> **핵심**: DBSCAN(Density-Based Spatial Clustering of Applications with Noise, 노이즈 포함 밀도 기반 공간 군집화)은 반경 ε 내에 최소 MinPts 이상의 점이 밀집한 영역을 군집으로 연결하는 밀도 기반 군집화 알고리즘으로, 군집 개수 K를 사전에 지정할 필요가 없다.
 > 2. **가치**: 원형이 아닌 임의 형태의 군집(초승달, 도넛, 나선형)을 탐지하고, 어느 군집에도 속하지 않는 이상치(Noise Point)를 자동 분리하여 K-Means가 실패하는 복잡한 데이터 구조를 처리한다.
 > 3. **판단 포인트**: ε(epsilon, 반경)와 MinPts(최소 점 수) 두 하이퍼파라미터가 군집 품질을 결정하며, k-NN 거리 그래프(k-distance graph)의 엘보우(elbow) 지점에서 적절한 ε를 추정한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 위성 사진에서 도시 군집을 탐지하거나 소셜 미디어 게시물의 지역 이벤트를 군집화할 때, 도시 모양은 원형이 아닌 복잡한 형태다. K-Means는 원형 군집만 탐지할 수 있어 이런 상황에서 완전히 실패한다. DBSCAN은 "이 점의 주변 반경 ε 안에 점이 충분히 많으면(≥MinPts) 군집이다"라는 직관적 원리로 임의 형태 군집을 탐지하고, 주변에 점이 없는 고립된 이상치를 자동으로 -1(노이즈)로 표시한다.
 
@@ -21,7 +23,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -55,7 +57,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 HDBSCAN(Hierarchical DBSCAN): DBSCAN의 단점인 단일 ε 값으로 밀도가 다른 군집을 처리 못하는 문제를 계층적 밀도 기반 접근으로 해결한다. 밀도가 높은 군집과 낮은 군집을 동시에 탐지할 수 있어 실무에서 DBSCAN보다 선호된다. OPTICS(Ordering Points To Identify the Clustering Structure)는 ε 없이 도달 거리(reachability distance)로 군집 구조를 시각화한다.
 
@@ -63,7 +65,7 @@ HDBSCAN(Hierarchical DBSCAN): DBSCAN의 단점인 단일 ε 값으로 밀도가 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ε 선택: 데이터의 k번째(k=MinPts) 최근접 이웃 거리를 정렬하여 k-distance 그래프를 그리고, 거리가 급격히 증가하는 엘보우(knee/elbow) 지점을 ε로 선택한다. MinPts 선택: 일반적으로 차원 d의 2배(MinPts ≥ 2d)를 권장한다. 지리 정보 데이터에서 Haversine 거리를 사용하면 위도/경도 기반 지역 군집화가 가능하다. 데이터 스케일링 필수(유클리드 거리 기반이므로).
 
@@ -71,7 +73,7 @@ HDBSCAN(Hierarchical DBSCAN): DBSCAN의 단점인 단일 ε 값으로 밀도가 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 DBSCAN은 군집 형태 제약 없음, 이상치 자동 탐지, K 사전 지정 불필요라는 3대 강점으로 지리정보, 이상치 탐지, 의료 이미지 분석에서 K-Means 대비 압도적 우위를 보인다. 단, 고차원 데이터(차원의 저주)와 밀도가 균일하지 않은 데이터에는 HDBSCAN이나 스펙트럼 군집화(Spectral Clustering)가 더 적합하다.
 

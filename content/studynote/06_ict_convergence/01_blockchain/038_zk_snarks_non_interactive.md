@@ -4,11 +4,14 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. zk-SNARK(Succinct Non-interactive ARguments of Knowledge)는 영지식 증명을 단 한 번의 메시지 전송으로 검증 가능하게 만든 비대화형 프로토콜로, 블록체인에서 여러 라운드 상호작용 없이 스마트 컨트랙트가 즉시 검증할 수 있다.
 > 2. 핵심 구성 요소는 신뢰 설정(Trusted Setup, CRS: Common Reference String)으로 생성된 증명 키(pk)와 검증 키(vk)로, 이 CRS가 안전하게 폐기되지 않으면 위조 증명이 가능한 독성 폐기물(Toxic Waste) 문제가 있다.
 > 3. Groth16이 현재 가장 효율적인 zk-SNARK 구현(증명 크기 192바이트, 검증 3ms)이며, Ethereum zkEVM(zkSync, Polygon zkEVM)의 핵심 암호 기반으로 Layer 2 스케일링의 보안을 보장한다.
+
+> 📝 모범 답안
 
 ---
 

@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 교착 상태 복구 (프로세스 킬)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 교착 상태 복구(Deadlock Recovery)는 시스템이 데드락 예방이나 회피를 포기하고 일단 데드락이 발생하도록 내버려 둔 뒤, **주기적인 탐지(Detection)를 통해 꼬인 매듭을 사후에 강제로 끊어내는(Recovery) 비관적 대처법**이다.
+> **핵심**: 교착 상태 복구(Deadlock Recovery)는 시스템이 데드락 예방이나 회피를 포기하고 일단 데드락이 발생하도록 내버려 둔 뒤, **주기적인 탐지(Detection)를 통해 꼬인 매듭을 사후에 강제로 끊어내는(Recovery) 비관적 대처법**이다.
 > 2. **해결책 (Process Kill)**: 가장 확실하고 잔인한 복구 방법은 데드락 사이클(원형 대기)에 얽혀있는 프로세스 중 **만만한 놈(Victim) 하나를 골라 강제로 죽여버려(Kill) 쥐고 있던 자원을 뺏는 것**이다. 
 > 3. **희생자 선정 (Victim Selection)**: 아무나 죽이면 시스템 피해가 크므로, 연산 진행도가 가장 낮거나, 롤백(Rollback)해야 할 데이터가 가장 적거나, 우선순위가 가장 낮은 프로세스를 희생자로 고르는 경제적이고 전략적인 판단이 요구된다.
 
+> 📝 모범 답안
+
+# 교착 상태 복구 (프로세스 킬)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **교착 상태 탐지 (Detection)**: 주기적으로 자원 할당 그래프(RAG)를 순회하며 사이클(데드락)이 발생했는지 찾는 과정.
@@ -41,7 +43,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 데드락 복구를 위한 프로세스 종료 (Process Termination) 기법
 
@@ -78,7 +80,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 자원 선점 (Resource Preemption) vs 프로세스 종료 (Process Kill)
 
@@ -102,7 +104,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -151,7 +153,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Insecure Design (안전하지 않은 설계, A04)은 구현 버그가 아니라 설계 단계에서 보안 통제를 누락하거나 잘못 설계해, 올바른 구현조차도 시스템을 취약하게 만드는 근본적인 아키텍처 취약점이다.
+> **핵심**: Insecure Design (안전하지 않은 설계, A04)은 구현 버그가 아니라 설계 단계에서 보안 통제를 누락하거나 잘못 설계해, 올바른 구현조차도 시스템을 취약하게 만드는 근본적인 아키텍처 취약점이다.
 > 2. **가치**: OWASP 2021에서 신규 진입하며 4위를 차지했고, "보안은 코딩 단계가 아닌 설계 단계에서 내재화되어야 한다"는 패러다임 전환을 반영한다.
 > 3. **판단 포인트**: 위협 모델링(Threat Modeling, STRIDE), 보안 설계 패턴 적용, 제한 노출(Constrained Design), 레퍼런스 아키텍처가 핵심 대응이며, SDL (Secure Development Lifecycle) 초기 단계 통합이 필수다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 Insecure Design은 코드에 버그가 없어도 시스템이 취약한 경우다. 예를 들어 비밀번호 재설정 기능을 "어린 시절 애완동물 이름"으로 설계하면, 코드가 완벽해도 소셜 엔지니어링으로 계정이 탈취된다. 이처럼 설계 결함은 구현 수정만으로는 해결할 수 없다.
 
@@ -27,7 +29,7 @@ Insecure Design은 코드에 버그가 없어도 시스템이 취약한 경우�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Secure Design의 핵심 원칙:
 
@@ -56,7 +58,7 @@ Secure Design의 핵심 원칙:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Insecure Design vs. 다른 OWASP 항목:
 
@@ -71,7 +73,7 @@ Insecure Design vs. 다른 OWASP 항목:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **Secure Design 방법론**:
 1. **위협 모델링 (Threat Modeling)**: STRIDE (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege)로 설계 단계 위협 식별
@@ -84,7 +86,7 @@ Insecure Design vs. 다른 OWASP 항목:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 위협 모델링을 SDL에 통합하면 설계 결함을 코딩 이전에 발견·수정할 수 있어 수정 비용을 1/10 이하로 줄일 수 있다(보안 결함 수정 비용은 발견 시점이 늦을수록 기하급수적으로 증가). OWASP SAMM (Software Assurance Maturity Model)에 따르면 위협 모델링 성숙도가 높은 조직일수록 보안 사고 빈도가 현저히 낮다.
 

@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 656. x86 보호 모드 (x86 Protection Modes)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: x86 보호 모드는 하드웨어 수준에서 **메모리 영역과 실행 권한(Ring Levels)을 격리**하여, 특정 애플리케이션의 오류나 악의적인 공격이 시스템 전체(OS 커널)로 확산되지 않도록 방지하는 운영 체제의 물리적 토대다.
+> **핵심**: x86 보호 모드는 하드웨어 수준에서 **메모리 영역과 실행 권한(Ring Levels)을 격리**하여, 특정 애플리케이션의 오류나 악의적인 공격이 시스템 전체(OS 커널)로 확산되지 않도록 방지하는 운영 체제의 물리적 토대다.
 > 2. **가치**: 리얼 모드(Real Mode)의 1MB 주소 한계를 극복하고 최대 4GB 이상의 광활한 메모리 공간(Protected/Long Mode)을 제공하며, 페이징(Paging)과 가상 메모리를 통해 현대 멀티태스킹 환경의 안정성을 보장한다.
 > 3. **융합**: GDT(Global Descriptor Table), LDT(Local Descriptor Table), 그리고 TSS(Task State Segment)와 같은 복잡한 하드웨어 구조가 결합되어, 운영체제가 사용자 앱과 커널을 안전하게 분리하고 관리할 수 있는 '권한의 성벽'을 구축한다.
 
+> 📝 모범 답안
+
+# 656. x86 보호 모드 (x86 Protection Modes)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1. "무법지대"에서 "질서의 도시"로
 - **현상 (리얼 모드)**: 초기 8086 CPU는 모든 프로그램이 하드웨어의 모든 곳을 건드릴 수 있었다. 게임이 실수로 하드디스크 제어권을 건드리면 데이터가 다 날아가는 시대였다.
@@ -54,7 +56,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. GDT (Global Descriptor Table)
 - 메모리 각 영역의 시작 주소, 크기, 그리고 **'누가 접근할 수 있는지(DPL, Descriptor Privilege Level)'**를 적어놓은 거대한 장부다. 
@@ -76,7 +78,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 리얼 모드 vs 보호 모드 vs 롱 모드
 
@@ -96,7 +98,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -118,7 +120,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **시스템 가동률(Uptime) 향상**: 앱 오류가 OS에 영향을 주지 않아 서버 가동 시간 극대화.

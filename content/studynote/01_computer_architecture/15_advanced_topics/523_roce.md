@@ -5,17 +5,19 @@ date = "2026-04-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 523. RoCE (RDMA over Converged Ethernet)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: RoCE(RDMA over Converged Ethernet)는 고가의 전용 장비가 필요한 인피니밴드(InfiniBand) 대신, **대중적인 이더넷(Ethernet) 인프라 위에서 RDMA의 초고속, 초저지연 통신을 가능케 하는 프로토콜**이다.
+> **핵심**: RoCE(RDMA over Converged Ethernet)는 고가의 전용 장비가 필요한 인피니밴드(InfiniBand) 대신, **대중적인 이더넷(Ethernet) 인프라 위에서 RDMA의 초고속, 초저지연 통신을 가능케 하는 프로토콜**이다.
 > 2. **가치**: 이더넷을 무손실(Lossless) 네트워크로 개조하는 **PFC(Priority-based Flow Control)** 기술과 결합하여, CPU 간섭 없이 데이터센터 전역의 서버 간 메모리 직통 터널을 저렴한 비용으로 구축한다.
 > 3. **융합**: IP 라우팅이 가능한 **RoCE v2**가 현대 클라우드와 AI 클러스터의 사실상 표준으로 자리 잡았으며, NVMe-oF 기술과 융합되어 고성능 스토리지 공유 아키텍처를 완성한다.
 
+> 📝 모범 답안
+
+# 523. RoCE (RDMA over Converged Ethernet)
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 - **개념**: 2010년 인피니밴드 무역 협회(IBTA)가 발표한 표준으로, 이더넷 프레임 내에 인피니밴드 전송 계층을 캡슐화하여 전송하는 기술이다.
 - **필요성**: 슈퍼컴퓨터 급의 성능을 내기 위해 RDMA가 필요하지만, 모든 서버의 랜카드와 스위치를 비싼 인피니밴드 전용 제품으로 바꾸기에는 비용 부담이 너무 컸다. RoCE는 **"이미 깔려있는 이더넷 선과 스위치를 그대로 쓰면서 소프트웨어 스택과 일부 하드웨어 설정만으로 RDMA를 구현하자"**는 경제적 실용주의에서 탄생했다.
@@ -44,7 +46,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 무손실 이더넷 (Converged Ethernet)의 마법
 일반 이더넷은 길이 막히면 패킷을 버린다. 하지만 RDMA는 패킷 하나만 없어져도 성능이 나락으로 간다. 이를 막기 위해 RoCE는 다음 기술을 필수적으로 요구한다.
@@ -62,7 +64,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### RoCE vs 인피니밴드 vs iWARP (RDMA 삼파전)
 
@@ -81,7 +83,7 @@ RoCE는 **NVMe-oF(NVMe over Fabrics)** 기술이 실전에서 제 실력을 발�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -102,7 +104,7 @@ RoCE는 **NVMe-oF(NVMe over Fabrics)** 기술이 실전에서 제 실력을 발�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량적 기대효과
 - **데이터센터 구축 비용 30~50% 절감**: 전용 인피니밴드 장비 없이 범용 이더넷 장비만으로 하이엔드 성능을 구현한다.

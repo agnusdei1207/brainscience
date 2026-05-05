@@ -2,14 +2,17 @@
 title = "322. DW 4대 특징 - 주젯 지향성(Subject-oriented), 통합성(Integrated), 시계열성(Time-variant), 비휘발성(Non-volatile)"
 weight = 322
 +++
+## 0. 핵심 인사이트
 
 > **💡 핵심 인사이트**
 > DB 방화벽(Database Firewall)은 **"데이터베이스에 접근하는 SQL 트래픽을가로채어, 사전에 정의된 보안 정책 위반 여부를リアルタイム檢查하고 공격을 차단하는 미들웨어"**입니다.
 > SQL 인젝션(SQL Injection)은 이 DB 방화벽이防止하는 대표적인 공격 유형으로, **"사용자 입력을 SQL 查询에そのまま 삽입하여 数据库를Manipulate하는 해킹 기법"**입니다. OWASP Top 10에서 매년 반복되는常習犯であり、入力 검증不足から生みます。
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. SQL 인젝션의 원리: 입력이 명령이 되는 순간
+## 1. 개요 및 필요성
 
 ```
 [SQL 인젝션 원리]
@@ -67,7 +70,7 @@ query = f"SELECT * FROM users WHERE username = '{user_input}'"
 
 ---
 
-## Ⅱ. DB 방화벽의 작동 원리
+## 2. 구성요소
 
 ```
 [DB 방화벽 아키텍처]
@@ -186,7 +189,7 @@ rules:
 
 ---
 
-## Ⅳ. Prepared Statement의重要性
+## 4. 비교 및 트레이드오프
 
 ```python
 # 취약한 코드 vs 안전한 코드 비교
@@ -213,7 +216,7 @@ $stmt->execute(['id' => $_GET['id']]);
 
 ---
 
-## Ⅴ. 실제 공격 시나리오と 📢 비유
+## 5. 실무 적용 및 최적화 기법
 
 **실제 SQL 인젝션으로 인한 피해 사례:**
 

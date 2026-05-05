@@ -4,11 +4,14 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-devops-sre"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 애자일 PMO(Agile Project Management Office)는 전통적 PMO의 통제·감시 기능에서 벗어나 팀의 자율성을 존중하면서 조직 수준의 애자일 확장·장애물 제거·전략 정렬을 지원하는 가치 전달 허브다.
 > 2. 전통 PMO가 "계획 준수 감시자"라면 애자일 PMO는 "흐름 최적화 촉진자" — 산출물(Deliverable) 중심에서 가치(Value) 중심으로, 프로젝트 단위에서 제품 포트폴리오 단위로 전환이 핵심이다.
 > 3. SAFe(Scaled Agile Framework)의 LACE(Lean-Agile Center of Excellence), Spotify 모델의 길드(Guild), LeSS의 중앙 지원팀이 각각 조직 규모와 문화에 맞는 애자일 PMO 구현 방식이다.
+
+> 📝 모범 답안
 
 ---
 

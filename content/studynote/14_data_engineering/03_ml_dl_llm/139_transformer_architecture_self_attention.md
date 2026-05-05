@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Transformer는 **RNN의 순차 처리를 Self-Attention으로 대체**하여 시퀀스 전체를 병렬 처리하는 아키텍처이며, "Attention Is All You Need"(2017, Google)에서 제안되었다.
+> **핵심**: Transformer는 **RNN의 순차 처리를 Self-Attention으로 대체**하여 시퀀스 전체를 병렬 처리하는 아키텍처이며, "Attention Is All You Need"(2017, Google)에서 제안되었다.
 > 2. **가치**: RNN은 시퀀스를 순차 처리하여 **병렬화 불가·장기 의존성 약점**이 있지만, Transformer는 **O(1) 거리로 모든 위치에 접근**하고 GPU 병렬화가 완벽하여 대규모 학습이 가능하다.
 > 3. **판단 포인트**: Encoder-only(BERT, 이해)·Decoder-only(GPT, 생성)·Encoder-Decoder(T5, 번역)로 변형되며, Multi-Head Attention·Positional Encoding·Feed-Forward Network가 핵심 구성이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Transformer = Encoder + Decoder

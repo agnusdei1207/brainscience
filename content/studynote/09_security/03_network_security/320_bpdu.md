@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: BPDU (Bridge Protocol Data Unit)는 STP (Spanning Tree Protocol)가 네트워크 루프(Loop)를 방지하기 위해 스위치 간에 교환하는 제어 메시지로, 루트 브리지(Root Bridge) 선출과 포트 상태 결정에 사용된다.
+> **핵심**: BPDU (Bridge Protocol Data Unit)는 STP (Spanning Tree Protocol)가 네트워크 루프(Loop)를 방지하기 위해 스위치 간에 교환하는 제어 메시지로, 루트 브리지(Root Bridge) 선출과 포트 상태 결정에 사용된다.
 > 2. **가치**: BPDU Guard는 엔드포인트 포트에서 BPDU가 수신되면 즉시 포트를 차단(err-disable)해 가짜 루트 브리지(Root Bridge) 주입과 STP 토폴로지 조작 공격을 원천 차단한다.
 > 3. **판단 포인트**: PortFast와 BPDU Guard의 조합이 핵심이다. PortFast는 스위치 수렴 시간(Convergence Time)을 단축하지만, BPDU Guard 없이 단독으로 사용하면 STP 조작 공격에 취약해진다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 STP (Spanning Tree Protocol, IEEE 802.1D)는 이더넷 네트워크에서 스위치 간 경로 중복으로 발생하는 브로드캐스트 스톰(Broadcast Storm)과 MAC 테이블 불안정을 방지하는 프로토콜이다. STP는 네트워크 내 하나의 루트 브리지를 선출하고, 중복 경로를 차단 상태(Blocking)로 전환해 루프-프리(Loop-free) 토폴로지를 유지한다.
 
@@ -25,7 +27,7 @@ BPDU는 이 STP 프로세스의 핵심 메시지다. 스위치들은 주기적�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### BPDU 구조 및 STP 루트 브리지 선출
 
@@ -89,7 +91,7 @@ PortFast + BPDU Guard 조합:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### STP 보안 기능 전체 비교
 
@@ -126,7 +128,7 @@ Root Guard: 비루트 포트(스위치 간 연결)에 적용
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Cisco 스위치 BPDU Guard + PortFast 설정
 
@@ -174,7 +176,7 @@ BPDU/STP 보안 문제에서 핵심은 세 가지다. 첫째, BPDU Spoofing이 "
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 PortFast + BPDU Guard 조합은 스위치 보안 설정 중 가장 효과 대비 구현 비용이 낮은 기법이다. 엔드포인트 포트에 두 줄의 CLI 설정만으로 STP 기반 루트 브리지 하이재킹을 원천 차단하고, 동시에 PC나 서버의 네트워크 연결 속도도 향상시킨다.
 

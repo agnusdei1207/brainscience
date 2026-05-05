@@ -5,16 +5,17 @@ weight = 498
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 스마트 팩토리(Smart Factory)는 CPS(Cyber-Physical System)로 사이버 세계(디지털 제어)와 물리 세계(생산 공정)를 실시간 연동하며, OPC UA(산업 자동화 표준 프로토콜)와 TSN(Time-Sensitive Networking)으로 신뢰성 있는 산업 통신을 구현한다.
+> **핵심**: 스마트 팩토리(Smart Factory)는 CPS(Cyber-Physical System)로 사이버 세계(디지털 제어)와 물리 세계(생산 공정)를 실시간 연동하며, OPC UA(산업 자동화 표준 프로토콜)와 TSN(Time-Sensitive Networking)으로 신뢰성 있는 산업 통신을 구현한다.
 > 2. **가치**: 마이크로그리드(Microgrid)는 태양광·ESS(Energy Storage System) 기반 에너지 자급자족을 실현하여 공장 에너지 비용과 탄소 발자국을 동시에 절감하는 에너지 경영 혁신이다.
 > 3. **판단 포인트**: 스마트 팩토리 5단계(ISA-95 기반)에서 레벨 3~4 이상 달성이 진정한 디지털 전환이며, IEC 62443 산업 보안 표준 준수가 CPS의 필수 전제 조건이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 **스마트 팩토리 등장 배경**
 
@@ -37,7 +38,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -76,7 +77,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 **OPC UA vs 전통 산업 통신**
 
@@ -97,7 +98,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **스마트 팩토리 구축 단계별 판단**
 
@@ -118,7 +119,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 스마트 팩토리는 CPS·AI·마이크로그리드의 융합으로 생산성·에너지 효율·품질을 동시에 향상시킨다. OPC UA와 TSN의 결합은 산업 통신의 표준으로 자리 잡고 있으며, IEC 62443 보안 체계 준수가 디지털 전환의 신뢰 기반이다. 기술사 시험에서는 5단계 레벨, CPS 원리, OPC UA/TSN, 마이크로그리드, IEC 62443을 통합적으로 답안에 포함해야 한다.
 

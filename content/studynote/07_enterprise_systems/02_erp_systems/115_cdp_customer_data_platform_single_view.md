@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CDP(Customer Data Platform)는 웹·앱·매장·CRM·소셜 등 **분산된 모든 고객 접점 데이터를 수집하여 통합 고객 프로파일(Single Customer View)**을 구축하는 패키지 소프트웨어다.
+> **핵심**: CDP(Customer Data Platform)는 웹·앱·매장·CRM·소셜 등 **분산된 모든 고객 접점 데이터를 수집하여 통합 고객 프로파일(Single Customer View)**을 구축하는 패키지 소프트웨어다.
 > 2. **가치**: DMP(Data Management Platform)가 익명 쿠키 기반·광고 타겟팅 전용이라면, CDP는 **실명(1st Party) 데이터 기반**으로 고객 ID를 통합하여 마케팅·CS·영업 전 부서에서 활용 가능한 **360° 고객 뷰**를 제공한다.
 > 3. **판단 포인트**: CDP의 핵심은 **ID Resolution(동일 고객의 이메일·전화·앱ID를 1명으로 통합)**이며, Segment·mParticle·Treasure Data가 대표 제품이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -41,7 +43,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### CDP vs DMP vs CRM
 
@@ -56,13 +58,13 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 3rd Party 쿠키 폐지(Chrome 2025)로 DMP의 가치가 하락하면서 **1st Party 데이터 기반 CDP**의 중요성이 급증하고 있다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### CDP 도입 체크리스트
 1. **데이터 소스 인벤토리**: 현재 고객 데이터가 어디에 분산되어 있는지 목록화.
@@ -71,7 +73,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 지표 | CDP 미도입 | CDP 도입 | 개선 |
 |:---|:---|:---|:---|

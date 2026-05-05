@@ -6,15 +6,17 @@ description = "누가 언제 무엇을 했는지 추적하는 감사 트레일 �
 taxonomy = ""
 tags = ["Software Engineering", "Security", "Audit", "Traceability", "Logging"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 감사 트레일은 행위의 책임 추적을 위한 기록이다.
+> **핵심**: 감사 트레일은 행위의 책임 추적을 위한 기록이다.
 > 2. **가치**: 보안 사고와 내부 통제에 필수다.
 > 3. **판단 포인트**: 변경 전후와 사용자 식별이 명확해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 감사 트레일은 누가, 언제, 어디서, 무엇을 했는지 남기는 기능이다. 시스템 신뢰와 법적 대응에 중요하다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Security", "Audit", "Traceability", "Logging"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 감사 트레일은 이벤트와 상태 변화를 연결한다.
 
@@ -42,7 +44,7 @@ tags = ["Software Engineering", "Security", "Audit", "Traceability", "Logging"]
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 감사 트레일은 디버그 로그와 달리 책임 추적이 목적이다.
 
@@ -58,7 +60,7 @@ tags = ["Software Engineering", "Security", "Audit", "Traceability", "Logging"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 변경 이벤트, 승인 이벤트, 관리자 작업을 반드시 기록한다.
 
@@ -71,7 +73,7 @@ tags = ["Software Engineering", "Security", "Audit", "Traceability", "Logging"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 감사 트레일은 내부 통제와 사고 대응의 핵심 기반이다.
 

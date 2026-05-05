@@ -5,15 +5,17 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-opering-system"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: TLS (Thread-Local Storage)는 각 스레드마다 독립적으로 소유하는 데이터 저장 공간이다. 전역 변수(global variable)와 달리 TLS 변수는 스레드 간에 공유되지 않으므로 동기화 없이 안전하게 접근할 수 있다.
+> **핵심**: TLS (Thread-Local Storage)는 각 스레드마다 독립적으로 소유하는 데이터 저장 공간이다. 전역 변수(global variable)와 달리 TLS 변수는 스레드 간에 공유되지 않으므로 동기화 없이 안전하게 접근할 수 있다.
 > 2. **가치**: errno, 스레드 ID, 난수 생성기 시드, per-thread 버퍼 등 스레드마다 고유해야 하는 데이터를 관리하는 표준 수단이다. 동기화 없이 thread-safe한 데이터 공유 패턴을 실현할 수 있다.
 > 3. **융합**: C11의 _Thread_local, C++의 thread_local, Java의 ThreadLocal, Go의 goroutine-local storage, Rust의 thread_local! 등 현대 언어에서 광범위하게 지원된다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 - **개념**: TLS는 각 스레드에 고유한 저장 공간을 제공하는 메커니즘이다. 컴파일러와 런타임이 협력하여, 동일한 변수 이름이라도 각 스레드가 접근하는 인스턴스가 물리적으로 다른 메모리 위치를 가리키도록 구현한다.
 
@@ -46,7 +48,7 @@ categories = "studynote-opering-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 구현 방식
 
@@ -90,7 +92,7 @@ categories = "studynote-opering-system"
 
 ---
 
-## Ⅲ. 융합 비교
+## 3. 구조 및 동작 원리
 
 | 비교 항목 | 전역 변수 + 뮤텍스 | TLS | __thread |
 |:---|:---|::---|:---:|
@@ -103,7 +105,7 @@ categories = "studynote-opering-system"
 
 ---
 
-## Ⅳ. 실무 적용
+## 4. 비교 및 트레이드오프
 
 ### 안티패턴
 - **과도한 TLS 사용**: 모든 변수를 TLS로 만들면 메모리 사용량이 N배가 된다. 진짜 스레드별 고유 데이터만 TLS에 저장해야 한다.
@@ -113,7 +115,7 @@ categories = "studynote-opering-system"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 - **📢 섹션 요약 비율**: TLS는 다중 스레드 환경에서 "동기화 없는 안전한 데이터 공유"의 핵심 기법이며, errno가 TLS인 이유는 시스템 콜 오류 처리의 thread-safety를 보장하기 위해서입니다.
 

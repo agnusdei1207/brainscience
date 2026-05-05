@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 시스템 클럭 타이머 틱 (System Clock Timer Tick)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 타이머 틱(Timer Tick)은 하드웨어 타이머(PIT, APIC, HPET 등)가 일정한 주기(예: 1ms 또는 10ms)마다 CPU에 발생시키는 주기적인 인터럽트(Interrupt) 신호로, 운영체제가 시간을 인지하는 심장 박동(Heartbeat)이다.
+> **핵심**: 타이머 틱(Timer Tick)은 하드웨어 타이머(PIT, APIC, HPET 등)가 일정한 주기(예: 1ms 또는 10ms)마다 CPU에 발생시키는 주기적인 인터럽트(Interrupt) 신호로, 운영체제가 시간을 인지하는 심장 박동(Heartbeat)이다.
 > 2. **가치**: 이 심장 박동이 있어야만 운영체제는 현재 실행 중인 프로세스의 CPU 사용 시간을 계산하고(Accounting), 시간 할당량(Time Quantum)이 끝난 프로세스를 강제로 쫓아내는 선점형 스케줄링(Preemptive Scheduling)을 수행할 수 있다.
 > 3. **융합**: 과거에는 틱 발생 주파수(HZ)를 높여 응답성을 높이는 데 주력했으나, 현대 모바일/클라우드 환경에서는 전력 소모를 줄이기 위해 불필요한 틱을 생략하는 틱리스 커널(Tickless Kernel) 아키텍처로 진화하여 하드웨어 전원 관리(ACPI)와 긴밀하게 융합되었다.
 
+> 📝 모범 답안
+
+# 시스템 클럭 타이머 틱 (System Clock Timer Tick)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 시스템 클럭(System Clock)은 컴퓨터 내부에 있는 물리적인 발진기(Oscillator)이며, 운영체제는 이 클럭을 이용해 설정된 주기(Hz)마다 하드웨어 인터럽트를 발생시키도록 타이머 칩을 프로그래밍한다. 이때 발생하는 1회의 인터럽트를 **타이머 틱 (Timer Tick)** 또는 **지피스 (Jiffies)**라고 부른다.
 - **필요성(문제의식)**: 
@@ -66,7 +68,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 타이머 시스템의 구성 요소
 
@@ -126,7 +128,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 틱 주파수(HZ) 설정의 트레이드오프
 
@@ -175,7 +177,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 운영 안티패턴
 
@@ -193,7 +195,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

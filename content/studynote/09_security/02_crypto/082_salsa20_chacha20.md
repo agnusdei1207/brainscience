@@ -7,17 +7,19 @@ date = 2026-03-26
 [extra]
 categories = ["studynote-software-engineering"]
 +++
+## 0. 핵심 인사이트
 
-# Salsa20/ChaCha20
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Salsa20과 ChaCha20은 Daniel J. Bernstein가 설계한 ARX (Add-Rotate-XOR) 기반 스트림 암호다. 단순하고 효율적인 구조로 다양한 플랫폼에서高速実装可能하며, 특히 측면 채널 공격에 강한 것으로 알려져 있다.
+> **핵심**: Salsa20과 ChaCha20은 Daniel J. Bernstein가 설계한 ARX (Add-Rotate-XOR) 기반 스트림 암호다. 단순하고 효율적인 구조로 다양한 플랫폼에서高速実装可能하며, 특히 측면 채널 공격에 강한 것으로 알려져 있다.
 > 2. **가치**: RC4와 달리 현재까지 알려진有效的攻撃이 없으며, TLS 1.3 표준에 포함되고 Signal Protocol에서使用된다. 모바일 및 IoT 환경에서 AES-GCM보다優れた性能을 보인다.
 > 3. **차이**: ChaCha20은 Salsa20의 개선 버전으로, Quarter Round 연산의 순서를 변경하여更容易한実装と更强的并行性을 제공하며, Poly1305와 결합하여 AEAD를実現한다.
 
+> 📝 모범 답안
+
+# Salsa20/ChaCha20
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 개념 정의
 
@@ -98,7 +100,7 @@ Salsa20과 ChaCha20은 **정교한 주방용 믹서**와 같다. 재료 (평문)
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Salsa20 vs ChaCha20 비교
 
@@ -153,7 +155,7 @@ ChaCha20과 결합하여 AEAD를实现한다:
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### ChaCha20 vs AES-GCM
 
@@ -185,7 +187,7 @@ ChaCha20과 결합하여 AEAD를实现한다:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 주요 용도
 
@@ -235,7 +237,7 @@ X3DH (Extended Triple Diffie-Hellman):
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

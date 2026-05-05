@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: CSF (Critical Success Factor)는 "무엇을 잘해야 성공하는가"의 요인이고, KPI (Key Performance Indicator)는 "얼마나 잘하고 있는가"를 측정하는 지표로, CSF가 KPI의 논리적 부모다.
+> **핵심**: CSF (Critical Success Factor)는 "무엇을 잘해야 성공하는가"의 요인이고, KPI (Key Performance Indicator)는 "얼마나 잘하고 있는가"를 측정하는 지표로, CSF가 KPI의 논리적 부모다.
 > 2. **가치**: Vision → Strategy → CSF → KPI → Target의 폭포식 연계(Cascade)를 통해 조직 전략이 현장 담당자의 일상 업무 측정 지표로 구체화되어 전략 실행력을 확보한다.
 > 3. **판단 포인트**: 좋은 KPI는 SMART (Specific, Measurable, Achievable, Relevant, Time-bound) 기준을 충족해야 하며, 선행 지표(Leading Indicator)와 후행 지표(Lagging Indicator)를 균형 있게 배치해야 한다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 CSF (Critical Success Factor)는 Rockart(1979)가 MIT Sloan Management Review에서 정의한 개념으로, "조직이 목표를 달성하기 위해 반드시 잘 수행해야 하는 소수의 핵심 영역"이다. 일반적으로 산업별 3~7개의 CSF가 존재하며, 이는 경쟁 우위의 근간이 된다.
 
@@ -36,7 +37,7 @@ Vision(비전) → Strategy(전략) → CSF(핵심 성공 요인) → KPI(핵심
 
 📢 **섹션 요약 비유**: CSF는 "축구에서 이기려면 골을 많이 넣어야 한다"는 핵심 요인이고, KPI는 "경기당 슈팅 수, 유효 슈팅률, 득점 전환율"처럼 그 요인을 숫자로 측정하는 도구다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### CSF → KPI Cascade 체계
 
@@ -83,7 +84,7 @@ Vision(비전) → Strategy(전략) → CSF(핵심 성공 요인) → KPI(핵심
 
 📢 **섹션 요약 비유**: 선행 지표는 자동차의 연료 게이지(미리 위험을 알려주는 것)이고, 후행 지표는 주행 거리계(이미 달린 거리를 알려주는 것)다 — 둘 다 있어야 안전 운전이 가능하다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 항목 | KPI | OKR | NPS | BSC |
 |:---|:---|:---|:---|:---|
@@ -105,7 +106,7 @@ Vision(비전) → Strategy(전략) → CSF(핵심 성공 요인) → KPI(핵심
 
 📢 **섹션 요약 비유**: KPI, OKR, BSC는 같은 목적지를 향한 다른 내비게이션 앱 — KPI는 속도계, OKR은 목적지 입력, BSC는 모든 계기판을 동시에 보여주는 대시보드다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **KPI 설계 체크리스트**:
 - [ ] KPI가 전략 CSF에서 논리적으로 도출되었는가?
@@ -129,7 +130,7 @@ Vision(비전) → Strategy(전략) → CSF(핵심 성공 요인) → KPI(핵심
 
 📢 **섹션 요약 비유**: KPI를 20개 이상 관리하는 것은 자동차 계기판에 100개 게이지를 달아놓는 것 — 중요한 정보를 찾기 어렵고 결국 아무것도 보지 않게 된다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 **KPI 체계 구축 기대 효과**:
 - 전략 실행 투명성: 전사 전략이 팀/개인 업무로 연결 → 정렬도 40% 향상

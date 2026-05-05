@@ -4,11 +4,14 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 와이드 컬럼 저장소(Wide Column Store)는 행 키(Row Key)로 데이터를 분산 저장하되, 각 행이 서로 다른 컬럼 집합을 가질 수 있는 스파스 매트릭스 구조로, 스키마가 행마다 다를 수 있는 반정형 대용량 데이터에 최적화되어 있다.
 > 2. 파티션 키(Partition Key) 설계가 Cassandra/HBase 성능의 90%를 결정 — 파티션 키가 핫스팟(Hot Spot)을 만들거나 너무 세밀하면 분산 효과가 사라지며, "쿼리 중심 데이터 모델링(Query-Driven Modeling)"이 관계형 DB의 정규화와 완전히 다른 설계 철학이다.
 > 3. Cassandra는 AP 시스템(가용성 우선, CAP 정리), HBase는 CP 시스템(일관성 우선) — 같은 와이드 컬럼이지만 일관성 모델이 다르므로 유스케이스를 구분하여 선택해야 한다.
+
+> 📝 모범 답안
 
 ---
 

@@ -2,17 +2,19 @@
 weight = 514
 title = "514. 시크릿(Secret) 관리 도구 - 하드코딩 금지, HashiCorp Vault, AWS Secrets Manager 활용"
 +++
+## 0. 핵심 인사이트
 
-# 514. 시크릿(Secret) 관리 도구 - 하드코딩 금지, HashiCorp Vault, AWS Secrets Manager 활용
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 시크릿(Secret) 관리 도구는 개발자가 귀찮다고 소스코드(`application.yml` 등)나 깃허브(GitHub)에 대놓고 쳐박아두던 DB 비밀번호나 API 암호키를 싹 다 도려내어, **절대 털리지 않는 '외부의 거대한 중앙 티타늄 금고(Vault)'에 꽁꽁 가둬놓고 서버가 켜질 때(Runtime)만 몰래 1회용으로 꺼내 쓰게 만드는 권한 통제 아키텍처의 끝판왕**이다.
+> **핵심**: 시크릿(Secret) 관리 도구는 개발자가 귀찮다고 소스코드(`application.yml` 등)나 깃허브(GitHub)에 대놓고 쳐박아두던 DB 비밀번호나 API 암호키를 싹 다 도려내어, **절대 털리지 않는 '외부의 거대한 중앙 티타늄 금고(Vault)'에 꽁꽁 가둬놓고 서버가 켜질 때(Runtime)만 몰래 1회용으로 꺼내 쓰게 만드는 권한 통제 아키텍처의 끝판왕**이다.
 > 2. **가치**: 2021년 해킹 2위인 **암호화 실패 및 민감 데이터 노출(A02)**을 원천 봉쇄한다. 해커가 깃허브 소스코드를 통째로 훔쳐 가거나 퇴사한 직원이 앙심을 품고 소스를 유출하더라도, 코드 안에는 `DB_PASSWORD=${VAULT_DB_PW}` 라는 '텅 빈 껍데기 변수명'밖에 없으므로 DB를 털 수 있는 진짜 열쇠(Key) 유출 2차 재앙을 100% 물리적으로 차단한다.
 > 3. **융합**: 소스코드에 키가 박혀있는지 젠킨스가 눈에 불을 켜고 검사하는 **비밀번호 정적 스캐너(Git-secrets, Trufflehog)**와, 30일마다 자동으로 금고 비번을 갈아치우는 **동적 키 로테이션(Key Rotation)** 파이프라인과 융합되어, 인간의 기억력(망각)을 배제한 완벽한 자동화 제로 트러스트 생태계를 구축한다.
 
+> 📝 모범 답안
+
+# 514. 시크릿(Secret) 관리 도구 - 하드코딩 금지, HashiCorp Vault, AWS Secrets Manager 활용
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 시스템이 돌려면 '시크릿(Secret)'이 필요하다. DB 접속 비밀번호, 카카오톡 푸시 알림을 쏘는 API Key, JWT 토큰을 서명하는 Master Secret Key 등이다. 시크릿 관리 도구(HashiCorp Vault, AWS Secrets Manager)는 이 **'시스템의 심장을 여는 만능열쇠 뭉치'들을 소스코드나 개발자 노트북에서 완전히 압수(Decoupling)**하여, 군사급 보안이 쳐진 거대한 중앙 은행 금고 안에 넣어두고, 권한을 증명한 기계(서버)에게만 0.1초 동안 빌려주고 뺏는 기술이다.
 
@@ -29,7 +31,7 @@ title = "514. 시크릿(Secret) 관리 도구 - 하드코딩 금지, HashiCorp V
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 1. 시크릿(Secret) 3단계 진화 아키텍처 (코드의 변천사)
 
@@ -74,7 +76,7 @@ spring.datasource.password: ${vault.secret.db_password} # 금고에서 비번을
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 1. HashiCorp Vault vs AWS Secrets Manager (클라우드 금고 삼국지)
 
@@ -95,7 +97,7 @@ spring.datasource.password: ${vault.secret.db_password} # 금고에서 비번을
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -116,7 +118,7 @@ spring.datasource.password: ${vault.secret.db_password} # 금고에서 비번을
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

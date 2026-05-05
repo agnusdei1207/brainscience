@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 큰 배치 사이즈 (Large Batch) 는 손실 경관 (Loss Landscape) 에서 샤프 미니마 (Sharp Minima) 로 수렴해 과적합 (Overfitting) 경향이 있고, 작은 배치 (Small Batch) 는 노이즈가 많은 기울기 덕분에 플랫 미니마 (Flat Minima) 로 수렴해 일반화 (Generalization) 가 향상된다.
+> **핵심**: 큰 배치 사이즈 (Large Batch) 는 손실 경관 (Loss Landscape) 에서 샤프 미니마 (Sharp Minima) 로 수렴해 과적합 (Overfitting) 경향이 있고, 작은 배치 (Small Batch) 는 노이즈가 많은 기울기 덕분에 플랫 미니마 (Flat Minima) 로 수렴해 일반화 (Generalization) 가 향상된다.
 > 2. **가치**: 플랫 미니마는 파라미터 공간에서 손실 곡면이 완만해 배포 환경의 약간의 분포 변화에도 안정적이고, 샤프 미니마는 좁은 골짜기에 있어 작은 변화에도 손실이 급증한다.
 > 3. **판단 포인트**: 선형 스케일링 규칙 (Linear Scaling Rule) — 배치 사이즈를 k배 늘리면 학습률을 k배 늘려야 동일한 업데이트 크기를 유지한다 — 은 대규모 분산 학습의 핵심 조정 원칙이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 배치 사이즈 선택의 딜레마
 
@@ -34,7 +36,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 손실 경관 (Loss Landscape) 시각화
 
@@ -106,7 +108,7 @@ PAC-Bayes (Probably Approximately Correct-Bayesian) 이론에 의하면, 플랫 
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Gradient Noise (기울기 노이즈) 와 탈출 능력
 
@@ -138,7 +140,7 @@ PAC-Bayes (Probably Approximately Correct-Bayesian) 이론에 의하면, 플랫 
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 배치 사이즈 실무 가이드라인
 
@@ -168,7 +170,7 @@ PAC-Bayes (Probably Approximately Correct-Bayesian) 이론에 의하면, 플랫 
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 - **일반화 향상**: 작은 배치 + Flat Minima 수렴으로 배포 환경 성능 향상
 - **분산 학습 가이드**: Linear Scaling Rule 로 배치 크기 확장 시 성능 저하 방지

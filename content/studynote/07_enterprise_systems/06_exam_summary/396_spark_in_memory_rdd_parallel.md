@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Apache Spark는 RDD(Resilient Distributed Dataset)를 메모리에 유지하며 DAG(Directed Acyclic Graph) 실행 계획으로 연산을 지연·최적화하여 MapReduce 대비 10~100배 빠른 인메모리 분산 처리를 실현한다.
+> **핵심**: Apache Spark는 RDD(Resilient Distributed Dataset)를 메모리에 유지하며 DAG(Directed Acyclic Graph) 실행 계획으로 연산을 지연·최적화하여 MapReduce 대비 10~100배 빠른 인메모리 분산 처리를 실현한다.
 > 2. **가치**: 배치·스트리밍·ML·그래프 처리를 단일 프레임워크로 통합하여 데이터 파이프라인 복잡도를 줄이고, Scala·Python·Java·R API를 통한 범용 접근성을 제공한다.
 > 3. **판단 포인트**: 지연 평가(Lazy Evaluation)와 액션(Action) 시점의 최적화 실행, 그리고 Shuffle 최소화 전략이 Spark 성능 튜닝의 핵심이다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 UC Berkeley AMPLab이 2009년 개발한 Apache Spark는 Hadoop MapReduce의 디스크 I/O 병목을 인메모리 캐싱으로 해결했다. RDD(Resilient Distributed Dataset)는 메모리에 파티션 단위로 분산 저장되며, Transformation(지연 실행)과 Action(즉시 실행) 연산 체계로 최적 DAG를 구성한 뒤 한 번에 실행한다.
 
@@ -20,7 +21,7 @@ ML(MLlib)·SQL(Spark SQL)·스트리밍(Structured Streaming)·그래프(GraphX)
 
 📢 **섹션 요약 비유**: Spark는 칠판에 적으며 계산하는 천재 — 모든 중간 단계를 칠판(메모리)에 유지하다가 한 번에 최적 경로로 답을 낸다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ```
 Driver Program (DAG 생성·배포)
@@ -49,7 +50,7 @@ Driver Program (DAG 생성·배포)
 
 📢 **섹션 요약 비유**: Lazy Evaluation은 장 보기 목록 — 마트 가기 전까지는 목록만 만들고, 마트(Action)에서 한 번에 모든 장을 본다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 항목 | RDD | DataFrame |
 |:---|:---|:---|
@@ -62,7 +63,7 @@ Shuffle 최소화: repartition vs coalesce, broadcast join, partition pruning이
 
 📢 **섹션 요약 비유**: DataFrame은 RDD의 정장 버전 — 같은 사람이지만 구조화된 옷(스키마)을 입어 SQL 최적화기(Catalyst)가 더 잘 이해한다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **의사결정 포인트**:
 - Shuffle 최소화: 작은 테이블은 broadcast join으로 네트워크 전송 제거
@@ -72,7 +73,7 @@ Shuffle 최소화: repartition vs coalesce, broadcast join, partition pruning이
 
 📢 **섹션 요약 비유**: broadcast join은 작은 책자 복사 배포 — 큰 사전(대형 테이블)은 두고, 작은 안내서(소형 테이블)를 모든 책상(Executor)에 나눠줘 찾기를 빠르게 한다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Apache Spark는 인메모리 처리와 DAG 최적화로 배치·스트리밍·ML·SQL을 단일 플랫폼에서 처리하는 현대 데이터 엔지니어링의 표준 엔진이다. 대용량 Shuffle이 성능 병목이 되므로 파티셔닝·broadcast join·캐싱 전략의 체계적 설계가 필수이며, Delta Lake/Iceberg와 결합하면 레이크하우스의 핵심 처리 엔진으로 작동한다.
 

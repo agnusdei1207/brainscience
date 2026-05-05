@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 정규화(Regularization)는 **모델이 학습 데이터에 과적합(Overfitting)하는 것을 방지**하는 기법의 총칭이며, Dropout·BatchNorm·L1/L2·Data Augmentation·Early Stopping이 대표이다.
+> **핵심**: 정규화(Regularization)는 **모델이 학습 데이터에 과적합(Overfitting)하는 것을 방지**하는 기법의 총칭이며, Dropout·BatchNorm·L1/L2·Data Augmentation·Early Stopping이 대표이다.
 > 2. **가치**: 과적합 없이는 학습 정확도 99%인데 테스트 60%인 상황이 발생하며, 정규화로 **일반화 성능(Generalization)**을 확보해야 실제 데이터에서도 높은 성능을 발휘한다.
 > 3. **판단 포인트**: Dropout(뉴런 랜덤 비활성화)·BatchNorm(층별 정규화)·Weight Decay(L2)가 현대 딥러닝의 3대 정규화이며, Transformer에서는 LayerNorm을 사용한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 Dropout:    학습 시 뉴런 랜덤 50% 비활성화

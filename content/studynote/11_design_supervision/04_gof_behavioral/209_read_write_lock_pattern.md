@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Read-Write Lock (읽기-쓰기 락) 패턴은 여러 스레드의 동시 읽기(공유 락, Shared Lock)는 허용하고, 쓰기 시에만 단독 접근(배타 락, Exclusive Lock)을 보장하여 읽기 성능과 쓰기 일관성을 동시에 달성한다.
+> **핵심**: Read-Write Lock (읽기-쓰기 락) 패턴은 여러 스레드의 동시 읽기(공유 락, Shared Lock)는 허용하고, 쓰기 시에만 단독 접근(배타 락, Exclusive Lock)을 보장하여 읽기 성능과 쓰기 일관성을 동시에 달성한다.
 > 2. **가치**: 전통적인 `synchronized`(모든 접근 직렬화)는 읽기만 해도 차단되는 비효율이 있다. Read-Write Lock은 읽기가 빈번한 시나리오에서 처리량(Throughput)을 극적으로 향상시킨다.
 > 3. **판단 포인트**: 읽기/쓰기 비율이 10:1 이상처럼 읽기 빈번하고 쓰기 드문 경우에 적합하다. 쓰기가 빈번하면 오버헤드로 오히려 역효과다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1-1. 전통적 synchronized의 문제
 
@@ -55,7 +56,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. Java ReentrantReadWriteLock 구조
 
@@ -138,7 +139,7 @@ Java 8에서 도입된 StampedLock은 **낙관적 읽기(Optimistic Read Lock)**
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. 락 종류 비교표
 
@@ -170,7 +171,7 @@ Java 8에서 도입된 StampedLock은 **낙관적 읽기(Optimistic Read Lock)**
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. 캐시 시스템 적용 사례
 
@@ -222,7 +223,7 @@ public class ReadHeavyCache<K, V> {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5-1. 기대 효과
 

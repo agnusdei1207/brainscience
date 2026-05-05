@@ -5,17 +5,19 @@ date = "2026-03-28"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# 양자 컴퓨터 (Quantum Computer) 기초
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 양자 컴퓨터 (Quantum Computer)는 고전적 비트 (Classical Bit)의 0 또는 1 상태 대신, 양자역학적 중첩 (Superposition)과 얽힘 (Entanglement) 현상을 이용하여 0과 1을 동시에 표현하는 큐비트 (Qubit)를 연산 단위로 사용하는 차세대 컴퓨팅 패러다임이다.
+> **핵심**: 양자 컴퓨터 (Quantum Computer)는 고전적 비트 (Classical Bit)의 0 또는 1 상태 대신, 양자역학적 중첩 (Superposition)과 얽힘 (Entanglement) 현상을 이용하여 0과 1을 동시에 표현하는 큐비트 (Qubit)를 연산 단위로 사용하는 차세대 컴퓨팅 패러다임이다.
 > 2. **가치**: 특정 문제(소인수분해, 양자 시뮬레이션, 최적화)에 대해 고전 컴퓨터가 수십억 년 걸리는 연산을 수분~수시간 내에 수행할 수 있는 **양자 우위 (Quantum Supremacy)**를 제공하며, 이는 암호학, 신약 개발, 금융 모델링의 판도를 뒤바꾼다.
 > 3. **융합**: 양자 컴퓨터는 독립형 시스템이 아니라 하이브리드 양자-고전 (Hybrid Quantum-Classical) 아키텍처로 발전하며, 양자 오류 정정 (QEC, Quantum Error Correction), 양자 게이트 (Quantum Gate), 양자 알고리즘 (Shor, Grover)이 핵심 기술 스택을 구성한다.
 
+> 📝 모범 답안
+
+# 양자 컴퓨터 (Quantum Computer) 기초
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 양자 컴퓨터는 양자역학 (Quantum Mechanics)의 원리를 연산에 적용한 컴퓨터다. 고전 컴퓨터의 트랜지스터가 0 또는 1 중 하나의 상태만 가지는 반면, 양자 컴퓨터의 큐비트는 0과 1의 **중첩 상태 (Superposition)**를 동시에 유지할 수 있다. 이로 인해 n개의 큐비트는 2ⁿ개의 상태를 병렬로 표현하며, 특정 알고리즘 하에서 지수적 속도 향상을 달성한다.
 
@@ -64,7 +66,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 양자 컴퓨터 핵심 구성 요소
 
@@ -130,7 +132,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 큐비트 하드웨어 구현 기술 비교
 
@@ -190,7 +192,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -219,7 +221,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

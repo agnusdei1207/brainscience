@@ -5,15 +5,18 @@ description = "기능점수(FP) 추정의 간이법과 상세법 차이, 조정 
 categories = "studynote-se"
 tags = ["FP", "function point", "IFPUG", "COSMIC", "UFP", "VAF", "software estimation", "간이법", "상세법"]
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트 3줄**
 > 1. 기능점수(FP, Function Point)는 소프트웨어의 기능 크기를 사용자 관점에서 정량화하는 표준 규모 측정 기법으로, IFPUG가 국제 표준을 관리한다.
 > 2. 간이법(Approximate FP)은 개발 초기 빠른 견적에 쓰이고, 상세법(Detailed FP)은 전체 요구사항 확정 후 정확한 산정에 쓰인다.
 > 3. VAF(Value Adjustment Factor) 기반 AFP = UFP × VAF로 기술 복잡도를 반영하며, COSMIC FP는 소프트웨어 이동 데이터 흐름 기반의 차세대 표준이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 기능점수 개요
+## 1. 개요 및 필요성
 
 ### 1.1 기능점수 구성 요소 (IFPUG 기준)
 
@@ -41,7 +44,7 @@ UFP(Unadjusted FP) = Σ(기능 유형별 복잡도 × 가중치)
 
 ---
 
-## Ⅱ. 간이법 (Approximate / Simple FP)
+## 2. 구성요소
 
 ### 2.1 적용 시점과 방법
 
@@ -63,7 +66,7 @@ UFP_간이 = EI×4 + EO×5 + EQ×4 + ILF×10 + EIF×7
 
 ---
 
-## Ⅲ. 상세법 (Detailed FP)
+## 3. 구조 및 동작 원리
 
 ### 3.1 VAF — 가치 조정 인자
 
@@ -99,7 +102,7 @@ VAF = 0.65 + 0.01 × Σ(14개 일반 시스템 특성 × 영향도 0~5)
 
 ---
 
-## Ⅳ. COSMIC FP — 차세대 표준
+## 4. 비교 및 트레이드오프
 
 ### 4.1 COSMIC 함수점수의 이동 데이터 흐름
 
@@ -127,7 +130,7 @@ CFP(COSMIC Function Point) = Σ(E+X+R+W) × 1 (단위: Cosmic Function Point, CF
 
 ---
 
-## Ⅴ. FP 기반 생산성 분석
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 FP 활용 지표
 

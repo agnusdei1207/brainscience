@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Delta Lake는 Parquet 기반 데이터 레이크에 ACID 트랜잭션과 트랜잭션 로그(Delta Log)를 추가하여, 데이터 레이크의 유연성과 데이터 웨어하우스의 신뢰성을 결합한 Lakehouse 아키텍처를 구현한다.
+> **핵심**: Delta Lake는 Parquet 기반 데이터 레이크에 ACID 트랜잭션과 트랜잭션 로그(Delta Log)를 추가하여, 데이터 레이크의 유연성과 데이터 웨어하우스의 신뢰성을 결합한 Lakehouse 아키텍처를 구현한다.
 > 2. **가치**: Time Travel(시간 여행) 기능은 트랜잭션 로그를 기반으로 과거 임의 시점의 데이터 스냅샷을 쿼리·롤백할 수 있어, 데이터 품질 사고 복구와 ML 재현성을 동시에 보장한다.
 > 3. **판단 포인트**: Delta Lake vs Apache Iceberg vs Apache Hudi 선택 시, 생태계(Delta: Spark/Databricks, Iceberg: 멀티 엔진, Hudi: 스트리밍 증분)와 사용 패턴(배치 vs 스트리밍)을 기준으로 결정해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 데이터 레이크의 문제
 
@@ -71,7 +73,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 Delta Log 구조
 
@@ -203,7 +205,7 @@ MERGE 내부 동작:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 Delta Lake vs Apache Iceberg vs Apache Hudi
 
@@ -236,7 +238,7 @@ MOR (Merge-On-Read):
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 Delta Lake 최적화 기법
 
@@ -313,7 +315,7 @@ Delta Lake + MLflow 통합으로 ML 재현성:
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 Delta Lakehouse 도입 효과
 

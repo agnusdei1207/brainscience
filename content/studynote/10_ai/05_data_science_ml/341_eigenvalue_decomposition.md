@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ai"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 고유값 분해 (EVD, Eigenvalue Decomposition) 는 정방 행렬 A 를 A = QΛQᵀ 로 분해하는데, Q 는 고유벡터 (Eigenvector) 로 이루어진 직교 행렬이고, Λ 는 고유값 (Eigenvalue) 이 대각에 놓인 행렬이다.
+> **핵심**: 고유값 분해 (EVD, Eigenvalue Decomposition) 는 정방 행렬 A 를 A = QΛQᵀ 로 분해하는데, Q 는 고유벡터 (Eigenvector) 로 이루어진 직교 행렬이고, Λ 는 고유값 (Eigenvalue) 이 대각에 놓인 행렬이다.
 > 2. **가치**: PCA (Principal Component Analysis, 주성분 분석) 는 공분산 행렬의 고유값 분해로 구현되며, 분산을 최대화하는 투영 방향(주성분)을 고유벡터로, 각 방향의 분산량을 고유값으로 직접 얻을 수 있다.
 > 3. **판단 포인트**: EVD 는 정방·대칭 행렬에만 적용되고, 비정방 행렬에는 SVD (Singular Value Decomposition, 특이값 분해) 를 사용해야 한다는 적용 범위의 차이를 반드시 명시해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 고유벡터·고유값의 기하학적 의미
 
@@ -38,7 +40,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 고유값 분해 (EVD) 전체 흐름
 
@@ -90,7 +92,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### EVD vs SVD 비교
 
@@ -116,7 +118,7 @@ categories = "studynote-ai"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 고유값 분해 계산 (NumPy)
 
@@ -149,7 +151,7 @@ top_k_eigvec = eigenvectors[:, idx[:k]]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 - **차원 축소**: PCA 로 고차원 데이터를 손실 최소화하며 압축
 - **이해 가능성**: 주성분별 분산 설명 비율로 데이터 구조 파악

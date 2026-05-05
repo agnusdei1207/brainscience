@@ -5,8 +5,11 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> 📢 **섹션 요약 비유**: 온프레미스는 자가 발전소를 갖춘 공장이고, 클라우드는 한국전력에서 필요한 만큼 전기를 사는 방식이다.
+
+> 📝 모범 답안
 
 - 온프레미스 Hadoop은 높은 초기 CapEx와 고정 용량을 감수하는 대신 데이터 지역성(Data Locality)의 계산 효율과 규정 준수 제어력을 획득한다.
 - 클라우드 빅데이터(EMR/Dataproc/HDInsight)는 컴퓨팅과 스토리지를 분리(S3/ADLS)하여 각각 독립 확장하는 클라우드 네이티브 아키텍처로, 워크로드 변동성이 클수록 비용 우위가 뚜렷해진다.
@@ -14,7 +17,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1-1. 온프레미스 Hadoop의 등장 배경
 
@@ -24,11 +27,9 @@ categories = "studynote-bigdata"
 
 2012년 이후 AWS EMR (Elastic MapReduce), Google Dataproc, Azure HDInsight 등 관리형 Hadoop 서비스 등장. 이후 클라우드 네이티브 서비스(BigQuery, Redshift, Snowflake)로 패러다임 전환.
 
-> 📢 **섹션 요약 비유**: 온프레미스는 자가 발전소를 갖춘 공장이고, 클라우드는 한국전력에서 필요한 만큼 전기를 사는 방식이다.
-
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. 핵심 아키텍처 비교
 
@@ -69,7 +70,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 마이그레이션 전략 비교
 
@@ -87,7 +88,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. 클라우드 마이그레이션 의사결정 기준
 
@@ -110,7 +111,7 @@ categories = "studynote-bigdata"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 | 내용 |
 |:---|:---|

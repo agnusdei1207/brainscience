@@ -5,17 +5,19 @@ date = "2026-03-29"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 시스템 레지스트리 (Windows Registry) 및 구성 데이터베이스 관리 구조
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Windows 레지스트리(Registry)는 OS 커널, 디바이스 드라이버, 서비스, 그리고 사용자 애플리케이션의 모든 설정 정보(Configuration)를 수만 개의 텍스트 파일(INI) 대신 **단일화된 계층형(Tree) 데이터베이스**로 관리하는 중앙 집중형 설정 저장소다.
+> **핵심**: Windows 레지스트리(Registry)는 OS 커널, 디바이스 드라이버, 서비스, 그리고 사용자 애플리케이션의 모든 설정 정보(Configuration)를 수만 개의 텍스트 파일(INI) 대신 **단일화된 계층형(Tree) 데이터베이스**로 관리하는 중앙 집중형 설정 저장소다.
 > 2. **구조 (Hive)**: 레지스트리는 물리적으로 디스크에 흩어져 있는 여러 개의 이진 파일(Hive 파일: SAM, SECURITY, SOFTWARE, SYSTEM 등)들로 구성되며, 부팅 시 커널의 `Configuration Manager`가 이를 RAM으로 올려 하나의 거대한 가상 논리 트리(HKEY_*)로 조립해 낸다.
 > 3. **가치**: 이 아키텍처는 설정 파일 파싱(Parsing)에 소모되는 CPU와 I/O 오버헤드를 극단적으로 줄이고, 다중 사용자 환경(Multi-user)에서 사용자별 프로필(NTUSER.DAT)을 동적으로 로드 및 언로드할 수 있게 하여 Windows가 거대한 엔터프라이즈 OS로 기능할 수 있는 근간이 되었다.
 
+> 📝 모범 답안
+
+# 시스템 레지스트리 (Windows Registry) 및 구성 데이터베이스 관리 구조
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - **Windows Registry**: 윈도우 운영체제와 애플리케이션의 설정, 하드웨어 정보, 사용자 프로필 등을 저장하는 중앙 집중식 계층형 데이터베이스.
@@ -40,7 +42,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 레지스트리의 논리적 구조 (5대 Root Keys)
 
@@ -108,7 +110,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 설정 관리 패러다임 비교 (Windows vs Linux)
 
@@ -129,7 +131,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -175,7 +177,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

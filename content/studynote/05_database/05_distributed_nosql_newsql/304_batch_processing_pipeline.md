@@ -2,17 +2,19 @@
 title = "304. 데이터 레이크하우스 (Data Lakehouse) - 데이터 레이크(비정형)와 웨어하우스(정형)의 융합 구조 (Databricks, Delta Lake)"
 weight = 304
 +++
+## 0. 핵심 인사이트
 
-# 304. 배치 처리 파이프라인
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 배치 처리 파이프라인(Batch Processing Pipeline)은 대규모 데이터를 일정 주기로まとめて処理하는 시스템으로, Hadoop MapReduce, Apache Spark, Cron + Shell, Workflow Orchestration 도구(Airflow, Dagster 등) 등이 있다.
+> **핵심**: 배치 처리 파이프라인(Batch Processing Pipeline)은 대규모 데이터를 일정 주기로まとめて処理하는 시스템으로, Hadoop MapReduce, Apache Spark, Cron + Shell, Workflow Orchestration 도구(Airflow, Dagster 등) 등이 있다.
 > 2. **가치**: 대량 데이터의 효율적処理, 재현 가능하고 자동화된 데이터 파이프라인, 스케줄링 기반의周期적 실행이 가능하다.
 > 3. **융합**: Hadoop, Spark, Airflow, ETL, DW, 데이터 레이크, 워크플로우 오케스트레이션과 밀접하게 연관된다.
 
+> 📝 모범 답안
+
+# 304. 배치 처리 파이프라인
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 배치 처리 파이프라인(Batch Processing Pipeline)은 대규모 데이터셋을Collectして一定량또는 일정 주기로 Processed하는 시스템이다. 배치 처리的特点是大量データを一括して処理，因此在处理完成后才生成结果，适用于对实时性要求不高的业务场景（如日终处理、月度报告、数据仓库ETL等）。주요 기술로는 Hadoop MapReduce, Apache Spark (배치 모드), Cron + Shell 스크립트, 그리고 이러한 잡을orchestrate하는 워크플로우 도구(Airflow, Dagster, Prefect, Luigi 등)가 있다.
@@ -30,7 +32,7 @@ weight = 304
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 배치 처리 아키텍처
 
@@ -262,15 +264,13 @@ weight = 304
 
 ---
 
-## Ⅲ. 결론
+## 3. 구조 및 동작 원리
 
 배치 처리 파이프라인은 대규모 데이터를 일정 주기로 수집·처리하는 핵심 데이터 엔지니어링 기술이다. Hadoop MapReduce는 대규모 분산 처리의 기반이 되었고, Apache Spark는 메모리 내 처리를 통해より高速な処理を提供している。Airflow는 배치 파이프라인의 오케스트레이션을 위한 사실상의 표준 도구이다. 배치 처리와 스트림 처리는各々の장단점이 있으며, Lambda/Kappa 아키텍처를 통해 hybrid 접근도 가능하다.用様に応じて適切な処理方式を選択することが重要である。
 
 📢 섹션 요약: 배치 처리 파이프라인은 대규모 데이터의 효율적 처리에 필수적이며, Spark, Airflow 등이 핵심 기술이고, 배치와 스트림은场景에 따라 선택하거나 hybrid로 활용한다.
 
 ---
-
-## 핵심 인사이트 ASCII 다이어그램 (Concept Map)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐

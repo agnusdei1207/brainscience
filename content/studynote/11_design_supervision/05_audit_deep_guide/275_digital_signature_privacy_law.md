@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 전자서명법(Digital Signature Act)과 개인정보보호법(Personal Information Protection Act) 기반 감리는 온라인 거래·행정에서의 동의 획득 적법성, 전송 암호화 체계, 서명 인증 절차의 법적 충족성을 검증한다.
+> **핵심**: 전자서명법(Digital Signature Act)과 개인정보보호법(Personal Information Protection Act) 기반 감리는 온라인 거래·행정에서의 동의 획득 적법성, 전송 암호화 체계, 서명 인증 절차의 법적 충족성을 검증한다.
 > 2. **가치**: 전자서명의 법적 유효성과 개인정보의 안전한 전송 보장은 디지털 행정·금융 서비스 신뢰의 근본이며, 위반 시 형사 처벌과 행정 제재가 병행된다.
 > 3. **판단 포인트**: 공인 전자서명 또는 동등한 인증 수단 사용 여부, 개인정보 수집·이용 동의 화면의 법정 요건 충족, TLS (Transport Layer Security) 1.2 이상 전송 암호화 적용이 핵심 점검 항목이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 전자서명법 핵심 내용
 
@@ -40,7 +41,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 전자서명 및 개인정보 처리 아키텍처
 
@@ -102,7 +103,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 암호화 전송 기술 비교
 
@@ -127,7 +128,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 전자서명·개인정보 감리 체크리스트
 
@@ -168,7 +169,7 @@ categories = "studynote-design-supervision"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 기대효과
 

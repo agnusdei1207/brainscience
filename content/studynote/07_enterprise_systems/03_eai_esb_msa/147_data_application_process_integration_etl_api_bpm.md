@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 엔터프라이즈 통합은 분산된 시스템 사이의 데이터·기능·프로세스를 하나의 흐름으로 연결하는 것으로, **ETL(Extract-Transform-Load)은 데이터 통합**, **API(Application Programming Interface)와 메시지는 애플리케이션 통합**, **BPM(Business Process Management)은 비즈니스 프로세스 통합**을 각각 담당한다.
+> **핵심**: 엔터프라이즈 통합은 분산된 시스템 사이의 데이터·기능·프로세스를 하나의 흐름으로 연결하는 것으로, **ETL(Extract-Transform-Load)은 데이터 통합**, **API(Application Programming Interface)와 메시지는 애플리케이션 통합**, **BPM(Business Process Management)은 비즈니스 프로세스 통합**을 각각 담당한다.
 > 2. **가치**: ERP·CRM·SCM·레거시 시스템이 공존하는 엔터프라이즈 환경에서, 사일로(Silo) 구조를 허물고 **단일 정보 흐름(Single Source of Truth)** 을 확보하는 통합 아키텍처의 핵심 기술 삼각형이다.
 > 3. **판단 포인트**: 데이터 배치 이동이면 ETL, 실시간 시스템 간 호출이면 API/메시지, 사람+시스템의 복합 업무 흐름이면 BPM을 선택해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 대기업 IT 환경은 수십~수백 개의 시스템이 독립적으로 발전해 온 사일로(Silo) 구조다. 영업팀은 CRM(Customer Relationship Management), 재무팀은 ERP(Enterprise Resource Planning), 물류팀은 WMS(Warehouse Management System)를 각자 쓴다. 이 시스템들이 서로 데이터를 공유하지 못하면 중복 입력, 데이터 불일치, 업무 지연이 발생한다.
 
@@ -26,7 +28,7 @@ categories = "studynote-enterprise-systems"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 1. 통합 유형 비교
 
@@ -83,7 +85,7 @@ ETL 흐름
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 통합 방식 선택 기준
 
@@ -106,7 +108,7 @@ ETL 흐름
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### BPM 핵심 컴포넌트
 
@@ -141,7 +143,7 @@ BPM 구성 요소
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 데이터·애플리케이션·프로세스의 3계층 통합이 완성되면, 엔터프라이즈는 **실시간 단일 정보 관점(Single Pane of Glass)** 을 달성한다. ERP의 재고 변경이 즉시 CRM 영업 시스템에 반영되고, 배송 지연 이벤트가 자동으로 고객 알림 프로세스를 트리거하며, 모든 데이터가 분석 플랫폼으로 실시간 흘러간다.
 

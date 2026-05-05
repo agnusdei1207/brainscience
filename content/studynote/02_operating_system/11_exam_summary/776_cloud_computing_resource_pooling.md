@@ -5,17 +5,19 @@ date = "2026-03-30"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 클라우드 컴퓨팅: OS와 자원 풀링 (Resource Pooling)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 클라우드 컴퓨팅의 핵심인 자원 풀링 (Resource Pooling)은 수천 대의 물리적 서버, 스토리지, 네트워크 자원을 **운영체제(하이퍼바이저/오케스트레이터)의 추상화 계층을 통해 하나의 거대한 '가상 자원 물웅덩이(Pool)'로 녹여내는 아키텍처**다.
+> **핵심**: 클라우드 컴퓨팅의 핵심인 자원 풀링 (Resource Pooling)은 수천 대의 물리적 서버, 스토리지, 네트워크 자원을 **운영체제(하이퍼바이저/오케스트레이터)의 추상화 계층을 통해 하나의 거대한 '가상 자원 물웅덩이(Pool)'로 녹여내는 아키텍처**다.
 > 2. **가치**: 고객(Tenant)이 필요할 때마다 물리적 서버를 발주하는 대신, 이 거대한 물웅덩이에서 필요한 만큼의 CPU와 RAM을 즉각적으로 퍼다 쓰고(On-demand), 안 쓰면 다시 웅덩이로 반납하는 멀티테넌시(Multi-tenancy)의 극한의 효율성을 창출한다.
 > 3. **융합**: 이를 가능하게 만든 것은 운영체제의 가상 메모리 매핑 기술, 하이퍼바이저의 CPU 오버커밋(Overcommit) 알고리즘, 그리고 컨테이너 네임스페이스(Namespace)의 자원 격리 기술이 거대한 스케일(Data Center)로 융합된 결과다.
 
+> 📝 모범 답안
+
+# 클라우드 컴퓨팅: OS와 자원 풀링 (Resource Pooling)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 
   - NIST(미국 국립표준기술연구소)가 정의한 클라우드 컴퓨팅의 5대 필수 특성 중 하나.
@@ -67,7 +69,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 3대 자원 풀링 기술 스택 (Compute, Memory, Storage)
 
@@ -109,7 +111,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 자원 풀링의 3가지 레벨 비교 (IaaS vs PaaS vs SaaS)
 
@@ -130,7 +132,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 트러블슈팅
 
@@ -176,7 +178,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

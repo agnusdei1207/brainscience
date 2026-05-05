@@ -7,19 +7,21 @@ date = 2024-05-24
 tags = ["Software Engineering", "GitOps", "Kubernetes", "Declarative Infrastructure", "ArgoCD"]
 categories = ["Software Engineering"]
 +++
-
-# GitOps와 인프라 선언적 관리 (Declarative Infrastructure)
+## 0. 핵심 인사이트
 
 > ⚠️ 이 문서는 Git을 단일 진실 공급원(SSOT)으로 삼아 인프라와 어플리케이션의 배포를 자동화하고 형상 드리프트(Drift)를 방지하는 GitOps 패러다임에 대한 심층 가이드입니다.
 
-## 핵심 인사이트 (3줄 요약)
+> 📝 모범 답안
+
+# GitOps와 인프라 선언적 관리 (Declarative Infrastructure)
+
 > 1. **본질**: GitOps는 "Git에 저장된 선언적 상태(Desired State)"와 "실제 운영 환경의 상태(Actual State)"를 끊임없이 비교하여 불일치를 자동으로 동기화(Reconciliation)하는 운영 패러다임이다.
 > 2. **가치**: 인프라 변경 이력이 모두 Git 커밋으로 남기 때문에 완벽한 감사(Audit)와 손쉬운 롤백(Rollback)이 가능해지며, 배포 권한을 CI 서버에서 분리하여 보안성을 극대화한다.
 > 3. **융합**: Kubernetes의 제어 루프(Control Loop) 사상 및 IaC(Infrastructure as Code)와 결합하여, 수동 조작으로 인한 설정 표류(Configuration Drift) 문제를 원천 차단하는 클라우드 네이티브 표준 배포 아키텍처로 자리매김했다.
 
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: GitOps(깃옵스)는 애플리케이션의 소스 코드뿐만 아니라, 배포를 위한 인프라 설정, 권한, 네트워크 정책 등 모든 운영 환경의 상태를 '선언적(Declarative)'인 코드로 작성하여 Git 리포지토리에 저장하고, Git의 변경 사항을 운영 환경에 자동으로 반영하는 방법론이다. 즉, "Git이 곧 시스템의 현재 상태"가 되는 모델이다.
 
@@ -71,7 +73,7 @@ categories = ["Software Engineering"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소 (GitOps 4대 원칙)
 
@@ -161,7 +163,7 @@ GitOps 실무 아키텍처에서 가장 중요한 설계 원칙은 소스 코드
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 심층 기술 비교 1: 인프라 관리 패러다임 진화 (수동 → IaC → GitOps)
 
@@ -205,7 +207,7 @@ GitOps가 클라우드 네이티브 보안 모델에서 각광받는 이유는 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 다중 환경(Dev/Staging/Prod) 승격(Promotion) 파이프라인 설계
 
@@ -258,7 +260,7 @@ GitOps가 클라우드 네이티브 보안 모델에서 각광받는 이유는 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

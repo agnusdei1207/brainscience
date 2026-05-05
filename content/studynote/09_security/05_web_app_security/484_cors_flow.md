@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CORS (Cross-Origin Resource Sharing) 요청 흐름은 브라우저가 다른 출처(origin)의 리소스를 요청할 때 SOP (Same-Origin Policy)를 안전하게 완화하기 위해 거치는 헤더 교환 과정이다.
+> **핵심**: CORS (Cross-Origin Resource Sharing) 요청 흐름은 브라우저가 다른 출처(origin)의 리소스를 요청할 때 SOP (Same-Origin Policy)를 안전하게 완화하기 위해 거치는 헤더 교환 과정이다.
 > 2. **가치**: CORS 흐름을 정확히 이해해야 API 접근 오류를 빠르게 진단하고, 보안 설정(허용 출처, 메서드, 헤더)이 올바른지 검증할 수 있다.
 > 3. **판단 포인트**: 응답의 `Access-Control-Allow-Origin`이 요청의 `Origin` 헤더와 일치해야 하며, 와일드카드(`*`)는 Credentials 요청에서 사용 불가이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 브라우저는 크로스 오리진 요청 시 자동으로 `Origin` 헤더를 추가한다. 서버 응답에 `Access-Control-Allow-Origin`이 없거나 `Origin` 값과 불일치하면 브라우저는 응답을 차단하고 JavaScript에서 오류를 발생시킨다.
 
@@ -23,7 +25,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 단계 | 요청/응답 | 주요 헤더 |
 |:---|:---|:---|
@@ -59,7 +61,7 @@ categories = "studynote-security"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 흐름 유형 | 조건 | Preflight |
 |:---|:---|:---|
@@ -73,7 +75,7 @@ CORS 오류는 서버 문제가 아닌 브라우저 정책이므로, `curl`로 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **CORS 설정 보안 체크리스트**:
 1. `Access-Control-Allow-Origin`을 특정 출처로 제한
@@ -91,7 +93,7 @@ CORS 오류는 서버 문제가 아닌 브라우저 정책이므로, `curl`로 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 정확한 CORS 흐름 이해를 바탕으로 올바른 설정을 적용하면, 크로스 오리진 API 접근을 안전하게 허용하면서도 무단 접근을 차단할 수 있다. 특히 Credentials 요청에서 명시적 출처 지정은 세션 탈취 방어의 핵심이다.
 

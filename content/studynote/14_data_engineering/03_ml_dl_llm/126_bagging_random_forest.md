@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-dataengineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Bagging(Bootstrap Aggregating)은 **학습 데이터를 부트스트랩(복원 추출)으로 여러 부분 집합을 만들고, 각 부분 집합으로 독립 모델을 학습 → 다수결/평균으로 결합**하는 앙상블 기법이다.
+> **핵심**: Bagging(Bootstrap Aggregating)은 **학습 데이터를 부트스트랩(복원 추출)으로 여러 부분 집합을 만들고, 각 부분 집합으로 독립 모델을 학습 → 다수결/평균으로 결합**하는 앙상블 기법이다.
 > 2. **가치**: 단일 의사결정 트리는 데이터 변화에 민감(높은 분산)하지만, 100개 트리를 Bagging하면 **분산이 극적으로 감소**하여 과적합이 줄어든다.
 > 3. **판단 포인트**: Random Forest = Bagging + **피처 랜덤 선택**이며, 각 트리가 전체 피처의 √p개만 사용하여 **트리 간 상관관계를 낮추어** 앙상블 효과를 극대화한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -34,7 +36,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### Bagging vs Random Forest
 
@@ -52,7 +54,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | 단일 트리 | Random Forest | XGBoost |
 |:---|:---|:---|:---|
@@ -62,7 +64,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Random Forest 장점
 1. 하이퍼파라미터 튜닝이 쉬움 (기본값도 잘 동작).
@@ -71,7 +73,7 @@ categories = "studynote-dataengineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Random Forest는 **가장 안정적이고 실용적인 ML 알고리즘 중 하나**이며, 피처 선택·베이스라인 모델·비전문가 ML에 최적이다.
 

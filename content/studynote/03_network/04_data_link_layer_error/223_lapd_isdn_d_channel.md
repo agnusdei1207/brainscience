@@ -2,15 +2,17 @@
 title = "223. LAPD (Link Access Procedure on the D channel) - ISDN 망"
 weight = 223
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: LAPD (Link Access Procedure on the D channel)는 ISDN (Integrated Services Digital Network)의 D 채널에서 신호 제어 정보(Call Setup, Teardown 등)를 안전하게 전송하기 위해 설계된 데이터 링크 계층(ITU-T Q.921) 프로토콜이다.
+> **핵심**: LAPD (Link Access Procedure on the D channel)는 ISDN (Integrated Services Digital Network)의 D 채널에서 신호 제어 정보(Call Setup, Teardown 등)를 안전하게 전송하기 위해 설계된 데이터 링크 계층(ITU-T Q.921) 프로토콜이다.
 > 2. **가치**: HDLC 기반으로 설계되었으나, SAPI (Service Access Point Identifier)와 TEI (Terminal Endpoint Identifier)로 구성된 2바이트 확장 주소 체계를 도입하여 단일 물리 링크에서 다중 논리적 연결(Multiplexing)을 완벽히 지원한다.
 > 3. **융합**: LAPD의 다중화 기법은 물리적 회선 하나에 여러 대의 전화기나 단말기를 연결하는 ISDN의 핵심 가치를 실현했으며, 훗날 프레임 릴레이(Frame Relay, LAPF) 등의 가상 회선(Virtual Circuit) 기반 프로토콜의 직접적인 조상이 되었다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: LAPD (Link Access Procedure on the D channel)는 ISDN 환경에서 사용자와 네트워크 스위치 간의 호(Call) 제어 신호 및 소량의 패킷 데이터를 전송하기 위한 계층 2 (데이터 링크) 규격이다. 주로 ISDN의 D(Delta) 채널 위에서 동작한다.
 - **필요성**: 기존 통신망은 전화선 하나당 전화기 한 대만 연결되는 점대점 구조였다. 그러나 ISDN은 하나의 물리 회선(BRI 기준 2B+D)에 최대 8대의 단말기를 병렬로 연결(다중점 접속)할 수 있어야 했다. 따라서 어느 단말기가 보내는 신호인지, 그것이 음성 호 제어인지 패킷 데이터인지를 데이터 링크 계층에서 식별하고 분기(Multiplexing)할 방법이 절실했다.
@@ -35,7 +37,7 @@ weight = 223
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소: 확장된 주소 필드 (SAPI + TEI)
 
@@ -84,7 +86,7 @@ LAPD 프레임 구조의 가장 큰 특징은 HDLC/LAPB에서 1바이트였던 A
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교: LAPB vs LAPD vs LAPF
 
@@ -101,7 +103,7 @@ LAPD의 2바이트 주소 구조(SAPI+TEI)는 이후 프레임 릴레이(Frame R
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 과거 ISDN(종합정보통신망)이 보급되던 시기, 하나의 전화선에 전화기, 팩스, PC용 모뎀을 동시에 꽂아 사용하는 환경이 일반적이었다. 전화가 걸려올 때 PC 인터넷이 끊어지지 않으면서 팩스와 전화기를 구별해서 울리게 하는 모든 마법이 D 채널 위를 달리는 LAPD의 TEI/SAPI 다중화 덕분이었다.
@@ -114,7 +116,7 @@ LAPD의 2바이트 주소 구조(SAPI+TEI)는 이후 프레임 릴레이(Frame R
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 | 구분 | 내용 | 개선 효과 |

@@ -5,17 +5,19 @@ description = "성공적인 IT 프로젝트를 위한 의사소통 채널 산정
 [taxonomies]
 tags = ["Project Management", "Communication Plan", "PMBOK", "Agile", "Information Radiator"]
 +++
+## 0. 핵심 인사이트
 
-# 234. 의사소통 관리 계획 수립 절차
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 의사소통 관리 계획 (Communication Management Plan)은 프로젝트 성공의 90%를 차지하는 정보의 흐름을 통제하기 위해 "누가(Who), 무엇을(What), 언제(When), 어떻게(How) 전달할 것인가"를 규정하는 시스템적 접근이다.
+> **핵심**: 의사소통 관리 계획 (Communication Management Plan)은 프로젝트 성공의 90%를 차지하는 정보의 흐름을 통제하기 위해 "누가(Who), 무엇을(What), 언제(When), 어떻게(How) 전달할 것인가"를 규정하는 시스템적 접근이다.
 > 2. **가치**: 참여자 수가 늘어날수록 의사소통 채널이 기하급수적으로 증가하는 복잡성을 수학적 공식(N(N-1)/2)으로 예측하고, 푸시(Push)·풀(Pull)·대화형(Interactive) 방식을 혼합하여 정보 누락과 오버헤드를 동시에 방지한다.
 > 3. **융합**: 애자일(Agile) 환경의 일일 스크럼(Daily Scrum), 정보 방열기(Information Radiator) 기법과 결합하여 비동기(Async) 중심의 글로벌 분산 개발 환경에서 단일 진실 공급원(SSOT)을 유지하는 지식 경영(Knowledge Management)의 척추 역할을 한다.
 
+> 📝 모범 답안
+
+# 234. 의사소통 관리 계획 수립 절차
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 의사소통 관리 계획은 프로젝트 이해관계자의 정보 요구사항을 분석하여, 적절한 정보를 적시에 올바른 매체를 통해 전달하기 위한 전략과 전술을 문서화한 것이다.
 - **필요성**: 프로젝트 실패 원인 1위는 기술 부족이 아니라 '커뮤니케이션 실패'다. 스폰서는 예산 소진율을 원하는데 PM은 기술적 버그 목록만 이메일로 보내거나, 중요한 결정 사항이 개인 메신저로만 공유되어 나중에 타 부서가 이의를 제기하는 등 정보의 비대칭은 재작업과 신뢰 붕괴를 낳는다. 계획된 의사소통은 이러한 노이즈를 필터링하고 신호(Signal)를 명확히 한다.
@@ -54,7 +56,7 @@ tags = ["Project Management", "Communication Plan", "PMBOK", "Agile", "Informati
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 의사소통 채널 산정 공식 (Communication Channels Formula)
 
@@ -126,7 +128,7 @@ tags = ["Project Management", "Communication Plan", "PMBOK", "Agile", "Informati
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 동기식(Synchronous) vs 비동기식(Asynchronous) 소통 비교
 
@@ -171,7 +173,7 @@ tags = ["Project Management", "Communication Plan", "PMBOK", "Agile", "Informati
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 의사결정
 
@@ -213,7 +215,7 @@ tags = ["Project Management", "Communication Plan", "PMBOK", "Agile", "Informati
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

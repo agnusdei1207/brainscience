@@ -5,23 +5,26 @@ date = "2024-05-22"
 [extra]
 categories = "studynote-bigdata"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
+> | Value = 5 (Soft State)|
+
+> 📝 모범 답안
+
 - **가용성 우선(Availability First):** 데이터의 엄격한 일관성(ACID)을 희생하더라도, 대규모 분산 환경에서 중단 없는 서비스를 제공하는 NoSQL의 핵심 철학임.
 - **결과적 일관성(Eventual Consistency):** 실시간으로 데이터가 일치하지 않을 수 있지만, 일정 시간이 지나면 모든 노드가 동일한 값을 갖게 됨을 보장함.
 - **확장성 극대화:** 분산 시스템의 CAP 정리에서 가용성(A)과 파티션 감내(P)를 선택하여 전 세계 사용자에게 빠른 응답 속도를 제공함.
 
-### Ⅰ. 개요 (Context & Background)
+### 1. 개요 및 필요성
 1. **RDBMS의 한계:** 전통적인 ACID(원자성, 일관성, 고립성, 지속성)는 데이터의 무결성을 보장하지만, 수천 개의 서버가 연결된 빅데이터 환경에서는 성능 저하와 가용성 하락을 유발함.
 2. **BASE의 탄생:** 대규모 웹 서비스(Amazon, Google)에서 수평 확장(Scale-out)을 위해 일관성을 "결과적"으로 타협하되, 가용성을 극대화하는 새로운 트랜잭션 모델이 필요하게 됨.
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 - **BASE Principle Workflow & Distributed Replication**
 ```text
 [ Data Write (Node A) ]      [ Propagation Delay ]      [ Data Read (Node B) ]
 +---------------------+      +-------------------+      +---------------------+
-| Value = 10 (Update) | --- (Asynchronous Sync) ---> | Value = 5 (Soft State)|
-+---------------------+                                 +---------------------+
+| Value = 10 (Update) | --- (Asynchronous Sync) ---+---------------------+                                 +---------------------+
                                        |                           |
                                        |                           v
                                        |                (Eventually Consistency)
@@ -40,7 +43,7 @@ categories = "studynote-bigdata"
 3. **Eventual Consistency (E):**
    - 특정 시간 동안 새로운 업데이트가 없다면, 결국 모든 복제본(Replica)은 동일한 값으로 수렴함. 일시적인 불일치를 허용하여 성능 병목을 제거함.
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 | 비교 항목 | ACID (RDBMS) | BASE (NoSQL) | 융합 분석 |
 | :--- | :--- | :--- | :--- |
@@ -50,13 +53,13 @@ categories = "studynote-bigdata"
 | **확장성** | 수직 확장 (Scale-up) | 수평 확장 (Scale-out) | 빅데이터 처리는 수평 확장이 대세 |
 | **사용 사례** | 금융, 결제, 인사 관리 | SNS, 로그, 카트, 댓글 | 정합성 vs 실시간성 선택 |
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 1. **비즈니스 도메인별 선택 (Strategy):**
    - **SNS 뉴스피드:** 친구의 글이 1초 늦게 보여도 문제없으므로 BASE가 적합함.
    - **계좌 이체:** 1원이라도 틀리면 치명적이므로 반드시 ACID를 유지해야 함.
 2. **기술사적 판단:** 현대 아키텍처는 "Polyglot Persistence"를 지향함. 주문 정보는 RDBMS(ACID)에, 대량의 상품 조회 로그는 NoSQL(BASE)에 저장하여 성능과 안전성을 동시에 확보하는 것이 핵심 설계 역량임.
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 1. **기대효과:** 전 지구적 규모의 분산 시스템(Global Distribution)에서 지연 시간(Latency)을 최소화하고, 무한한 확장을 가능하게 하여 현대 인터넷 서비스의 기술적 근간이 됨.
 2. **결론:** BASE는 일관성을 포기한 것이 아니라, 성능을 위해 "일관성의 시점"을 늦춘 지혜로운 타협임. 분산 데이터베이스 설계자는 BASE 원칙을 통해 서비스 가용성의 임계치를 돌파할 수 있음.
 

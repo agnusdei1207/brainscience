@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# SDI Hardware Dependency (소프트웨어 정의 인프라 하드웨어 종속성)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: SDI (Software-Defined Infrastructure)는 서버, 스토리지, 네트워크를 소프트웨어로 가상화하여 유연하게 제어하는 클라우드의 핵심 개념이지만, 네트워크/스토리지 가상화의 처리량이 수백 Gbps로 폭증하면서 메인 CPU가 인프라 처리에만 시가를 다 쓰는 '데이터센터 세금(Datacenter Tax)' 문제가 발생했다.
+> **핵심**: SDI (Software-Defined Infrastructure)는 서버, 스토리지, 네트워크를 소프트웨어로 가상화하여 유연하게 제어하는 클라우드의 핵심 개념이지만, 네트워크/스토리지 가상화의 처리량이 수백 Gbps로 폭증하면서 메인 CPU가 인프라 처리에만 시가를 다 쓰는 '데이터센터 세금(Datacenter Tax)' 문제가 발생했다.
 > 2. **가치**: 이 문제를 해결하기 위해 최근 데이터센터는 가상화 및 보안 소프트웨어 연산을 CPU 대신 전담해서 처리해주는 특수 하드웨어인 SmartNIC, DPU (Data Processing Unit), IPU를 도입하여 '하드웨어 가속/오프로딩' 트렌드로 회귀하고 있다.
 > 3. **융합**: DPU는 CPU의 인프라 부담을 덜어주고(Customer VM에 100% 연산 자원 제공), 100GbE/200GbE 네트워킹, 스토리지 암호화, RDMA 등을 지원하여 클라우드 네이티브 프로세서와 보조를 같이한다.
 
+> 📝 모범 답안
+
+# SDI Hardware Dependency (소프트웨어 정의 인프라 하드웨어 종속성)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 문제의식: SDI의 꿈 vs 현실
 
@@ -64,7 +66,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Datacenter Tax: 소프트웨어의 한계
 
@@ -152,7 +154,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### DPU vs SmartNIC vs IPU 비교
 
@@ -171,7 +173,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -196,7 +198,7 @@ AWS Graviton (ARM 기반 클라우드 프로세서)과 Nitro (AWS 자체 설계 
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### SDI에서Hardware-defined로의 전환
 

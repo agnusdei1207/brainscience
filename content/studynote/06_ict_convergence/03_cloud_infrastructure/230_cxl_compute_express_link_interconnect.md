@@ -5,17 +5,19 @@ weight = 230
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-# CXL (Compute Express Link) - 차세대 메모리 인터커넥트 아키텍처
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CXL(Compute Express Link)은 CPU와 가속기(GPU, DPU), 그리고 메모리(RAM) 간의 통신 병목을 뚫기 위해 인텔(Intel) 주도로 2019년에 발표된 차세대 고속 인터커넥트 기술로, 기존 **PCIe(PCI Express) 규격의 물리적 선(Wire)을 그대로 쓰되 소프트웨어적인 '대화 방식(Protocol)'을 혁신한 융합 표준**이다.
+> **핵심**: CXL(Compute Express Link)은 CPU와 가속기(GPU, DPU), 그리고 메모리(RAM) 간의 통신 병목을 뚫기 위해 인텔(Intel) 주도로 2019년에 발표된 차세대 고속 인터커넥트 기술로, 기존 **PCIe(PCI Express) 규격의 물리적 선(Wire)을 그대로 쓰되 소프트웨어적인 '대화 방식(Protocol)'을 혁신한 융합 표준**이다.
 > 2. **가치**: 기존에는 CPU와 GPU가 서로 데이터를 주고받으려면 데이터를 일일이 복사(Copy)해서 넘겨줘야 했다(시간 낭비). CXL은 **'캐시 일관성(Cache Coherency)'**이라는 마법을 적용하여, CPU와 GPU가 1개의 똑같은 메모리를 서로 자기 것처럼 다이렉트로 공유해서 보게 만들어 복사(Copy) 지연 시간을 우주 끝까지 삭제(Zero-copy)해 버린다.
 > 3. **융합**: 초거대 AI(LLM) 훈련 시 GPU의 메모리(HBM)가 부족해 학습이 멈추는 '메모리 장벽(Memory Wall)'의 한계를 박살 내며, 서버 박스 안에 갇혀있던 램(RAM)을 밖으로 끄집어내어 공유하는 **'메모리 풀링(Memory Pooling, 231번)' 생태계와 융합해 차세대 데이터센터(SDDC)의 지형을 완벽히 재설계**하고 있다.
 
+> 📝 모범 답안
+
+# CXL (Compute Express Link) - 차세대 메모리 인터커넥트 아키텍처
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: CXL (Compute Express Link)은 고성능 컴퓨팅(HPC) 시스템과 클라우드 데이터센터에서 CPU와 연결된 가속기(GPU, FPGA, DPU), 스마트 I/O 장치, 확장 메모리 풀 간의 고속, 저지연(Low-latency), 캐시 일관성(Cache-coherent) 통신을 지원하는 개방형 업계 표준 인터커넥트(Interconnect) 기술이다.
 
@@ -63,7 +65,7 @@ B 방식인 CXL은 CPU와 GPU 사이의 벽을 부수고, **GPU가 CPU의 캐시
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### CXL을 완성하는 3가지 언어 (Sub-Protocols)
 
@@ -90,7 +92,7 @@ CXL은 하나의 뭉툭한 케이블이 아니다. 역할에 따라 3가지의 �
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 인터커넥트 3파전 (PCIe vs NVLink vs CXL)
 
@@ -115,7 +117,7 @@ CXL은 하나의 뭉툭한 케이블이 아니다. 역할에 따라 3가지의 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오 및 설계 안티패턴
 
@@ -169,7 +171,7 @@ CXL은 이 부조리를 박살 낸다. GPU 옆에 CXL 케이블을 꽂고 싼값
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

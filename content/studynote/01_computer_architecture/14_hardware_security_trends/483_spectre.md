@@ -5,17 +5,19 @@ date = "2026-03-20"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-# Spectre (스펙터) 취약점
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Spectre는 CPU의 분기 예측(Branch Prediction) 및 추측 실행(Speculative Execution) 기법을 악용하여, 공격자가 spéculative하게 실행된 코드의副作用으로 발생하는 캐시 상태 변화를 사이드 채널 공격으로窃看去, victim 프로세스(다른 앱, OS 커널, 甚至虚拟机)의 민감 정보를 탈취하는 하드웨어 취약점이다.
+> **핵심**: Spectre는 CPU의 분기 예측(Branch Prediction) 및 추측 실행(Speculative Execution) 기법을 악용하여, 공격자가 spéculative하게 실행된 코드의副作用으로 발생하는 캐시 상태 변화를 사이드 채널 공격으로窃看去, victim 프로세스(다른 앱, OS 커널, 甚至虚拟机)의 민감 정보를 탈취하는 하드웨어 취약점이다.
 > 2. **가치**: Intel, AMD, ARM 등 사실상すべての modern CPU에 영향을 미치며, Meltdown보다防护가 매우 어렵다. 브라우저의 JavaScriptサンドボッククスですら悪用可能하여, ウェブ 浏览 중에도银行잔고나 パスワードが盗まれる可能的である.
 > 3. **융합**: Retpoline 컴파일러 우회 기술, Indirect Branch Restricted Speculation (IBRS), Single Thread Indirect Branch Predictor (STIBP) 등의防御 기술이 제시되었으나, 근본적解決には CPU 아키텍처의 재설계가 필수적이다.
 
+> 📝 모범 답안
+
+# Spectre (스펙터) 취약점
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 문제의식: 분기 예측의 보안적 함정
 
@@ -29,7 +31,7 @@ Spectre의 핵심적인 차이는"CPU가 정상적으로 권한을 검사하지�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### Spectre 공격의 기본 구조
 
@@ -84,7 +86,7 @@ Spectre는 다음 단계로 구성된다. 第一段階では、攻撃者はvicti
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### Spectre 변형家族
 
@@ -105,7 +107,7 @@ Spectre는 단일 취약점이 아니라, 다양한 변형이 있는 취약점 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -130,7 +132,7 @@ Spectre는 단일 취약점이 아니라, 다양한 변형이 있는 취약점 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### Spectre 방어 기술
 

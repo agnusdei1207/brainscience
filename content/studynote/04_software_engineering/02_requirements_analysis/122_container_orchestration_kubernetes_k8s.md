@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 컨테이너 오케스트레이션은 **수백~수천 개 컨테이너의 배포·스케일링·네트워킹·자동 복구를 자동화**하는 시스템이며, Kubernetes(K8s)가 사실상 유일한 산업 표준이다.
+> **핵심**: 컨테이너 오케스트레이션은 **수백~수천 개 컨테이너의 배포·스케일링·네트워킹·자동 복구를 자동화**하는 시스템이며, Kubernetes(K8s)가 사실상 유일한 산업 표준이다.
 > 2. **가치**: 단일 Docker 컨테이너는 `docker run`으로 관리하지만, 프로덕션 환경에서 수백 컨테이너의 **헬스체크·오토스케일링·롤링 업데이트·서비스 디스커버리**를 수동 관리하는 것은 불가능하며, K8s가 이를 **선언적으로 자동화**한다.
 > 3. **판단 포인트**: K8s의 핵심은 **Desired State → Reconciliation Loop**이며, Pod·Deployment·Service·Ingress의 4대 리소스와 Control Plane(API Server·etcd·Scheduler·Controller Manager)의 아키텍처를 이해해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ```text
 ┌───────────────────────────────────────────────────────┐
@@ -36,7 +38,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 4대 핵심 리소스
 
@@ -51,7 +53,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Docker Compose | K8s | Nomad |
 |:---|:---|:---|:---|
@@ -61,7 +63,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### K8s 도입 판단 기준
 - 컨테이너 10개 이하: Docker Compose로 충분.
@@ -70,7 +72,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 K8s는 **클라우드 네이티브의 운영 체제**이며, CNCF 생태계(Istio·ArgoCD·Prometheus·Cilium)와 결합하여 현대 인프라의 사실상 표준이다.
 

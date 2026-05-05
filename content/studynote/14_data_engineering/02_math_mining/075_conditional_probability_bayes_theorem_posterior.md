@@ -5,16 +5,17 @@ date = "2026-04-10"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 조건부 확률은 "B를 알았을 때 A의 확률"이고, 베이즈 정리 (Bayes' theorem)는 그 조건을 뒤집어 관측 후의 믿음, 즉 posterior를 계산한다.
+> **핵심**: 조건부 확률은 "B를 알았을 때 A의 확률"이고, 베이즈 정리 (Bayes' theorem)는 그 조건을 뒤집어 관측 후의 믿음, 즉 posterior를 계산한다.
 > 2. **가치**: prior와 likelihood를 분리하면 적은 데이터에서도 기존 지식을 반영한 추론이 가능해져 진단·추천·이상탐지에 강해진다.
 > 3. **판단 포인트**: P(test|disease)와 P(disease|test)를 혼동하면 base rate fallacy에 빠지므로, posterior 해석 전에 evidence를 확인해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 데이터 과학과 AI에서 핵심은 불확실성을 업데이트하는 일이다. 어떤 사건의 확률은 새 증거가 들어오면 달라지며, 조건부 확률은 바로 그 갱신을 수학으로 적은 것이다.
 
@@ -31,7 +32,7 @@ Posterior ∝ Likelihood × Prior
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 Bayes 사고의 구성 요소는 prior, likelihood, evidence, posterior다. prior는 시작 믿음이고, likelihood는 증거가 주어졌을 때의 설명력이며, evidence는 전체 정규화 항이다.
 
@@ -48,7 +49,7 @@ Bayes 사고의 구성 요소는 prior, likelihood, evidence, posterior다. prio
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 조건부 확률은 사건 공간을 좁히는 개념이고, joint probability는 둘이 함께 일어날 확률이다. 또한 독립이면 조건이 붙어도 확률이 바뀌지 않는다.
 
@@ -63,7 +64,7 @@ Bayes는 likelihood와 posterior의 방향을 바꿔 생각하게 한다. 그래
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 base rate를 먼저 본다. 드문 사건일수록 검사가 꽤 정확해도 양성 후 실제 확률은 낮을 수 있다.
 
@@ -78,7 +79,7 @@ Bayes는 likelihood와 posterior의 방향을 바꿔 생각하게 한다. 그래
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Bayes는 "확률은 고정값이 아니라 갱신되는 믿음"이라는 점을 보여 준다. 그래서 데이터가 늘수록 추론이 더 정교해진다.
 

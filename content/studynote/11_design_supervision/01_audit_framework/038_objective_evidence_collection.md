@@ -4,11 +4,14 @@ date = "2026-03-03"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 객관적 증거(Objective Evidence)는 사실에 기반하고 검증 가능한 정보로, 감리/감사의 발견 사항(Finding)이 법적 효력을 가지려면 주관적 판단이 아닌 구체적이고 반박하기 어려운 증거로 뒷받침되어야 한다.
 > 2. 증거 수집의 세 가지 핵심 방법 — 인터뷰(Interview), 문서 검토(Documentation Review), 현장 관찰(Observation) — 은 서로 교차 검증(Triangulation)될 때 증거의 신뢰성이 극대화된다.
 > 3. 증거의 충분성(Sufficiency)과 적합성(Appropriateness)이 증거 품질의 핵심 — "많이 모았다"가 아니라 "발견 사항을 합리적으로 지지하는 증거를 정확하게 모았는가"가 기준이다.
+
+> 📝 모범 답안
 
 ---
 

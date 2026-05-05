@@ -2,17 +2,19 @@
 title = "591. 가비지 컬렉터 (MVCC Undo/Redo 블록 회수 진공 프로세스 Vacuum) 데이터 정리"
 weight = 591
 +++
+## 0. 핵심 인사이트
 
-# 가비지 컬렉터 (MVCC Undo/Redo 블록 회수 진공 프로세스 Vacuum) 데이터 정리
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 데이터베이스의 가비지 컬렉션 (Garbage Collection) 또는 진공 프로세스 (Vacuum Process)는 다중 버전 동시성 제어 (MVCC, Multi-Version Concurrency Control) 환경에서 트랜잭션 종료 후 더 이상 참조되지 않는 과거 버전의 데이터(Dead Tuple)를 식별하고 물리적 저장 공간을 회수하는 백그라운드 필수 작업이다.
+> **핵심**: 데이터베이스의 가비지 컬렉션 (Garbage Collection) 또는 진공 프로세스 (Vacuum Process)는 다중 버전 동시성 제어 (MVCC, Multi-Version Concurrency Control) 환경에서 트랜잭션 종료 후 더 이상 참조되지 않는 과거 버전의 데이터(Dead Tuple)를 식별하고 물리적 저장 공간을 회수하는 백그라운드 필수 작업이다.
 > 2. **가치**: 불필요한 과거 데이터가 디스크 공간을 점유하고 인덱스 크기를 비대화시키는 현상(Bloat)을 방지하여, 순차 스캔(Sequential Scan) 및 인덱스 스캔(Index Scan)의 디스크 I/O (Input/Output) 성능을 최적의 상태로 유지하고 트랜잭션 ID (Transaction ID) 랩어라운드(Wraparound)로 인한 시스템 중단을 예방한다.
 > 3. **융합**: PostgreSQL의 Autovacuum, MySQL(InnoDB)의 Purge Thread, Oracle의 Undo Tablespace 관리 등 각 DBMS (Database Management System) 아키텍처마다 구현 방식은 다르나, 운영체제 (OS, Operating System)의 페이지 교체 알고리즘과 SSD (Solid State Drive)의 가비지 컬렉션 메커니즘과 연계하여 스토리지 수명 및 시스템 전체 레이턴시에 직접적인 영향을 미친다.
 
+> 📝 모범 답안
+
+# 가비지 컬렉터 (MVCC Undo/Redo 블록 회수 진공 프로세스 Vacuum) 데이터 정리
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: MVCC (Multi-Version Concurrency Control) 기반의 관계형 데이터베이스에서 UPDATE (업데이트)나 DELETE (삭제) 연산이 수행될 때, 기존 데이터를 물리적으로 즉시 덮어쓰거나 지우지 않고 새로운 버전의 데이터를 생성(Insert)하거나 삭제 마킹(Mark for Deletion)만 수행한다. 가비지 컬렉터(Garbage Collector) 또는 Vacuum (진공) 프로세스는 이렇게 발생한 '더 이상 어떤 활성 트랜잭션에서도 접근 불가능한 과거 데이터(Dead Tuple/Row)'를 찾아내어 해당 디스크 블록을 재사용 가능하도록 회수하는 시스템 프로세스이다.
 
@@ -60,7 +62,7 @@ weight = 591
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -149,7 +151,7 @@ Vacuum 메커니즘의 핵심은 현재 실행 중인 모든 트랜잭션 중 �
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### 비교 1: PostgreSQL Vacuum vs Oracle/MySQL (InnoDB) Undo 메커니즘
 
@@ -202,7 +204,7 @@ Vacuum 메커니즘의 핵심은 현재 실행 중인 모든 트랜잭션 중 �
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -262,7 +264,7 @@ Vacuum 메커니즘의 핵심은 현재 실행 중인 모든 트랜잭션 중 �
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

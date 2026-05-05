@@ -6,15 +6,17 @@ description = "경험과 직관을 섞어 테스트 결과의 타당성을 판�
 taxonomy = ""
 tags = ["Software Engineering", "Testing", "Heuristic Oracle", "Experience", "Judgment"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 휴리스틱 오라클(Heuristic Oracle)은 경험칙과 직관으로 결과의 타당성을 판단하는 오라클이다.
+> **핵심**: 휴리스틱 오라클(Heuristic Oracle)은 경험칙과 직관으로 결과의 타당성을 판단하는 오라클이다.
 > 2. **가치**: 정답을 정확히 계산하기 어려운 상황에서 실무적 판정을 가능하게 한다.
 > 3. **판단 포인트**: 빠르지만 주관이 섞이므로 기준을 공유하지 않으면 흔들린다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 휴리스틱 오라클은 "완벽한 정답" 대신 "이 정도면 맞다/틀리다"를 경험으로 판단한다. 복잡한 UI, AI 출력, 비정형 데이터처럼 정답이 흐릿할 때 특히 유용하다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Testing", "Heuristic Oracle", "Experience", "Ju
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 휴리스틱 오라클은 규칙표, 경험, 패턴 인식을 함께 쓴다. 정답이 딱 떨어지지 않는 상황을 다룬다.
 
@@ -44,7 +46,7 @@ tags = ["Software Engineering", "Testing", "Heuristic Oracle", "Experience", "Ju
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 휴리스틱 오라클은 참 오라클보다 덜 정확하지만, 훨씬 실용적이다. 샘플링 오라클보다도 더 사람 중심이다.
 
@@ -60,7 +62,7 @@ tags = ["Software Engineering", "Testing", "Heuristic Oracle", "Experience", "Ju
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 정답이 모호한 추천 시스템, 문장 생성, UI 품질, 사용자 경험 평가에 쓴다. 다만 기준을 팀 안에서 공유하지 않으면 결과가 들쭉날쭉해진다.
 
@@ -73,7 +75,7 @@ tags = ["Software Engineering", "Testing", "Heuristic Oracle", "Experience", "Ju
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 휴리스틱 오라클은 애매한 문제를 멈추지 않고 판단하게 해 준다. 정답이 불명확한 영역에서 특히 가치가 크다.
 

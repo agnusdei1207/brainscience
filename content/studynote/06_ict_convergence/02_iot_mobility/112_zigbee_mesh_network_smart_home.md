@@ -5,15 +5,17 @@ date = "2026-04-19"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Zigbee는 IEEE 802.15.4 기반의 **저전력·저속·단거리(~100m) WPAN(Wireless Personal Area Network)** 프로토콜로, **메시(Mesh) 토폴로지**를 통해 수백 개 센서 노드가 자가 치유(Self-healing) 네트워크를 형성하는 스마트 홈·빌딩 자동화의 핵심 기술이다.
+> **핵심**: Zigbee는 IEEE 802.15.4 기반의 **저전력·저속·단거리(~100m) WPAN(Wireless Personal Area Network)** 프로토콜로, **메시(Mesh) 토폴로지**를 통해 수백 개 센서 노드가 자가 치유(Self-healing) 네트워크를 형성하는 스마트 홈·빌딩 자동화의 핵심 기술이다.
 > 2. **가치**: BLE(Bluetooth Low Energy)가 1:1 Point-to-Point에 강하다면, Zigbee는 **다대다(Many-to-Many) 메시 라우팅**에 강하여 조명 100개·센서 200개를 하나의 네트워크로 제어할 수 있다.
 > 3. **판단 포인트**: Zigbee 3.0이 프로파일 통합(HA/LL/SE)으로 호환성을 확보했으나, **Matter(구 CHIP) 프로토콜이 Zigbee·Thread·Wi-Fi·BLE를 통합하는 차세대 표준**으로 부상하여 Zigbee의 독자적 위치가 흔들리고 있다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 스마트 홈에서 조명·에어컨·도어록·센서를 제어하려면 **저전력으로 수백 개 디바이스가 안정적으로 통신**해야 한다. Wi-Fi는 전력 소모가 크고, BLE는 메시 지원이 제한적이다.
 
@@ -39,7 +41,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 | 항목 | Zigbee | BLE | Wi-Fi |
 |:---|:---|:---|:---|
@@ -55,7 +57,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 | Zigbee | Z-Wave | Thread | Matter |
 |:---|:---|:---|:---|:---|
@@ -66,7 +68,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 적합 시나리오
 1. **스마트 조명**: Philips Hue (Zigbee 기반), 조명 50개 메시 제어.
@@ -78,7 +80,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Zigbee는 스마트 홈 WPAN의 선구자이지만, **Matter 프로토콜(Apple·Google·Amazon 공동 표준)**이 Zigbee·Thread·Wi-Fi를 통합하며 차세대 스마트 홈 표준으로 부상하고 있다.
 

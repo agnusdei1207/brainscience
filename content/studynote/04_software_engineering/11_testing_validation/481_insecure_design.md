@@ -6,15 +6,17 @@ description = "보안 요구사항과 위협 분석이 부족해 처음부터 �
 taxonomy = ""
 tags = ["Software Engineering", "Security", "Design", "OWASP", "Threat Modeling"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Insecure Design은 구현이 아니라 설계 단계의 문제다.
+> **핵심**: Insecure Design은 구현이 아니라 설계 단계의 문제다.
 > 2. **가치**: 코드로 고치기 전에 구조적 결함을 줄인다.
 > 3. **판단 포인트**: 기능은 되지만 안전하지 않은 요구사항을 의심한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 안전하지 않은 설계는 보안 요구사항이 빠졌거나, 오용 시나리오를 고려하지 않은 상태다. 구현을 잘해도 설계가 약하면 전체가 취약해진다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Security", "Design", "OWASP", "Threat Modeling"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 설계 단계에서는 정상 흐름뿐 아니라 남용 (abuse) 흐름도 본다.
 
@@ -44,7 +46,7 @@ tags = ["Software Engineering", "Security", "Design", "OWASP", "Threat Modeling"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 Insecure Design은 Broken Access Control이나 Injection 같은 결과를 낳을 수 있다.
 
@@ -60,7 +62,7 @@ STRIDE, DREAD, Threat Modeling이 여기서 유효하다.
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 결제, 비밀번호 재설정, 승인 절차, 대량 요청 제한 같은 곳에 설계 검토가 필요하다.
 
@@ -73,7 +75,7 @@ STRIDE, DREAD, Threat Modeling이 여기서 유효하다.
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 안전한 설계는 나중에 보안을 덧씌우는 비용을 줄인다. 그래서 가장 싸고 강한 방어가 된다.
 

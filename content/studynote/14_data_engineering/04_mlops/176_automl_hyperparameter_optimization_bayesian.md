@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: AutoML (Automated Machine Learning)은 피처 엔지니어링·모델 선택·하이퍼파라미터 최적화를 자동화하여 ML 전문가가 아닌 도메인 전문가도 고품질 모델을 개발할 수 있게 한다.
+> **핵심**: AutoML (Automated Machine Learning)은 피처 엔지니어링·모델 선택·하이퍼파라미터 최적화를 자동화하여 ML 전문가가 아닌 도메인 전문가도 고품질 모델을 개발할 수 있게 한다.
 > 2. **가치**: 베이지안 최적화(Bayesian Optimization)는 대리 모델(Surrogate Model)로 탐색 공간을 효율적으로 좁혀, Grid Search 대비 10~100배 적은 실험으로 최적 하이퍼파라미터를 발견한다.
 > 3. **판단 포인트**: Hyperband의 조기 종료(Early Stopping)는 샘플 수보다 자원 효율이 중요할 때, 베이지안 최적화는 실험 비용이 높고 샘플 효율이 중요할 때 선택해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 1.1 하이퍼파라미터 최적화의 문제
 
@@ -49,7 +51,7 @@ categories = "studynote-data-engineering"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2.1 Grid Search vs Random Search
 
@@ -164,7 +166,7 @@ BOHB = 베이지안 최적화 + Hyperband 조기 종료 결합:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3.1 HPO 방법 비교
 
@@ -203,7 +205,7 @@ NAS 방법 분류:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4.1 주요 AutoML 도구 비교
 
@@ -285,7 +287,7 @@ importance = optuna.importance.get_param_importances(study)
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 5.1 AutoML 도입 효과
 

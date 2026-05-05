@@ -5,17 +5,20 @@ date = "2026-03-22"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 131. 메모리 맵 파일 IPC (Memory-Mapped File IPC)
-
-#### 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 메모리 맵 파일 IPC (Inter-Process Communication)는 운영체제의 `mmap()` 시스템 콜을 통해 파일 또는 익명 메모리 영역을 프로세스의 가상 주소 공간 (Virtual Address Space)에 직접 매핑하여, 프로세스 간 데이터를 커널 버퍼를 경유하지 않고 페이지 폴트 (Page Fault) 기반으로 공유하는 통신 기법이다.
+> **핵심**: 메모리 맵 파일 IPC (Inter-Process Communication)는 운영체제의 `mmap()` 시스템 콜을 통해 파일 또는 익명 메모리 영역을 프로세스의 가상 주소 공간 (Virtual Address Space)에 직접 매핑하여, 프로세스 간 데이터를 커널 버퍼를 경유하지 않고 페이지 폴트 (Page Fault) 기반으로 공유하는 통신 기법이다.
 > 2. **가치**: `MAP_SHARED` 플래그를 사용하면 여러 프로세스가 동일한 물리 페이지 (Physical Page)를 공유하므로, 대용량 데이터를 복사 없이(zero-copy) 교환할 수 있어 고성능 IPC가 가능하며, 파일 시스템과의 일관성도 자동으로 보장된다.
 > 3. **융합**: POSIX 공유 메모리 (POSIX Shared Memory, `shm_open`)의 내부 구현이 사실상 `mmap()` 기반으로 동작하므로, 메모리 맵 파일은 POSIX IPC의 근간을 이루는 핵심 메커니즘이다. 다만 동기화는 별도의 세마포어 (Semaphore)나 파일 락 (File Lock)으로 명시적으로 수행해야 한다.
 
+> 📝 모범 답안
+
+# 131. 메모리 맵 파일 IPC (Memory-Mapped File IPC)
+
+##
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 - **개념**: `mmap()` 시스템 콜은 디스크 상의 파일이나 익명 영역을 호출자 프로세스의 가상 메모리 (Virtual Memory)에 매핑한다. `MAP_SHARED` 플래그를 지정하여 매핑하면, 해당 영역에 대한 쓰기가 물리 메모리 상의 동일한 페이지 프레임 (Page Frame)에 반영되므로 매핑을 공유하는 모든 프로세스가 즉시 변경 사항을 관찰할 수 있다. 이를 통해 프로세스 간 IPC를 구현한다.
 - **필요성**: 전통적인 파이프 (Pipe)나 소켓 (Socket) 기반 IPC는 데이터가 사용자 공간에서 커널 공간으로, 다시 대상 프로세스의 사용자 공간으로 복사되는 2중 버퍼 복사(2x Copy)를 수반한다. 대용량 데이터 구조(예: 수백 MB의 이미지 버퍼)를 교환할 때 이러한 복사 비용은 치명적이다. `mmap()`은 페이지 폴트 (Page Fault)를 통해 물리 페이지를 직접 공유하므로 복사 오버헤드를 근본적으로 제거할 수 있다.
@@ -48,7 +51,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 메모리 맵 파일 IPC의 동작은 요구 페이징 (Demand Paging) 메커니즘과 긴밀하게 결합되어 있다.
 
@@ -88,7 +91,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 `mmap()` IPC는 POSIX 공유 메모리 (`shm_open` + `mmap`) 및 System V 공유 메모리 (`shmget` + `shmat`)와 유사한 결과를 낳지만, 내부 구현과 생명주기에서 중요한 차이가 존재한다.
 
@@ -136,7 +139,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 `mmap()` 기반 IPC는 고성능 애플리케이션에서 널리 사용되지만, 동기화 누락 시 데이터 일관성이 파괴되는 치명적 리스크가 존재한다.
 
@@ -175,7 +178,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 `mmap()` 기반 IPC는 대용량 데이터 공유의 표준으로 자리 잡았으며, 컨테이너 및 가상화 환경에서도 핵심적인 역할을 수행한다.
 

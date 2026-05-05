@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-it-management"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트
-
-> 1. **본질**: 사이버 킬체인(Cyber Kill Chain)은 공격자의 침투 과정을 7단계로 모델링하여, 방어자가 각 단계에서 공격을 차단할 수 있는 구조적 프레임워크다. 단계가 앞을수록 차단 비용이 낮다.
+> **핵심**: 사이버 킬체인(Cyber Kill Chain)은 공격자의 침투 과정을 7단계로 모델링하여, 방어자가 각 단계에서 공격을 차단할 수 있는 구조적 프레임워크다. 단계가 앞을수록 차단 비용이 낮다.
 > 2. **가치**: MITRE ATT&CK (Adversarial Tactics, Techniques, and Common Knowledge)는 실제 공격 캠페인에서 관찰된 TTP (Tactics, Techniques, and Procedures, 전술·기법·절차)를 행렬 형태로 정리한 글로벌 표준 지식 베이스로, SOC (Security Operations Center, 보안 운영 센터) 탐지 룰셋 작성의 사실상 표준이다.
 > 3. **판단 포인트**: 두 프레임워크는 상호 보완적이다. 킬체인은 공격의 '흐름'을, ATT&CK는 각 단계의 '방법'을 설명한다. 기술사 답안에서는 이 구분을 명확히 하고, TIP (Threat Intelligence Platform, 위협 인텔리전스 플랫폼)·SIEM (Security Information and Event Management, 보안 정보 및 이벤트 관리) 연동 방안까지 서술해야 한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 현대의 사이버 공격, 특히 APT (Advanced Persistent Threat, 지능형 지속 위협) 공격은 단순한 단발성 침입이 아니라 정찰·무기화·전달·익스플로잇·설치·C2 확립·목표 달성까지 체계적인 단계를 거친다. 방어자가 이 과정을 이해하지 못하면, 공격이 이미 깊숙이 침투한 뒤에야 발견하게 되어 막대한 피해를 초래한다.
 
@@ -26,7 +27,7 @@ MITRE Corporation의 **ATT&CK 프레임워크**는 2013년부터 축적된 실�
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 2-1. 사이버 킬체인 7단계 구조
 
@@ -74,7 +75,7 @@ MITRE Corporation의 **ATT&CK 프레임워크**는 2013년부터 축적된 실�
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 3-1. 킬체인 vs. ATT&CK 프레임워크 비교
 
@@ -100,7 +101,7 @@ STIX (Structured Threat Information eXpression) / TAXII (Trusted Automated eXcha
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 4-1. ATT&CK Navigator를 활용한 SOC 갭 분석
 
@@ -123,7 +124,7 @@ SOC 팀은 MITRE ATT&CK Navigator 도구를 사용하여 현재 탐지 커버리
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 사이버 킬체인과 MITRE ATT&CK를 통합 운영하면, 조직의 방어 커버리지 공백을 정량화하여 보안 투자 우선순위를 근거 있게 결정할 수 있다. 특히 APT 대응에서 단순 IOC 차단에서 TTP 기반 행동 분석으로 방어 수준을 격상시켜, 끊임없이 변화하는 공격에도 지속 가능한 방어 체계를 구축한다.
 

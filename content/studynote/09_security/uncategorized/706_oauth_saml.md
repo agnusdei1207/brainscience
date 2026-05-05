@@ -4,17 +4,19 @@ title = "706. Kerberoasting — SPN 요청 티켓 hash 추출"
 description = "권한 위임 프로토콜 OAuth 2.0과 인증 프레임워크 SAML 2.0의 원리와 보안"
 date = 2024-01-15
 +++
+## 0. 핵심 인사이트
 
-# OAuth와 SAML (OAuth 2.0 & SAML 2.0)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: OAuth 2.0은 제3자에게 제한된 권한으로 서비스 접근을 위임하는 승인 프로토콜(Delegation Protocol)이고, SAML 2.0은 XML 기반의 Assertion을 통해 SSO(Single Sign-On)를実現하는 인증 프레임워크이다. 둘 다 인증/인가가 아닌 인가(Authorization)를 primarily 목적으로 한다.
+> **핵심**: OAuth 2.0은 제3자에게 제한된 권한으로 서비스 접근을 위임하는 승인 프로토콜(Delegation Protocol)이고, SAML 2.0은 XML 기반의 Assertion을 통해 SSO(Single Sign-On)를実現하는 인증 프레임워크이다. 둘 다 인증/인가가 아닌 인가(Authorization)를 primarily 목적으로 한다.
 > 2. **가치**: Google, Facebook, GitHub 등이 OAuth 2.0을 利用하여 자사 서비스에 대한 제3자 앱의 접근을 관리하며, 기업 환경에서는 SAML 2.0이 SSO의 사실상의 표준으로 자리잡았다.
 > 3. **융합**: OAuth와 SAML은OpenID Connect(OIDC)에서 OAuth 2.0위에 인증 레이어를 추가하여 양립하며, SAML은 XML 디지털 서명, OAuth는 JWT를 활용한다.
 
+> 📝 모범 답안
+
+# OAuth와 SAML (OAuth 2.0 & SAML 2.0)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 
@@ -36,7 +38,7 @@ OAuth 1.0은 2007년 IETFdraft로 등장했으며, Twitter, Google, Yahoo 등이
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### OAuth 2.0 플로우
 
@@ -191,7 +193,7 @@ SAML 2.0은 XML Assertion을 활용하여 IdP와 SP 간에 인증 정보를 교�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### OpenID Connect (OIDC)와의 관계
 
@@ -235,7 +237,7 @@ OIDC는 OAuth 2.0위에 인증(Authentication) 레이어를 추가하여,OAuth�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 
@@ -258,7 +260,7 @@ OIDC는 OAuth 2.0위에 인증(Authentication) 레이어를 추가하여,OAuth�
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-design-supervision"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: Token Bucket (토큰 버킷) 알고리즘은 초당 R개 토큰이 버킷에 채워지고 요청마다 토큰을 소비하는 방식으로 API 호출 속도를 제어하는 Rate Limiting (속도 제한) 알고리즘이다 — 버스트(Burst) 트래픽을 버킷 용량(B) 한도 내에서 허용한다.
+> **핵심**: Token Bucket (토큰 버킷) 알고리즘은 초당 R개 토큰이 버킷에 채워지고 요청마다 토큰을 소비하는 방식으로 API 호출 속도를 제어하는 Rate Limiting (속도 제한) 알고리즘이다 — 버스트(Burst) 트래픽을 버킷 용량(B) 한도 내에서 허용한다.
 > 2. **가치**: 토큰이 있으면 즉시 처리(버스트 허용), 토큰이 없으면 요청 거부 또는 대기 — 평균 처리량을 R rps (Requests Per Second)로 제한하면서도 순간 폭발 트래픽에 유연하게 대응한다.
 > 3. **판단 포인트**: 토큰 버킷은 버스트 허용 + 평균 속도 제한, 리키 버킷(Leaky Bucket)은 버스트 흡수 + 일정 속도 출력 — 두 알고리즘의 차이가 Rate Limiting 설계의 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### Rate Limiting이 필요한 이유
 
@@ -43,7 +44,7 @@ API 서버 없이 무제한 요청을 허용하면:
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### 토큰 버킷 알고리즘 구조
 
@@ -107,7 +108,7 @@ AWS API Gateway 쓰로틀링 설정:
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### Rate Limiting 응답 코드와 헤더
 
@@ -167,7 +168,7 @@ end
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Spring Boot Rate Limiting 구현 (Bucket4j)
 
@@ -211,7 +212,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 Token Bucket 기반 Rate Limiting은 API 게이트웨이의 필수 구성 요소다:
 

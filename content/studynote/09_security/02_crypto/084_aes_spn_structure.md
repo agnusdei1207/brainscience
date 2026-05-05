@@ -5,16 +5,17 @@ weight = 84
 [extra]
 categories = "studynote-security"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: AES (Advanced Encryption Standard)는 SPN (Substitution-Permutation Network) 구조를 반복해 평문을 암호문으로 바꾸는 블록 암호다.
+> **핵심**: AES (Advanced Encryption Standard)는 SPN (Substitution-Permutation Network) 구조를 반복해 평문을 암호문으로 바꾸는 블록 암호다.
 > 2. **가치**: SubBytes, ShiftRows, MixColumns, AddRoundKey를 층층이 쌓아 confusion과 diffusion을 동시에 만든다.
 > 3. **판단 포인트**: AES 자체보다 더 자주 깨지는 것은 사용법이다. 모드, IV / nonce, 키 관리가 잘못되면 강한 알고리즘도 약해진다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 AES (Advanced Encryption Standard)는 128비트 블록을 처리하는 대표적인 대칭키 블록 암호다. 내부 구조는 SPN (Substitution-Permutation Network)으로, 작은 치환과 퍼뮤테이션을 여러 라운드 반복해 강한 확산과 혼돈을 만든다. DES (Data Encryption Standard)를 대체하면서 더 긴 키와 더 나은 효율을 제공하는 것이 목적이었다.
 
@@ -30,7 +31,7 @@ SPN의 핵심은 치환과 확산을 여러 번 반복하는 데 있다.
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 AES의 상태는 4x4 바이트 행렬로 표현된다. 각 라운드는 비선형 치환인 SubBytes, 행 이동인 ShiftRows, 열 섞기인 MixColumns, 라운드 키를 더하는 AddRoundKey로 구성된다. 마지막 라운드에서는 MixColumns를 생략한다. 이 구조가 혼돈(confusion)과 확산(diffusion)을 함께 만든다.
 
@@ -55,7 +56,7 @@ Ciphertext
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 AES는 SPN 구조이고, DES는 Feistel 구조다. SPN은 바이트 단위 병렬 치환과 확산을 강하게 걸기 좋고, Feistel은 복호화와 구현이 대칭적이라 역사적으로 널리 쓰였다. AES는 현대 CPU와 하드웨어 가속에 잘 맞는 쪽으로 설계되어 현재 표준이 되었다.
 
@@ -70,7 +71,7 @@ AES를 다른 암호와 비교할 때는 알고리즘 구조뿐 아니라 사용
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 AES 자체보다 어떤 모드로 쓰는지가 더 중요하다. 같은 AES라도 GCM (Galois/Counter Mode)처럼 인증된 암호를 쓰면 무결성까지 챙길 수 있고, nonce를 중복하면 안전성이 급격히 떨어진다. 또한 키를 코드에 박아 두거나, IV / nonce를 재사용하거나, ECB를 쓰는 것은 대표적인 안티패턴이다.
 
@@ -91,7 +92,7 @@ AES를 다른 암호와 비교할 때는 알고리즘 구조뿐 아니라 사용
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 AES의 장점은 강한 보안성과 높은 구현 효율을 동시에 제공한다는 점이다. SPN 구조는 하드웨어와 소프트웨어 양쪽에 잘 맞고, 충분히 검증된 표준이라는 신뢰도 크다. 하지만 최종 보안은 키 관리, 모드 선택, nonce 규칙까지 포함한 전체 사용 방식에서 결정된다.
 

@@ -3,17 +3,19 @@ title = "297. LLMOps (Large Language Model Operations)"
 description = "초거대 언어 모델의 생명주기를 관리하는 새로운 MLOps 패러다임: 파인튜닝, RAG, 평가와 가드레일"
 weight = 297
 +++
+## 0. 핵심 인사이트
 
-# 297. LLMOps (Large Language Model Operations)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: LLMOps는 기존 MLOps의 범위를 초거대 언어 모델(LLM)에 맞게 확장한 파생 개념으로, 기반 모델(Foundation Model) 선택부터 프롬프트 엔지니어링, 파인튜닝(Fine-Tuning), RAG(검색 증강 생성) 구축, 환각(Hallucination) 평가 및 비용 통제까지 LLM 고유의 전체 생명주기를 관리하는 엔지니어링 체계다.
+> **핵심**: LLMOps는 기존 MLOps의 범위를 초거대 언어 모델(LLM)에 맞게 확장한 파생 개념으로, 기반 모델(Foundation Model) 선택부터 프롬프트 엔지니어링, 파인튜닝(Fine-Tuning), RAG(검색 증강 생성) 구축, 환각(Hallucination) 평가 및 비용 통제까지 LLM 고유의 전체 생명주기를 관리하는 엔지니어링 체계다.
 > 2. **가치**: 모델을 바닥부터 새로 학습하는 대신 API 호출이나 LoRA(Low-Rank Adaptation) 등을 통한 미세 조정으로 개발 비용을 압도적으로 줄이고, 모델의 응답 퀄리티(보안, 윤리, 정확도)를 Guardrail과 LLM-as-a-Judge 기법을 통해 자동 검증하여 안전한 기업용 AI 서빙을 가능케 한다.
 > 3. **융합**: 거대한 파라미터를 가진 모델을 로딩하고 추론하는 vLLM, TensorRT-LLM과 같은 서빙 최적화 기술과, 외부 지식을 주입하는 Vector DB 아키텍처가 긴밀하게 결합하여 작동하는 인프라 융합의 정점이다.
 
+> 📝 모범 답안
+
+# 297. LLMOps (Large Language Model Operations)
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: LLMOps (Large Language Model Operations)는 LLM 기반 애플리케이션의 개발, 배포, 유지보수, 모니터링을 지속적으로 효율화하기 위한 도구와 방법론의 집합이다. 정형 데이터의 '분류/회귀' 중심이었던 전통적 MLOps와 달리, '비정형 텍스트 생성'에 집중하며 프롬프트와 맥락(Context) 관리가 가장 중요한 핵심 자산이 된다.
 - **필요성**: LLM은 강력하지만 예측할 수 없는 텍스트를 생성(환각 발생)하며, 추론 비용(API Token 비용 또는 GPU 서버 유지비)이 전통적 ML과 비교할 수 없을 정도로 비싸다. 또한 사용자의 악의적인 프롬프트 인젝션(Prompt Injection)에 취약하다. 이를 통제하고 비용 효율성을 달성하며 비즈니스 도메인 지식을 주입하기 위한 특화된 파이프라인 관리 체계가 없다면, LLM 서비스 상용화는 심각한 재무적·보안적 위험에 노출된다.
@@ -49,7 +51,7 @@ weight = 297
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 구성 요소
 
@@ -106,7 +108,7 @@ weight = 297
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## 3. 구조 및 동작 원리
 
 ### LLM 지식 주입 전략 비교 (Prompting vs RAG vs Fine-Tuning)
 
@@ -155,7 +157,7 @@ LLM 서빙은 일반 ML 서빙과 물리적 병목이 완전히 다르다. Memor
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: API 비용 폭발 및 응답 지연(Latency) 문제 해결
 
@@ -206,7 +208,7 @@ LLM 서빙은 일반 ML 서빙과 물리적 병목이 완전히 다르다. Memor
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 정량/정성 기대효과
 

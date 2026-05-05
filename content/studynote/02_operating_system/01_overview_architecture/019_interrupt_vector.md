@@ -5,17 +5,19 @@ date = "2026-03-21"
 [extra]
 categories = "studynote-operating-system"
 +++
+## 0. 핵심 인사이트
 
-# 인터럽트 벡터 및 벡터 테이블 (Interrupt Vector & Vector Table)
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 인터럽트 벡터 (Interrupt Vector)는 특정 인터럽트 신호가 발생했을 때 처리해야 할 ISR (Interrupt Service Routine)의 시작 메모리 주소를 가리키는 고유 식별자이자 포인터이며, 이들을 모아놓은 배열 구조를 인터럽트 벡터 테이블 (IVT, Interrupt Vector Table)이라 한다.
+> **핵심**: 인터럽트 벡터 (Interrupt Vector)는 특정 인터럽트 신호가 발생했을 때 처리해야 할 ISR (Interrupt Service Routine)의 시작 메모리 주소를 가리키는 고유 식별자이자 포인터이며, 이들을 모아놓은 배열 구조를 인터럽트 벡터 테이블 (IVT, Interrupt Vector Table)이라 한다.
 > 2. **가치**: 수많은 하드웨어 및 소프트웨어 인터럽트 요인을 개별적인 분기문(If-Else) 없이 하드웨어가 직접 메모리 주소로 변환하게 함으로써, 사건 발생부터 처리 시작까지의 지연 시간 (Latency)을 최소화하는 고속 인덱싱 기능을 제공한다.
 > 3. **융합**: 현대 x86 아키텍처의 IDT (Interrupt Descriptor Table)나 ARM의 Vector Table은 단순 주소를 넘어 권한 체크 (DPL), 게이트 유형 (Interrupt/Trap Gate) 정보를 포함하는 서술자 (Descriptor) 구조로 진화하여 시스템 보안의 핵심 관문 역할을 수행한다.
 
+> 📝 모범 답안
+
+# 인터럽트 벡터 및 벡터 테이블 (Interrupt Vector & Vector Table)
+
 ---
 
-### Ⅰ. 개요 및 필요성 (Context & Necessity)
+### 1. 개요 및 필요성
 
 - **개념**: 인터럽트 벡터 (Interrupt Vector)는 인터럽트의 종류를 구분하는 정수값(번호)이자, 해당 인터럽트를 처리할 함수의 메모리 시작 주소를 의미한다. 운영체제는 부팅 과정에서 메모리의 특정 영역에 각 번호별 ISR 주소를 미리 기록해두는데, 이 공간을 인터럽트 벡터 테이블 (IVT, Interrupt Vector Table) 또는 인터럽트 서술자 테이블 (IDT, Interrupt Descriptor Table)이라고 부른다.
 
@@ -59,7 +61,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+### 2. 구성요소
 
 - **인터럽트 벡터 테이블 구성 요소 및 예약 영역**:
 
@@ -126,7 +128,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+### 3. 구조 및 동작 원리
 
 - **IVT (Real Mode) vs IDT (Protected Mode) 비교**:
 
@@ -163,7 +165,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+### 4. 비교 및 트레이드오프
 
 - **실무 시나리오 및 운영 전략**:
   1. **인터럽트 벡터 가로채기 (Hooking)**: 보안 솔루션이나 루트킷 (Rootkit)은 특정 벡터 번호의 주소를 자신의 함수 주소로 몰래 바꿔치기한다. 시스템 콜 번호 (0x80)를 후킹하면 모든 파일 열기나 네트워크 전송을 감시할 수 있다. 이를 방지하기 위해 현대 OS는 IDT 영역을 '읽기 전용'으로 보호한다.
@@ -193,7 +195,7 @@ categories = "studynote-operating-system"
 
 ---
 
-### Ⅴ. 기대효과 및 결론 (Future & Standard)
+### 5. 실무 적용 및 최적화 기법
 
 - **기대효과**: 인터럽트 벡터 테이블은 '하드웨어의 고정성'과 '소프트웨어의 유연성'을 완벽하게 결합한 아키텍처적 걸작이다. 이 메커니즘 덕분에 새로운 장치가 나와도 운영체제는 벡터 번호와 ISR 주소만 새로 등록하면 즉시 호환성을 확보할 수 있다. 또한 모든 사건 처리가 '색인(Index)' 기반으로 수행되므로, 복잡한 시스템에서도 일정한 수준의 응답 지연 (Deterministic Latency)을 보장하는 효과를 거둔다.
 

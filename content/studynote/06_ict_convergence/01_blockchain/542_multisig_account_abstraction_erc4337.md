@@ -5,16 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-ict-convergence"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: 멀티시그(Multi-Sig, Multi-Signature)는 M-of-N 서명 구조로 단일 키 분실 리스크를 제거하고, ERC-4337 계정 추상화(Account Abstraction)는 EOA(Externally Owned Account)를 스마트 컨트랙트 계정으로 업그레이드하여 **지갑 로직을 프로그래머블**하게 만든다.
+> **핵심**: 멀티시그(Multi-Sig, Multi-Signature)는 M-of-N 서명 구조로 단일 키 분실 리스크를 제거하고, ERC-4337 계정 추상화(Account Abstraction)는 EOA(Externally Owned Account)를 스마트 컨트랙트 계정으로 업그레이드하여 **지갑 로직을 프로그래머블**하게 만든다.
 > 2. **가치**: 소셜 복구(Social Recovery)·가스비 대납(Paymaster)·세션 키(Session Key) 기능이 Web3 UX의 가장 큰 진입 장벽(개인키 관리·가스비)을 제거하여 **대중화 핵심 기술**이 된다.
 > 3. **판단 포인트**: UserOperation → Bundler → EntryPoint 아키텍처는 기존 이더리움 프로토콜 변경 없이 EIP-4337로 계정 추상화를 실현하는 영리한 설계로, 기술사 시험에서 구조 이해가 핵심이다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 ### 단일 키의 위험성
 
@@ -27,7 +28,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### ERC-4337 계정 추상화 구조
 
@@ -67,7 +68,7 @@ categories = "studynote-ict-convergence"
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### 주요 기능 상세
 
@@ -92,7 +93,7 @@ DApp이 사용자 가스비를 대납하거나 ERC-20 토큰으로 가스비 지
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### 보안 고려 사항
 
@@ -110,7 +111,7 @@ DApp이 사용자 가스비를 대납하거나 ERC-20 토큰으로 가스비 지
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 | 효과 항목 | 내용 |
 |:---|:---|

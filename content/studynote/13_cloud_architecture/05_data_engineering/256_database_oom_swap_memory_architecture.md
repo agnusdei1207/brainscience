@@ -5,15 +5,17 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Linux OOM Killer는 메모리 부족 시 oom_score가 높은 프로세스를 강제 종료하는데, DB 프로세스가 대상이 되면 서비스 장애로 직결된다 — Huge Pages, vm.swappiness=0, Cgroup 격리로 DB 메모리를 보호해야 한다.
+> **핵심**: Linux OOM Killer는 메모리 부족 시 oom_score가 높은 프로세스를 강제 종료하는데, DB 프로세스가 대상이 되면 서비스 장애로 직결된다 — Huge Pages, vm.swappiness=0, Cgroup 격리로 DB 메모리를 보호해야 한다.
 > 2. **가치**: DB는 자체 메모리 풀(Buffer Pool)로 성능을 최적화하므로, 커널이 메모리를 스왑하거나 강제 종료하면 캐시 무효화 + 예기치 않은 재시작으로 치명적 데이터 일관성 문제가 발생한다.
 > 3. **판단 포인트**: K8s 환경에서 DB 파드의 메모리 Request = Limit으로 설정(Guaranteed QoS)하여 OOM 우선순위를 낮추고, Huge Pages를 활용하여 TLB 미스 감소와 메모리 단편화를 동시에 해결한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 DB 서버에서 새벽 4시에 갑자기 PostgreSQL이 종료되고, 에러 로그에 `Killed` 한 줄만 남아있는 상황. 이것이 **Linux OOM(Out of Memory) Killer**의 소행이다.
 
@@ -46,7 +48,7 @@ postgresql SIGKILL → 서비스 장애!
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### OOM 방어 전략
 
@@ -113,7 +115,7 @@ BestEffort   request, limit 없음            가장 먼저 종료
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 ### vm.swappiness 설정 값별 동작
 
@@ -139,7 +141,7 @@ BestEffort   request, limit 없음            가장 먼저 종료
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 ### Linux DB 서버 메모리 최적화 체크리스트
 
@@ -188,7 +190,7 @@ numactl --hardware
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 

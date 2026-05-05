@@ -5,15 +5,17 @@ date = "2026-03-26"
 [extra]
 categories = "studynote-computer-architecture"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 인터럽트 벡터(Interrupt Vector)는 다양한 인터럽트 요청이 발생했을 때 각각의 인터럽트를 처리할 ISR(Interrupt Service Routine)이 메모리의 어느 주소에 위치하는지를 가리키는 포인터이며, IVT(Interrupt Vector Table)에 배열 형태로 저장된다.
+> **핵심**: 인터럽트 벡터(Interrupt Vector)는 다양한 인터럽트 요청이 발생했을 때 각각의 인터럽트를 처리할 ISR(Interrupt Service Routine)이 메모리의 어느 주소에 위치하는지를 가리키는 포인터이며, IVT(Interrupt Vector Table)에 배열 형태로 저장된다.
 > 2. **가치**: CPU는 인터럽트 번호만으로 단일 클럭 사이클 내에 IVT를 참조하여 즉시 ISR로 분기할 수 있어, 인터럽트 원인 파악을 위한 오버헤드(Overhead)를 획기적으로 낮춘다.
 > 3. **융합**: 고전적인 PIC(Programmable Interrupt Controller)부터 현대의 MSI(Message Signaled Interrupt)까지 아우르며, 멀티코어 환경에서 인터럽트 라우팅 및 처리의 핵심 메커니즘으로 작용한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 ### 개념 정의
 인터럽트 벡터(Interrupt Vector)는 하드웨어 또는 소프트웨어 인터럽트가 발생했을 때, 이를 처리하기 위해 실행되어야 할 ISR(Interrupt Service Routine)의 시작 주소를 담고 있는 정보의 단위다. 이들은 메모리의 특정 구역(일반적으로 하위 주소)에 인터럽트 벡터 테이블(IVT, Interrupt Vector Table)이라는 데이터 구조로 집계되어 관리된다.
@@ -42,7 +44,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### IVT 및 IDT 테이블 구조
 CPU는 인터럽트 번호를 받으면 IVT(Interrupt Vector Table) 또는 현대적 보호 모드의 IDT(Interrupt Descriptor Table)에서 ISR 주소를 인출한다.
@@ -92,7 +94,7 @@ CPU는 인터럽트 번호를 받으면 IVT(Interrupt Vector Table) 또는 현�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 벡터 인터럽트 vs 데이지 체인 (Daisy Chain)
 인터럽트 원인을 파악하는 방식에 따른 비교 분석이다.
@@ -124,7 +126,7 @@ PCI Express 시대에 접어들며 물리적 IRQ 라인을 대신하여 메모�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오: 인터럽트 지연 시간(Latency) 최적화
 **상황**: 초고속 네트워크 카드나 스토리지에서 인터럽트 처리가 병목이 되어 전체 시스템 처리량이 떨어지는 경우.
@@ -159,7 +161,7 @@ PCI Express 시대에 접어들며 물리적 IRQ 라인을 대신하여 메모�
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 - **시스템 응답성 향상**: 원인 파악 단계의 제거로 실시간 시스템(RTOS)의 결정론적(Deterministic) 성능 보장.

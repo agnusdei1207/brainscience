@@ -5,14 +5,15 @@ date = "2026-04-21"
 [extra]
 categories = "studynote-enterprise-systems"
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-
-> 1. **본질**: COBIT (Control Objectives for Information and Related Technologies)은 ISACA가 개발한 IT 거버넌스 및 관리 프레임워크로, 40개 거버넌스·관리 목표를 5개 도메인(EDM/APO/BAI/DSS/MEA)으로 구성하여 IT가 비즈니스 가치를 창출하도록 통제한다.
+> **핵심**: COBIT (Control Objectives for Information and Related Technologies)은 ISACA가 개발한 IT 거버넌스 및 관리 프레임워크로, 40개 거버넌스·관리 목표를 5개 도메인(EDM/APO/BAI/DSS/MEA)으로 구성하여 IT가 비즈니스 가치를 창출하도록 통제한다.
 > 2. **가치**: IT 거버넌스의 책임 소재와 의사결정 체계를 명확히 하여 리스크 관리, 규정 준수(SOX, ISO 27001), 자원 최적화를 동시에 달성한다.
 > 3. **판단 포인트**: COBIT은 "무엇을(What)" 해야 하는가를 정의하는 프레임워크이며, "어떻게(How)" 구현할지는 ITIL(운영), ISO 27001(보안), TOGAF(아키텍처) 등과 연계하여 보완해야 한다.
 
-## Ⅰ. 개요 및 필요성
+> 📝 모범 답안
+
+## 1. 개요 및 필요성
 
 COBIT은 1996년 ISACA (Information Systems Audit and Control Association)가 발표하고, COBIT 5(2012) → COBIT 2019(2018)로 진화한 IT 거버넌스 프레임워크다. COBIT 2019는 이전 버전 대비 Design Factors(설계 요인) 11개를 추가하여 조직 맥락에 맞는 맞춤형 거버넌스 시스템을 설계할 수 있도록 했다.
 
@@ -31,7 +32,7 @@ COBIT은 1996년 ISACA (Information Systems Audit and Control Association)가 �
 
 📢 **섹션 요약 비유**: COBIT은 기업 IT를 운영하는 헌법 — 무엇이 허용되고 금지되는지, 누가 결정권을 갖는지, 어떻게 감독하는지의 기본 틀을 제공한다.
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 ### COBIT 2019 5개 도메인 구조
 
@@ -81,7 +82,7 @@ COBIT은 1996년 ISACA (Information Systems Audit and Control Association)가 �
 
 📢 **섹션 요약 비유**: COBIT 성숙도 모델은 학생의 학년처럼 — 0학년(아무것도 안 함)에서 5학년(자율적으로 계속 발전)까지 조직의 IT 거버넌스 성숙 수준을 측정한다.
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 | 비교 항목 | COBIT | ITIL | ISO 27001 | TOGAF |
 |:---|:---|:---|:---|:---|
@@ -99,7 +100,7 @@ COBIT은 1996년 ISACA (Information Systems Audit and Control Association)가 �
 
 📢 **섹션 요약 비유**: COBIT은 IT 거버넌스의 헌법, ITIL은 운영 규정, ISO 27001은 보안 법규 — 모두 필요하지만 각자 담당하는 영역이 다르다.
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 **COBIT 도입 체크리스트**:
 - [ ] 조직의 IT 거버넌스 성숙도 현황 평가가 완료되었는가?
@@ -120,7 +121,7 @@ COBIT은 1996년 ISACA (Information Systems Audit and Control Association)가 �
 
 📢 **섹션 요약 비유**: COBIT의 40개 목표를 모두 동시에 구현하려는 것은 의대 교과서를 하루에 다 외우려는 것 — 환자(조직)에게 가장 시급한 치료부터 시작하는 것이 현명하다.
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 **기대 효과**:
 - IT 거버넌스 체계화: 이사회~CIO~운영팀까지 명확한 역할·책임 체계

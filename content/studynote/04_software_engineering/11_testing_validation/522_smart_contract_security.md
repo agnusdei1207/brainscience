@@ -6,15 +6,17 @@ description = "스마트 컨트랙트의 재진입 공격 등 취약점을 점�
 taxonomy = ""
 tags = ["Software Engineering", "Security", "Blockchain", "Smart Contract", "Audit"]
 +++
+## 0. 핵심 인사이트
 
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 스마트 컨트랙트는 한번 배포되면 수정이 어려워 감사가 중요하다.
+> **핵심**: 스마트 컨트랙트는 한번 배포되면 수정이 어려워 감사가 중요하다.
 > 2. **가치**: 재진입 공격(Reentrancy) 같은 치명적 결함을 줄인다.
 > 3. **판단 포인트**: 불변성, 상태 전이, 외부 호출 순서를 본다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 개요 및 필요성
+## 1. 개요 및 필요성
 
 스마트 컨트랙트는 블록체인에서 자동 실행되는 코드다. 배포 후 수정이 어렵기 때문에 사전 감사가 핵심이다.
 
@@ -24,7 +26,7 @@ tags = ["Software Engineering", "Security", "Blockchain", "Smart Contract", "Aud
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리
+## 2. 구성요소
 
 감사는 상태 변경, 외부 호출, 권한, 예외 처리를 살핀다.
 
@@ -42,7 +44,7 @@ tags = ["Software Engineering", "Security", "Blockchain", "Smart Contract", "Aud
 
 ---
 
-## Ⅲ. 비교 및 연결
+## 3. 구조 및 동작 원리
 
 스마트 컨트랙트는 일반 웹 앱보다 복구가 더 어렵다.
 
@@ -58,7 +60,7 @@ tags = ["Software Engineering", "Security", "Blockchain", "Smart Contract", "Aud
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사 판단
+## 4. 비교 및 트레이드오프
 
 실무에서는 권한 분리, 재진입 방지 패턴, 외부 호출 최소화가 중요하다.
 
@@ -71,7 +73,7 @@ tags = ["Software Engineering", "Security", "Blockchain", "Smart Contract", "Aud
 
 ---
 
-## Ⅴ. 기대효과 및 결론
+## 5. 실무 적용 및 최적화 기법
 
 스마트 컨트랙트 감사는 배포 후 손실을 예방한다.
 

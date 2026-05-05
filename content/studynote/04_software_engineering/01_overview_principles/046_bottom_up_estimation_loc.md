@@ -5,15 +5,18 @@ date = "2026-04-05"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 상향식(Bottom-Up) 비용 산정은 WBS(Work Breakdown Structure)의 개별 작업 단위에서 시작해 합산하는 방식 — 세부 계획이 확정된 후 적용 가능하며, 하향식보다 정확하지만 시간이 많이 소요된다.
 > 2. LOC(Lines of Code, 소스 코드 라인 수)는 가장 오래되고 직관적인 소프트웨어 규모 측정 지표 — 생산성(LOC/인월)과 비용(비용/LOC)으로 산정하나, 언어·개발자 숙련도·코딩 스타일에 크게 의존하는 한계가 있다.
 > 3. LOC와 기능점수(FP)의 비율은 언어별로 크게 다름 — C언어 1 FP ≈ 100~150 LOC, Java 1 FP ≈ 50~70 LOC, Python 1 FP ≈ 30~50 LOC로, LOC만으로 다른 언어 프로젝트를 비교하면 오류가 생긴다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 상향식 비용 산정
+## 1. 개요 및 필요성
 
 ```
 상향식 (Bottom-Up) 비용 산정:
@@ -64,7 +67,7 @@ WBS (Work Breakdown Structure):
 
 ---
 
-## Ⅱ. LOC 산정
+## 2. 구성요소
 
 ```
 LOC (Lines of Code):
@@ -118,7 +121,7 @@ LOC 단점:
 
 ---
 
-## Ⅲ. 언어별 LOC/FP 비율
+## 3. 구조 및 동작 원리
 
 ```
 언어별 FP(기능점수) 당 LOC 비교:
@@ -167,7 +170,7 @@ Cobol           107                레거시 비즈니스
 
 ---
 
-## Ⅳ. COCOMO II LOC 기반 모델
+## 4. 비교 및 트레이드오프
 
 ```
 COCOMO II (Constructive Cost Model):
@@ -217,7 +220,7 @@ COCOMO II (Constructive Cost Model):
 
 ---
 
-## Ⅴ. 실무 시나리오 — SI 프로젝트 상향식 산정
+## 5. 실무 적용 및 최적화 기법
 
 ```
 중견 기업 ERP 커스터마이징 프로젝트:

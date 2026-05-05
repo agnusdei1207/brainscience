@@ -5,15 +5,18 @@ date = "2026-03-19"
 [extra]
 categories = "studynote-software-engineering"
 +++
+## 0. 핵심 인사이트
 
 > **핵심 인사이트**
 > 1. 소프트웨어 프로젝트 위험 관리(Risk Management)는 식별(Identification)→분석(Analysis)→대응(Response)→모니터링(Monitoring) 4단계로 구성되며, "예측할 수 없는 것은 관리할 수 없다"는 원칙에 따라 가시성(Visibility)을 최대화하는 체계다.
 > 2. 위험은 확률(Probability)×영향도(Impact)의 곱으로 우선순위가 결정되며, 위험 노출도(Risk Exposure) = P × I 매트릭스를 통해 한정된 대응 자원을 고위험 항목에 집중 투자하는 의사결정을 지원한다.
 > 3. 위험 대응 전략의 4가지(회피·전가·완화·수용)는 각각 비용과 잔존 위험의 트레이드오프가 다르며, PMBOK과 ISO 21502는 이를 프로젝트 성공의 핵심 역량으로 정의하고 공공 IT 사업 감리의 필수 점검 항목으로 규정한다.
 
+> 📝 모범 답안
+
 ---
 
-## Ⅰ. 위험 식별 (Risk Identification)
+## 1. 개요 및 필요성
 
 ```
 위험 식별 기법:
@@ -44,7 +47,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅱ. 위험 분석
+## 2. 구성요소
 
 ```
 정량적 분석:
@@ -74,7 +77,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅲ. 위험 대응 전략
+## 3. 구조 및 동작 원리
 
 ```
 위험 대응 4전략:
@@ -110,7 +113,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅳ. 위험 모니터링
+## 4. 비교 및 트레이드오프
 
 ```
 위험 모니터링 활동:
@@ -140,7 +143,7 @@ categories = "studynote-software-engineering"
 
 ---
 
-## Ⅴ. 실무 시나리오 — 공공 IT 사업 위험 관리
+## 5. 실무 적용 및 최적화 기법
 
 ```
 공공 정보화 사업 위험 관리 계획:

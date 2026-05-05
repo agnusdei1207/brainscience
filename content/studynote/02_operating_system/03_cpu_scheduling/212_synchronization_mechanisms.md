@@ -5,17 +5,19 @@ date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]
 +++
+## 0. 핵심 인사이트
 
-# 동기화 (Synchronization) 메커니즘
-
-## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 동기화 (Synchronization)는 다수의 프로세스나 스레드가 공용 자원(Shared Resource)에 동시 접근할 때 데이터의 일관성(Consistency)과 무결성(Integrity)이 파괴되는 것을 막기 위해, **실행 순서를 제어하고 접근을 상호 배제(Mutual Exclusion)하는 시스템적 약속**이다.
+> **핵심**: 동기화 (Synchronization)는 다수의 프로세스나 스레드가 공용 자원(Shared Resource)에 동시 접근할 때 데이터의 일관성(Consistency)과 무결성(Integrity)이 파괴되는 것을 막기 위해, **실행 순서를 제어하고 접근을 상호 배제(Mutual Exclusion)하는 시스템적 약속**이다.
 > 2. **가치**: 이 메커니즘이 없으면 '경쟁 조건(Race Condition)'이 터져 은행 잔고가 증발하거나 미사일 궤도가 틀어지는 치명적 버그가 발생하며, 이를 막기 위해 임계 구역(Critical Section)을 정의하고 락(Lock)을 거는 것이 동시성(Concurrency) 프로그래밍의 가장 기본이다.
 > 3. **융합**: 동기화는 너무 강하게 걸면 데드락(Deadlock)이나 병목(Bottleneck)으로 성능이 폭락하고, 너무 느슨하게 걸면 데이터가 깨지는 양날의 검이므로, 뮤텍스, 세마포어, 스핀락부터 최신 Lock-free 자료구조까지 아키텍처에 맞게 융합/선택해야 한다.
 
+> 📝 모범 답안
+
+# 동기화 (Synchronization) 메커니즘
+
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## 1. 개요 및 필요성
 
 - **개념**: 여러 개의 실행 흐름(스레드, 프로세스)이 하나의 공유 데이터(메모리, 파일, DB 등)를 읽고 쓸 때, 그 순서나 타이밍이 꼬이지 않도록 교통정리를 해주는 모든 기법과 도구를 총칭한다.
 - **필요성**: 컴퓨터의 명령어(Instruction)는 우리가 생각하는 것만큼 원자적(Atomic)이지 않다. `count++` 이라는 단순한 C언어 코드 1줄도 CPU 내부에서는 [읽기 ─▶ 더하기 ─▶ 쓰기] 의 3단계 어셈블리어로 쪼개져 실행된다. 만약 A가 '읽기'만 하고 '더하기'를 하기 직전에 B가 끼어들어(Context Switch) 값을 바꿔버리면, A가 나중에 덮어쓸 때 B의 작업 내역이 허공으로 증발해 버린다.
@@ -47,7 +49,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## 2. 구성요소
 
 ### 임계 구역 (Critical Section) 문제의 3대 해결 조건
 
@@ -95,7 +97,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## 3. 구조 및 동작 원리
 
 ### 동기화 메커니즘 3형제 비교 (Spinlock vs Mutex vs Semaphore)
 
@@ -116,7 +118,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## 4. 비교 및 트레이드오프
 
 ### 실무 시나리오
 1. **싱글 코어에서의 스핀락(Spinlock) 절대 금지 규칙**: 주니어 커널 개발자가 싱글 코어(1 CPU) 환경에서 스핀락 코드를 짰다.
@@ -153,7 +155,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## 5. 실무 적용 및 최적화 기법
 
 ### 기대효과
 정교한 동기화 메커니즘을 설계하면, 수천 개의 스레드가 하나의 은행 계좌나 DB 레코드에 동시에 때려 박는 극한의 경합(Contention) 상황에서도 데이터가 1원조차 틀려지지 않는 완벽한 **트랜잭션 무결성(Data Integrity)**을 보장받을 수 있다.
