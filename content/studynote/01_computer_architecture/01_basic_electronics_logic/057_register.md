@@ -13,11 +13,15 @@ categories = "studynote-computer-architecture"
 
 ---
 
-> 📝 모범 답안
+📝 모범 답안
+
+---
 
 ## 1. 개요 및 필요성
 
 레지스터는 CPU가 연산을 수행할 때 필요한 데이터와 명령어, 상태 정보를 임시로 보관하는 초고속 저장 공간이다. 메모리(RAM)와 CPU 간의 속도 차이가 크기 때문에, 연산할 데이터를 미리 가까운 곳에 가져다 놓지 않으면 병목 현상(Von Neumann Bottleneck)이 발생한다. 레지스터가 없으면 매 연산마다 메인 메모리에 접근해야 하므로 명령어 파이프라인과 초고속 데이터패스(Datapath) 구성이 불가능해진다.
+
+---
 
 ## 2. 구성요소
 
@@ -27,6 +31,8 @@ categories = "studynote-computer-architecture"
 | 공통 클럭 (Clock) | 동기화된 상태 저장 | 모든 플립플롭 동시 갱신 |
 | 버스 인터페이스 | 데이터패스와의 연결 | 다중 읽기/쓰기 포트 (Multi-port) |
 | 로드(Load) 제어선 | 쓰기 동작 허가 | 필요한 시점에만 데이터 갱신 |
+
+---
 
 ## 3. 구조 및 원리
 
@@ -43,6 +49,8 @@ categories = "studynote-computer-architecture"
 [입력 버스] → [N비트 병렬 플립플롭 (CLK, LOAD)] → [출력 버스 / ALU]
 ```
 
+---
+
 ## 4. 비교 및 연결
 
 | 항목 | 레지스터 (Register) | 캐시 메모리 (Cache Memory) | 메인 메모리 (Main Memory) |
@@ -51,6 +59,8 @@ categories = "studynote-computer-architecture"
 | 용량 및 관리 | 수십~수백 바이트, ISA 명시 | 메가바이트 급, HW 자동 | 기가바이트 급, OS 관리 |
 
 레지스터는 프로그래머(또는 컴파일러)가 ISA(Instruction Set Architecture)를 통해 직접 명시적으로 제어할 수 있는 유일한 계층이다. 이 차이는 소프트웨어 최적화(Register Allocation)가 시스템 성능에 직결되는 이유가 된다.
+
+---
 
 ## 5. 실무 적용 및 판단
 
@@ -62,13 +72,13 @@ categories = "studynote-computer-architecture"
 2. 컴파일러가 범용 레지스터(GPR) 할당을 효율적으로 수행하고 있는가?
 3. 컨텍스트 스위칭(Context Switching) 시 레지스터 상태 백업/복구 오버헤드가 적정한가?
 
+---
+
 ## 6. 기대효과 및 결론
 
 적절한 레지스터 설계와 할당은 메모리 접근 횟수를 최소화하여 CPU 파이프라인 스톨(Stall)을 방지하고 전체 처리량을 극대화한다. 그러나 플립플롭 기반 설계의 특성상 면적과 전력 소모가 커서 무한정 용량을 늘릴 수 없다는 한계가 있다. 레지스터는 **"연산기가 가장 빠르게 접근할 수 있는 최전방의 데이터 캐리어"**로 기억해야 한다.
 
 ---
-
-> 📖 학습 보조
 
 ## 7. 발전 흐름도
 

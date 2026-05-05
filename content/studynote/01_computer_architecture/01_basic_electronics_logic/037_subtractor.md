@@ -1,5 +1,6 @@
 +++
 title = "37. 감산기 (Subtractor)"
+weight = 37
 date = "2026-03-03"
 [extra]
 categories = "studynote-computer-architecture"
@@ -12,7 +13,9 @@ categories = "studynote-computer-architecture"
 
 ---
 
-> 📝 모범 답안
+📝 모범 답안
+
+---
 
 ## 1. 개요 및 필요성
 
@@ -41,6 +44,14 @@ categories = "studynote-computer-architecture"
 3. 반전된 B와 Carry-In 1이 더해져 B는 최종적으로 2의 보수(-B) 형태가 된다.
 4. 피감수 A와 2의 보수화된 B가 전가산기 회로를 통해 덧셈 처리된다.
 5. 오버플로(Overflow)가 발생하지 않는다면 최종 산출된 합이 실제 뺄셈의 결과가 된다.
+
+```text
+[입력 / 상태 / 제어 조건]
+            ↓
+     [핵심 처리 로직]
+            ↓
+    [출력 / 상태 갱신 / 효과]
+```
 
 ---
 
@@ -73,8 +84,6 @@ categories = "studynote-computer-architecture"
 2의 보수를 활용한 감산기 구조는 하드웨어 비용을 최소화하면서도 일관된 연산 성능을 보장한다. 한계는 보수 변환 시 거쳐야 하는 인버터 로직으로 인해 순수 가산기보다 미세하게 지연이 길어질 수 있다는 점이다. 결론적으로 감산기는 독립된 하드웨어가 아니라 수학적 변환과 가산기의 융합 기술로 기억해야 하며, 이는 컴퓨터 구조 효율성의 근간이다.
 
 ---
-
-> 📖 학습 보조
 
 ## 7. 발전 흐름도
 

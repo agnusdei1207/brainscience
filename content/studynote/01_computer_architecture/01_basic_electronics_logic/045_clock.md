@@ -13,7 +13,9 @@ categories = "studynote-computer-architecture"
 
 ---
 
-> 📝 모범 답안
+📝 모범 답안
+
+---
 
 ## 1. 개요 및 필요성
 
@@ -65,7 +67,7 @@ categories = "studynote-computer-architecture"
 
 ## 5. 실무 적용 및 판단
 
-**채택**: 동기식 설계, 클럭 도메인별 분리, DVFS (Dynamic Voltage and Frequency Scaling) 적용  
+**채택**: 동기식 설계, 클럭 도메인별 분리, DVFS (Dynamic Voltage and Frequency Scaling) 적용
 **회피**: 측정 없는 클럭 상향, 도메인 간 비동기 직접 연결
 
 체크리스트:
@@ -80,8 +82,6 @@ categories = "studynote-computer-architecture"
 올바른 클럭 설계는 성능·검증 용이성·전력 제어를 동시에 확보한다. 한계는 클럭 트리 자체의 전력 소모와 글로벌 클럭의 스케일 한계다. 미래 방향은 블록별 클럭 분리와 적응형 주파수 제어다. **클럭은 "가장 빠른 신호"가 아니라 "회로 전체가 안전하게 따를 수 있는 신호"다.**
 
 ---
-
-> 📖 학습 보조
 
 ## 7. 발전 흐름도
 

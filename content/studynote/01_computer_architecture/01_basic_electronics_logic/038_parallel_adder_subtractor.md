@@ -1,5 +1,6 @@
 +++
 title = "38. 병렬 가감산기 (Parallel Adder-Subtractor)"
+weight = 38
 date = "2026-03-03"
 [extra]
 categories = "studynote-computer-architecture"
@@ -12,7 +13,9 @@ categories = "studynote-computer-architecture"
 
 ---
 
-> 📝 모범 답안
+📝 모범 답안
+
+---
 
 ## 1. 개요 및 필요성
 
@@ -41,6 +44,14 @@ categories = "studynote-computer-architecture"
 3. SUB가 1일 경우 XOR 게이트는 B 입력을 반전(1의 보수)시키고, 하위 Carry-In에 1이 입력된다.
 4. 전가산기 배열은 A와 반전된 B, 그리고 1을 더해 $A + (\sim B + 1)$ 즉 $A - B$ 연산을 완료한다.
 5. 연산 완료 시 최상위 비트의 Carry-In과 Carry-Out을 비교하여 오버플로 플래그(V)를 갱신한다.
+
+```text
+[입력 / 상태 / 제어 조건]
+            ↓
+     [핵심 처리 로직]
+            ↓
+    [출력 / 상태 갱신 / 효과]
+```
 
 ---
 
@@ -73,8 +84,6 @@ categories = "studynote-computer-architecture"
 병렬 가감산기는 하드웨어의 재사용성을 극대화하여 칩의 면적과 원가를 낮추면서도 핵심적인 산술 기능을 완벽히 지원한다. 단점으로는 모든 비트의 XOR 게이트가 추가되면서 순수 가산기보다 미세하게 데이터 경로가 길어진다는 점이 있다. 결과적으로 이 회로는 현대 ALU 설계의 가장 기초적이면서도 위대한 통합의 산물로 평가된다.
 
 ---
-
-> 📖 학습 보조
 
 ## 7. 발전 흐름도
 

@@ -13,7 +13,9 @@ categories = "studynote-computer-architecture"
 
 ---
 
-> 📝 모범 답안
+📝 모범 답안
+
+---
 
 ## 1. 개요 및 필요성
 
@@ -42,6 +44,14 @@ categories = "studynote-computer-architecture"
 4. 인에이블 신호 Low 하강: 회로가 잠금(Latch) 모드로 전환.
 5. 상태 유지: 하강 직전의 최종 데이터를 피드백 루프를 통해 유지.
 
+```text
+[입력 / 상태 / 제어 조건]
+            ↓
+     [핵심 처리 로직]
+            ↓
+    [출력 / 상태 갱신 / 효과]
+```
+
 ---
 
 ## 4. 비교 및 연결
@@ -58,7 +68,7 @@ categories = "studynote-computer-architecture"
 
 ## 5. 실무 적용 및 판단
 
-**채택**: 모바일 SoC의 저전력 캐시 메모리 셀, 비동기식 CDC(Clock Domain Crossing) 인터페이스 버퍼  
+**채택**: 모바일 SoC의 저전력 캐시 메모리 셀, 비동기식 CDC(Clock Domain Crossing) 인터페이스 버퍼
 **회피**: 파이프라인 레지스터, 여러 클럭 도메인이 섞인 범용 순차 로직
 
 체크리스트:
@@ -73,8 +83,6 @@ categories = "studynote-computer-architecture"
 레벨 트리거의 직관적인 투명성은 칩 면적의 극한 축소와 누설 전력 감소를 가능하게 한다. 그러나 상태 통제의 어려움이라는 한계 때문에 설계의 난이도가 대폭 상승한다는 전제조건이 따른다. 동기식 설계가 기본인 현재 실무에서 레벨 트리거는 가급적 피해야 할 대상이지만, 최적화가 필요한 특수 계층에서는 여전히 중요한 설계 옵션이다.
 
 ---
-
-> 📖 학습 보조
 
 ## 7. 발전 흐름도
 

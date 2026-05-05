@@ -13,7 +13,9 @@ categories = "studynote-computer-architecture"
 
 ---
 
-> 📝 모범 답안
+📝 모범 답안
+
+---
 
 ## 1. 개요 및 필요성
 
@@ -41,6 +43,14 @@ categories = "studynote-computer-architecture"
 3. EN 비활성화(Low): 게이트가 닫히고 외부 입력 차단.
 4. 피드백 루프 가동: 내부 NOR/NAND 게이트들이 서로의 출력을 교차 피드백하며 상태 유지.
 
+```text
+[입력 / 상태 / 제어 조건]
+            ↓
+     [핵심 처리 로직]
+            ↓
+    [출력 / 상태 갱신 / 효과]
+```
+
 ---
 
 ## 4. 비교 및 연결
@@ -57,7 +67,7 @@ categories = "studynote-computer-architecture"
 
 ## 5. 실무 적용 및 판단
 
-**채택**: 스위치 디바운싱(SR 래치), ASIC/SoC의 비임계 경로(Non-Critical Path)에서의 전력/면적 최적화  
+**채택**: 스위치 디바운싱(SR 래치), ASIC/SoC의 비임계 경로(Non-Critical Path)에서의 전력/면적 최적화
 **회피**: 다중 클럭이 교차하는 복잡한 데이터 경로, 합성기(Synthesizer)가 의도치 않게 생성한 경우
 
 체크리스트:
@@ -72,8 +82,6 @@ categories = "studynote-computer-architecture"
 래치를 적재적소에 활용하면 모바일 SoC 등에서 칩 면적을 18%, 동적 전력을 10% 이상 절감하는 효과를 얻을 수 있다. 그러나 엄격한 타이밍 분석이라는 전제조건이 만족되지 않으면 전체 시스템 오동작의 원흉이 된다. 래치는 제어하기 까다로운 원시 소자이므로, 특별한 최적화 목적이 없다면 플립플롭 사용을 우선시해야 한다.
 
 ---
-
-> 📖 학습 보조
 
 ## 7. 발전 흐름도
 

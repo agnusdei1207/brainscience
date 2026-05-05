@@ -1,5 +1,6 @@
 +++
 title = "39. 디코더 (Decoder)"
+weight = 39
 date = "2026-03-04"
 [extra]
 categories = "studynote-computer-architecture"
@@ -12,7 +13,9 @@ categories = "studynote-computer-architecture"
 
 ---
 
-> 📝 모범 답안
+📝 모범 답안
+
+---
 
 ## 1. 개요 및 필요성
 
@@ -41,6 +44,14 @@ categories = "studynote-computer-architecture"
 3. 입력된 이진수는 내부의 NOT 게이트 및 AND 게이트 배열을 통과하여 특정 논리곱(민터름) 조건을 평가받는다.
 4. $2^n$개의 AND 게이트 중 입력 비트 패턴과 정확히 일치하는 단 하나의 게이트만 1(또는 Active-Low 설계 시 0)을 출력한다.
 5. 활성화된 출력 신호는 메모리의 워드 라인(Word Line)을 켜거나 해당 명령어에 맞는 ALU 제어 신호를 구동한다.
+
+```text
+[입력 / 상태 / 제어 조건]
+            ↓
+     [핵심 처리 로직]
+            ↓
+    [출력 / 상태 갱신 / 효과]
+```
 
 ---
 
@@ -74,8 +85,6 @@ categories = "studynote-computer-architecture"
 디코더는 제한된 핀과 선로로 방대한 메모리와 하드웨어 제어 포인트를 정확하게 통제할 수 있게 해준다. 회로 규모가 커지면 디코더 자체의 게이트 딜레이가 성능 병목이 될 수 있다는 한계가 있어, 최신 메모리 구조에서는 행(Row)과 열(Column) 디코더로 분리하여 효율을 높인다. 결론적으로 디코더는 디지털 시스템에서 "무엇을 할 것인가"와 "어디로 갈 것인가"를 물리적으로 결정하는 핵심 나침반이다.
 
 ---
-
-> 📖 학습 보조
 
 ## 7. 발전 흐름도
 

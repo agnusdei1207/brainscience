@@ -15,6 +15,8 @@ categories = "studynote-computer-architecture"
 
 📝 모범 답안
 
+---
+
 ## 1. 개요 및 필요성
 
 전류 (Current)는 도체 내 전하가 전기장의 영향으로 이동하는 현상이다. 옴의 법칙에 따라 I = V/R로 표현되며, 전압이 구동력, 저항이 방해 요소, 전류가 그 결과물이다.

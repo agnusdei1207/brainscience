@@ -15,6 +15,8 @@ categories = "studynote-computer-architecture"
 
 📝 모범 답안
 
+---
+
 ## 1. 개요 및 필요성
 
 저항 (Resistance)은 도체 내에서 전하의 이동을 방해하는 물리적 성질이다. 옴의 법칙 R = V/I에 따라 전압과 전류의 비로 정의되며, 물질의 비저항 (Resistivity, ρ), 길이 (L), 단면적 (A)에 의해 R = ρL/A로 결정된다.
@@ -59,7 +61,7 @@ categories = "studynote-computer-architecture"
                    │          │
                    └──────────┘
                    τ = R × C
-                   
+
 긴 배선 리피터 삽입:
 [Driver] ─R/2─[Rep]─R/2─[Rep]─R/2─ [Receiver]
          지연: 3 × (R/2 × C/2) = 3RC/4 < RC

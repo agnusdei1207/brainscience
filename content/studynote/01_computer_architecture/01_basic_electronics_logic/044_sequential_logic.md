@@ -13,7 +13,9 @@ categories = "studynote-computer-architecture"
 
 ---
 
-> 📝 모범 답안
+📝 모범 답안
+
+---
 
 ## 1. 개요 및 필요성
 
@@ -42,6 +44,14 @@ categories = "studynote-computer-architecture"
 3. 조합 논리가 이 두 값을 연산하여 다음 상태(Next State)와 출력(Output) 결정
 4. 클럭의 특정 에지(Rising/Falling)가 발생하는 순간 기억 소자 활성화
 5. 계산된 다음 상태가 기억 소자에 저장되며 새로운 현재 상태로 갱신됨
+
+```text
+[입력 / 상태 / 제어 조건]
+            ↓
+     [핵심 처리 로직]
+            ↓
+    [출력 / 상태 갱신 / 효과]
+```
 
 ---
 
@@ -74,8 +84,6 @@ categories = "studynote-computer-architecture"
 순차 논리회로를 통해 디지털 시스템은 시간에 따른 절차적 연산과 메모리 기능을 획득하게 된다. 그러나 동기식 설계에서는 클럭 주파수 제약과 셋업/홀드 위반에 따른 메타스태빌리티(Metastability) 위험이 항상 따른다. **모든 디지털 컴퓨팅은 순차 논리가 만들어내는 정교한 '상태 전이(State Transition)'의 연속이다.**
 
 ---
-
-> 📖 학습 보조
 
 ## 7. 발전 흐름도
 

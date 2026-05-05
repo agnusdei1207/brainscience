@@ -1,5 +1,6 @@
 +++
 title = "36. 캐리 예측 가산기 (Carry Look-ahead Adder)"
+weight = 36
 date = "2026-03-03"
 [extra]
 categories = "studynote-computer-architecture"
@@ -12,7 +13,9 @@ categories = "studynote-computer-architecture"
 
 ---
 
-> 📝 모범 답안
+📝 모범 답안
+
+---
 
 ## 1. 개요 및 필요성
 
@@ -41,6 +44,14 @@ CLA (Carry Look-ahead Adder)는 리플 캐리 가산기 (Ripple Carry Adder)의 
 3. 예를 들어 $C_2 = G_1 + P_1 \cdot G_0 + P_1 \cdot P_0 \cdot C_0$와 같이 평탄화된 논리 게이트를 통과한다.
 4. 연산된 모든 캐리 $C_i$와 $P_i$를 더해 최종 합 $S_i$를 산출한다.
 5. 비트 수가 많아지면 게이트 입력 수 한계를 피하기 위해 4비트 단위로 묶어 계층적(Hierarchical) CLA 구조를 형성한다.
+
+```text
+[입력 / 상태 / 제어 조건]
+            ↓
+     [핵심 처리 로직]
+            ↓
+    [출력 / 상태 갱신 / 효과]
+```
 
 ---
 
@@ -74,8 +85,6 @@ CLA는 속도가 월등히 빠르지만 회로 면적이 넓고 전력 소모가
 CLA는 캐리 전파 병목을 해소하여 디지털 시스템의 산술 연산 성능을 비약적으로 향상시킨다. 그러나 비트 수가 커질수록 캐리 예측 로직의 복잡도가 폭발적으로 증가하는 한계가 있다. 이를 극복하기 위해 최신 아키텍처에서는 병렬 접두사 가산기(Parallel Prefix Adder) 등으로 발전했다. CLA는 속도를 위해 복잡성을 기꺼이 수용하는 아키텍처 설계의 기본 철학을 담고 있다.
 
 ---
-
-> 📖 학습 보조
 
 ## 7. 발전 흐름도
 

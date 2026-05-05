@@ -15,6 +15,8 @@ categories = "studynote-computer-architecture"
 
 📝 모범 답안
 
+---
+
 ## 1. 개요 및 필요성
 
 도체는 원자의 최외각 전자 (자유 전자)가 결정 격자에 구속되지 않고 자유롭게 이동할 수 있는 물질이다. 금속 (Cu, Al, Au, W 등)이 대표적이며, 비저항 (Resistivity, ρ)이 10⁻⁶ Ω·cm 이하로 매우 낮다.

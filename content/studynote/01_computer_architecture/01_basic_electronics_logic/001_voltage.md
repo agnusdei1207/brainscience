@@ -15,6 +15,8 @@ categories = "studynote-computer-architecture"
 
 📝 모범 답안
 
+---
+
 ## 1. 개요 및 필요성
 
 전압 (Voltage)은 단위 전하당 전기적 위치 에너지의 차이, 즉 전위차 (V = W/Q, 단위: Volt)로 정의된다. 전기회로에서 전류가 흐르기 위해서는 반드시 두 지점 간에 전위차가 존재해야 하며, 이 전위차가 전하를 이동시키는 기전력 (EMF, Electromotive Force)의 원천이다.
