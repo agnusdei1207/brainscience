@@ -26,7 +26,7 @@ categories = "studynote-computer-architecture"
 
 ## 2. 구성요소
 
-| 요소 | 역할 | 설계 포인트 |
+| 요소 | 역할 | 핵심 포인트 |
 |:---|:---|:---|
 | 발진기 (Oscillator) | 기준 주파수 생성 | 지터 (Jitter) 최소화 |
 | 분주기 (Divider) | 필요 주파수로 변환 | 성능/전력 균형 |
