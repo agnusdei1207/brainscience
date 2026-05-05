@@ -18,7 +18,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
---- 📝 모범 답안 ---
+> 📝 모범 답안
 
 ## 1. 개요 및 필요성
 
@@ -86,7 +86,7 @@ categories = "studynote-computer-architecture"
 
 ---
 
---- 📖 학습 보조 ---
+> 📖 학습 보조
 
 ## 7. 관련 개념 맵 및 발전 흐름도
 
