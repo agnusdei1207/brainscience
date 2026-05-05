@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>157. OOM (Out Of Memory) Killer 프로세스 종료 정책 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 22, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: OOM (Out Of Memory) Killer 프로세스 종료 정책은(는) 운영체제가 자원을 추상화하고 통제하는 과정에서 성능, 보호, 응답성을 동시에 조율하기 위해 필요한 핵심 개념이다.
+<strong>비유</strong>: OOM Killer는 "비상시 배를 가볍게 하기 위해 화물을 바다에 던지는 선장"이다. 배(시스템)가 침몰하는 것보다 일부 화물(프로세스)을 희생하는 것이 낫다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<h3 id="1-jeongyi">1. 정의</h3>
+<p>OOM Killer (Out-Of-Memory Killer)는 Linux 커널이 시스템의 물리 메모리 및 스왑 영역이 완전히 고갈되었을 때, 메모리를 확보하기 위해 특정 프로세스를 강제 종료(Kill)하는 커널 메커니즘이다. OOM 상태에서는 새로운 메모리 할당이 불가능하므로, 커널이 직접 개입하여 시스템 전체의 다운(Crash)을 방지한다.</p>
+<h3 id="2-oom-balsaeng-jogeon">2. OOM 발생 조건</h3>
+<pre><code>OOM 발생 과정
+
+[정상 상태]
+  물리 메모리: 8GB &#x2F; 16GB
+  Swap: 0GB &#x2F; 4GB
+      |
+      v  (메모리 사용 증가)
+[메모리 압박 상태]
+  물리 메모리: 15.5GB &#x2F; 16GB
+  Swap: 3.5GB &#x2F; 4GB
+  --&gt; kswapd 활성, 페이지 회수 시작
+      |
+      v  (회수 불충분)
+[OOM 경고 상태]
+  물리 메모리: 16GB &#x2F; 16GB (FULL)
+  Swap: 4GB &#x2F; 4GB (FULL)
+  --&gt; Direct Reclaim, Memory Compaction 시도
+      |
+      v  (모든 회수 실패)
+[OOM 발생!]
+  커널이 oom_badness()로 희생 프로세스 선정
+  --&gt; OOM Killer가 프로세스에 SIGKILL 전송
+  --&gt; 메모리 확보 후 시스템 계속 운영
+</code></pre>
+<h3 id="3-oom-killeryi-mogjeog">3. OOM Killer의 목적</h3>
+<table><thead><tr><th>목적</th><th>설명</th></tr></thead><tbody>
+<tr><td>시스템 생존 보장</td><td>전체 시스템 패닉(Panic) 방지</td></tr>
+<tr><td>서비스 연속성</td><td>필수 서비스 유지, 덜 중요한 프로세스 희생</td></tr>
+<tr><td>메모리 확보</td><td>종료된 프로세스의 메모리를 즉시 회수</td></tr>
+<tr><td>자동 복구</td><td>관리자 개입 없이 자동으로 메모리 복원</td></tr>
+</tbody></table>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="1-oom-badness-algorijeum">1. oom_badness() 알고리즘</h3>
+<p>커널은 <code>oom_badness()</code> 함수를 통해 각 프로세스의 OOM 점수(oom_score)를 계산한다. 점수가 높을수록 OOM Killer에 의해 먼저 종료될 확률이 높다.</p>
+<pre><code>oom_score 산정 모델
+
+oom_score = 프로세스 메모리 사용량 + 가중치 보정
+
++-----------------------------------------------+
+|  oom_score 구성 요소                           |
+|                                               |
+|  1. Resident Set Size (RSS)                   |
+|     --&gt; 물리 메모리 상주 크기                   |
+|                                               |
+|  2. 페이지 테이블 크기 (Page Table Size)        |
+|     --&gt; 페이지 테이블 엔트리 수                  |
+|                                               |
+|  3. Swap 사용량                                |
+|     --&gt; 스왑 영역 사용 크기                     |
+|                                               |
+|  4. oom_score_adj 보정값                       |
+|     --&gt; 관리자가 수동 조정 (-1000 ~ +1000)     |
+|                                               |
+|  최종 점수 = (RSS + Swap + PageTable) &#x2F; 총메모리 |
+|             + oom_score_adj 보정                |
++-----------------------------------------------+
+</code></pre>
+<h3 id="2-oom-score-beomwi">2. oom_score 범위</h3>
+<table><thead><tr><th>점수 범위</th><th>의미</th></tr></thead><tbody>
+<tr><td><strong>0</strong></td><td>메모리를 거의 사용하지 않음 (거의 종료되지 않음)</td></tr>
+<tr><td><strong>1~999</strong></td><td>보통 수준의 메모리 사용</td></tr>
+<tr><td><strong>1000</strong></td><td>매우 높은 점수 (OOM 발생 시 높은 우선순위로 종료)</td></tr>
+</tbody></table>
+<h3 id="3-jeomsu-hwagin-bangbeob">3. 점수 확인 방법</h3>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash">cat &#x2F;proc&#x2F;[pid]&#x2F;oom_score
+
+cat &#x2F;proc&#x2F;[pid]&#x2F;oom_score_adj
+
+ps -eo pid,comm,rss,oom_score | sort -k4 -rn | head -10
+</code></pre>
+<blockquote>
+<p><strong>비유</strong>: oom_score는 "위험도 순위표"다. 선장(OOM Killer)은 가장 높은 점수를 받은 화물을 먼저 바다에 던진다. 점수를 낮추면 안전하다.</p>
+</blockquote>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>요청 또는 이벤트 발생</strong>: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.</li>
+<li><strong>현재 상태 확인</strong>: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.</li>
+<li><strong>정책 적용 및 자원 배정</strong>: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.</li>
+<li><strong>결과 반영 및 후속 처리</strong>: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.</li>
+</ol>
+<h3 id="1-oom-score-adj">1. oom_score_adj</h3>
+<p><code>oom_score_adj</code>는 관리자가 프로세스의 OOM 우선순위를 수동으로 조정할 수 있는 인터페이스이다. <code>/proc/[pid]/oom_score_adj</code> 파일에 값을 기록하여 변경한다.</p>
+<pre><code>oom_score_adj 설정에 따른 동작
+
+[-1000]  ================================================
+         OOM 면제: 이 프로세스는 OOM Killer 대상에서 제외
+         단, 시스템 자체가 불가피한 상황이면 예외 존재
+
+[-999 ~ -1]  ==========================================
+              oom_score에서 해당 값만큼 차감
+              종료 확률 낮아짐
+
+[0]  ====================================================
+     기본값: oom_badness()로 계산된 점수 그대로 사용
+
+[+1 ~ +999]  ==========================================
+              oom_score에서 해당 값만큼 가산
+              종료 확률 높아짐
+
+[+1000]  ================================================
+          무조건 최우선 종료 대상
+          OOM 발생 시 가장 먼저 SIGKILL
+</code></pre>
+<h3 id="2-seoljeong-yesi">2. 설정 예시</h3>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash">echo -1000 &gt; &#x2F;proc&#x2F;1234&#x2F;oom_score_adj
+
+echo 500 &gt; &#x2F;proc&#x2F;1234&#x2F;oom_score_adj
+
+echo 0 &gt; &#x2F;proc&#x2F;1234&#x2F;oom_score_adj
+
+cat &#x2F;proc&#x2F;1234&#x2F;oom_score_adj
+</code></pre>
+<h3 id="3-systemdeseoyi-oomscoreadjust">3. systemd에서의 OOMScoreAdjust</h3>
+<pre data-lang="ini" class="language-ini "><code class="language-ini" data-lang="ini">[Service]
+OOMScoreAdjust=-500    # OOM 종료 우선순위 낮춤 (보호)
+ExecStart=&#x2F;usr&#x2F;bin&#x2F;myapp
+</code></pre>
+<table><thead><tr><th>OOMScoreAdjust</th><th>systemd 기본값</th></tr></thead><tbody>
+<tr><td>systemd 자체</td><td>-1000 (항상 보호)</td></tr>
+<tr><td>사용자 서비스</td><td>0</td></tr>
+<tr><td>커스텀 설정</td><td>-1000 ~ 1000</td></tr>
+</tbody></table>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="1-oom-score-adj-1">1. oom_score_adj</h3>
+<p><code>oom_score_adj</code>는 관리자가 프로세스의 OOM 우선순위를 수동으로 조정할 수 있는 인터페이스이다. <code>/proc/[pid]/oom_score_adj</code> 파일에 값을 기록하여 변경한다.</p>
+<pre><code>oom_score_adj 설정에 따른 동작
+
+[-1000]  ================================================
+         OOM 면제: 이 프로세스는 OOM Killer 대상에서 제외
+         단, 시스템 자체가 불가피한 상황이면 예외 존재
+
+[-999 ~ -1]  ==========================================
+              oom_score에서 해당 값만큼 차감
+              종료 확률 낮아짐
+
+[0]  ====================================================
+     기본값: oom_badness()로 계산된 점수 그대로 사용
+
+[+1 ~ +999]  ==========================================
+              oom_score에서 해당 값만큼 가산
+              종료 확률 높아짐
+
+[+1000]  ================================================
+          무조건 최우선 종료 대상
+          OOM 발생 시 가장 먼저 SIGKILL
+</code></pre>
+<h3 id="2-seoljeong-yesi-1">2. 설정 예시</h3>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash">echo -1000 &gt; &#x2F;proc&#x2F;1234&#x2F;oom_score_adj
+
+echo 500 &gt; &#x2F;proc&#x2F;1234&#x2F;oom_score_adj
+
+echo 0 &gt; &#x2F;proc&#x2F;1234&#x2F;oom_score_adj
+
+cat &#x2F;proc&#x2F;1234&#x2F;oom_score_adj
+</code></pre>
+<h3 id="3-systemdeseoyi-oomscoreadjust-1">3. systemd에서의 OOMScoreAdjust</h3>
+<pre data-lang="ini" class="language-ini "><code class="language-ini" data-lang="ini">[Service]
+OOMScoreAdjust=-500    # OOM 종료 우선순위 낮춤 (보호)
+ExecStart=&#x2F;usr&#x2F;bin&#x2F;myapp
+</code></pre>
+<table><thead><tr><th>OOMScoreAdjust</th><th>systemd 기본값</th></tr></thead><tbody>
+<tr><td>systemd 자체</td><td>-1000 (항상 보호)</td></tr>
+<tr><td>사용자 서비스</td><td>0</td></tr>
+<tr><td>커스텀 설정</td><td>-1000 ~ 1000</td></tr>
+</tbody></table>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="1-cgroup-v1-memory-oom-control">1. cgroup v1: memory.oom_control</h3>
+<p>cgroup (Control Group)을 사용하면 프로세스 그룹 단위로 메모리 사용량을 제한하고 OOM 동작을 제어할 수 있다.</p>
+<pre><code>cgroup 메모리 제어 구조
+
+[System Level]
+  oom_kill_disable=0 (default)
+  --&gt;
+  [cgroup: &#x2F;sys&#x2F;fs&#x2F;cgroup&#x2F;memory&#x2F;database]
+    memory.limit_in_bytes = 4G
+    memory.oom_control:
+      oom_kill_disable = 0  --&gt; OOM Killer 활성
+      under_oom = 0         --&gt; 현재 OOM 아님
+    |
+    +-- [PostgreSQL] (PID 1001)
+    +-- [Redis]      (PID 1002)
+
+  [cgroup: &#x2F;sys&#x2F;fs&#x2F;cgroup&#x2F;memory&#x2F;app]
+    memory.limit_in_bytes = 2G
+    memory.oom_control:
+      oom_kill_disable = 1  --&gt; OOM Killer 비활성
+    --&gt; 메모리 초과 시 해당 cgroup 내 프로세스 멈춤 (Sleep)
+    --&gt; 관리자가 수동 해제해야 함
+</code></pre>
+<h3 id="2-cgroup-v2-memory-events">2. cgroup v2: memory.events</h3>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash">cat &#x2F;sys&#x2F;fs&#x2F;cgroup&#x2F;memory&#x2F;mygroup&#x2F;memory.events
+
+echo &quot;2G&quot; &gt; &#x2F;sys&#x2F;fs&#x2F;cgroup&#x2F;memory&#x2F;mygroup&#x2F;memory.max
+
+echo 1 &gt; &#x2F;sys&#x2F;fs&#x2F;cgroup&#x2F;memory&#x2F;mygroup&#x2F;memory.swap.max
+</code></pre>
+<h3 id="3-oom-kill-disableyi-juyisahang">3. OOM Kill Disable의 주의사항</h3>
+<pre><code>oom_kill_disable=1 설정 시 동작
+
++--------------------------------------------------+
+| memory.limit_in_bytes = 2G                       |
+| oom_kill_disable = 1                             |
+|                                                  |
+| [메모리 초과 시]                                  |
+|   --&gt; OOM Killer가 프로세스를 죽이지 않음          |
+|   --&gt; 해당 cgroup 내 프로세스이 Sleep 상태로 대기   |
+|   --&gt; 새 메모리 할당은 즉시 실패 (ENOMEM)          |
+|   --&gt; 시스템 전체 OOM으로 확산 가능               |
+|                                                  |
+| [주의!]                                          |
+|   부적절한 사용은 시스템 전체 불안정 유발          |
+|   반드시 모니터링과 알림 필요                     |
++--------------------------------------------------+
+</code></pre>
+<blockquote>
+<p><strong>비유</strong>: cgroup은 "건물별 전기 사용량 제한기"다. 한 건물이 한계를 넘으면 그 건물만 차단(OOM Kill)하는데, oom_kill_disable=1은 "한계를 넘어도 차단하지 않겠다"는 의미로, 결국 전체 건물(시스템)이 정전될 수 있다.</p>
+</blockquote>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="1-oom-killer-rogeu">1. OOM Killer 로그</h3>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash">dmesg | grep -i &quot;oom\|out of memory\|killed process&quot;
+
+</code></pre>
+<h3 id="2-oom-bangji-jeonryag">2. OOM 방지 전략</h3>
+<pre><code>OOM 방지 다중 방어 레이어
+
+[Layer 1: 예방]
+  ├── 메모리 사용량 모니터링 (Prometheus, Grafana)
+  ├── Swap 영역 적절한 크기 설정
+  └── 과도한 메모리 할당 제한 (ulimit -v)
+
+[Layer 2: 제어]
+  ├── cgroup 메모리 제한 설정
+  ├── oom_score_adj로 중요 프로세스 보호
+  └── 메모리 과다 할당 해제 (vm.overcommit_memory)
+
+[Layer 3: 대응]
+  ├── OOM 이벤트 알림 설정
+  ├── 자동 재시작 메커니즘 (systemd restart)
+  └── 장애 후 포스트모템 분석
+</code></pre>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">기초 자원 관리 문제
+    ↓
+OOM (Out Of Memory) Killer 프로세스 종료 정책
+    ↓
+성능·격리·공정성 최적화
+    ↓
+가상화·관측·자동화 통합
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">OOM (Out Of Memory) Killer 프로세스 종료 정책</td><td style="text-align: left">운영체제 자원 관리와 보호 정책이 실제로 적용되는 핵심 주제</td></tr>
+<tr><td style="text-align: left">커널 (Kernel)</td><td style="text-align: left">정책 집행, 상태 전이, 시스템 호출 처리의 중심</td></tr>
+<tr><td style="text-align: left">프로세스/스레드</td><td style="text-align: left">CPU, 메모리, 동기화 자원과 직접 연결되는 실행 단위</td></tr>
+<tr><td style="text-align: left">메모리/I/O</td><td style="text-align: left">성능 병목과 보호 요구사항이 함께 드러나는 연계 영역</td></tr>
+<tr><td style="text-align: left">가상화/보안</td><td style="text-align: left">격리, 제어, 관측 확장 관점에서 해당 주제가 연결되는 상위 개념</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

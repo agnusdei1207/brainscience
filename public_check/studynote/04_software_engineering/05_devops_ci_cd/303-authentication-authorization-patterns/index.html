@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>303. 인증 (Authentication) 및 인가 (Authorization) 패턴 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 인증(Authentication, "너는 누구인가?")과 인가(Authorization, "네가 이것을 할 권한이 있는가?")는 시스템의 가장 앞단에서 불법적인 접근을 차단하는 보안 아키텍처의 절대적인 두 기둥이다.
+2. <strong>가치</strong>: 모놀리식 시스템에서는 세션(Session) 하나로 둘 다 처리했지만, 마이크로서비스(MSA)와 모바일/클라우드 환경에서는 이를 분산 처리하기 위한 <strong>JWT(JSON Web Token)</strong>, <strong>OAuth 2.0</strong>, <strong>RBAC/ABAC</strong> 같은 고도화된 아키텍처 패턴이 비즈니스의 스케일링을 결정짓는다.
+3. <strong>융합</strong>: 이 패턴들은 API 게이트웨이(API Gateway)와 결합하여 전사적인 보안 장벽(Token-based Authentication)을 세우고, 제로 트러스트(Zero Trust) 아키텍처를 구현하는 핵심 엔진으로 작동한다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h1 id="303-injeung-authentication-mic-inga-authorization-paeteon">303. 인증 (Authentication) 및 인가 (Authorization) 패턴</h1>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li>
+<p><strong>개념</strong>:</p>
+<ul>
+<li><strong>인증 (Authentication, AuthN)</strong>: 시스템에 접근하려는 주체(User, System)가 자신이 주장하는 그 사람이 맞는지(ID/PW, 생체정보 등으로) 확인하는 절차.</li>
+<li><strong>인가 (Authorization, AuthZ)</strong>: 인증된 주체가 특정 자원(게시판, 관리자 페이지)에 접근하거나 행동을 할 수 있는 '권한(Permission)'이 있는지 검증하는 절차.</li>
+</ul>
+</li>
+<li>
+<p><strong>필요성</strong>: 놀이공원에 비유해 보자. 매표소에서 신분증과 지문을 확인해 놀이공원 입장을 허락하는 것이 <strong>인증</strong>이다. 하지만 놀이공원에 들어왔다고 해서 누구나 롤러코스터 조종실에 들어갈 수는 없다. 일반 손님은 놀이기구 탑승만 가능하고, 직원은 조종실에 들어갈 수 있게 명찰 색깔로 통제하는 것이 <strong>인가</strong>다. 이 두 가지가 시스템적으로 명확히 분리되지 않으면 일반 손님이 롤러코스터를 조종하는 대참사가 터진다.</p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: **인증(AuthN)**은 여권을 보여주고 비행기 표를 받는 것이고, **인가(AuthZ)**는 비행기 안에서 이코노미석에 앉을지 일등석에 앉을지 표의 등급을 확인받는 것입니다. 일등석 표를 가졌어도(인가) 여권이 가짜면(인증) 애초에 공항에 못 들어가고, 여권이 진짜라도 일등석 표가 없으면 일등석에 못 앉습니다.</p>
+</li>
+<li>
+<p><strong>등장 배경 및 발전 과정</strong>:</p>
+<ol>
+<li><strong>상태 유지(Stateful) 세션 인증</strong>: 과거 웹에서는 서버가 메모리나 DB에 로그인한 사람의 명부(Session ID)를 기록해 두고 매번 대조했다. 동시접속자가 1천만 명이 되자 서버 메모리가 터졌다.</li>
+<li><strong>무상태(Stateless) 토큰 인증</strong>: 서버가 기억하는 대신, 위조 불가능한 도장이 찍힌 출입증(Token, JWT)을 사용자에게 줘버렸다. 사용자가 올 때마다 서버는 이 도장만 검사하면 되므로 서버 대수를 무한대로 늘릴 수 있게 되었다(MSA 최적화).</li>
+<li><strong>권한 위임 (OAuth 2.0)</strong>: 구글, 카카오 같은 거대 플랫폼이 생기며, 내 앱이 구글의 아이디와 패스워드를 묻지 않고도 구글의 '권한'만 빌려오는 OAuth 패턴이 인터넷의 표준으로 자리 잡았다.</li>
+</ol>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 옛날엔 식당 주인이 단골손님 100명의 얼굴과 외상 장부를 다 외웠지만(세션), 손님이 1만 명으로 늘어나자 도저히 외울 수 없어 손님들에게 지워지지 않는 도장이 찍힌 쿠폰(JWT 토큰)을 나눠주고 쿠폰만 보고 들여보내는 방식으로 바뀐 것입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="1-injeung-authentication-akitegceo-paeteon">1. 인증(Authentication) 아키텍처 패턴</h3>
+<p>현대 분산 시스템에서 인증을 처리하는 가장 강력한 3가지 패턴이다.</p>
+<h4 id="a-seobeo-ceug-sesyeon-giban-injeung-server-side-session">A. 서버 측 세션 기반 인증 (Server-side Session)</h4>
+<ul>
+<li><strong>원리</strong>: 클라이언트가 ID/PW를 보내면 서버가 인증 후 <code>Session ID</code>를 만들어 응답 쿠키(Cookie)에 내려준다. 서버는 이 ID를 메모리나 세션 클러스터(Redis)에 저장해 둔다.</li>
+<li><strong>장점</strong>: 사용자를 강제로 로그아웃(세션 만료) 시키거나 기기 제어를 하기 가장 완벽하고 보안성이 높다.</li>
+<li><strong>단점</strong>: 사용자가 스케일 아웃(Scale-out)된 여러 대의 서버를 오갈 때, 세션 정보(Redis)를 계속 뒤져야 하므로 오버헤드가 발생한다.</li>
+</ul>
+<h4 id="b-tokeun-giban-injeung-token-based-authentication-jwt">B. 토큰 기반 인증 (Token-based Authentication / JWT)</h4>
+<ul>
+<li><strong>원리</strong>: 클라이언트가 인증에 성공하면, 서버는 사용자의 정보와 유효기간을 암호학적으로 서명(HMAC, RSA)한 **JWT (JSON Web Token)**를 발급한다.</li>
+<li><strong>장점</strong>: 서버는 토큰을 저장하지 않는다(Stateless). CPU 연산만으로 서명의 유효성을 0.001초 만에 검증할 수 있어 MSA의 수백 개 서버 스케일 아웃에 가장 완벽한 패턴이다.</li>
+<li><strong>단점</strong>: 한 번 발급된 JWT 토큰은 유효기간이 끝날 때까지 서버가 강제로 취소(로그아웃)시킬 수 없다는 치명적인 약점(Token Revocation 문제)이 있다.</li>
+</ul>
+<h4 id="c-danil-rogeuin-sso-single-sign-on">C. 단일 로그인 (SSO, Single Sign-On)</h4>
+<ul>
+<li><strong>원리</strong>: 구글, 사내망 등 여러 개의 시스템이 있을 때, 사용자가 통합 인증 서버(IdP, Identity Provider)에서 딱 1번만 로그인하면 나머지 모든 패밀리 사이트는 인증을 패스하는 패턴. SAML이나 OAuth/OIDC(OpenID Connect) 프로토콜을 사용한다.</li>
+</ul>
+<hr />
+<h3 id="2-inga-authorization-akitegceo-paeteon">2. 인가(Authorization) 아키텍처 패턴</h3>
+<p>누가 접속했는지(인증) 알았다면, 이 사람이 어떤 API를 찌를 수 있는지(인가)를 판단하는 2대 아키텍처 뼈대다.</p>
+<h4 id="a-rbac-role-based-access-control-yeoghal-giban-jeobgeun-jeeo">A. RBAC (Role-Based Access Control, 역할 기반 접근 제어)</h4>
+<ul>
+<li><strong>개념</strong>: 사용자의 개별 신분이 아니라, **사용자가 가진 '역할(Role)'**에 권한을 매핑하는 가장 널리 쓰이는 표준 패턴.</li>
+<li><strong>구조</strong>: <code>User ─(N:M)─▶ Role ─(N:M)─▶ Permission</code>. (예: 홍길동은 '과장' Role을 가짐. '과장' Role은 '결재 승인' Permission을 가짐).</li>
+<li><strong>장점</strong>: 직원이 1만 명이어도 역할(사원, 대리, 과장)만 관리하면 되므로 관리가 매우 직관적이고 편하다.</li>
+<li><strong>단점</strong>: "서울 지점의 마케팅 부서 대리이면서 평일에만 접근 가능" 같은 세밀한 조건을 짤 수 없어 '역할 폭발(Role Explosion)' 현상이 생긴다.</li>
+</ul>
+<h4 id="b-abac-attribute-based-access-control-sogseong-giban-jeobgeun-jeeo">B. ABAC (Attribute-Based Access Control, 속성 기반 접근 제어)</h4>
+<ul>
+<li>
+<p><strong>개념</strong>: 역할뿐만 아니라 사용자, 자원, 환경의 **모든 '속성(Attribute)'을 조합한 동적인 규칙(Rule)**으로 권한을 판단하는 차세대 권한 패턴.</p>
+</li>
+<li>
+<p><strong>구조</strong>: <code>If (User.Dept == "HR" AND Resource.Type == "Salary" AND Time &lt; 18:00) Then Allow</code>.</p>
+</li>
+<li>
+<p><strong>장점</strong>: 1개의 완벽하고 세밀한 룰로 모든 예외 상황을 커버할 수 있어 제로 트러스트(Zero Trust) 아키텍처의 근간이 된다. 클라우드 인프라(AWS IAM Policy)가 ABAC 방식이다.</p>
+</li>
+<li>
+<p><strong>단점</strong>: 룰 엔진을 구축하고 매번 룰을 파싱(해석자 패턴)해야 하므로 성능(오버헤드)이 떨어지고 설계가 극도로 어렵다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: RBAC가 "임산부 배지(Role)를 단 사람만 핑크색 좌석에 앉으세요"라는 쉬운 직관적 룰이라면, ABAC는 "체온이 37도 이상이거나 짐이 10kg 이상이면서 버스가 붐비는 시간일 때만 이 자리에 앉으세요"라는 아주 깐깐하고 정확한 컴퓨터식 판단 룰입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h2>
+<h3 id="1-injeung-ingayi-gunggeugjeog-nanje-tokeun-talcwiwa-refresh-token">1. 인증/인가의 궁극적 난제: 토큰 탈취와 Refresh Token</h3>
+<p>MSA 환경에서 가장 많이 쓰는 JWT(토큰) 방식의 최대 약점은 "해커가 토큰을 훔쳐 가면 만료될 때까지 속수무책"이라는 점이다. 이를 해결하기 위해 아키텍트는 <strong>이중 토큰(Two-Token) 아키텍처</strong>를 설계한다.</p>
+<table><thead><tr><th style="text-align: left">토큰 종류</th><th style="text-align: left">수명 (Life Time)</th><th style="text-align: left">저장 위치 (프론트엔드)</th><th style="text-align: left">목적</th><th style="text-align: left">해커 탈취 시 리스크</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Access Token</strong></td><td style="text-align: left"><strong>매우 짧음 (15분 ~ 1시간)</strong></td><td style="text-align: left">메모리(JS 변수) 또는 Local Storage (탈취 취약)</td><td style="text-align: left">매번 API를 찌를 때 쓴다 (출입증).</td><td style="text-align: left">수명이 짧아 15분 뒤면 무용지물이 되어 리스크가 억제됨.</td></tr>
+<tr><td style="text-align: left"><strong>Refresh Token</strong></td><td style="text-align: left"><strong>긺 (1주 ~ 1달)</strong></td><td style="text-align: left"><strong>HttpOnly Secure Cookie</strong> (자바스크립트로 접근 절대 불가)</td><td style="text-align: left">Access Token이 만료되었을 때, 새 Access Token을 발급받기 위한 신분증.</td><td style="text-align: left">털리면 큰일 나지만 쿠키에 안전하게 갇혀있고, 도난 시 서버에서 DB를 지워 강제 무효화 가능.</td></tr>
+</tbody></table>
+<h3 id="gwamog-yunghab-gwanjeom">과목 융합 관점</h3>
+<ul>
+<li>
+<p><strong>네트워크 / 보안</strong>: OAuth 2.0 프레임워크는 인증이 아닌 '권한 위임(인가)' 프로토콜이다. 여기에 신원 확인(인증) 레이어를 덧붙인 것이 **OIDC (OpenID Connect)**다. 이 두 프로토콜이 맞물려 전 세계 인터넷의 소셜 로그인(SSO) 아키텍처를 지배하고 있다.</p>
+</li>
+<li>
+<p><strong>소프트웨어 공학 (SE)</strong>: API 게이트웨이(API Gateway)가 가장 중요하게 활약하는 곳이다. 클라이언트가 수백 개의 MSA 서버를 찌를 때마다 각 서버가 인증/인가를 하면 중복 코드가 엄청나다. 앞단의 API Gateway가 JWT를 뜯어서 유효성을 1차 검사(인증)하고, 찐 정보만 헤더에 달아 뒷단으로 넘겨주어(Cross-Cutting Concern 분리) 아키텍처를 깔끔하게 만든다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 수명이 15분짜리 1회용 방문증(Access Token)만 손에 들려주고, 기간이 1달짜리 진짜 신분증(Refresh Token)은 꺼낼 수 없는 비밀 주머니(HttpOnly 쿠키)에 꿰매버리는 완벽한 방어 설계입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="4-bigyo-mic-teureideuopeu">4. 비교 및 트레이드오프</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li>
+<p><strong>시나리오 — 토큰 강제 만료(Revocation) 불가로 인한 대참사</strong>: 해커가 쇼핑몰 관리자 PC에 악성코드를 심어 관리자의 JWT(Access Token, 수명 24시간)를 훔쳤다. 해커가 이 토큰으로 회원들의 등급을 마구 깎아내리자, 쇼핑몰 대표는 다급히 "저 해커를 즉시 강제 로그아웃 시키라!"고 소리쳤다. 그러나 개발자는 "서버에 세션 DB가 없고 JWT는 자기 혼자 24시간 살아 움직이므로, 24시간이 지날 때까지 해커를 막을 방법이 없습니다"라고 절망적인 대답을 내놓았다.</p>
+<ul>
+<li><strong>아키텍트의 해결책</strong>: MSA 환경에서 <strong>'JWT 토큰 블랙리스트(Blacklist)' 아키텍처</strong>를 설계하지 않은 직무 유기다. JWT는 Stateless(서버가 모름)가 장점이지만, 비상 상황을 위해 서버는 <strong>Redis</strong> 같은 초고속 인메모리 DB에 '로그아웃되거나 해킹당한 토큰 목록(블랙리스트)'을 올려두어야 한다. API Gateway는 토큰의 암호학적 서명이 맞더라도, 1초 만에 Redis를 찔러 이 토큰이 블랙리스트에 있는지 2차 검증하는 하이브리드(Stateful + Stateless) 방어막을 쳐야만 한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>시나리오 — IDOR(Insecure Direct Object Reference)에 의한 타인 정보 탈취</strong>: 사용자가 자신의 개인정보를 보는 API가 <code>GET /users/50</code> 이다. 백엔드 개발자는 스프링 시큐리티(Spring Security)로 사용자가 "로그인했는지(인증)"와 "User 권한이 있는지(인가)"를 완벽하게 필터로 짰다. 그런데 한 악의적 유저가 로그인 후 <code>GET /users/51</code> 이라고 숫자만 바꿔 호출하자, 남의 개인정보가 그대로 다 털렸다.</p>
+<ul>
+<li><strong>아키텍트의 해결책</strong>: **데이터 객체 수준의 인가(Data-Level Authorization)**를 빼먹은 끔찍한 안티패턴이다. RBAC 필터로 "User 권한이 있다"는 것은 통과시켰지만, 도메인 로직 안에서 **"현재 로그인한 토큰의 주인이, 조회하려는 51번 유저와 동일인인가?"**를 검사하는 비즈니스 방어 코드(ABAC의 일종)를 한 줄도 짜지 않은 것이다. 아키텍트는 메서드 보안(<code>@PreAuthorize("#id == authentication.principal.id")</code>)을 강제하여 이 취약점을 시스템적으로 회피해야 한다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="doib-cekeuriseuteu">도입 체크리스트</h3>
+<ul>
+<li><strong>기술적</strong>: 사내 시스템이 커지면서 여러 개의 서버가 돌아갈 때, 중앙화된 **IdP (Identity Provider, 예: Keycloak, Okta)**를 도입했는가? 각 팀이 각자 유저 테이블과 패스워드 로직을 짜게 놔두면 보안은 100% 박살 나고 관리 포인트만 기하급수적으로 늘어난다. (SSO의 필수 도입)</li>
+<li><strong>보안적</strong>: 비밀번호를 DB에 평문(Plain text)으로 저장하지 않는 건 기본 중의 기본이다. 단방향 해시(SHA-256)를 쓸 때, 반드시 계정마다 무작위 문자열인 **솔트(Salt)**를 추가하여 레인보우 테이블(Rainbow Table) 해킹을 무력화했는가? 더 나아가 Bcrypt, Argon2 등 계산에 고의로 시간을 끄는(Key Stretching) 최신 알고리즘을 썼는가?</li>
+</ul>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p><strong>JWT 암호화의 환상 (JWT는 암호화가 아니다)</strong>: JWT를 Base64로 인코딩한 것일 뿐, 그 안의 페이로드(Payload)는 누구나 디코딩해서 훤히 들여다볼 수 있다. 초보 개발자가 JWT 안에 고객의 '주민등록번호'나 '비밀번호'를 넣어서 프론트로 던지는 행위는 회사 문을 닫겠다는 최악의 범죄다. JWT에는 오직 식별용 아이디(<code>user_id</code>)나 만료 시간만 담아야 한다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: JWT 토큰은 투명한 비닐봉지 위에 '국가가 찍은 도장'이 있는 출입증입니다. 도장(서명)이 진짜인지 가짜인지는 속일 수 없지만, 비닐봉지 속 내용물(주민번호)은 누구나 밖에서 다 쳐다볼 수 있습니다. 중요한 물건은 절대 비닐봉지에 넣으면 안 됩니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-coejeoghwa-gibeob">5. 실무 적용 및 최적화 기법</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">세션(Session) + 모놀리식 인증 (AS-IS)</th><th style="text-align: left">JWT + Gateway 분산 인증 (TO-BE)</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">동시접속 10만 명 시 세션 DB 병목 및 뻗음</td><td style="text-align: left">세션 검사 생략, 서버 CPU 서명 검증만 수행</td><td style="text-align: left">서버 <strong>인증 처리 성능(TPS) 10배 이상 폭발적 증가</strong></td></tr>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">10개 앱마다 사용자가 10번 로그인해야 함</td><td style="text-align: left">SSO 연동으로 최초 1번 로그인</td><td style="text-align: left">사용자의 클릭 수 단축 및 <strong>서비스 체류 시간 20% 증가</strong></td></tr>
+<tr><td style="text-align: left"><strong>정성</strong></td><td style="text-align: left">모든 서버 로직 안에 권한 체크 코드가 도배됨</td><td style="text-align: left">Gateway와 AOP로 권한 검사 완벽히 캡슐화</td><td style="text-align: left">도메인 로직의 순수성 회복 및 완벽한 보안 통제권 확보</td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang">미래 전망</h3>
+<ul>
+<li><strong>비밀번호 없는 시대 (Passwordless Authentication)</strong>: 피싱(Phishing)과 해킹의 80%는 허술한 비밀번호에서 온다. 이제는 Apple의 FaceID, Windows Hello, 구글 패스키(Passkey) 등 생체 인식 장치가 만든 FIDO2 표준을 통해, 서버에 비밀번호를 아예 저장하지 않고 오직 스마트폰의 개인키로 서명(Signature)만 주고받는 완벽한 탈비밀번호 시대로 인터넷이 전면 개편되고 있다.</li>
+<li><strong>제로 트러스트와 연속 인증 (Continuous Authentication)</strong>: 한 번 로그인했다고 24시간 내내 믿어주는 시대는 끝났다. 사용자가 갑자기 평소 안 가던 심야 시간에 접속하거나 마우스 움직임이 봇(Bot) 같으면, 서버가 실시간으로 신뢰도 점수(Trust Score)를 깎고 재차 지문 인증(MFA)을 요구하는 능동적이고 편집증적인 ABAC 모델로 진화 중이다.</li>
+</ul>
+<h3 id="camgo-pyojun">참고 표준</h3>
+<ul>
+<li><strong>OAuth 2.0 (RFC 6749)</strong> &amp; <strong>OIDC (OpenID Connect)</strong>: 웹과 모바일 앱의 3자 간 권한 위임 및 신원 인증을 위한 절대적인 세계 표준 프레임워크.</li>
+<li><strong>JWT (RFC 7519)</strong>: JSON 형식의 클레임 정보를 안전하게 전달하기 위한 토큰 표준 규격.</li>
+</ul>
+<p>인증과 인가 패턴은 디지털 세계의 **"법과 질서(Law and Order)"**를 세우는 설계다. 기술사는 문을 꼭꼭 걸어 잠그기만 하는 폐쇄적인 설계에서 벗어나, 1억 명의 선량한 사용자는 문을 열지 않고도 하이패스(JWT/SSO)로 통과하게 만들면서도, 단 1명의 악당은 철옹성 같은 권한 분리(ABAC/RBAC)의 감옥에 가두어 시스템을 손끝 하나 건드리지 못하게 만드는 완벽한 출입국 관리소(Architecture)를 지어 올려야 한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 옛날 성벽 방어가 매번 신분증을 꺼내 대조하며 사람들을 몇 시간씩 줄 서게 만드는 것이었다면, 현대의 인증/인가 아키텍처는 보이지 않는 레이저 스캐너가 사람들의 얼굴과 걸음걸이를 0.1초 만에 분석하여 선량한 시민 앞의 문을 마법처럼 스르륵 열어주는 최첨단 공항 검색대와 같습니다.</li>
+</ul>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>API 게이트웨이 (API Gateway)</strong></td><td style="text-align: left">MSA 환경에서 모든 외부 트래픽을 빨아들여 JWT 토큰의 서명과 만료 여부(인증)를 1차로 싹 다 걸러주는 최고의 보안 호위무사.</td></tr>
+<tr><td style="text-align: left"><strong>OAuth 2.0 / OIDC</strong></td><td style="text-align: left">내 앱이 사용자 비밀번호를 직접 관리하는 위험을 피하고, 구글/페이스북의 인증 시스템을 합법적으로 빌려 쓰는 소셜 로그인 아키텍처.</td></tr>
+<tr><td style="text-align: left"><strong>제로 트러스트 (Zero Trust)</strong></td><td style="text-align: left">"아무도 믿지 말고 항상 검증하라." 망 내부에서 들어온 요청이라도 100% 깐깐하게 다시 인증/인가를 때려버리는 최신 보안 패러다임.</td></tr>
+<tr><td style="text-align: left"><strong>세션 클러스터링 (Session Clustering)</strong></td><td style="text-align: left">전통적인 세션 방식을 MSA에서 쓰기 위해, 여러 대의 서버가 하나의 Redis 메모리(Session DB)를 바라보게 만드는 확장 전술.</td></tr>
+<tr><td style="text-align: left"><strong>RBAC / ABAC</strong></td><td style="text-align: left">직급(역할)으로 권한을 자를 것인가(RBAC), 수만 가지 상황과 속성의 조합(ABAC)으로 권한을 섬세하게 자를 것인가를 결정하는 인가(AuthZ) 설계법.</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>영화관에 들어갈 때, 표 받는 아저씨가 "티켓 보여주세요~" 하고 확인하는 것이 바로 **'인증(네가 손님이 맞는지)'**이에요.</li>
+<li>영화관에 들어왔다고 끝이 아니에요. 내 티켓에 적힌 자리가 'VVIP석'인지 '일반석'인지 확인하고 딴 자리에 못 앉게 막는 것이 **'인가(어떤 권한을 가졌는지)'**랍니다.</li>
+<li>이렇게 나쁜 사람이 몰래 들어오는 걸 1차로 막고, 들어왔어도 엉뚱한 짓을 못하게 2차로 또 막는 튼튼한 자물쇠 시스템을 **'인증과 인가 패턴'**이라고 부른답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

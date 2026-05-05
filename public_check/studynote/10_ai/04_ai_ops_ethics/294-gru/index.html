@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>294. GRU (Gated Recurrent Unit) - 간소화 업데이트&#x2F;리셋 게이트 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ai
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: GRU (Gated Recurrent Unit, 게이트 순환 유닛)는 LSTM의 셀 상태(C_t)와 은닉 상태(h_t)를 하나로 통합하고, 3개의 게이트를 **업데이트 게이트(Update Gate)**와 <strong>리셋 게이트(Reset Gate)</strong> 2개로 간소화한 경량 순환 신경망이다.
+<strong>비유</strong>: LSTM이 부장-과장-사원 3단계 결재 구조라면, GRU는 "과장 한 명이 삭제·입력 결정을 동시에 처리하는" 스타트업 조직이다. 결재 단계가 줄어 빠르지만, 복잡한 판단을 혼자 내리는 부담은 있다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>2014년 조경현 등이 제안한 GRU는 "LSTM의 성능을 유지하면서 계산 복잡도를 줄일 수 없을까?"라는 질문에서 출발했다. LSTM이 셀 상태(C_t)와 은닉 상태(h_t) 두 가지 메모리를 유지하고 4개의 가중치 행렬을 학습하는 반면, GRU는 이 두 메모리를 h_t 하나로 통합하고 3개 행렬을 학습한다.</p>
+<p>특히 **업데이트 게이트(Update Gate)**는 LSTM의 삭제 게이트와 입력 게이트의 역할을 하나로 묶어, "과거 유지 비율"과 "새 정보 비율"이 자동으로 보완 관계(합이 1)가 되도록 설계되었다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│           GRU 셀 내부 구조 (단일 시점 t)                         │
+├──────────────────────────────────────────────────────────────┤
+│  입력: x_t, h_(t-1)                                          │
+│                                                              │
+│  ① 업데이트 게이트 (Update Gate):                              │
+│     z_t = σ(W_z · [h_(t-1), x_t])    ← 0~1 출력              │
+│     역할: z_t → 과거 유지 비율, (1-z_t) → 새 정보 비율           │
+│     &quot;LSTM의 Forget + Input Gate 역할을 하나로 합산&quot;             │
+│                                                              │
+│  ② 리셋 게이트 (Reset Gate):                                   │
+│     r_t = σ(W_r · [h_(t-1), x_t])    ← 0~1 출력              │
+│     역할: r_t=0이면 과거 h_(t-1) 완전 무시 → 새로 시작           │
+│           r_t=1이면 과거 h_(t-1) 완전 반영                     │
+│                                                              │
+│  ③ 후보 은닉 상태 (Candidate Hidden State):                    │
+│     h̃_t = tanh(W · [r_t × h_(t-1), x_t])                   │
+│                                                              │
+│  ④ 최종 은닉 상태 업데이트:                                      │
+│     h_t = (1-z_t) × h̃_t + z_t × h_(t-1)                    │
+│     ┌──────────────────────────────────────────┐            │
+│     │ z_t=1: h_t ≈ h_(t-1) (과거 완전 유지)     │            │
+│     │ z_t=0: h_t ≈ h̃_t  (완전히 새 정보로 교체) │            │
+│     └──────────────────────────────────────────┘            │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">LSTM</th><th style="text-align: left">GRU</th></tr></thead><tbody>
+<tr><td style="text-align: left">메모리</td><td style="text-align: left">C_t (장기) + h_t (단기)</td><td style="text-align: left">h_t 하나로 통합</td></tr>
+<tr><td style="text-align: left">게이트 수</td><td style="text-align: left">3 (Forget/Input/Output)</td><td style="text-align: left">2 (Update/Reset)</td></tr>
+<tr><td style="text-align: left">학습 파라미터</td><td style="text-align: left">4W 행렬</td><td style="text-align: left">3W 행렬</td></tr>
+<tr><td style="text-align: left">속도</td><td style="text-align: left">느림</td><td style="text-align: left">빠름 (~25%↑)</td></tr>
+<tr><td style="text-align: left">긴 시퀀스</td><td style="text-align: left">더 강함</td><td style="text-align: left">비슷하거나 약간 열세</td></tr>
+</tbody></table>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: GRU (Gated Recurrent Unit)의 성능과 타당성은 입력 표현, 핵심 구조 또는 연산, 학습·추론 절차, 평가 기준, 자원 제약이 서로 정합될 때 확보된다.</p>
+<p>동작 순서:</p>
+<ul>
+<li><strong>GRU vs LSTM 성능</strong>: 짧은 시퀀스(&lt;100 토큰)에서는 GRU가 더 빠르고 동등한 성능. 긴 시퀀스(&gt;500 토큰)에서는 LSTM이 더 안정적. 대용량 GPU 서버에서는 성능 차가 크지 않아 LSTM 사용, 온디바이스에서는 GRU 선호.</li>
+<li><strong>리셋 게이트의 직관</strong>: 리셋 게이트가 0일 때 과거 은닉 상태를 무시하므로, 새 문장 시작 시점에서 새로 시작(리셋)하는 효과를 낸다. LSTM의 삭제 게이트가 셀 상태를 지우는 것과 유사한 역할이다.</li>
+</ul>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<p><strong>선택 기준</strong>:</p>
+<ul>
+<li>연산 자원 충분 + 긴 시퀀스 → LSTM</li>
+<li>온디바이스 / 모바일 / 임베디드 / 짧은 시퀀스 → GRU</li>
+<li>NLP 대규모 응용 → Transformer (LSTM/GRU 모두 대체)</li>
+</ul>
+<p><strong>실전 코드 포인트</strong>: PyTorch에서 <code>nn.GRU</code>는 <code>nn.LSTM</code>과 동일한 API를 제공하지만 <code>hidden_state</code> 튜플 대신 단일 텐서를 반환한다는 점이 다르다. 이 차이를 기억하면 코드 마이그레이션에서 버그를 예방할 수 있다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p>GRU (Gated Recurrent Unit)는 LSTM의 복잡성을 덜어내어 경량화와 성능 간의 황금 균형점을 찾은 실용적 신경망이다. 특히 IoT 센서, 스마트폰 앱, 엣지 컴퓨팅 환경에서 실시간 시계열 데이터를 처리하는 핵심 구성 요소로 활약하고 있다. Transformer가 대규모 NLP를 지배하는 시대에도, GRU는 자원 제약 환경의 최선 선택으로 확고한 입지를 유지한다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>GRU (Gated Recurrent Unit)는 LSTM의 복잡성을 덜어내어 경량화와 성능 간의 황금 균형점을 찾은 실용적 신경망이다. 특히 IoT 센서, 스마트폰 앱, 엣지 컴퓨팅 환경에서 실시간 시계열 데이터를 처리하는 핵심 구성 요소로 활약하고 있다. Transformer가 대규모 NLP를 지배하는 시대에도, GRU는 자원 제약 환경의 최선 선택으로 확고한 입지를 유지한다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">문제 정의 · 입력 정리
+    ↓
+핵심 구조 · 연산 설계
+    ↓
+학습 · 추론 · 검증
+    ↓
+실무 적용 · 최적화
+    ↓
+운영 · 거버넌스 · 확장
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연관 키워드</th><th style="text-align: left">관계</th></tr></thead><tbody>
+<tr><td style="text-align: left">업데이트 게이트 (Update Gate)</td><td style="text-align: left">z_t, 과거+새 정보 비율</td><td style="text-align: left">LSTM의 Forget+Input 게이트 통합</td></tr>
+<tr><td style="text-align: left">리셋 게이트 (Reset Gate)</td><td style="text-align: left">r_t, 과거 h 제어</td><td style="text-align: left">이전 은닉 상태 반영 여부 결정</td></tr>
+<tr><td style="text-align: left">LSTM</td><td style="text-align: left">3 게이트, C_t</td><td style="text-align: left">GRU의 원형이자 비교 기준</td></tr>
+<tr><td style="text-align: left">온디바이스 AI</td><td style="text-align: left">경량화, 엣지 추론</td><td style="text-align: left">GRU의 주요 배치 환경</td></tr>
+<tr><td style="text-align: left">Transformer</td><td style="text-align: left">어텐션, 병렬</td><td style="text-align: left">GRU를 포함한 모든 RNN 계열의 후계자</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

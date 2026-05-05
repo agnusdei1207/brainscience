@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>405. 최적화 휴리스틱 타부 서치 (Tabu Search, 금기 탐색) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 18, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ict convergence
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 타부 서치(Tabu Search)는 지역 최적해(Local Minima)에 갇히는 것을 막기 위해, 한 번 가봤거나 나쁜 결과를 냈던 길(경로)을 '금기 목록(Tabu List)'에 적어두고 일정 기간 동안은 절대 그 길로 다시 돌아가지 못하게 강제하는 인간의 '단기 기억' 모방 알고리즘이다.
+<strong>비유</strong>: 쇼핑 중독자가 맨날 똑같은 백화점에 가서 과소비하는 걸 막으려고, 방금 방문한 백화점 3곳을 블랙리스트(Tabu List)에 올려서 출입을 금지시켜 억지로라도 새로운 시장(새로운 탐색 공간)을 구경하게 만드는 충동 통제 시스템이다.</p>
+</blockquote>
+<hr />
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>로봇을 미로에 풀었다. 로봇은 눈앞에 보이는 길 중 '제일 넓은 길'로만 가도록 프로그래밍되어 있다(Hill Climbing, 탐욕적 탐색). 그런데 막다른 골목(Local Minima)에 도착했다. 로봇은 제일 넓은 길인 '방금 자신이 들어왔던 길'로 다시 나갔다가, "어? 저쪽이 제일 넓네?" 하고 다시 막다른 골목으로 들어온다. 영원한 무한 루프다.</p>
+<p>이 바보 같은 로봇에게 인간의 지능을 하나 추가해 보자. <strong>"수첩을 하나 주고, 방금 지나온 3개의 길은 수첩에 적어놔. 그리고 수첩에 적힌 길은 아무리 넓어 보여도 3턴 동안은 절대 가지 마!"</strong>
+이것이 바로 막다른 골목에서 로봇이 억지로 좁고 험한 샛길(오르막길)로 빠져나가게 만들어, 결국 미로의 진짜 출구(Global Minima)를 찾게 해주는 **타부 서치(Tabu Search)**의 본질이다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<p>타부 서치는 기본적으로 '이웃 탐색(Local Search)'을 하면서, 기억(Memory)이라는 자료구조를 들고 다니는 아키텍처다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────┐
+│             [ 타부 서치(Tabu Search)의 3대 핵심 컴포넌트 ]      │
+├────────────────────────────────────────────────────────┤
+│ 1. 이웃 탐색 (Neighborhood Search)                     │
+│    - 현재 위치에서 한 걸음 갈 수 있는 모든 후보(이웃)를 평가    │
+│    - 원칙: 내 주변에서 제일 좋은(점수 높은) 곳으로 일단 간다!   │
+│                                                        │
+│ 2. 금기 목록 (Tabu List) : 단기 기억 (Short-term Memory) │
+│    - 방금 선택해서 이동한 길(행동)은 Tabu List에 올림        │
+│    - 큐(Queue) 구조: 최근 5개의 행동만 기억함 (꽉 차면 옛날 건 지움)│
+│    - 다음 탐색 때, 1등으로 좋은 길이라도 Tabu List에 있으면 무시함!│
+│                                                        │
+│ 3. 열망 조건 (Aspiration Criterion) : 예외 처리 룰        │
+│    - &quot;규칙은 깨라고 있는 것!&quot;                               │
+│    - Tabu List에 있는 금지된 길이라도, 그 길이 역대급 신기록     │
+│      (Global Best)을 갱신하는 어마어마한 정답이라면?          │
+│    - 금기를 깨고(예외 허용) 그 길로 가는 것을 허락함!           │
+└────────────────────────────────────────────────────────┘
+</code></pre>
+<ol>
+<li><strong>Tabu Tenure (금기 기간)</strong>: 목록에 한 번 올라간 행동이 며칠 동안이나 금지당할지를 결정하는 변수다. Tenure가 10이면 최근 10번의 행동을 금지하는 것이다. (현업에서는 7~15 정도의 텐션을 주로 쓴다.)</li>
+<li><strong>장기 기억 (Long-term Memory)</strong>: 단기 기억인 Tabu List 외에도 빈도 기반 기억을 쓸 수 있다. "지난 1,000턴 동안 A구역만 너무 많이 뒤졌네? 이제 A구역은 그만 가고 한 번도 안 가본 C구역으로 가보자!"라며 탐색의 다양성(Diversification)을 강제하는 고급 기법이다.</li>
+</ol>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: NP-Hard 문제를 부수기 위한 3대 메타 휴리스틱 알고리즘의 'Local Minima(웅덩이) 탈출 전략'을 비교해 본다.</p>
+<p>동작 순서:</p>
+<p>NP-Hard 문제를 부수기 위한 3대 메타 휴리스틱 알고리즘의 'Local Minima(웅덩이) 탈출 전략'을 비교해 본다.</p>
+<table><thead><tr><th style="text-align: center">비교 항목</th><th style="text-align: left">유전 알고리즘 (GA)</th><th style="text-align: left">시뮬레이티드 어닐링 (SA)</th><th style="text-align: left">타부 서치 (Tabu Search)</th></tr></thead><tbody>
+<tr><td style="text-align: center"><strong>탈출 전략</strong></td><td style="text-align: left">1% 확률의 <strong>돌연변이(Mutation)</strong></td><td style="text-align: left">고온일 때 <strong>더 나쁜 곳으로 점프 허용</strong></td><td style="text-align: left">나쁜 길이라도 좋으니 <strong>과거의 길은 피해서 전진</strong></td></tr>
+<tr><td style="text-align: center"><strong>기억력 (Memory)</strong></td><td style="text-align: left">유전자에 흔적이 남지만 의도적 기억은 아님</td><td style="text-align: left"><strong>없음</strong> (방금 전 상태 1개만 앎)</td><td style="text-align: left"><strong>있음 (최근 수십 턴의 과거 행동을 완벽히 기억)</strong></td></tr>
+<tr><td style="text-align: center"><strong>탐색 방식</strong></td><td style="text-align: left">수천 개의 헬기를 띄우는 전역 탐색</td><td style="text-align: left">1명이 미친 듯이 튕기며 탐색</td><td style="text-align: left"><strong>1명이 수첩에 오답 노트를 쓰며 꼼꼼히 탐색</strong></td></tr>
+<tr><td style="text-align: center"><strong>최적 활용처</strong></td><td style="text-align: left">설계, 병렬 최적화</td><td style="text-align: left">칩셋 레이아웃 설계</td><td style="text-align: left"><strong>외판원 순회(TSP), 차량 경로 배차(VRP)</strong></td></tr>
+</tbody></table>
+<p>SA(모의 담금질)는 주사위를 던지는 완벽한 확률(Random) 게임이다. 반면 타부 서치는 무작위성이 아니라 "기억된 리스트를 피한다"는 지독하게 논리적이고 결정론적인(Deterministic) 탐색을 수행한다. 그래서 휴리스틱 중에서도 가장 이지적이고 꼼꼼한 알고리즘으로 평가받는다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<p><strong>실무 적용 시나리오:</strong>
+쿠팡 로켓배송의 트럭 배차 시스템(VRP, Vehicle Routing Problem)이다. 트럭 100대가 서울 시내 1만 개의 아파트를 돌아야 한다. 데이터 과학자는 경로의 거리를 줄이기 위해 파이썬으로 2-opt(두 경로를 엑스자로 꼬아보는 것) 이웃 탐색에 <strong>Tabu Search</strong>를 결합한다. "A아파트 다음 B아파트를 가는 경로"를 50턴 동안 금지(Tabu List)시켜버리자, 알고리즘은 억지로 C아파트를 거쳐 가는 새로운 우회로를 시도하게 되고, 결국 기존 배송망보다 거리가 10km나 단축된 새로운 글로벌 최적해를 찾아낸다.</p>
+<p><strong>기술사 판단 포인트 (Trade-off):</strong>
+타부 서치 아키텍처 설계 시 기술사는 <strong>'금기 대상(What to Tabu)'의 메모리 비용</strong>을 완벽하게 계산해야 한다.</p>
+<ol>
+<li>"A $\rightarrow$ B $\rightarrow$ C 경로 전체"를 금기 목록에 넣으면 메모리가 터지고 목록이 너무 커져서 탐색이 막힌다.</li>
+<li>따라서 기술사는 경로 자체가 아니라, **"방금 맞바꾼 행위(예: A와 B의 순서를 스왑함)"**라는 아주 작은 속성(Attribute)만을 금기 목록에 저장해야 한다.</li>
+<li>속성만 금지하면 메모리는 몇 바이트밖에 먹지 않으면서도, 알고리즘이 똑같은 짓을 반복하는(Cycling) 것을 완벽하게 막아내는 가성비 최고의 메타 휴리스틱 파이프라인이 완성된다.</li>
+</ol>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p>타부 서치(Tabu Search)는 기계 학습에 '기억(Memory)'이라는 인간의 인지적 특성을 부여한 최적화 알고리즘의 진주다. 무작위 주사위 던지기(SA, GA)에 의존하던 메타 휴리스틱 세계에, 논리적이고 체계적인 인공지능의 시각을 던져주었다.</p>
+<p>결론적으로 타부 서치는 딥러닝에 가려져 대중적인 인지도는 낮지만, 제조업의 공정 스케줄링(Job-shop Scheduling)이나 통신망 라우팅처럼 '수조 개의 제약 조건이 얽혀 수학으로는 절대 풀 수 없는' 현실 세계의 B2B 솔루션 뒤에서 가장 조용히, 그리고 가장 강력하게 세상을 돌리고 있는 진짜 돈을 버는 코어 엔진이다. 기술사는 아무리 딥러닝이 화려해도, 순서(Permutation)를 섞어서 최적화해야 하는 문제 앞에서는 주저 없이 이 '수첩을 든 탐험가'를 소환해야 한다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>타부 서치(Tabu Search)는 기계 학습에 '기억(Memory)'이라는 인간의 인지적 특성을 부여한 최적화 알고리즘의 진주다. 무작위 주사위 던지기(SA, GA)에 의존하던 메타 휴리스틱 세계에, 논리적이고 체계적인 인공지능의 시각을 던져주었다.</p>
+<p>결론적으로 타부 서치는 딥러닝에 가려져 대중적인 인지도는 낮지만, 제조업의 공정 스케줄링(Job-shop Scheduling)이나 통신망 라우팅처럼 '수조 개의 제약 조건이 얽혀 수학으로는 절대 풀 수 없는' 현실 세계의 B2B 솔루션 뒤에서 가장 조용히, 그리고 가장 강력하게 세상을 돌리고 있는 진짜 돈을 버는 코어 엔진이다. 기술사는 아무리 딥러닝이 화려해도, 순서(Permutation)를 섞어서 최적화해야 하는 문제 앞에서는 주저 없이 이 '수첩을 든 탐험가'를 소환해야 한다.</p>
+<p>결론적으로 최적화 휴리스틱 타부 서치 (Tabu Search, 금기 탐색)는 기술 자체만으로 성과가 보장되지 않으며, 적용 맥락, 운영 역량, 데이터 품질, 보안·거버넌스 조건이 함께 충족될 때 비로소 실질적 가치가 구현된다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">데이터 수집과 정형 보고 중심 분석
+    ↓
+통계·실험·전처리 방법론 정립
+    ↓
+최적화 휴리스틱 타부 서치 (Tabu Search, 금기 탐색) 기반 패턴 발견·예측 체계 확립
+    ↓
+자동화된 모델링·시각화·의사결정 지원 확대
+    ↓
+MLOps·데이터 거버넌스와 결합한 운영 단계로 고도화
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">상위 개념</td><td style="text-align: left">메타 휴리스틱 (Meta-Heuristic), 조합 최적화 (Combinatorial Optimization)</td></tr>
+<tr><td style="text-align: left">하위 개념</td><td style="text-align: left">단기 기억 (Tabu List), 열망 조건 (Aspiration Criterion), 이웃 탐색 (Local Search)</td></tr>
+<tr><td style="text-align: left">연결 개념</td><td style="text-align: left">시뮬레이티드 어닐링 (SA), 유전 알고리즘 (GA), 외판원 순회 문제 (TSP)</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

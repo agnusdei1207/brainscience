@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>646. 리눅스 시스템 콜 테이블 (sys_call_table) 확장 및 보안 훅 추가 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 29, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: <code>sys_call_table</code>은 리눅스 커널에서 유저 스페이스의 요청 번호(예: 1번은 write, 2번은 open)를 실제 커널 내부의 함수 주소로 매핑해 주는 **시스템 콜 라우팅의 핵심 배열(Array)**이다.
+<strong>비유</strong>: 리눅스 시스템 콜 테이블 (sys_call_table) 확장 및 보안 훅 추가은(는) 복잡한 교통을 한 번에 통제해 전체 흐름을 맞추는 신호 체계와 같다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li>
+<p><strong>개념</strong>:</p>
+<ul>
+<li><strong>시스템 콜(System Call)</strong>: 유저 모드의 애플리케이션(Ring 3)이 커널(Ring 0)의 자원(파일, 네트워크 등)을 사용하기 위해 커널에 진입하는 유일한 합법적 통로.</li>
+<li><strong>sys_call_table</strong>: 시스템 콜 번호를 인덱스로 삼아, 해당 기능을 처리하는 커널 내 함수 포인터(메모리 주소)들을 1차원으로 저장해 둔 배열 자료구조.</li>
+</ul>
+</li>
+<li>
+<p><strong>필요성 (OS의 눈과 귀를 조작하려는 욕망)</strong>:</p>
+<ul>
+<li>
+<p>보안 엔지니어는 "특정 파일(<code>/etc/passwd</code>)을 읽는 프로세스를 모조리 기록하고 싶다"는 요구사항을 갖는다.</p>
+</li>
+<li>
+<p>하지만 커널 소스 코드를 직접 수정하고 재컴파일(Rebuild)하는 것은 상용 서버에서 불가능하다.</p>
+</li>
+<li>
+<p><strong>해결책 (LKM을 이용한 런타임 조작)</strong>: 커널 모듈(<code>.ko</code>)을 동적으로 올려서, 커널 메모리에 떠 있는 <code>sys_call_table</code>을 찾아낸 뒤, <code>sys_read</code> 시스템 콜이 가리키는 화살표를 내가 만든 <code>my_fake_read</code> 함수로 틀어버리는 <strong>후킹(Hooking)</strong> 기법이 고안되었다.</p>
+</li>
+<li>
+<p><strong>시스템 콜 테이블</strong>: 구청의 '민원 접수처 번호판'. 1번 창구는 혼인신고(<code>sys_open</code>), 2번 창구는 사망신고(<code>sys_kill</code>). 사용자는 1번 표를 뽑고 1번 창구 공무원에게 간다.</p>
+</li>
+<li>
+<p><strong>시스템 콜 테이블 후킹</strong>: 내가 밤에 몰래 구청에 잠입해서 1번 창구의 팻말을 내 자리(가짜 창구)로 옮겨놓는다. 다음 날 사람들이 혼인신고를 하러 1번 창구에 오면, 내가 서류(데이터)를 다 읽어본(감시) 뒤에 몰래 원래 1번 공무원에게 넘겨준다. 시민도 공무원도 중간에 내가 꼈다는 사실을 전혀 모른다.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>발전 과정</strong>:</p>
+<ol>
+<li><strong>고전적 후킹</strong>: <code>/dev/kmem</code>이나 심벌 익스포트(<code>EXPORT_SYMBOL</code>)를 통해 테이블 주소를 쉽게 찾아 덮어썼다. 루트킷의 전성시대.</li>
+<li><strong>커널 방어막 형성</strong>: 커널이 <code>sys_call_table</code> 주소를 숨기고(KASLR), 해당 메모리 영역을 읽기 전용(Read-only)으로 만들어 덮어쓰기를 원천 차단함.</li>
+<li><strong>합법적 훅 프레임워크 등장</strong>: 테이블을 무식하게 조작하는 대신, LSM, Kprobes, eBPF 등 커널이 공식적으로 제공하는 '안전한 감시소'를 사용하는 방식으로 진화함.</li>
+</ol>
+</li>
+</ul>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="siseutem-kol-teibeul-sys-call-table-yi-memori-gujo">시스템 콜 테이블 (sys_call_table)의 메모리 구조</h3>
+<p>x86_64 아키텍처에서 시스템 콜 테이블은 단순히 함수 포인터들이 8바이트씩 일렬로 나열된 배열이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  [메모리 주소]         [함수 포인터 (sys_call_table)]
+  0xffffffff81a00000 ──▶ sys_read  (번호 0)
+  0xffffffff81a00008 ──▶ sys_write (번호 1)
+  0xffffffff81a00010 ──▶ sys_open  (번호 2)
+  0xffffffff81a00018 ──▶ sys_close (번호 3)
+  ...
+</code></pre>
+<h3 id="siseutem-kol-huking-hooking-3dangye-weonri">시스템 콜 후킹 (Hooking) 3단계 원리</h3>
+<p>커널 모듈을 이용해 <code>sys_open</code>을 <code>my_sys_open</code>으로 후킹하는 과정이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌───────────────────────────────────────────────────────────────────┐
+  │                 시스템 콜 테이블 조작 (Hooking) 아키텍처                 │
+  ├───────────────────────────────────────────────────────────────────┤
+  │                                                                   │
+  │  [1. 테이블 주소 탐색 (Hunting)]                                       │
+  │   - 커널 2.6 이후 sys_call_table은 외부 모듈에 노출(Export)되지 않음.     │
+  │   - 해커(또는 백신)는 메모리를 직접 브루트포싱 스캔하거나, kallsyms를 뒤져서│
+  │     테이블의 물리적 주소를 알아낸다.                                    │
+  │                                                                   │
+  │  [2. 메모리 쓰기 보호 해제 (Bypassing Protection)]                       │
+  │   - sys_call_table이 있는 메모리 페이지는 Read-Only(읽기 전용)이다.     │
+  │   - CPU의 CR0 레지스터에서 &#x27;WP (Write Protect)&#x27; 비트를 강제로 0으로 끔.  │
+  │     ( asm volatile(&quot;cli; mov %0, %%cr0&quot;::&quot;r&quot;(cr0)); )             │
+  │                                                                   │
+  │  [3. 주소 바꿔치기 (Pointer Replacement)]                             │
+  │   - original_sys_open = sys_call_table[__NR_open]; (원본 백업)      │
+  │   - sys_call_table[__NR_open] = my_sys_open;       (가짜 함수로 교체)│
+  │                                                                   │
+  │   [결과: 애플리케이션의 open() 호출 흐름 변경]                             │
+  │   User App ──▶ syscall(2) ──▶ sys_call_table[2] ──▶ my_sys_open() │
+  │                                                         │         │
+  │                                (내가 만든 악성&#x2F;보안 로직 실행: 로그 남기기) │
+  │                                                         │         │
+  │                                       original_sys_open() ◀──────┘ │
+  │                                       (진짜 파일 열어주고 결과 반환)      │
+  └───────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 테이블 후킹의 본질은 포인터 치환이다. 앱이 파일을 열기 위해 <code>open()</code>을 부르면, CPU는 무조건 테이블의 2번 칸(<code>sys_call_table[2]</code>)에 적힌 주소로 점프한다. 거기를 내 함수 주소로 바꿔놓으면 커널의 모든 파일 오픈 행위가 내 함수를 거쳐 가게 된다. 내 함수 안에서 "누가 /etc/passwd를 열려 하네? 에러(-EPERM)를 던져서 막아야지!"라고 차단하면 훌륭한 백신(HIPS)이 되고, "어라, 해커인 내가 숨겨둔 파일을 보려 하네? 파일이 없는 척해야지!"라고 속이면 최악의 루트킷(Rootkit)이 된다.</p>
+<h3 id="keoneol-hwagjang-cuga-namanyi-siseutem-kol-mandeulgi">커널 확장 (추가): 나만의 시스템 콜 만들기</h3>
+<p>후킹이 아니라 아예 새로운 번호(예: 333번)에 새로운 기능을 만들고 싶을 때의 과정이다.</p>
+<ol>
+<li><code>syscalls.h</code>에 함수 프로토타입(<code>asmlinkage long sys_my_custom_call(...)</code>)을 정의한다.</li>
+<li>커널 소스의 <code>syscall_64.tbl</code> 파일에 <code>333 common my_custom_call sys_my_custom_call</code> 매핑을 추가한다.</li>
+<li>커널 전체를 다시 컴파일(Rebuild)하고 재부팅한다.</li>
+<li>이제 유저 스페이스에서 <code>syscall(333)</code>을 부르면 내가 만든 커널 함수가 실행된다.</li>
+</ol>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>요청 또는 이벤트 발생</strong>: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.</li>
+<li><strong>현재 상태 확인</strong>: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.</li>
+<li><strong>정책 적용 및 자원 배정</strong>: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.</li>
+<li><strong>결과 반영 및 후속 처리</strong>: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.</li>
+</ol>
+<h3 id="siseutem-kol-gamsi-jeeo-gisul-gyebo">시스템 콜 감시/제어 기술 계보</h3>
+<p><code>sys_call_table</code> 변조가 너무 위험해지자, 리눅스 커널은 이를 대체할 합법적 프레임워크들을 만들었다.</p>
+<table><thead><tr><th style="text-align: left">기술 명칭</th><th style="text-align: left">동작 위치 (Layer)</th><th style="text-align: left">원리 및 특징</th><th style="text-align: left">한계 / 단점</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>sys_call_table 후킹</strong></td><td style="text-align: left">커널 심층부 포인터</td><td style="text-align: left">커널 메모리 직접 덮어쓰기 (원시적)</td><td style="text-align: left">커널 패닉 위험 극상, 현재 방어 기제로 막힘</td></tr>
+<tr><td style="text-align: left"><strong>LSM (Linux Security Modules)</strong></td><td style="text-align: left">시스템 콜 실행 직전</td><td style="text-align: left">커널이 공식적으로 뚫어준 보안 훅(Hook) 포인트 (SELinux, AppArmor)</td><td style="text-align: left">커널 소스 트리 내부에 코드가 있어야 함</td></tr>
+<tr><td style="text-align: left"><strong>Kprobes / Ftrace</strong></td><td style="text-align: left">커널 함수 진입점 (명령어)</td><td style="text-align: left">함수 첫머리의 어셈블리를 INT3(브레이크)로 바꿔치기 (동적 디버깅)</td><td style="text-align: left">로깅/추적용이며, 악의적 차단(Deny)용으로는 부적합</td></tr>
+<tr><td style="text-align: left"><strong>eBPF</strong></td><td style="text-align: left">시스템 콜 / Kprobes 위치</td><td style="text-align: left">안전성이 증명된 바이트코드를 샌드박스에서 실행하여 후킹</td><td style="text-align: left">최신 기술로 러닝 커브 높음. 현재 업계 표준.</td></tr>
+</tbody></table>
+<h3 id="gwamog-yunghab-gwanjeom">과목 융합 관점</h3>
+<ul>
+<li><strong>보안 (Security)</strong>: 루트킷(Rootkit) 동작의 알파와 오메가다. 해커는 테이블 후킹을 통해 <code>sys_getdents</code>(디렉터리 목록 읽기)를 조작하여 자신의 백도어 파일을 <code>ls</code> 명령어 결과에서 투명하게 지워버리고, <code>sys_kill</code>을 조작하여 관리자가 자신의 악성 프로세스를 죽이지 못하게 막는다.</li>
+<li><strong>운영체제 (OS)</strong>: 메모리 보호(Paging / MMU). CPU는 CR0 레지스터의 WP(Write Protect) 비트를 통해 Ring 0 권한이라 할지라도 Read-Only 페이지를 수정하면 페이지 폴트를 낸다. <code>sys_call_table</code> 후킹은 이 OS의 링(Ring) 보호 체계를 무력화하는 전형적인 익스플로잇 기법이다.</li>
+</ul>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="siseutem-kol-gamsi-jeeo-gisul-gyebo-1">시스템 콜 감시/제어 기술 계보</h3>
+<p><code>sys_call_table</code> 변조가 너무 위험해지자, 리눅스 커널은 이를 대체할 합법적 프레임워크들을 만들었다.</p>
+<table><thead><tr><th style="text-align: left">기술 명칭</th><th style="text-align: left">동작 위치 (Layer)</th><th style="text-align: left">원리 및 특징</th><th style="text-align: left">한계 / 단점</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>sys_call_table 후킹</strong></td><td style="text-align: left">커널 심층부 포인터</td><td style="text-align: left">커널 메모리 직접 덮어쓰기 (원시적)</td><td style="text-align: left">커널 패닉 위험 극상, 현재 방어 기제로 막힘</td></tr>
+<tr><td style="text-align: left"><strong>LSM (Linux Security Modules)</strong></td><td style="text-align: left">시스템 콜 실행 직전</td><td style="text-align: left">커널이 공식적으로 뚫어준 보안 훅(Hook) 포인트 (SELinux, AppArmor)</td><td style="text-align: left">커널 소스 트리 내부에 코드가 있어야 함</td></tr>
+<tr><td style="text-align: left"><strong>Kprobes / Ftrace</strong></td><td style="text-align: left">커널 함수 진입점 (명령어)</td><td style="text-align: left">함수 첫머리의 어셈블리를 INT3(브레이크)로 바꿔치기 (동적 디버깅)</td><td style="text-align: left">로깅/추적용이며, 악의적 차단(Deny)용으로는 부적합</td></tr>
+<tr><td style="text-align: left"><strong>eBPF</strong></td><td style="text-align: left">시스템 콜 / Kprobes 위치</td><td style="text-align: left">안전성이 증명된 바이트코드를 샌드박스에서 실행하여 후킹</td><td style="text-align: left">최신 기술로 러닝 커브 높음. 현재 업계 표준.</td></tr>
+</tbody></table>
+<h3 id="gwamog-yunghab-gwanjeom-1">과목 융합 관점</h3>
+<ul>
+<li><strong>보안 (Security)</strong>: 루트킷(Rootkit) 동작의 알파와 오메가다. 해커는 테이블 후킹을 통해 <code>sys_getdents</code>(디렉터리 목록 읽기)를 조작하여 자신의 백도어 파일을 <code>ls</code> 명령어 결과에서 투명하게 지워버리고, <code>sys_kill</code>을 조작하여 관리자가 자신의 악성 프로세스를 죽이지 못하게 막는다.</li>
+<li><strong>운영체제 (OS)</strong>: 메모리 보호(Paging / MMU). CPU는 CR0 레지스터의 WP(Write Protect) 비트를 통해 Ring 0 권한이라 할지라도 Read-Only 페이지를 수정하면 페이지 폴트를 낸다. <code>sys_call_table</code> 후킹은 이 OS의 링(Ring) 보호 체계를 무력화하는 전형적인 익스플로잇 기법이다.</li>
+</ul>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li>
+<p><strong>시나리오 — 구형 상용 안티바이러스(백신) 도입 시 커널 패닉 문제</strong>: B회사는 리눅스 서버 보안을 위해 10년 전에 만들어진 레거시 상용 백신 에이전트를 설치했다. 설치 직후 커널 패닉이 발생하며 서버가 뻗었다.</p>
+<ul>
+<li><strong>원인 분석</strong>: 해당 백신은 파일 입출력을 실시간 감시하기 위해 <code>sys_call_table</code>의 <code>sys_open</code>, <code>sys_read</code>를 직접 후킹하는 방식을 썼다. 하지만 최신 리눅스 커널은 KASLR(커널 주소 무작위화)과 메모리 쓰기 보호(STRICT_KERNEL_RWX)가 켜져 있어, 백신이 테이블 주소를 잘못 찾았거나 쓰기 권한이 막혀 Segmentation Fault를 일으킨 것이다.</li>
+<li><strong>대응 (기술사적 가이드)</strong>: 커널 메모리를 직접 훼손하는(Dirty) 솔루션은 현대 클라우드에서 절대 도입 불가 판정을 내려야 한다. 파일 시스템 이벤트를 모니터링하려면 합법적인 <strong>Fanotify / Inotify API</strong>를 쓰거나, **eBPF 기반의 보안 에이전트(예: Falco, Cilium Tetragon)**로 솔루션을 교체해야 한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>시나리오 — 사내 보안 감사용 시스템 콜 로깅 아키텍처 설계</strong>: 누가 어떤 파일을 지우는지(<code>sys_unlink</code>) 모든 행위를 남기려 한다.</p>
+<ul>
+<li><strong>아키텍처 적용 (LSM / eBPF)</strong>: 테이블 후킹 대신 최신 <strong>LSM (Linux Security Module)</strong> 프레임워크인 BPF-LSM을 사용한다. 커널 모듈을 C로 짜서 올리는 대신, eBPF 코드로 "file_unlink 훅 포인트에서 사용자 UID와 파일 이름을 출력해라"라고 작성하여 JIT 컴파일한다. 이 코드는 커널 샌드박스에서 완벽히 안전하게 돌아가며, 커널 패닉의 위험 0%로 모든 삭제 행위를 감시할 수 있다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="yisagyeoljeong-mic-tyuning-peulrou">의사결정 및 튜닝 플로우</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌───────────────────────────────────────────────────────────────────┐
+  │                 커널 레벨 행위 감시(Hooking) 기술 선정 플로우             │
+  ├───────────────────────────────────────────────────────────────────┤
+  │                                                                   │
+  │   [커널의 특정 동작(파일 접근, 네트워크 통신)을 실시간으로 감시&#x2F;차단 필요]   │
+  │                │                                                  │
+  │                ▼                                                  │
+  │      감시 대상이 단순히 &#x27;로깅(Logging)&#x27;과 &#x27;추적&#x27; 목적인가?              │
+  │          ├─ 예 ─────▶ [Kprobes &#x2F; Tracepoint &#x2F; eBPF (퍼포먼스 툴) 적용]│
+  │          │            (시스템을 멈추지 않고 데이터를 안전하게 빼옴)      │
+  │          └─ 아니오 (행위를 사전에 분석하고 &#x27;차단(Deny)&#x27;해야 함)           │
+  │                │                                                  │
+  │                ▼                                                  │
+  │      보안 정책을 강제(Enforce)하여 악성 행위를 막아야 하는가?              │
+  │          ├─ 예 ─────▶ [LSM (AppArmor, SELinux, BPF-LSM) 프레임워크 적용] │
+  │          │            (커널이 공식 제공하는 시스템 콜 직전의 검문소)        │
+  │          │                                                        │
+  │          └─ 아니오 ──▶ sys_call_table 후킹을 고려? ──▶ [절대 금지!]    │
+  │                         (최신 커널에서는 방어 메커니즘으로 인해 패닉 보장)  │
+  └───────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> <code>sys_call_table</code> 후킹은 학부생들의 해킹 과제용이거나 악의적 공격자(루트킷)들의 전유물이다. 실무 인프라 엔지니어링에서는 이를 '어떻게 구현할까'가 아니라 **'시스템이 이런 공격을 당했는지 어떻게 탐지할까'**에 집중해야 한다. 무결성 검증 도구(예: <code>chkrootkit</code>)는 주기적으로 현재 메모리의 <code>sys_call_table</code> 포인터들이 정상적인 커널 Text 영역(<code>_stext</code> ~ <code>_etext</code>) 범위 내에 있는지를 검사하여, 범위를 벗어난 주소(해커 모듈 주소)가 발견되면 후킹 당했음을 알람으로 띄운다.</p>
+<h3 id="doib-cekeuriseuteu">도입 체크리스트</h3>
+<ul>
+<li><strong>KASLR (Kernel Address Space Layout Randomization)</strong>: 부팅 시마다 커널과 <code>sys_call_table</code>의 메모리 주소가 난수화되도록 커널 파라미터(kaslr)가 켜져 있어 공격자의 정적 메모리 후킹을 원천 차단하고 있는가?</li>
+<li><strong>STRICT_KERNEL_RWX</strong>: 커널 메모리 페이지에 '쓰기(Write)'와 '실행(Execute)' 권한이 동시에 주어지지 않도록 보호하는 커널 컴파일 옵션이 켜져 있는가? (CR0 우회를 무력화하는 2차 방어선)</li>
+</ul>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">레거시 테이블 후킹 방식</th><th style="text-align: left">차세대 LSM / eBPF 훅 방식</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정성 (안정성)</strong></td><td style="text-align: left">커널 버전 파편화로 패닉 잦음</td><td style="text-align: left">커널 API 변동에 무관한 호환성</td><td style="text-align: left">보안 솔루션 도입에 따른 시스템 장애 0%</td></tr>
+<tr><td style="text-align: left"><strong>정성 (보안성)</strong></td><td style="text-align: left">루트 권한 시 방어 불가능</td><td style="text-align: left">커널 락다운으로 런타임 훅 차단</td><td style="text-align: left">제로 트러스트(Zero Trust) 아키텍처 완성</td></tr>
+<tr><td style="text-align: left"><strong>정량 (탐지력)</strong></td><td style="text-align: left">OS 종속적 하드코딩 개발 (수 개월)</td><td style="text-align: left">BPF 코드로 즉각적 탐지 배포 (시간)</td><td style="text-align: left">클라우드 네이티브 환경의 위협 탐지 리드타임 극감</td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang">미래 전망</h3>
+<ul>
+<li><strong>eBPF(LSM-BPF)의 완전한 대체</strong>: 커널의 소스 코드를 건드리지 않고도 <code>sys_call_table</code> 조작 이상의 강력한 보안 제어(예: 파일 삭제 차단, 특정 IP 통신 차단)를 가능하게 하는 BPF-LSM이 완전히 성숙했다. 미래의 리눅스는 서드파티 커널 모듈(LKM)의 로드 자체를 금지하고, 오직 eBPF 형태의 샌드박스 프로그램만 허용하는 마이크로커널과 유사한 철학으로 이동할 것이다.</li>
+<li><strong>하드웨어 제어 흐름 무결성 (Intel CET, ARM BTI)</strong>: 소프트웨어 후킹이 갈수록 교묘해짐에 따라, CPU 하드웨어 자체가 함수 호출(Call)과 반환(Return)의 궤적을 섀도우 스택(Shadow Stack)에 기록하고, 정상 궤도(시스템 콜 테이블)를 이탈하는 점프(JMP) 명령어가 실행되면 CPU가 즉각 하드웨어 예외를 발생시켜 공격을 차단하는 기술이 일반화되고 있다.</li>
+</ul>
+<h3 id="gyeolron">결론</h3>
+<p>리눅스 <code>sys_call_table</code> 확장의 역사는 OS의 투명성을 통제하려는 해커(또는 백신)와 이를 막으려는 커널 개발자 간의 창과 방패의 전쟁사다. 과거의 거칠고 파괴적인 메모리 직접 조작(Hooking) 기법은 현대 운영체제의 정교한 메모리 보호 기법(KASLR, CR0 보호) 앞에 무력화되었다. 하지만 그 통제 욕구는 사라지지 않고 eBPF와 LSM이라는 우아하고 합법적인 아키텍처로 계승되었다. 시스템 콜의 관문을 지배하는 자가 시스템 전체를 지배한다는 명제는 운영체제가 존재하는 한 영원불멸의 진리다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">**Rootkit (루트킷)**
+    ↓
+**KASLR (Kernel ASLR)**
+    ↓
+**LSM (Linux Security Modules)**
+    ↓
+**eBPF (Extended BPF)**
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Rootkit (루트킷)</strong></td><td style="text-align: left"><code>sys_call_table</code> 후킹을 가장 악랄하게 사용하는 악성코드로, 관리자의 눈을 멀게 하여 자신의 존재를 은닉함</td></tr>
+<tr><td style="text-align: left"><strong>KASLR (Kernel ASLR)</strong></td><td style="text-align: left">시스템 콜 테이블이 메모리 몇 번지에 존재하는지 해커가 짐작조차 할 수 없게 부팅 시마다 주소를 섞어버리는 방어 기술</td></tr>
+<tr><td style="text-align: left"><strong>LSM (Linux Security Modules)</strong></td><td style="text-align: left">테이블 후킹 없이도, 시스템 콜 직전에 커널이 공식적으로 제공하는 합법적인 보안 차단 검문소</td></tr>
+<tr><td style="text-align: left"><strong>eBPF (Extended BPF)</strong></td><td style="text-align: left">커널 모듈을 작성해 올리는 위험 없이, 커널 내 샌드박스에서 안전하게 시스템 콜을 감시하고 조작하는 차세대 표준 기술</td></tr>
+<tr><td style="text-align: left"><strong>CR0 레지스터 (WP Bit)</strong></td><td style="text-align: left">CPU 레벨에서 읽기 전용(Read-Only) 메모리의 수정을 막는 스위치로, 고전적 후커들이 가장 먼저 무력화해야 했던 목표물</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

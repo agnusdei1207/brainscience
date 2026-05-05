@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>184. AI 런타임 섀도우 배포 및 카나리 롤아웃 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 17, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ai
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: AI 런타임 모델 서빙 단계에서 섀도우(Shadow) 배포와 카나리(Canary) 롤아웃은, 주피터 노트북(실험실)에서 100점을 받은 새 머신러닝 모델이 진짜 현실(Production)에 나갔을 때 엉뚱한 사고를 치지 않는지 안전하게 검증하는 **'무중단 생체실험 배포 아키텍처'**다.
+<strong>비유</strong>: 신약(V2 모델)을 개발했다고 바로 전 국민(100% 트래픽)에게 주사(빅뱅 배포)를 놓으면 대재앙이 터진다. 먼저 쥐에게 몰래 주사해 보고(섀도우 배포), 그다음 5명의 자원자에게 주사해 보고(카나리 배포), 마지막으로 기존 약과 신약을 반반 나눠서 환자들의 완치율을 비교(A/B 테스트)한 뒤에야 전국 병원에 약을 푸는 것이 완벽한 제약(MLOps) 시스템이다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>MLOps 파이프라인에서 가장 가슴 떨리는 순간은, 훈련을 마친 따끈따끈한 새 모델(Challenger Model, V2)을 실제 사용자들이 접속해 있는 운영 서버(Champion Model, V1)와 갈아 끼우는 서빙(Serving) 순간이다.</p>
+<p>데이터 과학자들은 흔히 "테스트 데이터셋에서 정확도가 99%가 나왔으니 당장 100% 교체합시다!"라고 주장한다. 하지만 인프라 엔지니어에게 이는 자살 행위다. 노트북의 데이터는 예쁘게 정제된 과거의 데이터일 뿐, 실시간으로 유입되는 유저의 클릭 패턴이나 오타 섞인 검색어 앞에서는 V2 모델이 어떤 끔찍한 할루시네이션(환각)을 뱉어낼지 아무도 모른다. 일반 코드는 버그가 나면 즉시 앱이 꺼지지만, AI 모델은 버그가 나면 앱은 쌩쌩 돌아가는데 "여성 화장품을 검색한 유저에게 남성용 면도기를 추천"하는 식으로 회사 매출만 조용히 갉아먹는다.</p>
+<p>이 치명적인 위험을 헷징(Hedging)하기 위해, 한 번에 V1을 죽이고 V2를 올리는 '빅뱅 배포(Big Bang)'를 절대 금지하고, 실전 트래픽을 이용해 V2를 안전하게 검증하는 3단계의 우아한 배포 철학이 도입되었다. 바로 <strong>섀도우 배포, 카나리 롤아웃, 그리고 A/B 테스팅</strong>이다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<p>쿠버네티스(K8s)와 이스티오(Istio) 같은 서비스 메시(Service Mesh) 위에서 AI 트래픽 라우팅은 예술의 경지에 이른다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│           AI 모델 서빙의 단계별 안전 배포 라우팅 (Traffic Routing) 아키텍처   │
+├──────────────────────────────────────────────────────────────┤
+│  [1단계. 섀도우 배포 (Shadow Deployment) - 모의고사]                │
+│   * 유저 요청 ─▶ (복제!) ─┬─▶ [V1 (기존 챔피언)] ─▶ 유저 화면에 추천 결과 출력!│
+│                         │                                    │
+│                         └─▶ [V2 (신규 도전자)] ─▶ 결과는 DB에 몰래 저장만 함.│
+│   * 효과: 유저는 V2의 존재조차 모름. 안전하게 V2의 실전 성능과 서버 랙(Latency) 측정.│
+│                                                              │
+│  [2단계. 카나리 배포 (Canary Rollout) - 소수 정예 투입]              │
+│   * 유저 요청 100명 ─┬─ (95명) ─▶ [V1 (챔피언)] ─▶ 95명 유저에게 V1 결과 출력!│
+│                    │                                         │
+│                    └─ (5명) ──▶ [V2 (도전자)] ─▶ 딱 5명에게만 V2 결과 노출! │
+│   * 효과: V2가 사고를 쳐도 전체 유저의 5%만 피해를 봄. 에러가 없으면 10% ─▶ 50% 확장.│
+│                                                              │
+│  [3단계. A&#x2F;B 테스팅 (A&#x2F;B Testing) - 진검승부]                      │
+│   * 유저 요청 100명 ─┬─ (50명) ─▶ [V1] ─▶ &quot;A그룹 고객 매출이 100만 원!&quot;     │
+│                    │                                         │
+│                    └─ (50명) ─▶ [V2] ─▶ &quot;B그룹 고객 매출이 120만 원!&quot;     │
+│   * 효과: 비즈니스 KPI(매출, 클릭률)를 통계적으로 완벽히 검증 후 V2로 천하 통일! │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>핵심 원리 (트래픽 미러링과 라우팅)</strong>:
+섀도우 배포의 심장은 **트래픽 미러링 (Traffic Mirroring)**이다. 들어오는 API 요청을 그대로 거울처럼 복사해서 V1과 V2에 동시에 쏜다. V2가 계산하다 메모리가 터지든 대답을 10초 늦게 하든, 유저는 0.1초 만에 V1이 준 정상 대답만 보고 집에 가므로 시스템 안정성이 100% 보장된다. 기술자는 다음 날 출근해서 V1과 V2가 똑같은 질문에 대답한 로그를 엑셀로 띄워놓고 "아, V2가 엉뚱한 대답을 안 하네!"라며 안심하고 2단계인 카나리로 넘어가는 것이다.</p>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: AI 런타임 섀도우 배포 및 카나리 롤아웃의 성능과 타당성은 입력 표현, 핵심 구조 또는 연산, 학습·추론 절차, 평가 기준, 자원 제약이 서로 정합될 때 확보된다.</p>
+<p>동작 순서:</p>
+<p>세 가지 배포 전략은 목적과 확인하려는 '오류의 성질'이 서로 다르다.</p>
+<table><thead><tr><th style="text-align: left">배포 전략</th><th style="text-align: left">가장 핵심적인 목적 (왜 하는가?)</th><th style="text-align: left">탐지할 수 있는 핵심 버그 유형</th><th style="text-align: left">사용자 피해율</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>섀도우 (Shadow)</strong></td><td style="text-align: left">신규 모델의 <strong>'컴퓨터적(시스템)' 안정성</strong> 검증</td><td style="text-align: left">V2가 메모리(OOM)를 터뜨리는지, 추론 속도가 너무 느린지, 런타임 에러가 나는지 100% 탐지</td><td style="text-align: left"><strong>0% (피해 없음)</strong></td></tr>
+<tr><td style="text-align: left"><strong>카나리 (Canary)</strong></td><td style="text-align: left">신규 모델의 <strong>'치명적인 헛소리'</strong> 방어 및 롤백</td><td style="text-align: left">V2가 에러는 안 띄우는데 유저에게 쌍욕을 뱉거나 추천 화면을 완전히 박살 내버리는지 눈치챔</td><td style="text-align: left">1 ~ 5%</td></tr>
+<tr><td style="text-align: left"><strong>A/B 테스트</strong></td><td style="text-align: left">신규 모델의 <strong>'비즈니스(매출) 기여도'</strong> 증명</td><td style="text-align: left">V2가 사고는 안 치는데, V1보다 추천 상품 클릭률(CTR)이나 구매 전환율이 오히려 더 떨어지는지 비교</td><td style="text-align: left">절반의 유저가 덜 맛있는 추천을 받음</td></tr>
+</tbody></table>
+<p><strong>용어의 유래</strong>: '카나리(Canary)'는 과거 광부들이 탄광에 들어갈 때, 유독 가스에 민감한 아주 작은 노란 새(카나리아)를 새장에 넣어 먼저 데리고 들어간 데서 유래했다. 카나리아가 기절하면 광부들이 재빨리 대피하듯, 5%의 트래픽을 먼저 쏴서 그들이 기절(클레임)하면 신규 모델 배포를 0.1초 만에 취소(Roll-back)하고 구형 모델로 대피하겠다는 인프라 철학이다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<p>최신 KServe나 Seldon Core 같은 MLOps 서빙 인프라를 구축할 때, 이 라우팅 아키텍처를 YAML 코드 몇 줄로 자동화하지 못하면 매번 사람이 밤을 새워가며 서버 포트를 갈아 끼우는 지옥이 펼쳐진다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<ol>
+<li><strong>응답 대기(Latency) 징크스 차단 (Fire and Forget)</strong>: 섀도우 배포를 설계할 때, 라우터(API Gateway)가 V1의 대답을 받고도 V2의 대답이 끝날 때까지 기다렸다가 유저에게 화면을 띄워주는 멍청한 코딩(Synchronous)을 짜면 대재앙이 터진다. 섀도우 미러링은 무조건 요청 복사본만 비동기(Asynchronous)로 던져놓고 잊어버려야(Fire-and-forget) 유저의 앱 반응 속도에 0.1초의 피해도 주지 않는다.</li>
+<li><strong>다중 밴딧 (Multi-Armed Bandit, MAB) 자동화 롤아웃</strong>: A/B 테스트는 50:50으로 한 달 동안 실험하는 고전적 방식이다. 하지만 V2 모델이 압도적으로 쓰레기라면, B그룹에 속한 50%의 고객은 한 달 내내 고통받고 회사는 수천만 원을 잃는다. 최신 MLOps는 강화 학습의 <strong>MAB 알고리즘</strong>을 도입해, 실시간으로 V2의 매출이 떨어진다 싶으면 50%였던 트래픽을 인공지능이 스스로 40%, 10%, 1%로 빠르게 줄여버려(Dynamic Traffic Routing) 회사의 손실을 인프라 레벨에서 자동 지혈하는 쾌속 배포 아키텍처를 지향한다.</li>
+</ol>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li><strong>오프라인 점수(Test Accuracy)의 절대적 맹신</strong>: "내가 교차 검증(Cross-validation) 다 돌려봤는데 정확도가 99%야! 당장 V1 내리고 V2 올려!"라고 우기는 주니어 데이터 과학자의 오만. 과거의 로그 엑셀 파일(오프라인 데이터)로 매긴 점수와, 내일 아침 실시간으로 밀려드는 모바일 앱 유저의 클릭률(온라인 점수) 사이에는 거대한 심연이 존재한다. 오프라인 지표와 온라인 지표는 100% 일치하지 않으므로, A/B 테스트의 실시간 매출 데이터만이 모델의 생사를 가르는 절대적인 헌법이 되어야 한다.</li>
+</ul>
+<p>섀도우와 카나리 배포 아키텍처의 정착은 인공지능 서비스의 배포(Deployment)를 "언제 터질지 모르는 시한폭탄 해체 작업"에서 "하루에 100번도 버튼을 누를 수 있는 일상적인 산책"으로 격상시켰다. 쿠버네티스의 파드(Pod) 롤아웃과 이스티오(Istio)의 트래픽 조절 마법이 결합되며, 개발자는 이제 새벽 3시에 덜덜 떨며 코드를 배포할 필요가 없어졌다.</p>
+<p>특히 거대 언어 모델(LLM) 시대에는 프롬프트 하나만 잘못 건드려도 챗봇이 회사의 영업 비밀을 까발리는 할루시네이션(환각) 대형 사고가 터질 수 있다. 이때 1%의 유저 트래픽만 카나리로 열어두고 실시간으로 대답의 유해성을 모니터링하여 0.1초 만에 롤백시키는 서빙 방어막은 기업의 법적(Compliance), 도덕적 리스크를 헷징하는 궁극의 방탄조끼다.</p>
+<p>결론적으로 AI 서빙의 배포 전략은 단순한 IT 인프라 기술이 아니다. 그것은 새로운 뇌(모델)가 세상과 접속할 때 겪게 될 혼돈과 충격을 수학적, 확률적으로 흡수하여 사용자에게 완벽한 안정성만을 투영하는 가장 거시적이고 세련된 소프트웨어 공학의 진화다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>특히 거대 언어 모델(LLM) 시대에는 프롬프트 하나만 잘못 건드려도 챗봇이 회사의 영업 비밀을 까발리는 할루시네이션(환각) 대형 사고가 터질 수 있다. 이때 1%의 유저 트래픽만 카나리로 열어두고 실시간으로 대답의 유해성을 모니터링하여 0.1초 만에 롤백시키는 서빙 방어막은 기업의 법적(Compliance), 도덕적 리스크를 헷징하는 궁극의 방탄조끼다.</p>
+<p>결론적으로 AI 서빙의 배포 전략은 단순한 IT 인프라 기술이 아니다. 그것은 새로운 뇌(모델)가 세상과 접속할 때 겪게 될 혼돈과 충격을 수학적, 확률적으로 흡수하여 사용자에게 완벽한 안정성만을 투영하는 가장 거시적이고 세련된 소프트웨어 공학의 진화다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">문제 정의 · 입력 정리
+    ↓
+핵심 구조 · 연산 설계
+    ↓
+학습 · 추론 · 검증
+    ↓
+실무 적용 · 최적화
+    ↓
+운영 · 거버넌스 · 확장
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>MLOps / CD (지속적 배포)</strong></td><td style="text-align: left">개발된 모델이 박물관(레지스트리)에 잠들지 않고, 실제로 살아 숨 쉬는 API 서버로 교체되어 나가는 실전 배포 파이프라인 기술</td></tr>
+<tr><td style="text-align: left"><strong>서비스 메시 (Service Mesh / Istio)</strong></td><td style="text-align: left">트래픽을 100% V1으로 보내지 않고, 95%와 5%로 정밀하게 찢어발기거나 복사(Mirroring)해 주는 마법의 네트워크 라우팅 인프라</td></tr>
+<tr><td style="text-align: left"><strong>MAB (멀티 암드 밴딧)</strong></td><td style="text-align: left">A/B 테스트가 무조건 50:50으로 고정돼서 손해를 보는 것을 막기 위해, 실시간으로 성적이 좋은 모델 쪽으로 80%, 90% 트래픽을 쫙쫙 밀어주는 똑똑한 인공지능 롤아웃 기법</td></tr>
+<tr><td style="text-align: left"><strong>할루시네이션 (환각) / 사일런트 페일러</strong></td><td style="text-align: left">서버는 에러(500 Error)를 뿜지 않고 쌩쌩 돌아가는데, 대답만 미친 소리를 뱉어내 모니터링 경보를 무력화시키는 AI 모델 특유의 치명적 스파이 버그</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

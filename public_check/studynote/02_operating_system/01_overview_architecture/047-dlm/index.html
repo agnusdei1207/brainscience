@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>047. DLM — 분산 잠금 관리자 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: DLM — 분산 잠금 관리자은(는) 운영체제가 자원을 추상화하고 통제하는 과정에서 성능, 보호, 응답성을 동시에 조율하기 위해 필요한 핵심 개념이다.
+<strong>비유</strong>: DLM — 분산 잠금 관리자은(는) 복잡한 교통을 한 번에 통제해 전체 흐름을 맞추는 신호 체계와 같다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<pre><code>분산 환경에서의 잠금 문제:
+
+단일 서버:
+  뮤텍스&#x2F;세마포어로 임계 구역 보호
+  OS 커널이 원자적 연산 보장
+
+분산 시스템:
+  서버 A, B, C가 공유 DB&#x2F;파일 접근
+  각 서버의 로컬 잠금으로는 충돌 방지 불가
+
+예시 문제 (분산 재고 관리):
+  서버 A: 재고 확인(100개) → 구매 처리 시작
+  서버 B: 재고 확인(100개) → 구매 처리 시작
+
+  둘 다 재고 100개로 판단 → 동시 100개씩 판매
+  → 실제 재고 100개인데 200개 판매 오류!
+
+분산 잠금으로 해결:
+  서버 A: 잠금 획득 → 재고 확인&#x2F;처리 → 잠금 해제
+  서버 B: 잠금 대기 → A 해제 후 획득 → 처리
+
+DLM 핵심 기능:
+  1. 잠금 획득&#x2F;해제 (Lock&#x2F;Unlock)
+  2. 잠금 대기 (Blocking&#x2F;Non-blocking)
+  3. 잠금 범위 (Resource 식별)
+  4. 잠금 만료 (TTL: Time-To-Live)
+  5. 장애 복구 (잠금 보유자 죽었을 때)
+  6. 재진입 허용 여부 (Reentrant Lock)
+</code></pre>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 분산 잠금은 화장실 키 — 건물에 화장실이 하나인데 사용자가 여러 건물에 있어요. 키(잠금)를 받은 사람만 사용. 키 받기 전까지 대기!</p>
+</blockquote>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<pre><code>분산 잠금 구현 방식:
+
+1. Redis 기반 (Redlock):
+  단일 Redis:
+  SET lock_key unique_val NX EX 30
+  (NX: 없을 때만, EX: 30초 TTL)
+
+  성공: &quot;OK&quot; 반환 → 잠금 획득
+  실패: nil → 이미 잠금 존재
+
+  해제: Lua 스크립트 (원자적 확인+삭제)
+  IF GET lock_key == unique_val:
+    DEL lock_key
+
+  Redlock (다중 Redis 노드):
+  N개 Redis 노드 (홀수, 예: 5개)
+  과반수(N&#x2F;2+1) 획득 → 잠금 성공
+  → 단일 노드 장애 내성
+
+2. ZooKeeper 기반:
+  임시 노드(Ephemeral Node) 생성
+  &#x2F;locks&#x2F;resource_A → 잠금 획득
+
+  클라이언트 세션 종료 → 임시 노드 자동 삭제
+  → 장애 시 자동 잠금 해제
+
+  공정한 잠금 (Fair Lock):
+  순서 노드(Sequence Node) 사용
+  &#x2F;locks&#x2F;resource_A&#x2F;lock-0001, lock-0002, ...
+  가장 낮은 번호 = 잠금 보유
+  자신 앞 번호 watch → 해제 시 알림
+
+3. etcd 기반 (Lease):
+  Lease 생성: TTL 30초
+  key 연결: key = lock, lease = leaseID
+
+  KeepAlive: 주기적으로 lease 갱신
+  클라이언트 죽음 → KeepAlive 중단 → 만료 → 삭제
+
+  Kubernetes: etcd로 리더 선출 구현
+  controller-manager, scheduler: etcd 잠금 사용
+</code></pre>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: DLM 구현 3종 — Redis는 빠른 메모 (NX 명령 원자적), ZooKeeper는 자동 사라지는 포스트잇 (세션 종료 시 임시 노드 삭제), etcd는 타이머 키 (Lease TTL)!</p>
+</blockquote>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>요청 또는 이벤트 발생</strong>: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.</li>
+<li><strong>현재 상태 확인</strong>: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.</li>
+<li><strong>정책 적용 및 자원 배정</strong>: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.</li>
+<li><strong>결과 반영 및 후속 처리</strong>: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.</li>
+</ol>
+<pre><code>잠금 만료(TTL) 문제:
+
+시나리오:
+  서버 A: 잠금 획득 (TTL 30초)
+  서버 A: GC 일시 정지 50초 (STW GC)
+  잠금 만료 → 서버 B가 잠금 획득
+  서버 A: GC 완료 후 처리 재개 (잠금 없이!)
+  → A와 B가 동시에 자원 접근!
+
+문제: &quot;잠금이 만료된 줄 모르고 계속 처리&quot;
+
+해결: Fencing Token
+
+  잠금 획득 시 단조 증가 토큰 발급:
+  서버 A: 잠금 획득, 토큰=33
+  서버 B: 잠금 획득 (A 만료 후), 토큰=34
+
+  자원 서버(DB, 파일 서버):
+  &quot;이전 토큰보다 작은 요청은 거부&quot;
+
+  서버 A 요청 (토큰=33): 서버 DB: 34 이상만 허용 → 거부!
+  서버 B 요청 (토큰=34): 서버 DB: 허용
+
+단조 토큰 발급:
+  etcd 트랜잭션 번호 (Revision)
+  ZooKeeper 트랜잭션 ID (zxid)
+  Redis INCR 연산 결과
+
+TTL 설정:
+  너무 짧음: 작업 중 만료 → 재시도 오버헤드
+  너무 긺: 장애 시 복구 지연 (다음 클라이언트 오래 대기)
+
+  실무: 예상 작업 시간 × 3~5배 (충분한 여유)
+  + KeepAlive (주기적 갱신)
+</code></pre>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: Fencing Token은 번호표 규칙 — 33번(A)이 잠들었을 때 34번(B)이 입장. 잠들었다 깬 33번이 "내가 잠금 있어요!" 해도 DB가 "34번 이상만 가능"으로 거부!</p>
+</blockquote>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<pre><code>잠금 만료(TTL) 문제:
+
+시나리오:
+  서버 A: 잠금 획득 (TTL 30초)
+  서버 A: GC 일시 정지 50초 (STW GC)
+  잠금 만료 → 서버 B가 잠금 획득
+  서버 A: GC 완료 후 처리 재개 (잠금 없이!)
+  → A와 B가 동시에 자원 접근!
+
+문제: &quot;잠금이 만료된 줄 모르고 계속 처리&quot;
+
+해결: Fencing Token
+
+  잠금 획득 시 단조 증가 토큰 발급:
+  서버 A: 잠금 획득, 토큰=33
+  서버 B: 잠금 획득 (A 만료 후), 토큰=34
+
+  자원 서버(DB, 파일 서버):
+  &quot;이전 토큰보다 작은 요청은 거부&quot;
+
+  서버 A 요청 (토큰=33): 서버 DB: 34 이상만 허용 → 거부!
+  서버 B 요청 (토큰=34): 서버 DB: 허용
+
+단조 토큰 발급:
+  etcd 트랜잭션 번호 (Revision)
+  ZooKeeper 트랜잭션 ID (zxid)
+  Redis INCR 연산 결과
+
+TTL 설정:
+  너무 짧음: 작업 중 만료 → 재시도 오버헤드
+  너무 긺: 장애 시 복구 지연 (다음 클라이언트 오래 대기)
+
+  실무: 예상 작업 시간 × 3~5배 (충분한 여유)
+  + KeepAlive (주기적 갱신)
+</code></pre>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: Fencing Token은 번호표 규칙 — 33번(A)이 잠들었을 때 34번(B)이 입장. 잠들었다 깬 33번이 "내가 잠금 있어요!" 해도 DB가 "34번 이상만 가능"으로 거부!</p>
+</blockquote>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<pre><code>CAP 트릴레마와 잠금 선택:
+
+CAP:
+  C (Consistency): 모든 노드 동일 데이터
+  A (Availability): 항상 응답
+  P (Partition Tolerance): 네트워크 분단 허용
+
+분산 잠금 구현별 선택:
+
+ZooKeeper (CP):
+  네트워크 분단 시 과반수 노드 없으면 → 서비스 중단
+  일관성 보장: 항상 최신 잠금 상태
+
+  Paxos&#x2F;ZAB 합의 알고리즘
+  → 강한 일관성 + 가용성 부분 포기
+
+etcd (CP):
+  Raft 합의 알고리즘
+  과반수 노드 필요
+  강한 일관성
+
+Redis 단일 노드 (AP):
+  빠른 응답 (메모리 기반)
+  복제는 비동기 → 마스터 장애 시 잠금 손실 가능
+
+Redlock (다수 Redis, &quot;CP에 가까운 AP&quot;):
+  논쟁: Martin Kleppmann &quot;Redlock은 안전하지 않다&quot;
+  반론: Antirez &quot;Redlock 충분히 안전&quot;
+
+  Kleppmann 주장:
+  - GC 일시 정지 + TTL 만료 조합 = 위험
+  - Fencing Token 없이는 불완전
+
+실무 선택:
+  금융&#x2F;주문: ZooKeeper 또는 etcd (강한 일관성)
+  캐시 레이스 방지: Redis Redlock (성능 우선)
+  단순 중복 방지: Redis SETNX (충분)
+</code></pre>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: CAP과 분산 잠금 — ZooKeeper/etcd는 엄격한 경비원(CP: 분단 시 서비스 중단), Redis는 빠른 경비원(AP: 빠르지만 가끔 실수). 돈(금융)은 엄격한 경비원!</p>
+</blockquote>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<pre><code>대규모 쿠폰 발급 시스템 분산 잠금:
+
+문제:
+  이벤트: &quot;선착순 1,000개 쿠폰&quot;
+  트래픽: 초당 50,000 요청
+  서버: 10개 인스턴스
+
+  분산 잠금 없이:
+  동시 요청 → 1,000개 이상 발급 가능
+
+설계 (Redis SETNX + Fencing Token):
+
+1단계: 분산 잠금 획득
+  잠금 키: coupon:event_12345:lock
+  TTL: 100ms (짧게, 빠른 작업)
+  unique_val: UUID 생성
+
+  SET coupon:event_12345:lock UUID NX PX 100
+
+2단계: 잠금 성공 시 쿠폰 발급
+  DECR coupon:event_12345:count
+  IF count &gt;= 0: 쿠폰 발급
+  IF count &lt; 0: INCR (롤백), 쿠폰 소진
+
+3단계: 잠금 해제
+  Lua 스크립트로 원자적 해제
+
+4단계: 잠금 실패 시
+  재시도: 5ms 대기 후 최대 10회 재시도
+  계속 실패 → &quot;잠시 후 다시 시도&quot; 응답
+
+성능:
+  초당 50,000 요청 → 잠금 경합
+  Redis throughput: ~100,000 ops&#x2F;sec
+
+  평균 지연: &lt; 5ms (잠금 획득 포함)
+  정확성: 1,000개 초과 발급 0건
+
+고가용성:
+  Redis Sentinel (마스터-레플리카-센티넬)
+  마스터 장애 → 자동 레플리카 승격
+  TTL 100ms로 짧게 → 장애 시 빠른 잠금 해제
+</code></pre>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 쿠폰 분산 잠금은 원 버튼 줄서기 — 50,000명이 동시에 쿠폰 버튼. Redis 잠금이 한 명씩만 서버에 접근하게 해서 1,000개 정확히 발급. 줄 서기 없이 공정하게!</p>
+</blockquote>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre><code>[초기 DLM (1990s)]
+클러스터 파일시스템 (VMS, VAXcluster)
+중앙 잠금 서버
+      |
+      v
+[분산 데이터베이스 잠금 (2000s)]
+2PC 기반 분산 트랜잭션
+      |
+      v
+[ZooKeeper (2007)]
+분산 코디네이션
+임시 노드 기반 잠금
+      |
+      v
+[Redis SETNX 패턴 (2010s)]
+초고성능 분산 잠금
+Redlock 알고리즘 제안
+      |
+      v
+[etcd + Kubernetes (2014~)]
+Raft 합의 기반
+클라우드 네이티브 DLM
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">DLM — 분산 잠금 관리자</td><td style="text-align: left">운영체제 자원 관리와 보호 정책이 실제로 적용되는 핵심 주제</td></tr>
+<tr><td style="text-align: left">커널 (Kernel)</td><td style="text-align: left">정책 집행, 상태 전이, 시스템 호출 처리의 중심</td></tr>
+<tr><td style="text-align: left">프로세스/스레드</td><td style="text-align: left">CPU, 메모리, 동기화 자원과 직접 연결되는 실행 단위</td></tr>
+<tr><td style="text-align: left">메모리/I/O</td><td style="text-align: left">성능 병목과 보호 요구사항이 함께 드러나는 연계 영역</td></tr>
+<tr><td style="text-align: left">가상화/보안</td><td style="text-align: left">격리, 제어, 관측 확장 관점에서 해당 주제가 연결되는 상위 개념</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

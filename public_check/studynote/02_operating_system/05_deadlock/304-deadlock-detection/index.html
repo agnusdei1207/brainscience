@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>304. 교착 상태 탐지 (Deadlock Detection) - 알고리즘을 주기적으로 실행하여 데드락 확인 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 23, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 교착 상태 탐지 (Deadlock Detection)는 데드락을 예방하거나 회피하기 위한 사전문지기 역할을 전면 폐기하고, "일단 자원 요구하는 대로 시원하게 막 퍼주고(사고 허용)" <strong>주기적으로 백그라운드 탐지 데몬이 시스템 내 대기 그래프에 얽힌 사이클이 없는지 예나 지금이나 감시하는 사후 감찰 메커니즘</strong>이다.
+<strong>비유</strong>: 교착 상태 탐지 (Deadlock Detection)은(는) 복잡한 교통을 한 번에 통제해 전체 흐름을 맞추는 신호 체계와 같다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>꽉 막힌 톨게이트 룰(예방/회피) 대신, 교차로 신호등을 아예 꺼버리고 사거리에 차들이 자유롭게 진입하게 냅둔다면 어떨까? (방임주의). 당장은 엄청 트래픽이 시원하게 뚫리지만, 재수가 없으면 4대가 꼬리를 물고 교차로가 완전 정지해 버리는 암흑 데드락이 필연적으로 발생한다.</p>
+<p>**교착 상태 탐지(Detection)**는 이 방임 시스템 뒷면에 붙어있는 "드론 순찰대"다.
+차가 돌든지 말든지 평소에는 자원을 다 내어준다. 그러다가 드론(탐지 알고리즘)이 위에서 슥 내려다보다가 "어? 저기 차선 4개가 둥글게 원형 꼬리를 물어 사이클이 형성됐군(데드락 발병)" 하고 늦게나마 진단서를 끊는 것이다. 진단이 떴으니 그제야 견인차(Recovery, 복구)를 불러 부수고 치우면 된다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌───────────────────────────────────────────────────────────────┐
+│         교착 상태 탐지 모델의 느슨한(Lazy) 자원 관리망        │
+├───────────────────────────────────────────────────────────────┤
+│                                                               │
+│  [시간 흐름별 시스템 상태]                                    │
+│  t0: 막 퍼줌 (자유 할당, 방어&#x2F;시뮬레이션 전혀 안 함)          │
+│  t1: 막 퍼줌 (엄청나게 높은 시스템 활성화 및 자원 소진율!)    │
+│  t2: 우연의 일치로 P1, P2, P3이 꼬리를 물어버림(Deadlock 발동)│
+│  t3: 시스템 일부가 멈춰버림. But OS는 모름 대기 방치          │
+│  t4: ⏰ (백그라운드 탐지 데몬 깨어남)                         │
+│      OS가 대기 그래프(WFG) 스캔 시작. DFS 탐색.               │
+│      &quot;P1→P2→P3→P1 사이클 1건 적발!!&quot;                          │
+│  t5: OS는 탐지 결과(교착)를 복구 레이어에 토스(Report).       │
+│                                                               │
+│  ▶ 핵심: 방어벽을 없앤 대가로 최상 성능을,                    │
+│           사고가 나면 몰아서 찾아내는 벌금형 통제 체계.       │
+└───────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="eunhaengweongwa-ragyi-sahu-post-jaehwalyong">은행원과 RAG의 "사후(Post)" 재활용</h3>
+<p>데드락 탐지(Detection) 알고리즘의 모양새는 놀랍게도 예방/회피 알고리즘(RAG, 뱅커스)의 복붙(Copy-paste)에 가깝다. 단지 쓰는 '타이밍'이 완전히 다르다.</p>
+<ol>
+<li><strong>단일 자원 환경 탐지 (Wait-for Graph)</strong>:
+<ul>
+<li>회피 때는 미래 점선(Claim)을 넣었지만, 탐지는 진짜 리얼루 막 붙어있는 지금의 "A대기→B대기→C대기" 방향 화살표만 그린다.</li>
+<li>주기적으로 DFS 알고리즘을 돌려 그 안에 닫힌 폐곡선(Cycle)이 뚫리면 교착 상태 확진!</li>
+</ul>
+</li>
+<li><strong>다중 자원 환경 탐지 (탐지 전용 은행원 알고리즘)</strong>:
+<ul>
+<li>뱅커스와 달리 <code>Max</code>(미래치)라는 개소리 행렬은 찢어버린다.</li>
+<li>오로지 지금 쥔 돈(Allocation), 당장 애타게 필요한 돈(Request), 금고 현찰(Available) 3장부만 놓고 지금 당장 돌려 막기가 도저히 안 되는 놈들(데드락 조도들)이 있는지 <code>O(m*n^2)</code> 순회 검토를 때린다.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>요청 또는 이벤트 발생</strong>: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.</li>
+<li><strong>현재 상태 확인</strong>: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.</li>
+<li><strong>정책 적용 및 자원 배정</strong>: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.</li>
+<li><strong>결과 반영 및 후속 처리</strong>: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.</li>
+</ol>
+<table><thead><tr><th style="text-align: left">감찰 기준</th><th style="text-align: left">회피 (Avoidance)</th><th style="text-align: left">탐지 (Detection)</th></tr></thead><tbody>
+<tr><td style="text-align: left">자원 융통성</td><td style="text-align: left">주면 데드락 날까 쫄아서 안 줌</td><td style="text-align: left">옜다 다 가져가라 (유연/속도 최고)</td></tr>
+<tr><td style="text-align: left">알고리즘 부하 타이밍</td><td style="text-align: left">자원 요청할 때<strong>마다</strong> 루틴 실행 (막대함)</td><td style="text-align: left">2시간에 1번, CPU 툭 떨어질 때만 실행 (최소화)</td></tr>
+<tr><td style="text-align: left">필수 수반 조치</td><td style="text-align: left">없음 (미리 거절하니까)</td><td style="text-align: left"><strong>반드시 &lt;복구(Recovery/Rollback)&gt; 모듈이 한 몸으로 필참</strong></td></tr>
+</tbody></table>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">감찰 기준</th><th style="text-align: left">회피 (Avoidance)</th><th style="text-align: left">탐지 (Detection)</th></tr></thead><tbody>
+<tr><td style="text-align: left">자원 융통성</td><td style="text-align: left">주면 데드락 날까 쫄아서 안 줌</td><td style="text-align: left">옜다 다 가져가라 (유연/속도 최고)</td></tr>
+<tr><td style="text-align: left">알고리즘 부하 타이밍</td><td style="text-align: left">자원 요청할 때<strong>마다</strong> 루틴 실행 (막대함)</td><td style="text-align: left">2시간에 1번, CPU 툭 떨어질 때만 실행 (최소화)</td></tr>
+<tr><td style="text-align: left">필수 수반 조치</td><td style="text-align: left">없음 (미리 거절하니까)</td><td style="text-align: left"><strong>반드시 &lt;복구(Recovery/Rollback)&gt; 모듈이 한 몸으로 필참</strong></td></tr>
+</tbody></table>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p><strong>실무 시나리오</strong>:</p>
+<ol>
+<li><strong>RDBMS (Oracle, MySQL, SQL Server) 동시성 코어</strong>: 운영체제 범용 레벨에서는 타조 방임이지만, DB 세상에서는 이 탐지 알고리즘이 황제다. 트랜잭션 수백만 개가 락을 막 건다. DB 백그라운드 스레드인 <code>Lock Manager</code>가 매 주기마다 대기 그래프(WFG) 매트릭스에 찌른 뒤 고리가 보이면 즉시 에러(<code>단절된 교착상태 발견</code>)를 뱉고 한 놈의 쿼리 전체를 롤백(희생양 탈락) 시켜 전체 디비를 구조한다. 이 사후 탐지 파워 덕택에 DB 속도가 미친 듯 방출될 수 있다.</li>
+<li><strong>소프트웨어 워치독 (Watchdog Timer)</strong>: 탐지는 수식을 돌릴 필요도 없이, 락 대기 시간에 'Ping'이 10초 이상 비거나 타이머가 뜨면 "너네 사이클에 걸려 죽었구나?" 라고 퉁 쳐서 자가 탐지하는 '타임아웃 디텍션' 구문으로 극단적 융합 및 경량화되어 실무를 제패한다.</li>
+</ol>
+<p><strong>안티패턴</strong>:</p>
+<ul>
+<li><strong>자주 돌려버리는 탐지 데몬 (Over-frequent Detction)</strong>: 데드락이 우려된다며 매 0.1초마다 이 거대한 $O(n^2)$ 탐색 커널을 돌리는 세팅. 어차피 이럴 거면 최악의 오버헤드를 자랑하는 회피(Avoidance)로 회귀하는 거나 다름없다. 데드락의 멈춤 피해액보다 쓸데없이 스캔하느라 갈려나가는 CPU 전기세가 압도적으로 크다.</li>
+</ul>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<table><thead><tr><th style="text-align: left">기준</th><th style="text-align: left">탐지 알고리즘 배제 시</th><th style="text-align: left">탐지 알고리즘 + 복구 채택 시</th></tr></thead><tbody>
+<tr><td style="text-align: left">프로그래밍 제약</td><td style="text-align: left">회피나 예방으로 짜내느라 뼈 빠짐</td><td style="text-align: left">코드 대충 짜도 터지면 엔진이 롤백 띄워줌 (자유)</td></tr>
+<tr><td style="text-align: left">자원 딜레이</td><td style="text-align: left">보수적이라 놀리는 시간 많음</td><td style="text-align: left">트래픽 닿는 한 극한의 Throughput 활용</td></tr>
+<tr><td style="text-align: left">장애 체감</td><td style="text-align: left">미리 막아 깔끔함</td><td style="text-align: left">터지고 롤백하느라 데이터 중간 잃고 버퍼링 오짐</td></tr>
+</tbody></table>
+<p><code>교착 상태 탐지 (Deadlock Detection)</code>는 완벽을 추구하던 컴퓨터 공학자들의 백기 항복이자 동시에 실용주의로의 엄청난 도약이었다. 그들은 "데드락을 방비하는 비용이 너무나 끔찍하니 차라리 펑펑 터지게 내버려 둬라! 우리가 주기적으로 수습(탐지/롤백)하는 단기적 고통이, 시스템을 100년 내내 거북이로 살게 하는 오버헤드 지옥보다 천 배는 낫다!" 라며 선제 방어(Proactive)에서 사후 검증(Reactive) 메타로 대세 이데올로기를 영원히 갈아치웠다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">대기 그래프 (Wait-For Graph)
+    ↓
+교착 상태 회복 (Recovery)
+    ↓
+탐지 오버헤드 (Detection Overhead)
+    ↓
+Timeout Detection
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">관계</th></tr></thead><tbody>
+<tr><td style="text-align: left">대기 그래프 (Wait-For Graph)</td><td style="text-align: left">단일 자원 환경에서 탐지 주기가 도달했을 때 돌려보는 둥근 사이클 감시기</td></tr>
+<tr><td style="text-align: left">교착 상태 회복 (Recovery)</td><td style="text-align: left">탐지를 통해 데드락 환자를 색출해 냈을 때 뒤따라오는 무자비한 사형 검/살생부 (항상 쌍으로 다님)</td></tr>
+<tr><td style="text-align: left">탐지 오버헤드 (Detection Overhead)</td><td style="text-align: left">무거워서 자주 부르면 안 되게 만드는 족쇄. 그래서 "언제 이 탐지기를 돌릴까" 고민이 발생함</td></tr>
+<tr><td style="text-align: left">Timeout Detection</td><td style="text-align: left">그래프 그리지도 않고 "너네 2초 넘게 블로킹이면 그냥 탐지라 치자"는 사구 탐지의 변칙 최강자 타임아웃</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

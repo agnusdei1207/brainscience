@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>515. 쿠버네티스 (Kubernetes) 보안 - RBAC, Network Policy, Pod Security Admission — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 쿠버네티스(K8s) 보안은 컨테이너(Docker) 하나를 방어하는 수준을 넘어, <strong>수만 개의 컨테이너가 얽혀 돌아가는 거대한 '해상 도시(Cluster)' 전체의 헌법(Policy)을 세우고, 주민(Service Account)의 직업과 이동 경로를 중앙에서 기계적으로 통제하는 클라우드 인프라 방어의 끝판왕</strong>이다.
+2. <strong>가치</strong>: 해커가 앱(Web)의 취약점을 뚫고 들어오더라도, K8s 보안 3대장이 버티고 있으면 해커는 <strong>아무 권한도 없고(RBAC 차단), 옆집 DB 서버로 가지도 못하며(Network Policy 차단), 무기(Root 컨테이너)를 추가로 소환하지도 못하는(PSA 차단)</strong> '3중 독방'에 갇혀 질식사하게 만드는 치명적 횡적 이동(Lateral Movement) 방어망을 제공한다.
+3. <strong>융합</strong>: 인간 개발자의 실수를 믿지 않는 <strong>제로 트러스트(Zero Trust)</strong> 및 <strong>IaC(Infrastructure as Code)</strong> 철학과 융합되어, YAML 파일로 적힌 보안 룰 자체가 인프라의 물리적 뼈대가 되고, OPA(Open Policy Agent)와 결합하여 "룰에 안 맞는 파드(Pod)는 아예 부팅조차 불가능"한 완벽한 자동화 차단 생태계를 완성한다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h1 id="515-kubeonetiseu-kubernetes-boan-rbac-network-policy-pod-security-admission">515. 쿠버네티스 (Kubernetes) 보안 - RBAC, Network Policy, Pod Security Admission</h1>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: 쿠버네티스(K8s)는 배의 조타실이다. 배 안에는 수천 개의 컨테이너(Pod)가 실려있다. K8s 보안은 1) 이 조타실(API Server)에 누가 접근할 수 있는가(RBAC), 2) 배 안의 컨테이너들끼리 서로 말을 걸 수 있는가(Network Policy), 3) 컨테이너가 위험한 화약(Root 권한)을 품고 배에 탈 수 있는가(Pod Security)를 통제하는 3대 핵심 룰(Rule)이다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 도커(Docker) 보안(513번)은 컨테이너 1개의 위생 상태만 챙긴다. 하지만 진짜 해킹은 컨테이너 A를 뚫은 해커가 K8s의 심장인 <code>API Server</code>로 말을 걸어서 "나 관리잔데, 저기 코인 채굴기 컨테이너 100개 더 띄워!"라고 인프라 자체를 장악(Cluster Takeover)할 때 일어난다. K8s는 기본적으로 "다 열려있는(Flat Network) 공산주의 마을"로 태어났기 때문에, <strong>개발자가 이 공산주의 마을에 억지로 보이지 않는 겹겹의 철조망(격벽)을 치지 않으면 마을 전체가 1초 만에 해커의 노예로 전락</strong>하므로 K8s 전용 보안 세팅이 필수적이다.</p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: K8s 보안은 **'대형 크루즈선(클러스터)의 생존 매뉴얼'**과 같습니다.</p>
+<ul>
+<li><strong>RBAC</strong>: 승무원의 **'사원증'**입니다. 주방 알바생(일반 Pod)이 엔진실(K8s API 서버) 문을 열려고 하면 쫓겨납니다.</li>
+<li><strong>Network Policy</strong>: 배 안의 **'밀실 복도'**입니다. 3층 객실 손님(Web)은 1층 식당(DB)으로만 갈 수 있고, 2층 기관실(Admin)로 통하는 복도에는 아예 콘크리트 벽이 쳐져 있어 갈 수조차 없습니다.</li>
+<li><strong>Pod Security Admission (PSA)</strong>: 배에 타기 전 **'엑스레이 검색대'**입니다. 뾰족한 무기(Root 권한, Host 마운트)를 들고 배에 타려는 승객(Pod)은 입구에서 컷(Fail) 당해 승선이 거부됩니다.</li>
+</ul>
+</li>
+<li>
+<p><strong>등장 배경 및 발전 과정</strong>:</p>
+<ol>
+<li><strong>초기 K8s의 무방비 시대</strong>: K8s 1.0 시절엔 RBAC도, 네트워크 격리도 없었다. 파드 1개가 털리면 클러스터 1만 개 파드가 다 털리는 구조였다 (테슬라 K8s 코인 채굴 해킹 사태).</li>
+<li><strong>RBAC와 Network Policy의 기본 탑재</strong>: 구글과 커뮤니티가 경악하며 <code>Role</code>과 <code>NetworkPolicy</code>를 K8s 기본 기능(Built-in)으로 때려 박았다.</li>
+<li><strong>PSP의 죽음과 PSA의 등장 (현재)</strong>: 원래 파드를 검사하던 툴은 PSP(Pod Security Policy)였는데, 설정이 너무 복잡해서 개발자들이 쌍욕을 하며 아무도 안 썼다. K8s 진영은 과감히 PSP를 폐기(Deprecated)하고, 훨씬 단순하고 직관적인 **PSA(Pod Security Admission)**로 세대교체를 단행하여 현대 클라우드 보안의 표준을 세웠다.</li>
+</ol>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: K8s가 주는 편리함(오토스케일링, 자동 복구)은 **'엑셀(가속기)'**입니다. 엑셀만 있고 **'브레이크(K8s 3대 보안)'**가 없는 자동차는 반드시 절벽에서 떨어집니다. 이 3가지 보안 요소는 클러스터라는 거대한 스포츠카가 폭주하지 않게 제어하는 100억짜리 카본 세라믹 브레이크입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="1-k8syi-jotasileul-jikyeora-rbac-role-based-access-control">1. K8s의 조타실을 지켜라: RBAC (Role-Based Access Control)</h3>
+<p>K8s에서는 '사람(User)'뿐만 아니라 '파드(Pod)'도 조타실(API 서버)에 말을 건다. 파드를 기계(Machine)가 아닌 **'서비스 어카운트(Service Account, SA)'**라는 인격체로 대우해야 한다.</p>
+<ul>
+<li><strong>문제</strong>: 개발자가 귀찮아서 웹 파드(Web Pod)에 <code>default</code> (기본) SA를 줬다. 해커가 웹 파드를 털었다. 해커가 쉘에서 <code>kubectl get secrets</code> 명령어를 쳤더니 K8s 클러스터 안의 모든 비밀번호가 우르르 쏟아져 나왔다.</li>
+<li><strong>방어 (RBAC)</strong>: K8s의 모든 SA는 기본적으로 <strong>'권한 제로(0)'</strong> 상태여야 한다(Default Deny). 웹 파드에는 오직 "내 상태(Status)만 읽을 수 있는 권한(Read-only)"만 적힌 <code>Role</code>을 부여하고, 그것을 <code>RoleBinding</code>으로 묶어주어야 한다. 해커가 <code>get secrets</code>를 치는 순간 "권한 없음(403 Forbidden)"으로 깔끔하게 차단된다.</li>
+</ul>
+<h3 id="2-hoengjeog-idong-lateral-movement-myeolmang-network-policy-neteuweokeu-jeongcaeg">2. 횡적 이동(Lateral Movement) 멸망: Network Policy (네트워크 정책)</h3>
+<p>K8s의 가장 충격적인 디폴트 설정: <strong>"클러스터 안의 모든 파드는 서로 100% 통신이 가능하다 (Flat Network)."</strong></p>
+<ul>
+<li><strong>문제</strong>: 프론트엔드 파드가 털렸다. 해커는 프론트 파드 안에서, 전혀 상관없는 '인사팀 DB 파드'로 핑(Ping)을 때리고 쿼리를 날려 데이터를 빼간다.</li>
+<li><strong>방어 (Network Policy)</strong>: L4(IP/Port) 레벨의 쿠버네티스 전용 방화벽 룰을 짠다.<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">kind: NetworkPolicy
+spec:
+  podSelector:
+    matchLabels: { app: db-pod } # 방어할 대상 (DB)
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels: { app: web-pod } # 오직 Web 파드에서 오는 것만
+    ports:
+    - protocol: TCP, port: 3306       # 3306 포트로만 허락!
+</code></pre>
+이 룰이 적용되는 순간, <code>web-pod</code> 외의 모든 파드가 <code>db-pod</code>로 날리는 패킷은 공중에서 1초 만에 증발(Drop)해 버린다. 해커는 프론트 파드에 갇혀서 한 발자국도 옆으로 못 가는 지옥을 맛본다.</li>
+</ul>
+<h3 id="3-mugi-banib-geumji-guyeog-psa-pod-security-admission">3. 무기 반입 금지 구역: PSA (Pod Security Admission)</h3>
+<p>컨테이너가 악마(Root)로 돌변하는 것을 쿠버네티스 입구에서 발로 차버린다.</p>
+<ul>
+<li>
+<p><strong>원리</strong>: K8s에 YAML 파일을 던져서 "파드 띄워줘!"라고 요청하면, 띄우기 직전 찰나의 순간에 **어드미션 컨트롤러(Admission Controller)**가 YAML 파일을 낚아채서 엑스레이를 쏜다.</p>
+</li>
+<li>
+<p><strong>3단계 프로필 (Privileged / Baseline / Restricted)</strong></p>
+<ul>
+<li><code>Restricted</code> 프로필을 네임스페이스에 걸어버리면: 개발자가 보낸 YAML에 <code>runAsRoot: true</code>(루트로 실행) 나 <code>hostNetwork: true</code>(호스트 네트워크 훔쳐 쓰기) 같은 위험한 옵션이 1개라도 적혀있으면 K8s가 "응, 안 띄워줘 돌아가!" 라며 파드 생성을 물리적으로 거부해 버린다. (이전 도커 보안 513장의 K8s 인프라 버전)</li>
+</ul>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: <strong>RBAC</strong>는 칩입자가 우리 집 **'금고 열쇠'**를 못 만지게 손을 묶는 것이고, <strong>Network Policy</strong>는 침입자가 거실에서 안방이나 화장실로 못 가도록 **'유리 벽'**을 치는 것이며, <strong>PSA</strong>는 애초에 침입자가 집에 들어올 때 주머니에 **'다이너마이트(루트 권한)'**를 숨기고 들어오지 못하게 몸수색을 하는 것입니다. 이 3개가 융합되어야 해커가 숨을 쉴 공간이 사라집니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h2>
+<h3 id="1-boan-inpeura-samgugji-waf-vs-network-policy-vs-service-mesh-mtls">1. 보안 인프라 삼국지: WAF vs Network Policy vs Service Mesh (mTLS)</h3>
+<p>클라우드의 3단 방패막이다. 어디서 막는지 헷갈리면 아키텍트 탈락이다.</p>
+<table><thead><tr><th style="text-align: left">척도</th><th style="text-align: left">WAF (웹 방화벽)</th><th style="text-align: left">Network Policy (K8s)</th><th style="text-align: left">Service Mesh (Istio mTLS)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>위치</strong></td><td style="text-align: left"><strong>클러스터 밖 (대문)</strong></td><td style="text-align: left"><strong>클러스터 안 (복도/방문)</strong></td><td style="text-align: left"><strong>클러스터 안 (서버와 서버 사이 통신 터널)</strong></td></tr>
+<tr><td style="text-align: left"><strong>방어 타겟</strong></td><td style="text-align: left">외부 해커의 SQLi, XSS</td><td style="text-align: left">털린 좀비 파드의 <strong>횡적 이동(L4 방어)</strong></td><td style="text-align: left">스니핑(도청) 및 <strong>신분증 없는 파드의 찌르기(L7 방어)</strong></td></tr>
+<tr><td style="text-align: left"><strong>작동 원리</strong></td><td style="text-align: left">악성 문자열 패턴(정규식) 컷오프</td><td style="text-align: left"><strong>IP, Port, Label</strong> 기반의 멍청하고 빠른 길막기</td><td style="text-align: left"><strong>클라이언트 인증서(신분증)</strong> 대조 기반의 깐깐한 암호화</td></tr>
+<tr><td style="text-align: left"><strong>비유</strong></td><td style="text-align: left">클럽 입구의 기도 (불량배 컷)</td><td style="text-align: left">클럽 내부 VIP 룸 바리케이드 (아무나 못 감)</td><td style="text-align: left">룸 안에서 요원들끼리의 귓속말 암호 통신</td></tr>
+</tbody></table>
+<h3 id="gwamog-yunghab-gwanjeom">과목 융합 관점</h3>
+<ul>
+<li>
+<p><strong>클라우드 데브옵스 (OPA Gatekeeper와의 융합)</strong>: PSA(Pod Security)가 K8s 순정품이라면, OPA(Open Policy Agent)는 사제 튜닝카의 끝판왕이다. OPA Gatekeeper를 깔면, 단순한 루트 권한 차단을 넘어서 "사내 프라이빗 레지스트리(Nexus)에서 가져온 도커 이미지가 아니면 생성 금지!", "Label에 팀 이름(Team=HR) 안 적혀있으면 생성 금지!" 등 전사적인 데브옵스 거버넌스(Rule)를 K8s에 법으로 박아버려, 개발자들의 모든 꼼수와 우회를 기계적으로 썰어버리는 극강의 **Policy as Code (정책의 코드화)**가 완성된다.</p>
+</li>
+<li>
+<p><strong>인프라 아키텍처 (네임스페이스 Namespace 격리)</strong>: K8s는 태생이 멀티 테넌트(Multi-tenant)다. A팀과 B팀이 한 클러스터를 나눠 쓴다. 아키텍트는 반드시 K8s <code>Namespace</code>로 A팀과 B팀을 찢어놓고, RBAC와 Network Policy를 융합하여 "A팀의 파드는 절대로 B팀 네임스페이스로 패킷을 보낼 수도 없고, B팀의 시크릿(Secret)을 읽을 수도 없다"는 거대한 국가 간 국경선(Hard Multitenancy)을 그어야만 1개의 클러스터를 수천 명이 안전하게 공유할 수 있다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 이 3단계 클라우드 방어는 **'오징어 게임'**과 같습니다. <strong>WAF</strong>는 게임장 밖에서 경찰을 막는 요원이고, <strong>Network Policy</strong>는 1번 게임장(무궁화꽃)에서 2번 게임장(달고나)으로 참가자가 맘대로 넘어가지 못하게 치는 벽입니다. <strong>Service Mesh</strong>는 달고나 게임 안에서 요원들이 서로가 스파이(침입자)인지 확인하려고 가면의 모양(인증서)을 깐깐하게 대조하는 암구호 시스템입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="4-bigyo-mic-teureideuopeu">4. 비교 및 트레이드오프</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li>
+<p><strong>시나리오 — 'cluster-admin' 만능주의가 낳은 랜섬웨어 초토화</strong>: 개발 편의성을 위해 데브옵스 팀원이 젠킨스(CI/CD)가 K8s에 배포할 때 쓰는 서비스 어카운트(SA)에 K8s 신의 권한인 <code>cluster-admin</code> 롤을 묶어(RoleBinding) 주었다. 어느 날 젠킨스 서버가 낡은 플러그인 취약점으로 해킹당했다. 해커는 젠킨스 안에 저장된 K8s <code>cluster-admin</code> 토큰을 꺼내 들었고, 단 1줄의 <code>kubectl delete namespace all</code> 명령어로 회사의 100개 서비스 전체가 0.1초 만에 허공으로 증발해버렸다.</p>
+<ul>
+<li><strong>아키텍트의 해결책</strong>: <strong>최소 권한의 원칙(Least Privilege) 위반에 의한 제국 붕괴</strong>다. 아키텍트는 아무리 젠킨스라도 절대 클러스터 전체 권한을 주면 안 된다. 무조건 **<code>Role</code> (특정 네임스페이스 안에서만 노는 동네 이장 권한)**과 **<code>ClusterRole</code> (클러스터 전체를 흔드는 대통령 권한)**을 칼같이 분리해야 한다. 젠킨스에는 오직 "A팀 네임스페이스 안에서만 파드를 업데이트(Update)할 수 있는" 좁디좁은 <code>Role</code>만 쥐여주어야, 젠킨스가 털리더라도 딱 A팀 네임스페이스 하나만 박살 나고 회사의 메인 심장(DB 등)은 무사히 보존된다.</li>
+</ul>
+</li>
+<li>
+<p><strong>시나리오 — Network Policy 부재로 인한 '서버 내 횡적 이동(Lateral Movement)'의 축제</strong>: 회사 K8s에 블로그 파드와 결제 파드가 같이 떠 있다. 방화벽(WAF)은 결제 파드를 미친 듯이 막았지만, 블로그 파드는 대충 열어놨다. 해커가 블로그 파드에 XSS/SSRF 취약점을 뚫고 들어가 쉘(Shell)을 땄다. K8s의 디폴트 네트워크는 "모두 다 친구" 상태였다. 해커는 블로그 파드 안에서 <code>curl http://payment-db:3306</code> 을 날려 아주 평온하게 결제 DB의 마스터 비밀번호와 고객 신용카드를 다 퍼갔다.</p>
+<ul>
+<li><strong>아키텍트의 해결책</strong>: <strong>제로 트러스트 네트워크 격리(Micro-segmentation) 실패</strong>다. 클러스터 안은 해커의 놀이터다. 아키텍트는 "모든 파드는 명시적으로 허락된(Whitelist) 길 외에는 통신할 수 없다"는 <strong>Default Deny (기본 차단) Network Policy</strong>를 네임스페이스 전체에 깔아버려야 한다. 이 룰 하나만 들어가면, 블로그 파드 안의 해커가 결제 파드로 핑(Ping)을 날리는 순간, 허공에서 패킷이 벽에 부딪혀 1초 만에 드랍(Drop)되며 해커는 독방에 갇혀 아사(餓死)하게 된다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="doib-cekeuriseuteu">도입 체크리스트</h3>
+<ul>
+<li><strong>비즈니스적</strong>: <strong>RBAC 감사를 위한 '주기적 권한 회수(Revocation)' 프로세스가 있는가?</strong> 3년 전 퇴사한 김대리의 깃허브 계정이나 K8s 토큰이 아직도 살아있다면 100% 털린다. 권한을 부여하는 것보다 뺏는 게 10배 중요하다. 아키텍트는 3개월에 한 번씩 사내 K8s의 모든 <code>RoleBinding</code>을 스캔하는 스크립트(Kube-audit)를 돌려, "이 서비스 어카운트(SA)를 최근 30일 동안 아무 파드도 안 썼네? 당장 삭제!" 라며 유령 권한(Ghost Privilege)의 싹을 기계적으로 잘라내야 한다.</li>
+<li><strong>기술적</strong>: <strong>K8s Secret 자원의 암호화(Encryption at Rest)를 켰는가?</strong> 쿠버네티스에 <code>kubectl create secret</code> 으로 DB 비번을 넣으면 안전한 것 같다. 하지만 이 시크릿은 <code>etcd</code>라는 마스터 노드의 뒷단 DB에 그냥 <code>Base64</code> 문자열(평문)로 쌩으로 저장된다. 해커가 노드 하나만 장악해서 <code>etcd</code> 파일을 훔치면 회사 비번이 다 털린다. 아키텍트는 K8s를 세팅할 때 무조건 <strong>AWS KMS나 봉투 암호화(Envelope Encryption)</strong> 옵션을 켜서, <code>etcd</code>에 저장되는 데이터 자체가 디스크 레벨에서 100% 군사급 암호화로 잠기게 인프라 밑바닥을 공사해야 한다.</li>
+</ul>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p><strong>"Network Policy 짰으니까 CNI 플러그인은 기본(Flannel) 쓰자!" (허공에 삽질)</strong>: K8s에서 <code>NetworkPolicy.yaml</code>을 100줄을 기가 막히게 짰다. 그런데 클러스터 네트워크 엔진(CNI)을 가장 기본인 <code>Flannel</code>로 깔아놨다. 결과는? 방어율 0%다. <code>Flannel</code>은 네트워크 폴리시(방화벽 룰)를 해석하는 뇌 기능 자체가 없어서, 기껏 짠 방화벽 룰을 100% 무시하고 모든 통신을 다 뚫어버린다. K8s 방화벽을 쓰려면 무조건 <strong><code>Calico</code> 나 <code>Cilium</code></strong> 같이 Network Policy를 정식으로 씹어 먹고 집행할 수 있는 '고급 3rd Party CNI'로 뼈대를 교체해야만 마법이 발동된다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: Flannel에서 Network Policy를 짜는 것은, **'장님 경비원에게 얼굴 확인 매뉴얼 100페이지 쥐여주기'**와 같습니다. 매뉴얼(yaml)이 아무리 완벽해도 경비원(CNI)이 눈(방화벽 룰 해석 엔진)이 없어서 지나가는 사람을 다 통과시킵니다. 완벽한 매뉴얼을 주려면, 반드시 눈이 보이고 몽둥이를 휘두를 수 있는 특수부대 출신 경비원(Calico/Cilium)을 고용해 자리에 앉혀둬야 룰이 물리적으로 집행됩니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-coejeoghwa-gibeob">5. 실무 적용 및 최적화 기법</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">디폴트 K8s (Flat Network + cluster-admin 남용) (AS-IS)</th><th style="text-align: left">RBAC 쪼개기 + Network Policy 차단 + PSA 방패 (TO-BE)</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">파드 1개 해킹 시 전체 클러스터 1,000개 파드 연쇄 감염</td><td style="text-align: left">Default Deny 방화벽으로 옆 파드 통신 100% 컷오프</td><td style="text-align: left">횡적 이동(Lateral Movement)에 의한 <strong>연쇄 피해율 0% 락인</strong></td></tr>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">취약한 도커 이미지로 Root 권한 탈취 후 호스트 OS 삭제</td><td style="text-align: left">PSA (Restricted) 강제화로 Root 권한 파드 생성 불가</td><td style="text-align: left">컨테이너 탈옥(Container Escape) <strong>치명적 장애(Downtime) 원천 봉쇄</strong></td></tr>
+<tr><td style="text-align: left"><strong>정성</strong></td><td style="text-align: left">"누가 K8s 건드려서 터진 거 아냐?" 개발자 간 끝없는 의심</td><td style="text-align: left">"기계(RBAC/OPA)가 승인한 놈만 움직인다" 투명성 확보</td><td style="text-align: left">휴먼 에러(Human Error)를 인프라 아키텍처로 찍어 누르는 <strong>클린 거버넌스 획득</strong></td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang">미래 전망</h3>
+<ul>
+<li><strong>eBPF 기반 차세대 보안 천하통일 (Cilium)</strong>: 낡은 K8s 네트워크 보안(iptables 기반)은 너무 복잡하고 성능을 많이 갉아먹는다. 미래의 K8s 클러스터는 리눅스 커널의 신(God)인 <strong>eBPF</strong> 기술 위로 싹 다 갈아타고 있다(Cilium). 컨테이너 밖에서 쩨쩨하게 막는 게 아니라, OS 커널 깊숙한 밑바닥에서 패킷이 튀어나오는 그 0.0001초의 순간에 L7(HTTP) 단위까지 스캔하고 목을 썰어버리는 '에이전트 없는(Agentless) 무설정 초음속 런타임 보안'이 미래의 압도적 표준으로 클라우드 생태계를 장악하고 있다. (이전 장 513번 연계)</li>
+<li><strong>KSPM (Kubernetes Security Posture Management)의 자율 주행화</strong>: K8s 설정 빵꾸(Misconfiguration)가 너무 많아서 인간의 뇌로는 감당이 안 된다. 미래엔 클라우드의 AI 로봇(KSPM 툴)이 24시간 내내 클러스터의 <code>yaml</code> 10만 개를 크롤링한다. "어? 3번 파드에 네트워크 폴리시 구멍 뚫렸네? 5번 파드는 권한이 너무 높네?" 라며 인간에게 알람만 주는 걸 넘어, AI가 1초 만에 <code>NetworkPolicy</code> yaml 코드를 새로 짜서 깃허브에 덮어 씌우고 K8s에 재배포해 구멍을 틀어막아 버리는(Auto-Remediation) 궁극의 자가 면역 시대로 진화 중이다.</li>
+</ul>
+<h3 id="camgo-pyojun">참고 표준</h3>
+<ul>
+<li><strong>CIS Kubernetes Benchmark</strong>: 도커를 넘어 K8s 클러스터를 세팅할 때 "API 서버 인증 켰냐? ETCD 암호화 했냐?"라며 무려 100개가 넘는 세팅 값의 정답을 숟가락으로 떠먹여 주는 인프라 보안의 글로벌 바이블. 스캐너(Kube-bench)들이 이 책을 기준으로 점수를 매긴다.</li>
+<li><strong>OWASP Kubernetes Top 10</strong>: K8s 시대에 맞춰 OWASP 형님들이 새로 파낸 족보. "설정 오류(Misconfiguration)와 공급망 공격(Supply Chain)이 K8s를 파괴하는 1등 주범이다"라며 RBAC와 네트워크 격리의 정당성에 못을 박아준 절대 헌장.</li>
+</ul>
+<p>쿠버네티스(Kubernetes) 보안의 핵심은 **'가장 거대한 편의성의 바다 위에 가장 가혹한 통제의 감옥을 짓는 철학적 역설'**이다. K8s는 개발자에게 무한히 확장(Scale-out)하고 스스로 치유되는 신의 권력을 주었다. 하지만 무한한 연결과 평면 네트워크(Flat Network)라는 축복은, 단 1마리의 좀비(해킹된 파드)가 1만 개의 파드를 1초 만에 물어뜯어 감염시키는 지옥의 고속도로를 깔아준 것과 같다. 기술사는 이 위험한 공산주의의 평화 속에 차가운 콘크리트 벽을 세워야 한다. 권한(RBAC)을 현미경처럼 쪼개서 말단 노예 권한만 주고, 네트워크(Network Policy)를 갈기갈기 찢어 옆집조차 못 보게 장님을 만들며, 무기(Root)를 들고 타려는 놈은 입구(PSA)에서 대가리를 깨버리는 편집증적 제로 트러스트(Zero Trust). 1만 명의 노를 젓는 선원(컨테이너)이 서로 소통하지 못하는 끔찍한 고립 속에서, 오직 지휘관(아키텍트)의 통제된 악보에 의해서만 10조 원짜리 비즈니스가 웅장하게 굴러가는 것, 그것이 가장 완벽한 클라우드 네이티브 보안 아키텍처다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: K8s 보안은 **'초대형 다이아몬드 전시관의 3중 레이저 보안'**과 같습니다. 관람객(유저)은 전시관(K8s)의 넓고 화려함을 즐기지만, 보이지 않는 곳엔 살벌한 통제가 깔려 있습니다. 1. 아무나 VIP 관리실 열쇠(RBAC)를 가지지 못하게 통제하고, 2. 복도마다 눈에 보이지 않는 적외선 레이저 벽(Network Policy)을 쳐서 정해진 동선을 1cm라도 벗어나면 즉각 사이렌이 울리며, 3. 입장할 때 금속탐지기(PSA)로 칼(Root)을 든 놈을 완벽히 튕겨냅니다. 화려함(K8s의 편리함)은 철저히 통제된 무결점 방어막 위에서만 유지될 수 있습니다.</li>
+</ul>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>컨테이너 보안 (Docker)</strong></td><td style="text-align: left">K8s 보안의 하위 호환 뼈대. K8s가 거대한 도시(Cluster)를 방어한다면, 컨테이너 보안은 도시를 채우고 있는 1개의 벽돌(Container)이 썩었는지(이미지 스캔) 검사하는 미시적 예방 백신. (이전 장 513번)</td></tr>
+<tr><td style="text-align: left"><strong>제로 트러스트 (Zero Trust)</strong></td><td style="text-align: left">K8s 보안의 절대 이념. "같은 K8s 클러스터(사내망) 안에 뜬 파드니까 안전한 우리 편이겠지!"라는 미친 망상을 때려 부수고 Network Policy로 파드끼리 벽을 쳐버리는 사상.</td></tr>
+<tr><td style="text-align: left"><strong>마이크로 세그멘테이션 (Micro-segmentation)</strong></td><td style="text-align: left">Network Policy의 목표 그 자체. 옛날 방화벽처럼 대문 1개만 지키는 게 아니라, K8s 내부의 1만 개 파드 사이사이에 수만 개의 방화벽(세그먼트)을 벌집처럼 잘게 쪼개어 박아버리는 극한의 격리술.</td></tr>
+<tr><td style="text-align: left"><strong>OPA (Open Policy Agent)</strong></td><td style="text-align: left">K8s 순정 보안(PSA)이 답답해서 아키텍트들이 사제 튜닝으로 달아버리는 궁극의 헌법 재판소 엔진. 룰을 코드(Rego 언어)로 짜서 넣으면 파드 생성부터 배포까지 K8s 생태계 전체의 입구컷을 통치한다.</td></tr>
+<tr><td style="text-align: left"><strong>mTLS (상호 TLS / Service Mesh)</strong></td><td style="text-align: left">Network Policy가 L4(포트/IP) 계층에서 파드를 무식하게 막는다면, mTLS(이스티오)는 L7 계층에서 파드끼리 인증서 신분증을 확인하고 암호화 통신을 씌우는 최상위 방어 쌍두마차. (이전 장 512번)</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>거대한 성(쿠버네티스) 안에 수천 명의 요정(컨테이너)들이 살고 있어요. 옛날엔 요정들이 맘대로 성 안을 뛰어다녀서(네트워크), 나쁜 도둑 1명만 들어와도 성 전체가 다 털렸죠.</li>
+<li>그래서 똑똑한 성주님(아키텍트)이 무서운 규칙 3개를 만들었어요! 첫째, 요정마다 **'명찰(RBAC)'**을 줘서 자기 일만 하게 하고! 둘째, 요정들 방 사이에 **'보이지 않는 유리벽(Network Policy)'**을 쳐서 옆방으로 못 가게 막고!</li>
+<li>셋째, 성문에 **'경비원(PSA)'**을 세워 위험한 무기(Root)를 든 놈은 애초에 성에 못 들어오게 뻥 차버렸어요! 이렇게 <strong>거대한 성 전체를 완벽하게 감시하고 쪼개서 지키는 3개의 마법</strong>을 **'쿠버네티스 보안 3대장'**이라고 부른답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

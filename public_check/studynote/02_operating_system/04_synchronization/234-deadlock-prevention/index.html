@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>234. 세마포어 (Semaphore) - S 정수 변수, wait(P), signal(V) 원자적 연산 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 22, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 교착 상태 예방 (Deadlock Prevention)은 데드락을 발생시키는 <strong>4대 필요조건(상호 배제, 점유 대기, 비선점, 순환 대기) 중 최소한 하나를 시스템 아키텍처 레벨에서 구조적으로 성립하지 못하도록 원천 차단</strong>하는 가장 보수적이고 강력한 방어 기법이다.
+<strong>비유</strong>: 교통사고(데드락)를 막기 위해 신호등(회피 알고리즘)을 다는 게 아니라, 아예 사고가 물리적으로 날 수 없도록 **'전국 모든 도로를 일방통행(순환 대기 파괴)으로 만들거나, 차를 한 대만 다니게(상호 배제 파괴) 법으로 강제하는 것'**과 같다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li><strong>개념</strong>: 시스템을 설계할 때부터 "어떤 프로세스도 데드락 4조건을 동시에 만족시킬 수 없게" 엄격한 제약(Constraints)을 걸어버리는 방법이다.</li>
+<li><strong>필요성</strong>: 우주선 발사 시스템이나 심장 박동기 제어 시스템처럼, 중간에 멈췄을 때 "재부팅(Recovery)할 시간적 여유조차 없는" 절대 무결성 시스템에서는 데드락이 단 한 번이라도 발생할 가능성조차 없애야 한다. 이럴 때는 성능이 반 토막 나더라도 100% 안전한 '예방'이 유일한 선택지다.</li>
+<li><strong>등장 배경</strong>: 동시성 프로그래밍 초창기, 데드락이 왜 발생하는지 이유를 몰랐을 때는 그저 껐다 켜는 게 답이었다. 코프만(Coffman)이 4대 조건을 수학적으로 정의한 이후, 학계는 "이 4개 중 하나만 확실히 부수면 100% 면역이 된다"는 사실을 깨닫고 각 조건을 파괴하는 예방 설계론을 확립했다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  [교착 상태 4대 조건과 예방(Prevention)의 타격점]
+
+  1. 상호 배제 (Mutual Exclusion) ─▶ 파괴 시도: &quot;다 같이 쓰게 해!&quot; (현실적 불가)
+  2. 점유 대기 (Hold and Wait)   ─▶ 파괴 시도: &quot;가진 거 다 놓고 기다려!&quot; (자원 낭비)
+  3. 비선점 (No Preemption)      ─▶ 파괴 시도: &quot;안 주면 억지로 뺏어!&quot; (롤백 비용 폭발)
+  4. 순환 대기 (Circular Wait)   ─▶ 파괴 시도: &quot;무조건 한 방향으로만 잡아!&quot; (가장 실용적)
+
+  &gt;&gt; 시스템 설계자는 이 4개의 방어막 중 &quot;가장 비용이 싸고 현실적인 것 1개&quot;만
+     집중 타격하여 무너뜨리면 데드락 예방을 달성할 수 있다.
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 예방 기법은 4개를 다 깰 필요가 없다. 4개 중 가장 만만한 고리 1개만 끊어버리면 완벽히 방어된다. 실무에서 상호 배제나 비선점을 깨는 것은 데이터 파괴를 부르기 때문에 너무 위험하고, 주로 점유 대기나 순환 대기를 타겟팅하여 아키텍처를 비튼다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="4dae-jogeon-pagoe-jeonsulyi-sebu-weonriwa-hangye">4대 조건 파괴 전술의 세부 원리와 한계</h3>
+<h4 id="1-sangho-baeje-mutual-exclusion-bujeong">1. 상호 배제(Mutual Exclusion) 부정</h4>
+<ul>
+<li><strong>원리</strong>: 프린터나 변수를 "누구나 동시에 접근해서 쓸 수 있게" 열어버린다.</li>
+<li><strong>한계</strong>: <strong>근본적으로 불가능하다.</strong> 읽기 전용(Read-only) 데이터라면 상관없지만, 계좌 잔고를 동시에 수정하면 데이터가 깨진다(Race Condition). 동기화의 존재 이유 자체를 부정하는 것이라 쓸 수 없다.</li>
+</ul>
+<h4 id="2-jeomyu-daegi-hold-and-wait-bujeong">2. 점유 대기(Hold and Wait) 부정</h4>
+<ul>
+<li><strong>원리 1 (All-or-Nothing)</strong>: 프로세스가 시작할 때, 일생 동안 쓸 모든 자원을 한 번에 다 달라고 요청한다. 하나라도 없으면 시작을 안 한다.
+<ul>
+<li><strong>부작용</strong>: 1시간짜리 작업 중 마지막 1초에만 프린터를 쓰는데, 1시간 내내 프린터를 움켜쥐고 있어 남들이 프린터를 못 쓴다. <strong>(극심한 자원 낭비)</strong></li>
+</ul>
+</li>
+<li><strong>원리 2 (선 반납 후 요청)</strong>: 내가 자원 A를 쥐고 있는데 B가 필요하면, 일단 A를 반납하고 맨몸이 된 상태로 A와 B를 동시에 요청한다.
+<ul>
+<li><strong>부작용</strong>: 운 나쁘면 평생 A와 B를 동시에 얻지 못하는 **기아 상태(Starvation)**에 빠진다.</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-biseonjeom-no-preemption-bujeong">3. 비선점(No Preemption) 부정</h4>
+<ul>
+<li><strong>원리</strong>: 내가 자원 A를 쥐고 B를 달라고 했는데 B를 누가 쓰고 있으면, OS가 내 자원 A를 강제로 뺏어서 딴 놈에게 줘버린다. 혹은 B를 쥐고 있는 놈을 쏴 죽이고(Kill) B를 뺏어온다.</li>
+<li><strong>한계</strong>: CPU 레지스터(Context)는 뺏었다가 나중에 다시 채워주면 되지만, 프린터나 테이프에 데이터를 절반쯤 기록했는데 뺏겨버리면 처음부터 다시 출력해야 한다. <strong>데이터 롤백(Rollback) 복구 비용이 너무 크다.</strong> (DB 엔진에서만 제한적으로 사용됨).</li>
+</ul>
+<h4 id="4-sunhwan-daegi-circular-wait-bujeong-sparkles-gajang-manhi-sseuineun-silmu-pyojun">4. 순환 대기(Circular Wait) 부정 (✨ 가장 많이 쓰이는 실무 표준)</h4>
+<ul>
+<li><strong>원리</strong>: 세상의 모든 자원(Mutex)에 $1, 2, 3 \dots N$의 **고유한 번호(Order)**를 매긴다. 그리고 프로세스는 반드시 **"번호가 오름차순(작은 것 ─▶ 큰 것)"**으로만 자원을 요청해야 한다고 법으로 강제한다.</li>
+<li><strong>수학적 효과</strong>: 큰 번호를 쥔 놈이 작은 번호를 요구할 수 없으므로, 화살표가 뒤로 돌아가서 꼬리를 무는 사이클(동그라미) 형성이 물리적으로 100% 불가능해진다.</li>
+<li><strong>부작용</strong>: 동적으로 자원이 계속 생겨나는 시스템에서는 번호를 매기기가 어렵다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌──────────────────────────────────────────────────────────────────────┐
+  │         순환 대기 부정(Lock Ordering)의 수학적 데드락 회피 증명      │
+  ├──────────────────────────────────────────────────────────────────────┤
+  │                                                                      │
+  │  [ 시스템 법률: 반드시 번호(ID)가 작은 자원부터 락을 잡을 것! ]      │
+  │                                                                      │
+  │  상황: 스레드 A는 R1, R2가 필요. 스레드 B도 R1, R2가 필요.           │
+  │                                                                      │
+  │  [ 스레드 A ]                [ 스레드 B ]                            │
+  │  1. lock(R1) ─▶ 성공       1. lock(R1) ─▶ 🚨 A가 쥐고 있어 대기      │
+  │  2. lock(R2) ─▶ 성공       (R1을 못 쥐었으니 R2는 쳐다보지도 못함)   │
+  │  3. 연산 완료 및 해제         2. A가 다 쓴 후 R1 획득!               │
+  │                            3. lock(R2) ─▶ 성공 및 연산 완료          │
+  │                                                                      │
+  │  ✅ 결론: 꼬리물기(교차) 자체가 발생할 수 없는 완벽한 일방통행 완성! │
+  └──────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>요청 또는 이벤트 발생</strong>: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.</li>
+<li><strong>현재 상태 확인</strong>: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.</li>
+<li><strong>정책 적용 및 자원 배정</strong>: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.</li>
+<li><strong>결과 반영 및 후속 처리</strong>: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.</li>
+</ol>
+<h3 id="dedeurag-yebang-prevention-vs-dedeurag-hoepi-avoidance">데드락 예방(Prevention) vs 데드락 회피(Avoidance)</h3>
+<p>두 전략은 "사전에 막는다"는 목적은 같지만 철학이 완전히 다르다.</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">예방 (Prevention)</th><th style="text-align: left">회피 (Avoidance - 은행원 알고리즘)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>통제 방식</strong></td><td style="text-align: left"><strong>규칙(법)으로 옭아맴</strong>. (4대 조건 중 하나를 시스템 구조로 박살 냄)</td><td style="text-align: left">규칙은 느슨하게 두고, <strong>매 요청 시마다 "이거 주면 데드락 날까?" 시뮬레이션 계산</strong>함</td></tr>
+<tr><td style="text-align: left"><strong>자원 이용률</strong></td><td style="text-align: left"><strong>최악</strong>. (안 쓸 자원도 미리 다 잡아두거나 뺏겨버림)</td><td style="text-align: left">보통. (최대한 머리 써서 아슬아슬하게 할당해 줌)</td></tr>
+<tr><td style="text-align: left"><strong>런타임 오버헤드</strong></td><td style="text-align: left"><strong>제로 (0)</strong>. (규칙대로만 짜면 CPU는 아무 생각 없이 실행만 하면 됨)</td><td style="text-align: left"><strong>매우 큼</strong>. (요청마다 O(N*M) 시뮬레이션 배열 계산을 돌려야 함)</td></tr>
+<tr><td style="text-align: left"><strong>실무 적용</strong></td><td style="text-align: left">⭕ (순환 대기 방지는 백엔드 코드의 기본 규칙으로 널리 쓰임)</td><td style="text-align: left">❌ (은행원 알고리즘은 오버헤드와 비현실적 제약 때문에 아무도 안 씀)</td></tr>
+</tbody></table>
+<h3 id="bosujeog-seolgyeyi-daega-gwaing-boho-over-protection">보수적 설계의 대가: 과잉 보호 (Over-protection)</h3>
+<p>예방 기법의 가장 큰 약점은 시스템을 너무 쫄보로 만든다는 것이다.
+"점유 대기 예방(All-or-Nothing)"을 쓰면, 스레드가 1주일 동안 딱 한 번 1초만 프린터를 쓰면 되는데도, 프로그램이 켜질 때 프린터를 점유하고 1주일 내내 남들이 못 쓰게 쥐고 있는다. 이 <strong>극단적인 자원 활용률 저하</strong> 때문에 범용 OS에서는 예방 기법을 OS 차원에서 강제하지 않고 프로그래머의 자율에 맡긴다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="dedeurag-yebang-prevention-vs-dedeurag-hoepi-avoidance-1">데드락 예방(Prevention) vs 데드락 회피(Avoidance)</h3>
+<p>두 전략은 "사전에 막는다"는 목적은 같지만 철학이 완전히 다르다.</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">예방 (Prevention)</th><th style="text-align: left">회피 (Avoidance - 은행원 알고리즘)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>통제 방식</strong></td><td style="text-align: left"><strong>규칙(법)으로 옭아맴</strong>. (4대 조건 중 하나를 시스템 구조로 박살 냄)</td><td style="text-align: left">규칙은 느슨하게 두고, <strong>매 요청 시마다 "이거 주면 데드락 날까?" 시뮬레이션 계산</strong>함</td></tr>
+<tr><td style="text-align: left"><strong>자원 이용률</strong></td><td style="text-align: left"><strong>최악</strong>. (안 쓸 자원도 미리 다 잡아두거나 뺏겨버림)</td><td style="text-align: left">보통. (최대한 머리 써서 아슬아슬하게 할당해 줌)</td></tr>
+<tr><td style="text-align: left"><strong>런타임 오버헤드</strong></td><td style="text-align: left"><strong>제로 (0)</strong>. (규칙대로만 짜면 CPU는 아무 생각 없이 실행만 하면 됨)</td><td style="text-align: left"><strong>매우 큼</strong>. (요청마다 O(N*M) 시뮬레이션 배열 계산을 돌려야 함)</td></tr>
+<tr><td style="text-align: left"><strong>실무 적용</strong></td><td style="text-align: left">⭕ (순환 대기 방지는 백엔드 코드의 기본 규칙으로 널리 쓰임)</td><td style="text-align: left">❌ (은행원 알고리즘은 오버헤드와 비현실적 제약 때문에 아무도 안 씀)</td></tr>
+</tbody></table>
+<h3 id="bosujeog-seolgyeyi-daega-gwaing-boho-over-protection-1">보수적 설계의 대가: 과잉 보호 (Over-protection)</h3>
+<p>예방 기법의 가장 큰 약점은 시스템을 너무 쫄보로 만든다는 것이다.
+"점유 대기 예방(All-or-Nothing)"을 쓰면, 스레드가 1주일 동안 딱 한 번 1초만 프린터를 쓰면 되는데도, 프로그램이 켜질 때 프린터를 점유하고 1주일 내내 남들이 못 쓰게 쥐고 있는다. 이 <strong>극단적인 자원 활용률 저하</strong> 때문에 범용 OS에서는 예방 기법을 OS 차원에서 강제하지 않고 프로그래머의 자율에 맡긴다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li><strong>커널 개발자들의 락(Lock) 순서 십계명</strong>: 리눅스 커널 소스 코드 내에는 수천 개의 스핀락과 뮤텍스가 존재한다.
+<ul>
+<li><strong>실무 조치</strong>: 커널 개발 가이드라인 문서(<code>Documentation/locking/spinlocks.txt</code>)에는 "A 락을 쥐고 B 락을 쥘 때는 반드시 이 순서대로 하라"는 순환 대기 예방(Lock Ordering) 규칙이 명시되어 있다. 만약 어떤 개발자가 이 순서를 무시하고 역방향으로 락을 잡는 코드를 패치로 올리면, 리누스 토발즈(Linus Torvalds)에게 욕을 먹고 그 코드는 영원히 리젝트(Reject)된다. 즉, OS 자체는 예방을 안 해주지만 OS를 '만드는' 사람들은 철저히 예방 기법으로 코딩한다.</li>
+</ul>
+</li>
+<li><strong>JPA / Hibernate 낙관적 락(Optimistic Lock)의 본질</strong>: 데이터베이스 트랜잭션에서 테이블에 <code>SELECT FOR UPDATE</code> (비관적 락)를 남발하면 데드락이 터지거나 DB 스루풋이 박살 난다.
+<ul>
+<li><strong>아키텍트 결단</strong>: 실무에서는 비관적 락을 버리고 버전(@Version) 컬럼을 이용한 <strong>낙관적 락</strong>을 쓴다. 낙관적 락은 락을 걸지 않고 메모리를 수정하다가 Commit 시점에 버전이 다르면 <code>OptimisticLockException</code>을 터뜨린다.</li>
+<li>이 예외를 잡아서 재시도(Retry)하는 구조는 코프만의 4조건 중 <strong>"비선점(No Preemption)"을 애플리케이션 레벨에서 자발적으로 파괴</strong>한 가장 우아한 실무적 예방 기술이다.</li>
+</ul>
+</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌──────────────────────────────────────────────────────────────────┐
+  │     애플리케이션(Spring, Node.js) 데드락 예방 설계 가이드라인    │
+  ├──────────────────────────────────────────────────────────────────┤
+  │                                                                  │
+  │   [ 1원칙: 상호 배제 타파 (가장 이상적이나 어려움) ]             │
+  │     ▶ 방법: 공유 자원을 불변 객체(Immutable)로 설계하거나,       │
+  │             Actor 패턴(메시지 큐)으로 동기화 병목 자체를 지움.   │
+  │                                                                  │
+  │   [ 2원칙: 순환 대기 타파 (가장 현실적인 실무 표준) ]            │
+  │     ▶ 방법: 락 획득을 사전 정의된 열거형(Enum) 순서나,           │
+  │             객체의 고유 HashCode 오름차순으로만 획득하게 코딩.   │
+  │                                                                  │
+  │   [ 3원칙: 점유 대기&#x2F;비선점 타파 (최후의 보루) ]                 │
+  │     ▶ 방법: `tryLock(timeout)`을 사용하여 락을 잡지 못하면       │
+  │             내가 쥐고 있던 락마저 모두 뱉어내고 처음부터 재시도. │
+  └──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> "OS가 데드락을 예방해 주겠지"라고 기대하는 주니어 개발자는 100% 서버를 터뜨린다. 현대의 타조 알고리즘(무시) 기반 OS 위에서 돌아가는 앱을 짤 때는, 프로그래머 스스로가 1원칙~3원칙을 아키텍처에 녹여내어 애플리케이션 레벨의 완벽한 예방(Prevention) 방어막을 쳐야만 새벽에 전화받을 일이 없어진다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="gidaehyogwa">기대효과</h3>
+<p>순환 대기 부정(Lock Hierarchy)이나 <code>tryLock</code>을 통한 점유 대기 부정 기법을 시스템 코어에 강제(Prevention)하면, 런타임에 막대한 계산을 하는 탐지(Detection)나 회피(Avoidance) 데몬을 돌리지 않고도 <strong>오버헤드 제로(0)의 100% 데드락 면역 시스템</strong>을 완성할 수 있다.</p>
+<h3 id="gyeolron-mic-mirae-jeonmang">결론 및 미래 전망</h3>
+<p>교착 상태 예방(Deadlock Prevention)은 이론적으로는 완벽하지만 "자원 낭비"라는 뼈아픈 단점 때문에 OS 커널 레벨의 자동화된 하부 인프라로는 채택되지 못했다. 그러나 그 위에서 코드를 짜는 **'개발자들의 설계 철학(Design Pattern)'**으로는 영원불멸의 가치를 지니고 있다.
+미래의 진화 방향은 프로그래머가 이 예방 규칙을 머리로 기억하고 짜는 것을 넘어, <strong>Rust의 빌드 컴파일러</strong>나 정적 코드 분석 도구(SonarQube 등)가 소스 코드의 락 획득 순서 그래프를 미리 쫙 그려보고, 순환 대기(Cycle)가 나올 것 같으면 아예 **컴파일 자체를 강제로 거부해 버리는 "도구(Tool) 레벨의 자동 예방(Auto-Prevention) 시대"**로 확고하게 굳어지고 있다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">**교착 상태 (Deadlock)**
+    ↓
+**순환 대기 (Circular Wait)**
+    ↓
+**교착 상태 회피 (Avoidance)**
+    ↓
+**타조 알고리즘 (Ostrich)**
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>교착 상태 (Deadlock)</strong></td><td style="text-align: left">예방(Prevention) 기법이 목숨 걸고 이 세상에서 존재 자체를 지워버리고자 하는 최악의 멈춤 버그다.</td></tr>
+<tr><td style="text-align: left"><strong>순환 대기 (Circular Wait)</strong></td><td style="text-align: left">4가지 조건 중 가장 실무적으로 깨부수기 만만한 타깃이며, 락 획득 순서(Ordering)만 맞추면 즉시 예방된다.</td></tr>
+<tr><td style="text-align: left"><strong>교착 상태 회피 (Avoidance)</strong></td><td style="text-align: left">예방(Prevention)이 너무 깐깐해서 자원을 낭비하자, 유도리 있게 계산해서 주자는 마인드로 나온 라이벌 철학이다.</td></tr>
+<tr><td style="text-align: left"><strong>타조 알고리즘 (Ostrich)</strong></td><td style="text-align: left">예방하려니 시스템이 너무 느려지고 불편해서, 현대 OS가 예방을 포기하고 선택해 버린 극단적 무시 전략이다.</td></tr>
+<tr><td style="text-align: left"><strong>Try-Lock (타임아웃 락)</strong></td><td style="text-align: left">'점유 대기'와 '비선점' 조건을 애플리케이션 레벨에서 자발적으로 파괴하여 데드락을 예방하는 훌륭한 백엔드 무기다.</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

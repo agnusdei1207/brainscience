@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>259. 정보시스템 마이그레이션 컷오버 롤백 시나리오 (IS Migration Cut-over &#x2F; Rollback) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote enterprise systems
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 정보시스템 마이그레이션 컷오버 롤백 시나리오 (IS Migration Cut-over / Rollback)는 하이브리드 업무, 전환 프로젝트, 운영 안정화 활동을 보안과 복원력 관점에서 연결하는 실행 체계다.
+<strong>비유</strong>: 운행 중인 열차를 멈추지 않고 선로를 바꾸되 감시 카메라와 비상 제동을 함께 다는 것과 같다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>정보시스템 마이그레이션에서 컷오버(Cut-over)는 프로젝트 전체에서 가장 위험도가 높은 순간이다. 수개월의 개발과 테스트가 이 단 한 번의 전환 순간에 성패가 결정된다. 컷오버 실패는 서비스 중단, 데이터 손실, 비즈니스 손실, 고객 신뢰 하락으로 이어지며, 최악의 경우 복구 불가능한 상황이 발생한다.</p>
+<p>컷오버(Cut-over)의 어원은 전기 공사에서 옛 회선을 끊고(Cut) 새 회선으로 전환(Over)하는 데서 왔다. IT에서는 레거시 시스템의 운영을 중단하고 신규 시스템을 실 운영(Production) 환경으로 활성화하는 과정이다.</p>
+<p>롤백(Rollback) 시나리오는 컷오버 실패 시 이전 상태로 되돌아가는 복구 절차다. 많은 프로젝트가 컷오버 계획에 집중하면서 롤백 계획을 소홀히 한다. 그러나 컷오버와 롤백 계획은 동전의 양면으로, <strong>롤백 불가능한 컷오버 계획은 도박</strong>이다.</p>
+<p>컷오버 계획 수립 시 반드시 고려할 사항: ① 컷오버 윈도우(Cutover Window) 최소화(비즈니스 영향 최소화), ② 롤백 결정 기준(Go/No-Go Criteria) 사전 정의, ③ 데이터 동기화 전략(마이그레이션 중 발생하는 변경 데이터 처리), ④ 이해관계자 의사소통 계획.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 컷오버는 비행기 이륙처럼—이륙 전에 충분히 점검하고, 이륙 후에도 비상 착륙 절차(롤백)를 항상 준비해두어야 한다.</p>
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="keosobeo-3dangye-gyehoeg">컷오버 3단계 계획</h3>
+<pre><code>┌──────────────────────────────────────────────────────────────────────┐
+│               컷오버 3단계 계획 구조                                 │
+├──────────────────────────────────────────────────────────────────────┤
+│  Phase 1: 컷오버 준비 (D-1 ~ D-7)                                   │
+│  · 최종 데이터 마이그레이션 리허설 (Dress Rehearsal)                │
+│  · 컷오버 체크리스트 최종 검토 (100+ 항목)                          │
+│  · 비상 연락망 확인 (기술팀·비즈니스팀·경영진)                      │
+│  · 롤백 절차 최종 확인 및 훈련                                       │
+│  · Go&#x2F;No-Go 회의 (사전 결정 기준 재확인)                            │
+├──────────────────────────────────────────────────────────────────────┤
+│  Phase 2: 컷오버 실행 (D-Day)                                       │
+│                                                                      │
+│  T-0: 레거시 시스템 쓰기 잠금 (Read-Only 전환)                     │
+│  T+1h: 최종 데이터 스냅샷 추출 및 신규 시스템 적재                  │
+│  T+3h: 데이터 무결성 검증 (체크섬, 건수 비교)                       │
+│  T+4h: 신규 시스템 스모크 테스트 (핵심 업무 20건 시나리오)          │
+│  T+5h: ✅ Go 결정 → DNS&#x2F;LB 트래픽 전환 (전환 선언)                 │
+│       OR ❌ No-Go → 롤백 절차 즉시 시작                             │
+│  T+6h: 신규 시스템 안정화 모니터링 (경보 임계값 강화)               │
+├──────────────────────────────────────────────────────────────────────┤
+│  Phase 3: 컷오버 후 안정화 (D+1 ~ D+14)                            │
+│  · 집중 모니터링 (24&#x2F;7, 2주간)                                       │
+│  · 이슈 트래킹 및 핫픽스 배포                                        │
+│  · 레거시 시스템 백업 보존 (최소 30일)                               │
+│  · 완전 컷오버 완료 선언 후 레거시 퇴역                             │
+└──────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="go-no-go-gyeoljeong-gijun-yesi">Go/No-Go 결정 기준 (예시)</h3>
+<table><thead><tr><th style="text-align: left">검증 항목</th><th style="text-align: left">Go 기준</th><th style="text-align: left">No-Go 조건</th></tr></thead><tbody>
+<tr><td style="text-align: left">데이터 마이그레이션 완료율</td><td style="text-align: left">100%</td><td style="text-align: left">99% 미만</td></tr>
+<tr><td style="text-align: left">데이터 무결성 (체크섬 일치)</td><td style="text-align: left">100%</td><td style="text-align: left">불일치 존재 시</td></tr>
+<tr><td style="text-align: left">핵심 기능 스모크 테스트</td><td style="text-align: left">100% 통과</td><td style="text-align: left">1건이라도 실패 시</td></tr>
+<tr><td style="text-align: left">시스템 응답 속도</td><td style="text-align: left">SLA 기준 이내</td><td style="text-align: left">기준의 2배 초과</td></tr>
+<tr><td style="text-align: left">보안 취약점</td><td style="text-align: left">致命的 0건</td><td style="text-align: left">Critical 1건 이상</td></tr>
+<tr><td style="text-align: left">롤백 준비 상태</td><td style="text-align: left">30분 내 롤백 가능</td><td style="text-align: left">롤백 불가 상태</td></tr>
+</tbody></table>
+<h3 id="bigbaeng-vs-dangyejeog-keosobeo">빅뱅 vs. 단계적 컷오버</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">빅뱅 컷오버</th><th style="text-align: left">단계적 컷오버 (Phased)</th></tr></thead><tbody>
+<tr><td style="text-align: left">방식</td><td style="text-align: left">특정 시점에 전체 전환</td><td style="text-align: left">기능·지역·사용자 그룹별 순차 전환</td></tr>
+<tr><td style="text-align: left">위험 수준</td><td style="text-align: left">높음 (전환 순간 집중 위험)</td><td style="text-align: left">낮음 (분산 위험)</td></tr>
+<tr><td style="text-align: left">비용</td><td style="text-align: left">중간</td><td style="text-align: left">높음 (병행 운영 비용)</td></tr>
+<tr><td style="text-align: left">적합 상황</td><td style="text-align: left">소규모 시스템, 강한 기한</td><td style="text-align: left">대규모, 복잡한 마이그레이션</td></tr>
+<tr><td style="text-align: left">롤백 복잡도</td><td style="text-align: left">낮음 (단일 시점 복구)</td><td style="text-align: left">높음 (단계별 롤백 시나리오 필요)</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 빅뱅 컷오버는 다리 하나를 한 번에 건너는 것이고, 단계적 컷오버는 돌다리를 하나씩 놓으면서 건너는 것이다.</p>
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 사용자 경험, 보안 통제, 전환 일정, 검증 기준이 같은 운영 시나리오로 묶여야 한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li>현재 업무 환경과 전환 대상 시스템을 평가한다.</li>
+<li>보안 통제와 사용자 영향 기준을 설계한다.</li>
+<li>이행 계획, 컷오버, 테스트, 롤백 절차를 준비한다.</li>
+<li>실행 중 지표와 예외를 모니터링하며 안정화한다.</li>
+<li>회고와 후속 조치로 운영 모델을 정착시킨다.</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[Current Workplace &#x2F; System]
+            |
+            v
+[Security &#x2F; Transition Design]
+            |
+            v
+[Cutover &#x2F; Rollout &#x2F; Test]
+            |
+            v
+[Validation &#x2F; Rollback]
+            |
+            v
+[Stabilization &#x2F; Retrospective]
+</code></pre>
+<h3 id="deiteo-maigeureisyeon-jeonryaggwa-keosobeo">데이터 마이그레이션 전략과 컷오버</h3>
+<table><thead><tr><th style="text-align: left">전략</th><th style="text-align: left">설명</th><th style="text-align: left">컷오버 영향</th></tr></thead><tbody>
+<tr><td style="text-align: left">병행 운영 (Parallel Run)</td><td style="text-align: left">구·신 시스템 동시 운영</td><td style="text-align: left">롤백 용이, 비용 높음</td></tr>
+<tr><td style="text-align: left">단계적 전환 (Phased)</td><td style="text-align: left">모듈별 순차 전환</td><td style="text-align: left">위험 분산, 기간 길어짐</td></tr>
+<tr><td style="text-align: left">빅뱅 (Big Bang)</td><td style="text-align: left">일시 전환</td><td style="text-align: left">위험 집중, 기간 짧음</td></tr>
+<tr><td style="text-align: left">파일럿 (Pilot)</td><td style="text-align: left">일부 사용자/지역 선행</td><td style="text-align: left">실제 환경 검증 가능</td></tr>
+</tbody></table>
+<h3 id="keosobeowa-drp-disaster-recovery-plan-yeongye">컷오버와 DRP (Disaster Recovery Plan) 연계</h3>
+<p>컷오버 롤백 시나리오는 DRP (Disaster Recovery Plan, 재해 복구 계획)와 연계하여 작성된다. 컷오버 중 발생하는 장애는 일반 운영 장애와 다른 복잡성을 가지므로, 별도의 컷오버 전용 DRP 섹션이 필요하다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 롤백 계획 없는 컷오버는 구명보트 없는 선박 출항처럼—순항하면 필요 없지만, 폭풍이 오면 그때는 이미 늦다.</p>
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="geumyunggigwan-koeobaengking-maigeureisyeon-keosobeo-sarye">금융기관 코어뱅킹 마이그레이션 컷오버 사례</h3>
+<p><strong>배경</strong>: 20년 된 코어뱅킹 레거시를 차세대 클라우드 기반 시스템으로 전환. 고객 계좌 800만 건, 일 거래 230만 건.</p>
+<p><strong>컷오버 전략</strong>: 빅뱅(주말 48시간 윈도우) + 단계적 지역 오픈(영업점 → 인터넷뱅킹 → 모바일 순)</p>
+<p><strong>컷오버 D-Day 타임라인</strong>:</p>
+<ul>
+<li>금요일 22:00: 인터넷뱅킹 일시 중단 공지 (고객 사전 안내 1주 전부터)</li>
+<li>금요일 23:00: 레거시 시스템 쓰기 잠금, 최종 데이터 스냅샷</li>
+<li>토요일 02:00: 데이터 마이그레이션 완료 (800만 계좌, 예상 3시간)</li>
+<li>토요일 03:00: 무결성 검증 완료 (체크섬, 잔액 합산 비교)</li>
+<li>토요일 05:00: 스모크 테스트 100케이스 통과 → Go 결정</li>
+<li>토요일 06:00: DNS 전환, 영업점 시스템 신규 접속 시작</li>
+<li>일요일 08:00: 인터넷뱅킹·모바일 순차 오픈</li>
+</ul>
+<p><strong>롤백 실제 적용</strong>: 데이터 검증 단계에서 특정 외화 계좌 환율 변환 오류 발견 → No-Go 결정 → 레거시 시스템 복구 → 2주 후 오류 수정 후 재도전.</p>
+<p><strong>교훈</strong>: 롤백 결정을 망설이지 않은 것이 결과적으로 옳았다. 오류 상태로 Go했다면 800만 고객 계좌 데이터 정합성 문제로 훨씬 큰 사태가 발생했을 것.</p>
+<h3 id="yisagyeoljeong-pointeu">의사결정 포인트</h3>
+<ul>
+<li><strong>컷오버 윈도우 설정</strong>: 비즈니스 영향이 최소인 주말·공휴일 야간. 금융은 결제원 운영 시간(평일 09:00~17:00) 외 필수.</li>
+<li><strong>롤백 결정 권한</strong>: 기술팀 판단만으로는 No-Go 결정 어려움 → 사전에 경영진이 위임한 명확한 Go/No-Go 권한자 지정 필수.</li>
+</ul>
+<p>📢 <strong>섹션 요약 비유</strong>: No-Go 결정은 로켓 발사 취소처럼—지금 발사를 취소하는 것이 더 비용이 크게 느껴지지만, 폭발 위험을 가진 로켓을 쏘는 것보다 훨씬 낫다.</p>
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="gidaehyogwa">기대효과</h3>
+<table><thead><tr><th style="text-align: left">영역</th><th style="text-align: left">효과</th></tr></thead><tbody>
+<tr><td style="text-align: left">비즈니스 연속성</td><td style="text-align: left">컷오버 실패 시 빠른 복구로 다운타임 최소화</td></tr>
+<tr><td style="text-align: left">데이터 무결성</td><td style="text-align: left">검증 절차로 마이그레이션 오류 사전 차단</td></tr>
+<tr><td style="text-align: left">위험 관리</td><td style="text-align: left">Go/No-Go 기준으로 감정이 아닌 데이터로 결정</td></tr>
+<tr><td style="text-align: left">이해관계자 신뢰</td><td style="text-align: left">투명한 계획과 의사소통으로 신뢰 유지</td></tr>
+<tr><td style="text-align: left">팀 역량</td><td style="text-align: left">리허설로 팀 컷오버 숙련도 향상</td></tr>
+</tbody></table>
+<h3 id="hangye-mic-jeonje-jogeon">한계 및 전제 조건</h3>
+<p><strong>한계</strong>: ① 대규모 시스템 컷오버는 아무리 준비해도 예상치 못한 이슈 발생 불가피. ② 병행 운영 비용이 커서 롤백 창을 제한할 수 있음. ③ 레거시 시스템 퇴역 지연 시 운영 부담 지속.</p>
+<p><strong>전제 조건</strong>: 철저한 리허설(최소 2회 드레스 리허설), 사전 정의된 Go/No-Go 기준, 충분한 컷오버 윈도우 확보, 경영진의 No-Go 결정 지지.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 컷오버 리허설은 실전 훈련처럼—실제 상황이 왔을 때 몸이 자동으로 움직이게 반복 연습해야 실수를 막을 수 있다.</p>
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">관계</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">DRP (Disaster Recovery Plan)</td><td style="text-align: left">연계 계획</td><td style="text-align: left">컷오버 장애 시 복구 절차</td></tr>
+<tr><td style="text-align: left">병행 운영 (Parallel Run)</td><td style="text-align: left">마이그레이션 전략</td><td style="text-align: left">안전한 컷오버를 위한 이중 운영 기간</td></tr>
+<tr><td style="text-align: left">SLA (Service Level Agreement)</td><td style="text-align: left">검증 기준</td><td style="text-align: left">Go/No-Go 결정의 성능 기준</td></tr>
+<tr><td style="text-align: left">데이터 무결성 검증</td><td style="text-align: left">핵심 활동</td><td style="text-align: left">마이그레이션 오류 탐지 메커니즘</td></tr>
+<tr><td style="text-align: left">RTO (Recovery Time Objective)</td><td style="text-align: left">롤백 목표</td><td style="text-align: left">롤백 완료 목표 시간</td></tr>
+<tr><td style="text-align: left">스모크 테스트 (Smoke Test)</td><td style="text-align: left">검증 활동</td><td style="text-align: left">컷오버 후 핵심 기능 빠른 검증</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>컷오버는 낡은 집에서 새 집으로 이사하는 것처럼—이사 전날까지 새 집이 정말 완벽한지 다시 확인하고, 혹시라도 문제가 생기면 다시 돌아올 수 있게 준비해두는 거예요.</li>
+<li>Go/No-Go 결정은 "짐을 다 옮기기 전에 새 집 수도·전기·가스가 다 작동하는지 확인"하는 것처럼—하나라도 안 되면 이사를 잠깐 미루는 게 맞아요.</li>
+<li>롤백 시나리오는 이사 차를 아직 돌려보내지 않고 기다리게 하는 것처럼—문제가 생겼을 때 빠르게 돌아올 수 있는 준비예요.</li>
+</ol>
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>정보시스템 마이그레이션 컷오버 롤백 시나리오 (IS Migration Cut-over / Rollback)는 변화 자체를 추진하는 기술이 아니라, 변화가 운영 장애로 번지지 않도록 흡수하는 복원력 체계다. 속도만 강조하면 보안과 사용자 신뢰를 잃고, 통제만 강조하면 전환이 멈춘다. 따라서 이 주제의 본질은 전환 속도와 안정성 사이의 균형을 설계하는 데 있다.</p>
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">현행 환경 분석
+    ↓
+보안·전환 설계
+    ↓
+컷오버&#x2F;테스트 실행
+    ↓
+검증·롤백 준비
+    ↓
+안정화·회고·정착
+</code></pre>
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">Zero Trust</td><td style="text-align: left">하이브리드 환경에서 기본 보안 원칙으로 작동</td></tr>
+<tr><td style="text-align: left">Cutover</td><td style="text-align: left">새 환경으로 전환하는 실제 실행 시점과 절차</td></tr>
+<tr><td style="text-align: left">Rollback</td><td style="text-align: left">전환 실패 시 복구 경로를 확보</td></tr>
+<tr><td style="text-align: left">OAT / UAT</td><td style="text-align: left">운영 관점과 사용자 관점의 수용 검증</td></tr>
+<tr><td style="text-align: left">Retrospective</td><td style="text-align: left">실행 이후 학습과 개선 과제를 정리</td></tr>
+<tr><td style="text-align: left">Change Management</td><td style="text-align: left">사용자 커뮤니케이션과 적응 지원을 포함</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>596. ROP (Return-Oriented Programming) 기법 - ASLR&#x2F;DEP 우회를 위해 코드 가젯 체이닝 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 25, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: ROP (Return-Oriented Programming)는 공격자가 악성 셸코드(Shellcode)를 메모리에 직접 주입하여 실행할 수 없도록 만든 DEP/NX Bit 방어 체계를 우회하기 위해, 이미 실행 권한을 가진 채 메모리에 로드되어 있는 정상 코드 조각(가젯, Gadget)들을 짜깁기하여 원하는 악성 행위를 수행하게 만드는 최상위 수준의 익스플로잇 (Exploit) 기법이다.
+<strong>비유</strong>: ROP (Return-Oriented Programming) 기법은(는) 복잡한 교통을 한 번에 통제해 전체 흐름을 맞추는 신호 체계와 같다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p><strong>개념 및 정의</strong>
+반환 지향 프로그래밍 (ROP, Return-Oriented Programming)은 취약한 프로그램의 제어 흐름(Control Flow)을 탈취한 후, 기존 바이너리나 라이브러리(예: <code>libc.so</code>, <code>ntdll.dll</code>)에 존재하는 짧은 기계어 명령어 서열인 '가젯 (Gadget)'들을 연결(Chaining)하여 튜링 완전(Turing Complete)한 프로그램(원하는 모든 악성 행위)을 구성하는 코드 재사용 공격 기법이다. 모든 가젯은 스택에서 다음 실행 주소를 꺼내오는 반환 명령어(<code>ret</code> 등)로 끝난다는 특징 때문에 이런 이름이 붙었다.</p>
+<p><strong>필요성 및 등장 배경</strong>
+2000년대 초반, W^X(Write XOR Execute) 원칙에 기반한 DEP (Data Execution Prevention)와 NX Bit 하드웨어 기술이 도입되면서 스택이나 힙에 주입한 셸코드가 실행(x) 권한 거부로 무력화되었다. 초기에는 이를 우회하기 위해 <code>libc</code> 라이브러리의 <code>system()</code> 함수 주소로 단 한 번 점프하여 셸을 띄우는 "Return-to-libc" 공격이 성행했다. 그러나 방어자들이 함수 인자를 전달하는 레지스터 규약을 변경하거나 ASLR을 적용하면서 단일 함수 호출만으로는 한계에 부딪혔다. 이에 해커들은 단일 함수 통째 호출이 아니라, 함수 내부에 흩어져 있는 <code>pop rdi; ret;</code> 같은 미세한 코드 조각들을 모아 프랑켄슈타인처럼 조립하여 DEP를 완벽히 뚫고 원하는 시스템 콜을 마음대로 조작할 수 있는 ROP 기술을 발명하게 되었다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────────────┐
+│      전통적 셸코드 인젝션 vs ROP(코드 재사용) 패러다임 비교    │
+├────────────────────────────────────────────────────────────────┤
+│                                                                │
+│  [과거: Code Injection (DEP 도입 전)]                          │
+│  스택 영역 (RWX)                                               │
+│  [ 변조된 RET ] ──────────┐                                    │
+│       ...                 ▼                                    │
+│  [ 공격자의 셸코드 ] ◀── CPU가 셸코드를 순차적으로 실행!       │
+│  (직접 작성한 악성 코드)   (현재는 DEP 때문에 💥 예외 발생)    │
+│                                                                │
+│  [현대: Return-Oriented Programming (DEP 도입 후)]             │
+│  스택 영역 (RW-)           .text &#x2F; 라이브러리 영역 (R-X)       │
+│  [ 가젯 1의 주소 ] ──(ret)─▶ [ pop rdi ; ret; ] (가젯 1)       │
+│  [ &quot;&#x2F;bin&#x2F;sh&quot; 주소]          (rdi에 &quot;&#x2F;bin&#x2F;sh&quot; 주소 세팅됨)      │
+│  [ 가젯 2의 주소 ] ◀(ret)─┐                                    │
+│                     (ret)─▶ [ pop rax ; ret; ] (가젯 2)        │
+│  [ 59 (execve)   ]          (rax에 시스템 콜 번호 59 세팅)     │
+│  [ 가젯 3의 주소 ] ◀(ret)─┐                                    │
+│                     (ret)─▶ [ syscall ; ret; ] (가젯 3)        │
+│                              =&gt; 커널이 execve(&quot;&#x2F;bin&#x2F;sh&quot;) 실행!
+└────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 도식은 ROP 공격의 놀라운 발상을 잘 보여준다. 스택에 실행 권한이 없으므로 공격자는 스택에 어떤 코드도 쓰지 않는다. 대신, 이미 메모리 상에 실행 권한(RX)을 가지고 존재하는 합법적인 공유 라이브러리(.text 영역) 내부의 조각 코드(가젯)들의 '주소(Address)'와, 그 가젯들이 소비할 '데이터(Data)'만을 순서대로 스택에 차곡차곡 쌓아놓는다. 버퍼 오버플로우를 통해 현재 함수의 진짜 리턴 주소를 '가젯 1의 주소'로 덮어쓰면, CPU는 가젯 1을 실행한다. 가젯 1의 끝에 있는 <code>ret</code> 명령어는 스택에서 다음 주소('가젯 2의 주소')를 팝(pop)하여 거기로 다시 점프한다. 이처럼 <code>ret</code> 명령어가 징검다리 역할을 하여 합법적인 파편 코드들을 연쇄적으로 실행시키고, 결국 공격자가 원하는 시스템 콜(예: <code>execve</code>)을 조립해 내는 것이 ROP의 정수다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="guseong-yoso-rop-peirodeuyi-haebuhag">구성 요소 (ROP 페이로드의 해부학)</h3>
+<table><thead><tr><th style="text-align: left">요소명</th><th style="text-align: left">역할</th><th style="text-align: left">내부 동작</th><th style="text-align: left">비유</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>가젯 (Gadget)</strong></td><td style="text-align: left">ROP 체인의 기본 실행 단위</td><td style="text-align: left"><code>pop 레지스터</code>, <code>mov</code>, <code>add</code> 등 짧은 연산 후 반드시 <code>ret</code>으로 끝나는 어셈블리 조각</td><td style="text-align: left">레고 블록 한 칸</td></tr>
+<tr><td style="text-align: left"><strong>ROP 체인 (ROP Chain)</strong></td><td style="text-align: left">완성된 악성 기능 흐름</td><td style="text-align: left">스택 메모리에 순차적으로 쌓인 가젯의 주소와 값들의 배열</td><td style="text-align: left">완성된 레고 구조물</td></tr>
+<tr><td style="text-align: left"><strong>스택 포인터 (RSP / ESP)</strong></td><td style="text-align: left">체인의 실행 흐름을 통제하는 나침반</td><td style="text-align: left"><code>ret</code> 명령이 호출될 때마다 RSP가 증가하며 다음 가젯의 주소를 EIP/RIP에 공급</td><td style="text-align: left">악보를 읽어 나가는 지휘봉</td></tr>
+<tr><td style="text-align: left"><strong>함수 호출 규약 (Calling Convention)</strong></td><td style="text-align: left">시스템 콜이나 함수 호출을 위한 레지스터 셋업 가이드</td><td style="text-align: left">x86-64 리눅스 기준: 인자를 rdi, rsi, rdx, rcx, r8, r9 순으로 레지스터에 세팅 후 호출</td><td style="text-align: left">부품 조립 설명서</td></tr>
+</tbody></table>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>요청 또는 이벤트 발생</strong>: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.</li>
+<li><strong>현재 상태 확인</strong>: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.</li>
+<li><strong>정책 적용 및 자원 배정</strong>: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.</li>
+<li><strong>결과 반영 및 후속 처리</strong>: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.</li>
+</ol>
+<h3 id="simceung-dongjag-weonri-mic-rop-peirodeu-guseong">심층 동작 원리 및 ROP 페이로드 구성</h3>
+<p>64비트 아키텍처(x86-64)에서는 함수에 인자를 전달할 때 스택이 아닌 레지스터(<code>RDI</code>, <code>RSI</code>, <code>RDX</code> 등)를 사용한다. 따라서 시스템 콜(<code>execve</code> 등)을 실행하려면, 스택에 주입한 공격자의 데이터(예: <code>/bin/sh</code> 문자열의 주소)를 레지스터로 옮겨 담는 작업이 필수적이다. 이때 주로 사용되는 것이 스택의 값을 레지스터로 빼내는 <code>pop</code> 명령어 가젯이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────────┐
+│      64비트 환경에서의 execve(&quot;&#x2F;bin&#x2F;sh&quot;) ROP 체인 동작 흐름          │
+├──────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  [초기 스택 (버퍼 오버플로우로 페이로드 덮어쓰기 완료)]              │
+│   RSP ─▶ [ 0x00007ffff7a12345 ] ← 가젯1: pop rdi; ret                │
+│          [ 0x00007fffffffe888 ] ← 문자열 &quot;&#x2F;bin&#x2F;sh&quot;의 주소            │
+│          [ 0x00007ffff7a23456 ] ← 가젯2: pop rsi; ret                │
+│          [ 0x0000000000000000 ] ← NULL 값 (0)                        │
+│          [ 0x00007ffff7a34567 ] ← 가젯3: pop rdx; ret                │
+│          [ 0x0000000000000000 ] ← NULL 값 (0)                        │
+│          [ 0x00007ffff7b11111 ] ← 가젯4: pop rax; ret                │
+│          [ 0x000000000000003b ] ← 59 (execve 시스템 콜 번호)         │
+│          [ 0x00007ffff7c22222 ] ← 가젯5: syscall; ret                │
+│                                                                      │
+│  [실행 흐름 (The &quot;Return&quot; Sequence)]                                 │
+│  1. 원래 함수 종료 (ret 실행) → RSP에서 가젯1 주소 Pop 및 점프       │
+│  2. 가젯1(pop rdi) 실행: 스택의 다음 값(&quot;&#x2F;bin&#x2F;sh&quot; 주소)을 RDI에 넣음 │
+│  3. 가젯1 끝(ret) 실행: 스택의 다음 값(가젯2 주소)을 Pop 및 점프     │
+│  4. 가젯2(pop rsi) 실행: 스택의 다음 값(NULL)을 RSI에 넣음           │
+│  5. 가젯2 끝(ret) 실행: 스택의 다음 값(가젯3 주소)을 Pop 및 점프     │
+│  6. ... (rdx, rax 동일하게 세팅) ...                                 │
+│  7. 최종 가젯5(syscall) 실행: 커널 모드 진입, execve 호출 성공!      │
+└──────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 상태도는 ROP가 스택을 이용하여 CPU 레지스터를 어떻게 통제하는지 수학적 톱니바퀴처럼 보여준다. 공격자는 버퍼 오버플로우 취약점을 이용해 스택을 위와 같은 "주소+데이터" 배열로 장악한다. 공격의 핵심 원동력은 <code>ret</code> 명령어의 동작 원리인 <code>pop rip</code>에 있다. 정상적인 상황이라면 리턴 주소 하나만 꺼내고 원래 호출자로 돌아가야 하지만, 여기서는 가젯의 끝마다 나타나는 <code>ret</code>이 스택 포인터(RSP)를 계속 증가시키며 미리 깔아둔 다음 가젯의 주소를 명령어 포인터(RIP)로 밀어 올린다. 즉, 스택 포인터가 마치 프로그램 카운터(PC) 역할을 대신하며, 스택에 적어둔 대본대로 코드 조각들을 순차적으로 실행하게 만드는 기막힌 재사용 매커니즘이다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="ropyi-jinhwa-pasaeng-gibeob-bigyo">ROP의 진화 파생 기법 비교</h3>
+<p>기본적인 ROP가 등장한 이후, 방어 기법(ASLR 등)이 강화됨에 따라 ROP 기술도 다양하게 진화(Evolution)했다.</p>
+<table><thead><tr><th style="text-align: left">기법 명칭</th><th style="text-align: left">약어 / 특징</th><th style="text-align: left">핵심 원리 및 우회 대상</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Return-to-libc (RTL)</strong></td><td style="text-align: left">1세대 ROP / 함수 단위 재사용</td><td style="text-align: left">가젯이 아닌 라이브러리의 함수 시작 주소(<code>system</code>)로 직접 점프. 32비트 환경에 국한되며 64비트 레지스터 규약에 막힘.</td></tr>
+<tr><td style="text-align: left"><strong>ROP (Return-Oriented Programming)</strong></td><td style="text-align: left">2세대 / 가젯 체이닝</td><td style="text-align: left">함수 전체가 아닌 끝단의 <code>ret</code> 기반 가젯 조각들을 엮어 시스템 콜 튜링 구조 완성. DEP 완벽 우회.</td></tr>
+<tr><td style="text-align: left"><strong>JOP (Jump-Oriented Programming)</strong></td><td style="text-align: left">JOP / 간접 점프 기반</td><td style="text-align: left"><code>ret</code> 대신 <code>jmp eax</code>나 <code>call rbx</code> 같은 간접 분기 명령어를 징검다리로 사용. <code>ret</code>을 모니터링하는 탐지 솔루션 우회.</td></tr>
+<tr><td style="text-align: left"><strong>BROP (Blind ROP)</strong></td><td style="text-align: left">BROP / 무차별 가젯 탐색</td><td style="text-align: left">대상 바이너리 파일(.text)조차 확보하지 못한 상태에서, 서버 응답(Crash 여부)만으로 바이트 단위로 가젯 주소를 찾아내어 ROP 체인 동적 구성.</td></tr>
+<tr><td style="text-align: left"><strong>SROP (Sigreturn-Oriented)</strong></td><td style="text-align: left">SROP / 유닉스 시그널 악용</td><td style="text-align: left">리눅스의 시그널 처리 복귀 시스템 콜(<code>sigreturn</code>)을 호출하여, 스택에 저장된 거대한 시그널 프레임을 한 번에 레지스터 전체로 복원시켜 버리는 초효율적 ROP.</td></tr>
+</tbody></table>
+<p>특히 JOP(Jump-Oriented Programming)는 ROP와 달리 스택을 실행 흐름의 나침반으로 쓰지 않고, 디스패처 (Dispatcher) 테이블과 레지스터 기반 점프를 이용하기 때문에, 섀도우 스택(Shadow Stack) 같은 최신 방어 체계를 무력화하기 위한 대체재로 쓰인다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌───────────────────────────────────────────────────────────────┐
+│      전통적 ROP 체인 vs SROP (Sigreturn) 체인 구조 비교       │
+├───────────────────────────────────────────────────────────────┤
+│                                                               │
+│  [일반 ROP: 가젯을 하나씩 모아 레지스터 셋업]                 │
+│  스택: [가젯1] [RDI값] [가젯2] [RSI값] [가젯3] [RDX값] ...    │
+│  단점: 필요한 레지스터 가젯(pop rdx 등)을 라이브러리에서      │
+│        모두 찾기 힘들 때 체인 구성이 불가능해짐.              │
+│                                                               │
+│  [SROP: 커널의 Context Restore 기능을 역이용]                 │
+│  스택: [ pop rax; ret; ]                                      │
+│        [ 15 (sigreturn 시스템 콜 번호) ]                      │
+│        [ syscall; ret; ]                                      │
+│        [ SigContext 구조체 (가짜 시그널 프레임) ]             │
+│          ├── RDI = &quot;&#x2F;bin&#x2F;sh&quot; 주소                             │
+│          ├── RSI = 0                                          │
+│          ├── RDX = 0                                          │
+│          ├── RAX = 59 (execve)                                │
+│          └── RIP = syscall 주소                               │
+│                                                               │
+│  원리: 커널이 &quot;아, 시그널 처리가 끝났구나!&quot; 착각하고 스택에   │
+│        해커가 조작해둔 구조체를 읽어 CPU 레지스터 전체를      │
+│        한방에 일괄 덮어씌움 (Context Restore 발생)            │
+└───────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 구조도는 가젯이 부족한 열악한 환경에서 해커가 어떻게 돌파구를 찾는지(SROP)를 보여준다. 일반적인 ROP는 각 레지스터마다 알맞은 <code>pop; ret</code> 가젯을 찾아내야 하는데, 바이너리 크기가 작거나 정적 링크(Static Link)가 안 된 경우 필수 가젯을 찾지 못해 공격이 실패할 수 있다. 반면 SROP는 리눅스 커널이 인터럽트(시그널) 처리 후 원래 프로세스 상태(Context)를 복원하기 위해 <code>rt_sigreturn</code> 시스템 콜을 사용한다는 점을 악용한다. 공격자는 스택에 <code>pop rax (값 15)</code>와 <code>syscall</code> 단 두 개의 가젯만 두고, 그 아래에 300바이트가 넘는 거대한 가짜 레지스터 상태 블록(SigContext)을 만들어 둔다. 커널은 시그널 복귀로 착각하고 스택의 가짜 값들을 CPU 레지스터에 한꺼번에 부어버린다. 단 2개의 가젯만으로 완벽한 제어권 장악이 가능한 파괴적인 기법이다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="silmu-sinario-aslr-hwangyeongeseo-ropreul-iyonghan-dep-haeje-gonggyeog">실무 시나리오: ASLR 환경에서 ROP를 이용한 DEP 해제 공격</h3>
+<ol>
+<li><strong>상황</strong>: 최신 리눅스 서버에서 버퍼 오버플로우가 발견되었다. 서버는 ASLR(주소 무작위화)과 DEP(데이터 실행 방지)가 모두 활성화되어 있다.</li>
+<li><strong>공격자의 전략 (Leak &amp; ROP)</strong>:
+<ul>
+<li>1단계 (Memory Leak): 공격자는 또 다른 취약점(Info Leak)을 이용해 현재 메모리에 무작위로 로드된 <code>libc.so</code> 내부의 <code>printf</code> 함수의 주소를 획득한다.</li>
+<li>2단계 (Base Offset 계산): <code>printf</code> 주소에서 라이브러리의 상대적 오프셋을 빼서 라이브러리 전체의 '시작 주소(Base Address)'를 구한다. (이로써 ASLR 방어막 무력화 완료).</li>
+<li>3단계 (ROP Payload 조립): 계산된 주소를 바탕으로 라이브러리 내부의 ROP 가젯 주소들을 도출한다.</li>
+<li>4단계 (mprotect 호출 ROP): 해커는 <code>system("/bin/sh")</code>를 호출하는 대신, <code>mprotect</code> 시스템 콜을 호출하는 ROP 체인을 구성한다. 인자로 (스택 영역 시작 주소, 크기, <code>PROT_READ | PROT_WRITE | PROT_EXEC</code>)를 전달하여 <strong>스택 영역의 DEP(실행 불가) 속성을 실행 가능(RWX)으로 강제 해제</strong>해 버린다.</li>
+<li>5단계 (Shellcode Execution): DEP가 해제된 스택으로 점프하여, 미리 심어둔 전통적인 셸코드를 실행한다. (이를 ROP Stager 기법이라 부름).</li>
+</ul>
+</li>
+<li><strong>방어자의 의사결정</strong>: ASLR의 우회를 막는 것이 가장 중요하므로, 포인터 주소가 메모리에 노출되는 것을 철저히 차단하는 시큐어 코딩(포맷 스트링 방지, 바운드 체킹)이 1순위다. 아울러 컴파일러 차원에서 PIE(위치 독립 실행 파일)를 강제 적용하여 바이너리의 .text 영역 가젯까지 난수화해야 한다.</li>
+</ol>
+<h3 id="doib-cekeuriseuteu-cfi-jeeo-heureum-mugyeolseong-bangeo">도입 체크리스트 (CFI: 제어 흐름 무결성 방어)</h3>
+<p>소프트웨어(OS) 기반의 방어가 한계에 다다르면서, 실무에서는 하드웨어 아키텍처 수준의 방어 기술을 도입해야 한다. 이를 <strong>제어 흐름 무결성 (CFI, Control-Flow Integrity)</strong> 기술군이라 한다.</p>
+<ul>
+<li><strong>인텔 CET (Control-flow Enforcement Technology)</strong>: 차세대 서버/클라이언트 CPU가 지원하는 섀도우 스택 (Shadow Stack) 기능 활성화 검토.</li>
+<li><strong>ARM PAC (Pointer Authentication Code)</strong>: 모바일/M1 이상 Mac 환경에서 컴파일 시 포인터 암호화 옵션(<code>-msign-return-address</code> 등) 적용 상태 확인.</li>
+<li><strong>소프트웨어 CFI (Clang CFI, Microsoft CFG)</strong>: 간접 분기(Indirect Call/Jump) 시 유효한 타겟 목록을 검증하는 컴파일러 기반의 Control Flow Guard 적용 여부 점검.</li>
+</ul>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li><strong>정적 컴파일 (Static Link) 남용</strong>: 보안 부서의 통제 없이 편의성을 위해 C 프로그램을 <code>-static</code> 옵션으로 정적 빌드하는 행위. 이 경우 수십 메가바이트의 라이브러리 코드가 메인 실행 파일 하나에 뭉쳐지게 되어 ROP 공격자에게 "무한한 가젯 뷔페"를 제공하는 최악의 안티패턴이 된다. 심지어 ASLR이 켜져 있더라도 PIE 옵션과 정적 링킹은 양립하기 어려워 바이너리 자체가 고정 주소를 갖는 대참사가 발생한다.</li>
+</ul>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa-cfi-mic-shadow-stack-doib-si">정량/정성 기대효과 (CFI 및 Shadow Stack 도입 시)</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">ROP 단일 대비 (ASLR/DEP)</th><th style="text-align: left">하드웨어 CFI (Shadow Stack) 전면 도입</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">메모리 릭(Leak) 발생 시 ROP 성공률 90%+</td><td style="text-align: left"><strong>ROP 공격 성공률 0.1% 미만 원천 차단</strong></td><td style="text-align: left">1-Day, 0-Day 취약점 악용 기간 대폭 지연</td></tr>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">BROP 등의 Brute-force 공격 시간 소요</td><td style="text-align: left">변조 즉시 하드웨어 Exception 발생 (0초)</td><td style="text-align: left">탐지 레이턴시 제거 및 즉각적인 위협 격리</td></tr>
+<tr><td style="text-align: left"><strong>운영</strong></td><td style="text-align: left">소프트웨어 CFI 추가 시 성능 저하 (3~8%)</td><td style="text-align: left">CPU 칩 레벨에서 검증 처리로 성능 오버헤드 <strong>1% 미만</strong> 달성</td><td style="text-align: left">성능 저하 없는 궁극의 제어 흐름 보호 체계</td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang">미래 전망</h3>
+<p>과거 20년이 "오버플로우를 어떻게 일으킬 것인가(공격) vs 어떻게 주소를 덮어쓰지 못하게 할 것인가(방어)"의 시대였다면, 현재와 미래는 **"실행 흐름을 어떻게 교란할 것인가(ROP/JOP/COP) vs 비정상적 흐름을 어떻게 물리적으로 끊어낼 것인가(CFI/Shadow Stack)"**의 시대다. 특히 하드웨어 지원 섀도우 스택(Shadow Stack)은 기존 스택과 완전히 격리된 보호 구역에 리턴 주소만을 이중 보관하고, 함수 복귀(<code>ret</code>) 시 두 스택의 값이 일치하지 않으면 즉각 CPU 예외를 던지는 방식으로 ROP를 종식시키고 있다. 이에 해커들은 <code>ret</code>을 쓰지 않는 순수 데이터 지향 공격 (Data-Oriented Programming, DOP)이나 로직 자체의 결함을 악용하는 방향으로 우회로를 찾고 있다.</p>
+<h3 id="camgo-pyojun">참고 표준</h3>
+<ul>
+<li><strong>Intel SDM Vol 1. Chapter 18</strong>: Control-flow Enforcement Technology (CET) 규격</li>
+<li><strong>CWE-693</strong>: 보호 메커니즘의 우회 가능성 (Protection Mechanism Failure)</li>
+<li><strong>NIST SP 800-190</strong>: 애플리케이션 컨테이너 보안 가이드 (메모리 보호 정책 권고)</li>
+</ul>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">**DEP &#x2F; NX Bit (데이터 실행 방지)**
+    ↓
+**ASLR (Address Space Layout Randomization)**
+    ↓
+**메모리 릭 (Memory Leak &#x2F; Info Leak)**
+    ↓
+**CFI (Control-Flow Integrity)**
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>DEP / NX Bit (데이터 실행 방지)</strong></td><td style="text-align: left">스택에 코드를 직접 쓸 수 없게 만들어, 해커들로 하여금 기존 코드를 재활용하는 ROP라는 괴물을 탄생하게 만든 방어 기술의 시발점이다.</td></tr>
+<tr><td style="text-align: left"><strong>ASLR (Address Space Layout Randomization)</strong></td><td style="text-align: left">ROP 체인을 구성하기 위해 필수적인 가젯(Gadget)의 절대 주소를 매번 무작위로 섞어 공격을 극도로 어렵게 만드는 1차 대응책이다.</td></tr>
+<tr><td style="text-align: left"><strong>메모리 릭 (Memory Leak / Info Leak)</strong></td><td style="text-align: left">ASLR이 흔들어 놓은 주소 퍼즐에서 라이브러리의 현재 위치(Base Offset)를 계산해 내어 ROP 공격을 성공시키는 핵심 열쇠 취약점이다.</td></tr>
+<tr><td style="text-align: left"><strong>CFI (Control-Flow Integrity)</strong></td><td style="text-align: left">프로그램의 런타임 분기 흐름이 사전에 컴파일러가 분석한 제어 흐름 그래프(CFG)를 이탈하지 못하도록 통제하여 ROP를 원천 봉쇄하는 기술이다.</td></tr>
+<tr><td style="text-align: left"><strong>섀도우 스택 (Shadow Stack)</strong></td><td style="text-align: left">기존 메모리 스택과 별도로 리턴 주소 전용의 읽기 전용 하드웨어 스택을 운용하여, ROP를 위한 리턴 주소 덮어쓰기 자체를 무용지물로 만드는 궁극의 하드웨어 방어막이다.</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

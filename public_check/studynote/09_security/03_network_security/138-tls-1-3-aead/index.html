@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>138. AEAD 요구 — TLS 1.3은 AEAD 암호만 허용 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote security
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p>⚠️ 이 문서는 과거 개발자들의 어설픈 조립(MAC-then-Encrypt)으로 인해 발생한 수많은 치명적 해킹 사태를 영구히 종결시키기 위해, 최신 보안 표준인 TLS 1.3이 기밀성(암호화)과 무결성(인증)이 하나의 칩으로 완벽하게 일체화된 <strong>AEAD 알고리즘 5개만을 남기고 과거의 모든 쓰레기 암호들을 법으로 강제 퇴출시킨 역사적 대청소 사건</strong>을 다룹니다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h1 id="138-aead-amhohwa-gangje-tls-1-3yi-daehagsal">138. AEAD 암호화 강제 (TLS 1.3의 대학살)</h1>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: TLS 1.3 스펙은 암호 통신을 맺을 때, 평문을 암호화하는 동시에 해커의 위변조를 막는 인증 태그(MAC)를 한 번의 수학적 연산으로 무결점 처리하는 <strong>AEAD(인증 및 연관 데이터 암호화) 모드만을 사용하도록 강제</strong>한다.</li>
+<li><strong>가치</strong>: CBC 블록 암호 모드나 구형 스트림 암호(RC4)를 썼을 때 터져 나왔던 악몽 같은 <strong>패딩 오라클 공격, Lucky13, POODLE 공격의 위협 표면(Attack Surface) 자체를 물리적으로 원천 소거</strong>해 버렸다.</li>
+<li><strong>융합</strong>: 선택의 폭을 줄인 것이 오히려 호환성과 보안성을 극대화했다. 현재 지구상의 모든 TLS 1.3 통신은 <code>AES-GCM</code> 이나 <code>ChaCha20-Poly1305</code> 라는 검증된 최정예 AEAD 용병들의 보호 아래 한 치의 오차 없이 강력하게 융합되어 돌아가고 있다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h3>
+<p>2010년대 중반, 전 세계의 보안 담당자들은 아침마다 터져 나오는 새로운 해킹 논문 이름에 노이로제가 걸릴 지경이었다. BEAST, POODLE, Lucky13, CRIME... 이름은 화려하지만 본질은 하나였다.
+**"서버가 암호문을 해독할 때 생기는 에러 메시지의 차이나 시간 지연을 이용해, 비밀키 없이 평문을 벗겨먹는 부채널 공격 / 패딩 오라클 공격"**이었다.</p>
+<p>왜 이런 일이 반복되었을까? 원흉은 TLS 1.2까지 허용되었던 **'블록 암호 CBC 모드'**와 **'MAC-then-Encrypt(인증 후 암호화)'**라는 조립식 설계의 치명적 결함 때문이었다. 개발자가 암호화와 무결성 검증을 수동으로 따로따로 조립하다 보니 자꾸 구멍이 났던 것이다.</p>
+<p>그래서 IETF(국제 인터넷 표준화 기구)의 학자들은 TLS 1.3 규격을 새로 짜며 칼을 뽑았다.
+<strong>"개발자들을 믿지 마라. 자유도를 주지 마라. 암호화와 인증이 분리될 수 없는 일체형 다이아몬드 칩(AEAD) 외에는 전부 호환 명단에서 삭제해 버려라!"</strong></p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 옛날엔 사람들이 자전거 바퀴 따로, 브레이크 따로 사서 자기 맘대로 조립해서 타다가 자꾸 브레이크가 빠져서 절벽으로 떨어졌습니다(CBC 모드 한계). 빡친 법률 사무소(TLS 1.3)가 "앞으로 도로에는 공장에서 바퀴와 자동 제동 브레이크가 용접되어 절대 분해할 수 없게 일체형으로 나온 자동차(AEAD) 말고는 다 진입 금지!"라고 선포한 안전 대청소 사건입니다.</p>
+</blockquote>
+<hr />
+<h3 id="2-guseongyoso">2. 구성요소</h3>
+<p>TLS 1.3 규격 문서(RFC 8446)가 발표되면서 그동안 우리가 사랑했던, 혹은 어쩔 수 없이 썼던 암호학 교과서의 레전드들이 모조리 쓰레기통으로 직행했다.</p>
+<h4 id="x-mudeomeuro-deuleogan-geosdeul-deprecated-in-tls-1-3">❌ 무덤으로 들어간 것들 (Deprecated in TLS 1.3)</h4>
+<ol>
+<li><strong>블록 암호 CBC 모드 전체</strong>: 패딩 오라클 공격의 영원한 먹잇감. AES-CBC, 3DES-CBC 모조리 짤렸다.</li>
+<li><strong>정적(Static) RSA 및 DH 키 교환</strong>: 해커가 나중에 키를 훔쳐 과거 데이터를 푸는 짓(전방 비밀성 부재) 때문에 모조리 짤렸다. 무조건 1회용인 DHE나 ECDHE만 살아남았다.</li>
+<li><strong>RC4 (스트림 암호)</strong>: 무선 랜(WEP) 시절부터 썼지만 수학적 편향성(초기 바이트가 평문을 유추하게 함) 때문에 짤렸다.</li>
+<li><strong>MD5, SHA-1 (해시 함수)</strong>: 구글 등에 의해 충돌 저항성이 깨졌으므로 당연히 무덤으로 갔다.</li>
+</ol>
+<h4 id="shield-salanameun-5inyi-coejeongye-yongbyeong-heoyongdoen-aead-cipher-suites">🛡️ 살아남은 5인의 최정예 용병 (허용된 AEAD Cipher Suites)</h4>
+<p>TLS 1.3에서 데이터를 암호화할 수 있는 유일하게 합법적인 무기는 단 5개뿐이다. 이것들은 모두 **"암호화를 뚫어보려 1비트라도 찌르면 펑 터져서 에러조차 뱉지 않고 닫혀버리는 AEAD 구조"**를 100% 충족한다.</p>
+<ol>
+<li><strong><code>TLS_AES_128_GCM_SHA256</code></strong> (★ 범용 1순위 제왕)</li>
+<li><strong><code>TLS_AES_256_GCM_SHA384</code></strong> (군사급 고강도)</li>
+<li><strong><code>TLS_CHACHA20_POLY1305_SHA256</code></strong> (★ 모바일/스마트폰 생태계의 패왕)</li>
+<li><code>TLS_AES_128_CCM_SHA256</code> (초경량 IoT용)</li>
+<li><code>TLS_AES_128_CCM_8_SHA256</code> (초경량 IoT용 특수 버전)</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────────────────────────────┐
+│           TLS 1.2 vs TLS 1.3 암호 묶음(Cipher Suite)의 다이어트 시각화              │
+├─────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                     │
+│ 🗑️ [ TLS 1.2의 지저분한 암호 메뉴판 (수십 가지 조합) ]                              │
+│  - TLS_RSA_WITH_AES_128_CBC_SHA  (위험: RSA 키교환 + CBC 모드)                      │
+│  - TLS_ECDHE_RSA_WITH_RC4_128_SHA  (위험: RC4 암호 사용)                            │
+│  - TLS_RSA_WITH_3DES_EDE_CBC_SHA  (위험: 3DES 사용, 무지하게 느림)                  │
+│  -&gt; 너무 많아서 개발자가 뭐 켤지 몰라 실수하면 바로 해킹당함!                       │
+│                                                                                     │
+│ 💎 [ TLS 1.3의 깔끔한 독재 (AEAD 5개 한정) ]                                        │
+│  1. TLS_AES_128_GCM_SHA256      (컴퓨터&#x2F;서버용 왕)                                  │
+│  2. TLS_CHACHA20_POLY1305_SHA256 (핸드폰&#x2F;모바일용 왕)                               │
+│  3. (나머지 3개 생략)                                                               │
+│  -&gt; 개발자는 암호학 몰라도 돼! 저 5개 중에 암거나 써도 무조건 안전해! (Fool-proof)  │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 그림에서 보듯 TLS 1.3의 Cipher Suite 이름표에는 앞부분에 덕지덕지 붙어있던 <code>키 교환 방식(RSA/ECDHE)</code> 이름이 싹 지워졌다. 어차피 1회용 키 교환(ECDHE/DHE)만 쓰도록 헌법으로 강제해 놨으니 메뉴판에 적을 필요조차 없어진 것이다. 이제 메뉴판에는 오직 100% 안전한 <strong>'AEAD 데이터 암호화 알고리즘 + 해시 함수'</strong> 딱 두 글자만 명확하게 남게 되었다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 식당 메뉴판에 복어 요리를 "독 빼고 요리하기, 독 넣고 대충 요리하기, 내장만 요리하기" 등 수십 가지 옵션을 써놓고 손님에게 고르라고 했던 게 TLS 1.2입니다. 식중독(해킹) 사고가 끊이지 않자 1.3에서는 식약처가 출동해 싹 다 불태워버리고, "무기농 안심 샐러드 1, 2, 3번" 단 3개의 무공해 메뉴만 강제로 팔게 만든 완벽한 위생 조치입니다.</li>
+</ul>
+<hr />
+<h3 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h3>
+<p>살아남은 5개 중에서도, 실무 서버 설정 파일에 박히는 알고리즘은 딱 두 개로 양분된다.</p>
+<ol>
+<li><strong>AES-GCM의 제국 (인텔/AMD 서버 진영)</strong>
+<ul>
+<li>AES는 완벽하지만 수학이 너무 복잡해서 배터리를 많이 먹는다.</li>
+<li>하지만 서버 컴퓨터의 CPU(인텔, AMD) 안에는 아예 쇠를 깎아 만든 AES 전용 고속도로 칩셋(<code>AES-NI</code> 하드웨어 가속기)이 내장되어 있다. 이걸 쓰면 CPU 클럭을 거의 안 먹고 1초에 수기가를 갈아버린다. 따라서 PC 브라우저나 클라우드 서버는 100% 이걸 쓴다.</li>
+</ul>
+</li>
+<li><strong>ChaCha20-Poly1305의 반란 (스마트폰 진영)</strong>
+<ul>
+<li>구글이 만든 모바일 전용 암호다. <code>ChaCha20</code>은 암호화를 하고, <code>Poly1305</code>는 인증(MAC)을 하는 완벽한 AEAD 콤비다.</li>
+<li><strong>이유</strong>: 싸구려 안드로이드폰이나 라즈베리파이 같은 작은 기기에는 비싼 <code>AES-NI</code> 가속 칩이 없다! AES를 순수하게 코드(소프트웨어)로만 돌리면 폰이 미친 듯이 뜨거워진다.</li>
+<li>반면 ChaCha20은 오직 기본 덧셈, 엑스오어, 비트 회전 3가지만 쓰는 무식하고 단순한 스트림 암호라 소프트웨어로 돌려도 AES보다 3배 이상 빠르고 가볍다. 스마트폰 배터리를 구원한 모바일의 황태자다.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="4-bigyo-mic-teureideuopeu">4. 비교 및 트레이드오프</h3>
+<p>"완벽함이란 더 이상 더할 것이 없을 때가 아니라, 뺄 것이 없을 때 이루어진다."
+TLS 1.3의 대숙청은 보안 업계에 뼈아픈 교훈을 남겼다. 해커에게 공격 표면(Attack Surface)을 주는 가장 큰 원인은 '너무 많은 선택지'였다. AEAD 강제 규정은 개발자의 자유를 뺏은 것이 아니라, 개발자가 보안 취약점을 만들 수 있는 권한 자체를 박탈하여 시스템을 원천적으로 보호하는 '안전한 독재'다. 오늘날 인터넷은 이 가혹한 다이어트 덕분에 1-RTT의 빛의 속도와 오라클 찌르기가 통하지 않는 다이아몬드 방패를 동시에 쥐게 되었다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>전체 규격</strong>: TLS 1.3 (RFC 8446)</li>
+<li><strong>강제 적용 대상</strong>: AEAD (Authenticated Encryption with Associated Data)</li>
+<li><strong>제공하는 보안 속성</strong>: 기밀성 (Confidentiality) + 무결성/인증 (Integrity/Authentication) 동시 달성</li>
+<li><strong>대표 알고리즘 투톱</strong>: AES-GCM (하드웨어 가속), ChaCha20-Poly1305 (소프트웨어/모바일 친화)</li>
+</ul>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>옛날 인터넷(TLS 1.2)은 레고 블록 조립 세트였어요. 사람들이 바퀴랑 프로펠러를 맘대로 끼워 맞추다 보니 조립을 잘못해서 사고(해킹)가 매일 났죠.</li>
+<li>그래서 안전 관리자(TLS 1.3) 화가 잔뜩 나서 낡은 레고 블록을 다 버리고, 공장에서 아예 용접해서 절대로 분해할 수 없고 고장도 안 나는 티타늄 자동차 장난감(AEAD) 5개만 딱 던져줬어요.</li>
+<li>이제 사람들은 조립할 필요도 없이 그냥 티타늄 자동차(AES-GCM, ChaCha20) 중 맘에 드는 색깔 하나만 골라서 타기만 하면, 절대 사고가 나지 않는 안전한 인터넷 고속도로를 달릴 수 있게 되었답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

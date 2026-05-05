@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>439. Cgroups 메모리 서브시스템의 자원 제한 (Memory Limit) 동작 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 23, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: Cgroups(Control Groups) 메모리 서브시스템은 램이 부족할 때 무자비하게 남의 램을 뺏어 쓰는 리눅스의 <strong>'전역 교체(Global Replacement)' 야생성을 통제하기 위해, 특정 프로세스 무리(컨테이너)에게 보이지 않는 강철 철창(Memory Limit)을 씌워 메모리 상한선을 강제하는 커널 레벨의 샌드박싱 기술</strong>이다.
+<strong>비유</strong>: cgroups 메모리 제한은 호텔 조식 뷔페의 <strong>칸막이 식판 배식</strong>과 같다. 리눅스의 기본 상태(전역 교체)는 거대한 공용 냄비 하나를 놔두고 알아서 퍼먹는 것이다. 식탐 많은 뚱보 손님(메모리 릭) 한 명이 냄비째 마셔버리면 99명의 다른 손님은 굶어 죽는다. cgroups를 켜면 지배인이 뚱보 손님에게 **"너는 이 네모난 작은 식판(Limit) 크기 이상으로는 절대 음식을 못 담는다!"**라고 철창을 친다. 뚱보가 식판을 꽉 채워서 음식이 부족하면 지 식판 안의 음식을 토해내고 다시 담든 말든 혼자 헐떡이게 내버려 둔다. 나머지 99명의 손님은 자기들 식판에 밥을 가득 담아 평화롭고 배부르게 식사를 마칠 수 있다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: cgroups(컨트롤 그룹)는 구글(Google) 엔지니어들이 리눅스 커널에 추가한 자원 통제 모듈이다. CPU, 네트워크 등 여러 서브시스템이 있지만 그중 <strong>메모리(Memory) 서브시스템</strong>은 특정 프로세스 트리(PIDs)가 사용할 수 있는 최대 물리 램(RAM)과 스왑(Swap)의 상한선(Limit) 바이트 수를 바위처럼 굳게 설정한다. 이 선을 넘으면 얄짤없이 램 징수나 사형(OOM Kill)이 집행된다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 2010년대 클라우드 시대가 열리며 서버 1대에 100개 회사의 앱(가상 머신/컨테이너)을 구겨 넣는 멀티 테넌트(Multi-tenant) 환경이 대세가 되었다. 리눅스는 태생이 '전역 교체'다. A 회사 앱이 램을 10GB 달라고 떼쓰면, OS는 B, C, D 회사의 멀쩡한 램 프레임을 싹 다 뺏어다가 A에게 상납해 버린다. 결과적으로 A의 실수 때문에 아무 죄 없는 다른 회사 서버들이 전부 뻗어버리는 최악의 <strong>시끄러운 이웃(Noisy Neighbor)</strong> 재앙이 터졌다. 클라우드 사업자들은 피눈물을 흘리며 "프로세스마다 보이지 않는 벽을 쳐서, 남의 램은 절대 뺏어올 수 없게 막는 깐깐한 배급 통제소"를 커널 심장부에 박아넣어야만 했다.</p>
+</li>
+<li>
+<p><strong>등장 배경 및 컨테이너 혁명의 조건</strong>:</p>
+<ol>
+<li><strong>가상 머신(VM)의 무거움</strong>: VM(KVM/VMware)은 하드웨어 단에서 램을 찢어줘서 안전했지만, OS를 띄우느라 너무 느리고 무거웠다.</li>
+<li><strong>가볍고 안전한 격리(Isolation)의 열망</strong>: 리눅스 프로세스(<code>chroot</code>, <code>namespace</code>) 수준에서 가볍게 띄우되, 자원 뺏기를 막을 강력한 장치가 필요했다.</li>
+<li><strong>cgroups의 등장</strong>: 프로세스 그룹에 하드 리밋(Hard Limit)을 거는 cgroups v1(그리고 더 정교한 v2)이 커널에 병합되며 마침내 가벼운 도커(Docker)의 시대가 폭발적으로 열렸다.</li>
+</ol>
+</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────────────────────────┐
+│        cgroups 유무에 따른 메모리 릭(Leak) 터짐 시의 파급력 시각화         │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│ [ 서버 물리 RAM: 16GB &#x2F; 컨테이너 A, B 구동 중 ]                            │
+│                                                                            │
+│ ▶ 1. 과거 야생 상태 (cgroups OFF - 리눅스 전역 교체)                       │
+│  - 컨테이너 A에 메모리 릭 발생! 램을 무한대로 빨아들임 (10GB -&gt; 15GB)      │
+│  - OS는 A를 돕기 위해 멀쩡한 B의 램(5GB)을 강제로 뺏어 스왑으로 날림.      │
+│  💥 결과: A 때문에 아무 죄 없는 B 서버가 렉 걸려 마비됨. 서버 전체 뇌사!   │
+│                                                                            │
+│ ▶ 2. 현대 클라우드 상태 (cgroups ON - 철저한 격리)                         │
+│  - 설정: `docker run -m 4g 컨테이너A` (A는 최대 4GB로 묶임)                │
+│  - 컨테이너 A에 메모리 릭 발생! 램이 4GB에 도달함.                         │
+│  - OS: &quot;A 놈아, 서버에 램 12GB가 남아돌지만, 넌 Limit 4GB 쳤네?            │
+│        절대 B의 램을 뺏지 말고 네 철창 안에서 혼자 알아서 쫓아내고 놀아라!&quot;│
+│  - A가 4GB 안에서 아등바등 대다 결국 폭발함 (OOM Killed).                  │
+│  ✅ 결과: 미친놈 A 하나만 깔끔하게 죽고, B는 평화롭게 로켓 속도로 생존!    │
+└────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> cgroups는 리눅스 메모리 관리의 가장 큰 아이러니를 보여준다. 전체 램(RAM)이 12GB나 텅텅 비어있는데도, 프로세스를 "메모리가 부족하다(OOM)"며 무참히 쏴 죽이는 인위적이고 융통성 없는 에러를 발생시킨다. 자원의 활용도(Efficiency)를 기꺼이 포기하고, 그 대가로 타인에 대한 방어막(Isolation)과 시스템 전체의 생존(Stability)을 쟁취한 클라우드 아키텍처의 비정한 선택이다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="local-replacement-jiyeog-gyoce-yi-buhwal">Local Replacement (지역 교체)의 부활</h3>
+<p>앞 장에서 리눅스는 "무조건 남의 램을 뺏는 전역 교체(Global Replacement)"를 쓴다고 했다. 그런데 cgroups를 씌우는 순간 <strong>지역 교체(Local Replacement)가 마법처럼 부활</strong>한다.</p>
+<ul>
+<li>프로세스가 cgroup에 설정된 <code>memory.limit_in_bytes</code> (예: 2GB)에 도달했다 치자.</li>
+<li>프로세스가 새 페이지(4KB)를 달라고 폴트를 냈다.</li>
+<li>커널은 시스템의 전체 Free List에서 램을 가져오지 않는다. 오직 **이 프로세스가 속한 cgroup 안에 있는 페이지들만을 뱅글뱅글 도는 전용 LRU 리스트(cgroup 단위의 Clock 알고리즘)**를 뒤진다.</li>
+<li>그리고 같은 cgroup 철창 안에 있는 불쌍한 자기 자신의 과거 페이지 하나를 골라 스왑으로 쫓아낸다 (돌려막기).</li>
+<li>즉, <strong>cgroups는 광활한 바다(전체 램)에 떠 있던 리눅스의 전역망을, 작은 어항(컨테이너) 단위의 수백 개의 독립된 지역 교체 생태계로 갈기갈기 찢어놓는</strong> 위대한 격리 아키텍처다.</li>
+</ul>
+<h3 id="oom-killeryi-haceong-cgroup-oom">OOM Killer의 하청 (cgroup OOM)</h3>
+<p>cgroups 안에서 지역 교체로 낑낑대며 돌려막기를 하다가, 스왑 공간마저 다 쓰거나(또는 스왑 옵션을 꺼놔서) 도저히 빈 페이지를 못 내는 순간이 온다.</p>
+<ul>
+<li>이때 커널은 전체 시스템(Node) 레벨의 거대한 OOM Killer를 깨우지 않는다.</li>
+<li>대신 해당 cgroup에 딸린 **소규모 전용 킬러 (cgroup OOM Killer)**를 조용히 파견한다.</li>
+<li>이 킬러는 다른 컨테이너는 쳐다보지도 않고, 오직 Limit을 초과한 그 불량 cgroup 철창 안에 있는 프로세스(PID)들만 평가(Score)해서 제일 뚱뚱한 놈의 머리통을 날린다(<code>SIGKILL</code>).</li>
+<li>이 덕분에 AWS나 GCP에서 내 컨테이너가 뻗어 죽었어도, 내가 돌리던 옆의 컨테이너들이나 호스트 OS의 관리 데몬은 생채기 하나 없이 살아서 무사히 "님 서버 죽었어요"라고 알람(Health Check)을 보낼 수 있는 것이다.</li>
+</ul>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>요청 또는 이벤트 발생</strong>: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.</li>
+<li><strong>현재 상태 확인</strong>: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.</li>
+<li><strong>정책 적용 및 자원 배정</strong>: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.</li>
+<li><strong>결과 반영 및 후속 처리</strong>: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.</li>
+</ol>
+<h3 id="bigyo-1-memory-limit-vs-memory-request-kubeonetiseuyi-2jung-jangbu">비교 1: Memory Limit vs Memory Request (쿠버네티스의 2중 장부)</h3>
+<p>cgroups를 조종하는 쿠버네티스(k8s)는 개발자에게 2가지 값을 쓰라고 강요한다. 이 두 값의 하드웨어적 본질은 완전히 다르다.</p>
+<table><thead><tr><th style="text-align: left">설정 값</th><th style="text-align: left">리눅스 커널의 물리적 맵핑 (cgroups)</th><th style="text-align: left">역할 및 튜닝의 의미</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Request</strong> (요구량)</td><td style="text-align: left"><code>memory.soft_limit_in_bytes</code></td><td style="text-align: left">스케줄러가 서버에 빈자리(램)가 있는지 검사할 때 쓰는 <strong>최소 보장 보증금</strong>. 이 값은 cgroup이 강제로 앱을 죽이는 락(Lock)으로 작용하지 않음.</td></tr>
+<tr><td style="text-align: left"><strong>Limit</strong> (제한량)</td><td style="text-align: left"><code>memory.limit_in_bytes</code></td><td style="text-align: left">이 선을 넘으면 하늘이 두 쪽 나도 <strong>OOM 총알이 발사되는 강철 지붕(Hard Limit)</strong>. 무조건 이 선 아래서 교체와 쫓겨남이 일어남.</td></tr>
+</tbody></table>
+<ul>
+<li>만약 Request = 1GB, Limit = 4GB 로 설정했다면?
+<ul>
+<li>컨테이너는 평소에 1GB는 보장받고 맘 편히 쓴다. (워킹 셋 보장).</li>
+<li>1GB를 넘어 3GB를 쓰고 있는데 서버 전체 램이 모자라기 시작하면, 커널은 이 컨테이너의 1GB 초과분(2GB 잉여분)을 0순위로 스왑으로 쫓아낸다(Reclaim). 죽이지는 않는다.</li>
+<li>하지만 앱이 미쳐서 4GB 선을 찌르는 순간, 램이 아무리 남아돌아도 자비 없이 OOM으로 즉사시킨다.</li>
+</ul>
+</li>
+</ul>
+<h3 id="page-cache-beopeo-kaesi-dodugyi-bigeug">Page Cache (버퍼 캐시) 도둑의 비극</h3>
+<p>개발자들이 도커를 띄우고 가장 억울해하며 많이 당하는 버그다.</p>
+<ul>
+<li>내 자바 앱 힙 메모리(Heap)는 2GB로 넉넉하게 짰고, cgroups Limit은 3GB로 설정했다. "절대 안 죽겠지?"</li>
+<li>자바 앱이 10GB짜리 로그 파일을 열어 계속 썼다(<code>write</code>).</li>
+<li>리눅스는 이 파일 기록을 **Page Cache(파일 지원 메모리)**에 쌓아둔다.</li>
+<li>🚨 <strong>핵심</strong>: cgroups의 <code>memory.limit_in_bytes</code> 카운터는 순수 힙(익명 메모리)뿐만 아니라, <strong>이 앱이 낳은 거대한 Page Cache 파일 조각들의 무게까지 몽땅 합산하여 한도를 깎아 먹는다!</strong></li>
+<li>결국 힙은 2GB밖에 안 썼는데, 로그 파일 Page Cache가 1.5GB 쌓이면서 총 3.5GB가 되어 Limit(3GB)을 돌파, 어이없게도 멀쩡한 자바 앱이 OOM Killer에게 암살당한다. 실무 백엔드에서 90% 이상 겪게 되는 "원인 모를 도커 튕김"의 진짜 범인이다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────┬────────────┬────────────┬──────────────────────────┐
+│ 램 사용 내역│ 힙(익명) 크기 │ Page Cache │ cgroups Limit 도달 │
+├──────────┼────────────┼────────────┼──────────────────────────┤
+│ 앱의 착각  │ 2GB (안전)  │ &quot;OS가 관리함&quot;│ Limit 3GB 안 넘음!  │
+│ OS의 채점  │ 2GB        │ + 1.5GB 누적│ 💥 3.5GB &gt; 3GB (OOM)  │
+└──────────┴────────────┴────────────┴──────────────────────────┘
+</code></pre>
+<p><strong>[매트릭스 해설]</strong> cgroups는 무자비한 사채업자다. 네가 빌려 간 힙 메모리 원금뿐만 아니라, 네가 몰래 파일 시스템에 싸질러놓은 더티 페이지 캐시 이자까지 모두 합산해서 청구서를 들이민다. 이것을 막으려면 자바 앱 실행 시 파일 로깅을 끄거나 O_DIRECT를 써서 페이지 캐시 우회를 시도해야만 OOM 폭사를 막을 수 있다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="bigyo-1-memory-limit-vs-memory-request-kubeonetiseuyi-2jung-jangbu-1">비교 1: Memory Limit vs Memory Request (쿠버네티스의 2중 장부)</h3>
+<p>cgroups를 조종하는 쿠버네티스(k8s)는 개발자에게 2가지 값을 쓰라고 강요한다. 이 두 값의 하드웨어적 본질은 완전히 다르다.</p>
+<table><thead><tr><th style="text-align: left">설정 값</th><th style="text-align: left">리눅스 커널의 물리적 맵핑 (cgroups)</th><th style="text-align: left">역할 및 튜닝의 의미</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Request</strong> (요구량)</td><td style="text-align: left"><code>memory.soft_limit_in_bytes</code></td><td style="text-align: left">스케줄러가 서버에 빈자리(램)가 있는지 검사할 때 쓰는 <strong>최소 보장 보증금</strong>. 이 값은 cgroup이 강제로 앱을 죽이는 락(Lock)으로 작용하지 않음.</td></tr>
+<tr><td style="text-align: left"><strong>Limit</strong> (제한량)</td><td style="text-align: left"><code>memory.limit_in_bytes</code></td><td style="text-align: left">이 선을 넘으면 하늘이 두 쪽 나도 <strong>OOM 총알이 발사되는 강철 지붕(Hard Limit)</strong>. 무조건 이 선 아래서 교체와 쫓겨남이 일어남.</td></tr>
+</tbody></table>
+<ul>
+<li>만약 Request = 1GB, Limit = 4GB 로 설정했다면?
+<ul>
+<li>컨테이너는 평소에 1GB는 보장받고 맘 편히 쓴다. (워킹 셋 보장).</li>
+<li>1GB를 넘어 3GB를 쓰고 있는데 서버 전체 램이 모자라기 시작하면, 커널은 이 컨테이너의 1GB 초과분(2GB 잉여분)을 0순위로 스왑으로 쫓아낸다(Reclaim). 죽이지는 않는다.</li>
+<li>하지만 앱이 미쳐서 4GB 선을 찌르는 순간, 램이 아무리 남아돌아도 자비 없이 OOM으로 즉사시킨다.</li>
+</ul>
+</li>
+</ul>
+<h3 id="page-cache-beopeo-kaesi-dodugyi-bigeug-1">Page Cache (버퍼 캐시) 도둑의 비극</h3>
+<p>개발자들이 도커를 띄우고 가장 억울해하며 많이 당하는 버그다.</p>
+<ul>
+<li>내 자바 앱 힙 메모리(Heap)는 2GB로 넉넉하게 짰고, cgroups Limit은 3GB로 설정했다. "절대 안 죽겠지?"</li>
+<li>자바 앱이 10GB짜리 로그 파일을 열어 계속 썼다(<code>write</code>).</li>
+<li>리눅스는 이 파일 기록을 **Page Cache(파일 지원 메모리)**에 쌓아둔다.</li>
+<li>🚨 <strong>핵심</strong>: cgroups의 <code>memory.limit_in_bytes</code> 카운터는 순수 힙(익명 메모리)뿐만 아니라, <strong>이 앱이 낳은 거대한 Page Cache 파일 조각들의 무게까지 몽땅 합산하여 한도를 깎아 먹는다!</strong></li>
+<li>결국 힙은 2GB밖에 안 썼는데, 로그 파일 Page Cache가 1.5GB 쌓이면서 총 3.5GB가 되어 Limit(3GB)을 돌파, 어이없게도 멀쩡한 자바 앱이 OOM Killer에게 암살당한다. 실무 백엔드에서 90% 이상 겪게 되는 "원인 모를 도커 튕김"의 진짜 범인이다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────┬────────────┬────────────┬──────────────────────────┐
+│ 램 사용 내역│ 힙(익명) 크기 │ Page Cache │ cgroups Limit 도달 │
+├──────────┼────────────┼────────────┼──────────────────────────┤
+│ 앱의 착각  │ 2GB (안전)  │ &quot;OS가 관리함&quot;│ Limit 3GB 안 넘음!  │
+│ OS의 채점  │ 2GB        │ + 1.5GB 누적│ 💥 3.5GB &gt; 3GB (OOM)  │
+└──────────┴────────────┴────────────┴──────────────────────────┘
+</code></pre>
+<p><strong>[매트릭스 해설]</strong> cgroups는 무자비한 사채업자다. 네가 빌려 간 힙 메모리 원금뿐만 아니라, 네가 몰래 파일 시스템에 싸질러놓은 더티 페이지 캐시 이자까지 모두 합산해서 청구서를 들이민다. 이것을 막으려면 자바 앱 실행 시 파일 로깅을 끄거나 O_DIRECT를 써서 페이지 캐시 우회를 시도해야만 OOM 폭사를 막을 수 있다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="silmu-sinario-cgroups-v2wa-psi-pressure-stall-information-yi-guweon">실무 시나리오: cgroups v2와 PSI (Pressure Stall Information)의 구원</h3>
+<ol>
+<li><strong>과거 cgroups v1의 무식함</strong>: v1 시절에는 Limit에 다다르면 무작정 앱을 죽이거나 디스크 스왑을 치면서 렉을 만들어냈다. 시스템 엔지니어는 앱이 죽고 나서야 "아 Limit을 너무 낮게 잡았구나" 후회하며 수동으로 YAML 파일의 램 용량을 올려주는 뒷북을 쳤다.</li>
+<li><strong>페이스북의 구원 (PSI 도입)</strong>:
+<ul>
+<li>페이스북 커널 엔지니어들은 이 장님 같은 OOM 관리에 빡쳐서 **PSI (메모리 압박 지연 정보)**라는 신기능을 cgroups v2에 박아넣어 리눅스 본가에 기증했다.</li>
+<li>앱이 Limit 철창에 부딪히기 직전, 메모리를 달라고 헐떡이는 '기다림의 시간(Delay time)'을 0.001초 단위로 측정해서 <code>memory.pressure</code> 파일에 "이 컨테이너 지금 램 모자라서 1초 중 0.2초를 멍때리고(Stall) 있습니다!"라고 실시간 스트리밍 경고를 뿜어낸다.</li>
+</ul>
+</li>
+<li><strong>오토 스케일링의 예술</strong>:
+<ul>
+<li>이제 쿠버네티스와 모니터링 툴(Datadog 등)은 앱이 OOM으로 터져 죽기 한참 전에 이 PSI 압박 지수를 듣는다.</li>
+<li>"오! 1번 컨테이너 램 압박 지수가 20%를 넘었어! 죽기 전에 빨리 옆에 똑같은 컨테이너를 3개 더 띄워서 트래픽을 분산시켜라!(Horizontal Pod Autoscaling)"</li>
+<li>cgroups v2의 발전으로 클라우드는 앱이 죽는 사후 대처에서 죽기 전에 미리 살려내는 **예측적 자동 확장(Predictive Scaling)**의 시대로 진입했다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="oom-kilreo-bihwalseonghwa-obsyeon-oomkilldisable-yi-hamjeong">OOM 킬러 비활성화 옵션 (OOMKillDisable)의 함정</h3>
+<p>도커 설정에 <code>--oom-kill-disable</code> 이라는 무적 같은 옵션이 있다.
+"와, 이거 켜면 램 꽉 차도 내 앱이 안 죽겠지?" 하고 켜는 순간 당신의 서버는 영원한 냉동 인간이 된다. Limit에 도달했는데 OOM 킬러마저 안 쏘면, cgroups는 그 앱의 스레드를 영원히 대기 상태(Uninterruptible Sleep)로 묶어버린다. 차라리 깔끔하게 죽고 컨테이너가 1초 만에 재시작(Restart)되는 게 100배 나은데, 죽지도 살지도 못한 채 트래픽을 다 잡아먹으며 굳어버리는 최악의 좀비 컨테이너 안티패턴이다. 클라우드에서는 "빨리 죽이는(Fail-fast)" 것이 미덕이다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">내용</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>멀티 테넌트(Multi-tenant) 완벽 격리</strong></td><td style="text-align: left">하나의 물리 서버에 수백 개의 서로 다른 회사 컨테이너를 구겨 넣어도, 남의 램을 뺏지 못하게 막아 보안과 가용성을 100% 보장</td></tr>
+<tr><td style="text-align: left"><strong>마이크로서비스 비용 산정(Billing)</strong></td><td style="text-align: left">"1GB 램 컨테이너당 월 만 원"이라는 클라우드 비즈니스 모델을 수학적/물리적으로 증명하고 강제 집행하는 하드코어 장부</td></tr>
+<tr><td style="text-align: left"><strong>스래싱(Thrashing)의 국지화(Localize)</strong></td><td style="text-align: left">램 파편화의 연쇄 폭발을 시스템 전체가 아닌 단일 철창(cgroup) 안으로 고립시켜 서버 메인 커널의 패닉을 영구 면제</td></tr>
+</tbody></table>
+<h3 id="gyeolron-mic-mirae-jeonmang">결론 및 미래 전망</h3>
+<p>Cgroups 메모리 서브시스템의 자원 제한 (Memory Limit) 동작은, "모두의 램은 내 램이다"라고 외치던 리눅스의 무정부주의적 전역 교체(Global Replacement) 낭만에 차가운 자본주의의 철창을 들이민 위대한 아키텍처적 선 긋기다. 이 철창이 없었다면 도커(Docker)도, 쿠버네티스(Kubernetes)도, 지금의 AWS 클라우드 생태계도 모래성처럼 무너져 내렸을 것이다. 우리는 cgroups를 통해 하드웨어 가상 머신(KVM)의 무거운 이중 페이징 렉을 피하면서도, 마치 독립된 컴퓨터를 통째로 산 것과 같은 완벽한 램 샌드박스를 단 1초 만에 공짜로 띄울 수 있게 되었다. 미래의 리눅스 커널(eBPF 융합 등)은 이 cgroups 제한을 단순히 용량(Bytes)을 자르는 것을 넘어, 캐시 대역폭(L3 Cache Allocation Technology)과 메모리 버스 속도까지 정밀하게 쪼개어 배급하는 극초정밀 자원 스케줄링 머신으로 진화하며 현대 백엔드의 신(God)으로 군림할 것이다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">기초 자원 관리 문제
+    ↓
+Cgroups 메모리 서브시스템의 자원 제한 (Memory Limit) 동작
+    ↓
+성능·격리·공정성 최적화
+    ↓
+가상화·관측·자동화 통합
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">Cgroups 메모리 서브시스템의 자원 제한 (Memory Limit) 동작</td><td style="text-align: left">운영체제 자원 관리와 보호 정책이 실제로 적용되는 핵심 주제</td></tr>
+<tr><td style="text-align: left">커널 (Kernel)</td><td style="text-align: left">정책 집행, 상태 전이, 시스템 호출 처리의 중심</td></tr>
+<tr><td style="text-align: left">프로세스/스레드</td><td style="text-align: left">CPU, 메모리, 동기화 자원과 직접 연결되는 실행 단위</td></tr>
+<tr><td style="text-align: left">메모리/I/O</td><td style="text-align: left">성능 병목과 보호 요구사항이 함께 드러나는 연계 영역</td></tr>
+<tr><td style="text-align: left">가상화/보안</td><td style="text-align: left">격리, 제어, 관측 확장 관점에서 해당 주제가 연결되는 상위 개념</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

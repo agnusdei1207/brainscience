@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Brain Science - 문제 해결</title>
+    <subtitle>AI, Infra, DevSecOps, Cloud Native, Security</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://agnusdei1207.github.io/brainscience/tags/munje-haegyeol/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://agnusdei1207.github.io/brainscience"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-05-24T00:00:00+00:00</updated>
+    <id>https://agnusdei1207.github.io/brainscience/tags/munje-haegyeol/atom.xml</id>
+    <entry xml:lang="en">
+        <title>13. 상태 공간 탐색 (State Space Search)</title>
+        <published>2024-05-24T00:00:00+00:00</published>
+        <updated>2024-05-24T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://agnusdei1207.github.io/brainscience/studynote/10_ai/01_ai_basics/013-state-space-search/"/>
+        <id>https://agnusdei1207.github.io/brainscience/studynote/10_ai/01_ai_basics/013-state-space-search/</id>
+        
+        <content type="html" xml:base="https://agnusdei1207.github.io/brainscience/studynote/10_ai/01_ai_basics/013-state-space-search/">&lt;h2 id=&quot;0-haegsim-insaiteu&quot;&gt;0. 핵심 인사이트&lt;&#x2F;h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;핵심&lt;&#x2F;strong&gt;: 복잡한 현실의 문제를 유한 또는 무한의 노드(상태)와 간선(연산자)으로 이루어진 수학적 그래프 모델로 추상화하여, 목표 지점을 찾아가는 최적 경로 탐색 알고리즘 체계.
+&lt;strong&gt;비유&lt;&#x2F;strong&gt;: 마치 복잡한 서울 시내의 실제 지형과 건물을 다 지워버리고, 오직 지하철역(상태)과 철로(연산자)만 남겨놓은 노선도로 바꾸어 최단 경로를 쉽게 찾는 것과 같습니다.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;hr &#x2F;&gt;
+&lt;p&gt;📝 모범 답안&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;1-gaeyo-mic-pilyoseong&quot;&gt;1. 개요 및 필요성&lt;&#x2F;h2&gt;
+&lt;p&gt;인공지능 초창기, 학자들은 기계가 &#x27;문제를 푼다(Problem Solving)&#x27;는 행위를 어떻게 정의할 것인가 고민했다. 그 결과물인 &#x27;상태 공간 탐색(State Space Search)&#x27;은 문제를 물리적 형태가 아닌 추상적인 상태(State)들의 집합으로 변환하는 패러다임이다.
+만약 로봇이 방을 청소해야 한다면, 방의 더러운 정도, 로봇의 현재 위치 등이 하나의 &#x27;상태&#x27;가 되며, 로봇이 이동하거나 진공 흡입을 하는 동작이 &#x27;연산자(Operator)&#x27;가 된다. 이 기법이 없다면 기계는 환경과 상호작용하는 시퀀스를 논리적으로 기획(Planning)할 수 없다. 따라서 상태 공간 모델링은 모든 고전 AI와 현대 강화학습 환경 구축의 절대적인 전제 조건이 된다.&lt;&#x2F;p&gt;
+&lt;p&gt;이 도식은 현실의 문제가 어떻게 추상적인 노드와 간선의 그래프로 모델링되는지 보여주는 기초 구조도이다.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[현실 세계]                [상태 공간 그래프 추상화]
+로봇이 방 A에 있음  ====&amp;gt;    (Node S0: 로봇=A, 방=더러움) -- [Start]
+      ↓ (이동)                       │  (간선: Move_to_B)
+로봇이 방 B로 감    ====&amp;gt;    (Node S1: 로봇=B, 방=더러움)
+      ↓ (청소)                       │  (간선: Vacuum)
+방 B가 깨끗해짐    ====&amp;gt;    (Node S2: 로봇=B, 방=깨끗함) -- [Goal]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 구조도의 핵심은 복잡한 다차원 현실을 컴퓨터가 연산 가능한 이산적(Discrete) 노드 그래프로 맵핑(Mapping)했다는 점이다. 이렇게 변환되면 어떤 문제든 &#x27;S0에서 S2로 가는 최단 경로를 찾는 수학 문제&#x27;로 치환되며, 이후에는 그래프 이론 기반의 탐색 알고리즘(BFS, DFS, Dijkstra 등)을 일관되게 적용할 수 있게 된다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;2-guseongyoso&quot;&gt;2. 구성요소&lt;&#x2F;h2&gt;
+&lt;p&gt;상태 공간을 정의하고 탐색을 수행하기 위해서는 명확하게 정형화된 5가지 구성 요소가 필요하다.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;상태 공간 문제의 5요소 (Problem Formulation)&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;구성 요소&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;역할&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;내부 논리 및 예시 (8-퍼즐 기준)&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;상태 (States, S)&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;에이전트가 처할 수 있는 모든 가능한 상황의 집합&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;타일 8개와 빈칸 1개의 배열 모양&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;초기 상태 (Initial State)&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;탐색을 시작하는 출발 노드&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;게임이 섞인 직후의 타일 배치&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;연산자 &#x2F; 행동 (Actions, A)&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;한 상태에서 다른 상태로 전이시키는 함수 (Transition Model)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;빈칸을 상&#x2F;하&#x2F;좌&#x2F;우로 이동 (Move)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;목표 검사 (Goal Test)&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;현재 상태가 정답인지 판별하는 논리 함수&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;타일이 1~8까지 순서대로 정렬되었는가?&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;경로 비용 (Path Cost)&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;상태 전이 시 발생하는 비용 함수 (가중치)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;한 번 이동할 때마다 코스트 +1 증가&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;다음은 상태 공간 그래프에서 탐색 트리(Search Tree)가 메모리 상에 확장(Expansion)되는 동적 과정을 보여주는 흐름도이다.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[그래프 모델] (무한 순환 가능)      [탐색 트리 확장 과정] (루프 방지 구조)
+   (S0) ───┐                            [ S0 ] (Root Node)
+  ↗   ↘    │                            &amp;#x2F;    \
+(S1) (S2)  │    == 전개(Expand) ==&amp;gt;  [ S1 ]  [ S2 ]
+  ↖   ↙    │                         &amp;#x2F;       &amp;#x2F;  \
+   (S3) &amp;lt;──┘                     (무시)    [S3] [S4] (목표 도달 시 중단)
+                             (S0 회귀 방지)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 흐름의 핵심은 &#x27;그래프(Graph)&#x27;와 &#x27;탐색 트리(Tree)&#x27;의 차이다. 상태 공간 자체는 순환(Loop)이 존재하는 그래프일 수 있으나, 탐색 알고리즘은 이를 실행 메모리 상에 루트에서 뻗어나가는 순환 없는 트리 구조로 풀어낸다(Unrolling). 이때 S1에서 다시 S0로 돌아가는 불필요한 반복 전개를 막기 위해 &#x27;방문한 노드(Closed List &#x2F; Explored Set)&#x27;를 캐싱하여 메모리 병목과 무한 루프를 방지하는 컷오프(Cut-off) 메커니즘이 알고리즘 최적화의 핵심으로 작용한다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;3-gujo-mic-weonri&quot;&gt;3. 구조 및 원리&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;strong&gt;핵심 조건&lt;&#x2F;strong&gt;: 상태 공간 탐색 (State Space Search)의 성능과 타당성은 입력 표현, 핵심 구조 또는 연산, 학습·추론 절차, 평가 기준, 자원 제약이 서로 정합될 때 확보된다.&lt;&#x2F;p&gt;
+&lt;p&gt;동작 순서:&lt;&#x2F;p&gt;
+&lt;p&gt;문제의 복잡도가 증가할수록 상태 공간 탐색은 &#x27;조합 폭발(Combinatorial Explosion)&#x27;이라는 치명적 한계에 부딪힌다. 따라서 공간의 크기에 따라 탐색 전략을 다르게 취해야 한다.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;상태 공간 탐색 전략별 비교 매트릭스&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;비교 항목&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;맹목적 탐색 (Uninformed)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;휴리스틱 탐색 (Informed)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;로컬 탐색 (Local Search)&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;도메인 지식&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;없음 (오직 목표 판별만 가능)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;있음 (목표까지의 거리 추정치 $h(n)$)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;오직 현재 상태의 이웃만 평가&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;공간 유지&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;지나온 전체 경로 트리를 메모리에 유지&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;우선순위 큐(PQ)로 경로 유지&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;현재 노드만 유지 (메모리 O(1))&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;목적&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;최단 &#x27;경로&#x27; 찾기 보장&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;빠른 &#x27;최적 경로&#x27; 찾기 보장&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&#x27;목표 상태&#x27; 자체를 찾기 (경로 무관)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;적용 사례&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;소규모 퍼즐, 기본 웹 크롤러&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;네비게이션, 게임 유닛 길찾기&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;N-Queen 문제, 유전 알고리즘 기반 스케줄링&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;다음은 문제의 복잡도에 따른 상태 공간의 폭발적 증가(Curse of Dimensionality)를 보여주는 비용 함수 시각화이다.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;상태 수(Nodes)
+  ↑
+  │                                   * (바둑: 10^170, 탐색 불가 -&amp;gt; MCTS&amp;#x2F;딥러닝 도입)
+  │                                 &amp;#x2F;
+  │                                &amp;#x2F;
+  │                     * (체스: 10^47, 알파베타 가지치기 한계치)
+  │                   &amp;#x2F;
+  │       * (루빅스 큐브: 10^19, 휴리스틱 필수)
+  │     &amp;#x2F;
+  │ * (8-퍼즐: 10^5, 완전 탐색 가능)
+  └───────────────────────────────────────&amp;gt; 문제 차원 깊이(Depth)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 차트의 핵심은 차원의 저주다. 깊이가 얕을 때는 맹목적 탐색으로도 노드를 전개할 수 있지만, 깊이가 증가하면 지수함수적으로 노드가 폭발한다. 실무적으로 10^10을 넘어서는 상태 공간은 모든 경로를 스캔하는 것이 불가능하다. 따라서 거대 상태 공간에서는 공간의 일부만 선택적으로 탐색하는 빔 서치(Beam Search)나, 무작위성을 부여한 몬테카를로 탐색(MCTS)으로 탐색의 패러다임을 전환해야 한다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;4-bigyo-mic-yeongyeol&quot;&gt;4. 비교 및 연결&lt;&#x2F;h2&gt;
+&lt;p&gt;실제 산업 환경에서 상태 공간 모델링을 적용할 때 가장 중요한 엔지니어링 판단은 &#x27;상태를 어떻게 추상화(Abstraction)할 것인가&#x27;이다.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;실무 의사결정 시나리오: 물류 창고 로봇 라우팅&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[상태 추상화 수준 결정 플로우]
+   ↓
+[Q1. 로봇의 각도(연속적인 실수)까지 상태 노드에 포함시킬 것인가?]
+ ├── (Yes) -&amp;gt; 연속 상태 공간 발생. 노드 무한대 폭발 -&amp;gt; 연속 최적화 제어(LQR)로 변경
+ └── (No) -&amp;gt; 타일(Grid) 단위로 이산화(Discretization) 확정
+      ↓
+[Q2. 동적 장애물(사람)이 존재하는가?]
+ ├── (No) -&amp;gt; 정적 A* 상태 탐색 그래프 구축 후 캐싱
+ └── (Yes) -&amp;gt; 실시간 D* (Dynamic A*) 적용 또는 탐색 트리 주기적 재계산 강제
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 시나리오의 핵심 판단 기준은 &#x27;디테일과 연산량의 트레이드오프&#x27;다. 상태를 정의할 때 불필요한 정보(로봇의 배터리 잔량, 미세 각도)를 포함시키면 노드 수가 수천만 배로 증가한다. 실무에서는 해결하고자 하는 문제에 꼭 필요한 &#x27;최소 충족 특성(Minimal Sufficient Features)&#x27;만 상태 튜플(Tuple)로 남겨 추상화 수준을 높이는 것이 시스템 성능 병목을 예방하는 1원칙이다.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;실무 안티패턴&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;과도한 상태 정의&lt;&#x2F;strong&gt;: 상태 변수가 1개 늘어날 때마다 상태 공간의 크기는 차원의 저주에 의해 곱연산으로 폭발한다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;방문 상태 관리 부재&lt;&#x2F;strong&gt;: 이미 거쳐간 상태(Explored List)를 해시 테이블이나 비트맵 필터 없이 리스트로 관리하면, 탐색 후반부에 중복 검사 비용(O(N))이 탐색 비용을 초과하여 시스템이 멈추는 데드락 유사 현상을 겪는다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;5-silmu-jeogyong-mic-pandan&quot;&gt;5. 실무 적용 및 판단&lt;&#x2F;h2&gt;
+&lt;p&gt;상태 공간 탐색은 단순한 과거의 알고리즘이 아니라, 현대 인공지능이 세계를 이해하고 시뮬레이션하는 기저 구조로서 여전히 진화 중이다.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;구분&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;고전적 상태 공간 탐색&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;현대적 응용 아키텍처&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;환경 모델&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;결정론적 (액션 결과 100% 확정)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;확률적 (MDP, 상태 전이 확률 개입)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;가치 평가&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;고정된 경로 비용 (가중치 덧셈)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;딥러닝(신경망) 기반 가치 함수 (Value Network)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;탐색 범위&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;전역적 완전 탐색 지향&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;롤아웃 기반 부분 병렬 시뮬레이션 (MCTS)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;&lt;strong&gt;미래 전망&lt;&#x2F;strong&gt;
+최근의 상태 공간 탐색은 딥러닝과 결합하고 있다. 알파고(AlphaGo)가 증명했듯, 방대한 상태 공간 그래프 전체를 메모리에 올리는 대신 직관(정책망&#x2F;Policy Network)으로 유망한 노드만 고르고, 시뮬레이션(MCTS)을 통해 국소적인 탐색 트리만 전개하는 하이브리드 아키텍처가 AGI(강인공지능)의 추론 능력 향상을 이끄는 코어 메커니즘으로 자리매김하고 있다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;6-gidaehyogwa-mic-gyeolron&quot;&gt;6. 기대효과 및 결론&lt;&#x2F;h2&gt;
+&lt;p&gt;상태 공간 탐색은 단순한 과거의 알고리즘이 아니라, 현대 인공지능이 세계를 이해하고 시뮬레이션하는 기저 구조로서 여전히 진화 중이다.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;미래 전망&lt;&#x2F;strong&gt;
+최근의 상태 공간 탐색은 딥러닝과 결합하고 있다. 알파고(AlphaGo)가 증명했듯, 방대한 상태 공간 그래프 전체를 메모리에 올리는 대신 직관(정책망&#x2F;Policy Network)으로 유망한 노드만 고르고, 시뮬레이션(MCTS)을 통해 국소적인 탐색 트리만 전개하는 하이브리드 아키텍처가 AGI(강인공지능)의 추론 능력 향상을 이끄는 코어 메커니즘으로 자리매김하고 있다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;7-baljeon-heureumdo&quot;&gt;7. 발전 흐름도&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[문제 정형화 (Problem Formulation) — 초기 상태·전이·목표 정의]
+    │
+    ▼
+[상태 공간 (State Space) — 가능한 모든 상태의 집합과 전이 그래프]
+    │
+    ▼
+[맹목 탐색 (Blind Search) — BFS·DFS, 휴리스틱 없이 완전 탐색]
+    │
+    ▼
+[휴리스틱 탐색 (Heuristic Search) — A*, 추정 비용으로 유망 경로 우선]
+    │
+    ▼
+[MCTS + 딥러닝 (Deep RL) — 정책망·가치망으로 대규모 상태 공간 극복]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 흐름은 문제를 상태 공간으로 정형화한 뒤 맹목 탐색에서 휴리스틱 탐색으로 발전하고, 딥러닝과 결합한 MCTS로 바둑·게임AI의 거대 상태 공간을 극복하는 진화 과정을 보여준다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;8-gwanryeon-gaenyeom-maeb&quot;&gt;8. 관련 개념 맵&lt;&#x2F;h2&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;개념&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;연결 포인트&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;BFS (Breadth-First Search)&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;최단 경로를 보장하는 너비 우선 맹목 탐색, 메모리 집약적&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;em&gt;&lt;em&gt;A&lt;&#x2F;em&gt; 알고리즘 (A-star)&lt;&#x2F;em&gt;*&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;휴리스틱 함수로 유망 노드 우선 탐색, 최적성 보장&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;MCTS (Monte Carlo Tree Search)&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;롤아웃 시뮬레이션으로 거대 상태 공간을 부분 탐색하는 알파고 핵심 기술&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+</feed>

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>260. 부스팅 (Boosting) - 오차 가중치 직렬 보완 &#x2F; XGBoost — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ai
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 부스팅(Boosting)은 이전 모델이 틀린 샘플에 더 높은 가중치를 부여하며 순차적(직렬)으로 약한 학습기(Weak Learner)를 쌓아 편향(Bias)을 줄이는 앙상블 기법이다.
+<strong>비유</strong>: 부스팅은 "선생님이 틀린 문제만 집중적으로 가르쳐주는 과외"다. 매 회차마다 이전에 틀렸던 문제에 더 많은 시간을 투자해 약점을 없애나간다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>**부스팅(Boosting)**은 Robert Schapire(1990)의 이론적 증명에서 출발했다: "약한 학습기(랜덤보다 조금 나은 분류기)를 순차적으로 결합하면 임의의 강한 학습기(Strong Learner)를 만들 수 있다."</p>
+<p>배깅이 분산을 줄이는 데 집중한다면, 부스팅은 <strong>편향(Bias)을 줄이는</strong> 데 집중한다.</p>
+<table><thead><tr><th style="text-align: left">알고리즘</th><th style="text-align: left">핵심 아이디어</th><th style="text-align: left">등장 시기</th></tr></thead><tbody>
+<tr><td style="text-align: left">AdaBoost (Adaptive Boosting)</td><td style="text-align: left">오분류 샘플 가중치 증가</td><td style="text-align: left">1995</td></tr>
+<tr><td style="text-align: left">Gradient Boosting</td><td style="text-align: left">잔차(Residual)의 그래디언트 최소화</td><td style="text-align: left">1999</td></tr>
+<tr><td style="text-align: left">XGBoost (eXtreme Gradient Boosting)</td><td style="text-align: left">Gradient Boosting + 정규화 + 병렬화</td><td style="text-align: left">2016</td></tr>
+<tr><td style="text-align: left">LightGBM</td><td style="text-align: left">리프 중심 트리 성장 + 히스토그램 최적화</td><td style="text-align: left">2017</td></tr>
+<tr><td style="text-align: left">CatBoost</td><td style="text-align: left">범주형 변수 자동 처리</td><td style="text-align: left">2017</td></tr>
+</tbody></table>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="adaboost-dongjag-weonri">AdaBoost 동작 원리</h3>
+<pre><code>  Round 1: 균등 가중치 w = 1&#x2F;n
+  ┌──────────────────────────────────────────┐
+  │  h_1 학습 → 오분류 샘플에 가중치 증가   │
+  │  ○○○○○●●●  (●=오분류, 가중치 증가)    │
+  └──────────────────────┬───────────────────┘
+                         │
+  Round 2: 증가된 가중치
+  ┌──────────────────────▼───────────────────┐
+  │  h_2 학습 → 이전 오분류에 집중           │
+  │  ○○○○○●●●  → ○○○○○●●●               │
+  │         (●에 더 큰 원)                  │
+  └──────────────────────┬───────────────────┘
+                         │
+         ... T 라운드 반복 ...
+                         │
+  최종: H(x) = sign( Σ α_t · h_t(x) )
+        α_t = 0.5 · ln((1-ε_t)&#x2F;ε_t)  ← 모델 정확도 기반 가중치
+</code></pre>
+<h3 id="gradient-boosting-haegsim-gujo">Gradient Boosting 핵심 구조</h3>
+<pre><code>  F_0(x) = 초기 예측 (평균값)
+     │
+  ┌──▼──────────────────────────────────────┐
+  │  잔차(Residual) = 실제값 - 예측값       │
+  │  r_1 = y - F_0(x)                       │
+  └──┬──────────────────────────────────────┘
+     │
+  h_1(x) ← r_1을 예측하도록 트리 학습
+     │
+  F_1(x) = F_0(x) + η · h_1(x)  (η: 학습률)
+     │
+  r_2 = y - F_1(x)
+     │
+  h_2(x) ← r_2를 예측 ...
+     │
+  반복 → F_M(x) = F_0 + η·Σh_m(x)
+</code></pre>
+<h3 id="xgboostyi-haegsim-gaeseonsahang">XGBoost의 핵심 개선사항</h3>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">기존 Gradient Boosting</th><th style="text-align: left">XGBoost</th></tr></thead><tbody>
+<tr><td style="text-align: left">정규화</td><td style="text-align: left">없음</td><td style="text-align: left">L1(Lasso) + L2(Ridge) 정규화</td></tr>
+<tr><td style="text-align: left">결측값 처리</td><td style="text-align: left">별도 전처리 필요</td><td style="text-align: left">자동 처리 (Sparsity-Aware)</td></tr>
+<tr><td style="text-align: left">병렬화</td><td style="text-align: left">불가 (순차적)</td><td style="text-align: left">노드 수준 병렬화</td></tr>
+<tr><td style="text-align: left">조기 종료</td><td style="text-align: left">없음</td><td style="text-align: left">Early Stopping 내장</td></tr>
+<tr><td style="text-align: left">트리 성장</td><td style="text-align: left">깊이 우선 (Depth-wise)</td><td style="text-align: left">최적 노드 우선</td></tr>
+<tr><td style="text-align: left">캐시 최적화</td><td style="text-align: left">없음</td><td style="text-align: left">있음 (Column Block)</td></tr>
+</tbody></table>
+<h3 id="lightgbm-vs-xgboost">LightGBM vs XGBoost</h3>
+<pre><code>  XGBoost:  레벨 단위 (Level-wise) 트리 성장
+  ┌──────────────────────────────────────┐
+  │       Root                           │
+  │      &#x2F;    \                          │
+  │   Node1   Node2  ← 같은 깊이 동시    │
+  │   &#x2F;  \    &#x2F;  \                       │
+  │ L1   L2  L3   L4                     │
+  └──────────────────────────────────────┘
+
+  LightGBM: 리프 단위 (Leaf-wise) 트리 성장
+  ┌──────────────────────────────────────┐
+  │       Root                           │
+  │      &#x2F;    \                          │
+  │   Node1   Node2                      │
+  │   &#x2F;  \                               │
+  │ L1   L2  ← 가장 손실 큰 리프 먼저   │
+  │ &#x2F;  \                                 │
+  │L3   L4  ← 연속 분할 → 깊고 비대칭  │
+  └──────────────────────────────────────┘
+  → LightGBM이 더 빠르지만 과적합 위험 ↑
+</code></pre>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 부스팅 (Boosting)의 성능과 타당성은 입력 표현, 핵심 구조 또는 연산, 학습·추론 절차, 평가 기준, 자원 제약이 서로 정합될 때 확보된다.</p>
+<p>동작 순서:</p>
+<ol>
+<li>부스팅 (Boosting)의 입력 조건과 목적을 정의한다.</li>
+<li>핵심 연산 또는 추론 규칙을 적용한다.</li>
+<li>결과를 평가 지표와 피드백으로 검증한다.</li>
+</ol>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">특성</th><th style="text-align: left">AdaBoost</th><th style="text-align: left">Gradient Boosting</th></tr></thead><tbody>
+<tr><td style="text-align: left">오류 처리 방식</td><td style="text-align: left">샘플 가중치 조정</td><td style="text-align: left">잔차(Residual) 직접 학습</td></tr>
+<tr><td style="text-align: left">손실 함수</td><td style="text-align: left">지수 손실 (Exponential Loss)</td><td style="text-align: left">임의 미분 가능 손실 함수</td></tr>
+<tr><td style="text-align: left">이상값 민감성</td><td style="text-align: left">높음 (가중치 급증)</td><td style="text-align: left">중간 (손실 함수에 의존)</td></tr>
+<tr><td style="text-align: left">적용 범위</td><td style="text-align: left">분류</td><td style="text-align: left">분류 + 회귀</td></tr>
+</tbody></table>
+<h3 id="buseuting-gwajeoghab-jeeo">부스팅 과적합 제어</h3>
+<pre><code>  부스팅 과적합 제어 방법:
+  ┌─────────────────────────────────────────┐
+  │ 1. 학습률 (Learning Rate η) 감소        │
+  │    → 더 많은 트리 필요 (트레이드오프)   │
+  │ 2. max_depth 제한 (보통 3~6)            │
+  │ 3. 조기 종료 (Early Stopping)           │
+  │ 4. Subsampling (배깅 기법 차용)         │
+  │ 5. L1&#x2F;L2 정규화 (XGBoost, LightGBM)    │
+  └─────────────────────────────────────────┘
+</code></pre>
+<h3 id="xgboost-juyo-haipeoparamiteo">XGBoost 주요 하이퍼파라미터</h3>
+<table><thead><tr><th style="text-align: left">파라미터</th><th style="text-align: left">역할</th><th style="text-align: left">권장 범위</th></tr></thead><tbody>
+<tr><td style="text-align: left">n_estimators</td><td style="text-align: left">트리 수</td><td style="text-align: left">100~1000 (Early Stopping)</td></tr>
+<tr><td style="text-align: left">learning_rate</td><td style="text-align: left">학습률 η</td><td style="text-align: left">0.01~0.3</td></tr>
+<tr><td style="text-align: left">max_depth</td><td style="text-align: left">트리 깊이</td><td style="text-align: left">3~6</td></tr>
+<tr><td style="text-align: left">subsample</td><td style="text-align: left">행 샘플링 비율</td><td style="text-align: left">0.6~0.9</td></tr>
+<tr><td style="text-align: left">colsample_bytree</td><td style="text-align: left">열 샘플링 비율</td><td style="text-align: left">0.6~0.9</td></tr>
+<tr><td style="text-align: left">reg_alpha</td><td style="text-align: left">L1 정규화</td><td style="text-align: left">0~1</td></tr>
+<tr><td style="text-align: left">reg_lambda</td><td style="text-align: left">L2 정규화</td><td style="text-align: left">1 (기본)</td></tr>
+</tbody></table>
+<h3 id="buseuting-algorijeum-seontaeg-gijun">부스팅 알고리즘 선택 기준</h3>
+<ol>
+<li><strong>XGBoost</strong>: 정확도 최우선, 범용</li>
+<li><strong>LightGBM</strong>: 대규모 데이터(수백만 행), 빠른 훈련 속도 필요</li>
+<li><strong>CatBoost</strong>: 범주형 변수가 많은 데이터, 전처리 최소화</li>
+<li><strong>AdaBoost</strong>: 교육용, 이론 학습 목적</li>
+</ol>
+<h3 id="gisulsa-daban-pointeu">기술사 답안 포인트</h3>
+<ul>
+<li><strong>"부스팅이 편향을 줄이는 원리"</strong>: 잔차 반복 학습 → 각 트리가 이전 트리가 설명 못한 패턴 학습</li>
+<li><strong>"XGBoost가 빠른 이유"</strong>: Column Block으로 데이터 정렬 캐시, 병렬 노드 분할</li>
+<li><strong>"부스팅 vs 배깅 선택 기준"</strong>: 고편향 → Boosting, 고분산 → Bagging</li>
+<li><strong>"과적합 방지 조합"</strong>: 낮은 학습률 + Early Stopping + Subsampling</li>
+</ul>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p>부스팅, 특히 XGBoost/LightGBM을 활용하면:</p>
+<ol>
+<li><strong>최고 수준의 예측 성능</strong>: 정형 데이터(Tabular Data) 분야에서 딥러닝과 경쟁 또는 압도</li>
+<li><strong>빠른 훈련</strong>: 최적화된 병렬 처리로 대규모 데이터에서도 실용적 훈련 시간</li>
+<li><strong>내장 기능 풍부</strong>: 결측값 처리, 조기 종료, 특성 중요도를 추가 코드 없이 지원</li>
+<li><strong>유연한 목적 함수</strong>: 커스텀 손실 함수 정의로 다양한 비즈니스 목표 최적화</li>
+</ol>
+<p>기술사 시험에서 XGBoost는 <strong>Gradient Boosting 원리 → XGBoost 개선점 → 하이퍼파라미터 조정 → 과적합 방지</strong> 순서로 체계적으로 서술해야 고득점을 받는다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>부스팅, 특히 XGBoost/LightGBM을 활용하면:</p>
+<p>기술사 시험에서 XGBoost는 <strong>Gradient Boosting 원리 → XGBoost 개선점 → 하이퍼파라미터 조정 → 과적합 방지</strong> 순서로 체계적으로 서술해야 고득점을 받는다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">문제 정의 · 입력 정리
+    ↓
+핵심 구조 · 연산 설계
+    ↓
+학습 · 추론 · 검증
+    ↓
+실무 적용 · 최적화
+    ↓
+운영 · 거버넌스 · 확장
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연관 키워드</th><th style="text-align: left">관계</th></tr></thead><tbody>
+<tr><td style="text-align: left">부스팅 (Boosting)</td><td style="text-align: left">Weak Learner, 직렬 학습, 편향 감소</td><td style="text-align: left">순차 오차 보완 앙상블</td></tr>
+<tr><td style="text-align: left">AdaBoost (Adaptive Boosting)</td><td style="text-align: left">샘플 가중치, 지수 손실</td><td style="text-align: left">최초 부스팅 구현</td></tr>
+<tr><td style="text-align: left">Gradient Boosting</td><td style="text-align: left">잔차, 그래디언트, 손실 함수</td><td style="text-align: left">범용 부스팅 프레임워크</td></tr>
+<tr><td style="text-align: left">XGBoost (eXtreme Gradient Boosting)</td><td style="text-align: left">정규화, 병렬화, Column Block</td><td style="text-align: left">최적화된 Gradient Boosting</td></tr>
+<tr><td style="text-align: left">LightGBM</td><td style="text-align: left">Leaf-wise, 히스토그램, 빠른 훈련</td><td style="text-align: left">대규모 데이터 특화</td></tr>
+<tr><td style="text-align: left">CatBoost</td><td style="text-align: left">범주형 변수, 대칭 트리</td><td style="text-align: left">전처리 최소화</td></tr>
+<tr><td style="text-align: left">학습률 (Learning Rate)</td><td style="text-align: left">η, Shrinkage</td><td style="text-align: left">부스팅 과적합 제어</td></tr>
+<tr><td style="text-align: left">조기 종료 (Early Stopping)</td><td style="text-align: left">검증 손실, n_estimators</td><td style="text-align: left">과적합 방지 핵심 기법</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

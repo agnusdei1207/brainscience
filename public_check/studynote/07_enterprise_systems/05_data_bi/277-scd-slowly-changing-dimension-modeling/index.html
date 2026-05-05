@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>277. SCD (Slowly Changing Dimension) 모델링 기법 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote enterprise systems
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: SCD (Slowly Changing Dimension)는 차원 속성의 변화 자체보다, 그 변화를 분석에서 어떤 시간 의미로 보존할지를 결정하는 모델링 규칙이다.
+<strong>비유</strong>: 사람의 주소 변경을 현재 주소만 볼지, 전입·전출 이력을 모두 남길지 정하는 주민기록 관리 방식과 같다.
+📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>데이터 웨어하우스의 차원(Dimension)은 제품, 고객, 조직, 지역처럼 사실(Fact)을 해석하는 기준 축이다. 문제는 이 축이 완전히 고정되어 있지 않다는 점이다. 고객 등급은 바뀌고, 조직은 개편되며, 제품 분류도 재정의된다. 이런 변화는 운영계 관점에서는 단순 업데이트일 수 있지만, 분석계에서는 과거 사실을 어떤 차원 상태와 연결할 것인가라는 시간 문제를 만든다. 이 문제를 해결하는 대표적 모델링 규칙이 SCD다.</p>
+<p>SCD가 필요한 이유는 시점 정합성 때문이다. 예를 들어 2023년에 Silver 고객이었던 사람이 2024년에 Gold로 승급했다면, 2023년 매출을 Gold 고객 매출로 해석하면 잘못된 분석이 된다. 반대로 오타 수정이나 명칭 표준화는 굳이 이력을 남기지 않고 현재 값으로 일괄 정정하는 편이 더 적절하다. 즉 차원 변화는 모두 같은 방식으로 다루면 안 되고, 속성의 의미와 분석 목적에 따라 모델링 전략을 달리해야 한다.</p>
+<p>따라서 SCD는 단순한 저장 기법이 아니라, 무엇을 역사로 볼 것인가에 대한 비즈니스 해석 규칙이다. DW 설계에서 이 판단이 틀리면 성능보다 먼저 의미가 무너진다.</p>
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<table><thead><tr><th style="text-align: left">요소</th><th style="text-align: left">역할</th><th style="text-align: left">핵심 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">차원 엔터티</td><td style="text-align: left">변경이 발생하는 분석 기준</td><td style="text-align: left">고객, 제품, 조직, 지역 등</td></tr>
+<tr><td style="text-align: left">속성 분류</td><td style="text-align: left">변경 의미 판단</td><td style="text-align: left">오류 수정/법적 이력/분석용 이력 구분</td></tr>
+<tr><td style="text-align: left">SCD 유형</td><td style="text-align: left">이력 처리 방식</td><td style="text-align: left">Type 1, 2, 3이 핵심</td></tr>
+<tr><td style="text-align: left">유효기간 컬럼</td><td style="text-align: left">시점 구간 표현</td><td style="text-align: left">Type 2에서 start/end date, current flag 사용</td></tr>
+<tr><td style="text-align: left">서로게이트 키</td><td style="text-align: left">버전 식별</td><td style="text-align: left">Type 2에서 사실상 필수</td></tr>
+</tbody></table>
+<p>SCD의 핵심은 차원 자체가 아니라 속성 단위의 정책 설정이다. 하나의 고객 차원 안에서도 이름 오타는 Type 1, 고객 등급은 Type 2, 직전 등급 비교용 컬럼은 Type 3로 혼용될 수 있다. 따라서 실무에서는 차원별 SCD보다 속성별 SCD 정책표가 더 중요하다.</p>
+<p>또한 SCD는 ETL/ELT와 분리해서 생각할 수 없다. 변경 감지(Change Detection), 현재 버전 판정, 이력 만료 처리, 새 버전 삽입, 팩트 적재 시점의 SK 연결이 한 세트로 운영되어야 한다.</p>
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 차원 속성은 변경 빈도가 아니라 분석 의미를 기준으로 분류해야 하며, 이력이 필요한 속성은 사실 데이터가 발생한 시점과 올바르게 연결될 수 있어야 한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li>변경 감지: 원천 데이터와 현재 차원 상태를 비교해 무엇이 달라졌는지 파악한다.</li>
+<li>속성 정책 판정: 변경된 속성이 Type 1 대상인지, Type 2 대상인지, Type 3 대상인지 결정한다.</li>
+<li>차원 갱신 수행: Type 1은 덮어쓰기, Type 2는 기존 행 만료 후 새 행 삽입, Type 3은 이전 값 컬럼 이동을 수행한다.</li>
+<li>버전 연결 보장: Type 2의 경우 새 서로게이트 키를 생성해 팩트가 해당 시점 버전을 참조하게 한다.</li>
+<li>분석 규칙 검증: 현재값 조회, 특정 시점 조회, 직전 비교 조회가 의도한 결과를 내는지 확인한다.</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">원천 변경 발생
+    ↓
+[변경 감지]
+    ↓
+┌───────────────┬───────────────┬───────────────┐
+│ Type 1        │ Type 2        │ Type 3        │
+│ 현재값 교체    │ 새 버전 생성    │ 이전값 컬럼 보존 │
+└───────────────┴───────────────┴───────────────┘
+    ↓                ↓                 ↓
+현재 기준 분석      시점 기준 분석       직전 비교 분석
+</code></pre>
+<p>이 구조에서 가장 중요한 차이는 과거 사실을 재해석할 것인가, 당시 맥락을 유지할 것인가다. Type 1은 과거 사실도 현재 차원으로 재해석한다. Type 2는 당시 맥락을 보존한다. Type 3은 현재와 직전 맥락만 동시에 보여준다. 따라서 SCD 선택은 저장 공간의 문제가 아니라 분석 의미의 선택이다.</p>
+<p>경계 조건도 명확하다. 법적 감사, 고객 동의 이력, 조직 개편 전후 비교처럼 시점이 중요한 속성은 Type 2를 우선 검토해야 한다. 반면 명백한 입력 오류 수정에 Type 2를 적용하면 불필요한 이력만 늘어난다.</p>
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">Type 1</th><th style="text-align: left">Type 2</th><th style="text-align: left">Type 3</th></tr></thead><tbody>
+<tr><td style="text-align: left">이력 보존</td><td style="text-align: left">없음</td><td style="text-align: left">완전 보존</td><td style="text-align: left">제한적 보존</td></tr>
+<tr><td style="text-align: left">행 수 증가</td><td style="text-align: left">없음</td><td style="text-align: left">증가</td><td style="text-align: left">없음</td></tr>
+<tr><td style="text-align: left">컬럼 증가</td><td style="text-align: left">없음</td><td style="text-align: left">보통 없음</td><td style="text-align: left">있음</td></tr>
+<tr><td style="text-align: left">시점 분석</td><td style="text-align: left">부적합</td><td style="text-align: left">가장 적합</td><td style="text-align: left">제한적</td></tr>
+<tr><td style="text-align: left">구현 난이도</td><td style="text-align: left">낮음</td><td style="text-align: left">높음</td><td style="text-align: left">중간</td></tr>
+<tr><td style="text-align: left">대표 용도</td><td style="text-align: left">오류 수정</td><td style="text-align: left">등급·조직·동의 이력</td><td style="text-align: left">직전 값 비교</td></tr>
+</tbody></table>
+<p>SCD는 서로게이트 키, 스타 스키마, OLAP 분석과 연결된다. 특히 Type 2는 팩트가 당시 차원 버전을 정확히 참조해야 하므로 SK 설계가 핵심이다. 또 데이터 카탈로그와 데이터 거버넌스 측면에서는 각 속성이 어떤 SCD 정책을 따르는지 메타데이터로 명시해야 분석자 해석 충돌을 막을 수 있다.</p>
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p>채택 기준은 다음과 같다.</p>
+<ul>
+<li>Type 1: 잘못된 코드 수정, 주소 오타 보정, 표준 명칭 통일</li>
+<li>Type 2: 고객 등급, 조직 소속, 상품 분류, 법적 동의 이력</li>
+<li>Type 3: 전/현 비교가 핵심이고 전체 이력은 중요하지 않은 경우</li>
+</ul>
+<p>실무 체크리스트:</p>
+<ol>
+<li>속성별로 이력 필요 여부를 업무 부서와 합의했는가?</li>
+<li>Type 2 대상 속성에 대해 유효기간과 current flag 규칙을 정의했는가?</li>
+<li>팩트 적재 시 올바른 차원 버전을 조회하는 로직이 있는가?</li>
+<li>현재 기준 보고서와 과거 기준 보고서의 의미 차이를 사용자에게 설명했는가?</li>
+<li>SCD 정책이 카탈로그나 모델 문서에 명시되어 있는가?</li>
+</ol>
+<p>실제 프로젝트에서는 하나의 차원에 단일 유형만 적용하기보다 혼합 전략이 일반적이다. 예를 들어 고객 차원에서 이름·이메일은 Type 1, 등급·마케팅 동의는 Type 2, 직전 등급 비교 컬럼은 Type 3로 함께 설계할 수 있다.</p>
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>SCD를 올바르게 적용하면 DW는 단순한 현재 상태 저장소가 아니라 시간에 따라 변하는 비즈니스 맥락을 해석하는 분석 플랫폼이 된다. 이력 보존이 필요한 영역에서는 정확한 시점 분석을 가능하게 하고, 불필요한 영역에서는 간단한 모델을 유지해 성능과 운영 복잡도를 통제할 수 있다.</p>
+<p>반대로 SCD 정책이 불명확하면 같은 지표도 보고서마다 다른 의미로 계산될 수 있다. 따라서 결론적으로 SCD의 본질은 차원 변경을 어떻게 저장할 것인가가 아니라 과거 사실을 어떤 의미 체계로 해석할 것인가를 명시하는 설계 규칙이다.</p>
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">단순 현재값 중심 차원 관리
+    ↓
+Type 1 덮어쓰기 사용
+    ↓
+이력 요구 증가로 Type 2 확산
+    ↓
+직전 비교 요구로 Type 3&#x2F;혼합 전략 등장
+    ↓
+속성별 정책화 + 메타데이터 관리 고도화
+    ↓
+레이크하우스 환경의 시간여행·버전 관리와 결합
+</code></pre>
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">차원 테이블</td><td style="text-align: left">SCD 정책이 적용되는 핵심 대상</td></tr>
+<tr><td style="text-align: left">서로게이트 키</td><td style="text-align: left">Type 2 버전 식별의 기반</td></tr>
+<tr><td style="text-align: left">Change Data Capture</td><td style="text-align: left">차원 변경 감지의 입력 메커니즘</td></tr>
+<tr><td style="text-align: left">스타 스키마</td><td style="text-align: left">팩트와 차원을 시간 의미로 연결</td></tr>
+<tr><td style="text-align: left">데이터 거버넌스</td><td style="text-align: left">속성별 SCD 정책 문서화와 해석 통제</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

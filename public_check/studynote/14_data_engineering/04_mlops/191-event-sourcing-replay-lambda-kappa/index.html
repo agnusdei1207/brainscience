@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>191. 람다&#x2F;카파 아키텍처 재현 (Event Sourcing Replay - Lambda&#x2F;Kappa Architecture) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>May 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote data engineering
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 이벤트 소싱(Event Sourcing)은 시스템 상태를 이벤트 스트림으로 저장해 언제든 과거 시점으로 재현(Replay)하는 패턴이다.
+<strong>비유</strong>: 단일 기능의 기술이 아니라, 흐름과 기준과 운영 판단이 함께 맞물릴 때 의미가 생기는 체계와 같다.</p>
+</blockquote>
+<hr />
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>이벤트 소싱은 애플리케이션 상태 변화를 <strong>이벤트(Event)</strong> 의 연속으로 저장하고, 현재 상태를 이 이벤트들을 순서대로 재적용(Replay)하여 도출하는 패턴이다. 전통적 CRUD 방식이 최종 상태만 저장하는 것과 대비된다.</p>
+<table><thead><tr><th style="text-align: left">방식</th><th style="text-align: left">저장 단위</th><th style="text-align: left">특징</th></tr></thead><tbody>
+<tr><td style="text-align: left">CRUD</td><td style="text-align: left">현재 상태(스냅샷)</td><td style="text-align: left">이력 손실, 간단한 구현</td></tr>
+<tr><td style="text-align: left">이벤트 소싱</td><td style="text-align: left">이벤트 스트림</td><td style="text-align: left">완전한 이력, 재현 가능</td></tr>
+</tbody></table>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<table><thead><tr><th style="text-align: left">요소</th><th style="text-align: left">역할</th><th style="text-align: left">핵심 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">핵심 대상</td><td style="text-align: left">해당 주제가 직접 다루는 데이터·모델·인프라의 중심 객체</td><td style="text-align: left">무엇을 저장·처리·최적화하는지가 기술의 경계를 결정한다</td></tr>
+<tr><td style="text-align: left">제어 메커니즘</td><td style="text-align: left">처리 순서, 규칙, 알고리즘, 오케스트레이션</td><td style="text-align: left">성능·정합성·확장성은 제어 방식에 따라 달라진다</td></tr>
+<tr><td style="text-align: left">운영 레이어</td><td style="text-align: left">모니터링, 품질 검증, 거버넌스, 비용 관리</td><td style="text-align: left">실무에서는 기능보다 운영 가능성이 채택 여부를 좌우한다</td></tr>
+</tbody></table>
+<p><strong>감사 추적(Audit Trail)</strong>: 모든 변경 사항이 불변(Immutable) 이벤트로 기록됨</p>
+<ul>
+<li><strong>시간 여행(Time Travel)</strong>: 특정 시점의 상태 재현 가능</li>
+<li><strong>새 로직 소급 적용</strong>: 비즈니스 로직 변경 시 과거 이벤트 전체 재처리</li>
+<li><strong>CQRS(Command Query Responsibility Segregation)</strong> 와 자연스러운 결합</li>
+</ul>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 람다/카파 아키텍처 재현 (Event Sourcing Replay은 입력 데이터의 품질, 처리 단계의 일관성, 결과 활용 단계의 운영 제어가 동시에 맞아야 기대 효과를 낸다.</p>
+<pre><code>[기존 로직 v1 처리 중]
+Kafka Topic: order-events (offset 0 ~ 100,000)
+
+오프셋 0  ──→ 이벤트 소비 ──→ 로직 v1 적용 ──→ DB 저장
+
+[새 로직 v2 적용 필요]
+          ┌─────────────────────────────────┐
+          │  새 컨슈머 그룹(Consumer Group)  │
+          │  오프셋 0부터 재시작              │
+          │  오프셋 0 ──→ 로직 v2 적용       │
+          │  오프셋 1 ──→ 로직 v2 적용       │
+          │      ...                        │
+          │  오프셋 100,000 ──→ v2 완료      │
+          └─────────────────────────────────┘
+
+결과: v2 기준 전체 히스토리 재계산 완료
+v1 결과와 병행 운영 후 전환 (Blue&#x2F;Green)
+</code></pre>
+<table><thead><tr><th style="text-align: left">Kafka 기능</th><th style="text-align: left">이벤트 소싱 활용</th></tr></thead><tbody>
+<tr><td style="text-align: left">토픽(Topic) 파티션</td><td style="text-align: left">엔티티(Entity) ID 기준 파티셔닝</td></tr>
+<tr><td style="text-align: left">오프셋(Offset)</td><td style="text-align: left">이벤트 순서 보장</td></tr>
+<tr><td style="text-align: left">보존 기간(Retention)</td><td style="text-align: left">무기한 보존으로 완전한 이력</td></tr>
+<tr><td style="text-align: left">컨슈머 그룹</td><td style="text-align: left">여러 Projection 병렬 처리</td></tr>
+<tr><td style="text-align: left">압축(Log Compaction)</td><td style="text-align: left">최신 상태 스냅샷 유지</td></tr>
+</tbody></table>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">전통 DB (CRUD)</th><th style="text-align: left">이벤트 소싱</th></tr></thead><tbody>
+<tr><td style="text-align: left">저장 단위</td><td style="text-align: left">현재 상태</td><td style="text-align: left">이벤트 스트림</td></tr>
+<tr><td style="text-align: left">쿼리 복잡도</td><td style="text-align: left">단순 SELECT</td><td style="text-align: left">Projection 생성 필요</td></tr>
+<tr><td style="text-align: left">이력 추적</td><td style="text-align: left">별도 감사 테이블 필요</td><td style="text-align: left">기본 제공</td></tr>
+<tr><td style="text-align: left">확장성</td><td style="text-align: left">수직적 확장</td><td style="text-align: left">수평적 확장</td></tr>
+<tr><td style="text-align: left">디버깅</td><td style="text-align: left">어려움</td><td style="text-align: left">이벤트 재현으로 용이</td></tr>
+<tr><td style="text-align: left">스토리지</td><td style="text-align: left">효율적</td><td style="text-align: left">많은 스토리지 필요</td></tr>
+</tbody></table>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">상황</th><th style="text-align: left">권장 아키텍처</th><th style="text-align: left">이유</th></tr></thead><tbody>
+<tr><td style="text-align: left">복잡한 집계 쿼리 + 정확도 최우선</td><td style="text-align: left">람다</td><td style="text-align: left">배치 레이어의 정확한 처리</td></tr>
+<tr><td style="text-align: left">실시간 이벤트 파이프라인</td><td style="text-align: left">카파</td><td style="text-align: left">단순한 운영, 재처리 용이</td></tr>
+<tr><td style="text-align: left">팀 규모 작음</td><td style="text-align: left">카파</td><td style="text-align: left">이중 코드베이스 유지 부담</td></tr>
+<tr><td style="text-align: left">레거시 배치 시스템 공존</td><td style="text-align: left">람다</td><td style="text-align: left">점진적 마이그레이션</td></tr>
+<tr><td style="text-align: left">Flink/Spark Structured Streaming 도입</td><td style="text-align: left">카파</td><td style="text-align: left">배치/스트림 통합 API</td></tr>
+</tbody></table>
+<pre><code>[주문 시스템 예시]
+
+사용자 주문
+    │
+    ▼
+Order Command Handler
+    │ OrderCreated 이벤트 발행
+    ▼
+Kafka Topic: order-events
+ ├─ Partition 0: userId % N
+ ├─ 무기한 보존(log.retention.ms=-1)
+ └─ Log Compaction 활성화
+
+    │
+    ├──→ Consumer Group A: 재고 Projection → Redis
+    ├──→ Consumer Group B: 결제 Projection → PostgreSQL
+    ├──→ Consumer Group C: 검색 Projection → Elasticsearch
+    └──→ Consumer Group D: 분석 Projection → ClickHouse
+</code></pre>
+<ol>
+<li><strong>새 Consumer Group 생성</strong>: <code>order-events-v2-consumer</code></li>
+<li><strong>오프셋 초기화</strong>: <code>--reset-offsets --to-earliest</code></li>
+<li><strong>새 로직 컨테이너 배포</strong>: Blue/Green 전략으로 병렬 운영</li>
+<li><strong>재처리 완료 검증</strong>: 처리 카운트 및 결과 검증</li>
+<li><strong>트래픽 전환</strong>: 서빙 레이어에서 v2 결과로 전환</li>
+<li><strong>기존 Consumer 제거</strong>: v1 Consumer Group 중단</li>
+</ol>
+<table><thead><tr><th style="text-align: left">도전 과제</th><th style="text-align: left">해결 방법</th></tr></thead><tbody>
+<tr><td style="text-align: left">이벤트 스키마 변화</td><td style="text-align: left">Apache Avro + Schema Registry</td></tr>
+<tr><td style="text-align: left">재처리 시 성능 부하</td><td style="text-align: left">별도 토픽/클러스터에서 재처리</td></tr>
+<tr><td style="text-align: left">이벤트 순서 보장</td><td style="text-align: left">동일 파티션 키 사용</td></tr>
+<tr><td style="text-align: left">대용량 이벤트 스토어</td><td style="text-align: left">Kafka Tiered Storage</td></tr>
+<tr><td style="text-align: left">스냅샷 없이 긴 이력 재현</td><td style="text-align: left">주기적 스냅샷 + 이후 이벤트 적용</td></tr>
+</tbody></table>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<table><thead><tr><th style="text-align: left">효과</th><th style="text-align: left">정량적 지표</th></tr></thead><tbody>
+<tr><td style="text-align: left">운영 복잡도 감소</td><td style="text-align: left">람다 대비 코드베이스 50% 감소</td></tr>
+<tr><td style="text-align: left">재처리 자동화</td><td style="text-align: left">수동 배치 재실행 제거</td></tr>
+<tr><td style="text-align: left">완전한 감사 추적</td><td style="text-align: left">모든 상태 변화 100% 추적</td></tr>
+<tr><td style="text-align: left">새 기능 빠른 배포</td><td style="text-align: left">Consumer Group 추가로 무중단 확장</td></tr>
+</tbody></table>
+<pre><code>이벤트 소싱&#x2F;스트림 아키텍처 의사결정 트리
+
+스트림 처리 필요?
+├─ NO  → 전통 CRUD + 배치 ETL
+└─ YES → 실시간 정확도 요구?
+          ├─ 높음 + 복잡 집계 → 람다 아키텍처
+          │   (배치 + 스트림 병렬 운영)
+          └─ 보통 + 운영 단순화 → 카파 아키텍처
+              (스트림 단일 경로)
+              └─ 이력&#x2F;감사 필요? → 이벤트 소싱 결합
+</code></pre>
+<table><thead><tr><th style="text-align: left">기업</th><th style="text-align: left">아키텍처</th><th style="text-align: left">용도</th></tr></thead><tbody>
+<tr><td style="text-align: left">Netflix</td><td style="text-align: left">람다 → 카파 전환</td><td style="text-align: left">실시간 추천</td></tr>
+<tr><td style="text-align: left">LinkedIn</td><td style="text-align: left">카파 (Kafka 기반)</td><td style="text-align: left">사용자 활동 스트림</td></tr>
+<tr><td style="text-align: left">Uber</td><td style="text-align: left">이벤트 소싱 + CQRS</td><td style="text-align: left">실시간 주문/위치 처리</td></tr>
+<tr><td style="text-align: left">Airbnb</td><td style="text-align: left">람다 → Flink 기반 카파</td><td style="text-align: left">가격 최적화</td></tr>
+</tbody></table>
+<p>이벤트 소싱은 데이터의 불변성과 재현성을 보장하는 강력한 패턴이며, 카파 아키텍처와 결합 시 운영 단순성과 실시간 처리를 동시에 달성한다. 기술사 시험에서는 <strong>람다 vs 카파의 트레이드오프</strong>와 <strong>Kafka를 이벤트 소싱 스토어로 활용하는 방법</strong>이 핵심 논점이다.</p>
+<pre><code>시간 흐름 →
+┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐
+│E1    │→ │E2    │→ │E3    │→ │E4    │→ │E5    │
+│주문생성│  │결제완료│  │배송시작│  │배송완료│  │리뷰작성│
+└──────┘  └──────┘  └──────┘  └──────┘  └──────┘
+     ↓ Replay(재현)
+┌─────────────────────────────────┐
+│ 현재 상태 = 순서대로 이벤트 적용     │
+│ 언제든 원하는 시점 상태 재현 가능    │
+└─────────────────────────────────┘
+</code></pre>
+<p>Nathan Marz가 제안한 빅데이터 처리 아키텍처로, 배치와 스트림 두 레이어를 병렬 운영하여 정확성과 저지연을 동시에 달성한다.</p>
+<pre><code>데이터 소스
+    │
+    ├─────────────────────────────┐
+    │                             │
+    ▼                             ▼
+┌─────────────────┐   ┌─────────────────┐
+│  배치 레이어      │   │  스피드 레이어    │
+│  (Batch Layer)  │   │  (Speed Layer)  │
+│                 │   │                 │
+│ HDFS &#x2F; S3       │   │ Kafka + Flink   │
+│ Spark Batch     │   │ 실시간 처리       │
+│ 고정확도         │   │ 저지연           │
+│ 고지연(시간~일)  │   │ 근사치(최근 데이터)│
+└────────┬────────┘   └────────┬────────┘
+         │                     │
+         ▼                     ▼
+┌─────────────────────────────────┐
+│          서빙 레이어              │
+│         (Serving Layer)         │
+│                                 │
+│  배치 뷰(Batch View) +           │
+│  실시간 뷰(Realtime View) 병합    │
+│  → 사용자 쿼리 응답               │
+└─────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">레이어</th><th style="text-align: left">역할</th><th style="text-align: left">기술 스택</th><th style="text-align: left">지연</th></tr></thead><tbody>
+<tr><td style="text-align: left">Batch Layer</td><td style="text-align: left">전체 데이터 정확 처리</td><td style="text-align: left">HDFS, Spark, Hive</td><td style="text-align: left">시간~일</td></tr>
+<tr><td style="text-align: left">Speed Layer</td><td style="text-align: left">최근 데이터 빠른 처리</td><td style="text-align: left">Kafka, Flink, Storm</td><td style="text-align: left">초~분</td></tr>
+<tr><td style="text-align: left">Serving Layer</td><td style="text-align: left">두 레이어 결과 병합 조회</td><td style="text-align: left">Cassandra, Redis, Druid</td><td style="text-align: left">ms</td></tr>
+</tbody></table>
+<p>Jay Kreps(Kafka 창시자)가 람다의 복잡성을 비판하며 제안. <strong>스트림 처리 단일 레이어</strong>로 배치 역할까지 수행.</p>
+<pre><code>데이터 소스
+    │
+    ▼
+┌─────────────────────────────────┐
+│         메시지 큐(Kafka)          │
+│   이벤트 영구 보관 (무한 보존)      │
+│   파티셔닝, 순서 보장              │
+└────────────────┬────────────────┘
+                 │
+        ┌────────┴────────┐
+        │                 │
+        ▼                 ▼
+┌──────────────┐  ┌──────────────┐
+│ 실시간 처리   │  │ 재처리(Replay) │
+│ (Consumer v1)│  │ (Consumer v2) │
+│ 현재 로직 적용│  │ 새 로직 소급  │
+└──────┬───────┘  └──────┬───────┘
+       │                 │
+       └────────┬────────┘
+                ▼
+┌─────────────────────────────────┐
+│          서빙 레이어              │
+│   단일 스트림 처리 결과 조회        │
+└─────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">람다 아키텍처</th><th style="text-align: left">카파 아키텍처</th></tr></thead><tbody>
+<tr><td style="text-align: left">처리 경로</td><td style="text-align: left">배치 + 스트림 이중 경로</td><td style="text-align: left">스트림 단일 경로</td></tr>
+<tr><td style="text-align: left">운영 복잡도</td><td style="text-align: left">높음 (코드 이중화)</td><td style="text-align: left">낮음 (단일 코드베이스)</td></tr>
+<tr><td style="text-align: left">재처리 방법</td><td style="text-align: left">배치 재실행</td><td style="text-align: left">Kafka 오프셋 리셋 후 재처리</td></tr>
+<tr><td style="text-align: left">정확도</td><td style="text-align: left">배치 기준 높은 정확도</td><td style="text-align: left">스트림 처리 정확도 (근사 허용)</td></tr>
+<tr><td style="text-align: left">적합 사례</td><td style="text-align: left">복잡한 집계, ML 학습</td><td style="text-align: left">이벤트 소싱, 실시간 파이프라인</td></tr>
+<tr><td style="text-align: left">도입 난이도</td><td style="text-align: left">복잡</td><td style="text-align: left">비교적 단순</td></tr>
+</tbody></table>
+<p>CQRS는 명령(Command: 쓰기)과 쿼리(Query: 읽기)를 분리하는 패턴이다. 이벤트 소싱과 결합하면 강력한 시스템을 구성한다.</p>
+<pre><code>┌─────────────────────────────────────────────────┐
+│                   CQRS + 이벤트 소싱              │
+│                                                 │
+│  클라이언트                                       │
+│    │                                            │
+│    ├──── Command(쓰기) ──→ Command Handler       │
+│    │                           │                │
+│    │                           ▼                │
+│    │                    이벤트 스토어             │
+│    │                    (Kafka&#x2F;EventStore)       │
+│    │                           │                │
+│    │                     Projection             │
+│    │                    (읽기 모델 생성)          │
+│    │                           │                │
+│    │                           ▼                │
+│    └──── Query(읽기) ──→  Read DB(최적화)        │
+│                           (Redis&#x2F;Elasticsearch) │
+└─────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>이벤트 소싱은 데이터의 불변성과 재현성을 보장하는 강력한 패턴이며, 카파 아키텍처와 결합 시 운영 단순성과 실시간 처리를 동시에 달성한다.</p>
+<p>람다/카파 아키텍처 재현 (Event Sourcing Replay의 효과는 성능 향상 자체보다도 예측 가능성과 운영 일관성을 확보하는 데 있다. 반대로 데이터 품질, 거버넌스, 모니터링 없이 도입하면 복잡도만 늘고 실질 가치는 줄어든다. 따라서 이 주제는 기능 도입이 아니라 구조적 운영 역량과 함께 판단해야 하며, 향후에는 자동화·실시간성·설명 가능성·비용 최적화와 결합된 방향으로 발전한다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">CRUD 기반 상태 저장 (현재 상태만 유지)
+    │
+    ▼
+이벤트 소싱 (Event Sourcing): 모든 변화를 이벤트로 기록
+    ├─► 이벤트 스토어: 불변 로그 (Kafka · EventStoreDB)
+    └─► 상태 재구성: 이벤트 리플레이 (Replay)
+    │
+    ▼
+람다 아키텍처: Batch Layer + Speed Layer 분리
+    │
+    ▼
+카파 아키텍처: Speed Layer만으로 통합 (Kafka 중심)
+    │
+    ▼
+CQRS: 쓰기 모델(Command)과 읽기 모델(Query) 분리
+</code></pre>
+<ol start="2">
+<li>람다 아키텍처는 두 개의 창구가 있는 은행이에요. 빠른 창구(스트림)와 정확한 창구(배치) 두 곳에서 결과를 합쳐요.</li>
+<li>카파 아키텍처는 스트리밍 서비스처럼 한 곳에서 모든 영상을 보여주는데, 필요하면 처음부터 다시 재생해서 새로운 자막(로직)도 입힐 수 있어요.</li>
+</ol>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">관계</th><th style="text-align: left">개념</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">저장 패턴</td><td style="text-align: left">Event Sourcing (이벤트 소싱)</td><td style="text-align: left">상태를 이벤트 스트림으로 저장</td></tr>
+<tr><td style="text-align: left">아키텍처 패턴</td><td style="text-align: left">Lambda Architecture (람다 아키텍처)</td><td style="text-align: left">배치 + 스트림 이중 경로</td></tr>
+<tr><td style="text-align: left">아키텍처 패턴</td><td style="text-align: left">Kappa Architecture (카파 아키텍처)</td><td style="text-align: left">스트림 단일 경로</td></tr>
+<tr><td style="text-align: left">설계 패턴</td><td style="text-align: left">CQRS</td><td style="text-align: left">명령과 쿼리 분리</td></tr>
+<tr><td style="text-align: left">인프라</td><td style="text-align: left">Kafka</td><td style="text-align: left">이벤트 스토어 + 메시지 큐</td></tr>
+<tr><td style="text-align: left">재처리</td><td style="text-align: left">Replay (재현)</td><td style="text-align: left">오프셋 리셋 후 재처리</td></tr>
+<tr><td style="text-align: left">표현 변환</td><td style="text-align: left">Projection (프로젝션)</td><td style="text-align: left">이벤트 → 읽기 모델 변환</td></tr>
+<tr><td style="text-align: left">스키마 관리</td><td style="text-align: left">Schema Registry</td><td style="text-align: left">이벤트 스키마 버전 관리</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>220. 무중단 라이브 마이그레이션 스케줄링 고려사항 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 22, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 피터슨 알고리즘 (Peterson's Algorithm)은 임계 구역 (Critical Section) 진입을 두 개의 공유 변수인 깃발 (<code>flag</code>)과 차례 (<code>turn</code>)만을 사용하여 소프트웨어적으로만 제어하는 가장 우아한 2-프로세스 동기화 알고리즘이다.
+<strong>비유</strong>: 외나무다리에서 두 운전자가 만났을 때, 둘 다 "내가 먼저 건너갈래!" 하고 클랙션(flag)을 누르되, 마지막에 "你先走(당신 먼저 가세요)"라고 말하는(turn) 사람이 결국 상대를 통과시키는 양보의 미덕이다. 동시에 "你先走"를 외치더라도 turn 변수가 마지막에 덮어쓴 쪽이 상대를 보내주게 되어 충돌이 없다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li><strong>개념</strong>: 1981년 게리 피터슨 (Gary L. Peterson)이公开发표한 알고리즘으로, 하드웨어 명령어 없이 오직 공유 변수 두 개 (<code>flag</code>, <code>turn</code>)만으로 임계 구역 문제를 완벽히 해결한다. ($N$개 프로세스로 확장 가능한 데커 알고리즘의 2프로세스 단순화 버전이다.)</li>
+<li><strong>필요성</strong>: 하드웨어의 도움 없이 "누가 먼저 들어갈 것인가?"를 결정하는 문제는, 단순히 <code>if</code>문과 <code>while</code>문으로 짜면 "자기가 확인하는 찰나에 다른 놈이 들어와서 꼬이는 타이밍"이 존재한다. 이 미세한 타이밍을 이론적으로 완벽히 차단하는 최소한의 논리적 구조가 필요했다.</li>
+<li><strong>등장 배경</strong>: 1965년 데이크스트라의 세마포어 해결책은 수학적이나 복잡했다. 피터슨은 "기권(yield)이라는 한 줄의 코드"로 이를 압축하여, 1981년 ACM Transactions에서 정식 발표한 뒤로 전 세계OS 학부 수업의 바이블이 되었다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  [피터슨 알고리즘의 &quot;你先走(turn)&quot; 양보 메커니즘]
+
+  [ P0 (운전자 A) ]                        [ P1 (운전자 B) ]
+  1. &quot;내가 먼저!&quot; (flag[0] = true)
+  2. &quot;你先走!&quot; (turn = 1)             1. &quot;내가 먼저!&quot; (flag[1] = true)
+                                        2. &quot;你先走!&quot; (turn = 0)
+
+  [ 핵심 3단계:while 문 검증 (Critical 검문소) ]
+   P0의 내면: &quot;P1이 깃발을 들었나(flag[1]==T), turn이 1(P1)이니?
+               → 그럼 내가 양보. P1이 먼저 건너갈 때까지 대기.&quot;
+   P1의 내면: &quot;P0이 깃발을 들었나(flag[0]==T), turn이 0(P0)이니?
+               → 그럼 내가 양보. P0이 먼저 건너갈 때까지 대기.&quot;
+
+  결론: turn 변수가 마지막에 덮어쓴 쪽이
+               항상 상대방을 통과시키는 양보자(turn==자신)가 되어
+               둘 다 동시에 진입하는 것을 구조적으로 원천 차단!
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 피터슨 알고리즘의 핵심은 <code>turn</code>이라는 양보 변수에 있다. 둘 다 먼저겠다면서 깃발을 세울 때, 마지막에 <code>turn = 상대방</code>으로 덮어쓴 프로세스가 항상 양보자가 된다. 둘 다 동시에 <code>turn</code>을 덮어쓸 때, 마지막 쓰기가 이기는 것이 아니라 turn의 최종값이 "누가 양보했는지"를 결정하는 핵심 비트다. 이 두 단계의 협상과정이야말로 경쟁 조건 없이 임계 구역을 통과하는 SOFTWAREONLY의 최종 해법이다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="algorijeumyi-c-kodeuwa-3gaji-jogeon-jeungmyeong">알고리즘의 C 코드와 3가지 조건 증명</h3>
+<p>피터슨 알고리즘은 단 2개의 공유 변수(<code>flag[2]</code>, <code>turn</code>)만으로 임계 구역 진입을 통제한다.</p>
+<pre data-lang="c" class="language-c "><code class="language-c" data-lang="c">&#x2F;&#x2F; 공유 변수 (Shared Variables)
+bool flag[2] = {false, false};  &#x2F;&#x2F; &quot;내가 들어가겠다고 선언!&quot;
+int turn;                         &#x2F;&#x2F; &quot;누가 양보했는가?&quot;
+
+&#x2F;&#x2F; 프로세스 i (0 또는 1)
+&#x2F;&#x2F; 프로세스 j는 다른 쪽 (1 - i)
+
+void enter_critical_section(int i) {
+    int j = 1 - i;               &#x2F;&#x2F; 상대의 프로세스 번호
+
+    flag[i] = true;               &#x2F;&#x2F; 1. 내 깃발을 세운다 (진입 의사 표시)
+    turn = j;                     &#x2F;&#x2F; 2. 일단 상대방에게 양보한다 (대인배 모드)
+
+    &#x2F;&#x2F; 3. 상대가 깃발을 들었으면서, 차례도 상대방이면 무한 대기!
+    while (flag[j] &amp;&amp; turn == j) {
+        &#x2F;* do nothing (Busy Waiting) *&#x2F;
+    }
+    &#x2F;&#x2F; while을 뚫었다 = 임계 구역 진입 성공!
+}
+
+void leave_critical_section(int i) {
+    flag[i] = false;              &#x2F;&#x2F; 4. 임계 구역 완료. 깃발을 내린다 (퇴장)
+}
+</code></pre>
+<h4 id="sangho-baeje-100-jeungmyeong-proof-of-mutual-exclusion">상호 배제 100% 증명 (Proof of Mutual Exclusion)</h4>
+<ol>
+<li><strong>초기 상태</strong>: 두 프로세스가 임계 구역에 동시에 진입하려면, <code>while</code> 루프를 동시에 빠져나와야 한다.</li>
+<li><code>while</code> 루프를 빠져나오려면 <code>flag[j] == false</code> (상대가 나갔음) 또는 <code>turn != j</code> (양보자가 내가 아니게 됨)이어야 한다.</li>
+<li><code>flag[0]</code>과 <code>flag[1]</code>이 동시에 <code>true</code>일 때, <code>turn</code>의 값은 마지막으로 덮어쓴 프로세스만 결정한다.</li>
+<li>따라서 두 프로세스가 동시에 <code>while</code>을 빠져나올 수 없으며, 오직 하나만 진입한다. (상호 배제 만족)</li>
+</ol>
+<h4 id="jinhaeng-progress-jeungmyeong">진행 (Progress) 증명</h4>
+<ol>
+<li>P1이 임계 구역을 나가고자 <code>flag[1] = false</code>를 실행하면,</li>
+<li>P0의 <code>while(flag[1] &amp;&amp; turn == 1)</code> 조건에서 <code>flag[1] == false</code>이 되어 <code>while(false &amp;&amp; ...)</code>이 되어 즉시 탈출한다.</li>
+<li>따라서 빈 임계 구역에 들어가려는 프로세스는 즉시 진입할 수 있다. (진행 만족)</li>
+</ol>
+<h4 id="hanjeongdoen-daegi-bounded-waiting-jeungmyeong">한정된 대기 (Bounded Waiting) 증명</h4>
+<ol>
+<li>P0가 임계 구역에 진입한 뒤 P1이 진입을 시도하면, P1은 <code>flag[1] = true; turn = 0</code>로 설정하고 대기한다.</li>
+<li>P0가 퇴장하며 <code>flag[0] = false</code>를 실행하면, P1은 대기 중이던 <code>while</code>을 빠져나와 진입한다.</li>
+<li>P1 진입 후 P0가 다시 시도하면, P1의 <code>flag[1] = true</code> 때문에 P0은 대기해야 한다. 이는 P0의 대기 횟수가 1회로 제한됨을 의미한다. (한정된 대기 만족)</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌─────────────────────────────────────────────────────────────────────┐
+  │         피터슨 알고리즘의 타임라인 동작 시각화                       │
+  ├─────────────────────────────────────────────────────────────────────┤
+  │                                                                     │
+  │  P0: ──flag[0]=T──turn=1──[while: F&amp;&amp;T=F]──[CRITICAL]──flag[0]=F─│
+  │  P1: ──────────────────────flag[1]=T──turn=0──[while: T&amp;&amp;T=T]──│
+  │                                                              대기   │
+  │  시간 ───────────────────────────────────────────────────────────▶    │
+  │                                                                     │
+  │  P0의 enter: flag[0]=T, turn=1 → while(T &amp;&amp; T) = T → 대기!        │
+  │  P0의 leave: flag[0]=F → P1의 while(T &amp;&amp; T) = F → P1 진입!        │
+  └─────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> P0이 먼저 깃발을 세우고 turn=1로 양보하면, P1이 뒤에 와서 turn=0으로 덮어쓴다. 이때 P1의 while 조건은 <code>flag[0]=T &amp;&amp; turn=0</code>이 되어 <code>T</code>가 되어 P1이 대기하고, P0이 먼저 진입한다. P0이 퇴장하면 P1이 진입하는 완벽한 교대 시퀀스가 형성된다. 이 교대(Alternation)가 바로 한정된 대기의 핵심 증거다.</p>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>요청 또는 이벤트 발생</strong>: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.</li>
+<li><strong>현재 상태 확인</strong>: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.</li>
+<li><strong>정책 적용 및 자원 배정</strong>: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.</li>
+<li><strong>결과 반영 및 후속 처리</strong>: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.</li>
+</ol>
+<h3 id="piteoseun-algorijeum-vs-hadeuweeo-tas-test-and-set">피터슨 알고리즘 vs 하드웨어 TAS (Test-And-Set)</h3>
+<p>현대 멀티코어 환경에서 피터슨 알고리즘의 운명은 완전히 달라졌다.</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">피터슨 알고리즘 (소프트웨어)</th><th style="text-align: left">Test-And-Set (하드웨어)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>자원</strong></td><td style="text-align: left">변수 2개(<code>flag</code>, <code>turn</code>)만 사용</td><td style="text-align: left">CPU 1개 원자적Latch 명령</td></tr>
+<tr><td style="text-align: left"><strong>확장성</strong></td><td style="text-align: left">2개 프로세스만 가능 (N 확장 시 데커 등 무거움)</td><td style="text-align: left">스레드 1만 개도 while 1줄로 통제 가능</td></tr>
+<tr><td style="text-align: left"><strong>현대 CPU 적용</strong></td><td style="text-align: left">❌ 실패 (Out-of-Order에 순서 뒤틀림)</td><td style="text-align: left">✅ 성공 (버스 락으로 물리적 차단)</td></tr>
+<tr><td style="text-align: left"><strong>CPU 낭비</strong></td><td style="text-align: left">대기 중 Busy Wait (무한 루프)</td><td style="text-align: left">대기 중 Sleep 또는 Spin</td></tr>
+</tbody></table>
+<h3 id="out-of-order-executionyi-salinjeog-wihyeob">Out-of-Order Execution의 살인적 위협</h3>
+<p>현대 CPU의 비순차 실행은 피터슨 알고리즘의 논리적 증명을 무너뜨린다.</p>
+<ol>
+<li><strong>문제</strong>: 컴파일러 또는 CPU가 코드의 실행 순서를 최적화한다.</li>
+<li><strong>시나리오</strong>: P0이 <code>flag[0]=true</code>보다 <code>turn=1</code>을 먼저 실행하도록 재배치하면?
+<ul>
+<li>P0이 <code>turn=1</code>을 먼저 실행한 뒤, CPU가 최적화를 위해 <code>flag[0]=true</code>를 나중에 실행한다.</li>
+<li>이 찰나에 P1이 <code>flag[1]=true; turn=0</code>을 모두 실행하고 while을评估한다.</li>
+<li>P1은 <code>flag[0]=false</code>를 보게 되어 while을 빠져나와 진입한다.</li>
+<li>P0도 곧 <code>flag[0]=true</code>를 세우고 진입한다. <strong>동시 진입 인정!</strong></li>
+</ul>
+</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌─────────────────────────────────────────────────────────────────────┐
+  │        Out-of-Order 실행에 의한 피터슨 알고리즘 붕괴 시나리오         │
+  ├─────────────────────────────────────────────────────────────────────┤
+  │                                                                     │
+  │  정상 순서 (피터슨의 가정):                                        │
+  │    P0: flag[0]=T → turn=1 → while() 대기                         │
+  │    P1: flag[1]=T → turn=0 → while() 대기 (P0 진입)                │
+  │                                                                     │
+  │  CPU가 순서를 뒤집은 경우 (Out-of-Order):                          │
+  │    P0: turn=1 ──▶ flag[0]=T (순서 뒤집힘!)                        │
+  │         ────────────────────────▶ P1이 flag[0]=F를 보고 진입!       │
+  │    P1: flag[1]=T → turn=0 → while(T &amp;&amp; F=F) → 진입 성공!          │
+  │         ────────────────────────▶ P0도 곧 flag[0]=T 후 진입!        │
+  │         🚨 두 프로세스가 동시에 임계 구역 진입! 붕괴!                 │
+  └─────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="memori-baerieo-memory-barrier-yihan-guweon">메모리 배리어 (Memory Barrier) 의한 구원</h3>
+<p>이 문제를 해결하려면 컴파일러에게 "이 두 줄은 순서를 바꾸지 마라!"고 명령해야 한다.</p>
+<pre data-lang="c" class="language-c "><code class="language-c" data-lang="c">void enter_critical_section(int i) {
+    int j = 1 - i;
+    flag[i] = true;
+    __asm__ __volatile__ (&quot;mfence&quot; : : : &quot;memory&quot;);  &#x2F;&#x2F; 메모리 배리어!
+    &#x2F;&#x2F; 위 명령어는 이전의 모든 메모리 쓰기가 다음 것보다 먼저 완료됨을 보장.
+    turn = j;
+    while (flag[j] &amp;&amp; turn == j) { &#x2F;* do nothing *&#x2F; }
+}
+</code></pre>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="piteoseun-algorijeum-vs-hadeuweeo-tas-test-and-set-1">피터슨 알고리즘 vs 하드웨어 TAS (Test-And-Set)</h3>
+<p>현대 멀티코어 환경에서 피터슨 알고리즘의 운명은 완전히 달라졌다.</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">피터슨 알고리즘 (소프트웨어)</th><th style="text-align: left">Test-And-Set (하드웨어)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>자원</strong></td><td style="text-align: left">변수 2개(<code>flag</code>, <code>turn</code>)만 사용</td><td style="text-align: left">CPU 1개 원자적Latch 명령</td></tr>
+<tr><td style="text-align: left"><strong>확장성</strong></td><td style="text-align: left">2개 프로세스만 가능 (N 확장 시 데커 등 무거움)</td><td style="text-align: left">스레드 1만 개도 while 1줄로 통제 가능</td></tr>
+<tr><td style="text-align: left"><strong>현대 CPU 적용</strong></td><td style="text-align: left">❌ 실패 (Out-of-Order에 순서 뒤틀림)</td><td style="text-align: left">✅ 성공 (버스 락으로 물리적 차단)</td></tr>
+<tr><td style="text-align: left"><strong>CPU 낭비</strong></td><td style="text-align: left">대기 중 Busy Wait (무한 루프)</td><td style="text-align: left">대기 중 Sleep 또는 Spin</td></tr>
+</tbody></table>
+<h3 id="out-of-order-executionyi-salinjeog-wihyeob-1">Out-of-Order Execution의 살인적 위협</h3>
+<p>현대 CPU의 비순차 실행은 피터슨 알고리즘의 논리적 증명을 무너뜨린다.</p>
+<ol>
+<li><strong>문제</strong>: 컴파일러 또는 CPU가 코드의 실행 순서를 최적화한다.</li>
+<li><strong>시나리오</strong>: P0이 <code>flag[0]=true</code>보다 <code>turn=1</code>을 먼저 실행하도록 재배치하면?
+<ul>
+<li>P0이 <code>turn=1</code>을 먼저 실행한 뒤, CPU가 최적화를 위해 <code>flag[0]=true</code>를 나중에 실행한다.</li>
+<li>이 찰나에 P1이 <code>flag[1]=true; turn=0</code>을 모두 실행하고 while을评估한다.</li>
+<li>P1은 <code>flag[0]=false</code>를 보게 되어 while을 빠져나와 진입한다.</li>
+<li>P0도 곧 <code>flag[0]=true</code>를 세우고 진입한다. <strong>동시 진입 인정!</strong></li>
+</ul>
+</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌─────────────────────────────────────────────────────────────────────┐
+  │        Out-of-Order 실행에 의한 피터슨 알고리즘 붕괴 시나리오         │
+  ├─────────────────────────────────────────────────────────────────────┤
+  │                                                                     │
+  │  정상 순서 (피터슨의 가정):                                        │
+  │    P0: flag[0]=T → turn=1 → while() 대기                         │
+  │    P1: flag[1]=T → turn=0 → while() 대기 (P0 진입)                │
+  │                                                                     │
+  │  CPU가 순서를 뒤집은 경우 (Out-of-Order):                          │
+  │    P0: turn=1 ──▶ flag[0]=T (순서 뒤집힘!)                        │
+  │         ────────────────────────▶ P1이 flag[0]=F를 보고 진입!       │
+  │    P1: flag[1]=T → turn=0 → while(T &amp;&amp; F=F) → 진입 성공!          │
+  │         ────────────────────────▶ P0도 곧 flag[0]=T 후 진입!        │
+  │         🚨 두 프로세스가 동시에 임계 구역 진입! 붕괴!                 │
+  └─────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="memori-baerieo-memory-barrier-yihan-guweon-1">메모리 배리어 (Memory Barrier) 의한 구원</h3>
+<p>이 문제를 해결하려면 컴파일러에게 "이 두 줄은 순서를 바꾸지 마라!"고 명령해야 한다.</p>
+<pre data-lang="c" class="language-c "><code class="language-c" data-lang="c">void enter_critical_section(int i) {
+    int j = 1 - i;
+    flag[i] = true;
+    __asm__ __volatile__ (&quot;mfence&quot; : : : &quot;memory&quot;);  &#x2F;&#x2F; 메모리 배리어!
+    &#x2F;&#x2F; 위 명령어는 이전의 모든 메모리 쓰기가 다음 것보다 먼저 완료됨을 보장.
+    turn = j;
+    while (flag[j] &amp;&amp; turn == j) { &#x2F;* do nothing *&#x2F; }
+}
+</code></pre>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li><strong>임베디드/RTOS 환경에서의 활용</strong>: 하드웨어 TAS 명령이 없거나 비싸게 매기는 소형 임베디드 시스템에서는, 메모리 배리어를 추가한 피터슨 알고리즘이 여전히 유효하다. 특히 단일 코어에서 인터럽트 기반 동기화에 활용된다.</li>
+<li><strong>교육적 가치</strong>: 피터슨 알고리즘은 임계 구역 문제의 세 가지 조건(상호 배제, 진행, 한정된 대기)을 어떻게 하면 최소화한 변수로 충족할 수 있는지를 보여주는 가장优雅한 교과서 예제다. 실무에서 직접 쓰는 것은 드물지만, 동시성 제어의 기본기로서 필수다.</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌─────────────────────────────────────────────────────────────────────┐
+  │         동시성 제어 알고리즘 선정 아키텍처 결정 트리                  │
+  ├─────────────────────────────────────────────────────────────────────┤
+  │                                                                     │
+  │   [요구사항: 2개 스레드의 임계 구역 동기화]                          │
+  │                │                                                    │
+  │                ▼                                                   │
+  │   [ 하드웨어 원자 명령(TAS&#x2F;CAS)이 있는가? ]                         │
+  │       ├─ 예 ──▶ [ ✅ 하드웨어 락 사용 (현대적 정답) ]              │
+  │       │           - std::mutex, std::atomic 등                     │
+  │       │           - Out-of-Order 안전, 성능 우수                    │
+  │       │                                                        │
+  │       └─ 아니오 (순수 소프트웨어만 가능)                              │
+  │                │                                                   │
+  │                ▼                                                   │
+  │         [ 2개 프로세스인가? ]                                        │
+  │             ├─ 예 ──▶ [ ✅ 피터슨 + 메모리 배리어 ]                │
+  │             │           - 임베디드, 단일 코어 환경                   │
+  │             └─ 아니오 ──▶ [ ⚠️ 데커&#x2F;표시 알고리즘 ]                │
+  │                         - N 확장 시 복잡도 폭발 주의                │
+  └─────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 피터슨 알고리즘은 하드웨어가 약하거나 특수한 환경(교육, 임베디드, 단일 코어)에서만 빛을 발한다. 최신 멀티코어 서버 환경에서는 std::mutex나 std::atomic이 피터슨 알고리즘보다 안전하고高性能이다. 실무 엔지니어는 "언제 하드웨어 도움 없이 소프트웨어만으로同步를 해야 하는가?"를 구분할 줄 알아야 한다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="gidaehyogwa">기대효과</h3>
+<p>피터슨 알고리즘은 하드웨어 명령어의 도움 없이도 공유 자원의 경쟁 조건을 완전히 제거할 수 있음을 수학적으로証明했다. 이最小化의 정신은 이후 lock-free 자료구조와 비교-교환(CAS) 알고리즘의 이론적 토대가 되었으며, 임계 구역 문제 해결의 모든 가능성을 탐구한歷史적里程碑다.</p>
+<h3 id="gyeolron-mic-mirae-jeonmang">결론 및 미래 전망</h3>
+<p>피터슨 알고리즘은 1981년 당시에는革命적이었으나, 현대 CPU의 비순차 실행과 다중 코어 환경에서는 하드웨어 도움 없이는 안전하게 동작하지 않는다. 그러나 이 알고리즘이 提出한 "flag + turn"이라는 2변수 제어 메커니즘의 아이디어는, 이후Compare-And-Swap (CAS) 같은 하드웨어 원자 명령어의 설계 철학으로 직결된다. 궁극적으로 임계 구역 문제는 하드웨어와 소프트웨어가 협력할 때 가장 아름답게 해결되며, 피터슨 알고리즘은 그 협력의 출발점이었다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">**데커 알고리즘 (Dekker&#x27;s Algorithm)**
+    ↓
+**비순차 실행 (Out-of-Order Execution)**
+    ↓
+**메모리 배리어 (Memory Barrier)**
+    ↓
+**Test-And-Set (TAS)**
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>데커 알고리즘 (Dekker's Algorithm)</strong></td><td style="text-align: left">피터슨보다 먼저 등장한 2프로세스 알고리즘으로, 피터슨이 이를 더 우아하게 압축했다.</td></tr>
+<tr><td style="text-align: left"><strong>비순차 실행 (Out-of-Order Execution)</strong></td><td style="text-align: left">피터슨 알고리즘의 소프트웨어적 안전성을 무너뜨리는 현대 CPU 최적화 기법이다.</td></tr>
+<tr><td style="text-align: left"><strong>메모리 배리어 (Memory Barrier)</strong></td><td style="text-align: left">Out-of-Order에 의한 순서 뒤집기를防止하는 하드웨어/컴파일러 명령어다.</td></tr>
+<tr><td style="text-align: left"><strong>Test-And-Set (TAS)</strong></td><td style="text-align: left">피터슨의 소프트웨어적 방법을hardware적으로 1클럭에 完成시키는 원자적Latch 명령어다.</td></tr>
+<tr><td style="text-align: left"><strong>상호 배제 (Mutual Exclusion)</strong></td><td style="text-align: left">피터슨이 <code>flag</code>와 <code>turn</code> 변수로 Achieved하려는 세 가지 필요조건의 첫 번째다.</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

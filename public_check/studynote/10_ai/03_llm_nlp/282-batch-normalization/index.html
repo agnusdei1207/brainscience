@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>282. 배치 정규화 (Batch Normalization) - 은닉층 입력 분포 안정화 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ai
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 배치 정규화(Batch Normalization, BN)는 각 미니배치 내에서 활성화 값을 평균=0, 분산=1로 정규화한 뒤 학습 가능한 스케일(γ)과 이동(β) 파라미터로 복원함으로써 내부 공변량 이동(Internal Covariate Shift)을 억제하고 학습을 가속한다.
+<strong>비유</strong>: BN 없이 딥 네트워크를 학습하는 것은 매 수업마다 교과서가 바뀌는 학교에서 공부하는 것과 같다. BN은 "오늘부터 교과서 형식을 통일"해 모든 학생(레이어)이 같은 기준으로 공부할 수 있게 한다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<h3 id="naebu-gongbyeonryang-idong-internal-covariate-shift">내부 공변량 이동(Internal Covariate Shift)</h3>
+<p>딥 네트워크에서 각 레이어의 입력 분포는 <strong>앞 레이어의 가중치가 갱신될 때마다 변화</strong>한다. 이를 내부 공변량 이동(Internal Covariate Shift)이라 한다.</p>
+<p>이로 인한 문제:</p>
+<ul>
+<li>각 레이어가 계속 변하는 입력 분포에 적응해야 함 → 학습 불안정</li>
+<li>낮은 학습률 강제 → 학습 속도 저하</li>
+<li>활성화 값의 포화(Saturation) 문제 → 그래디언트 소실</li>
+</ul>
+<p>배치 정규화(BN)는 각 레이어의 입력을 <strong>미니배치 단위로 정규화</strong>하여 이 문제를 해결한다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="baeci-jeonggyuhwa-susig">배치 정규화 수식</h3>
+<p>미니배치 B = {x_1, ..., x_m}에 대해:</p>
+<pre><code>1단계: 미니배치 평균
+   μ_B = (1&#x2F;m) · Σx_i
+
+2단계: 미니배치 분산
+   σ²_B = (1&#x2F;m) · Σ(x_i - μ_B)²
+
+3단계: 정규화
+   x̂_i = (x_i - μ_B) &#x2F; √(σ²_B + ε)
+
+4단계: 스케일과 이동 (학습 파라미터)
+   y_i = γ · x̂_i + β
+   (γ: 스케일, β: 이동, 학습으로 결정)
+</code></pre>
+<h3 id="baeci-jeonggyuhwa-reieo-wici">배치 정규화 레이어 위치</h3>
+<pre><code>입력 데이터
+    │
+    ▼
+┌───────────────────────────────────────────────────┐
+│  레이어 N (Conv 또는 FC)                          │
+│  선형 변환: z = Wx + b                            │
+├───────────────────────────────────────────────────┤
+│  배치 정규화 (BN)                                 │
+│  z → 정규화(μ,σ²) → γz̃ + β = y                  │
+├───────────────────────────────────────────────────┤
+│  활성화 함수 (ReLU 등)                            │
+│  a = ReLU(y)                                      │
+└───────────────────────────────────────────────────┘
+    │
+    ▼
+다음 레이어로...
+</code></pre>
+<h3 id="hagseub-si-vs-curon-si-dongjag">학습 시 vs 추론 시 동작</h3>
+<table><thead><tr><th style="text-align: left">단계</th><th style="text-align: left">평균</th><th style="text-align: left">분산</th></tr></thead><tbody>
+<tr><td style="text-align: left">학습 시</td><td style="text-align: left">미니배치 평균 μ_B</td><td style="text-align: left">미니배치 분산 σ²_B</td></tr>
+<tr><td style="text-align: left">추론 시</td><td style="text-align: left">전체 데이터의 <strong>이동 평균(Running Mean)</strong></td><td style="text-align: left">전체 데이터의 <strong>이동 분산(Running Var)</strong></td></tr>
+</tbody></table>
+<p>추론 시 미니배치가 없으므로, 학습 중 누적된 **이동 평균(Exponential Moving Average)**을 사용한다:</p>
+<pre><code>학습 중 누적:
+  running_mean = momentum · running_mean + (1-momentum) · μ_B
+  running_var  = momentum · running_var  + (1-momentum) · σ²_B
+</code></pre>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 배치 정규화 (Batch Normalization)의 성능과 타당성은 입력 표현, 핵심 구조 또는 연산, 학습·추론 절차, 평가 기준, 자원 제약이 서로 정합될 때 확보된다.</p>
+<p>동작 순서:</p>
+<h3 id="bnyi-gyuje-hyogwa">BN의 규제 효과</h3>
+<p>BN은 각 미니배치에서 계산된 통계(평균/분산)가 매번 달라지는 <strong>노이즈(Noise)를 추가</strong>하는 효과가 있어, 드롭아웃과 유사한 규제 효과를 부분적으로 제공한다. 이 때문에:</p>
+<ul>
+<li>BN 사용 시 드롭아웃 비율을 줄이거나 생략 가능</li>
+<li>배치 크기가 클수록 이 노이즈 효과가 줄어 규제 효과 감소</li>
+</ul>
+<h3 id="gwa-byi-yeoghal">γ와 β의 역할</h3>
+<p>정규화 후 γ·x̂ + β 변환은 BN이 아이덴티티(항등 변환)처럼 동작할 수 있게 한다:</p>
+<ul>
+<li>γ = σ, β = μ 로 학습되면 → BN이 없는 것과 동일</li>
+<li>이를 통해 BN이 항상 정규화를 강제하지 않고, 네트워크가 필요에 따라 정규화를 조절할 수 있음</li>
+</ul>
+<h3 id="yeongyeol-gaenyeom">연결 개념</h3>
+<ul>
+<li><strong>그래디언트 소실</strong>: BN으로 활성화 분포가 안정화되어 그래디언트 흐름 개선</li>
+<li><strong>학습률</strong>: BN 사용 시 10배 이상 높은 학습률도 안정적으로 사용 가능</li>
+<li><strong>가중치 초기화</strong>: BN이 분포를 정규화하므로 초기화 방법에 덜 민감</li>
+</ul>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│           정규화 기법(Normalization) 비교                    │
+│                                                             │
+│  Batch Norm:    배치(N) 방향으로 정규화                     │
+│  ┌──────────────────────────────────┐                       │
+│  │  N개 샘플 × C채널 × H × W       │                       │
+│  │  ────── 배치 방향 통계 ──────   │                       │
+│  └──────────────────────────────────┘                       │
+│                                                             │
+│  Layer Norm:    채널(C) 방향으로 정규화 (NLP 표준)          │
+│  ┌──────────────────────────────────┐                       │
+│  │  각 샘플 내부 채널&#x2F;특성 방향     │                       │
+│  │  ────── 샘플별 통계 ──────────  │                       │
+│  └──────────────────────────────────┘                       │
+│                                                             │
+│  Group Norm:   채널을 G 그룹으로 나눠 정규화               │
+│  Instance Norm: 각 샘플 각 채널 독립 정규화 (스타일 전송)  │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">정규화 기법</th><th style="text-align: left">정규화 방향</th><th style="text-align: left">주요 사용처</th><th style="text-align: center">배치 크기 의존성</th></tr></thead><tbody>
+<tr><td style="text-align: left">배치 정규화 (BN)</td><td style="text-align: left">배치(N) 방향</td><td style="text-align: left">CNN, 이미지 분류</td><td style="text-align: center">높음</td></tr>
+<tr><td style="text-align: left">레이어 정규화 (LN)</td><td style="text-align: left">특성(C) 방향</td><td style="text-align: left">Transformer, NLP</td><td style="text-align: center">없음</td></tr>
+<tr><td style="text-align: left">그룹 정규화 (GN)</td><td style="text-align: left">채널 그룹 방향</td><td style="text-align: left">작은 배치의 CNN</td><td style="text-align: center">낮음</td></tr>
+<tr><td style="text-align: left">인스턴스 정규화 (IN)</td><td style="text-align: left">공간(H,W) 방향</td><td style="text-align: left">스타일 전송</td><td style="text-align: center">없음</td></tr>
+</tbody></table>
+<h3 id="gisulsa-siheom-pandan-pointeu">기술사 시험 판단 포인트</h3>
+<ol>
+<li><strong>수식 4단계</strong>: μ_B → σ²_B → x̂_i → γx̂_i + β</li>
+<li><strong>추론 시 이동 평균 사용</strong>: 배치 통계 대신 누적 이동 평균/분산 적용</li>
+<li><strong>LN vs BN</strong>: Transformer에서 Layer Norm 사용하는 이유 (시퀀스 길이 가변, 배치 크기 작음)</li>
+<li><strong>BN + Dropout 상호작용</strong>: BN이 노이즈 제공 → Dropout 비율 낮춰도 됨</li>
+</ol>
+<h3 id="baeci-keugiwa-bnyi-gwangye">배치 크기와 BN의 관계</h3>
+<pre><code>배치 크기 32 이상: BN 효과 안정적
+배치 크기 8 이하:  통계가 불안정 → Group Norm&#x2F;Layer Norm 권장
+배치 크기 1:       BN 사용 불가 → Instance Norm&#x2F;Layer Norm 사용
+</code></pre>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<ul>
+<li><strong>ResNet, VGG, EfficientNet</strong>: 각 Conv 레이어 이후 BN 적용이 표준</li>
+<li><strong>GPT, BERT, Vision Transformer</strong>: Layer Normalization 사용 (배치 독립)</li>
+<li><strong>GAN (Generative Adversarial Network)</strong>: 생성자에 BN, 판별자에 Spectral Norm 또는 LN 사용</li>
+</ul>
+<p>배치 정규화의 주요 효과:</p>
+<ol>
+<li><strong>학습 가속</strong>: 높은 학습률 사용 가능 → 수렴 속도 대폭 향상 (원 논문에서 14배 빠른 학습)</li>
+<li><strong>그래디언트 흐름 개선</strong>: 깊은 네트워크에서 그래디언트 소실/폭발 완화</li>
+<li><strong>규제 효과</strong>: 미니배치 통계의 노이즈로 드롭아웃 효과 일부 대체</li>
+<li><strong>초기화 민감도 감소</strong>: 나쁜 가중치 초기화도 BN이 분포를 복원해 보완</li>
+</ol>
+<p>BN은 현대 CNN 아키텍처의 <strong>필수 구성 요소</strong>이며, 트랜스포머 계열에서는 Layer Normalization이 그 역할을 담당한다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>배치 정규화의 주요 효과:</p>
+<p>BN은 현대 CNN 아키텍처의 <strong>필수 구성 요소</strong>이며, 트랜스포머 계열에서는 Layer Normalization이 그 역할을 담당한다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">문제 정의 · 입력 정리
+    ↓
+핵심 구조 · 연산 설계
+    ↓
+학습 · 추론 · 검증
+    ↓
+실무 적용 · 최적화
+    ↓
+운영 · 거버넌스 · 확장
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연관 키워드</th><th style="text-align: left">관계</th></tr></thead><tbody>
+<tr><td style="text-align: left">배치 정규화 (BN)</td><td style="text-align: left">μ_B, σ²_B, γ, β</td><td style="text-align: left">미니배치 기반 활성화 정규화</td></tr>
+<tr><td style="text-align: left">내부 공변량 이동 (ICS)</td><td style="text-align: left">레이어 입력 분포 변화</td><td style="text-align: left">BN이 해결하는 핵심 문제</td></tr>
+<tr><td style="text-align: left">이동 평균 (Running Mean)</td><td style="text-align: left">추론 시 통계, EMA</td><td style="text-align: left">BN의 추론 모드 동작</td></tr>
+<tr><td style="text-align: left">레이어 정규화 (LN)</td><td style="text-align: left">Transformer, NLP</td><td style="text-align: left">BN의 NLP/시퀀스 대안</td></tr>
+<tr><td style="text-align: left">그룹 정규화 (GN)</td><td style="text-align: left">소형 배치, CNN</td><td style="text-align: left">BN의 작은 배치 크기 대안</td></tr>
+<tr><td style="text-align: left">스케일/이동 파라미터 (γ, β)</td><td style="text-align: left">학습 가능 파라미터</td><td style="text-align: left">정규화 후 표현력 복원</td></tr>
+<tr><td style="text-align: left">그래디언트 소실</td><td style="text-align: left">활성화 포화, 깊은 네트워크</td><td style="text-align: left">BN이 완화하는 문제</td></tr>
+<tr><td style="text-align: left">Dropout</td><td style="text-align: left">규제, 앙상블</td><td style="text-align: left">BN이 일부 대체하는 기법</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

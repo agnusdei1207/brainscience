@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>255. 데이터 파이프라인 (Apache Airflow) DAG 배치 플로우 관리 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>May 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ict convergence
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 아파치 에어플로우 (Apache Airflow)는 복잡한 데이터 파이프라인을 파이썬 (Python) 코드로 정의하고, 방향성 비순환 그래프 (DAG, Directed Acyclic Graph) 형태로 태스크 (Task)의 의존성과 실행 순서를 스케줄링 및 모니터링하는 워크플로우 오케스트레이션 플랫폼이다.
+<strong>비유</strong>: 필요할 때마다 전기처럼 자원을 꺼내 쓰고, 사용량과 상태를 계량기로 실시간 관리하는 디지털 발전소와 같다.</p>
+</blockquote>
+<hr />
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: 아파치 에어플로우 (Apache Airflow)는 데이터 파이프라인을 코드로 작성 (Configuration as Code)하여 스케줄링하고 모니터링하는 플랫폼이다. 핵심 개념인 방향성 비순환 그래프 (DAG, Directed Acyclic Graph)는 태스크 간의 의존성을 논리적으로 표현하며, 순환 (Cycle)을 허용하지 않음으로써 워크플로우가 반드시 무한 루프 없이 종료되도록 보장한다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 현대 데이터 파이프라인은 단순히 단일 스크립트를 실행하는 것을 넘어, 수십 개의 시스템에서 데이터를 추출하고 변환하는 복잡한 과정의 연속이다. 만약 중간 태스크가 실패했을 때 후속 태스크가 그대로 실행된다면 데이터 무결성이 심각하게 훼손된다. 에어플로우는 이러한 의존성 관리를 자동화하고, 실행 컨텍스트 (Execution Context)를 유지하여 장애 발생 지점부터 손쉽게 재시작할 수 있는 환경을 제공하는 필수적인 데이터 생명 유지 장치다.</p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: 에어플로우 (Airflow)는 복잡한 교향곡을 지휘하는 "오케스트라 지휘자"와 같다. 각각의 악기 (데이터 추출, 변환, 적재 도구)가 언제 연주를 시작해야 할지, 앞선 악기의 연주가 끝나야만 다음 악기가 연주할 수 있도록 (DAG 의존성) 정확한 타이밍과 순서를 통제한다.</p>
+</li>
+<li>
+<p><strong>등장 배경 및 발전 과정</strong>:</p>
+<ol>
+<li><strong>초기 스크립트 기반 스케줄러의 한계</strong>: 과거에는 크론 (Cron)과 쉘 스크립트를 결합하여 배치 파이프라인을 관리했다. 그러나 크론은 태스크 간의 의존성을 이해하지 못하므로, 선행 스크립트가 지연되거나 실패해도 후속 스크립트가 정해진 시간에 강제로 실행되어 데이터 정합성 오류가 빈번하게 발생했다.</li>
+</ol>
+<p>크론 (Cron) 방식의 한계와 에어플로우 DAG (Directed Acyclic Graph) 방식의 의존성 관리 차이를 시각화하면, 에어플로우가 파이프라인의 구조적 안정성을 어떻게 확보하는지 직관적으로 확인할 수 있다.</p>
+</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌──────────────────────────────────────────────────────────────────┐
+  │                 Cron vs Airflow DAG 의존성 관리                   │
+  ├──────────────────────────────────────────────────────────────────┤
+  │                                                                  │
+  │  [기존 Cron 방식 - 시간 기반 결합]                                 │
+  │                                                                  │
+  │   01:00 실행              02:00 실행 (선행 완료 가정)                │
+  │  ┌────────────┐        ┌────────────┐                            │
+  │  │ 추출 스크립트 │   ?    │ 변환 스크립트 │  ← 추출 지연 시, 변환 실패! │
+  │  └────────────┘        └────────────┘                            │
+  │   (지연 발생)                                                     │
+  │                                                                  │
+  │  [Airflow DAG 방식 - 이벤트&#x2F;의존성 기반 결합]                      │
+  │                                                                  │
+  │  ┌───────────┐         ┌───────────┐         ┌───────────┐       │
+  │  │ Task_A    │ ──────▶ │ Task_B    │ ──────▶ │ Task_C    │       │
+  │  │ (Extract) │ success │ (Transform) success │ (Load)    │       │
+  │  └───────────┘         └───────────┘         └───────────┘       │
+  │       │                      ▲                                   │
+  │       │ fail                 │ retry                             │
+  │       ▼                      │                                   │
+  │    재시도 로직 ───────────────┘                                    │
+  │                                                                  │
+  │  ✅ 결과: Task_A가 늦게 끝나도 Task_B는 완벽히 기다렸다가 실행됨        │
+  └──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 기존 크론 방식은 태스크들이 오직 "예정된 시간"이라는 암묵적인 약속에 의존하여 실행된다. 만약 원천 데이터 시스템의 부하로 추출(Extract) 작업이 예상 시간보다 길어지면, 변환(Transform) 작업은 아직 준비되지 않은 데이터를 대상으로 실행되어 치명적인 데이터 정합성 오류를 발생시킨다. 반면, 에어플로우의 DAG (Directed Acyclic Graph)는 논리적인 선후 관계(Success 트리거)로 태스크를 묶는다. 추출 작업이 지연되면 변환 작업은 단순히 큐(Queue)에서 대기하며, 추출이 실패하면 설정된 재시도(Retry) 정책에 따라 자동으로 복구를 시도한다. 이는 시간 기반 결합을 상태 기반 결합으로 전환하여 파이프라인의 회복 탄력성 (Resilience)을 극대화한다.</p>
+<ol start="2">
+<li><strong>에어비앤비 (Airbnb)의 Airflow 개발</strong>: 2014년 에어비앤비는 폭증하는 데이터 파이프라인을 효율적으로 관리하기 위해 코드로 워크플로우를 정의하는 에어플로우를 개발하고 오픈소스로 공개했다.</li>
+<li><strong>표준 오케스트레이션 도구로의 부상</strong>: 파이썬 생태계와의 완벽한 결합, 풍부한 프로바이더 (Provider) 패키지를 바탕으로 아파치 (Apache) 재단의 최상위 프로젝트로 승격되며 모던 데이터 스택의 사실상 표준 (De facto standard)이 되었다.</li>
+</ol>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="guseong-yoso">구성 요소</h3>
+<table><thead><tr><th style="text-align: left">요소명</th><th style="text-align: left">역할</th><th style="text-align: left">내부 동작</th><th style="text-align: left">통신 방식 / 관련 기술</th><th style="text-align: left">비유</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>스케줄러 (Scheduler)</strong></td><td style="text-align: left">DAG 파일 파싱 및 태스크 스케줄링 결정</td><td style="text-align: left">실행 주기에 맞춰 태스크를 메타데이터 DB에 등록하고 큐에 푸시</td><td style="text-align: left">메타데이터 DB / Python 데몬</td><td style="text-align: left">오케스트라의 총지휘자</td></tr>
+<tr><td style="text-align: left"><strong>웹 서버 (Web Server)</strong></td><td style="text-align: left">UI 제공 및 DAG 상태 모니터링, 제어</td><td style="text-align: left">메타데이터 DB를 조회하여 시각적 인터페이스 렌더링</td><td style="text-align: left">Flask / Gunicorn / HTTP</td><td style="text-align: left">공연장의 대형 전광판</td></tr>
+<tr><td style="text-align: left"><strong>메타데이터 DB (Metadata DB)</strong></td><td style="text-align: left">모든 상태 정보 (DAG, 태스크, 변수, 연결 정보) 중앙 저장</td><td style="text-align: left">스케줄러와 워커 간의 상태 동기화 기점 역할</td><td style="text-align: left">PostgreSQL / MySQL / SQLAlchemy</td><td style="text-align: left">지휘자의 악보 및 기록부</td></tr>
+<tr><td style="text-align: left"><strong>워커 (Worker)</strong></td><td style="text-align: left">실제 태스크 (Python 코드, Bash 명령어 등) 실행</td><td style="text-align: left">브로커에서 메시지를 받아 태스크를 비동기적으로 수행</td><td style="text-align: left">Celery / Kubernetes Pod</td><td style="text-align: left">실제 악기를 연주하는 단원</td></tr>
+<tr><td style="text-align: left"><strong>메시지 브로커 (Message Broker)</strong></td><td style="text-align: left">스케줄러와 워커 사이의 통신 큐 역할 (Celery 등 사용 시)</td><td style="text-align: left">스케줄러가 보낸 태스크 실행 명령을 워커에 안전하게 전달</td><td style="text-align: left">Redis / RabbitMQ</td><td style="text-align: left">지휘자의 신호 전달자</td></tr>
+</tbody></table>
+<h3 id="eeopeulrou-siseutem-akitegceowa-taeseukeu-silhaeng-heureum">에어플로우 시스템 아키텍처와 태스크 실행 흐름</h3>
+<p>에어플로우의 아키텍처는 분산 환경에서 대규모 파이프라인을 안정적으로 실행하기 위해 스케줄러, 웹 서버, 메타데이터 DB, 워커가 역할을 엄격하게 분리하여 동작한다. Celery Executor를 사용하는 프로덕션 아키텍처에서의 태스크 실행 라이프사이클을 추적해 본다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌──────────────────────────────────────────────────────────────────┐
+  │         Apache Airflow 시스템 아키텍처 및 태스크 처리 흐름           │
+  ├──────────────────────────────────────────────────────────────────┤
+  │                                                                  │
+  │                          [개발자]                                │
+  │                             │ (DAG 코드 작성)                     │
+  │                             ▼                                    │
+  │                    ┌─────────────────┐                           │
+  │                    │ DAG Directory   │                           │
+  │                    └─────────────────┘                           │
+  │                        │          │                              │
+  │                  (파싱) │          │ (파싱)                        │
+  │                        ▼          ▼                              │
+  │  ┌────────────┐    ┌────────────┐    ┌────────────┐              │
+  │  │ Web Server │──▶ │ Metadata DB│ ◀──│ Scheduler  │              │
+  │  │ (UI&#x2F;API)   │    │ (Postgres) │    │ (데몬)     │              │
+  │  └────────────┘    └────────────┘    └────────────┘              │
+  │                                           │  ① 큐잉 (Queueing)   │
+  │                                           ▼                      │
+  │                                      ┌────────────┐              │
+  │                                      │ Broker     │ (Redis&#x2F;      │
+  │                                      │ (Queue)    │  RabbitMQ)   │
+  │                                      └────────────┘              │
+  │                                           │                      │
+  │                                           │  ② 소비 (Consume)     │
+  │                                           ▼                      │
+  │                                      ┌────────────┐              │
+  │                                      │ Worker(s)  │              │
+  │  ③ 상태 업데이트 ─────────────────────▶ │ (Celery)   │              │
+  │  (Running&#x2F;Success&#x2F;Failed)            └────────────┘              │
+  │                                           │                      │
+  │                                           │  ④ 태스크 실행        │
+  │                                           ▼                      │
+  │                                    [외부 시스템 (Spark, DB 등)]    │
+  │                                                                  │
+  └──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 구조도는 프로덕션 환경에서 가장 널리 쓰이는 Celery Executor 기반의 에어플로우 아키텍처를 보여준다. 핵심 흐름은 다음과 같다. 스케줄러 (Scheduler)는 지정된 폴더의 DAG 파일을 주기적으로 파싱하여 메타데이터 DB에 상태를 갱신하고, 실행 조건이 충족된 태스크를 찾아 브로커 (Redis 등)의 큐에 푸시(①)한다. 분산된 워커 (Worker) 노드들은 브로커를 구독하며 큐에서 태스크 명령을 가져와(②) 실제 작업을 수행(④)한다. 워커는 실행 중, 완료, 실패 등의 상태 변화를 메타데이터 DB에 직접 기록(③)하며, 웹 서버는 이 DB를 읽어 UI에 실시간으로 반영한다. 이처럼 컴포넌트 간 통신이 DB와 큐를 거치는 비동기 아키텍처로 설계되어 있어, 워커 노드를 수평 확장 (Scale-out) 하거나 일부 노드에 장애가 발생해도 전체 파이프라인의 스케줄링이 중단되지 않는 강력한 내결함성 (Fault Tolerance)을 확보할 수 있다.</p>
+<h3 id="dagyi-nonrijeog-guseong-mic-paisseon-kodeu-guhyeon-weonri">DAG의 논리적 구성 및 파이썬 코드 구현 원리</h3>
+<p>에어플로우의 가장 큰 특징은 "Configuration as Code" 패러다임이다. DAG는 <code>Operator</code> (태스크의 템플릿)의 인스턴스인 <code>Task</code>들로 구성되며, <code>&gt;&gt;</code> (비트 시프트 연산자 오버로딩)를 사용하여 의존성을 직관적으로 선언한다.</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python"># [핵심 알고리즘&#x2F;코드] Airflow DAG 정의 실무 코드 스니펫
+from airflow import DAG
+from airflow.operators.bash import BashOperator
+from airflow.providers.postgres.operators.postgres import PostgresOperator
+from datetime import datetime, timedelta
+
+default_args = {
+    &#x27;owner&#x27;: &#x27;data_engineering_team&#x27;,
+    &#x27;retries&#x27;: 3,                           # 실패 시 3번 재시도
+    &#x27;retry_delay&#x27;: timedelta(minutes=5),    # 재시도 대기 시간 5분
+    &#x27;email_on_failure&#x27;: True
+}
+
+with DAG(
+    dag_id=&#x27;daily_sales_etl_pipeline&#x27;,
+    default_args=default_args,
+    description=&#x27;일일 매출 데이터를 추출, 변환, 적재하는 파이프라인&#x27;,
+    schedule_interval=&#x27;0 2 * * *&#x27;,          # 매일 새벽 2시 실행 (크론 표현식)
+    start_date=datetime(2023, 1, 1),        # 논리적 시작 기준일
+    catchup=False,                          # 과거 미실행 구간 추인(Backfill) 여부
+    tags=[&#x27;sales&#x27;, &#x27;etl&#x27;]
+) as dag:
+
+    # 3. 태스크(Operator 인스턴스) 정의
+    extract_task = BashOperator(
+        task_id=&#x27;extract_sales_data&#x27;,
+        bash_command=&#x27;python &#x2F;scripts&#x2F;extract.py --date {{ ds }}&#x27; 
+        # {{ ds }}는 Airflow의 Jinja 템플릿으로, 논리적 실행 날짜(YYYY-MM-DD)가 주입됨
+    )
+
+    transform_task = BashOperator(
+        task_id=&#x27;transform_data&#x27;,
+        bash_command=&#x27;spark-submit &#x2F;scripts&#x2F;transform.py&#x27;
+    )
+
+    load_task = PostgresOperator(
+        task_id=&#x27;load_to_dw&#x27;,
+        postgres_conn_id=&#x27;postgres_dw_conn&#x27;,
+        sql=&#x27;CALL sp_load_daily_sales();&#x27;
+    )
+
+    # 4. 의존성 (의존성 트리) 설정
+    extract_task &gt;&gt; transform_task &gt;&gt; load_task  
+    # extract가 성공해야 transform 실행, 그 다음 load 실행
+</code></pre>
+<p>코드의 핵심은 멱등성 (Idempotency) 보장과 Jinja 템플릿 (예: <code>{{ ds }}</code>)의 활용이다. 데이터 엔지니어링에서 재시도 시 데이터가 중복 적재되지 않도록 하는 멱등성은 매우 중요하다. 에어플로우는 <code>execution_date</code>라는 논리적 실행 시간을 컨텍스트로 제공하여, 스크립트가 "현재 물리적 시간"이 아닌 "처리해야 할 논리적 기준 시간"을 바라보고 멱등성을 유지하며 데이터를 처리하도록 돕는다. 만약 <code>catchup=True</code>로 설정하면, <code>start_date</code>부터 현재까지 누락된 과거 기간의 데이터 처리를 자동으로 순차 실행 (백필, Backfill)하여 데이터 공백을 메꿀 수 있다.</p>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 에어플로우는 시간 기반의 정적인 배치 파이프라인을 관리하는 데 독보적인 강점을 갖지만, 태스크가 실행 시점에 동적으로 결정되거나 초 단위의 지연 시간이 요구되는 마이크로 파이프라인에는 적합하지 않다.</p>
+<p>동작 순서:</p>
+<h3 id="bigyo-1-okeseuteureisyeon-dogu-akitegceo-bigyo-airflow-vs-argo-workflows-vs-prefect">비교 1: 오케스트레이션 도구 아키텍처 비교 (Airflow vs Argo Workflows vs Prefect)</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">Apache Airflow</th><th style="text-align: left">Argo Workflows</th><th style="text-align: left">Prefect</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>설계 철학</strong></td><td style="text-align: left">배치 파이프라인 중앙 오케스트레이션</td><td style="text-align: left">쿠버네티스 (Kubernetes) 네이티브 컨테이너 오케스트레이션</td><td style="text-align: left">동적 워크플로우 및 데이터플로우 중심</td></tr>
+<tr><td style="text-align: left"><strong>실행 환경</strong></td><td style="text-align: left">단일 노드부터 Celery/K8s까지 다양</td><td style="text-align: left">오직 Kubernetes 클러스터 내부</td><td style="text-align: left">하이브리드 (로컬 개발 후 클라우드 실행)</td></tr>
+<tr><td style="text-align: left"><strong>정의 방식</strong></td><td style="text-align: left">Python (DAG as Code)</td><td style="text-align: left">YAML (Manifest 파일)</td><td style="text-align: left">Python (Pythonic Decorator 기반)</td></tr>
+<tr><td style="text-align: left"><strong>주 사용처</strong></td><td style="text-align: left">전사적 통합 데이터 파이프라인, ETL 스케줄링</td><td style="text-align: left">머신러닝 (MLOps) 파이프라인, CI/CD</td><td style="text-align: left">상태 의존성이 복잡한 최신 데이터플로우</td></tr>
+<tr><td style="text-align: left"><strong>단점/병목</strong></td><td style="text-align: left">스케줄러 오버헤드 큼, 동적 DAG 생성 어려움</td><td style="text-align: left">YAML 작성의 극심한 피로도, K8s 종속성</td><td style="text-align: left">엔터프라이즈 기능은 클라우드 유료 모델 의존</td></tr>
+</tbody></table>
+<p>에어플로우는 시간 기반의 정적인 배치 파이프라인을 관리하는 데 독보적인 강점을 갖지만, 태스크가 실행 시점에 동적으로 결정되거나 초 단위의 지연 시간이 요구되는 마이크로 파이프라인에는 적합하지 않다. 반면 Argo Workflows는 모든 태스크를 K8s 파드로 실행하므로 격리성이 뛰어나지만, YAML 구조가 복잡하여 데이터 엔지니어보다 데브옵스 (DevOps) 친화적이다.</p>
+<p>동적/정적 스케줄링 모델과 파이프라인 복잡도에 따른 툴 선택 기준을 맵으로 시각화하면, 각 솔루션이 타겟팅하는 최적의 워크로드를 파악할 수 있다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌──────────────────────────────────────────────────────────────┐
+  │         워크플로우 오케스트레이션 도구 포지셔닝 맵             │
+  ├──────────────────────────────────────────────────────────────┤
+  │                                                              │
+  │     [동적 &#x2F; 데이터 중심]                                       │
+  │            ▲                                                 │
+  │            │                    Prefect                      │
+  │            │                   Dagster                       │
+  │  실행 시점  │                                                 │
+  │  태스크 변화 │                                                 │
+  │  (Dynamic) │                                                 │
+  │            │                             Argo Workflows      │
+  │            ├────────────────────────────────────────▶        │
+  │            │                                   K8s 네이티브   │
+  │            │                                                 │
+  │            │               Apache                            │
+  │            │               Airflow                           │
+  │            │                                                 │
+  │     [정적 &#x2F; 시간 중심]                                         │
+  │            ▼                                                 │
+  │      (미리 정의된 DAG)                                          │
+  │                                                              │
+  │             ◀────────────────────────────────────────▶       │
+  │         스크립트 위주 배치               컨테이너 중심 복합 파이프라인 │
+  │                                                              │
+  └──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 아파치 에어플로우는 Y축의 하단 (미리 정의된 정적 DAG)과 X축의 중간 지점에 가장 견고하게 자리 잡고 있다. 정해진 주기에 정해진 의존성대로 실행되는 전사 ETL/ELT 파이프라인에 최적화되어 있다. 반면 Prefect나 Dagster 같은 차세대 도구들은 Y축 상단으로 이동하여, 데이터의 양이나 상태에 따라 런타임에 실행 경로가 동적으로 결정되는 데이터 인지형 (Data-Aware) 파이프라인에 강점을 보인다. Argo Workflows는 철저히 K8s의 컨테이너 중심 생태계 우측 하단에 위치하여, MLOps나 모델 학습 등 인프라 리소스 격리가 중요한 파이프라인에 주로 채택된다. 실무에서는 전사 표준 오케스트레이터로 Airflow를 두고, K8s 전용 작업은 <code>KubernetesPodOperator</code>를 통해 Airflow에서 Argo나 K8s 자원을 트리거하는 하이브리드 방식을 선호한다.</p>
+<h3 id="gwamog-yunghab-gwanjeom">과목 융합 관점</h3>
+<ul>
+<li><strong>데이터베이스 (Database)</strong>: 메타데이터 DB는 파이프라인의 뇌에 해당한다. 태스크 실행 이력 (TaskInstance), 변수 (Variables), 연결 정보 (Connections) 트랜잭션이 집중되므로, 동시 실행 태스크가 수천 개를 넘어가면 DB의 커넥션 풀 (Connection Pool, 예: PgBouncer) 관리와 데드락 방지가 전체 시스템의 병목을 결정한다.</li>
+<li><strong>분산 시스템 (Distributed Systems)</strong>: Celery 워커 (Worker) 노드 간의 로드 밸런싱, 메시지 브로커 (Redis/RabbitMQ)의 메시지 유실 방지(ACK 처리), 분산 락(Lock)을 통한 스케줄러 다중화(HA) 등 분산 환경의 가용성과 일관성 유지 메커니즘이 깊게 적용되어 있다.</li>
+</ul>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li>
+<p><strong>시나리오 — 센서 (Sensor) 태스크에 의한 워커 풀 (Worker Pool) 고갈 (Deadlock)</strong>: 외부 시스템의 데이터가 준비되기를 기다리는 <code>Sensor</code> 태스크를 다수 배치했다. 그러나 외부 데이터 도착이 지연되면서 모든 워커의 슬롯(Slot)이 <code>Sensor</code> 태스크 대기 상태로 점유되었고, 정작 실제 작업을 수행해야 할 후속 태스크들이 큐에서 할당받지 못해 시스템 전체가 멈추는 데드락 (Deadlock)이 발생했다. 아키텍트는 <code>Sensor</code>의 모드를 <code>poke</code> (워커 슬롯 지속 점유)에서 <code>reschedule</code> (조건 확인 후 슬롯 반납 및 스케줄러 대기)로 변경하고, 센서 전용 워커 풀(Pool)을 별도로 분리하여 리소스 격리 정책을 적용해야 한다.</p>
+</li>
+<li>
+<p><strong>시나리오 — UTC 시간대 문제와 논리적 실행 시간 (execution_date) 혼동</strong>: 데이터 분석팀이 매일 자정에 어제(T-1)의 데이터를 집계하는 파이프라인을 구축했다. 그러나 파이썬 스크립트 내부에서 <code>datetime.now()</code> 물리적 현재 시간을 기준으로 쿼리를 작성하여, 파이프라인 재시작이나 백필(Backfill) 시 과거 데이터가 아닌 현재 데이터가 중복 적재되는 정합성 오류가 발생했다. 해결책은 스크립트 내부의 물리적 시간을 모두 배제하고, 에어플로우가 컨텍스트로 찔러주는 <code>{{ ds }}</code> (논리적 파이프라인 기준일) 매개변수만을 사용하여 철저히 멱등성 (Idempotency)을 보장하도록 코드를 리팩토링하는 것이다.</p>
+<p>에어플로우 운영 중 발생하는 전형적인 문제 상황과 해결을 위한 의사결정 흐름을 시각화하면, 병목을 어떻게 진단하고 아키텍처를 튜닝해야 하는지 명확해진다.</p>
+</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌───────────────────────────────────────────────────────────────────┐
+  │         Airflow 파이프라인 병목 진단 및 아키텍처 최적화 의사결정      │
+  ├───────────────────────────────────────────────────────────────────┤
+  │                                                                   │
+  │   [장애&#x2F;지연 현상 식별]                                             │
+  │             │                                                     │
+  │             ▼                                                     │
+  │      DAG 파싱 타임아웃 &#x2F; 스케줄러 CPU 100% 점유?                      │
+  │          ├─ 예 ─────▶ [DAG 최상단에 무거운 연산&#x2F;DB 쿼리 존재]         │
+  │          │                     │                                  │
+  │          │                     └─▶ [해결: 연산을 Task 내부로 이동]    │
+  │          │                                                        │
+  │          └─ 아니오                                                  │
+  │             │                                                     │
+  │             ▼                                                     │
+  │      태스크가 큐에 쌓인 채 Running 상태로 넘어가지 않음?               │
+  │          ├─ 예 ─────▶ [Worker 동시성(Concurrency) 한계 도달]         │
+  │          │                     │                                  │
+  │          │                     └─▶ [해결: Celery Worker 수평 확장]  │
+  │          │                                                        │
+  │          └─ 아니오                                                  │
+  │             │                                                     │
+  │             ▼                                                     │
+  │      태스크 실패 시 데이터 중복&#x2F;누락 발생?                            │
+  │          ├─ 예 ─────▶ [Idempotency(멱등성) 설계 위반]               │
+  │          │                     │                                  │
+  │          │                     └─▶ [해결: Delete-then-Insert 패턴, │
+  │          │                           {{ ds }} 템플릿 엄격 적용]       │
+  │          │                                                        │
+  │          └─ 아니오 ──▶ [정상 상태, 모니터링 임계치만 세밀 조정]        │
+  │                                                                   │
+  └───────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 의사결정 트리의 핵심은 장애의 근본 원인을 아키텍처의 어느 계층에서 찾아야 하는지 가이드하는 것이다. 첫 번째 스케줄러 과부하는, 파이썬 파일이 매초 파싱된다는 에어플로우의 특성을 무시하고 DAG 정의 레벨 (Global Scope)에 API 호출이나 무거운 로직을 작성했을 때 발생하는 치명적 안티패턴이다. 두 번째 큐 적체 현상은 브로커와 워커 간의 리소스 병목이므로, 분산 큐 모니터링과 인프라 확장이 필요하다. 세 번째 멱등성 위반은 데이터 정합성의 가장 근본적인 문제로, 시스템이 아닌 개발자의 파이프라인 설계 패턴(Upsert, 논리적 시간 사용)을 교정해야 해결된다. 실무 아키텍트는 이러한 병목 지점을 메트릭 (StatsD, Prometheus)으로 감시하고 선제적으로 아키텍처를 튜닝해야 한다.</p>
+<h3 id="doib-cekeuriseuteu">도입 체크리스트</h3>
+<ul>
+<li><strong>기술적</strong>: DAG 코드 파일 내 최상위(Top-level) 수준에 무거운 연산이나 DB 커넥션 코드가 없는지 확인했는가? (스케줄러 과부하 방지) 태스크 재시도 시 데이터가 중복 처리되지 않도록 멱등성 (Idempotency) 로직이 구현되었는가?</li>
+<li><strong>운영·보안적</strong>: DB 패스워드나 외부 API 키를 하드코딩하지 않고, Airflow Connection이나 Secret Backend (HashiCorp Vault 등)와 연동하여 안전하게 관리하고 있는가?</li>
+</ul>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li><strong>DAG 파일 내에서 무거운 데이터 처리</strong>: 에어플로우 워커 메모리에 수 GB의 Pandas 데이터프레임을 올려 직접 변환 작업을 수행하는 것은 최악의 안티패턴이다. 에어플로우는 오케스트레이터일 뿐 연산 엔진이 아니므로, 무거운 작업은 스파크 (Spark)나 데이터 웨어하우스 (Snowflake, BigQuery)로 오프로딩 (Offloading)하고 상태만 추적해야 한다.</li>
+<li><strong>Top-level 코드 남용</strong>: DAG 파일 최상단에 외부 API를 호출하는 코드를 두면, 스케줄러가 파일을 파싱할 때마다(수십 초 주기) 불필요한 API 통신이 발생하여 파이프라인 전체가 마비될 수 있다.</li>
+</ul>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">도입 전 (Cron &amp; 쉘 스크립트)</th><th style="text-align: left">도입 후 (Apache Airflow)</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">장애 인지 및 복구에 평균 4시간 소요</td><td style="text-align: left">실패 시 자동 재시도 및 슬랙(Slack) 알림 연동</td><td style="text-align: left">MTTR (Mean Time To Recovery) <strong>80% 이상 단축</strong></td></tr>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">과거 수개월 데이터 재처리 시 수동 스크립트 실행</td><td style="text-align: left">Catchup/Backfill 기능 활용</td><td style="text-align: left">과거 데이터 보정 시간 <strong>일 단위에서 시간 단위로 감소</strong></td></tr>
+<tr><td style="text-align: left"><strong>정성</strong></td><td style="text-align: left">태스크 간 의존성을 개발자 머릿속이나 문서에 의존</td><td style="text-align: left">UI를 통해 DAG 그래프 직관적 가시화</td><td style="text-align: left">파이프라인 구조 투명화 및 온보딩 비용 감소</td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang">미래 전망</h3>
+<ul>
+<li><strong>데이터 인지형 스케줄링 (Data-Aware Scheduling)</strong>: 단순히 시간에 맞춰 실행되는 것을 넘어, 데이터셋(Dataset)의 변경 이벤트 자체를 트리거로 삼아 하위 DAG를 실행하는 데이터 인지형 스케줄링 기능(AIP-48)이 고도화되어 이벤트 기반 아키텍처와의 융합이 가속화될 것이다.</li>
+<li><strong>K8s 네이티브 오케스트레이션 확장</strong>: 기존 Celery 기반 워커의 오버헤드를 줄이기 위해, KEDA (Kubernetes Event-driven Autoscaling)와 연동하여 실행할 태스크가 있을 때만 K8s 파드를 동적으로 생성하고 소멸시키는 비용 효율적 아키텍처로 진화하고 있다.</li>
+</ul>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa-1">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">도입 전 (Cron &amp; 쉘 스크립트)</th><th style="text-align: left">도입 후 (Apache Airflow)</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">장애 인지 및 복구에 평균 4시간 소요</td><td style="text-align: left">실패 시 자동 재시도 및 슬랙(Slack) 알림 연동</td><td style="text-align: left">MTTR (Mean Time To Recovery) <strong>80% 이상 단축</strong></td></tr>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">과거 수개월 데이터 재처리 시 수동 스크립트 실행</td><td style="text-align: left">Catchup/Backfill 기능 활용</td><td style="text-align: left">과거 데이터 보정 시간 <strong>일 단위에서 시간 단위로 감소</strong></td></tr>
+<tr><td style="text-align: left"><strong>정성</strong></td><td style="text-align: left">태스크 간 의존성을 개발자 머릿속이나 문서에 의존</td><td style="text-align: left">UI를 통해 DAG 그래프 직관적 가시화</td><td style="text-align: left">파이프라인 구조 투명화 및 온보딩 비용 감소</td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang-1">미래 전망</h3>
+<ul>
+<li><strong>데이터 인지형 스케줄링 (Data-Aware Scheduling)</strong>: 단순히 시간에 맞춰 실행되는 것을 넘어, 데이터셋(Dataset)의 변경 이벤트 자체를 트리거로 삼아 하위 DAG를 실행하는 데이터 인지형 스케줄링 기능(AIP-48)이 고도화되어 이벤트 기반 아키텍처와의 융합이 가속화될 것이다.</li>
+<li><strong>K8s 네이티브 오케스트레이션 확장</strong>: 기존 Celery 기반 워커의 오버헤드를 줄이기 위해, KEDA (Kubernetes Event-driven Autoscaling)와 연동하여 실행할 태스크가 있을 때만 K8s 파드를 동적으로 생성하고 소멸시키는 비용 효율적 아키텍처로 진화하고 있다.</li>
+</ul>
+<p>결론적으로 데이터 파이프라인 (Apache Airflow) DAG 배치 플로우 관리는 기술 자체만으로 성과가 보장되지 않으며, 적용 맥락, 운영 역량, 데이터 품질, 보안·거버넌스 조건이 함께 충족될 때 비로소 실질적 가치가 구현된다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">물리 인프라 중심의 수동 운영
+    ↓
+가상화·분산 처리 기반 자원 추상화
+    ↓
+데이터 파이프라인 (Apache Airflow) DAG 배치 플로우 관리 중심 자동화·표준화 정립
+    ↓
+컨테이너·클라우드 네이티브 운영 확장
+    ↓
+관측성·비용·탄소·거버넌스 최적화로 고도화
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>배치 처리 (Batch Processing)</strong></td><td style="text-align: left">대량의 데이터를 정해진 주기 단위로 묶어서 처리하는 방식으로, 에어플로우의 가장 주된 타겟 워크로드다.</td></tr>
+<tr><td style="text-align: left"><strong>ETL / ELT (Extract, Transform, Load)</strong></td><td style="text-align: left">데이터를 추출하고 변환하여 적재하는 과정으로, 에어플로우는 이 파이프라인의 각 단계를 연결하는 오케스트레이터 역할을 수행한다.</td></tr>
+<tr><td style="text-align: left"><strong>멱등성 (Idempotency)</strong></td><td style="text-align: left">동일한 연산을 여러 번 수행해도 결과가 달라지지 않는 성질로, 에어플로우 태스크 실패 후 재시도 시 데이터 중복을 막는 핵심 설계 원칙이다.</td></tr>
+<tr><td style="text-align: left"><strong>Celery (셀러리)</strong></td><td style="text-align: left">파이썬 기반의 분산 비동기 작업 큐 시스템으로, 에어플로우가 여러 대의 워커 노드로 태스크를 분산 처리할 때 핵심 브로커-워커 통신 인프라로 활용된다.</td></tr>
+<tr><td style="text-align: left"><strong>모던 데이터 스택 (Modern Data Stack)</strong></td><td style="text-align: left">클라우드 기반의 데이터 파이프라인 생태계로, 에어플로우는 Fivetran, dbt, Snowflake 등과 결합하여 이 스택의 중심 제어탑 역할을 한다.</td></tr>
+<tr><td style="text-align: left"><strong>데이터 거버넌스 (Data Governance)</strong></td><td style="text-align: left">파이프라인의 가시성을 높이고 데이터 리니지 (Lineage)를 추적 가능하게 하여, 기업의 전체 데이터 품질과 보안 통제력을 향상시킨다.</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

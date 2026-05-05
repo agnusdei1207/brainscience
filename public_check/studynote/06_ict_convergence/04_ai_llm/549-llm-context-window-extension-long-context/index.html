@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>549. LLM 컨텍스트 윈도우 확장과 긴 문맥 처리 (LLM Context Window Extension Long Context) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ict convergence
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 트랜스포머 셀프 어텐션의 O(n²) 시간·공간 복잡도는 긴 컨텍스트 입력 시 메모리와 연산이 제곱으로 폭발하므로, RoPE 외삽·Sliding Window Attention·SSM(State Space Model) 등 다양한 기법으로 이 한계를 극복하고 있다.
+<strong>비유</strong>: 컨텍스트 윈도우 확장은 AI의 단기 기억력 한계를 늘리는 것 — 메모장 크기가 커질수록 더 많은 내용을 동시에 참조할 수 있다.</p>
+</blockquote>
+<hr />
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>GPT-3(2048 토큰) → GPT-4(8K/32K) → Claude 3.5(200K) → Gemini 1.5 Pro(1M) 토큰으로 컨텍스트 윈도우가 급격히 확장됐다. 이 확장의 배경:</p>
+<p><strong>왜 긴 컨텍스트가 필요한가?</strong></p>
+<ul>
+<li>긴 PDF 문서 분석: 법률 계약서(수백 페이지), 학술 논문 다수</li>
+<li>장기 대화 기억: 수백 턴의 대화 맥락 유지</li>
+<li>코드 리포지토리: 전체 코드베이스 맥락 이해</li>
+<li>비디오/멀티모달: 수시간 영상의 프레임 시퀀스</li>
+</ul>
+<p><strong>트랜스포머 어텐션의 O(n²) 장벽</strong></p>
+<p>시퀀스 길이 n에서 어텐션 연산은 O(n²) 메모리와 시간이 필요:</p>
+<ul>
+<li>1K 토큰: 1 단위, 10K 토큰: 100 단위, 100K 토큰: <strong>10,000 단위</strong></li>
+</ul>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<pre><code>┌──────────────────────────────────────────────────────────┐
+│          Long Context 해결 기법 비교                       │
+│                                                          │
+│  RoPE 외삽              Sliding Window           Mamba   │
+│  ┌────────────┐         ┌────────────────┐    ┌────────┐ │
+│  │위치 인코딩 │         │ 국소 윈도우     │    │ SSM    │ │
+│  │스케일링    │         │ (w 토큰)       │    │선형복잡│ │
+│  │NTK, YaRN  │         │+글로벌 토큰     │    │O(n)    │ │
+│  │학습 없이  │         │                │    │        │ │
+│  │외삽 가능  │         │ [tok][tok]...  │    │상태벡터│ │
+│  └────────────┘         └────────────────┘    └────────┘ │
+│                                                          │
+│  복잡도: O(n log n)       O(n·w)              O(n)       │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>위치 인코딩 외삽(Positional Encoding Extrapolation)</strong></p>
+<p><strong>RoPE(Rotary Positional Embedding)</strong>: 위치를 회전 행렬로 인코딩. 원래 학습 범위 이상의 위치도 외삽 가능.</p>
+<ul>
+<li><strong>NTK-aware Interpolation</strong>: 고주파 성분 유지하며 위치 스케일링 → 성능 손실 최소화</li>
+<li><strong>YaRN(Yet another RoPE extensioN method)</strong>: 다이나믹 스케일링, 학습 없이 2~4배 확장</li>
+</ul>
+<p><strong>ALiBi(Attention with Linear Biases)</strong>: 상대 거리에 비례하는 음수 편향을 어텐션에 추가 → 학습 길이 이상 자연스러운 외삽.</p>
+<h3 id="eotensyeon-bogjabdo-gaeseon-gibeob">어텐션 복잡도 개선 기법</h3>
+<table><thead><tr><th style="text-align: center">기법</th><th style="text-align: center">복잡도</th><th style="text-align: center">원리</th><th style="text-align: center">대표 모델</th></tr></thead><tbody>
+<tr><td style="text-align: center">표준 어텐션</td><td style="text-align: center">O(n²)</td><td style="text-align: center">전체 쌍 어텐션</td><td style="text-align: center">GPT-4</td></tr>
+<tr><td style="text-align: center">Sliding Window</td><td style="text-align: center">O(n·w)</td><td style="text-align: center">국소 w 토큰만 어텐션</td><td style="text-align: center">Mistral 7B</td></tr>
+<tr><td style="text-align: center">FlashAttention-2</td><td style="text-align: center">O(n²) IO 최적화</td><td style="text-align: center">타일링으로 HBM 접근 최소화</td><td style="text-align: center">대부분 모델</td></tr>
+<tr><td style="text-align: center">Mamba/SSM</td><td style="text-align: center">O(n)</td><td style="text-align: center">순환적 상태 업데이트</td><td style="text-align: center">Mamba, Jamba</td></tr>
+<tr><td style="text-align: center">Ring Attention</td><td style="text-align: center">O(n²/d) 분산</td><td style="text-align: center">시퀀스를 GPU에 분산</td><td style="text-align: center">멀티 GPU 훈련</td></tr>
+</tbody></table>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: Lost in the Middle 현상**: 긴 컨텍스트에서 정보의 위치가 중간에 있을 때 모델이 이를 덜 활용하는 경향.</p>
+<p>동작 순서:</p>
+<h3 id="rag-vs-long-context-bigyo">RAG vs Long Context 비교</h3>
+<table><thead><tr><th style="text-align: center">항목</th><th style="text-align: center">RAG</th><th style="text-align: center">Long Context</th></tr></thead><tbody>
+<tr><td style="text-align: center">정보 범위</td><td style="text-align: center">무제한(DB 크기)</td><td style="text-align: center">컨텍스트 윈도우 내</td></tr>
+<tr><td style="text-align: center">검색 정확도</td><td style="text-align: center">ANN 기반, 95~99%</td><td style="text-align: center">위치에 따른 주의 저하</td></tr>
+<tr><td style="text-align: center">비용</td><td style="text-align: center">검색 비용 + LLM 토큰</td><td style="text-align: center">긴 프롬프트 토큰 비용↑</td></tr>
+<tr><td style="text-align: center">최신성</td><td style="text-align: center">DB 업데이트 필요</td><td style="text-align: center">프롬프트에 포함 시 즉시</td></tr>
+<tr><td style="text-align: center">구현 복잡도</td><td style="text-align: center">높음(벡터 DB 필요)</td><td style="text-align: center">낮음(단순 프롬프트)</td></tr>
+</tbody></table>
+<p><strong>Lost in the Middle 현상</strong>: 긴 컨텍스트에서 정보의 위치가 중간에 있을 때 모델이 이를 덜 활용하는 경향. 앞·뒤 정보는 잘 참조하지만 중간 정보는 무시.</p>
+<p><strong>Needle-in-Haystack 벤치마크</strong>: 긴 텍스트 중간에 숨긴 단일 사실을 얼마나 정확히 찾는지 측정.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<p><strong>컨텍스트 윈도우 확장 전략</strong></p>
+<pre><code># vLLM에서 RoPE 스케일링으로 컨텍스트 확장
+vllm serve Llama-3-8B-Instruct \
+  --max-model-len 32768 \
+  --rope-scaling &#x27;{&quot;type&quot;:&quot;dynamic&quot;,&quot;factor&quot;:2.0}&#x27;
+</code></pre>
+<p><strong>비용 분석 (GPT-4o 기준)</strong></p>
+<table><thead><tr><th style="text-align: center">전략</th><th style="text-align: center">입력 토큰</th><th style="text-align: center">비용</th><th style="text-align: center">적합 케이스</th></tr></thead><tbody>
+<tr><td style="text-align: center">RAG (Top-5)</td><td style="text-align: center">2K~5K</td><td style="text-align: center">낮음</td><td style="text-align: center">FAQ, 정보 검색</td></tr>
+<tr><td style="text-align: center">중간 컨텍스트(32K)</td><td style="text-align: center">32K</td><td style="text-align: center">중간</td><td style="text-align: center">코드 분석</td></tr>
+<tr><td style="text-align: center">초장문(200K)</td><td style="text-align: center">200K</td><td style="text-align: center">높음</td><td style="text-align: center">계약서 전체 분석</td></tr>
+</tbody></table>
+<p><strong>기술사 판단 포인트</strong></p>
+<ol>
+<li><strong>Mamba/SSM 한계</strong>: 선형 복잡도지만 In-Context Learning 능력이 트랜스포머 대비 약함 → Jamba(혼합 아키텍처)로 보완</li>
+<li><strong>KV 캐시 폭발</strong>: 100K 컨텍스트 × Llama 3 8B → KV 캐시 ~20GB → HBM 계획 필수</li>
+<li><strong>청킹 전략 최적화</strong>: Long Context 사용 시에도 중요 정보를 프롬프트 앞뒤에 배치하는 "포지션 전략" 병행</li>
+<li><strong>LongBench 평가</strong>: 실제 서비스 투입 전 장문 이해 벤치마크(LongBench, SCROLLS)로 모델 검증</li>
+</ol>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p>LLM 컨텍스트 윈도우 확장은 단순 메모리 증가를 넘어 AI가 인간 수준의 긴 문서 이해와 추론을 수행하는 방향으로 발전하고 있다. RoPE 외삽, Sliding Window, Mamba SSM은 각각 비용-성능-아키텍처 트레이드오프를 제공하며, RAG와 Long Context의 상호 보완 전략이 실무 최적 설계가 된다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>LLM 컨텍스트 윈도우 확장은 단순 메모리 증가를 넘어 AI가 인간 수준의 긴 문서 이해와 추론을 수행하는 방향으로 발전하고 있다. RoPE 외삽, Sliding Window, Mamba SSM은 각각 비용-성능-아키텍처 트레이드오프를 제공하며, RAG와 Long Context의 상호 보완 전략이 실무 최적 설계가 된다.</p>
+<hr />
+<p>결론적으로 LLM 컨텍스트 윈도우 확장과 긴 문맥 처리 (LLM Context Window Extension Long Context)는 기술 자체만으로 성과가 보장되지 않으며, 적용 맥락, 운영 역량, 데이터 품질, 보안·거버넌스 조건이 함께 충족될 때 비로소 실질적 가치가 구현된다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">통계적 학습과 규칙 기반 자동화
+    ↓
+딥러닝·대규모 사전학습 체계 확산
+    ↓
+LLM 컨텍스트 윈도우 확장과 긴 문맥 처리 (LLM Context Window Extension Long Context) 핵심 메커니즘 정립
+    ↓
+RAG·에이전트·멀티모달 응용 확장
+    ↓
+정렬·평가·거버넌스 중심의 운영 단계로 고도화
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">RoPE</td><td style="text-align: left">위치 인코딩</td></tr>
+<tr><td style="text-align: left">YaRN</td><td style="text-align: left">RoPE 외삽</td></tr>
+<tr><td style="text-align: left">Sliding Window</td><td style="text-align: left">어텐션 최적화</td></tr>
+<tr><td style="text-align: left">Mamba/SSM</td><td style="text-align: left">대안 아키텍처</td></tr>
+<tr><td style="text-align: left">Needle-in-Haystack</td><td style="text-align: left">벤치마크</td></tr>
+<tr><td style="text-align: left">Lost in the Middle</td><td style="text-align: left">한계 현상</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

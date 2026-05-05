@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>523. RoCE (RDMA over Converged Ethernet) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 20, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote computer architecture
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: RoCE(RDMA over Converged Ethernet)는 고가의 전용 장비가 필요한 인피니밴드(InfiniBand) 대신, <strong>대중적인 이더넷(Ethernet) 인프라 위에서 RDMA의 초고속, 초저지연 통신을 가능케 하는 프로토콜</strong>이다.
+<strong>비유</strong>: 전용 철로를 새로 깔아야 하는 KTX(인피니밴드) 대신, <strong>기존의 8차선 고속도로(이더넷)의 한 차선을 '하이패스 전용 차로'로 지정하고 그 위에서 초고속 열차를 달리게 만든 것</strong>과 같습니다. 공사비는 줄이면서 속도는 열차급으로 낼 수 있습니다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>핵심 해설:</p>
+<ul>
+<li>
+<p><strong>가치</strong>: 이더넷을 무손실(Lossless) 네트워크로 개조하는 <strong>PFC(Priority-based Flow Control)</strong> 기술과 결합하여, CPU 간섭 없이 데이터센터 전역의 서버 간 메모리 직통 터널을 저렴한 비용으로 구축한다.</p>
+</li>
+<li>
+<p><strong>융합</strong>: IP 라우팅이 가능한 <strong>RoCE v2</strong>가 현대 클라우드와 AI 클러스터의 사실상 표준으로 자리 잡았으며, NVMe-oF 기술과 융합되어 고성능 스토리지 공유 아키텍처를 완성한다.</p>
+</li>
+<li>
+<p><strong>개념</strong>: 2010년 인피니밴드 무역 협회(IBTA)가 발표한 표준으로, 이더넷 프레임 내에 인피니밴드 전송 계층을 캡슐화하여 전송하는 기술이다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 슈퍼컴퓨터 급의 성능을 내기 위해 RDMA가 필요하지만, 모든 서버의 랜카드와 스위치를 비싼 인피니밴드 전용 제품으로 바꾸기에는 비용 부담이 너무 컸다. RoCE는 **"이미 깔려있는 이더넷 선과 스위치를 그대로 쓰면서 소프트웨어 스택과 일부 하드웨어 설정만으로 RDMA를 구현하자"**는 경제적 실용주의에서 탄생했다.</p>
+</li>
+<li>
+<p><strong>등장 배경</strong>: 클라우드 거인들(AWS, Azure 등)이 수십만 대의 서버를 연결할 때, 성능과 가성비의 절충안으로 RoCE를 선택하면서 폭발적으로 성장했다.</p>
+</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│             RoCE의 계층별 캡슐화(Encapsulation) 구조               │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  [ RDMA Payload (진짜 데이터) ]                                 │
+│               │                                              │
+│               ▼                                              │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ [ Ethernet ] [ IP ] [ UDP ] [ IB BTH ] [ Data ] [ CRC ] │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  * 특징: RoCE v2는 UDP&#x2F;IP를 사용하여 라우터(L3)를 넘나들 수 있음.     │
+│  * IB BTH: 인피니밴드 전송 헤더 (Base Transport Header)         │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>일반 이더넷은 길이 막히면 패킷을 버린다. 하지만 RDMA는 패킷 하나만 없어져도 성능이 나락으로 간다. 이를 막기 위해 RoCE는 다음 기술을 필수적으로 요구한다.</p>
+<ul>
+<li><strong>PFC (Priority-based Flow Control)</strong>: 수신측 랜카드가 "나 지금 너무 바빠!"라고 신호를 보내면, 송신측이 패킷 쏘는 것을 잠시 멈춘다. (데이터 유실 방지)</li>
+<li><strong>DCB (Data Center Bridging)</strong>: 이더넷 스위치가 RDMA 트래픽을 일반 웹 트래픽보다 더 귀하게 대접하도록 설정하는 기술들의 집합이다.</li>
+</ul>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<table><thead><tr><th style="text-align: left">요소</th><th style="text-align: left">역할</th><th style="text-align: left">핵심 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">핵심 대상</td><td style="text-align: left">RoCE (RDMA over Converged Ethernet)에서 직접 다루는 연산, 자원, 상태, 지표</td><td style="text-align: left">문제 정의와 측정 기준을 먼저 명확히 해야 함</td></tr>
+<tr><td style="text-align: left">제어 메커니즘</td><td style="text-align: left">동작을 결정하는 규칙, 신호, 정책, 알고리즘</td><td style="text-align: left">성능과 안정성의 균형을 좌우</td></tr>
+<tr><td style="text-align: left">구현 자원</td><td style="text-align: left">회로, 메모리, 인터커넥트, 전력, 소프트웨어 협력 요소</td><td style="text-align: left">병목과 비용의 직접 원인</td></tr>
+<tr><td style="text-align: left">결과/출력</td><td style="text-align: left">처리 결과, 상태 변화, 품질 지표, 후속 제어 신호</td><td style="text-align: left">상위 계층의 의사결정 근거</td></tr>
+</tbody></table>
+<ul>
+<li><strong>RoCE v1</strong>: 이더넷 L2 헤더만 사용. 같은 스위치 밑에 있는 서버끼리만 통신 가능 (Routable 하지 않음).</li>
+<li><strong>RoCE v2</strong>: UDP와 IP 헤더를 추가. 이제 라우터를 거쳐 다른 건물, 다른 도시의 서버와도 RDMA를 할 수 있게 되었다. (현재의 대세)</li>
+</ul>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: RoCE (RDMA over Converged Ethernet) 적용 시 입력 조건, 내부 상태, 제약 자원이 함께 맞물려야 기대한 동작이 성립한다.</p>
+<ul>
+<li>패킷을 캡슐화하고 푸는 모든 과정은 CPU가 아닌 <strong>RoCE 지원 SmartNIC</strong>가 전담한다. CPU는 전송 명령만 내리고 즉시 자기 할 일로 복귀한다.</li>
+</ul>
+<h3 id="roce-vs-inpinibaendeu-vs-iwarp-rdma-sampajeon">RoCE vs 인피니밴드 vs iWARP (RDMA 삼파전)</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: center">인피니밴드</th><th style="text-align: center"><strong>RoCE (v2)</strong></th><th style="text-align: left">iWARP</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>물리 계층</strong></td><td style="text-align: center">전용 망 (IB)</td><td style="text-align: center"><strong>이더넷 (Ethernet)</strong></td><td style="text-align: left">이더넷 (Ethernet)</td></tr>
+<tr><td style="text-align: left"><strong>속도/지연</strong></td><td style="text-align: center">최고 (0.5 $\mu s$)</td><td style="text-align: center"><strong>우수 (1.0 $\mu s$)</strong></td><td style="text-align: left">보통 (수 $\mu s$)</td></tr>
+<tr><td style="text-align: left"><strong>구축 비용</strong></td><td style="text-align: center">매우 비쌈</td><td style="text-align: center"><strong>합리적 (가성비)</strong></td><td style="text-align: left">낮음</td></tr>
+<tr><td style="text-align: left"><strong>관리 난이도</strong></td><td style="text-align: center">높음 (전용 기술)</td><td style="text-align: center"><strong>중간 (이더넷 지식)</strong></td><td style="text-align: left">낮음 (기존 TCP 활용)</td></tr>
+<tr><td style="text-align: left"><strong>주사용처</strong></td><td style="text-align: center">슈퍼컴퓨터, HPC</td><td style="text-align: center"><strong>클라우드, AI 클러스터</strong></td><td style="text-align: left">일반 서버 원격 복제</td></tr>
+</tbody></table>
+<h3 id="nvme-ofwayi-yunghab-sineoji">NVMe-oF와의 융합 시너지</h3>
+<p>RoCE는 <strong>NVMe-oF(NVMe over Fabrics)</strong> 기술이 실전에서 제 실력을 발휘하게 만드는 가장 핵심적인 날개다. 네트워크 너머의 SSD를 마치 내 메인보드에 꽂힌 것처럼 쓰게 만드는 마법의 80%는 RoCE의 초저지연 성능 덕분이다.</p>
+<p>동작 순서:</p>
+<ol>
+<li>입력값, 상태 정보, 제어 조건이 먼저 정의된다.</li>
+<li>내부 구성요소가 정해진 규칙에 따라 상호작용하며 핵심 처리가 수행된다.</li>
+<li>처리 결과가 출력, 상태 갱신, 후속 제어 신호로 연결되어 다음 단계 동작을 결정한다.</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[입력 &#x2F; 상태 &#x2F; 제어 조건]
+            ↓
+     [핵심 처리 로직]
+            ↓
+    [출력 &#x2F; 상태 갱신 &#x2F; 효과]
+</code></pre>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">관점</th><th style="text-align: left">기본 접근</th><th style="text-align: left">최적화/확장 접근</th></tr></thead><tbody>
+<tr><td style="text-align: left">초점</td><td style="text-align: left">기능을 성립시키는 최소 구조</td><td style="text-align: left">성능·전력·확장성까지 함께 최적화</td></tr>
+<tr><td style="text-align: left">장점</td><td style="text-align: left">구현과 이해가 단순함</td><td style="text-align: left">대규모 시스템에서 효율이 높음</td></tr>
+<tr><td style="text-align: left">주의점</td><td style="text-align: left">병목과 한계가 빨리 드러남</td><td style="text-align: left">검증·설계 복잡도와 비용이 증가</td></tr>
+</tbody></table>
+<p>RoCE (RDMA over Converged Ethernet)를 비교할 때는 단순한 우열보다 어떤 제약 조건에서 어느 방식이 더 적합한지 판단하는 것이 중요하다. 같은 기술도 워크로드, 전력 예산, 검증 난이도, 호환성에 따라 최적 해가 달라진다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p><strong>채택 조건</strong>:</p>
+<ul>
+<li>시스템 병목이나 구조적 한계를 줄이는 수단으로 RoCE (RDMA over Converged Ethernet)을 선택할 근거가 분명할 때</li>
+<li>상위 소프트웨어와 운영 정책이 해당 구조를 활용할 수 있을 때</li>
+</ul>
+<p><strong>회피 조건</strong>:</p>
+<ul>
+<li>구현 복잡도와 검증 비용이 기대 효과보다 더 클 때</li>
+<li>단순한 대안 구조로도 동일한 목표를 달성할 수 있을 때</li>
+</ul>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li>
+<p><strong>AI 거대 언어 모델(LLM) 분산 학습</strong></p>
+<ul>
+<li><strong>상황</strong>: 수천 개의 GPU가 수조 개의 파라미터를 동기화해야 함.</li>
+<li><strong>적용</strong>: 200Gbps RoCEv2 네트워크를 구축하고 NVIDIA Collective Communications Library (NCCL)를 최적화한다.</li>
+<li><strong>결과</strong>: 통신 병목이 제거되어 수개월이 걸리던 학습 시간을 수주일로 단축한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>클라우드 네이티브 스토리지 가속 (Storage Disaggregation)</strong></p>
+<ul>
+<li><strong>상황</strong>: 서버의 CPU 부하는 낮은데 스토리지 I/O 지연 때문에 웹 서비스가 느림.</li>
+<li><strong>기술</strong>: 백엔드망을 RoCE 기반 NVMe-oF로 전환한다.</li>
+<li><strong>효과</strong>: 원격 디스크 응답 속도가 로컬 SSD와 구분이 안 될 정도로 빨라져 고객 만족도가 수직 상승한다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li><strong>설정 없이 일반 스위치에 RoCE 장비 연결</strong>: "랜선 꽂았으니 되겠지"라고 생각하는 것. 무손실 설정(PFC/ECN)이 안 된 스위치에서 RoCE를 돌리면, 트래픽이 몰리는 순간 패킷이 우수수 떨어지고 RDMA 세션이 끊기는 대참사가 벌어진다. 차라리 그럴 거면 속도가 조금 느려도 안정적인 iWARP를 쓰는 게 낫다.</li>
+</ul>
+<p>체크리스트:</p>
+<ol>
+<li>적용 목적과 병목 지점이 명확하게 정의되었는가?</li>
+<li>성능 향상과 함께 전력·면적·복잡도 증가를 감당할 수 있는가?</li>
+<li>상위 소프트웨어와 운영 정책이 해당 구조를 활용할 수 있는가?</li>
+</ol>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="jeongryangjeog-gidaehyogwa">정량적 기대효과</h3>
+<ul>
+<li><strong>데이터센터 구축 비용 30~50% 절감</strong>: 전용 인피니밴드 장비 없이 범용 이더넷 장비만으로 하이엔드 성능을 구현한다.</li>
+<li><strong>연산 스루풋 2배 향상</strong>: 통신에 허덕이던 CPU를 해방시켜 실질적인 앱 처리 속도를 극대화한다.</li>
+</ul>
+<h3 id="gyeolron">결론</h3>
+<p>RoCE는 **"성능의 민주화"**를 이끈 위대한 프로토콜이다. 과거 슈퍼컴퓨터의 전유물이었던 RDMA를 우리 주변의 평범한 이더넷 위로 끌어올림으로써, 오늘날 우리가 누리는 챗GPT나 고속 클라우드 서비스의 토대를 마련했다. 하드웨어 아키텍트는 하드웨어(NIC)와 네트워크(Switch)의 정교한 조율을 통해 RoCE라는 강력한 무기를 완벽하게 다룰 줄 알아야 한다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">기존 범용 구조 한계 인식
+    ↓
+세부 병목·위협·운영 문제 정의
+    ↓
+RoCE (RDMA over Converged Ethernet) 도입
+    ↓
+하드웨어·소프트웨어 협력 최적화
+    ↓
+차세대 표준·자동화 체계로 진화
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">RoCE (RDMA over Converged Ethernet)</td><td style="text-align: left">해당 주제가 다루는 핵심 메커니즘과 설계 판단의 중심축</td></tr>
+<tr><td style="text-align: left">성능 지표</td><td style="text-align: left">처리량·지연 시간·확장성에 미치는 영향을 함께 검토해야 함</td></tr>
+<tr><td style="text-align: left">전력·열</td><td style="text-align: left">구현 비용과 지속 가능성을 좌우하는 제약 조건</td></tr>
+<tr><td style="text-align: left">신뢰성·보안</td><td style="text-align: left">오류 대응, 검증, 보호 메커니즘과의 연결이 필요</td></tr>
+<tr><td style="text-align: left">상위 시스템</td><td style="text-align: left">ISA, 운영체제, 컴파일러, 런타임, 인터커넥트와의 정합성이 중요</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>162. CT (Continuous Training) 파이프라인 - 모델 성능 저하 시 자동 재학습 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>May 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote data engineering
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: CT (Continuous Training)는 데이터 세계의 변화를 ML 모델이 자동으로 따라잡도록, 재학습 파이프라인을 트리거 기반으로 자동 실행하는 MLOps 핵심 메커니즘이다.
+<strong>비유</strong>: 단일 기능의 기술이 아니라, 흐름과 기준과 운영 판단이 함께 맞물릴 때 의미가 생기는 체계와 같다.</p>
+</blockquote>
+<hr />
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>**CT (Continuous Training)**는 ML 파이프라인을 자동으로 주기적 또는 이벤트 기반으로 실행하여, 최신 데이터로 모델을 재학습하고 배포하는 자동화 체계다.</p>
+<pre><code>기존 방식 (수동 재학습)              CT 방식 (자동 재학습)
+┌──────────────────────────┐       ┌──────────────────────────────┐
+│ 데이터 과학자가 수동으로  │       │  트리거 감지                  │
+│ 성능 저하 인지            │       │  (일정&#x2F;데이터&#x2F;성능)            │
+│         ↓                │       │          ↓                    │
+│ 재학습 스크립트 실행      │  →    │  파이프라인 자동 실행          │
+│         ↓                │       │  데이터 검증 → 학습 → 평가    │
+│ 수동 모델 평가 및 배포    │       │          ↓                    │
+│ 수주 소요                 │       │  자동 배포 또는 알람           │
+└──────────────────────────┘       │  수시간 소요                  │
+                                   └──────────────────────────────┘
+</code></pre>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<table><thead><tr><th style="text-align: left">문제 상황</th><th style="text-align: left">설명</th><th style="text-align: left">CT 해결</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>계절성</strong></td><td style="text-align: left">쇼핑몰 구매 패턴이 명절마다 변화</td><td style="text-align: left">주기적 재학습</td></tr>
+<tr><td style="text-align: left"><strong>사용자 행동 변화</strong></td><td style="text-align: left">스마트폰 보급으로 모바일 패턴 급증</td><td style="text-align: left">성능 트리거 재학습</td></tr>
+<tr><td style="text-align: left"><strong>외부 충격</strong></td><td style="text-align: left">COVID-19로 여행 수요 급감</td><td style="text-align: left">즉시 재학습</td></tr>
+<tr><td style="text-align: left"><strong>데이터 누적</strong></td><td style="text-align: left">새 데이터 1만 건 이상 쌓이면 업데이트 필요</td><td style="text-align: left">데이터 트리거 재학습</td></tr>
+<tr><td style="text-align: left"><strong>사기 패턴 변화</strong></td><td style="text-align: left">새로운 신용카드 사기 수법 등장</td><td style="text-align: left">드리프트 감지 후 재학습</td></tr>
+</tbody></table>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: CT (Continuous Training) 파이프라인은 입력 데이터의 품질, 처리 단계의 일관성, 결과 활용 단계의 운영 제어가 동시에 맞아야 기대 효과를 낸다.</p>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">일정 기반</th><th style="text-align: left">데이터 기반</th><th style="text-align: left">성능 기반</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>반응 시간</strong></td><td style="text-align: left">예정된 시각</td><td style="text-align: left">데이터 임계값 도달 시</td><td style="text-align: left">성능 저하 후</td></tr>
+<tr><td style="text-align: left"><strong>비용 예측</strong></td><td style="text-align: left">높음 (예측 가능)</td><td style="text-align: left">중간 (데이터 유입량 의존)</td><td style="text-align: left">낮음 (필요 시만)</td></tr>
+<tr><td style="text-align: left"><strong>리스크</strong></td><td style="text-align: left">불필요한 재학습</td><td style="text-align: left">데이터 품질 이슈</td><td style="text-align: left">저하 구간 노출</td></tr>
+<tr><td style="text-align: left"><strong>권장 분야</strong></td><td style="text-align: left">금융 리스크, 배치 서비스</td><td style="text-align: left">추천 시스템, 검색</td><td style="text-align: left">고가용성 서비스</td></tr>
+<tr><td style="text-align: left"><strong>결합 사용</strong></td><td style="text-align: left">데이터 + 성능 트리거 조합 권장</td><td style="text-align: left"></td><td style="text-align: left"></td></tr>
+</tbody></table>
+<pre><code>증분 학습의 문제 - Catastrophic Forgetting
+
+이전 학습 데이터: [고양이, 개, 자동차]
+새 학습 데이터:   [비행기, 배]
+                        ↓
+증분 학습 후: 비행기·배는 잘 분류,
+              고양이·개·자동차 성능 급락 (Forgetting!)
+
+해결 방법:
+┌────────────────────────────────────────────────┐
+│  ① Replay Buffer: 이전 데이터 샘플 보존         │
+│  ② EWC (Elastic Weight Consolidation):         │
+│     중요 가중치에 페널티 부여                    │
+│  ③ Progressive Neural Networks:               │
+│     새 태스크에 별도 컬럼 추가                   │
+│  ④ 전체 재학습 주기 병행                        │
+└────────────────────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">기존 배치 업데이트</th><th style="text-align: left">CT 자동화</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>주기</strong></td><td style="text-align: left">수동 결정 (수주)</td><td style="text-align: left">트리거 기반 (수시간~수일)</td></tr>
+<tr><td style="text-align: left"><strong>인력</strong></td><td style="text-align: left">데이터 과학자 개입</td><td style="text-align: left">자동화 (최소 인력)</td></tr>
+<tr><td style="text-align: left"><strong>재현성</strong></td><td style="text-align: left">낮음 (수동 환경)</td><td style="text-align: left">높음 (컨테이너 기반)</td></tr>
+<tr><td style="text-align: left"><strong>감사 추적</strong></td><td style="text-align: left">어려움</td><td style="text-align: left">파이프라인 로그 자동 기록</td></tr>
+<tr><td style="text-align: left"><strong>실패 처리</strong></td><td style="text-align: left">수동 디버깅</td><td style="text-align: left">자동 알람 + 이전 버전 유지</td></tr>
+</tbody></table>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<pre><code>모델 성능
+  ↑
+  │     ····················· 이상적 성능 유지선
+  │  ╲     ╱╲     ╱╲
+  │   ╲   ╱  ╲   ╱  ╲
+  │    ╲ ╱    ╲ ╱    ╲···(성능 저하 시작)
+  │     ╳      ╳
+  │    재학습  재학습
+  └─────────────────────────────→ 시간
+    ↑                  ↑
+  너무 자주 재학습      너무 늦은 재학습
+  (비용 낭비)           (성능 저하 노출)
+</code></pre>
+<table><thead><tr><th style="text-align: left">재학습 빈도</th><th style="text-align: center">컴퓨팅 비용</th><th style="text-align: center">모델 신선도</th><th style="text-align: left">권장 상황</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>매시간</strong></td><td style="text-align: center">매우 높음</td><td style="text-align: center">최고</td><td style="text-align: left">주식 예측, 사기 탐지</td></tr>
+<tr><td style="text-align: left"><strong>매일</strong></td><td style="text-align: center">높음</td><td style="text-align: center">높음</td><td style="text-align: left">실시간 추천, 광고</td></tr>
+<tr><td style="text-align: left"><strong>매주</strong></td><td style="text-align: center">중간</td><td style="text-align: center">중간</td><td style="text-align: left">검색 랭킹, 신용 평가</td></tr>
+<tr><td style="text-align: left"><strong>매월</strong></td><td style="text-align: center">낮음</td><td style="text-align: center">낮음</td><td style="text-align: left">정적 분류 모델</td></tr>
+</tbody></table>
+<p><strong>Q. CT 파이프라인에서 평가 게이트(Evaluation Gate)의 역할과 중요성을 설명하시오.</strong></p>
+<p>평가 게이트는 자동 재학습된 모델이 실제 프로덕션에 배포되기 전에 거치는 <strong>자동 품질 검증 관문</strong>이다. 다음 세 가지 기준을 모두 통과해야 배포가 허용된다:</p>
+<ol>
+<li><strong>절대 성능 기준</strong>: 정확도, F1-Score 등이 최소 기준치 이상</li>
+<li><strong>상대 성능 기준</strong>: 현재 프로덕션 모델 대비 성능 향상 또는 동등</li>
+<li><strong>비기능 요건</strong>: 추론 지연시간 SLA, 메모리 사용량 등</li>
+</ol>
+<p>이를 통해 자동화 과정에서 발생할 수 있는 데이터 품질 문제나 코드 버그로 인한 성능 저하 모델이 자동으로 배포되는 위험을 방지한다.</p>
+<p><strong>Q. 재학습 비용 vs 모델 성능 저하 트레이드오프를 설명하시오.</strong></p>
+<ul>
+<li>재학습이 너무 잦으면: GPU 컴퓨팅 비용 급증, 데이터 레이블링 비용 증가</li>
+<li>재학습이 너무 드물면: 모델 드리프트로 서비스 품질 저하, 비즈니스 손실 발생</li>
+<li><strong>최적 해</strong>: 성능 트리거와 데이터 트리거를 조합하여 "필요할 때만 재학습" 전략 채택</li>
+</ul>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python"># Kubeflow Pipelines DSL로 CT 파이프라인 정의
+from kfp import dsl
+from kfp.components import func_to_container_op
+
+@dsl.pipeline(name=&#x27;CT Pipeline&#x27;, description=&#x27;Continuous Training&#x27;)
+def ct_pipeline(data_path: str, threshold: float = 0.90):
+    # 단계 1: 데이터 검증
+    validate_op = validate_data(data_path=data_path)
+
+    # 단계 2: 피처 엔지니어링 (데이터 검증 통과 후)
+    features_op = feature_engineering(
+        data=validate_op.outputs[&#x27;validated_data&#x27;]
+    )
+
+    # 단계 3: 모델 학습
+    train_op = train_model(
+        features=features_op.outputs[&#x27;features&#x27;]
+    )
+
+    # 단계 4: 평가 게이트
+    eval_op = evaluate_model(
+        model=train_op.outputs[&#x27;model&#x27;],
+        threshold=threshold
+    )
+
+    # 단계 5: 조건부 배포
+    with dsl.Condition(eval_op.outputs[&#x27;passed&#x27;] == &#x27;true&#x27;):
+        deploy_op = deploy_model(
+            model=train_op.outputs[&#x27;model&#x27;]
+        )
+</code></pre>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">도입 전</th><th style="text-align: left">도입 후</th><th style="text-align: left">개선</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>재학습 주기</strong></td><td style="text-align: left">분기~반기 (수동)</td><td style="text-align: left">수시간~수일 (자동)</td><td style="text-align: left">10~100배 단축</td></tr>
+<tr><td style="text-align: left"><strong>모델 드리프트 노출</strong></td><td style="text-align: left">수주간 저하 방치</td><td style="text-align: left">즉시 감지 후 복구</td><td style="text-align: left">서비스 품질 유지</td></tr>
+<tr><td style="text-align: left"><strong>데이터 과학자 공수</strong></td><td style="text-align: left">재학습에 50% 투입</td><td style="text-align: left">연구개발에 집중</td><td style="text-align: left">생산성 2배 향상</td></tr>
+<tr><td style="text-align: left"><strong>배포 실패율</strong></td><td style="text-align: left">수동 배포로 20%</td><td style="text-align: left">자동 게이트로 5% 미만</td><td style="text-align: left">배포 신뢰성 향상</td></tr>
+</tbody></table>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│                  CT 설계 체크리스트                       │
+├─────────────────────────────────────────────────────────┤
+│  □ 트리거 조건 명확화 (스케줄&#x2F;데이터&#x2F;성능 중 선택)        │
+│  □ 학습 데이터 윈도우 크기 결정 (전체 vs 슬라이딩)       │
+│  □ 평가 게이트 기준 설정 (절대값 + 상대값 조합)          │
+│  □ 실패 시 롤백 전략 (이전 버전 유지)                    │
+│  □ 재학습 비용 예산 설정 (GPU 사용량 알람)               │
+│  □ 데이터 레이블링 파이프라인 연결 (지도학습의 경우)     │
+│  □ 피처 스토어 연동 (훈련&#x2F;서빙 일관성 보장)              │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+<p>CT (Continuous Training)는 MLOps 성숙도 Level 1 이상에서 반드시 구현해야 할 핵심 자동화 요소다. 트리거 방식의 올바른 선택, 평가 게이트를 통한 품질 보증, 재학습 전략(전체/증분)의 비용 최적화가 성공적인 CT 구현의 3대 축이다.</p>
+<table><thead><tr><th style="text-align: left">트리거 종류</th><th style="text-align: left">조건</th><th style="text-align: left">장점</th><th style="text-align: left">단점</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>일정 기반 (Schedule Trigger)</strong></td><td style="text-align: left">매일/매주/매월 정해진 시각</td><td style="text-align: left">예측 가능, 리소스 계획 용이</td><td style="text-align: left">데이터 변화와 무관하게 실행</td></tr>
+<tr><td style="text-align: left"><strong>데이터 기반 (Data Trigger)</strong></td><td style="text-align: left">새 데이터 N건 이상 수집 시</td><td style="text-align: left">데이터 충분히 쌓인 후 학습</td><td style="text-align: left">변화 속도와 불일치 가능</td></tr>
+<tr><td style="text-align: left"><strong>성능 기반 (Performance Trigger)</strong></td><td style="text-align: left">정확도/F1이 임계값 이하로 하락</td><td style="text-align: left">진짜 필요할 때만 실행</td><td style="text-align: left">성능 저하 후 대응 (사후적)</td></tr>
+</tbody></table>
+<pre><code>┌─────────────────────────────────────────────────────────────────────┐
+│                      CT 파이프라인 전체 흐름                         │
+├──────────┬──────────┬──────────┬──────────┬──────────┬─────────────┤
+│  트리거  │  데이터  │  피처    │  모델    │  모델    │   자동      │
+│  감지    │  검증    │  엔지니  │  학습    │  평가    │   배포      │
+│          │          │  어링    │          │          │             │
+├──────────┼──────────┼──────────┼──────────┼──────────┼─────────────┤
+│ Schedule │ 스키마   │ 피처     │ 분산     │ 정확도   │ 통과 →     │
+│ Data     │ 검증     │ 계산     │ 학습     │ F1-Score │ 모델 레지   │
+│ Perf     │ 이상값   │ 정규화   │ HPO      │ 드리프트 │ 스트리 등록 │
+│ Trigger  │ 체크     │ 인코딩   │ 교차검증 │ 비교     │ → 카나리   │
+└──────────┴──────────┴──────────┴──────────┴──────────┴─────────────┘
+                                                           실패 →
+                                                           알람 발송
+</code></pre>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python"># TensorFlow Data Validation (TFDV) 예시
+import tensorflow_data_validation as tfdv
+
+# 학습 데이터 통계 생성
+train_stats = tfdv.generate_statistics_from_csv(&#x27;train.csv&#x27;)
+
+# 스키마 추론
+schema = tfdv.infer_schema(train_stats)
+
+# 새 데이터 검증
+new_stats = tfdv.generate_statistics_from_csv(&#x27;new_data.csv&#x27;)
+anomalies = tfdv.validate_statistics(new_stats, schema)
+</code></pre>
+<table><thead><tr><th style="text-align: left">작업</th><th style="text-align: left">설명</th><th style="text-align: left">도구</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>피처 변환</strong></td><td style="text-align: left">수치형 정규화, 범주형 인코딩</td><td style="text-align: left">Scikit-learn Pipeline, TF Transform</td></tr>
+<tr><td style="text-align: left"><strong>피처 선택</strong></td><td style="text-align: left">중요도 기반 피처 필터링</td><td style="text-align: left">SHAP, Boruta</td></tr>
+<tr><td style="text-align: left"><strong>피처 저장</strong></td><td style="text-align: left">온라인/오프라인 스토어 업데이트</td><td style="text-align: left">Feast, Hopsworks</td></tr>
+<tr><td style="text-align: left"><strong>데이터 분할</strong></td><td style="text-align: left">Train/Validation/Test 분리</td><td style="text-align: left">Stratified Split</td></tr>
+</tbody></table>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│                모델 학습 전략 비교                   │
+├───────────────────┬─────────────────────────────────┤
+│  전체 재학습      │  전체 데이터로 처음부터 학습     │
+│  (Full Retraining)│  고비용, 높은 정확도             │
+├───────────────────┼─────────────────────────────────┤
+│  증분 학습        │  새 데이터만으로 기존 모델 업데이 │
+│  (Incremental)    │  저비용, 점진적 성능 개선        │
+├───────────────────┼─────────────────────────────────┤
+│  앙상블 업데이트  │  새 모델 추가, 가중치 재조정     │
+│  (Ensemble Update)│  안정성 높음, 복잡성 증가        │
+└───────────────────┴─────────────────────────────────┘
+</code></pre>
+<pre><code>신규 모델 학습 완료
+        │
+        ▼
+  ┌─────────────────────────────┐
+  │  자동 평가 게이트 (Gate)     │
+  │                             │
+  │  ① 정확도 &gt; 기준 (예: 90%) │
+  │  ② F1-Score 개선 여부       │
+  │  ③ 현재 프로덕션 모델 대비  │
+  │     성능 향상 확인           │
+  │  ④ 지연시간 SLA 충족        │
+  │  ⑤ 공정성 메트릭 체크       │
+  └─────────────────────────────┘
+        │              │
+    통과 ▼          실패 ▼
+  레지스트리 등록   알람 + 원인 분석
+  → 카나리 배포     → 데이터팀 통보
+</code></pre>
+<table><thead><tr><th style="text-align: left">전략</th><th style="text-align: left">방법</th><th style="text-align: left">장점</th><th style="text-align: left">단점</th><th style="text-align: left">적합 상황</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>전체 재학습</strong></td><td style="text-align: left">전체 데이터로 처음부터</td><td style="text-align: left">최고 성능 보장</td><td style="text-align: left">높은 컴퓨팅 비용</td><td style="text-align: left">중요 모델, 월 1회 이하</td></tr>
+<tr><td style="text-align: left"><strong>증분 학습</strong></td><td style="text-align: left">새 데이터만 추가 학습</td><td style="text-align: left">저비용, 빠른 실행</td><td style="text-align: left">Catastrophic Forgetting 위험</td><td style="text-align: left">신경망, 온라인 학습</td></tr>
+<tr><td style="text-align: left"><strong>슬라이딩 윈도우</strong></td><td style="text-align: left">최근 N일 데이터만 사용</td><td style="text-align: left">오래된 패턴 제거</td><td style="text-align: left">윈도우 크기 설정 필요</td><td style="text-align: left">계절성 없는 데이터</td></tr>
+<tr><td style="text-align: left"><strong>가중치 기반</strong></td><td style="text-align: left">최신 데이터에 높은 가중치</td><td style="text-align: left">균형 잡힌 학습</td><td style="text-align: left">가중치 튜닝 필요</td><td style="text-align: left">대부분의 시계열</td></tr>
+</tbody></table>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>CT (Continuous Training)는 MLOps 성숙도 Level 1 이상에서 반드시 구현해야 할 핵심 자동화 요소다.</p>
+<p>CT (Continuous Training) 파이프라인의 효과는 성능 향상 자체보다도 예측 가능성과 운영 일관성을 확보하는 데 있다. 반대로 데이터 품질, 거버넌스, 모니터링 없이 도입하면 복잡도만 늘고 실질 가치는 줄어든다. 따라서 이 주제는 기능 도입이 아니라 구조적 운영 역량과 함께 판단해야 하며, 향후에는 자동화·실시간성·설명 가능성·비용 최적화와 결합된 방향으로 발전한다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">수동 모델 재학습 (분기별 배치)
+    │
+    ▼
+CT 트리거 도입
+    ├─► 일정 기반 (cron) — 주기적 재학습
+    ├─► 데이터 기반 — 드리프트 감지 시 발동
+    └─► 성능 기반 — 정확도 임계값 하락 시 발동
+    │
+    ▼
+자동 재학습 파이프라인 (Kubeflow · Airflow)
+    ├─► 데이터 검증 → 피처 추출 → 학습
+    └─► 평가 게이트 (성능 · SLA · 공정성)
+    │
+    ▼
+자동 배포 (카나리 → A&#x2F;B → 전체)
+    │
+    ▼
+지속 모니터링 → 드리프트 재감지 → CT 재발동 (순환)
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">관계</th><th style="text-align: left">개념</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">상위 개념</td><td style="text-align: left">MLOps</td><td style="text-align: left">CT는 MLOps CI/CD의 세 번째 축</td></tr>
+<tr><td style="text-align: left">트리거</td><td style="text-align: left">데이터 드리프트 (Data Drift)</td><td style="text-align: left">입력 분포 변화가 CT 발동 조건</td></tr>
+<tr><td style="text-align: left">트리거</td><td style="text-align: left">컨셉 드리프트 (Concept Drift)</td><td style="text-align: left">관계 변화로 성능 저하 → CT 발동</td></tr>
+<tr><td style="text-align: left">구성요소</td><td style="text-align: left">피처 스토어 (Feature Store)</td><td style="text-align: left">재학습 시 최신 피처 제공</td></tr>
+<tr><td style="text-align: left">구성요소</td><td style="text-align: left">모델 레지스트리 (Model Registry)</td><td style="text-align: left">CT 결과 모델 버전 등록</td></tr>
+<tr><td style="text-align: left">도구</td><td style="text-align: left">Kubeflow Pipelines</td><td style="text-align: left">CT 파이프라인 오케스트레이션</td></tr>
+<tr><td style="text-align: left">도구</td><td style="text-align: left">Apache Airflow</td><td style="text-align: left">CT 스케줄 기반 트리거</td></tr>
+<tr><td style="text-align: left">배포 전략</td><td style="text-align: left">카나리 롤아웃</td><td style="text-align: left">CT 완료 후 점진적 배포</td></tr>
+<tr><td style="text-align: left">문제</td><td style="text-align: left">Catastrophic Forgetting</td><td style="text-align: left">증분 학습의 핵심 위험</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

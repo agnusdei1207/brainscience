@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>259. ABA 문제 - CAS 연산 시 값이 변경되었다가 원복된 것을 인지하지 못하는 오류 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 22, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 페이징 (Paging)은 프로세스가 사용하는 논리적 가상 메모리와 물리적 RAM 공간을 <strong>모두 동일한 크기(보통 4KB)의 고정된 블록(Page / Frame)으로 잘게 썰어서 1:1로 매핑</strong>시키는 현대 운영체제의 절대적인 메모리 관리 기법이다.
+<strong>비유</strong>: 이삿짐을 나를 때 책상, 냉장고, 침대 모양 그대로(연속 할당) 트럭에 실으면 트럭 사이사이에 남는 공간(외부 단편화)이 생겨 짐을 다 못 싣는다. 하지만 모든 가구를 부수고 **'가로세로 30cm짜리 똑같은 우체국 규격 박스(Page)'**에 나눠 담아 싣게 하면, 트럭의 빈 공간 1cm까지 낭비 없이 100% 채울 수 있는 것과 완벽히 일치한다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li><strong>개념</strong>: 가상 메모리를 <code>페이지(Page)</code>라는 고정 크기 블록으로 나누고, 물리 메모리를 <code>프레임(Frame)</code>이라는 똑같은 크기의 블록으로 나누어, <strong>OS가 찢어진 페이지들을 흩어져 있는 빈 프레임에 테트리스처럼 욱여넣고 페이지 테이블로 길을 연결해 주는 기술</strong>이다.</li>
+<li><strong>필요성</strong>: 페이징이 없던 시절(연속 메모리 할당)에는 100MB짜리 프로그램을 띄우려면 RAM에 100MB의 '빈 연속 공간'이 있어야만 했다. 하지만 10MB, 20MB짜리 프로그램들이 켜졌다 꺼졌다를 반복하며 RAM은 치즈처럼 구멍이 숭숭 뚫렸고, 빈 공간을 다 합치면 200MB인데 정작 100MB짜리 연속 공간이 없어서 프로그램을 실행 못 하는 끔찍한 **외부 단편화(External Fragmentation)**가 발생했다. 이를 막으려면 애초에 프로그램을 "연속적으로 올리지 않겠다"는 발상의 전환이 필요했다.</li>
+<li><strong>등장 배경</strong>: 1960년대 초반 Ferranti Atlas 컴퓨터에서 처음 개념이 증명되었으며, 이후 프로세스가 메모리의 연속성에 얽매이지 않고 남는 자원을 극한으로 활용하려는 다중 프로그래밍(Multiprogramming)의 핵심 도구로 모든 범용 OS를 지배하게 되었다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  [연속 할당의 한계(외부 단편화) vs 페이징의 불연속 매핑 마법]
+
+  [ ❌ 과거: 연속 할당 (외부 단편화 발생) ]
+  물리 RAM: [ P1 10M ] [ 빈 10M ] [ P2 20M ] [ 빈 20M ]
+  ▶ 25MB짜리 P3 실행 요청 ─▶ 🚨 거절! 빈 공간 합치면 30M인데, 연속된 25M가 없음!
+
+  [ ✅ 현대: 페이징 (불연속 할당) ]
+  - P3 (25MB) 를 4KB 단위로 잘게 썬다. (약 6,400개의 페이지 생성)
+  - RAM의 빈 공간 여기저기(떨어져 있어도 상관없음)에 6,400개를 막 쑤셔 넣는다.
+  - CPU가 P3를 실행할 때, &quot;페이지 테이블&quot;이라는 내비게이션을 보고
+    이리저리 흩어진 조각들을 순서대로 찾아가며 완벽하게 실행해 낸다.
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 페이징은 인간의 직관(연속성)을 철저히 파괴하고 기계의 효율성(파편화 허용)을 극대화한 시스템이다. 메모리가 물리적으로 찢어져 있어도, CPU 입장에서는 **"페이지 테이블이 가리키는 주소로 가면 무조건 다음 코드가 있다"**는 논리적 연속성(Logical Contiguity)만 보장되면 그만이기 때문이다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="peijingyi-3dae-haegsim-gujoce-page-frame-page-table">페이징의 3대 핵심 구조체 (Page, Frame, Page Table)</h3>
+<ol>
+<li><strong>페이지 (Page)</strong>: 개발자가 짠 프로그램(가상 메모리)을 일정한 크기로 자른 조각. (예: Page 0, Page 1...)</li>
+<li><strong>프레임 (Frame)</strong>: 실제 물리적 RAM을 페이지와 똑같은 크기로 자른 빈 방. (예: Frame 3, Frame 10...)</li>
+<li><strong>페이지 테이블 (Page Table)</strong>: "Page 1번은 Frame 10번에 있다"라고 매핑해 두는 커널 메모리 속의 1차원 배열(지도).</li>
+</ol>
+<h3 id="cpu-juso-byeonhwan-address-translation-yi-suhagjeog-weonri">CPU 주소 변환 (Address Translation)의 수학적 원리</h3>
+<p>CPU는 프로그램 코드에 적힌 **가상 주소(Logical Address)**만 본다. MMU(메모리 관리 장치) 하드웨어가 이 가상 주소를 쪼개서 진짜 **물리 주소(Physical Address)**로 변환한다.</p>
+<p>가상 주소는 두 부분으로 나뉜다: <strong>$v = (p, d)$</strong></p>
+<ul>
+<li><strong>$p$ (Page Number)</strong>: 페이지 테이블에서 내가 찾을 조각의 인덱스 번호. (책의 몇 번째 '장'인가?)</li>
+<li><strong>$d$ (Page Offset)</strong>: 그 페이지 조각 안에서의 변위(떨어진 거리). (그 '장' 안에서 몇 번째 '줄'인가?)</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌────────────────────────────────────────────────────────────────────────┐
+  │         MMU의 페이징(Paging) 주소 변환 매커니즘 (가상 ─▶ 물리)         │
+  ├────────────────────────────────────────────────────────────────────────┤
+  │                                                                        │
+  │  [ CPU가 가상 주소 0x1234 를 요청함 ]                                  │
+  │  (가정: 페이지 크기 4KB = 0x1000 이므로 하위 3자리가 Offset임)         │
+  │                                                                        │
+  │  1. 주소 쪼개기: p = 0x1 (페이지 번호 1번), d = 0x234 (오프셋)         │
+  │                                                                        │
+  │  2. 페이지 테이블(Page Table) 조회                                     │
+  │     [ Index ]    [ Frame Number ]    [ Valid ]                         │
+  │       0번           5번                 v                              │
+  │     ▶ 1번           9번 (0x9)          v  ◀ (여기 매핑됨!)             │
+  │       2번          15번                 v                              │
+  │                                                                        │
+  │  3. 물리 주소 합성: Frame(0x9) + Offset(0x234)                         │
+  │     ▶ 🌟 최종 물리 주소: 0x9234                                        │
+  │                                                                        │
+  │  4. RAM의 0x9234 번지에 꽂혀있는 진짜 데이터를 가져와 CPU에 바침.      │
+  └────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 여기서 가장 소름 돋는 점은 <strong>오프셋($d$)은 절대 변하지 않는다</strong>는 것이다. 가상 메모리에서 1페이지의 50번째 줄에 있던 데이터는, 물리 메모리 프레임으로 통째로 이사 가도 여전히 그 프레임의 50번째 줄에 있다. 박스 채로 짐을 옮겼기 때문이다. MMU는 단지 "박스 번호(p)"를 "트럭 번호(f)"로 치환하는 단순 문자열 치환 놀이만 할 뿐이다.</p>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>요청 또는 이벤트 발생</strong>: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.</li>
+<li><strong>현재 상태 확인</strong>: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.</li>
+<li><strong>정책 적용 및 자원 배정</strong>: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.</li>
+<li><strong>결과 반영 및 후속 처리</strong>: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.</li>
+</ol>
+<h3 id="peijing-paging-vs-segeumeonteisyeon-segmentation">페이징(Paging) vs 세그먼테이션(Segmentation)</h3>
+<p>운영체제 메모리 관리의 영원한 라이벌이자 시험 단골 문제다.</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">페이징 (Paging)</th><th style="text-align: left">세그먼테이션 (Segmentation)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>분할 방식</strong></td><td style="text-align: left"><strong>고정 크기 (Fixed Size)</strong>, 무식하게 4KB로 깍두기 썰기</td><td style="text-align: left"><strong>가변 크기 (Variable)</strong>, 논리적 덩어리(코드, 데이터, 힙)로 의미 있게 자름</td></tr>
+<tr><td style="text-align: left"><strong>단편화 문제</strong></td><td style="text-align: left">❌ <strong>내부 단편화(Internal) 발생</strong> (4KB보다 작은 놈도 4KB를 줌)</td><td style="text-align: left">🚨 <strong>외부 단편화(External) 발생</strong> (남은 빈 공간 모양이 다 달라서 할당 불가)</td></tr>
+<tr><td style="text-align: left"><strong>보안 및 공유</strong></td><td style="text-align: left">1개 페이지에 코드와 데이터가 섞여 들어갈 수 있어 보안 권한(R/W) 주기 불편함</td><td style="text-align: left">코드 세그먼트(Read Only), 데이터(R/W)가 완벽히 분리되어 권한 관리가 예술임</td></tr>
+<tr><td style="text-align: left"><strong>현대 OS 선택</strong></td><td style="text-align: left">🏆 <strong>압도적 승리 (Linux, Windows 100% 채택)</strong></td><td style="text-align: left">사실상 멸종. (가끔 페이징 위에 보안용으로 살짝 얹어서 쓰긴 함)</td></tr>
+</tbody></table>
+<p>왜 페이징이 이겼을까? **"외부 단편화가 내부 단편화보다 100배 더 끔찍한 버그이기 때문"**이다. 내부 단편화는 기껏해야 박스 빈 공간(수 KB) 낭비로 끝나지만, 외부 단편화는 램이 10GB 남아도 5GB짜리 게임이 안 켜져서 서버가 뻗는 파국을 낳는다. 현대 OS는 의미 따위 개나 주고 일단 물리적으로 똑같이 썰어버리는 평등주의(페이징)를 택했다.</p>
+<h3 id="naebu-danpyeonhwa-internal-fragmentation-yi-hyeonsil">내부 단편화 (Internal Fragmentation)의 현실</h3>
+<p>페이징을 쓰면 프로세스의 마지막 페이지는 항상 4KB를 다 채우지 못하고 빈 공간이 남는다.
+만약 페이지 크기가 4KB인데 프로세스 크기가 10KB라면?</p>
+<ul>
+<li>10KB = 4KB + 4KB + 2KB.</li>
+<li>총 3개의 페이지(12KB)를 받아야 하고, 마지막 3번째 페이지에서 2KB가 낭비된다.</li>
+<li><strong>현실</strong>: 요즘 서버 램이 64GB, 128GB 시대다. 프로세스 100개 띄워봤자 프로세스당 최대 4KB씩 낭비되니 총 400KB 버리는 셈이다. 이 정도 세금은 현대 하드웨어 인프라에서 완벽히 무시할 수 있다.</li>
+</ul>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="peijing-paging-vs-segeumeonteisyeon-segmentation-1">페이징(Paging) vs 세그먼테이션(Segmentation)</h3>
+<p>운영체제 메모리 관리의 영원한 라이벌이자 시험 단골 문제다.</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">페이징 (Paging)</th><th style="text-align: left">세그먼테이션 (Segmentation)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>분할 방식</strong></td><td style="text-align: left"><strong>고정 크기 (Fixed Size)</strong>, 무식하게 4KB로 깍두기 썰기</td><td style="text-align: left"><strong>가변 크기 (Variable)</strong>, 논리적 덩어리(코드, 데이터, 힙)로 의미 있게 자름</td></tr>
+<tr><td style="text-align: left"><strong>단편화 문제</strong></td><td style="text-align: left">❌ <strong>내부 단편화(Internal) 발생</strong> (4KB보다 작은 놈도 4KB를 줌)</td><td style="text-align: left">🚨 <strong>외부 단편화(External) 발생</strong> (남은 빈 공간 모양이 다 달라서 할당 불가)</td></tr>
+<tr><td style="text-align: left"><strong>보안 및 공유</strong></td><td style="text-align: left">1개 페이지에 코드와 데이터가 섞여 들어갈 수 있어 보안 권한(R/W) 주기 불편함</td><td style="text-align: left">코드 세그먼트(Read Only), 데이터(R/W)가 완벽히 분리되어 권한 관리가 예술임</td></tr>
+<tr><td style="text-align: left"><strong>현대 OS 선택</strong></td><td style="text-align: left">🏆 <strong>압도적 승리 (Linux, Windows 100% 채택)</strong></td><td style="text-align: left">사실상 멸종. (가끔 페이징 위에 보안용으로 살짝 얹어서 쓰긴 함)</td></tr>
+</tbody></table>
+<p>왜 페이징이 이겼을까? **"외부 단편화가 내부 단편화보다 100배 더 끔찍한 버그이기 때문"**이다. 내부 단편화는 기껏해야 박스 빈 공간(수 KB) 낭비로 끝나지만, 외부 단편화는 램이 10GB 남아도 5GB짜리 게임이 안 켜져서 서버가 뻗는 파국을 낳는다. 현대 OS는 의미 따위 개나 주고 일단 물리적으로 똑같이 썰어버리는 평등주의(페이징)를 택했다.</p>
+<h3 id="naebu-danpyeonhwa-internal-fragmentation-yi-hyeonsil-1">내부 단편화 (Internal Fragmentation)의 현실</h3>
+<p>페이징을 쓰면 프로세스의 마지막 페이지는 항상 4KB를 다 채우지 못하고 빈 공간이 남는다.
+만약 페이지 크기가 4KB인데 프로세스 크기가 10KB라면?</p>
+<ul>
+<li>10KB = 4KB + 4KB + 2KB.</li>
+<li>총 3개의 페이지(12KB)를 받아야 하고, 마지막 3번째 페이지에서 2KB가 낭비된다.</li>
+<li><strong>현실</strong>: 요즘 서버 램이 64GB, 128GB 시대다. 프로세스 100개 띄워봤자 프로세스당 최대 4KB씩 낭비되니 총 400KB 버리는 셈이다. 이 정도 세금은 현대 하드웨어 인프라에서 완벽히 무시할 수 있다.</li>
+</ul>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li><strong>페이지 테이블(Page Table) 크기 오버헤드의 절망과 극복</strong>:
+<ul>
+<li><strong>사건</strong>: 32비트 OS(4GB 주소 공간)에서 페이지 크기가 4KB라면, 프로세스 1개당 페이지 테이블 항목이 100만 개($2^{20}$) 필요하다. 이 테이블(4MB)을 메모리에 올려둬야 한다. 만약 크롬 탭(프로세스)을 100개 띄우면? <strong>순수하게 페이지 테이블(지도) 용량으로만 램 400MB가 증발한다!</strong> 64비트 시대엔 지도가 테라바이트급이 되어 불가능해졌다.</li>
+<li><strong>아키텍트 혁명 (다단계 페이징, Hierarchical Paging)</strong>: 지도를 1장으로 안 만들고 책처럼 쪼갰다. 1단계 책갈피(Page Directory)만 램에 올리고, 유저가 안 쓰는 빈 가상 메모리 공간에 대한 상세 지도는 아예 만들지조차 않는다. 이 기법 덕분에 64비트 OS에서도 페이지 테이블 용량을 수 KB 수준으로 다이어트시켜 현대 운영체제의 구원투수가 되었다.</li>
+</ul>
+</li>
+<li><strong>Transparent Huge Pages (THP)의 양날의 검</strong>: 대규모 램을 쓰는 실무 백엔드(DB, Hadoop, Redis)의 핵심 튜닝 요소다.
+<ul>
+<li><strong>원리</strong>: 4KB로 쪼개면 128GB 램에서 페이지 개수가 수천만 개가 되어 TLB 캐시 미스가 폭발한다. 리눅스는 이를 막으려고 백그라운드에서 4KB 페이지 512개를 뭉쳐서 **2MB짜리 거대 페이지(Huge Page)**로 몰래 압축(THP)해 버린다.</li>
+<li><strong>장애 발생</strong>: Redis가 데이터를 백업(<code>BGSAVE</code>)할 때 COW(Copy-On-Write)가 터진다. 원래 4KB만 복사하면 될 걸, THP가 켜져 있으면 2MB를 통째로 복사하느라 레이턴시가 미친 듯이 튀어 서버가 1초씩 멈춘다(Jitter).</li>
+<li><strong>실무 조치</strong>: 고성능 인메모리 DB를 돌리는 K8s 노드나 베어메탈 서버에서는 무조건 <code>echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled</code> 를 때려서 OS의 오지랖(THP)을 강제로 끄는 것이 첫 번째 성능 튜닝 세팅이다.</li>
+</ul>
+</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌─────────────────────────────────────────────────────────────────────┐
+  │     메모리 집약적(Memory-Intensive) 백엔드 서버의 페이징 튜닝 가이드│
+  ├─────────────────────────────────────────────────────────────────────┤
+  │                                                                     │
+  │   [요구사항: 256GB RAM을 가진 Oracle &#x2F; JVM 서버 운영]               │
+  │                │                                                    │
+  │                ▼ 운영체제 페이징 최적화 결단                        │
+  │   [ 1. 일반 4KB 페이징 유지 ]                                       │
+  │     ▶ 결과: 수천만 개의 페이지 발생 ─▶ TLB Miss 폭격 ─▶ CPU 낭비    │
+  │                                                                     │
+  │   [ 2. THP (투명한 거대 페이지 - 리눅스 디폴트) 활성화 ]            │
+  │     ▶ 결과: OS가 백그라운드에서 2MB로 뭉치느라 CPU 자원 소모,       │
+  │             메모리 파편화 시 단편화 정리(Defrag) 하느라 서버 멈춤.  │
+  │     ▶ 판정: 🚨 DB 서버에서는 절대 악(Evil). 즉시 비활성화할 것.     │
+  │                                                                     │
+  │   [ 3. 명시적 Huge Pages (Explicit Huge Pages) 수동 셋팅 ]          │
+  │     ▶ 방식: 부팅 시 커널 파라미터로 `hugepages=1000` 강제 할당.     │
+  │     ▶ 결과: 2MB or 1GB 단위로 램을 미리 통째로 썰어둠(Swap도 안됨). │
+  │     ▶ 판정: ✅ TLB Hit Rate 99% 달성, 디스크 스왑 원천 봉쇄.        │
+  │             JVM이나 DB가 날아다니는 최강의 엔터프라이즈 셋팅.       │
+  └─────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 가상 메모리 페이징은 너무 위대해서 개발자를 바보로 만들었다. 4KB 단위의 쪼개짐이 내 애플리케이션 성능에 어떤 오버헤드를 가져오는지 잊게 만들었기 때문이다. 하드코어 인프라 아키텍트는 4KB의 족쇄를 풀고, OS에게 "내 DB는 무조건 1GB 단위(Huge Page)로 썰어서 던져줘라!"라고 커널 단위의 수동 제어(Manual Override)를 걸어 궁극의 성능을 탈환한다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="gidaehyogwa">기대효과</h3>
+<p>페이징 기법을 통해 운영체제는 외부 단편화(메모리 낭비)를 100% 근절하고, 어떤 크기의 프로그램이든 디스크의 스왑(Swap) 공간과 연계하여 램에 욱여넣을 수 있는 <strong>궁극의 다중 프로그래밍(Multiprogramming) 환경</strong>과 프로세스 간 메모리 100% 격리(Isolation)를 제공한다.</p>
+<h3 id="gyeolron-mic-mirae-jeonmang">결론 및 미래 전망</h3>
+<p>페이징은 현대 컴퓨터 공학에서 단 1개의 예외도 없이 적용되는 가상 메모리의 유일무이한 황제다. 스마트폰, 윈도우 PC, K8s 클러스터 등 모든 시스템이 이 4KB 깍두기 썰기 법칙 위에서 동작한다.
+미래에는 메모리 용량이 테라바이트를 넘어가면서 4KB라는 크기 자체가 너무 작다는 비판을 받고 있다. 따라서 기본 페이지 크기를 4KB에서 16KB(최신 Apple M 시리즈 칩), 64KB(ARM 아키텍처)로 점진적으로 키우는 하드웨어적 진화가 일어나고 있으며, 소프트웨어적으로는 eBPF를 통해 애플리케이션이 자신의 메모리 접근 패턴을 커널에 알려주어 OS가 페이지 프리패칭(Prefetching)을 AI처럼 동적으로 최적화하는 <strong>지능형 페이징(Intelligent Paging)</strong> 시대로 나아가고 있다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">**가상 메모리 (Virtual Memory)**
+    ↓
+**요구 페이징 (Demand Paging)**
+    ↓
+**MMU (Memory Management Unit)**
+    ↓
+**TLB (Translation Lookaside Buffer)**
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>가상 메모리 (Virtual Memory)</strong></td><td style="text-align: left">페이징을 핵심 엔진으로 삼아 "내 메모리는 무한하고 연속적이다"라는 사기를 치는 전체 시스템 아키텍처다.</td></tr>
+<tr><td style="text-align: left"><strong>요구 페이징 (Demand Paging)</strong></td><td style="text-align: left">페이징 된 조각들을 한 번에 다 올리지 않고, CPU가 부를 때만 디스크에서 1조각씩 가져오는 찰떡궁합의 콤보다.</td></tr>
+<tr><td style="text-align: left"><strong>MMU (Memory Management Unit)</strong></td><td style="text-align: left">CPU 안에 박혀서 가상 페이지 번호를 물리 프레임 번호로 0.1ns 만에 엑셀(페이지 테이블) 찾듯 변환해 주는 하드웨어 칩이다.</td></tr>
+<tr><td style="text-align: left"><strong>TLB (Translation Lookaside Buffer)</strong></td><td style="text-align: left">페이지 테이블(RAM)에 다녀오는 시간조차 아까워서, 방금 변환한 '가상-물리' 주소 쌍을 CPU 안에 임시로 저장해 두는 초고속 캐시다.</td></tr>
+<tr><td style="text-align: left"><strong>세그먼테이션 (Segmentation)</strong></td><td style="text-align: left">페이징의 경쟁자였으나 끔찍한 외부 단편화를 일으키며 페이징에게 왕좌를 내어준 비운의 가변 분할 기법이다.</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

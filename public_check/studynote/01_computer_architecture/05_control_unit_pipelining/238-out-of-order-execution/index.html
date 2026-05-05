@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>238. 비순차 실행 (Out-of-Order Execution, OoO) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 20, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote computer architecture
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 비순차 실행 (Out-of-Order Execution, OoO)은 메모리에서 명령어를 가져오는 순서와 무관하게, 데이터가 준비된 명령어부터 먼저 연산기에 투입하여 파이프라인의 유휴 시간(Stall)을 최소화하는 동적 스케줄링 기술이다.
+<strong>비유</strong>: 은행 창구에서 1번 손님이 서류를 덜 써서 10분을 기다려야 할 때, 창구 직원이 노는 게 아니라 서류를 다 써온 3번 손님부터 먼저 불러 처리하는 똑똑한 유연성입니다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>핵심 해설:</p>
+<ul>
+<li><strong>가치</strong>: 수퍼스칼라의 넓은 차선을 100% 활용하기 위한 필수 엔진으로, **토마술로 알고리즘 (Tomasulo's Algorithm)**과 예약역을 통해 명령어 수준 병렬성(ILP)을 하드웨어가 스스로 극한까지 캐낸다.</li>
+<li><strong>판단 포인트</strong>: 실행은 비순차로 하되 최종 결과 기록(Commit)은 반드시 원래 프로그램 순서를 지키는 <strong>리오더 버퍼 (ROB)</strong> 구조를 통해, 성능과 논리적 정확성 사이의 완벽한 이중 생활을 구현한다.</li>
+</ul>
+<p>비순차 실행은 파이프라인의 "고지식한 줄 서기"를 타파하기 위해 등장했다. 순차(In-order) 파이프라인에서는 맨 앞차가 고장(캐시 미스)나면 뒤에 있는 쌩쌩한 차들도 꼼짝없이 서 있어야 했다. 비순차 실행은 이 고장 난 차를 갓길에 세워두고, 뒤에 있는 준비된 차들부터 먼저 보내 고속도로(연산기) 가동률을 극대화한다.</p>
+<p>이 기술이 필요한 이유는 <strong>메모리 벽 (Memory Wall)의 은닉</strong> 때문이다. CPU 연산은 1나노초인데 DRAM 접근은 100나노초가 걸리는 환경에서, 데이터를 기다리는 동안 멍하니 노는 것은 치명적인 낭비다. 따라서 기다리는 동안 할 수 있는 다른 일을 찾아 미리 처리함으로써, 칩의 실질적인 연산 밀도를 3~4배 이상 끌어올리는 현대 고성능 CPU의 심장 역할을 수행한다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<p>비순차 실행은 [순차적 인출 -&gt; 비순차적 실행 -&gt; 순차적 은퇴]라는 3단계 샌드위치 구조를 가진다.</p>
+<table><thead><tr><th style="text-align: left">단계</th><th style="text-align: left">동작 방식</th><th style="text-align: left">역할 및 하드웨어</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Frontend</strong></td><td style="text-align: left"><strong>In-Order</strong></td><td style="text-align: left">명령어를 순서대로 가져오고(Fetch) 리네이밍 수행</td></tr>
+<tr><td style="text-align: left"><strong>Execution Core</strong></td><td style="text-align: left"><strong>Out-of-Order</strong></td><td style="text-align: left">**예약역 (RS)**에서 데이터가 준비된 놈부터 마구잡이 실행</td></tr>
+<tr><td style="text-align: left"><strong>Backend</strong></td><td style="text-align: left"><strong>In-Order</strong></td><td style="text-align: left">**리오더 버퍼 (ROB)**를 통해 원래 순서대로 결과 확정(Commit)</td></tr>
+</tbody></table>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────────────────────┐
+│              비순차 실행(OoO) 엔진의 3단계 물리적 구조                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [ 인출&#x2F;해독 ]  ─────▶  [ 예약역 (RS) ]  ─────▶  [ 실행 유닛 ]                │
+│   (In-Order)           (Out-of-Order)         (ALU, FPU...)                 │
+│        │                      │                      │                      │
+│        └───────▶ [ 리오더 버퍼 (ROB) ] ◀─────────────┘                      │
+│                   (결과를 순서대로 정렬)                                    │
+│                           │                                                 │
+│                           ▼                                                 │
+│                  [ 최종 은퇴 (Retire) ]                                     │
+│                       (In-Order)                                            │
+│                                                                             │
+│ * 핵심: 속은 난장판(비순차)이지만, 겉(Retire)은 아주 얌전한(순차) 이중 구조   │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>이 구조의 물리적 실체는 <strong>토마술로 알고리즘</strong>이다. 명령어들은 예약역이라는 대기실에 들어가 각자 필요한 데이터가 버스를 타고 오는지 감시하다가, 데이터가 도착하는 순간 순서 상관없이 비어있는 연산기로 돌진한다.</p>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 비순차 실행 (Out-of-Order Execution, OoO) 적용 시 입력 조건, 내부 상태, 제약 자원이 함께 맞물려야 기대한 동작이 성립한다.</p>
+<p>비순차 실행은 필연적으로 <strong>레지스터 리네이밍</strong>이라는 마법과 결합해야 한다.</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">순차 실행 (In-Order)</th><th style="text-align: left">비순차 실행 (Out-of-Order)</th><th style="text-align: left">아키텍처적 도약</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>스케줄링</strong></td><td style="text-align: left">정적 (코드 순서 고수)</td><td style="text-align: left"><strong>동적 (데이터 준비 시 즉시)</strong></td><td style="text-align: left">수동 vs 자동</td></tr>
+<tr><td style="text-align: left"><strong>자원 가동률</strong></td><td style="text-align: left">낮음 (Stall 시 유휴)</td><td style="text-align: left"><strong>매우 높음 (항상 바쁨)</strong></td><td style="text-align: left">낭비 vs 효율</td></tr>
+<tr><td style="text-align: left"><strong>하드웨어 복잡도</strong></td><td style="text-align: left">단순 (작고 차가움)</td><td style="text-align: left"><strong>극도로 복잡 (크고 뜨거움)</strong></td><td style="text-align: left">면적/전력 투자</td></tr>
+<tr><td style="text-align: left"><strong>IPC</strong></td><td style="text-align: left">1.0 근처</td><td style="text-align: left"><strong>2.0 ~ 6.0 이상</strong></td><td style="text-align: left">성능의 수직 상승</td></tr>
+</tbody></table>
+<p>명령어 순서를 뒤섞다 보면 같은 레지스터 이름을 쓰는 명령어끼리 충돌(WAR, WAW)이 나는데, 하드웨어가 런타임에 이름을 몰래 바꿔치기(리네이밍)하여 이 가짜 의존성을 박살 낸다. 이 마법 덕분에 명령어들은 아무런 거리낌 없이 순서를 바꿔 추월할 수 있게 된다.</p>
+<p>동작 순서:</p>
+<ol>
+<li>입력값, 상태 정보, 제어 조건이 먼저 정의된다.</li>
+<li>내부 구성요소가 정해진 규칙에 따라 상호작용하며 핵심 처리가 수행된다.</li>
+<li>처리 결과가 출력, 상태 갱신, 후속 제어 신호로 연결되어 다음 단계 동작을 결정한다.</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[입력 &#x2F; 상태 &#x2F; 제어 조건]
+            ↓
+     [핵심 처리 로직]
+            ↓
+    [출력 &#x2F; 상태 갱신 &#x2F; 효과]
+</code></pre>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">관점</th><th style="text-align: left">기본 접근</th><th style="text-align: left">최적화/확장 접근</th></tr></thead><tbody>
+<tr><td style="text-align: left">초점</td><td style="text-align: left">기능을 성립시키는 최소 구조</td><td style="text-align: left">성능·전력·확장성까지 함께 최적화</td></tr>
+<tr><td style="text-align: left">장점</td><td style="text-align: left">구현과 이해가 단순함</td><td style="text-align: left">대규모 시스템에서 효율이 높음</td></tr>
+<tr><td style="text-align: left">주의점</td><td style="text-align: left">병목과 한계가 빨리 드러남</td><td style="text-align: left">검증·설계 복잡도와 비용이 증가</td></tr>
+</tbody></table>
+<p>비순차 실행 (Out-of-Order Execution, OoO)를 비교할 때는 단순한 우열보다 어떤 제약 조건에서 어느 방식이 더 적합한지 판단하는 것이 중요하다. 같은 기술도 워크로드, 전력 예산, 검증 난이도, 호환성에 따라 최적 해가 달라진다.</p>
+<p>실무 아키텍트에게 비순차 실행은 **'전력 밀도'**와의 사투다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p><strong>채택 조건</strong>:</p>
+<ul>
+<li>시스템 병목이나 구조적 한계를 줄이는 수단으로 비순차 실행 (Out-of-Order Execution, OoO)을 선택할 근거가 분명할 때</li>
+<li>상위 소프트웨어와 운영 정책이 해당 구조를 활용할 수 있을 때</li>
+</ul>
+<p><strong>회피 조건</strong>:</p>
+<ul>
+<li>구현 복잡도와 검증 비용이 기대 효과보다 더 클 때</li>
+<li>단순한 대안 구조로도 동일한 목표를 달성할 수 있을 때</li>
+</ul>
+<h3 id="seolgye-mic-silmu-pandan-pointeu">설계 및 실무 판단 포인트</h3>
+<ol>
+<li><strong>인텔 Nehalem의 유산</strong>: 인텔은 ROB 크기를 늘리고 실행 포트를 다중화하여 IPC 혁명을 이끌었다. 실무적으로는 ROB가 수백 개를 넘어가면 검색 지연 시간이 길어져 오히려 클럭 속도가 떨어지므로, 적절한 <strong>창(Window) 크기</strong>를 찾는 것이 핵심 노하우다.</li>
+<li><strong>모바일 big.LITTLE 전략</strong>: 비순차 실행 엔진은 전기를 무지막지하게 먹는다. 그래서 ARM은 고성능 코어(Cortex-X)에만 OoO를 넣고, 효율 코어(Cortex-A55)는 얌전한 In-Order로 설계하여 배터리 수명을 사수한다.</li>
+<li><strong>정밀한 예외 처리</strong>: 실행 순서가 꼬인 상태에서 에러가 터지면 복구가 불가능하다. ROB는 "딱 여기까지는 원래 순서대로 확실히 끝냈다"는 경계선을 유지하여, 사고 발생 시 정확히 그 지점으로 시스템을 롤백(Roll-back)시키는 안전판 역할을 한다.</li>
+</ol>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li><strong>비순차 실행의 과도한 깊이 설정</strong>: 작업 부하는 가벼운데 예약역만 무식하게 크게 만들면, 명령어 검색에 쓰는 전력이 연산 전력보다 커지는 배보다 배꼽이 더 큰 칩이 된다.</li>
+</ul>
+<p>비순차 실행은 CPU를 **'지능형 스케줄러'**로 진화시킨 아키텍처의 정점이다.</p>
+<p>결론적으로 현대 CPU는 작업 부하에 따라 비순차 실행의 깊이를 실시간으로 조절하는 <strong>동적 깊이 조절 (Dynamic Depth Scaling)</strong> 기술로 진화하고 있다. 미래에는 하드웨어가 코드의 데이터플로우를 그래프로 직접 그려서 실행하는 <strong>그래프 아키텍처</strong>와 융합되며, 명령어 순서라는 폰 노이만의 낡은 유산을 완전히 청산할 것이다.</p>
+<p>체크리스트:</p>
+<ol>
+<li>적용 목적과 병목 지점이 명확하게 정의되었는가?</li>
+<li>성능 향상과 함께 전력·면적·복잡도 증가를 감당할 수 있는가?</li>
+<li>상위 소프트웨어와 운영 정책이 해당 구조를 활용할 수 있는가?</li>
+</ol>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>비순차 실행 (Out-of-Order Execution, OoO)는 단일 기능으로 끝나는 개념이 아니라, 성능·전력·복잡도·확장성 사이의 균형점을 설계자가 어디에 두는지에 따라 가치가 달라지는 아키텍처 요소다. 앞서 살펴본 구조, 비교, 실무 판단 기준을 종합하면 핵심은 특정 기술을 맹목적으로 채택하는 것이 아니라 시스템 전체 경로에서 병목과 제약을 함께 읽는 데 있다.</p>
+<p>또한 실제 효과는 주변 계층과의 정합성이 확보될 때 비로소 나타난다. 하드웨어 단독 최적화만으로는 충분하지 않으며, 소프트웨어 스택·운영 정책·검증 체계·배치 환경까지 함께 맞물려야 안정적인 개선으로 연결된다.</p>
+<p>향후에는 더 높은 집적도, 이기종 결합, 자동화된 제어, 보안 강화 요구가 커지면서 비순차 실행 (Out-of-Order Execution, OoO) 역시 정적 규칙보다 적응형 정책과 도메인 특화 구조 쪽으로 발전할 가능성이 높다. 따라서 실무에서는 개별 장점보다 전체 시스템 균형 속의 채택 타당성을 최종 판단해야 한다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">명령어 사이클 정의
+    ↓
+제어 신호 설계
+    ↓
+비순차 실행 (Out-of-Order Execution, OoO) 도입
+    ↓
+파이프라인·투기 실행 고도화
+    ↓
+고성능 마이크로아키텍처 확장
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>토마술로 알고리즘</strong></td><td style="text-align: left">비순차 실행을 하드웨어적으로 구현한 표준 로직</td></tr>
+<tr><td style="text-align: left"><strong>재주문 버퍼 (ROB)</strong></td><td style="text-align: left">섞인 실행 결과를 다시 줄 세워 내보내는 최종 수문장</td></tr>
+<tr><td style="text-align: left"><strong>예약역 (RS)</strong></td><td style="text-align: left">데이터가 올 때까지 명령어가 잠복 대기하는 장소</td></tr>
+<tr><td style="text-align: left"><strong>레지스터 리네이밍</strong></td><td style="text-align: left">가짜 의존성을 지워 비순차 실행의 길을 닦는 사전 작업</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

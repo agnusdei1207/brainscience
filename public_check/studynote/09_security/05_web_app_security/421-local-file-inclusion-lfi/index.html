@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>로컬 파일 포함 (LFI, Local File Inclusion) — 원격 코드 실행의 발판 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 28, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote security
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<ul>
+<li><strong>파일의 비정상적 포함(Inclusion)</strong>: 웹 애플리케이션의 <code>include</code>, <code>require</code> 같은 함수가 사용자 입력을 검증 없이 받아들여 서버 내부의 임의 파일을 스크립트로 실행하게 만드는 취약점임.</li>
+<li><strong>경로 순회와의 결합</strong>: <code>../</code> 시퀀스를 통해 웹 루트 밖의 파일을 불러오며, 특히 로그 파일이나 환경 변수 파일에 악성 코드를 심은 뒤 실행하는 로그 포이즈닝(Log Poisoning)으로 이어짐.</li>
+<li><strong>방어의 핵심은 신뢰할 수 없는 입력 차단</strong>: 동적 파일 포함 로직을 지양하고, 고정된 목록(Whitelist)에서만 파일을 로드하거나 웹 서버 설정을 통해 외부 입력을 제한해야 함.</li>
+</ul>
+<h3 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h3>
+<ul>
+<li><strong>배경:</strong> 초기 PHP나 JSP 기반 웹 앱에서 헤더나 푸터와 같이 공통된 레이아웃을 동적으로 로드하기 위해 파일 경로를 파라미터로 받는 기법(<code>?page=home.php</code>)이 유행하면서 탄생함.</li>
+<li><strong>정의:</strong> 공격자가 서버 로컬에 존재하는 파일(운영체제 설정, 로그, 업로드된 파일 등)을 애플리케이션의 실행 흐름으로 끌어들여 코드가 실행되게 하거나 기밀을 유출하는 공격임.</li>
+<li><strong>위험성:</strong> 단순한 정보 유출을 넘어, 서버를 완전히 장악하는 원격 코드 실행(RCE)으로 발전할 가능성이 매우 높음.</li>
+</ul>
+<h3 id="2-guseongyoso">2. 구성요소</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[ LFI Attack to RCE (Log Poisoning) ]
+
+Step 1: Code Injection
+- Attacker sends HTTP request with PHP code in User-Agent or Referer header.
+  User-Agent: &lt;?php system($_GET[&#x27;cmd&#x27;]); ?- Server logs this request into &#x2F;var&#x2F;log&#x2F;apache2&#x2F;access.log
+
+Step 2: File Inclusion (LFI)
+- Attacker requests vulnerable page:
+  GET &#x2F;index?page=..&#x2F;..&#x2F;..&#x2F;..&#x2F;var&#x2F;log&#x2F;apache2&#x2F;access.log&amp;cmd=id
+
+Vulnerable Logic:
+1. $page = $_GET[&#x27;page&#x27;];
+2. include($page); &#x2F;&#x2F; Executes content of access.log as PHP code!
+
+Result:
+Server executes &#x27;id&#x27; command and returns system info.
+</code></pre>
+<ul>
+<li><strong>공격 트리거:</strong> PHP의 <code>include</code>, <code>require</code>, <code>fopen</code>이나 JSP의 <code>jsp:include</code> 등 파일 시스템에 접근하여 내용을 처리하는 함수들이 주요 타겟임.</li>
+<li><strong>공격 진화 (Wrapper 활용):</strong> PHP의 경우 <code>php://filter</code> (인코딩된 소스 코드 유출), <code>data://</code> (평문 코드 실행) 등 다양한 프로토콜 래퍼를 사용하여 보안 장비를 우회함.</li>
+</ul>
+<h3 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">로컬 파일 포함 (LFI)</th><th style="text-align: left">원격 파일 포함 (RFI)</th><th style="text-align: left">경로 순회 (Path Traversal)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>파일 위치</strong></td><td style="text-align: left">서버 로컬 시스템 내부</td><td style="text-align: left">외부 공격자 서버 (URL)</td><td style="text-align: left">서버 로컬 시스템 내부</td></tr>
+<tr><td style="text-align: left"><strong>주요 행위</strong></td><td style="text-align: left">파일 실행 (Inclusion)</td><td style="text-align: left">외부 코드 실행</td><td style="text-align: left">파일 읽기 (Reading)</td></tr>
+<tr><td style="text-align: left"><strong>취약 설정</strong></td><td style="text-align: left">PHP wrapper 활용 등</td><td style="text-align: left">allow_url_include=On</td><td style="text-align: left">입력 검증 부재</td></tr>
+<tr><td style="text-align: left"><strong>결과 영향</strong></td><td style="text-align: left">RCE, 정보 유출</td><td style="text-align: left">치명적 RCE</td><td style="text-align: left">정보 유출</td></tr>
+</tbody></table>
+<h3 id="4-bigyo-mic-teureideuopeu">4. 비교 및 트레이드오프</h3>
+<ul>
+<li><strong>적용 사례:</strong> 다국어 지원 페이지(<code>?lang=ko</code>), 템플릿 엔진 로딩 로직, 파일 업로드 후 미리보기 기능.</li>
+<li><strong>기술사적 판단:</strong> LFI는 경로 순회의 '확장판'이자 RCE의 '입구'임. 근본적 해결책은 사용자 입력을 파일명으로 직접 사용하지 않는 것이며, 부득이한 경우 <code>basename()</code>과 같은 경로 필터링 함수 사용 및 <code>open_basedir</code> 설정을 통해 프로세스가 접근할 수 있는 디렉터리 범위를 엄격히 한정해야 함.</li>
+</ul>
+<h3 id="5-silmu-jeogyong-mic-coejeoghwa-gibeob">5. 실무 적용 및 최적화 기법</h3>
+<ul>
+<li><strong>기대효과:</strong> 서버 내부 자원의 비정상적 노출을 막고, 악성 스크립트 실행 경로를 원천 차단하여 인프라의 전반적인 안전성을 확보함.</li>
+<li><strong>결론:</strong> 클라우드 네이티브 환경으로 갈수록 컨테이너 내부 파일 시스템 보안이 중요해짐. LFI 방어는 단순 웹 취약점 대응을 넘어, 컨테이너 격리와 최소 권한 원칙(PoLP)을 실현하는 필수적인 보안 요구사항임.</li>
+</ul>
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h3>
+<ul>
+<li><strong>상위 개념:</strong> 파일 시스템 접근 제어 취약점, RCE (Remote Code Execution)</li>
+<li><strong>하위/파생 개념:</strong> Log Poisoning, PHP Wrappers (php://), RFI, Null Byte Injection</li>
+</ul>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ul>
+<li>"영수증 보여줘"라고 해야 할 자리에 "도둑이 몰래 숨겨놓은 독이 든 사탕 상자를 열어줘"라고 속이는 것과 같아요.</li>
+<li>사탕 상자를 여는 순간(파일 포함), 도둑이 계획한 나쁜 일(악성 코드)이 벌어지게 된답니다.</li>
+<li>그래서 주인님은 "내가 미리 허락한 영수증만 보여줄 거야!"라고 약속을 지켜야 안전해요.</li>
+</ul>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

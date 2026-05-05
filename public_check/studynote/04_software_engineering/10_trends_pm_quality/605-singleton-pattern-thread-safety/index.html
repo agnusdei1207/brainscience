@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>605. 싱글톤 패턴 메모리&#x2F;쓰레드 세이프 설계 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 싱글톤(Singleton) 패턴은 **"우주가 두 쪽 나도 이 클래스의 객체(Instance)는 내 메모리(RAM) 힙(Heap) 영역 위에 단 1개만 존재해야 한다"**는 강박적 결벽증의 결정체로, 데이터베이스 커넥션 풀(DB Connection Pool)이나 스레드 풀처럼 여러 번 <code>new</code>로 찍어내면 서버 램이 폭발해 죽는 핵심 자원들을 완벽히 통제하는 방어술이다.
+2. <strong>가치</strong>: 1,000만 명이 동시에 접속하는 멀티 스레드(Tomcat) 환경에서 2명의 유저가 0.001초 차이로 동시에 접근해 객체가 2개 이상 생성되는 '동시성(Race Condition) 파국'을 막기 위해, <strong>Double-Checked Locking, Lazy Holder, Enum 같은 피 튀기는 스레드 세이프(Thread-Safe) 동기화 흑마법</strong>이 역사적으로 동원되어 왔다.
+3. <strong>융합</strong>: 하지만 현대엔 개발자가 이 복잡한 쌩쇼를 칠 필요가 없다. **Spring 프레임워크 뱃속의 IoC 컨테이너(Bean Registry)가 애플리케이션 부팅 0.1초 찰나에 싱글톤 락(Lock)을 강제로 보장해 주는 인프라적 오프로딩(Offloading)**이 표준으로 군림하며, 개발자는 그저 깡통 객체를 만들어 꿀만 빠는(Decoupling) 시대로 진화했다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h1 id="605-singgeulton-paeteon-memori-sseuredeu-seipeu-seolgye">605. 싱글톤 패턴 메모리/쓰레드 세이프 설계</h1>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li>
+<p><strong>개념</strong>:</p>
+<ul>
+<li><code>Single(단 하나) + ton(덩어리)</code>. 생성자(Constructor)를 <code>private</code>으로 꽁꽁 숨겨서 밖에서 절대로 <code>new</code> 키워드를 못 치게 막아버리고, 오직 클래스 자기가 스스로 만든 자기 자신의 객체 딱 1개만 <code>public static getInstance()</code> 대문으로 나눠주는 독재적 객체 생성 패턴.</li>
+</ul>
+</li>
+<li>
+<p><strong>필요성 (메모리 폭파와 공유 자원의 딜레마)</strong>: 게시판을 만들었다. 유저 1만 명이 접속할 때마다 "DB랑 연결하는 객체(<code>DbConnection</code>)"를 1만 번 <code>new</code> 해서 만들었다. 객체 1개당 10MB인데 1만 개면 100GB다. 1초 만에 서버 램(RAM)이 OOM(Out of Memory)을 토하며 폭파됐다. <strong>"아 ㅆㅂ!! DB 연결 객체는 안에 들어있는 데이터(State)도 없는데 왜 유저 올 때마다 계속 새로 찍어내?! 걍 서버 켜질 때 딱 1개만 만들어두고 1만 명이 그 1개를 돌려 쓰게(공유) 만들면 램 10MB로 평생 서버 안 죽잖아!!"</strong> 이 자본주의적 가성비와 자원 최적화의 열망이 싱글톤을 세상에 낳았다.</p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: 일반 <code>new</code> 객체 생성은 **'손님이 올 때마다 1인 1 화장실을 아예 새로 지어주는 짓'**입니다. 손님 1만 명 오면 화장실 1만 개 지어야 하니 땅(메모리)이 부족해서 파산합니다. 싱글톤은 **'광장 한가운데 짱 크고 튼튼한 공중화장실 딱 1개를 짓고(싱글톤 1개), 1만 명의 손님(스레드)이 그 1개의 화장실을 번갈아 가며 같이 돌려쓰게 만드는 짓'**입니다. 땅값(RAM)은 화장실 1개 치만 나가니 평생 공짜로 꿀을 빱니다.</p>
+</li>
+<li>
+<p><strong>등장 배경 및 발전 과정</strong>:</p>
+<ol>
+<li><strong>무지성 Lazy Init (원시 시대)</strong>: 처음에 <code>if (instance == null) new();</code> 짰더니, 스레드 2개가 동시에 if문 뚫고 들어와서 객체가 2개 3개 생겨버림 (싱글톤 박살).</li>
+<li><strong>무식한 Synchronized 떡칠 (중세)</strong>: 에라 모르겠다 <code>synchronized getInstance()</code> 락을 확 걸어버림. 객체 생성 한 번 막겠다고 1만 명의 유저가 1줄로 서서 1명씩 입장하는 대기 줄 병목(Performance Hell)이 터짐.</li>
+<li><strong>Double-Checked / Lazy Holder (고인물 시대)</strong>: 성능 저하를 0으로 깎으면서 동시성을 막는 극악의 메모리 가시성(volatile) 흑마법이 연구됨.</li>
+<li><strong>Spring Framework의 천하 통일 (현재)</strong>: "야 니들 그딴 거 짜지 마 ㅋ 걍 <code>@Component</code> 딱지 붙이면 스프링 부트(Tomcat)가 켜질 때 스레드 1개만 도니까 그때 무지성으로 싱글톤 100% 보장해서 찍어줌 ㅋ" 스프링의 은총으로 생코딩 멸망.</li>
+</ol>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 이 발전 과정은 **'은행 금고 지키기'**와 같습니다. 초창기엔 경비원 1명(Synchronized)이 문앞에 서서 손님 1만 명을 일일이 검문하느라 은행 마비가 왔습니다. 고수들은 지문 인식+홍채 인식 2중 잠금장치(Double-Checked)로 속도와 보안을 맞췄죠. 지금은 아예 **'스위스 연방 은행 지하 최첨단 자동화 벙커(Spring IoC 컨테이너)'**에 돈을 맡겨버려서 도둑(동시성 버그)이 들어올 물리적 구멍 자체를 0으로 삭제해버린 시대입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="1-seuredeu-seipeu-thread-safe-reul-hyanghan-bbyeo-ggaggneun-jinhwa-4dangye-boom">1. 스레드 세이프(Thread-Safe)를 향한 뼈 깎는 진화 4단계 💥</h3>
+<p>면접관이 칠판 던져주고 무조건 쓰라고 하는 자바 동시성 역사책.</p>
+<p><strong>[ ❌ 1단계: 멍청한 Lazy Initialization (동시성 붕괴) ]</strong></p>
+<pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">public static Singleton getInstance() {
+    if (instance == null) { &#x2F;&#x2F; 💥 스레드 A와 B가 0.001초 차이로 동시에 이 줄을 통과함!!
+        instance = new Singleton(); &#x2F;&#x2F; 객체 2개 생김. 싱글톤 파괴.
+    }
+    return instance;
+}
+</code></pre>
+<p><strong>[ ⚠️ 2단계: 무지성 Synchronized (성능 폭파) ]</strong></p>
+<pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">public static synchronized Singleton getInstance() { ... }
+&#x2F;&#x2F; 💥 락(Lock)을 너무 넓게 걸어서, 이미 객체가 만들어진 후에도 10만 명이 무조건 1줄 서기 대기해야 함. 속도 100배 저하.
+</code></pre>
+<p><strong>[ 🛡️ 3단계: Double-Checked Locking (Volatile 흑마법) ]</strong></p>
+<pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">private static volatile Singleton instance; &#x2F;&#x2F; 💥 메모리 가시성 동기화 필수!
+public static Singleton getInstance() {
+    if (instance == null) { &#x2F;&#x2F; 1차 락 안 걸고 쾌속 검사
+        synchronized (Singleton.class) { &#x2F;&#x2F; 딱 1번만 락 잡음
+            if (instance == null) { instance = new Singleton(); } &#x2F;&#x2F; 2차 안전 검사
+        }
+    }
+    return instance;
+}
+&#x2F;&#x2F; 복잡함. volatile 안 쓰면 CPU L1 캐시 문제로 다른 스레드가 객체 생성된 거 눈치 못 채고 또 만듦.
+</code></pre>
+<p><strong>[ 👑 4단계: LazyHolder 클래스 꼼수 (Bill Pugh Solution, 자바 1티어 국룰) ]</strong></p>
+<pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">public class Singleton {
+    private Singleton() {}
+    &#x2F;&#x2F; 💥 내부 정적 클래스 (JVM의 클래스 로더 락킹 마술 이용)
+    private static class LazyHolder {
+        private static final Singleton INSTANCE = new Singleton();
+    }
+    public static Singleton getInstance() {
+        return LazyHolder.INSTANCE;
+    }
+}
+&#x2F;&#x2F; 완벽함. `synchronized` 키워드 1개도 없이, JVM이 처음 LazyHolder를 읽어 들이는 타이밍의 &quot;100% 스레드 세이프&quot; 특성을 얍삽하게 빨아먹는 1타 족보.
+</code></pre>
+<h3 id="2-antipaeteon-jeonyeog-sangtae-global-state-yi-jeojuwa-meolti-seuredeu-daejaeang-boom-boom">2. 안티패턴: '전역 상태(Global State)'의 저주와 멀티 스레드 대재앙 💥💥</h3>
+<p>싱글톤을 썼을 때 회사가 파산하는 가장 완벽한 시나리오.</p>
+<ul>
+<li>
+<p><strong>문제 (가변 객체의 재앙)</strong>: 주니어 개발자가 로그인 유저 이름을 싱글톤 <code>UserSession</code> 객체의 뱃속에 <code>public String userName;</code> (가변 변수/State)으로 박아놨다.</p>
+</li>
+<li>
+<p><strong>파국 (Race Condition)</strong>: 유저 A(철수)가 로그인해서 싱글톤에 <code>userName = "철수"</code>를 박았다. 0.001초 뒤 유저 B(영희)가 로그인해서 <code>userName = "영희"</code>로 덮어썼다(Override). 1초 뒤 A가 내 정보 보기 버튼을 눌렀는데, 떡하니 **"영희 님 환영합니다!"**가 뜨고 A의 통장에서 영희가 산 가방 결제 대금 100만 원이 빠져나갔다!!! (전 세계 유저 100만 명의 정보가 1개의 변수에서 짬뽕 믹스 폭발).</p>
+</li>
+<li>
+<p><strong>아키텍트의 해결책 (Stateless 헌법)</strong>: 우주가 두 쪽 나도 <strong>"싱글톤 객체 뱃속에는 '절대 변하지 않는 읽기 전용(Read-only) 설정값' 이나 '단순 계산 함수(Method)만 둬라!! 1,000만 명이 동시에 찔러도 1도 안 변하는 무상태(Stateless) 깡통을 유지하지 못하면 그 싱글톤은 회사 파산의 핵폭탄 스위치가 된다!"</strong> (유저 정보는 파라미터로 잠깐 던지고 1초 컷으로 빼가게 만들어야 함).</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 상태를 가진 싱글톤(Stateful)은 **'식당의 공용 1통짜리 짬뽕 국물'**과 같습니다. 100명의 손님이 각자 자기 숟가락으로 그 1개의 뚝배기(전역 변수)를 떠먹으면 침이 다 섞이고 코로나(데이터 오염 버그)에 단체 감염됩니다. 무상태 싱글톤(Stateless)은 **'식당의 정수기 1대'**입니다. 손님 100명이 각자 자기 개인 컵(로컬 스레드 변수)을 가져와서 정수기 물만 딱 담아갑니다. 정수기 본체(싱글톤)는 절대 더러워지지 않고 100명에게 완벽하고 순결한 서비스를 평생 공짜로 제공합니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h2>
+<h3 id="1-gaegce-saengseong-creational-samgugji-singleton-vs-factory-vs-builder">1. 객체 생성(Creational) 삼국지 (Singleton vs Factory vs Builder)</h3>
+<p>"이 객체 어떻게 찍어낼까?" 물을 때 아키텍트의 3단 도끼.</p>
+<table><thead><tr><th style="text-align: left">척도</th><th style="text-align: left">1. Singleton (싱글톤) 👑</th><th style="text-align: left">2. Factory (팩토리 607장) 🏭</th><th style="text-align: left">3. Builder (빌더) 🧱</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>핵심 목적</strong></td><td style="text-align: left"><strong>"무조건 1개만 파서 평생 뼈 우려먹기"</strong></td><td style="text-align: left">"객체 창조의 더러운 <code>new</code> 과정을 뒤로 숨기기"</td><td style="text-align: left">"파라미터 10개짜리 뚱땡이 객체 예쁘게 조립하기"</td></tr>
+<tr><td style="text-align: left"><strong>타겟 도메인</strong></td><td style="text-align: left"><strong>DB 커넥션 풀, 로깅 유틸, 환경설정(Config) 객체</strong></td><td style="text-align: left">유저 등급별(VIP, 일반)로 다른 전략 객체 뽑아줄 때</td><td style="text-align: left">Entity 객체 팩토리 매핑, 테스트 더미 객체 만들 때</td></tr>
+<tr><td style="text-align: left"><strong>객체 개수</strong></td><td style="text-align: left">우주 끝까지 <strong>오직 1개 (단수)</strong></td><td style="text-align: left">부를 때마다 <strong>무한 생성 (복수)</strong></td><td style="text-align: left">부를 때마다 <strong>무한 생성 (복수)</strong></td></tr>
+<tr><td style="text-align: left"><strong>메모리(RAM)</strong></td><td style="text-align: left">10MB 고정 방어 (극강 다이어트)</td><td style="text-align: left">1,000번 찌르면 10GB 터짐 (GC 청소 노가다)</td><td style="text-align: left">1,000번 찌르면 10GB 터짐</td></tr>
+</tbody></table>
+<h3 id="gwamog-yunghab-gwanjeom">과목 융합 관점</h3>
+<ul>
+<li>
+<p><strong>소프트웨어 공학 (TDD의 영원한 주적)</strong>: 470장 테스트 주도 개발(TDD)에서 싱글톤은 **'악마의 패턴'**으로 찍혀있다. 왜? 단위 테스트는 A 테스트와 B 테스트가 완벽히 독립(격리)되어야 한다. 근데 싱글톤은 1통짜리 전역 객체다! A 테스트에서 싱글톤 객체 안의 변수를 "10"으로 바꿨는데, B 테스트가 돌 때 이 싱글톤을 찌르면 10이라는 똥물이 묻어있어 테스트가 연쇄적으로 실패(Flaky Test)한다!! 1개의 공유 램이 100개의 테스트 환경을 다 오염시키는 것. 그래서 TDD 광신도들은 <code>private constructor</code> 쌩 싱글톤을 저주하며, 무조건 Spring의 **DI(의존성 주입)**로 밀어 넣어 껍데기(Interface)만 조립하게 바꿔 가짜 목 객체(Mock Object)를 주사기로 밀어 넣을 숨통을 뚫어놓는다.</p>
+</li>
+<li>
+<p><strong>클라우드 컴퓨팅 / MSA (분산 시스템에서의 싱글톤 환상 붕괴)</strong>: 532장 마이크로서비스(MSA) 클라우드 시대가 왔다. 주니어가 "오 K8s에 앱 올릴 때 싱글톤으로 짜면 서버 1개 뜨니까 메모리 개이득이네 ㅋ" 했다. K8s 파드(Pod) 50대가 떴다. <strong>자바의 싱글톤은 "JVM(컴퓨터 메모리 1개)" 안에서만 1개 보장이다!! 파드 50대 띄우면 내 앱의 싱글톤 객체는 지구상에 50개가 복제되어 둥둥 떠다닌다!!</strong> (분산 모놀리스의 비극). 만약 50대 파드가 "1번부터 1만 번까지 순서대로 번호표를 줘야 하는 시퀀스 로직"을 로컬 싱글톤 변수로 짰다면 번호표가 50개씩 중복 발급돼서 회사 터진다. <strong>"아키텍트 절대 헌법: K8s 우주 공간에서 데이터 상태(State)의 싱글톤(유일성)을 보장하려면, 자바 메모리 싱글톤 따위는 찢어 버리고 무조건 외부 Redis나 Zookeeper의 분산 락(Distributed Lock)으로 멱살 잡아 1개의 진실(Source of Truth)을 밖으로 빼내야(Offloading) 살아남는다."</strong></p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: K8s 파드 환경의 싱글톤 오판은, **'대한민국(K8s 클러스터) 전체에 왕(싱글톤)이 1명인 줄 알았는데, 사실 서울, 대전, 대구(각 파드 JVM)마다 자기들이 왕이라고 우기는 놈이 50명 떠 있는 춘추전국시대'**와 같습니다. 이 50명의 가짜 왕들이 서로 세금(데이터)을 거둬가니 장부가 개판이 되죠. 이 우주를 통일하려면 각 동네의 왕(자바 싱글톤)들을 다 폐위시키고, 하늘 구름 위에 우주 황제 1명(Redis 분산 락)을 딱 세워두고 50개 도시가 무조건 무릎 꿇고 그 황제한테만 결재를 받아야(Lock 획득) 통치가 완성됩니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="4-bigyo-mic-teureideuopeu">4. 비교 및 트레이드오프</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li>
+<p><strong>시나리오 — '리플렉션(Reflection) 해킹'과 '직렬화(Serialization)'가 부순 100% 싱글톤의 결계</strong>: 데브옵스 보안팀이 자바(Java) 해킹 툴을 켰다. 소스코드에 <code>LazyHolder</code> 기법으로 우주 방어 쳐둔 싱글톤 클래스를 뚫어보겠다고 나섰다.</p>
+<ul>
+<li><strong>공격 1 (리플렉션)</strong>: 자바의 신의 권력 <code>Reflection API</code>를 쓰면, <code>private</code>으로 막아둔 생성자 자물쇠를 <code>constructor.setAccessible(true)</code> 딱 1줄 쳐서 강제로 마스터키로 따고 들어가 <code>new</code> 키워드로 복제 객체를 2개 3개 마구 찍어낼 수 있다!! (싱글톤 파괴).</li>
+<li><strong>공격 2 (직렬화)</strong>: 싱글톤 객체를 바이트로 뭉개서 파일로 저장(Serialization)했다가 다시 읽어오면(Deserialization), 앗 ㅆㅂ 원래 메모리에 있던 놈 말고 똑같이 생긴 복제인간 객체가 메모리에 1마리 더 태어난다!! (메모리 주소 분기 파괴).</li>
+<li><strong>아키텍트의 해결책 (Enum의 무적 방어 👑)</strong>: <strong>조슈아 블로크(Effective Java)가 선언한 우주 최강의 1줄 컷 싱글톤 헌법이다. 클래스를 <code>class</code>가 아니라 <code>enum</code>으로 파버려라!!</strong><pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">public enum Singleton { INSTANCE; public void doSomething() {...} }
+</code></pre>
+이 1줄이면 끝난다! 자바(JVM) 엔진 자체가 <code>enum</code>은 리플렉션 해킹 공격이 오면 시뻘건 에러를 뱉고 튕겨내며, 직렬화/역직렬화 공격이 와도 우주가 두 쪽 나도 절대 복제인간을 못 낳게 하드웨어적으로 철통 방어를 쳐준다. 현존하는 인간계 최강의 무결점 싱글톤 마술이다.</li>
+</ul>
+</li>
+<li>
+<p><strong>시나리오 — '싱글톤 팩토리'와 Spring IoC 컨테이너의 위대한 교체 (생코딩 멸망기)</strong>: 주니어가 입사해서 "선배님! 제가 LazyHolder 기법이랑 Enum 떡칠해서 싱글톤 클래스 50개를 완벽하게 다 짜놨습니다 ㅋ" 자랑했다. 팀장한테 귀싸대기를 맞았다.</p>
+<ul>
+<li><strong>팀장의 분노</strong>: "야 이 미친놈아! 그거 다 짜면 클래스 간 의존성(DIP) 주입은 누가 어떻게 할래? 나중에 KAKAO_DB 에서 NAVER_DB 로 싱글톤 갈아 낄 때 소스코드 50군데 다 <code>new</code> 치러 다닐래?!"</li>
+<li><strong>아키텍트의 해결책 (Spring Bean 생태계 흡수)</strong>: 현대 아키텍처에선 개발자 손으로 직접 싱글톤 패턴 방어막(private 생성자)을 치는 건 구석기 짓이다. <strong>아키텍트는 개발자들에게 "그냥 <code>public</code> 생성자 뚫어놓고 맘 편하게 평범한 POJO 클래스 짜!" 지시한다. 그리고 그 껍데기 위에 <code>@Component</code> 나 <code>@Service</code> 어노테이션 도장 딱 1개만 찍어버린다.</strong></li>
+<li><strong>결과</strong>: Spring(스프링) 부팅 엔진이 켜지는 0.1초 찰나! 스프링 봇이 전사 1만 개의 클래스를 스캔한 뒤 자기가 알아서 1개씩만 딱딱 <code>new</code> 생성 쳐서 자기 뱃속(ApplicationContext 금고)에 1만 개의 유일한 싱글톤 인스턴스로 영구 박제 락인(Lock-in) 시켜둔다!! 개발자는 1줄의 동시성 방어 코드 없이 스프링 인프라가 던져주는 절대 싱글톤의 쾌감에 무임승차한다 (Inversion of Control 제어의 역전).</li>
+</ul>
+</li>
+</ol>
+<h3 id="doib-cekeuriseuteu">도입 체크리스트</h3>
+<ul>
+<li><strong>조직적</strong>: <strong>"팀 내 모든 개발자가 싱글톤(Singleton) 객체 안에 1바이트라도 유저 데이터를 담아두면(Stateful) 회사가 터진다는 동시성(Concurrency) 공포증을 체화하고 있는가?"</strong> 아무리 훌륭하게 스프링(Spring) <code>@Controller</code> 싱글톤 빈(Bean)을 띄워놔도, 그 뱃속에 <code>int count = 0;</code> 글로벌 멤버 변수를 파놓고 조회수 카운트 센다고 <code>count++</code> 치는 주니어가 1명이라도 있으면 그 회사는 매일 밤 데이터가 꼬여서 지옥을 겪는다. 아키텍트는 깃헙 PR(Pull Request) 리뷰 때 매의 눈으로 <strong>"스프링 빈(싱글톤) 안에 선언된 변수가 <code>final (읽기 전용 상수)</code>이 아니거나 DB 주입 의존성 객체가 아니라 일반 변수(가변)면 무조건 배포 반려 컷!!"</strong> 치는 폭군 독재를 펼쳐야 무상태(Stateless) 고가용성이 살아남는다.</li>
+<li><strong>기술적</strong>: <strong>DB 커넥션 풀(Connection Pool)을 생짜 싱글톤 1개로 착각하는 무식함을 버렸는가?</strong> 데이터베이스 연결 선을 싱글톤으로 1개만 파면? 1만 명이 접속할 때 1개의 좁은 빨대 구멍으로 1열 종대로 서서 쿼리 날려야 하니 서버 대기 시간(Hang)이 1시간 터진다. <strong>DB 커넥션은 '싱글톤 풀(Pool)' 관리자 객체가 1개 떠 있는 거고, 그 뱃속 관리자가 100개의 커넥션 튜브(HikariCP)를 파놓고 병렬로 쫙쫙 던져주는 다중 풀링(Pooling) 아키텍처</strong>다! 이 '관리자의 유일성(Singleton)'과 '자원의 병렬성(Pool)' 개념을 짬뽕 쳐서 오해하면 인프라 튜닝하다가 트래픽 병목의 늪에 빠져 죽는다.</li>
+</ul>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p><strong>"안티패턴: 디자인 패턴의 뽕에 취해 일반 DTO나 Entity 데이터 덩어리까지 모조리 싱글톤으로 도배해 버리기 (Singleton Abuse)"</strong>: 아키텍처 책 읽은 2년 차가 "오 객체 생성 비용(GC 부하) 아끼려면 무조건 1개만 띄우라네 ㅋ" 하면서, 유저 정보(User), 상품 정보(Product) 객체들까지 싹 다 메모리에 싱글톤 1개로 올려두고 유저가 바뀔 때마다 안에 값(Setter)을 스위칭 지우고 쓰며 재탕하는 미친 짓. 1초 뒤 유저 1만 명이 접속하면 A 유저 정보에 B 유저 정보가 덮어씌워 지고 C 유저로 덮어씌워 지며 전 세계 개인정보 대유출 핵폭발 대참사가 터진다. <strong>"명심해라. 싱글톤은 '로직(행동)을 수행하는 차가운 기계(Service, Controller, Repository)'에게만 부여되는 영광이다. '데이터(피와 살)'를 담는 그릇(Entity, DTO)은 요청이 들어올 때마다 무지성 1만 번 <code>new</code> 로 찍어내고 쓰고 쿨하게 버려(Garbage Collection) 죽게 내버려 두는 게 메모리 안정성의 가장 완벽한 대원칙이다."</strong></p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 이 안티패턴은 식당에서 **'접시(DTO/데이터 객체)를 싱글톤 1개로 고정해 놓는 미친 짓'**과 똑같습니다. 손님 1번이 먹던 짜장면 접시에, 씻지도 않고 2번 손님 짬뽕을 붓고, 3번 손님 돈까스를 얹어서 내어주니 손님들이 분노해서 식당에 불을 지릅니다(버그 폭발). 접시(데이터)는 손님 올 때마다 무조건 깨끗한 새 접시(new 생성)로 100번 꺼내야 합니다. 싱글톤 1개로 고정해야 할 것은 100만 번 요리해도 닳지 않고 튼튼한 **'주방장(로직 기계/Service)'**과 **'가스레인지 불(DB 커넥션 풀)'**뿐이라는 이 극단의 역할 분리를 뇌에 박아야 합니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-coejeoghwa-gibeob">5. 실무 적용 및 최적화 기법</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">무지성 <code>new</code> 떡칠로 유저 1만 명 오면 1만 번 객체 찍어내던 똥볼 시절</th><th style="text-align: left">완벽한 싱글톤 / Spring IoC 컨테이너 기반 락인 융합 (TO-BE)</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">트래픽 튈 때마다 JVM Heap 메모리 10GB 돌파 및 OOM 서버 터짐 즉사</td><td style="text-align: left">1만 명 쏟아져도 핵심 기계(Service) 메모리 10MB 영구 고정 방어</td><td style="text-align: left">쓸데없는 인스턴스 팽창 방지로 <strong>서버 램(RAM) 피크 점유율 99% 다이어트</strong></td></tr>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">찍어낸 1만 개 쓰레기 객체 치우느라 Garbage Collector 3초 멈춤(STW 렉)</td><td style="text-align: left">버릴 객체가 없으니 GC 청소부 요원들이 파업하고 놀고먹음</td><td style="text-align: left">마이크로 GC 버퍼링 단절로 <strong>API 응답 체감 지연(Latency) 10배 쾌속 펌핑</strong></td></tr>
+<tr><td style="text-align: left"><strong>정성</strong></td><td style="text-align: left">"아 ㅆㅂ 전역 변수에 누가 값 덮어썼어!! 1만 줄 디버깅 어케 해 ㅠ"</td><td style="text-align: left">"응 무상태(Stateless) 빈(Bean)이라 100만 명 찔러도 병목 제로 ㅋ"</td><td style="text-align: left">멀티 스레드 동시성 지옥 타파 및 <strong>Thread-Safe 개발 안도감 우주 방어</strong></td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang">미래 전망</h3>
+<ul>
+<li><strong>GraalVM과 Native Image (초광속 부팅 융합 559장 연계)</strong>: 스프링(Spring)이 1만 개 빈(싱글톤)을 애플리케이션 시작할 때 다 찍어내려니까(IoC 초기화), 서버 부팅(Cold Start) 타임이 10초 넘게 렉 걸려 558장 서버리스(AWS Lambda) 환경에서 다 버려졌다! 아키텍트의 피눈물 나는 복수극이 **GraalVM (그랄 브이엠)**이다. "야! 런타임 부팅 10초 걸리는 거 기다리지 마! 아예 젠킨스 빌드(Compile) 칠 때 1만 개 싱글톤 객체 뼈대를 메모리 상태 그대로 꽁꽁 얼려(AOT, Ahead-of-Time) C언어 기계어 바이너리 덩어리 1개로 찍어 뭉개버려!!" 이제 서버를 켜면 10초가 아니라 0.1초 만에 1만 개 싱글톤이 메모리에 팟! 부활하며 우주 최강 1티어 빠른 자바(Java) 서버리스의 화려한 르네상스 역주행이 폭발 중이다.</li>
+<li><strong>분산 락 (Distributed Lock) 메타-싱글톤의 K8s 천하통일</strong>: 1개 컴퓨터(JVM)의 싱글톤 족보 따윈 모던 클라우드(K8s 파드 50개 찢기)에선 아무 의미 없는 휴지 조각이 됐다. "1대의 램이 아니라, 50대의 K8s 클러스터 전 우주를 통틀어서 오직 1명만 단독 실행(Singleton)을 보장해야 한다!" 이 우주적 스케일의 동시성 멱살잡이를 위해 아키텍트들은 **Redis(레디스)**의 <code>Redisson</code> 펍섭(Pub/Sub) 기능이나 <strong>Zookeeper</strong>를 인프라 허공에 띄워둔다. 50대 파드 중 오직 1놈만 Redis 요정에게 "키(Lock) 내놔!" 해서 쟁취한 놈 딱 1명만 로직을 실행하고, 나머지 49명은 "아 늦었네 ㅋ" 하고 튕겨 나가는 <strong>글로벌 인프라 레벨의 매크로-싱글톤 락킹 시대</strong>가 모든 엔터프라이즈의 표준 헌법으로 군림하고 있다.</li>
+</ul>
+<h3 id="camgo-pyojun">참고 표준</h3>
+<ul>
+<li><strong>Effective Java (Joshua Bloch)</strong>: 전 세계 자바 1티어 신(God) 조슈아 블로크 형님이 "니들 어설프게 LazyHolder 짜다 리플렉션 해킹 맞고 털리지 말고 걍 우주 최강 <code>Enum</code> 딱 1줄 쳐라 ㅋ 이게 가장 완벽한 자바 싱글톤 헌법이다"라고 선언해 버린 객체지향 바이블 3장 3번 항목.</li>
+<li><strong>Inversion of Control (IoC) / Dependency Injection (DI)</strong>: 싱글톤 1만 개 만들고 서로 엮어주기(Wiring) 귀찮아 죽겠는 백엔드 개발자들을 구원하기 위해, Spring 프레임워크 뱃속 깊은 곳에서 이 1만 개를 알아서 <code>new</code> 치고 100% 생사를 통제(제어의 역전)하는 자바 인프라 생태계의 절대 엔진 철학.</li>
+</ul>
+<p>싱글톤 패턴 메모리/쓰레드 세이프 설계는 소프트웨어 공학이 도달한 **'무한한 복제(Multiplication)가 가능한 소프트웨어의 가벼운 탐욕을 도끼로 찍어 누르고, 자원의 고갈을 막기 위해 단 하나(The One)의 불멸자(Immortal)만을 허락한 가장 극단적이고도 오만한 자원 통제(Resource Control) 흑마법'**이다. 구석기의 나약한 코드들은 유저가 밀려올 때마다 1만 번 객체를 낳고 1만 번 죽이며 램(RAM)을 피바다로 만들고 가비지 컬렉터(GC)를 과로사로 몰아넣었다. 아키텍트는 뼈를 깎는 철창을 쳤다. 생성자(Constructor)의 목통을 <code>private</code>으로 꽁꽁 묶어 바깥 세상의 무지성 <code>new</code> 난사를 0.1초 컷오프(Fail) 차단해버려라. 그리고 100만 명의 트래픽 쓰나미(Thread)가 동시에 들이닥쳐 똑같은 단 하나의 객체(Instance) 뇌를 헤집고 공유하려 발버둥 칠 때, 그 안에서 데이터가 섞이고 오염되는 피의 살육전(Race Condition)을 막기 위해, 싱글톤의 뱃속에 단 1바이트의 상태(State)도 남겨두지 않는 순백의 무상태(Stateless) 도화지로 피와 살을 말려버려라. 동시성의 악마를 <code>Enum</code>과 <code>IoC 컨테이너</code>라는 인프라의 거대한 강철 방패 뒤로 100% 짬처리(Offloading) 시킨 이 위대한 꼼수. 그것이야말로 천문학적인 클라우드 요금과 끔찍한 OOM(메모리 터짐) 셧다운의 공포로부터 서버 1대의 생명을 무병장수 100배로 펌핑시켜 낸, 작지만 가장 무거운 객체 지향 생성술의 절대 마스터피스다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 이 험난한 스레드 세이프(Thread-Safe) 동기화의 여정은 **'초대형 놀이공원 매표소 입장 관리'**와 100% 같습니다. 1만 명의 손님(스레드)이 문 열리자마자 1개뿐인 표(싱글톤 객체 1회 생성권)를 잡으려고 서로 밀치며 돌진합니다(동시성 폭발/Race Condition). 멍청한 놀이공원은 입구에 바리케이드를 치고 1명씩 1줄로 세워서(Synchronized 락) 속도가 100배 느려집니다. 똑똑한 아키텍트(Spring/Enum)는 아예 오픈 시간 1시간 전에 <strong>'미리 매표원 1명(싱글톤 1개)을 박아놓고 철창을 쳐서 절대 두 명이 못 앉게(Eager/IoC 초기화 락인) 원천 봉쇄'</strong> 해둡니다. 문이 열리고 1만 명이 미친 듯이 몰려와도 매표원은 1명 고정이고, 각 손님은 빠르고 질서 정연하게 표(메서드 실행)만 탁탁 받아 치고 빠지는 10만 TPS 방어의 궁극의 트래픽 교통정리 예술입니다.</li>
+</ul>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>팩토리 패턴 (Factory Method)</strong></td><td style="text-align: left">싱글톤이 "난 우주에 무조건 1명만 파고 끝낼게 ㅋ" 라면, 다음 장(607장) 팩토리 패턴은 "상황에 따라서 A 객체, B 객체 내 맘대로 100개 무한으로 쫙쫙 뽑아내서 줄게 ㅋ" 라는 정반대의 생성 쾌감을 뽐내는 영혼의 양대 산맥 조립 파트너. (이후 607번 연계)</td></tr>
+<tr><td style="text-align: left"><strong>의존성 주입 (Dependency Injection / DI)</strong></td><td style="text-align: left">싱글톤 1만 개를 개발자가 직접 손으로 짜서 파일로 굴리면 미친 스파게티 똥 밭이 된다. 스프링 프레임워크가 아예 이 1만 개 싱글톤을 중앙 금고(Application Context)에 몰아넣고 밖에서 알아서 배선(Wiring)을 꽂아주는 메타-싱글톤 흑마법. (이전 장 601장 SOLID 연계)</td></tr>
+<tr><td style="text-align: left"><strong>비동기 락 (Distributed Lock)</strong></td><td style="text-align: left">서버 1대 램(RAM) 뱃속에서의 싱글톤(Java) 동시성 방어는 이제 장난감이다. 50대 서버 파드(Pod)로 찢어진 K8s 클라우드 우주에서 딱 1번만 실행되는 결제 로직(싱글톤 1개 보장)을 방어하려면 Redis 펍섭 기반의 우주 방위군 락(Redisson)을 걸어야 파산 안 당한다.</td></tr>
+<tr><td style="text-align: left"><strong>상태 비저장 (Stateless)</strong></td><td style="text-align: left">싱글톤 패턴이 살인 병기(버그 폭탄)가 되지 않기 위한 0순위 목줄 헌법. 1개 객체를 1만 명이 공유(Share)하니까 뱃속에 유저 개인정보 변수 파놓고 저장 치는 순간 100% 타인 정보 유출 개털림 참사. 558장 서버리스 람다의 Stateless 철학과 100% 맞닿는 영혼.</td></tr>
+<tr><td style="text-align: left"><strong>콜드 스타트 (Cold Start)</strong></td><td style="text-align: left">559장. 스프링이 싱글톤 객체 1만 개를 띄우느라 10초 렉(부팅 지연) 걸려서 람다(Lambda) 서버리스에서 버림받은 슬픈 이유. 이걸 깨려고 GraalVM (AOT 컴파일)이 싱글톤을 얼려서 0.1초 만에 해동시키는 부활 마술을 펼치는 중. (이전 장 559번 연계)</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>내가 레고 블록으로 **'멋진 마법 지팡이(싱글톤 객체)'**를 만들었어요. 친구 100명이 놀러 와서 "나도 나도!" 하며 지팡이를 100개나 억지로 복사(new 키워드 남발)하려고 하니까 방에 레고가 꽉 차서 숨이 막혀 죽을 뻔했어요 ㅠㅠ (메모리 램 터짐 OOM!).</li>
+<li>그래서 나는 똑똑하게, 마법 지팡이는 방 한가운데 튼튼한 돌(Private 생성자)에 콱! 꽂아서 <strong>딱 1개만 영원히 절대 안 뽑히게 고정(싱글톤)시켜 버렸어요!</strong></li>
+<li>이제 친구들 100명이 우르르 달려와도, 지팡이를 새로 만드는 게 아니라 <strong>순서대로 한 명씩 번갈아 가며 지팡이 1개를 같이 돌려쓰고 쿨하게 집에 가는(메모리 짱 절약) 마법의 자원 아끼기 룰</strong>을 '싱글톤 패턴'이라고 부른답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

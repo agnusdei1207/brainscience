@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>307. 다차원 큐브 MOLAP ROLAP HOLAP 성능 튜닝 (Multidimensional OLAP) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote enterprise systems
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 다차원 OLAP (Online Analytical Processing)의 본질은 분석 질의 시간을 줄이기 위해 계산 시점을 미리 당기는 것이며, MOLAP·ROLAP·HOLAP은 그 선계산 위치가 다른 아키텍처다.
+<strong>비유</strong>: 자주 묻는 질문에 대해 즉석에서 매번 계산할지, 미리 답안을 만들어 둘지, 일부만 미리 준비할지를 정하는 것과 같다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>비즈니스 분석은 단순 조회가 아니라 차원 (Dimension)과 측정값 (Measure)을 여러 관점에서 교차해 보는 작업이다. 매출을 지역·시간·상품·채널별로 drill-down, roll-up, slice, dice 하려면 동일한 데이터에 대해 반복적인 집계 질의가 폭발적으로 발생한다. 관계형 데이터베이스 (Relational Database)만으로도 분석은 가능하지만, 대용량 집계와 다중 조인을 매번 실시간 계산하면 응답 시간이 길어지고 경영 대시보드의 상호작용성이 크게 떨어진다.</p>
+<p>이 문제를 해결하기 위해 등장한 것이 OLAP이다. 핵심 아이디어는 분석 질의가 자주 반복되는 차원 조합에 대해 집계를 사전에 계산하거나, 적어도 질의 구조를 분석 친화적으로 바꾸어 응답 시간을 줄이는 것이다. 이때 저장 위치와 계산 전략에 따라 MOLAP (Multidimensional OLAP), ROLAP (Relational OLAP), HOLAP (Hybrid OLAP)으로 구분된다.</p>
+<p>따라서 세 방식의 차이는 단순 구현 차이가 아니라 성능, 저장 공간, 데이터 신선도, 확장성의 균형점 차이다. 어떤 모델이 우수한가보다 어떤 분석 환경에 맞는가가 더 중요한 판단 기준이다.</p>
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<table><thead><tr><th style="text-align: left">요소</th><th style="text-align: left">역할</th><th style="text-align: left">핵심 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">사실 데이터 (Fact Data)</td><td style="text-align: left">매출, 수량, 비용 같은 측정값 저장</td><td style="text-align: left">집계 대상이 되는 수치 데이터</td></tr>
+<tr><td style="text-align: left">차원 데이터 (Dimensions)</td><td style="text-align: left">시간, 지역, 상품, 고객 등 분석 관점 제공</td><td style="text-align: left">계층 구조가 drill-down과 roll-up을 결정</td></tr>
+<tr><td style="text-align: left">집계 저장소 (Aggregate Store)</td><td style="text-align: left">사전 계산된 큐브 또는 요약 테이블 보관</td><td style="text-align: left">응답 시간과 저장 공간을 맞바꿈</td></tr>
+<tr><td style="text-align: left">질의 엔진 (Query Engine)</td><td style="text-align: left">사용자 질의를 적절한 집계 또는 SQL로 변환</td><td style="text-align: left">어떤 레벨에서 계산할지 선택</td></tr>
+<tr><td style="text-align: left">메타데이터 계층</td><td style="text-align: left">차원 정의, 계층, 계산식, 보안 정책 관리</td><td style="text-align: left">분석 의미 체계를 유지하는 핵심</td></tr>
+</tbody></table>
+<p>MOLAP은 집계 저장소를 전용 다차원 큐브로 두고, ROLAP은 관계형 테이블과 물질화 뷰 (Materialized View)를 활용하며, HOLAP은 세분 데이터는 관계형 또는 컬럼 저장소에 두고 자주 쓰는 상위 집계만 큐브에 둔다. 따라서 동일한 구성요소를 갖더라도 저장 방식과 질의 라우팅 방식이 다르다.</p>
+<p>또한 메타데이터 계층은 세 방식 모두에서 중요하다. 계층 정의가 불명확하면 월-분기-연도 roll-up이나 지역 drill-down이 일관되지 않으며, 이는 저장 방식보다 더 큰 분석 오류를 만든다.</p>
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 질의 빈도, 집계 반복성, 데이터 신선도 요구, 저장 공간 제약을 함께 고려해 사전 집계 비율을 정해야 한다.</p>
+<p>OLAP의 구조적 원리는 “반복되는 집계 연산을 어디서 미리 계산할 것인가”에 있다. 사전 집계 비율이 높을수록 질의는 빨라지지만 저장 공간과 큐브 빌드 시간이 증가한다. 반대로 사전 집계를 줄이면 저장 공간은 줄지만 질의 시 계산 부하가 커진다. MOLAP, ROLAP, HOLAP은 이 트레이드오프에서 서로 다른 지점을 선택한 결과다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>차원 모델 정의</strong>: 사실 테이블과 차원 계층을 정의한다. 계층이 명확해야 어떤 레벨까지 선계산할지 결정할 수 있다.</li>
+<li><strong>집계 전략 선택</strong>: 빈도가 높은 질의 조합을 기준으로 큐브 집계나 요약 테이블을 만든다. 이 판단이 잘못되면 저장 비용은 늘고 성능 효과는 작다.</li>
+<li><strong>데이터 적재 및 처리</strong>: MOLAP은 큐브 빌드를 수행하고, ROLAP은 스타 스키마 (Star Schema) 기반 SQL 최적화와 인덱스를 활용하며, HOLAP은 상위 집계만 별도 저장한다.</li>
+<li><strong>질의 라우팅</strong>: 사용자의 분석 요청이 들어오면 엔진은 가장 가까운 사전 집계 레벨을 찾거나, 없으면 상세 데이터를 스캔해 계산한다.</li>
+<li><strong>드릴다운/롤업 수행</strong>: 집계 수준을 바꾸면서 분석 시점을 이동한다. 이때 메타데이터 계층이 레벨 간 관계를 일관되게 보장한다.</li>
+</ol>
+<pre><code>                사용자 분석 질의
+                       │
+                       ▼
+                [OLAP Query Engine]
+                 ┌────────┼────────┐
+                 │        │        │
+                 ▼        ▼        ▼
+            [MOLAP]   [ROLAP]   [HOLAP]
+          큐브 집계    SQL 집계   상위는 큐브
+          즉시 응답    실시간 계산 상세는 RDB&#x2F;Columnar
+                 └────────┴────────┘
+                       │
+                       ▼
+                 Drill-down &#x2F; Roll-up
+</code></pre>
+<p>정량적으로 보면 응답 시간은 일반적으로 MOLAP이 가장 짧고, 데이터 신선도는 ROLAP이 가장 높다. HOLAP은 월·분기 같은 자주 보는 상위 집계는 빠르게 응답하고, 상세 drill-down 시에는 관계형 또는 컬럼 저장소를 조회한다. 따라서 HOLAP은 성능과 신선도 사이의 절충안으로 자주 사용된다.</p>
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">MOLAP</th><th style="text-align: left">ROLAP</th><th style="text-align: left">HOLAP</th></tr></thead><tbody>
+<tr><td style="text-align: left">저장 방식</td><td style="text-align: left">전용 다차원 큐브</td><td style="text-align: left">관계형/컬럼형 테이블</td><td style="text-align: left">큐브 + 관계형 혼합</td></tr>
+<tr><td style="text-align: left">응답 속도</td><td style="text-align: left">매우 빠름</td><td style="text-align: left">상대적으로 느림</td><td style="text-align: left">상위 집계 빠름</td></tr>
+<tr><td style="text-align: left">데이터 신선도</td><td style="text-align: left">큐브 재빌드 주기에 의존</td><td style="text-align: left">원천 데이터에 가장 근접</td><td style="text-align: left">혼합</td></tr>
+<tr><td style="text-align: left">확장성</td><td style="text-align: left">큐브 크기에 제약</td><td style="text-align: left">대용량 확장에 유리</td><td style="text-align: left">중간</td></tr>
+<tr><td style="text-align: left">적합 사례</td><td style="text-align: left">반복 집계, 경영 대시보드</td><td style="text-align: left">애드혹 분석, 초대형 데이터</td><td style="text-align: left">혼합형 BI</td></tr>
+</tbody></table>
+<p>MOLAP은 성능 중심이고, ROLAP은 확장성과 유연성 중심이며, HOLAP은 둘을 연결한다는 점이 실무적 의미다. 예를 들어 월별 손익 보고처럼 분석 패턴이 안정적이면 MOLAP의 선계산 가치가 크다. 반면 데이터 과학자들이 새로운 기준으로 탐색하는 환경에서는 ROLAP의 유연성이 더 중요하다.</p>
+<p>현대 클라우드 데이터 웨어하우스 (Data Warehouse)는 전통적 ROLAP의 확장판으로 볼 수 있다. Snowflake, BigQuery, Redshift는 큐브를 직접 운영하지 않아도 컬럼 지향 저장과 대규모 병렬 처리로 ROLAP 성능을 크게 끌어올렸다. 따라서 오늘날 HOLAP적 설계는 “전용 큐브 + 클라우드 DW” 조합으로 재해석되기도 한다.</p>
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p><strong>MOLAP이 적합한 경우</strong></p>
+<ul>
+<li>경영 지표가 안정적이고 반복 조회가 매우 많은 경우</li>
+<li>초저지연 대시보드가 핵심인 경우</li>
+<li>데이터량이 큐브 관리 가능한 범위인 경우</li>
+</ul>
+<p><strong>ROLAP이 적합한 경우</strong></p>
+<ul>
+<li>데이터량이 매우 크고 차원 조합이 자주 바뀌는 경우</li>
+<li>상세 데이터 drill-through가 빈번한 경우</li>
+<li>실시간 또는 근실시간 적재가 중요한 경우</li>
+</ul>
+<p><strong>HOLAP이 적합한 경우</strong></p>
+<ul>
+<li>상위 집계 응답성과 상세 분석 유연성을 동시에 원하는 경우</li>
+<li>핵심 KPI는 정형화되어 있으나 예외 분석도 필요한 경우</li>
+</ul>
+<p>체크리스트:</p>
+<ul>
+<li>질의 패턴이 반복형인가, 탐색형인가?</li>
+<li>데이터 신선도 요구가 분 단위인가, 일 단위인가?</li>
+<li>차원 조합 수가 큐브 폭발을 일으킬 정도로 큰가?</li>
+<li>사전 집계 유지 비용을 운영할 인력이 있는가?</li>
+<li>상세 데이터 원본까지 drill-through가 필요한가?</li>
+</ul>
+<p>실무 제품으로는 Microsoft SQL Server Analysis Services의 큐브, Oracle Essbase, SAP BW/4HANA가 전통 OLAP의 대표이고, 최근에는 dbt·클라우드 DW·BI 도구 조합으로 ROLAP/HOLAP 성격을 구현하는 경우가 많다.</p>
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>OLAP 아키텍처를 적절히 선택하면 분석 응답 시간을 줄이고, 동일한 KPI를 조직 전체가 일관되게 해석하게 하며, 데이터 자산의 재사용성을 높일 수 있다. 특히 경영 의사결정 환경에서는 1초 이내 응답 경험이 분석 활용률 자체를 높인다.</p>
+<p>그러나 선계산이 많아질수록 큐브 관리 복잡성과 데이터 신선도 저하가 뒤따른다. 또한 차원 폭발, 보안 정책 분산, 재빌드 실패는 전통 MOLAP 운영의 대표적인 부담이다. 따라서 현재는 “전부 큐브화”보다, 자주 보는 지표만 선계산하고 나머지는 컬럼 지향 DW에서 처리하는 혼합 전략이 현실적이다.</p>
+<p>결론적으로 MOLAP·ROLAP·HOLAP의 본질은 기술 선택이 아니라 분석 워크로드의 시간-공간 교환을 어디에서 할 것인가에 대한 설계 결정이다.</p>
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre><code>관계형 집계 SQL 중심 분석
+    ↓
+전용 MOLAP 큐브 확산
+    ↓
+스타 스키마 기반 ROLAP 확장
+    ↓
+HOLAP으로 성능·유연성 절충
+    ↓
+클라우드 DW + BI 시맨틱 레이어
+    ↓
+실시간 메트릭 스토어·증강 분석으로 진화
+</code></pre>
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">스타 스키마</td><td style="text-align: left">ROLAP 성능을 위한 기본 모델</td></tr>
+<tr><td style="text-align: left">차원 계층</td><td style="text-align: left">drill-down과 roll-up의 의미를 결정</td></tr>
+<tr><td style="text-align: left">물질화 뷰</td><td style="text-align: left">ROLAP에서 선계산 효과를 제공</td></tr>
+<tr><td style="text-align: left">큐브 빌드</td><td style="text-align: left">MOLAP의 핵심 운영 작업</td></tr>
+<tr><td style="text-align: left">시맨틱 레이어</td><td style="text-align: left">BI 도구가 공통 지표를 해석하는 계층</td></tr>
+<tr><td style="text-align: left">컬럼 지향 저장</td><td style="text-align: left">현대 ROLAP 성능을 높이는 기반</td></tr>
+<tr><td style="text-align: left">애드혹 분석</td><td style="text-align: left">ROLAP이 상대적으로 유리한 대표 workload</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

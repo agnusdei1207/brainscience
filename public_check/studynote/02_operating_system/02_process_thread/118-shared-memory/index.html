@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>118. 공유 메모리 (Shared Memory) 방식 - 빠름, 동기화 문제 발생 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 22, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 공유 메모리 (Shared Memory)는 두 개 이상의 프로세스가 동일한 물리 메모리 영역을 각자의 가상 주소 공간에 매핑하여, 커널의 개입 없이 직접 데이터를 읽고 쓰는 가장 빠른 IPC (Inter-Process Communication) 방식이다.
+<strong>비유</strong>: 공유 메모리는 두 집 사이에 건너편으로 통하는 다리를 놓는 것과 같습니다. 다리가 완성되면(매핑 완료) 우편배달부(OS)를 부를 필요 없이 직접 물건을 건너편으로 전달할 수 있지만, 동시에 양쪽에서 다리를 건너려 하면 충돌하므로 신호등(동기화)이 필수적입니다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li><strong>개념</strong>: 공유 메모리 (Shared Memory)는 운영체제가 프로세스 간에 공유할 수 있는 물리 메모리 영역을 할당하고, 각 프로세스의 가상 주소 공간(Virtual Address Space) 일부가 이 공유 영역을 가리키도록 페이지 테이블 (Page Table)을 설정하는 IPC 메커니즘이다. 매핑 완료 후에는 프로세스가 일반 메모리에 접근하는 것과 완전히 동일한 방식(포인터 읽기/쓰기)으로 데이터를 교환할 수 있다.</li>
+<li><strong>필요성</strong>: 메시지 전달 방식(파이프, 메시지 큐 등)은 매 통신마다 커널 모드 전환과 데이터 복사가 발생하므로, 대규모 데이터(비디오 프레임, 과학 계산 배열 등)를 고빈도로 교환하는 환경에서는 지연이 치명적이다. 공유 메모리는 초기 한 번의 설정만으로 이후에는 어떤 커널 오버헤드도 없이 직접 메모리에 접근하므로, 고성능 컴퓨팅(HPC), 고빈도 거래(HFT), 멀티미디어 처리 등 대량 데이터 교환이 필수적인 분야에서 대안이 없는 선택이다.</li>
+<li><strong>등장 배경</strong>: 초기 유닉스에서 IPC는 파이프와 시그널만 지원되어 데이터 교환의 효율이 매우 낮았다. AT&amp;T Bell Labs의 System V에서 <code>shmget()</code>, <code>shmat()</code>, <code>shmdt()</code>, <code>shmctl()</code> API가 도입되면서 처음으로 공유 메모리 IPC가 표준화되었다. 이후 IEEE POSIX 표준에서 파일 기반 인터페이스(<code>shm_open()</code> + <code>mmap()</code>)로 재설계되어, 기존 파일 디스크립터(File Descriptor) 기반 I/O와의 통합성이 크게 향상되었다.</li>
+</ul>
+<p>공유 메모리의 가상 주소-물리 주소 매핑 구조를 시각화하면, 왜 커널 개입 없이 직접 접근이 가능한지 이해할 수 있다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────────────┐
+│          공유 메모리의 가상-물리 주소 매핑 구조                     │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  [프로세스 A의 가상 주소 공간]     [프로세스 B의 가상 주소 공간]    │
+│                                                                     │
+│  0x0000 ┌───────────────┐      0x0000 ┌───────────────┐             │
+│         │   Code        │             │   Code        │             │
+│         │   Data        │             │   Data        │             │
+│         │   Heap        │             │   Heap        │             │
+│  0x5000 │ ┌───────────┐ │      0x7000 │ ┌───────────┐ │             │
+│         │ │ 공유 영역  │ │             │ │ 공유 영역  │ │           │
+│         │ │ (매핑됨)  │ │             │ │ (매핑됨)  │ │             │
+│         │ └─────┬─────┘ │             │ └─────┬─────┘ │             │
+│  0x6000 │   Stack      │      0x8000 │   Stack      │               │
+│         └──────┼────────┘             └──────┼────────┘             │
+│                │                             │                      │
+│  ──────────────┼───── Page Table ────────────┼──────────            │
+│                │                             │                      │
+│                ▼                             ▼                      │
+│         ┌──────────────────────────────────────┐                    │
+│         │     물리 메모리 (Physical RAM)         │                  │
+│         │                                      │                    │
+│         │   ┌──────────────────────────────┐   │                    │
+│         │   │     공유 메모리 영역           │   │                  │
+│         │   │  (두 프로세스가 동일 페이지    │   │                  │
+│         │   │   공유함)                     │   │                   │
+│         │   └──────────────────────────────┘   │                    │
+│         └──────────────────────────────────────┘                    │
+│                                                                     │
+│  핵심: Page Table이 두 가상 주소를 동일 물리 주소로 매핑함          │
+│       → 프로세스 A의 쓰기가 프로세스 B에 즉시 반영됨                │
+│       → CPU 명령(LOAD&#x2F;STORE)만으로 통신 완료 (커널 개입 없음!)      │
+└─────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 구조도는 공유 메모리가 "왜 커널 개입 없이 동작하는가"를 페이지 테이블(Page Table) 관점에서 명확히 보여준다. 운영체제는 <code>shmget()</code>으로 물리 메모리에 공유 영역을 할당하고, <code>shmat()</code>를 통해 각 프로세스의 가상 주소 공간 내에 이 물리 메모리를 매핑한다. 이 매핑은 프로세스 A의 0x5000 번지와 프로세스 B의 0x7000 번지가 동일한 물리 메모리 페이지를 가리키도록 각자의 페이지 테이블 엔트리(Page Table Entry, PTE)를 설정하는 방식으로 이루어진다. 매핑 완료 후에는 CPU가 일반적인 LOAD/STORE 명령으로 메모리에 접근하므로, 시스템 콜이나 커널 모드 전환 없이 프로세스 간 데이터 교환이 즉각적으로 이루어진다. 이것이 공유 메모리가 가장 빠른 IPC 방식인 근본 이유다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="system-v-gongyu-memori-api">System V 공유 메모리 API</h3>
+<table><thead><tr><th style="text-align: left">API 함수</th><th style="text-align: left">역할</th><th style="text-align: left">내부 동작</th><th style="text-align: left">비유</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>shmget()</strong></td><td style="text-align: left">공유 메모리 세그먼트 생성 또는 기존 것 획득</td><td style="text-align: left">커널이 물리 메모리 할당, shmid_ds 구조체 생성, 정수 식별자 반환</td><td style="text-align: left">공유 창고 대여 계약</td></tr>
+<tr><td style="text-align: left"><strong>shmat()</strong></td><td style="text-align: left">프로세스의 가상 주소 공간에 공유 메모리 연결</td><td style="text-align: left">페이지 테이블 엔트리 수정, 가상 주소 포인터 반환</td><td style="text-align: left">창고로 이어지는 문 개방</td></tr>
+<tr><td style="text-align: left"><strong>shmdt()</strong></td><td style="text-align: left">프로세스의 가상 주소 공간에서 공유 메모리 분리</td><td style="text-align: left">페이지 테이블 엔트리 무효화 (물리 메모리는 유지)</td><td style="text-align: left">창고로 이어지는 문 폐쇄</td></tr>
+<tr><td style="text-align: left"><strong>shmctl()</strong></td><td style="text-align: left">공유 메모리 세그먼트 제어(삭제, 권한 변경 등)</td><td style="text-align: left"><code>IPC_RMID</code>로 커널에서 세그먼트 삭제</td><td style="text-align: left">창고 철거 또는 권한 변경</td></tr>
+</tbody></table>
+<h3 id="gongyu-memori-giban-saengsanja-sobija-munje">공유 메모리 기반 생산자-소비자 문제</h3>
+<p>공유 메모리를 활용한 가장 전형적 패턴은 생산자-소비자 (Producer-Consumer) 문제다. 다음은 공유 메모리 버퍼를 사용한 생산자-소비자 구조와 동기화 요구사항이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────────────────┐
+│     공유 메모리 기반 생산자-소비자 (Producer-Consumer) 구조        │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  ┌────────────┐      ┌──────────────────────────────────┐          │
+│  │  생산자      │      │       공유 메모리 영역              │     │
+│  │ (Producer)  │      │                                  │         │
+│  │             │      │  ┌───────────────────────────┐   │         │
+│  │  data를 생성 │      │  │  공유 버퍼 (Buffer)       │   │        │
+│  │             │─────▶│  │  ┌─────┬─────┬─────┐    │   │           │
+│  │  buffer에   │      │  │  │ 10  │ 20  │ 30  │    │   │           │
+│  │  쓰기 (write)│      │  │  └─────┴─────┴─────┘    │   │          │
+│  └────────────┘      │  │  in=3  out=0  count=3   │   │            │
+│                       │  │                           │   │         │
+│  ┌────────────┐      │  │  ┌─────────────────────┐ │   │           │
+│  │  소비자      │      │  │  │ mutex (상호배제)     │ │   │        │
+│  │ (Consumer)  │      │  │  └─────────────────────┘ │   │          │
+│  │             │─────▶│  │  ┌─────────────────────┐ │   │          │
+│  │  buffer에서  │      │  │  │ empty(빈칸=버퍼용량) │ │   │        │
+│  │  읽기 (read) │      │  │  │ full(가득참=0)      │ │   │         │
+│  └────────────┘      │  │  └─────────────────────┘ │   │           │
+│                       │  └───────────────────────────┘   │         │
+│                       └──────────────────────────────────┘         │
+│                                                                    │
+│  동기화 규칙 (필수!):                                              │
+│  ┌─────────────────────────────────────────────────────────┐       │
+│  │ 1. mutex: 버퍼에 한 프로세스만 접근 가능 (상호배제)        │    │
+│  │ 2. empty: 버퍼가 가득 찼을 때 생산자 대기                  │    │
+│  │ 3. full:  버퍼가 비었을 때 소비자 대기                     │    │
+│  │                                                         │       │
+│  │  생산자: wait(empty) → wait(mutex) → write →              │     │
+│  │          signal(mutex) → signal(full)                     │     │
+│  │                                                         │       │
+│  │  소비자: wait(full) → wait(mutex) → read →                │     │
+│  │          signal(mutex) → signal(empty)                    │     │
+│  └─────────────────────────────────────────────────────────┘       │
+└────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 구조도는 공유 메모리를 활용한 생산자-소비자 패턴에서 동기화가 왜 필수적인지를 명확히 보여준다. 공유 버퍼는 단일 물리 메모리 영역이므로, 생산자가 버퍼 인덱스(in)를 갱신하는 동시에 소비자가 같은 인덱스를 읽으면 데이터 불일치가 발생한다. 이를 방지하기 위해 mutex(뮤텍스)로 상호 배제(Mutual Exclusion)를 보장해야 한다. 또한 버퍼가 가득 찼을 때(empty=0) 생산자가 데이터를 덮어쓰는 것을 막기 위해 empty 세마포어로 대기시키고, 버퍼가 비었을 때(full=0) 소비자가 의미 없는 데이터를 읽는 것을 막기 위해 full 세마포어로 대기시킨다. 이 세 가지 동기화 변수(mutex, empty, full)가 공유 메모리 자체에 함께 저장되어, 모든 프로세스가 동일한 동기화 상태를 공유한다.</p>
+<h3 id="posix-gongyu-memori-shm-open-mmap">POSIX 공유 메모리 (<code>shm_open()</code> + <code>mmap()</code>)</h3>
+<p>POSIX 표준은 System V API의 정수 식별자 대신 파일 디스크립터 기반의 더 통합적인 인터페이스를 제공한다. <code>shm_open()</code>이 <code>/dev/shm/</code> 아래에 이름 있는 공유 메모리 객체를 생성하고, <code>mmap()</code>이 이를 프로세스의 가상 주소 공간에 매핑한다.</p>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>요청 또는 이벤트 발생</strong>: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.</li>
+<li><strong>현재 상태 확인</strong>: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.</li>
+<li><strong>정책 적용 및 자원 배정</strong>: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.</li>
+<li><strong>결과 반영 및 후속 처리</strong>: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.</li>
+</ol>
+<h3 id="gongyu-memori-vs-gita-ipc-bangsig-simceung-bigyo">공유 메모리 vs 기타 IPC 방식 심층 비교</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">공유 메모리</th><th style="text-align: left">파이프 (Pipe)</th><th style="text-align: left">메시지 큐 (Message Queue)</th><th style="text-align: left">소켓 (Socket)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>통신 속도</strong></td><td style="text-align: left">매우 빠름 (직접 접근)</td><td style="text-align: left">중간 (커널 버퍼 경유)</td><td style="text-align: left">느림 (커널 구조체 복사)</td><td style="text-align: left">가장 느림 (네트워크 스택 경유)</td></tr>
+<tr><td style="text-align: left"><strong>동기화</strong></td><td style="text-align: left">사용자가 직접 구현 필수</td><td style="text-align: left">커널이 자동 관리</td><td style="text-align: left">커널이 자동 관리</td><td style="text-align: left">프로토콜이 자동 관리</td></tr>
+<tr><td style="text-align: left"><strong>데이터 크기</strong></td><td style="text-align: left">페이지 단위(4KB~수GB)</td><td style="text-align: left">바이트 스트림(무제한)</td><td style="text-align: left">메시지 단위(제한 있음)</td><td style="text-align: left">바이트 스트림/데이터그램</td></tr>
+<tr><td style="text-align: left"><strong>대상 범위</strong></td><td style="text-align: left">동일 머신</td><td style="text-align: left">부모-자식 프로세스</td><td style="text-align: left">동일 머신</td><td style="text-align: left">동일/원격 머신</td></tr>
+</tbody></table>
+<p>공유 메모리의 동기화 문제를 다이어그램으로 시각화하면, 경합 조건 (Race Condition)이 어떻게 발생하는지 구체적으로 이해할 수 있다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────────────┐
+│     공유 메모리 동기화 없이 두 프로세스가 동시 쓸 때의 문제         │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  공유 메모리: counter = 0 (초기값)                                  │
+│                                                                     │
+│  시간 ──────────────────────────────────────────▶                   │
+│                                                                     │
+│  프로세스 A:  counter값 읽기(0) ─── counter+1 계산(1) ─── 쓰기(1)   │
+│                    │                        │                       │
+│  프로세스 B:        └── counter값 읽기(0) ─── counter+1 계산 ─┤     │
+│                                                │                    │
+│                                                ▼                    │
+│                                           쓰기(1) ← 기대값 2!       │
+│                                                                     │
+│  결과: counter = 1 (기대값은 2였음!)                                │
+│       → 경합 조건 (Race Condition) 발생!                            │
+│                                                                     │
+│  해결:                                                              │
+│  ┌────────────────────────────────────────────────────────┐         │
+│  │  프로세스 A: lock(mutex) → 읽기(0) → 계산(1) → 쓰기(1)  │        │
+│  │                        → unlock(mutex)                 │         │
+│  │                                                        │         │
+│  │  프로세스 B:               lock(mutex) 대기...          │        │
+│  │                           (A의 unlock 후)               │        │
+│  │                           → 읽기(1) → 계산(2) → 쓰기(2)│         │
+│  │                           → unlock(mutex)               │        │
+│  │                                                        │         │
+│  │  결과: counter = 2 (정상!)                               │       │
+│  └────────────────────────────────────────────────────────┘         │
+└─────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 타임라인 다이어그램은 공유 메모리에서 동기화가 없을 때 발생하는 경합 조건(Race Condition)의 전형적인 패턴을 보여준다. 두 프로세스가 동시에 <code>counter</code>의 값을 읽었을 때, 두 프로세스 모두 0을 읽고 각자 독립적으로 1을 더해 1을 쓴다. 기대값은 2이지만 실제 결과는 1이 된다. 이것이 원자성(Atomicity)이 보장되지 않는 읽기-수정-쓰기(Read-Modify-Write) 연산의 근본적 문제다. 뮤텍스(Mutex)를 사용하면 한 프로세스가 임계 구역(Critical Section)에 진입하는 동안 다른 프로세스가 대기하도록 강제하여, counter 값이 항상 올바르게 갱신되도록 보장한다. 공유 메모리를 사용하는 모든 시스템에서 이러한 동기화 보장이 필수적이다.</p>
+<h3 id="gwamog-yunghab-gwanjeom">과목 융합 관점</h3>
+<ul>
+<li><strong>컴퓨터 아키텍처 (CA)</strong>: 멀티코어 프로세서에서 각 코어가 공유하는 L3 캐시 (Last Level Cache)는 하드웨어 수준의 공유 메모리다. 캐시 일관성 프로토콜(MESI 등)이 소프트웨어 수준의 뮤텍스와 동일한 역할을 하여, 여러 코어가 동일 데이터에 일관되게 접근하도록 보장한다.</li>
+<li><strong>데이터베이스 (DB)</strong>: 공유 메모리는 데이터베이스의 공유 버퍼 풀(Shared Buffer Pool) 구현에 사용된다. 여러 백엔드 프로세스가 디스크에서 읽은 데이터 페이지를 공유 버퍼 풀에 저장하고 접근하므로, 디스크 I/O를 최소화할 수 있다. PostgreSQL의 <code>shared_buffers</code>가 대표적 사례다.</li>
+</ul>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="gongyu-memori-vs-gita-ipc-bangsig-simceung-bigyo-1">공유 메모리 vs 기타 IPC 방식 심층 비교</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">공유 메모리</th><th style="text-align: left">파이프 (Pipe)</th><th style="text-align: left">메시지 큐 (Message Queue)</th><th style="text-align: left">소켓 (Socket)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>통신 속도</strong></td><td style="text-align: left">매우 빠름 (직접 접근)</td><td style="text-align: left">중간 (커널 버퍼 경유)</td><td style="text-align: left">느림 (커널 구조체 복사)</td><td style="text-align: left">가장 느림 (네트워크 스택 경유)</td></tr>
+<tr><td style="text-align: left"><strong>동기화</strong></td><td style="text-align: left">사용자가 직접 구현 필수</td><td style="text-align: left">커널이 자동 관리</td><td style="text-align: left">커널이 자동 관리</td><td style="text-align: left">프로토콜이 자동 관리</td></tr>
+<tr><td style="text-align: left"><strong>데이터 크기</strong></td><td style="text-align: left">페이지 단위(4KB~수GB)</td><td style="text-align: left">바이트 스트림(무제한)</td><td style="text-align: left">메시지 단위(제한 있음)</td><td style="text-align: left">바이트 스트림/데이터그램</td></tr>
+<tr><td style="text-align: left"><strong>대상 범위</strong></td><td style="text-align: left">동일 머신</td><td style="text-align: left">부모-자식 프로세스</td><td style="text-align: left">동일 머신</td><td style="text-align: left">동일/원격 머신</td></tr>
+</tbody></table>
+<p>공유 메모리의 동기화 문제를 다이어그램으로 시각화하면, 경합 조건 (Race Condition)이 어떻게 발생하는지 구체적으로 이해할 수 있다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────────────┐
+│     공유 메모리 동기화 없이 두 프로세스가 동시 쓸 때의 문제         │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  공유 메모리: counter = 0 (초기값)                                  │
+│                                                                     │
+│  시간 ──────────────────────────────────────────▶                   │
+│                                                                     │
+│  프로세스 A:  counter값 읽기(0) ─── counter+1 계산(1) ─── 쓰기(1)   │
+│                    │                        │                       │
+│  프로세스 B:        └── counter값 읽기(0) ─── counter+1 계산 ─┤     │
+│                                                │                    │
+│                                                ▼                    │
+│                                           쓰기(1) ← 기대값 2!       │
+│                                                                     │
+│  결과: counter = 1 (기대값은 2였음!)                                │
+│       → 경합 조건 (Race Condition) 발생!                            │
+│                                                                     │
+│  해결:                                                              │
+│  ┌────────────────────────────────────────────────────────┐         │
+│  │  프로세스 A: lock(mutex) → 읽기(0) → 계산(1) → 쓰기(1)  │        │
+│  │                        → unlock(mutex)                 │         │
+│  │                                                        │         │
+│  │  프로세스 B:               lock(mutex) 대기...          │        │
+│  │                           (A의 unlock 후)               │        │
+│  │                           → 읽기(1) → 계산(2) → 쓰기(2)│         │
+│  │                           → unlock(mutex)               │        │
+│  │                                                        │         │
+│  │  결과: counter = 2 (정상!)                               │       │
+│  └────────────────────────────────────────────────────────┘         │
+└─────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 타임라인 다이어그램은 공유 메모리에서 동기화가 없을 때 발생하는 경합 조건(Race Condition)의 전형적인 패턴을 보여준다. 두 프로세스가 동시에 <code>counter</code>의 값을 읽었을 때, 두 프로세스 모두 0을 읽고 각자 독립적으로 1을 더해 1을 쓴다. 기대값은 2이지만 실제 결과는 1이 된다. 이것이 원자성(Atomicity)이 보장되지 않는 읽기-수정-쓰기(Read-Modify-Write) 연산의 근본적 문제다. 뮤텍스(Mutex)를 사용하면 한 프로세스가 임계 구역(Critical Section)에 진입하는 동안 다른 프로세스가 대기하도록 강제하여, counter 값이 항상 올바르게 갱신되도록 보장한다. 공유 메모리를 사용하는 모든 시스템에서 이러한 동기화 보장이 필수적이다.</p>
+<h3 id="gwamog-yunghab-gwanjeom-1">과목 융합 관점</h3>
+<ul>
+<li><strong>컴퓨터 아키텍처 (CA)</strong>: 멀티코어 프로세서에서 각 코어가 공유하는 L3 캐시 (Last Level Cache)는 하드웨어 수준의 공유 메모리다. 캐시 일관성 프로토콜(MESI 등)이 소프트웨어 수준의 뮤텍스와 동일한 역할을 하여, 여러 코어가 동일 데이터에 일관되게 접근하도록 보장한다.</li>
+<li><strong>데이터베이스 (DB)</strong>: 공유 메모리는 데이터베이스의 공유 버퍼 풀(Shared Buffer Pool) 구현에 사용된다. 여러 백엔드 프로세스가 디스크에서 읽은 데이터 페이지를 공유 버퍼 풀에 저장하고 접근하므로, 디스크 I/O를 최소화할 수 있다. PostgreSQL의 <code>shared_buffers</code>가 대표적 사례다.</li>
+</ul>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li>
+<p><strong>시나리오 -- 대용량 비디오 프레임 실시간 처리</strong>: AI 기반 실시간 영상 분석 시스템에서 카메라 캡처 프로세스가 4K 해상도(1프레임당 약 8MB)를 초당 60프레임 생성하고, AI 추론 프로세스가 이를 분석해야 하는 상황.</p>
+<ul>
+<li><strong>판단</strong>: 메시지 전달(파이프/소켓)로 8MB * 60 = 480MB/s를 전송하면 커널 버퍼 복사 비용으로 CPU 사용률이 30% 이상 소모되고 지연이 수백 마이크로초로 증가한다. 반면 공유 메모리에 원형 버퍼(Ring Buffer)를 구성하면, 캡처 프로세스가 프레임을 버퍼에 쓰기만 하고 추론 프로세스가 포인터만 읽어오면 되므로 커널 개입이 전혀 필요 없다. 동기화는 CAS(Compare-And-Swap) 기반의 락 프리(Lock-free) 인덱스 관리로 구현하여 뮤텍스 오버헤드마저 제거해야 한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>시나리오 -- 공유 메모리 누수로 인한 시스템 메모리 고갈</strong>: 프로세스가 <code>shmget()</code>으로 공유 메모리를 할당한 뒤 비정상 종료(Crash)하여 <code>shmdt()</code>와 <code>shmctl(IPC_RMID)</code>이 호출되지 않아, 공유 메모리 세그먼트가 시스템에 영구적으로 남아 메모리가 점진적으로 고갈되는 상황.</p>
+<ul>
+<li><strong>판단</strong>: System V 공유 메모리의 전형적인 자원 누수 문제다. 해결책으로 세 가지를 병행해야 한다. 첫째, 프로세스에 시그널 핸들러(SIGINT, SIGTERM)를 등록하여 비정상 종료 시 <code>shmctl(IPC_RMID)</code>을 호출하도록 한다. 둘째, <code>ipcs -m</code> 명령으로 정기적으로 고아(orphan) 공유 메모리 세그먼트를 모니터링하고 <code>ipcrm -m</code>으로 정리하는 운영 스크립트를 구성한다. 셋째, POSIX 공유 메모리(<code>shm_open()</code>)로 전환하면 참조 카운트(Reference Count)가 0이 될 때 자동으로 해제되므로 누수 위험이 크게 줄어든다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="doib-cekeuriseuteu">도입 체크리스트</h3>
+<ul>
+<li>
+<p><strong>기술적</strong>: 공유 메모리의 크기를 페이지 크기의 배수로 맞추었는가? 동기화에 사용하는 뮤텍스/세마포어가 공유 메모리 내부에 배치되어 모든 프로세스가 동일한 동기화 객체를 참조하는가? 캐시 라인 (Cache Line, 64바이트) 경계에 따라 false sharing을 피하도록 자료구조를 패딩(Padding)했는가?</p>
+</li>
+<li>
+<p><strong>운영·보안적</strong>: 공유 메모리 세그먼트의 접근 권한(0600 등)이 최소 권한 원칙으로 설정되어 있어, 의도치 않은 프로세스의 접근이 차단되는가? <code>ipcrm</code> 정리 자동화 스크립트가 운영 체크리스트에 포함되어 있는가?</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비약</strong>: 공유 메모리는 성능이 뛰어나지만 관리 책임이 사용자에게 있으므로, 사용 후 반드시 정리(해제)하고, 동시 접근 시 반드시 동기화(뮤텍스)하는 두 가지 규칙을 절대 잊지 말아야 합니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">메시지 전달 (파이프/소켓)</th><th style="text-align: left">공유 메모리 (Shared Memory)</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량 (1MB 전송 지연)</strong></td><td style="text-align: left">약 50~200us (커널 복사 2회)</td><td style="text-align: left">약 0.1~1us (직접 접근)</td><td style="text-align: left">지연 <strong>100~1000배 단축</strong></td></tr>
+<tr><td style="text-align: left"><strong>정량 (CPU 사용률)</strong></td><td style="text-align: left">커널 모드 전환으로 높음</td><td style="text-align: left">유저 모드에서만 동작</td><td style="text-align: left">CPU 오버헤드 <strong>70% 이상 감소</strong></td></tr>
+<tr><td style="text-align: left"><strong>정성 (대역폭)</strong></td><td style="text-align: left">시스템 콜당 수 KB~수 MB</td><td style="text-align: left">물리 메모리 대역폭(수십 GB/s) 극대 활용</td><td style="text-align: left">데이터 처리량 <strong>수십배 증가</strong></td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang">미래 전망</h3>
+<ul>
+<li><strong>CXL (Compute Express Link) 기반 원격 공유 메모리</strong>: CXL 3.0 표준은 PCIe 버스를 통해 타 장치의 메모리를 로컬 메모리처럼 직접 접근할 수 있는 코히어런트(coherent) 공유 메모리 인터페이스를 제공한다. 이는 단일 머신의 공유 메모리 개념을 서버 클러스터 규모로 확장하여, NUMA 아키텍처의 메모리 접근 비균일성 문제를 해결하는 차세대 기술이다.</li>
+<li><strong>GPU 공유 메모리와의 통합</strong>: NVIDIA CUDA의 공유 메모리(Shared Memory)는 GPU 블록 내 스레드 간 데이터 공유를 위한 초고속 온칩 메모리로, CPU 프로세스 간 공유 메모리와 동일한 설계 원리를 공유한다. 통합 메모리(Unified Memory) 기술이 발전하면서 CPU-GPU 간의 투명한 공유 메모리 접근이 현실화되고 있다.</li>
+</ul>
+<h3 id="camgo-pyojun">참고 표준</h3>
+<ul>
+<li><strong>POSIX.1 (IEEE 1003.1)</strong>: <code>shm_open()</code>, <code>shm_unlink()</code>, <code>ftruncate()</code>, <code>mmap()</code>, <code>munmap()</code> POSIX 공유 메모리 API 표준.</li>
+<li><strong>System V IPC</strong>: <code>shmget()</code>, <code>shmat()</code>, <code>shmdt()</code>, <code>shmctl()</code> 레거시 공유 메모리 API.</li>
+<li><strong>Linux <code>memfd_create()</code> (3.17~)</strong>: 익명 파일 기반 공유 메모리로, 파일 시스템 경로 없이 <code>mmap()</code>과 결합하여 사용.</li>
+</ul>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">**IPC (Inter-Process Communication)**
+    ↓
+**뮤텍스 (Mutex) &#x2F; 세마포어 (Semaphore)**
+    ↓
+**mmap()**
+    ↓
+**페이지 테이블 (Page Table)**
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>IPC (Inter-Process Communication)</strong></td><td style="text-align: left">공유 메모리는 IPC의 한 종류로, 메시지 전달과 함께 프로세스 간 통신의 두 가지 근본 모델 중 하나를 형성한다.</td></tr>
+<tr><td style="text-align: left"><strong>뮤텍스 (Mutex) / 세마포어 (Semaphore)</strong></td><td style="text-align: left">공유 메모리에서 데이터 일관성을 보장하기 위해 반드시 함께 사용되어야 하는 동기화 도구로, 임계 구역 보호 역할을 한다.</td></tr>
+<tr><td style="text-align: left"><strong>mmap()</strong></td><td style="text-align: left">POSIX 공유 메모리의 핵심 시스템 콜로, 파일이나 공유 메모리 객체를 프로세스의 가상 주소 공간에 매핑하는 범용 메모리 매핑 인터페이스다.</td></tr>
+<tr><td style="text-align: left"><strong>페이지 테이블 (Page Table)</strong></td><td style="text-align: left">공유 메모리의 동작 원리를 하드웨어적으로 구현하는 핵심 자료구조로, 여러 가상 주소가 동일 물리 주소를 가리키도록 설정한다.</td></tr>
+<tr><td style="text-align: left"><strong>경합 조건 (Race Condition)</strong></td><td style="text-align: left">공유 메모리 사용 시 동기화 부재로 발생하는 대표적 오류로, 여러 프로세스가 동시에 같은 데이터를 수정할 때 결과가 불일치하는 현상이다.</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

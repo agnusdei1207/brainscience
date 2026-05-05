@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>444. ResNet의 잔차 연결 (Residual Connection)과 기울기 소실 방어 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 18, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ict convergence
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: ResNet(Residual Network)은 신경망이 20층을 넘어가면 오히려 성능이 떨어지는 저주(기울기 소실)를 풀기 위해, 데이터가 여러 층을 거칠 때 생기는 '정답과의 차이(Residual)'만 학습하도록 목표를 바꾸고, 앞쪽 데이터를 뒷쪽으로 훅 건너뛰어 더해주는 샛길(Skip Connection)을 뚫은 마법의 아키텍처다.
+<strong>비유</strong>: 100명의 사람이 일렬로 서서 앞사람의 말을 뒷사람에게 전하는 귓속말 게임이다. 100명쯤 거치면 내용이 다 찌그러진다. 그래서 1번 학생이 5번 학생에게, 5번 학생이 10번 학생에게 직접 다이렉트 전화를 걸어(Skip Connection) 원래 정보를 수시로 상기시켜주는 시스템이다.</p>
+</blockquote>
+<hr />
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>딥러닝 연구자들은 딜레마에 빠졌다. 층을 깊게 쌓을수록(Deep) 신경망이 더 복잡한 특징(눈, 코, 입)을 잘 찾아낸다는 것을 알았다. 하지만 층을 20층 이상으로 쌓자, 이상하게도 모델이 학습을 멈추고 에러율이 폭등했다.
+과적합(Overfitting)이 아니었다. 훈련 데이터(Train)의 오차도 같이 치솟았다. 층이 너무 깊어서 맨 뒤의 정답 오차(Loss)가 역전파를 타고 맨 앞까지 오기도 전에 0으로 사라져 버리는 **기울기 소실(Vanishing Gradient)**의 한계에 부딪힌 것이다.</p>
+<p>"아무리 층이 많아도 **맨 앞쪽의 정보가 맨 뒷층까지, 맨 뒤의 오차가 맨 앞층까지 100% 온전하게 뻥 뚫려 전달되는 직통 고속도로(Shortcut)**를 만들 순 없을까?"
+이 직관적인 고민에서, 데이터가 블록을 거치지 않고 옆으로 휙 점프해서 뒤로 합류하는 샛길, **잔차 연결(Residual Connection)**을 발명해 낸 2015년 마이크로소프트의 역작이 바로 <strong>ResNet</strong>이다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<p>ResNet은 신경망 블록의 학습 목표를 $H(x)$에서 $F(x)$로 완전히 뜯어고친 역발상 아키텍처다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────┐
+│             [ ResNet의 잔차 블록(Residual Block) 파이프라인 ]  │
+├────────────────────────────────────────────────────────┤
+│ 1. 기존 신경망의 학습 목표                               │
+│    - 목표: 입력 x를 받아서, 완벽한 정답 H(x)로 100% 변환하라! │
+│    - 층이 깊어질수록 원본 x의 모양을 완전히 잊어버리며 헤매게 됨   │
+│                                                        │
+│ 2. 잔차 연결 (Skip Connection)의 도입                   │
+│    - 입력 x를 2~3개의 은닉층(F(x))으로 통과시킴             │
+│    - 동시에, x를 은닉층 바깥으로 빼돌려서(Shortcut) 은닉층이 │
+│      끝난 결과물 F(x)에 더하기(+)로 냅다 합쳐버림!           │
+│    - 최종 수식: H(x) = F(x) + x                        │
+│                                                        │
+│ 3. 잔차(Residual) 학습으로의 목표 변경                    │
+│    - H(x) = F(x) + x 를 이항하면 -&gt; F(x) = H(x) - x    │
+│    - 즉, 은닉층(F)은 100% 완벽한 정답을 다 만들어 낼 필요 없이,  │
+│      &quot;정답(H)과 현재 입력(x)의 아주 미세한 차이(잔차)&quot;만 깎아내면 됨!│
+└────────────────────────────────────────────────────────┘
+</code></pre>
+<ol>
+<li><strong>기울기 고속도로 (Gradient Highway)</strong>: 역전파를 할 때 덧셈(+) 기호는 미분하면 1이다. 곱하기 없이 무조건 1이 전파되기 때문에, 150번째 층의 미분값이 샛길(Shortcut)을 타고 단 한 번의 손실도 없이 1번째 층까지 다이렉트로 빛의 속도로 꽂힌다. 이것이 ResNet이 152층, 1,000층까지 쌓아도 절대 무너지지 않는 진짜 이유다.</li>
+<li><strong>병목 블록 (Bottleneck Architecture)</strong>: 152층이나 되면 1x1 필터로 데이터의 채널(두께)을 확 줄였다가 3x3으로 특징을 뽑고 다시 1x1로 채널을 늘리는(압축했다 푸는) 병목 구조를 써서, 연산 파라미터 개수를 기가 막히게 절약했다.</li>
+</ol>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 현대 컴퓨터 비전(CNN) 아키텍처의 계보를 비교해 본다.</p>
+<p>동작 순서:</p>
+<p>현대 컴퓨터 비전(CNN) 아키텍처의 계보를 비교해 본다.</p>
+<table><thead><tr><th style="text-align: center">모델 (연도)</th><th style="text-align: center">은닉층 깊이</th><th style="text-align: left">핵심 발명 (Architecture)</th><th style="text-align: left">의미 및 한계</th></tr></thead><tbody>
+<tr><td style="text-align: center"><strong>AlexNet</strong> (2012)</td><td style="text-align: center">8층</td><td style="text-align: left">ReLU와 Dropout 최초 적용</td><td style="text-align: left">딥러닝 르네상스의 포문을 연 모델</td></tr>
+<tr><td style="text-align: center"><strong>VGGNet</strong> (2014)</td><td style="text-align: center">16~19층</td><td style="text-align: left">무조건 <strong>3x3 작은 필터만 여러 번 겹쳐 씀</strong></td><td style="text-align: left">파라미터가 너무 많고(1억 개) 20층의 벽을 못 넘음</td></tr>
+<tr><td style="text-align: center"><strong>GoogLeNet</strong> (2014)</td><td style="text-align: center">22층</td><td style="text-align: left">인셉션(Inception) 모듈 (다양한 크기 필터 동시 적용)</td><td style="text-align: left">구조가 너무 기괴하고 복잡함</td></tr>
+<tr><td style="text-align: center"><strong>ResNet</strong> (2015)</td><td style="text-align: center"><strong>152층</strong></td><td style="text-align: left"><strong>잔차 연결 (Skip Connection)</strong> 도입</td><td style="text-align: left"><strong>기울기 소실의 완벽한 종식. 현대 AI의 영원한 베이스라인</strong></td></tr>
+</tbody></table>
+<p>ResNet의 잔차 연결 철학은 이미지(CNN)를 넘어서 텍스트, 음성 등 인공지능의 모든 뼈대를 완전히 갈아치웠다. 2017년에 발표된 <strong>트랜스포머(Transformer)</strong> 아키텍처 역시, 멀티 헤드 어텐션을 통과한 뒤에 무조건 입력값을 다시 더해주는 <code>Add &amp; Norm</code> (Skip Connection) 구조를 그대로 복사해서 쓰고 있다. 이 샛길이 없다면 챗GPT도 학습이 불가능하다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<p><strong>실무 적용 시나리오:</strong>
+현업에서 공장 CCTV로 불량품 스크래치를 잡아내는 비전 AI 시스템을 구축한다. 처음부터 150층짜리 모델을 맨땅에서(Scratch) 코딩해서 학습시키는 건 바보짓이다. 데이터 과학자는 파이토치의 <code>torchvision.models</code>에서 <code>resnet50(pretrained=True)</code>를 한 줄로 불러온다. 이미 구글의 수천만 장 사진으로 학습된 똑똑한 50층짜리 뇌를 가져와서, 마지막 분류기(Classifier) 층 하나만 불량품/정상품(2개)으로 갈아 끼운 뒤 전이 학습(Transfer Learning)을 돌린다. 단 30분 만에 정확도 99%의 불량품 탐지기가 배포된다.</p>
+<p><strong>기술사 판단 포인트 (Trade-off):</strong>
+아키텍처 설계 시 기술사는 **'Depth(층수)의 증가'와 '메모리 병목(Feature Map Caching)'**의 물리적 트레이드오프를 통제해야 한다.</p>
+<ol>
+<li>ResNet은 $\oplus$ 덧셈(Skip Connection)을 하기 위해, 길을 건너뛰기 전의 원본 텐서 $x$를 버리지 않고 VRAM(GPU 메모리)에 계속 저장해 둬야 한다.</li>
+<li>따라서 VGG보다 파라미터(가중치) 개수는 적을지 몰라도, 훈련 시 순전파(Forward) 중간의 활성화 맵(Activation Map)을 기억하느라 실질적인 메모리 소모량은 152층에서 폭발한다.</li>
+<li>기술사는 GPU 메모리가 부족한 엣지 디바이스(스마트폰) 환경에서는 무작정 ResNet50/152를 고집하지 말고, 잔차 연결을 끊어버리고 구조를 모바일용으로 최적화한 <strong>MobileNet</strong>이나, Depth/Width/Resolution을 황금비율로 섞은 <strong>EfficientNet</strong>으로 뼈대를 교체하는 로드 밸런싱을 결단해야 한다.</li>
+</ol>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p>ResNet의 잔차 연결(Residual Connection)은 "네트워크가 아무리 깊어져도, 최소한 아무것도 안 하고 입력값을 그대로 통과시키는(Identity Mapping) 층보다는 성능이 나빠질 수 없다"는 천재적인 발상의 전환이다. 오차 역전파의 한계를 수학적 우회로를 뚫어 물리적으로 해결한 소프트웨어 엔지니어링의 극치다.</p>
+<p>결론적으로 ResNet 이후 "어떻게 기울기 소실을 막을 것인가?"에 대한 학계의 고민은 완벽하게 끝났다. 기술사는 AI 아키텍처의 설계도를 볼 때 잔차 덧셈($\oplus$) 기호를 단순한 더하기로 볼 것이 아니라, 수만 개의 미분값이 빛의 속도로 맨 앞단까지 다이렉트로 내리꽂히는 '무손실 광케이블 고속도로'로 인식해야 하며, 이 고속도로가 뚫려 있어야만 초거대 AI(LLM)가 숨을 쉴 수 있음을 깨달아야 한다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>ResNet의 잔차 연결(Residual Connection)은 "네트워크가 아무리 깊어져도, 최소한 아무것도 안 하고 입력값을 그대로 통과시키는(Identity Mapping) 층보다는 성능이 나빠질 수 없다"는 천재적인 발상의 전환이다. 오차 역전파의 한계를 수학적 우회로를 뚫어 물리적으로 해결한 소프트웨어 엔지니어링의 극치다.</p>
+<p>결론적으로 ResNet 이후 "어떻게 기울기 소실을 막을 것인가?"에 대한 학계의 고민은 완벽하게 끝났다. 기술사는 AI 아키텍처의 설계도를 볼 때 잔차 덧셈($\oplus$) 기호를 단순한 더하기로 볼 것이 아니라, 수만 개의 미분값이 빛의 속도로 맨 앞단까지 다이렉트로 내리꽂히는 '무손실 광케이블 고속도로'로 인식해야 하며, 이 고속도로가 뚫려 있어야만 초거대 AI(LLM)가 숨을 쉴 수 있음을 깨달아야 한다.</p>
+<p>결론적으로 ResNet의 잔차 연결 (Residual Connection)과 기울기 소실 방어는 기술 자체만으로 성과가 보장되지 않으며, 적용 맥락, 운영 역량, 데이터 품질, 보안·거버넌스 조건이 함께 충족될 때 비로소 실질적 가치가 구현된다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">통계적 학습과 규칙 기반 자동화
+    ↓
+딥러닝·대규모 사전학습 체계 확산
+    ↓
+ResNet의 잔차 연결 (Residual Connection)과 기울기 소실 방어 핵심 메커니즘 정립
+    ↓
+RAG·에이전트·멀티모달 응용 확장
+    ↓
+정렬·평가·거버넌스 중심의 운영 단계로 고도화
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">상위 개념</td><td style="text-align: left">딥러닝 컴퓨터 비전 (Computer Vision), 합성곱 신경망 (CNN)</td></tr>
+<tr><td style="text-align: left">하위 개념</td><td style="text-align: left">Skip Connection (잔차 연결 / 샛길), Residual Block, 병목 (Bottleneck) 아키텍처</td></tr>
+<tr><td style="text-align: left">연결 개념</td><td style="text-align: left">기울기 소실 (Vanishing Gradient), 트랜스포머 (Transformer), 전이 학습 (Transfer Learning)</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

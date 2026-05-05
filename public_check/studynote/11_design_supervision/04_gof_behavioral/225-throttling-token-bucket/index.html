@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>225. 쓰로틀링과 토큰 버킷 패턴 (Throttling &#x2F; Token Bucket Pattern) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote design supervision
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: Token Bucket (토큰 버킷) 알고리즘은 초당 R개 토큰이 버킷에 채워지고 요청마다 토큰을 소비하는 방식으로 API 호출 속도를 제어하는 Rate Limiting (속도 제한) 알고리즘이다 — 버스트(Burst) 트래픽을 버킷 용량(B) 한도 내에서 허용한다.
+2. <strong>가치</strong>: 토큰이 있으면 즉시 처리(버스트 허용), 토큰이 없으면 요청 거부 또는 대기 — 평균 처리량을 R rps (Requests Per Second)로 제한하면서도 순간 폭발 트래픽에 유연하게 대응한다.
+3. <strong>판단 포인트</strong>: 토큰 버킷은 버스트 허용 + 평균 속도 제한, 리키 버킷(Leaky Bucket)은 버스트 흡수 + 일정 속도 출력 — 두 알고리즘의 차이가 Rate Limiting 설계의 핵심이다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<h3 id="rate-limitingi-pilyohan-iyu">Rate Limiting이 필요한 이유</h3>
+<p>API 서버 없이 무제한 요청을 허용하면:</p>
+<ul>
+<li>DDoS 공격에 취약 (악의적 대량 요청)</li>
+<li>특정 클라이언트의 과도 사용으로 다른 클라이언트 피해</li>
+<li>백엔드 DB/서비스 과부하 → 전체 서비스 다운</li>
+</ul>
+<p><strong>Rate Limiting (속도 제한) 적용 목적</strong>:</p>
+<ul>
+<li>공정한 자원 배분 (Fair Usage)</li>
+<li>DoS/DDoS 방어</li>
+<li>서비스 안정성 보장 (SLA)</li>
+<li>요금 과금 기준 (유료 API 플랜)</li>
+</ul>
+<h3 id="rate-limiting-algorijeum-jongryu">Rate Limiting 알고리즘 종류</h3>
+<table><thead><tr><th style="text-align: left">알고리즘</th><th style="text-align: left">특징</th><th style="text-align: left">버스트 허용</th><th style="text-align: left">구현 복잡도</th></tr></thead><tbody>
+<tr><td style="text-align: left">Fixed Window Counter</td><td style="text-align: left">시간 창(Window)에서 카운팅</td><td style="text-align: left">제한적</td><td style="text-align: left">단순</td></tr>
+<tr><td style="text-align: left">Sliding Window Log</td><td style="text-align: left">정확한 슬라이딩 윈도우</td><td style="text-align: left">없음</td><td style="text-align: left">복잡, 메모리 많음</td></tr>
+<tr><td style="text-align: left">Sliding Window Counter</td><td style="text-align: left">근사 슬라이딩 윈도우</td><td style="text-align: left">제한적</td><td style="text-align: left">중간</td></tr>
+<tr><td style="text-align: left"><strong>Token Bucket</strong></td><td style="text-align: left"><strong>토큰 소비 방식</strong></td><td style="text-align: left"><strong>허용</strong></td><td style="text-align: left"><strong>중간</strong></td></tr>
+<tr><td style="text-align: left">Leaky Bucket</td><td style="text-align: left">큐를 통한 일정 속도 출력</td><td style="text-align: left">흡수 후 평활화</td><td style="text-align: left">중간</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: Rate Limiting은 놀이공원 입장 관리 — 아무리 많은 손님이 몰려도 회전문이 초당 R명만 통과시키고, 토큰 버킷은 대기열에 R명씩 들어가는 입장권(토큰)을 주는 방식이다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="tokeun-beokis-algorijeum-gujo">토큰 버킷 알고리즘 구조</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                   Token Bucket Algorithm                    │
+│                                                             │
+│  토큰 생성:                                                   │
+│    초당 R개 토큰 추가 ────▶  ┌──────────────────┐            │
+│    (Rate Refill)            │    Token Bucket   │            │
+│                             │  [T][T][T][T][T]  │            │
+│                             │  capacity = B개   │            │
+│                             └────────┬─────────┘            │
+│                                      │                       │
+│  요청 처리:                            │                       │
+│    ┌──────────┐  토큰 있음?  토큰 소비  │                       │
+│    │ Request  │────────────▶ (1개 차감) └──▶  처리(200 OK)    │
+│    └──────────┘                                             │
+│         │        토큰 없음                                    │
+│         └─────────────────────────────▶  거부(429 Too Many) │
+│                                                             │
+│  파라미터:                                                    │
+│    R (Rate): 초당 토큰 충전 속도                               │
+│    B (Bucket): 버킷 최대 용량 (최대 버스트 크기)               │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="tokeun-beokis-vs-riki-beokis-haegsim-cai">토큰 버킷 vs 리키 버킷 핵심 차이</h3>
+<pre><code>Token Bucket (토큰 버킷):
+  입력:  [burst][burst][burst]···[quiet]···
+  처리:  [burst][burst][burst]···[quiet]···
+  → 버킷에 토큰이 있으면 버스트 즉시 처리
+  → 버킷 비면 거부 (거부 또는 대기)
+
+Leaky Bucket (리키 버킷):
+  입력:  [burst][burst][burst]···[quiet]···
+  처리:  [▬][▬][▬][▬][▬][▬][▬]···  (일정 속도)
+  → 버스트를 버킷에 흡수하고 일정 속도로 &#x27;새어 나옴&#x27;
+  → 버킷 넘침 시 패킷 드롭
+</code></pre>
+<h3 id="api-gateway-rate-limiting-guhyeon">API Gateway Rate Limiting 구현</h3>
+<pre><code>AWS API Gateway 쓰로틀링 설정:
+  Rate (속도):  초당 요청 수 (rps)
+  Burst:        순간 최대 요청 수 (버킷 크기)
+
+예시:
+  Rate  = 100 rps (초당 100개 토큰 충전)
+  Burst = 500     (버킷 용량, 최대 버스트)
+
+  → 평시: 초당 100 요청 처리
+  → 갑자기 500 요청: 버킷에 토큰 남아있으면 즉시 처리
+  → 500 초과: 429 Too Many Requests 반환
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: 토큰 버킷은 지하철 개찰구 — 평소에는 통행권(토큰)이 쌓이고, 출근 시간 러시(버스트)에는 모아둔 통행권을 한번에 써서 처리하고, 통행권이 다 소진되면 다음 통행권이 쌓일 때까지 대기한다.</p>
+<hr />
+<h2 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h2>
+<h3 id="rate-limiting-eungdab-kodeuwa-hedeo">Rate Limiting 응답 코드와 헤더</h3>
+<table><thead><tr><th style="text-align: left">HTTP 상태 코드</th><th style="text-align: left">의미</th><th style="text-align: left">헤더</th></tr></thead><tbody>
+<tr><td style="text-align: left">200 OK</td><td style="text-align: left">요청 처리 성공</td><td style="text-align: left">X-RateLimit-Remaining: 99</td></tr>
+<tr><td style="text-align: left">429 Too Many Requests</td><td style="text-align: left">속도 제한 초과</td><td style="text-align: left">Retry-After: 60</td></tr>
+<tr><td style="text-align: left">503 Service Unavailable</td><td style="text-align: left">서버 과부하</td><td style="text-align: left">—</td></tr>
+</tbody></table>
+<p>표준 응답 헤더:</p>
+<pre><code>X-RateLimit-Limit:     100    (최대 허용 요청 수)
+X-RateLimit-Remaining: 73     (남은 요청 수)
+X-RateLimit-Reset:     1716000000 (리셋 시각, Unix timestamp)
+Retry-After:           30     (재시도 권장 대기 시간, 초)
+</code></pre>
+<h3 id="bunsan-rate-limiting-redis-lua-seukeuribteu">분산 Rate Limiting — Redis + Lua 스크립트</h3>
+<p>단일 서버에서는 메모리 카운터로 Rate Limiting이 간단하지만, 수평 확장(다중 서버) 환경에서는 중앙 저장소가 필요하다:</p>
+<pre data-lang="lua" class="language-lua "><code class="language-lua" data-lang="lua">-- Redis Lua 스크립트 (원자적 Token Bucket)
+local key       = KEYS[1]           -- &quot;rate:user:123&quot;
+local capacity  = tonumber(ARGV[1]) -- 버킷 크기
+local refill    = tonumber(ARGV[2]) -- 초당 토큰 충전
+local now       = tonumber(ARGV[3]) -- 현재 시각 (ms)
+local requested = tonumber(ARGV[4]) -- 요청 토큰 수
+
+local last_tokens = tonumber(redis.call(&quot;HGET&quot;, key, &quot;tokens&quot;) or capacity)
+local last_time   = tonumber(redis.call(&quot;HGET&quot;, key, &quot;ts&quot;) or now)
+
+local elapsed = math.max(0, now - last_time) &#x2F; 1000.0  -- 경과 초
+local tokens  = math.min(capacity, last_tokens + elapsed * refill)
+
+if tokens &gt;= requested then
+    tokens = tokens - requested
+    redis.call(&quot;HMSET&quot;, key, &quot;tokens&quot;, tokens, &quot;ts&quot;, now)
+    redis.call(&quot;EXPIRE&quot;, key, math.ceil(capacity &#x2F; refill) + 1)
+    return 1  -- 허용
+else
+    return 0  -- 거부
+end
+</code></pre>
+<h3 id="rate-limiting-sujunbyeol-seolgye">Rate Limiting 수준별 설계</h3>
+<table><thead><tr><th style="text-align: left">수준</th><th style="text-align: left">키</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">전역 (Global)</td><td style="text-align: left">—</td><td style="text-align: left">전체 시스템 트래픽 상한</td></tr>
+<tr><td style="text-align: left">IP 기반</td><td style="text-align: left"><code>rate:ip:{ip}</code></td><td style="text-align: left">DDoS/스크래핑 방어</td></tr>
+<tr><td style="text-align: left">사용자 기반</td><td style="text-align: left"><code>rate:user:{userId}</code></td><td style="text-align: left">공정 사용</td></tr>
+<tr><td style="text-align: left">API 키 기반</td><td style="text-align: left"><code>rate:apikey:{key}</code></td><td style="text-align: left">유료 플랜별 제한</td></tr>
+<tr><td style="text-align: left">엔드포인트 기반</td><td style="text-align: left"><code>rate:ep:{endpoint}</code></td><td style="text-align: left">민감 API 보호</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 분산 Rate Limiting은 멀티 지점 은행의 계좌 잔액 관리 — 어느 지점(서버)에서 출금해도 중앙 DB(Redis)에서 잔액(토큰)을 공유하므로 같은 규칙이 적용된다.</p>
+<hr />
+<h2 id="4-bigyo-mic-teureideuopeu">4. 비교 및 트레이드오프</h2>
+<h3 id="spring-boot-rate-limiting-guhyeon-bucket4j">Spring Boot Rate Limiting 구현 (Bucket4j)</h3>
+<pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">@Component
+public class RateLimitFilter extends OncePerRequestFilter {
+    private final Map&lt;String, Bucket&gt; buckets = new ConcurrentHashMap&lt;&gt;();
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain chain) throws IOException, ServletException {
+        String userId = extractUserId(request);
+        Bucket bucket = buckets.computeIfAbsent(userId, k -&gt;
+            Bucket.builder()
+                .addLimit(Bandwidth.classic(100, Refill.greedy(100, Duration.ofMinutes(1))))
+                .build()
+        );
+
+        if (bucket.tryConsume(1)) {
+            chain.doFilter(request, response);
+        } else {
+            response.setStatus(429);
+            response.setHeader(&quot;Retry-After&quot;, &quot;60&quot;);
+            response.getWriter().write(&quot;{\&quot;error\&quot;: \&quot;Rate limit exceeded\&quot;}&quot;);
+        }
+    }
+}
+</code></pre>
+<h3 id="rate-limiting-paramiteo-seoljeong-gaideu">Rate Limiting 파라미터 설정 가이드</h3>
+<table><thead><tr><th style="text-align: left">서비스 유형</th><th style="text-align: left">Rate (rps)</th><th style="text-align: left">Burst</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">무료 API</td><td style="text-align: left">10</td><td style="text-align: left">50</td><td style="text-align: left">기본 공정 사용 보장</td></tr>
+<tr><td style="text-align: left">유료 기본 플랜</td><td style="text-align: left">100</td><td style="text-align: left">500</td><td style="text-align: left">대부분 서비스 적합</td></tr>
+<tr><td style="text-align: left">엔터프라이즈</td><td style="text-align: left">1,000+</td><td style="text-align: left">5,000+</td><td style="text-align: left">SLA 계약에 따라</td></tr>
+<tr><td style="text-align: left">관리자 API</td><td style="text-align: left">10</td><td style="text-align: left">20</td><td style="text-align: left">민감 엔드포인트 보호</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: Rate Limiting 파라미터 설정은 고속도로 속도 제한 설계 — 일반 도로(무료 API)는 60km/h, 고속도로(유료 API)는 110km/h로 다르게 설정하고, 단속 카메라(Redis)가 모든 톨게이트(서버)에서 동일하게 적용한다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-coejeoghwa-gibeob">5. 실무 적용 및 최적화 기법</h2>
+<p>Token Bucket 기반 Rate Limiting은 API 게이트웨이의 필수 구성 요소다:</p>
+<p><strong>기대효과</strong>:</p>
+<ul>
+<li><strong>공정한 자원 배분</strong>: 특정 클라이언트의 자원 독점 방지</li>
+<li><strong>DDoS 방어</strong>: 악의적 대량 요청 차단</li>
+<li><strong>서비스 안정성</strong>: 백엔드 과부하 방지</li>
+<li><strong>버스트 허용</strong>: 정상적인 트래픽 패턴 수용</li>
+</ul>
+<p><strong>설계 원칙</strong>:</p>
+<ul>
+<li>Rate와 Burst를 서비스 유형별로 별도 설정</li>
+<li>429 응답에 Retry-After 헤더 포함 (클라이언트 재시도 가이드)</li>
+<li>분산 환경에서는 Redis + Lua 원자적 구현 필수</li>
+<li>클라이언트에게 현재 한도를 X-RateLimit-* 헤더로 투명하게 공개</li>
+</ul>
+<p>기술사 시험에서는 <strong>토큰 버킷 알고리즘의 파라미터(R, B)와 동작 원리</strong>, <strong>리키 버킷과의 차이</strong>, **분산 환경에서의 구현 방법(Redis)**을 서술하는 것이 핵심이다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: Token Bucket Rate Limiting은 놀이공원 자이로드롭 — 안전을 위해 한번에 R명만 탑승(rate)하고, 여러 명이 미리 대기해도 최대 B명까지만 줄(버킷)을 허용한다. 정원 초과 시 "지금 자리 없어요"(429) 라고 안내한다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">관계</th><th style="text-align: left">개념</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">상위 개념</td><td style="text-align: left">Rate Limiting (속도 제한)</td><td style="text-align: left">Token Bucket이 구현하는 상위 개념</td></tr>
+<tr><td style="text-align: left">대비 알고리즘</td><td style="text-align: left">Leaky Bucket</td><td style="text-align: left">일정 출력 속도 보장, 버스트 평활화</td></tr>
+<tr><td style="text-align: left">연관 알고리즘</td><td style="text-align: left">Fixed/Sliding Window</td><td style="text-align: left">다른 Rate Limiting 구현 방식</td></tr>
+<tr><td style="text-align: left">구현 도구</td><td style="text-align: left">Redis + Lua Script</td><td style="text-align: left">분산 환경의 원자적 Rate Limiting</td></tr>
+<tr><td style="text-align: left">구현 라이브러리</td><td style="text-align: left">Bucket4j</td><td style="text-align: left">Java 토큰 버킷 라이브러리</td></tr>
+<tr><td style="text-align: left">연관 인프라</td><td style="text-align: left">AWS API Gateway</td><td style="text-align: left">서비스 레벨 Rate Limiting 기본 내장</td></tr>
+<tr><td style="text-align: left">연관 개념</td><td style="text-align: left">Circuit Breaker</td><td style="text-align: left">Rate Limit 초과 + 장애 복합 대응</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ul>
+<li>토큰 버킷은 동전 게임기 — 동전(토큰)이 있어야 게임을 할 수 있고, 동전이 없으면 기다려야 해. 동전통(버킷)이 꽉 차면 새 동전이 더 들어오지 않아.</li>
+<li>초당 R개씩 동전이 자동으로 생기는데, 동전을 모아뒀다가(버스트) 한번에 많이 쓸 수 있어 — 단, 동전통(B) 크기를 넘으면 더 모을 수 없어.</li>
+<li>토큰이 부족해서 게임을 못 하면 "토큰 없어요 (429 Too Many Requests), X초 후에 다시 와요 (Retry-After)"라고 친절하게 알려줘야 해.</li>
+</ul>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

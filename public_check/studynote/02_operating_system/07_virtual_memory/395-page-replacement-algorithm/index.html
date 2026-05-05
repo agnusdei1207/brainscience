@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>395. 페이지 교체 (Page Replacement)의 필요성 - 프레임 가용 공간 부족 시 (Over-allocation) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 23, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 페이지 교체(Page Replacement)는 운영체제가 가상 메모리(디스크)를 믿고 <strong>물리 램(RAM) 용량보다 훨씬 더 많은 메모리를 프로세스들에게 나눠주는 허풍(초과 할당, Over-allocation)을 쳤을 때, 결국 물리 램 잔고가 바닥나 파산하는 것을 막기 위한 수습 메커니즘</strong>이다.
+<strong>비유</strong>: 페이지 교체는 <strong>만석이 된 스타벅스 카페의 눈치 게임</strong>과 같다. 빈자리가 0개(램 풀방)인데 새로운 단체 손님(새 페이지 요청)이 문을 열고 들어왔다. 점장(OS 커널)은 손님을 쫓아내지 않는다. 대신 매장을 쓱 둘러본 뒤, 커피 다 마시고 3시간째 자면서 폰만 보는 카공족(LRU 꼴찌 페이지)의 멱살을 잡아 매장 밖 벤치(디스크 스왑)로 내쫓아버린다. 그리고 그 자리를 쓱 닦아 새 손님을 앉히는 피 튀기는 테이블 회전율(다중 프로그래밍) 극대화 전략이다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: 페이지 교체는 물리 메모리의 잔여 빈 프레임(Free Frame List)이 임계치(Watermark) 밑으로 고갈되었을 때, 커널이 기존에 램을 차지하고 있던 누군가의 페이지를 희생양(Victim)으로 골라 하드디스크 스왑(Swap) 공간으로 쫓아내고 빈방을 강제로 창출하는 작업이다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 가상 메모리는 램 16GB 컴퓨터에 카카오톡(10GB), 크롬(10GB), 롤(10GB)을 켤 수 있게 해준다 (총 30GB). 처음엔 다들 조금씩만 쓰니까 램 16GB 안에서 평화롭게 돌아간다. 그런데 갑자기 세 프로그램이 동시에 풀옵션으로 돌기 시작하며 17GB의 램을 요구(Demand)했다! 램은 16GB가 한계인데 17GB를 달라고 떼를 쓴다. 이때 빈방이 없다고 "에러! OOM!"을 띄우며 게임을 튕기게 만들면 그건 쓰레기 OS다. "어 잠깐, 크롬 네가 예전에 띄워둔 광고 배너 페이지, 이거 1시간 동안 안 봤지? 너 방 빼서 스왑으로 가!" 하고 강제 퇴거를 시켜 자리를 마련해 주는 냉혹한 청소부(Reclaimer)가 반드시 필요했다.</p>
+</li>
+<li>
+<p><strong>등장 배경 및 OS의 허풍(Over-allocation)</strong>:</p>
+<ol>
+<li><strong>가상 메모리의 과도한 약속</strong>: OS는 물리 램이 16GB여도, 10개의 앱에게 "너희 각각 4GB씩 혼자 다 써!"라며 40GB어치의 가짜 수표(가상 주소)를 남발해 두었다 (Over-allocation).</li>
+<li><strong>수표 결제의 폭주</strong>: 평소엔 1GB씩만 써서 넘어갔는데, 어느 날 앱들이 동시에 가짜 수표 20GB를 은행(MMU)에 들고 와서 진짜 현금(물리 램)으로 바꿔달라고 요구하는 '뱅크런(Bank run)'이 터졌다.</li>
+<li><strong>페이지 교체의 구원</strong>: 뱅크런에 파산(OOM)하지 않으려면, 이전에 빌려줬던 현금을 어떻게든 강제로 빼앗아 와서 막아야 했다. 그것이 바로 페이지 희생양(Victim Page) 선택의 서막이다.</li>
+</ol>
+</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌───────────────────────────────────────────────────────────────────────┐
+│        Over-allocation 뱅크런 사태와 페이지 교체의 구원 시각화        │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│ [ 상황: 물리 램(RAM) 16GB. 잔고 0원(빈 프레임 0개) ]                  │
+│  [ 크롬 5G ] [ 워드 3G ] [ 롤 8G ] ◀ 꽉 차 있음! 100%                 │
+│                                                                       │
+│ ▶ 위기 폭발 (Page Fault)                                              │
+│  롤(LoL)이 &quot;나 새로운 맵 데이터 1GB 더 줘!&quot; 하고 페이지 폴트 때림.    │
+│  OS: &quot;아뿔싸... 줄 빈 프레임이 단 한 개도 없네?&quot;                      │
+│                                                                       │
+│                    ↓↓ [ 페이지 교체 알고리즘 발동 ] ↓↓                │
+│                                                                       │
+│ [ 1. 희생양 수색 (Select Victim) ]                                    │
+│ OS가 매의 눈으로 램을 뒤짐. &quot;크롬 저 구석에 있는 광고 탭 1GB,         │
+│ 저거 2시간 동안 한 번도 클릭 안 한 놈이다! 저 놈 당첨!&quot;               │
+│                                                                       │
+│ [ 2. 스왑 아웃 (Swap Out) ]                                           │
+│ 크롬의 1GB를 디스크로 내동댕이침. -&gt; 램에 [ 1GB 빈 구멍 창출! ]       │
+│                                                                       │
+│ [ 3. 스왑 인 (Swap In) ]                                              │
+│ 확보한 1GB 빈 구멍에, 롤(LoL)의 새 맵 데이터를 예쁘게 넣어줌.         │
+│ ✅ 결과: 아무 앱도 죽지 않고 시스템은 극적인 평화를 되찾음.           │
+└───────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 메커니즘 덕분에 유저들은 "내 컴퓨터 램이 꽉 찼네?"라는 사실조차 모른 채 그냥 컴퓨터가 조금 버벅대나 보다 하고 계속 쓰게 된다. 페이지 교체는 단순히 에러를 막는 수비 기술이 아니다. 16GB 하드웨어로 30GB의 워크로드를 돌리게 만드는, 소프트웨어가 창조해 낸 완벽한 무에서 유를 창조하는 '연금술'이다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="agmayi-diseukeu-obeohedeu-dirty-bityi-buhwal">악마의 디스크 오버헤드 (Dirty Bit의 부활)</h3>
+<p>빈방이 있을 때의 페이지 폴트는 디스크를 1번(읽어오기)만 쓰면 된다. 하지만 <strong>빈방이 없어 페이지 교체가 끼어드는 순간 끔찍한 오버헤드 곱빼기</strong>가 터진다.</p>
+<ol>
+<li><strong>희생양(Victim)이 Clean 한 경우</strong>:
+<ul>
+<li>램에 올라온 뒤 내용이 한 번도 안 바뀐 놈(예: 실행 코드).</li>
+<li>"어차피 디스크 원본이랑 내용 똑같으니 스왑에 쓸 필요 없이 램에서 그냥 휴지통에 찢어버려!" -&gt; <strong>디스크 쓰기 0회</strong>. 읽어올 때 1회만 I/O 발생. (쾌적함)</li>
+</ul>
+</li>
+<li><strong>희생양(Victim)이 Dirty 한 경우</strong>: (최악의 시나리오)
+<ul>
+<li>램에 올라와서 값이 변경된 놈 (페이지 테이블의 <strong>Modify/Dirty Bit가 1</strong>로 세팅됨).</li>
+<li>이 놈을 그냥 찢으면 변경된 값이 영영 날아간다.</li>
+<li>무조건 디스크(스왑)에 <strong>먼저 덮어써야(Write-back)</strong> 한다. (디스크 I/O 1회 발생)</li>
+<li>쫓아낸 뒤에야 롤(LoL) 데이터를 <strong>읽어온다(Read)</strong>. (디스크 I/O 2회 발생)</li>
+<li><strong>결과</strong>: 페이지 교체 한 번에 하드디스크가 2번이나 드르륵거리며 <strong>속도가 완전히 반토막(Double Penalty)</strong> 난다.</li>
+</ul>
+</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────────┐
+│              Dirty Bit에 따른 교체 페널티 차이 회로도                │
+├──────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│ [ 희생양 페이지 선택 완료 ]                                          │
+│          │                                                           │
+│          ▼ MMU의 Dirty Bit 검사                                      │
+│ ┌───────────────────┐                                                │
+│ │ Dirty Bit == 1 ?  │ ──(Yes)──▶ [ 디스크에 Write (8ms 지연) ]       │
+│ └────────┬──────────┘                  │                             │
+│          │ (No: Clean)                  │                            │
+│          ▼                              ▼                            │
+│ [ 램 공간 1차 확보 완료 ] ◀────────────────┘                         │
+│          │                                                           │
+│          ▼                                                           │
+│ [ 새 데이터를 디스크에서 Read (8ms 지연) ]                           │
+│                                                                      │
+│ ⚡ Clean 페이지 교체: 8ms 소요  &#x2F;  Dirty 페이지 교체: 16ms 소요!     │
+└──────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> OS 설계자들이 가장 발작을 일으키는 지점이 바로 저 '16ms 딜레이'다. 그래서 현존하는 거의 모든 운영체제(Windows, 리눅스)의 페이지 교체 알고리즘(LRU 등)은 단순히 "가장 오래된 놈"을 쫓아내는 걸 넘어, **"기왕이면 제일 오래됐으면서 동시에 0순위로 Clean(더티 비트가 0인) 한 놈을 쫓아내라"**는 이중 필터링 로직이 하드코딩되어 있다. 디스크 쓰기 1번을 막기 위한 눈물겨운 발버둥이다.</p>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>요청 또는 이벤트 발생</strong>: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.</li>
+<li><strong>현재 상태 확인</strong>: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.</li>
+<li><strong>정책 적용 및 자원 배정</strong>: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.</li>
+<li><strong>결과 반영 및 후속 처리</strong>: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.</li>
+</ol>
+<h3 id="bigyo-1-over-allocation-cogwa-haldang-i-naheun-3gaji-unmyeong">비교 1: Over-allocation (초과 할당)이 낳은 3가지 운명</h3>
+<p>프로그램이 램 용량보다 더 많은 램을 할당(malloc) 받았을 때 시스템은 3가지 길 중 하나를 걷게 된다.</p>
+<table><thead><tr><th style="text-align: left">시스템 반응</th><th style="text-align: left">동작 방식 및 결과</th><th style="text-align: left">OS의 철학</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>OOM Killer (사형)</strong></td><td style="text-align: left">램도 스왑도 없으면 제일 무거운 앱 1개를 총으로 쏴 죽임</td><td style="text-align: left">"다 같이 죽느니 한 놈 죽여서 전체를 살린다" (리눅스의 결단)</td></tr>
+<tr><td style="text-align: left"><strong>Swapping (통짜 교체)</strong></td><td style="text-align: left">옛날 OS. 앱 통째로 10GB를 디스크로 내쫓음</td><td style="text-align: left">"느려 터져도 에러는 안 띄우겠다" (구형 유닉스)</td></tr>
+<tr><td style="text-align: left"><strong>Page Replacement (진화)</strong></td><td style="text-align: left"><strong>앱은 살려두고 당장 안 쓰는 4KB 페이지들만 솎아내서 디스크로 보냄</strong></td><td style="text-align: left">"죽이지도 않고 통째로 옮기지도 않는 궁극의 줄타기!" (현대 범용 OS)</td></tr>
+</tbody></table>
+<h3 id="peureim-haldang-frame-allocation-gwa-peiji-gyoce-replacement-yi-sanggwangwangye">프레임 할당(Frame Allocation)과 페이지 교체(Replacement)의 상관관계</h3>
+<ul>
+<li>페이지 교체의 핵심은 결국 "남의 방을 뺏는 것"이다.</li>
+<li>그런데 <strong>누구 방</strong>을 뺏을 것인가?</li>
+<li><strong>전역 교체(Global Replacement)</strong>: "빈방 없으면 옆에 있는 카카오톡의 램 프레임을 뺏어서 내 엑셀에 줘!" -&gt; 시스템 전체 램을 유동적으로 써서 처리량이 높다 (대세).</li>
+<li><strong>지역 교체(Local Replacement)</strong>: "빈방 없으면 엑셀 네가 갖고 있는 100개 프레임 안에서 네 스스로 안 쓰는 거 하나 지우고 돌려막기 해! 남의 방 넘보지 마!" -&gt; 메모리 독점은 막지만 남는 램을 활용 못 해서 잘 안 쓴다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────┬────────────┬────────────┬──────────────────────────────────┐
+│ 교체 범위  │ 뺏기는 대상   │ 장점         │ 단점                      │
+├──────────┼────────────┼────────────┼──────────────────────────────────┤
+│ 전역(Global)│ 메모리의 모든 앱│ 램 활용률 극대화│ 남의 앱 렉 걸리게 함│
+│ 지역(Local) │ 자기 자신 앱  │ 남에게 피해 안 줌│ 램 낭비, OOM 위험    │
+└──────────┴────────────┴────────────┴──────────────────────────────────┘
+</code></pre>
+<p><strong>[매트릭스 해설]</strong> 거의 모든 리눅스/윈도우 시스템은 **전역 교체(Global)**를 채택한다. 이 때문에 내가 크롬을 미친 듯이 켜면 카카오톡이 렉이 걸린다. 크롬이 전역 교체를 통해 카카오톡이 쓰던 램 프레임을 다 빼앗아 스왑으로 던져버렸기 때문이다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="bigyo-1-over-allocation-cogwa-haldang-i-naheun-3gaji-unmyeong-1">비교 1: Over-allocation (초과 할당)이 낳은 3가지 운명</h3>
+<p>프로그램이 램 용량보다 더 많은 램을 할당(malloc) 받았을 때 시스템은 3가지 길 중 하나를 걷게 된다.</p>
+<table><thead><tr><th style="text-align: left">시스템 반응</th><th style="text-align: left">동작 방식 및 결과</th><th style="text-align: left">OS의 철학</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>OOM Killer (사형)</strong></td><td style="text-align: left">램도 스왑도 없으면 제일 무거운 앱 1개를 총으로 쏴 죽임</td><td style="text-align: left">"다 같이 죽느니 한 놈 죽여서 전체를 살린다" (리눅스의 결단)</td></tr>
+<tr><td style="text-align: left"><strong>Swapping (통짜 교체)</strong></td><td style="text-align: left">옛날 OS. 앱 통째로 10GB를 디스크로 내쫓음</td><td style="text-align: left">"느려 터져도 에러는 안 띄우겠다" (구형 유닉스)</td></tr>
+<tr><td style="text-align: left"><strong>Page Replacement (진화)</strong></td><td style="text-align: left"><strong>앱은 살려두고 당장 안 쓰는 4KB 페이지들만 솎아내서 디스크로 보냄</strong></td><td style="text-align: left">"죽이지도 않고 통째로 옮기지도 않는 궁극의 줄타기!" (현대 범용 OS)</td></tr>
+</tbody></table>
+<h3 id="peureim-haldang-frame-allocation-gwa-peiji-gyoce-replacement-yi-sanggwangwangye-1">프레임 할당(Frame Allocation)과 페이지 교체(Replacement)의 상관관계</h3>
+<ul>
+<li>페이지 교체의 핵심은 결국 "남의 방을 뺏는 것"이다.</li>
+<li>그런데 <strong>누구 방</strong>을 뺏을 것인가?</li>
+<li><strong>전역 교체(Global Replacement)</strong>: "빈방 없으면 옆에 있는 카카오톡의 램 프레임을 뺏어서 내 엑셀에 줘!" -&gt; 시스템 전체 램을 유동적으로 써서 처리량이 높다 (대세).</li>
+<li><strong>지역 교체(Local Replacement)</strong>: "빈방 없으면 엑셀 네가 갖고 있는 100개 프레임 안에서 네 스스로 안 쓰는 거 하나 지우고 돌려막기 해! 남의 방 넘보지 마!" -&gt; 메모리 독점은 막지만 남는 램을 활용 못 해서 잘 안 쓴다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────┬────────────┬────────────┬──────────────────────────────────┐
+│ 교체 범위  │ 뺏기는 대상   │ 장점         │ 단점                      │
+├──────────┼────────────┼────────────┼──────────────────────────────────┤
+│ 전역(Global)│ 메모리의 모든 앱│ 램 활용률 극대화│ 남의 앱 렉 걸리게 함│
+│ 지역(Local) │ 자기 자신 앱  │ 남에게 피해 안 줌│ 램 낭비, OOM 위험    │
+└──────────┴────────────┴────────────┴──────────────────────────────────┘
+</code></pre>
+<p><strong>[매트릭스 해설]</strong> 거의 모든 리눅스/윈도우 시스템은 **전역 교체(Global)**를 채택한다. 이 때문에 내가 크롬을 미친 듯이 켜면 카카오톡이 렉이 걸린다. 크롬이 전역 교체를 통해 카카오톡이 쓰던 램 프레임을 다 빼앗아 스왑으로 던져버렸기 때문이다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="silmu-sinario-seuraesing-thrashing-yi-soyongdoliwa-dibeoging">실무 시나리오: 스래싱(Thrashing)의 소용돌이와 디버깅</h3>
+<p>페이지 교체는 가상 메모리의 영웅이지만, 선을 넘으면 시스템을 파멸로 이끄는 악마다.</p>
+<ol>
+<li><strong>발단</strong>: 16GB 램 서버에 3개의 무거운 빅데이터 분석 파이썬 10GB짜리 스크립트를 켰다 (총 30GB 요구).</li>
+<li><strong>페이지 교체의 한계 돌파</strong>:
+<ul>
+<li>A 스크립트가 램을 달라고 B 스크립트의 4KB를 디스크로 내쫓았다(Swap-out).</li>
+<li>0.01초 뒤 B 스크립트가 실행 차례가 되어 방금 쫓겨난 자기 데이터를 읽으려고, 다시 A의 데이터를 디스크로 쫓아내며(Swap-out) 자기 걸 읽어왔다(Swap-in).</li>
+<li>다시 A 차례가 되어 B 걸 쫓아낸다... (무한 반복).</li>
+</ul>
+</li>
+<li><strong>스래싱(Thrashing) 지옥 터짐</strong>:
+<ul>
+<li>디스크 I/O가 100%를 찍으며 서버 하드디스크가 비명을 지른다. CPU 사용률은 1%인데, CPU는 아무 계산도 못 하고 오직 A와 B의 데이터를 램과 디스크 사이에서 퍼 나르는 '교체 작업(Replacement)'에만 모든 생명력을 탕진한다.</li>
+</ul>
+</li>
+<li><strong>실무적 결단</strong>:
+<ul>
+<li>시스템 관리자는 <code>vmstat</code> 명령어로 초당 수천 번의 <code>si/so(Swap In/Out)</code>가 터지는 걸 보고 식은땀을 흘리며 <code>kill -9</code>로 파이썬 하나를 쏴 죽인다. 즉시 10GB 빈 램이 생기고 페이지 교체가 멈추며 서버가 마법처럼 평온을 되찾는다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="algorijeum-jeonjaengyi-seomag-fifo-vs-lru">알고리즘 전쟁의 서막 (FIFO vs LRU)</h3>
+<p>누구를 내쫓을 것인가?
+가장 먼저 램에 들어온 놈을 내쫓는 **FIFO(First-In First-Out)**를 썼더니, 가장 자주 쓰는 핵심 코드가 자꾸 쫓겨나서 에러(Belady의 모순)가 터졌다. 공학자들은 "과거를 보면 미래를 안다"는 철학 아래 <strong>"가장 오랫동안 한 번도 안 쳐다본 놈을 쫓아내자"는 LRU(Least Recently Used)</strong> 알고리즘을 숭배하게 되었다. 이 피 튀기는 페이지 교체 알고리즘 100년 전쟁은 다음 키워드에서 본격적으로 다뤄진다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">내용</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>물리 램 한계의 영구적 해방</strong></td><td style="text-align: left">페이지 교체 매커니즘 덕분에, 물리 램이 100% 꽉 찬 절망적 상태에서도 에러 없이 101%의 앱을 가동하는 마법의 쿠션</td></tr>
+<tr><td style="text-align: left"><strong>다중 프로그래밍(Degree) 극대화</strong></td><td style="text-align: left">유휴(Sleep) 상태 앱의 메모리 조각들을 실시간으로 회수(Reclaim)하여 당장 바쁜 활성 앱에 몰아주는 극한의 스케줄링 자원 펌핑</td></tr>
+<tr><td style="text-align: left"><strong>메모리 계층화(Tiering)의 심장</strong></td><td style="text-align: left">L1/L2 캐시 -&gt; RAM -&gt; SSD/HDD 로 이어지는 메모리 피라미드에서 램과 스토리지를 동적으로 펌프질해 주는 핵심 삼투압 엔진</td></tr>
+</tbody></table>
+<h3 id="gyeolron-mic-mirae-jeonmang">결론 및 미래 전망</h3>
+<p>페이지 교체 (Page Replacement)는 가상 메모리가 부리는 "내가 세상 모든 메모리를 가지고 있다"는 오만한 뻥카(Over-allocation)를, 하드디스크라는 거대한 뒷배를 활용한 치열한 돌려막기로 현실화시켜 준 운영체제 최고의 사기극이자 예술이다. 이 교체 로직이 얼마나 은밀하고 스마트하게 안 쓰는 페이지를 발라내어 스왑으로 보내느냐에 따라 OS의 품격(렉 체감)이 결정된다. 미래에 CXL(Compute Express Link) 기술로 데이터센터 내 모든 서버의 램이 거대한 하나의 풀(Pool)로 묶이게 되더라도, 결국 어딘가는 꽉 찰 것이고 "누구를 더 느린 저장소로 밀어낼 것인가"라는 페이지 교체의 철학과 알고리즘(LRU 등)은 우주가 멸망할 때까지 컴퓨터 공학의 가장 중요하고 지독한 최적화 난제로 살아남을 것이다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">기초 자원 관리 문제
+    ↓
+페이지 교체 (Page Replacement)의 필요성
+    ↓
+성능·격리·공정성 최적화
+    ↓
+가상화·관측·자동화 통합
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">페이지 교체 (Page Replacement)의 필요성</td><td style="text-align: left">운영체제 자원 관리와 보호 정책이 실제로 적용되는 핵심 주제</td></tr>
+<tr><td style="text-align: left">커널 (Kernel)</td><td style="text-align: left">정책 집행, 상태 전이, 시스템 호출 처리의 중심</td></tr>
+<tr><td style="text-align: left">프로세스/스레드</td><td style="text-align: left">CPU, 메모리, 동기화 자원과 직접 연결되는 실행 단위</td></tr>
+<tr><td style="text-align: left">메모리/I/O</td><td style="text-align: left">성능 병목과 보호 요구사항이 함께 드러나는 연계 영역</td></tr>
+<tr><td style="text-align: left">가상화/보안</td><td style="text-align: left">격리, 제어, 관측 확장 관점에서 해당 주제가 연결되는 상위 개념</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

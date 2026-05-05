@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>184. 이벤트 버스 &#x2F; 발행-구독 패턴 (Event Bus &#x2F; Publish-Subscribe Pattern) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote design supervision
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 퍼블리시/서브스크라이브 (Publish/Subscribe) 패턴은 이벤트 발행자(Publisher)와 구독자(Subscriber) 사이에 브로커(Broker)를 두어 완전한 결합도 제거(Decoupling)를 달성하는 비동기 통신 구조다.
+2. <strong>가치</strong>: Publisher는 누가 구독하는지 모르고, Subscriber는 누가 발행하는지 모른다 — 이 "무지(Ignorance)"가 마이크로서비스 간 독립적 배포와 확장을 가능하게 한다.
+3. <strong>판단 포인트</strong>: Observer 패턴과의 결정적 차이는 브로커의 존재다. Observer는 발행자가 구독자를 직접 알고 호출하지만, Pub/Sub은 브로커를 통해 완전히 분리된다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<h3 id="ganggyeolhab-tongsinyi-munje">강결합 통신의 문제</h3>
+<p>서비스 A가 서비스 B, C, D를 직접 호출하면 다음 문제가 생긴다.</p>
+<pre><code>[강결합 구조 문제]
+     Service A
+     │   │   │
+     │   │   └──► Service D (배포 중단 시 A도 영향)
+     │   └──────► Service C (버전 변경 시 A 수정)
+     └──────────► Service B (일시 장애 시 A 실패)
+
+문제점:
+- 단일 책임 위반: A가 B, C, D 모두 알아야 함
+- 장애 전파: D 장애 → A 타임아웃
+- 확장 어려움: 새 구독자 E 추가 시 A 코드 수정
+</code></pre>
+<h3 id="pub-sub-paeteonyi-haegyeolcaeg">Pub/Sub 패턴의 해결책</h3>
+<pre><code>[Pub&#x2F;Sub 구조]
+Service A (Publisher)
+     │
+     │ 이벤트 발행
+     ▼
+  [Message Broker]  ← 이벤트 라우팅
+  (Kafka, RabbitMQ)
+     │
+     ├──► Service B (Subscriber)
+     ├──► Service C (Subscriber)
+     └──► Service D (Subscriber)
+
+장점:
+- A는 B, C, D를 모름
+- B, C, D는 독립적으로 처리
+- E가 추가되어도 A 수정 불필요
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: 신문사(Publisher)는 독자(Subscriber)가 몇 명인지, 누구인지 모른다. 우체국(Broker)이 구독자 목록을 관리하고 신문을 배달한다. 독자가 늘어도 신문사는 그냥 인쇄하면 된다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="ibenteu-beoseu-vs-mesiji-beurokeo-gujo-bigyo">이벤트 버스 vs 메시지 브로커 구조 비교</h3>
+<pre><code>[이벤트 버스 (In-Process)]
+┌─────────────────────────────────────────────┐
+│             Application Process              │
+│                                             │
+│  Publisher ──► EventBus ──► Subscriber A   │
+│                    │                         │
+│                    └──────► Subscriber B    │
+│                                             │
+│  (Spring ApplicationEventPublisher 등)       │
+└─────────────────────────────────────────────┘
+
+[메시지 브로커 (Cross-Process)]
+┌──────────────────┐     ┌─────────────────┐     ┌──────────────────┐
+│  Service A       │     │  Kafka &#x2F; MQ     │     │  Service B       │
+│  (Publisher)     │────►│  (Broker)       │────►│  (Subscriber)    │
+│                  │     │  Topic&#x2F;Queue    │     │                  │
+└──────────────────┘     └─────────────────┘     └──────────────────┘
+</code></pre>
+<h3 id="apache-kafka-topig-gujo">Apache Kafka 토픽 구조</h3>
+<pre><code>Topic: &quot;order-events&quot;
+┌────────────────────────────────────────────────────────┐
+│  Partition 0: [Event1][Event3][Event5][Event7]...      │
+│  Partition 1: [Event2][Event4][Event6][Event8]...      │
+│  Partition 2: [Event9][Event10][Event11]...            │
+└────────────────────────────────────────────────────────┘
+         │                      │
+         ▼                      ▼
+  Consumer Group A       Consumer Group B
+  (재고 서비스 구독)       (알림 서비스 구독)
+  ├── Consumer 1          ├── Consumer 1
+  └── Consumer 2          └── Consumer 2
+  (독립적으로 처리)        (독립적으로 처리)
+</code></pre>
+<h3 id="haegsim-gaenyeom">핵심 개념</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">설명</th><th style="text-align: left">Kafka 용어</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Publisher (발행자)</strong></td><td style="text-align: left">이벤트를 생성하여 브로커에 전송</td><td style="text-align: left">Producer</td></tr>
+<tr><td style="text-align: left"><strong>Subscriber (구독자)</strong></td><td style="text-align: left">특정 토픽의 이벤트를 수신하여 처리</td><td style="text-align: left">Consumer</td></tr>
+<tr><td style="text-align: left"><strong>Broker (중간 매개자)</strong></td><td style="text-align: left">이벤트를 수신, 저장, 라우팅</td><td style="text-align: left">Kafka Broker</td></tr>
+<tr><td style="text-align: left"><strong>Topic (토픽)</strong></td><td style="text-align: left">이벤트 분류 채널</td><td style="text-align: left">Topic</td></tr>
+<tr><td style="text-align: left"><strong>Consumer Group</strong></td><td style="text-align: left">동일 토픽을 공유 처리하는 구독자 그룹</td><td style="text-align: left">Consumer Group</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: Kafka는 라디오 방송국이다. 방송국(Broker)이 음악(이벤트)을 FM 주파수(Topic)에 방송하면, 라디오(Subscriber)를 가진 누구든 독립적으로 들을 수 있다.</p>
+<hr />
+<h2 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h2>
+<h3 id="pub-sub-vs-observer-paeteon-bigyo">Pub/Sub vs Observer 패턴 비교</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">Observer 패턴</th><th style="text-align: left">Pub/Sub 패턴</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>결합도</strong></td><td style="text-align: left">발행자가 구독자 목록을 직접 관리</td><td style="text-align: left">브로커를 통해 완전 분리</td></tr>
+<tr><td style="text-align: left"><strong>통신 방식</strong></td><td style="text-align: left">동기 (동일 프로세스 내)</td><td style="text-align: left">비동기 (브로커 경유)</td></tr>
+<tr><td style="text-align: left"><strong>위치</strong></td><td style="text-align: left">동일 프로세스/JVM 내</td><td style="text-align: left">다른 서비스/프로세스 가능</td></tr>
+<tr><td style="text-align: left"><strong>구독자 인지</strong></td><td style="text-align: left">발행자가 구독자 목록 알고 있음</td><td style="text-align: left">발행자가 구독자 모름</td></tr>
+<tr><td style="text-align: left"><strong>필터링</strong></td><td style="text-align: left">발행자가 제어</td><td style="text-align: left">토픽/구독 조건으로 브로커 제어</td></tr>
+<tr><td style="text-align: left"><strong>메시지 보장</strong></td><td style="text-align: left">없음 (메모리 내)</td><td style="text-align: left">영속화, At-Least-Once 등</td></tr>
+<tr><td style="text-align: left"><strong>대표 예시</strong></td><td style="text-align: left">Java 이벤트 리스너, GUI 이벤트</td><td style="text-align: left">Kafka, RabbitMQ, Google Pub/Sub</td></tr>
+</tbody></table>
+<h3 id="mesiji-kyu-mq-bigyo">메시지 큐(MQ) 비교</h3>
+<table><thead><tr><th style="text-align: left">브로커</th><th style="text-align: left">모델</th><th style="text-align: left">특징</th><th style="text-align: left">적합 상황</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Apache Kafka</strong></td><td style="text-align: left">Pub/Sub + Log</td><td style="text-align: left">영속 로그, 높은 처리량, 재처리 가능</td><td style="text-align: left">이벤트 스트리밍, 로그 집계</td></tr>
+<tr><td style="text-align: left"><strong>RabbitMQ</strong></td><td style="text-align: left">AMQP 기반</td><td style="text-align: left">복잡한 라우팅, 낮은 지연</td><td style="text-align: left">작업 큐, 마이크로서비스</td></tr>
+<tr><td style="text-align: left"><strong>AWS SNS/SQS</strong></td><td style="text-align: left">Pub/Sub + 큐</td><td style="text-align: left">완전 관리형, AWS 통합</td><td style="text-align: left">클라우드 네이티브</td></tr>
+<tr><td style="text-align: left"><strong>Google Cloud Pub/Sub</strong></td><td style="text-align: left">Pub/Sub</td><td style="text-align: left">자동 확장, 전 세계 분산</td><td style="text-align: left">GCP 기반 서비스</td></tr>
+<tr><td style="text-align: left"><strong>Spring ApplicationEvent</strong></td><td style="text-align: left">인프로세스 Pub/Sub</td><td style="text-align: left">Spring Bean 내부 이벤트</td><td style="text-align: left">동일 애플리케이션 내</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: Observer는 선생님이 학생들을 직접 불러서 공지하는 것이고, Pub/Sub은 학교 방송실(Broker)에서 방송하면 모든 교실(Subscriber)이 자율적으로 듣는 것이다.</p>
+<hr />
+<h2 id="4-bigyo-mic-teureideuopeu">4. 비교 및 트레이드오프</h2>
+<h3 id="spring-boot-kafka-ibenteu-balhaeng-gudog-yesi">Spring Boot + Kafka 이벤트 발행/구독 예시</h3>
+<pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">&#x2F;&#x2F; 이벤트 DTO
+public record OrderCreatedEvent(Long orderId, Long userId, BigDecimal amount) {}
+
+&#x2F;&#x2F; Publisher (주문 서비스)
+@Service
+public class OrderService {
+    private final KafkaTemplate&lt;String, OrderCreatedEvent&gt; kafkaTemplate;
+
+    public void createOrder(OrderRequest req) {
+        &#x2F;&#x2F; 주문 처리 로직...
+        Order order = orderRepository.save(new Order(req));
+
+        &#x2F;&#x2F; 이벤트 발행 (Subscriber가 누구인지 모름)
+        kafkaTemplate.send(&quot;order-events&quot;, new OrderCreatedEvent(
+            order.getId(), req.getUserId(), order.getTotalAmount()
+        ));
+    }
+}
+
+&#x2F;&#x2F; Subscriber 1: 재고 서비스
+@Component
+public class InventoryEventHandler {
+    @KafkaListener(topics = &quot;order-events&quot;, groupId = &quot;inventory-service&quot;)
+    public void handleOrderCreated(OrderCreatedEvent event) {
+        inventoryService.decreaseStock(event.orderId());
+    }
+}
+
+&#x2F;&#x2F; Subscriber 2: 알림 서비스 (독립적 추가, 주문 서비스 수정 없음)
+@Component
+public class NotificationEventHandler {
+    @KafkaListener(topics = &quot;order-events&quot;, groupId = &quot;notification-service&quot;)
+    public void handleOrderCreated(OrderCreatedEvent event) {
+        emailService.sendOrderConfirmation(event.userId(), event.orderId());
+    }
+}
+</code></pre>
+<h3 id="ibenteu-seolgye-juyisahang">이벤트 설계 주의사항</h3>
+<table><thead><tr><th style="text-align: left">주의사항</th><th style="text-align: left">설명</th><th style="text-align: left">해결</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>이벤트 순서 보장</strong></td><td style="text-align: left">파티션 내에서만 순서 보장</td><td style="text-align: left">동일 키로 동일 파티션 라우팅</td></tr>
+<tr><td style="text-align: left"><strong>중복 처리 (At-Least-Once)</strong></td><td style="text-align: left">네트워크 오류 시 재발행</td><td style="text-align: left">멱등성(Idempotency) 설계</td></tr>
+<tr><td style="text-align: left"><strong>이벤트 스키마 진화</strong></td><td style="text-align: left">이벤트 구조 변경 시 하위 호환</td><td style="text-align: left">Avro Schema Registry 사용</td></tr>
+<tr><td style="text-align: left"><strong>Dead Letter Queue</strong></td><td style="text-align: left">처리 실패 이벤트</td><td style="text-align: left">DLQ로 격리 후 모니터링</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 카카오톡 단체 채팅방(Topic)에 메시지를 보내면, 방에 있는 모든 사람(Subscriber)이 읽는다. 보내는 사람은 누가 방에 있는지 몰라도 된다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-coejeoghwa-gibeob">5. 실무 적용 및 최적화 기법</h2>
+<h3 id="pub-sub-doib-gidaehyogwa">Pub/Sub 도입 기대효과</h3>
+<table><thead><tr><th style="text-align: left">기대효과</th><th style="text-align: left">구체적 내용</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>서비스 간 결합도 제거</strong></td><td style="text-align: left">발행자/구독자 독립 배포 가능</td></tr>
+<tr><td style="text-align: left"><strong>확장성</strong></td><td style="text-align: left">구독자 추가 시 발행자 수정 불필요</td></tr>
+<tr><td style="text-align: left"><strong>비동기 처리</strong></td><td style="text-align: left">동기 대기 없이 작업 위임</td></tr>
+<tr><td style="text-align: left"><strong>장애 격리</strong></td><td style="text-align: left">구독자 장애가 발행자에 영향 없음</td></tr>
+<tr><td style="text-align: left"><strong>이벤트 재처리</strong></td><td style="text-align: left">Kafka 로그로 과거 이벤트 재처리 가능</td></tr>
+</tbody></table>
+<p>Pub/Sub 패턴과 이벤트 버스는 마이크로서비스 아키텍처의 <strong>결합도 해소 핵심 도구</strong>이다. 특히 도메인 이벤트(Domain Event) 중심의 이벤트 소싱(Event Sourcing) 아키텍처와 결합하면 시스템의 확장성과 감사 추적(Audit Trail) 능력이 크게 향상된다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 각 부처가 대통령에게 직접 보고하는 대신, 국무조정실(Broker)을 통해 안건을 처리하면 대통령(Publisher)은 모든 부처(Subscriber)를 알 필요가 없다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">관계</th><th style="text-align: left">개념</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">상위 개념</td><td style="text-align: left">이벤트 주도 아키텍처 (EDA)</td><td style="text-align: left">Pub/Sub의 아키텍처 패러다임</td></tr>
+<tr><td style="text-align: left">상위 개념</td><td style="text-align: left">마이크로서비스 아키텍처</td><td style="text-align: left">Pub/Sub으로 서비스 간 결합 제거</td></tr>
+<tr><td style="text-align: left">하위 개념</td><td style="text-align: left">Apache Kafka</td><td style="text-align: left">대표적 메시지 브로커 구현</td></tr>
+<tr><td style="text-align: left">하위 개념</td><td style="text-align: left">Topic / Consumer Group</td><td style="text-align: left">Kafka의 Pub/Sub 핵심 구성</td></tr>
+<tr><td style="text-align: left">연관 개념</td><td style="text-align: left">Observer 패턴</td><td style="text-align: left">브로커 없는 동기식 Pub/Sub</td></tr>
+<tr><td style="text-align: left">연관 개념</td><td style="text-align: left">이벤트 소싱 (Event Sourcing)</td><td style="text-align: left">이벤트를 상태 변경의 유일한 소스로</td></tr>
+<tr><td style="text-align: left">연관 개념</td><td style="text-align: left">CQRS</td><td style="text-align: left">쓰기 이벤트와 읽기 모델 분리</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ul>
+<li>마트(Publisher)에서 할인 소식(이벤트)을 전단지(Broker)를 통해 뿌리면, 관심 있는 동네 주민(Subscriber)만 자발적으로 마트에 온다.</li>
+<li>마트는 누가 올지 모르고, 주민도 마트가 할인 결정을 어떻게 했는지 모른다.</li>
+<li>새 주민이 이사 와서 전단지를 구독해도 마트는 아무것도 바꿀 필요가 없다.</li>
+</ul>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

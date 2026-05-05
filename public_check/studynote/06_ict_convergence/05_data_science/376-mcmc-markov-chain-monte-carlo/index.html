@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>376. 마르코프 체인 몬테카를로 (MCMC) 샘플링 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 18, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ict convergence
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: MCMC(Markov Chain Monte Carlo)는 수학적으로 정확히 풀 수 없는(NP-Hard) 극도로 복잡한 확률 분포나 적분 문제를, 컴퓨터의 난수 발생(Monte Carlo)과 무기억성 상태 전이(Markov Chain)를 이용해 '대충 수만 번 점을 찍어' 정답을 추정(근사)해 내는 샘플링 기법이다.
+<strong>비유</strong>: 넓은 산(복잡한 확률 분포) 어딘가에 있는 금괴를 찾으려고 산의 모든 흙을 다 파보는 것(정확한 적분)이 아니라, 원숭이 수만 마리를 풀어놓고 "어제 발견한 바나나 냄새가 나는 곳 주변부터 파봐!(MCMC)"라고 시켜서 대충 금괴가 있을 만한 구역을 빠르게 좁혀가는 야매(근사) 수사법이다.</p>
+</blockquote>
+<hr />
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>베이즈 정리(Bayes Theorem)를 써서 인공지능을 만들려 했다. 처음에는 잘 됐다. 그런데 변수가 50개쯤 되자, 사후 확률을 구하기 위한 분모(모든 경우의 수에 대한 확률의 합, 즉 다중 적분)를 계산하는 데 경우의 수가 수조 개를 넘어갔다. 아무리 슈퍼컴퓨터라도 이 식을 정확하게(Exact Inference) 푸는 것은 불가능했다.</p>
+<p>이때 물리학자 폰 노이만과 스타니스와프 울람이 고안한 카지노 도박장의 이름에서 따온 기법이 등장했다. "수학 공식으로 정확히 풀지 말고, 그냥 주사위(난수)를 수백만 번 던져서 점을 찍어본 다음, 점이 많이 찍힌 곳을 정답이라고 치자!" 이것이 <strong>몬테카를로(Monte Carlo) 시뮬레이션</strong>이다. 여기에 "다음 점을 찍을 위치는 오직 방금 찍은 점의 위치에만 영향을 받는다"는 **마르코프 체인(Markov Chain)**의 철학을 섞어서, 무식한 주사위 던지기를 '스마트한 점 찍기'로 진화시킨 것이 바로 <strong>MCMC</strong>다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<p>MCMC는 무작위성을 통제하기 위해 특별한 규칙을 가진 샘플링 알고리즘 위에서 동작한다. 가장 유명한 것이 <strong>메트로폴리스-헤이스팅스(Metropolis-Hastings)</strong> 알고리즘이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────┐
+│             [ MCMC (메트로폴리스-헤이스팅스) 샘플링 원리 ]    │
+├────────────────────────────────────────────────────────┤
+│ 1. 출발점 (초기 상태, X_0) 설정                          │
+│    - 아무 데나 대충 첫 번째 점을 찍음                        │
+│                                                        │
+│ 2. 다음 후보점 (X_new) 제안 (Markov Chain)             │
+│    - 현재 점에서 무작위로 가까운 옆으로 한 걸음 이동해 봄         │
+│                                                        │
+│ 3. 수락(Accept) vs 거절(Reject) 평가 (Monte Carlo)     │
+│    - 새 자리(X_new)의 확률이 지금 자리보다 [높으면]?          │
+│      -&gt; 무조건 수락! 그 자리로 이동.                        │
+│    - 새 자리(X_new)의 확률이 지금 자리보다 [낮으면]?          │
+│      -&gt; 무조건 거절하는 게 아니라, 주사위를 굴려 확률적으로 이동!  │
+│         (웅덩이에 빠지는 Local Minima를 막기 위한 관용)        │
+│                                                        │
+│ 4. 무한 반복 (Burn-in 구간 버리기)                       │
+│    - 이 짓을 수만 번 반복하면, 점들은 결국 진짜 정답(목표 분포)   │
+│      근처에만 바글바글하게 찍히게 됨!                         │
+└────────────────────────────────────────────────────────┘
+</code></pre>
+<ol>
+<li><strong>상태 공간 탐색 (State Space Exploration)</strong>: 아무리 꼬이고 찌그러진 확률 분포라도, MCMC가 수만 번 점을 찍다 보면 확률이 높은 쪽에 점이 많이 찍히고 낮은 쪽엔 적게 찍힌다. 결국 찍힌 점들의 밀도가 '우리가 구하고 싶었던 원래의 확률 분포' 모양과 똑같아진다.</li>
+<li><strong>번인 (Burn-in) 처리</strong>: 처음에 찍은 점 1,000개 정도는 탐색하느라 엉뚱한 곳을 헤맨 흔적이다. 따라서 초반 데이터는 모델을 망치므로 쿨하게 버린다. 이를 Burn-in Period라고 한다.</li>
+<li><strong>깁스 샘플링 (Gibbs Sampling)</strong>: 변수가 100개일 때, 99개를 고정해 두고 1개씩만 번갈아 가며 주사위를 굴려 샘플링을 최적화하는 MCMC의 가장 강력한 파생 알고리즘이다. (토픽 모델링 LDA 등에 쓰임)</li>
+</ol>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 베이지안 추론(Inference)을 풀기 위한 두 가지 근사(Approximation) 접근법을 비교한다.</p>
+<p>동작 순서:</p>
+<p>베이지안 추론(Inference)을 풀기 위한 두 가지 근사(Approximation) 접근법을 비교한다.</p>
+<table><thead><tr><th style="text-align: center">비교 항목</th><th style="text-align: left">MCMC (마르코프 체인 몬테카를로)</th><th style="text-align: left">변분 추론 (Variational Inference, VI)</th></tr></thead><tbody>
+<tr><td style="text-align: center"><strong>작동 원리</strong></td><td style="text-align: left">수만 번 점을 찍어 분포를 <strong>샘플링</strong>으로 흉내 냄</td><td style="text-align: left">복잡한 분포를 단순한(정규) 분포로 <strong>수학적으로 깎아서 맞춤</strong></td></tr>
+<tr><td style="text-align: center"><strong>정확도</strong></td><td style="text-align: left">무한히 반복하면 <strong>100% 정답에 완벽히 수렴</strong></td><td style="text-align: left">대충 비슷한 껍데기만 씌우므로 100% 수렴 불가</td></tr>
+<tr><td style="text-align: center"><strong>연산 속도</strong></td><td style="text-align: left">주사위를 던져야 하므로 <strong>매우 느림 (수 시간~수 일)</strong></td><td style="text-align: left">수식 최적화(KL-Divergence)로 풀어서 <strong>압도적으로 빠름</strong></td></tr>
+<tr><td style="text-align: center"><strong>적용 시나리오</strong></td><td style="text-align: left">정확도가 생명인 의료/금융 베이지안 네트워크</td><td style="text-align: left">방대한 데이터의 VAE(변이형 오토인코더), 토픽 모델링</td></tr>
+</tbody></table>
+<p>최근 딥러닝 시대에는 MCMC의 느린 속도를 견디지 못하고 변분 추론(VI) 계열로 패러다임이 많이 넘어갔지만, 여전히 변분 추론이 만들어낸 결과가 진짜 맞는지 벤치마킹하는 <strong>절대적인 정답지(Gold Standard)</strong> 역할은 무조건 MCMC가 담당한다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<p><strong>실무 적용 시나리오:</strong>
+넷플릭스 영화의 A/B 테스트에서 단순 빈도주의 통계(p-value)를 믿지 못할 때 베이지안 A/B 테스트를 쓴다. A안과 B안의 전환율이 어떤 분포를 그릴지 수식으로 안 풀리므로, 파이썬의 <code>PyMC3</code>나 <code>Stan</code> 라이브러리를 통해 MCMC(NUTS 샘플러) 알고리즘을 띄운다. 밤새 10만 개의 샘플 점을 찍은 MCMC는 "B안이 A안보다 전환율이 높을 확률은 94.2%입니다"라는 완벽한 사후 확률 분포(Posterior) 곡선을 그려내어 경영진에 보고한다.</p>
+<p><strong>기술사 판단 포인트 (Trade-off):</strong>
+MCMC 파이프라인을 설계할 때 기술사는 **'수렴(Convergence) 여부'와 '자기 상관(Autocorrelation)'**을 반드시 모니터링해야 한다.</p>
+<ol>
+<li>MCMC는 무조건 정답을 보장하지만, "언제 정답에 도착하는가?"는 아무도 모른다. 기술사는 찍힌 점들의 모양(Trace plot)을 눈으로 보고 점들이 특정 구간에서 애벌레처럼 예쁘게 뭉쳐 있는지(수렴 확인), 아니면 이리저리 미친 듯이 요동치는지(수렴 실패) 판단해야 한다.</li>
+<li>앞 점이 뒷 점에 영향을 주는 마르코프 체인 특성상 샘플끼리 너무 비슷하다(자기 상관). 따라서 10만 개를 뽑았다고 10만 개를 다 쓰면 모델이 편향되므로, 10개마다 1개씩 솎아내서(Thinning) 독립적인 샘플을 구축하는 전처리 파이프라인이 필수다.</li>
+</ol>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p>MCMC는 불가능하다고 여겨졌던 복잡한 확률 세계의 굳게 닫힌 문을 부수고 들어간 무식하고도 가장 강력한 공성추다. 이 샘플링 기법 덕분에, 학자들의 칠판에만 머물던 베이즈 정리와 조건부 확률망이 금융 리스크 분석과 역학 조사 같은 진짜 현실 비즈니스로 튀어나올 수 있었다.</p>
+<p>결론적으로 MCMC는 컴퓨터의 막대한 무식한 연산력(Brute-force)을 가장 지능적으로 통제한 알고리즘 예술이다. 기술사는 아무리 인공신경망이 화려하게 날아다녀도, 불확실성을 수치화하고 리스크를 엄밀하게 추정해야 하는 도메인에서는 딥러닝을 버리고 이 묵직한 베이지안 샘플링 엔진(MCMC)을 아키텍처의 코어로 채택하는 고집을 가질 줄 알아야 한다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>MCMC는 불가능하다고 여겨졌던 복잡한 확률 세계의 굳게 닫힌 문을 부수고 들어간 무식하고도 가장 강력한 공성추다. 이 샘플링 기법 덕분에, 학자들의 칠판에만 머물던 베이즈 정리와 조건부 확률망이 금융 리스크 분석과 역학 조사 같은 진짜 현실 비즈니스로 튀어나올 수 있었다.</p>
+<p>결론적으로 MCMC는 컴퓨터의 막대한 무식한 연산력(Brute-force)을 가장 지능적으로 통제한 알고리즘 예술이다. 기술사는 아무리 인공신경망이 화려하게 날아다녀도, 불확실성을 수치화하고 리스크를 엄밀하게 추정해야 하는 도메인에서는 딥러닝을 버리고 이 묵직한 베이지안 샘플링 엔진(MCMC)을 아키텍처의 코어로 채택하는 고집을 가질 줄 알아야 한다.</p>
+<p>결론적으로 마르코프 체인 몬테카를로 (MCMC) 샘플링는 기술 자체만으로 성과가 보장되지 않으며, 적용 맥락, 운영 역량, 데이터 품질, 보안·거버넌스 조건이 함께 충족될 때 비로소 실질적 가치가 구현된다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">데이터 수집과 정형 보고 중심 분석
+    ↓
+통계·실험·전처리 방법론 정립
+    ↓
+마르코프 체인 몬테카를로 (MCMC) 샘플링 기반 패턴 발견·예측 체계 확립
+    ↓
+자동화된 모델링·시각화·의사결정 지원 확대
+    ↓
+MLOps·데이터 거버넌스와 결합한 운영 단계로 고도화
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">상위 개념</td><td style="text-align: left">베이지안 추론 (Bayesian Inference), 몬테카를로 시뮬레이션</td></tr>
+<tr><td style="text-align: left">하위 개념</td><td style="text-align: left">메트로폴리스-헤이스팅스 (MH), 깁스 샘플링 (Gibbs Sampling), 번인 (Burn-in)</td></tr>
+<tr><td style="text-align: left">연결 개념</td><td style="text-align: left">베이지안 네트워크, 변분 추론 (Variational Inference), A/B 테스트</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

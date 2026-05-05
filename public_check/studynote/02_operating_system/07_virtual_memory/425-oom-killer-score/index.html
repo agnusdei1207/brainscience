@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>425. OOM Killer (Out-of-Memory) 작동 우선순위 점수 (oom_score) 매커니즘 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 23, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: OOM(Out of Memory) Killer는 리눅스 시스템에서 물리 메모리(RAM)와 스왑(Swap) 공간마저 100% 고갈되어 커널이 질식사(Kernel Panic)하기 직전, <strong>시스템 전체를 구하기 위해 가장 램을 많이 잡아먹는 프로세스 하나를 골라 총으로 쏴 죽이는(SIGKILL) 최후의 암살 데몬</strong>이다.
+<strong>비유</strong>: OOM Killer는 <strong>타이타닉호의 무자비한 구명보트 선장</strong>이다. 구명보트(RAM)에 정원 10명이 넘는 15명이 타버려서 보트가 가라앉기 직전이다(시스템 패닉). 선장(OS 커널)은 다 같이 수장되는 걸 막기 위해 총을 빼 들고 뱃머리로 나간다. 그리고 승객들을 쓱 훑어보고 **가장 몸무게가 많이 나가고(메모리 독식), 짐이 많고, VIP가 아닌 일반 승객 1명(oom_score 1등)**의 멱살을 잡아 바다로 던져버린다. 배는 가벼워져 다시 떠오르고 남은 사람들은 무사히 항해를 계속한다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: OOM Killer는 리눅스 커널의 자가방어 메커니즘이다. 운영체제는 'Overcommit(초과 할당)' 정책에 따라 램이 없어도 일단 앱들에게 램을 주겠다고 사기(가상 주소 발급)를 쳐놨다. 앱들이 진짜로 램을 내놓으라고 몰려와서 남은 램과 스왑 공간이 단 1바이트도 없을 때, 커널은 이 뱅크런 사태를 막기 위해 법정(Score)을 열고 사형수를 한 명 뽑아 목을 날려버리고 그놈이 물고 있던 램을 압수한다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 만약 OOM Killer가 없다면? 램 100% 상태에서 마우스 드라이버나 시스템 코어가 메모리를 4KB 요구했는데 램이 없다. 커널은 그 자리에서 치명적 에러를 뿜으며 컴퓨터를 파란 화면(Kernel Panic)으로 멈춰버리거나 영원한 렉(Deadlock)에 빠져버린다. "다 같이 사이좋게 죽느니, 그냥 제일 뚱뚱한 시민 하나를 절벽으로 밀어버리고 남은 사람이라도 살리자!"는 트롤리 딜레마의 공학적 결단이 OOM Killer를 리눅스의 핏줄에 새겨 넣었다.</p>
+</li>
+<li>
+<p><strong>등장 배경 및 Overcommit의 부메랑</strong>:</p>
+<ol>
+<li><strong>요구 페이징의 뻥카</strong>: 램 16GB 서버에서 프로세스들이 <code>malloc</code>으로 30GB를 요구해도 OS는 "OK"라며 I 비트를 찍어 보냈다(Overcommit).</li>
+<li><strong>뻥카의 들통</strong>: 앱들이 가짜 주소에 진짜 데이터를 쓰기 시작하며 물리 프레임을 요구하자 스왑마저 다 털려버림.</li>
+<li><strong>사형 집행인의 등장</strong>: 뻥카를 쳐서 시스템을 위기에 빠뜨린 OS가 뒷수습을 하기 위해 가장 램을 많이 요구한 놈부터 총살시켜 증거 인멸(?)을 하는 아키텍처가 확립되었다.</li>
+</ol>
+</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────────────────┐
+│        OOM Killer가 총을 뽑아 드는 절망적 런타임 시각화            │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│ [ 상황: RAM 16GB + Swap 8GB 모두 사용률 100% 도달! ]               │
+│ ┌───────────────┬────────────────┬──────────────┐                  │
+│ │ MySQL (15GB)  │ 파이썬 봇 (8GB)  │ SSH 접속 (1GB)│               │
+│ └───────────────┴────────────────┴──────────────┘                  │
+│                                                                    │
+│ ▶ 1. 최후의 순간 (Page Fault)                                      │
+│   SSH 접속 데몬이 &quot;나 로그인 처리할 4KB만 줘!&quot; 라고 외침.          │
+│   OS 커널: &quot;빈방 0개... 캐시도 다 지움... 스왑도 꽉 참... 좆됐다&quot;  │
+│                                                                    │
+│ ▶ 2. 재판장 (OOM Score 계산 발동)                                  │
+│   커널이 [ oom_score ] 살생부 랭킹을 매김.                         │
+│   - MySQL (15GB 쳐먹음) -&gt; 800점                                   │
+│   - 파이썬 봇 (8GB 쳐먹음) -&gt; 500점                                │
+│   - SSH 데몬 (VIP 권한 + 1GB) -&gt; 10점                              │
+│                                                                    │
+│ ▶ 3. 처형 (Execution)                                              │
+│   OOM Killer: &quot;MySQL 네 이놈! 네가 점수 1등이다! 죽어라!&quot;          │
+│   💥 SIGKILL 발사 -&gt; MySQL 즉사 -&gt; 15GB 램 허공에 확 풀림!         │
+│   ✅ SSH 데몬은 무사히 램을 받아 로깅 성공. 서버 커널 생존!        │
+└────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 초보 개발자들은 MySQL이 갑자기 죽어버린 걸 보고 "리눅스가 미쳤어!"라고 원망하지만, 사실 리눅스는 MySQL을 죽여서 SSH(터미널)와 서버 심장부를 살려낸 다크나이트다. 만약 OOM 킬러가 저 총을 안 쐈다면 당신은 서버에 SSH로 접속조차 못 하고 AWS 콘솔에서 하드웨어 강제 리부팅 버튼을 눌러야만 했을 것이다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="oom-score-salsaengbu-jeomsu-yi-suhagjeog-gyesanbeob">OOM Score (살생부 점수)의 수학적 계산법</h3>
+<p>리눅스 커널은 아무나 막 쏘지 않는다. <code>/proc/&lt;pid&gt;/oom_score</code> 에 명시된 점수(0 ~ 1000점)를 철저히 계산하여 가장 높은 놈을 죽인다. 점수가 높을수록 죽을 확률이 높다.</p>
+<p><strong>[ 점수를 올리는 죄악 (Bad) ]</strong></p>
+<ol>
+<li><strong>물리 램(RSS)과 스왑 점유율</strong>: 절대적인 평가 기준이다. 가장 뚱뚱하게 램을 많이 깔고 앉은 프로세스가 기본적으로 수백 점의 점수를 먹고 1순위 타겟이 된다. (램을 많이 토해낼 놈을 죽여야 가성비가 좋으니까).</li>
+<li><strong>자식 프로세스가 많은 놈</strong>: <code>fork()</code>로 새끼를 쳐서 메모리를 갉아먹는 악성 스크립트들을 싹 쓸어버리기 위해 자식들의 메모리 합까지 연좌제로 물어 점수를 올린다.</li>
+</ol>
+<p><strong>[ 점수를 깎아주는 선행 (Good) ]</strong></p>
+<ol>
+<li><strong>루트(Root) 권한</strong>: <code>sudo</code>나 <code>root</code>로 띄운 프로세스는 커널의 주요 관리 데몬일 확률이 높으므로 묻지도 따지지도 않고 점수를 깎아 살려준다. (SSH, Systemd 등 보호).</li>
+<li><strong>하드웨어 직접 접근</strong>: 디스크 컨트롤러(DMA) 등 하드웨어 락을 쥐고 있는 앱을 죽이면 기계가 뻗어버릴 수 있으므로 점수를 대폭 깎아 방어해 준다.</li>
+<li><strong>오래 살아남은 놈 (Uptime)</strong>: 1년 동안 안 터지고 잘 돌아간 앱은 시스템의 핵심 코어일 확률이 높으므로 점수를 깎아준다. (새로 들어와 램을 먹어대는 뜨내기 파이썬 스크립트를 우선 사살함).</li>
+</ol>
+<h3 id="oom-killeryi-ceohyeong-bangsig-sigkill">OOM Killer의 처형 방식 (SIGKILL)</h3>
+<p>점수 1등이 결정되면 커널은 해당 프로세스에게 <code>SIGKILL (Signal 9)</code>을 자비 없이 발사한다.</p>
+<ul>
+<li>일반적인 종료 신호(<code>SIGTERM</code>)는 프로세스에게 "너 메모리 정리하고 유서 쓰고 예쁘게 죽어라"라고 시간을 준다.</li>
+<li>하지만 OOM 상태는 1바이트의 램도 없어 유서를 쓸 램 공간조차 없는 위급 상황이다.</li>
+<li><code>SIGKILL</code>은 앱이 저항하거나 에러 로그를 남길 틈조차 주지 않고, <strong>커널이 직접 뇌를 박살 내고 램을 즉시 강제 압수</strong>해버리는 무식하고 확실한 처형이다. 이 때문에 앱 내부 로그에는 아무런 에러 메시지도 남지 않고 조용히 증발하며, 개발자는 리눅스 커널 시스템 로그(<code>/var/log/messages</code>나 <code>dmesg</code>)를 뒤져봐야만 "아... OOM 킬러한테 총 맞았구나" 하고 사인을 알 수 있게 된다.</li>
+</ul>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>요청 또는 이벤트 발생</strong>: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.</li>
+<li><strong>현재 상태 확인</strong>: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.</li>
+<li><strong>정책 적용 및 자원 배정</strong>: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.</li>
+<li><strong>결과 반영 및 후속 처리</strong>: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.</li>
+</ol>
+<h3 id="bigyo-1-seuwaping-swapping-vs-keompaegsyeon-compaction-vs-oom-killer">비교 1: 스와핑(Swapping) vs 컴팩션(Compaction) vs OOM Killer</h3>
+<p>메모리가 모자랄 때 OS가 뽑아 드는 3단계 방어 무기의 한계 비교.</p>
+<table><thead><tr><th style="text-align: left">방어 단계</th><th style="text-align: left">방어 무기 (Mechanism)</th><th style="text-align: left">시스템 체감 (UX)</th><th style="text-align: left">한계 및 부작용</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>1단계 (경고)</strong></td><td style="text-align: left"><strong>Swapping / Paging</strong> (안 쓰는 놈 디스크로)</td><td style="text-align: left">앱 켤 때 1~2초씩 버벅거림</td><td style="text-align: left">디스크 스래싱(Thrashing) 터지면 끝남</td></tr>
+<tr><td style="text-align: left"><strong>2단계 (위험)</strong></td><td style="text-align: left"><strong>Memory Compaction</strong> (램 구석으로 밀어 압축)</td><td style="text-align: left">화면이 멈추고 렉이 심하게 걸림 (STW)</td><td style="text-align: left">빈 공간 자체가 아예 없으면 실패함</td></tr>
+<tr><td style="text-align: left"><strong>3단계 (사형)</strong></td><td style="text-align: left"><strong>OOM Killer</strong> (뚱뚱한 앱 사살)</td><td style="text-align: left">갑자기 돌아가던 <b>게임(DB)이 팍 튕겨버림</b></td><td style="text-align: left">앱의 데이터가 저장 안 되고 다 날아감 (Data Loss)</td></tr>
+</tbody></table>
+<h3 id="overcommit-cogwa-haldang-ceolhagyi-nonjaeng">Overcommit (초과 할당) 철학의 논쟁</h3>
+<p>리눅스 철학의 뜨거운 감자다.</p>
+<ul>
+<li><strong>Strict Overcommit (보수적)</strong>: "물리 램 + 스왑 공간 이상으로는 절대 <code>malloc</code> 안 받아줘! 애초에 OOM 킬러가 뜰 일을 만들지 마!" -&gt; 안정적이지만 램 낭비가 뼈아프다. (윈도우가 선호).</li>
+<li><strong>Heuristic Overcommit (진취적, 리눅스 디폴트)</strong>: "야, 쟤들 <code>malloc(1GB)</code> 해놓고 실제론 10MB밖에 안 쓰는 허풍쟁이들인 거 다 알아. 램 16GB여도 30GB어치 수표 팍팍 남발해서 다 받아줘! 혹시 나중에 수표 막을 돈 부족해지면? 그때 가서 OOM 킬러로 한 놈 쏴 죽이고 무마하면 돼!"</li>
+<li>리눅스는 이 야만적인 Overcommit과 OOM Killer의 콜라보 덕분에 적은 램으로도 어마어마하게 많은 컨테이너를 띄우며 클라우드 서버 생태계를 압살할 수 있었다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────┬────────────┬────────────┬──────────────────────────────────────────────┐
+│ Overcommit│ 램 10GB일때 할당량│ OOM 킬러 출동 빈도│ 다중 프로그래밍 밀도          │
+├──────────┼────────────┼────────────┼──────────────────────────────────────────────┤
+│ 비활성화 (0)│ 딱 10GB만 허가│ 절대 출동 안함 (평화)│ 낮음 (보수적 낭비)           │
+│ 활성화 (1) │ 30GB 이상 뻥튀기│ 가끔 탕! 쏘고 감 (야생)│ **최상 (클라우드 최적화)**│
+└──────────┴────────────┴────────────┴──────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[매트릭스 해설]</strong> OOM 킬러는 리눅스가 무능해서 만든 에러 코드가 아니다. 오히려 리눅스가 램 자본주의를 극한으로 쥐어짜기(Overcommit) 위해 의도적으로 배치해 둔 '폭력적인 시장 조정자'에 가깝다. 이 살생부가 있기에 리눅스 커널은 배짱 있게 메모리 장사를 할 수 있다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="bigyo-1-seuwaping-swapping-vs-keompaegsyeon-compaction-vs-oom-killer-1">비교 1: 스와핑(Swapping) vs 컴팩션(Compaction) vs OOM Killer</h3>
+<p>메모리가 모자랄 때 OS가 뽑아 드는 3단계 방어 무기의 한계 비교.</p>
+<table><thead><tr><th style="text-align: left">방어 단계</th><th style="text-align: left">방어 무기 (Mechanism)</th><th style="text-align: left">시스템 체감 (UX)</th><th style="text-align: left">한계 및 부작용</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>1단계 (경고)</strong></td><td style="text-align: left"><strong>Swapping / Paging</strong> (안 쓰는 놈 디스크로)</td><td style="text-align: left">앱 켤 때 1~2초씩 버벅거림</td><td style="text-align: left">디스크 스래싱(Thrashing) 터지면 끝남</td></tr>
+<tr><td style="text-align: left"><strong>2단계 (위험)</strong></td><td style="text-align: left"><strong>Memory Compaction</strong> (램 구석으로 밀어 압축)</td><td style="text-align: left">화면이 멈추고 렉이 심하게 걸림 (STW)</td><td style="text-align: left">빈 공간 자체가 아예 없으면 실패함</td></tr>
+<tr><td style="text-align: left"><strong>3단계 (사형)</strong></td><td style="text-align: left"><strong>OOM Killer</strong> (뚱뚱한 앱 사살)</td><td style="text-align: left">갑자기 돌아가던 <b>게임(DB)이 팍 튕겨버림</b></td><td style="text-align: left">앱의 데이터가 저장 안 되고 다 날아감 (Data Loss)</td></tr>
+</tbody></table>
+<h3 id="overcommit-cogwa-haldang-ceolhagyi-nonjaeng-1">Overcommit (초과 할당) 철학의 논쟁</h3>
+<p>리눅스 철학의 뜨거운 감자다.</p>
+<ul>
+<li><strong>Strict Overcommit (보수적)</strong>: "물리 램 + 스왑 공간 이상으로는 절대 <code>malloc</code> 안 받아줘! 애초에 OOM 킬러가 뜰 일을 만들지 마!" -&gt; 안정적이지만 램 낭비가 뼈아프다. (윈도우가 선호).</li>
+<li><strong>Heuristic Overcommit (진취적, 리눅스 디폴트)</strong>: "야, 쟤들 <code>malloc(1GB)</code> 해놓고 실제론 10MB밖에 안 쓰는 허풍쟁이들인 거 다 알아. 램 16GB여도 30GB어치 수표 팍팍 남발해서 다 받아줘! 혹시 나중에 수표 막을 돈 부족해지면? 그때 가서 OOM 킬러로 한 놈 쏴 죽이고 무마하면 돼!"</li>
+<li>리눅스는 이 야만적인 Overcommit과 OOM Killer의 콜라보 덕분에 적은 램으로도 어마어마하게 많은 컨테이너를 띄우며 클라우드 서버 생태계를 압살할 수 있었다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────┬────────────┬────────────┬──────────────────────────────────────────────┐
+│ Overcommit│ 램 10GB일때 할당량│ OOM 킬러 출동 빈도│ 다중 프로그래밍 밀도          │
+├──────────┼────────────┼────────────┼──────────────────────────────────────────────┤
+│ 비활성화 (0)│ 딱 10GB만 허가│ 절대 출동 안함 (평화)│ 낮음 (보수적 낭비)           │
+│ 활성화 (1) │ 30GB 이상 뻥튀기│ 가끔 탕! 쏘고 감 (야생)│ **최상 (클라우드 최적화)**│
+└──────────┴────────────┴────────────┴──────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[매트릭스 해설]</strong> OOM 킬러는 리눅스가 무능해서 만든 에러 코드가 아니다. 오히려 리눅스가 램 자본주의를 극한으로 쥐어짜기(Overcommit) 위해 의도적으로 배치해 둔 '폭력적인 시장 조정자'에 가깝다. 이 살생부가 있기에 리눅스 커널은 배짱 있게 메모리 장사를 할 수 있다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="silmu-sinario-oom-score-adj-ro-myeoncaeg-teuggweon-bangtanjoggi-buyeohagi">실무 시나리오: <code>oom_score_adj</code> 로 면책 특권(방탄조끼) 부여하기</h3>
+<ol>
+<li><strong>문제의 발단</strong>: 회사 수익을 100% 담당하는 **오라클 데이터베이스(DB)**가 돌아가는 서버에 로그를 파싱하는 별도 앱을 띄웠다. DB는 당연히 램을 제일 많이 쳐먹고(15GB) 있으니 OOM 점수 1등이다. 로그 앱이 실수로 램을 다 긁어먹는 순간, OOM 킬러가 튀어나와 1초의 망설임도 없이 회사 매출의 심장인 오라클 DB의 머리에 총을 쏴서 죽여버렸다. (엔지니어 사유서 제출).</li>
+<li><strong>방탄조끼 튜닝 (<code>oom_score_adj</code>)</strong>:
+<ul>
+<li>실력 있는 백엔드 엔지니어는 DB 서버를 켤 때 시스템 설정에 방탄조끼를 입힌다.</li>
+<li>프로세스 고유의 살생부 가중치인 <code>/proc/&lt;pid&gt;/oom_score_adj</code> 파일에 들어가서 **<code>-1000</code> (면책 특권 수치)**을 박아 넣는다.</li>
+<li>이 수치가 <code>-1000</code>이 되면 커널의 살생부 점수 계산식에서 무조건 음수나 0점이 되어, **"아무리 뚱뚱하고 램을 다 쳐먹어도 OOM 킬러가 절대 쏘지 않는 영구 까임 방지권"**을 획득하게 된다.</li>
+</ul>
+</li>
+<li><strong>결과</strong>: 나중에 램이 폭발해도, OOM 킬러는 오라클 DB는 건드리지 못하고 옆에서 찌질거리던 로그 파싱 앱(점수 2등)의 머리통을 날려버린다. 핵심 서비스는 살아남고 보조 서비스만 죽는 완벽한 장애 통제(Graceful Degradation)가 완성된다.</li>
+</ol>
+<h3 id="k8s-kubernetes-yi-qos-keulraeseuwa-oom">K8s (Kubernetes)의 QoS 클래스와 OOM</h3>
+<p>쿠버네티스는 컨테이너를 띄울 때 파드(Pod)에 3가지 계급(QoS)을 부여하며, 이 계급이 곧 OOM 킬러의 1순위 타겟 지표가 된다.</p>
+<ul>
+<li><strong>Guaranteed (귀족)</strong>: Request와 Limit 램 용량이 정확히 같게 깐깐하게 세팅된 파드. <code>oom_score_adj</code>가 낮게 설정되어 절대 안 죽음.</li>
+<li><strong>Burstable (평민)</strong>: Request보다 Limit을 높게 잡아 뻥카를 친 파드. 위험할 때 죽을 수 있음.</li>
+<li><strong>BestEffort (천민)</strong>: 램 세팅을 아예 안 하고 띄운 파드. OOM 터지면 0순위로 모가지가 썰려 나가는 희생양이다. K8s의 오케스트레이션은 이 OOM 킬러 점수를 뒤에서 조작하는 거대한 인형극이다.</li>
+</ul>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">내용</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>커널 패닉(Kernel Panic) 원천 차단</strong></td><td style="text-align: left">램 잔고 0원이라는 최악의 교착 상태(Deadlock)에서 프로세스 1개를 쳐냄으로써, 서버 전체가 먹통 되어 강제 리부팅하는 사태를 방지</td></tr>
+<tr><td style="text-align: left"><strong>Overcommit (초과 할당) 아키텍처 성립</strong></td><td style="text-align: left">OOM 킬러라는 든든한 뒤처리꾼이 존재하기에, OS가 마음껏 뻥튀기 가상 메모리를 팔아 서버 다중 프로그래밍 스루풋을 극대화</td></tr>
+<tr><td style="text-align: left"><strong>마이크로서비스(MSA) 우선순위 통제</strong></td><td style="text-align: left">쿠버네티스 환경에서 QoS와 <code>oom_score_adj</code> 튜닝을 통해, 죽어도 되는 컨테이너와 살려야 할 컨테이너의 생사를 클라우드 설계자가 완벽하게 통제</td></tr>
+</tbody></table>
+<h3 id="gyeolron-mic-mirae-jeonmang">결론 및 미래 전망</h3>
+<p>OOM Killer (Out-of-Memory Killer)는 "가상 메모리의 환상이 물리적 현실의 벽에 부딪혔을 때, 운영체제가 보여줄 수 있는 가장 폭력적이고도 이성적인 구조조정"이다. 초보 개발자들에게는 내 코드를 알림도 없이 찢어 죽이는 공포의 대상이지만, 베테랑 시스템 엔지니어에게는 이 킬러의 총구를 누구에게 돌릴지(oom_score_adj) 세팅함으로써 시스템의 코어를 지켜내는 고도화된 스케줄링의 체스판이 된다. 클라우드와 도커(Docker)의 시대가 도래하며 단일 서버가 수백 개의 앱을 품는 오버커밋(Overcommit)이 당연해짐에 따라, 이 살생부 데몬의 역할은 단순한 오류 처리기를 넘어 마이크로서비스 생태계의 숲을 가꾸는 '산불(자연 도태)'과 같은 필수 불가결한 정화 시스템으로 영원히 작동할 것이다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">기초 자원 관리 문제
+    ↓
+OOM Killer (Out-of-Memory) 작동 우선순위 점수 (oom_score) 매커니즘
+    ↓
+성능·격리·공정성 최적화
+    ↓
+가상화·관측·자동화 통합
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">OOM Killer (Out-of-Memory) 작동 우선순위 점수 (oom_score) 매커니즘</td><td style="text-align: left">운영체제 자원 관리와 보호 정책이 실제로 적용되는 핵심 주제</td></tr>
+<tr><td style="text-align: left">커널 (Kernel)</td><td style="text-align: left">정책 집행, 상태 전이, 시스템 호출 처리의 중심</td></tr>
+<tr><td style="text-align: left">프로세스/스레드</td><td style="text-align: left">CPU, 메모리, 동기화 자원과 직접 연결되는 실행 단위</td></tr>
+<tr><td style="text-align: left">메모리/I/O</td><td style="text-align: left">성능 병목과 보호 요구사항이 함께 드러나는 연계 영역</td></tr>
+<tr><td style="text-align: left">가상화/보안</td><td style="text-align: left">격리, 제어, 관측 확장 관점에서 해당 주제가 연결되는 상위 개념</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

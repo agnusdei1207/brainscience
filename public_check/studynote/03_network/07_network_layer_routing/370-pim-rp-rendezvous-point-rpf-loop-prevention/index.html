@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>370. RP (Rendezvous Point, PIM-SM), RPF (Reverse Path Forwarding) 멀티캐스트 루프 방지 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>May 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote network
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 멀티캐스트 라우팅이 정상적으로 돌아가기 위한 두 가지 핵심 기둥으로, 송신자와 수신자를 만나게 해주는 중앙 우체국인 **RP(랑데부 포인트)**와, 멀티캐스트 패킷이 복사되다가 엉뚱한 길로 빙빙 도는 무한 루프(폭풍)를 원천 차단하는 검문소인 **RPF(역방향 경로 포워딩)**가 있다.
+<strong>비유</strong>: RP (Rendezvous Point, PIM-SM), RPF (Reverse Path Forwarding) 멀티캐스트 루프 방지은(는) 라우팅과 경로 제어 안에서 데이터와 제어 규칙을 질서 있게 맞춰 주는 교통 체계와 같다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li><strong>개념</strong>: PIM-SM 네트워크의 구심점 역할을 하는 RP(Rendezvous Point)와, 멀티캐스트 트래픽의 라우팅 루프 방지 및 최적 분배 트리 구성을 위한 RPF(Reverse Path Forwarding) 알고리즘.</li>
+<li><strong>필요성</strong>: 멀티캐스트는 "1개를 받아서 2개로 복사(Flooding)해 던지는" 아주 위험한 기술이다. 라우터 3대가 삼각형으로 묶여있는데 1개가 2개로, 2개가 4개로, 4개가 16개로 복사되며 루프가 돌면 1초 만에 기가비트 백본이 터져버린다(Broadcast Storm). **"어디서 들어온 패킷인지 깐깐하게 검사해서, 정문(최단 경로)으로 들어온 패킷만 통과시키고 뒷문으로 몰래 굴러들어온 중복 패킷은 다 버리자!"**라는 생존 본능이 RPF라는 마법의 검문소를 만들어냈다.</li>
+</ul>
+<hr />
+<p>전국의 라우터들이 "누가 RP(중앙 우체국)인지" 똑같이 알고 있어야 한다.</p>
+<ul>
+<li><strong>Static RP</strong>: 관리자가 수백 대의 라우터에 일일이 <code>ip pim rp-address 1.1.1.1</code>이라고 손으로 쳐서 하드코딩한다. 가장 무식하지만 완벽하다. (RP가 죽으면 수동으로 딴 놈으로 다 고쳐야 함).</li>
+<li><strong>Auto-RP</strong>: 시스코 꼼수. 후보자(Candidate-RP)들이 "나 반장 할래!"라고 떠들면, 매니저(Mapping Agent)가 그걸 듣고 가장 똘똘한 놈을 골라 동네방네 "올해의 RP는 1.1.1.1 이다!"라고 멀티캐스트로 쏴준다. (설정이 자동이라 편함).</li>
+<li><strong>BSR (Bootstrap Router)</strong>: Auto-RP의 벤더 독립적인(Open) 업계 표준 버전. 원리는 거의 똑같이 후보를 받고 매니저가 쏴주는 방식이다.</li>
+</ul>
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<p>가장 중요한 핵심이다. 면접이나 트러블슈팅에서 PIM의 작동 여부는 RPF가 결정한다.
+어떤 라우터의 1번 포트로 멀티캐스트 영상 패킷이 쏟아져 들어왔다. (출발지 IP: <code>10.1.1.1</code> 방송국).</p>
+<ol>
+<li>라우터는 영상(멀티캐스트 IP)을 일단 킵해두고, <strong>출발지 IP(<code>10.1.1.1</code>)를 가지고 자신의 유니캐스트 라우팅 테이블(OSPF 지도)을 펴서 거꾸로(Reverse) 검색을 때려본다</strong>.</li>
+<li>"내 지도(OSPF)를 보니까, 내가 10.1.1.1 방송국으로 갈 때는 <strong>1번 포트</strong>로 나가는 게 제일 빠르네!"</li>
+<li><strong>RPF 검사 (일치 여부 판단)</strong>: "어? 내가 OSPF로 갈 때 쓰는 제일 빠른 길(1번 포트)이랑, 지금 영상이 굴러 들어온 포트(1번 포트)가 완벽히 똑같네? 오케이! 넌 빙빙 돌지 않고 똑바로 최단 거리로 날아온 진짜 찐 패킷이다! 통과 (RPF Success)!"</li>
+<li><strong>RPF 실패 (Drop)</strong>: 만약 OSPF 지도는 1번 포트가 제일 빠른데, 영상이 2번 포트로 기어들어 왔다? "너 이 새끼, 1번으로 안 오고 왜 2번으로 뺑 돌아왔어! 너 어디서 핑퐁(루프) 돌다가 굴러들어온 복제품 찌꺼기 패킷이지! 쓰레기통으로 가라!" ──▶ <strong>즉시 패킷 폐기 (RPF Failure Drop)</strong>.</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text"> ┌─────────────────────────────────────────────────────────────┐
+ │                RPF (역방향 경로 포워딩) 루프 방어 시각화           │
+ ├─────────────────────────────────────────────────────────────┤
+ │                                                             │
+ │   [ 방송국 (10.1.1.1) ]                                        │
+ │        │ (정문 1번 포트) ◀── (OSPF 지도로 보면 이쪽이 최단거리!) │
+ │        ▼                                                     │
+ │     [ 라우터 ] ──── (뒷문 2번 포트) ◀── (어딘가서 뺑뺑 돌다 들어온 패킷)│
+ │                                                             │
+ │   * 1번 포트로 들어온 패킷:                                      │
+ │     &quot;OSPF 지도(1번) == 들어온 포트(1번)&quot; ──▶ 합격! 영상 시청자에게 복사!│
+ │                                                             │
+ │   * 2번 포트로 들어온 패킷:                                      │
+ │     &quot;OSPF 지도(1번) != 들어온 포트(2번)&quot; ──▶ 불합격! 복제된 루프 패킷! │
+ │     (만약 이걸 통과시켰으면 스위치로 복사되면서 망이 뻗었을 것이다).   │
+ └─────────────────────────────────────────────────────────────┘
+</code></pre>
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: RP (Rendezvous Point, PIM-SM), RPF (Reverse Path Forwarding) 멀티캐스트 루프 방지은(는) 라우팅 프로토콜, 경로 계산, 정책 제어 조건을 함께 만족할 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<p>RPF는 "돌아가는 길이 같아야 한다"는 대원칙을 쓴다. 그런데 실무에서 방화벽 두 대를 놓고 들어오는 길(Inbound)과 나가는 길(Outbound)을 일부러 다르게 세팅해 놓은 <strong>비대칭 라우팅(Asymmetric Routing)</strong> 환경이라면?</p>
+<ul>
+<li>영상 패킷은 정상적으로 들어왔는데, 라우터가 "어? 나가는 길은 2번 포튼데 넌 1번으로 왔네?"라며 정상 패킷을 RPF Fail로 몽땅 다 쏴 죽여버린다!</li>
+<li><strong>해결책</strong>: 관리자가 억지로 <code>ip mroute</code> (멀티캐스트 전용 Static 라우팅)을 한 줄 쳐서 "야, 1번으로 들어오는 거 RPF 합격시켜줘!"라고 RPF 검사기를 강제로 속여(수정해) 줘야만 영상이 뚫린다.</li>
+</ul>
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">관점</th><th style="text-align: left">RP (Rendezvous Point, PIM-SM), RPF (Reverse Path Forwarding) 멀티캐스트 루프 방지</th><th style="text-align: left">인접 기술/대안</th><th style="text-align: left">판단 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">적용 범위</td><td style="text-align: left">라우팅과 경로 제어의 특정 문제를 직접 해결</td><td style="text-align: left">상위·하위 계층 또는 대체 방식이 일부 기능을 분담</td><td style="text-align: left">요구사항과 계층 경계 확인</td></tr>
+<tr><td style="text-align: left">장점</td><td style="text-align: left">라우팅 프로토콜과 경로 계산을 구조적으로 통제</td><td style="text-align: left">범용성 또는 단순성이 강점</td><td style="text-align: left">목적에 맞는 선택 필요</td></tr>
+<tr><td style="text-align: left">한계</td><td style="text-align: left">정책 제어·운영 복잡도 증가 가능</td><td style="text-align: left">기능은 단순하지만 제어력 제한</td><td style="text-align: left">비용·표준 호환성 검토</td></tr>
+</tbody></table>
+<p>핵심은 단순 우열 비교가 아니라, RP (Rendezvous Point, PIM-SM), RPF (Reverse Path Forwarding) 멀티캐스트 루프 방지이 어떤 맥락에서 더 적합한지와 인접 기술과의 역할 분담을 해석하는 데 있다.</p>
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p><strong>채택 조건</strong></p>
+<ul>
+<li>라우팅 프로토콜과 경로 계산을 동시에 관리해야 할 때</li>
+<li>운영 자동화 또는 표준화된 제어가 필요할 때</li>
+<li>장애 분석 시 원인 구분이 명확해야 할 때</li>
+</ul>
+<p><strong>회피 조건</strong></p>
+<ul>
+<li>단순 환경이라 오버헤드가 더 큰 경우</li>
+<li>장비·프로토콜 호환성이 확보되지 않은 경우</li>
+<li>측정 지표 없이 관행적으로만 적용하는 경우</li>
+</ul>
+<p><strong>체크리스트</strong></p>
+<ol>
+<li>요구 성능과 허용 지연이 정의되었는가?</li>
+<li>오류·혼잡·보안 처리 경계가 명확한가?</li>
+<li>표준·벤더 구현 차이를 검증했는가?</li>
+<li>운영 관측성 및 장애 대응 절차가 준비되었는가?</li>
+</ol>
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>RP (Rendezvous Point, PIM-SM), RPF (Reverse Path Forwarding) 멀티캐스트 루프 방지을 적용하면 라우팅 프로토콜과 경로 계산에 대한 통제력이 높아지고, 운영 일관성과 성능 예측 가능성을 확보할 수 있다. 반면 설정 복잡도, 표준 호환성, 장비 비용, 운영 숙련도라는 전제가 뒤따르므로 무조건적인 도입이 정답은 아니다. 결론적으로 이 주제는 라우팅과 경로 제어를 이해하는 기준점이며, 최근에는 자동화·가상화·지능형 제어와 결합해 더 세밀한 최적화 방향으로 진화하고 있다.</p>
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">기초 라우팅과 경로 제어 이해
+    ↓
+RP (Rendezvous Point, PIM-SM), RPF (Reverse Path Forwarding) 멀티캐스트 루프 방지 개념 정립
+    ↓
+표준화·상용화 적용
+    ↓
+자동화·가상화 연계
+    ↓
+지능형 최적화·차세대 확장
+</code></pre>
+<p>RP (Rendezvous Point, PIM-SM), RPF (Reverse Path Forwarding) 멀티캐스트 루프 방지은(는) 단일 기능으로 끝나지 않고 표준화, 운영 자동화, 고속화·지능화 단계로 확장된다.</p>
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">라우팅 프로토콜</td><td style="text-align: left">RP (Rendezvous Point, PIM-SM), RPF (Reverse Path Forwarding) 멀티캐스트 루프 방지를 이해할 때 함께 봐야 하는 라우팅과 경로 제어 핵심 개념</td></tr>
+<tr><td style="text-align: left">경로 계산</td><td style="text-align: left">RP (Rendezvous Point, PIM-SM), RPF (Reverse Path Forwarding) 멀티캐스트 루프 방지를 이해할 때 함께 봐야 하는 라우팅과 경로 제어 핵심 개념</td></tr>
+<tr><td style="text-align: left">정책 제어</td><td style="text-align: left">RP (Rendezvous Point, PIM-SM), RPF (Reverse Path Forwarding) 멀티캐스트 루프 방지를 이해할 때 함께 봐야 하는 라우팅과 경로 제어 핵심 개념</td></tr>
+<tr><td style="text-align: left">수렴</td><td style="text-align: left">RP (Rendezvous Point, PIM-SM), RPF (Reverse Path Forwarding) 멀티캐스트 루프 방지를 이해할 때 함께 봐야 하는 라우팅과 경로 제어 핵심 개념</td></tr>
+<tr><td style="text-align: left">보안</td><td style="text-align: left">RP (Rendezvous Point, PIM-SM), RPF (Reverse Path Forwarding) 멀티캐스트 루프 방지를 이해할 때 함께 봐야 하는 라우팅과 경로 제어 핵심 개념</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

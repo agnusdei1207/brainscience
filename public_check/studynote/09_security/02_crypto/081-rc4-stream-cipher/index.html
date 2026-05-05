@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>81. RC4 — 스트림 암호, 취약점 발견으로 사용 중단 (WEP) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 26, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: RC4는 Ron Rivest가 1987년에 설계한 스트림 암호로, 간단한 구조와高速な实现로 인해 WEP, SSL/TLS, WPA 등 광범위하게 사용되었다. 그러나严重的인 취약점들이 발견되어 현재는 사용이 금지되어 있다.
+2. <strong>가치</strong>: 한때 가장 널리 사용されたストリーム暗号だったが、暗号解読の研究が蓄積されるにつれ、 키 스트림의 예측 가능성과 초기 상태의脆弱性が 드러났다. 2015년 RFC 7465에서 TLS에서 RC4 사용이正式에禁止되었다.
+3. <strong>教训</strong>: RC4의 역사는"보안은 검증되지 않은 알고리즘의广泛한 사용이 얼마나 위험한か"を教訓적으로 보여준다. 간단한 설계가 빠른 채택을 이끌었지만, 이는 동시에深度있는安全分析不足招いた。</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h1 id="rc4-rivest-cipher-4">RC4 (Rivest Cipher 4)</h1>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<h3 id="gaenyeom-jeongyi">개념 정의</h3>
+<p>**RC4 (Rivest Cipher 4)**는 다음과 같은 특성을 갖는다:</p>
+<ul>
+<li><strong>설계자</strong>: Ron Rivest, RSA Security, 1987년</li>
+<li><strong>구조</strong>: 내부 상태 (256바이트 배열) 기반 의사 난수 생성</li>
+<li><strong>키 길이</strong>: 40비트~2048비트 (일반적으로 40~256비트)</li>
+<li><strong>용도</strong>: WEP, SSL/TLS, WPA, PDF 등</li>
+</ul>
+<p>동작 원리:</p>
+<pre><code>1. KSA (Key Scheduling Algorithm): 키로 내부 상태 배열 S 초기화
+2. PRGA (Pseudo-Random Generation Algorithm): 키 스트림 생성
+3. XOR: 평문과 키 스트림을 XOR하여 암호문 생성
+</code></pre>
+<h3 id="cwiyagjeom-balgyeon-yeogsa">취약점 발견 역사</h3>
+<p>RC4의 취약점들은 시간이 지남에 따라次々と発見された:</p>
+<ul>
+<li><strong>2001년</strong>: Fluher, Mantin, Shamir가 WEP 분석论文发表, RC4의 첫 major 취약점 공개</li>
+<li><strong>2007년</strong>: Klein이 RC4의进一步な分析 발표</li>
+<li><strong>2013년</strong>: AlFardanらが TLS에서의 RC4 공격 (RC4攻击) 발표</li>
+<li><strong>2015년</strong>: RFC 7465에서 TLS에서 RC4 사용禁止</li>
+<li><strong>2015년</strong>: Barenia ity ataque - Royal Holloway에서 최신 공격公开</li>
+</ul>
+<h3 id="biyu">비유</h3>
+<p>RC4는 <strong>밟을 때마다 다른 소리를 내는 древний 기계식 잠금장치</strong>와 같았다. 처음에는 다양한 소리를 내어 방어하는 것 같았지만, 사람들이 많이 밟아본 결과 "이 정도 힘으로 밟으면 이 소리가 난다"는 패턴을 발견했다. 결국 도둑이 어떤 소리로 어떤 봉인이 눌렸는지 알게 되어 열쇠 없이도破解할 수 있게 되었다.</p>
+<p>📢 <strong>비유</strong>: RC4는 "물고기 껍질 모양 자물쇠"와 같았다. 처음에는 복잡하게 생겨서 쉽게 열 수 없을 것 같았지만, 사람들이 자물쇠를反复试验하여 "이런 모양의 키를 넣으면 이런 패턴으로 열린다"는 것을 발견했다. 결국 패턴을 알게 되자 열쇠 없이도 열 수 있게 되었다.</p>
+<h3 id="cwiyagjeomyi-weonin">취약점의 원인</h3>
+<p>RC4의 핵심 문제는 **키 스트림의 통계적 편향 (Statistical Bias)**이다:</p>
+<pre><code>【발견된 주요 취약점】
+
+1. 초기 키 스트림 바이트의 편향
+   - 바이트 값 0과 128의 발생 확률이 높음
+   - 이를利用하여 평문 첫 수 바이트를 추론 가능
+
+2. 바이트 간 상관관계
+   - 키 스트림의 연속된 바이트 사이에 相関
+   - 반복적으로 사용 시 패턴이 드러남
+
+3. IV 관련 취약점
+   - WEP에서 24비트 IV가 매 패킷마다 재설정
+   - IV + 짧은 키로 전제 키 流復 가능
+</code></pre>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌────────────────────────────────────────────────────────────────────┐
+  │                    RC4 취약점 공격示意                               │
+  ├────────────────────────────────────────────────────────────────────┤
+  │
+  │  【WEP 공격】                                                        │
+  │  ────────────────────────────────────────────────────────────────   │
+  │                                                                      │
+  │  공격자가 다수의 취약한 RC4 패킷을 수집:                              │
+  │                                                                      │
+  │  패킷 1: IV(1) + 암호문(1)    → 키 스트림 일부 노출                  │
+  │  패킷 2: IV(2) + 암호문(2)    → 다른 부분 노출                       │
+  │  패킷 N: IV(N) + 암호문(N)    → 점점 더 많은 부분 노출                │
+  │                                                                      │
+  │  → 충분히 많은 패킷 수집 후:                                         │
+  │    통계적 분석으로 WEP 키를完全に推測可能!                            │
+  │                                                                      │
+  │  【TLS RC4 공격】                                                    │
+  │  ────────────────────────────────────────────────────────────────   │
+  │                                                                      │
+  │  알판다인 등 연구진 발견:                                            │
+  │  - RC4 키 스트림의초기 바이트에 明らかな偏り                           │
+  │  - 수백만 번의 반복으로 평문 특정 바이트를 확인 가능                   │
+  │  - HTTPS 쿠키, 인증 토큰 등 유출 가능                                 │
+  │                                                                      │
+  │  필요한 암호문 수: ~10억 회 (실제로는 수 십억)                        │
+  │  시간: 数時間 내 (현재 컴퓨터로)                                      │
+  │                                                                      │
+  └────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> WEP 공격은 RC4의 IV 문제를利用한다. WEP는 매 패킷마다 24비트 IV를 달랑 사용하고 이를 공개한다. 공격자는 충분한 수의 패킷을 수집하여 통계적 분석을 통해 키를 추론할 수 있다. TLS 공격은 키 스트림의 바이트 편향을利用한다. 여러 번의 암호화 결과에서 특정 위치의 바이트가 특정 값으로倾向하는 것을 관찰하면 원래 평문을 알 수 있다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="rc4-naebu-gujo">RC4 내부 구조</h3>
+<p><strong>1. 내부 상태 (State)</strong>:</p>
+<ul>
+<li>256바이트 배열 S</li>
+<li>두 개의 포인터 i와 j</li>
+<li>S[0], S[1], ..., S[255]로 구성</li>
+</ul>
+<p><strong>2. 키 스케줄링 알고리즘 (KSA)</strong>:</p>
+<pre><code>for i = 0 to 255:
+    j = 0
+    j = (j + S[i] + key[i mod keylen]) mod 256
+    swap(S[i], S[j])
+</code></pre>
+<p><strong>3. 의사 난수 생성 알고리즘 (PRGA)</strong>:</p>
+<pre><code>i = (i + 1) mod 256
+j = (j + S[i]) mod 256
+swap(S[i], S[j])
+t = (S[i] + S[j]) mod 256
+return S[t]
+</code></pre>
+<h3 id="wae-cwiyaghanga">왜 취약한가?</h3>
+<p>RC4의 취약점은 KSA와 PRGA의 <strong>간단한 구조</strong>에서 비롯된다:</p>
+<ol>
+<li><strong>상태 공간 부족</strong>: 256! ≈ 2^1700의 가능한 상태지만, 실제 효과적 엔트로피はより少ない</li>
+<li><strong>키 스케줄의 불완전성</strong>: 키가很短거나 IV가_predictable하면 초기 상태가 취약</li>
+<li><strong>바이트 간 상관관계</strong>: PRGA의 단순한 swap 연산은 완전한 무작위성を提供하지 않음</li>
+</ol>
+<h3 id="alryeojin-gonggyeogdeul">알려진 공격들</h3>
+<table><thead><tr><th style="text-align: left">공격명</th><th style="text-align: left">연도</th><th style="text-align: left">설명</th><th style="text-align: left">복잡도</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>FMS</strong></td><td style="text-align: left">2001</td><td style="text-align: left">IV + 키 역추적</td><td style="text-align: left">2^24 packets</td></tr>
+<tr><td style="text-align: left"><strong>Klein</strong></td><td style="text-align: left">2007</td><td style="text-align: left">키 스케줄 분석</td><td style="text-align: left">2^64 operations</td></tr>
+<tr><td style="text-align: left"><strong>Mantin</strong></td><td style="text-align: left">2015</td><td style="text-align: left">absurd-Z直撃</td><td style="text-align: left">2^31 operations</td></tr>
+<tr><td style="text-align: left"><strong>Barenia</strong></td><td style="text-align: left">2015</td><td style="text-align: left">TLS 공격</td><td style="text-align: left">2^30 encryptions</td></tr>
+</tbody></table>
+<p>📢 <strong>아날로그</strong>: RC4의 취약점은 "물고기 껍질 패턴의 자물쇠가繰り返し使用すると磨り減ってパターンが見えてくる" 것과 같다. 처음에는 복잡한 패턴이 있지만, 자물쇠가 열리고 닫힐 때마다 같은 위치가 문지러져Eventually 패턴이 드러난다.</p>
+<hr />
+<h2 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h2>
+<h3 id="rc4-vs-hyeondae-seuteurim-amho">RC4 vs 현대 스트림 암호</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">RC4</th><th style="text-align: left">ChaCha20</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>설계 연도</strong></td><td style="text-align: left">1987</td><td style="text-align: left">2008</td></tr>
+<tr><td style="text-align: left"><strong>상태 크기</strong></td><td style="text-align: left">1700비트</td><td style="text-align: left">256비트 (더 작음)</td></tr>
+<tr><td style="text-align: left"><strong>키 길이</strong></td><td style="text-align: left">40~2048비트</td><td style="text-align: left">256비트</td></tr>
+<tr><td style="text-align: left"><strong>안전성</strong></td><td style="text-align: left"><strong>취약/폐기</strong></td><td style="text-align: left"><strong>안전/권장</strong></td></tr>
+<tr><td style="text-align: left"><strong>attacks</strong></td><td style="text-align: left">多数発見済み</td><td style="text-align: left">目前까지strong</td></tr>
+<tr><td style="text-align: left"><strong>권장 여부</strong></td><td style="text-align: left">절대 사용 금지</td><td style="text-align: left">권장</td></tr>
+<tr><td style="text-align: left"><strong>용도</strong></td><td style="text-align: left">레거시 系统</td><td style="text-align: left">TLS 1.3, Signal</td></tr>
+</tbody></table>
+<h3 id="hyeonjae-sangtae">현재 상태</h3>
+<p><strong>사용 금지된 환경</strong>:</p>
+<ul>
+<li>TLS/SSL (RFC 7465, 2015)</li>
+<li>WPA/WPA2 (일부)</li>
+<li>WEP (이미 완전히破られた)</li>
+</ul>
+<p><strong>잔재하는 곳</strong>:</p>
+<ul>
+<li>레거시 시스템 (점진적 교체 필요)</li>
+<li>일부旧型设备</li>
+<li>파일 암호화 (.pdf 등 레거시）</li>
+</ul>
+<h3 id="daecean">대체案</h3>
+<p><strong>TLS에서 RC4 대체</strong>:</p>
+<pre><code>RC4 제거 후 권장 CipherSuite:
+- TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+- TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+- TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+</code></pre>
+<hr />
+<h2 id="4-bigyo-mic-teureideuopeu">4. 비교 및 트레이드오프</h2>
+<h3 id="hyeonjae-sanghwange-daehan-pyeongga">현재 상황에 대한 평가</h3>
+<p>RC4는 이제 <strong>完全に禁止</strong>되어야 한다:</p>
+<ol>
+<li><strong>암호학적 관점</strong>: 이미破られた暗号화를 사용하는 것은 "자물쇠 없이 문을 닫는 것"과 같다</li>
+<li><strong>컴플라이언스 관점</strong>: PCI DSS, SOC 2 등 주요 규정에서 RC4 사용을 명시적으로禁止</li>
+<li><strong>운영 관점</strong>: 데이터 유출 시 책임 문제가 발생할 수 있음</li>
+</ol>
+<h3 id="maigeureisyeon-gyehoeg">마이그레이션 계획</h3>
+<p><strong>즉시 조치</strong>:</p>
+<pre><code>1. 모든 시스템에서 RC4 비활성화
+2. TLS 설정에서 RC4 관련 CipherSuite 제거
+3. 레거시 시스템 식별 및 업데이트 계획 수립
+</code></pre>
+<p><strong>장기적 조치</strong>:</p>
+<pre><code>1. 레거시 시스템 교체 또는 업그레이드
+2. ChaCha20-Poly1305 또는 AES-GCM으로 대체
+3. 정기적인 암호 제품군 검토
+</code></pre>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li><strong>"아직도 작동하니까" 방치</strong>: 작동하지만 안전하지 않으면 의미가 없다</li>
+<li><strong>"일부만 사용"</strong>: 부분적 사용도 공격 가능성 있음</li>
+<li><strong>레거시 호환성 유지</strong>: 오래된 클라이언트 지원之名으로不安全한 암호 사용</li>
+</ul>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-coejeoghwa-gibeob">5. 실무 적용 및 최적화 기법</h2>
+<h3 id="rc4-sayongeuro-inhanrisuku">RC4 사용으로 인한リスク</h3>
+<table><thead><tr><th style="text-align: left">시나리오</th><th style="text-align: left">위험 수준</th><th style="text-align: left">결과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>WEP 사용</strong></td><td style="text-align: left"><strong>극도로 높음</strong></td><td style="text-align: left">수 분 내 키 유출 가능</td></tr>
+<tr><td style="text-align: left"><strong>TLS RC4</strong></td><td style="text-align: left"><strong>높음</strong></td><td style="text-align: left">쿠키/토큰 탈취 가능</td></tr>
+<tr><td style="text-align: left"><strong>기타 RC4</strong></td><td style="text-align: left"><strong>높음</strong></td><td style="text-align: left">데이터 평문 노출</td></tr>
+</tbody></table>
+<h3 id="gyohun">교훈</h3>
+<ol>
+<li><strong>검증되지 않은 알고리즘의 조기 채택은 위험하다</strong>: RC4의 간단한 설계가 빠른 채택을 이끌었지만, 충분한 분석이 이루어지기 전에 널리 퍼졌다.</li>
+<li><strong>简单的 구조는 빠른 구현을 가능하지만, 동시에攻撃面도 증가시킨다</strong>: RC4의 단순성이 장점이자 약점이 되었다.</li>
+<li><strong>암호학적으로破られた 알고리즘은即時 교체해야 한다</strong>: "아직도 작동한다"는 이유로 사용을延续하면 안 된다.</li>
+</ol>
+<p>📢 <strong>정리</strong>: RC4는 한때 가장 널리 사용されたストリーム暗号였지만, 이제는完全に廃止되었다. its vulnerabilities have been thoroughly documented and attacks are practical. 모든 시스템에서 RC4를 제거하고 ChaCha20-Poly1305 또는 AES-GCM으로 대체해야 한다. RC4의 역사는暗号학에서 "검증과標準化の重要性"을 상기시킨다.</p>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>ChaCha20</strong></td><td style="text-align: left">RC4를 대체하는 현대적 스트림 암호로, 현재 권장된다</td></tr>
+<tr><td style="text-align: left"><strong>WEP</strong></td><td style="text-align: left">RC4를使用した Wi-Fi 암호화로 완전히破られた</td></tr>
+<tr><td style="text-align: left"><strong>TLS</strong></td><td style="text-align: left">현재는 RC4를 제거하고 AES-GCM 또는 ChaCha20을 사용한다</td></tr>
+<tr><td style="text-align: left"><strong>키 스트림 편향</strong></td><td style="text-align: left">RC4의 근본적 취약점으로, 통계적 분석을可能하게 한다</td></tr>
+<tr><td style="text-align: left"><strong>KSA/PRGA</strong></td><td style="text-align: left">RC4의 두 주요 알고리즘으로, 둘 다 취약점을含む</td></tr>
+<tr><td style="text-align: left"><strong>양자 컴퓨터 위협</strong></td><td style="text-align: left">Grover 알고리즘은 ChaCha20의 강도를 半減시키지만 256비트는十分である</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>RC4는**"물고기 비늘 모양 자물쇠"**와 같았다. 처음엔 복잡하게 생겨서 쉽게 열 수 없을 것 같았지만, 사람들이 자물쇠를 몇 천 번 열어본 결과 "이런 압력과 이런 각도로 맞으면 이런 패턴의 소리가 난다"는 것을 발견했다. 결국 도둑이 패턴을 알게 되자 열쇠 없이도 열 수 있게 되었다.</li>
+<li>컴퓨터에서도 마찬가지로, RC4를 사용하여 보내는 데이터를 여러 번intercept하면 "이 암호문 뒤에는 이런 평문이 오倾向"이 있다는 것을 발견하게 된다. 충분히 많이 수집하면 어떤 비밀 메시지든 解読할 수 있게 되는 거다.</li>
+<li>그래서 사람들은**"새로운 모양의 자물쇠 (ChaCha20)"**를 만들었다. 이 새로운 자물쇠는 아무리 많이 열어봐도 패턴이 발견되지 않아서, 도둑이 아무리Intercept해도 어떤 열쇠가 사용되었는지 알 수 없게 되었다. 이제는 모두가 이 새로운 자물쇠만 사용해야 한다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

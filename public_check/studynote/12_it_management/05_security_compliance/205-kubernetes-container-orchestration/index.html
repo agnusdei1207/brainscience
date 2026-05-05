@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>205. 컨테이너 오케스트레이션 (Kubernetes) 노드&#x2F;포드(Pod) 고가용성 설계 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote it management
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 컨테이너 오케스트레이션 (Kubernetes) 노드/포드(Pod) 고가용성 설계의 본질은 컨테이너 오케스트레이션 (Kubernetes) 노드/포드(Pod) 고가용성 설계의 목적·구성·운영 기준을 명확히 설명하는 주제를 비즈니스 가치, 통제, 실행 관점에서 일관되게 연결하는 데 있다.
+<strong>비유</strong>: 복잡한 시스템을 안전하게 연결하는 교통망 설계도와 같다.</p>
+</blockquote>
+<hr />
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>마이크로서비스 아키텍처가 확산되면서 수십~수백 개의 컨테이너를 관리하는 문제가 대두되었다. Docker만으로는 컨테이너의 배포·장애 복구·스케일링·로드 밸런싱을 자동화할 수 없었고, 이를 해결하기 위해 Google이 내부 시스템(Borg)의 노하우를 바탕으로 2014년 Kubernetes를 오픈소스로 공개하였다. 현재 CNCF (Cloud Native Computing Foundation)가 관리하며, 전 세계 컨테이너 오케스트레이션의 사실상 표준(De facto Standard)이 되었다.</p>
+<p>K8s의 핵심 철학은 <strong>선언형(Declarative) 관리</strong>다. "현재 상태를 어떻게 변경하라"고 명령하는 대신, "원하는 최종 상태(Desired State)가 무엇인지"를 선언하면 K8s가 현재 상태와의 차이를 계속 감지하고 자동으로 수렴시킨다. 이 메커니즘이 자가 치유(Self-Healing)·자동 스케일링·무중단 배포를 가능하게 하는 근본 원리다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────────┐
+│                    Kubernetes Cluster 구조                            │
+├─────────────────────────────┬────────────────────────────────────────┤
+│    Control Plane (마스터)   │           Worker Nodes                 │
+│                             │                                        │
+│  ┌──────────────────────┐   │  ┌─────────────┐  ┌─────────────┐     │
+│  │  API Server          │◄──┤  │  Worker #1  │  │  Worker #2  │     │
+│  │  (모든 통신 허브)     │   │  │             │  │             │     │
+│  └──────────┬───────────┘   │  │  ┌───────┐  │  │  ┌───────┐  │     │
+│             │               │  │  │ Pod A │  │  │  │ Pod C │  │     │
+│  ┌──────────┴───────────┐   │  │  └───────┘  │  │  └───────┘  │     │
+│  │  etcd (클러스터 DB)  │   │  │  ┌───────┐  │  │  ┌───────┐  │     │
+│  │  (상태 저장소)       │   │  │  │ Pod B │  │  │  │ Pod D │  │     │
+│  └──────────────────────┘   │  │  └───────┘  │  │  └───────┘  │     │
+│  ┌──────────────────────┐   │  │  kubelet    │  │  kubelet    │     │
+│  │  Scheduler           │   │  │  kube-proxy │  │  kube-proxy │     │
+│  └──────────────────────┘   │  └─────────────┘  └─────────────┘     │
+│  ┌──────────────────────┐   │                                        │
+│  │  Controller Manager  │   │                                        │
+│  └──────────────────────┘   │                                        │
+└─────────────────────────────┴────────────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">오브젝트</th><th style="text-align: left">역할</th><th style="text-align: left">핵심 특징</th></tr></thead><tbody>
+<tr><td style="text-align: left">Pod</td><td style="text-align: left">컨테이너 실행 최소 단위</td><td style="text-align: left">1개 이상의 컨테이너, 동일 네트워크·스토리지 공유</td></tr>
+<tr><td style="text-align: left">Deployment</td><td style="text-align: left">Pod 복제·업데이트 관리</td><td style="text-align: left">롤링 업데이트, 롤백 지원</td></tr>
+<tr><td style="text-align: left">ReplicaSet</td><td style="text-align: left">지정된 Pod 복제본 수 유지</td><td style="text-align: left">Deployment가 내부적으로 사용</td></tr>
+<tr><td style="text-align: left">Service</td><td style="text-align: left">Pod 집합에 대한 안정적 네트워크 엔드포인트</td><td style="text-align: left">ClusterIP·NodePort·LoadBalancer 유형</td></tr>
+<tr><td style="text-align: left">Ingress</td><td style="text-align: left">외부 HTTP/HTTPS 트래픽 라우팅 규칙</td><td style="text-align: left">URL 경로·호스트 기반 라우팅</td></tr>
+<tr><td style="text-align: left">ConfigMap</td><td style="text-align: left">환경 설정 데이터 분리 저장</td><td style="text-align: left">12-Factor App Factor 3 구현</td></tr>
+<tr><td style="text-align: left">Secret</td><td style="text-align: left">민감 데이터(비밀번호·토큰) 관리</td><td style="text-align: left">Base64 인코딩, etcd 저장</td></tr>
+<tr><td style="text-align: left">PersistentVolume</td><td style="text-align: left">영구 스토리지 연결</td><td style="text-align: left">Pod 재시작 후에도 데이터 유지</td></tr>
+<tr><td style="text-align: left">HPA</td><td style="text-align: left">Horizontal Pod Autoscaler, 수평 자동 확장</td><td style="text-align: left">CPU/메모리 메트릭 기반 Pod 수 조절</td></tr>
+</tbody></table>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">HPA (수평 확장)</th><th style="text-align: left">VPA (수직 확장)</th><th style="text-align: left">Cluster Autoscaler</th></tr></thead><tbody>
+<tr><td style="text-align: left">전체 명칭</td><td style="text-align: left">Horizontal Pod Autoscaler</td><td style="text-align: left">Vertical Pod Autoscaler</td><td style="text-align: left">Cluster Autoscaler</td></tr>
+<tr><td style="text-align: left">확장 방향</td><td style="text-align: left">Pod 수 증가/감소</td><td style="text-align: left">Pod의 CPU·메모리 할당 조정</td><td style="text-align: left">워커 노드 수 증가/감소</td></tr>
+<tr><td style="text-align: left">응답 속도</td><td style="text-align: left">빠름 (수 초~수 분)</td><td style="text-align: left">중간 (Pod 재시작 필요)</td><td style="text-align: left">느림 (노드 프로비저닝 시간)</td></tr>
+<tr><td style="text-align: left">적합 워크로드</td><td style="text-align: left">무상태(Stateless) 서비스</td><td style="text-align: left">메모리 집약적 단일 프로세스</td><td style="text-align: left">전체 클러스터 용량 관리</td></tr>
+<tr><td style="text-align: left">한계</td><td style="text-align: left">단일 Pod 처리 한계 존재</td><td style="text-align: left">Pod 재시작으로 잠시 중단</td><td style="text-align: left">노드 추가 시간 지연</td></tr>
+</tbody></table>
+<table><thead><tr><th style="text-align: left">Service 유형</th><th style="text-align: left">접근 범위</th><th style="text-align: left">사용 사례</th></tr></thead><tbody>
+<tr><td style="text-align: left">ClusterIP</td><td style="text-align: left">클러스터 내부만</td><td style="text-align: left">마이크로서비스 간 내부 통신</td></tr>
+<tr><td style="text-align: left">NodePort</td><td style="text-align: left">외부 → 노드 IP:Port</td><td style="text-align: left">개발·테스트 환경</td></tr>
+<tr><td style="text-align: left">LoadBalancer</td><td style="text-align: left">클라우드 LB를 통한 외부 접근</td><td style="text-align: left">프로덕션 외부 트래픽</td></tr>
+<tr><td style="text-align: left">ExternalName</td><td style="text-align: left">외부 DNS 이름으로 라우팅</td><td style="text-align: left">외부 데이터베이스 연결</td></tr>
+</tbody></table>
+<p>K8s 클러스터 고가용성을 위해 Control Plane을 3개 이상의 홀수 노드로 구성하여 etcd 쿼럼(Quorum)을 보장한다. Pod AntiAffinity 정책으로 동일 서비스의 Pod들이 서로 다른 워커 노드에 분산 배치되도록 하며, PodDisruptionBudget (PDB)으로 유지보수 중에도 최소 가용 Pod 수를 보장한다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">배포 전략</th><th style="text-align: left">설명</th><th style="text-align: left">장점</th><th style="text-align: left">단점</th></tr></thead><tbody>
+<tr><td style="text-align: left">Rolling Update</td><td style="text-align: left">구버전 Pod를 점진적으로 신버전으로 교체</td><td style="text-align: left">무중단, 단순</td><td style="text-align: left">롤백 시간 소요</td></tr>
+<tr><td style="text-align: left">Blue/Green</td><td style="text-align: left">신버전 환경 완전 준비 후 트래픽 일괄 전환</td><td style="text-align: left">즉시 롤백 가능</td><td style="text-align: left">리소스 2배 필요</td></tr>
+<tr><td style="text-align: left">Canary</td><td style="text-align: left">신버전에 소량(예: 5%) 트래픽만 우선 인가</td><td style="text-align: left">위험 최소화</td><td style="text-align: left">설정 복잡</td></tr>
+</tbody></table>
+<ul>
+<li><strong>RBAC (Role-Based Access Control, 역할 기반 접근 제어)</strong>: 최소 권한 원칙으로 서비스 계정 권한 제한</li>
+<li><strong>Network Policy</strong>: Pod 간 허용 트래픽 화이트리스트 방식으로 통제</li>
+<li><strong>Pod Security Admission</strong>: 특권(Privileged) 컨테이너 실행 제한</li>
+<li><strong>Image Scanning</strong>: CI/CD에서 취약점 스캔(Trivy) 후 신뢰된 이미지만 배포</li>
+<li><strong>Secrets 관리</strong>: HashiCorp Vault + External Secrets Operator 연동</li>
+</ul>
+<p>Prometheus로 K8s 메트릭을 수집하고, Grafana 대시보드로 시각화한다. 알림은 Alertmanager가 처리하여 Slack·PagerDuty로 전송한다. 분산 추적은 Jaeger 또는 OpenTelemetry를 사용하며, 이 세 가지(메트릭·로그·추적)가 K8s 운영의 관찰 가능성 삼각형을 구성한다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p>Kubernetes는 컨테이너 기반 애플리케이션의 운영 복잡성을 자동화로 해결하여, 엔지니어가 인프라 관리 대신 비즈니스 가치 창출에 집중할 수 있게 한다. HPA를 통한 자동 스케일링은 예상치 못한 트래픽 급증에도 SLA (Service Level Agreement, 서비스 수준 계약)를 유지하고, Self-Healing은 장애 탐지·복구 자동화로 운영 비용을 절감한다.</p>
+<p>기술사 시험에서는 ① K8s 마스터-워커 아키텍처의 컴포넌트 역할, ② 핵심 오브젝트(Pod·Deployment·Service·Ingress) 간 관계, ③ HPA·VPA·Cluster Autoscaler 차이, ④ Blue/Green·Canary 배포 전략을 체계적으로 서술하고, 고가용성 설계 방안까지 포함해야 완성도 높은 답안이 된다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>컨테이너 오케스트레이션 (Kubernetes) 노드/포드(Pod) 고가용성 설계를 올바르게 적용하면 의사결정의 일관성, 운영의 재현성, 통제의 추적성이 동시에 향상된다. 즉 “누가 무엇을 왜 했는가”가 남기 때문에 조직이 커질수록 효과가 커진다.</p>
+<p>다만 컨테이너 오케스트레이션 (Kubernetes) 노드/포드(Pod) 고가용성 설계는 문서만 잘 만들어도 성공하는 영역이 아니다. 정의와 실행이 분리되면 형식주의가 되고, 자동화만 앞서면 통제 목적이 사라진다. 따라서 표준화와 민첩성, 통제와 생산성 사이의 균형이 항상 필요하다.</p>
+<p>향후에는 정책 코드화(Policy as Code), 실시간 관측성(Observability), AI 기반 이상 탐지와 의사결정 지원이 결합되면서 관리 체계가 더 자동화되고 증거 중심으로 진화할 가능성이 크다. 결론적으로 핵심은 도구가 아니라 기준선이며, 기준선이 명확할 때만 자동화와 확장이 의미를 가진다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">사일로형 구조
+    ↓
+표준 인터페이스 정립
+    ↓
+컨테이너 오케스트레이션 (Kubernetes) 노드&#x2F;포드(Pod) 고가용성 설계 정착
+    ↓
+자동화·관측성 결합
+    ↓
+지능형 최적화
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">설명</th><th style="text-align: left">연관 키워드</th></tr></thead><tbody>
+<tr><td style="text-align: left">Kubernetes (K8s)</td><td style="text-align: left">컨테이너 오케스트레이션 플랫폼</td><td style="text-align: left">CNCF, Google Borg</td></tr>
+<tr><td style="text-align: left">Pod</td><td style="text-align: left">K8s 배포 최소 단위</td><td style="text-align: left">컨테이너, 공유 네트워크</td></tr>
+<tr><td style="text-align: left">Deployment</td><td style="text-align: left">Pod 선언형 관리·업데이트 오브젝트</td><td style="text-align: left">롤링 업데이트, 롤백</td></tr>
+<tr><td style="text-align: left">Service</td><td style="text-align: left">Pod 집합의 안정적 네트워크 엔드포인트</td><td style="text-align: left">ClusterIP, LoadBalancer</td></tr>
+<tr><td style="text-align: left">Ingress</td><td style="text-align: left">외부 HTTP 트래픽 라우팅 규칙</td><td style="text-align: left">URL 경로, 호스트 기반</td></tr>
+<tr><td style="text-align: left">HPA</td><td style="text-align: left">Horizontal Pod Autoscaler, 수평 자동 확장</td><td style="text-align: left">CPU 메트릭, 스케일링</td></tr>
+<tr><td style="text-align: left">etcd</td><td style="text-align: left">K8s 클러스터 상태 저장 분산 KV 스토어</td><td style="text-align: left">쿼럼, 고가용성</td></tr>
+<tr><td style="text-align: left">RBAC</td><td style="text-align: left">Role-Based Access Control, 역할 기반 접근 제어</td><td style="text-align: left">최소 권한, ServiceAccount</td></tr>
+<tr><td style="text-align: left">Canary 배포</td><td style="text-align: left">소량 트래픽 신버전 선 테스트 배포 방식</td><td style="text-align: left">위험 최소화, Istio</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>170. PKCS#7 &#x2F; CMS — 인증서 envelope 형식 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote security
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p>⚠️ 이 문서는 인터넷에 흩날리는 수많은 인증서, 전자서명 도장, 그리고 암호화된 알맹이(Data)들을, 해커가 함부로 찢어볼 수 없도록 하나의 거대하고 표준화된 디지털 마트료시카(상자) 안에 예쁘게 쓸어 담아 완벽하게 밀봉(Envelope)해 주는 최상위 보안 포장지 규격, PKCS#7 (CMS)을 다룹니다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h1 id="170-pkcs-7-cms-cryptographic-message-syntax">170. PKCS#7 / CMS (Cryptographic Message Syntax)</h1>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: PKCS#7 (현대 명칭 CMS)는 암호화된 데이터, 여러 사람의 전자서명 도장, 그리고 그 서명을 보증하는 인증서(X.509) 다발들을 한곳에 몽땅 우겨넣고 구조화하는 **'다목적 암호학적 메시지 포장(Envelope) 표준 규격'**이다.</li>
+<li><strong>가치</strong>: 데이터 따로, 서명 따로, 인증서 파일 따로 던져주면 수신자의 프로그램이 파싱하다 에러를 뿜는다. CMS는 이 모든 걸 <code>.p7b</code> 나 <code>.p7m</code> 이라는 하나의 단일 캡슐 파일 안에 질서정연하게 우겨넣어 주어 완벽한 호환성(Interoperability)과 봉투 암호화 아키텍처를 실현한다.</li>
+<li><strong>융합</strong>: 이 위대한 포장지 껍데기는 기업용 보안 이메일 표준인 <strong>S/MIME</strong>, 윈도우 프로그램의 <code>.exe</code> 실행 파일 서명(Authenticode), 그리고 KEM/DEM 기반 하이브리드 암호의 패킷 구조 등 현대 애플리케이션 보안의 가장 바깥쪽 껍질로 강력하게 융합되어 있다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h3>
+<p>우리가 앞서 배운 [169번 문서]에서 앨리스가 CSR(신청서)을 보냈다. CA(인증기관)는 심사를 마치고 드디어 앨리스에게 "인증서"를 발급해 준다.
+그런데 CA가 인증서를 줄 때, 그냥 텍스트 파일 하나만 달랑 주지 않는다.</p>
+<ul>
+<li>앨리스 본인 인증서 1장</li>
+<li>앨리스를 찍어준 중간 CA(Intermediate CA) 인증서 1장</li>
+<li>대장 Root CA 인증서 1장
+(브라우저가 3단 콤보로 검사할 수 있게 '인증서 체인(Chain)' 뭉치를 통째로 줘야 한다.)</li>
+</ul>
+<p>이 3장의 파일을 따로따로 압축(.zip)해서 주면 될까? 암호학자들은 불안했다. "해커가 압축을 풀고 중간 CA 파일을 쏙 빼고 가짜를 껴 넣으면 어떡해? <strong>이 파일 3개가 한 몸뚱이라는 걸 증명하는 '수학적 묶음 포장지'가 필요해!</strong>"</p>
+<p>그리하여 RSA Security 회사가 발표한 포장지 규격 <strong>PKCS#7</strong>이 탄생했다. (후에 IETF로 넘어가 <strong>CMS - Cryptographic Message Syntax</strong> 라는 공식 명칭으로 진화했다). 이 포장지는 인증서 묶음뿐만 아니라, 이메일 암호문, 전자서명 등 뭐든지 다 주워 담을 수 있는 '도라에몽의 4차원 주머니' 같은 표준이 되었다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 귀중한 도자기(데이터)와 보증서 3장(인증서 체인), 그리고 작가의 친필 사인(전자서명)을 택배로 보냅니다. 이걸 비닐봉지에 대충 따로 담으면 분실되고 찢어집니다. PKCS#7(CMS)은 겉면에 "절대 파손 금지, 내용물 5개 묶음"이라고 정밀하게 적힌, 충격 흡수 스펀지가 꽉 찬 '최고급 항공 배송용 특수 강철 컨테이너 박스'입니다. 받는 사람은 박스만 딱 까보면 모든 구성품이 손상 없이 100% 질서 있게 들어있음을 알 수 있습니다.</p>
+</blockquote>
+<hr />
+<h3 id="2-guseongyoso">2. 구성요소</h3>
+<p>이 캡슐의 가장 무서운 점은 상황에 따라 '서명 봉투', '암호화 봉투', '인증서 보관함'으로 자유자재로 모드 체인지(트랜스포머)를 한다는 것이다.</p>
+<h4 id="1-envelopeddata-modeu-bongtu-amhohwa-modeu">1. EnvelopedData 모드 (봉투 암호화 모드)</h4>
+<ul>
+<li><strong>용도</strong>: 기밀성 보장 (해커가 못 읽게 꽁꽁 싸매기).</li>
+<li><strong>내용물</strong>:
+<ul>
+<li>내부에 10GB짜리 영화를 대칭키(AES)로 갈아서 넣은 '본체 암호문 덩어리'가 꽉 차 있다.</li>
+<li>그리고 상자 뚜껑 안쪽(헤더)에, 아까 그 AES 대칭키를 수신자의 공개키(RSA)로 한 번 더 잠가버린 쪼그만 '키 캡슐'을 테이프로 딱 붙여놓는다.</li>
+<li>(완벽한 하이브리드 암호, KEM/DEM 구조를 통째로 담아내는 포맷이다).</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-signeddata-modeu-jeonjaseomyeong-modeu">2. SignedData 모드 (전자서명 모드)</h4>
+<ul>
+<li><strong>용도</strong>: 무결성 및 신분 증명 (누가 보냈는지 확실히 인증하기).</li>
+<li><strong>내용물</strong>:
+<ul>
+<li>알맹이는 암호화하지 않고 원래 평문(계약서 내용) 그대로 상자에 넣는다. (누구나 읽을 수 있음)</li>
+<li>대신 상자 겉면에 송신자(나)의 마스터 개인키로 전자서명(해시+RSA) 도장을 쾅 찍는다.</li>
+<li><strong>★ 가장 중요한 꿀 기능</strong>: 상대방이 내 도장을 검증할 수 있도록, <strong>'내 공개키가 들어있는 X.509 인증서 파일' 자체를 아예 상자 안에 같이 쑤셔 넣어서 동봉해 버린다!</strong> (상대방이 내 인증서를 따로 찾으러 다닐 필요가 없는 미친 편의성).</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-certificates-only-modeu-injeungseo-dabal-bogwanham">3. Certificates-Only 모드 (인증서 다발 보관함)</h4>
+<ul>
+<li><strong>용도</strong>: 데이터나 서명은 1도 없고, 오직 "인증서 파일 여러 개 묶음 배송" 용도로만 쓴다.</li>
+<li><strong>내용물</strong>: CA가 앨리스에게 발급해 준 방금 전의 그 상황이다. [내 인증서 + 중간 CA 인증서 + Root 인증서] 3장을 차곡차곡 포개어 <code>.p7b</code> 확장자를 가진 파일 하나로 예쁘게 합쳐서 뱉어준다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────────────────────────────────┐
+│           CMS (PKCS#7)의 SignedData 모드(전자서명 캡슐) 해부 시각화                │
+├────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                    │
+│ [ 📦 거대한 CMS 캡슐 껍데기 (.p7m 파일) ]                                          │
+│   ┌──────────────────────────────────────────────────────┐                         │
+│   │ 1. 📜 인증서 묶음 보관함 (Certificates)                   │                    │
+│   │    - 앨리스의 인증서 (공개키 포함)                           │                 │
+│   │    - DigiCert 중간 인증서 (앨리스를 보증함)                   │                │
+│   ├──────────────────────────────────────────────────────┤                         │
+│   │ 2. 📝 진짜 원본 데이터 (Encapsulated Content)             │                    │
+│   │    - &quot;김부장, 내일 A급 작전 개시한다.&quot; (평문 메시지)            │              │
+│   ├──────────────────────────────────────────────────────┤                         │
+│   │ 3. ✍️ 서명 도장 묶음 (Signer Infos)                      │                     │
+│   │    - 방금 위쪽 2번 데이터를 앨리스의 개인키로 암호화한 도장 쾅!    │           │
+│   │    - (필요하면 다른 부장의 결재 도장 여러 개도 줄줄이 추가 가능)    │          │
+│   └──────────────────────────────────────────────────────┘                         │
+│                                                                                    │
+│ ★ 완벽한 패키징: 수신자는 이 캡슐 하나만 딱 다운받으면, 안에 들어있는 앨리스의     │
+│   인증서로 1초 만에 맨 밑의 도장을 검사하여 2번 메시지가 진짜인지 확신할 수 있다!  │
+└────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 포맷의 무서움은 **'확장성'**에 있다. 서명 도장을 1명이 아니라 10명(다중 서명, Multi-Signature)이 연달아 찍어 붙여도 상자 크기만 살짝 늘어날 뿐 규격이 전혀 깨지지 않는다. 이 복잡한 정보 덩어리들을 바이트 배열 안에서 어디서부터 어디까지가 인증서고, 어디부터가 서명인지 한 치의 오차 없이 파싱(Parsing)해 주는 컴퓨터 언어 체계가 바로 그 악명 높은 ASN.1 과 DER 인코딩 기술이며, CMS는 이 뼈대 위에서 돌아간다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 친구한테 생일 선물을 보낼 때, 장난감(원본 데이터)과 사용 설명서(인증서), 그리고 내 친필 편지(서명)를 각각 우편으로 보내면 순서도 섞이고 하나가 분실되면 게임을 못 합니다. CMS는 이 세 가지를 예쁜 종합선물 세트 박스 하나에 딱 고정시켜서 뽁뽁이로 포장해 버리는 완벽한 올인원 배송 상자입니다.</li>
+</ul>
+<hr />
+<h3 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h3>
+<p>PKCS#7 (CMS) 포맷은 당신이 지금 마우스를 클릭하는 순간순간 윈도우 OS 안에서 맹활약하고 있다.</p>
+<ol>
+<li><strong>S/MIME (보안 이메일 표준)</strong>
+<ul>
+<li>대기업이나 군대에서 사내 이메일을 보낼 때, 해커가 못 뜯어보게 암호화하거나 서명을 붙일 때 쓰는 절대 표준 기술이다.</li>
+<li>아웃룩(Outlook) 메일 클라이언트가 메일 본문과 첨부파일을 이 거대한 CMS 상자(<code>SignedData</code> 나 <code>EnvelopedData</code> 모드)에 통째로 쑤셔 넣고 <code>.p7m</code> 파일로 압축하여 메일망(SMTP) 위로 던져버린다.</li>
+</ul>
+</li>
+<li><strong>Microsoft Authenticode (.exe 실행 파일 서명)</strong>
+<ul>
+<li>인터넷에서 <code>setup.exe</code> 같은 게임 설치 파일을 다운받아 더블 클릭할 때 화면이 어두워지며 "이 앱을 신뢰하시겠습니까? (게시자: Nexon)" 라고 파란 방패가 뜬다.</li>
+<li>이것은 넥슨(Nexon)의 개발자가 자기가 짠 <code>setup.exe</code> 파일 겉면에 PKCS#7 (CMS) 캡슐로 자기 회사의 공인 인증서 도장을 찰싹 붙여놨기 때문이다. 윈도우 OS는 실행 직전 이 캡슐을 까서 해커가 파일을 변조(바이러스 주입)하지 않았음을 0.1초 만에 확인하고 안전망을 풀어준다.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="4-bigyo-mic-teureideuopeu">4. 비교 및 트레이드오프</h3>
+<p>"알맹이가 아무리 눈부셔도, 훌륭한 포장지가 없으면 쓰레기통에서 썩게 된다."
+암호학자들이 수십 년간 깎아낸 RSA, AES, SHA-256이라는 찬란한 보석들은 PKCS#7 (CMS)이라는 단단하고 유연한 가죽 지갑이 발명되고 나서야 비로소 인터넷이라는 진흙탕에 안전하게 굴러다닐 수 있게 되었다. 인증서와 데이터, 서명 도장을 하나의 우아한 구조체로 통합한 이 캡슐 포장 기술은, 앞으로 도래할 양자 내성 암호(PQC)의 거대한 열쇠 뭉치들마저도 군말 없이 넉넉하게 품어 안으며 현대 통신 아키텍처의 가장 바깥쪽 외투 역할을 묵묵히 수행할 것이다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>전체 시리즈</strong>: PKCS (Public-Key Cryptography Standards) 계보</li>
+<li><strong>형제 규격</strong>: PKCS#10 (CSR 신청서 캡슐), PKCS#12 (비밀키까지 다 담아버리는 백업용 캡슐, <code>.pfx</code> <code>.p12</code>)</li>
+<li><strong>공식 IETF 명칭</strong>: CMS (Cryptographic Message Syntax, RFC 5652)</li>
+<li><strong>실전 응용처</strong>: S/MIME (보안 이메일), Authenticode (코드 서명), SSL/TLS 인증서 체인 배포 파일(<code>.p7b</code>)</li>
+</ul>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>우리가 10GB짜리 영화 파일에 자물쇠를 채우고, 내 신분증도 동봉하고, 친필 사인 도장까지 꽉 찍어서 보내려고 해요.</li>
+<li>이 3개를 덜렁덜렁 따로 던져주면 택배 배달부(인터넷)가 길에서 잃어버리거나 도둑이 바꿔치기하기 쉬워요.</li>
+<li>그래서 이 모든 것을 흔들리지 않게 차곡차곡 담을 수 있는 엄청나게 단단하고 칸막이가 잘 쳐진 '마법의 종합선물 세트 상자(PKCS#7)'를 발명해서, 이 상자 하나만 쓱 던져주면 받는 사람이 한 번에 싹 풀어볼 수 있게 만들었답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

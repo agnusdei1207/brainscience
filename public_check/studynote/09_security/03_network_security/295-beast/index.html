@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>295. BEAST — SSL&#x2F;TLS CBC 취약점 (Browser Exploit Against SSL&#x2F;TLS) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote security
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: BEAST(Browser Exploit Against SSL/TLS)는 TLS 1.0의 CBC(Cipher Block Chaining) 모드에서 암호화 전 IV(Initialization Vector)가 이전 암호문 블록에 의존하는 구조를 이용, 공격자가 다음 평문을 예측·확인할 수 있는 선택 평문 공격(Chosen Plaintext Attack)이다.
+2. <strong>가치</strong>: 이론은 2002년 Philip Rogaway가 제시했지만, 2011년 Thai Duong·Juliano Rizzo가 자바스크립트를 이용해 브라우저에서 실증하면서 현실 위협이 됐다 — 이는 이론적 취약점이 실제 공격으로 전환되는 데 9년이 걸렸음을 보여준다.
+3. <strong>판단 포인트</strong>: TLS 1.1에서 명시적 IV(Explicit IV)를 도입해 근본 원인이 해결됐다. TLS 1.0 환경에서의 단기 완화책은 1/n−1 레코드 분할(Record Splitting)이었으며, RC4 사용은 이후 RC4 자체의 취약점(RFC 7465)으로 폐기됐다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>HTTPS로 보호된 세션 쿠키는 2011년 이전까지 안전하다고 여겨졌다. BEAST는 이 가정을 깨뜨렸다. 공격자가 동일 네트워크 세그먼트(Wi-Fi, LAN)에 위치하고 피해자 브라우저에서 공격자 제어 JavaScript를 실행할 수 있다면, TLS 1.0으로 암호화된 HTTP 쿠키를 복호화할 수 있음을 실증했다.</p>
+<p>공격의 핵심은 TLS 1.0의 구현 방식에 있다. TLS 1.0은 CBC 모드에서 <strong>암묵적 IV(Implicit IV)</strong> 를 사용한다. 즉, 현재 레코드의 IV가 이전 레코드의 마지막 암호문 블록이다. 이는 TLS 연결이 유지되는 동안 공격자가 이전 암호문을 관찰하면 다음 블록의 IV를 알 수 있다는 의미다.</p>
+<p>BEAST의 등장은 브라우저 보안 커뮤니티가 TLS 1.1/1.2 전환을 가속화하는 결정적 계기가 됐으며, 서버 측 RC4 우선 협상이 단기 완화책으로 급속히 확산됐다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 수학 시험지를 봉투에 넣어 보내는데, 봉투 재질이 반투명해서 마지막 문제의 답이 비쳐 보이고, 그게 다음 봉투의 잠금 힌트가 되는 것과 같다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="tls-1-0-ammugjeog-iv-munje">TLS 1.0 암묵적 IV 문제</h3>
+<p>CBC 암호화에서 각 블록은 <code>C_i = E_k(P_i XOR C_{i-1})</code>로 암호화된다. 여기서 첫 번째 블록은 <code>C_0 = IV</code>를 사용한다.</p>
+<pre><code>TLS 1.0: 암묵적 IV (취약)
+────────────────────────────────────────
+레코드 N:
+  IV = 레코드 N-1의 마지막 암호문 블록
+  ↓ 공격자가 이미 알고 있음!
+
+  ┌──────────────┐   ┌──────────────┐
+  │  P_1 (평문)  │   │  P_2 (평문)  │
+  └──────┬───────┘   └──────┬───────┘
+         │ XOR              │ XOR
+  ┌──────▼───────┐   ┌──────▼───────┐
+  │   IV (알음)  │   │   C_1        │
+  └──────────────┘   └──────────────┘
+         │                  │
+         ▼ E_k              ▼ E_k
+  ┌──────────────┐   ┌──────────────┐
+  │   C_1        │   │   C_2        │
+  └──────────────┘   └──────────────┘
+
+TLS 1.1+: 명시적 IV (안전)
+────────────────────────────────────────
+레코드마다 새로운 랜덤 IV를 평문으로 전송
+  ┌──────────────┐
+  │ Random IV(16B)│ ← 예측 불가
+  └──────────────┘
+</code></pre>
+<h3 id="beast-gonggyeog-heureum">BEAST 공격 흐름</h3>
+<pre><code>피해자 브라우저          공격자 (MITM + JS 삽입)      서버
+       │                           │                    │
+       │← JS (BEAST 스크립트) 삽입 ─┤                    │
+       │                           │                    │
+  [1] 공격자가 추측 평문 P&#x27; 준비     │                    │
+  [2] 브라우저가 P&#x27; 포함 HTTP 요청 암호화                  │
+       │────── TLS 레코드 (P&#x27;) ────────────────────────▶│
+       │                           │                    │
+  [3] 암호문 C&#x27; 관찰                │                    │
+  [4] C&#x27; == C_target 이면 P&#x27; = 쿠키!│                    │
+       │                           │                    │
+  [5] 반복 → 쿠키 전체 복원          │                    │
+</code></pre>
+<h3 id="wanhwa-gibeob">완화 기법</h3>
+<table><thead><tr><th style="text-align: left">완화 방법</th><th style="text-align: left">원리</th><th style="text-align: left">장단점</th></tr></thead><tbody>
+<tr><td style="text-align: left">TLS 1.1/1.2 업그레이드</td><td style="text-align: left">명시적 IV 사용</td><td style="text-align: left">근본 해결, 구형 클라이언트 비호환</td></tr>
+<tr><td style="text-align: left">1/n−1 레코드 분할</td><td style="text-align: left">예측 가능 블록을 1바이트 레코드로 분리</td><td style="text-align: left">성능 저하, 임시 방편</td></tr>
+<tr><td style="text-align: left">RC4 우선 협상</td><td style="text-align: left">블록 암호 아닌 스트림 암호로 우회</td><td style="text-align: left">RC4 자체 취약점(RFC 7465)으로 폐기</td></tr>
+<tr><td style="text-align: left">BEAST 방어 패치</td><td style="text-align: left">NSS, OpenSSL 1-n 분할 구현</td><td style="text-align: left">서버 설정 변경 필요</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 반투명 봉투 문제를 해결하는 방법은 세 가지다. ①완전 불투명 봉투로 교체(TLS 1.1), ②봉투 안에 빈 종이를 한 장 추가해 시야 차단(1/n−1), ③아예 다른 잠금 방식 사용(RC4 — 그러나 이도 문제가 생겼다).</p>
+<hr />
+<h2 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h2>
+<h3 id="cbc-gwanryeon-cwiyagjeom-bigyo">CBC 관련 취약점 비교</h3>
+<table><thead><tr><th style="text-align: left">취약점</th><th style="text-align: left">대상</th><th style="text-align: left">CBC 문제점</th><th style="text-align: left">공격 유형</th></tr></thead><tbody>
+<tr><td style="text-align: left">BEAST (2011)</td><td style="text-align: left">TLS 1.0 암묵적 IV</td><td style="text-align: left">IV 예측 가능</td><td style="text-align: left">선택 평문 (CPA)</td></tr>
+<tr><td style="text-align: left">POODLE (2014)</td><td style="text-align: left">SSL 3.0 패딩</td><td style="text-align: left">임의 패딩 허용</td><td style="text-align: left">패딩 오라클</td></tr>
+<tr><td style="text-align: left">Lucky13 (2013)</td><td style="text-align: left">TLS/DTLS</td><td style="text-align: left">패딩 처리 시간 차이</td><td style="text-align: left">타이밍 사이드 채널</td></tr>
+<tr><td style="text-align: left">CRIME (2012)</td><td style="text-align: left">TLS 압축</td><td style="text-align: left">압축 비율 유출</td><td style="text-align: left">사이드 채널</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: BEAST는 봉투 재질 문제, POODLE은 잠금장치 설계 오류, Lucky13은 봉투 뜯는 시간 차이로 내용을 추론하는 것이다. 모두 "암호화된 봉투"의 서로 다른 약점이다.</p>
+<hr />
+<h2 id="4-bigyo-mic-teureideuopeu">4. 비교 및 트레이드오프</h2>
+<p><strong>현재 권장 조치</strong>: TLS 1.0/1.1은 2021년 RFC 8996으로 공식 폐기됐으므로, BEAST는 TLS 1.2 이상을 사용하는 환경에서 이미 해결된 취약점이다. 단, 레거시 임베디드 시스템, 구형 POS 단말, 산업제어시스템(ICS, Industrial Control System)에서는 TLS 1.0이 잔존할 수 있다.</p>
+<p><strong>레거시 환경 점검 체크리스트</strong>:</p>
+<ol>
+<li><code>openssl s_client -connect host:443 -tls1</code> 으로 TLS 1.0 활성화 여부 확인</li>
+<li>Qualys SSL Labs에서 A등급 미달 원인 확인</li>
+<li>nginx: <code>ssl_protocols TLSv1.2 TLSv1.3;</code> 설정 강제</li>
+<li>Apache: <code>SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1</code></li>
+</ol>
+<p><strong>기술사 논술 포인트</strong>: BEAST 설명 시 ① IV 예측 가능성의 이론적 배경(Rogaway 2002), ② 브라우저 실증(2011), ③ 단기 완화(1/n−1, RC4), ④ 근본 해결(TLS 1.1 명시적 IV) 순으로 서술하면 "이론→실증→완화→해결" 4단계 구조가 명확해진다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 오래된 열차 선로에서 진동으로 인한 탈선 위험을 발견했을 때, 처음에는 속도를 줄이고(1/n−1), 다른 노선으로 우회하다가(RC4), 결국 선로 전체를 교체한(TLS 1.1+) 것과 같다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-coejeoghwa-gibeob">5. 실무 적용 및 최적화 기법</h2>
+<p>BEAST가 남긴 유산은 두 가지다. 첫째, 이론적으로 알려진 취약점도 언제든 실증될 수 있다는 교훈이다. 9년간 "이론상 취약"에 머물렀던 문제가 하루아침에 현실 공격이 됐다. 이는 보안 패치를 "아직 악용 사례 없음"을 이유로 미루지 말아야 한다는 원칙의 근거가 됐다.</p>
+<p>둘째, RC4를 단기 완화책으로 도입했다가 RC4 자체 취약점(통계적 편향, Fluhrer-Mantin-Shamir 공격)으로 추가 문제가 생긴 사례는 <strong>임시 방편의 위험성</strong>을 보여준다. NIST와 IETF는 이후 RFC 7465(2015년)로 TLS에서 RC4를 공식 금지했다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 지붕 구멍을 막으려고 임시로 비닐을 덮었는데, 비닐이 더 큰 문제를 일으켰다. BEAST의 RC4 임시 방편이 그랬다. 결국 지붕을 제대로 교체하는(TLS 1.1+) 것만이 답이었다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">관계</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">CBC 모드 (Cipher Block Chaining)</td><td style="text-align: left">취약 구성요소</td><td style="text-align: left">암묵적 IV가 문제의 근원</td></tr>
+<tr><td style="text-align: left">암묵적 IV (Implicit IV)</td><td style="text-align: left">원인</td><td style="text-align: left">TLS 1.0의 설계상 결함</td></tr>
+<tr><td style="text-align: left">명시적 IV (Explicit IV)</td><td style="text-align: left">해결</td><td style="text-align: left">TLS 1.1에서 도입</td></tr>
+<tr><td style="text-align: left">1/n−1 레코드 분할</td><td style="text-align: left">단기 완화</td><td style="text-align: left">예측 블록을 1바이트로 분리</td></tr>
+<tr><td style="text-align: left">RC4 (Rivest Cipher 4)</td><td style="text-align: left">임시 완화 → 폐기</td><td style="text-align: left">스트림 암호로 우회하다 자체 취약</td></tr>
+<tr><td style="text-align: left">POODLE</td><td style="text-align: left">연관 취약점</td><td style="text-align: left">같은 CBC 패밀리, 패딩 오라클</td></tr>
+<tr><td style="text-align: left">TLS 1.1 (RFC 4346)</td><td style="text-align: left">근본 해결</td><td style="text-align: left">명시적 IV 의무화</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>BEAST는 반투명 봉투를 통해 편지 내용을 추측하는 도둑 이야기예요.</li>
+<li>도둑은 "이 내용이 맞으면 반사광이 달라진다"는 특성을 이용해 글자를 하나씩 맞춰나갔어요.</li>
+<li>새 불투명 봉투(TLS 1.1+)로 교체하면 이 도둑은 완전히 막혀요.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>548. OpenID Connect - OAuth 2.0 기반 사용자 식별 프로토콜 (ID Token, JWT) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote network
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: OpenID Connect (OIDC)는 '권한(인가)' 위임에만 특화되어 있던 기존 OAuth 2.0 프로토콜 위에, 사용자의 '신원(인증)' 정보를 전달하는 <strong>ID Token(JWT 포맷)</strong> 구조를 얹어 완성한 현대적 분산 인증 표준이다.
+<strong>비유</strong>: OpenID Connect - OAuth 2.0 기반 사용자 식별 프로토콜 (ID Token, JWT)은(는) DNS와 네트워크 관리 응용 안에서 데이터와 제어 규칙을 질서 있게 맞춰 주는 교통 체계와 같다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li><strong>개념</strong>: OpenID Connect는 비영리 재단인 OpenID Foundation에서 제정한 자격 증명(Identity) 레이어다. OAuth 2.0 프로토콜을 뼈대로 삼아, 클라이언트(앱)가 인가 서버(IdP)에게 "이 토큰을 발급받은 사용자가 구체적으로 누구(이름, 이메일, 프로필 사진)인지"를 검증할 수 있게 해주는 표준화된 규격이다.</li>
+<li><strong>필요성</strong>: OAuth 2.0(546번 문서)은 "이 앱이 내 캘린더에 글을 쓰게 해줘"라는 **권한(인가)**을 넘겨주는 Access Token만 발급한다. 이 토큰은 뜻을 알 수 없는 난수 문자열이라, 앱 개발자가 이 토큰을 들고 온 사용자가 홍길동인지 이순신인지, 심지어 언제 로그인했는지 알 방법이 없었다. 그래서 개발자들은 억지로 OAuth로 발급받은 권한 토큰을 가지고 다시 페이스북 API 서버를 찔러 유저 정보를 가져와서 로그인 처리(Authentication)를 하는 등 기형적인 해킹(Confused Deputy 문제)을 일삼았다. "그냥 처음부터 토큰 안에 명함(신원)을 파서 같이 주면 안 되나?"라는 절실한 요구가 OIDC의 탄생 배경이다.</li>
+<li><strong>등장 배경</strong>: ① 초기 OpenID 1.0/2.0의 복잡성과 OAuth와의 파편화 → ② OAuth 2.0 남용에 따른 심각한 보안/인증 사고 빈발 → ③ OAuth 2.0 아키텍처 위에 JWT (JSON Web Token) 포맷의 신분증을 한 장 더 끼워 넣은 깔끔한 통합 표준(OIDC) 제정.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────┐
+│             OAuth 2.0 한계와 OpenID Connect(OIDC)의 해결책 시각화  │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   [과거: OAuth 2.0 오용 사태 - 반쪽짜리 인증]                       │
+│   앱: &quot;구글아 토큰 줘!&quot; ─▶ 구글: &quot;여기 [Access Token: 8fx#@...]&quot;  │
+│   앱: &quot;근데 이 토큰 주인이 누구야? 이름이 뭐야? 알 수 없네...&quot;          │
+│   (결과: 앱이 유저 신원을 몰라 자사 DB에 로그인을 못 시킴. 억지 연동)      │
+│                                                             │
+│   [현재: OIDC의 완벽한 인증 (소셜 로그인)]                         │
+│   앱: &quot;구글아 OIDC 스코프(openid)로 토큰 줘!&quot;                    │
+│   구글: &quot;여기 [Access Token: 8fx#@... (이건 캘린더용)] 이랑,      │
+│          [ID Token: eyJhbG... (이건 유저 신분증 명찰)] 같이 받아!&quot; │
+│                                                             │
+│   앱: &quot;앗, ID Token을 열어보니 이름: 홍길동, 메일: hong@gmail 이네!  │
+│        로그인 처리 완료!&quot;                                        │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 도식은 IT 업계에서 가장 흔하게 혼동하는 OAuth와 OIDC의 차이를 1초 만에 박살 내준다. OAuth는 목적지 서버의 문을 따기 위한 '열쇠(Access Token)'만 준다. 열쇠에는 주인의 이름이 안 적혀 있다. OIDC는 앱(클라이언트)을 호출할 때 스코프(Scope)에 <code>openid</code>라는 단어를 추가로 넣기만 하면, 인가 서버(구글)가 열쇠와 함께 '얼굴 사진과 이름이 박힌 사원증(ID Token)'을 세트로 던져준다. 앱은 그 사원증을 보고 바로 자사 DB의 회원과 매칭시켜 완벽한 '구글로 로그인' 기능을 구현할 수 있게 된다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="guseong-yoso-oidc-4dae-haegsim">구성 요소 (OIDC 4대 핵심)</h3>
+<table><thead><tr><th style="text-align: left">요소명</th><th style="text-align: left">의미 및 역할</th><th style="text-align: left">작동 원리</th><th style="text-align: left">비유</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>OIDC Provider (OP)</strong></td><td style="text-align: left">인증 제공자</td><td style="text-align: left">사용자를 인증하고 클라이언트에게 ID Token을 발급하는 거대 플랫폼 서버 (구글, 카카오)</td><td style="text-align: left">국가 신분증 발급처</td></tr>
+<tr><td style="text-align: left"><strong>Relying Party (RP)</strong></td><td style="text-align: left">클라이언트 (앱)</td><td style="text-align: left">OP를 믿고(Rely) 사용자의 신원 정보를 넘겨받아 로그인 처리를 하는 타사 앱</td><td style="text-align: left">신분증 검사하는 술집</td></tr>
+<tr><td style="text-align: left"><strong>ID Token</strong></td><td style="text-align: left">디지털 신분증</td><td style="text-align: left">사용자의 신원, 토큰 발급 시간, 만료 시간 등을 서명하여 담은 JWT (JSON Web Token) 포맷의 덩어리</td><td style="text-align: left">주민등록증 본체</td></tr>
+<tr><td style="text-align: left"><strong>UserInfo Endpoint</strong></td><td style="text-align: left">추가 정보 조회소</td><td style="text-align: left">ID Token에 다 담지 못한 주소, 전화번호 등의 추가 프로필을 Access Token을 내밀고 더 가져올 수 있는 API 주소</td><td style="text-align: left">주민센터 무인 발급기</td></tr>
+</tbody></table>
+<hr />
+<h3 id="oidc-id-token-tongsin-heureumdo-authorization-code-flow-gyeolhab">OIDC (ID Token) 통신 흐름도 (Authorization Code Flow 결합)</h3>
+<p>OIDC는 OAuth 2.0의 흐름(Dance)에 거의 100% 무임승차한다. 개발자가 서버로 보내는 파라미터 중에 <code>scope=openid</code> 딱 하나만 더 추가하면, 마지막 응답 단계에서 기적이 일어난다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌───────────────────────────────────────────────────────────────┐
+│               OIDC 소셜 로그인 인증 흐름 (OAuth 2.0 기반)         │
+├───────────────────────────────────────────────────────────────┤
+│                                                               │
+│   [사용자(Browser)]             [RP (우리가 만든 앱)]     [OP (카카오&#x2F;구글)]│
+│           │                             │                      │  │
+│           │ ① &quot;카카오로 로그인&quot; 클릭        │                      │  │
+│           ├────────────────────────────▶│                      │  │
+│           │                             │ ② Redirect (scope=openid) │
+│           │ ③ 카카오 로그인 화면으로 이동   │◀──────────────────────┤  │
+│           │◀────────────────────────────┤                      │  │
+│           │                             │                      │  │
+│           │ ④ 카카오 계정 로그인 &amp; 정보 제공 동의                  │  │
+│           ├────────────────────────────────────────────────────▶│  │
+│           │                                                    │  │
+│           │ ⑤ 임시 &quot;Auth Code&quot; 발급 후 RP 앱으로 Redirect          │  │
+│           │◀────────────────────────────────────────────────────┤  │
+│           │                             │                      │  │
+│           │ ⑥ Code를 우리 앱(백엔드)으로 전달│                      │  │
+│           ├────────────────────────────▶│                      │  │
+│           │                             │ ⑦ Code + Secret 제시 │  │
+│           │                             ├──────────────────────▶│  │
+│           │                             │                      │  │
+│      ==== 여기서부터 OIDC의 마법이 발동 (Access Token과 ID Token 동시 발급) ==== │
+│           │                             │                      │  │
+│           │                             │ ⑧ [Access Token] +   │  │
+│           │                             │    [ID Token (JWT)] 반환│  │
+│           │                             │◀──────────────────────┤  │
+│           │                             │                      │  │
+│           │ ⑨ ID Token 뜯어보고(Decoded) &quot;홍길동&quot; 자동 회원가입 및 로그인 처리! │
+└───────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 앞서 546번 문서에서 본 OAuth 2.0 흐름과 ⑦번까지 완벽히 똑같다. 하지만 ⑧번 응답을 받을 때, 백엔드 앱(RP)은 목적지 서버를 열 수 있는 열쇠인 <code>Access Token</code>뿐만 아니라, 클라이언트 본인이 뜯어서 읽어볼 수 있는 명찰인 <code>ID Token</code>을 덤으로 받는다. 이 ID Token은 JSON 형식으로 만들어져 있어(JWT), RP 서버는 추가로 카카오 API 서버를 찌를 필요 없이 토큰만 뜯어서 이메일과 닉네임을 알아내고 즉시 로그인 완료 화면을 띄울 수 있다. 엄청난 속도 향상과 로직의 단순화를 가져온다.</p>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: OpenID Connect - OAuth 2.0 기반 사용자 식별 프로토콜 (ID Token, JWT)은(는) DNS, 이름 해석, 분산 관리 조건을 함께 만족할 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<h3 id="id-tokenyi-naebu-gujo-claims-mic-geomjeung-mekeonijeum">ID Token의 내부 구조 (Claims) 및 검증 메커니즘</h3>
+<p>OIDC가 발급하는 <code>ID Token</code>은 JWT (JSON Web Token)라는 표준 포맷(549번 문서에서 상술)을 따른다. 그 안에는 사용자의 정보를 나타내는 **클레임(Claims)**이라는 속성 조각들이 들어 있다.</p>
+<table><thead><tr><th style="text-align: left">주요 클레임 (Claims)</th><th style="text-align: left">의미</th><th style="text-align: left">설명 (예시)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>iss (Issuer)</strong></td><td style="text-align: left">발급자</td><td style="text-align: left">이 신분증을 누가 발급했는가? (예: <code>https://accounts.google.com</code>)</td></tr>
+<tr><td style="text-align: left"><strong>sub (Subject)</strong></td><td style="text-align: left">주체 식별자</td><td style="text-align: left">구글 세계에서 이 사람의 절대 바뀌지 않는 고유 번호 (예: <code>107691503...</code>)</td></tr>
+<tr><td style="text-align: left"><strong>aud (Audience)</strong></td><td style="text-align: left">관객 (수신자)</td><td style="text-align: left">이 신분증을 받을 자격이 있는 자 (내 앱의 Client ID와 일치해야 함)</td></tr>
+<tr><td style="text-align: left"><strong>exp (Expiration)</strong></td><td style="text-align: left">만료 시간</td><td style="text-align: left">이 신분증의 유효기간 (보통 발급 후 10분 등 극히 짧게 세팅)</td></tr>
+<tr><td style="text-align: left"><strong>iat (Issued At)</strong></td><td style="text-align: left">발급 시간</td><td style="text-align: left">이 신분증이 언제 만들어졌는가? (타임스탬프)</td></tr>
+</tbody></table>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌───────────────────────────────────────────────────────────────┐
+│               ID Token (JWT) 탈취에 대비한 강력한 서명 검증 원리    │
+├───────────────────────────────────────────────────────────────┤
+│                                                               │
+│   [해커의 장난 시도]                                             │
+│   해커가 ID Token 중간의 &quot;sub&quot;:&quot;홍길동&quot; 을 &quot;sub&quot;:&quot;관리자&quot; 로 조작함.     │
+│                                                               │
+│   [우리 앱 (RP)의 방어 로직]                                       │
+│   RP: &quot;어? 구글이 준 토큰이네. 근데 구글 진짜 도장(서명)이 찍혀있나?&quot;        │
+│                                                               │
+│   1. 구글의 공개키(Public Key) 서버에 접속해 구글의 자물쇠를 가져옴.         │
+│   2. 해커가 바꾼 조작된 문서(Payload)와 구글 자물쇠를 수학적으로 맞춰봄 (RSA).│
+│   3. RP: &quot;이봐! 문서 내용이 바뀌어서 구글 도장(Signature)이랑 수학 공식이 안 맞아!&quot;│
+│                                                               │
+│   =&gt; 결과: 해커의 위조 로그인 시도 100% 차단 (인증 거부 Drop)            │
+└───────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> OIDC가 단순한 JSON 덩어리가 아니라 위대한 보안 규격인 이유는 끝부분에 달린 <strong>디지털 서명(Signature)</strong> 덕분이다. 카카오나 구글(OP)은 ID 토큰을 만들 때 자신들의 절대 비밀인 '개인키(Private Key)'로 문서 전체를 암호학적으로 도장 찍어 보낸다. 우리 앱(RP)은 토큰 안의 이메일이나 이름(Payload)을 믿기 전에, 반드시 구글의 '공개키(Public Key)'를 가져와서 그 도장이 진짜 구글이 찍은 게 맞는지 역산해본다. 단 한 글자라도 위조되었다면 서명 공식이 깨져서 즉각 튕겨낸다. 이 서명 검증을 빼먹는 것이 초보 개발자들이 가장 많이 저지르는 최악의 보안 결함이다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="silmu-sinario-toseu-toss-baengkeusaelreodeu-deung-maideiteo-saengtaegyeeseoyi-oidc-hwalyong">실무 시나리오: 토스(Toss), 뱅크샐러드 등 마이데이터 생태계에서의 OIDC 활용</h3>
+<ol>
+<li><strong>상황</strong>: 고객이 핀테크 앱(토스)에 가입하면서, 국민은행에 있는 자신의 계좌 정보를 끌어오고 싶다. 핀테크 앱은 고객이 진짜 그 고객이 맞는지(인증)와 계좌 열람 권한(인가)을 동시에 얻어내야 한다.</li>
+<li><strong>과거의 한계</strong>: 구형 OAuth만 쓰면 권한은 받지만, 이 고객이 토스 앱의 회원가입자 정보와 완벽히 일치하는지 국민은행 측에서 강력하게 확인해 주지 못해 대포통장 연동 등의 사기 위험이 컸다.</li>
+<li><strong>의사결정 및 OIDC 조치 (FAPI 표준 결합)</strong>:
+<ul>
+<li>금융권 마이데이터 규격(FAPI)은 **OAuth 2.0 인가(계좌 열람)와 OIDC 인증(고객 본인 확인)**을 하나의 세트로 묶어 강제한다.</li>
+<li>고객이 토스에서 "국민은행 연동"을 누르면 국민은행(OP) 인증 창이 뜬다.</li>
+<li>국민은행은 로그인한 고객이 맞는지 확인 후, 토스 앱(RP)에게 <code>Access Token(계좌 열람 열쇠)</code>과 <code>ID Token(이 사람은 주민번호 뒷자리 XX인 홍길동이 맞음)</code>을 세트로 넘겨준다.</li>
+<li>토스 앱 백엔드는 ID 토큰의 서명을 완벽히 검증하여 "진짜 국민은행이 보증한 홍길동이 맞네"라고 신원을 100% 확정한 뒤, Access Token으로 계좌를 조회해 대시보드에 뿌려준다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="doib-cekeuriseuteu-mic-antipaeteon">도입 체크리스트 및 안티패턴</h3>
+<ul>
+<li><strong>aud(Audience) 및 nonce 검증 누락 금지</strong>: ID 토큰을 받을 때 개발자가 라이브러리를 대충 쓰면 서명만 확인하고 끝내는 경우가 많다. 해커가 다른 앱(예: 해커의 게임 앱)에서 탈취한 구글 ID 토큰을 우리 앱의 로그인 창에 슬쩍 밀어 넣는 공격(Token Substitution)이 발생할 수 있다. 토큰을 뜯었을 때 <code>aud(관객)</code> 필드에 적힌 Client ID가 <strong>반드시 우리 회사가 구글에서 발급받은 ID와 일치</strong>하는지 확인해야 하며, CSRF 방어를 위해 <code>nonce</code> (일회용 난수) 값의 일치 여부를 무조건 검증해야 한다.</li>
+<li><strong>안티패턴</strong>: 발급받은 OIDC의 <strong>ID Token 자체를 우리 앱 서비스의 세션(Session) 유지용 토큰으로 재사용</strong>하는 행위. 구글이 발급해 준 ID Token은 "구글이 이 사람을 인증했음"을 증명하는 1회성 명함일 뿐이다. 이걸 쿠키에 구워 넣고 계속 API 인증에 쓴다면, 구글 쪽에서 계정이 정지되어도 우리 앱에서는 토큰 만료 전까지 활보하는 무결성 붕괴가 일어난다. 소셜 로그인 직후, 우리 앱만의 자체 세션이나 자체 JWT(Access Token)를 새로 발급하여 사용하는 것이 글로벌 아키텍처 원칙이다.</li>
+</ul>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p><strong>채택 조건</strong></p>
+<ul>
+<li>DNS과 이름 해석을 동시에 관리해야 할 때</li>
+<li>운영 자동화 또는 표준화된 제어가 필요할 때</li>
+<li>장애 분석 시 원인 구분이 명확해야 할 때</li>
+</ul>
+<p><strong>회피 조건</strong></p>
+<ul>
+<li>단순 환경이라 오버헤드가 더 큰 경우</li>
+<li>장비·프로토콜 호환성이 확보되지 않은 경우</li>
+<li>측정 지표 없이 관행적으로만 적용하는 경우</li>
+</ul>
+<p><strong>체크리스트</strong></p>
+<ol>
+<li>요구 성능과 허용 지연이 정의되었는가?</li>
+<li>오류·혼잡·보안 처리 경계가 명확한가?</li>
+<li>표준·벤더 구현 차이를 검증했는가?</li>
+<li>운영 관측성 및 장애 대응 절차가 준비되었는가?</li>
+</ol>
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">자체 회원가입 구축 시 (과거)</th><th style="text-align: left">OIDC 소셜 로그인 도입 시</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량 (전환율)</strong></td><td style="text-align: left">아이디/비밀번호/이메일 인증 등 가입 절차 5단계 (이탈률 높음)</td><td style="text-align: left">"카카오로 1초 만에 시작하기" 클릭 1번</td><td style="text-align: left">신규 고객 회원가입 이탈률 <strong>50% 이상 감소 (폭발적 성장)</strong></td></tr>
+<tr><td style="text-align: left"><strong>정량 (보안 리스크)</strong></td><td style="text-align: left">자체 DB에 사용자 비밀번호 저장 (해킹 시 회사 파산 위험)</td><td style="text-align: left">비밀번호 0건 저장 (구글/애플에 보안 책임 전가)</td><td style="text-align: left">비밀번호 유출에 따른 기업의 법적 책임/손해배상 <strong>100% 면제</strong></td></tr>
+<tr><td style="text-align: left"><strong>정성 (데이터 품질)</strong></td><td style="text-align: left">가짜 이메일, 가짜 전화번호 입력 난무</td><td style="text-align: left">통신사 및 거대 플랫폼이 이미 실명 검증한 정보 획득</td><td style="text-align: left">확보된 고객 데이터(Profile)의 질적 신뢰도 극대화</td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang-mic-jinhwa-banghyang">미래 전망 및 진화 방향</h3>
+<ul>
+<li><strong>Apple의 "Sign in with Apple" 강제 및 표준화</strong>: 애플은 앱스토어에 소셜 로그인(구글, 페이스북)을 하나라도 넣으려면 무조건 애플 로그인도 넣도록 정책을 강제했다. 이 애플 로그인의 뒷단 뼈대가 바로 OIDC 규격이다. OIDC는 거대 빅테크들의 독자 규격 전쟁을 멈추고 전 세계를 하나의 통일된 신원 연합(Identity Federation)으로 평정했다.</li>
+<li><strong>분산 신원 증명 (DID, Decentralized Identity)과의 경쟁 및 융합</strong>: OIDC의 유일한 단점은 "구글이나 카카오(OP)가 죽으면 전 세계 수십만 개의 앱 로그인이 동시에 죽는다"는 거대 플랫폼 종속성(SPOF)이다. 블록체인 기반으로 내 신원 정보를 내 폰에 직접 저장하는 DID 기술이 차세대 웹3.0(Web3) 인증으로 부상하고 있으나, 당분간은 사용자 편의성에서 압도적인 OIDC가 B2C 인증 시장을 철권통치할 것이다.</li>
+</ul>
+<h3 id="camgo-pyojun">참고 표준</h3>
+<ul>
+<li><strong>OpenID Connect Core 1.0</strong>: OIDC 프로토콜의 핵심 규격 (OAuth 2.0 위에 ID Token과 UserInfo API를 어떻게 얹을지 정의).</li>
+<li><strong>JWT (RFC 7519) / JWS (RFC 7515)</strong>: ID Token의 형태(JSON)와 디지털 서명(Signature)을 검증하기 위한 암호학적 기반 IETF 표준.</li>
+</ul>
+<p>결국 OIDC는 "권한"만 따지던 바보 같은 로봇(OAuth)에게 "그래서 네가 누군데?"라는 인간의 본질적 질문(신원)을 던질 수 있는 눈과 귀를 달아준 위대한 발명품이다. 번거로운 가입 절차 없이 클릭 한 번으로 수백 개의 앱을 옮겨 다니는 현대 스마트폰의 쾌적한 디지털 유목민 생활은, 오롯이 OIDC라는 보이지 않는 JSON 신분증 교환 인프라가 뒷받침하고 있기에 가능했다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">기초 DNS와 네트워크 관리 응용 이해
+    ↓
+OpenID Connect - OAuth 2.0 기반 사용자 식별 프로토콜 (ID Token, JWT) 개념 정립
+    ↓
+표준화·상용화 적용
+    ↓
+자동화·가상화 연계
+    ↓
+지능형 최적화·차세대 확장
+</code></pre>
+<p>OpenID Connect - OAuth 2.0 기반 사용자 식별 프로토콜 (ID Token, JWT)은(는) 단일 기능으로 끝나지 않고 표준화, 운영 자동화, 고속화·지능화 단계로 확장된다.</p>
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>OAuth 2.0</strong></td><td style="text-align: left">OIDC가 기생하여 동작하는 모체(숙주) 프레임워크로, 브라우저가 화면을 옮겨 다니는 리다이렉트 흐름(Dance)을 제공해 준다.</td></tr>
+<tr><td style="text-align: left"><strong>ID Token (신분증 토큰)</strong></td><td style="text-align: left">OIDC의 핵심 결과물이자 심장으로, 무거운 XML(SAML) 대신 가벼운 JSON에 서명을 더해(JWT) 사용자의 이름과 얼굴을 담아 넘겨주는 페이로드다.</td></tr>
+<tr><td style="text-align: left"><strong>SAML 2.0</strong></td><td style="text-align: left">회사와 회사(B2B)를 묶는 옛날 방식의 무거운 엔터프라이즈 SSO 기술이라면, OIDC는 일반인(B2C)과 스마트폰 앱을 묶는 빠르고 가벼운 SSO 기술이라는 완벽한 대척점이다.</td></tr>
+<tr><td style="text-align: left"><strong>JWT (JSON Web Token)</strong></td><td style="text-align: left">OIDC가 발급하는 ID Token의 데이터 포맷. 글자 수가 적어 HTTP 헤더나 URL에 실어 보내기 최적화된 마이크로서비스 시대의 공용어다.</td></tr>
+<tr><td style="text-align: left"><strong>UserInfo Endpoint</strong></td><td style="text-align: left">ID Token이 너무 뚱뚱해질까 봐 핵심 정보(이름, 이메일)만 넣고, 추가 정보(주소, 전화번호)는 Access Token을 들고 와서 따로 뽑아갈 수 있게 열어둔 OIDC 전용 API 창구다.</td></tr>
+</tbody></table>
+<hr />
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

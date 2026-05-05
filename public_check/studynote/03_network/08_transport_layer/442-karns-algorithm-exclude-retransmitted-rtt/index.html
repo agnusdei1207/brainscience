@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>442. 칸 알고리즘 (Karn&#x27;s Algorithm) - 재전송 패킷 RTT 샘플 제외 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>May 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote network
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 칸 알고리즘(Karn's Algorithm)은 TCP가 패킷을 재전송했을 때 뒤늦게 날아온 영수증(ACK)을 보고, "이게 처음 쏜 게 온 건지, 재전송한 게 온 건지" 도저히 구분할 수 없어 <strong>타이머 계산(RTT)이 오염되는 치명적 딜레마(재전송의 모호성)를 막기 위해 필 베일(Phil Karn)이 도입한 철통 방어 룰</strong>이다.
+<strong>비유</strong>: 칸 알고리즘 (Karn's Algorithm) - 재전송 패킷 RTT 샘플 제외은(는) 전송 계층의 신뢰성과 세션 제어 안에서 데이터와 제어 규칙을 질서 있게 맞춰 주는 교통 체계와 같다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li><strong>개념</strong>: TCP의 RTT(Round Trip Time) 측정 시, 재전송된 세그먼트에 대한 응답(ACK)을 RTT 샘플 산출에서 배제하고, 재전송 발생 시 RTO를 지수 함수적으로 증가시키는 혼잡 회피 알고리즘 (RFC 2988).</li>
+<li><strong>필요성</strong>: 내 PC가 구글에 패킷을 쐈다. 3초(RTO)를 기다렸는데 영수증이 안 온다. 나는 눈물을 머금고 패킷을 <strong>다시(재전송)</strong> 쐈다. 그런데 재전송을 쏘자마자 0.1초 뒤에 띠링~ 하고 영수증이 도착했다! 내 PC의 멘탈은 박살 난다. <strong>"이 영수증... 아까 3초 전에 쐈던 1번이 지각해서 이제 온 걸까? 아니면 방금 0.1초 전에 재전송한 2번이 빛의 속도로 튕겨서 온 걸까?"</strong> 만약 1번이 온 건데 2번이 온 줄 알고 "오! 이 동네 핑 0.1초 짱 빠르네!" 착각하고 타이머를 0.1초로 확 줄여버리면? 다음번 패킷부터는 0.1초마다 미친 듯이 재전송 폭풍을 갈겨대어 인터넷이 폭파된다. 이 혼돈(Ambiguity)을 멈출 절대자의 룰이 필요했다.</li>
+</ul>
+<hr />
+<ul>
+<li>송신자가 한 번이라도 <code>재전송(Retransmit)</code> 버튼을 누른 시퀀스 번호에 대해서는, 나중에 돌아오는 ACK를 RTT 샘플로 절대 채택하지 않는다.</li>
+<li>이 규칙 덕분에 TCP의 초시계(RTO)는 유령 패킷에 속아 비정상적으로 짧아지는(그래서 미친 재전송 폭풍을 유발하는) 대참사를 완벽하게 피하게 되었다.</li>
+</ul>
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<p>제1법칙만 쓰면 치명적인 모순이 생긴다. 네트워크가 진짜 막혀서 재전송을 했는데, 재전송 영수증을 RTT 계산에서 무시해 버리면? 내 PC의 타이머(RTO)는 갱신되지 않고 영원히 과거의 짧은 시간(예: 1초)으로 고정되어 버린다! 길이 막혔는데 타이머를 늘려주지 않으면 계속 1초마다 재전송을 때릴 것이다.</p>
+<ul>
+<li><strong>칸의 천재적인 2번째 룰</strong>: "야! 영수증 무시하는 건 좋은데, <strong>네가 재전송을 했다는 것 자체가 지금 톨게이트 꽉 막혔다는 증거잖아! 재전송 버튼을 누를 때마다 무조건 기존 타이머(RTO)를 2배로 늘려버려!</strong>"</li>
+<li>최초 RTO가 1초였다면 -&gt; 첫 재전송 시 2초 대기 -&gt; 두 번째 재전송 시 4초 대기 -&gt; 8초 대기 -&gt; 16초 대기...</li>
+<li>길이 막혔을 때 스스로 숨을 꾹 참으며 대기 시간을 늘려주는 이 <strong>타이머 백오프(Timer Backoff)</strong> 기술 덕분에 라우터들은 한숨을 돌릴 수 있게 되었다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text"> ┌─────────────────────────────────────────────────────────────┐
+ │                칸 알고리즘(Karn&#x27;s Algo)의 타임아웃 방어 시퀀스     │
+ ├─────────────────────────────────────────────────────────────┤
+ │                                                             │
+ │   [ 평소 ] (현재 RTO 타이머 = 1초)                              │
+ │   - 패킷 전송 -&gt; ACK 무사 도착! -&gt; RTT 측정해서 1.1초로 갱신함.      │
+ │                                                             │
+ │   [ 꽉 막힌 지옥 ]                                             │
+ │   - 패킷 전송 -&gt; 1초 지남 -&gt; 타임아웃 펑! (패킷 잃어버렸어!)           │
+ │   - Karn의 개입 1: &quot;오케이 재전송 갈겨! 대신 RTO를 2초(2배)로 늘려 놔!&quot;│
+ │   - 2초 지남 -&gt; 타임아웃 또 펑!                                  │
+ │   - Karn의 개입 2: &quot;또 재전송해! RTO는 4초(2배)로 또 늘려!!&quot;        │
+ │                                                             │
+ │   [ 기적의 영수증 도착 ]                                         │
+ │   - 재전송 후 드디어 ACK 도착!!                                   │
+ │   - Karn의 철퇴: &quot;야! 이거 첫 번째 건지 두 번째 건지 모르잖아!        │
+ │                 얘는 RTT 평균 계산식에 절.대. 넣지 마!! 무시해!&quot;    │
+ └─────────────────────────────────────────────────────────────┘
+</code></pre>
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 칸 알고리즘 (Karn's Algorithm) - 재전송 패킷 RTT 샘플 제외은(는) TCP/UDP, 순서 제어, 재전송 제약 안에서 일관된 제어 규칙을 유지할 때 효과가 난다.</p>
+<p>동작 순서:</p>
+<ol>
+<li>대상 자원과 상태 정보를 수집한다.</li>
+<li>정책 또는 프로토콜 규칙에 따라 처리 기준을 결정한다.</li>
+<li>데이터 전달·주소 지정·세션 유지·오류 처리 중 필요한 제어를 수행한다.</li>
+<li>결과를 상위 계층 또는 인접 장비와 연동한다.</li>
+<li>성능 지표를 확인하여 병목과 예외 상황을 보정한다.</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[요구사항&#x2F;트래픽 특성]
+          ↓
+[칸 알고리즘 (Karn&#x27;s Algorithm) - 재전송 패킷 RTT 샘플 제외]
+          ↓
+[전달·제어·보호 처리]
+          ↓
+[성능 검증 및 최적화]
+</code></pre>
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">관점</th><th style="text-align: left">칸 알고리즘 (Karn's Algorithm) - 재전송 패킷 RTT 샘플 제외</th><th style="text-align: left">인접 기술/대안</th><th style="text-align: left">판단 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">적용 범위</td><td style="text-align: left">전송 계층의 신뢰성과 세션 제어의 특정 문제를 직접 해결</td><td style="text-align: left">상위·하위 계층 또는 대체 방식이 일부 기능을 분담</td><td style="text-align: left">요구사항과 계층 경계 확인</td></tr>
+<tr><td style="text-align: left">장점</td><td style="text-align: left">TCP/UDP과 순서 제어을 구조적으로 통제</td><td style="text-align: left">범용성 또는 단순성이 강점</td><td style="text-align: left">목적에 맞는 선택 필요</td></tr>
+<tr><td style="text-align: left">한계</td><td style="text-align: left">재전송·운영 복잡도 증가 가능</td><td style="text-align: left">기능은 단순하지만 제어력 제한</td><td style="text-align: left">비용·표준 호환성 검토</td></tr>
+</tbody></table>
+<p>핵심은 단순 우열 비교가 아니라, 칸 알고리즘 (Karn's Algorithm) - 재전송 패킷 RTT 샘플 제외이 어떤 맥락에서 더 적합한지와 인접 기술과의 역할 분담을 해석하는 데 있다.</p>
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p><strong>채택 조건</strong></p>
+<ul>
+<li>TCP/UDP과 순서 제어을 동시에 관리해야 할 때</li>
+<li>운영 자동화 또는 표준화된 제어가 필요할 때</li>
+<li>장애 분석 시 원인 구분이 명확해야 할 때</li>
+</ul>
+<p><strong>회피 조건</strong></p>
+<ul>
+<li>단순 환경이라 오버헤드가 더 큰 경우</li>
+<li>장비·프로토콜 호환성이 확보되지 않은 경우</li>
+<li>측정 지표 없이 관행적으로만 적용하는 경우</li>
+</ul>
+<p><strong>체크리스트</strong></p>
+<ol>
+<li>요구 성능과 허용 지연이 정의되었는가?</li>
+<li>오류·혼잡·보안 처리 경계가 명확한가?</li>
+<li>표준·벤더 구현 차이를 검증했는가?</li>
+<li>운영 관측성 및 장애 대응 절차가 준비되었는가?</li>
+</ol>
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>칸 알고리즘 (Karn's Algorithm) - 재전송 패킷 RTT 샘플 제외을 적용하면 TCP/UDP과 순서 제어에 대한 통제력이 높아지고, 운영 일관성과 성능 예측 가능성을 확보할 수 있다. 반면 설정 복잡도, 표준 호환성, 장비 비용, 운영 숙련도라는 전제가 뒤따르므로 무조건적인 도입이 정답은 아니다. 결론적으로 이 주제는 전송 계층의 신뢰성과 세션 제어를 이해하는 기준점이며, 최근에는 자동화·가상화·지능형 제어와 결합해 더 세밀한 최적화 방향으로 진화하고 있다.</p>
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">기초 전송 계층의 신뢰성과 세션 제어 이해
+    ↓
+칸 알고리즘 (Karn&#x27;s Algorithm) - 재전송 패킷 RTT 샘플 제외 개념 정립
+    ↓
+표준화·상용화 적용
+    ↓
+자동화·가상화 연계
+    ↓
+지능형 최적화·차세대 확장
+</code></pre>
+<p>칸 알고리즘 (Karn's Algorithm) - 재전송 패킷 RTT 샘플 제외은(는) 단일 기능으로 끝나지 않고 표준화, 운영 자동화, 고속화·지능화 단계로 확장된다.</p>
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">TCP/UDP</td><td style="text-align: left">칸 알고리즘 (Karn's Algorithm) - 재전송 패킷 RTT 샘플 제외를 이해할 때 함께 봐야 하는 전송 계층의 신뢰성과 세션 제어 핵심 개념</td></tr>
+<tr><td style="text-align: left">순서 제어</td><td style="text-align: left">칸 알고리즘 (Karn's Algorithm) - 재전송 패킷 RTT 샘플 제외를 이해할 때 함께 봐야 하는 전송 계층의 신뢰성과 세션 제어 핵심 개념</td></tr>
+<tr><td style="text-align: left">재전송</td><td style="text-align: left">칸 알고리즘 (Karn's Algorithm) - 재전송 패킷 RTT 샘플 제외를 이해할 때 함께 봐야 하는 전송 계층의 신뢰성과 세션 제어 핵심 개념</td></tr>
+<tr><td style="text-align: left">흐름/혼잡 제어</td><td style="text-align: left">칸 알고리즘 (Karn's Algorithm) - 재전송 패킷 RTT 샘플 제외를 이해할 때 함께 봐야 하는 전송 계층의 신뢰성과 세션 제어 핵심 개념</td></tr>
+<tr><td style="text-align: left">포트</td><td style="text-align: left">칸 알고리즘 (Karn's Algorithm) - 재전송 패킷 RTT 샘플 제외를 이해할 때 함께 봐야 하는 전송 계층의 신뢰성과 세션 제어 핵심 개념</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

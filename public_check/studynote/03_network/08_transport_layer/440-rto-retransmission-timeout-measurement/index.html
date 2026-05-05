@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>440. RTO (Retransmission TimeOut) 측정 방식 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>May 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote network
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: RTO(Retransmission TimeOut)는 내가 패킷을 쏘고 나서 <strong>"도대체 상대방의 영수증(ACK)이 올 때까지 몇 초를 기다렸다가, 안 오면 포기하고 재전송을 때려야 할까?"를 라우터가 혼자 끙끙 앓으며 계산해 내는 절대적인 대기 인내심 타이머 시간</strong>이다.
+<strong>비유</strong>: RTO (Retransmission TimeOut) 측정 방식은(는) 전송 계층의 신뢰성과 세션 제어 안에서 데이터와 제어 규칙을 질서 있게 맞춰 주는 교통 체계와 같다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li><strong>개념</strong>: TCP 송신 측이 세그먼트를 전송한 후, 수신 확인(ACK) 패킷이 도달할 때까지 기다리는 최대 허용 시간(Timeout). 이 시간이 경과하면 패킷 유실로 간주하고 재전송(Retransmission)을 수행한다.</li>
+<li><strong>필요성</strong>: 내가 게임 아이템 구매 요청 패킷을 넥슨 서버에 쐈다. 응답이 안 온다. 0.1초 만에 "안 왔어! 재전송 쏴!" 하면 넥슨 서버는 똑같은 요청을 두 번 받아 결제가 2중으로 될 위험이 있고, 대역폭도 낭비된다. 반대로 10초나 기다리면 내 게임 화면은 10초 동안 프리징(렉) 걸린다. <strong>"기다리긴 기다려야 하는데, 너무 짧지도 않고 너무 길지도 않게, 딱 상대방과 나 사이의 도로 사정에 완벽히 들어맞는 '황금 타이머(RTO)'를 어떻게 수학적으로 구할 것인가?"</strong></li>
+</ul>
+<hr />
+<p>TCP는 영수증이 올 때마다 걸린 시간(RTT)을 초시계로 잰다.
+하지만 한 번 튀었다고 그 값을 맹신하면 안 된다. 과거의 기억을 부드럽게 섞어준다.</p>
+<ul>
+<li><strong>SRTT (평활화된 RTT)</strong>: <code>이전 평균값 87.5% + 방금 잰 시간 12.5%</code>. 이렇게 가중 평균을 내어 순간적으로 핑이 확 튀어도 부드러운 언덕(이동 평균)을 유지하게 한다.</li>
+<li><strong>RTTVAR (RTT 편차)</strong>: 핑이 안정적인지(계속 20ms 유지), 널뛰기하는지(10ms ~ 100ms 지랄 발광) 변동성을 측정한다.</li>
+<li><strong>최종 RTO 공식</strong>: <strong><code>RTO = SRTT + 4 × RTTVAR</code></strong>
+<ul>
+<li>해석: "평균 시간(SRTT)만큼 기다려주되, 만약 이 동네 네트워크가 널뛰기가 심한 양아치 망(RTTVAR가 높음)이라면, 여유 시간(×4)을 엄청 넉넉하게 더 줘서 섣부른 재전송(독촉 전화)을 막아라!"</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<p>네트워크의 지연율(RTT)은 수시로 변한다. TCP는 이를 3단계의 정밀한 수학 공식을 통해 추적한다.</p>
+<p>엄청나게 유명한 시험 단골 출제 문제다. (재전송의 딜레마).</p>
+<ul>
+<li><strong>상황</strong>: 내가 1번 패킷을 쐈다. RTO(예: 3초)가 다 지났는데 답(ACK)이 안 와서, 눈물을 머금고 1번 패킷을 <strong>다시(재전송)</strong> 쐈다.</li>
+<li><strong>사건 발생</strong>: 재전송을 갈기고 0.1초 뒤에 띠링~ 하고 <strong>1번 ACK 영수증</strong>이 도착했다!</li>
+<li><strong>미쳐버린 딜레마</strong>: 내 PC의 뇌구조는 멘붕에 빠진다. "야, 방금 도착한 이 영수증... <strong>아까 3.1초 전에 보냈던 원본 패킷이 지각해서 이제 온 걸까? 아니면 내가 방금 0.1초 전에 재전송한 패킷이 빛의 속도로 튕겨서 온 걸까?</strong>"</li>
+<li>만약 지각한 놈(3.1초)인데 빛의 속도(0.1초)라고 착각해서 RTO 공식에 넣어버리면? 내 PC는 "오 핑 0.1초 짱 빠르네!" 착각하고 RTO 타이머를 0.1초로 확 줄여버린다. 결국 다음 패킷부터 0.1초마다 미친 듯이 재전송 폭풍을 갈겨대어 인터넷을 망가뜨린다.</li>
+<li><strong>칸의 해결책</strong>: <strong>"재전송한 패킷에 대해서 날아온 영수증은 출처가 불분명한 썩은 물이니까, 아예 RTO 측정 공식(타이머 갱신)에 한 방울도 섞지 마라! 무시해라!!"</strong> 이 한마디로 TCP의 계산 오염을 완벽히 차단했다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text"> ┌─────────────────────────────────────────────────────────────┐
+ │                칸 알고리즘(Karn&#x27;s Algorithm) 딜레마 시각화        │
+ ├─────────────────────────────────────────────────────────────┤
+ │                                                             │
+ │   [ 내 PC ]                                       [ 목적지 ]   │
+ │   1. 1번 패킷 (원본) ────────(엄청 늦게 기어감)────────▶        │
+ │                                                             │
+ │   2. (3초 타이머 만료!!)                                        │
+ │   3. 1번 패킷 (재전송) ────────(빛의 속도로 날아감)───▶        │
+ │                                                             │
+ │   4. 영수증(ACK) 도착!! ◀────────────────────────       │
+ │                                                             │
+ │   * 내 PC의 멘붕: &quot;저 영수증은 1번 원본이 3초 만에 만든 걸까,        │
+ │                  3번 재전송이 0.1초 만에 만든 걸까? 알 수가 없다!!&quot;  │
+ │                                                             │
+ │   * 칸의 철칙: &quot;출처가 헷갈리는 영수증은 평균 핑 타임 계산에서 무조건  │
+ │               제외(Ignore)시켜 계산 수질 오염을 막아라!!&quot;          │
+ └─────────────────────────────────────────────────────────────┘
+</code></pre>
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: RTO (Retransmission TimeOut) 측정 방식은(는) TCP/UDP, 순서 제어, 재전송 제약 안에서 일관된 제어 규칙을 유지할 때 효과가 난다.</p>
+<p>동작 순서:</p>
+<ol>
+<li>대상 자원과 상태 정보를 수집한다.</li>
+<li>정책 또는 프로토콜 규칙에 따라 처리 기준을 결정한다.</li>
+<li>데이터 전달·주소 지정·세션 유지·오류 처리 중 필요한 제어를 수행한다.</li>
+<li>결과를 상위 계층 또는 인접 장비와 연동한다.</li>
+<li>성능 지표를 확인하여 병목과 예외 상황을 보정한다.</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[요구사항&#x2F;트래픽 특성]
+          ↓
+[RTO (Retransmission TimeOut) 측정 방식]
+          ↓
+[전달·제어·보호 처리]
+          ↓
+[성능 검증 및 최적화]
+</code></pre>
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">관점</th><th style="text-align: left">RTO (Retransmission TimeOut) 측정 방식</th><th style="text-align: left">인접 기술/대안</th><th style="text-align: left">판단 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">적용 범위</td><td style="text-align: left">전송 계층의 신뢰성과 세션 제어의 특정 문제를 직접 해결</td><td style="text-align: left">상위·하위 계층 또는 대체 방식이 일부 기능을 분담</td><td style="text-align: left">요구사항과 계층 경계 확인</td></tr>
+<tr><td style="text-align: left">장점</td><td style="text-align: left">TCP/UDP과 순서 제어을 구조적으로 통제</td><td style="text-align: left">범용성 또는 단순성이 강점</td><td style="text-align: left">목적에 맞는 선택 필요</td></tr>
+<tr><td style="text-align: left">한계</td><td style="text-align: left">재전송·운영 복잡도 증가 가능</td><td style="text-align: left">기능은 단순하지만 제어력 제한</td><td style="text-align: left">비용·표준 호환성 검토</td></tr>
+</tbody></table>
+<p>핵심은 단순 우열 비교가 아니라, RTO (Retransmission TimeOut) 측정 방식이 어떤 맥락에서 더 적합한지와 인접 기술과의 역할 분담을 해석하는 데 있다.</p>
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p><strong>채택 조건</strong></p>
+<ul>
+<li>TCP/UDP과 순서 제어을 동시에 관리해야 할 때</li>
+<li>운영 자동화 또는 표준화된 제어가 필요할 때</li>
+<li>장애 분석 시 원인 구분이 명확해야 할 때</li>
+</ul>
+<p><strong>회피 조건</strong></p>
+<ul>
+<li>단순 환경이라 오버헤드가 더 큰 경우</li>
+<li>장비·프로토콜 호환성이 확보되지 않은 경우</li>
+<li>측정 지표 없이 관행적으로만 적용하는 경우</li>
+</ul>
+<p><strong>체크리스트</strong></p>
+<ol>
+<li>요구 성능과 허용 지연이 정의되었는가?</li>
+<li>오류·혼잡·보안 처리 경계가 명확한가?</li>
+<li>표준·벤더 구현 차이를 검증했는가?</li>
+<li>운영 관측성 및 장애 대응 절차가 준비되었는가?</li>
+</ol>
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>RTO (Retransmission TimeOut) 측정 방식을 적용하면 TCP/UDP과 순서 제어에 대한 통제력이 높아지고, 운영 일관성과 성능 예측 가능성을 확보할 수 있다. 반면 설정 복잡도, 표준 호환성, 장비 비용, 운영 숙련도라는 전제가 뒤따르므로 무조건적인 도입이 정답은 아니다. 결론적으로 이 주제는 전송 계층의 신뢰성과 세션 제어를 이해하는 기준점이며, 최근에는 자동화·가상화·지능형 제어와 결합해 더 세밀한 최적화 방향으로 진화하고 있다.</p>
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">기초 전송 계층의 신뢰성과 세션 제어 이해
+    ↓
+RTO (Retransmission TimeOut) 측정 방식 개념 정립
+    ↓
+표준화·상용화 적용
+    ↓
+자동화·가상화 연계
+    ↓
+지능형 최적화·차세대 확장
+</code></pre>
+<p>RTO (Retransmission TimeOut) 측정 방식은(는) 단일 기능으로 끝나지 않고 표준화, 운영 자동화, 고속화·지능화 단계로 확장된다.</p>
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">TCP/UDP</td><td style="text-align: left">RTO (Retransmission TimeOut) 측정 방식를 이해할 때 함께 봐야 하는 전송 계층의 신뢰성과 세션 제어 핵심 개념</td></tr>
+<tr><td style="text-align: left">순서 제어</td><td style="text-align: left">RTO (Retransmission TimeOut) 측정 방식를 이해할 때 함께 봐야 하는 전송 계층의 신뢰성과 세션 제어 핵심 개념</td></tr>
+<tr><td style="text-align: left">재전송</td><td style="text-align: left">RTO (Retransmission TimeOut) 측정 방식를 이해할 때 함께 봐야 하는 전송 계층의 신뢰성과 세션 제어 핵심 개념</td></tr>
+<tr><td style="text-align: left">흐름/혼잡 제어</td><td style="text-align: left">RTO (Retransmission TimeOut) 측정 방식를 이해할 때 함께 봐야 하는 전송 계층의 신뢰성과 세션 제어 핵심 개념</td></tr>
+<tr><td style="text-align: left">포트</td><td style="text-align: left">RTO (Retransmission TimeOut) 측정 방식를 이해할 때 함께 봐야 하는 전송 계층의 신뢰성과 세션 제어 핵심 개념</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

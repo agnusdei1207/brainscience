@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>210. DANE (DNS-Based Auth of Named Entities) - TLSA 인증서 고정 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote security
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p>⚠️ 이 문서는 웹/이메일 통신 시 암호화(HTTPS/TLS)에 사용되는 디지털 인증서를 기존의 상업적 인증기관(CA) 시스템에만 전적으로 의존하는 대신, 도메인의 소유자가 직접 DNS(도메인 네임 시스템)를 통해 자신의 인증서 정보를 검증 가능하게 배포하는 <strong>DANE 프로토콜과 TLSA 레코드</strong>를 다룹니다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h1 id="210-dane-dns-based-authentication-of-named-entities">210. DANE (DNS-Based Authentication of Named Entities)</h1>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 브라우저나 메일 서버가 접속하려는 사이트의 인증서가 "진짜 이 사이트 주인이 발급받은 것이 맞는지"를, 해킹 위험이 있는 CA를 맹신하지 않고 해당 도메인의 DNS에 기록된 지문(Fingerprint)과 직접 대조하여 크로스체크하는 보안 기술이다.</li>
+<li><strong>가치</strong>: 부패하거나 해킹당한 인증기관(CA)이 구글이나 네이버를 사칭한 '가짜 인증서'를 몰래 발급하여 중간자 공격(MitM)을 시도하더라도, DNS에 등록된 원본 지문과 다르기 때문에 접속을 원천 차단할 수 있다.</li>
+<li><strong>기술 체계</strong>: 이를 구현하기 위해 DNSSEC(DNS 데이터 위변조 방지)가 반드시 선행되어야 하며, DNS 설정에 <code>TLSA</code>라는 특수 레코드를 추가하여 인증서의 해시값을 기록해 둔다. (특히 이메일 SMTP 암호화 강제에 널리 쓰임)</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h3>
+<p>현재의 인터넷 보안은 수백 개의 인증기관(CA) 중 하나라도 뚫리면 무너지는 구조다.</p>
+<ol>
+<li><strong>CA (Certificate Authority)의 신뢰 모델</strong>:
+<ul>
+<li>우리는 네이버에 접속할 때, 브라우저가 네이버의 인증서를 보고 "아, 디지서트(DigiCert)라는 믿을만한 CA가 도장을 찍어줬으니 진짜 네이버구나" 하고 암호화 통신을 시작한다.</li>
+</ul>
+</li>
+<li><strong>CA 해킹 사건 (DigiNotar 사태 등)</strong>:
+<ul>
+<li>2011년 해커가 네덜란드의 CA인 디지노타르(DigiNotar)를 해킹해 구글(Google.com)의 가짜 인증서를 무단 발급했다. 브라우저는 이 가짜 인증서를 '합법적인 CA가 발급한 진짜'로 오인하여 이란 사용자의 지메일을 중간에서 모두 감청당했다.</li>
+</ul>
+</li>
+<li><strong>신뢰의 딜레마</strong>:
+<ul>
+<li>전 세계 수백 개의 CA 중 단 한 곳만 매수되거나 해킹당해도, 전 세계 모든 도메인의 가짜 인증서를 만들어낼 수 있는 치명적인 약점(약한 고리)이 존재한다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 우리가 여권을 믿는 이유는 '정부(CA)'가 발행했기 때문인데, 만약 수백 개의 동사무소 중 한 곳의 직원이 뇌물을 받고 내 이름의 가짜 여권을 만들어주면, 전 세계 공항이 그 가짜 여권을 진짜로 믿고 통과시켜 버리는 시스템적 허점과 같습니다.</p>
+<hr />
+<h3 id="2-guseongyoso">2. 구성요소</h3>
+<p>DANE은 CA를 못 믿겠으니, 도메인 주인이 직접 자기 인증서의 모양을 공표하자는 아이디어다.</p>
+<ol>
+<li><strong>TLSA 레코드</strong>:
+<ul>
+<li>도메인 주인은 인증서를 발급받은 뒤, 그 인증서의 해시값(지문)을 추출하여 자신의 DNS 서버에 <code>TLSA</code> 레코드라는 형태로 등록해 둔다.</li>
+<li>예: <code>_443._tcp.www.example.com. IN TLSA 3 0 1 (해시값)</code></li>
+</ul>
+</li>
+<li><strong>DANE의 2중 검증 프로세스</strong>:
+<ul>
+<li>┌─────────────────────────────────────────────────────────┐
+│ 1. [클라이언트]가 https://example.com 에 접속 시도.      │
+│ 2. 서버가 1차로 [CA가 발급한 인증서]를 클라이언트에게 줌. │
+│ 3. [클라이언트]는 DNS 서버에 2차로 [TLSA 레코드]를 질의함. │
+│ 4. 서버가 준 인증서의 해시값과 DNS의 TLSA 해시값이        │
+│    <strong>일치하는지</strong> 대조 (DANE 검증). 일치할 때만 접속 허용.│
+└─────────────────────────────────────────────────────────┘</li>
+</ul>
+</li>
+<li><strong>인증서 고정 (Certificate Pinning)</strong>:
+<ul>
+<li>해커가 가짜 인증서를 내밀더라도, DNS에 등록된 진짜 해시값과 다르기 때문에 브라우저나 메일 서버는 이 접속을 즉시 끊어버린다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 누군가 내 여권(인증서)을 들고 공항에 왔을 때 정부 도장만 믿는 게 아니라, 공항 직원이 진짜 내 가족(DNS)에게 전화를 걸어 "이 여권에 찍힌 얼굴 특징(해시값)이 당신 아들 맞소?"라고 한 번 더 확인하여 위조 여권을 원천 차단하는 방식입니다.</p>
+<hr />
+<h3 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h3>
+<p>DANE은 강력하지만 치명적인 전제 조건이 있다. "DNS 자체는 안전한가?"</p>
+<ol>
+<li><strong>DNSSEC의 필수 동반</strong>:
+<ul>
+<li>해커가 CA도 속이고 DNS 응답(TLSA 레코드) 자체도 중간에서 위조(DNS Spoofing)해 버리면 DANE은 소용이 없다.</li>
+<li>따라서 DANE이 동작하려면, DNS 응답 데이터 자체가 위변조되지 않았음을 암호학적으로 보증하는 **DNSSEC(DNS Security Extensions)**이 반드시 100% 적용되어 있어야 한다.</li>
+</ul>
+</li>
+<li><strong>SMTP 이메일 암호화에서의 맹활약</strong>:
+<ul>
+<li>브라우저(웹)에서는 DANE 지원이 아직 완벽하지 않지만(크롬/엣지 제한적), 이메일 서버 간 통신(SMTP)에서는 매우 중요하다.</li>
+<li>이메일 서버가 상대방 서버로 메일을 보낼 때, 상대가 암호화(STARTTLS)를 지원하는 진짜 서버인지 DANE으로 검증하여, 해커의 서버로 이메일이 평문 유출되는(Downgrade Attack) 것을 강력하게 막아준다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 가족에게 확인 전화를 거는 방법(DANE)은 완벽해 보이지만, 해커가 전화선 자체를 가로채서 가짜 가족 행세(DNS 스푸핑)를 하면 망합니다. 그래서 가족과 통화할 때 반드시 미리 정해둔 비밀 암호(DNSSEC)를 먼저 대야만 진짜 가족의 답변으로 인정하는 2중 안전장치가 꼭 필요합니다.</p>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

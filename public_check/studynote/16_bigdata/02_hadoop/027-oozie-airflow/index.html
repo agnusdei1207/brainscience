@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>05. Apache Oozie와 Airflow - 워크플로우 오케스트레이션의 진화 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote bigdata
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: Apache Oozie와 Airflow - 워크플로우 오케스트레이션의 진화은(는) 분산 저장, 병렬 처리, 자원 관리를 결합해 대규모 데이터를 저비용으로 처리하게 하는 하둡 계열 핵심 기술이다.
+<strong>비유</strong>: 대형 물류창고에 재고를 나눠 보관하고 작업 지시서를 현장 직원에게 보내는 체계와 같다.</p>
+</blockquote>
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>Oozie의 Workflow는 XML로 정의되며, HDFS에 배포되어 YARN에서 실행됩니다.</p>
+<pre data-lang="xml" class="language-xml "><code class="language-xml" data-lang="xml">&lt;!-- Oozie Workflow XML 예시 --&gt;
+&lt;workflow-app name=&quot;etl-workflow&quot; xmlns=&quot;uri:oozie:workflow:0.5&quot;&gt;
+  &lt;start to=&quot;ingest-data&quot;&#x2F;&gt;
+  &lt;action name=&quot;ingest-data&quot;&gt;
+    &lt;hive xmlns=&quot;uri:oozie:hive-action:0.5&quot;&gt;
+      &lt;script&gt;&#x2F;scripts&#x2F;ingest.hql&lt;&#x2F;script&gt;
+    &lt;&#x2F;hive&gt;
+    &lt;ok to=&quot;transform-data&quot;&#x2F;&gt;
+    &lt;error to=&quot;send-alert&quot;&#x2F;&gt;
+  &lt;&#x2F;action&gt;
+  &lt;action name=&quot;transform-data&quot;&gt;
+    &lt;spark xmlns=&quot;uri:oozie:spark-action:0.2&quot;&gt;
+      &lt;master&gt;yarn-cluster&lt;&#x2F;master&gt;
+      &lt;script&gt;&#x2F;scripts&#x2F;transform.py&lt;&#x2F;script&gt;
+    &lt;&#x2F;spark&gt;
+    &lt;ok to=&quot;end&quot;&#x2F;&gt;
+    &lt;error to=&quot;send-alert&quot;&#x2F;&gt;
+  &lt;&#x2F;action&gt;
+  &lt;kill name=&quot;send-alert&quot;&gt;
+    &lt;message&gt;Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]&lt;&#x2F;message&gt;
+  &lt;&#x2F;kill&gt;
+  &lt;end name=&quot;end&quot;&#x2F;&gt;
+&lt;&#x2F;workflow-app&gt;
+</code></pre>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<p>Airflow의 DAG는 Python 코드로 정의됩니다.</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">
+from datetime import datetime, timedelta
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+from airflow.providers.snowflake.operators.snowflake import SnowflakeOperator
+
+default_args = {
+    &#x27;owner&#x27;: &#x27;data_engineer&#x27;,
+    &#x27;retries&#x27;: 3,
+    &#x27;retry_delay&#x27;: timedelta(minutes=5),
+}
+
+with DAG(
+    dag_id=&#x27;etl_pipeline&#x27;,
+    start_date=datetime(2024, 1, 1),
+    schedule_interval=&#x27;0 2 * * *&#x27;,  # 매일 새벽 2시
+    default_args=default_args,
+    catchup=False,
+) as dag:
+
+    ingest_task = SnowflakeOperator(
+        task_id=&#x27;ingest_data&#x27;,
+        sql=&quot;CALL my_procedure(&#x27;INSERT&#x27;);&quot;,
+        snowflake_conn_id=&#x27;snowflake_conn&#x27;,
+    )
+
+    transform_task = PythonOperator(
+        task_id=&#x27;transform_data&#x27;,
+        python_callable=transform_function,
+        op_kwargs={&#x27;input_key&#x27;: &#x27;data&#x27;},
+    )
+
+    check_quality = PythonOperator(
+        task_id=&#x27;check_data_quality&#x27;,
+        python_callable=data_quality_check,
+    )
+
+    # 의존성 정의
+    ingest_task &gt;&gt; transform_task &gt;&gt; check_quality
+    # 또는: ingest_task.set_downstream(transform_task)
+</code></pre>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 데이터 배치 위치, 메타데이터 관리, 병렬 실행, 장애 복구가 함께 맞물려야 한다.</p>
+<p>동작 순서:</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">Apache Oozie</th><th style="text-align: left">Apache Airflow</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>학습 곡선</strong></td><td style="text-align: left">상대적으로 완만한 (XML熟悉必要)</td><td style="text-align: left">Python熟悉的 엔지니어에게 친숙</td></tr>
+<tr><td style="text-align: left"><strong>生态계統合</strong></td><td style="text-align: left">Hadoop生态系と紧密结合</td><td style="text-align: left">400+ 외부 시스템Integration (Provider)</td></tr>
+<tr><td style="text-align: left"><strong>모니터링</strong></td><td style="text-align: left">기본적</td><td style="text-align: left">매우 풍부 (Gantt, Tree, Slack 연동)</td></tr>
+<tr><td style="text-align: left"><strong>에러 복구</strong></td><td style="text-align: left">기본 (재시도, 알림)</td><td style="text-align: left">세밀함 (Trigger Rules, Depends on Past, Backfill)</td></tr>
+<tr><td style="text-align: left"><strong>멀티 테넌시</strong></td><td style="text-align: left">제한적</td><td style="text-align: left">Celery + K8s로良好的</td></tr>
+<tr><td style="text-align: left"><strong>Python 활용</strong></td><td style="text-align: left">불가 (별도 Python 태스크 필요)</td><td style="text-align: left">네이티브 Python 활용</td></tr>
+<tr><td style="text-align: left"><strong>현재 유지보수</strong></td><td style="text-align: left">크게 활발하지 않음</td><td style="text-align: left">매우 활발 (Apache Airflow + Astronomer, AWS MWAA 등)</td></tr>
+</tbody></table>
+<ul>
+<li><strong>Airflow가 주목받는 이유</strong>: Airflow는"코드로서의 데이터 파이프라인"이라는 철학을 통해, 데이터 엔지니어링 팀의 생산성을 크게 향상시켰습니다. Python으로 DAG를 작성하면 Git으로 버전 관리, Pull Request로 코드 리뷰, CI/CD로 자동 테스트가 가능해져"엔지니어링 품질 관리"를 파이프라인에 적용할 수 있습니다. 또한 Rich한 UI,Slack/이메일 알림,실행 이력 추적,Backfill(과거 데이터 재처리) 기능 등이 뛰어나"운영 관점"에서도 우월합니다.</li>
+</ul>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">고려 사항</th><th style="text-align: left">세부 내용</th><th style="text-align: left">주요 의사결정</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>기존 인프라</strong></td><td style="text-align: left">기존 Hadoop/HDFS 환경 → Oozie 自然스럽게 Integration</td><td style="text-align: left">신규 / Cloud 환경 → Airflow</td></tr>
+<tr><td style="text-align: left"><strong>팀 기술 스택</strong></td><td style="text-align: left">Java 중심 → Oozie XML (Java 태스크)</td><td style="text-align: left">Python 중심 → Airflow (네이티브)</td></tr>
+<tr><td style="text-align: left"><strong>통합 필요성</strong></td><td style="text-align: left">Hadoop生態圈中心 → Oozie</td><td style="text-align: left">Snowflake, BigQuery, Kafka 등 400+ → Airflow</td></tr>
+<tr><td style="text-align: left"><strong>모니터링 요구</strong></td><td style="text-align: left">基本监控足够 → Oozie</td><td style="text-align: left">상세 모니터링 + 알람 → Airflow</td></tr>
+</tbody></table>
+<p><em>(추가 실무 적용 가이드 - Airflow 도입 Decision Tree)</em></p>
+<ul>
+<li><strong>Airflow가 적합한 경우</strong>: Python 기반 데이터 팀, Snowflake/BigQuery/Databricks 등 모던 데이터 플랫폼 활용, 상세 모니터링 필요, GitOps/CD/CD 요구</li>
+<li><strong>Oozie가 적합한 경우</strong>: 기존 Hadoop/HDFS 환경에서 간단한 태스크 의존성 관리만 필요, 제한된 수의 태스크 (10개 이내), 이미 Oozie가 구축되어 있는 레거시 환경</li>
+<li><strong>대안 고려</strong>: Prefect, Dagster, Temporal 등 모던 오케스트레이션 도구도 평가해볼 가치가 있습니다. 특히 Dagster는"데이터 파이프라인의 테스트와 문서화를 중요시하는团队"에 적합합니다.</li>
+</ul>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<ol>
+<li>
+<p><strong>Airflow의 완전히 관리되는 서비스 확산</strong>
+AWS MWAA (Managed Workflows for Apache Airflow), Astronomer Cloud, Google Cloud Composer 등 fully managed Airflow 서비스가 확산됨에 따라,"스케줄러/웹서버/Worker 관리"의 운영 부담이 크게 줄어들고 있습니다. 이는"Serverless Airflow"라는 개념으로 진화하며, 데이터 엔지니어가"오케스트레이션의 logic 설계"에만 집중할 수 있는 환경을 제공합니다.</p>
+</li>
+<li>
+<p><strong>Dagster의 台頭: "엔지니어링 우선" 오케스트레이션</strong>
+Prefect와 Dagster는 Airflow의"단점"(예: 테스트 어려움, 파이프라인과 외부 시스템의耦合,세밀한 리소스 격리 어려움)을 개선한"차세대" 오케스트레이션 도구로 떠오르고 있습니다. 특히 Dagster는"소스 코드 수준의 파이프라인 테스트", "타ипа卡片 기반 파이프라인 모니터링", "파이프라인과 스케줄러의 완벽한 분리"를 통해"엔지니어링 품질"을 한 단계 끌어올립니다.</p>
+</li>
+<li>
+<p><strong>Temporal의崛起: 마이크로서비스 스타일의 워크플로우</strong>
+Temporal은" طول 수명Workflow( Long-Running Workflow)"와"분산 트랜잭션"을 네이티브하게 지원하는新規念な 오케스트레이션 플랫폼으로,金融거래나 주문 처리처럼"여러 마이크로서비스가 참여하는 장기간の Workflow"에 적합합니다. 이는"단순한 데이터 ETL"을 넘어"비즈니스 프로세스 오케스트레이션"으로의 확장을 보여줍니다.</p>
+</li>
+</ol>
+<h2 id="brain-jisig-maeb-knowledge-graph">🧠 지식 맵 (Knowledge Graph)</h2>
+<ul>
+<li><strong>Apache Oozie核心组件</strong>
+<ul>
+<li><strong>Workflow</strong>: DAG 기반 작업 순서 (XML 정의)</li>
+<li><strong>Coordinator</strong>: 시간/데이터 기반 Workflow 트리거</li>
+<li><strong>Bundle</strong>: 복수의 Coordinator 그룹化管理</li>
+<li><strong>Action</strong>: 실제 실행할 태스크 (MapReduce, Spark, Hive, Shell等)</li>
+</ul>
+</li>
+<li><strong>Apache Airflow核心组件</strong>
+<ul>
+<li><strong>DAG</strong>: Python으로 정의된 방향성 비순환 그래프</li>
+<li><strong>Operator</strong>: 태스크 실행 단위 (Python, Bash, Snowflake, etc.)</li>
+<li><strong>Task</strong>: Operator 실행 인스턴스</li>
+<li><strong>Executor</strong>: 태스크 실행 방식 (Local, Celery, K8s)</li>
+<li><strong>XCom</strong>: 태스크 간 데이터 공유 메커니즘</li>
+<li><strong>Connection</strong>: 외부 시스템 연결 정보 관리</li>
+</ul>
+</li>
+<li><strong>Airflow vs alternatives</strong>
+<ul>
+<li><strong>Prefect</strong>: Prefect Cloud + Orion 엔진, Python-첫</li>
+<li><strong>Dagster</strong>: 테스트/문서화 특화, 파이프라인-스케줄러 분리</li>
+<li><strong>Temporal</strong>: Long-running Workflow + 분산 트랜잭션</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>Apache Oozie와 Airflow - 워크플로우 오케스트레이션의 진화은(는) 해당 영역의 성능, 확장성, 운영 안정성, 거버넌스 수준을 직접 좌우하는 핵심 요소다. 따라서 도입 여부는 기능 비교를 넘어 데이터 특성, 팀 역량, 비용 구조, 규제 요구를 함께 보는 아키텍처 판단이어야 한다.</p>
+<p>실무에서는 초기 효과보다 지속 운영 가능성과 연계 확장성이 더 중요하다. 하둡 계열 기술의 가치는 개별 컴포넌트보다 저장·자원·처리 계층이 얼마나 안정적으로 결합되는가에 달려 있다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[Apache Oozie]
+    │
+    ▼
+[Apache Airflow]
+    │
+    ▼
+[DAG (Directed Acyclic Graph)]
+    │
+    ▼
+[Celery&#x2F;Kubernetes Executor]
+    │
+    ▼
+[Dagster &#x2F; Prefect]
+</code></pre>
+<p>이 흐름도는 Apache Oozie에서 출발해 Dagster / Prefect까지 이어지며, 중간 단계가 기초 개념을 실무 구조로 발전시키는 과정을 보여준다.</p>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">HDFS</td><td style="text-align: left">분산 저장 계층</td></tr>
+<tr><td style="text-align: left">MapReduce·Spark</td><td style="text-align: left">분산 처리 엔진 연결점</td></tr>
+<tr><td style="text-align: left">YARN</td><td style="text-align: left">클러스터 자원 관리 축</td></tr>
+<tr><td style="text-align: left">Hive·HBase·Kafka</td><td style="text-align: left">하둡 생태계 확장 요소</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

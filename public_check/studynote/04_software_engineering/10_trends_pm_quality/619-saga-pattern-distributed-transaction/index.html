@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>619. 사가 (Saga) 패턴 2PC 한계 극복 분산 트랜잭션 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 07, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote se
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 사가(Saga) 패턴은 마이크로서비스 아키텍처(MSA)에서 여러 서비스에 걸친 긴 트랜잭션을 처리하기 위해, 각 서비스의 로컬 트랜잭션을 순차적으로 실행하고 실패 시 **보상 트랜잭션(Compensating Transaction)**을 통해 논리적 롤백을 수행하는 분산 트랜잭션 패턴이다.
+2. <strong>가치</strong>: 전통적인 2PC(Two-Phase Commit)가 가진 동기적 블로킹과 자원 락(Lock)으로 인한 성능 저하 한계를 극복하고, 시스템의 가용성(Availability)과 확장성을 유지하면서 최종 일관성(Eventual Consistency)을 확보할 수 있게 해준다.
+3. <strong>융합</strong>: 사가 패턴은 중앙에서 흐름을 통제하는 <strong>오케스트레이션(Orchestration)</strong> 방식과 이벤트 기반으로 자율적으로 동작하는 <strong>코레오그래피(Choreography)</strong> 방식으로 나뉘며, 비동기 메시징 큐(Kafka, RabbitMQ) 및 아웃박스(Outbox) 패턴과 결합하여 구현된다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h1 id="saga-saga-paeteon-2pc-hangye-geugbog-bunsan-teuraenjaegsyeon">사가 (Saga) 패턴 2PC 한계 극복 분산 트랜잭션</h1>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: 사가(Saga)는 단일 데이터베이스의 ACID(원자성, 일관성, 고립성, 지속성) 트랜잭션을 여러 서비스에 걸쳐 분할한 연속된 로컬 트랜잭션의 체인이다. 만약 중간 단계에서 비즈니스 규칙 위반(예: 잔고 부족)으로 실패하면, 이전에 성공했던 트랜잭션들을 되돌리기 위해 역순으로 보상 트랜잭션을 실행한다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: MSA에서는 '주문(Order)', '결제(Payment)', '재고(Inventory)' 서비스가 각각 독립적인 데이터베이스를 갖는다(Database per Service). 고객이 주문을 할 때 세 가지 DB가 모두 성공적으로 업데이트되어야 하는데, 이를 전통적인 분산 트랜잭션 기법인 2PC로 묶으면, 하나라도 지연될 경우 세 개의 DB에 모두 락(Lock)이 걸려 시스템 전체가 마비(Deadlock 위험 및 Throughput 저하)된다. 따라서 락을 걸지 않고도 데이터의 정합성을 맞출 대안이 필수적이다.</p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: 친구들과 해외여행을 준비할 때, 한 명이 '항공권', '호텔', '렌터카'를 한 번에 동시에 예약(2PC)하려 하면 하나라도 자리가 날 때까지 아무것도 못 하고 기다려야 합니다. 반면 사가 패턴은 먼저 항공권을 예약(성공)하고, 다음으로 호텔을 예약하려는데 방이 없으면, **앞서 예약해둔 항공권을 취소(보상 트랜잭션)**하는 방식과 같습니다.</p>
+</li>
+<li>
+<p><strong>등장 배경 및 발전 과정</strong>:</p>
+<ol>
+<li><strong>단일 DB와 2PC (Two-Phase Commit)</strong>: 과거 XA 프로토콜 기반의 2PC는 완벽한 일관성을 보장했으나, MSA의 클라우드 환경에서는 성능 저하와 NoSQL 등 미지원 DB의 등장으로 사용이 불가능해졌다.</li>
+<li><strong>BASE와 최종 일관성 (Eventual Consistency)</strong>: 분산 시스템에서는 항상 즉각적인 일관성을 보장하기보다, "결국에는(Eventual) 일치하게 된다"는 비동기적 철학이 대두되었다.</li>
+<li><strong>Saga 패턴의 재조명</strong>: 1987년 논문에서 처음 등장한 장기 실행 트랜잭션 모델인 Saga가 MSA 시대에 이벤트 기반 아키텍처(EDA)와 결합하며 분산 트랜잭션의 표준 해결책으로 부활했다.</li>
+</ol>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 도미노를 세우다가 중간에 하나가 무너지면, 뒤로 계속 무너지는 것이 아니라 관리자가 재빨리 뛰어가 앞서 세워둔 도미노들을 안전하게 눕혀놓아 원상태로 복구하는 것과 같습니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="guseong-yoso">구성 요소</h3>
+<table><thead><tr><th style="text-align: left">요소명</th><th style="text-align: left">역할</th><th style="text-align: left">내부 동작</th><th style="text-align: left">관련 기술</th><th style="text-align: left">비유</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>로컬 트랜잭션 (Local Tx)</strong></td><td style="text-align: left">단일 마이크로서비스 내부 DB에서의 ACID 트랜잭션</td><td style="text-align: left">데이터 변경 및 이벤트 발행</td><td style="text-align: left">Spring <code>@Transactional</code></td><td style="text-align: left">각자의 방에서 하는 청소</td></tr>
+<tr><td style="text-align: left"><strong>보상 트랜잭션 (Compensating Tx)</strong></td><td style="text-align: left">이미 커밋된 로컬 트랜잭션의 결과를 논리적으로 취소(역산)</td><td style="text-align: left">예: 결제 승인 → 결제 취소, 재고 차감 → 재고 증가</td><td style="text-align: left">비즈니스 로직</td><td style="text-align: left">결제된 카드를 승인 취소함</td></tr>
+<tr><td style="text-align: left"><strong>코레오그래피 (Choreography)</strong></td><td style="text-align: left">각 서비스가 이벤트를 구독하고 자율적으로 다음 행동을 결정</td><td style="text-align: left">펍/섭 (Pub/Sub) 브로커를 통한 비동기 통신</td><td style="text-align: left">Kafka, RabbitMQ</td><td style="text-align: left">지휘자 없는 댄서들의 군무</td></tr>
+<tr><td style="text-align: left"><strong>오케스트레이션 (Orchestration)</strong></td><td style="text-align: left">중앙 통제기(Orchestrator)가 트랜잭션의 흐름과 보상을 명령</td><td style="text-align: left">상태 기계(State Machine) 기반 작업 조율</td><td style="text-align: left">AWS Step Functions, Camunda</td><td style="text-align: left">오케스트라 지휘자</td></tr>
+</tbody></table>
+<hr />
+<h3 id="saga-paeteon-guhyeon-bangsig-1-koreogeuraepi-choreography">사가 패턴 구현 방식 1: 코레오그래피 (Choreography)</h3>
+<p>코레오그래피 방식은 중앙의 통제자 없이, 각 서비스가 다른 서비스의 **이벤트(Event)**를 듣고 자신의 로컬 트랜잭션을 실행한 뒤 다음 이벤트를 발행하는 방식이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌───────────────────────────────────────────────────────────────┐
+  │        코레오그래피 (Choreography) Saga 흐름 (주문 실패 시나리오)   │
+  ├───────────────────────────────────────────────────────────────┤
+  │                                                               │
+  │   [Order Svc]            [Payment Svc]           [Inventory Svc]│
+  │   1. 주문 생성(PENDING)                                         │
+  │   2. OrderCreatedEvent ──▶                                    │
+  │                          3. 결제 시도 (성공)                     │
+  │                          4. PaymentBilledEvent ─▶             │
+  │                                                  5. 재고 확인 (실패!)│
+  │                                                  6. InventoryFailedEvent │
+  │  ◀───────────────────────────(보상 시작)─────────────────────────┘│
+  │                          7. [보상] 결제 취소                    │
+  │  ◀── PaymentRefundedEvent ───                                 │
+  │   8. [보상] 주문 취소(CANCELED)                                 │
+  │                                                               │
+  │   * 특징: 지휘자 없이 서로의 이벤트를 듣고 알아서 행동함!            │
+  └───────────────────────────────────────────────────────────────┘
+</code></pre>
+<ul>
+<li><strong>장점</strong>: 결합도가 낮고, 중앙 병목(SPOF)이 없다. 간단한 트랜잭션에 적합하다.</li>
+<li><strong>단점</strong>: 참여하는 서비스가 많아지면 이벤트의 흐름을 추적하기 매우 어려워진다(이벤트 스파게티).</li>
+</ul>
+<hr />
+<h3 id="saga-paeteon-guhyeon-bangsig-2-okeseuteureisyeon-orchestration">사가 패턴 구현 방식 2: 오케스트레이션 (Orchestration)</h3>
+<p>오케스트레이션 방식은 <code>Order Saga Orchestrator</code>라는 중앙 관리자가 존재하여, 각 서비스에게 무엇을 해야 할지 **명령(Command)**을 내리고 결과를 받아 다음 단계를 제어한다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌───────────────────────────────────────────────────────────────┐
+  │        오케스트레이션 (Orchestration) Saga 흐름 (주문 실패 시나리오)│
+  ├───────────────────────────────────────────────────────────────┤
+  │                                                               │
+  │                 ┌────────────────────────┐                    │
+  │                 │ Order Saga Orchestrator│ (상태 관리자)         │
+  │                 └────────────────────────┘                    │
+  │                   │     ▲    │     ▲    │    ▲                │
+  │      1.결제명령(Cmd)│     │    │     │    │    │ 6.재고실패 응답  │
+  │                   ▼     │    │     │    ▼    │                │
+  │    ┌───────────────┐    │    │     │  ┌───────────────┐       │
+  │    │ Payment Svc   │────┘    │     │  │ Inventory Svc │       │
+  │    │ (결제 성공)    │ 2.성공응답│     │  │ (재고 부족!)    │       │
+  │    └───────────────┘         ▼     │  └───────────────┘       │
+  │                   3.재고명령(Cmd)   │                         │
+  │                                    │                          │
+  │                   7.결제취소명령(Cmd) │                          │
+  │                   (보상 트랜잭션 시작) ▼                          │
+  │    ┌───────────────┐               ┌───────────────┐          │
+  │    │ Payment Svc   │               │ Order Svc     │          │
+  │    │ (결제 취소 처리)│               │ (주문 상태 취소)│          │
+  │    └───────────────┘               └───────────────┘          │
+  │                                                               │
+  │   * 특징: Orchestrator가 전체 워크플로우와 보상 순서를 책임짐!      │
+  └───────────────────────────────────────────────────────────────┘
+</code></pre>
+<ul>
+<li>
+<p><strong>장점</strong>: 복잡한 트랜잭션 흐름(예: 5개 이상 서비스 참여)도 한 곳에서 추적 가능하며, 순환 참조 문제가 없다.</p>
+</li>
+<li>
+<p><strong>단점</strong>: Orchestrator가 слишком 많은 비즈니스 로직을 가지면 또 다른 모놀리스(Smart Orchestrator, Dumb Services)가 될 위험이 있다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 코레오그래피가 신호등(이벤트)을 보고 알아서 차들이 움직이는 교차로라면, 오케스트레이션은 교통경찰(지휘자)이 수신호로 어느 차가 가고 멈출지를 일일이 지시하는 교차로입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li>
+<p><strong>시나리오 — 보상 트랜잭션의 실패</strong>: 주문 취소로 인해 '결제 취소' 보상 트랜잭션을 실행했는데, PG사 네트워크 오류로 결제 취소가 실패한 상황.</p>
+<ul>
+<li><strong>판단</strong>: 보상 트랜잭션은 본질적으로 실패할 수 있다. 분산 시스템에서 '절대 실패하지 않는 것'은 불가능하다.</li>
+<li><strong>해결책</strong>: 보상 트랜잭션은 반드시 **멱등성(Idempotency)**을 보장하도록 설계되어야 한다. 네트워크 오류 시 무한 재시도(Retry)를 하거나, 실패 내역을 Dead Letter Queue(DLQ)에 쌓아두고 관리자가 수동(Manual Intervention)으로 개입할 수 있는 배치/어드민 알림 프로세스를 마련해야 한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>시나리오 — 격리성(Isolation) 부재로 인한 Dirty Read</strong>: 사가 패턴 진행 중, 주문은 생성되었으나 아직 재고 확인이 끝나지 않은 시점에, 다른 트랜잭션이나 사용자가 해당 '주문' 데이터를 읽고 처리해버린 상황.</p>
+<ul>
+<li><strong>판단</strong>: 사가 패턴은 ACID 중 고립성(Isolation)이 부족하다. 즉, 트랜잭션 중간 상태가 외부에 노출(Dirty Read)된다.</li>
+<li><strong>해결책</strong>: <strong>시맨틱 락(Semantic Lock)</strong> 기법을 사용한다. 레코드의 상태 플래그를 <code>CREATED</code> 대신 <code>PENDING</code>이나 <code>PROCESSING</code>으로 표기하여, 다른 트랜잭션이 이 레코드를 섣불리 읽거나 수정하지 못하도록 비즈니스 로직 단에서 통제해야 한다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="doib-cekeuriseuteu">도입 체크리스트</h3>
+<ul>
+<li><strong>기술적</strong>: 이벤트 발행 시 DB 커밋과 메시지 전송의 원자성을 보장하기 위해 <strong>아웃박스(Outbox) 패턴</strong>이 결합되어 있는가? (메시지 유실 방지)</li>
+<li><strong>아키텍처적</strong>: 서비스의 개수가 3~4개 이하로 적고 워크플로우가 고정적이라면 코레오그래피를, 5개 이상이거나 보상 로직 분기가 매우 복잡하다면 오케스트레이션을 선택했는가?</li>
+</ul>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p><strong>오케스트레이터의 갓 객체(God Object)화</strong>: 오케스트레이터가 흐름 제어뿐만 아니라 '재고가 부족하면 대체 상품을 제안한다' 같은 타 도메인의 핵심 비즈니스 로직까지 품어버려, 결국 모든 코드가 오케스트레이터로 집중되는 안티패턴.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 식당에서 주문이 잘못 들어갔을 때, 환불(보상 트랜잭션) 처리가 전산 오류로 안 될 수도 있기 때문에, 점장님(관리자)이 나중에 장부를 보고 직접 돈을 돌려줄 수 있는 수동 절차(DLQ/배치)도 반드시 준비해 두어야 합니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="4-bigyo-mic-teureideuopeu">4. 비교 및 트레이드오프</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">전통적인 2PC 분산 트랜잭션</th><th style="text-align: left">사가(Saga) 패턴</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">모든 DB에 Lock 유지 (수 초 소요)</td><td style="text-align: left">로컬 DB만 Lock 점유 후 즉시 해제</td><td style="text-align: left">시스템 동시 처리량(Throughput) <strong>수십~수백 배 증가</strong></td></tr>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">단일 서비스 장애 시 전체 트랜잭션 대기</td><td style="text-align: left">비동기 기반 보상 처리</td><td style="text-align: left">시스템 전체의 가용성(Availability) 방어</td></tr>
+<tr><td style="text-align: left"><strong>정성</strong></td><td style="text-align: left">DB 기술 종속적 (NoSQL 적용 불가)</td><td style="text-align: left">애플리케이션 레벨의 논리적 롤백</td><td style="text-align: left">RDBMS와 NoSQL 간의 트랜잭션 연동 가능</td></tr>
+</tbody></table>
+<p>사가 패턴은 MSA에서 데이터를 나누었을 때 직면하는 가장 큰 고통(데이터 정합성)에 대한 현실적인 타협안이다. 완벽한 ACID를 포기하는 대신 BASE(Basic Availability, Soft-state, Eventual consistency) 철학을 받아들여 시스템의 성능과 생존성을 높인다. 기술사는 "왜 2PC를 쓰지 않느냐"는 질문에 동기식 락(Lock)의 위험성을 설명하고, 사가 패턴의 멱등성과 보상 실패 시나리오까지 대비된 아키텍처를 제시할 수 있어야 한다.</p>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>2PC (Two-Phase Commit)</strong></td><td style="text-align: left">사가 패턴이 극복하고자 하는 과거의 동기식 분산 트랜잭션 모델로, 완벽한 일관성을 주지만 성능을 희생한다.</td></tr>
+<tr><td style="text-align: left"><strong>이벤트 주도 아키텍처 (EDA)</strong></td><td style="text-align: left">사가 패턴 중 코레오그래피 방식을 구현하기 위한 기반 아키텍처로 비동기 메시지 큐(Kafka)를 사용한다.</td></tr>
+<tr><td style="text-align: left"><strong>아웃박스 패턴 (Outbox Pattern)</strong></td><td style="text-align: left">로컬 트랜잭션 완료와 보상 트랜잭션 유발을 위한 이벤트 발행이 100% 원자적으로 일어나도록 보장하는 연계 패턴이다.</td></tr>
+<tr><td style="text-align: left"><strong>멱등성 (Idempotency)</strong></td><td style="text-align: left">보상 트랜잭션이 여러 번 재시도되더라도 최종 결과가 같음을 보장하여, 분산 환경의 네트워크 에러를 방어하는 핵심 속성이다.</td></tr>
+<tr><td style="text-align: left"><strong>최종 일관성 (Eventual Consistency)</strong></td><td style="text-align: left">사가 패턴 실행 도중에는 데이터가 불일치할 수 있으나, 결국 보상이나 성공으로 마무리되어 데이터가 맞춰지는 상태다.</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>레고로 큰 성을 만들 때, 친구들 3명이 각자 방에서 '탑', '벽', '문'을 만들어서 나중에 하나로 합치기로 했어요.</li>
+<li>만약 한 친구가 블록이 모자라서 '문'을 못 만들게 되면, 나머지 친구들도 만들던 '탑'과 '벽'을 모두 부수고 처음 상태로 되돌려 놓기로 약속했어요.</li>
+<li>이렇게 서로 멀리 떨어져서 일하다가 한 명이라도 실패하면, 다 같이 약속한 대로 자기가 만든 걸 예전으로 되돌리는 똑똑한 방법을 '사가(Saga) 패턴'이라고 한답니다.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

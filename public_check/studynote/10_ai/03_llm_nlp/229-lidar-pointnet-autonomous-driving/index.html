@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>229. 자율주행 LiDAR 3D 딥러닝 (PointNet) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 17, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ai
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: PointNet은 자율주행 자동차 지붕에서 쏘아 올린 수백만 개의 점(Point Cloud, 라이다 센서 데이터)을 기존 방식처럼 평면 사진(2D)이나 깍두기 블록(Voxel)으로 변환하지 않고, <strong>점(Point)이 가진 3차원 (x,y,z) 좌표 날것(Raw)을 그대로 신경망에 들이붓는 세계 최초의 3D 직접 학습 딥러닝 아키텍처</strong>다.
+<strong>비유</strong>: 복셀(Voxel) 방식은 모래사장에서 '동전(점)'을 찾을 때, 모래사장을 1만 개의 큐브 박스로 쪼갠 뒤 박스를 하나하나 다 열어보는 멍청한 방식이다(빈 박스가 99%라 지쳐 쓰러짐). PointNet은 금속 탐지기다. 텅 빈 모래(허공)는 신경도 쓰지 않고, 오직 동전이 있는 (x, y, z) 정확한 좌표 위치에만 침을 꽂아 모양을 파악하는 극한의 효율성을 가진 탐지기다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>자율주행 자동차의 눈은 크게 두 가지다. 색깔을 보는 '카메라(Camera)'와, 레이저를 쏴서 돌아오는 시간을 재어 거리를 파악하는 '라이다(LiDAR)'다.
+카메라 이미지는 픽셀이 바둑판처럼 예쁘게 차곡차곡 정렬되어 있어서 2D-CNN(합성곱)을 돌리기가 아주 좋다. 하지만 LiDAR가 뿜어내는 데이터인 **'포인트 클라우드(Point Cloud)'**는 완전히 다른 괴물이다.</p>
+<p>라이다는 허공에 점을 무작위로 찍는다. 자동차 본체에는 점이 수만 개 찍히지만, 하늘이나 허공에는 점이 1개도 없다. 밀도도 제멋대로고, 배열 순서도 없는 **순수한 (x, y, z) 수학적 좌표들의 난장판(Unordered set of points)**이다.
+초창기 공학자들은 이 난장판을 딥러닝에 넣기 위해 무식한 짓을 했다. 공간을 마인크래프트 블록(Voxel)처럼 잘게 쪼개어, 점이 들어있으면 1, 없으면 0을 채우고 3D-CNN을 돌린 것이다(Voxelization). 하지만 세상 공간의 99%는 허공이다. GPU는 쓸데없는 공기를 계산하느라 메모리(VRAM)가 폭발해 버렸다.</p>
+<p>"이봐, 점을 억지로 블록에 구겨 넣지 말고, <strong>있는 그대로의 점 좌표 (x, y, z) 숫자 3개를 그냥 신경망에 때려 박아서 학습</strong>할 순 없을까?"
+이 미친 발상을 스탠퍼드 대학교 연구진이 2017년에 수학적으로 완벽하게 증명해 낸 모델이 바로 **PointNet(포인트넷)**이다. 3D 딥러닝 역사는 PointNet 이전과 이후로 나뉜다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<p>PointNet은 순서가 없는 점(Point) 덩어리를 딥러닝에 우겨넣기 위해, MLP(다층 퍼셉트론)와 대칭 함수(Max Pooling)를 우아하게 결합한다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│           PointNet 아키텍처의 3D 좌표 날것(Raw) 학습 파이프라인 도해      │
+├──────────────────────────────────────────────────────────────┤
+│  [입력]: 무작위로 섞인 점 1,000개 (각 점은 x, y, z 3차원 좌표)            │
+│   예: 점A(1,2,3), 점B(4,5,6), 점C(7,8,9) ...                        │
+│                                                              │
+│  [1. T-Net (공간 변환기 - 삐뚤어진 각도 펴주기)]                     │
+│   * 자전거가 누워있든 서 있든 똑같은 자전거로 인식하도록 회전 행렬을 곱해     │
+│     모든 점들의 자세를 정면으로 예쁘게 정렬시킴 (Affine Transformation).│
+│                                                              │
+│  [2. Shared MLP (개별 점 특징 뻥튀기)]                           │
+│   * 점 1,000개가 서로 대화하지 않고 &#x27;각자 독립적으로&#x27; 퍼셉트론 방을 통과함.   │
+│   * 점 하나당 (x,y,z) 3개 숫자가 ─▶ 64개 ─▶ 1024개의 특징 숫자로 뻥튀기됨! │
+│                                                              │
+│  [3. ★ Max Pooling (대칭 함수 - 순서 불변성 극복의 핵심!)]            │
+│   * 점 1,000개가 제각각 1024차원으로 부풀려졌음. (1000 x 1024 행렬)       │
+│   * 여기서 세로로 가장 큰 값(Max) 하나씩만 쾅 눌러서 뽑아냄!                │
+│   ─▶ 점이 어떤 순서로 들어왔든 상관없이 &quot;이 전체 점 덩어리는 &#x27;의자&#x27; 모양이다!&quot; │
+│      라는 거대한 [1 x 1024] 글로벌 특징(Global Feature) 벡터가 완성됨!   │
+│                                                              │
+│  [출력]: 이 글로벌 벡터를 바탕으로 &quot;이건 자동차(99%)&quot; 라고 판별 완료.         │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>핵심 원리 (순서 불변성 극복, Permutation Invariance)</strong>:
+이미지 픽셀은 1번 픽셀과 2번 픽셀의 자리가 바뀌면 사진이 망가진다. 하지만 포인트 클라우드는 점 A, B, C를 입력하든 C, A, B를 입력하든 똑같은 컵 모양이다. 신경망이 이 '순서 없음'을 이해하게 만드는 것이 최대 난제였다.
+PointNet은 **'대칭 함수(Symmetric Function)'인 맥스 풀링(Max Pooling)**을 해결책으로 썼다. 100개의 점 데이터가 순서대로 들어오든 역순으로 들어오든, 가장 강한 특징(Max) 하나만 찍어 누르면 결과값은 언제나 동일하기 때문이다. 점들을 섞어도 결과가 똑같아지는 이 수학적 성질이 PointNet을 3D 비전의 마스터피스로 만들었다.</p>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 자율주행 LiDAR 3D 딥러닝 (PointNet)의 성능과 타당성은 입력 표현, 핵심 구조 또는 연산, 학습·추론 절차, 평가 기준, 자원 제약이 서로 정합될 때 확보된다.</p>
+<p>동작 순서:</p>
+<p>라이다(LiDAR) 3D 데이터를 자율주행 딥러닝으로 처리하려는 인프라 아키텍트들의 눈물겨운 3대 파벌 투쟁을 비교해 보자.</p>
+<table><thead><tr><th style="text-align: left">3D 딥러닝 방식</th><th style="text-align: left">데이터 가공 철학</th><th style="text-align: left">가장 큰 장점 (Pros)</th><th style="text-align: left">치명적 단점 (Cons)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Multi-view (다중 시점 2D 변환)</strong></td><td style="text-align: left">3D 모델의 앞, 뒤, 위, 아래 사진을 여러 장 찰칵 찍어서 평범한 2D-CNN에 먹임</td><td style="text-align: left">이미 완성된 2D-CNN 기술(ResNet 등)을 그대로 쓸 수 있어 성능이 꽤 좋음</td><td style="text-align: left">진정한 3D 구조(속 빈 구멍 등)를 이해 못 하고, 카메라 각도를 몇 개로 할지 세팅하기 미치도록 까다로움</td></tr>
+<tr><td style="text-align: left"><strong>Voxelization (복셀/3D 블록화)</strong></td><td style="text-align: left">허공에 떠 있는 점들을 마인크래프트 네모 블록(Voxel) 맵으로 변환 후 3D-CNN에 먹임</td><td style="text-align: left">빈틈없는 그리드(Grid) 형태라 기존 CNN 수학 공식이 완벽하게 찰떡으로 맞아떨어짐</td><td style="text-align: left"><strong>메모리 파산</strong>. 99%의 빈 허공 블록까지 계산하느라 GPU RAM이 터져 실시간 자율주행 절대 불가</td></tr>
+<tr><td style="text-align: left"><strong>PointNet (포인트 직접 학습)</strong></td><td style="text-align: left"><strong>어떤 변환도 없이 점 (x,y,z) 숫자 날것 그대로를 MLP에 쑤셔 넣음</strong></td><td style="text-align: left"><strong>속도 최강, 메모리 절약 끝판왕</strong>. 빈 공간은 아예 계산을 안 해서 밀리초(ms) 단위 추론 가능</td><td style="text-align: left">점들이 자기 동네 옆에 있는 이웃 점들과 대화를 못 해서 '부분적인 질감(Local feature)' 파악에 약함 (이후 PointNet++로 해결됨)</td></tr>
+</tbody></table>
+<p>이 PointNet의 성공 이후, "점 하나하나만 보지 말고, 주변 점들(이웃)을 공 모양으로 묶어서 동네 분위기도 같이 보자!"라며 계층적 구조를 도입한 **PointNet++(포인트넷 플러스플러스)**가 등장하며, 자율주행 라이다 검출기의 글로벌 표준 아키텍처로 완전히 굳어졌다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<p>자율주행 스타트업이 테슬라를 잡겠다며 PointNet 인프라를 얹을 때, 현실 세계 라이다(LiDAR) 센서의 더러운 노이즈를 처리하지 않으면 차가 사람을 들이받는다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<ol>
+<li><strong>라이다의 극단적 데이터 불균형(Sparsity) 제어</strong>: 라이다는 가까운 차에는 점이 1만 개 찍히고, 50m 멀리 있는 차에는 점이 10개밖에 안 찍힌다. 거리에 따라 점의 밀도(Density)가 극단적으로 변한다. 이 날것의 데이터를 PointNet에 그대로 넣으면 멀리 있는 차를 인식하지 못하고 뻗는다. 실무 아키텍처에서는 PointNet++에 탑재된 **다중 해상도 그룹핑 (MRG, Multi-Resolution Grouping)**이나 <strong>다중 스케일 그룹핑 (MSG)</strong> 파이프라인을 켜서, 점이 듬성듬성한 곳은 돋보기를 크게 잡고 촘촘한 곳은 좁게 잡는 '적응형 수용 영역(Adaptive Receptive Field)' 튜닝을 반드시 거쳐야 원거리 사고를 막을 수 있다.</li>
+<li><strong>동적 객체 탐지 병목 (VoxelNet과의 하이브리드 타협)</strong>: PointNet은 물체가 '의자인가 컵인가(Classification)'를 맞추는 덴 신이지만, 넓은 도로 맵 전체에서 '어디에 차가 있는지 박스(Bounding Box)를 치는 일(Detection)'에는 연산 로드가 심하게 걸린다. 그래서 최신 자율주행 서버(Inference)에서는 넓은 도로 전체는 빠르게 큰 깍두기(Voxel)로 대충 썰어버리고(Voxel Feature Encoding), 그 깍두기 안에서만 PointNet을 돌려 정확한 형상을 잡아내는 <strong>PointPillars</strong>나 <strong>VoxelNet</strong> 같은 하이브리드 아키텍처로 타협하는 것이 실시간 FPS(초당 프레임) 방어의 정석이다.</li>
+</ol>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li><strong>단일 프레임 (Single-sweep) 의존 맹상</strong>: 라이다가 1바퀴 돌아서 찍은 정지된 3D 점 구름 딱 1장만 가지고 PointNet을 돌려서 앞차의 속도와 방향을 예측하려는 미친 짓. 3D 점 구름 한 장은 멈춰있는 조각상일 뿐이다. 앞차가 내 쪽으로 후진하는지, 멈춰있는지 단일 프레임으론 절대 모른다. 무조건 라이다가 찍은 과거 프레임 5~10장을 누적해서 쌓은 뒤(Multi-sweep), 각 점들에 <strong>(x, y, z) 좌표뿐만 아니라 과거부터 흘러온 시간축(t) 정보 1개를 추가하여 4D 벡터</strong>로 만들어 먹이지 않으면(Temporal Fusion), 자율주행차는 정지한 차와 시속 100km로 다가오는 차를 구분하지 못하고 그대로 충돌한다.</li>
+</ul>
+<p>PointNet의 등장은 딥러닝이 평면(2D 모니터)의 제약을 완전히 박살 내고, 현실 세계(3D 시공간)의 물리적 날것 데이터를 그대로 씹어먹기 시작한 위대한 차원 도약의 마일스톤이다.</p>
+<p>과거에는 수백억짜리 자율주행 센서(LiDAR)가 쏟아내는 완벽한 3차원 데이터를, 컴퓨터가 소화하지 못해 억지로 2D 사진이나 블록으로 뭉뚱그려(Voxelization) 버리는 정보의 손실(Loss)을 묵인했다. 그러나 PointNet은 "가공하지 마라. 인공지능은 점들의 무작위성(Unordered)마저 수학적 대칭(Max Pooling)으로 이해할 만큼 진화했다"며 원본 3D 좌표 데이터를 직접 신경망의 입구에 들이밀었다. 그 결과 자율주행 자동차는 수백만 개의 점들이 흩뿌려진 복잡한 도심 교차로에서도 보행자와 킥보드를 밀리초 단위로 정확히 분리해 내는 미친 반응 속도를 얻게 되었다.</p>
+<p>결국 미래의 AI는 메타버스, 디지털 트윈, 로보틱스 등 수많은 3차원 공간 산업과 맞물린다. 이 가상과 현실의 3D 공간을 매핑하는 근본 재료가 바로 '포인트 클라우드(Point Cloud)'다. PointNet이 열어젖힌 3D 딥러닝 아키텍처는 자동차의 눈을 넘어, 드론의 공중 매핑, 로봇 팔의 물건 집기(Grasping) 등 기계가 인간의 3차원 세계를 완벽하게 인식하고 지배하기 위한 궁극의 시각 피질로 영원히 기억될 것이다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>과거에는 수백억짜리 자율주행 센서(LiDAR)가 쏟아내는 완벽한 3차원 데이터를, 컴퓨터가 소화하지 못해 억지로 2D 사진이나 블록으로 뭉뚱그려(Voxelization) 버리는 정보의 손실(Loss)을 묵인했다. 그러나 PointNet은 "가공하지 마라. 인공지능은 점들의 무작위성(Unordered)마저 수학적 대칭(Max Pooling)으로 이해할 만큼 진화했다"며 원본 3D 좌표 데이터를 직접 신경망의 입구에 들이밀었다. 그 결과 자율주행 자동차는 수백만 개의 점들이 흩뿌려진 복잡한 도심 교차로에서도 보행자와 킥보드를 밀리초 단위로 정확히 분리해 내는 미친 반응 속도를 얻게 되었다.</p>
+<p>결국 미래의 AI는 메타버스, 디지털 트윈, 로보틱스 등 수많은 3차원 공간 산업과 맞물린다. 이 가상과 현실의 3D 공간을 매핑하는 근본 재료가 바로 '포인트 클라우드(Point Cloud)'다. PointNet이 열어젖힌 3D 딥러닝 아키텍처는 자동차의 눈을 넘어, 드론의 공중 매핑, 로봇 팔의 물건 집기(Grasping) 등 기계가 인간의 3차원 세계를 완벽하게 인식하고 지배하기 위한 궁극의 시각 피질로 영원히 기억될 것이다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">문제 정의 · 입력 정리
+    ↓
+핵심 구조 · 연산 설계
+    ↓
+학습 · 추론 · 검증
+    ↓
+실무 적용 · 최적화
+    ↓
+운영 · 거버넌스 · 확장
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>포인트 클라우드 (Point Cloud)</strong></td><td style="text-align: left">LiDAR 센서가 뿜어내는 수백만 개의 (x, y, z) 3차원 좌표 점 덩어리. PointNet이 이 세상에 태어난 유일한 이유이자 먹잇감 데이터</td></tr>
+<tr><td style="text-align: left"><strong>복셀화 (Voxelization)</strong></td><td style="text-align: left">PointNet이 박살 내버린 과거의 멍청한 전처리 방식. 점들을 마인크래프트 블록 안에 구겨 넣어서 계산하려다 텅 빈 허공(공기)까지 딥러닝이 계산하게 만들어 GPU 메모리를 파산시키던 주범</td></tr>
+<tr><td style="text-align: left"><strong>Max Pooling (대칭 함수)</strong></td><td style="text-align: left">점 1,000개의 입력 순서가 뒤죽박죽 섞여도 똑같은 결과를 뱉어내기 위해 PointNet이 선택한 마법의 수학 무기 (순서 불변성, Permutation Invariance 확보)</td></tr>
+<tr><td style="text-align: left"><strong>T-Net (Transformation Network)</strong></td><td style="text-align: left">자전거가 똑바로 서 있든, 거꾸로 누워 있든 PointNet이 헷갈리지 않게, 점들을 딥러닝 뇌에 넣기 전에 회전시켜서 정면으로 예쁘게 펴주는 자세 교정기</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

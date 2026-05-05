@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>173. 생성 패턴 메모리 효율화 비교 (Prototype vs Flyweight) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote design supervision
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 프로토타입(Prototype)은 <strong>객체 생성 속도</strong>를 최적화하고, 플라이웨이트(Flyweight)는 <strong>메모리 공간</strong>을 최적화한다. 같은 "메모리 효율화"라도 해결하는 문제가 다르다.
+2. <strong>가치</strong>: 프로토타입은 "비싼 초기화를 피하기 위한 복제", 플라이웨이트는 "유사 객체 수천 개의 공유 가능 부분을 하나로 통합"하는 방식으로 시스템 자원을 절약한다.
+3. <strong>판단 포인트</strong>: 객체 초기화 비용이 크다면 프로토타입을, 동일한 상태를 공유하는 유사 객체가 대량으로 존재한다면 플라이웨이트를 선택하라.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<h3 id="saengseong-biyongyi-du-gaji-hyeongtae">생성 비용의 두 가지 형태</h3>
+<p>소프트웨어 시스템에서 객체 생성 비용은 크게 두 형태로 나타난다:</p>
+<ol>
+<li><strong>초기화 비용이 높은 경우</strong>: DB 조회, 파일 파싱, 복잡한 알고리즘 계산으로 단일 객체 생성에 수백 ms가 소요.</li>
+<li><strong>동시에 존재하는 유사 객체가 대량인 경우</strong>: 게임에서 총알 10만 개, 문서에서 글자 수백만 개가 동시에 메모리에 로드.</li>
+</ol>
+<p>두 문제는 성격이 다르며, 각각 <strong>프로토타입 패턴</strong>과 <strong>플라이웨이트 패턴</strong>으로 해결한다.</p>
+<h3 id="silje-munje-maegrag">실제 문제 맥락</h3>
+<table><thead><tr><th style="text-align: left">시나리오</th><th style="text-align: left">문제</th><th style="text-align: left">해결 패턴</th></tr></thead><tbody>
+<tr><td style="text-align: left">CAD 소프트웨어의 복잡한 3D 모델 복사</td><td style="text-align: left">모델 하나 생성에 3초 소요</td><td style="text-align: left">Prototype (복제로 시간 절약)</td></tr>
+<tr><td style="text-align: left">온라인 게임 총알 10만 개 동시 렌더링</td><td style="text-align: left">총알 하나당 100byte × 10만 = 10MB</td><td style="text-align: left">Flyweight (공유로 메모리 절약)</td></tr>
+<tr><td style="text-align: left">워드프로세서 글자 100만 개</td><td style="text-align: left">글자 객체 100만 개 = 수백 MB</td><td style="text-align: left">Flyweight (폰트·색상 공유)</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 프로토타입은 "이미 만들어진 케이크를 통째로 복사"해서 새 케이크를 빨리 만드는 것이고, 플라이웨이트는 "같은 레시피(공유 데이터)를 여러 케이크가 공유"해서 메모리를 아끼는 것이다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="peurototaib-prototype-paeteon-gujo">프로토타입(Prototype) 패턴 구조</h3>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│  Prototype Registry (원본 보관소)                             │
+│                                                              │
+│  &quot;complex-model&quot; → ┌───────────────────────────────────┐    │
+│                    │  ComplexModel (초기화 비용 3초)     │    │
+│                    │  data: [...]  geometry: [...]       │    │
+│                    └───────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────┘
+           │
+           │ clone() 호출 (밀리초 단위)
+           ▼
+┌──────────────────────────────────────────────────────────────┐
+│  복제된 ComplexModel                                         │
+│                                                              │
+│  얕은 복사(Shallow Copy): 참조만 복사 → 원본과 내부 공유     │
+│  깊은 복사(Deep Copy): 모든 내부 객체 재귀 복사 → 완전 독립  │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>얕은 복사(Shallow Copy) vs 깊은 복사(Deep Copy)</strong></p>
+<pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">&#x2F;&#x2F; 얕은 복사 - Object.clone() 기본 동작
+ComplexModel copy = (ComplexModel) original.clone();
+&#x2F;&#x2F; copy.list == original.list → 공유! 한쪽 수정이 다른쪽에 영향
+
+&#x2F;&#x2F; 깊은 복사 - 직렬화(Serialization) 활용
+ComplexModel deepCopy = serialize_then_deserialize(original);
+&#x2F;&#x2F; copy.list != original.list → 완전 독립
+</code></pre>
+<h3 id="peulraiweiteu-flyweight-paeteon-gujo">플라이웨이트(Flyweight) 패턴 구조</h3>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│  FlyweightFactory (플라이웨이트 팩토리)                       │
+│  pool: { &quot;A-Arial-12-Black&quot; → CharFlyweight,  ... }          │
+└──────────────────────┬───────────────────────────────────────┘
+                       │ 공유 인스턴스 반환
+           ┌───────────┼───────────────────┐
+           ▼           ▼                   ▼
+┌──────────────┐ ┌──────────────┐  ┌──────────────┐
+│ CharFlyweight│ │ CharFlyweight│  │ CharFlyweight│
+│ char=&#x27;A&#x27;     │ │ char=&#x27;B&#x27;     │  │ char=&#x27;C&#x27;     │
+│ font=Arial   │ │ font=Arial   │  │ font=Arial   │
+│ size=12      │ │ size=12      │  │ size=12      │
+│ (내재 상태)  │ │ (내재 상태)  │  │ (내재 상태)  │
+└──────┬───────┘ └──────┬───────┘  └──────┬───────┘
+       │                │                  │
+  외재 상태(Extrinsic State): 클라이언트가 전달
+  위치(x, y), 색상(런타임 결정) 등
+</code></pre>
+<h3 id="naejae-sangtae-intrinsic-state-wa-oejae-sangtae-extrinsic-state">내재 상태(Intrinsic State)와 외재 상태(Extrinsic State)</h3>
+<table><thead><tr><th style="text-align: left">상태 유형</th><th style="text-align: left">설명</th><th style="text-align: left">저장 위치</th><th style="text-align: left">예시</th></tr></thead><tbody>
+<tr><td style="text-align: left">내재 상태 (Intrinsic State)</td><td style="text-align: left">공유 가능, 불변</td><td style="text-align: left">Flyweight 객체 내부</td><td style="text-align: left">글자 코드, 폰트, 크기</td></tr>
+<tr><td style="text-align: left">외재 상태 (Extrinsic State)</td><td style="text-align: left">인스턴스별 가변</td><td style="text-align: left">클라이언트가 전달</td><td style="text-align: left">화면 위치(x, y), 배경색</td></tr>
+</tbody></table>
+<p>이 분리가 플라이웨이트의 핵심이다. 내재 상태만 공유하고, 외재 상태는 매 호출마다 파라미터로 전달한다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 플라이웨이트는 공중화장실 거울(내재 상태, 공유)과 손님이 가져온 화장품(외재 상태, 개인 소유)의 분리다. 거울은 모두가 공유하고, 화장품은 각자 들고 다닌다.</p>
+<hr />
+<h2 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h2>
+<h3 id="peurototaib-vs-peulraiweiteu-bigyopyo">프로토타입 vs 플라이웨이트 비교표</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">프로토타입 (Prototype)</th><th style="text-align: left">플라이웨이트 (Flyweight)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>최적화 대상</strong></td><td style="text-align: left">객체 생성 <strong>시간</strong></td><td style="text-align: left">객체 <strong>메모리</strong> 사용량</td></tr>
+<tr><td style="text-align: left"><strong>동작 방식</strong></td><td style="text-align: left">기존 객체 복제(Clone)</td><td style="text-align: left">공유 인스턴스 재사용</td></tr>
+<tr><td style="text-align: left"><strong>인스턴스 수</strong></td><td style="text-align: left">복제마다 새 인스턴스</td><td style="text-align: left">동일 상태는 단일 인스턴스</td></tr>
+<tr><td style="text-align: left"><strong>상태 관리</strong></td><td style="text-align: left">복제 후 독립 상태</td><td style="text-align: left">내재 상태 공유, 외재 상태 분리</td></tr>
+<tr><td style="text-align: left"><strong>변경 안전성</strong></td><td style="text-align: left">독립적 (원본 영향 없음)</td><td style="text-align: left">공유 상태 변경 시 전체 영향</td></tr>
+<tr><td style="text-align: left"><strong>주요 위험</strong></td><td style="text-align: left">얕은 복사의 공유 참조 문제</td><td style="text-align: left">외재 상태 주입 누락</td></tr>
+<tr><td style="text-align: left"><strong>Java 구현</strong></td><td style="text-align: left"><code>Cloneable</code>, 직렬화 복사</td><td style="text-align: left"><code>HashMap</code> 캐시 팩토리</td></tr>
+<tr><td style="text-align: left"><strong>실사례</strong></td><td style="text-align: left">복잡한 도메인 객체 복사</td><td style="text-align: left">String Pool, Integer Cache</td></tr>
+</tbody></table>
+<h3 id="java-string-pool-peulraiweiteuyi-daepyo-sarye">Java String Pool: 플라이웨이트의 대표 사례</h3>
+<pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">String s1 = &quot;hello&quot;;
+String s2 = &quot;hello&quot;;
+System.out.println(s1 == s2);  &#x2F;&#x2F; true! 동일 인스턴스 (String Pool)
+
+String s3 = new String(&quot;hello&quot;);
+System.out.println(s1 == s3);  &#x2F;&#x2F; false (힙에 새 객체)
+</code></pre>
+<p>JVM은 문자열 리터럴을 String Pool에 캐싱하여 같은 문자열은 동일 인스턴스를 공유한다. Integer 캐시(-128~127)도 동일 원리다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 도서관 책(플라이웨이트)은 모두가 빌려 읽지만(공유), 메모를 추가하려면 복사본을 만들어야 한다(외재 상태 분리). 책 자체를 각자 구매하는 것은 프로토타입(복제) 방식이다.</p>
+<hr />
+<h2 id="4-bigyo-mic-teureideuopeu">4. 비교 및 트레이드오프</h2>
+<h3 id="geim-enjin-coejeoghwa-sinario">게임 엔진 최적화 시나리오</h3>
+<pre><code>총알(Bullet) 10만 개 동시 존재 시나리오:
+
+[플라이웨이트 적용 전]
+총알 하나: 스프라이트(500B) + 속도(8B) + 위치(16B) + 피해량(4B) = ~528B
+총알 10만 개: 528B × 100,000 = 52.8 MB
+
+[플라이웨이트 적용 후]
+내재 상태 (BulletFlyweight): 스프라이트(500B) + 피해량(4B) → 공유
+외재 상태 (클라이언트 전달): 속도(8B) + 위치(16B) = 24B
+총알 10만 개: 504B(공유 1개) + 24B × 100,000 = 2.9 MB
+
+절감: 52.8 MB → 2.9 MB (약 94% 감소)
+</code></pre>
+<h3 id="peurototaib-sayong-pandan-gijun">프로토타입 사용 판단 기준</h3>
+<table><thead><tr><th style="text-align: left">상황</th><th style="text-align: left">권장 여부</th></tr></thead><tbody>
+<tr><td style="text-align: left">DB 조회 포함 복잡한 초기화 (&gt;100ms)</td><td style="text-align: left">✅ 프로토타입 적합</td></tr>
+<tr><td style="text-align: left">객체 그래프가 깊고 복잡함</td><td style="text-align: left">⚠️ 깊은 복사 비용 고려</td></tr>
+<tr><td style="text-align: left">불변 객체 복사</td><td style="text-align: left">❌ 불필요 (공유하면 됨)</td></tr>
+<tr><td style="text-align: left">런타임 타입이 불명확한 객체 복사</td><td style="text-align: left">✅ 프로토타입 적합</td></tr>
+</tbody></table>
+<h3 id="peulraiweiteu-seolgye-si-juyisahang">플라이웨이트 설계 시 주의사항</h3>
+<ol>
+<li><strong>스레드 안전성</strong>: 내재 상태가 공유되므로 반드시 **불변(Immutable)**이어야 한다.</li>
+<li><strong>외재 상태 설계</strong>: 외재 상태가 너무 많으면 전달 비용이 절감 효과를 상쇄한다.</li>
+<li><strong>캐시 해제</strong>: 장기 실행 시스템에서 캐시가 메모리 누수(Memory Leak)로 연결될 수 있다. WeakReference 활용 고려.</li>
+</ol>
+<p>📢 <strong>섹션 요약 비유</strong>: 기술사 설계 문제에서 "대량 객체 성능 최적화"가 나오면, 먼저 "시간 최적화인가 vs 공간 최적화인가"를 구분하고 패턴을 선택해야 한다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-coejeoghwa-gibeob">5. 실무 적용 및 최적화 기법</h2>
+<table><thead><tr><th style="text-align: left">패턴</th><th style="text-align: left">기대 효과</th><th style="text-align: left">주의</th></tr></thead><tbody>
+<tr><td style="text-align: left">프로토타입</td><td style="text-align: left">생성 시간 수백 ms → ms 단위로 단축</td><td style="text-align: left">얕은 복사 참조 공유 버그 주의</td></tr>
+<tr><td style="text-align: left">플라이웨이트</td><td style="text-align: left">메모리 수십 MB → 수 MB로 감소</td><td style="text-align: left">외재 상태 분리 설계 필요</td></tr>
+</tbody></table>
+<p>두 패턴은 목적이 다르므로 <strong>동시에 적용</strong>할 수도 있다. 예를 들어, 복잡한 게임 맵 객체를 복제(프로토타입)하되, 맵 내 타일 텍스처는 플라이웨이트로 공유하는 방식이다.</p>
+<p>기술사 논술에서 "객체 생성 최적화" 주제가 나오면, 두 패턴의 최적화 대상 차이(시간 vs 공간)와 핵심 메커니즘(복제 vs 공유)을 명확히 구분하여 서술하면 높은 변별점을 얻을 수 있다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 프로토타입은 "3D 프린터로 빠르게 복사"하는 것이고, 플라이웨이트는 "도장(공유 폼)을 하나 만들어 수만 번 찍어내는" 것이다. 둘 다 효율적이지만 아끼는 자원이 다르다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">관계</th><th style="text-align: left">개념</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">상위 개념</td><td style="text-align: left">Creational / Structural Pattern</td><td style="text-align: left">Prototype은 생성 패턴, Flyweight는 구조 패턴</td></tr>
+<tr><td style="text-align: left">하위 개념</td><td style="text-align: left">Shallow Copy (얕은 복사)</td><td style="text-align: left">참조만 복사, 내부 객체 공유</td></tr>
+<tr><td style="text-align: left">하위 개념</td><td style="text-align: left">Deep Copy (깊은 복사)</td><td style="text-align: left">모든 내부 객체 재귀 복사</td></tr>
+<tr><td style="text-align: left">하위 개념</td><td style="text-align: left">Intrinsic State (내재 상태)</td><td style="text-align: left">플라이웨이트 공유 상태, 불변</td></tr>
+<tr><td style="text-align: left">하위 개념</td><td style="text-align: left">Extrinsic State (외재 상태)</td><td style="text-align: left">클라이언트가 전달하는 가변 상태</td></tr>
+<tr><td style="text-align: left">연관 개념</td><td style="text-align: left">String Pool</td><td style="text-align: left">JVM의 플라이웨이트 구현체</td></tr>
+<tr><td style="text-align: left">연관 개념</td><td style="text-align: left">Integer Cache</td><td style="text-align: left">-128~127 캐싱, 플라이웨이트</td></tr>
+<tr><td style="text-align: left">연관 개념</td><td style="text-align: left">Object Pool Pattern (객체 풀)</td><td style="text-align: left">재사용 가능한 인스턴스 관리, 프로토타입 응용</td></tr>
+<tr><td style="text-align: left">연관 개념</td><td style="text-align: left">WeakReference</td><td style="text-align: left">플라이웨이트 캐시 메모리 누수 방지</td></tr>
+</tbody></table>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ul>
+<li>프로토타입은 이미 만들어 놓은 쿠키(원본)를 틀로 찍어서 똑같은 쿠키를 빨리 만드는 거예요. 새 반죽부터 시작하면 너무 오래 걸리니까요.</li>
+<li>플라이웨이트는 같은 모양의 레고 블록(공유 부품)을 여러 레고 작품에서 함께 쓰는 거예요. 각자 가지면 너무 많이 필요하니까요.</li>
+<li>프로토타입은 "빠르게 복사", 플라이웨이트는 "공유해서 아끼기" — 두 가지는 목적이 달라요!</li>
+</ul>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

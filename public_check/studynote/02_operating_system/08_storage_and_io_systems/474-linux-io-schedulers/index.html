@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>474. 리눅스 I&#x2F;O 스케줄러 - NOOP, CFQ(Completely Fair Queuing), Deadline, BFQ — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 23, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 리눅스 I/O 스케줄러는 수십 개의 유저 앱들이 하드디스크나 SSD에 읽고 쓰겠다고 마구잡이로 던진 1차원적인 요청(Queue)들을 가로채, <strong>하드웨어의 물리적 한계(Seek Time)를 덮어주고 프로세스 간의 공평성을 보장하도록 순서와 타이밍을 재배치(Sorting &amp; Merging)하는 커널 내부의 관제탑</strong>이다.
+<strong>비유</strong>: I/O 스케줄러는 대형 놀이공원의 <strong>놀이기구 탑승 줄 세우기 알바생</strong>과 같다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: 운영체제의 파일 시스템(EXT4) 아래, 그리고 진짜 하드웨어(디바이스 드라이버) 위에 샌드위치처럼 껴있는 '블록 I/O 계층(Block Layer)'의 심장부다. <code>read/write</code> 시스템 콜로 쏟아지는 요청 블록(Sector 100번지, 5000번지)들을 모아서, 합칠 건 합치고(Merge), 순서 바꿀 건 바꾸는(Sort) 4가지 대표적 알고리즘(NOOP, CFQ, Deadline, BFQ)의 집합체다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 1990년대 리눅스 서버에 접속자가 10명만 넘어가도 하드디스크가 "드르륵 드르륵" 비명을 지르며 서버가 멈췄다(I/O 스래싱). 1번 앱이 10번지 찌르고, 2번 앱이 9000번지를 찌르는 랜덤 I/O 앞에서 기계식 바늘(Head)은 와이퍼처럼 널뛰다 모터가 타버렸다. 이 물리적 파국을 막기 위해 커널은 "야, 디스크로 보내기 전에 내 큐(Queue)에 잠시 다 대기시켜봐. 내가 바늘 동선 제일 짧게, 그리고 아무도 안 굶어 죽게 줄(스케줄) 다시 예쁘게 세워줄게!"라며 교통정리에 총대를 메고 나선 것이다.</p>
+<ul>
+<li><strong>NOOP (없음)</strong>: "나 알 바 아님. 온 순서대로 막 타!(FCFS)" (손님이 순간 이동하는 SSD 포탈 환경에서만 가능).</li>
+<li><strong>CFQ (완전 공평)</strong>: "A 학교, B 학교, C 학교 학생 1명씩 번갈아 가며 한 줄로 예쁘게 타세요!" (서버 전체의 앱들이 골고루 디스크를 쪼개 쓰는 낭만).</li>
+<li><strong>Deadline (시간제한)</strong>: "VIP 손님은 무조건 0.5초 안에 태워줘야 하니까, 일반 줄 무시하고 VIP부터 냅다 꽂아!" (구석에 처박힌 파일 렉 방지).</li>
+<li><strong>BFQ (예산 할당)</strong>: "너네 학교 덩치 제일 크니까 이번 턴에 10명 태워주고, 저 학교는 2명 태워줄게(대역폭 분배)." (현대 스마트폰의 렉 없는 터치감의 비밀).</li>
+</ul>
+</li>
+<li>
+<p><strong>등장 배경 및 저장매체의 진화에 따른 멸망과 부활</strong>:</p>
+<ol>
+<li><strong>HDD의 암흑기</strong>: Seek Time 8ms를 줄이기 위해 영혼을 갈아 넣은 CFQ(엘리베이터)가 리눅스 천하를 지배함.</li>
+<li><strong>SSD의 파괴적 등장</strong>: 바늘이 없어져 정렬(Sorting)이 오히려 렉이 됨. CPU만 처먹는 CFQ가 버려지고 NOOP(무지성)이 왕좌에 오름.</li>
+<li><strong>Multi-Queue (<code>blk-mq</code>)의 혁명</strong>: 코어 64개가 SSD에 100만 IOPS를 쏠 때 큐 1개(Single Queue)에서 락(Lock)이 걸리자, 큐를 수만 개로 찢어버리며 스케줄러 생태계를 완전히 물갈이함.</li>
+</ol>
+</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────────────────┐
+│        리눅스 4대 I&#x2F;O 스케줄러의 아키텍처 및 철학 비교 시각화           │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│ ▶ 1. NOOP (No Operation &#x2F; none) - SSD의 영원한 단짝                     │
+│   [앱 요청] ─▶ [단순 FIFO 큐] ─(정렬 없이 즉시)─▶ [SSD&#x2F;NVMe]            │
+│   🚀 장점: CPU 오버헤드 0%. 순간 이동하는 SSD에 가장 미친 속도 뿜어냄.  │
+│                                                                         │
+│ ▶ 2. Deadline (데드라인) - 기아(Starvation) 박멸자                      │
+│   [읽기 큐: 500ms 제한] + [쓰기 큐: 5초 제한] ──▶ [엘리베이터 큐]       │
+│   ⏱️ 장점: 500ms 다 된 똥줄 타는 요청이 생기면 엘리베이터 동선 다       │
+│           무시하고 즉시 그쪽으로 바늘 꺾어버림. (DB 서버의 구원자)      │
+│                                                                         │
+│ ▶ 3. CFQ (Completely Fair Queuing) - 옛날 HDD의 제왕                    │
+│   [크롬 큐] [엑셀 큐] [카톡 큐] -&gt; 각자 100ms씩 공평하게 디스크 줌      │
+│   ⚖️ 장점: 한 앱이 디스크 100% 독점해 서버 뻗는 걸 완벽 차단.           │
+│                                                                         │
+│ ▶ 4. BFQ (Budget Fair Queuing) - 현대 모바일&#x2F;데스크탑의 패자            │
+│   CFQ 진화형. &quot;디스크 시간&quot;이 아닌 &quot;데이터 예산(Byte)&quot; 단위로 공평 배분.│
+│   📱 장점: 뒤에서 10GB 다운받아도 내 마우스 커서와 영상은 절대 안 끊김! │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 리눅스 서버를 깔고 아무 세팅도 안 하면 서버의 잠재력을 50%도 못 쓴다. 하드디스크가 달린 옛날 서버에 <code>NOOP</code>을 주면 바늘이 널뛰다 모터가 타버리고, 최신 NVMe SSD가 꽂힌 AWS 클라우드에 <code>CFQ</code>를 켜두면 CPU 코어가 정렬 헛수고를 하느라 IOPS가 1/10로 박살 난다. 하드웨어의 물리적 쌩얼을 정확히 파악하고 <code>echo none &gt; /sys/block/sda/queue/scheduler</code>를 때려 넣는 자가 진정한 데브옵스(DevOps) 엔지니어다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="1-deadline-seukejulreoyi-taimaus-heugmasul">1. Deadline 스케줄러의 타임아웃 흑마술</h3>
+<p>디스크는 '쓰기(Write)'보다 **'읽기(Read)'**가 수만 배 더 시급하다.</p>
+<ul>
+<li>앱이 파일에 값을 덮어쓰는(Write) 건, 램 버퍼에 대충 던져놓고 딴일 하러 가면 된다(지연 쓰기).</li>
+<li>하지만 파일을 읽을(Read) 때는? 디스크에서 파일이 올라올 때까지 앱 스레드가 꼼짝없이 기절(Blocked)해서 기다려야 한다.</li>
+<li><strong>Deadline의 철학</strong>:
+<ol>
+<li>엘리베이터(C-LOOK)처럼 거리를 계산해 큐를 정렬한다.</li>
+<li>근데 큐 옆에 **'타이머 큐'**를 두 개 더 판다. (Read 큐 = 500ms 제한, Write 큐 = 5초 제한). 읽기에 극단적 특혜를 줬다.</li>
+<li>평소엔 엘리베이터 큐대로 예쁘게 긁다가, 타임아웃 500ms가 임박한 Read 요청이 터지면?</li>
+<li>엘리베이터 스케줄을 박살 내고, 바늘을 휙 꺾어서 그 불쌍한 Read 데이터부터 구출해 온다.</li>
+<li><strong>결과</strong>: 특정 데이터가 디스크 구석에 박혀 영원히 굶어 죽는(Starvation) 것을 막아내며, DB 서버의 응답 기복(Variance)을 환상적으로 플랫하게 잡아준다. (오라클 DB의 추천 1순위 튜닝).</li>
+</ol>
+</li>
+</ul>
+<h3 id="2-cfq-completely-fair-queuing-yi-nangmangwa-myeolmang">2. CFQ (Completely Fair Queuing)의 낭만과 멸망</h3>
+<p>CFQ는 리눅스 2.6 시절을 씹어 먹던 제왕이었다.</p>
+<ul>
+<li><strong>동작 원리</strong>: 64개의 프로세스가 돌고 있으면, OS 안에 <strong>64개의 내부 I/O 큐</strong>를 따로 판다.</li>
+<li>그리고 디스크(HDD)라는 거대한 피자를 64개의 프로세스에게 돌아가면서 '시간 조각(Time Slice)'으로 떼어준다.</li>
+<li>"크롬아, 네가 100ms 동안 디스크 혼자 독점해서 다 긁어! 그다음은 엑셀, 네가 100ms 독점해!"</li>
+<li><strong>장점</strong>: 어떤 미친 프로세스(바이러스)가 1초에 1억 번 디스크를 긁어대도, 걔한테 허락된 시간은 100ms뿐이라 다른 프로세스들이 절대 렉이 안 걸린다. 궁극의 공평성(Fairness)이다.</li>
+<li><strong>멸망의 이유 (SSD)</strong>: SSD 시대가 오자 이 100ms 시간 배분이 최악의 족쇄가 되었다. SSD는 동시에 10만 개를 꽂아도 다 처리하는 괴물인데, CFQ가 "잠깐! 엑셀 1명만 들어가서 100ms 써라!" 하고 입구 컷을 해버리니 SSD의 스피드가 1%도 발휘되지 못했다. 결국 커널 블록 레이어에서 불명예 퇴출당했다.</li>
+</ul>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>요청 또는 이벤트 발생</strong>: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.</li>
+<li><strong>현재 상태 확인</strong>: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.</li>
+<li><strong>정책 적용 및 자원 배정</strong>: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.</li>
+<li><strong>결과 반영 및 후속 처리</strong>: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.</li>
+</ol>
+<h3 id="bigyo-1-single-queue-guhyeong-vs-multi-queue-coesin-blk-mq">비교 1: Single-Queue(구형) vs Multi-Queue(최신 blk-mq)</h3>
+<p>리눅스 I/O 스케줄러 역사의 가장 거대한 대지진(Paradigm Shift)이다.</p>
+<table><thead><tr><th style="text-align: left">척도</th><th style="text-align: left">구형 블록 레이어 (Single Queue)</th><th style="text-align: left">최신 blk-mq (Multi-Queue)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>큐(Queue) 개수</strong></td><td style="text-align: left">시스템 전체에 딱 <strong>1개</strong>의 디스크 큐</td><td style="text-align: left"><strong>CPU 코어 개수</strong>만큼 큐를 뚫음 (예: 128개)</td></tr>
+<tr><td style="text-align: left"><strong>멀티코어 락(Lock)</strong></td><td style="text-align: left">64코어가 1개 큐에 쑤셔 넣느라 <strong>Spinlock 경합 터짐</strong></td><td style="text-align: left">각자 자기 코어 큐에 넣으면 끝 <strong>(Lock Free 🚀)</strong></td></tr>
+<tr><td style="text-align: left"><strong>대응 스토리지</strong></td><td style="text-align: left">느린 SATA HDD (1개 큐로도 충분함)</td><td style="text-align: left"><strong>NVMe SSD (초당 수백만 IOPS 감당)</strong></td></tr>
+<tr><td style="text-align: left"><strong>사라진 스케줄러</strong></td><td style="text-align: left">CFQ, 낡은 Deadline 영원히 폐기 처분됨</td><td style="text-align: left"><code>mq-deadline</code>, <code>bfq</code>, <code>none</code> 으로 완전 물갈이</td></tr>
+</tbody></table>
+<h3 id="bfq-budget-fair-queuing-yi-seumateupon-hyeogmyeong">BFQ (Budget Fair Queuing)의 스마트폰 혁명</h3>
+<p>CFQ가 SSD에서 처참히 망하자, 똑똑한 이탈리아 해커들이 <strong>BFQ</strong>라는 걸그룹 같은 이름의 스케줄러를 커널에 이식했다.</p>
+<ul>
+<li>CFQ의 문제점: "엑셀 너 디스크 100ms(시간) 동안 써!"라고 했더니, 빠른 SSD에서 엑셀 혼자 100ms 동안 10GB를 긁어버렸다(대역폭 독식).</li>
+<li><strong>BFQ의 흑마술</strong>: "시간이 아니라 데이터 예산(Budget)을 쏜다! 엑셀 너는 딱 50MB(섹터 개수)만 긁고 나와!"</li>
+<li><strong>휴리스틱 (가중치)</strong>: BFQ는 유저가 화면에서 **터치(Touch)**하거나 마우스를 움직이는 액티브한 프로세스(GUI)를 귀신같이 알아채고 걔한테 I/O 대역폭을 왕창 몰아준다.</li>
+<li><strong>결과</strong>: 안드로이드 폰 뒤에서 10GB짜리 원신(Genshin) 게임을 다운받는 중(디스크 100% 혹사)이라도, 유저가 카카오톡 창을 스크롤하면 **1프레임의 버벅거림(Jitter)도 없이 부드럽게 내려가는 솜털 같은 체감 성능(UX 극대화)**을 달성하며 모바일 OS 천하를 통일했다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────┬────────────┬────────────┬─────────────────────────────┐
+│ 스토리지   │ 최적의 튜닝 │ 피해야 할 독약 │ 시스템 체감 효과     │
+├──────────┼────────────┼────────────┼─────────────────────────────┤
+│ NVMe SSD │ `none`     │ `bfq`, `cfq`│ CPU 연산 0, 대역폭 폭발    │
+│ SATA HDD │ `mq-deadline`│ `none`      │ 드르륵 소리 줄고 수명연장│
+│ 스마트폰 │ `bfq`      │ `none`      │ 렉 없는 부드러운 터치감    │
+└──────────┴────────────┴────────────┴─────────────────────────────┘
+</code></pre>
+<p><strong>[매트릭스 해설]</strong> "SSD 샀으니 무조건 none(NOOP) 쓰면 되는 거 아냐?" 반은 맞고 반은 틀렸다. AWS 서버에서 DB 돌릴 땐 <code>none</code>이 신(God)이지만, 데스크탑이나 리눅스 노트북에서 <code>none</code>을 쓰면 백그라운드 윈도우 업데이트 돌 때 내 마우스 커서가 툭툭 끊기는 지옥을 맛본다. 용도(서버 스루풋 vs 유저 UX 체감)에 따라 무기를 갈아 끼우는 것이 아키텍트의 실력이다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="bigyo-1-single-queue-guhyeong-vs-multi-queue-coesin-blk-mq-1">비교 1: Single-Queue(구형) vs Multi-Queue(최신 blk-mq)</h3>
+<p>리눅스 I/O 스케줄러 역사의 가장 거대한 대지진(Paradigm Shift)이다.</p>
+<table><thead><tr><th style="text-align: left">척도</th><th style="text-align: left">구형 블록 레이어 (Single Queue)</th><th style="text-align: left">최신 blk-mq (Multi-Queue)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>큐(Queue) 개수</strong></td><td style="text-align: left">시스템 전체에 딱 <strong>1개</strong>의 디스크 큐</td><td style="text-align: left"><strong>CPU 코어 개수</strong>만큼 큐를 뚫음 (예: 128개)</td></tr>
+<tr><td style="text-align: left"><strong>멀티코어 락(Lock)</strong></td><td style="text-align: left">64코어가 1개 큐에 쑤셔 넣느라 <strong>Spinlock 경합 터짐</strong></td><td style="text-align: left">각자 자기 코어 큐에 넣으면 끝 <strong>(Lock Free 🚀)</strong></td></tr>
+<tr><td style="text-align: left"><strong>대응 스토리지</strong></td><td style="text-align: left">느린 SATA HDD (1개 큐로도 충분함)</td><td style="text-align: left"><strong>NVMe SSD (초당 수백만 IOPS 감당)</strong></td></tr>
+<tr><td style="text-align: left"><strong>사라진 스케줄러</strong></td><td style="text-align: left">CFQ, 낡은 Deadline 영원히 폐기 처분됨</td><td style="text-align: left"><code>mq-deadline</code>, <code>bfq</code>, <code>none</code> 으로 완전 물갈이</td></tr>
+</tbody></table>
+<h3 id="bfq-budget-fair-queuing-yi-seumateupon-hyeogmyeong-1">BFQ (Budget Fair Queuing)의 스마트폰 혁명</h3>
+<p>CFQ가 SSD에서 처참히 망하자, 똑똑한 이탈리아 해커들이 <strong>BFQ</strong>라는 걸그룹 같은 이름의 스케줄러를 커널에 이식했다.</p>
+<ul>
+<li>CFQ의 문제점: "엑셀 너 디스크 100ms(시간) 동안 써!"라고 했더니, 빠른 SSD에서 엑셀 혼자 100ms 동안 10GB를 긁어버렸다(대역폭 독식).</li>
+<li><strong>BFQ의 흑마술</strong>: "시간이 아니라 데이터 예산(Budget)을 쏜다! 엑셀 너는 딱 50MB(섹터 개수)만 긁고 나와!"</li>
+<li><strong>휴리스틱 (가중치)</strong>: BFQ는 유저가 화면에서 **터치(Touch)**하거나 마우스를 움직이는 액티브한 프로세스(GUI)를 귀신같이 알아채고 걔한테 I/O 대역폭을 왕창 몰아준다.</li>
+<li><strong>결과</strong>: 안드로이드 폰 뒤에서 10GB짜리 원신(Genshin) 게임을 다운받는 중(디스크 100% 혹사)이라도, 유저가 카카오톡 창을 스크롤하면 **1프레임의 버벅거림(Jitter)도 없이 부드럽게 내려가는 솜털 같은 체감 성능(UX 극대화)**을 달성하며 모바일 OS 천하를 통일했다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────┬────────────┬────────────┬─────────────────────────────┐
+│ 스토리지   │ 최적의 튜닝 │ 피해야 할 독약 │ 시스템 체감 효과     │
+├──────────┼────────────┼────────────┼─────────────────────────────┤
+│ NVMe SSD │ `none`     │ `bfq`, `cfq`│ CPU 연산 0, 대역폭 폭발    │
+│ SATA HDD │ `mq-deadline`│ `none`      │ 드르륵 소리 줄고 수명연장│
+│ 스마트폰 │ `bfq`      │ `none`      │ 렉 없는 부드러운 터치감    │
+└──────────┴────────────┴────────────┴─────────────────────────────┘
+</code></pre>
+<p><strong>[매트릭스 해설]</strong> "SSD 샀으니 무조건 none(NOOP) 쓰면 되는 거 아냐?" 반은 맞고 반은 틀렸다. AWS 서버에서 DB 돌릴 땐 <code>none</code>이 신(God)이지만, 데스크탑이나 리눅스 노트북에서 <code>none</code>을 쓰면 백그라운드 윈도우 업데이트 돌 때 내 마우스 커서가 툭툭 끊기는 지옥을 맛본다. 용도(서버 스루풋 vs 유저 UX 체감)에 따라 무기를 갈아 끼우는 것이 아키텍트의 실력이다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="silmu-sinario-aws-ebs-bolryumgwa-echo-noneyi-mabeob">실무 시나리오: AWS EBS 볼륨과 <code>echo none</code>의 마법</h3>
+<ol>
+<li><strong>문제 상황</strong>: 클라우드(AWS EC2)에서 비싼 돈을 주고 IOPS 64,000짜리 <code>io2</code> 볼륨(NVMe 기반)을 붙여 MySQL을 켰는데, IOPS가 10,000밖에 안 나오고 CPU <code>sy</code>(커널 로드)가 치솟는다.</li>
+<li><strong>원인 분석</strong>:
+<ul>
+<li>AWS에서 제공한 기본 리눅스 이미지가 I/O 스케줄러를 <code>mq-deadline</code>이나 <code>bfq</code>로 세팅해 둔 것이다.</li>
+<li>디스크가 너무 빠르다 보니, OS 커널이 쿼리를 예쁘게 정렬하고 시간제한 재고(Deadline 연산) 예산 배분(BFQ 연산)하느라 오히려 CPU가 발목을 잡혀 트래픽을 못 쏴주고 있었다.</li>
+</ul>
+</li>
+<li><strong>신의 튜닝 (1초 컷)</strong>:
+<ul>
+<li><code>cat /sys/block/nvme0n1/queue/scheduler</code> 로 확인해 본다. <code>[mq-deadline] none bfq</code></li>
+<li>루트 권한으로 <strong><code>echo none &gt; /sys/block/nvme0n1/queue/scheduler</code></strong> 를 때려 넣는다.</li>
+<li>이 명령어 한 줄이 OS 커널의 모든 I/O 참견(정렬, 타이머)을 0으로 셧다운 시키고, MySQL의 쿼리를 0.001초의 검열도 없이 NVMe 컨트롤러 다이렉트로 내리꽂게 만든다.</li>
+<li>즉시 IOPS가 64,000 풀 한계치로 폭발하며, CPU 커널 로드(<code>sy</code>)는 1% 미만으로 쾌적하게 떨어진다. AWS 클라우드 아키텍트의 필수 생존 팁이다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="kvm-haipeobaijeo-2jung-seukejulringyi-camsa">KVM 하이퍼바이저 2중 스케줄링의 참사</h3>
+<p>가상 머신(VM) 안의 우분투(Guest)가 <code>mq-deadline</code>으로 I/O를 정렬해서 밑으로 보냈다. 호스트(AWS 서버)에 있는 진짜 리눅스 커널이 그걸 받아서 또 <code>mq-deadline</code>으로 2차 정렬을 한다.
+정렬을 2번이나 하느라 CPU만 낭비되고 시간은 두 배로 늦어진다(Double Scheduling).
+<strong>결론</strong>: VM(가상 머신) 내부의 게스트 OS는 하드웨어의 물리적 쌩얼을 어차피 모른다(가짜 디스크). 따라서 가상 머신 안의 리눅스는 묻지도 따지지도 않고 스케줄러를 무조건 **<code>none (NOOP)</code>**으로 밀어버리고, 실제 물리 하드디스크가 달린 가장 밑바닥 호스트 OS 딱 1명만 스케줄링을 돌려야 서버가 타지 않는다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">내용</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>CPU-디바이스 매칭 최적화</strong></td><td style="text-align: left">HDD(바늘 이동 최소화), NVMe(CPU 락 프리 직통), 모바일(UI 반응성 우선) 등 하드웨어의 물리적 민낯에 완벽히 동기화된 맞춤형 스루풋 달성</td></tr>
+<tr><td style="text-align: left"><strong>블록 레이어 병목 분쇄 (blk-mq)</strong></td><td style="text-align: left">싱글 큐의 스핀락 지옥을 다중 큐로 찢어버려, 코어가 128개인 매니코어 서버에서도 성능 감소 없는 선형적 I/O 확장성(Scalability) 제공</td></tr>
+<tr><td style="text-align: left"><strong>꼬리 지연(Tail Latency) 방어</strong></td><td style="text-align: left">Deadline 큐와 BFQ 예산 분배를 통해, 디스크 과부하 상태에서도 특정 프로세스가 무한 응답 대기에 빠지는 기아 현상(Starvation)을 100% 억제</td></tr>
+</tbody></table>
+<h3 id="gyeolron-mic-mirae-jeonmang">결론 및 미래 전망</h3>
+<p>리눅스 I/O 스케줄러 (NOOP, CFQ, Deadline, BFQ)의 핏빛 진화사는, "소프트웨어(OS)의 낭만적인 통제가 하드웨어(SSD)의 무식한 물리적 스피드 앞에 어떻게 무너지고 타협해 왔는가"를 보여주는 가장 극적인 기술 다큐멘터리다. 쇳덩어리 바늘(HDD)을 달래보려 엘리베이터(CFQ)를 깎던 낭만파 엔지니어들은, 전자가 순간 이동을 하는 반도체(NVMe) 앞에서는 모든 간섭을 끄고 비켜서는 것(NOOP/none)만이 유일한 정답임을 인정하고 스스로 권력을 내려놓았다(<code>blk-mq</code> 도입). 앞으로 CXL 기술과 Storage-Class Memory(SCM)가 대중화되어 램과 디스크의 속도 차이가 사라지게 되면, 커널 블록 레이어의 복잡한 스케줄링 로직은 완전히 소멸하고 오직 가상 메모리 매핑(mmap)을 통한 하드웨어 다이렉트 접근만이 살아남는 'Zero-OS-Overhead' 시대로 천하 통일될 것이다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">기초 자원 관리 문제
+    ↓
+리눅스 I&#x2F;O 스케줄러
+    ↓
+성능·격리·공정성 최적화
+    ↓
+가상화·관측·자동화 통합
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">리눅스 I/O 스케줄러</td><td style="text-align: left">운영체제 자원 관리와 보호 정책이 실제로 적용되는 핵심 주제</td></tr>
+<tr><td style="text-align: left">커널 (Kernel)</td><td style="text-align: left">정책 집행, 상태 전이, 시스템 호출 처리의 중심</td></tr>
+<tr><td style="text-align: left">프로세스/스레드</td><td style="text-align: left">CPU, 메모리, 동기화 자원과 직접 연결되는 실행 단위</td></tr>
+<tr><td style="text-align: left">메모리/I/O</td><td style="text-align: left">성능 병목과 보호 요구사항이 함께 드러나는 연계 영역</td></tr>
+<tr><td style="text-align: left">가상화/보안</td><td style="text-align: left">격리, 제어, 관측 확장 관점에서 해당 주제가 연결되는 상위 개념</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

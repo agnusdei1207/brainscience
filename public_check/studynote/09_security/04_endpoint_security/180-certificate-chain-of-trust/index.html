@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>180. 인증서 체인 검증 — Root CA → Intermediate CA → End Entity — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote security
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p>⚠️ 이 문서는 해커가 가짜 도장을 위조하는 것을 막기 위해 브라우저가 접속한 웹사이트(네이버)의 인증서부터 시작해 꼬리에 꼬리를 물고 올라가며 도장을 검사하여, 마침내 내 컴퓨터 뱃속에 하드코딩된 '절대 신뢰의 뿌리(Root CA)'에 도달할 때까지 멈추지 않는 암호학적 연쇄 검문 시스템, '인증서 체인'을 다룹니다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h1 id="180-injeungseo-cein-certificate-chain-of-trust">180. 인증서 체인 (Certificate Chain of Trust)</h1>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 인증서 체인(Chain of Trust)은 일반 웹 서버(End Entity)의 인증서가 혼자 덜렁 존재하는 것이 아니라, 그 도장을 찍어준 <strong>중간 인증기관(Intermediate CA), 그리고 중간 기관을 임명해 준 최상위 보스(Root CA)까지 2단계, 3단계로 서명이 꼬리를 물고 이어져 있는 계층적 신뢰 구조</strong>다.</li>
+<li><strong>가치</strong>: 브라우저는 이 체인을 밑바닥부터 한 칸씩 거슬러 올라가며 서명(도장) 수학 계산을 반복한다. 중간에 도장이 하나라도 깨지거나 끊기면 즉시 접속을 폭파시켜버리므로, 해커가 말단 인증서 하나를 어설프게 위조하더라도 윗선의 족보(체인)를 통째로 위조하지 않는 이상 절대 뚫을 수 없는 철벽 방어선이 된다.</li>
+<li><strong>융합</strong>: 보안 강화를 위해 가장 꼭대기에 있는 **Root CA는 절대 인터넷에 연결하지 않고 오프라인 금고에 동면(격리)**시키며, 혹시나 사고가 터지면 중간 CA(허리)만 가위로 싹둑 잘라내 버리는(폐기) 꼬리 자르기 생태계를 완벽하게 융합해 냈다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h3>
+<p>우리가 앞서 배운 [159번 문서 PKI]에서 "경찰청장(Root CA)이 도장을 찍어준다"고 했다.
+하지만 현실 세계를 보라. 전 세계 웹사이트가 20억 개다. 경찰청장 한 명이 하루 종일 도장만 찍고 앉아있을 수 있는가? 경찰청장이 피곤해서 실수라도 하거나, 도장 잉크(마스터 개인키)를 도둑맞으면 세상의 20억 개 사이트가 그날 하루아침에 한 방에 멸망한다.</p>
+<p>그래서 현실적인 **'다단계 피라미드 권력 위임 구조'**를 만들었다.</p>
+<ol>
+<li><strong>Root CA (대빵)</strong>: 10년에 딱 한 번 금고에서 나와서, 믿을 만한 부하(중간 CA) 10명한테 "내가 너희를 임명한다 쾅!" 도장 찍어주고 다시 금고(오프라인 HSM)로 들어가 평생 동면한다.</li>
+<li><strong>Intermediate CA (중간 보스)</strong>: 대빵에게 받은 임명장을 벽에 걸어두고, 인터넷에 24시간 접속해서 매일 찾아오는 10만 명의 백성(네이버, 구글 등)들에게 대리인 자격으로 열심히 인증서 도장을 찍어준다.</li>
+<li><strong>End-Entity (말단 서버)</strong>: 네이버 서버는 손님이 오면 자기 신분증 1장만 주는 게 아니라, <strong>[내 신분증 + 중간 보스의 임명장] 2장을 스테이플러로 철해서(Chain 묶음) 뭉텅이로 던져준다.</strong></li>
+</ol>
+<p>손님(브라우저)은 이 뭉텅이를 받고, 도장을 꼬리에 꼬리를 물고 역추적(추적 검사)해 올라간다. 이것이 위대한 **Chain of Trust(신뢰의 사슬)**다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 회사에 처음 온 신입사원이 저한테 물건을 팔러 왔습니다. 전 이 신입을 못 믿습니다. 신입이 "대리님 명함(중간 CA)"을 같이 줍니다. 전 대리도 못 믿습니다. 대리 명함 뒤에 "사장님 친필 결재 도장(Root CA)"이 찍혀 있습니다. 마침 저희 집 거실엔 진짜 사장님 도장 무늬(Root Store)가 액자에 걸려있거든요. 대조해 보니 도장 무늬가 100% 똑같습니다. "사장님이 대리를 임명했고, 대리가 신입을 보냈구나!" 족보가 완벽히 이어지니 신입사원을 100% 믿고 물건을 사줍니다.</p>
+</blockquote>
+<hr />
+<h3 id="2-guseongyoso">2. 구성요소</h3>
+<p>앨리스(크롬 브라우저)가 네이버에 접속했을 때 벌어지는 0.01초의 암호학적 스릴러다.</p>
+<h4 id="step-1-maldan-geomsa-leaf-certificate">Step 1: 말단 검사 (Leaf Certificate)</h4>
+<ul>
+<li>네이버가 앨리스에게 신분증을 준다. 신분증 겉면에 "이거 발급자(Issuer): DigiCert G2 (중간 보스)" 라고 적혀있다.</li>
+<li>앨리스는 함께 배달 온 'DigiCert G2의 인증서'를 뜯어내, 그 안에 들어있는 <strong>공개키</strong>를 뽑아낸다.</li>
+<li>그 공개키로 네이버 신분증 맨 밑에 찍힌 암호화된 도장(서명)을 풀어본다. 찰칵! 무사히 풀린다. (1단계 사슬 연결 성공! "네이버는 가짜가 아니다!")</li>
+</ul>
+<h4 id="step-2-junggan-boseu-geomsa-intermediate-certificate">Step 2: 중간 보스 검사 (Intermediate Certificate)</h4>
+<ul>
+<li>이제 네이버가 가짜가 아닌 건 알겠는데, "이 도장을 찍어준 중간 보스(DigiCert G2) 이놈 사기꾼 아냐?" 의심이 든다.</li>
+<li>중간 보스 신분증을 까본다. 겉면에 "발급자(Issuer): DigiCert Global Root G1 (대빵)" 라고 적혀있다.</li>
+<li>앨리스 브라우저는 **내 컴퓨터 하드디스크(윈도우 OS의 신뢰할 수 있는 루트 저장소)**를 허겁지겁 뒤진다.</li>
+</ul>
+<h4 id="step-3-jeoldae-sinroeyi-bburi-dodal-root-ca">Step 3: 절대 신뢰의 뿌리 도달 (Root CA)</h4>
+<ul>
+<li>오 마이 갓! 내 윈도우 OS 뱃속에 마이크로소프트가 공장에서부터 하드코딩해서 심어놓은 '전 세계 대빵 명단(Root Store)' 중에 딱 저 <code>DigiCert Global Root G1</code> 할아버지의 인증서 파일이 고이 모셔져 있다!</li>
+<li>뱃속에 있던 대빵 할아버지의 <strong>공개키</strong>를 꺼내서, 중간 보스 신분증 밑에 찍힌 도장을 문질러본다. 찰칵! 100% 풀린다.</li>
+<li><strong>최종 판결</strong>: "할아버지가 중간 보스를 임명했고(사슬 2), 중간 보스가 네이버를 임명했군(사슬 1). 사슬이 내 뱃속까지 완벽히 이어졌다. 네이버는 진짜다. 접속 허가(Green Light)!!"</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────────────────────────────┐
+│           인증서 체인(Chain of Trust)의 서명 물고 물기(역추적) 시각화          │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│ [ 💻 내 컴퓨터 뱃속 (미리 깔려있는 정답지) ]                                   │
+│    👑 Root CA 인증서 (DigiCert Root G1)                                        │
+│        - 스스로 자기 도장 찍음 (Self-Signed)                                   │
+│        - ★ 여기서 &#x27;공개키(Root_Pub)&#x27;를 뽑아내서 밑에 놈을 검사함!              │
+│               │ (서명&#x2F;도장 검사 🔍)                                            │
+│               ▼                                                                │
+│ [ 🌐 인터넷에서 통신으로 날아온 파일 뭉텅이들 ]                                │
+│    👮 Intermediate CA 인증서 (DigiCert G2)                                     │
+│        - Root CA의 마스터 개인키로 쾅! 서명된 상태                             │
+│        - ★ 여기서 &#x27;공개키(Inter_Pub)&#x27;를 뽑아내서 밑에 놈을 검사함!             │
+│               │ (서명&#x2F;도장 검사 🔍)                                            │
+│               ▼                                                                │
+│    🏢 End-Entity 인증서 (www.naver.com)                                        │
+│        - Intermediate CA의 핫라인 개인키로 쾅! 서명된 상태                     │
+│        - 족보 추적 끝! 검문 이상 무! 파란 자물쇠 ON 🚀                         │
+│                                                                                │
+│ ★ 해커의 절망: 해커가 가짜 네이버 신분증을 만들어도, 이 사슬을 타고 올라가다   │
+│   보면 내 컴퓨터 뱃속의 Root 명단에서 뚝 끊겨버리기 때문에 절대 속일 수 없다!  │
+└────────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 체인에 구멍이 나면 터지는 치명적 장애가 바로 <strong>'중간 인증서 누락(Missing Intermediate)'</strong> 에러다. 서버 관리자(초보)가 설정할 때 귀찮아서 네이버 신분증 1장만 덜렁 세팅하고, 중간 보스 신분증을 같이 묶어서(PEM 뭉쳐치기, 172번 문서 참조) 던져주지 않은 것이다. 그러면 스마트폰 브라우저는 네이버 신분증을 받았는데 도장을 검사할 중간 보스의 공개키가 없어 "사슬이 끊겼다(ERR_CERT_AUTHORITY_INVALID)!"며 모바일 앱 접속을 터뜨려버린다. (서버 엔지니어들이 밤에 가장 많이 불려 나가는 장애 원인 1순위다.)</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 체인은 '다단계 추천'과 같습니다. 나쁜 다단계 피라미드는 추적하다 보면 유령 회사에서 끊기지만, 합법 다단계(PKI)는 나를 추천한 사람, 그 사람을 추천한 지부장, 최종적으로 피라미드 맨 꼭대기를 추적해 보면 '국세청에 합법 등록된 진짜 회장님(Root CA)' 명단이 떡하니 튀어나옵니다. 뿌리가 튼튼하니 밑의 잔가지들도 다 진짜로 믿어주는 겁니다.</li>
+</ul>
+<hr />
+<h3 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h3>
+<p>"루트 CA 할아버지 인증서는 유효기간이 20년인데, 만약 내일모레 유효기간이 땡 치고 죽어버리면 세상 인터넷이 멈추나요?"</p>
+<p>이 엄청난 세대교체의 충격을 브라우저가 견디게 해주는 기술이 **크로스 서명(Cross-Signing)**이다.</p>
+<ol>
+<li>늙은 할아버지(구형 Root)가 죽기 전에, 젊은 아들(신형 Root)이 태어난다.</li>
+<li>할아버지 죽는 날, 구형 안드로이드 폰을 쓰는 사람들은 뱃속에 아직 아들 명단이 업데이트 안 돼서 폰이 먹통이 될 위기다.</li>
+<li>이때 아들의 인증서 겉면에 <strong>늙은 할아버지의 도장(서명)을 한 번 덧칠해서 겹쳐 찍어</strong> 브라우저에 던져준다.</li>
+<li>구형 폰 브라우저는 "오! 아들놈은 누군지 모르지만, 그 위에 내가 아는 할아버지 도장이 찍혀있네? 통과!" 라며 무사히 징검다리를 건넌다.
+Let's Encrypt(무료 인증서)가 처음 세상에 나왔을 때 전 세계 구형 폰들을 호환시키기 위해 쓴 IdenTrust 크로스 서명 기법이 바로 이 위대한 사슬 연장의 마법이다.</li>
+</ol>
+<hr />
+<h3 id="4-bigyo-mic-teureideuopeu">4. 비교 및 트레이드오프</h3>
+<p>"권력은 가장 깊은 어둠 속에 격리하고, 증명은 가장 가벼운 사슬로 묶어 던져라."
+인증서 체인(Chain of Trust)은 완벽한 수학(RSA)에 사회학적 분업(위임)을 섞어 넣은 천재적인 아키텍처다. 만약 대리인(Intermediate CA)이 해킹당하거나 타락하더라도, 동면에서 깨어난 제왕(Root CA)이 가위로 그 부패한 사슬 중간 마디만 싹둑 잘라 폐기해 버리면, 거대한 생태계의 기둥은 무너지지 않고 새살을 돋아내며 다시 굴러간다. 당신의 브라우저가 오늘도 보이지 않는 수십 개의 사슬 고리를 순식간에 타고 올라가 윈도우 OS 심장에 새겨진 제왕의 지문(Root Store)을 쓰다듬고 내려오는 한, 우리가 누리는 파란 자물쇠의 평화는 결코 부서지지 않는다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>전체 분류</strong>: PKI (Public Key Infrastructure) 신뢰 검증 로직</li>
+<li><strong>3대 계층 구성</strong>: Root CA (오프라인) $\rightarrow$ Intermediate CA (온라인/서브) $\rightarrow$ End-Entity (리프/말단 서버)</li>
+<li><strong>검증 필수 데이터</strong>: Trust Store (Root Store - OS나 브라우저에 하드코딩된 최상위 공개키 묶음)</li>
+<li><strong>실무 장애 원인</strong>: Certificate Chain Incomplete (중간 인증서를 서버에 묶어서 세팅 안 했을 때 모바일에서 주로 터지는 에러)</li>
+</ul>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>인터넷에서 누굴 만났는데 "나 네이버야!"라면서 임명장을 줘요. 근데 그 임명장은 '동네 이장님(중간 보스)'이 찍어준 거래요. 이장님이 누군지 어떻게 믿죠?</li>
+<li>그래서 그 사람이 '이장님 임명장'을 한 장 더 줘요. 거길 보니까 이장님은 제가 제일 잘 알고 믿고 있는 '대한민국 대통령(Root CA)'이 친필로 찍어준 도장이 딱 박혀있어요!</li>
+<li>"아하! 대통령이 이장님을 믿고, 이장님이 널 믿으니까, 나는 이 꼬리표(사슬)를 쭉 따라 올라가서 너를 100% 진짜 네이버라고 믿을 수 있어!" 하고 1초 만에 논리적으로 확인을 끝내는 시스템이랍니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>185. 다단계 피드백 큐 스케줄링 (Multilevel Feedback Queue, MLFQ) - 프로세스의 큐 이동 허용 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 22, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 다단계 피드백 큐 (MLFQ)는 다단계 큐(Multilevel Queue)의 치명적 한계였던 '이동 불가' 원칙을 부수고, 프로세스의 행동(CPU 점유율, 대기 시간)을 지속적으로 관찰하여 <strong>큐와 큐 사이를 동적으로 승급/강등(Feedback)하며 이동할 수 있게 만든 현대 스케줄러의 정점</strong>이다.
+<strong>비유</strong>: 신용카드 회사의 **'동적 회원 등급제'**와 같다. 처음 가입하면 골드(최상위 큐)를 주지만, 연체(CPU 과점유)하면 실버로 강등시키고, 실버에서 오랫동안 카드를 성실히 쓰며 기다리면 다시 VIP로 승급(Aging) 시켜주는 철저한 피드백 시스템이다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li><strong>개념</strong>: 여러 개의 층(우선순위 레벨)을 가진 큐를 운영하되, 프로세스가 한 큐에 영원히 박제되는 것이 아니라, CPU를 너무 길게 쓰면 아래층으로 강등(Demotion)당하고 큐에서 오래 굶으면 위층으로 승급(Promotion)하는 '에스컬레이터' 구조를 갖춘 스케줄링 알고리즘이다.</li>
+<li><strong>필요성</strong>: SJF처럼 짧은 놈을 우대하고 싶지만, 컴퓨터는 미래의 실행 시간을 예측할 수 없다. 그렇다면 "짧게 쳐보고(10ms), 안 끝나면 무거운 놈으로 간주해 뒤로 빼자"는 귀납적이고 경험적인 판단 기법(Heuristics)이 필요했다. 동시에 일반 다단계 큐에서 발생하는 하위 큐의 무한 대기(기아 상태) 문제를 시스템적으로 구제할 돌파구가 절실했다.</li>
+<li><strong>등장 배경</strong>: 1962년 MIT의 CTSS(Compatible Time-Sharing System) 개발자 페르난도 코바토(Fernando Corbató)가 발명한 것으로, (이 공로로 튜링상을 받았다), 미래를 예측하는 불가능한 수학 공식을 버리고 철저히 "프로세스가 과거에 보여준 행동거지"를 기반으로 미래를 추정해 내는 가장 현실적이고 강력한 범용 OS(Windows, Mac, 초기 Linux)의 표준 아키텍처로 자리 잡았다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  [다단계 피드백 큐(MLFQ)의 계층적 에스컬레이터 메커니즘]
+
+   (신규 진입) ─────────────▶ [ Q0: 최상위 큐 &#x2F; RR (q=8ms) ]
+                              │ (8ms 다 쓰면 쫓겨남)
+                              ▼ 강등 (Demotion)
+                            [ Q1: 중간 큐 &#x2F; RR (q=16ms) ]
+                              │ (16ms 다 쓰면 쫓겨남)
+                              ▼ 강등 (Demotion)
+                            [ Q2: 최하위 큐 &#x2F; FCFS (무한) ]
+
+   (에이징 &#x2F; 부스트)         (Q2에서 너무 오래 굶었다면?)
+   전체 프로세스 ◀───────── [ 주기적(예: 1초)으로 모든 하위 큐 놈들을 Q0으로 구출! ]
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> MLFQ의 가장 아름다운 점은 각 큐마다 타임 퀀텀(q)의 크기가 다르게 설계되어 있다는 점이다. 위쪽은 퀀텀이 극도로 짧아 마우스/키보드(I/O 바운드)가 스치듯 지나가 응답성이 극강이다. 여기서 안 끝나는 무거운 놈(CPU 바운드)은 점차 아래로 떨어져 결국 퀀텀 제약이 없는 FCFS에서 묵직하게 계산을 끝마치게 된다. 가벼운 놈은 빨리 보내고 무거운 놈은 깊게 파묻는 완벽한 필터링 깔때기(Funnel) 구조다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="mlfqreul-jitaenghaneun-5gaji-jeoldae-gyucig-rules">MLFQ를 지탱하는 5가지 절대 규칙 (Rules)</h3>
+<p>이 5가지 규칙이 MLFQ가 돌아가는 톱니바퀴의 전부다.</p>
+<ol>
+<li><strong>Rule 1 (우선순위 절대 권력)</strong>: Priority(A) &gt; Priority(B) 이면, A를 실행하고 B는 대기한다. (상위 큐가 텅 빌 때까지 하위 큐는 숨죽이고 있어야 함)</li>
+<li><strong>Rule 2 (동급의 평등)</strong>: Priority(A) == Priority(B) 이면, A와 B는 라운드 로빈(RR) 방식으로 공평하게 돌아가며 실행된다.</li>
+<li><strong>Rule 3 (신규 진입 혜택)</strong>: 새로운 프로세스가 시스템에 진입하면, 일단 성격을 모르므로 **가장 높은 최상위 우선순위 큐(Q0)**에 배치한다. (일단 믿어줌)</li>
+<li><strong>Rule 4 (강등의 조건)</strong>: 프로세스가 주어진 타임 퀀텀을 소진하면(즉, CPU 바운드라는 냄새가 나면), 우선순위가 한 단계 강등된다. (단, 퀀텀을 채우기 전에 I/O를 요청해 자발적으로 나가면 우선순위는 유지된다.)</li>
+<li><strong>Rule 5 (기아 방지 부스트)</strong>: 일정 주기 $S$가 지나면, 시스템에 있는 <strong>모든 프로세스</strong>를 최상위 우선순위 큐(Q0)로 한 번에 통째로 끌어올린다 (Priority Boost).</li>
+</ol>
+<h3 id="i-o-baundeuwa-cpu-baundeuyi-haengdong-paeteon-simyulreisyeon">I/O 바운드와 CPU 바운드의 행동 패턴 시뮬레이션</h3>
+<p>Rule 3과 Rule 4가 어떻게 악질적인 연산 프로세스를 걸러내는지 간트 차트로 확인한다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌───────────────────────────────────────────────────────────────────────┐
+  │         신규 P1(CPU 바운드 100ms)의 처절한 계급 강등 일대기           │
+  ├───────────────────────────────────────────────────────────────────────┤
+  │                                                                       │
+  │   [ 0 ms: 최상위 Q0 (q=10) 진입 ]                                     │
+  │   P1 10ms 꽉 채워 연산 완료 ─▶ 🚨 타임아웃! 강제로 쫓겨나 Q1로 추락   │
+  │                                                                       │
+  │   [ 10 ms: 중간 Q1 (q=20) 대기 및 진입 ]                              │
+  │   P1 20ms 또 꽉 채워 연산 완료 ─▶ 🚨 타임아웃! 넌 괴물이다. Q2로 추락 │
+  │                                                                       │
+  │   [ 30 ms: 최하위 Q2 (FCFS) 유배 ]                                    │
+  │   P1 이제 여기서 다른 무거운 놈들과 함께 순서대로 남은 70ms 연산      │
+  └───────────────────────────────────────────────────────────────────────┘
+
+  ┌───────────────────────────────────────────────────────────────────────┐
+  │         가벼운 마우스 입력 P2(I&#x2F;O 바운드 2ms)의 영원한 VIP 특권       │
+  ├───────────────────────────────────────────────────────────────────────┤
+  │                                                                       │
+  │   [ 5 ms: 최상위 Q0 (q=10) 진입 ]                                     │
+  │   P2 2ms 연산 후 마우스 인터럽트로 자발적 포기 ─▶ ✅ 퀀텀 안 채웠음!  │
+  │   결과: P2는 강등되지 않고 I&#x2F;O 끝난 뒤 다시 최상위 Q0으로 복귀!       │
+  └───────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이것이 페르난도 코바토의 천재성이다. "미래의 프로세스 길이를 알 수 없다고? 그럼 그냥 조금씩(10ms) 먹여봐! 시간 다 채워서 먹고 안 나가면 긴 놈이니까 뒤로 빼버려!" 이 귀납법적 필터링 덕분에 I/O 바운드(대화형)는 항상 최상위 큐에 머물며 1ms의 렉도 없이 반응하고, 무거운 연산들은 밑바닥에 차곡차곡 가라앉아 캐시를 데우며 효율적으로 일괄 처리되는 완벽한 아키텍처가 완성되었다.</p>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>요청 또는 이벤트 발생</strong>: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.</li>
+<li><strong>현재 상태 확인</strong>: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.</li>
+<li><strong>정책 적용 및 자원 배정</strong>: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.</li>
+<li><strong>결과 반영 및 후속 처리</strong>: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.</li>
+</ol>
+<h3 id="mlfqyi-maengjeom-geimingyi-ggomsu-gaming-the-scheduler">MLFQ의 맹점: 게이밍의 꼼수 (Gaming the Scheduler)</h3>
+<p>MLFQ의 룰이 알려지자 악의적인(혹은 영악한) 프로그래머들이 스케줄러를 속이는 꼼수를 쓰기 시작했다. Rule 4(퀀텀을 소진하면 강등)를 악용한 것이다.</p>
+<ul>
+<li><strong>꼼수 (Gaming)</strong>: CPU를 9.9ms(퀀텀 10ms 직전)까지 꽉꽉 채워 쓰고, 0.1ms짜리 헛된 파일 쓰기(I/O)를 날려 자발적으로 CPU를 포기한다.</li>
+<li><strong>결과</strong>: 커널은 "아이고 퀀텀을 안 채우고 I/O를 요청하셨네요, 역시 가벼운 I/O 바운드 프로세스군요!" 하고 속아서 이 악성 CPU 바운드 놈을 평생 최상위 Q0 큐에 박아둔다. 이놈 하나 때문에 진짜 I/O 바운드들의 화면이 미친 듯이 끊긴다.</li>
+</ul>
+<h3 id="hyeondae-mlfqyi-bangeocaeg-rinugseuyi-daedab">현대 MLFQ의 방어책 (리눅스의 대답)</h3>
+<p>이 꼼수를 막기 위해, 현대 커널은 Rule 4를 **"퀀텀을 한 번에 소진했는가"**에서 **"해당 큐에서 머문 시간 동안 총 누적 사용량이 퀀텀을 넘겼는가"**로 업그레이드했다. 9.9ms 쓰고 도망가더라도, 다음에 돌아와서 0.1ms를 더 쓰는 순간 "총합 10ms 소진"으로 체크되어 얄짤없이 하위 큐로 강제 강등시켜 버린다. (어카운팅의 고도화)</p>
+<h3 id="ilban-dadangye-kyuwayi-bigyo">일반 다단계 큐와의 비교</h3>
+<table><thead><tr><th style="text-align: left">특성</th><th style="text-align: left">일반 다단계 큐 (Multilevel Queue)</th><th style="text-align: left">다단계 피드백 큐 (MLFQ)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>큐 간 이동 (Migration)</strong></td><td style="text-align: left">❌ <strong>절대 불가 (철저한 카스트 제도)</strong></td><td style="text-align: left">✅ <strong>수시로 이동 (에스컬레이터)</strong></td></tr>
+<tr><td style="text-align: left"><strong>I/O / CPU 바운드 구분</strong></td><td style="text-align: left">관리자가 프로세스 생성 시 정적으로 분류</td><td style="text-align: left">OS가 프로세스의 행동을 관찰해 <strong>동적으로 분류</strong></td></tr>
+<tr><td style="text-align: left"><strong>기아 상태 방어</strong></td><td style="text-align: left">거의 불가능 (하위 큐는 늘 굶음)</td><td style="text-align: left">Rule 5 (Priority Boost) 로 완벽 방어</td></tr>
+<tr><td style="text-align: left"><strong>시스템 유연성</strong></td><td style="text-align: left">경직됨 (성격 바뀌면 시스템 멈춤)</td><td style="text-align: left">극한의 유연성 (실시간으로 성격 변화 추적)</td></tr>
+</tbody></table>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="mlfqyi-maengjeom-geimingyi-ggomsu-gaming-the-scheduler-1">MLFQ의 맹점: 게이밍의 꼼수 (Gaming the Scheduler)</h3>
+<p>MLFQ의 룰이 알려지자 악의적인(혹은 영악한) 프로그래머들이 스케줄러를 속이는 꼼수를 쓰기 시작했다. Rule 4(퀀텀을 소진하면 강등)를 악용한 것이다.</p>
+<ul>
+<li><strong>꼼수 (Gaming)</strong>: CPU를 9.9ms(퀀텀 10ms 직전)까지 꽉꽉 채워 쓰고, 0.1ms짜리 헛된 파일 쓰기(I/O)를 날려 자발적으로 CPU를 포기한다.</li>
+<li><strong>결과</strong>: 커널은 "아이고 퀀텀을 안 채우고 I/O를 요청하셨네요, 역시 가벼운 I/O 바운드 프로세스군요!" 하고 속아서 이 악성 CPU 바운드 놈을 평생 최상위 Q0 큐에 박아둔다. 이놈 하나 때문에 진짜 I/O 바운드들의 화면이 미친 듯이 끊긴다.</li>
+</ul>
+<h3 id="hyeondae-mlfqyi-bangeocaeg-rinugseuyi-daedab-1">현대 MLFQ의 방어책 (리눅스의 대답)</h3>
+<p>이 꼼수를 막기 위해, 현대 커널은 Rule 4를 **"퀀텀을 한 번에 소진했는가"**에서 **"해당 큐에서 머문 시간 동안 총 누적 사용량이 퀀텀을 넘겼는가"**로 업그레이드했다. 9.9ms 쓰고 도망가더라도, 다음에 돌아와서 0.1ms를 더 쓰는 순간 "총합 10ms 소진"으로 체크되어 얄짤없이 하위 큐로 강제 강등시켜 버린다. (어카운팅의 고도화)</p>
+<h3 id="ilban-dadangye-kyuwayi-bigyo-1">일반 다단계 큐와의 비교</h3>
+<table><thead><tr><th style="text-align: left">특성</th><th style="text-align: left">일반 다단계 큐 (Multilevel Queue)</th><th style="text-align: left">다단계 피드백 큐 (MLFQ)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>큐 간 이동 (Migration)</strong></td><td style="text-align: left">❌ <strong>절대 불가 (철저한 카스트 제도)</strong></td><td style="text-align: left">✅ <strong>수시로 이동 (에스컬레이터)</strong></td></tr>
+<tr><td style="text-align: left"><strong>I/O / CPU 바운드 구분</strong></td><td style="text-align: left">관리자가 프로세스 생성 시 정적으로 분류</td><td style="text-align: left">OS가 프로세스의 행동을 관찰해 <strong>동적으로 분류</strong></td></tr>
+<tr><td style="text-align: left"><strong>기아 상태 방어</strong></td><td style="text-align: left">거의 불가능 (하위 큐는 늘 굶음)</td><td style="text-align: left">Rule 5 (Priority Boost) 로 완벽 방어</td></tr>
+<tr><td style="text-align: left"><strong>시스템 유연성</strong></td><td style="text-align: left">경직됨 (성격 바뀌면 시스템 멈춤)</td><td style="text-align: left">극한의 유연성 (실시간으로 성격 변화 추적)</td></tr>
+</tbody></table>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li><strong>서버 응답성 저하 (Boost 주기 튜닝 실패)</strong>: 윈도우/유닉스 계열 서버에서 일괄 처리(DB 백업) 스크립트가 도는 도중 웹 서버 API 응답 시간이 10초까지 튀는 스파이크가 주기적으로 터진다.
+<ul>
+<li><strong>원인 분석</strong>: MLFQ의 Rule 5 (주기 S마다 모든 프로세스를 상위로 Boost) 파라미터가 잘못 설정된 것이다. S 주기가 1초로 너무 짧으면, 밑바닥에서 조용히 처리되어야 할 거대 백업 프로세스들이 1초마다 무조건 최상위로 튀어 올라와(Boost) I/O 바운드의 길을 막아버린다(호위 효과 일시적 재발).</li>
+<li><strong>실무 조치</strong>: 이런 현상(Priority Inversion 류의 렉)이 보이면 커널 튜닝을 통해 Boost 주기(S)를 수십 초 단위로 길게 늘여서, 무거운 프로세스가 쓸데없이 상위 계층 물을 흐리는 빈도를 줄여야 한다.</li>
+</ul>
+</li>
+<li><strong>MacOS / Windows의 Foreground Boost</strong>: 실무 UI 체감 성능의 끝판왕 튜닝이다. 사용자가 지금 마우스로 클릭하고 활성화시킨 '활성 창(Foreground)' 프로세스가 사실은 무거운 CPU 렌더링 작업을 하느라 하위 큐로 떨어질 위기에 처했다. 이때 OS는 화면 활성화라는 이벤트를 감지해 임의로 이 프로세스에게 무한정의 Priority Boost를 먹여 최상위 큐에 인위적으로 본드시켜 버린다. 뒤에 숨은 백그라운드 크롬 창 수십 개가 멈추더라도 사용자는 내 활성 창이 매끄러우면 쾌적함을 느낀다. MLFQ의 철학을 사용자 경험(UX) 극대화로 응용한 사례다.</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌──────────────────────────────────────────────────────────────────┐
+  │     MLFQ 환경에서 아키텍트의 파라미터 튜닝(Tuning) 결정 요소     │
+  ├──────────────────────────────────────────────────────────────────┤
+  │                                                                  │
+  │   MLFQ 설계자(OS)는 다음의 5가지 질문에 매직 넘버를 넣어야 한다. │
+  │                                                                  │
+  │   1. 큐의 개수는 몇 개로 할 것인가? (보통 3~64개)                │
+  │   2. 각 큐의 스케줄링 알고리즘은 무엇인가? (RR → RR → FCFS)      │
+  │   3. 하위 큐로 강등(Demote)시키는 구체적 조건은 무엇인가?        │
+  │      (예: 타임 퀀텀 크기, 누적 사용량 기준)                      │
+  │   4. 상위 큐로 승급(Promote)시키는 조건은 무엇인가?              │
+  │      (예: 대기 시간 1초 경과 시 Boost)                           │
+  │   5. 처음 들어온 프로세스는 몇 번 큐에 꽂을 것인가?              │
+  │                                                                  │
+  │   🚨 주의: 이 매직 넘버들의 조합이 시스템의 성격을 결정짓는다.   │
+  │   웹 서버라면 퀀텀을 늘리고 부스트를 줄여야 하고, 데스크톱이라면 │
+  │   퀀텀을 쪼개고 부스트를 자주 일으켜야 화면이 버벅이지 않는다.   │
+  └──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> MLFQ는 단일 알고리즘이라기보다 사실상 "운영체제 스케줄러를 커스텀하는 종합 프레임워크"에 가깝다. 즉, 저 파라미터들을 어떻게 돌리느냐에 따라 지구 상에 존재하는 거의 모든 스케줄러(FCFS, RR, SJF)를 시뮬레이션하고 흉내 낼 수 있는 무한한 확장성을 가진다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="gidaehyogwa">기대효과</h3>
+<p>MLFQ 아키텍처의 확립으로 시스템은 개발자가 프로세스의 속성을 미리 태깅해 줄 필요 없이, 코드가 구동되는 찰나의 순간에 <strong>동적으로 I/O 바운드와 CPU 바운드를 분류</strong>해 내어, 마우스는 0.01초 만에 움직이면서도 뒤에서 거대한 영화가 렌더링되는 현대의 완벽한 멀티태스킹 체감을 인류에게 선사했다.</p>
+<h3 id="gyeolron-mic-mirae-jeonmang">결론 및 미래 전망</h3>
+<p>MLFQ는 1990년대부터 2000년대 초중반까지 Windows NT, MacOS, Unix의 절대적인 스케줄러 신(God)으로 군림했다.
+하지만 큐를 수십 개 만들고 프로세스를 위아래로 끌어올리는(Boost) 일 자체가 멀티코어 환경에서는 막대한 <strong>동기화 락(Lock) 오버헤드와 캐시 파괴</strong>를 유발했다. 이를 타파하기 위해 현대 리눅스는 큐를 계층 이동시키는 복잡한 짓을 버리고, 프로세스마다 "지금까지 쓴 시간(vruntime)"이라는 단 하나의 숫자표를 붙여 레드-블랙 트리(O(log N))로 정렬해 버리는 **CFS (Completely Fair Scheduler)**라는 더 우아하고 수학적인 구조로 패러다임을 전환했다. MLFQ는 역사 속으로 조금씩 물러나고 있지만, 그 '과거 행동 기반 동적 평가'라는 위대한 철학은 불멸의 지식으로 남아있다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">**다단계 큐 (Multilevel Queue)**
+    ↓
+**에이징 (Aging) &#x2F; Priority Boost**
+    ↓
+**I&#x2F;O 바운드 (I&#x2F;O Bound)**
+    ↓
+**타임 퀀텀 (Time Quantum&#x2F;Slice)**
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>다단계 큐 (Multilevel Queue)</strong></td><td style="text-align: left">MLFQ의 전신으로, 계층을 나눈 아이디어는 좋았으나 프로세스 층간 이동을 금지하는 멍청함으로 도태된 아키텍처다.</td></tr>
+<tr><td style="text-align: left"><strong>에이징 (Aging) / Priority Boost</strong></td><td style="text-align: left">MLFQ가 하위 큐에 처박혀 영원히 고통받는 프로세스를 기아 상태에서 구출하기 위해 1초마다 가동하는 강제 승강기다.</td></tr>
+<tr><td style="text-align: left"><strong>I/O 바운드 (I/O Bound)</strong></td><td style="text-align: left">MLFQ 시스템에서 가장 큰 혜택(평생 최상위 큐 VIP 대우)을 누리며, 이들이 빨리 시스템을 탈출해야 전체 효율이 올라간다.</td></tr>
+<tr><td style="text-align: left"><strong>타임 퀀텀 (Time Quantum/Slice)</strong></td><td style="text-align: left">MLFQ에서 프로세스를 아래층 큐로 떨어뜨릴지 말지(Demotion) 평가하는 냉혹한 타이머 기준치다.</td></tr>
+<tr><td style="text-align: left"><strong>CFS (Completely Fair Scheduler)</strong></td><td style="text-align: left">큐를 여러 층으로 나누고 프로세스를 이동시키는 MLFQ의 무거운 오버헤드를, 트리의 동적 정렬 하나로 부숴버린 리눅스의 현대 스케줄러다.</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

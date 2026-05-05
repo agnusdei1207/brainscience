@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>575. 섀도우 배포 (Shadow Deployment &#x2F; 트래픽 미러링) - 실운영 트래픽을 복제하여 신규 버전에 테스트 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 섀도우 배포(Shadow Deployment/트래픽 미러링)는 QA 서버에서 백날 찌적대봤자 "1,000만 명이 동시 접속해 디비 데드락이 꼬이는 실제 라이브 트래픽(Real World)의 광기"는 절대 재현할 수 없다는 공포를 박살 내기 위해, <strong>현재 멀쩡히 도는 V1(안전 서버)으로 들어오는 리얼 유저 트래픽 100%를 거울(Mirror)처럼 투명하게 복사해, 몰래 구석에 띄워둔 V2(신상 서버)에 유령처럼 쏴버리는 궁극의 모의고사 테스트 비행술</strong>이다.
+2. <strong>가치</strong>: 고객의 트래픽은 V1으로 정상 처리되어 완벽한 결제(200 OK) 화면을 보장받는다(고객 피해 0%, Zero-impact). 하지만 껍데기만 복제되어 V2에 쏟아진 트래픽은 <strong>신규 서버 V2의 뼈와 살을 100% 라이브 강도로 타격하며 진짜 에러(500)나 메모리 누수를 뿜어내게 만든다. V2가 뱉은 대답은 유저에게 안 가고 쓰레기통에 쿨하게 버려지며(Fire and Forget) 오직 아키텍트의 로깅(관찰) 모니터에만 수집</strong>되는, 100점짜리 리스크 제로 다크 런칭(Dark Launching)이 성립된다.
+3. <strong>융합</strong>: 이 마술을 개발자가 자바 코드로 짭짤하게 짜려다간 복제 통신 딜레이(오버헤드)로 V1 본체 서버까지 터져 죽는다. 따라서 545장에서 배운 **서비스 메시(Service Mesh/Istio)**나 API Gateway 같은 K8s 인프라 밑바닥 프록시(Envoy) 단에서, 네트워크 패킷 자체를 공중에서 낚아채 비동기로 몰래 던져버리는 <strong>코드 제로 터치(Zero-code) 라우팅 흑마법</strong>과 100% 한 몸으로 융합되어 진화했다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h1 id="575-syaedou-baepo-shadow-deployment-teuraepig-mireoring-silunyeong-teuraepigeul-bogjehayeo-singyu-beojeone-teseuteu">575. 섀도우 배포 (Shadow Deployment / 트래픽 미러링) - 실운영 트래픽을 복제하여 신규 버전에 테스트</h1>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li>
+<p><strong>개념</strong>:</p>
+<ul>
+<li><strong>Shadow (그림자/유령)</strong>: 유저 눈에는 보이지 않지만, 본체(V1 서버) 뒤에 똑같이 찰싹 붙어 행동을 똑같이 따라 하는 V2 샌드박스(테스트) 서버.</li>
+<li><strong>Traffic Mirroring (거울 복제)</strong>: 1개의 HTTP 패킷이 프록시 라우터에 닿는 순간, 거울에 반사되듯 2개의 똑같은 패킷으로 100% 클론 복제(Clone)되어 하나는 V1으로, 하나는 V2로 흩어져 날아가는 인프라 네트워크 꺾기 마술.</li>
+</ul>
+</li>
+<li>
+<p><strong>필요성 (카나리 1% 배포조차 피가 튀는 초핵심 코어 도메인의 한계)</strong>: 결제 코어 엔진을 C++에서 Java(V2)로 완전히 싹 갈아엎었다. 547장 카나리(Canary) 배포로 1% 트래픽만 살짝 흘려보려 했다. 그런데 앗! 1% 유저가 결제하다가 V2 버그 터져서 돈만 빠지고 화면이 하얗게 뻗어버렸다! 이 1% 유저의 환불 민원(CS)과 법적 소송 폭주로 데브옵스 팀이 공중분해 됐다. <strong>"아 ㅆㅂ 결제나 통장 잔고 도메인은, 단 1%의 유저 카나리(희생양) 테스트조차 용납이 안 돼!! 유저한테 피 1방울도 안 튀게 방탄유리 치면서, V2가 100만 명 트래픽 쳐맞고 뒤지는지(부하 테스트) 확인해 볼 완벽한 모의 시뮬레이터 없어?!"</strong> 이 피 맺힌 극강의 무결점 런칭에 대한 집착이 섀도우 배포를 이끌어냈다.</p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: 카나리 배포가 **'신약 백신(V2)을 10명(1%)한테 직접 주사 놔보고, 1명 죽으면 그제야 롤백 치는(1명은 진짜 죽음) 임상 실험'**이라면, 섀도우 배포(미러링)는 **'유저의 몸에 100% 똑같은 쌍둥이 가짜 인형(Shadow 샌드박스)을 만들어두고, 그 인형한테만 신상 백신(V2) 주사를 1만 방 때려보는 짓'**입니다. 인형이 터져나가고 팔다리가 뜯어져도 팝콘 먹으며 "아 부작용 오지네 ㅋ" 구경만 할 뿐, 실제 환자(유저)는 평화롭게 구형 안전 백신(V1) 맞으며 1도 다치지 않는(Zero-Impact) 궁극의 복제 인간 샌드박스 테스트입니다.</p>
+</li>
+<li>
+<p><strong>등장 배경 및 발전 과정</strong>:</p>
+<ol>
+<li><strong>Staging / QA 섭 테스트 (구석기)</strong>: QA 엔지니어가 Jmeter 툴 켜고 10만 건 가짜 트래픽(Dummy) 쏘며 자위하던 시대. "QA 100점 통과!" ➡ 운영 배포하자마자 진짜 유저들의 창의적인 더러운 데이터 패턴에 맞고 1초 컷 셧다운(운영과 개발 환경의 치명적 괴리).</li>
+<li><strong>오픈소스 미러링 툴 등장 (과도기)</strong>: <code>GoReplay(Gor)</code> 같은 툴이 떴다. 리눅스 서버에 바이너리로 깔아두면 패킷을 복사해 딴 데로 쏴줬다. 근데 툴 세팅이 까다롭고 무거웠다.</li>
+<li><strong>Service Mesh 천하 통일 (현재, Istio)</strong>: 쿠버네티스와 Envoy 프록시가 세상을 덮었다. 개발자 코드 1줄, 무거운 툴 설치 1개 없이 <code>mirror: subset: v2</code> YAML 설정 1줄 띡 엔터 치면 K8s 전 우주 허공 패킷이 마법처럼 2갈래로 쫙 갈라져 유령 서버에 꽂히는 무적의 인프라 흑마법 시대가 도래했다.</li>
+</ol>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: QA 환경에서의 가짜 테스트가 **'수영장(QA 서버)에서 구명조끼 입고 헤엄치기 훈련 100시간 하기'**라면, 섀도우 미러링 테스트는 **'태풍 몰아치는 진짜 한가운데 찐 바다(운영 라이브 트래픽)에, 나랑 똑같은 로봇 더미(V2)를 집어 던져놓고 걔가 파도에 휩쓸려 박살 나는지 망원경으로 안전하게 관찰만 하는 것'**입니다. 진짜 바다의 파도(Real World Complexity)를 그대로 맞으면서도 나는 뽀송뽀송한 미친 모의고사입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="1-teuraepig-mireoringyi-3dangye-dongjag-masul-fire-and-forget">1. 트래픽 미러링의 3단계 동작 마술 (Fire and Forget)</h3>
+<p>Istio(Envoy) 프록시가 네트워크 밑바닥에서 부리는 속임수.</p>
+<p><strong>[ 🛡️ 쿠팡 결제 API 미러링 시나리오 ]</strong></p>
+<ol>
+<li><strong>가로채기 및 복제 (Mirroring)</strong>: 유저가 결제 요청(<code>POST /pay</code>)을 쏜다. V1 서버 앞을 지키는 문지기(Istio 프록시)가 0.001초 만에 그 패킷 텍스트 덩어리를 <code>Ctrl+C</code>, <code>Ctrl+V</code> 해서 쌍둥이 2개로 찢어낸다.</li>
+<li><strong>원상 배송 (To V1)</strong>: 원본 패킷(1개)은 원래 가던 길인 <code>안전한 V1 구버전 서버</code>에 꽂힌다. V1은 정상적으로 결제 로직을 돌리고 <strong>유저에게 <code>200 OK (성공)</code>를 뱉어 유저의 화면을 평화롭게 띄워준다.</strong></li>
+<li><strong>유령 배송 (To V2) 💥 (핵심)</strong>: 복사된 쌍둥이 1개는, 구석에 몰래 띄워둔 <code>위험한 V2 신상 서버</code>로 몰래 발사된다.
+<ul>
+<li>V2는 진짜 운영 트래픽 100%를 처맞으며 미친 듯이 결제 연산을 돌린다. (메모리 누수, CPU 풀스캔 다 터짐).</li>
+<li>그런데 V2가 땀 뻘뻘 흘리며 계산 끝내고 "나 에러 났어(500)!"라고 대답을 프록시로 다시 던진다.</li>
+<li><strong>프록시는? 그 대답(Response)을 받자마자 휴지통에 쿨하게 쳐박아 버린다! (Fire and Forget). 유저에겐 절대 B서버의 똥(에러)이 흘러 들어가지 않는다.</strong></li>
+</ul>
+</li>
+<li><strong>결과 모니터링</strong>: 아키텍트는 팝콘 먹으며 그라파나 대시보드(567장)를 연다. "이야~ V2 놈 혼자 뒤에서 라이브 트래픽 맞더니 500에러 30% 뿜으며 장렬히 전사(OOM)했네 ㅋ" 부작용 제로 꿀잼 테스트 완료. 코드 고쳐서 V3 만들고 내일 다시 섀도우 던져본다.</li>
+</ol>
+<h3 id="2-syaedou-baepoyi-coego-akilreseugeon-sangtae-byeongyeong-state-mutation-bujagyong-bangeo-boom-boom-boom">2. 섀도우 배포의 최고 아킬레스건: "상태 변경(State Mutation)" 부작용 방어 💥💥💥</h3>
+<p>이거 못 막으면 섀도우 배포 돌렸다가 회장님 구속되고 회사 문 닫는다. (아키텍트 면접 0순위).</p>
+<ul>
+<li>
+<p><strong>치명적 딜레마 (DB 중복 삽입 대재앙)</strong>: 유저가 1만 원을 송금했다(POST). V1이 내 결제 오라클 DB에 +1만 원 인서트(Insert)를 쾅 찍었다. 근데 미러링 된 복제 패킷을 받은 V2 놈도 똑같은 라이브 DB를 쳐다보고 있으니까, <strong>V2 놈도 +1만 원을 한 번 더 인서트(Insert) 쾅 쳐버린다!!</strong> 유저는 1만 원 송금했는데 상대방 계좌에 2만 원이 찍히는, 대한민국 금융망을 개박살 내는 돈 복사 복제 버그가 터진다. 섀도우 테스트가 오히려 재앙이 된 꼴이다!</p>
+</li>
+<li>
+<p><strong>무적 방어술 (Mocking &amp; Shadow DB 융합 컷오프)</strong>:</p>
+<ol>
+<li><strong>섀도우 깡통 DB 분리</strong>: V2 서버의 환경 변수(ConfigMap)를 싹 조작해서, 라이브 진짜 오라클 DB를 못 찌르게 막아버리고 어제 백업 떠놓은 **'가짜 깡통 Sandbox DB(격리)'**를 찌르도록 URL을 확 꺾어버려야 한다.</li>
+<li><strong>외부 API 찌르기(Third-party) 모킹(Mocking) 컷오프</strong>: V2가 카카오페이 실제 결제 API로 통신을 쏘려 한다? 미친 짓이다! 사이드카 프록시 단에 룰을 심어서, **"V2 놈이 외부로 날리는 HTTP/Kafka 통신은 패킷을 공중에서 싹 낚아채 자르고, 무조건 200 OK 깡통 가짜 응답(WireMock)만 뱉어주게 강제 차단막(Egress Mocking)"**을 세워 둬야 세상 밖으로 똥(부작용)이 안 새어 나간다.</li>
+</ol>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 섀도우 배포 시 상태 변경을 안 막는 건, **'군대 모의 전투 훈련(섀도우 테스트)인데, 병사들(V2) 총에 가짜 페인트탄이 아니라 진짜 실탄(Live DB Insert)을 장전해주고 쏘라고 하는 미친 짓'**입니다. 다 죽습니다. 완벽한 섀도우 훈련을 하려면? 총(V2 서버)은 진짜 운영 총을 쓰되, 그 안에 들어가는 총알과 표적판은 무조건 가짜 깡통(Shadow DB, Mock API)으로 100% 교체 락인(Lock-in) 시켜놓고 방아쇠를 당겨야만 사상자(DB 오염) 0명의 안전한 극한 훈련이 보장됩니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h2>
+<h3 id="1-baepo-3daejang-coehuyi-mogjeog-why-bunri-pyo-kanari-vs-syaedou-vs-a-b">1. 배포 3대장 최후의 목적(Why) 분리 표 (카나리 vs 섀도우 vs A/B)</h3>
+<p>면접관이 100% 섞어서 물어보는 트레이드오프 3단 콤보.</p>
+<table><thead><tr><th style="text-align: left">척도</th><th style="text-align: left">1. 카나리 배포 (Canary) 🐦</th><th style="text-align: left">2. 섀도우 배포 (Shadow) 👻 👑</th><th style="text-align: left">3. A/B 테스트 (A/B) 📊</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>트래픽 분배</strong></td><td style="text-align: left">V1 99% : V2 <strong>1%</strong> 쪼개기 (분할)</td><td style="text-align: left">V1 100% ➡ <strong>V2도 거울 복사 100% 타격 (복제 200%)</strong></td><td style="text-align: left">강남 유저 50% : 강북 유저 50% 쪼개기</td></tr>
+<tr><td style="text-align: left"><strong>고객 피해 (Blast Radius)</strong></td><td style="text-align: left">1% 유저는 V2 에러 처맞고 피 흘림 <strong>(피해 1% 발생)</strong></td><td style="text-align: left">100% 유저가 V1 결과만 봄. V2는 뒤에서 혼자 뻘짓 <strong>(피해 0%)</strong></td><td style="text-align: left">V2 버튼 색깔 구려서 결제율 떨어짐 <strong>(매출 떡락 피해 가능)</strong></td></tr>
+<tr><td style="text-align: left"><strong>핵심 타겟 (왜 쓰는가?)</strong></td><td style="text-align: left">실제 유저 피드백 포함, 전반적 서버 안정성 <strong>야금야금 간 보기.</strong></td><td style="text-align: left"><strong>DB 오염(부작용) 없는 '조회용(GET) 거대 쿼리 엔진' V2의 CPU 풀부하 / 스트레스(OOM) 무결점 한계 테스트.</strong></td><td style="text-align: left">버그 잡는 게 아니라 <strong>"파란 버튼 vs 빨간 버튼" 매출 통계 도박.</strong></td></tr>
+<tr><td style="text-align: left"><strong>운영 인프라 (돈)</strong></td><td style="text-align: left">V1 옆에 V2 딱 1개 띄우면 됨 (초가성비)</td><td style="text-align: left"><strong>V2가 100% 트래픽 다 맞아야 하므로, V1 100대 떠있으면 V2도 똑같이 100대 띄워야 함 (서버 비용 2배 돈지랄 폭발 💸).</strong></td><td style="text-align: left">데이터 통계 분석 툴(Amplitude 등) 비용 펌핑.</td></tr>
+</tbody></table>
+<h3 id="gwamog-yunghab-gwanjeom">과목 융합 관점</h3>
+<ul>
+<li>
+<p><strong>데이터베이스 아키텍처 (CQRS/이벤트 소싱과의 극강 시너지)</strong>: 위에서 말한 "DB 인서트 중복" 대재앙을 가장 우아하게 피하는 법은? 애초에 아키텍처를 554장 CQRS로 짜는 거다! 섀도우 V2 서버는 무거운 '읽기(Query) 전용' 로직(Elasticsearch 검색 등) 최적화 튜닝 용도로만 미러링(Mirroring)을 쏜다. 섀도우 서버 100대가 검색어 "사과"를 받아 1만 번의 무거운 조인(JOIN) 쿼리를 때리며 CPU가 타들어 가든 말든, 어차피 DB 데이터 변경(Write) 로직이 0.00% 인 읽기 뷰(View) 샌드박스니까, DB 오염 부작용은 물리적으로 1도 없고 극한의 V2 검색 엔진 스트레스 부하 테스트만 100% 꿀 빨며 쳐낼 수 있다. (Read-heavy 도메인의 섀도우 찰떡궁합).</p>
+</li>
+<li>
+<p><strong>마이크로서비스 (서비스 메시 Istio의 선언적 흑마법)</strong>: 545장 이스티오(Istio)가 없었으면 개발자는 <code>GoReplay</code> 까느라 1주일 노가다 쳤다. 지금 K8s 클라우드에선 아키텍트가 YAML 텍스트 파일 1장 열고 ➡ <code>route: destination: subset: v1</code> ➡ 그 바로 밑줄에 <strong><code>mirror: destination: subset: v2</code></strong> 1줄 타이핑 치고 엔터 치면 끝난다! K8s 1만 대 서버에 깔린 사이드카 프록시(Envoy) 봇들이 일제히 0.1초 만에 뇌를 스위칭해서, 허공을 떠도는 패킷 100%를 무자비하게 2장으로 복제(Clone)해 V2 유령 파드들에게 폭격기처럼 쏟아붓기 시작한다. 앱 소스코드(자바) 1바이트 훼손 없는, 궁극의 인프라 레벨 메타 통제술(Decoupling)이다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 카나리가 **'살얼음판(V2)에 사람 1명(1%) 먼저 올려보내서 얼음이 깨지나 안 깨지나 사람 목숨으로 간 보는 짓'**이라면, 섀도우(미러링)는 **'사람이 걷는 멀쩡한 시멘트 다리(V1) 밑에, 새로 만든 투명한 유리 다리(V2)를 몰래 겹쳐 깔아놓고 사람 그림자(트래픽 복제본) 100% 무게를 유리에 똑같이 얹어보며 혼자 유리가 박살 나나 쳐다보는 짓(피해자 0명)'**입니다. 단점은 다리를 2개(서버 2배) 지어야 하니 건설비(인프라 요금)가 2배로 듭니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="4-bigyo-mic-teureideuopeu">4. 비교 및 트레이드오프</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li>
+<p><strong>시나리오 — 대형 마이그레이션(Migration) 코어 교체 컷오버의 공포 극복 (Strangler Fig Pattern 연계)</strong>: 통신사 SKT 급에서 20년 된 낡은 C++ 정산 서버(V1)를 최신 Java Spring(V2)으로 1,000억 들여 새로 짰다. 내일모레 그랜드 오픈(스위치 컷오버)이다. 오픈날 V2로 트래픽 다 틀었는데 버그 나서 요금 정산 잘못되면 1,000억 날리고 뉴스에 대문짝만하게 나온다. QA 환경에선 100점 맞았지만, 아무도 자기 목통을 걸고 오픈 버튼을 누르려 하지 않는다. (라이브 환경 공포증).</p>
+<ul>
+<li><strong>아키텍트의 해결책</strong>: <strong>3달간의 장기 섀도우 미러링(Dark Launching)을 통한 실전 스트레스 100% 데이터 정합성 검증</strong>이다. 아키텍트는 컷오버 3개월 전부터 K8s 인프라 단에 <code>미러링</code>을 켜버린다.
+<ul>
+<li>고객들은 3달 내내 기존 낡은 C++ V1 서버로 잘 요금 정산을 받는다.</li>
+<li>하지만 뒤에 띄워둔 Java V2 서버는 3달 내내 리얼 타임 고객 트래픽 100%를 똑같이 쳐맞으며 자기 혼자 가짜 섀도우 DB에 정산 요금을 미친 듯이 엑셀에 쓴다.</li>
+<li>매일 밤 자정, 데이터 엔지니어가 <strong>[V1이 진짜 고객에게 뱉은 영수증 금액] vs [V2가 뒤에서 유령처럼 계산해 본 가짜 영수증 금액] 1,000만 건을 액셀(Diff)로 비교 대조(Reconciliation)해 본다.</strong></li>
+<li>첫 달엔 1만 건이 금액 차이(버그)가 나서 V2 코드를 죽어라 고쳤다. 3달째! 두 서버의 1,000만 건 계산 금액이 100.00% 소수점까지 일치했다! 그제야 아키텍트는 미소를 지으며 완벽한 확신과 함께 V1 낡은 서버의 목줄을 자르고 V2로 그랜드 스위칭(Cut-over) 오픈 버튼을 당당하게 누른다. 이것이 수천억짜리 SI 시스템을 교체하는 무결점의 교과서 아키텍처다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>시나리오 — V2 유령 서버의 렉(Latency)이 V1 본체 서버의 목을 조르다 (Synchronous Mirroring의 파국)</strong>: 주니어 데브옵스가 프록시 Nginx에 섀도우 미러링 룰을 쌩으로 걸었다. 유저가 들어온 패킷을 1개는 V1으로 쏘고, 1개는 복사해서 V2로 쐈다. 그런데 V2 신상 코드가 꼬여서 무한루프 렉 10초 대기(Hang)를 탔다. Nginx 프록시는 멍청하게 "어 V2 이놈 대답 안 하네?" 하고 스레드 물고 V2를 10초 동안 같이 기다려줘 버렸다! <strong>유령 서버(V2)한테 렉 걸린 프록시 때문에 정작 진짜 고객에게 돌아가야 할 V1의 정상 200 OK 응답 패킷마저 병목(Backpressure)에 갇혀 10초 뒤에나 유저에게 도달하는(동반 셧다운) 최악의 모순적 팀킬 장애</strong>가 터졌다.</p>
+<ul>
+<li><strong>아키텍트의 해결책</strong>: <strong>비동기 망각 (Fire and Forget / Async Mirroring) 원칙의 100% 강제화</strong>다. 섀도우 패킷은 던지는 순간 우주에서 잊혀야 한다! 아키텍트는 이스티오(Istio) 룰이나 하프로록시(HAProxy) 룰에 절대 철칙을 세팅한다. <strong>"프록시야! V1 놈한테 던진 건 무조건 스레드 잡고 대답(Response) 꼬박 기다려서 유저한테 올려줘. 근데 V2(유령) 놈한테 100% 복제해서 쏜 그 섀도우 트래픽은? 쏘는 0.001초 찰나 그 순간 이후로 스레드 풀고 바로 뒤돌아서 V2 놈 얼굴도 쳐다보지 마라(완전 비동기 버림)!! 걔가 뒤에서 불타서 1시간 렉 걸리든 알 바 아니야!"</strong> 프록시가 유령 서버의 응답을 1초라도 기다려주는(Wait) 순간, 본체 서버의 생명줄이 찢겨나가는 지옥을 맛보게 된다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="doib-cekeuriseuteu">도입 체크리스트</h3>
+<ul>
+<li><strong>조직적</strong>: <strong>"이 V2 테스트를 위해 AWS 서버 요금을 2배(100대 + 100대)로 태울 무식한 자본(Budget) 결재를 사장님한테 따냈는가?"</strong> 섀도우 미러링은 낭만적인 기술이지만 현실은 자본주의다. V1이 평소에 100대의 K8s 파드로 10만 트래픽을 간신히 버틴다면? V2에도 똑같이 10만 트래픽 100% 복사 폭격이 떨어지므로, V2 역시 뒤에서 100대의 서버 파드를 똑같이 띄워놓고 램(RAM)을 퍼먹어야만 서버가 안 터진다. <strong>테스트 한 번 하려고 인프라 서버 비용이 100% 따블(x2)로 폭발하는 가장 비싸고 돈지랄인 배포 기법</strong>이다. 넷플릭스나 쿠팡급 자본력이 아니면, "걍 1대 띄워놓고 카나리 1%만 흘려서 간 보자 ㅋ" 라며 가성비 카나리(Canary) 배포로 무릎 꿇고 도망가는 게 현실적인 SRE 타협안이다.</li>
+<li><strong>비즈니스적</strong>: <strong>이메일 발송, 문자 알림톡(SMS) 결제 승인 연동 같은 "되돌릴 수 없는 외부(External) 사이드 이펙트"가 V2 로직 뱃속에 박혀있는가?</strong> 결제 완료 후 알림톡 쏘는 서버를 V2 섀도우로 미러링 띄웠다 치자. V1 본체 서버가 "고객님 결제 1만 원 ㄳ!" 알림톡 쏘고 끝냈는데, 뒤에서 복제 트래픽 몰래 받은 V2 섀도우 놈이 "오 결제 들어왔네 ㅋ 알림톡 쏴!" 하면서 <strong>유저한테 결제 카톡 메시지를 똑같은 거 2방 연속(중복) 발송해 버리는 미친 스팸 테러 사태</strong>가 터진다! 아키텍트는 섀도우 배포 돌리기 전 소스 코드 전수조사를 갈겨서, <strong>"V2 서버가 바깥세상(Third-party API)으로 나가는 Egress 네트워크 통신문은 이스티오(Istio)에서 100% 락다운 걸고 모킹(Mocking) 가짜 서버로 길을 다 꺾어버려 무음 벙커(Silent Bunker)를 만들어 놔야"</strong> 섀도우 테스트의 독가스가 세상으로 안 샌다.</li>
+</ul>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p><strong>"프론트엔드/안드로이드 앱(Client)에서 더블 클릭 코딩(Dual Request) 쳐서 트래픽 2개 복제해 쏘기"</strong>: 인프라 프록시 다룰 줄 몰라서 멍청하게, 안드로이드 앱 개발자한테 "야 결제 버튼 누를 때, <code>axios.post('V1주소')</code> 하나 치고 밑에 <code>axios.post('V2주소')</code> 하나 더 쳐서 비동기로 2번 API 쏘게 코딩해 놔 ㅋ 이게 미러링이지 ㅋ" 시키는 개미친 짓. 유저 핸드폰 배터리랑 LTE 데이터가 2배로 닳아버리고 폰이 뜨거워지며 렉 걸림. <strong>"트래픽 복제(미러링)는 우주가 두 쪽 나도 절대 클라이언트 폰이나 앱에서 코딩 쳐서 쏘는 게 아니다. 유저는 평소처럼 가볍게 1개만 딱 쏘고(오버헤드 0%), 백엔드 클라우드 튼튼한 K8s 인프라 내부 가장 깊숙한 Proxy(Envoy) 단의 빵빵한 네트워크 속에서 100% 몰래 찢어발겨 복사 쳐야만 완벽한 은폐 엄폐가 성립한다."</strong></p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 유저 폰에서 2번 쏘는 짓은, **'고객한테 우리 식당(V1)에서 밥 먹었으면, 옆에 2호점(V2) 가서 밥 한 번 더 꾸역꾸역 강제로 쳐먹으라고 멱살 잡는 짓(배터리 폭발)'**입니다. 정상적인 미러링은, 고객은 우리 식당(V1)에서 1그릇만 맛있게 먹고 집에 가는데, <strong>주방장(프록시)이 요리할 때 똑같은 메뉴를 몰래 뒤에서 하나 더 볶아내서(복제), 뒤에 숨어있는 심사위원(V2 에러 테스트)한테 먹어보라고 몰래 밀어 넣어주는(유저 타격 0%)</strong> 식당 뒷주방만의 비밀스러운 분업 마술입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-coejeoghwa-gibeob">5. 실무 적용 및 최적화 기법</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">QA 서버(Staging)에 Jmeter 가짜 트래픽으로 1달 찌적대던 시절</th><th style="text-align: left">100% 라이브 트래픽 미러링 섀도우 샌드박스 도입 (TO-BE)</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">QA 100점 통과 후 리얼 배포 쳤더니 미처 파악 못한 엣지 케이스 버그율 5%</td><td style="text-align: left">리얼 트래픽으로 완벽한 시뮬레이션 타격, 운영 런칭 시 버그율 0.01% 방어</td><td style="text-align: left">코어/레거시 마이그레이션 시 <strong>런칭 치명적 장애 파급률 99% 극감</strong></td></tr>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">리얼 서버 부하 버티나 알아보려고 주말 새벽 2시에 모여 스트레스 테스트</td><td style="text-align: left">평일 오후 12시 10만 건 쏟아지는 트래픽 V2에 몰래 쏴서 풀부하 자동 테스트</td><td style="text-align: left">극강 부하(Stress) 테스트 <strong>인프라 셋업 시간 및 인건비 100% 자동화/증발</strong></td></tr>
+<tr><td style="text-align: left"><strong>정성</strong></td><td style="text-align: left">"아 진짜 라이브에 올렸다가 V2 DB 터져서 돈 털리면 어떡하냐 쫄려 ㅠ"</td><td style="text-align: left">"어차피 V2 뒤에서 혼자 뻘짓하다 뻗는 거임 ㅋ 유저는 1도 모름 팝콘 꿀잼"</td><td style="text-align: left">0% 리스크 런칭을 통한 <strong>아키텍트의 배포 공포증(Anxiety) 영구 소멸</strong></td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang">미래 전망</h3>
+<ul>
+<li><strong>Diffing (응답 대조) 자동화 AI 봇의 등장 (Diffy / Mountebank)</strong>: 섀도우 배포해 놓고 V2가 500에러 내고 뻗는(OOM) 건 그라파나 눈으로 보면 된다. 근데 V2가 200 OK 살아서 대답을 잘하긴 했는데, 원래 V1이 "3,000원"이라고 정답을 뱉을 걸 V2가 로직이 살짝 꼬여 "2,950원"이라고 계산 틀려서 뱉으면?! 이거 에러 로그도 안 떠서 인간 눈으론 절대 못 찾는다! 차세대 툴들은 **AI 비교 봇(Diffing Engine)**을 달고 나온다. V1이 뱉은 JSON과 V2 유령이 뱉은 JSON 응답 결과 수백만 개를 뒷단 창고에 다 모은 다음, AI가 1초에 1만 번씩 비교 덧셈(Diff) 때려서 "야! 99만 건 똑같은데 이 3건이 50원 짝짝이로 빵꾸 났다! V2 로직 버그 잡어!" 라고 인간 뇌를 초월해 핀셋으로 소수점 버그까지 적발해 내는 극단적 무결점 디버깅 팩토리가 엔터프라이즈의 표준으로 안착 중이다.</li>
+<li><strong>eBPF 기반 커널 레벨 미러링 (Zero-Cost Clone)</strong>: 서비스 메시(Envoy) 프록시로 트래픽을 찢어 복사(Clone)하면 CPU랑 메모리 오버헤드가 좀 생긴다. 앞서 567, 569장 옵저버빌리티에서 찬양했던 리눅스 커널 흑마법 **eBPF(Cilium)**가 이 미러링 영역도 삼켜버리고 있다. 아예 프록시 컨테이너도 안 거치고, 리눅스 밑바닥 커널 소켓 망에서 패킷이 지나가는 0.0001초 찰나에 eBPF C코드가 훅 낚아채서 패킷 원자 단위를 2개로 물리적 복사 쳐서 던져버린다! 기존 프록시 대비 CPU 점유율을 1/10 수준의 깃털로 떨어뜨리며 섀도우 배포의 유일한 단점인 "인프라 자원 낭비(Overhead)"를 하드웨어 레벨에서 지워버리는 기적의 초고속 미러링 시대가 열렸다.</li>
+</ul>
+<h3 id="camgo-pyojun">참고 표준</h3>
+<ul>
+<li><strong>Istio Traffic Mirroring</strong>: K8s 세계관에서 섀도우 배포(다크 런칭)를 "아 그거 뭐 코드 짜야 함? YAML 1줄이면 복제되는데 ㅋ" 수준의 허접한 난이도로 떡락시켜버려 전 세계 아키텍트들에게 무적의 샌드박스를 공짜로 선물해 준 1티어 인프라.</li>
+<li><strong>Dark Launching (다크 런칭)</strong>: 마틴 파울러가 구글, 페이스북의 천재 짓을 보고 명명한 릴리즈 기법의 철학. "사용자는 빛(UI)을 보지만, 코드는 보이지 않는 어둠(Dark) 속 샌드박스에서 수만 번의 라이브 실전 테스트 펀치를 맞으며 벼려진다."</li>
+</ul>
+<p>섀도우 배포 (Shadow Deployment / 트래픽 미러링)는 소프트웨어 공학이 도달한 **'통제된 QA(가짜 테스트)의 오만함을 버리고, 오직 날것 그대로의 혼돈(Real World Traffic)만이 시스템의 진실을 증명할 수 있다는 극단적 실전주의 사상의 가장 우아한 시뮬레이션 봉합술'**이다. QA 서버에 100만 더미 트래픽을 때려 넣어도 절대로 잡히지 않던 버그들이, 실제 운영 서버에 올리자마자 1초 만에 유저의 기상천외한 더러운 클릭과 꼬인 데이터 패턴에 쳐맞고 서버가 하얗게 뻗어버리곤 했다. 라이브 트래픽은 가장 잔혹하지만 가장 완벽한 멘토다. 하지만 그 멘토의 회초리를 고객의 화면(UX)에 피 튀기며 맞을 순 없다. 아키텍트는 사이드카 프록시라는 투명 망토를 이용해 이 라이브 트래픽을 100% 훔쳐낸다. 빛의 속도로 거울 복제(Clone)된 이 거대한 파도는, 격리된 어둠(Shadow) 속에 홀로 서 있는 신규 V2 서버의 심장에 무자비하게 꽂힌다. V2가 피를 토하며 메모리 릭(Leak)으로 쓰러지든, 계산 로직이 꼬여 미친 JSON을 뱉어내든, 그 추악한 실패와 똥들은 단 1방울도 사용자(V1)의 세계로 스며들지 못한 채 무음의 진공 속으로 버려진다(Fire and Forget). 유저 피해 0%의 무결점 보호막 뒤에서, 우리는 100% 실전 강도의 타격을 쳐맞으며 코드를 극한으로 벼려낸다. 실패의 리스크는 0으로 고립시키면서 배움(Test)의 강도는 100% 실전으로 끌어올린 이 모순적인 연금술, 그것이야말로 1,000억짜리 거대 시스템의 엔진을 단 1초의 셧다운도 없이 매끄럽게 심장 이식해 내는 마이크로서비스 시대 최고위 아키텍트들의 절대 무기, '다크 런칭'의 찬란한 그림자다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 섀도우 미러링은 신형 방탄복(V2)의 성능을 테스트하는 **'완벽한 복제 더미 인형 사격장'**입니다. 진짜 군인(V1 유저)에게 새 방탄복을 입혀서 전장에 내보냈다가 뚫리면 목숨을 잃습니다(카나리/빅뱅의 참사). 똑똑한 사령관은 병사와 키, 몸무게, 뼈 밀도가 원자 단위까지 100% 완벽히 똑같은 '돼지고기 실리콘 더미 인형(Shadow)'을 10만 개 복제해 놓고 신상 방탄복을 씌워 진짜 전쟁터 한가운데 몰래 던져놓습니다. 1만 발의 진짜 총알(라이브 트래픽)을 처맞고 인형 뱃속이 걸레짝이 되어도(에러 폭발), 아키텍트는 팝콘을 먹으며 방탄복 설계도를 수정할 뿐 군인은 단 한 명도 피 흘리지 않는 완벽한 실전 시뮬레이터입니다.</li>
+</ul>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>서비스 메시 (Service Mesh/Istio)</strong></td><td style="text-align: left">섀도우 배포의 뼈대이자 심장 흑마법사. 이거 안 쓰면 개발자가 <code>Spring WebFlux</code>로 코드 뱃속에서 <code>Async</code> 쳐가며 남의 서버(V2)로 직접 복제 쏘는 노가다 치다가 톰캣 CPU 터져서 멸망한다. 무조건 인프라 단(Envoy)에서 가위로 찢어서 비동기로 날려버려야(Offloading) 0오버헤드 마술이 성공한다. (이전 장 545번 연계)</td></tr>
+<tr><td style="text-align: left"><strong>카나리 배포 (Canary Release)</strong></td><td style="text-align: left">섀도우 배포의 영원한 경쟁자. 섀도우는 유저가 절대 V2를 못 보게 숨겨서(Dark) 테스트하는 "내구도 스트레스" 용도고, 카나리는 유저 1%가 진짜 V2 껍데기를 보며 "디자인 예쁘네~"라고 실제 클릭 피드백을 주는 "실전 런칭 간 보기" 용도다. 목적이 180도 다르다. (이전 장 547번 연계)</td></tr>
+<tr><td style="text-align: left"><strong>옵저버빌리티 트레이스 (Trace-ID)</strong></td><td style="text-align: left">V1이랑 V2 섀도우 유령 놈이 둘 다 같은 DB를 찌르면 대재앙이라 했다. 옵저버빌리티 형광펜(<code>Trace-ID</code>)이나 <code>X-Shadow-Traffic</code> 헤더 꼬리표를 딱 박아서 V2로 복제 던져주면, 뒷단 K8s 생태계 놈들이 그 헤더 보고 "아씨 이거 섀도우 유령 패킷이네 ㅋ 깡통 샌드박스 DB 찌르게 꺾어줘!"라고 눈치껏 우회시켜 주는 완벽한 연계 플레이 바통이다. (이전 장 569, 570번 연계)</td></tr>
+<tr><td style="text-align: left"><strong>피처 플래그 (Feature Flag)</strong></td><td style="text-align: left">섀도우가 '인프라 레벨'에서 서버 통째로 복제해서 폭격 치는 무식한 테스트라면, 피처 플래그(다음 장 576번)는 내 '앱 소스코드' 뱃속에서 if문 스위치 1개만 띡 열어서 신규 로직 살짝 간 보는 아주 작고 얄팍한 마이크로 레벨의 앱 테스트 꼼수다. (다음 장 576번 연계)</td></tr>
+<tr><td style="text-align: left"><strong>도메인 주도 설계 (DDD)</strong></td><td style="text-align: left">섀도우 미러링 치다 DB 데이터 이중으로 돈 복사(Insert) 터지는 파멸을 막기 위해, CQRS(554장) 기반의 읽기 전용(Read-only) 뷰 도메인에 핀셋으로 타겟팅해서 섀도우 부하 테스트를 몰빵 쳐야 한다. 쓰기 도메인에 무지성 섀도우 때리면 징계위원회 회부된다.</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>내가 만든 새 장난감 자동차(V2 서버)가 쌩쌩 달리는지 보려고 <strong>진짜 10차선 고속도로(운영 트래픽)에 던져넣고 싶은데, 차가 박살 나서 100중 추돌사고 날까 봐 너무너무 쫄렸어요 ㅠㅠ!</strong></li>
+<li>그래서 마법 거울(프록시 미러링)을 썼어요! 고속도로 쌩쌩 달리는 진짜 차들(V1)의 모습을 <strong>100% 똑같이 거울로 복사해서, 내 방 구석 안전한 투명 상자(섀도우) 안에 던져놨어요.</strong></li>
+<li>새 자동차(V2)는 내 방에서 그 진짜 10차선 자동차들의 엄청난 움직임을 100% 처맞으면서 굴러가요! 박살 나도 내 방에서 혼자 터지는 거니까 고속도로 사람들은 1도 다치지 않죠. <strong>진짜랑 100% 똑같이 아프게 맞으면서도 아무도 안 다치는 마법의 샌드박스 테스트</strong>를 '섀도우 배포'라고 부른답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>02. RDD (Resilient Distributed Dataset) — 불변 분산 데이터셋 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote bigdata
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: RDD (Resilient Distributed Dataset) — 불변 분산 데이터셋은(는) 인메모리 분산 실행과 쿼리 최적화를 통해 대화형 분석·배치·스트리밍을 빠르게 연결하는 스파크 핵심 개념이다.
+<strong>비유</strong>: 같은 재료를 다시 꺼내지 않도록 조리대 위에 올려 두고 빠르게 여러 요리를 완성하는 주방과 같다.</p>
+</blockquote>
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>RDD 연산은 부모 RDD의 파티션 데이터를 어떻게 참조하느냐에 따라 두 가지 의존성으로 나뉩니다.</p>
+<table><thead><tr><th style="text-align: left">의존성 유형</th><th style="text-align: left">특징</th><th style="text-align: left">예시 연산</th><th style="text-align: left">Stage 분리</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Narrow Dependency (좁은 의존성)</strong></td><td style="text-align: left">부모 파티션 1개가 자식 파티션 1개에만 필요 (or 子_parent 파티션少數에)</td><td style="text-align: left">map, filter, union</td><td style="text-align: left">같은 Stage에서 파이프라이닝 실행</td></tr>
+<tr><td style="text-align: left"><strong>Wide Dependency (넓은 의존성)</strong></td><td style="text-align: left">부모 파티션 전체가 자식 파티션에 필요 (All-to-All 통신)</td><td style="text-align: left">groupByKey, join, reduceByKey</td><td style="text-align: left">Shuffle 발생 → Stage 경계 분리</td></tr>
+</tbody></table>
+<ul>
+<li><strong>파이프라이닝 최적화</strong>: Narrow Dependency에서는 한 파티션의 연산이 끝나는 즉시 그 결과를 다음 연산으로 보낼 수 있어, 전체 데이터를 한 번에 읽어서 한 번에 처리하는 효율적인 파이프라이닝이 가능합니다.</li>
+<li><strong>Stage 분리 기준</strong>: Wide Dependency(Shuffle)가 발생하는 지점이 Stage 경계입니다. Shuffle은 네트워크를 통해 데이터를 수집해야 하므로 다른 Stage의 태스크보다 나중에 실행되어야 하며, 이를 DAG 스케줄러가 자동으로 배치합니다.</li>
+</ul>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<p>RDD의 변환(Transformation) 연산은 호출 즉시 실행되지 않고, 해당 연산内容과 입력 데이터 위치 정보를 "미리보기(Plan)"로만 기록합니다. 실제 연산은 Action(collect, count, save 등)이 호출되는 시점에 비로소 시작됩니다.</p>
+<p><strong>왜 Lazy Evaluation인가?</strong></p>
+<ol>
+<li><strong>변환 연산의 조합으로 DAG 최적화</strong>: 여러 변환을 조합한 후 한 번에 실행하면, 불필요한 중간 결과를 생성하지 않고 end-to-end로 최적화된 실행 계획을 세울 수 있습니다. 예를 들어 <code>filter → map → filter</code>를 순차 실행하면 3개의 임시 RDD가 생성되지만, Lazy Evaluation에 의해 Spark가 최적의 filter → map → filter 단일 파이프라인으로 압축할 수 있습니다.</li>
+<li><strong>데이터 이동 최소화</strong>: 전체 데이터가 아닌 Action에 실제로 필요한 파티션만 선별적으로 읽어서 처리하는 data-locality 기반 스케줄링이 가능합니다.</li>
+<li><strong>Lineage 그래프 구축</strong>: Action 호출 전까지 전체 변환 체인을 추적하여 DAG를 완성하고, 이를 기반으로 Stage 및 Task를 최적的配置합니다.</li>
+</ol>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 지연 평가, 파티션, 메모리 활용, 실행 계획 최적화가 동시에 설계되어야 한다.</p>
+<p>동작 순서:</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">RDD (Low-level API)</th><th style="text-align: left">DataFrame / Dataset (High-level API)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>스키마</strong></td><td style="text-align: left">없음 (타입 없음, Any 타입)</td><td style="text-align: left">있음 (명시적 스키마, 구조화)</td></tr>
+<tr><td style="text-align: left"><strong>성능 최적화</strong></td><td style="text-align: left">수동 튜닝 필수</td><td style="text-align: left">Catalyst Optimizer가 자동 최적화</td></tr>
+<tr><td style="text-align: left"><strong>컴파일 시 타입 체크</strong></td><td style="text-align: left">불가능 (Runtime才发现 오류)</td><td style="text-align: left">가능 (Scala/Java 컴파일러がチェック)</td></tr>
+<tr><td style="text-align: left"><strong>적합한 워크로드</strong></td><td style="text-align: left">Low-level 제어 필요한 경우 (custom partitioner 등)</td><td style="text-align: left">표준 ETL/SQL/ML 워크로드</td></tr>
+<tr><td style="text-align: left"><strong>디버깅 용이성</strong></td><td style="text-align: left">어려움 (RDD 체인 추적)</td><td style="text-align: left">용이 (SQL/DataFrame plan으로 시각화)</td></tr>
+</tbody></table>
+<ul>
+<li><strong>DataFrame이 RDD보다 좋은 경우</strong>: 구조화된 데이터, SQL 쿼리, 표준 데이터 처리 파이프라인. DataFrame은 Tungsten의 바이트코드 생성(Codegen)과Catalyst 옵티마이저의 규칙 기반/비용 기반 최적화로 인해手書き RDD 코드보다 빠른 경우도 많습니다.</li>
+<li><strong>RDD를 직접 사용해야 하는 경우</strong>: (1) Custom partitioner가 필요한 특수한 샤딩 로직, (2) 비구조화된 데이터(헥사 덤프, 바이너리 등)를 처리하는 low-level 연산, (3) Spark 외부 시스템과의 특수한 Integration이 필요한 경우</li>
+</ul>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">고려 사항</th><th style="text-align: left">세부 내용</th><th style="text-align: left">주요 의사결정</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>데이터 구조화 여부</strong></td><td style="text-align: left">구조화된 테이블/로그/SQL 데이터 → DataFrame 권장</td><td style="text-align: left">비정형/바이너리/커스텀 파싱 → RDD 고려</td></tr>
+<tr><td style="text-align: left"><strong>반복 연산 빈도</strong></td><td style="text-align: left">동일 RDD를 3회 이상 반복 사용 → cache/persist 필수</td><td style="text-align: left">일회성 파이프라인 → 불필요</td></tr>
+<tr><td style="text-align: left"><strong>Lineage 체인 길이</strong></td><td style="text-align: left">10개 이상 변환 체인 → Long lineage, checkpoint 권장</td><td style="text-align: left">짧은 체인 → 기본으로 충분</td></tr>
+<tr><td style="text-align: left"><strong>파티션 수</strong></td><td style="text-align: left">파티션 수 = 전체 CPU 코어 수 × 2~4 가 적절</td><td style="text-align: left">코어 수보다 현저히 적으면資源活用不足, 많으면 Overhead 증가</td></tr>
+</tbody></table>
+<p><em>(추가 실무 적용 가이드 - RDD 캐싱 전략)</em></p>
+<ul>
+<li><strong>cache()</strong>: 기본 메모리 캐싱. <code>MEMORY_AND_DISK</code> (메모리 부족 시 디스크로 자동 fell back)</li>
+<li><strong>persist(StorageLevel.MEMORY_ONLY)</strong>: 메모리에만 저장. OOM 시 해당 RDD 전체가 evict되어 다시 처음부터 재연산됨</li>
+<li><strong>persist(StorageLevel.DISK_ONLY)</strong>: 디스크에만 저장. 메모리보다 느리지만 확실한 영속성</li>
+<li><strong>persist(StorageLevel.MEMORY_AND_DISK_2)</strong>: 메모리 + 디스크 + 2중 복제. 클러스터 장애耐性이 중요한 경우</li>
+<li><strong>실무 Decision Tree</strong>: (1) RDD를 여러 번 반복 사용합니까? → No: 캐시 불필요, Yes: (2) 클러스터 메모리 충분합니까? → No: MEMORY_AND_DISK, Yes: MEMORY_ONLY)</li>
+</ul>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<ol>
+<li>
+<p><strong>RDD에서 DataFrame으로의 자연스러운 이동</strong>
+Apache Spark의 주요 사용자들은 점점 더 low-level RDD API에서 high-level DataFrame/Dataset API로 이동하고 있습니다. Databricks의 내부 통계에 따르면 2025년 현재 Spark 워크로드의 약 90%가 DataFrame API로 작성되고 있으며, RDD API는 주로 Spark 내부 코드(Structured Streaming의 상태 관리, MLlib의低级 구현체 등)에서만 사용됩니다.</p>
+</li>
+<li>
+<p><strong>Pandas API on Spark (Koalas)의 표준화</strong>
+PySpark의 Pandas API(PyArrow 기반)는 기존 Pandas 사용자가 수십 줄의 코드 변경만으로 분산 처리 환경으로 마이그레이션할 수 있게 합니다. 이는 데이터 엔지니어링과 데이터 사이언스 간의 장벽을 크게 낮추는 역할을 하며, 단일 노드 Pandas 스크립트가 수십 대 클러스터의 처리량으로 확장될 수 있는 미래가 열리고 있습니다.</p>
+</li>
+<li>
+<p><strong>Lineage 추적의 거버넌스 통합</strong>
+Delta Lake, Apache Iceberg, Apache Hudi 같은 레이크하우스 테이블 포맷과 Spark의 조합에서, RDD의 lineage 개념이 데이터 계보(Data Lineage) 관점으로 확장되고 있습니다. Apache Atlas나 DataHub 같은 메타데이터/거버넌스 도구가 Spark SQL 쿼리의 논리적 lineage를 자동으로 추적하여, 특정 테이블 컬럼의 출처부터 최종 분석 결과까지端着 цепочку 전개를 시각화하는 것이 기술사 级問에서 중요하게 다뤄지고 있습니다.</p>
+</li>
+</ol>
+<h2 id="brain-jisig-maeb-knowledge-graph">🧠 지식 맵 (Knowledge Graph)</h2>
+<ul>
+<li><strong>RDD Operations 트리</strong>
+<ul>
+<li><strong>Transformation (지연 실행)</strong>
+<ul>
+<li>Narrow: map, filter, flatMap, union, sample, mapPartitions</li>
+<li>Wide: groupByKey, reduceByKey, join, cogroup, repartition, coalesce</li>
+</ul>
+</li>
+<li><strong>Action (즉시 실행)</strong>
+<ul>
+<li>Collect: collect, toLocalIterator</li>
+<li>Aggregate: count, sum, reduce, fold, aggregate</li>
+<li>Output: saveAsTextFile, saveAsNewAPIHadoopFile, foreach</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>StorageLevel 종류</strong>
+<ul>
+<li>MEMORY_ONLY, MEMORY_AND_DISK, MEMORY_ONLY_SER, MEMORY_AND_DISK_SER, DISK_ONLY, DISK_ONLY_2, OFF_HEAP (Titanium)</li>
+</ul>
+</li>
+<li><strong>RDD vs DataFrame vs Dataset 비교</strong>
+<ul>
+<li>RDD:타입 없음(T), 低レベル, 手動 최적화</li>
+<li>DataFrame:Row 타입, 스키마 있음, Catalyst 최적화</li>
+<li>Dataset[T]:타입 T, 스키마 있음, Encoder 기반 직렬화</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>RDD (Resilient Distributed Dataset) — 불변 분산 데이터셋은(는) 해당 영역의 성능, 확장성, 운영 안정성, 거버넌스 수준을 직접 좌우하는 핵심 요소다. 따라서 도입 여부는 기능 비교를 넘어 데이터 특성, 팀 역량, 비용 구조, 규제 요구를 함께 보는 아키텍처 판단이어야 한다.</p>
+<p>실무에서는 초기 효과보다 지속 운영 가능성과 연계 확장성이 더 중요하다. 스파크 계열 기술의 성능은 단순 API 선택보다 실행 계획과 메모리·셔플 제어를 얼마나 정교하게 하느냐에서 결정된다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[MapReduce]
+    │
+    ▼
+[RDD]
+    │
+    ▼
+[Lineage 기반 복구]
+    │
+    ▼
+[DataFrame&#x2F;Dataset]
+</code></pre>
+<p>이 흐름도는 MapReduce의 디스크 기반 한계를 시작점으로 RDD의 불변 분산 복구를 거쳐 DataFrame/Dataset으로 확장되는 진화 순서를 보여준다.</p>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">RDD·DataFrame</td><td style="text-align: left">스파크의 기본 추상화</td></tr>
+<tr><td style="text-align: left">Catalyst·AQE</td><td style="text-align: left">실행 계획 최적화 핵심</td></tr>
+<tr><td style="text-align: left">Shuffle·Partition</td><td style="text-align: left">성능 병목과 튜닝 포인트</td></tr>
+<tr><td style="text-align: left">Lakehouse</td><td style="text-align: left">스파크 기반 현대 분석 플랫폼</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

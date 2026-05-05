@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>379. 재해 복구 (DR) 아키텍처 - RTO (Recovery Time Objective), RPO (Recovery Point Objective) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 재해 복구(Disaster Recovery)는 화산재, 홍수, 전쟁 등 대규모 재해로 인해 주요 데이터 센터가 전소하거나 기능이 마비되었을 때, 시스템을 다른 위치에 복원하여 서비스를 계속 제공할 수 있도록 하는 비즈니스 연속성(BC) 전략의 핵심 구성 요소이다. RTO (Recovery Time Objective)는 "얼마나 빨리 복구해야 하는가", RPO (Recovery Point Objective)는 "얼마나 많은 데이터 손실을 허용하는가"를 정의한다.
+2. <strong>가치</strong>: 효과적인 DR 전략은 재해 상황에서도 비즈니스 운영의 연속성을 보장하여, 데이터 손실로 인한 금전적 손실, 고객 이탈, 평판 손상 등을 최소화한다. 특히 금융, 의료, 전자상거래等领域에서 DR 미흡은 치명적인 결과를 초래할 수 있다.
+3. <strong>융합</strong>: DR 아키텍처는 다중 가용 영역(Multi-AZ), 이중화(Redundancy), 자동 장애 조치(Failover), 클라우드 기반 DR-as-a-Service 등 다양한 기술과 결합되어 구현된다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h1 id="379-jaehae-boggu-dr-akitegceo-rto-rpo">379. 재해 복구 (DR) 아키텍처 - RTO, RPO</h1>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: 재해 복구(DR)는 업무 연속성 계획(BCP)의 기술적 구현으로, 데이터 손실과 시스템 downtime을 최소화하기 위한 체계적인 전략이다. DR은 화재,地震, 테러 공격, Ransomware 공격 등 예기치 않은 대규모 Incident에 대응하여, 비즈니스가 사용할 수 있는 수준의 시스템으로 얼마나 빨리 돌아갈 수 있는지를 목표로 한다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 2021년 한국某 datacenter 화재로 인해 金음카드, 한겨레 등 주요 서비스가 수일에 걸쳐 마비된 사례에서 볼 수 있듯이, DR 전략이 부재하거나不十分하면 대규모 장애発生 시 회복이 매우 어렵다. 또한 금전적 손실 외에 고객 신뢰 상실, 규제 제재 등 二次的被害도 발생한다.</p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: DR 아키텍처는 **'항공사 비행기의 안전設備'**와 같다. 비행기에는 엔진故障時를 위한 이중 엔진,紧急 대피용 미끄럼틀, 충돌 가능성에 대한迫擊 Procedures 등이 있으며, 이러한 安全設備는"이렇게 하면生存可能性が maximise된다"는 목표에 따라 설계된다. 소프트웨어 시스템도 마찬가지로 대규모 재해(데이터센터 붕괴 등)가 발생해도"얼마나 빨리 그리고 얼마나 完全하게客戶에게서비스를 제공할 수 있게 회복하는가"를目標로 설계된다.</p>
+</li>
+<li>
+<p><strong>등장 배경 및 발전 과정</strong>:</p>
+<ol>
+<li><strong>1990년대</strong>: 인터넷 보급과 함께 웹 서비스의 중요성 증가, DR 개념 발전</li>
+<li><strong>2001년 9/11</strong>: 미국 terrorist 공격으로 비즈니스 연속성 계획(BCP/DR)의 중요성 본격적 인식</li>
+<li><strong>2010년대</strong>: 클라우드 컴퓨팅 확산으로 DR 구축 비용大幅적 감소</li>
+<li><strong>현재</strong>: Ransomware 공격 증가에 따른 DR의 중요성 再認識, Cloud DR (DR-as-a-Service) 확산</li>
+</ol>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: DR 아키텍처는 **'해상 Cruise선의 난파선 대피 程序'**와 같다. cruise선이 침몰할 경우, 승객은 정해진 위치로 대피하고, 구명보트에 분산乘坐하여 손실될 승객 수를 최소화하며, 구조 신호기를 작동시켜 구조대가 최대한 빨리 도착하도록 한다. 소프트웨어 시스템에서도 대규모 장애 시 데이터를 다른 곳에 복제하고, 미리定해진 절차에 따라 failover하여 피해量を最小化하는 것이 DR의 핵심이다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="rtowa-rpo-jeongyi">RTO와 RPO 정의</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────────┐
+│                    RTO와 RPO 핵심 개념                                                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  [RTO (Recovery Time Objective)] ★복구 시간 목표                    │
+│                                                                 │
+│     - 재해 발생 후 서비스를完全に 복구하는데 걸리는 最大 허용 시간               │
+│     - 이 시간 내에 복구되지 않으면 비즈니스에 치명적 영향                     │
+│     - 예: RTO = 4시간 → 장애 발생 후 4시간 내에 서비스 복구 완료 목표         │
+│                                                                 │
+│  [RPO (Recovery Point Objective)] ★복구 시점 목표                    │
+│                                                                 │
+│     - 복구 시 허용되는 최대 데이터 손실 기간                             │
+│     - 이 시점 이후의 데이터는 손실된 것으로 간주                         │
+│     - 예: RPO = 1시간 → 마지막 백업 이후 1시간 이내의 데이터만 손실 허용       │
+│                                                                 │
+│  [RTO&#x2F;RPO 관계]                                                    │
+│                                                                 │
+│     장애 발생 시점 ──────────────────────▶ 현재                         │
+│     │                                    │                         │
+│     │◀────────── RPO ────────────▶│                                 │
+│                                    │                                 │
+│                           │◀──── RTO ────▶│                         │
+│                                    │                                 │
+│                           복구 완료                                │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="dr-jeonryag-yuhyeong">DR 전략 유형</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────────┐
+│                    DR 전략 4가지 유형 (비용 vs 복구 시간 tradeoff)                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  [1. DR 없음 (No DR)] ★가장 저렴, 위험 가장 높음                     │
+│     - 재해 시 데이터 및 서비스 완전 손실                                   │
+│     - 복구 불가능하거나 엄청난 시간 소요                                   │
+│     - 비용: 없음                                                     │
+│     - 복구 시간: 무한대                                              │
+│     - RTO: 수일~수주                                                │
+│     - RPO: 데이터 100% 손실                                             │
+│                                                                 │
+│  [2. 백업 &amp;.restore (Backup &amp; Restore)] ★저렴                     │
+│     - 데이터를 주기적으로 백업하여 보관                                    │
+│     - 재해 시 백업에서 복원                                             │
+│     - 비용: 낮음                                                      │
+│     - 복구 시간: 백업 크기에 따라 수시간~수일                             │
+│     - RTO: 수시간~수일                                                │
+│     - RPO: 마지막 백업 시점 (예: 하루 전)                              │
+│                                                                 │
+│  [3. Pilot Light] ★중간 비용&#x2F;복구 시간                               │
+│     - 핵심 인프라만 DR 사이트에 항상 대기                                │
+│     - 재해 시 전체 인프라 가동 + 데이터 복사                              │
+│     - 비용: 중간                                                      │
+│     - 복구 시간: 수십 분~수시간                                        │
+│     - RPO: 거의 실시간 (데이터 복제)                                    │
+│                                                                 │
+│  [4. Warm Standby] ★높은 비용, 빠른 복구                              │
+│     - 전체 인프라가 축소된 형태로 DR 사이트에 항상 가동                     │
+│     - 재해 시 Scale-out하여 정상 운영                                   │
+│     - 비용: 높음                                                      │
+│     - 복구 시간: 수십 분                                              │
+│     - RPO: 거의 실시간                                               │
+│                                                                 │
+│  [5. Hot Standby (Multisite)] ★가장高昂, 가장 빠름                      │
+│     - 전체 인프라가 DR 사이트에 항상 가동 + 실시간 데이터 동기화              │
+│     - 재해 시 자동 failover                                             │
+│     - 비용: 매우 높음                                                  │
+│     - 복구 시간: 수초~수십 초                                            │
+│     - RPO: 0 (동기화 되므로 데이터 손실 없음)                               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="dr-akitegceo-daieogeuraem">DR 아키텍처 다이어그램</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────────┐
+│                    Multi-Region DR 아키텍처 예시                                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  [주 데이터 센터 (Primary Region)]              [DR 데이터 센터 (Secondary Region)]      │
+│  ┌──────────────────────┐                ┌──────────────────────┐            │
+│  │     Application      │                │     Application      │            │
+│  │        Tier         │                │        Tier         │            │
+│  │    (Auto Scaling)   │                │   (Standby Mode)    │            │
+│  └──────────┬─────────┘                └──────────┬─────────┘            │
+│              │                                       │                         │
+│              │ Synchronous Replication               │                         │
+│              │                                       │                         │
+│  ┌──────────▼─────────┐                ┌──────────▼─────────┐            │
+│  │   Database Primary  │────────────────▶│  Database Standby  │            │
+│  │  (Write&#x2F;Read)      │                │   (Read-Only)      │            │
+│  └─────────────────────┘                └─────────────────────┘            │
+│                                                                              │
+│  [ failover Trigger]                                                      │
+│  - Health check 실패 감지                                                  │
+│  - 수동 failover 명령                                                           │
+│  - 자동 Route53 DNS failover                                                 │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해석]</strong> DR 아키텍처의 핵심은 Primary Region과 Secondary Region 간의 데이터 복제와 failover 메커니즘이다. RTO/RPO 요구사항에 따라 동기/비동기 복제, Warm/Hot Standby 등의 전략을 선택한다.</p>
+<hr />
+<h2 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h2>
+<h3 id="dr-teseuteude-zhong-yao-xing-gwa-yuhyeong">DR 테스트的重要性과 유형</h3>
+<table><thead><tr><th style="text-align: left">테스트 유형</th><th style="text-align: left">설명</th><th style="text-align: left">실행 주기</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>구성 검토</strong></td><td style="text-align: left">DR 설정 및 문서 유효성 확인</td><td style="text-align: left">월 1회</td></tr>
+<tr><td style="text-align: left"><strong>표면적 테스트</strong></td><td style="text-align: left">백업 데이터의 完全性 확인</td><td style="text-align: left">주 1회</td></tr>
+<tr><td style="text-align: left"><strong>기능 테스트</strong></td><td style="text-align: left">DR 시스템의 개별 功能 확인</td><td style="text-align: left">월 1회</td></tr>
+<tr><td style="text-align: left"><strong>模擬演练</strong></td><td style="text-align: left">실제 failover 시뮬레이션 (본番 환경 아님)</td><td style="text-align: left">분기 1회</td></tr>
+<tr><td style="text-align: left"><strong>전면演练</strong></td><td style="text-align: left">실제 재해를 simulates하여 完全 failover/</td><td style="text-align: left">연 1회</td></tr>
+</tbody></table>
+<h3 id="dr-sinariobyeol-boggu-jeolca">DR 시나리오별 복구 절차</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[시나리오 1: Ransomware 공격으로 인한 DR Trigger]
+
+  1. [감지 및 보고] (T+0)
+     - Ransom Notes detection 또는暗号化 진행 目擊
+     - CSIRT 즉시 소집, 상황 평가
+
+  2. [ 격리] (T+10분)
+     - 공격 범위 파악
+     - 영향 받은 시스템 네트워크 격리
+     - 추가 전파 방지
+
+  3. [DR_trigger] (T+30분)
+     - DR Team에 failover指令
+     - DNS failover (Route53)
+     - DR 사이트로 트래픽 전환
+
+  4. [복구 확인] (T+1시간)
+     - DR 사이트에서 서비스 정상 가동 확인
+     - 데이터 무결성 확인 (RPO 기준)
+
+  5. [복귀 계획] (T+24시간)
+     - 원래 사이트 회복 가능성 평가
+     - 장기 복구 전략 수립
+</code></pre>
+<h3 id="keulraudeu-giban-dr-obsyeon">클라우드 기반 DR 옵션</h3>
+<table><thead><tr><th style="text-align: left">옵션</th><th style="text-align: left">공급업체</th><th style="text-align: left">특징</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>AWS Elastic Disaster Recovery</strong></td><td style="text-align: left">AWS</td><td style="text-align: left">Pilot Light 방식, 온라인 복구</td></tr>
+<tr><td style="text-align: left"><strong>Azure Site Recovery</strong></td><td style="text-align: left">Microsoft</td><td style="text-align: left">Warm Standby 방식</td></tr>
+<tr><td style="text-align: left"><strong>Google Cloud DR</strong></td><td style="text-align: left">Google</td><td style="text-align: left">다중 리전 지원</td></tr>
+<tr><td style="text-align: left"><strong>Zerto</strong></td><td style="text-align: left">Zerto</td><td style="text-align: left">블록 레벨 복제, 시간 지정 복구</td></tr>
+<tr><td style="text-align: left"><strong>Veeam</strong></td><td style="text-align: left">Veeam</td><td style="text-align: left">백업 및 DR 통합</td></tr>
+</tbody></table>
+<hr />
+<h2 id="4-bigyo-mic-teureideuopeu">4. 비교 및 트레이드오프</h2>
+<h3 id="dr-readiness-pyeongga-jipyo">DR readiness 평가 지표</h3>
+<table><thead><tr><th style="text-align: left">지표</th><th style="text-align: left">설명</th><th style="text-align: left">목표</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>DR 테스트 성공률</strong></td><td style="text-align: left">직전 DR 테스트에서 목표 달성 비율</td><td style="text-align: left">100%</td></tr>
+<tr><td style="text-align: left"><strong>RTO 달성률</strong></td><td style="text-align: left">실제 장애 시 목표 RTO 내 복구 비율</td><td style="text-align: left">&gt; 95%</td></tr>
+<tr><td style="text-align: left"><strong>RPO 달성률</strong></td><td style="text-align: left">실제 장애 시 목표 RPO 내 데이터 손실 비율</td><td style="text-align: left">&gt; 95%</td></tr>
+<tr><td style="text-align: left"><strong>문서화 수준</strong></td><td style="text-align: left">DR Runbook 완전성 점수</td><td style="text-align: left">&gt; 90%</td></tr>
+<tr><td style="text-align: left"><strong>팀 숙련도</strong></td><td style="text-align: left">DR 절차 수행 평균 시간</td><td style="text-align: left">&lt; 목표 RTO의 50%</td></tr>
+</tbody></table>
+<h3 id="dr-munseo-pilsu-hangmog-runbook">DR 문서 필수 항목 (Runbook)</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[DR Runbook 필수 항목]
+
+  1. 개요 및 범위
+     - DR 목표 (RTO&#x2F;RPO)
+     - 적용 시스템 목록
+
+  2. 역할 및 책임
+     - DR 팀 연락처
+     - 각 역할별 책임 분담
+
+  3. 복구 절차 (순서 명확히)
+     - 각 단계별 상세 명령&#x2F;작업
+     - 예상 소요 시간
+     - 확인 방법
+
+  4. 의사결정 트리
+     - 상황별 action flow diagram
+     -&#x2F;go&#x2F;no-go criteria
+
+  5. 통신 계획
+     - 이해관계자 통보 순서
+     - 고객 통보 템플릿
+     - 규제 기관 신고 기준
+</code></pre>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: DR 테스트는 **'방재 훈련'**과 같다. 건물에서는消防訓練을 실시하여 직원들이災害時에 어떻게 대피하고, 소화전을如何使用하며,管理자에게報告하는가를演练한다. 소프트웨어 시스템에서도 동일한 원리로,재해 발생 시 어떻게 failover하고 복구하는가를定期적으로テスト하여, 실제 상황이 발생했을 때混乱없이 대응할 수 있도록 준비한다.</li>
+</ul>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-coejeoghwa-gibeob">5. 실무 적용 및 최적화 기법</h2>
+<h3 id="coesin-donghyang">최신 동향</h3>
+<ol>
+<li><strong>Cloud-Native DR</strong>: 클라우드 네이티브 서비스를 활용한 DR 구축 비용大幅적 감소</li>
+<li>** Ransomware 특화 DR**: Ransomware 공격에 특화된 분리된 DR 환경, air-gapped 백업</li>
+<li><strong>Orchestrated DR</strong>: 복잡한 MSA 환경에서 자동화된 DR 오케스트레이션 도구 확산</li>
+<li><strong>실시간 DR 테스트</strong>: 실제 운영에 영향을 주지 않고 Continuous하게 DR 준비도 검증</li>
+</ol>
+<h3 id="hangyejeom-mic-bowan">한계점 및 보완</h3>
+<ul>
+<li><strong>비용</strong>: Hot Standby 방식은 막대한 인프라 비용 소요</li>
+<li><strong>복잡성</strong>: MSA 환경에서는 서비스 간 의존성 때문에 DR 복잡性이 기하급수적으로 증가</li>
+<li><strong>테스트 부담</strong>: 정기적 DR 테스트는 운영 리소스를消費</li>
+<li><strong>데이터 일관성</strong>: 비동기 복제에서는 일부 데이터 손실不可避免</li>
+</ul>
+<p>재해 복구(DR) 아키텍처는 비즈니스 연속성의 핵심 요소로서, 대규모 재해 상황에서 서비스의可用性と 데이터의 무결성을 보장한다. RTO와 RPO를 명확히 정의하고, 조직의业务 중요도에 맞는 DR 전략(Pilot Light, Warm/Hot Standby 등)을 선택하며, 정기적인 DR 테스트를 통해 준비 상태를 검증해야 한다. 기술사는 DR을 단순한Backup이 아닌, 비즈니スの生存을 보장하는 핵심 요소로 인식하고, 체계적인 DR 전략 수립과 지속적인 개선에 기여해야 한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: DR 아키텍처는 **'보험'**과 같다. 보험이 Fire, 자동차 보험 등이 있는 것처럼, DR도 대규모障害에 대한 "보험"이다. 평소에 보험료(DR 구축/유지 비용)를 들이면서 실제 사고(재해)가 발생했을 때 보장(비즈니스 연속성)을 받는 것이다. 보험이 있는 우리는 안심하고 생활하듯, DR이 갖추어진 조직도 대규모障害에서도 안심하고 대응할 수 있다.</li>
+</ul>
+<hr />
+<h2 id="camgo">참고</h2>
+<ul>
+<li>모든 약어는 반드시 전체 명칭과 함께 표기: <code>API (Application Programming Interface)</code></li>
+<li>일어/중국어 절대 사용 금지 (한국어만 사용)</li>
+<li>각 섹션 끝에 📢 요약 비유 반드시 추가</li>
+<li>ASCII 다이어그램의 세로선 │와 가로선 ─ 정렬 완벽하게</li>
+<li>한 파일당 최소 800자 이상의 실질 내용</li>
+</ul>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>02. CI&#x2F;CD 및 GitOps 아키텍처 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="breadcrumb">
+    <a href="https://agnusdei1207.github.io/brainscience">root</a>
+    
+    
+    <span class="breadcrumb-sep">/</span>
+    <a href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;">학습 노트</a>
+    
+    
+    <span class="breadcrumb-sep">/</span>
+    <a href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;">Study Note</a>
+    
+    
+    <span class="breadcrumb-sep">/</span>
+    <a href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;">15: 데브옵스 및 SRE (DevOps &amp; SRE)</a>
+    
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">02. CI&#x2F;CD 및 GitOps 아키텍처</span>
+</div>
+
+
+<h1 style="font-size:1.5rem; font-weight:700; margin-bottom:24px;">02. CI&#x2F;CD 및 GitOps 아키텍처</h1>
+
+
+
+
+<div class="folder-list">
+
+    
+    
+    
+
+    
+
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;061-helm-charts&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">61. Helm Charts (헬름 차트)</span>
+            <span class="fi-meta">2026-04-05</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;061-helm-charts&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;062-infrastructure-as-code&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">62. 인프라스트럭처 애즈 코드 (Infrastructure as Code, IaC)</span>
+            <span class="fi-meta">2026-04-05</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;062-infrastructure-as-code&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;063-terraform-ansible&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">63. Terraform vs Ansible</span>
+            <span class="fi-meta">2026-04-05</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;063-terraform-ansible&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;064-git-flow-branch-strategy-release&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">64. Git Flow</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;064-git-flow-branch-strategy-release&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;065-github-flow-branch-strategy&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">65. GitHub Flow</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;065-github-flow-branch-strategy&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;066-gitlab-flow-environment-branch-strategy&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">66. GitLab Flow</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;066-gitlab-flow-environment-branch-strategy&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;067-pull-request-pr-merge-request-code-review&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">67. Pull Request (PR)</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;067-pull-request-pr-merge-request-code-review&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;068-git-merge-conflict-resolution-rebase&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">68. 병합 충돌 (Merge Conflict) 및 해결 방안 (Rebase vs Merge)</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;068-git-merge-conflict-resolution-rebase&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;069-commit-message-convention-feat-fix&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">69. 커밋 메시지 컨벤션</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;069-commit-message-convention-feat-fix&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;070-build-tools-maven-gradle-npm&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">70. 빌드 도구 (Build Tools)</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;070-build-tools-maven-gradle-npm&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;071-jenkins-ci-cd-pipeline-automation&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">71. 젠킨스 (Jenkins)</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;071-jenkins-ci-cd-pipeline-automation&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;072-declarative-pipeline-jenkinsfile-as-code&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">72. 선언적 파이프라인</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;072-declarative-pipeline-jenkinsfile-as-code&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;073-github-actions-ci-cd-workflow&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">73. GitHub Actions</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;073-github-actions-ci-cd-workflow&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;074-gitlab-ci-cd-pipeline-automation&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">74. GitLab CI&#x2F;CD</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;074-gitlab-ci-cd-pipeline-automation&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;075-artifact-management-nexus-docker-registry&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">75. 아티팩트 (Artifact)</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;075-artifact-management-nexus-docker-registry&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;076-artifact-repository-nexus-jfrog-ecr&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">76. 아티팩트 리포지토리</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;076-artifact-repository-nexus-jfrog-ecr&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;077-unit-testing-automation-junit-pytest-mocking&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">77. 단위 테스트 (Unit Test) 자동화 (JUnit, PyTest)</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;077-unit-testing-automation-junit-pytest-mocking&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;078-code-coverage&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">78. 코드 커버리지 (Code Coverage) 분석 도구 (JaCoCo)</span>
+            <span class="fi-meta">2026-04-05</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;078-code-coverage&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;079-sonarqube&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">79. 소스코드 정적 분석 도구 (SonarQube)</span>
+            <span class="fi-meta">2026-04-05</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;079-sonarqube&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;080-sca-software-composition-analysis&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">80. 패키지 취약점 스캐닝 (SCA, Software Composition Analysis)</span>
+            <span class="fi-meta">2026-04-05</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;080-sca-software-composition-analysis&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;081-cd-continuous-deployment-pipeline-architecture&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">81. 지속적 배포 (CD Pipeline)</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;081-cd-continuous-deployment-pipeline-architecture&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;082-zero-downtime-deployment-rolling-blue-green-canary&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">82. 무중단 배포 (Zero Downtime Deployment) 전략 3가지</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;082-zero-downtime-deployment-rolling-blue-green-canary&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;083-rolling-update-deployment-zero-downtime-version-inconsistency&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">83. 롤링 배포 (Rolling Update)</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;083-rolling-update-deployment-zero-downtime-version-inconsistency&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;084-blue-green-deployment-zero-downtime-fast-rollback&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">84. 블루&#x2F;그린 배포 (Blue&#x2F;Green)</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;084-blue-green-deployment-zero-downtime-fast-rollback&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;085-canary-release-progressive-delivery-weight-routing&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">85. 카나리 배포 (Canary Release)</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;085-canary-release-progressive-delivery-weight-routing&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;086-gitops-declarative-infrastructure-continuous-synchronization-argocd&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">86. GitOps (깃옵스)</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;086-gitops-declarative-infrastructure-continuous-synchronization-argocd&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;087-push-based-deployment-jenkins-ci-cd-security-risk&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">87. 푸시 기반(Push-based) 배포</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;087-push-based-deployment-jenkins-ci-cd-security-risk&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;088-pull-based-deployment-gitops-argocd-security-auto-healing&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">88. 풀 기반(Pull-based) 배포</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;088-pull-based-deployment-gitops-argocd-security-auto-healing&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;089-argocd-gitops-continuous-delivery-kubernetes&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">89. ArgoCD</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;089-argocd-gitops-continuous-delivery-kubernetes&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;090-fluxcd-gitops-pull-based-kubernetes-deployment&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">90. FluxCD</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;090-fluxcd-gitops-pull-based-kubernetes-deployment&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;091-kustomize-kubernetes-declarative-overlay-manifest&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">91. Kustomize (커스터마이즈)</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;091-kustomize-kubernetes-declarative-overlay-manifest&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;092-helm-kubernetes-package-manager-chart-template&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">92. Helm (헬름)</span>
+            <span class="fi-meta">2026-04-10</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;092-helm-kubernetes-package-manager-chart-template&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;093-spinnaker-multi-cloud-cd-canary-analysis&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">93. 스핀네이커 (Spinnaker)</span>
+            <span class="fi-meta">2026-03-04</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;093-spinnaker-multi-cloud-cd-canary-analysis&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;094-pipeline-security-lock-in-ci-cd&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">94. 파이프라인 보안 락인 (Pipeline Security)</span>
+            <span class="fi-meta">2026-03-04</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;094-pipeline-security-lock-in-ci-cd&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;095-secret-manager-hashicorp-vault-aws&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">95. 시크릿 매니저 (Secret Manager)</span>
+            <span class="fi-meta">2026-03-04</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;095-secret-manager-hashicorp-vault-aws&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;096-k8s-sealed-secrets-gitops-encryption&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">96. K8s Sealed Secrets</span>
+            <span class="fi-meta">2026-03-04</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;096-k8s-sealed-secrets-gitops-encryption&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;097-deployment-approval-gate-automation&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">97. 배포 승인 게이트 (Approval Gate)</span>
+            <span class="fi-meta">2026-03-04</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;097-deployment-approval-gate-automation&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;098-rollback-strategy-pipeline-error-threshold&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">98. 롤백 (Rollback) 전략</span>
+            <span class="fi-meta">2026-03-04</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;098-rollback-strategy-pipeline-error-threshold&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;099-database-migration-automation-flyway-liquibase&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">99. 데이터베이스 마이그레이션 자동화 (Flyway, Liquibase)</span>
+            <span class="fi-meta">2026-03-04</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;099-database-migration-automation-flyway-liquibase&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;100-multi-region-deployment-pipeline-disaster-recovery&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">100. 멀티 리전 (Multi-Region) 배포 파이프라인</span>
+            <span class="fi-meta">2026-03-04</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;100-multi-region-deployment-pipeline-disaster-recovery&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;101-edge-device-ota-firmware-deployment-pipeline&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">101. 엣지 디바이스 OTA 배포 (Over-The-Air)</span>
+            <span class="fi-meta">2026-03-04</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;101-edge-device-ota-firmware-deployment-pipeline&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;102-air-gapped-cicd-tarball-delivery&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">102. 에어 갭 (Air-gapped) 환경의 CI&#x2F;CD: 폐쇄망 배포 전략</span>
+            <span class="fi-meta">2026-03-04</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;102-air-gapped-cicd-tarball-delivery&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;103-cicd-metrics-dashboard-deployment-analytics&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">103. CI&#x2F;CD 메트릭 대시보드: 배포 성능 분석 및 병목 탐지</span>
+            <span class="fi-meta">2026-03-04</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;103-cicd-metrics-dashboard-deployment-analytics&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;104-mobile-app-cicd-fastlane-pipeline&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">104. 모바일 앱 CI&#x2F;CD: Fastlane을 활용한 파이프라인 자동화</span>
+            <span class="fi-meta">2026-03-04</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;104-mobile-app-cicd-fastlane-pipeline&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;105-build-caching-optimization-docker-layer&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">105. 빌드 캐싱 최적화: CI&#x2F;CD 병목을 뚫는 레이어 전략</span>
+            <span class="fi-meta">2026-03-04</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;105-build-caching-optimization-docker-layer&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;106-distributed-build-worker-nodes-scaling&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">106. 분산 빌드: 워커 노드 스케일링을 통한 빌드 병렬화</span>
+            <span class="fi-meta">2026-03-04</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;106-distributed-build-worker-nodes-scaling&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;107-nightly-build-scheduled-cron-pipeline&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">107. 나이트 빌드: 예약된 크론(Cron) 기반의 정적&#x2F;동적 정기 점검</span>
+            <span class="fi-meta">2026-03-04</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;107-nightly-build-scheduled-cron-pipeline&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;108-test-data-masking-pipeline&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">108. 테스트 데이터 마스킹 파이프라인 (Test Data Masking)</span>
+            <span class="fi-meta">2026-03-04</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;108-test-data-masking-pipeline&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;109-sbom-extraction-pipeline&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">109. SBOM 추출 파이프라인 (Software Bill of Materials)</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;109-sbom-extraction-pipeline&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;110-zero-downtime-db-schema-rollout&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">110. 무중단 DB 스키마 롤아웃 (Zero-Downtime)</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;110-zero-downtime-db-schema-rollout&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;111-micro-frontends-deployment&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">111. 마이크로 프론트엔드 배포 (Micro Frontends Deployment)</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;111-micro-frontends-deployment&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;112-serverless-framework-deployment&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">112. 서버리스 프레임워크 배포 (Serverless Framework Deployment)</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;112-serverless-framework-deployment&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;113-aws-sam-serverless-model&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">113. AWS SAM (Serverless Application Model)</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;113-aws-sam-serverless-model&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;114-kayenta-canary-analysis&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">114. Kayenta 카나리 분석 (Kayenta Canary Analysis)</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;114-kayenta-canary-analysis&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;115-atlantis-terraform-ci&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">115. Atlantis Terraform CI</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;115-atlantis-terraform-ci&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;116-infrastructure-drift-detection&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">116. 인프라 드리프트 감지 (Infrastructure Drift Detection)</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;116-infrastructure-drift-detection&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;117-textops-docops-automation&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">117. TextOps&#x2F;DocOps 자동화</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;117-textops-docops-automation&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;118-ephemeral-ci-runner-isolation&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">118. 일회성 CI 러너 (Ephemeral CI Runner)</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;118-ephemeral-ci-runner-isolation&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;119-pre-commit-hook-linting&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">119. Pre-commit Hook 린팅 (Pre-commit Hook Linting)</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;119-pre-commit-hook-linting&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;120-concept&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">120. DORA Metrics (DevOps Research &amp; Assessment)</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;02_cicd_gitops&#x2F;120-concept&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+
+</div>
+
+<script>
+    document.querySelectorAll('.card-copy-btn').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var url = this.dataset.url;
+            var btnEl = this;
+            fetch(url)
+                .then(function (res) { return res.text(); })
+                .then(function (html) {
+                    var parser = new DOMParser();
+                    var doc = parser.parseFromString(html, 'text/html');
+                    var content = doc.querySelector('.post-content');
+                    if (content) {
+                        var text = content.innerText || content.textContent;
+                        navigator.clipboard.writeText(text).then(function () {
+                            btnEl.classList.add('copied');
+                            setTimeout(function () { btnEl.classList.remove('copied'); }, 2000);
+                        });
+                    }
+                });
+        });
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

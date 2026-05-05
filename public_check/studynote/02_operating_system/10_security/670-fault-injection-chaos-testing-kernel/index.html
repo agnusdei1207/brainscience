@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>670. 소프트웨어 오류 주입 (Fault Injection) 카오스 테스팅 시스템 커널 모듈 활용법 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 29, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 결함 주입(Fault Injection)은 소프트웨어 인프라가 실제 장애 상황(디스크 I/O 에러, 메모리 할당 실패, 네트워크 단절)에서 올바르게 복구되거나 우아하게 죽는지(Graceful Degradation)를 검증하기 위해 <strong>고의로 커널에 오류를 발생시키는 카오스 엔지니어링 기법</strong>이다.
+<strong>비유</strong>: 소프트웨어 오류 주입 (Fault Injection) 카오스 테스팅 시스템 커널 모듈 활용법은(는) 복잡한 교통을 한 번에 통제해 전체 흐름을 맞추는 신호 체계와 같다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li>
+<p><strong>개념</strong>:</p>
+<ul>
+<li><strong>결함 주입 (Fault Injection)</strong>: 시스템의 특정 구성 요소에 의도적으로 결함을 일으켜 시스템의 예외 처리 능력과 가용성을 테스트하는 기법.</li>
+<li><strong>카오스 엔지니어링 (Chaos Engineering)</strong>: 프로덕션(운영) 환경에서도 무작위로 인스턴스를 끄거나 네트워크를 지연시켜 시스템이 견디는지 실험하는 학문.</li>
+</ul>
+</li>
+<li>
+<p><strong>필요성 (잡을 수 없는 에러의 공포)</strong>:</p>
+<ul>
+<li>
+<p>개발자가 에러 처리 코드(Exception Handling)를 짰다. <code>if (malloc() == NULL) { 로깅하고 복구 }</code>.</p>
+</li>
+<li>
+<p>그런데 개발 서버에서는 메모리가 빵빵해서 <code>malloc</code>이 한 번도 실패하지 않는다. 이 에러 처리 코드는 운영에 배포된 후 3년 뒤에 처음으로 메모리가 부족해졌을 때 처음 실행된다. 그런데 그 에러 코드 안에 오타(버그)가 있어서 시스템이 통째로 뻗어버렸다.</p>
+</li>
+<li>
+<p>디스크 I/O 에러(<code>EIO</code>) 같은 하드웨어 장애는 평소에 재현하는 것이 물리적으로 불가능에 가깝다.</p>
+</li>
+<li>
+<p><strong>해결책</strong>: 디스크를 망치로 때리지 않고도, 커널 스스로가 1% 확률로 가짜 에러를 뱉어내게 만드는 <strong>소프트웨어적 오류 주입 프레임워크</strong>가 커널 내부에 필요해졌다.</p>
+</li>
+<li>
+<p><strong>일반 테스트</strong>: 모의고사(Unit Test)를 100번 풀어서 100점을 맞는다. 하지만 실제 수능 날 배가 아프거나 연필이 부러지는 상황은 연습해 보지 않았다.</p>
+</li>
+<li>
+<p><strong>결함 주입 (Fault Injection)</strong>: 모의고사를 치는 도중에 선생님이 일부러 학생의 연필을 뺏거나(메모리 에러), 교실 불을 10초 끄거나(네트워크 단절), 시험지 한 장을 찢어버린다(디스크 에러). 학생이 이 개판 속에서도 당황하지 않고 여분 연필을 꺼내 문제를 끝까지 푸는지(Resilience) 확인하는 독한 훈련이다.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>발전 과정</strong>:</p>
+<ol>
+<li><strong>하드웨어 오류 주입</strong>: 물리적인 핀에 노이즈를 쏘거나 열을 가함 (비싸고 재현 어려움).</li>
+<li><strong>소프트웨어 오류 주입 (SWFI)</strong>: OS API 레벨에서 훅(Hook)을 걸어 에러 반환.</li>
+<li><strong>Linux Kernel Fault Injection</strong>: 리눅스 커널 소스에 공식 프레임워크로 내장되어, 메모리/디스크/NVMe/네트워크 등 커널 가장 밑바닥에서 에러를 확률적으로 뿜어냄.</li>
+</ol>
+</li>
+</ul>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="rinugseu-keoneolyi-fault-injection-peureimweokeu">리눅스 커널의 Fault Injection 프레임워크</h3>
+<p>리눅스 커널을 컴파일할 때 <code>CONFIG_FAULT_INJECTION=y</code> 옵션을 주면 활성화되며, <code>debugfs</code>를 통해 유저 스페이스에서 오류 주입 확률과 대상을 조절할 수 있다.</p>
+<table><thead><tr><th style="text-align: left">주입 모듈 (Subsystem)</th><th style="text-align: left">역할</th><th style="text-align: left">발생시키는 오류 형태</th><th style="text-align: left">활용 시나리오</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>failslab / fail_page_alloc</strong></td><td style="text-align: left">메모리 할당 오류 주입</td><td style="text-align: left"><code>kmalloc()</code>, <code>alloc_pages()</code> 호출 시 강제로 NULL 반환</td><td style="text-align: left">앱이나 커널의 OOM 대응(메모리 누수, 예외 처리) 검증</td></tr>
+<tr><td style="text-align: left"><strong>fail_make_request</strong></td><td style="text-align: left">블록 I/O(디스크) 오류 주입</td><td style="text-align: left">하드디스크/SSD의 Read/Write 요청을 강제로 에러(<code>-EIO</code>) 처리</td><td style="text-align: left">RAID, LVM, ZFS의 디스크 장애 복구 및 데이터 정합성 검증</td></tr>
+<tr><td style="text-align: left"><strong>fail_function</strong></td><td style="text-align: left">범용 함수 오류 주입 (eBPF 결합)</td><td style="text-align: left">Kprobes를 통해 지정한 커널 함수의 반환값을 임의로 조작</td><td style="text-align: left">특정 시스템 콜(예: <code>sys_open</code>) 실패 상황 시뮬레이션</td></tr>
+<tr><td style="text-align: left"><strong>nvme_core.fault_inject</strong></td><td style="text-align: left">NVMe 전용 오류 주입</td><td style="text-align: left">최신 NVMe 컨트롤러의 타임아웃, 포트 단절 모사</td><td style="text-align: left">고성능 스토리지망의 페일오버(Multipath) 테스트</td></tr>
+</tbody></table>
+<h3 id="beulrog-i-o-gyeolham-juib-fail-make-request-dongjag-mekeonijeum">블록 I/O 결함 주입 (fail_make_request) 동작 메커니즘</h3>
+<p>RAID 1(미러링)을 구축하고, 디스크 1개가 고장 났을 때 시스템이 안 멈추는지 테스트하는 과정이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌───────────────────────────────────────────────────────────────────┐
+  │                 커널 블록 디바이스 에러 주입 (Fault Injection) 아키텍처     │
+  ├───────────────────────────────────────────────────────────────────┤
+  │                                                                   │
+  │  [User Space (테스트 환경 세팅)]                                        │
+  │   - root: `echo 10 &gt; &#x2F;sys&#x2F;kernel&#x2F;debug&#x2F;fail_make_request&#x2F;probability` │
+  │          (디스크에 I&#x2F;O를 날릴 때 10% 확률로 실패하게 만들라!)             │
+  │   - root: `echo 1 &gt; &#x2F;sys&#x2F;block&#x2F;sda&#x2F;sda1&#x2F;make-it-fail`             │
+  │          (타겟은 오직 &#x2F;dev&#x2F;sda1 디스크로 한정한다)                      │
+  │                                                                   │
+  │  [Kernel Space (Block Layer)]                                     │
+  │   - 파일 시스템(ext4)이 &#x2F;dev&#x2F;sda1에 파일 Write를 시도 (BIO 구조체 생성)    │
+  │                                                                   │
+  │   - 커널 블록 레이어 `submit_bio()` 함수 내부:                           │
+  │      if (should_fail(&amp;fail_make_request, bio-&gt;bi_iter.bi_size)) { │
+  │          &#x2F;&#x2F; 난수 생성기가 10% 확률에 당첨됨을 확인                         │
+  │          bio-&gt;bi_status = BLK_STS_IOERR;  ◀ (가짜 I&#x2F;O 에러 주입!)   │
+  │          bio_endio(bio);                  ◀ (하드웨어로 안 보내고 즉시 반환)│
+  │          return;                                                  │
+  │      }                                                            │
+  │                                                                   │
+  │  [Hardware (무사함)]                                                │
+  │   - 실제 물리 디스크(sda)는 아무런 망치질도 당하지 않고 평온함.               │
+  │                                                                   │
+  │  [테스트 결과 확인]                                                  │
+  │   - 파일 시스템이나 RAID 모듈은 &quot;-EIO&quot; 에러를 받고 당황함.                │
+  │   - 정상적인 RAID라면 sda를 버리고 sdb(미러)로 데이터를 우회시켜야 성공!       │
+  └───────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 디스크 케이블을 진짜로 뺐다 꽂았다 하면 장비가 고장 나거나 다른 사람의 테스트를 방해한다. 커널 프레임워크는 소프트웨어(블록 레이어) 단계에서 I/O 패킷(BIO)을 인터셉트하여, 진짜 디스크로 내려보내기 전에 "이거 디스크가 망가졌다고 뻥치고 위로 돌려보내!"라고 가짜 에러를 날린다. 덕분에 10% 확률의 배드 섹터 발생 같은 극도로 재현하기 힘든 하드웨어 장애 상황을 소프트웨어 명령어 한 줄로 1초 만에 만들어 낼 수 있다.</p>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>요청 또는 이벤트 발생</strong>: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.</li>
+<li><strong>현재 상태 확인</strong>: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.</li>
+<li><strong>정책 적용 및 자원 배정</strong>: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.</li>
+<li><strong>결과 반영 및 후속 처리</strong>: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.</li>
+</ol>
+<h3 id="jangae-moyi-simulation-gibeob-bigyo">장애 모의(Simulation) 기법 비교</h3>
+<table><thead><tr><th style="text-align: left">기법</th><th style="text-align: left">위치 및 주체</th><th style="text-align: left">장점</th><th style="text-align: left">단점 / 한계</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>물리적 장애 발생</strong></td><td style="text-align: left">하드웨어 (케이블 뽑기, 전원 컷)</td><td style="text-align: left">가장 현실적</td><td style="text-align: left">하드웨어 마모, 원격 클라우드에서 불가능</td></tr>
+<tr><td style="text-align: left"><strong>커널 모듈 (Fault Injection)</strong></td><td style="text-align: left">OS 커널 내부 (debugfs)</td><td style="text-align: left">정밀한 에러 코드(-ENOMEM 등) 핀포인트 조작</td><td style="text-align: left">커널 컴파일 옵션 필요, 노드 전체가 패닉날 위험</td></tr>
+<tr><td style="text-align: left"><strong>시스템 콜 후킹 (eBPF)</strong></td><td style="text-align: left">커널과 유저 스페이스 경계</td><td style="text-align: left">프로세스 단위로 매우 안전하게 에러 주입</td><td style="text-align: left">커널 내부(드라이버) 깊숙한 곳의 장애는 모사 불가</td></tr>
+<tr><td style="text-align: left"><strong>애플리케이션 레벨 (Chaos Monkey)</strong></td><td style="text-align: left">K8s / 클라우드 API 제어</td><td style="text-align: left">인스턴스 킬, 파드 삭제 등 마이크로서비스 테스트에 최적</td><td style="text-align: left">단일 앱 내부의 세밀한 메모리/디스크 에러는 모사 불가</td></tr>
+</tbody></table>
+<h3 id="gwamog-yunghab-gwanjeom">과목 융합 관점</h3>
+<ul>
+<li><strong>소프트웨어공학 (SE)</strong>: 카오스 엔지니어링의 핵심은 "통제된 실험(Controlled Experiment)"이다. 아무 때나 서버를 죽이는 것이 아니라, 정상 상태(Steady State)를 정의하고 $\rightarrow$ 가설을 세우고(DB 하나 죽어도 서비스는 될 거야) $\rightarrow$ 결함을 주입하고 $\rightarrow$ 폭발 반경(Blast Radius)을 최소화하면서 결과를 분석하는 과학적 접근법이다.</li>
+<li><strong>클라우드 컴퓨팅 (Cloud)</strong>: AWS Fault Injection Service(FIS)나 Gremlin 같은 상용 카오스 테스팅 툴은 커널 레벨의 도구와 연동하여, K8s 클러스터 환경에서 "오후 2시에 결제 컨테이너의 네트워크 지연율을 5초로 늘려봐라" 같은 정교한 워크로드 인젝션을 수행한다.</li>
+</ul>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="jangae-moyi-simulation-gibeob-bigyo-1">장애 모의(Simulation) 기법 비교</h3>
+<table><thead><tr><th style="text-align: left">기법</th><th style="text-align: left">위치 및 주체</th><th style="text-align: left">장점</th><th style="text-align: left">단점 / 한계</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>물리적 장애 발생</strong></td><td style="text-align: left">하드웨어 (케이블 뽑기, 전원 컷)</td><td style="text-align: left">가장 현실적</td><td style="text-align: left">하드웨어 마모, 원격 클라우드에서 불가능</td></tr>
+<tr><td style="text-align: left"><strong>커널 모듈 (Fault Injection)</strong></td><td style="text-align: left">OS 커널 내부 (debugfs)</td><td style="text-align: left">정밀한 에러 코드(-ENOMEM 등) 핀포인트 조작</td><td style="text-align: left">커널 컴파일 옵션 필요, 노드 전체가 패닉날 위험</td></tr>
+<tr><td style="text-align: left"><strong>시스템 콜 후킹 (eBPF)</strong></td><td style="text-align: left">커널과 유저 스페이스 경계</td><td style="text-align: left">프로세스 단위로 매우 안전하게 에러 주입</td><td style="text-align: left">커널 내부(드라이버) 깊숙한 곳의 장애는 모사 불가</td></tr>
+<tr><td style="text-align: left"><strong>애플리케이션 레벨 (Chaos Monkey)</strong></td><td style="text-align: left">K8s / 클라우드 API 제어</td><td style="text-align: left">인스턴스 킬, 파드 삭제 등 마이크로서비스 테스트에 최적</td><td style="text-align: left">단일 앱 내부의 세밀한 메모리/디스크 에러는 모사 불가</td></tr>
+</tbody></table>
+<h3 id="gwamog-yunghab-gwanjeom-1">과목 융합 관점</h3>
+<ul>
+<li><strong>소프트웨어공학 (SE)</strong>: 카오스 엔지니어링의 핵심은 "통제된 실험(Controlled Experiment)"이다. 아무 때나 서버를 죽이는 것이 아니라, 정상 상태(Steady State)를 정의하고 $\rightarrow$ 가설을 세우고(DB 하나 죽어도 서비스는 될 거야) $\rightarrow$ 결함을 주입하고 $\rightarrow$ 폭발 반경(Blast Radius)을 최소화하면서 결과를 분석하는 과학적 접근법이다.</li>
+<li><strong>클라우드 컴퓨팅 (Cloud)</strong>: AWS Fault Injection Service(FIS)나 Gremlin 같은 상용 카오스 테스팅 툴은 커널 레벨의 도구와 연동하여, K8s 클러스터 환경에서 "오후 2시에 결제 컨테이너의 네트워크 지연율을 5초로 늘려봐라" 같은 정교한 워크로드 인젝션을 수행한다.</li>
+</ul>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li>
+<p><strong>시나리오 — HA(고가용성) 클러스터의 Split-Brain 복구 능력 테스트</strong>: Pacemaker와 Corosync로 묶인 3대의 DB 클러스터가 있다. 네트워크 스위치가 10초간 죽었다 살아날 때, 페일오버(Failover)가 정상 작동하는지 검증하고 싶다.</p>
+<ul>
+<li><strong>아키텍처 적용</strong>: 스위치 전원을 뽑는 대신 리눅스의 <code>tc (Traffic Control)</code> 명령어와 커널의 <code>netem (Network Emulator)</code> 모듈을 결합한다.</li>
+<li><code>tc qdisc add dev eth0 root netem loss 100%</code> 명령을 치면 eth0 밖으로 나가는 패킷이 커널 단에서 100% 드롭(Drop)된다. 10초 뒤 <code>tc qdisc del</code>로 복구시킨다.</li>
+<li>이를 통해 HA 클러스터가 10초 단절을 "상대방의 사망"으로 인식하고 STONITH(펜싱)를 날리는지, 아니면 일시적 단절로 무시하는지(Timeout 설정 검증) 소프트웨어적으로 완벽하게 모사한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>시나리오 — C++ 서버의 메모리 할당 실패(OOM) 방어 코드 검증</strong>: 거대 게임 서버에서 <code>malloc</code> 실패 시 우아하게 연결을 끊고 메모리를 정리하는 로직을 짰다. 하지만 서버 램이 128GB라 개발 환경에서 <code>malloc</code>이 실패할 일이 절대 없다.</p>
+<ul>
+<li><strong>대응 (fail_page_alloc)</strong>: 커널의 <code>debugfs</code>에 접근하여 특정 PID(게임 서버)를 타겟으로 <code>echo 10 &gt; /sys/kernel/debug/fail_page_alloc/probability</code>를 준다.</li>
+<li>서버가 <code>malloc</code>을 호출할 때마다 10% 확률로 커널 버디 할당기가 램이 텅텅 비었는데도 <code>NULL</code>을 반환한다. 게임 서버는 "메모리가 부족하다!"라고 착각하고 에러 처리 로직을 실행한다. 이때 메모리 누수(Memory Leak)나 널 포인터 참조(Segfault)로 서버가 죽는다면, 방어 코드가 잘못 짜여 있음을 출시 전에 잡아낼 수 있다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="yisagyeoljeong-mic-tyuning-peulrou">의사결정 및 튜닝 플로우</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌───────────────────────────────────────────────────────────────────┐
+  │                 카오스 테스팅(결함 주입) 전략 도입 플로우                │
+  ├───────────────────────────────────────────────────────────────────┤
+  │                                                                   │
+  │   [새로 개발된 마이크로서비스 또는 인프라의 내결함성(Fault Tolerance) 검증]  │
+  │                │                                                  │
+  │                ▼                                                  │
+  │      테스트 환경이 프로덕션(운영)인가, Staging&#x2F;QA 환경인가?                │
+  │          ├─ 운영 ───▶ [Blast Radius(폭발 반경) 통제 필수]             │
+  │          │            - 절대 커널 레벨 패닉 유도 금지 (서버 자체가 죽음)   │
+  │          │            - 네트워크 지연(Latency)이나 파드(Pod) 종료 위주로 테스트│
+  │          │                                                        │
+  │          └─ QA&#x2F;개발 ─▶ 시스템 밑바닥의 장애를 모사해야 하는가?              │
+  │                │                                                  │
+  │                ▼                                                  │
+  │      파일 시스템 코어, 디바이스 드라이버, 메모리 릭(Leak) 등 하위 레벨 검증 필요 │
+  │          ├─ 예 ─────▶ [Kernel Fault Injection (failslab, fail_io) 적용]│
+  │          │            (커널 컴파일 시 옵션 켜야 하므로 전용 QA 이미지 필요)   │
+  │          │                                                        │
+  │          └─ 아니오 ──▶ [eBPF 기반 에러 주입 (예: Chaos Mesh)]        │
+  │                         특정 프로세스의 시스템 콜(open, read)만 후킹해 에러 발생│
+  └───────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 초보자는 운영 서버에 대고 <code>kill -9</code>를 날리는 것이 카오스 엔지니어링이라고 착각한다. 진정한 카오스 테스팅은 "시스템이 이 에러를 극복할 수 있다"는 확신(Confidence)을 먼저 설계하고, 이를 증명하기 위해 바늘 찌르듯 아주 정교하게(Targeted) 에러를 주입하는 것이다. 커널 단위의 인젝션은 폭발 반경이 호스트 전체이므로 운영(Production) 환경에서는 절대 금물이며, 오직 샌드박싱된 CI/CD 파이프라인에서만 쓰여야 한다.</p>
+<h3 id="doib-cekeuriseuteu">도입 체크리스트</h3>
+<ul>
+<li><strong>KASAN / KMEMLEAK 연동</strong>: 결함 주입을 할 때 방어 로직이 동작하면서 발생할 수 있는 2차 피해(예: 에러 처리 중 메모리를 반환 안 해서 생기는 누수)를 잡기 위해, 커널 동적 메모리 분석 도구(KASAN)를 함께 켜두고 테스트를 진행하는가?</li>
+<li><strong>Task 필터링 (Pid)</strong>: 커널 I/O 에러 인젝션 시, 운영체제의 핵심 데몬(systemd 등)까지 같이 에러를 맞아 서버 전체가 멈추는 것을 막기 위해, <code>/sys/kernel/debug/fail_make_request/task-filter</code> 옵션에 <code>Y</code>를 주고 테스트할 앱의 PID만 선택적으로 공격하도록 필터링했는가?</li>
+</ul>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">결함 주입 미실시 환경 (희망 회로)</th><th style="text-align: left">카오스/결함 주입 테스팅 적용</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정성 (에러 처리)</strong></td><td style="text-align: left">예외 코드가 데드 코드(Dead code)로 방치됨</td><td style="text-align: left">100% 실행 커버리지 달성</td><td style="text-align: left">복구 로직의 치명적 버그 사전 제거</td></tr>
+<tr><td style="text-align: left"><strong>정량 (가용성)</strong></td><td style="text-align: left">첫 대형 장애 시 복구 불가 (수 시간 소요)</td><td style="text-align: left">자동화된 복구 메커니즘 훈련 완료</td><td style="text-align: left">장애 상황에서의 MTTR 극단적 단축</td></tr>
+<tr><td style="text-align: left"><strong>정성 (문화)</strong></td><td style="text-align: left">인프라는 100% 안정적이어야 한다고 착각</td><td style="text-align: left">**"모든 것은 실패한다"**는 철학 내재화</td><td style="text-align: left">개발자들의 방어적 프로그래밍(Defensive Coding) 유도</td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang">미래 전망</h3>
+<ul>
+<li><strong>eBPF 카오스 인젝션의 표준화</strong>: 커널을 다시 컴파일해야 하는 기존 <code>Fault Injection Framework</code>의 불편함을 없애기 위해, 최신 카오스 툴(Chaos Mesh 등)은 eBPF를 사용하여 특정 컨테이너나 프로세스가 부르는 시스템 콜의 리턴 값을 실시간으로 <code>-ENOENT</code>나 <code>-EIO</code>로 바꿔버리는(Error Inject BPF) 안전하고 동적인 카오스 훈련을 대세로 만들고 있다.</li>
+<li><strong>AI 기반 자율 카오스 (Autonomous Chaos)</strong>: 개발자가 수동으로 시나리오를 짜는 것을 넘어, AI가 시스템의 로그와 아키텍처 다이어그램을 분석하여 "네 네트워크 구조상 이 스위치가 죽으면 다 터질 것 같은데?"라고 약점을 스스로 찾아내 결함을 쏴보고 레포팅하는 자동화된 카오스 로봇이 등장하고 있다.</li>
+</ul>
+<h3 id="gyeolron">결론</h3>
+<p>소프트웨어 오류 주입과 카오스 테스팅은 "버그를 없애기 위해 테스트한다"는 전통적 관념을 뒤집어, **"버그와 장애는 필연이므로, 그 속에서도 시스템이 살아남는 법을 훈련한다"**는 현대 클라우드의 성숙한 회복탄력성(Resilience) 철학을 보여준다. 커널 깊숙한 곳에서 디스크 I/O와 메모리 할당을 조작하는 이 잔인한 도구들은, 개발자의 오만한 코드를 부수고 겸손한 예외 처리 로직을 강제함으로써 무너지지 않는 엔터프라이즈 아키텍처를 세우는 가장 훌륭한 반면교사다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">**Chaos Monkey**
+    ↓
+**Graceful Degradation**
+    ↓
+**eBPF Error Injection**
+    ↓
+**OOM (Out-of-Memory)**
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Chaos Monkey</strong></td><td style="text-align: left">넷플릭스가 고안한 카오스 엔지니어링의 시초로, 클라우드 환경에서 무작위로 서버 전원을 내려 시스템의 생존성을 테스트하는 도구</td></tr>
+<tr><td style="text-align: left"><strong>Graceful Degradation</strong></td><td style="text-align: left">시스템 일부에 장애(결함 주입)가 났을 때, 전체가 죽지 않고 핵심 기능만 살려서 부드럽게 서비스를 낮추는 아키텍처 목표</td></tr>
+<tr><td style="text-align: left"><strong>eBPF Error Injection</strong></td><td style="text-align: left">커널 재컴파일 없이, BPF_PROG_TYPE_KPROBE를 이용해 시스템 콜의 반환값을 런타임에 덮어써 에러를 유발하는 차세대 결함 주입 기술</td></tr>
+<tr><td style="text-align: left"><strong>OOM (Out-of-Memory)</strong></td><td style="text-align: left">메모리 할당 오류(<code>fail_page_alloc</code>)를 주입했을 때 시스템이 맞닥뜨리는 최악의 상황으로, 이를 어떻게 핸들링하는지가 훈련의 핵심</td></tr>
+<tr><td style="text-align: left"><strong>Network Emulator (netem)</strong></td><td style="text-align: left">커널의 트래픽 컨트롤(tc) 레이어에서 네트워크 패킷 손실, 지연, 중복, 손상을 의도적으로 섞어 카오스 네트워크 환경을 모사하는 모듈</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

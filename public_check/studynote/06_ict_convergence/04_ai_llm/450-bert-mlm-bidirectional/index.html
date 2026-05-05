@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>450. BERT와 양방향 (Bidirectional) 마스크 언어 모델 (MLM) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 18, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ict convergence
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: BERT(Bidirectional Encoder Representations from Transformers)는 트랜스포머(Transformer)의 인코더(Encoder) 뼈대만 떼어와서, 문장을 왼쪽에서 오른쪽으로만 읽던 기존의 한계를 깨고 양방향(Bidirectional)으로 동시에 읽어 문맥을 100% 씹어먹는 언어 이해(NLU) 모델이다.
+<strong>비유</strong>: 수능 빈칸 추론 문제를 풀 때, 빈칸 앞부분만 읽고 정답을 찍는 성급한 학생(기존 단방향 AI)과, 빈칸의 앞문장과 뒷문장(양방향)을 한눈에 통째로 훑어본 뒤 완벽한 문맥의 교집합을 찾아내어 정답을 적는 수능 만점자(BERT)의 차이다.</p>
+</blockquote>
+<hr />
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>자연어 처리 AI에게 "Bank"라는 단어가 무슨 뜻이냐고 물어봤다.
+기존 AI(단방향 모델)는 왼쪽에서부터 오른쪽으로 글을 읽기 때문에, 문장이 "I went to the bank"로 시작하면 일단 '은행'이라고 찍어버린다. 그런데 문장 끝에 "to fish(낚시하러)"라는 말이 이어지면? 아뿔싸, '강둑'이라는 뜻이었는데 이미 늦었다. 뒤를 못 보고 앞에서부터 성급하게 뜻을 결정해 버린 것이다.</p>
+<p>"글을 읽을 때 꼭 왼쪽에서 오른쪽으로만 읽어야 해? <strong>어차피 번역하거나 분석할 문장을 한 번에 다 보여줄 텐데, 그냥 문장의 앞뒤를 한 번에 다(양방향) 보고 중간 단어의 뜻을 완벽하게 파악하면 안 될까?</strong>"
+이 철학을 구글이 트랜스포머의 '어텐션' 기술에 접목해, 세상의 모든 문서를 양방향으로 싹 다 읽어버린 언어 천재가 바로 <strong>BERT</strong>다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<p>BERT의 학습 파이프라인은 인간이 개입하지 않고도, 위키피디아 전체를 텍스트북 삼아 스스로 빈칸 채우기 놀이를 하는 위대한 훈련법이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────┐
+│             [ BERT의 자기 지도 학습(Self-Supervised) 2대 파이프라인 ]│
+├────────────────────────────────────────────────────────┤
+│ 1. MLM (Masked Language Model) : 빈칸 채우기 놀이        │
+│    - 원본 문장: &quot;나는 어제 강남역에서 맛있는 피자를 먹었다.&quot;       │
+│    - 15%를 강제로 가림(Mask): &quot;나는 어제 [MASK]에서 맛있는 [MASK]를 먹었다.&quot;│
+│    - BERT는 주변 단어들을 양방향으로 둘러보고, 지워진 단어가        │
+│      &#x27;강남역&#x27;과 &#x27;피자&#x27;라는 것을 수억 번의 학습을 통해 스스로 깨우침!│
+│                                                        │
+│ 2. NSP (Next Sentence Prediction) : 문장 이어짐 맞추기    │
+│    - 두 문장을 연달아 보여주고 &quot;이거 내용이 이어지는 문장 맞아?&quot; 물어봄│
+│    - A: &quot;나는 피자를 먹었다.&quot; &#x2F; B: &quot;정말 맛있었다.&quot; -&gt; (True)  │
+│    - A: &quot;나는 피자를 먹었다.&quot; &#x2F; B: &quot;스마트폰 충전기.&quot; -&gt; (False)│
+│    - 문장과 문장 사이의 논리적 뼈대(문맥)를 파악하는 능력을 기름     │
+└────────────────────────────────────────────────────────┘
+</code></pre>
+<ol>
+<li><strong>사전 학습(Pre-training)과 파인 튜닝(Fine-tuning)</strong>: BERT의 가장 위대한 공헌이다. 구글이 슈퍼컴퓨터로 수조 개의 단어(위키피디아 전체)를 MLM으로 학습시켜 '영어의 신'을 만들어 놓는다(사전 학습). 일반 회사는 이 똑똑한 뇌를 공짜로 다운받아, 끝에 얇은 출력층 하나만 달고 자기 회사 데이터 수백 장만 추가로 가르쳐서(파인 튜닝) 완벽한 사내 챗봇을 만든다. 거인의 어깨에 올라타는 전이 학습(Transfer Learning)의 표준이 되었다.</li>
+<li><strong>트랜스포머 인코더 (Encoder Only)</strong>: BERT의 몸통은 트랜스포머의 '인코더' 부분 딱 하나다. 인코더의 12층(Base) 또는 24층(Large) 탑을 쌓아 올려, 오직 단어들 간의 셀프 어텐션(관계 짓기)에만 영혼을 갈아 넣었다.</li>
+</ol>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 자연어 처리 시장을 양분한 구글의 BERT와 OpenAI의 GPT 철학을 전격 비교한다.</p>
+<p>동작 순서:</p>
+<p>자연어 처리 시장을 양분한 구글의 BERT와 OpenAI의 GPT 철학을 전격 비교한다.</p>
+<table><thead><tr><th style="text-align: center">비교 항목</th><th style="text-align: left">구글 BERT</th><th style="text-align: left">OpenAI GPT</th></tr></thead><tbody>
+<tr><td style="text-align: center"><strong>트랜스포머 뼈대</strong></td><td style="text-align: left"><strong>인코더 (Encoder)</strong> 만 사용</td><td style="text-align: left"><strong>디코더 (Decoder)</strong> 만 사용</td></tr>
+<tr><td style="text-align: center"><strong>글을 읽는 방향</strong></td><td style="text-align: left"><strong>양방향 (Bidirectional)</strong></td><td style="text-align: left"><strong>단방향 (왼쪽 -&gt; 오른쪽)</strong></td></tr>
+<tr><td style="text-align: center"><strong>학습 방법</strong></td><td style="text-align: left">구멍 난 중간 빈칸 채우기 (MLM)</td><td style="text-align: left"><strong>마지막 단어 다음 올 단어 맞추기 (자가 회귀)</strong></td></tr>
+<tr><td style="text-align: center"><strong>핵심 장점</strong></td><td style="text-align: left">문장의 <strong>문맥(Context) 이해도</strong>가 우주 최강</td><td style="text-align: left">새로운 문장을 <strong>창조(생성)해 내는 능력</strong> 우주 최강</td></tr>
+<tr><td style="text-align: center"><strong>주요 활용 도메인</strong></td><td style="text-align: left">스팸 분류, 감성 분석, 구글 검색 엔진</td><td style="text-align: left"><strong>챗봇 (ChatGPT), 소설 쓰기, 코드 생성</strong></td></tr>
+</tbody></table>
+<p>"BERT가 더 똑똑해 보이는데 왜 챗GPT가 세상을 지배했을까?"
+BERT는 완성된 문장을 던져주고 그 뜻을 분석하는(이해, NLU) 데는 최고지만, 텅 빈 백지를 주고 "옛날 옛적에..."라며 이야기를 시작해서 끝까지 이어나가는(생성, NLG) 구조가 아예 막혀있다. 반면 GPT는 "다음 단어, 그다음 단어"를 끝없이 뱉어내는 생성의 스페셜리스트라서 인간과 티키타카(채팅)를 할 수 있었던 것이다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<p><strong>실무 적용 시나리오:</strong>
+쇼핑몰 고객 리뷰가 하루에 10만 개씩 달린다. 긍정인지 부정인지, 배송 불만인지 디자인 불만인지 알바생이 다 읽고 분류할 수가 없다.
+데이터 과학자는 허깅페이스(HuggingFace) 라이브러리에서 구글이 만들어둔 <code>bert-base-multilingual</code> 모델을 다운받는다. 10만 개의 리뷰를 이 BERT에 통과시키면 리뷰 문장들이 전부 **[768차원의 문맥 벡터]**로 찌그러진다. 이 벡터를 끝에 달아둔 로지스틱 회귀 층에 넣고 파인 튜닝(Fine-tuning)을 10분만 돌린다. 정확도 95%의 완벽한 고객 불만 자동 분류기가 실시간 파이프라인에 배포된다.</p>
+<p><strong>기술사 판단 포인트 (Trade-off):</strong>
+아키텍처 설계 시 기술사는 **'성능'과 '추론 지연 시간(Latency)'**의 딜레마를 관리해야 한다.</p>
+<ol>
+<li>BERT 모델 하나 크기가 기본 400MB가 넘고, 파라미터가 1억 개다. 스마트폰(엣지 디바이스) 앱 내부에 심어서 실시간으로 구동하면 핸드폰이 불타오른다.</li>
+<li>따라서 기술사는 모바일 배포 환경에서는 무거운 원본 BERT 대신, 지식 증류(Knowledge Distillation) 기법으로 뇌의 크기를 반 토막 낸 <strong>DistilBERT</strong>나 양자화(Quantization)를 거친 <strong>ALBERT</strong> 같은 경량화 모델로 아키텍처를 교체해야 한다. (성능은 3% 떨어지지만 속도는 60% 빨라진다).</li>
+</ol>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p>BERT는 "라벨링이 없어도(정답이 없어도), 그저 책을 많이 읽히는 것만으로 기계가 문맥을 100% 이해할 수 있다"는 사실을 입증하며 자연어 처리(NLP) 생태계에 '사전 학습 + 파인 튜닝'이라는 영구적인 표준 템플릿을 세운 거인이다.</p>
+<p>결론적으로 오늘날 네이버, 구글에서 무언가를 검색할 때, 검색 엔진이 여러분의 질문 의도를 귀신같이 파악해서 찰떡같은 문서를 찾아주는 이유가 바로 검색창 뒤에서 이 BERT의 양방향 어텐션 텐서가 미친 듯이 돌아가고 있기 때문이다. 기술사는 화려하게 말을 지어내는 GPT의 섀도우에 가려져 있지만, 세상의 모든 텍스트를 분류하고 이해하고 요약하는 엔터프라이즈(기업용) B2B 시장의 진짜 워커홀릭은 바로 이 인코더 기반의 BERT임을 통찰해야 한다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>BERT는 "라벨링이 없어도(정답이 없어도), 그저 책을 많이 읽히는 것만으로 기계가 문맥을 100% 이해할 수 있다"는 사실을 입증하며 자연어 처리(NLP) 생태계에 '사전 학습 + 파인 튜닝'이라는 영구적인 표준 템플릿을 세운 거인이다.</p>
+<p>결론적으로 오늘날 네이버, 구글에서 무언가를 검색할 때, 검색 엔진이 여러분의 질문 의도를 귀신같이 파악해서 찰떡같은 문서를 찾아주는 이유가 바로 검색창 뒤에서 이 BERT의 양방향 어텐션 텐서가 미친 듯이 돌아가고 있기 때문이다. 기술사는 화려하게 말을 지어내는 GPT의 섀도우에 가려져 있지만, 세상의 모든 텍스트를 분류하고 이해하고 요약하는 엔터프라이즈(기업용) B2B 시장의 진짜 워커홀릭은 바로 이 인코더 기반의 BERT임을 통찰해야 한다.</p>
+<p>결론적으로 BERT와 양방향 (Bidirectional) 마스크 언어 모델 (MLM)는 기술 자체만으로 성과가 보장되지 않으며, 적용 맥락, 운영 역량, 데이터 품질, 보안·거버넌스 조건이 함께 충족될 때 비로소 실질적 가치가 구현된다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">통계적 학습과 규칙 기반 자동화
+    ↓
+딥러닝·대규모 사전학습 체계 확산
+    ↓
+BERT와 양방향 (Bidirectional) 마스크 언어 모델 (MLM) 핵심 메커니즘 정립
+    ↓
+RAG·에이전트·멀티모달 응용 확장
+    ↓
+정렬·평가·거버넌스 중심의 운영 단계로 고도화
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">상위 개념</td><td style="text-align: left">트랜스포머 (Transformer), 거대 언어 모델 (LLM)</td></tr>
+<tr><td style="text-align: left">하위 개념</td><td style="text-align: left">인코더 (Encoder), MLM (Masked Language Model), 사전 학습 (Pre-training)</td></tr>
+<tr><td style="text-align: left">연결 개념</td><td style="text-align: left">파인 튜닝 (Fine-tuning), 자연어 이해 (NLU), GPT (디코더 모델)</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

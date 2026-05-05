@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>171. 폴백 (Fallback) - 장애 시 기본 응답으로 서비스 열화를 제어하는 복원력 패턴 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>May 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote enterprise
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 폴백(Fallback)은 장애를 숨기는 장식이 아니라, 실패를 허용 가능한 수준의 서비스 열화(Graceful Degradation)로 바꾸어 전체 사용자 여정을 끊기지 않게 만드는 복원력 제어 장치다.
+<strong>비유</strong>: 고속철이 멈췄을 때 모든 승객을 역에 묶어두는 대신, 우회 버스를 즉시 투입해 목적지 도착 수준은 낮아져도 이동 자체는 이어가게 만드는 운영 전략과 같다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>폴백은 원 서비스가 실패했을 때 예외를 그대로 전파하지 않고, 미리 정의한 대체 응답을 반환하여 사용자 경험과 상위 서비스의 안정성을 지키는 패턴이다. 마이크로서비스 아키텍처(MSA)에서는 하나의 요청이 여러 하위 서비스 호출에 의존하므로, 비핵심 기능 하나의 장애가 전체 요청 실패로 확대되기 쉽다. 특히 추천, 랭킹, 리뷰, 환율, 외부 연동 정보처럼 "없으면 불편하지만 없다고 핵심 거래가 멈춰서는 안 되는" 기능은 폴백 설계 여부가 서비스 품질을 크게 좌우한다.</p>
+<p>폴백이 필요한 이유는 단순히 에러 화면을 줄이기 위해서가 아니다. 첫째, 상위 서비스가 장애 상황에서 대기와 재시도로 자원을 고갈시키지 않도록 해야 한다. 둘째, 사용자에게 완전 실패 대신 제한된 기능을 제공하면 이탈률을 낮출 수 있다. 셋째, 운영 관점에서는 장애 범위를 격리하고 우선순위가 높은 핵심 기능에 자원을 집중할 수 있다. 즉 폴백은 장애를 없애는 기술이 아니라, 장애의 사업적 충격을 제어하는 기술이다.</p>
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<table><thead><tr><th style="text-align: left">구성요소</th><th style="text-align: left">역할</th><th style="text-align: left">핵심 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">실패 감지기</td><td style="text-align: left">타임아웃, 예외, 서킷 브레이커 OPEN 상태를 감지</td><td style="text-align: left">폴백은 반드시 명확한 실패 조건 위에서만 동작해야 한다</td></tr>
+<tr><td style="text-align: left">폴백 정책</td><td style="text-align: left">어떤 대체 응답을 줄지 정의</td><td style="text-align: left">기본값, 캐시, 스텁 응답, 기능 비활성화 등으로 세분화</td></tr>
+<tr><td style="text-align: left">대체 데이터 소스</td><td style="text-align: left">캐시, 마지막 정상값, 정적 구성값</td><td style="text-align: left">데이터 신선도와 정확도 한계를 함께 관리해야 한다</td></tr>
+<tr><td style="text-align: left">응답 변환 계층</td><td style="text-align: left">폴백 결과를 API 계약에 맞게 반환</td><td style="text-align: left">클라이언트 계약을 깨지 않아야 한다</td></tr>
+<tr><td style="text-align: left">관측성 계층</td><td style="text-align: left">폴백 발생률, 원인, 지속시간을 수집</td><td style="text-align: left">성공처럼 보이는 숨은 실패를 드러내야 한다</td></tr>
+</tbody></table>
+<p>폴백은 보통 서킷 브레이커, 타임아웃, 재시도 정책과 함께 배치된다. 실패 감지기가 먼저 비정상 상황을 판단하고, 폴백 정책이 어떤 수준까지 기능을 낮출지 결정하며, 대체 데이터 소스가 실제 응답 재료를 제공한다. 이때 응답 변환 계층은 원래 API 스키마를 유지해 클라이언트가 추가 오류 처리 없이 동작하도록 하고, 관측성 계층은 "정상 응답처럼 보이는 비정상 상태"를 운영자에게 노출한다.</p>
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 폴백은 핵심 거래 무결성을 침해하지 않는 읽기 중심 기능에 우선 적용해야 하며, 대체 응답의 허용 오차·신선도·책임 범위를 사전에 정의해야 한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li>클라이언트 요청이 상위 서비스에 도달하면 상위 서비스는 하위 서비스 호출 전에 타임아웃과 실패 임계치를 설정한다.</li>
+<li>하위 서비스가 지연되거나 예외를 반환하면 실패 감지기가 이를 포착하고, 서킷 브레이커가 열려 있다면 실제 호출 자체를 생략한다.</li>
+<li>상위 서비스는 폴백 정책 테이블을 조회해 해당 기능이 "캐시 반환", "기본 메시지 반환", "기능 숨김", "부분 성공 처리" 중 어느 전략을 따르는지 결정한다.</li>
+<li>대체 데이터 소스에서 마지막 정상값이나 미리 준비된 기본값을 읽어 응답 계약에 맞게 변환한다.</li>
+<li>응답 헤더나 메타데이터에 degraded 상태를 기록하고, 메트릭과 로그에 폴백 발생 사실을 남긴다.</li>
+<li>운영자는 폴백 비율이 임계치를 넘는지 감시하고, 장기화되면 장애 대응을 수행한다.</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[Client]
+   |
+   v
+[API Service]
+   |
+   +--&gt; call downstream -----------------------------+
+   |                                                 |
+   |                                           success?
+   |                                            &#x2F;      |                                          yes    no&#x2F;open
+   |                                          &#x2F;           |                                         v          v
+   |                               [Normal Response] [Fallback Policy]
+   |                                                      |
+   |                           +--------------------------+----------------------+
+   |                           |                          |                      |
+   |                           v                          v                      v
+   |                    [Cache &#x2F; Last Good]      [Default Payload]      [Feature Disabled]
+   |                           \                          |                      &#x2F;
+   +----------------------------\-------------------------+---------------------&#x2F;
+                                 v
+                      [Degraded but Contract-safe Response]
+</code></pre>
+<p>이 구조의 핵심은 "실패를 성공처럼 위장하는 것"이 아니라 "실패를 통제된 결과로 변환하는 것"이다. 따라서 폴백은 항상 제한 조건을 가져야 한다. 예를 들어 추천 목록은 빈 목록으로 대체해도 되지만, 결제 승인 결과를 "성공으로 가정"하는 폴백은 치명적이다. 또한 캐시 기반 폴백은 오래된 데이터를 노출할 수 있으므로, 허용 가능한 신선도(Time To Live)와 사용자 고지 방식이 함께 정의되어야 한다. 결국 폴백의 품질은 대체 응답 자체보다도, 어디까지 허용하고 어디서 절대 금지할지를 구분하는 경계 설계에서 결정된다.</p>
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">폴백</th><th style="text-align: left">재시도 (Retry)</th><th style="text-align: left">서킷 브레이커 (Circuit Breaker)</th></tr></thead><tbody>
+<tr><td style="text-align: left">목적</td><td style="text-align: left">실패 시 대체 응답 제공</td><td style="text-align: left">일시적 오류 재호출</td><td style="text-align: left">반복 실패 시 호출 차단</td></tr>
+<tr><td style="text-align: left">사용 시점</td><td style="text-align: left">실패가 이미 발생했을 때</td><td style="text-align: left">실패 직후</td><td style="text-align: left">실패율 임계치 초과 시</td></tr>
+<tr><td style="text-align: left">장점</td><td style="text-align: left">사용자 경험 유지, 부분 기능 제공</td><td style="text-align: left">일시 장애 복구 가능</td><td style="text-align: left">자원 고갈과 연쇄 장애 방지</td></tr>
+<tr><td style="text-align: left">주의점</td><td style="text-align: left">잘못 쓰면 데이터 왜곡</td><td style="text-align: left">과도하면 부하 증폭</td><td style="text-align: left">차단 후 복구 판단 필요</td></tr>
+</tbody></table>
+<p>폴백은 서킷 브레이커와 경쟁 관계가 아니라 보완 관계다. 서킷 브레이커가 "더 이상 호출하지 말자"를 결정하면, 폴백이 "그 대신 무엇을 돌려줄 것인가"를 담당한다. 또한 캐시, BFF (Backend for Frontend), CQRS (Command Query Responsibility Segregation) 읽기 모델과도 자주 연결된다. 읽기 전용 복제본이나 사전 계산된 뷰가 있으면 폴백 품질이 높아지기 때문이다. 반대로 강한 일관성이 필요한 명령 처리 영역에서는 폴백보다 명시적 실패와 재시도가 더 적절하다.</p>
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p>채택이 적합한 영역은 상품 상세, 추천, 공지, 리뷰, 통계, 외부 환율/날씨 정보처럼 읽기 중심이면서 사용자 경험 영향은 크지만 정합성 위험은 상대적으로 낮은 기능이다. 예를 들어 전자상거래에서 추천 서비스가 장애 나면 "추천 상품 없음"을 반환하더라도 주문 기능은 계속 수행되어야 한다. 반면 결제 승인, 재고 차감, 인증 토큰 발급처럼 잘못된 기본값이 비즈니스 손실이나 보안 사고로 이어지는 기능에는 폴백을 매우 제한적으로 사용해야 한다.</p>
+<p>실무 체크리스트는 다음과 같다.</p>
+<ul>
+<li>대체 응답이 비즈니스적으로 허용 가능한가?</li>
+<li>캐시 데이터의 최대 허용 지연 시간은 얼마인가?</li>
+<li>폴백 응답과 정상 응답을 운영자가 구분할 수 있는가?</li>
+<li>폴백이 장기화될 때 자동 복구 대신 장애 은폐만 하고 있지 않은가?</li>
+<li>핵심 쓰기 기능에 위험한 "가짜 성공"을 반환하지 않는가?</li>
+</ul>
+<p>대표 구현으로는 Resilience4j, Spring Cloud CircuitBreaker, Envoy 기반 서비스 메시의 로컬 응답 정책 등이 활용된다. 다만 도구보다 중요한 것은 정책이다. 폴백이 많을수록 시스템이 안정적인 것이 아니라, "어떤 실패를 어떤 품질로 축소할 것인지"를 세밀하게 정의한 시스템이 성숙한 것이다.</p>
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>폴백의 가장 큰 효과는 전체 실패를 부분 실패로 축소한다는 점이다. 이를 통해 사용자 경험을 방어하고, 상위 서비스의 쓰레드·커넥션 점유를 줄이며, 장애 전파를 완화할 수 있다. 또한 운영자는 핵심 기능과 부가 기능의 우선순위를 명확히 구분하게 되어, 시스템 복원력 설계를 비즈니스 가치와 연결할 수 있다.</p>
+<p>그러나 폴백은 만능 해법이 아니다. 과도한 폴백은 장애를 늦게 발견하게 만들고, 오래된 데이터 노출이나 "조용한 오류"를 만들 수 있다. 따라서 폴백은 항상 관측성, 사용자 고지, 만료 정책과 함께 설계되어야 하며, 핵심 쓰기 트랜잭션에는 엄격한 금지선이 필요하다. 결론적으로 폴백은 "서비스를 정상처럼 보이게 하는 미봉책"이 아니라, 허용 가능한 열화 수준을 미리 설계하는 복원력 아키텍처의 핵심 구성이다.</p>
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">단순 예외 전파
+   -&gt; 재시도 도입
+      -&gt; 서킷 브레이커로 실패 차단
+         -&gt; 폴백으로 제한된 응답 제공
+            -&gt; 캐시&#x2F;읽기 모델 기반 정교한 열화 제어
+               -&gt; 정책 기반 적응형 복원력(사용자&#x2F;기능별 차등 열화)
+</code></pre>
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">Circuit Breaker</td><td style="text-align: left">호출 차단 여부를 판단한 뒤 폴백으로 제어를 넘긴다</td></tr>
+<tr><td style="text-align: left">Retry</td><td style="text-align: left">재시도 후에도 실패할 때 폴백이 최종 방어선이 된다</td></tr>
+<tr><td style="text-align: left">Cache</td><td style="text-align: left">가장 일반적인 폴백 데이터 소스다</td></tr>
+<tr><td style="text-align: left">CQRS</td><td style="text-align: left">조회 모델을 별도로 두면 폴백 품질을 높일 수 있다</td></tr>
+<tr><td style="text-align: left">Graceful Degradation</td><td style="text-align: left">폴백이 구현하는 대표적인 서비스 열화 전략이다</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

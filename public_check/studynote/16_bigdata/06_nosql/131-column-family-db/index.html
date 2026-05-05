@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>131. 컬럼 패밀리 데이터베이스 (Column Family DB) — Cassandra&#x2F;HBase&#x2F;ScyllaDB — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote bigdata
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 컬럼 패밀리 데이터베이스 (Column Family DB) — Cassandra/HBase/ScyllaDB은(는) 관계형 데이터베이스의 확장 한계를 넘어 분산 환경에 맞는 일관성·성능·유연성을 선택하게 하는 저장 기술이다.
+<strong>비유</strong>: 한 종류의 서랍장 대신 용도별 보관함을 골라 쓰는 공구실과 같다.</p>
+</blockquote>
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<h3 id="deungjang-baegyeong-big-tableeseo-sijag">등장 배경: Big Table에서 시작</h3>
+<p>2006년 Google이 발표한 BigTable 논문이 기반. 행·컬럼·타임스탬프의 3차원 맵 구조로 페타바이트급 데이터를 처리하는 아이디어를 제시했다. HBase(Hadoop 기반 오픈소스)와 Cassandra(Facebook 개발, P2P 기반)가 이를 계승했다.</p>
+<h3 id="rdbms-vs-keolreom-paemilri-db-jeojang-gujo-cai">RDBMS vs 컬럼 패밀리 DB 저장 구조 차이</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────┐
+│     RDBMS (행 기반 저장): 모든 컬럼 고정              │
+├────────┬──────┬──────┬──────┬──────┬──────┬────────┤
+│ Row ID │ col1 │ col2 │ col3 │ col4 │ col5 │ col6   │
+├────────┼──────┼──────┼──────┼──────┼──────┼────────┤
+│ user:1 │ 홍길동│ 20   │ NULL │ NULL │ NULL │ NULL   │
+│ user:2 │ 이몽룡│ 22   │ 서울 │ NULL │ NULL │ NULL   │
+└────────┴──────┴──────┴──────┴──────┴──────┴────────┘
+
+┌─────────────────────────────────────────────────────┐
+│  Wide-Column DB (스파스 저장): 있는 컬럼만 저장       │
+│                                                     │
+│  Row Key: &quot;user:1&quot;                                  │
+│  ├── CF: profile → { name:&quot;홍길동&quot;, age:20 }         │
+│  └── CF: activity → { login:&quot;2026-04&quot;, views:42 }   │
+│                                                     │
+│  Row Key: &quot;user:2&quot;                                  │
+│  ├── CF: profile → { name:&quot;이몽룡&quot;, age:22, city:&quot;서울&quot; }
+│  ├── CF: activity → { login:&quot;2026-04&quot; }             │
+│  └── CF: purchase → { item1:&quot;A&quot;,item2:&quot;B&quot; }         │
+│                                                     │
+│  * NULL 컬럼 저장 불필요 → 스토리지 효율 극대화        │
+└─────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="daepyo-solrusyeon-bigyo">대표 솔루션 비교</h3>
+<table><thead><tr><th style="text-align: center">항목</th><th style="text-align: center">HBase</th><th style="text-align: center">Cassandra</th><th style="text-align: center">ScyllaDB</th></tr></thead><tbody>
+<tr><td style="text-align: center">기반</td><td style="text-align: center">HDFS + ZooKeeper</td><td style="text-align: center">P2P 링</td><td style="text-align: center">C++ 재구현</td></tr>
+<tr><td style="text-align: center">일관성</td><td style="text-align: center">강한 일관성</td><td style="text-align: center">조정 가능</td><td style="text-align: center">조정 가능</td></tr>
+<tr><td style="text-align: center">마스터</td><td style="text-align: center">Master 존재</td><td style="text-align: center">마스터리스</td><td style="text-align: center">마스터리스</td></tr>
+<tr><td style="text-align: center">확장성</td><td style="text-align: center">HDFS 의존</td><td style="text-align: center">독립 확장</td><td style="text-align: center">독립 확장</td></tr>
+<tr><td style="text-align: center">GC 영향</td><td style="text-align: center">Java GC 문제</td><td style="text-align: center">Java GC 문제</td><td style="text-align: center">없음(C++)</td></tr>
+<tr><td style="text-align: center">쿼리</td><td style="text-align: center">HBase API</td><td style="text-align: center">CQL</td><td style="text-align: center">CQL 호환</td></tr>
+</tbody></table>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="hbase-akitegceo">HBase 아키텍처</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────┐
+│                   HBase 아키텍처                          │
+│                                                          │
+│  ┌────────────────────────────────────────────────────┐  │
+│  │              HMaster                              │  │
+│  │  - Region 할당 관리         - DDL 처리             │  │
+│  │  - Region Server 모니터링   - 부하 분산             │  │
+│  └────────────────────────────────────────────────────┘  │
+│                        │ ZooKeeper 코디네이션             │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐   │
+│  │RegionServer 1│  │RegionServer 2│  │RegionServer 3│   │
+│  │ Region A     │  │ Region B     │  │ Region C     │   │
+│  │ Region D     │  │ Region E     │  │ Region F     │   │
+│  └──────────────┘  └──────────────┘  └──────────────┘   │
+│                        │                                 │
+│  ┌─────────────────────────────────────────────────────┐ │
+│  │           HDFS (Hadoop Distributed File System)     │ │
+│  │  HFile(SSTable) 영구 저장, 3중 복제                  │ │
+│  └─────────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="cassandra-ring-gujo">Cassandra 링 구조</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────┐
+│           Cassandra 마스터리스 링 토폴로지               │
+│                                                      │
+│              Node 1 (token: 0)                       │
+│             ╱         ╲                              │
+│  Node 5   ●             ●   Node 2                   │
+│ (token:   │   동등한     │   (token:                  │
+│  2^126)   │   피어들     │    2^30)                   │
+│            ●             ●                           │
+│  Node 4 (token:2^94)  Node 3(token:2^62)             │
+│                                                      │
+│  * 모든 노드가 동등(피어) → 단일 장애점(SPOF) 없음       │
+│  * RF=3: 데이터는 일관된 해싱으로 결정된 3개 노드에 저장  │
+│  * Gossip Protocol: 노드 상태 P2P 전파               │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="cassandra-sseugi-gyeongro-write-path">Cassandra 쓰기 경로 (Write Path)</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">클라이언트 Write 요청
+        │
+        ↓
+┌──────────────┐
+│  Commit Log  │ ← 내구성 보장 (Sequential Write)
+└──────────────┘
+        │
+        ↓
+┌──────────────┐
+│  MemTable    │ ← 인메모리 정렬 구조
+└──────────────┘
+        │ (임계값 도달 시 Flush)
+        ↓
+┌──────────────┐
+│   SSTable    │ ← 불변(Immutable) 디스크 파일
+└──────────────┘
+        │
+        ↓ (주기적 Compaction)
+┌──────────────┐
+│ 병합된 SSTable│ ← 공간 회수 + 성능 최적화
+└──────────────┘
+</code></pre>
+<h3 id="compaction-jeonryag-bigyo">Compaction 전략 비교</h3>
+<table><thead><tr><th style="text-align: center">전략</th><th style="text-align: left">설명</th><th style="text-align: center">적합 워크로드</th></tr></thead><tbody>
+<tr><td style="text-align: center"><strong>STCS</strong> (SizeTiered Compaction Strategy)</td><td style="text-align: left">비슷한 크기 SSTable 병합</td><td style="text-align: center">쓰기 집중</td></tr>
+<tr><td style="text-align: center"><strong>LCS</strong> (Leveled Compaction Strategy)</td><td style="text-align: left">레벨별 정렬 유지</td><td style="text-align: center">읽기 집중</td></tr>
+<tr><td style="text-align: center"><strong>TWCS</strong> (TimeWindow Compaction Strategy)</td><td style="text-align: left">시간 윈도우별 병합</td><td style="text-align: center">시계열 데이터</td></tr>
+</tbody></table>
+<blockquote>
+<p>Cassandra의 쓰기 경로는 편의점 재고 관리와 같다. 판매 즉시 영수증(Commit Log)을 끊고, 진열대(MemTable)에 임시 표시한 뒤, 밤마다 창고(SSTable)로 정리한다. 창고가 복잡해지면 주기적으로 재정리(Compaction)하여 공간을 확보한다.</p>
+</blockquote>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 일관성 수준, 파티셔닝, 복제, 접근 패턴을 함께 선택해야 한다.</p>
+<p>동작 순서:</p>
+<h3 id="tyuneobeul-ilgwanseong-tunable-consistency">튜너블 일관성 (Tunable Consistency)</h3>
+<table><thead><tr><th style="text-align: center">Consistency Level</th><th style="text-align: center">읽기</th><th style="text-align: center">쓰기</th><th style="text-align: center">보장 수준</th></tr></thead><tbody>
+<tr><td style="text-align: center">ONE</td><td style="text-align: center">1 복제본 응답</td><td style="text-align: center">1 복제본 쓰기</td><td style="text-align: center">최저 (빠름)</td></tr>
+<tr><td style="text-align: center">QUORUM</td><td style="text-align: center">과반수 응답</td><td style="text-align: center">과반수 쓰기</td><td style="text-align: center">중간 (권장)</td></tr>
+<tr><td style="text-align: center">LOCAL_QUORUM</td><td style="text-align: center">로컬 DC 과반수</td><td style="text-align: center">로컬 DC 과반수</td><td style="text-align: center">멀티 리전 최적</td></tr>
+<tr><td style="text-align: center">ALL</td><td style="text-align: center">전체 응답</td><td style="text-align: center">전체 쓰기</td><td style="text-align: center">최고 (느림)</td></tr>
+</tbody></table>
+<blockquote>
+<p>QUORUM + QUORUM = 강한 일관성 (W + R &gt; N: 2Q &gt; RF)</p>
+</blockquote>
+<h3 id="scylladbyi-cabyeolhwa">ScyllaDB의 차별화</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">Java Cassandra → GC 일시 정지(Stop-the-World)
+                 100ms~수초 스파이크
+
+C++ ScyllaDB  → GC 없음, 코어별 CPU 친화성
+                p99 지연 10배 이상 개선
+                같은 워크로드를 1&#x2F;5~1&#x2F;10 노드로 처리
+</code></pre>
+<blockquote>
+<p>QUORUM 일관성은 과반수 투표와 같다. 5개 노드 중 3개가 "OK"하면 정상으로 인정한다. 한두 노드가 느리거나 다운되어도 과반수가 살아있으면 계속 서비스할 수 있어, 가용성과 일관성 사이의 균형점이 된다.</p>
+</blockquote>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="deiteo-modelring-kweori-useon-seolgye">데이터 모델링: 쿼리 우선 설계</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">❌ 잘못된 접근: 엔티티 관계 우선 설계
+   (후에 필요한 쿼리에 맞게 복잡한 JOIN → CQL에서 불가)
+
+✅ 올바른 접근: 쿼리 패턴 우선 설계
+   1. &quot;어떤 쿼리로 데이터를 읽을 것인가?&quot; 정의
+   2. 그 쿼리를 위한 파티션 키 + 클러스터링 키 결정
+   3. 쿼리당 1개 테이블 원칙 (Query-per-table)
+
+예: &quot;사용자별 최근 100개 주문 시간 역순 조회&quot;
+   → PRIMARY KEY ((user_id), order_time)
+      WITH CLUSTERING ORDER BY (order_time DESC)
+</code></pre>
+<h3 id="patisyeon-ki-seolgye-juyisahang">파티션 키 설계 주의사항</h3>
+<table><thead><tr><th style="text-align: center">문제</th><th style="text-align: center">증상</th><th style="text-align: left">해결책</th></tr></thead><tbody>
+<tr><td style="text-align: center">핫 파티션</td><td style="text-align: center">특정 노드 CPU/IO 급증</td><td style="text-align: left">파티션 키에 버킷(bucket) 추가</td></tr>
+<tr><td style="text-align: center">대형 파티션</td><td style="text-align: center">읽기 타임아웃, GC 압박</td><td style="text-align: left">파티션 크기 &lt; 100MB 유지</td></tr>
+<tr><td style="text-align: center">하나의 파티션 키만</td><td style="text-align: center">모든 데이터가 한 노드</td><td style="text-align: left">복합 파티션 키 설계</td></tr>
+</tbody></table>
+<blockquote>
+<p>Cassandra 데이터 모델링은 슈퍼마켓 진열 계획과 같다. 손님이 "우유"를 찾을 것인지 "아침 식재료"를 한번에 찾을 것인지 먼저 알아야 어느 통로(파티션 키)에 무엇을 진열할지 결정할 수 있다. 모든 상품을 한 통로에 몰아넣으면(핫 파티션) 그 통로만 항상 막히게 된다.</p>
+</blockquote>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="jeoghab-sayong-sarye-yoyag">적합 사용 사례 요약</h3>
+<table><thead><tr><th style="text-align: center">사용 사례</th><th style="text-align: center">추천 솔루션</th><th style="text-align: left">이유</th></tr></thead><tbody>
+<tr><td style="text-align: center">IoT 센서 시계열</td><td style="text-align: center">Cassandra + TWCS</td><td style="text-align: left">시간 기반 쓰기 집중, 자동 TTL</td></tr>
+<tr><td style="text-align: center">실시간 메시지 저장</td><td style="text-align: center">Cassandra</td><td style="text-align: left">멀티 리전 쓰기 가용성</td></tr>
+<tr><td style="text-align: center">Hadoop 기반 분석</td><td style="text-align: center">HBase</td><td style="text-align: left">HDFS 통합, MapReduce 연계</td></tr>
+<tr><td style="text-align: center">비용 효율 Cassandra</td><td style="text-align: center">ScyllaDB</td><td style="text-align: left">노드 수 1/5, 동일 성능</td></tr>
+<tr><td style="text-align: center">사용자 활동 피드</td><td style="text-align: center">Cassandra</td><td style="text-align: left">쓰기 최적화, 시간 역순 조회</td></tr>
+</tbody></table>
+<h3 id="gyeolron">결론</h3>
+<p>컬럼 패밀리 DB는 시계열·이벤트 중심의 대용량 데이터에서 타 NoSQL 모델보다 압도적인 쓰기 성능을 제공한다. 기술사 시험에서는 <strong>Cassandra의 마스터리스 링 구조와 튜너블 일관성</strong>, <strong>HBase의 ZooKeeper 기반 강한 일관성 메커니즘</strong>, <strong>TWCS Compaction 전략의 시계열 최적화 원리</strong>가 핵심 논점이다.</p>
+<blockquote>
+<p>컬럼 패밀리 DB는 거대한 실시간 기록 시스템이다. 초당 수백만 개의 센서 신호를 끊임없이 기록하면서도, "지난 1시간 온도 변화"를 즉시 조회할 수 있다. 마치 CCTV가 24시간 녹화하면서도 특정 시간대 영상을 바로 재생할 수 있는 것처럼.</p>
+</blockquote>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>컬럼 패밀리 데이터베이스 (Column Family DB) — Cassandra/HBase/ScyllaDB은(는) 해당 영역의 성능, 확장성, 운영 안정성, 거버넌스 수준을 직접 좌우하는 핵심 요소다. 따라서 도입 여부는 기능 비교를 넘어 데이터 특성, 팀 역량, 비용 구조, 규제 요구를 함께 보는 아키텍처 판단이어야 한다.</p>
+<p>실무에서는 초기 효과보다 지속 운영 가능성과 연계 확장성이 더 중요하다. NoSQL 선택은 정답 찾기가 아니라 업무 패턴에 맞는 일관성과 확장성의 균형점을 고르는 일이다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[RDBMS 행 기반 저장]
+    │
+    ▼
+[와이드 컬럼 필요성]
+    │
+    ▼
+[컬럼 패밀리 DB(HBase&#x2F;Cassandra)]
+    │
+    ▼
+[SSTable&#x2F;LSM 트리]
+    │
+    ▼
+[시계열&#x2F;IoT 응용]
+</code></pre>
+<p>컬럼 패밀리 DB는 행 기반 RDBMS의 한계를 넘어 LSM 트리와 wide-column 저장으로 확장된다.</p>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: center">개념</th><th style="text-align: center">관계</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: center">BigTable</td><td style="text-align: center">이론적 기원</td><td style="text-align: left">Google의 분산 컬럼 저장소 논문</td></tr>
+<tr><td style="text-align: center">SSTable</td><td style="text-align: center">저장 구조</td><td style="text-align: left">Sorted String Table, 불변 파일</td></tr>
+<tr><td style="text-align: center">Compaction</td><td style="text-align: center">유지 관리</td><td style="text-align: left">SSTable 병합, 삭제된 데이터 제거</td></tr>
+<tr><td style="text-align: center">Gossip Protocol</td><td style="text-align: center">클러스터 관리</td><td style="text-align: left">노드 간 상태 P2P 전파</td></tr>
+<tr><td style="text-align: center">Tombstone</td><td style="text-align: center">삭제 마커</td><td style="text-align: left">삭제된 데이터 표시, Compaction 시 제거</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

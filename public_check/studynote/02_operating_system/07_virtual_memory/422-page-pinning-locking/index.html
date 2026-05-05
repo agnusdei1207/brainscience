@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>422. 페이지 고정 (Page Pinning &#x2F; Locking) - I&#x2F;O 대기 중인 페이지가 스왑아웃되지 않게 고정 (mlock) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 23, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 페이지 고정(Page Pinning / Locking)은 운영체제가 램(RAM)이 모자라 페이지 교체 알고리즘(LRU 등)을 돌려 희생양을 쫓아내려 할 때, <strong>특정 페이지에 닻(Lock)을 내려 절대로 디스크 스왑(Swap) 영역으로 쫓겨나지 않고 램에 영구 상주(Pinned)하도록 강제하는 커널 보호 기술</strong>이다.
+<strong>비유</strong>: 페이지 피닝은 <strong>호텔 객실의 '청소 금지 (Do Not Disturb)' 팻말</strong>과 같다. 호텔(RAM) 방이 모자라면 지배인(OS)은 오랫동안 나간 손님의 방(LRU 희생양)을 치우고 새 손님을 받는다(Swap-out). 하지만 10번 방 손님은 지금 중요한 수술 장비(DMA I/O)를 방안에 세팅 중이다. 만약 지배인이 맘대로 방을 치우고 새 손님을 넣으면 기계가 망가진다. 그래서 손님은 문고리에 '청소 금지' 팻말을 걸어둔다. 지배인은 방이 아무리 모자라도 이 팻말이 걸린 방은 절대 청소(교체)하지 않고 스킵하며 손님의 생존을 100% 보장해 준다.</p>
+</blockquote>
+<hr />
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: 페이지 락킹(Locking) 또는 피닝(Pinning)은 프레임 속성 장부에 특수한 비트(Lock Bit)를 1로 세팅하는 것이다. 램이 고갈되어 OS의 빗자루 데몬(kswapd)이 시곗바늘을 뱅글뱅글 돌리며 쫓아낼 페이지를 찾을 때, 이 락 비트가 켜진 페이지는 <strong>무적의 면책 특권</strong>을 가지고 빗자루질을 튕겨낸다. 전원이 꺼질 때까지, 또는 락을 직접 풀 때까지 해당 가상 주소는 그 물리 프레임에 영원히 알박기를 한다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 네트워크 카드(NIC)로 100MB의 유튜브 영상 패킷이 밀려오고 있다. 하드웨어 DMA 컨트롤러가 CPU 대신 램의 10번 프레임에 이 영상을 쓰고 있다. 이 작업은 0.1초가 걸린다. 그런데 0.05초쯤 지났을 때, 갑자기 OS가 램이 모자란다고 10번 프레임의 데이터를 스왑 디스크로 내쫓아버리고 그 자리에 엑셀 문서를 올려버렸다! DMA 하드웨어는 OS의 이런 사정을 모른 채 10번 프레임에 계속 영상을 쓴다. <strong>결과적으로 엑셀 문서가 영상 데이터에 의해 난도질당해 박살 난다(커널 패닉).</strong> OS는 I/O가 진행 중인 방에는 무조건 <strong>"공사 중 접근 금지(Pinning)"</strong> 팻말을 걸어 스왑 데몬이 절대 건드리지 못하게 막아야만 했다.</p>
+</li>
+<li>
+<p><strong>등장 배경 및 비동기 I/O의 충돌</strong>:</p>
+<ol>
+<li><strong>요구 페이징의 야생성</strong>: 램의 모든 프레임은 언제든 쫓겨날 수 있는 시한부 생명이라는 게 페이징의 기본 철학이었다.</li>
+<li><strong>비동기 하드웨어(DMA)의 발전</strong>: CPU 몰래 램에 데이터를 쏘고 가는 DMA 칩이 발명되면서, OS의 소프트웨어 교체 로직과 하드웨어의 물리적 전송 타이밍이 꼬이는 동기화 붕괴 사태가 터짐.</li>
+<li><strong>Pinning 락의 도입</strong>: OS는 페이지 장부에 '절대 쫓아내지 마'라는 예외 조항을 급히 신설하여 I/O 진행 중인 페이지들을 하드캐리하게 되었다.</li>
+</ol>
+</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────────────┐
+│        DMA I&#x2F;O 작업 중 페이지 피닝(Pinning)이 없는 경우의 참사           │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│ [ 1. 정상적인 I&#x2F;O 시작 ]                                                 │
+│ 하드웨어 랜카드 ──(DMA 전송 시작)──▶ [ 물리 램 5번 프레임 ]              │
+│ (네트워크 패킷을 5번 방에 쓰는 중... 약 0.1초 소요 예정)                 │
+│                                                                          │
+│ [ 2. 💥 OS의 무지성 페이지 교체 발동 (0.05초 경과 시점) ]                │
+│ OS: &quot;램 꽉 찼네? 5번 방 비워! 디스크로 스왑 아웃(Swap-out) 쳐!&quot;          │
+│ OS: &quot;빈 5번 방에 &#x27;워드 문서&#x27; 데이터 새로 올려!&quot; (Swap-in)                │
+│                                                                          │
+│ [ 3. 끔찍한 데이터 파괴 (Memory Corruption) ]                            │
+│ 하드웨어 랜카드 ──(나머지 데이터 계속 전송)──▶ [ 물리 램 5번 프레임 ]    │
+│ ✅ 결과: 랜카드는 OS가 방주인을 바꾼 걸 모르고 5번 방에 영상을 계속 씀.  │
+│         5번 방에 있던 &#x27;워드 문서&#x27;는 영상 픽셀 데이터에 덮어씌워져 파괴됨.│
+│                                                                          │
+│ 🛡️ [ 해결책: Page Pinning (페이지 고정) ]                                │
+│ 1단계에서 랜카드가 I&#x2F;O를 시작하기 전, OS가 5번 방에 [ 🔒 락 ]을 검.      │
+│ 2단계에서 OS 교체 알고리즘이 5번 방을 쫓아내려다 락을 보고 그냥 도망감.  │
+└──────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 가상 메모리 매핑 시스템(MMU)은 소프트웨어적인 눈속임이다. 하지만 DMA 컨트롤러는 이런 눈속임을 모르는 순수 하드웨어다. "5번 방에 쏴라" 하면 진짜 구리선 5번 구역에 전기를 쏜다. 소프트웨어의 스왑과 하드웨어의 전송이 부딪히는 이 끔찍한 사고를 막는 유일한 방파제가 바로 페이지 고정(Pinning) 기술이다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="keoneol-naebuyi-ijung-jangbu-pg-locked-biteu">커널 내부의 이중 장부: PG_locked 비트</h3>
+<p>리눅스 커널은 물리 페이지(Frame) 한 장 한 장마다 <code>struct page</code>라는 관리 구조체를 램 구석에 수백만 개 가지고 있다.</p>
+<ul>
+<li>이 구조체 안에는 상태를 나타내는 <code>flags</code> 비트맵이 있다.</li>
+<li>여기에 <strong><code>PG_locked</code></strong> 또는 <strong><code>PG_reserved</code></strong> 비트가 1로 세팅되면 피닝이 된 것이다.</li>
+<li><code>kswapd</code> 데몬(교체 청소부)이 LRU 리스트를 뺑글뺑글 돌면서 희생양을 찾을 때, 이 <code>flags</code>를 슬쩍 보고 락이 걸려 있으면 **무조건 패스(Skip)**하고 다음 불쌍한 희생양을 찾으러 간다.</li>
+<li>이 락은 I/O(디스크 쓰기/읽기, 네트워크 수신)가 100% 완료되는 하드웨어 인터럽트가 떨어져야만 OS가 0으로 풀어준다.</li>
+</ul>
+<h3 id="double-buffering-ijung-beopeoring-eul-tonghan-yujeo-memori-pining-hoepi">Double Buffering (이중 버퍼링)을 통한 유저 메모리 피닝 회피</h3>
+<p>만약 일반 유저 프로그램(카카오톡)이 자기 배열 버퍼에 하드디스크 파일을 다이렉트로(DMA) 읽어오라고 시스템 콜을 때리면 어떻게 될까? OS는 유저의 램 영역 전체에 Pinning 락을 걸어야 할까?</p>
+<ul>
+<li>유저 메모리에 락을 남발하면 악의적인 유저가 램 16GB를 전부 락 걸어놓고 스왑을 마비시키는 램 테러(Denial of Service)가 일어난다.</li>
+<li><strong>OS의 방어 (커널 버퍼 바운싱)</strong>: OS는 절대 유저 램에 다이렉트로 I/O를 꽂지 않는다.
+<ol>
+<li>I/O 장치에게는 **OS 소유의 '커널 버퍼(미리 Pinning 된 놈)'**에 데이터를 쏘라고 지시한다.</li>
+<li>하드웨어 전송이 끝나면, OS가 그 커널 버퍼에서 유저 버퍼로 소프트웨어적으로 쓱 복사(Memcpy)해 준다.</li>
+<li>이렇게 하면 유저 페이지는 락을 걸 필요가 없어져, 언제든 자유롭게 스왑 아웃될 수 있는 아름다운 가상 메모리 상태를 유지한다.</li>
+</ol>
+</li>
+</ul>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 운영체제의 해당 메커니즘은 현재 상태 정보, 자원 제약, 정책 기준이 함께 정합성을 가질 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<ol>
+<li><strong>요청 또는 이벤트 발생</strong>: 사용자 요청, 인터럽트, 시스템 호출 등으로 커널이 해당 기능을 처리할 필요가 생긴다.</li>
+<li><strong>현재 상태 확인</strong>: 커널은 큐, 제어 블록, 메타데이터, 자원 가용량을 확인해 실행 가능 여부와 우선순위를 판단한다.</li>
+<li><strong>정책 적용 및 자원 배정</strong>: 해당 주제의 핵심 정책에 따라 상태 전이, 자원 할당, 보호 검사를 수행한다.</li>
+<li><strong>결과 반영 및 후속 처리</strong>: 처리 결과를 시스템 상태에 기록하고 다음 인터럽트·스케줄링·복구 단계로 연결한다.</li>
+</ol>
+<h3 id="bigyo-1-mlock-yujeo-pining-vs-kernel-pinning-naebu-i-o-rag">비교 1: mlock() (유저 피닝) vs Kernel Pinning (내부 I/O 락)</h3>
+<p>피닝은 커널만 쓰는 게 아니다. 깐깐한 백엔드 프로그래머도 특수 목적으로 락을 강제할 수 있다.</p>
+<table><thead><tr><th style="text-align: left">특성</th><th style="text-align: left">커널 내부 Pinning (I/O)</th><th style="text-align: left"><code>mlock()</code> 시스템 콜 (유저 제어)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>발생 목적</strong></td><td style="text-align: left">DMA I/O 시 데이터 파괴(Corruption) 방지</td><td style="text-align: left">성능 저하(Swap 지연)를 막기 위해 유저가 램에 알박기 시도</td></tr>
+<tr><td style="text-align: left"><strong>유지 시간</strong></td><td style="text-align: left">I/O가 끝나는 찰나의 시간 (수 밀리초)</td><td style="text-align: left">프로세스가 명시적으로 풀 때까지 영구 지속 (수 개월)</td></tr>
+<tr><td style="text-align: left"><strong>권한 및 제한</strong></td><td style="text-align: left">커널 맘대로 제한 없이 사용</td><td style="text-align: left">시스템 붕괴 막으려 <code>ulimit -l</code>로 유저당 수십 KB 수준으로 철저히 양을 제한함</td></tr>
+<tr><td style="text-align: left"><strong>주 사용처</strong></td><td style="text-align: left">드라이버, 디스크 컨트롤러, 랜카드</td><td style="text-align: left">Redis 핵심 캐시, DB 암호화 키 메모리, RTOS</td></tr>
+</tbody></table>
+<h3 id="boangwa-keuribto-cryptography-yi-saengmyeongseon">보안과 크립토(Cryptography)의 생명선</h3>
+<p>해커로부터 비밀번호나 인증서를 다루는 C/C++ 암호화 프로그램은 메모리를 무조건 <code>mlock()</code>으로 피닝한다.
+왜일까? 만약 패스워드가 적힌 메모리가 스왑(Swap) 디스크로 쫓겨났다고 치자.
+나중에 서버 전원을 끄고 해커가 그 하드디스크를 뜯어가 포렌식 툴로 스왑 파티션을 뒤져보면 내 비밀번호 평문이 고스란히 하드디스크 조각에 남아있다. 램은 전원을 끄면 날아가지만 디스크는 영원히 남기 때문이다.
+**"내 메모리는 절대 하드디스크 스왑에 적히면 안 돼!"**라는 극강의 보안 철학을 달성하기 위한 유일한 함수가 바로 페이지 피닝(<code>mlock</code>)이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────┬────────────┬────────────┬──────────────────────────────────┐
+│ 메모리 성격│ 스와핑(Swap) │ 보안 취약점  │ mlock 적용 후              │
+├──────────┼────────────┼────────────┼──────────────────────────────────┤
+│ 일반 변수  │ 자유롭게 이동 │ 스왑 디스크에 남음│ 적용 안 함 (자유로움)│
+│ 암호 키   │ ☠️ 절대 금지  │ 치명적 정보 유출│ 🔒 램에 영구 상주       │
+└──────────┴────────────┴────────────┴──────────────────────────────────┘
+</code></pre>
+<p><strong>[매트릭스 해설]</strong> 가상 메모리가 부리는 스왑의 마법은 편하지만 보안 관점에서는 램에 있어야 할 휘발성 데이터를 비휘발성 디스크로 질질 흘리고 다니는 무서운 정보 유출 펌프다. 보안 개발자에게 피닝은 속도 튜닝을 넘어서는 생명 지킴이다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="bigyo-1-mlock-yujeo-pining-vs-kernel-pinning-naebu-i-o-rag-1">비교 1: mlock() (유저 피닝) vs Kernel Pinning (내부 I/O 락)</h3>
+<p>피닝은 커널만 쓰는 게 아니다. 깐깐한 백엔드 프로그래머도 특수 목적으로 락을 강제할 수 있다.</p>
+<table><thead><tr><th style="text-align: left">특성</th><th style="text-align: left">커널 내부 Pinning (I/O)</th><th style="text-align: left"><code>mlock()</code> 시스템 콜 (유저 제어)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>발생 목적</strong></td><td style="text-align: left">DMA I/O 시 데이터 파괴(Corruption) 방지</td><td style="text-align: left">성능 저하(Swap 지연)를 막기 위해 유저가 램에 알박기 시도</td></tr>
+<tr><td style="text-align: left"><strong>유지 시간</strong></td><td style="text-align: left">I/O가 끝나는 찰나의 시간 (수 밀리초)</td><td style="text-align: left">프로세스가 명시적으로 풀 때까지 영구 지속 (수 개월)</td></tr>
+<tr><td style="text-align: left"><strong>권한 및 제한</strong></td><td style="text-align: left">커널 맘대로 제한 없이 사용</td><td style="text-align: left">시스템 붕괴 막으려 <code>ulimit -l</code>로 유저당 수십 KB 수준으로 철저히 양을 제한함</td></tr>
+<tr><td style="text-align: left"><strong>주 사용처</strong></td><td style="text-align: left">드라이버, 디스크 컨트롤러, 랜카드</td><td style="text-align: left">Redis 핵심 캐시, DB 암호화 키 메모리, RTOS</td></tr>
+</tbody></table>
+<h3 id="boangwa-keuribto-cryptography-yi-saengmyeongseon-1">보안과 크립토(Cryptography)의 생명선</h3>
+<p>해커로부터 비밀번호나 인증서를 다루는 C/C++ 암호화 프로그램은 메모리를 무조건 <code>mlock()</code>으로 피닝한다.
+왜일까? 만약 패스워드가 적힌 메모리가 스왑(Swap) 디스크로 쫓겨났다고 치자.
+나중에 서버 전원을 끄고 해커가 그 하드디스크를 뜯어가 포렌식 툴로 스왑 파티션을 뒤져보면 내 비밀번호 평문이 고스란히 하드디스크 조각에 남아있다. 램은 전원을 끄면 날아가지만 디스크는 영원히 남기 때문이다.
+**"내 메모리는 절대 하드디스크 스왑에 적히면 안 돼!"**라는 극강의 보안 철학을 달성하기 위한 유일한 함수가 바로 페이지 피닝(<code>mlock</code>)이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────┬────────────┬────────────┬──────────────────────────────────┐
+│ 메모리 성격│ 스와핑(Swap) │ 보안 취약점  │ mlock 적용 후              │
+├──────────┼────────────┼────────────┼──────────────────────────────────┤
+│ 일반 변수  │ 자유롭게 이동 │ 스왑 디스크에 남음│ 적용 안 함 (자유로움)│
+│ 암호 키   │ ☠️ 절대 금지  │ 치명적 정보 유출│ 🔒 램에 영구 상주       │
+└──────────┴────────────┴────────────┴──────────────────────────────────┘
+</code></pre>
+<p><strong>[매트릭스 해설]</strong> 가상 메모리가 부리는 스왑의 마법은 편하지만 보안 관점에서는 램에 있어야 할 휘발성 데이터를 비휘발성 디스크로 질질 흘리고 다니는 무서운 정보 유출 펌프다. 보안 개발자에게 피닝은 속도 튜닝을 넘어서는 생명 지킴이다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<h3 id="silmu-sinario-oracle-redisyi-swap-reg-bangeojeon">실무 시나리오: Oracle / Redis의 Swap 렉 방어전</h3>
+<ol>
+<li><strong>문제 상황</strong>:
+<ul>
+<li>256GB 램 서버에서 오라클 DB가 잘 돌고 있다. 그런데 서버에 접속한 잡다한 파이썬 스크립트들이 램을 파먹기 시작했다.</li>
+<li>리눅스의 전역 교체(Global Replacement) 알고리즘이 램을 비우려고, 가만히 캐싱되어 있던 오라클 DB의 가장 중요한 인덱스 메모리를 스왑 디스크로 쫓아내 버렸다.</li>
+<li>유저가 쿼리를 날리자 오라클이 스왑에서 1GB를 퍼오느라 서버가 10초 동안 정지(STW)했다. 대재앙이다.</li>
+</ul>
+</li>
+<li><strong>개발자의 반격 (OS를 불신하라)</strong>:
+<ul>
+<li>데이터베이스 엔지니어들은 OS의 "내가 알아서 잘 교체해 줄게"라는 말을 절대 믿지 않는다.</li>
+<li>DB 서버 켤 때 아예 <strong>Lock_SGA (또는 memlock)</strong> 설정을 <code>True</code>로 박아버린다.</li>
+<li>이 설정은 수십 GB의 오라클 캐시 메모리 전체에 <code>mlock()</code> 시스템 콜을 때려버려 **"OS야 램이 모자라건 말건 이 수십 GB는 절대 스왑으로 내쫓지 마. 알박기 할 거야!"**라고 강제 피닝을 시전한다.</li>
+</ul>
+</li>
+<li><strong>결과</strong>: OS는 파이썬이 아무리 램을 달라고 울부짖어도 오라클의 램은 절대 뺏을 수 없다(피닝의 절대 방어). 결국 램 모자란 파이썬들끼리 싸우다 OOM으로 터져 죽고, 오라클 DB는 1년 내내 캐시 미스 없이 0.001초 응답 속도를 철벽 방어한다.</li>
+</ol>
+<h3 id="oom-killerwayi-dilrema">OOM Killer와의 딜레마</h3>
+<p><code>mlock</code>으로 램에 피닝을 남발하면, OS 교체 청소부(kswapd)가 램을 비우려 돌아다니다 락(Lock) 걸린 페이지에 다 튕겨 나가서 쫓아낼 놈을 단 하나도 못 찾는다. 빈방이 0개가 되는 순간 시스템은 극단적 패닉에 빠지고 리눅스의 저승사자 OOM Killer가 총을 꺼내 든다. 그래서 리눅스는 일반 유저 계정이 감히 <code>mlock</code>을 쓰지 못하도록 <code>ulimit -l</code> (max locked memory) 제한을 64KB 수준으로 깐깐하게 막아둔다. (DB 서버는 루트 권한으로 이 제한을 풀어버리는 튜닝을 거친다).</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">내용</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>하드웨어 I/O 무결성 보장</strong></td><td style="text-align: left">디바이스 DMA 전송 도중 물리 램의 주인이 바뀌는 가상 메모리의 모순을 막아 데이터 박살(Corruption)을 100% 원천 차단</td></tr>
+<tr><td style="text-align: left"><strong>절대적 Low-Latency 보장</strong></td><td style="text-align: left">스왑 디스크로 쫓겨날 확률을 0으로 만들어, 실시간 처리(RTOS) 환경에서 디스크 I/O 렉(8ms)을 0초로 완벽하게 평탄화</td></tr>
+<tr><td style="text-align: left"><strong>크립토 보안(Security) 강화</strong></td><td style="text-align: left">비밀키나 개인정보가 비휘발성 저장장치(HDD/SSD)에 기록되는 것을 막아 램 추출 해킹이 아니면 뚫을 수 없는 철통 샌드박스 구축</td></tr>
+</tbody></table>
+<h3 id="gyeolron-mic-mirae-jeonmang">결론 및 미래 전망</h3>
+<p>페이지 고정 (Page Pinning / Locking)은 '끝없이 유동하는 가상 메모리의 강물' 속에 흔들리지 않고 닻을 내린 튼튼한 콘크리트 말뚝이다. 모든 메모리를 스왑의 노예로 부리며 "한정된 램을 무한대처럼 속이려 했던" 운영체제의 허풍은, 결국 I/O 하드웨어의 냉혹한 물리적 전송 시간과 데이터베이스의 성능 집착 앞에서 무릎을 꿇고 이 피닝(Pinning)이라는 특권적 알박기 조항을 허락해야만 했다. 오늘날 KVM 같은 클라우드 하이퍼바이저에서 GPU 패스스루(Pass-through)를 위해 게스트 OS의 램 수십 GB를 호스트에 피닝해 버리는 기술은 가상화 성능을 네이티브(Bare-metal) 수준으로 끌어올리는 원동력이 되었다. 미래의 SR-IOV나 스마트 닉(SmartNIC) 시대가 가속화될수록, 하드웨어가 램에 직접 꽂아버리는 DMA 통신이 폭증하여 이 '페이지 고정' 기술은 가상 메모리의 족쇄가 아닌 필수 고속도로로서 그 비중이 더욱 거대해질 것이다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">기초 자원 관리 문제
+    ↓
+페이지 고정 (Page Pinning &#x2F; Locking)
+    ↓
+성능·격리·공정성 최적화
+    ↓
+가상화·관측·자동화 통합
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">페이지 고정 (Page Pinning / Locking)</td><td style="text-align: left">운영체제 자원 관리와 보호 정책이 실제로 적용되는 핵심 주제</td></tr>
+<tr><td style="text-align: left">커널 (Kernel)</td><td style="text-align: left">정책 집행, 상태 전이, 시스템 호출 처리의 중심</td></tr>
+<tr><td style="text-align: left">프로세스/스레드</td><td style="text-align: left">CPU, 메모리, 동기화 자원과 직접 연결되는 실행 단위</td></tr>
+<tr><td style="text-align: left">메모리/I/O</td><td style="text-align: left">성능 병목과 보호 요구사항이 함께 드러나는 연계 영역</td></tr>
+<tr><td style="text-align: left">가상화/보안</td><td style="text-align: left">격리, 제어, 관측 확장 관점에서 해당 주제가 연결되는 상위 개념</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

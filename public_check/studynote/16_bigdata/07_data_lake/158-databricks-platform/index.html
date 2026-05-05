@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>158. Databricks — Spark 기반 레이크하우스 통합 플랫폼 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote bigdata
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: Databricks — Spark 기반 레이크하우스 통합 플랫폼은(는) 원시 데이터 저장의 유연성과 분석 거버넌스의 통제를 함께 확보하기 위한 현대 데이터 플랫폼 핵심 개념이다.
+<strong>비유</strong>: 자유롭게 물을 모으는 저수지에 수문·정수 설비를 함께 갖춘 복합 수자원 시설과 같다.</p>
+</blockquote>
+<p>📝 모범 답안</p>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>Apache Spark는 뛰어난 성능에도 불구하고 클러스터 설정, 라이브러리 호환성, ML 실험 관리, 데이터 거버넌스를 모두 직접 구성해야 하는 운영 복잡성이 있었다. Databricks는 이 모든 요소를 통합 플랫폼으로 제공하여, 데이터 엔지니어·데이터 과학자·BI 분석가가 하나의 환경에서 협업할 수 있게 한다.</p>
+<p>Databricks Lakehouse Platform은 Delta Lake(저장), Unity Catalog(거버넌스), MLflow(ML 수명 주기), Workflows(오케스트레이션), SQL Analytics(BI)를 단일 통합 환경으로 제공한다.</p>
+<table><thead><tr><th style="text-align: left">이전 환경 (분산 도구)</th><th style="text-align: left">Databricks 통합</th></tr></thead><tbody>
+<tr><td style="text-align: left">Hadoop + Spark 자체 클러스터</td><td style="text-align: left">관리형 Spark 클러스터</td></tr>
+<tr><td style="text-align: left">Hive + 별도 DW</td><td style="text-align: left">Delta Lake 단일 스토리지</td></tr>
+<tr><td style="text-align: left">개별 ML 도구 (Jupyter 등)</td><td style="text-align: left">MLflow + Feature Store</td></tr>
+<tr><td style="text-align: left">별도 오케스트레이터 (Airflow)</td><td style="text-align: left">Databricks Workflows</td></tr>
+<tr><td style="text-align: left">별도 BI 도구 연결</td><td style="text-align: left">Databricks SQL + Serverless</td></tr>
+</tbody></table>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<pre><code>┌──────────────────────────────────────────────────────────────────┐
+│               Databricks Lakehouse Platform                       │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │              사용자 인터페이스 레이어                      │    │
+│  │  Notebooks │ Databricks SQL │ ML Experiments │ Workflows │    │
+│  └─────────────────────────────────────────────────────────┘    │
+│                                                                  │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │              컴퓨팅 레이어                                │    │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐   │    │
+│  │  │ All-Purpose  │  │ Job Cluster  │  │  SQL          │   │    │
+│  │  │ Cluster      │  │  (배치 전용) │  │  Warehouse   │   │    │
+│  │  │ (개발&#x2F;탐색)   │  │              │  │  (BI 전용)   │   │    │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘   │    │
+│  │           Apache Spark + Photon Engine (C++ 벡터화)      │    │
+│  └─────────────────────────────────────────────────────────┘    │
+│                                                                  │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │              데이터&#x2F;ML 레이어                              │    │
+│  │  Delta Lake │ Unity Catalog │ MLflow │ Feature Store     │    │
+│  └─────────────────────────────────────────────────────────┘    │
+│                                                                  │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │              클라우드 스토리지 레이어                      │    │
+│  │   AWS S3  │  Azure ADLS Gen2  │  Google Cloud Storage    │    │
+│  └─────────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>핵심 제품·기능 상세</strong></p>
+<table><thead><tr><th style="text-align: left">제품/기능</th><th style="text-align: left">역할</th><th style="text-align: left">핵심 특징</th></tr></thead><tbody>
+<tr><td style="text-align: left">Delta Lake</td><td style="text-align: left">저장 포맷</td><td style="text-align: left">ACID, 타임 트래블, Z-ORDER</td></tr>
+<tr><td style="text-align: left">Unity Catalog</td><td style="text-align: left">거버넌스</td><td style="text-align: left">3계층 네임스페이스, Fine-Grained AC</td></tr>
+<tr><td style="text-align: left">MLflow</td><td style="text-align: left">ML 수명 주기</td><td style="text-align: left">실험 추적, 모델 레지스트리, 서빙</td></tr>
+<tr><td style="text-align: left">Photon Engine</td><td style="text-align: left">쿼리 성능</td><td style="text-align: left">C++ 벡터화, SQL 최대 8배 가속</td></tr>
+<tr><td style="text-align: left">Databricks SQL</td><td style="text-align: left">BI 쿼리</td><td style="text-align: left">서버리스 SQL 웨어하우스</td></tr>
+<tr><td style="text-align: left">Workflows</td><td style="text-align: left">오케스트레이션</td><td style="text-align: left">DAG 기반 작업 의존성 관리</td></tr>
+<tr><td style="text-align: left">AutoML</td><td style="text-align: left">ML 자동화</td><td style="text-align: left">자동 피처 엔지니어링·하이퍼파라미터</td></tr>
+<tr><td style="text-align: left">Delta Live Tables</td><td style="text-align: left">파이프라인</td><td style="text-align: left">선언적 스트리밍·배치 통합 파이프라인</td></tr>
+</tbody></table>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 저장 포맷, 메타데이터, 트랜잭션, 거버넌스 계층을 함께 설계해야 한다.</p>
+<p>동작 순서:
+<strong>Databricks vs Snowflake — 핵심 대립 구도</strong></p>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">Databricks</th><th style="text-align: left">Snowflake</th></tr></thead><tbody>
+<tr><td style="text-align: left">핵심 포지셔닝</td><td style="text-align: left">코드 네이티브 (Python/Spark 중심)</td><td style="text-align: left">SQL 네이티브 (ANSI SQL 중심)</td></tr>
+<tr><td style="text-align: left">ML/AI 지원</td><td style="text-align: left">최고 수준 (MLflow, AutoML 내장)</td><td style="text-align: left">Snowpark ML (2023~)</td></tr>
+<tr><td style="text-align: left">스토리지 방식</td><td style="text-align: left">오픈 포맷 (Delta/Iceberg on 객체 스토리지)</td><td style="text-align: left">독점 스토리지 포맷</td></tr>
+<tr><td style="text-align: left">스트리밍</td><td style="text-align: left">Spark Structured Streaming + DLT</td><td style="text-align: left">Snowpipe (마이크로 배치)</td></tr>
+<tr><td style="text-align: left">가격 모델</td><td style="text-align: left">DBU (Databricks Unit) 기반</td><td style="text-align: left">Credit 기반</td></tr>
+<tr><td style="text-align: left">주 사용자</td><td style="text-align: left">데이터 엔지니어, ML 엔지니어</td><td style="text-align: left">SQL 분석가, BI 개발자</td></tr>
+<tr><td style="text-align: left">벤더 독립성</td><td style="text-align: left">오픈 포맷 (Delta/Iceberg)</td><td style="text-align: left">높은 벤더 종속성</td></tr>
+</tbody></table>
+<p><strong>연관 기술 연결</strong></p>
+<ul>
+<li><strong>MLflow</strong>: Databricks에서 인큐베이션, 현재 LF AI&amp;Data 재단 기증</li>
+<li><strong>Delta Lake</strong>: Linux Foundation 기증, 벤더 중립화</li>
+<li><strong>Apache Spark</strong>: Databricks 창업자들이 UC Berkeley AMPLab에서 개발</li>
+</ul>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<p><strong>클러스터 유형별 최적 사용 시나리오</strong></p>
+<table><thead><tr><th style="text-align: left">클러스터 유형</th><th style="text-align: left">특징</th><th style="text-align: left">사용 시나리오</th></tr></thead><tbody>
+<tr><td style="text-align: left">All-Purpose Cluster</td><td style="text-align: left">상시 실행, 협업</td><td style="text-align: left">탐색적 분석, 개발·디버깅</td></tr>
+<tr><td style="text-align: left">Job Cluster</td><td style="text-align: left">작업 시작 시 생성, 완료 후 종료</td><td style="text-align: left">운영 배치 파이프라인</td></tr>
+<tr><td style="text-align: left">SQL Warehouse</td><td style="text-align: left">서버리스 SQL 최적화</td><td style="text-align: left">BI 도구 연결, SQL 분석</td></tr>
+<tr><td style="text-align: left">Instance Pools</td><td style="text-align: left">미리 워밍업된 VM</td><td style="text-align: left">빠른 클러스터 시작 필요 시</td></tr>
+</tbody></table>
+<p><strong>기술사 답안 포인트</strong></p>
+<table><thead><tr><th style="text-align: left">질문</th><th style="text-align: left">핵심 답변</th></tr></thead><tbody>
+<tr><td style="text-align: left">Databricks 핵심 제품 구성</td><td style="text-align: left">Delta Lake + Unity Catalog + MLflow + Photon + Workflows</td></tr>
+<tr><td style="text-align: left">Photon Engine 원리</td><td style="text-align: left">C++ 기반 벡터화 실행, JVM 오버헤드 제거, SIMD 활용</td></tr>
+<tr><td style="text-align: left">Databricks vs Snowflake</td><td style="text-align: left">Databricks = 코드 네이티브/ML, Snowflake = SQL 네이티브/BI</td></tr>
+<tr><td style="text-align: left">DBU(Databricks Unit)</td><td style="text-align: left">클러스터 유형·크기에 따른 가격 단위, 시간당 소비량</td></tr>
+</tbody></table>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<table><thead><tr><th style="text-align: left">효과</th><th style="text-align: left">내용</th></tr></thead><tbody>
+<tr><td style="text-align: left">통합 플랫폼 효율</td><td style="text-align: left">여러 도구 연동 설정 제거, 단일 보안·거버넌스</td></tr>
+<tr><td style="text-align: left">ML 가속</td><td style="text-align: left">MLflow·Feature Store로 ML 실험→배포 사이클 단축</td></tr>
+<tr><td style="text-align: left">비용 최적화</td><td style="text-align: left">Auto Scaling + Spot 인스턴스 + 작업 완료 종료</td></tr>
+<tr><td style="text-align: left">오픈 포맷</td><td style="text-align: left">Delta/Iceberg로 벤더 종속 최소화</td></tr>
+</tbody></table>
+<p>Databricks는 2023년 기준 기업 가치 430억 달러로 평가되며, 2024년 IPO를 준비 중인 빅데이터 AI 플랫폼의 선두 기업이다. 레이크하우스 아키텍처의 레퍼런스 구현체로서 기업 데이터 플랫폼 표준에 가장 가까이 있다. 기술사 시험에서는 <strong>Databricks 핵심 제품 구성</strong>, <strong>Photon Engine 특성</strong>, <strong>Snowflake와의 포지셔닝 비교</strong>가 핵심 논점이다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>Databricks — Spark 기반 레이크하우스 통합 플랫폼은(는) 해당 영역의 성능, 확장성, 운영 안정성, 거버넌스 수준을 직접 좌우하는 핵심 요소다. 따라서 도입 여부는 기능 비교를 넘어 데이터 특성, 팀 역량, 비용 구조, 규제 요구를 함께 보는 아키텍처 판단이어야 한다.</p>
+<p>실무에서는 초기 효과보다 지속 운영 가능성과 연계 확장성이 더 중요하다. 레이크하우스 계열 기술은 저장 유연성과 거버넌스 통제를 동시에 달성할 때 비로소 플랫폼 가치가 커진다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[Apache Spark — 인메모리 분산 처리 엔진, 배치·스트림 통합]
+    │
+    ▼
+[Databricks (Managed Spark) — Spark 완전 관리형 클라우드 플랫폼, 자동 최적화]
+    │
+    ▼
+[Delta Lake — ACID 트랜잭션·스키마 진화·타임 트래블 지원 오픈 테이블 포맷]
+    │
+    ▼
+[레이크하우스 (Lakehouse) — 데이터 레이크의 유연성 + 데이터 웨어하우스의 ACID·성능 통합]
+    │
+    ▼
+[Unity Catalog + MLflow — 데이터·모델 거버넌스 통합, 엔드투엔드 AI&#x2F;ML 파이프라인]
+</code></pre>
+<p>이 흐름은 순수 Spark 엔진이 데이터 품질 보장의 한계를 드러내자 Delta Lake의 ACID가 이를 보완하고, 레이크하우스 아키텍처와 통합 거버넌스로 발전하는 Databricks 플랫폼의 진화 계보를 보여준다.</p>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">관계</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">Delta Lake</td><td style="text-align: left">저장 레이어</td><td style="text-align: left">Databricks 핵심 오픈소스 기여</td></tr>
+<tr><td style="text-align: left">Unity Catalog</td><td style="text-align: left">거버넌스 레이어</td><td style="text-align: left">3계층 네임스페이스, 리니지</td></tr>
+<tr><td style="text-align: left">MLflow</td><td style="text-align: left">ML 수명 주기</td><td style="text-align: left">실험·레지스트리·서빙 통합</td></tr>
+<tr><td style="text-align: left">Photon Engine</td><td style="text-align: left">성능 가속</td><td style="text-align: left">C++ 벡터화, SQL 8배 향상</td></tr>
+<tr><td style="text-align: left">DBU</td><td style="text-align: left">가격 단위</td><td style="text-align: left">클러스터 유형별 시간당 단가</td></tr>
+<tr><td style="text-align: left">Databricks SQL</td><td style="text-align: left">BI 레이어</td><td style="text-align: left">서버리스 SQL 웨어하우스</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

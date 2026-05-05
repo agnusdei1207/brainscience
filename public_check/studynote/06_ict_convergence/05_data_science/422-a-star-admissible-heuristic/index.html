@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>422. A* 알고리즘과 허용 휴리스틱 (Admissible Heuristic) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 18, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ict convergence
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: A*(에이스타) 알고리즘은 미로를 탈출할 때 "지금까지 걸어온 실제 거리(g)"와 "앞으로 출구까지 남은 예상 거리(h)"를 더한 총비용(f = g + h)이 가장 작은 길만 똑똑하게 골라서 나아가는 최단 경로 탐색 알고리즘이다.
+<strong>비유</strong>: 서울에서 부산으로 갈 때 다익스트라는 일단 춘천, 강릉, 인천을 다 들려보며 길을 찾는 바보라면, A* 알고리즘은 "부산은 남동쪽에 있으니 일단 남동쪽으로 향하는 고속도로만 타자!"라며 똑똑하게 좁혀 들어가는 내비게이션이다.</p>
+</blockquote>
+<hr />
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>게임에서 내 캐릭터(기사)가 마우스 클릭 한 번으로 성벽과 강물을 피해 목적지(마왕성)로 달려간다. 어떻게 이렇게 똑똑하게 장애물을 피해 갈까?
+기존의 다익스트라(Dijkstra) 알고리즘을 쓰면 목적지가 동쪽인데도 일단 동서남북을 가리지 않고 둥글게 원을 그리며 모든 땅을 다 뒤지며 전진한다. 시간이 너무 오래 걸린다.</p>
+<p>"목적지가 동쪽이면 서쪽은 쳐다보지도 말고 동쪽으로만 집중해서 길을 찾으면 안 될까?"
+이 아이디어를 실현하기 위해, 탐색자에게 **"목적지가 저쪽 방향에 있어!"라고 알려주는 나침반(휴리스틱)*<em>을 쥐여주어 무식한 계산량을 획기적으로 줄여낸 지능형 탐색 기법이 바로 <em><em>A</em> (A-Star) 알고리즘</em></em>이다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<p>A* 알고리즘은 오직 하나의 수식, $f(n) = g(n) + h(n)$ 에 의해 움직인다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────┐
+│             [ A* 알고리즘의 최적 경로 탐색 파이프라인 ]        │
+├────────────────────────────────────────────────────────┤
+│ 1. 평가 함수 (Evaluation Function, f)                  │
+│    - f(n) = g(n) + h(n)  -&gt; 이 값이 제일 작은 칸으로 이동!│
+│                                                        │
+│ 2. g(n) : 현재까지의 진짜 피로도 (과거)                   │
+│    - 출발점에서 현재 위치(n)까지 걸어오면서 실제로 쓴 비용     │
+│    - 장애물을 돌아왔다면 값이 큼 (거짓말 안 통하는 팩트 점수)   │
+│                                                        │
+│ 3. h(n) : 목적지까지의 예상 거리 (미래, 휴리스틱)           │
+│    - 현재 위치(n)에서 목적지까지 장애물이 없다고 가정하고 잰   │
+│      대충의 직선거리 (맨해튼 거리나 유클리디안 거리를 씀)      │
+│    - 뻥튀기를 하면 안 된다는 아주 엄격한 룰이 있음!           │
+└────────────────────────────────────────────────────────┘
+</code></pre>
+<ol>
+<li><strong>허용 휴리스틱 (Admissible Heuristic)</strong>: A<em>가 완벽한 길을 찾기 위한 0순위 조건이다. 예상 거리 $h(n)$은 무조건 '실제 목적지까지의 거리'보다 작거나 같아야 한다(과소평가해야 함). 만약 "저 산만 넘으면 1시간 걸릴 거야"라고 예상($h$)했는데 실제로는 터널이 뚫려있어 30분 만에 간다면? A</em>는 1시간 걸린다고 뻥을 친 그쪽 길을 포기하고 영원히 멀리 빙빙 돌아가게 된다(최적해 붕괴).</li>
+<li><strong>다익스트라와의 관계</strong>: 만약 예상 거리 $h(n)$을 0으로 줘버리면? 미래를 예측하지 않겠다는 뜻이므로, A* 알고리즘은 완벽하게 100% 다익스트라 알고리즘과 똑같이 둥글게 퍼지며 탐색하게 된다.</li>
+</ol>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 지도나 미로에서 길을 찾는(Pathfinding) 세 가지 대표 탐색 알고리즘을 비교해 본다.</p>
+<p>동작 순서:</p>
+<p>지도나 미로에서 길을 찾는(Pathfinding) 세 가지 대표 탐색 알고리즘을 비교해 본다.</p>
+<table><thead><tr><th style="text-align: center">비교 항목</th><th style="text-align: left">다익스트라 (Dijkstra)</th><th style="text-align: left">탐욕적 최우선 탐색 (Greedy BFS)</th><th style="text-align: left">A* (A-Star) 알고리즘</th></tr></thead><tbody>
+<tr><td style="text-align: center"><strong>평가 수식</strong></td><td style="text-align: left">$f(n) = g(n)$</td><td style="text-align: left">$f(n) = h(n)$</td><td style="text-align: left"><strong>$f(n) = g(n) + h(n)$</strong></td></tr>
+<tr><td style="text-align: center"><strong>탐색의 철학</strong></td><td style="text-align: left">오직 지금까지 <strong>걸어온 거리만</strong> 따짐</td><td style="text-align: left">오직 앞으로 <strong>남은 거리만</strong> 따짐</td><td style="text-align: left"><strong>과거의 거리와 미래의 예상을 융합함</strong></td></tr>
+<tr><td style="text-align: center"><strong>속도</strong></td><td style="text-align: left">사방을 다 뒤지므로 가장 느림</td><td style="text-align: left">목적지 향해 직진하므로 엄청 빠름</td><td style="text-align: left"><strong>목적지 쪽으로 똑똑하게 좁혀들어가 빠름</strong></td></tr>
+<tr><td style="text-align: center"><strong>최단 경로 보장</strong></td><td style="text-align: left">무조건 보장함</td><td style="text-align: left">보장 안 됨 (장애물 만나면 꼬임)</td><td style="text-align: left"><strong>허용 휴리스틱 조건 만족 시 100% 보장함</strong></td></tr>
+</tbody></table>
+<p>탐욕적 탐색(Greedy)은 눈앞에 출구가 보이면 그쪽으로만 미친 듯이 직진한다. 그러다 중간에 거대한 호수를 만나면 그걸 피하지 못하고 갇혀버린다. A*는 "출구가 가깝긴 한데($h$가 낮음), 호수를 빙빙 돌아오느라 이미 체력을 너무 많이 썼네($g$가 높음). 그냥 다른 길로 돌아가자!"라며 과거와 미래를 밸런스 있게 평가하는 천재다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<p><strong>실무 적용 시나리오:</strong>
+물류 로봇(AGV)이 거대한 물류 창고 안에서 장애물(랙)을 피해 배송구로 이동해야 한다. 데이터 과학자는 창고 바닥을 바둑판(Grid)으로 나누고 파이썬 <code>networkx</code> 라이브러리나 C++로 <em><em>A</em> 알고리즘</em>*을 짠다. 이때 장애물을 통과할 수 없으므로, 로봇이 상하좌우로만 움직이는 상황을 반영해 휴리스틱($h$)을 '유클리디안(직선)' 대신 **'맨해튼 거리(Manhattan Distance)'**로 세팅한다. 로봇은 막힌 랙을 부드럽게 피해 최단 거리로 배송구에 짐을 골인시킨다.</p>
+<p><strong>기술사 판단 포인트 (Trade-off):</strong>
+A* 아키텍처 설계 시 기술사는 <strong>'휴리스틱의 팽창(Weighting)'과 '완벽함(Optimality)'</strong> 사이의 스위칭을 결단해야 한다.</p>
+<ol>
+<li>게임이나 로봇 제어에서, A*가 무조건 100% 완벽한 최단 경로를 찾기 위해 연산을 너무 오래 하면 랙(Lag)이 걸린다.</li>
+<li>기술사는 수식을 $f(n) = g(n) + W \times h(n)$ 으로 바꾸고 가중치($W$)를 5 정도로 확 줘버린다(Weighted A*).</li>
+<li>이렇게 하면 로봇이 "뒤돌아가는 건 생각하기도 싫어! 무조건 목적지 쪽으로 직진해!"라며 탐욕(Greedy) 성향이 강해진다. 비록 최단 거리가 아니라 살짝 돌아가는 길을 찾을 수도 있지만(최적해 포기), 연산 속도가 5배 빨라져 게임이 렉 없이 부드럽게 돌아간다.</li>
+</ol>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p>A* 알고리즘은 1968년 스탠퍼드 연구소(SRI)에서 인공지능 로봇 '셰이키(Shakey)'를 움직이게 하려고 발명된 컴퓨터 과학의 불멸의 마스터피스다. 맹목적인 탐색의 세계에 "정보(Information)를 가진 탐색"이라는 룰을 불어넣어, 기계가 목적을 가지고 똑똑하게 움직일 수 있도록 만들었다.</p>
+<p>결론적으로 우리가 쓰는 스타크래프트의 유닛 이동, 카카오내비의 길 찾기, 자율주행 자동차의 경로 플래닝(Path Planning)의 밑바닥에는 예외 없이 이 A* 알고리즘이 굳건하게 뼈대로 자리 잡고 있다. 기술사는 아무리 딥러닝(강화학습)이 발전하더라도, 물리적 공간에서 100% 안전한 최단 거리를 수학적으로 보장해야 하는 미션 크리티컬(Mission-Critical) 환경에서는 반드시 이 낡지만 위대한 알고리즘을 0순위로 채택해야 한다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>A* 알고리즘은 1968년 스탠퍼드 연구소(SRI)에서 인공지능 로봇 '셰이키(Shakey)'를 움직이게 하려고 발명된 컴퓨터 과학의 불멸의 마스터피스다. 맹목적인 탐색의 세계에 "정보(Information)를 가진 탐색"이라는 룰을 불어넣어, 기계가 목적을 가지고 똑똑하게 움직일 수 있도록 만들었다.</p>
+<p>결론적으로 우리가 쓰는 스타크래프트의 유닛 이동, 카카오내비의 길 찾기, 자율주행 자동차의 경로 플래닝(Path Planning)의 밑바닥에는 예외 없이 이 A* 알고리즘이 굳건하게 뼈대로 자리 잡고 있다. 기술사는 아무리 딥러닝(강화학습)이 발전하더라도, 물리적 공간에서 100% 안전한 최단 거리를 수학적으로 보장해야 하는 미션 크리티컬(Mission-Critical) 환경에서는 반드시 이 낡지만 위대한 알고리즘을 0순위로 채택해야 한다.</p>
+<p>결론적으로 A* 알고리즘과 허용 휴리스틱 (Admissible Heuristic)는 기술 자체만으로 성과가 보장되지 않으며, 적용 맥락, 운영 역량, 데이터 품질, 보안·거버넌스 조건이 함께 충족될 때 비로소 실질적 가치가 구현된다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">데이터 수집과 정형 보고 중심 분석
+    ↓
+통계·실험·전처리 방법론 정립
+    ↓
+A* 알고리즘과 허용 휴리스틱 (Admissible Heuristic) 기반 패턴 발견·예측 체계 확립
+    ↓
+자동화된 모델링·시각화·의사결정 지원 확대
+    ↓
+MLOps·데이터 거버넌스와 결합한 운영 단계로 고도화
+</code></pre>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">상위 개념</td><td style="text-align: left">그래프 탐색 (Graph Search), 휴리스틱 탐색 (Heuristic Search)</td></tr>
+<tr><td style="text-align: left">하위 개념</td><td style="text-align: left">맨해튼 거리, 평가 함수 (f = g + h), 허용 휴리스틱 (Admissible)</td></tr>
+<tr><td style="text-align: left">연결 개념</td><td style="text-align: left">다익스트라 (Dijkstra), 탐욕적 최우선 탐색 (Greedy BFS), MCTS (몬테카를로 트리 탐색)</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

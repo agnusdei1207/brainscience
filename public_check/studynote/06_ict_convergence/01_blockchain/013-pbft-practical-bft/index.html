@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>13. PBFT (Practical BFT) - 다수결 기반 상태 기계 복제 합의 (텐더민트, 하이퍼레저) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>May 18, 2024</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ict convergence
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: 기존 BFT가 가진 비현실적인 동기식 네트워크 가정을 깨고, 실제 지연이 존재하는 비동기 네트워크에서도 비잔틴 장애를 견뎌내는 '실용적' 다수결 상태 기계 복제 알고리즘입니다.
+<strong>비유</strong>: 재판에서 PoW가 "임시 판결 후 며칠 기다렸다가 이의 제기가 없으면 확정"하는 1심 판결이라면, PBFT는 대법관 다수가 모여 즉석에서 "번복할 수 없는 최종 선고"를 내리는 대법원 확정 판결과 같습니다.</p>
+</blockquote>
+<hr />
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>PBFT(Practical Byzantine Fault Tolerance)는 악의적 노드(비잔틴 노드)가 존재하는 네트워크에서 합의를 도출하기 위한 가장 대표적인 분산 컴퓨팅 알고리즘입니다. 오리지널 BFT 이론은 네트워크 메시지가 항상 정해진 시간 내에 도착한다는 '동기화(Synchronous) 모델'을 전제로 하여 현실 인터넷 환경에서는 사용하기 어려웠습니다. PBFT는 이를 극복하여 지연 시간이 예측 불가능한 '비동기(Asynchronous) 모델'에서도 정상 작동하도록 설계된 최초의 실용적(Practical) 프로토콜입니다.</p>
+<p>비트코인의 PoW(작업증명)는 강력한 탈중앙성을 제공하지만 10분에 1번씩 블록을 생성하며, 네트워크 분기(Fork) 발생 시 6개의 블록을 기다려야 하는 확률적 완결성(Probabilistic Finality) 문제를 안고 있습니다. 금융권 결제 시스템처럼 결제가 즉시 '최종 확정'되어야 하는 비즈니스에서는 분기가 치명적입니다. PBFT는 암호화 연산 낭비를 없애고 2/3 이상의 노드 투표만 거치면 그 즉시 블록을 확정(Immediate Finality)하므로, 엔터프라이즈 환경에서 필수적인 아키텍처가 되었습니다.</p>
+<p>PBFT 도입으로 인한 상태 비가역성(Finality) 확보 구조를 보여주는 도식입니다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[ 전통적 PoW 체인 (비트코인) ]
+ ──[B1]──[B2]──[B3]──[B4] (언제든 더 긴 체인이 나타나면 뒤집힐 수 있음)
+             └──[B3&#x27;] (고아 블록 분기 발생)
+
+[ PBFT 합의 기반 체인 (하이퍼레저) ]
+ ──[B1]──[B2]──[B3]──[B4] 
+    |      |      |      |
+  (확정) (확정) (확정) (확정) =&gt; 즉각적 100% 완결성 (분기 원천 차단)
+</code></pre>
+<p>이 도식의 핵심은 PBFT 기반 시스템에서는 분기(Fork) 자체가 수학적으로 발생할 수 없다는 점입니다. 하나의 블록이 체인에 연결되기 전에 이미 네트워크 2/3 이상의 노드로부터 검증 도장을 모두 받아 확정(Commit) 처리하기 때문입니다. 이런 배치는 은행 송금이나 주식 거래처럼 롤백이 불가능한 실시간 금융 시스템에 강력한 이점을 줍니다. 따라서 실무에서 '거래가 절대 취소되어서는 안 되는' 비즈니스 요건이 있다면 PoW/PoS보다 PBFT 계열 컨소시엄망 도입을 최우선으로 검토해야 합니다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<p>PBFT는 전체 N개의 노드 중 최대 $f$개의 비잔틴(악의적) 노드가 존재할 때, $N \ge 3f + 1$ 조건을 만족하면 합의를 이룹니다. 알고리즘의 동작은 하나의 프라이머리(Primary, 리더)와 다수의 레플리카(Replica, 복제본) 간 메시지 교환으로 이뤄지는 <strong>3단계 페이즈 (3-Phase Commit)</strong> 아키텍처를 가집니다.</p>
+<table><thead><tr><th style="text-align: left">단계 (Phase)</th><th style="text-align: left">핵심 동작 및 역할</th><th style="text-align: left">내부 메커니즘</th><th style="text-align: left">비유</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>1. Pre-prepare</strong></td><td style="text-align: left">프라이머리가 클라이언트 요청 수신 및 순서(Sequence) 부여</td><td style="text-align: left">리더가 트랜잭션에 번호를 매기고 서명하여 복제본들에게 브로드캐스트 전파</td><td style="text-align: left">의장의 안건 상정</td></tr>
+<tr><td style="text-align: left"><strong>2. Prepare</strong></td><td style="text-align: left">복제본들이 리더의 제안 수신 후 교차 검증 전파</td><td style="text-align: left">메시지를 받은 노드들이 자신이 받았다는 사실을 얽히고설켜(P2P) 브로드캐스트</td><td style="text-align: left">안건 내용 교차 확인</td></tr>
+<tr><td style="text-align: left"><strong>3. Commit</strong></td><td style="text-align: left">2/3 정족수 달성 확인 후 상태 장부에 영구 기록</td><td style="text-align: left"><code>2f+1</code> 개의 Prepare 수집 후, 다시 Commit 메시지를 날려 최종 의사 결정 확정</td><td style="text-align: left">최종 다수결 투표</td></tr>
+<tr><td style="text-align: left"><strong>View Change</strong></td><td style="text-align: left">리더가 응답 없거나 해킹당했을 때 탄핵 및 리더 교체</td><td style="text-align: left">타이머 초과 시 레플리카들이 투표하여 다음 순번 노드를 새 리더로 선출</td><td style="text-align: left">리더 불신임 탄핵안</td></tr>
+</tbody></table>
+<p>PBFT의 핵심인 3-Phase 메시지 시퀀스 다이어그램입니다 (N=4, f=1).</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[Client]     [Primary]      [Replica 1]    [Replica 2 (비잔틴)]
+   │             │               │               │
+   ├── Request ─&gt;│               │               │
+   │             ├──Pre-prepare─&gt;│               │
+   │             ├──Pre-prepare─────────────────&gt;│ (침묵 또는 거짓말)
+   │             │               │               │
+   │             │&lt;── Prepare ───┤               │
+   │             │               ├── Prepare ───&gt;│
+   │             │               │               │
+   │             ├── Commit ────&gt;│               │
+   │             │&lt;── Commit ────┤               │
+   │&lt;─ Reply ────┤               │               │
+</code></pre>
+<p>이 흐름의 핵심은 한 단계가 다음 단계로 넘어가기 위해서는 각 노드가 반드시 2f+1개의 서명된 동일 메시지(Quorum)를 수집해야 한다는 점입니다. 만약 레플리카 2가 악의적으로 침묵하거나 엉뚱한 메시지를 보내더라도, 프라이머리와 레플리카 1이 올바른 메시지를 주고받으면 총 2개의 일치된 표가 확보되어 $2f+1=3$ 표 중 2표(자신 포함)를 획득, 검증을 패스할 수 있습니다. 이런 촘촘한 그물망 배치는 리더의 독재와 복제본의 반란을 동시에 억제합니다. 따라서 단일 노드 성능보다 네트워크 통신 대역폭이 전체 시스템의 병목(Bottleneck)이 되며, 노드 수가 증가할수록 메시지 양이 $O(N^2)$로 폭발하여 성능이 급감하는 트레이드오프가 존재합니다.</p>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: PBFT는 퍼블릭 체인에서 널리 쓰이는 PoW 알고리즘과 대척점에 위치하며, 서로 보완적인 시스템 도메인에서 활용됩니다.</p>
+<p>동작 순서:</p>
+<p>PBFT는 퍼블릭 체인에서 널리 쓰이는 PoW 알고리즘과 대척점에 위치하며, 서로 보완적인 시스템 도메인에서 활용됩니다.</p>
+<p>PoW와 PBFT 합의의 성능과 구조적 한계를 비교한 다각도 분석표입니다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌───────────┬──────────────────────┬──────────────────────┐
+│ 아키텍처  │ Nakamoto (PoW 기반)  │ PBFT (투표 기반)     │
+├───────────┼──────────────────────┼──────────────────────┤
+│ 보안 앵커 │ 해시 컴퓨팅 연산력   │ 참가자 다수결 2&#x2F;3    │
+│ 노드 개방 │ Permissionless (공개)│ Permissioned (비공개)│
+│ 확장성    │ 노드 무한 확장 가능  │ ~100개 이하 제한     │
+│ 초당 처리 │ ~10 TPS 미만 (극악)  │ 3,000 TPS 이상 (쾌속)│
+│ 완결성    │ 임시 블록 -&gt; 점진 확정│ 투표 종료 즉시 확정  │
+└───────────┴──────────────────────┴──────────────────────┘
+</code></pre>
+<p>PoW 체계는 아무나 익명으로 참여할 수 있기 때문에 분산 원장의 이데올로기적 궁극인 검열 저항성이 높지만, 기업 실무 시스템으로 쓰기에는 느리고 환경 파괴적입니다. 반면 PBFT는 신원이 확인된 컨소시엄 참여자끼리만 닫힌 망을 구성하여 노드 수를 제한함으로써, 데이터 일관성과 실시간 처리 속도를 극대화합니다. 따라서 중앙은행이나 다국적 물류 기업들이 융합 연합체를 구성할 때는 탈중앙성(PoW)의 환상을 버리고 실용주의적(PBFT) 성능을 택하는 것이 올바른 아키텍처 방향입니다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<p>실무에서 PBFT를 도입할 때 가장 흔하게 발생하는 장애는 네트워크 구성의 안티패턴과 리더 장애(View Change) 시 발생하는 일시적 합의 중단(Stall)입니다.</p>
+<ol>
+<li>
+<p><strong>최소 노드 수 안티패턴 (N=3 구성의 함정)</strong></p>
+<ul>
+<li>개발자들이 비용 절감을 위해 프라이빗 블록체인을 3대의 노드로만 구성하는 경우가 잦습니다. PBFT 공식 $N=3f+1$에 대입하면, $N=3$일 때 $f=0$이 됩니다. 즉 단 1대의 서버 해킹이나 장애도 견디지 못하고 시스템 전체가 락(Lock)에 걸립니다. 비잔틴 장애 1대를 버티기 위해서는 반드시 최소 4대의 분산 노드를 구성해야 합니다.</li>
+</ul>
+</li>
+<li>
+<p><strong>리더 장애와 View Change 오버헤드</strong></p>
+<ul>
+<li>PBFT는 프라이머리(리더)가 중앙에서 트랜잭션 순서를 매기는 권한을 독점합니다. 만약 리더가 악의적으로 순서를 섞거나 장애로 죽어버리면 뷰 체인지(View Change)가 발동하여 다음 복제본이 리더 자리를 승계합니다. 이 교체 과정에서 엄청난 메시지 교환 오버헤드 타임아웃이 발생하여 일시적으로 TPS가 0으로 수렴합니다.</li>
+</ul>
+</li>
+</ol>
+<p>이러한 리더 교체 시 병목을 보여주는 상태 전이 큐 시각화입니다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[정상 트래픽 처리 중] =&gt; [Primary 장애&#x2F;해킹 발생] =&gt; [트랜잭션 Timeout 누적]
+                                     ↓
+[Replica들이 View Change 메시지 P2P 브로드캐스트 투표 시작] (네트워크 대역폭 폭주)
+                                     ↓
+[2f+1 동의 획득] =&gt; [새로운 Primary 선출] =&gt; [New-View 전파] =&gt; [합의 재개]
+</code></pre>
+<p>이 시각화의 핵심은 리더가 멈춘 순간부터 새로운 리더가 선출될 때까지 시스템의 합의가 완전히 멈추는(Liveness 단절) 취약 구간이 존재한다는 점입니다. 이 때문에 텐더민트(Tendermint) 같은 PBFT 변형 아키텍처에서는 한 명의 리더가 계속 독점하는 방식 대신, 매 블록마다 라운드 로빈 방식으로 리더를 강제로 교체하여 리더 장애의 충격과 독재를 원천 분산시키는 실무적 방어 기법을 결합하여 사용합니다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p>PBFT는 분산 환경에서 '실용적'이라는 이름을 붙인 최초의 연구답게, 학계의 이론을 산업계의 메인스트림 코드로 안착시켰습니다.</p>
+<table><thead><tr><th style="text-align: left">기대효과</th><th style="text-align: left">정량적 가치 및 아키텍처 기여</th><th style="text-align: left">비고</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>기업용 블록체인 표준화</strong></td><td style="text-align: left">하이퍼레저 패브릭, 코다(Corda) 등 주요 프레임워크 탑재</td><td style="text-align: left">컨소시엄망 사실상 표준</td></tr>
+<tr><td style="text-align: left"><strong>즉각적 비가역성 제공</strong></td><td style="text-align: left">금융 송금 실패율 0%, 롤백 불가 아키텍처 완성</td><td style="text-align: left">결제 시스템에 완벽 호환</td></tr>
+<tr><td style="text-align: left"><strong>친환경 성능 고도화</strong></td><td style="text-align: left">전력 낭비 제로, 수천 TPS 달성</td><td style="text-align: left">비트코인의 한계 극복</td></tr>
+</tbody></table>
+<p>PBFT의 핵심 약점인 '노드가 늘어날수록 급증하는 $O(N^2)$ 통신량'을 극복하기 위해, 최근에는 DPoS(위임 투표)와 결합하여 소수의 대표 노드만 PBFT를 수행하는 하이브리드 체인(코스모스 SDK, BSC)으로 진화하고 있습니다. PBFT는 향후 CBDC(중앙은행 디지털 화폐) 및 대규모 RWA(실물 자산) 토큰화 네트워크를 지탱하는 보이지 않는 척추 역할을 수행할 것입니다.</p>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>PBFT는 분산 환경에서 '실용적'이라는 이름을 붙인 최초의 연구답게, 학계의 이론을 산업계의 메인스트림 코드로 안착시켰습니다.</p>
+<table><thead><tr><th style="text-align: left">기대효과</th><th style="text-align: left">정량적 가치 및 아키텍처 기여</th><th style="text-align: left">비고</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>기업용 블록체인 표준화</strong></td><td style="text-align: left">하이퍼레저 패브릭, 코다(Corda) 등 주요 프레임워크 탑재</td><td style="text-align: left">컨소시엄망 사실상 표준</td></tr>
+<tr><td style="text-align: left"><strong>즉각적 비가역성 제공</strong></td><td style="text-align: left">금융 송금 실패율 0%, 롤백 불가 아키텍처 완성</td><td style="text-align: left">결제 시스템에 완벽 호환</td></tr>
+<tr><td style="text-align: left"><strong>친환경 성능 고도화</strong></td><td style="text-align: left">전력 낭비 제로, 수천 TPS 달성</td><td style="text-align: left">비트코인의 한계 극복</td></tr>
+</tbody></table>
+<p>PBFT의 핵심 약점인 '노드가 늘어날수록 급증하는 $O(N^2)$ 통신량'을 극복하기 위해, 최근에는 DPoS(위임 투표)와 결합하여 소수의 대표 노드만 PBFT를 수행하는 하이브리드 체인(코스모스 SDK, BSC)으로 진화하고 있습니다. PBFT는 향후 CBDC(중앙은행 디지털 화폐) 및 대규모 RWA(실물 자산) 토큰화 네트워크를 지탱하는 보이지 않는 척추 역할을 수행할 것입니다.</p>
+<hr />
+<p>결론적으로 PBFT (Practical BFT) - 다수결 기반 상태 기계 복제 합의 (텐더민트, 하이퍼레저)는 기술 자체만으로 성과가 보장되지 않으며, 적용 맥락, 운영 역량, 데이터 품질, 보안·거버넌스 조건이 함께 충족될 때 비로소 실질적 가치가 구현된다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[비잔틴 결함 허용 (BFT) — 악의적 노드 존재 시에도 합의 도달 이론 정립]
+    │
+    ▼
+[PBFT (Practical Byzantine Fault Tolerance) — O(n²) 메시지로 실용적 BFT 구현]
+    │
+    ▼
+[Pre-prepare → Prepare → Commit 3단계 프로토콜 — 결정론적 순서 합의]
+    │
+    ▼
+[Tendermint &#x2F; HotStuff — PBFT 개선, 리더 기반 선형 복잡도 합의 알고리즘]
+    │
+    ▼
+[이더리움 PoS Casper &#x2F; Cosmos BFT — PBFT 계열 합의를 퍼블릭 블록체인에 적용]
+</code></pre>
+<p>이 흐름은 비잔틴 결함 허용 이론에서 출발하여 PBFT가 실용화되고, 이후 HotStuff 등의 최적화를 거쳐 퍼블릭 블록체인의 지분증명 합의로 발전하는 과정을 보여준다.</p>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">단계 (Phase)</td><td style="text-align: left">핵심 동작 및 역할</td></tr>
+<tr><td style="text-align: left"><strong>1. Pre-prepare</strong></td><td style="text-align: left">프라이머리가 클라이언트 요청 수신 및 순서(Sequence) 부여</td></tr>
+<tr><td style="text-align: left"><strong>2. Prepare</strong></td><td style="text-align: left">복제본들이 리더의 제안 수신 후 교차 검증 전파</td></tr>
+<tr><td style="text-align: left"><strong>3. Commit</strong></td><td style="text-align: left">2/3 정족수 달성 확인 후 상태 장부에 영구 기록</td></tr>
+<tr><td style="text-align: left"><strong>View Change</strong></td><td style="text-align: left">리더가 응답 없거나 해킹당했을 때 탄핵 및 리더 교체</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

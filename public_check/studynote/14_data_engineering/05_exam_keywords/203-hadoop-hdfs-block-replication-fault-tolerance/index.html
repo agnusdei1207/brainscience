@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>203. 하둡 HDFS (Hadoop Distributed File System) 블록 복제 내결함성 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>May 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote data engineering
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: HDFS (Hadoop Distributed File System)는 파일을 고정 크기 블록(128MB)으로 분할하고, 각 블록을 여러 DataNode에 자동 복제(기본 3회)하여, 범용 하드웨어 위에서 페타바이트급 분산 저장을 실현한다.
+<strong>비유</strong>: 단일 기능의 기술이 아니라, 흐름과 기준과 운영 판단이 함께 맞물릴 때 의미가 생기는 체계와 같다.</p>
+</blockquote>
+<hr />
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>2003~2006년 구글이 발표한 세 편의 논문 — GFS (Google File System), MapReduce, BigTable — 이 하둡의 탄생 기반이 되었다. 야후(Yahoo)의 더그 커팅(Doug Cutting)이 오픈소스로 구현한 HDFS는 GFS의 오픈소스 대체제이다.</p>
+<table><thead><tr><th style="text-align: left">구글 논문</th><th style="text-align: left">발표 연도</th><th style="text-align: left">하둡 구현체</th></tr></thead><tbody>
+<tr><td style="text-align: left">GFS (Google File System)</td><td style="text-align: left">2003</td><td style="text-align: left">HDFS</td></tr>
+<tr><td style="text-align: left">MapReduce</td><td style="text-align: left">2004</td><td style="text-align: left">Hadoop MapReduce</td></tr>
+<tr><td style="text-align: left">BigTable</td><td style="text-align: left">2006</td><td style="text-align: left">Apache HBase</td></tr>
+</tbody></table>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<table><thead><tr><th style="text-align: left">요소</th><th style="text-align: left">역할</th><th style="text-align: left">핵심 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">핵심 대상</td><td style="text-align: left">해당 주제가 직접 다루는 데이터·모델·인프라의 중심 객체</td><td style="text-align: left">무엇을 저장·처리·최적화하는지가 기술의 경계를 결정한다</td></tr>
+<tr><td style="text-align: left">제어 메커니즘</td><td style="text-align: left">처리 순서, 규칙, 알고리즘, 오케스트레이션</td><td style="text-align: left">성능·정합성·확장성은 제어 방식에 따라 달라진다</td></tr>
+<tr><td style="text-align: left">운영 레이어</td><td style="text-align: left">모니터링, 품질 검증, 거버넌스, 비용 관리</td><td style="text-align: left">실무에서는 기능보다 운영 가능성이 채택 여부를 좌우한다</td></tr>
+</tbody></table>
+<p>HDFS는 "고가 하드웨어를 믿지 말라"는 철학에서 출발한다. 수천 대의 범용(Commodity) 서버를 묶어, 어느 서버가 장애를 일으켜도 데이터가 손실되지 않도록 설계되었다.</p>
+<pre><code>HDFS 설계 원칙
+┌────────────────────────────────────────────────────────┐
+│  원칙 1: 하드웨어 장애는 예외가 아니라 정상 상황이다    │
+│  원칙 2: 대용량 파일 순차 접근에 최적화 (스트리밍 읽기) │
+│  원칙 3: Write-Once-Read-Many (쓰기 1회, 읽기 다수)     │
+│  원칙 4: 범용 하드웨어로 구성 (저비용 Scale-Out)        │
+└────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: 하둡 HDFS (Hadoop Distributed File System) 블록 복제 내결함성은 입력 데이터의 품질, 처리 단계의 일관성, 결과 활용 단계의 운영 제어가 동시에 맞아야 기대 효과를 낸다.</p>
+<p>HDFS는 마스터-슬레이브(Master-Slave) 아키텍처를 따른다.</p>
+<pre><code>HDFS 전체 아키텍처
+┌────────────────────────────────────────────────────────────┐
+│                         클라이언트                          │
+└───────────────────────────┬────────────────────────────────┘
+                            │ ① 파일 위치 요청
+                            ▼
+┌──────────────────────────────────────────────────────────┐
+│                      NameNode (1대)                       │
+│  - 파일 시스템 네임스페이스 (트리 구조)                    │
+│  - 파일 ↔ 블록 매핑 (메모리 내 유지)                      │
+│  - 블록 ↔ DataNode 위치 매핑 (FsImage + EditLog)          │
+└───────┬──────────────────────┬───────────────────────────┘
+        │ ② 블록 위치 응답     │ 하트비트&#x2F;블록 리포트
+        │                      ▼
+        │          ┌─────────────────────┐
+        │          │ Secondary NameNode  │
+        │          │ (체크포인팅 전용)    │
+        │          └─────────────────────┘
+        │
+        ▼ ③ 직접 데이터 접근
+┌───────────────────────────────────────────────────────────┐
+│                     DataNode 클러스터                      │
+│  ┌─────────┐   ┌─────────┐   ┌─────────┐   ┌─────────┐  │
+│  │DataNode1│   │DataNode2│   │DataNode3│   │DataNode4│  │
+│  │ Blk A1  │   │ Blk A2  │   │ Blk A3  │   │ Blk B1  │  │
+│  │ Blk C1  │   │ Blk B2  │   │ Blk C2  │   │ Blk B3  │  │
+│  └─────────┘   └─────────┘   └─────────┘   └─────────┘  │
+└───────────────────────────────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">컴포넌트</th><th style="text-align: left">역할</th><th style="text-align: left">핵심 특성</th></tr></thead><tbody>
+<tr><td style="text-align: left">NameNode</td><td style="text-align: left">파일 시스템 메타데이터 관리</td><td style="text-align: left">전체 네임스페이스를 RAM에 유지 (GB 단위)</td></tr>
+<tr><td style="text-align: left">DataNode</td><td style="text-align: left">실제 블록 저장·서비스</td><td style="text-align: left">로컬 파일시스템에 블록 파일로 저장</td></tr>
+<tr><td style="text-align: left">Secondary NameNode</td><td style="text-align: left">FsImage 체크포인팅</td><td style="text-align: left">EditLog 병합으로 NameNode 부담 경감 (HA 대체 아님!)</td></tr>
+<tr><td style="text-align: left">Standby NameNode</td><td style="text-align: left">HA (High Availability) 구성</td><td style="text-align: left">Active NameNode 장애 시 자동 전환</td></tr>
+</tbody></table>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<p>HDFS는 파일을 <strong>128MB</strong> (기본값) 블록으로 분할하여 저장한다.</p>
+<pre><code>파일 → 블록 분할 예시
+┌─────────────────────────────────────────────────────────┐
+│  파일: movie.mp4 (384MB)                                 │
+│                                                         │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐     │
+│  │  블록 A       │ │  블록 B       │ │  블록 C       │     │
+│  │  128MB        │ │  128MB        │ │  128MB        │     │
+│  └──────┬───────┘ └──────┬───────┘ └──────┬───────┘     │
+│         │ 복제 ×3        │ 복제 ×3        │ 복제 ×3      │
+│  DN1,DN2,DN3       DN2,DN3,DN4       DN1,DN3,DN4        │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">블록 크기</th><th style="text-align: left">이유</th><th style="text-align: left">트레이드오프</th></tr></thead><tbody>
+<tr><td style="text-align: left">128MB (기본값)</td><td style="text-align: left">대용량 순차 접근 최적화, NameNode 메타데이터 감소</td><td style="text-align: left">소규모 파일에는 낭비</td></tr>
+<tr><td style="text-align: left">64MB (이전 버전)</td><td style="text-align: left">구버전 기본값</td><td style="text-align: left">현재는 권장하지 않음</td></tr>
+<tr><td style="text-align: left">256MB (대용량)</td><td style="text-align: left">매우 큰 파일 처리 최적화</td><td style="text-align: left">NameNode 메모리 더 절약</td></tr>
+</tbody></table>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p>HDFS의 기본 복제 계수(Replication Factor)는 3이며, 랙 인지(Rack Awareness) 정책으로 배치한다.</p>
+<pre><code>랙 인지 복제 배치 정책
+┌─────────────────────────────────────────────────────────────┐
+│  데이터센터                                                   │
+│                                                             │
+│  ┌──────────── Rack 1 ────────────┐  ┌─── Rack 2 ────────┐  │
+│  │  DataNode1 ←── 복제본 1 (첫번째)│  │  DataNode3 ←── 복제본 3│  │
+│  │  DataNode2 ←── 복제본 2 (같은 랙)│  │                   │  │
+│  └─────────────────────────────────┘  └───────────────────┘  │
+│                                                             │
+│  정책: 2개는 같은 랙, 1개는 다른 랙                          │
+│  → 랙 내 스위치 장애 시에도 다른 랙 복제본으로 서비스 가능    │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">복제 배치</th><th style="text-align: left">이유</th></tr></thead><tbody>
+<tr><td style="text-align: left">1번 복제: 쓰기 클라이언트와 같은 랙 DataNode</td><td style="text-align: left">쓰기 성능 최적화</td></tr>
+<tr><td style="text-align: left">2번 복제: 같은 랙의 다른 DataNode</td><td style="text-align: left">랙 내 네트워크 활용</td></tr>
+<tr><td style="text-align: left">3번 복제: 다른 랙의 DataNode</td><td style="text-align: left">랙 단위 장애 대응</td></tr>
+</tbody></table>
+<table><thead><tr><th style="text-align: left">장애 유형</th><th style="text-align: left">HDFS 감지 방법</th><th style="text-align: left">복구 방법</th></tr></thead><tbody>
+<tr><td style="text-align: left">DataNode 장애</td><td style="text-align: left">하트비트 10분 무응답</td><td style="text-align: left">NameNode가 해당 블록 재복제 지시</td></tr>
+<tr><td style="text-align: left">블록 데이터 손상</td><td style="text-align: left">체크섬(Checksum) 검증</td><td style="text-align: left">다른 복제본으로 대체 후 재복제</td></tr>
+<tr><td style="text-align: left">랙 장애</td><td style="text-align: left">블록 리포트 누락</td><td style="text-align: left">다른 랙의 복제본 활용</td></tr>
+<tr><td style="text-align: left">NameNode 장애</td><td style="text-align: left">ZooKeeper 기반 모니터링</td><td style="text-align: left">Standby NameNode 자동 전환 (HA)</td></tr>
+</tbody></table>
+<p>MapReduce는 "데이터를 컴퓨팅으로 이동"시키는 대신 "컴퓨팅을 데이터로 이동"시키는 데이터 지역성 원칙을 따른다.</p>
+<pre><code>데이터 지역성 원칙
+┌─────────────────────────────────────────────────────────┐
+│  전통 방식 (데이터 → 컴퓨팅):                            │
+│  DataNode ──[네트워크]──▶ 중앙 처리 서버 (병목 발생)     │
+│                                                         │
+│  MapReduce 방식 (컴퓨팅 → 데이터):                       │
+│  DataNode ──[로컬 실행]──▶ Map Task 직접 실행            │
+│  네트워크 전송 없음 → 처리 속도 대폭 향상                 │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">지역성 레벨</th><th style="text-align: left">설명</th><th style="text-align: left">성능</th></tr></thead><tbody>
+<tr><td style="text-align: left">데이터 로컬 (Data-Local)</td><td style="text-align: left">Map Task와 블록이 동일 노드</td><td style="text-align: left">최고 (로컬 디스크 읽기)</td></tr>
+<tr><td style="text-align: left">랙 로컬 (Rack-Local)</td><td style="text-align: left">같은 랙의 다른 노드</td><td style="text-align: left">중간 (내부 스위치 경유)</td></tr>
+<tr><td style="text-align: left">오프 랙 (Off-Rack)</td><td style="text-align: left">다른 랙의 노드</td><td style="text-align: left">최저 (WAN급 지연)</td></tr>
+</tbody></table>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">HDFS</th><th style="text-align: left">GFS (Google File System)</th><th style="text-align: left">Amazon S3</th></tr></thead><tbody>
+<tr><td style="text-align: left">접근 방식</td><td style="text-align: left">POSIX 유사 파일 API</td><td style="text-align: left">독점 API</td><td style="text-align: left">REST API</td></tr>
+<tr><td style="text-align: left">일관성</td><td style="text-align: left">강한 일관성</td><td style="text-align: left">완화된 일관성</td><td style="text-align: left">최종 일관성</td></tr>
+<tr><td style="text-align: left">적합 사례</td><td style="text-align: left">배치 처리 (MapReduce)</td><td style="text-align: left">구글 내부 서비스</td><td style="text-align: left">오브젝트 저장, 클라우드 DL</td></tr>
+<tr><td style="text-align: left">파일 수정</td><td style="text-align: left">Append 전용</td><td style="text-align: left">Append 전용</td><td style="text-align: left">덮어쓰기 가능</td></tr>
+</tbody></table>
+<table><thead><tr><th style="text-align: left">파라미터</th><th style="text-align: left">기본값</th><th style="text-align: left">튜닝 방향</th><th style="text-align: left">이유</th></tr></thead><tbody>
+<tr><td style="text-align: left">dfs.replication</td><td style="text-align: left">3</td><td style="text-align: left">2 (개발/테스트)</td><td style="text-align: left">저장 비용 절감</td></tr>
+<tr><td style="text-align: left">dfs.block.size</td><td style="text-align: left">128MB</td><td style="text-align: left">256MB (대용량 파일)</td><td style="text-align: left">NameNode 메타데이터 감소</td></tr>
+<tr><td style="text-align: left">dfs.namenode.handler.count</td><td style="text-align: left">10</td><td style="text-align: left">CPU 코어 수 × 20</td><td style="text-align: left">NameNode RPC 병목 해소</td></tr>
+<tr><td style="text-align: left">dfs.datanode.du.reserved</td><td style="text-align: left">0</td><td style="text-align: left">10GB</td><td style="text-align: left">DataNode 디스크 여유 공간 확보</td></tr>
+</tbody></table>
+<p>HDFS의 가장 큰 실무 문제 중 하나는 수백만 개의 소규모 파일이다. 각 파일마다 최소 1개의 블록 메타데이터가 NameNode 메모리를 차지하기 때문이다.</p>
+<pre><code>소규모 파일 문제
+┌─────────────────────────────────────────────────────────┐
+│  1KB 파일 1,000만 개 저장 시:                            │
+│  → NameNode 메모리: 약 150 bytes × 10,000,000 = 1.5GB   │
+│  → 실제 데이터: 10GB (전체의 6.7%)                       │
+│  → NameNode 메모리가 데이터보다 더 빨리 소진됨!           │
+│                                                         │
+│  해결책:                                                 │
+│  - HAR (Hadoop Archive): 소규모 파일 묶음 저장           │
+│  - SequenceFile: 키-값 쌍으로 소규모 파일 병합           │
+│  - S3 + Parquet: 소규모 파일을 컬럼형으로 병합 저장      │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+<ol>
+<li><strong>NameNode SPOF</strong>: HDFS의 근본 약점은 단일 NameNode. Hadoop 2.x부터 HA (High Availability) NameNode + ZooKeeper로 해결</li>
+<li><strong>복제 vs 이레이저 코딩</strong>: 복제 계수 3은 200% 스토리지 오버헤드. Hadoop 3.x의 Erasure Coding으로 50% 이내로 줄임</li>
+<li><strong>데이터 지역성 저하</strong>: 클라우드 환경(S3 분리)에서는 HDFS의 지역성 장점이 사라짐 → 컬럼형 포맷(Parquet) + 파티셔닝으로 보완</li>
+</ol>
+<table><thead><tr><th style="text-align: left">효과 영역</th><th style="text-align: left">수치 예시</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">저장 비용</td><td style="text-align: left">기존 SAN 대비 80% 절감</td><td style="text-align: left">범용 HDD 서버 활용</td></tr>
+<tr><td style="text-align: left">가용성</td><td style="text-align: left">99.9% (3 복제 기준)</td><td style="text-align: left">노드 장애 자동 복구</td></tr>
+<tr><td style="text-align: left">처리 병렬성</td><td style="text-align: left">선형 확장</td><td style="text-align: left">노드 추가 = 처리량 비례 증가</td></tr>
+<tr><td style="text-align: left">확장성</td><td style="text-align: left">수천 노드, 수백 PB</td><td style="text-align: left">야후 등 실제 수만 노드 운영 사례</td></tr>
+</tbody></table>
+<table><thead><tr><th style="text-align: left">한계</th><th style="text-align: left">발전 방향</th></tr></thead><tbody>
+<tr><td style="text-align: left">NameNode SPOF</td><td style="text-align: left">HA NameNode + ZooKeeper Federation</td></tr>
+<tr><td style="text-align: left">소규모 파일 취약</td><td style="text-align: left">Parquet/ORC + 메타데이터 압축</td></tr>
+<tr><td style="text-align: left">높은 복제 오버헤드</td><td style="text-align: left">Erasure Coding (RS-6-3 등)</td></tr>
+<tr><td style="text-align: left">클라우드 S3 분리</td><td style="text-align: left">컴퓨팅-스토리지 분리 아키텍처(Delta Lake, Iceberg)</td></tr>
+</tbody></table>
+<hr />
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<p>HDFS의 기본 복제 계수(Replication Factor)는 3이며, 랙 인지(Rack Awareness) 정책으로 배치한다.</p>
+<p>하둡 HDFS (Hadoop Distributed File System) 블록 복제 내결함성의 효과는 성능 향상 자체보다도 예측 가능성과 운영 일관성을 확보하는 데 있다. 반대로 데이터 품질, 거버넌스, 모니터링 없이 도입하면 복잡도만 늘고 실질 가치는 줄어든다. 따라서 이 주제는 기능 도입이 아니라 구조적 운영 역량과 함께 판단해야 하며, 향후에는 자동화·실시간성·설명 가능성·비용 최적화와 결합된 방향으로 발전한다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">단일 디스크 저장 → 용량 · 내구성 한계
+    │
+    ▼
+HDFS (Hadoop Distributed File System)
+    ├─► 블록 분할 (128MB) + 3중 복제 (Replication Factor)
+    ├─► NameNode: 메타데이터 관리 (파일→블록 맵)
+    └─► DataNode: 실제 블록 저장
+    │
+    ▼
+Hadoop 2.x: HA NameNode · Federation
+    │
+    ▼
+클라우드 오브젝트 스토리지: S3 · GCS (HDFS 대체)
+</code></pre>
+<ol start="2">
+<li>블록마다 3개씩 복사본을 만들어두기 때문에, 컴퓨터 한 대가 고장나도 다른 곳에서 레고 조각을 꺼낼 수 있어요.</li>
+<li>NameNode는 "어떤 컴퓨터에 어떤 레고 조각이 있는지 기억하는 목록 책"이고, DataNode는 "실제로 레고를 보관하는 창고"예요.</li>
+</ol>
+<hr />
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">관계</th><th style="text-align: left">개념</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">구성 요소</td><td style="text-align: left">NameNode</td><td style="text-align: left">HDFS 메타데이터 중앙 관리자</td></tr>
+<tr><td style="text-align: left">구성 요소</td><td style="text-align: left">DataNode</td><td style="text-align: left">실제 블록 데이터 저장·서비스 노드</td></tr>
+<tr><td style="text-align: left">구성 요소</td><td style="text-align: left">Secondary NameNode</td><td style="text-align: left">체크포인팅 전용 (HA가 아님)</td></tr>
+<tr><td style="text-align: left">연관 기술</td><td style="text-align: left">MapReduce</td><td style="text-align: left">데이터 지역성 활용한 분산 처리</td></tr>
+<tr><td style="text-align: left">상위 개념</td><td style="text-align: left">YARN</td><td style="text-align: left">HDFS 위의 리소스 관리 레이어</td></tr>
+<tr><td style="text-align: left">이론적 배경</td><td style="text-align: left">GFS (Google File System)</td><td style="text-align: left">HDFS의 원조 논문</td></tr>
+<tr><td style="text-align: left">발전 방향</td><td style="text-align: left">Apache Iceberg / Delta Lake</td><td style="text-align: left">HDFS 한계를 극복한 오픈 테이블 포맷</td></tr>
+<tr><td style="text-align: left">보완 기술</td><td style="text-align: left">Erasure Coding</td><td style="text-align: left">복제 오버헤드 감소 기술</td></tr>
+</tbody></table>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>136. 마이크로커널 아키텍처 (Microkernel &#x2F; Plugin Architecture) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote design supervision
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: Microkernel Architecture (마이크로커널 아키텍처)는 최소한의 Core System (코어 시스템)만 두고 나머지 기능을 독립 배포 가능한 Plug-in (플러그인)으로 분리해 조립하는 확장 중심 설계이다.
+2. <strong>가치</strong>: 기능 확장 시 코어를 수정하지 않고 플러그인만 추가·교체하므로 OCP (Open-Closed Principle, 개방-폐쇄 원칙)를 가장 직접적으로 실현하는 아키텍처이다.
+3. <strong>판단 포인트</strong>: 사용자별·고객별로 기능 조합이 달라지는 제품(IDE, 브라우저, ERP)이나 핫 스왑(Hot Swap)이 필요한 시스템에 최적이다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<hr />
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<p>소프트웨어 제품이 성장하면서 모든 기능을 단일 코드베이스에 포함하면 빌드 시간 증가, 배포 리스크 확대, 팀 간 코드 충돌이 발생한다. 마이크로커널 아키텍처는 이 문제를 <strong>코어(Core)와 플러그인(Plug-in)의 명확한 분리</strong>로 해결한다.</p>
+<p>운영체제 영역의 마이크로커널(Mach, QNX)에서 이름을 빌렸지만, 소프트웨어 아키텍처에서는 IDE, CMS (Content Management System, 콘텐츠 관리 시스템), ERP (Enterprise Resource Planning, 전사적 자원 관리) 등 제품 기반 시스템에 광범위하게 적용된다.</p>
+<h3 id="daepyo-jeogyong-sarye">대표 적용 사례</h3>
+<table><thead><tr><th style="text-align: left">시스템</th><th style="text-align: left">Core System 역할</th><th style="text-align: left">Plug-in 예시</th></tr></thead><tbody>
+<tr><td style="text-align: left">Eclipse IDE (통합 개발 환경)</td><td style="text-align: left">에디터 프레임워크 + 플러그인 레지스트리</td><td style="text-align: left">Java 개발도구, Git 연동, 디버거</td></tr>
+<tr><td style="text-align: left">VS Code (Visual Studio Code)</td><td style="text-align: left">에디터 + Extension API</td><td style="text-align: left">Python 지원, Prettier, Copilot</td></tr>
+<tr><td style="text-align: left">Chrome Browser (크롬 브라우저)</td><td style="text-align: left">렌더링 엔진 + Extension API</td><td style="text-align: left">광고 차단, 번역, 비밀번호 관리</td></tr>
+<tr><td style="text-align: left">Jenkins CI (지속 통합 서버)</td><td style="text-align: left">빌드 스케줄러 + 플러그인 프레임워크</td><td style="text-align: left">Maven, Docker, Slack 알림</td></tr>
+<tr><td style="text-align: left">OSGi Framework</td><td style="text-align: left">번들 라이프사이클 관리</td><td style="text-align: left">각 번들(Bundle)이 플러그인 역할</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 스마트폰이 기본 OS만 제공하고, 나머지 기능은 앱스토어에서 설치하는 앱(플러그인)으로 채우는 것이 마이크로커널 아키텍처이다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="maikeurokeoneol-akitegceo-gujo">마이크로커널 아키텍처 구조</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                    Core System (코어 시스템)                     │
+│                                                                 │
+│  ┌──────────────────┐    ┌──────────────────────────────────┐   │
+│  │  기본 기능       │    │  Plugin Registry (플러그인 레지  │   │
+│  │  (Base Features) │    │  스트리: 등록·조회·생명주기 관리) │   │
+│  └──────────────────┘    └──────────────┬───────────────────┘   │
+│                                         │                       │
+│          Plugin Interface (플러그인 계약 인터페이스)              │
+└─────────────────────────────────────────┼───────────────────────┘
+                                          │
+          ┌───────────────────────────────┼───────────────────────┐
+          │               독립 배포 가능  │                       │
+          ▼                              ▼                       ▼
+┌─────────────────┐          ┌─────────────────┐     ┌─────────────────┐
+│   Plug-in A     │          │   Plug-in B     │     │   Plug-in C     │
+│  (독립 모듈)    │          │  (독립 모듈)    │     │  (독립 모듈)    │
+│                 │          │                 │     │                 │
+│ ┌─────────────┐ │          │ ┌─────────────┐ │     │ ┌─────────────┐ │
+│ │ Plugin API  │ │          │ │ Plugin API  │ │     │ │ Plugin API  │ │
+│ │ 구현체      │ │          │ │ 구현체      │ │     │ │ 구현체      │ │
+│ └─────────────┘ │          │ └─────────────┘ │     │ └─────────────┘ │
+└─────────────────┘          └─────────────────┘     └─────────────────┘
+     (런타임 로드 가능)            (핫 스왑 지원)          (선택적 설치)
+</code></pre>
+<h3 id="haegsim-seolgye-weoncig">핵심 설계 원칙</h3>
+<table><thead><tr><th style="text-align: left">원칙</th><th style="text-align: left">설명</th><th style="text-align: left">효과</th></tr></thead><tbody>
+<tr><td style="text-align: left">Plugin Contract (플러그인 계약)</td><td style="text-align: left">코어가 인터페이스를 정의, 플러그인이 구현</td><td style="text-align: left">코어와 플러그인 간 결합도 최소화</td></tr>
+<tr><td style="text-align: left">Plugin Registry (레지스트리)</td><td style="text-align: left">플러그인 목록·버전·의존성 관리</td><td style="text-align: left">동적 발견(Discovery) 및 로드 가능</td></tr>
+<tr><td style="text-align: left">Isolation (격리성)</td><td style="text-align: left">플러그인 간 직접 참조 금지</td><td style="text-align: left">플러그인 오류가 코어·타 플러그인에 미전파</td></tr>
+<tr><td style="text-align: left">Hot Swap (핫 스왑)</td><td style="text-align: left">시스템 재시작 없이 플러그인 교체</td><td style="text-align: left">고가용성(High Availability) 유지</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 전원을 끄지 않고 USB 장치를 꽂고 뽑을 수 있는 핫 플러그(Hot Plug)처럼, 마이크로커널은 시스템 중단 없이 기능을 추가·제거할 수 있다.</p>
+<hr />
+<h2 id="3-gujo-mic-dongjag-weonri">3. 구조 및 동작 원리</h2>
+<h3 id="monolith-vs-microkernel-vs-microservices">Monolith vs Microkernel vs Microservices</h3>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">Monolith (모놀리스)</th><th style="text-align: left">Microkernel</th><th style="text-align: left">Microservices (마이크로서비스)</th></tr></thead><tbody>
+<tr><td style="text-align: left">배포 단위</td><td style="text-align: left">단일 산출물</td><td style="text-align: left">코어 + 플러그인</td><td style="text-align: left">독립 서비스</td></tr>
+<tr><td style="text-align: left">확장 방법</td><td style="text-align: left">전체 재빌드·배포</td><td style="text-align: left">플러그인 추가·교체</td><td style="text-align: left">서비스 수평 확장</td></tr>
+<tr><td style="text-align: left">팀 경계</td><td style="text-align: left">중앙 집중</td><td style="text-align: left">코어 팀 + 플러그인 팀</td><td style="text-align: left">서비스별 독립팀</td></tr>
+<tr><td style="text-align: left">통신 방식</td><td style="text-align: left">함수 호출 (In-process)</td><td style="text-align: left">플러그인 API (In-process)</td><td style="text-align: left">HTTP/gRPC (Out-of-process)</td></tr>
+<tr><td style="text-align: left">운영 복잡도</td><td style="text-align: left">낮음</td><td style="text-align: left">중간</td><td style="text-align: left">높음</td></tr>
+<tr><td style="text-align: left">적합 규모</td><td style="text-align: left">소규모·초기</td><td style="text-align: left">제품·플랫폼</td><td style="text-align: left">대규모·엔터프라이즈</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 모놀리스는 원룸, 마이크로커널은 모듈형 가구로 꾸민 아파트, 마이크로서비스는 각각 독립된 건물이다.</p>
+<hr />
+<h2 id="4-bigyo-mic-teureideuopeu">4. 비교 및 트레이드오프</h2>
+<h3 id="osgi-open-services-gateway-initiative-peureimweokeu">OSGi (Open Services Gateway initiative) 프레임워크</h3>
+<p>Java 환경의 표준 플러그인 프레임워크. 번들(Bundle = JAR + 메타데이터)이 플러그인 역할을 하며, 런타임에 설치·시작·중단·제거가 가능하다. Eclipse의 플러그인 시스템이 OSGi 기반이다.</p>
+<h3 id="peulreogeuin-yijonseong-gwanri">플러그인 의존성 관리</h3>
+<p>플러그인 간 의존성이 생기면 마이크로커널의 격리성이 깨진다. 이를 방지하는 전략:</p>
+<ul>
+<li><strong>공유 서비스 레이어</strong>: 플러그인이 공통으로 필요한 기능을 코어의 서비스로 제공</li>
+<li><strong>의존성 역전(DI, Dependency Injection)</strong>: 플러그인이 코어 인터페이스를 통해 다른 플러그인 서비스 접근</li>
+<li><strong>버전 관리(Semantic Versioning)</strong>: 플러그인 API 변경 시 하위 호환성 규칙 준수</li>
+</ul>
+<h3 id="jangdanjeom-bigyo">장단점 비교</h3>
+<table><thead><tr><th style="text-align: left">장점</th><th style="text-align: left">단점</th></tr></thead><tbody>
+<tr><td style="text-align: left">확장성: 기능 추가 시 코어 무수정</td><td style="text-align: left">플러그인 의존성 관리 복잡</td></tr>
+<tr><td style="text-align: left">격리성: 플러그인 오류 영향 최소화</td><td style="text-align: left">플러그인 간 통신 성능 오버헤드</td></tr>
+<tr><td style="text-align: left">핫 스왑: 무중단 기능 교체</td><td style="text-align: left">코어-플러그인 인터페이스 설계 어려움</td></tr>
+<tr><td style="text-align: left">커스터마이징: 고객별 기능 조합</td><td style="text-align: left">플러그인 버전 호환성 관리 필요</td></tr>
+</tbody></table>
+<h3 id="gisulsa-pandan-gijun">기술사 판단 기준</h3>
+<ul>
+<li>고객마다 **기능 조합이 다른 제품(Product)**이라면 마이크로커널을 1순위로 고려한다.</li>
+<li>플러그인 계약(Interface)은 <strong>안정성(Stability)을 최우선</strong>으로 설계한다. 계약 변경은 모든 플러그인에 영향을 미친다.</li>
+<li>플러그인 수가 100개 이상으로 늘면 <strong>플러그인 마켓플레이스(Marketplace)</strong> 설계가 필요하다.</li>
+</ul>
+<p>📢 <strong>섹션 요약 비유</strong>: 식당 주방에서 기본 인프라(가스레인지, 냉장고)는 그대로 두고, 요리사(플러그인)만 교체해 메뉴를 바꾸는 것이 마이크로커널이다.</p>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-coejeoghwa-gibeob">5. 실무 적용 및 최적화 기법</h2>
+<p>마이크로커널 아키텍처는 코어를 안정적으로 유지하면서 기능을 무한히 확장할 수 있는 <strong>개방형 플랫폼(Open Platform)</strong> 설계의 핵심 패턴이다. Eclipse, VS Code, Chrome 등 성공적인 개발자 도구들이 이 패턴을 채택한 것은 우연이 아니다.</p>
+<table><thead><tr><th style="text-align: left">기대효과</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">개방적 확장성</td><td style="text-align: left">제3자 개발자가 플러그인을 독립 개발 가능</td></tr>
+<tr><td style="text-align: left">리스크 격리</td><td style="text-align: left">결함 플러그인이 코어 안정성에 미치는 영향 최소화</td></tr>
+<tr><td style="text-align: left">다양한 배포 형태</td><td style="text-align: left">고객별 기능 세트 조합 배포 가능</td></tr>
+<tr><td style="text-align: left">점진적 현대화</td><td style="text-align: left">레거시 기능을 플러그인으로 분리 후 단계적 대체</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 핵심 DNA(코어)는 그대로 두고 환경에 따라 다른 특성(플러그인)을 발현하는 생명체처럼, 마이크로커널은 하나의 코어로 무한히 다양한 제품을 만들어낸다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">관계</th><th style="text-align: left">개념</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">상위 개념</td><td style="text-align: left">Architecture Style (아키텍처 스타일)</td><td style="text-align: left">확장성 중심 아키텍처 스타일</td></tr>
+<tr><td style="text-align: left">설계 원칙</td><td style="text-align: left">OCP (Open-Closed Principle)</td><td style="text-align: left">확장에 열리고 수정에 닫힌 원칙</td></tr>
+<tr><td style="text-align: left">하위 개념</td><td style="text-align: left">Plugin Registry (플러그인 레지스트리)</td><td style="text-align: left">플러그인 등록·조회·관리</td></tr>
+<tr><td style="text-align: left">하위 개념</td><td style="text-align: left">Plugin Contract (플러그인 계약)</td><td style="text-align: left">코어-플러그인 인터페이스</td></tr>
+<tr><td style="text-align: left">연관 개념</td><td style="text-align: left">OSGi Framework</td><td style="text-align: left">Java 표준 플러그인 프레임워크</td></tr>
+<tr><td style="text-align: left">연관 개념</td><td style="text-align: left">Hot Swap (핫 스왑)</td><td style="text-align: left">무중단 플러그인 교체</td></tr>
+<tr><td style="text-align: left">대비 개념</td><td style="text-align: left">Monolith (모놀리스)</td><td style="text-align: left">단일 배포 단위 아키텍처</td></tr>
+<tr><td style="text-align: left">대비 개념</td><td style="text-align: left">MSA (Microservices Architecture)</td><td style="text-align: left">프로세스 분리 기반 확장 아키텍처</td></tr>
+</tbody></table>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ul>
+<li>스마트폰이 기본 기능(전화, 문자)만 있고, 게임이나 카메라 앱은 따로 설치하는 것처럼, 마이크로커널은 기본 기능(코어)에 앱(플러그인)을 끼워 맞춰요.</li>
+<li>앱 하나가 오류나도 스마트폰(코어)은 멈추지 않아요. 그 앱만 삭제하면 돼요.</li>
+<li>새 기능이 필요하면 앱스토어(플러그인 레지스트리)에서 찾아 설치하면 되고, 스마트폰 자체를 바꿀 필요가 없어요.</li>
+</ul>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

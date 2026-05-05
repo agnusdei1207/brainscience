@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>541. RADIUS (Remote Authentication Dial-In User Service) - UDP 기반 관리자&#x2F;사용자 인증(AAA), 패스워드만 암호화 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote network
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="0-haegsim-insaiteu">0. 핵심 인사이트</h2>
+<blockquote>
+<p><strong>핵심</strong>: RADIUS (Remote Authentication Dial-In User Service)는 사용자가 네트워크(Wi-Fi, VPN, 다이얼업)에 접속할 때 접근 서버(NAS)를 거쳐 중앙 서버에서 자격 증명을 수행하는 <strong>UDP (User Datagram Protocol)</strong> 기반의 1세대 AAA (Authentication, Authorization, Accounting) 프로토콜이다.
+<strong>비유</strong>: RADIUS (Remote Authentication Dial-In User Service) - UDP 기반 관리자/사용자 인증(AAA), 패스워드만 암호화은(는) DNS와 네트워크 관리 응용 안에서 데이터와 제어 규칙을 질서 있게 맞춰 주는 교통 체계와 같다.</p>
+</blockquote>
+<blockquote>
+<p>📝 모범 답안</p>
+</blockquote>
+<h2 id="1-gaeyo-mic-pilyoseong">1. 개요 및 필요성</h2>
+<ul>
+<li><strong>개념</strong>: RADIUS는 클라이언트/서버 구조를 띠는 네트워크 프로토콜로, 네트워크 접근을 요청하는 사용자(Supplicant)와 이를 수락하는 네트워크 장비(NAS: Network Access Server), 그리고 실제로 권한을 심사하는 RADIUS 서버로 구성된다. (인증/인가는 UDP 1812, 과금은 UDP 1813 사용).</li>
+<li><strong>필요성</strong>: 기업에 스위치가 10대, VPN 라우터가 5대, 무선 AP가 50대 있다고 가정하자. 직원이 입사하거나 퇴사할 때마다 65대의 장비에 접속해 ID/PW를 생성/삭제하는 것은 불가능에 가깝다. 장비들은 단순히 출입문 역할만 하고, "이 사람이 들어와도 됩니까?"라는 질문을 중앙의 '보안 경비실(RADIUS)'로 던져서 대답을 받게 하는 표준 언어가 필요했다.</li>
+<li><strong>등장 배경</strong>: ① 1990년대 초 모뎀 다이얼업 풀(Dial-up Pool)의 다수 사용자 인증 요구 → ② IETF RFC 2865, 2866 표준화 → ③ 무선 LAN(802.1X) 및 광대역 통신망의 폭발적 성장과 함께 범용 네트워크 접근 제어(NAC) 솔루션의 중추로 발전.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────┐
+│           기존 독립 인증 방식과 RADIUS 중앙 인증 방식의 비교        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   [과거: 장비별 개별 인증] (관리 지옥)                            │
+│   User A ──▶ [AP 1] (내부 DB 확인) ─▶ 접속 허용               │
+│   User A ──▶ [VPN ] (내부 DB 없음) ─▶ 접속 거부 (계정 누락!)    │
+│                                                             │
+│   [현재: RADIUS 기반 중앙 집중 인증]                            │
+│   User A ──▶ [AP 1 (NAS)] ─(RADIUS 프로토콜)─▶ ┌─────────┐    │
+│   User B ──▶ [VPN  (NAS)] ─(RADIUS 프로토콜)─▶ │ RADIUS  │    │
+│   User C ──▶ [Switch(NAS)] ─(RADIUS 프로토콜)─▶ │ Server  │    │
+│                                               │ (AD 연동)│    │
+│   =&gt; 모든 출입구(NAS)는 판단을 보류하고 오직 무전기(RADIUS)만 칠 뿐이다. │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 도식은 왜 RADIUS가 필요한지를 극명하게 보여준다. 사용자가 사내망에 들어오려는 출입구는 무선(AP), 유선(Switch), 원격(VPN) 등 다양하다. 출입구 장비(NAS, Network Access Server)들은 똑똑할 필요가 없다. 단지 사용자가 제시한 신분증(ID/PW, 인증서)을 봉투에 담아 RADIUS 서버로 던지고, 서버가 "Access-Accept(통과)" 또는 "Access-Reject(차단)"라는 도장을 찍어 돌려주면 그에 따라 문을 열거나 닫기만 하면 된다.</p>
+<hr />
+<h2 id="2-guseongyoso">2. 구성요소</h2>
+<h3 id="guseong-yoso">구성 요소</h3>
+<table><thead><tr><th style="text-align: left">요소명</th><th style="text-align: left">역할</th><th style="text-align: left">내부 동작</th><th style="text-align: left">프로토콜/특징</th><th style="text-align: left">비유</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Supplicant (사용자)</strong></td><td style="text-align: left">접근 요청 주체</td><td style="text-align: left">PC, 스마트폰에 내장된 인증 클라이언트 프로그램 (ID/PW 또는 인증서 제출)</td><td style="text-align: left">EAP-TLS, PEAP</td><td style="text-align: left">신분증을 내미는 방문객</td></tr>
+<tr><td style="text-align: left"><strong>NAS (Network Access Server)</strong></td><td style="text-align: left">중계자 (Authenticator)</td><td style="text-align: left">사용자의 요청을 RADIUS 패킷으로 변환하여 서버에 전달하고 결과를 강제 적용</td><td style="text-align: left">802.1X, 무선 AP, 스위치</td><td style="text-align: left">출입문을 지키는 경비원</td></tr>
+<tr><td style="text-align: left"><strong>RADIUS Server</strong></td><td style="text-align: left">최종 인증/인가 결정</td><td style="text-align: left">전달받은 자격 증명을 로컬 DB나 AD(LDAP)와 대조하여 승인/거부 패킷 반환</td><td style="text-align: left">UDP 1812, 1813</td><td style="text-align: left">신원 조회를 하는 중앙 관제소</td></tr>
+<tr><td style="text-align: left"><strong>Shared Secret</strong></td><td style="text-align: left">NAS-서버 간 신뢰 구축</td><td style="text-align: left">NAS와 RADIUS 서버 간 통신을 암호화하고 변조를 막기 위해 사전에 공유된 텍스트 키</td><td style="text-align: left">MD5 해시 서명</td><td style="text-align: left">경비원과 관제소만의 암구호</td></tr>
+<tr><td style="text-align: left"><strong>EAP (Extensible Auth Protocol)</strong></td><td style="text-align: left">인증 데이터 컨테이너</td><td style="text-align: left">인증서, 생체인식 등 다양한 인증 방식을 RADIUS 위로 실어 나르는 확장 프로토콜</td><td style="text-align: left">802.1X의 페이로드</td><td style="text-align: left">어떤 신분증이든 담는 투명 봉투</td></tr>
+</tbody></table>
+<hr />
+<h3 id="radius-tongsin-heureum-mic-paeseuweodeu-amhohwa-weonri">RADIUS 통신 흐름 및 패스워드 암호화 원리</h3>
+<p>RADIUS는 패킷의 "본문(Payload) 전체"를 암호화하지 않는다. 오직 <strong>패스워드 필드</strong>만 암호화하며, 나머지 ID나 기타 속성은 평문으로 전송된다는 치명적인 특성을 갖는다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌───────────────────────────────────────────────────────────────┐
+│               RADIUS 인증 흐름 (Access-Request &amp; Accept)          │
+├───────────────────────────────────────────────────────────────┤
+│                                                               │
+│   [사용자 단말]              [NAS (VPN&#x2F;AP)]         [RADIUS 서버] │
+│        │                          │                       │   │
+│        ├─── 1. 접속 요청 (ID&#x2F;PW) ───▶│                       │   │
+│        │                          │ 2. Access-Request     │   │
+│        │                          │ (ID: 평문, PW: 암호화)  │   │
+│        │                          ├──────────────────────▶│   │
+│        │                          │                       │   │
+│        │                          │ 3. DB&#x2F;AD 조회 후 판단   │   │
+│        │                          │                       │   │
+│        │                          │ 4. Access-Accept      │   │
+│        │                          │ (+ VLAN 할당 정보 등)   │   │
+│        │                          │◀──────────────────────┤   │
+│        │   5. 네트워크 접근 허가    │                       │   │
+│        │◀─────────────────────────┤                       │   │
+│                                                               │   │
+│   ■ 패스워드 암호화 방식:                                         │   │
+│   - 전달 패스워드 = User_PW XOR MD5(Shared_Secret + Request_Auth) │   │
+│   - 즉, Shared Secret을 모르는 해커는 패킷을 스니핑해도 암호를 못 풂.    │
+└───────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 클라이언트가 NAS에 인증을 요청하면, NAS는 사용자 ID와 다양한 환경 속성(AVP, Attribute-Value Pairs)을 모아 <code>Access-Request</code> 패킷을 만든다. 이때 패스워드는 그대로 보내지 않고, 사전에 정의된 <code>Shared Secret</code>과 무작위 16바이트의 <code>Request Authenticator</code>를 MD5로 해싱한 값과 사용자의 실제 비밀번호를 XOR 연산하여 숨긴다. RADIUS 서버는 동일한 <code>Shared Secret</code>을 알고 있으므로 역방향 XOR를 통해 패스워드를 복원하고 AD(Active Directory) 등과 대조한다. 인증에 성공하면 <code>Access-Accept</code> 패킷을 돌려주는데, 이때 "이 사용자는 VLAN 10번으로 넣어라"라는 인가(Authorization) 속성을 함께 내려보낼 수 있다.</p>
+<hr />
+<h2 id="3-gujo-mic-weonri">3. 구조 및 원리</h2>
+<p><strong>핵심 조건</strong>: RADIUS (Remote Authentication Dial-In User Service) - UDP 기반 관리자/사용자 인증(AAA), 패스워드만 암호화은(는) DNS, 이름 해석, 분산 관리 조건을 함께 만족할 때 안정적으로 동작한다.</p>
+<p>동작 순서:</p>
+<h3 id="radius-vs-tacacs-cisco-bigyo">RADIUS vs TACACS+ (Cisco) 비교</h3>
+<p>네트워크 접근 제어 프로토콜의 양대 산맥인 RADIUS와 TACACS+의 차이를 이해하는 것은 기술사 설계의 핵심 포인트다.</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">RADIUS (IETF 표준)</th><th style="text-align: left">TACACS+ (Cisco 전용 -&gt; 범용)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>전송 프로토콜</strong></td><td style="text-align: left"><strong>UDP</strong> 1812(인증), 1813(과금)</td><td style="text-align: left"><strong>TCP</strong> 49</td></tr>
+<tr><td style="text-align: left"><strong>보안 (암호화 범위)</strong></td><td style="text-align: left"><strong>패스워드 필드만 암호화</strong> (ID는 평문)</td><td style="text-align: left"><strong>패킷 페이로드 전체 암호화</strong> (ID, 본문 모두 보호)</td></tr>
+<tr><td style="text-align: left"><strong>아키텍처 구조</strong></td><td style="text-align: left">인증(Authentication)과 인가(Authorization)가 <strong>결합됨</strong></td><td style="text-align: left">인증, 인가, 과금이 <strong>완전히 분리됨 (독립 모듈)</strong></td></tr>
+<tr><td style="text-align: left"><strong>주요 사용 목적</strong></td><td style="text-align: left">수만 명의 <strong>일반 네트워크 사용자</strong> 접속 제어 (무선랜, VPN)</td><td style="text-align: left">소수의 <strong>네트워크 장비 관리자</strong> 명령어 권한 제어 (Router SSH)</td></tr>
+<tr><td style="text-align: left"><strong>명령어 단위 인가 제어</strong></td><td style="text-align: left">불가능 (할당 속성만 전달)</td><td style="text-align: left"><strong>가능</strong> (사용자가 칠 수 있는 <code>show</code>, <code>config</code> 명령어까지 통제)</td></tr>
+</tbody></table>
+<p>RADIUS는 빠르고 가벼운 UDP를 쓰므로 10만 명의 대학 캠퍼스 Wi-Fi 접속을 처리하는 데 유리하다. 반면 TACACS+는 신뢰성 있는 TCP를 쓰며 트래픽 전체를 암호화하고, "홍길동 엔지니어는 라우터에서 <code>show</code> 명령어는 칠 수 있지만 <code>reboot</code>은 칠 수 없다"는 식의 디테일한 장비 통제가 가능하여 데이터센터 관리자 계정 통제에 특화되어 있다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌───────────────────────────────────────────────────────────────┐
+│               RADIUS와 TACACS+의 인증&#x2F;인가 아키텍처 비교            │
+├───────────────────────────────────────────────────────────────┤
+│                                                               │
+│   [RADIUS] &quot;인증과 인가는 한 몸이다&quot;                              │
+│   (요청) 신분증 확인 좀 ──▶                                        │
+│   ◀── (응답) &quot;너는 홍길동 맞고(인증), 들어오면 VIP 라운지로 가(인가)&quot; │
+│   =&gt; 패킷 한 번에 결론이 나므로 속도가 빠름.                            │
+│                                                               │
+│   [TACACS+] &quot;인증, 인가, 과금을 완벽히 분리한다&quot;                      │
+│   (요청) 신분증 확인 좀 ──▶                                        │
+│   ◀── (응답) &quot;홍길동 맞네. (인증 완료)&quot;                              │
+│   (추가 요청) 그럼 나 라우터 재부팅해도 돼? ──▶                       │
+│   ◀── (응답) &quot;아니, 넌 조회만 가능해. (인가 거부)&quot;                     │
+│   =&gt; 세분화된 명령어별 권한 통제에 최적화됨.                           │
+└───────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> RADIUS는 사용자가 '네트워크 포트'를 뚫고 들어오는 순간에 필요한 '인가(예: VLAN 번호, IP 대역)'를 인증과 묶어서 한 번에 전달한다. 일반 직원들이 Wi-Fi에 붙을 때 "IP만 받으면 끝"이므로 이 방식이 매우 효율적이다. 반대로 TACACS+는 장비 관리자가 콘솔에 붙은 뒤 명령어를 한 줄 칠 때마다 서버에 "이 명령어 쳐도 돼?"라고 물어볼 수 있도록 아키텍처가 3조각으로 분리되어 있어 철저한 관리자 감사(Audit) 트레일에 적합하다.</p>
+<hr />
+<h2 id="4-bigyo-mic-yeongyeol">4. 비교 및 연결</h2>
+<h3 id="silmu-sinario-802-1x-museonraen-boan-godohwa-wpa2-3-enterprise">실무 시나리오: 802.1X 무선랜 보안 고도화 (WPA2/3-Enterprise)</h3>
+<ol>
+<li><strong>상황</strong>: 500명 규모의 기업이 "사무실 AP 비밀번호(WPA2-PSK)가 전 직원에 공유되고 있어, 퇴사자가 회사 건물 밖 주차장에서 Wi-Fi에 붙어 내부망에 침투할 위험이 있다"며 보안 감사를 받았다.</li>
+<li><strong>원인</strong>: 단일 공유 비밀번호(PSK, Pre-Shared Key) 방식은 기기 분실이나 퇴사자 발생 시 전체 비밀번호를 바꾸지 않는 한 통제가 불가능하다.</li>
+<li><strong>의사결정 및 조치 (RADIUS 기반 802.1X 구축)</strong>:
+<ul>
+<li>전사 무선랜 인증 방식을 <strong>WPA2/3-Enterprise</strong> (802.1X)로 변경한다.</li>
+<li>중앙에 **RADIUS 서버 (예: Cisco ISE, FreeRADIUS, NPS)**를 구축하고, 이를 기존 Active Directory(LDAP)와 연동한다.</li>
+<li>각 무선 AP를 NAS로 설정하여 Shared Secret을 맺는다.</li>
+<li>직원들은 자신의 고유한 AD 계정(ID/PW) 또는 사원증(인증서, EAP-TLS)을 통해서만 Wi-Fi에 붙을 수 있다.</li>
+<li><strong>결과</strong>: 퇴사자의 AD 계정만 비활성화하면, 그 즉시 전사의 모든 무선/유선망 및 VPN 접속이 1초 만에 일괄 차단된다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="doib-cekeuriseuteu-mic-antipaeteon">도입 체크리스트 및 안티패턴</h3>
+<ul>
+<li><strong>UDP 재전송(Retransmission) 튜닝</strong>: RADIUS는 UDP 기반이므로 네트워크 혼잡 시 패킷이 유실된다. NAS 측의 타임아웃(예: 3초)과 재전송 횟수(예: 3회)가 올바르게 설정되지 않으면, 인증 폭주 시 사용자는 "비밀번호가 틀렸습니다"가 아니라 "접속할 수 없습니다(Timeout)" 에러에 갇힌다. 로드밸런서를 통해 복수의 RADIUS 서버로 트래픽을 분산(Active-Active)하는 아키텍처가 필수다.</li>
+<li><strong>안티패턴</strong>: RADIUS Shared Secret 통신이 지나는 백본 구간을 암호화하지 않은 채 인터넷이나 비신뢰 광역망(WAN)을 넘나들게 두는 행위. RADIUS는 ID가 평문(Cleartext)으로 노출되므로 스니핑 시 임직원의 계정 체계가 고스란히 털린다. 반드시 IPsec VPN 터널 안으로 캡슐화하여 전송하거나, TLS 래퍼를 씌운 최신 <strong>RadSec(TCP 2083)</strong> 프로토콜로 업그레이드해야 한다.</li>
+</ul>
+<hr />
+<h2 id="5-silmu-jeogyong-mic-pandan">5. 실무 적용 및 판단</h2>
+<p><strong>채택 조건</strong></p>
+<ul>
+<li>DNS과 이름 해석을 동시에 관리해야 할 때</li>
+<li>운영 자동화 또는 표준화된 제어가 필요할 때</li>
+<li>장애 분석 시 원인 구분이 명확해야 할 때</li>
+</ul>
+<p><strong>회피 조건</strong></p>
+<ul>
+<li>단순 환경이라 오버헤드가 더 큰 경우</li>
+<li>장비·프로토콜 호환성이 확보되지 않은 경우</li>
+<li>측정 지표 없이 관행적으로만 적용하는 경우</li>
+</ul>
+<p><strong>체크리스트</strong></p>
+<ol>
+<li>요구 성능과 허용 지연이 정의되었는가?</li>
+<li>오류·혼잡·보안 처리 경계가 명확한가?</li>
+<li>표준·벤더 구현 차이를 검증했는가?</li>
+<li>운영 관측성 및 장애 대응 절차가 준비되었는가?</li>
+</ol>
+<h2 id="6-gidaehyogwa-mic-gyeolron">6. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">도입 전 (공유 비밀번호 / 개별 로컬 DB)</th><th style="text-align: left">RADIUS 중앙 인증 도입 후</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량 (관리 시간)</strong></td><td style="text-align: left">신규/퇴사자 발생 시 50대 장비 수동 세팅 (수십 분)</td><td style="text-align: left">AD 계정 한 번 비활성화 시 모든 망 차단 (1초)</td><td style="text-align: left">계정 라이프사이클 관리 비용 <strong>99% 절감</strong></td></tr>
+<tr><td style="text-align: left"><strong>정량 (보안성)</strong></td><td style="text-align: left">공용 패스워드 탈취 시 전사망 침투 무방비</td><td style="text-align: left">개인별 세션키 생성(EAP) 및 무선 구간 암호화</td><td style="text-align: left">공유 암호 노출에 의한 침해 사고 <strong>0건</strong></td></tr>
+<tr><td style="text-align: left"><strong>정성 (감사 및 추적)</strong></td><td style="text-align: left">누가 언제 어떤 IP를 할당받고 접속했는지 로그 파편화</td><td style="text-align: left">RADIUS Accounting(과금) 서버에 중앙 통합 로깅</td><td style="text-align: left">완벽한 포렌식 추적성 확보 및 컴플라이언스(ISMS) 충족</td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang-mic-jinhwa-banghyang">미래 전망 및 진화 방향</h3>
+<ul>
+<li><strong>RadSec (RADIUS over TLS, RFC 6614)</strong>: 클라우드 기반 네트워크 제어(예: Cisco Meraki, Aruba)가 일상화되면서, 회사 내부의 NAS 장비가 인터넷 너머의 클라우드 RADIUS 서버와 통신해야 하는 일이 잦아졌다. UDP 평문의 한계를 극복하기 위해, TCP 위에서 TLS 암호화 터널을 뚫고 그 안으로 RADIUS 패킷을 쏘는 RadSec 표준이 차세대 대세로 자리 잡고 있다.</li>
+<li><strong>eduroam (Education Roaming)</strong>: 전 세계 대학 및 연구기관이 거대한 단일 RADIUS 프록시 계층 트리를 구성하여, 서울대 소속 학생이 유럽의 대학에 방문해서 노트북을 켜도 자신의 서울대 계정으로 현지 Wi-Fi를 무료로 보안 접속할 수 있게 하는 글로벌 모빌리티 혁신의 뼈대로 사용된다.</li>
+</ul>
+<h3 id="camgo-pyojun">참고 표준</h3>
+<ul>
+<li><strong>RFC 2865</strong>: Remote Authentication Dial In User Service (RADIUS) 기본 인증 사양</li>
+<li><strong>RFC 2866</strong>: RADIUS Accounting (과금 및 로그 기록)</li>
+<li><strong>RFC 3748</strong>: Extensible Authentication Protocol (EAP) - 무선 및 VPN 환경에서 캡슐화 인증</li>
+</ul>
+<p>RADIUS는 전화선 모뎀 시대에 태어나 무선랜(Wi-Fi) 시대의 방패가 되었고, 이제는 제로 트러스트(Zero Trust) 아키텍처의 말단 초소 역할까지 수행하고 있다. 결국 네트워크의 시작점은 언제나 "당신은 누구인가?"라는 단순하고도 본질적인 질문에서 출발하며, 그 대답을 전달하는 표준 언어는 앞으로도 RADIUS의 후손들이 담당할 것이다.</p>
+<hr />
+<h2 id="7-baljeon-heureumdo">7. 발전 흐름도</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">기초 DNS와 네트워크 관리 응용 이해
+    ↓
+RADIUS (Remote Authentication Dial-In User Service) - UDP 기반 관리자&#x2F;사용자 인증(AAA), 패스워드만 암호화 개념 정립
+    ↓
+표준화·상용화 적용
+    ↓
+자동화·가상화 연계
+    ↓
+지능형 최적화·차세대 확장
+</code></pre>
+<p>RADIUS (Remote Authentication Dial-In User Service) - UDP 기반 관리자/사용자 인증(AAA), 패스워드만 암호화은(는) 단일 기능으로 끝나지 않고 표준화, 운영 자동화, 고속화·지능화 단계로 확장된다.</p>
+<h2 id="8-gwanryeon-gaenyeom-maeb">8. 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>AAA (Authentication, Authorization, Accounting)</strong></td><td style="text-align: left">RADIUS가 소프트웨어적으로 구현하고 있는 보안 통제의 철학적 3단계 뼈대 모델이다.</td></tr>
+<tr><td style="text-align: left"><strong>802.1X / EAP</strong></td><td style="text-align: left">무선랜 환경에서 단말기(Supplicant)와 AP(NAS) 간의 인증 대화를 정의하며, 이를 중앙으로 나르는 트럭 역할이 RADIUS다.</td></tr>
+<tr><td style="text-align: left"><strong>LDAP / Active Directory</strong></td><td style="text-align: left">RADIUS 자체는 껍데기 서버일 뿐이며, 실제로 "이 비밀번호가 맞는가?"를 최종적으로 조회하는 거대한 임직원 DB 백엔드 역할을 한다.</td></tr>
+<tr><td style="text-align: left"><strong>TACACS+</strong></td><td style="text-align: left">RADIUS가 일반 사용자 트래픽 통제용이라면, TACACS+는 인프라 장비를 다루는 관리자들의 위험한 명령어를 통제하는 라이벌이자 보완재다.</td></tr>
+<tr><td style="text-align: left"><strong>RadSec (TLS 암호화 RADIUS)</strong></td><td style="text-align: left">퍼블릭 클라우드 구간을 넘나들 때 ID 평문 노출과 UDP 유실 문제를 해결하기 위해 TCP 2083번 포트에 TLS 껍질을 씌운 보안 업그레이드 버전이다.</td></tr>
+</tbody></table>
+<hr />
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>
