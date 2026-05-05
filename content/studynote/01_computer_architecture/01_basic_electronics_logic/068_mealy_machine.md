@@ -82,14 +82,7 @@ categories = "studynote-computer-architecture"
 
 > 📖 학습 보조
 
-## 7. 관련 개념 맵 및 발전 흐름도
-
-| 개념 | 연결 포인트 |
-|:---|:---|
-| FSM (Finite State Machine) | 설계의 근간이 되는 논리적 상태 기계 |
-| 무어 머신 (Moore Machine) | 안정성을 위해 반응 속도를 타협한 대안적 모델 |
-| 상태 전이도 (State Transition Diagram) | 엣지(Edge)에 입/출력을 모두 표기하여 밀리 머신을 표현 |
-| 글리치 (Glitch) | 밀리 설계 시 반드시 제거하거나 회피해야 할 노이즈 현상 |
+## 7. 발전 흐름도
 
 ```
 요구사항 (빠른 반응, 면적 최소화)
@@ -100,3 +93,14 @@ categories = "studynote-computer-architecture"
     ↓
 통신 프로토콜 컨트롤러 구현
 ```
+
+---
+
+## 8. 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+|:---|:---|
+| FSM (Finite State Machine) | 설계의 근간이 되는 논리적 상태 기계 |
+| 무어 머신 (Moore Machine) | 안정성을 위해 반응 속도를 타협한 대안적 모델 |
+| 상태 전이도 (State Transition Diagram) | 엣지(Edge)에 입/출력을 모두 표기하여 밀리 머신을 표현 |
+| 글리치 (Glitch) | 밀리 설계 시 반드시 제거하거나 회피해야 할 노이즈 현상 |

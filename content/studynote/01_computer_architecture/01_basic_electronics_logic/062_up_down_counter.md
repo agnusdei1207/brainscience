@@ -71,14 +71,7 @@ categories = "studynote-computer-architecture"
 
 > 📖 학습 보조
 
-## 7. 관련 개념 맵 및 발전 흐름도
-
-| 개념 | 연결 포인트 |
-|:---|:---|
-| 멀티플렉서 (MUX) | 여러 입력 중 하나를 선택하는 모드 전환의 핵심 소자 |
-| 스택 포인터 (Stack Pointer) | PUSH(증가) 및 POP(감소) 명령에 대응하는 CPU 핵심 레지스터 |
-| 조합 논리 (Combinational Logic) | 플립플롭 사이에서 제어 신호에 따른 라우팅 담당 |
-| 임계 경로 (Critical Path) | 클럭 주기를 결정짓는 가장 긴 논리 지연 경로 |
+## 7. 발전 흐름도
 
 ```text
 단방향 계수기 (Up/Down)
@@ -89,3 +82,14 @@ MUX 통합 논리 설계
     ↓
 Up/Down 양방향 제어기 (Stack/Buffer 제어)
 ```
+
+---
+
+## 8. 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+|:---|:---|
+| 멀티플렉서 (MUX) | 여러 입력 중 하나를 선택하는 모드 전환의 핵심 소자 |
+| 스택 포인터 (Stack Pointer) | PUSH(증가) 및 POP(감소) 명령에 대응하는 CPU 핵심 레지스터 |
+| 조합 논리 (Combinational Logic) | 플립플롭 사이에서 제어 신호에 따른 라우팅 담당 |
+| 임계 경로 (Critical Path) | 클럭 주기를 결정짓는 가장 긴 논리 지연 경로 |

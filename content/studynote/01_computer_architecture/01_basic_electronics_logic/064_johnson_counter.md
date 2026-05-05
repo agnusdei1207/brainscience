@@ -71,14 +71,7 @@ categories = "studynote-computer-architecture"
 
 > 📖 학습 보조
 
-## 7. 관련 개념 맵 및 발전 흐름도
-
-| 개념 | 연결 포인트 |
-|:---|:---|
-| 꼬인 링 카운터 (Twisted Ring Counter) | 존슨 카운터의 구조적 형태를 설명하는 다른 명칭 |
-| 그레이 코드 (Gray Code) | 한 번에 1비트만 변경되어 노이즈와 글리치를 막는 유사 개념 |
-| 무효 상태 (Invalid State) | 설계된 2n 외에 시스템 에러로 발생할 수 있는 남은 상태들 |
-| 다상 클럭 (Multi-phase Clock) | 위상이 다른 여러 클럭을 만들 때 존슨 카운터 출력이 활용됨 |
+## 7. 발전 흐름도
 
 ```text
 Ring Counter
@@ -89,3 +82,14 @@ Ring Counter
     ↓
 Johnson Counter (다상 타이밍 생성 및 중규모 제어)
 ```
+
+---
+
+## 8. 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+|:---|:---|
+| 꼬인 링 카운터 (Twisted Ring Counter) | 존슨 카운터의 구조적 형태를 설명하는 다른 명칭 |
+| 그레이 코드 (Gray Code) | 한 번에 1비트만 변경되어 노이즈와 글리치를 막는 유사 개념 |
+| 무효 상태 (Invalid State) | 설계된 2n 외에 시스템 에러로 발생할 수 있는 남은 상태들 |
+| 다상 클럭 (Multi-phase Clock) | 위상이 다른 여러 클럭을 만들 때 존슨 카운터 출력이 활용됨 |

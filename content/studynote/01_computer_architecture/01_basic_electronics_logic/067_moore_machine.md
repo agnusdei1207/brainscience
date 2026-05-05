@@ -80,14 +80,7 @@ categories = "studynote-computer-architecture"
 
 > 📖 학습 보조
 
-## 7. 관련 개념 맵 및 발전 흐름도
-
-| 개념 | 연결 포인트 |
-|:---|:---|
-| FSM (Finite State Machine) | 무어 머신이 속하는 유한 상태 기계의 범주 |
-| 글리치 (Glitch) | 무어 머신이 차단하고자 하는 조합 논리의 원치 않는 신호 흔들림 |
-| 밀리 머신 (Mealy Machine) | 출력 결정 방식이 다른 대척점의 모델 |
-| 상태 할당 (State Assignment) | 상태 수를 최소화하여 논리를 단순화하는 기법 |
+## 7. 발전 흐름도
 
 ```
 FSM 기초 개념
@@ -96,3 +89,14 @@ FSM 기초 개념
     ↓
 클럭 동기화 제어 회로 (MCU, CPU Control Unit)
 ```
+
+---
+
+## 8. 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+|:---|:---|
+| FSM (Finite State Machine) | 무어 머신이 속하는 유한 상태 기계의 범주 |
+| 글리치 (Glitch) | 무어 머신이 차단하고자 하는 조합 논리의 원치 않는 신호 흔들림 |
+| 밀리 머신 (Mealy Machine) | 출력 결정 방식이 다른 대척점의 모델 |
+| 상태 할당 (State Assignment) | 상태 수를 최소화하여 논리를 단순화하는 기법 |

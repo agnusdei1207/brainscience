@@ -77,14 +77,7 @@ ASIC은 막대한 초기 개발 비용(NRE)이 들지만, 수백만 개 이상 �
 
 > 📖 학습 보조
 
-## 7. 관련 개념 맵 및 발전 흐름도
-
-| 개념 | 연결 포인트 |
-|:---|:---|
-| NRE (Non-Recurring Engineering) | ASIC의 초기 마스크 제작 및 설계 인건비 등 일회성 비용 |
-| SoC (System on Chip) | 여러 시스템 요소(CPU, GPU, RAM)를 하나의 ASIC에 담는 기술 |
-| FPGA | ASIC 개발 전 논리 오류를 완벽히 잡기 위한 필수 프로토타이핑 도구 |
-| 파운드리 (Foundry) | 설계된 ASIC의 도면(GDSII)을 받아 실제 웨이퍼로 구워내는 위탁 생산 기업 |
+## 7. 발전 흐름도
 
 ```
 Standard Cell 기반 ASIC
@@ -95,3 +88,14 @@ NPU / 특정 목적용 가속기(TPU 등)
     ↓
 칩렛 (Chiplet) 및 고급 패키징 (미래 대안)
 ```
+
+---
+
+## 8. 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+|:---|:---|
+| NRE (Non-Recurring Engineering) | ASIC의 초기 마스크 제작 및 설계 인건비 등 일회성 비용 |
+| SoC (System on Chip) | 여러 시스템 요소(CPU, GPU, RAM)를 하나의 ASIC에 담는 기술 |
+| FPGA | ASIC 개발 전 논리 오류를 완벽히 잡기 위한 필수 프로토타이핑 도구 |
+| 파운드리 (Foundry) | 설계된 ASIC의 도면(GDSII)을 받아 실제 웨이퍼로 구워내는 위탁 생산 기업 |

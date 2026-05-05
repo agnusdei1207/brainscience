@@ -77,14 +77,7 @@ categories = "studynote-computer-architecture"
 
 > 📖 학습 보조
 
-## 7. 관련 개념 맵 및 발전 흐름도
-
-| 개념 | 연결 포인트 |
-|:---|:---|
-| FSM (Finite State Machine) | 상태표로 기술되는 제어 모델 |
-| 카르노 맵 (Karnaugh Map) | 상태표를 최소화된 논리식으로 변환하는 도구 |
-| 순차 회로 (Sequential Circuit) | 상태표의 최종 구현체 |
-| 축소 상태표 (Reduced State Table) | 중복 상태를 제거해 하드웨어를 최적화한 표 |
+## 7. 발전 흐름도
 
 ```
 동작 명세서 및 상태도
@@ -95,3 +88,14 @@ categories = "studynote-computer-architecture"
     ↓
 논리 합성 (회로 구현)
 ```
+
+---
+
+## 8. 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+|:---|:---|
+| FSM (Finite State Machine) | 상태표로 기술되는 제어 모델 |
+| 카르노 맵 (Karnaugh Map) | 상태표를 최소화된 논리식으로 변환하는 도구 |
+| 순차 회로 (Sequential Circuit) | 상태표의 최종 구현체 |
+| 축소 상태표 (Reduced State Table) | 중복 상태를 제거해 하드웨어를 최적화한 표 |

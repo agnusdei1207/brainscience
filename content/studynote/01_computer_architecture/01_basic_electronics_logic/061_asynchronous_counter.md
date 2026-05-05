@@ -71,14 +71,7 @@ categories = "studynote-computer-architecture"
 
 > 📖 학습 보조
 
-## 7. 관련 개념 맵 및 발전 흐름도
-
-| 개념 | 연결 포인트 |
-|:---|:---|
-| 플립플롭 (Flip-Flop) | 상태 저장을 위한 기본 논리 소자 |
-| 주파수 분주 (Frequency Division) | 입력 클럭을 2의 배수로 나누어 주파수를 낮추는 응용 |
-| 전파 지연 (Propagation Delay) | 입력 변화가 출력에 도달할 때까지 걸리는 물리적 시간 |
-| 글리치 (Glitch) | 상태 변화의 시간차로 인해 발생하는 일시적인 오작동 신호 |
+## 7. 발전 흐름도
 
 ```text
 Flip-Flop Chain
@@ -89,3 +82,14 @@ Asynchronous Counter
     ↓
 저주파 Frequency Divider 활용
 ```
+
+---
+
+## 8. 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+|:---|:---|
+| 플립플롭 (Flip-Flop) | 상태 저장을 위한 기본 논리 소자 |
+| 주파수 분주 (Frequency Division) | 입력 클럭을 2의 배수로 나누어 주파수를 낮추는 응용 |
+| 전파 지연 (Propagation Delay) | 입력 변화가 출력에 도달할 때까지 걸리는 물리적 시간 |
+| 글리치 (Glitch) | 상태 변화의 시간차로 인해 발생하는 일시적인 오작동 신호 |
