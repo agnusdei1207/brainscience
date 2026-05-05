@@ -166,9 +166,9 @@ def segmented_sieve(n):
         low = high + 1
     
     return primes
-
-# 10억 이하 소수 개수: 50,847,534개 (소수 정리 근사: n/ln(n) ≈ 48M)
 ```
+
+참고로 `10억` 이하의 소수 개수는 `50,847,534`개이며, 이는 소수 정리 (Prime Number Theorem)의 근사값 `n / ln(n)`와 비슷한 수준이다.
 
 장점:
   캐시 친화적 (세그먼트가 L1 캐시에 들어감)
