@@ -1,20 +1,19 @@
 +++
-title = "045. 클라우드 이전 전략 — Repurchase & SaaS Migration"
 weight = 45
+title = "45. 045. 클라우드 이전 전략 — Repurchase & SaaS Migration"
 date = "2026-04-05"
 [extra]
 categories = "studynote-cloud-architecture"
 +++
+
 ## 0. 핵심 인사이트
 
-> **핵심 인사이트**
-> 1. 클라우드 이전(Migration) 전략의 6R(또는 7R) 프레임워크 — Retire(폐기), Retain(유지), Rehost(Lift & Shift), Replatform(이식), Repurchase(SaaS 전환), Refactor(재설계), Relocate(이전)으로 각 워크로드에 최적 전략을 선택한다.
-> 2. Repurchase(SaaS 재구매)는 사내 구축 소프트웨어를 SaaS로 교체 — 이메일(Exchange→Office 365), CRM(Siebel→Salesforce), ERP(온프레미스→SAP S/4HANA Cloud) 전환이 대표적이며, 초기 비용보다 장기 총소유비용(TCO) 분석이 핵심이다.
-> 3. SaaS 전환의 핵심 과제는 데이터 이전(Data Migration)과 통합(Integration) — 수년간 축적된 레거시 데이터를 SaaS 데이터 모델로 변환하고, 기존 시스템과의 연동(API 통합)이 프로젝트 복잡성의 80%를 차지한다.
-
-> 📝 모범 답안
+> **핵심**: 045. 클라우드 이전 전략 — Repurchase & SaaS Migration는 클라우드 아키텍처에서 자원, 데이터, 운영 방식을 더 탄력적이고 일관되게 만들기 위한 핵심 개념이다.
+> **비유**: 6R은 이사 전략 — 버리기(Retire), 두고가기(Retain), 그대로 옮기기(Rehost), 포장 개선(Replatform), 새 가구로 교체(Repurchase), 집 자체를 새로(Refactor)!
 
 ---
+
+> 📝 모범 답안
 
 ## 1. 개요 및 필요성
 
@@ -121,7 +120,16 @@ HR/급여:
 
 ---
 
-## 3. 구조 및 동작 원리
+## 3. 구조 및 원리
+
+**핵심 조건**: 자원 추상화, 격리 수준, 자동 프로비저닝, 보안 경계, 비용 통제가 함께 설계되어야 안정적인 서비스 가치가 나온다.
+
+동작 순서:
+1. 요구사항과 책임 경계를 먼저 정의한다.
+2. 추상화 계층에서 컴퓨팅·스토리지·네트워크 자원을 논리적으로 분리하고 격리 수준을 결정한다.
+3. 제어 평면이 정책에 맞는 자원을 프로비저닝하고 서비스 모델에 따라 사용자에게 노출한다.
+4. 운영 중에는 확장, 가용성, 백업, 보안 정책을 지속적으로 적용해 상태를 안정화한다.
+5. 마지막으로 비용·성능·벤더 종속성을 함께 평가해 구조를 최적화한다.
 
 ```
 SaaS 데이터 이전 (Data Migration):
@@ -171,7 +179,7 @@ SaaS 데이터 이전 (Data Migration):
 
 ---
 
-## 4. 비교 및 트레이드오프
+## 4. 비교 및 연결
 
 ```
 SaaS 전환 TCO (Total Cost of Ownership) 분석:
@@ -218,7 +226,7 @@ TCO 결론:
 
 ---
 
-## 5. 실무 적용 및 최적화 기법
+## 5. 실무 적용 및 판단
 
 ```
 글로벌 제조업체 Microsoft 365 전환:
@@ -267,28 +275,15 @@ TCO 결론:
 
 ---
 
-## 📌 관련 개념 맵
+## 6. 기대효과 및 결론
 
-```
-클라우드 이전 전략 (6R)
-+-- Retire / Retain
-+-- Rehost (Lift & Shift)
-+-- Replatform
-+-- Repurchase (SaaS)
-|   +-- 이메일: M365
-|   +-- CRM: Salesforce
-|   +-- ERP: SAP Cloud
-+-- Refactor (MSA/Cloud Native)
-+-- 핵심 활동
-    +-- TCO 분석
-    +-- 데이터 이전 (ETL)
-    +-- 통합 (API/iPaaS)
-    +-- 변화 관리
-```
+045. 클라우드 이전 전략 — Repurchase & SaaS Migration를 올바르게 적용하면 확장성, 운영 안정성, 자동화 수준, 가시성을 함께 높일 수 있다. 다만 이 효과는 기술 자체만으로 생기지 않으며, 책임 경계·표준화·보안 통제·비용 관리가 함께 설계될 때 비로소 현실화된다.
+
+향후에는 관리형 서비스, 정책 자동화, AI 기반 운영 최적화와 결합되면서 045. 클라우드 이전 전략 — Repurchase & SaaS Migration의 중요성이 더 커질 것이다. 따라서 핵심은 특정 도구를 도입하는 것이 아니라, 업무 특성과 조직 역량에 맞는 적용 범위와 운영 모델을 설계하는 데 있다.
 
 ---
 
-## 📈 관련 키워드 및 발전 흐름도
+## 7. 발전 흐름도
 
 ```
 [클라우드 초기 이전 (2010s)]
@@ -314,8 +309,12 @@ SaaS First 정책 (비커스텀 기능)
 
 ---
 
-## 👶 어린이를 위한 3줄 비유 설명
+## 8. 관련 개념 맵
 
-1. 6R은 이사 전략 6가지 — 버리기(Retire), 그대로(Rehost), 일부 고치기(Replatform), 새 가구로 교체(Repurchase), 집 새로(Refactor)! 상황에 맞는 방법 선택!
-2. Repurchase는 구독 서비스 교체 — 직접 만든 낡은 냉장고(Exchange) 버리고, 매달 구독하는 새 냉장고(M365)로! 수리 걱정 끝!
-3. TCO가 핵심 — "월 구독료(SaaS)가 비싸 보여도" 5년 총비용(서버+인건비+업그레이드) 합치면 SaaS가 저렴할 수 있어요!
+| 개념 | 연결 포인트 |
+|:---|:---|
+| | +-- 이메일 | M365 |
+| | +-- CRM | Salesforce |
+| | +-- ERP | SAP Cloud |
+
+---
