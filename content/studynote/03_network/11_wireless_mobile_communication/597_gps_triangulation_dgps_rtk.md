@@ -1,6 +1,6 @@
 +++
 weight = 597
-title = "597. GPS (Global Positioning System) 삼각 측량 / 오차 개선 기법 (DGPS, RTK)"
+title = "597. 블루투스 (Bluetooth)와 BLE - 페어링, 피코넷, 스캐터넷과 초저전력 IoT 아키텍처"
 date = "2026-04-05"
 [extra]
 categories = "studynote-network"

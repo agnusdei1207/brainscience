@@ -1,5 +1,5 @@
 +++
-title = "282. 해시 샤딩 (Hash Sharding) - 균등 분배 / 레인지 샤딩 (Range Sharding) - 범위 검색 유리 (핫스팟 문제 유의)"
+title = "282. 임베디드 도큐먼트 패턴"
 weight = 282
 +++
 

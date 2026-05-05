@@ -1,6 +1,6 @@
 +++
 weight = 504
-title = "504. 데이터베이스 백업 핫 덤프 콜드 덤프"
+title = "504. 데이터 독립성 (Data Independence)"
 description = "데이터 독립성의 정의, 유형, 중요성"
 date = 2026-03-26
 

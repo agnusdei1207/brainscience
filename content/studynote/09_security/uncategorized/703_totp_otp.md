@@ -1,6 +1,6 @@
 +++
 weight = 703
-title = "703. UAC绕过 — 사용자 계정 컨트롤 우回"
+title = "703. OTP와 TOTP (One-Time Password & Time-Based OTP)"
 description = "일회성 비밀번호(OTP)와 시간 기반 OTP(TOTP)의 원리와 보안"
 date = 2024-01-15
 +++

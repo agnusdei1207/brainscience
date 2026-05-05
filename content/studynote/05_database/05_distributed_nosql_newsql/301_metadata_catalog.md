@@ -1,5 +1,5 @@
 +++
-title = "301. 데이터 마이그레이션 도구 및 CDC (Change Data Capture) - Debezium 등 실시간 변경 로깅/전송"
+title = "301. 메타데이터 카탈로그"
 weight = 301
 +++
 

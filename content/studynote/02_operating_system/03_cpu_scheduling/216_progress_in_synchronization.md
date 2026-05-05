@@ -1,6 +1,6 @@
 +++
 weight = 216
-title = "216. 에너지 인지 스케줄링 (Energy-Aware Scheduling, EAS)"
+title = "216. 진행 (Progress)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

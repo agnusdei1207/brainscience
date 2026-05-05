@@ -1,5 +1,5 @@
 +++
-title = "110. 양자 복잡도 (Quantum Complexity) — BQP, 양자 우위"
+title = "110. 스킵 리스트 (Skip List)"
 weight = 110
 +++
 

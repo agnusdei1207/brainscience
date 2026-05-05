@@ -1,5 +1,5 @@
 +++
-title = "298. 몽고DB (MongoDB) 아키텍처 - 레플리카 셋 (Replica Set), 샤드 클러스터 (mongos, config server, shard)"
+title = "298. MOLAP, ROLAP, HOLAP"
 weight = 298
 +++
 

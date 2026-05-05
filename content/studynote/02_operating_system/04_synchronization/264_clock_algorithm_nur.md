@@ -1,6 +1,6 @@
 +++
 weight = 264
-title = "264. 큐잉 스핀락 (MCS Lock / qspinlock) - NUMA 환경 스핀락 최적화"
+title = "264. 클럭 알고리즘 (Clock Algorithm / NUR)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

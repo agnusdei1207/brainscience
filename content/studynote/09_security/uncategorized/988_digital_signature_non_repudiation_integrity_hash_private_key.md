@@ -1,5 +1,5 @@
 +++
-title = "988. crypto agility — 알고리즘 교체 능력"
+title = "988. 전자 서명 (Digital Signature) - 부인 방지 무결성 인증 해시 함수 비대칭키(개인키) 암호화 결합 통신망 신원 보증 원리"
 weight = 988
 +++
 # 988. 전자 서명 (Digital Signature) - 부인 방지 무결성 인증 해시 함수 비대칭키(개인키) 암호화 결합 통신망 신원 보증 원리

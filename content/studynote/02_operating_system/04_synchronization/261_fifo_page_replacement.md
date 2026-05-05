@@ -1,6 +1,6 @@
 +++
 weight = 261
-title = "261. 장벽 (Barrier) 동기화 - 여러 스레드가 특정 지점에 도달할 때까지 대기"
+title = "261. FIFO (First-In, First-Out) 페이지 교체"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

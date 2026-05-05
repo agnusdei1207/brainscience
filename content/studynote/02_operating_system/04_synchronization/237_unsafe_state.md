@@ -1,6 +1,6 @@
 +++
 weight = 237
-title = "237. 블로킹 세마포어 - 대기 큐 (Sleep & Wakeup) 사용, 바쁜 대기 없음"
+title = "237. 불안전 상태 (Unsafe State)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

@@ -1,6 +1,6 @@
 +++
 weight = 507
-title = "507. 트리거 (Trigger 이벤트 연동 프로시저 콜)"
+title = "507. ACID 속성"
 description = "ACID (원자성, 일관성, 고립성, 영속성) 상세 설명"
 date = 2026-03-26
 

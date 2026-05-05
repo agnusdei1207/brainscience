@@ -1,6 +1,6 @@
 +++
 weight = 225
-title = "225. 피터슨의 해결책 (Peterson's Algorithm) - 플래그(flag)와 턴(turn) 변수 활용, 2 프로세스 한정"
+title = "225. 이진 세마포어 (Binary Semaphore)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

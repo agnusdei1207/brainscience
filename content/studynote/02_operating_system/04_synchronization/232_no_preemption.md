@@ -1,6 +1,6 @@
 +++
 weight = 232
-title = "232. acquire() / release() 함수"
+title = "232. 비선점 (No Preemption)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

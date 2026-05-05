@@ -1,6 +1,6 @@
 +++
 weight = 604
-title = "604. SSP (Security Support Provider) — 인증 공급자 DLL"
+title = "604. SQL 주입 (SQL Injection)"
 description = "데이터베이스 보안 취약점의 대표적 유형인 SQL 주입(SQL Injection) 원리와 방어 기법"
 date = 2024-01-15
 +++

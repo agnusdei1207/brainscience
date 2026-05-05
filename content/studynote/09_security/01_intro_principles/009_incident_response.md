@@ -1,6 +1,6 @@
 +++
 weight = 9
-title = "9. 정보보안 6요소 — CIA + 인증성 + 부인방지 + 책임추적성"
+title = "9. 사고 대응 (Incident Response)"
 description = "보안 사고 발생 시 체계적인 대응 절차와 방법론"
 date = 2026-03-26
 

@@ -1,6 +1,6 @@
 +++
 weight = 6
-title = "6. 부인방지 (Non-repudiation) — 전자서명, 타임스탬프, 로그, 감사 추적"
+title = "6. 보안 거버넌스 (Security Governance)"
 description = "조직 전체의信息安全을 체계적으로管理하는 프레임워크"
 date = 2026-03-26
 

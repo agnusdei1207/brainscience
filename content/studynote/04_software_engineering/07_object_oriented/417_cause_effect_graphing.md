@@ -1,5 +1,5 @@
 +++
-title = "417. 유스케이스 테스팅 (Use Case Testing) - 액터와의 상호작용 흐름 기반"
+title = "417. 원인-결과 그래프 (Cause-Effect Graphing)"
 date = 2026-04-05
 weight = 417
 +++

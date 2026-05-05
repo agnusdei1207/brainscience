@@ -1,5 +1,5 @@
 +++
-title = "728. 크로스 사이트 스크립팅 (XSS - Reflected/Stored, 브라우저 로컬 데이터 탈취 쿠키 위협망 통신 쿠키보안 CSP 설정 등 세부망 보안 원리)"
+title = "728. CSRF (Cross-Site Request Forgery) 인증 세션 권한 도용"
 weight = 728
 +++
 # 728. CSRF (Cross-Site Request Forgery) 인증 세션 권한 도용

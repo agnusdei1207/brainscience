@@ -1,6 +1,6 @@
 +++
 weight = 502
-title = "502. 데이터 리니지 흐름 추적 무결성 감사 구조"
+title = "502. DBMS (Database Management System)"
 description = "DBMS의 정의, 구성 요소, 필수 기능"
 date = 2026-03-26
 

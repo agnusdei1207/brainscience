@@ -1,6 +1,6 @@
 +++
 weight = 263
-title = "263. 티켓 락 (Ticket Lock) - FIFO 보장 스핀락"
+title = "263. LFU (Least Frequently Used) 페이지 교체"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

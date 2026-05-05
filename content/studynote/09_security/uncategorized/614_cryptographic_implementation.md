@@ -1,6 +1,6 @@
 +++
 weight = 614
-title = "614. 애드혹 identity — 임시/외부 사용자 관리"
+title = "614. 암호학적 구현 보안 (Cryptographic Implementation Security)"
 description = "효과적인 암호화 구현과 키 관리의 실무 가이드라인"
 date = 2024-01-15
 +++

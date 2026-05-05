@@ -1,6 +1,6 @@
 +++
 weight = 81
-title = "81. Watermark — 지연 이벤트 허용 임계, 늦은 데이터 트리거"
+title = "81. 특성 공학 (Feature Engineering)"
 description = "특성 공학의 정의와 중요성, 다양한 특성 변환 기법, 파생 변수 생성, 특성 선택 방법론"
 date = "2026-04-05"
 [taxonomies]

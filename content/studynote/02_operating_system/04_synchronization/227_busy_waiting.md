@@ -1,6 +1,6 @@
 +++
 weight = 227
-title = "227. 하드웨어 명령어 기반 동기화"
+title = "227. 바쁜 대기 (Busy Waiting)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

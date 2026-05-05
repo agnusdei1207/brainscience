@@ -1,6 +1,6 @@
 +++
 weight = 252
-title = "252. 이벤트 객체 (Event Object) - 스레드 간 신호 전달"
+title = "252. 메모리 계층 구조 (Memory Hierarchy)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

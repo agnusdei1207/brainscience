@@ -1,6 +1,6 @@
 +++
 weight = 22
-title = "22. RDD (Resilient Distributed Dataset) - 스파크 핵심. 탄력적이고 불변하는 메모리 데이터 구조. 장애 시 리니지(계보) 연산 기록을 바탕으로 즉시 자가 복구"
+title = "22. 아파치 카프카 (Apache Kafka) - 분산 이벤트 스트리밍 플랫폼"
 date = "2026-04-02"
 [extra]
 categories = "studynote-data-engineering"

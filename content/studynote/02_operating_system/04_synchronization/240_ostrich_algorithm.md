@@ -1,6 +1,6 @@
 +++
 weight = 240
-title = "240. 모니터 시그널 의미론 - Signal and Wait vs Signal and Continue"
+title = "240. 타조 알고리즘 (Ostrich Algorithm)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

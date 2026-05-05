@@ -1,6 +1,6 @@
 +++
 weight = 17
-title = "17. 완전한 중재 원칙 (Complete Mediation) — 모든 접근 경로 검사"
+title = "17. 보안 프레임워크 및 컴플라이언스 (Security Framework & Compliance)"
 description = "ISMS-P, ISO 27001, NIST CSF, SOC 2 등 정보보호 관리체계 및 IT 거버넌스 아키텍처 통합 분석"
 date = "2025-02-24"
 [taxonomies]

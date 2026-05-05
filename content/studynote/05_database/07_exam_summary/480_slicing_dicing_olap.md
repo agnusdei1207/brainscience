@@ -1,5 +1,5 @@
 +++
-title = "480. 슬라이스 (Slicing)와 다이스 (Dicing)"
+title = "480. 다차원 OLAP 연산 - 슬라이싱과 다이싱"
 date = "2026-04-10"
 weight = 480
 [extra]

@@ -1,6 +1,6 @@
 +++
 weight = 523
-title = "523. 정보 공학 방법론 데이터 주도적 생명 주기"
+title = "523. 서브쿼리 (Subquery)"
 description = "SQL 서브쿼리의 유형과 사용법"
 date = 2026-03-26
 

@@ -1,5 +1,5 @@
 +++
-title = "297. 레디스 (Redis) 자료구조 - String, List, Set, Sorted Set, Hash"
+title = "297. 스노우플레이크 스키마"
 weight = 297
 +++
 

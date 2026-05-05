@@ -1,6 +1,6 @@
 +++
 weight = 210
-title = "210. 리눅스 O(1) 스케줄러 - 두 개의 배열 (Active, Expired)"
+title = "210. 휴리스틱 (Heuristics) 기반 스케줄링"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

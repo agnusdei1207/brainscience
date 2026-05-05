@@ -1,6 +1,6 @@
 +++
 weight = 221
-title = "221. 경쟁 조건 (Race Condition) - 실행 순서에 따라 결과가 달라지는 현상"
+title = "221. 하드웨어적 동기화 (TAS, CAS)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

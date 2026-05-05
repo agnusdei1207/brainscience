@@ -1,6 +1,6 @@
 +++
 weight = 89
-title = "89. Google Pub/Sub — Kafka 대안, GCP, 글로벌 분산"
+title = "89. 합성곱 신경망 (Convolutional Neural Network) - 공간 패턴 인식자"
 description = "CNN의 구조, 합성곱 연산, 필터, 풀링, 이미지 인식에서의 역할과 한계점"
 date = "2026-04-05"
 [taxonomies]

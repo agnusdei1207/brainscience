@@ -1,5 +1,5 @@
 +++
-title = "283. 일관된 해싱 (Consistent Hashing) - 노드 추가/삭제 시 재배치 최소화 (링 구조 배열)"
+title = "283. 참조 (Reference) 패턴"
 weight = 283
 +++
 

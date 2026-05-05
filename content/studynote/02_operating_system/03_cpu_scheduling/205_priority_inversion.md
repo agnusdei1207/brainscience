@@ -1,6 +1,6 @@
 +++
 weight = 205
-title = "205. 주기적 태스크 (Periodic Task) - 주기(p), 마감시간(d), 실행시간(t)"
+title = "205. 우선순위 역전 (Priority Inversion)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

@@ -1,5 +1,5 @@
 +++
-title = "288. 공간 데이터베이스 (Spatial Database) - 좌표, 기하학적 객체 쿼리, PostGIS 확장"
+title = "288. 데이터 웨어하우스 (DW) 정의"
 weight = 288
 +++
 

@@ -1,6 +1,6 @@
 +++
 weight = 522
-title = "522. 데이터 거버넌스 3요소 (원칙, 조직, 프로세스)"
+title = "522. GROUP BY와 HAVING"
 description = "SQL GROUP BY와 HAVING 절의 사용법"
 date = 2026-03-26
 

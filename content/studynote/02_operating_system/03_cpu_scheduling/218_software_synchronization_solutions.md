@@ -1,6 +1,6 @@
 +++
 weight = 218
-title = "218. 컨테이너 스케줄링 (cgroups cpu.shares, cpu.cfs_quota_us)"
+title = "218. 소프트웨어적 동기화 해결책"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

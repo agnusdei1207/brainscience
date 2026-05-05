@@ -1,5 +1,5 @@
 +++
-title = "293. 티아이디비 (TiDB) - HTAP (Hybrid Transactional/Analytical Processing) 지원 NewSQL"
+title = "293. ELT 프로세스"
 weight = 293
 +++
 

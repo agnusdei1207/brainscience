@@ -1,5 +1,5 @@
 +++
-title = "287. 시계열 데이터 특성 - 높은 쓰기 처리량, 다운샘플링 (Downsampling), 보존 정책 (Retention Policy)"
+title = "287. 다중 모델 DB - ArangoDB"
 weight = 287
 +++
 

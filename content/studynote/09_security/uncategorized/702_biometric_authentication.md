@@ -1,6 +1,6 @@
 +++
 weight = 702
-title = "702. AXIOM — Magnet Forensics 포렌식"
+title = "702. 생체 인증 (Biometric Authentication)"
 description = "지문, 얼굴, 홍채 등 생체 정보를 이용한 인증 방식의 원리와 보안"
 date = 2024-01-15
 +++

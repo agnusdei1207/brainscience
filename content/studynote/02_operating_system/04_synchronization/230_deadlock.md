@@ -1,6 +1,6 @@
 +++
 weight = 230
-title = "230. 원자적 변수 (Atomic Variable) - Lock-free 프로그래밍 기초"
+title = "230. 교착 상태 (Deadlock)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

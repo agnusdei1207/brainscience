@@ -1,6 +1,6 @@
 +++
 weight = 615
-title = "615. Federated Identity — SAML/OIDC 기반 연합"
+title = "615. API 보안 (API Security)"
 description = "REST, GraphQL, gRPC 등 현대 API 아키텍처의 보안 전략"
 date = 2024-01-15
 +++

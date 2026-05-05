@@ -1,6 +1,6 @@
 +++
 weight = 197
-title = "197. 프로세서 친화성 (Processor Affinity) - 캐시 최적화"
+title = "197. RM (Rate Monotonic) 스케줄링"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

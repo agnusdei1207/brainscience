@@ -1,6 +1,6 @@
 +++
 weight = 8
-title = "8. 개인정보보호 3요소 — 기밀성·무결성·접근성 (ISO 27701)"
+title = "8. 보안 인식 교육 (Security Awareness)"
 description = "조직 구성원의 보안 인식을 높이는 교육과 훈련 프로그램"
 date = 2026-03-26
 

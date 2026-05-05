@@ -1,6 +1,6 @@
 +++
 weight = 259
-title = "259. ABA 문제 - CAS 연산 시 값이 변경되었다가 원복된 것을 인지하지 못하는 오류"
+title = "259. 페이징 (Paging)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

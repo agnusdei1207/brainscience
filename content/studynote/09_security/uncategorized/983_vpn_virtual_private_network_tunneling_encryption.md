@@ -1,5 +1,5 @@
 +++
-title = "983. LLM08: Autonomous Agent — 자가 실행 에이전트 위험"
+title = "983. VPN (가상 사설망) - Virtual Private Network 사설망 전용선 비용 절감 터널링 암호화 인터넷망 공중망 가상 논리 보안 통신망 기초 원리"
 weight = 983
 +++
 

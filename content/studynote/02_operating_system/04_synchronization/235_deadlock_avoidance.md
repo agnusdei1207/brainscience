@@ -1,6 +1,6 @@
 +++
 weight = 235
-title = "235. 이진 세마포어 (Binary Semaphore) = 뮤텍스와 유사"
+title = "235. 교착 상태 회피 (Deadlock Avoidance)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

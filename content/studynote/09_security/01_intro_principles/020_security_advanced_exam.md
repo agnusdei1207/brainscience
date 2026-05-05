@@ -1,6 +1,6 @@
 +++
 weight = 20
-title = "20. Least Common Mechanism — 메커니즘 공유 최소화"
+title = "20. 보안 심화 및 최신 위협 (Security Advanced & Emerging Threats)"
 description = "물리적 메모리 공격(Cold Boot), TEE 아키텍처, 난수 생성기(CSPRNG) 및 완전 동형 암호 등 보안 최상위 심화 키워드"
 date = "2025-02-24"
 [taxonomies]

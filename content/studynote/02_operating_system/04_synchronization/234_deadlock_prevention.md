@@ -1,6 +1,6 @@
 +++
 weight = 234
-title = "234. 세마포어 (Semaphore) - S 정수 변수, wait(P), signal(V) 원자적 연산"
+title = "234. 교착 상태 예방 (Deadlock Prevention)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

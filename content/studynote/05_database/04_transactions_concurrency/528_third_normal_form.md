@@ -1,6 +1,6 @@
 +++
 weight = 528
-title = "528. 동시성 오손 읽기 (Dirty Read) 고립 수준 회피"
+title = "528. 제3정규형 (3NF)"
 description = "제3정규형의 정의와 이행 종속성 제거"
 date = 2026-03-26
 

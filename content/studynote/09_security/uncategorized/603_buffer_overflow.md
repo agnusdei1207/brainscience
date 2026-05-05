@@ -1,6 +1,6 @@
 +++
 weight = 603
-title = "603. WDigest — 평문 비밀번호 캐싱 (레지스트리 설정)"
+title = "603. 버퍼 오버플로우 (Buffer Overflow)"
 description = "메모리 보안 취약점의 대표적 유형인 버퍼 오버플로우(Buffer Overflow) 원리와 방어 기법"
 date = 2024-01-15
 +++

@@ -1,6 +1,6 @@
 +++
 weight = 701
-title = "701. FTK / EnCase — 포렌식 도구"
+title = "701. 비밀번호 인증 (Password Authentication)"
 description = "가장 보편적인 인증 수단인 비밀번호의 보안과 관리 전략"
 date = 2024-01-15
 +++

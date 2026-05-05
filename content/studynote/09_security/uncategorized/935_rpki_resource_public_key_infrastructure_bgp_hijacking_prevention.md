@@ -1,5 +1,5 @@
 +++
-title = "935. Mantrap — 이중 문으로 인적 격리"
+title = "935. RPKI (Resource Public Key Infrastructure) - BGP 스푸핑/BGP 하이재킹 경로 위조 공격 차단 인터넷 라우팅 테이블 서명/인증서 기반 인가 검증 라우팅 결함 예방 라우팅망 안전 표준 체계 인프라 기술 모델 분석 설계"
 weight = 935
 +++
 # 935. RPKI (Resource Public Key Infrastructure) - BGP 스푸핑/BGP 하이재킹 경로 위조 공격 차단 인터넷 라우팅 테이블 서명/인증서 기반 인가 검증 라우팅 결함 예방 라우팅망 안전 표준 체계 인프라 기술 모델 분석 설계

@@ -1,6 +1,6 @@
 +++
 weight = 238
-title = "238. 모니터 (Monitor) - 추상 자료형 구조, 상호 배제 자동 보장 (High-level 구조)"
+title = "238. 은행원 알고리즘 (Banker's Algorithm)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

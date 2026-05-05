@@ -1,6 +1,6 @@
 +++
 weight = 18
-title = "18. 경제적 설계 원칙 (Economy of Mechanism) — 최소 구현"
+title = "18. IoT, OT, ICS 및 물리적 보안 (IoT, OT, ICS & Physical Security)"
 description = "Purdue 모델, IEC 62443, SCADA 보안부터 스마트 팩토리 제어망 및 사이버-물리 시스템(CPS) 보호까지 통합 아키텍처"
 date = "2025-02-24"
 [taxonomies]

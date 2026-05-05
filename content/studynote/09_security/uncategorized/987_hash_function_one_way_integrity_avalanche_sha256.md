@@ -1,5 +1,5 @@
 +++
-title = "987. NIST PQC 표준 — Kyber/Dilithium/Falcon/SPHINCS+"
+title = "987. 해시 함수 (Hash Function) - 단방향 암호화 무결성 보장 전자 서명 연계 압축 다이제스트 충돌 회피 알고리즘 (MD5, SHA) 보안망 기초"
 weight = 987
 +++
 # 987. 해시 함수 (Hash Function) - 단방향 암호화 무결성 보장 전자 서명 연계 압축 다이제스트 충돌 회피 알고리즘 (MD5, SHA) 보안망 기초

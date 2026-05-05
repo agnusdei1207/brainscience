@@ -1,6 +1,6 @@
 +++
 weight = 231
-title = "231. 뮤텍스 락 (Mutex Lock / Mutual Exclusion Lock)"
+title = "231. 점유 대기 (Hold and Wait)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

@@ -1,6 +1,6 @@
 +++
 weight = 200
-title = "200. 이기종 다중 처리기 스케줄링 (HMP) - ARM big.LITTLE 구조"
+title = "200. 실시간 커널 (Real-time Kernel) / PREEMPT_RT"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

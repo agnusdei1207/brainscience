@@ -1,6 +1,6 @@
 +++
 weight = 226
-title = "226. 메모리 장벽 (Memory Barrier / Memory Fence) - 메모리 연산 순서 보장 명령어"
+title = "226. 카운팅 세마포어 (Counting Semaphore)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

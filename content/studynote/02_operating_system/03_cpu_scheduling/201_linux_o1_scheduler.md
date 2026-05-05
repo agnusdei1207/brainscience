@@ -1,6 +1,6 @@
 +++
 weight = 201
-title = "201. 실시간 스케줄링 (Real-time Scheduling)"
+title = "201. 리눅스 O(1) 스케줄러"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

@@ -1,6 +1,6 @@
 +++
 weight = 257
-title = "257. 웨이트-프리 (Wait-free) 알고리즘"
+title = "257. 스래싱 (Thrashing)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

@@ -1,6 +1,6 @@
 +++
 weight = 228
-title = "228. Test-and-Set 명령어 - 원자적(Atomic) 읽기-수정"
+title = "228. 조건 변수 (Condition Variable)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

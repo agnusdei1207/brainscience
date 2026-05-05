@@ -1,6 +1,6 @@
 +++
 weight = 258
-title = "258. 스케줄러 일드 (sched_yield) - 락 경합 시 자발적 CPU 양보"
+title = "258. 다중 프로그래밍 정도 (Degree of Multiprogramming)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

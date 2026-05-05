@@ -1,5 +1,5 @@
 +++
-title = "724. 다크 웹 (Dark Web) Tor (The Onion Router 은닉망 릴레이 체계 분석)"
+title = "724. 스머프 공격 방어를 위한 no ip directed-broadcast 설정 논리"
 weight = 724
 +++
 # 724. 스머프 공격 방어를 위한 no ip directed-broadcast 설정 논리

@@ -1,6 +1,6 @@
 +++
 weight = 506
-title = "506. 데이터 디렉터리 시스템 카탈로그 차이"
+title = "506. 트랜잭션 (Transaction)"
 description = "트랜잭션의 정의, 특성, 상태 다이어그램"
 date = 2026-03-26
 

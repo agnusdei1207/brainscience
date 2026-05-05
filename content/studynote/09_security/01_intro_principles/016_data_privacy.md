@@ -1,6 +1,6 @@
 +++
 weight = 16
-title = "16. 실패 안전 원칙 (Fail-Safe) — 기본값 거부, 오류 시 안전 상태"
+title = "16. 데이터 및 개인정보 보호 (Data & Privacy Protection)"
 description = "개인정보보호법, GDPR, 비식별화(k-익명성, l-다양성), DLP 및 토큰화 등 데이터 보호 핵심 기술 및 컴플라이언스 통합 가이드"
 date = "2025-02-24"
 [taxonomies]

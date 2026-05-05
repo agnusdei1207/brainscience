@@ -1,5 +1,5 @@
 +++
-title = "299. 카산드라 (Cassandra) 특징 - 링 기반 피어투피어, 가십 프로토콜(Gossip Protocol), 튜너블 컨시스턴시 (Tunable Consistency - Quorum Read/Write)"
+title = "299. 데이터 레이크"
 weight = 299
 +++
 

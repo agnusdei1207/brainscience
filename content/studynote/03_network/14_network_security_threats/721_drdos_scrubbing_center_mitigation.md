@@ -1,5 +1,5 @@
 +++
-title = "721. SLOW GET / SLOW POST 공격(Slowloris) 응용 계층 소켓 점유, 헤더/엔티티를 끊임없이 매우 느리게 보내 Connection 지속 자원 무력화 (일시적 방화벽 필터링, 타임아웃 최소화 대응)"
+title = "721. DRDoS 스크러빙 센터 (Scrubbing Center) 완화 트래픽 정제 대피소"
 weight = 721
 +++
 # 721. DRDoS 스크러빙 센터 (Scrubbing Center) 완화 트래픽 정제 대피소

@@ -1,6 +1,6 @@
 +++
 weight = 239
-title = "239. 조건 변수 (Condition Variable) - x.wait(), x.signal()"
+title = "239. 자원 할당 그래프 (Resource Allocation Graph, RAG)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

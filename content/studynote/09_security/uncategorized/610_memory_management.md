@@ -1,6 +1,6 @@
 +++
 weight = 610
-title = "610. Azure AD条件부 액세스 — 정책 기반 접근 제어"
+title = "610. 메모리 관리 보안 (Memory Management Security)"
 description = "메모리 할당, 해제, 사용过程中的 보안 취약점과 방어 기법"
 date = 2024-01-15
 +++

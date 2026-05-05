@@ -1,6 +1,6 @@
 +++
 weight = 217
-title = "217. 코-스케줄링 (Co-scheduling / Gang Scheduling) - 밀접한 스레드 동시 스케줄링"
+title = "217. 한정된 대기 (Bounded Waiting)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

@@ -1,5 +1,5 @@
 +++
-title = "723. 랜섬웨어 (Ransomware) 파일공유 139/445망 자가전파 및 피싱 방어 포트 폐쇄 규약 체계 SMBv1 보안 약점 타격 (워너크라이 WannaCry 분석)"
+title = "723. RUDY (Slow HTTP POST 공격) - Content-Length 조작 연결 지연"
 weight = 723
 +++
 # 723. RUDY (Slow HTTP POST 공격) - Content-Length 조작 연결 지연

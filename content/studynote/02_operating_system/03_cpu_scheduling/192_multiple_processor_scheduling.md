@@ -1,6 +1,6 @@
 +++
 weight = 192
-title = "192. LWP 디스패치"
+title = "192. 다중 처리기 스케줄링 (Multiple-Processor Scheduling)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

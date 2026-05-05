@@ -1,6 +1,6 @@
 +++
 weight = 505
-title = "505. 트랜잭션 장애 미디어 장애 복구 범위"
+title = "505. 스키마 (Schema)"
 description = "스키마의 정의, 유형, 수준"
 date = 2026-03-26
 

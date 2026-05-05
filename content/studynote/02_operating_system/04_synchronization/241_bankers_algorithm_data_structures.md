@@ -1,6 +1,6 @@
 +++
 weight = 241
-title = "241. 라이브락 (Livelock) - 진행은 하나 유효한 작업 불가 (양보만 반복)"
+title = "241. 은행원 알고리즘의 4대 자료구조 (Max, Allocation, Need, Available)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

@@ -1,6 +1,6 @@
 +++
 weight = 77
-title = "77. Flink 아키텍처 — JobManager / TaskManager / JobGraph"
+title = "77. AdaBoost (Adaptive Boosting)"
 description = "AdaBoost의 적응적 부스팅 원리,弱분류기 조합 메커니즘, 샘플 가중치 조정 알고리즘, 한계점 분석"
 date = "2026-04-05"
 [taxonomies]

@@ -1,5 +1,5 @@
 +++
-title = "303. 역색인 (Inverted Index) 구조 - 단어(Term)가 포함된 문서 ID 리스트 매핑 (검색 엔진 핵심)"
+title = "303. 스트림 처리 DB"
 weight = 303
 +++
 

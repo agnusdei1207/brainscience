@@ -1,5 +1,5 @@
 +++
-title = "290. NewSQL 데이터베이스 - RDB의 ACID 트랜잭션과 NoSQL의 수평적 확장성(Scale-out) 결합 패러다임"
+title = "290. 데이터 마트 (Data Mart)"
 weight = 290
 +++
 

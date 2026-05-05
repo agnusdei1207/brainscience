@@ -1,6 +1,6 @@
 +++
 weight = 521
-title = "521. 동적 SQL 조립 런타임 질의 파서"
+title = "521. JOIN 연산"
 description = "SQL JOIN 연산의 유형과 사용법"
 date = 2026-03-26
 

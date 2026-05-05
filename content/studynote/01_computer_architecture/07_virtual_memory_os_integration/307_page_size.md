@@ -1,6 +1,6 @@
 +++
 weight = 307
-title = "307. 메모리 보호 (Memory Protection)"
+title = "307. 페이지 크기 (Page Size)의 트레이드오프"
 date = 2024-01-01
 [taxonomies]
 categories = ["Computer Architecture"]

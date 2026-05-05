@@ -1,6 +1,6 @@
 +++
 weight = 607
-title = "607. Smart Card — 인증서 기반 MFA"
+title = "607. 안전한 세션 관리 (Secure Session Management)"
 description = "세션 하이재킹, 세션 고정 공격 등 세션 관리 취약점과 안전한 세션 설계 기법"
 date = 2024-01-15
 +++

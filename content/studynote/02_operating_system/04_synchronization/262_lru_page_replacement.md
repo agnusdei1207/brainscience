@@ -1,6 +1,6 @@
 +++
 weight = 262
-title = "262. 양방향 랑데부 (Rendezvous)"
+title = "262. LRU (Least Recently Used) 페이지 교체"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

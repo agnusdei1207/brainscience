@@ -1,6 +1,6 @@
 +++
 weight = 530
-title = "530. Serializable 성능 저하 임계 영역 데드락 방어"
+title = "530. 이상 (Anomaly)"
 description = "데이터베이스 이상 현상의 유형과 원인"
 date = 2026-03-26
 

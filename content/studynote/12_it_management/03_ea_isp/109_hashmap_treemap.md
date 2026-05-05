@@ -1,5 +1,5 @@
 +++
-title = "109. 지수 시간 가설 (ETH) — 알고리즘 하한 도구"
+title = "109. 해시맵 vs 트리맵 (HashMap vs TreeMap)"
 weight = 109
 +++
 

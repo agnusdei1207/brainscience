@@ -1,6 +1,6 @@
 +++
 weight = 242
-title = "242. 우선순위 역전 (Priority Inversion) - 하위 프로세스가 락을 쥐고 있어 상위 프로세스 대기"
+title = "242. 교착 상태 탐지 (Deadlock Detection)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

@@ -1,5 +1,5 @@
 +++
-title = "932. 물리적 보안 3대 요소 —威慑/ Delay/ Detection"
+title = "932. 스니핑 탐지 - ARP 핑(Ping) 테스트 네트워크 지연 감지 Promiscuous 모드 응답성 시간차 망 분석 진단 통제 통신 구조 확인 체제 도구 기초"
 weight = 932
 +++
 # 932. 스니핑 탐지 - ARP 핑(Ping) 테스트 네트워크 지연 감지 Promiscuous 모드 응답성 시간차 망 분석 진단 통제 통신 구조 확인 체제 도구 기초

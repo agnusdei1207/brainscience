@@ -1,6 +1,6 @@
 +++
 weight = 255
-title = "255. SeqLock (순차 락) - 읽기-쓰기 락의 대안, 카운터 기반"
+title = "255. 요구 페이징 (Demand Paging)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

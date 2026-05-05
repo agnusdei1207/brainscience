@@ -1,6 +1,6 @@
 +++
 weight = 213
-title = "213. 윈도우 스케줄링 - 디스패처 (Dispatcher), 우선순위 기반 선점형, 32단계 우선순위"
+title = "213. 경쟁 조건 (Race Condition)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

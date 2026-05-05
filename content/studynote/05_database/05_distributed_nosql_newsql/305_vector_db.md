@@ -1,5 +1,5 @@
 +++
-title = "305. 오라클 RAC (Real Application Clusters) - 공유 디스크(Shared Disk) 기반 다중 인스턴스 클러스터링 RDB (수직적 한계 완화)"
+title = "305. 벡터 DB"
 weight = 305
 +++
 

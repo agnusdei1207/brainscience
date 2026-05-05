@@ -1,6 +1,6 @@
 +++
 weight = 220
-title = "220. 무중단 라이브 마이그레이션 스케줄링 고려사항"
+title = "220. 피터슨 알고리즘 (Peterson's Algorithm)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

@@ -1,5 +1,5 @@
 +++
-title = "285. 그래프 쿼리 언어 - Cypher (Neo4j), Gremlin, SPARQL"
+title = "285. 트리 구조 저장 - Materialized Path, Nested Sets"
 weight = 285
 +++
 

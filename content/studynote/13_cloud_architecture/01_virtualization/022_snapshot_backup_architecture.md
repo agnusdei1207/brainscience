@@ -1,6 +1,6 @@
 +++
 weight = 22
-title = "22. SR-IOV (Single Root I/O Virtualization) - 하나의 물리적 PCIe 네트워크 카드(NIC)를 여러 VM에 논리적으로 직접 매핑해 하이퍼바이저 스위치 오버헤드 우회 (초고속 I/O)"
+title = "22. 스냅샷 (Snapshot) - 클라우드 스토리지 백업 및 복원 아키텍처"
 date = "2026-04-02"
 [extra]
 categories = "studynote-cloud"

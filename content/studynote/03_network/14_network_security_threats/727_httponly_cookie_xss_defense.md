@@ -1,5 +1,5 @@
 +++
-title = "727. SQL 인젝션 (OWASP 핵심 웹 구조 보안 약점 WAF 적용 룰 필터망 파라미터 처리망)"
+title = "727. XSS 방어 HttpOnly 쿠키 속성 설정 원리 스크립트 접근 차단"
 weight = 727
 +++
 # 727. XSS 방어 HttpOnly 쿠키 속성 설정 원리 스크립트 접근 차단

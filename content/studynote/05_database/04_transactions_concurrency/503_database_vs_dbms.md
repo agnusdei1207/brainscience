@@ -1,6 +1,6 @@
 +++
 weight = 503
-title = "503. 데이터 거버넌스 품질 메타 카탈로그 통제 관리"
+title = "503. 데이터베이스 vs DBMS"
 description = "데이터베이스와 DBMS의 차이와 상호 관계"
 date = 2026-03-26
 

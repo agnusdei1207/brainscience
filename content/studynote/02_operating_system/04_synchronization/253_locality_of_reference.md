@@ -1,6 +1,6 @@
 +++
 weight = 253
-title = "253. 리눅스 동기화 - 원자적 정수, 스핀락, 세마포어, 락 메커니즘"
+title = "253. 참조의 지역성 (Locality of Reference)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

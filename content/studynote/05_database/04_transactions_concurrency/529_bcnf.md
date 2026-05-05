@@ -1,6 +1,6 @@
 +++
 weight = 529
-title = "529. Repeatable Read 의 팬텀 현상 MVCC 해결 유무"
+title = "529. BCNF (보이스-코드 정규형)"
 description = "BCNF의 정의와 적용"
 date = 2026-03-26
 

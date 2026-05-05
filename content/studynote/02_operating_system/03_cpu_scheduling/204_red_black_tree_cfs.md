@@ -1,6 +1,6 @@
 +++
 weight = 204
-title = "204. 지연 시간 (Latency) - 인터럽트 지연 (Interrupt Latency) + 디스패치 지연 (Dispatch Latency)"
+title = "204. 레드-블랙 트리 (Red-Black Tree)와 CFS"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

@@ -1,6 +1,6 @@
 +++
 weight = 215
-title = "215. 태스크 스케줄링의 캐시 일관성 (Cache Coherence) 문제"
+title = "215. 상호 배제 (Mutual Exclusion, Mutex)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

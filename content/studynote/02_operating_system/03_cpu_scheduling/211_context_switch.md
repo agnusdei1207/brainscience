@@ -1,6 +1,6 @@
 +++
 weight = 211
-title = "211. 리눅스 CFS (Completely Fair Scheduler) - 가상 실행 시간 (vruntime) 기반, 레드-블랙 트리 사용"
+title = "211. 문맥 교환 (Context Switch)"
 date = "2026-03-22"
 [extra]
 categories = ["studynote-operating-system"]

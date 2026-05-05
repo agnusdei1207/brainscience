@@ -1,5 +1,5 @@
 +++
-title = "993. DMA 공격 — Thunderbolt/PCIe Direct Memory Access"
+title = "993. WAF (웹 방화벽) - Web Application Firewall L7 계층 웹 특화 보안 HTTP 트래픽 검사 SQL 인젝션 XSS 차단 암호화 복호화 탐지망 통제 모델"
 weight = 993
 +++
 # 993. WAF (웹 방화벽) - Web Application Firewall L7 계층 웹 특화 보안 HTTP 트래픽 검사 SQL 인젝션 XSS 차단 암호화 복호화 탐지망 통제 모델
