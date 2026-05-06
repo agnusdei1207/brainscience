@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>367. 결측치 대치법 (Imputation) 및 MICE — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 18, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ict
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 결측치 대치법(Imputation)은 데이터 셋에 빵꾸가 난 결측치(NaN, Null)를 단순히 삭제해 버리는 대신, 주변 데이터들의 패턴이나 통계적 특성을 활용하여 가장 그럴듯한 가짜 값으로 빈칸을 채워 넣는 전처리 기술이다.</li>
+<li><strong>가치</strong>: 데이터 한 줄을 지우면 그 줄에 있던 정상적인 나머지 정보들까지 몽땅 날아가는 끔찍한 정보 유실(Information Loss)을 방지하고, 머신러닝 모델이 에러 없이 원활하게 학습할 수 있도록 돕는다.</li>
+<li><strong>판단 포인트</strong>: 단순히 전체 평균이나 중앙값으로 채우면 데이터의 원래 분산(흩어짐)이 훼손되는 편향이 생기므로, 실무 파이프라인에서는 다른 변수들과의 회귀 방정식을 반복적으로 돌려 빈칸을 채우는 <strong>MICE (다중 대치법)</strong> 아키텍처를 표준으로 채택해야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>수집된 현실의 데이터는 절대 깔끔하지 않다. 설문조사에서 대답을 안 한 문항, 센서가 고장 나 기록되지 않은 온도 등 빈칸(결측치, Missing Values) 투성이다.</p>
+<p>컴퓨터 알고리즘(회귀 분석, 딥러닝 등)은 숫자 행렬에 빈칸이 하나라도 있으면 역행렬 계산을 하지 못하고 바로 프로그램이 터져버린다. 가장 쉬운 해결책은 빈칸이 있는 줄(Row)을 통째로 지워버리는 것이다. 하지만 100개의 질문 중 딱 1개를 대답 안 했다고 나머지 99개의 훌륭한 응답까지 버리는 것은 막대한 비즈니스 손실이다. 그래서 데이터 과학자들은 "버리지 말고 최대한 똑똑하게 채워 넣자!"라는 **대치(Imputation)**의 철학을 발전시켰다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 이가 하나 빠졌다고 얼굴 전체를 수건으로 가리고 다니는 것(삭제)이 아니라, 남아있는 다른 치아들의 모양과 색깔을 분석해서 가장 자연스러운 인공 치아(대치법)를 끼워 넣는 임플란트 수술이다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>결측치를 채우는 알고리즘은 단순한 통계값 대치부터 머신러닝을 활용한 예측 대치까지 진화해 왔다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────┐
+│             [ 결측치 대치(Imputation) 파이프라인 진화 ]      │
+├────────────────────────────────────────────────────────┤
+│ 1. 단순 대치 (Simple Imputation)                       │
+│    - 수치형: 평균(Mean), 중앙값(Median)으로 일괄 채움     │
+│    - 범주형: 최빈값(Mode)이나 &#x27;Unknown&#x27;이라는 새 글자로 채움│
+│    - 한계: 분산이 줄어들고 변수 간의 관계(상관성)가 깨짐      │
+│                                                        │
+│ 2. K-NN Imputer (최근접 이웃 대치)                      │
+│    - 빈칸이 있는 데이터와 가장 비슷한 이웃 K개를 찾음         │
+│    - 그 K개 이웃들의 평균값을 내서 빈칸에 쏙 집어넣음         │
+│                                                        │
+│ 3. MICE (다중 대치법, Multiple Imputation)             │
+│    - 빈칸을 예측하는 머신러닝 모델(회귀, 트리)을 띄움         │
+│    - A 변수의 빈칸을 B, C 변수로 예측해서 채움              │
+│    - B 변수의 빈칸을 채워진 A, C 변수로 예측해서 채움       │
+│    - 이 과정을 수십 번 핑퐁(반복)하며 완벽한 값으로 수렴시킴!   │
+└────────────────────────────────────────────────────────┘
+</code></pre>
+<ol>
+<li><strong>평균 vs 중앙값</strong>: 데이터에 재벌(이상치)이 섞여 있어 평균이 비정상적으로 높을 때는, 평균으로 결측치를 채우면 데이터가 통째로 오염된다. 따라서 실무에서는 평균보다는 <strong>중앙값(Median)</strong> 대치가 훨씬 안전한 베이스라인이다.</li>
+<li><strong>MICE (Multivariate Imputation by Chained Equations)</strong>: 단순히 한 번 채우고 끝내는 것이 아니다. 각 변수의 결측치를 다른 모든 변수를 사용해 '회귀 예측'하는 과정을 체인(Chained)처럼 물고 물리며 10번, 20번 반복한다. 이 핑퐁 과정이 반복될수록 빈칸의 예측값은 놀라울 정도로 정교해진다.</li>
+</ol>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 국어 시험지를 백지로 낸 학생의 점수를 채울 때, 반 평균 50점으로 대충 적는 게 '단순 대치'다. 반면 MICE는 이 학생의 수학 점수, 영어 점수, 아이큐를 모두 컴퓨터에 넣고 "이 정도 실력이면 국어는 75점 맞았겠군"이라고 정교하게 추리해서 채우는 방식이다.</p>
+</blockquote>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>결측치의 발생 원인(Mechanism)에 따라 대치 전략을 다르게 짜야 한다. 이것을 무시하면 대참사가 일어난다.</p>
+<table><thead><tr><th style="text-align: center">결측치 메커니즘</th><th style="text-align: left">정의 및 상황</th><th style="text-align: left">최적의 대치 전략 (Treatment)</th></tr></thead><tbody>
+<tr><td style="text-align: center"><strong>MCAR</strong> (완전 무작위 결측)</td><td style="text-align: left">센서가 우연히 고장 난 경우 (다른 변수와 상관없음)</td><td style="text-align: left">단순 대치(평균/중앙값)나 <strong>삭제(Drop)해도 무방함</strong></td></tr>
+<tr><td style="text-align: center"><strong>MAR</strong> (무작위 결측)</td><td style="text-align: left">"여성은 몸무게를 잘 안 적는다"처럼 다른 변수(성별)와 연관됨</td><td style="text-align: left">다른 변수를 힌트로 쓰는 <strong>MICE, KNN Imputer 필수</strong></td></tr>
+<tr><td style="text-align: center"><strong>MNAR</strong> (비무작위 결측)</td><td style="text-align: left">"우울증 환자는 우울증 설문에 대답 안 한다"처럼 자기 자신의 값과 연관됨</td><td style="text-align: left"><strong>대치 불가!</strong> 결측치 자체를 "응답 안 함(0)"이라는 새로운 정보(Feature)로 써야 함</td></tr>
+</tbody></table>
+<p>트리(Tree) 기반의 앙상블 모델인 <strong>XGBoost나 LightGBM</strong>은 결측치가 들어와도 프로그램이 터지지 않고 "빈칸이면 왼쪽 가지로, 값이 있으면 오른쪽 가지로 가라"는 식으로 결측치 자체를 힌트 삼아 알아서 분기한다. 그래서 최신 캐글(Kaggle) 대회에서는 굳이 결측치를 채우지 않고 트리에 그냥 던져버리는 방식을 선호하기도 한다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 빈칸이 그냥 잉크가 번져서 안 보이는 거라면(MCAR) 대충 채워도 되지만, 학생이 몰라서 일부러 빈칸으로 둔 거라면(MNAR) 억지로 100점을 채워 넣지 말고 "이 문제는 모르는구나"라는 팩트 자체를 평가 점수에 반영해야 한다.</p>
+</blockquote>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p><strong>실무 적용 시나리오:</strong>
+의료 데이터 분석에서 환자의 '혈압' 데이터가 30% 비어 있다. 혈압을 단순 평균(120)으로 채우면 고혈압 환자들의 위험성을 뭉개버리게 된다. 파이썬 <code>scikit-learn</code>의 <code>IterativeImputer</code> (MICE 알고리즘 구현체)를 불러와, 환자의 나이, 체중, 콜레스테롤 수치를 기반으로 빈칸의 혈압을 추론하여 채워 넣는다. 그 결과 혈압 예측의 분산이 원본 데이터와 똑같이 예쁘게 유지된다.</p>
+<p><strong>기술사 판단 포인트 (Trade-off):</strong>
+데이터 파이프라인(ETL) 아키텍처 설계 시 기술사는 **'Data Leakage(정보 누설)'**를 완벽하게 차단해야 한다.</p>
+<ol>
+<li>수많은 초보자들이 전체 데이터에 MICE나 평균 대치를 싹 돌린 다음, 모델 학습용(Train)과 테스트용(Test)으로 쪼갠다.</li>
+<li>이렇게 되면 미래에 들어올 Test 셋의 평균값과 패턴이 Train 셋의 빈칸을 채우는 데 쓰이게 된다. 미래의 정보가 과거의 학습에 몰래 스며드는 치명적 반칙(Data Leakage)이다.</li>
+<li>기술사는 **반드시 Train 셋만 가지고 대치기(Imputer)를 학습(Fit)시킨 뒤, 그 룰(Train의 평균이나 회귀식)을 그대로 Test 셋에 적용(Transform)**하도록 파이프라인을 쪼개는 강제 룰을 심어야 한다.</li>
+</ol>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 모의고사(Train) 빈칸을 채우기 위해 수능 정답지(Test)의 평균 점수 패턴을 훔쳐서 계산하면 당장 모의고사 성적은 잘 나오지만, 실제 수능 날에는 훔쳐볼 패턴이 없어서 시험을 완전히 망치게 된다.</p>
+</blockquote>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>결측치 대치법은 불완전한 현실의 데이터를 머신러닝의 이상적인 세계로 안전하게 건너갈 수 있게 돕는 튼튼한 징검다리다. 빈칸을 지워버림으로써 발생하는 뼈아픈 데이터 손실을 막아주며, 통계적 추론의 힘을 빌려 죽어가는 데이터에 인공호흡기를 달아준다.</p>
+<p>결론적으로 모든 빈칸을 완벽하게 채우는 은탄환(Silver Bullet)은 없다. 대치법은 어디까지나 '가장 그럴듯한 소설'을 쓰는 작업이기 때문이다. 기술사는 평균 대치의 뭉개짐과 MICE의 연산 비용(Cost) 사이에서 시스템의 균형을 잡고, 때로는 "대답하지 않았다"는 빈칸 그 자체(Missingness)를 가장 훌륭한 비즈니스 힌트(Feature)로 승화시키는 통찰력을 발휘해야 한다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 퍼즐에 구멍이 몇 개 뚫렸을 때, 주변 조각의 색깔을 보고 비슷한 색의 크레파스로 구멍을 칠해(대치법) 멀리서 봤을 때 완벽한 그림처럼 보이게 만드는 데이터 복원 마술이다.</p>
+</blockquote>
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>상위 개념</strong>: 데이터 전처리 (Data Preprocessing), 탐색적 데이터 분석 (EDA)</li>
+<li><strong>하위 개념</strong>: 단순 대치 (평균/중앙값), MICE (다중 대치법), K-NN Imputer</li>
+<li><strong>연결 개념</strong>: Data Leakage (데이터 누수), 이상치 (Outlier), XGBoost 결측치 처리</li>
+</ul>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>일기장에 글씨를 쓰다가 물을 흘려서 단어 몇 개가 지워져서 안 보여요 (결측치).</li>
+<li>그냥 그 페이지를 찢어버리면 다른 재밌는 내용도 다 날아가서 아깝잖아요? (삭제의 단점)</li>
+<li>결측치 대치법은 앞뒤 문맥과 다른 날의 일기를 꼼꼼히 읽어보고, "여기에 들어갈 말은 아마 '사과'일 거야!"라고 똑똑하게 추리해서 지워진 글자를 다시 예쁘게 채워 넣는 탐정 놀이랍니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

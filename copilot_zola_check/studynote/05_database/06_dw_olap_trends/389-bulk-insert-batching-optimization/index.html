@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>389. 대용량 트랜잭션 배칭(Batching) 삽입 최적화 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 16, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote database
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="daeyongryang-teuraenjaegsyeonyi-baecing-batching-sabib-coejeoghwa-akitegceo">대용량 트랜잭션의 배칭(Batching) 삽입 최적화 아키텍처</h1>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 데이터베이스에 100만 건의 데이터를 밀어 넣을 때 루프(Loop)를 돌며 단건 <code>INSERT</code> 쿼리를 100만 번 호출하는 것은, 데이터 쓰기 시간보다 네트워크 왕복 시간(RTT)과 트랜잭션 커밋(Commit) 여닫기 등 통신 오버헤드에 99%의 시간을 허비하는 최악의 안티패턴이다.</li>
+<li><strong>가치</strong>: 배칭(Batching) 최적화는 1,000건, 3,000건 단위의 큰 덩어리(Chunk)로 데이터를 메모리에 모았다가 한 번의 네트워크 통신과 단일 트랜잭션으로 묶어버림으로써, 디스크 I/O와 네트워크 병목을 일소하여 삽입(Insert) 성능을 수십 배에서 수백 배까지 비약적으로 폭발시킨다.</li>
+<li><strong>융합</strong>: 이 기법은 애플리케이션 레벨의 <strong>JPA Batch Insert</strong> (<code>hibernate.jdbc.batch_size</code>) 설정부터, 데이터베이스 레벨의 <strong>Multi-row Insert</strong>, 나아가 SQL 파싱(Parsing) 연산조차 생략하고 스토리지 엔진 메모리에 텍스트를 직결로 꽂아 넣는 <strong>PostgreSQL COPY / MySQL LOAD DATA</strong> 명령어와 결합하여 궁극의 데이터 파이프라인을 완성한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: 대용량 트랜잭션 배칭(Batching) 최적화는 애플리케이션 메모리에 생성된 수많은 레코드(Row) 객체를 데이터베이스로 플러시(Flush)할 때, 개별 쿼리로 전송하지 않고 묶음(Batch) 단위로 페이로드(Payload)를 압축하여 전송 횟수와 DB 커밋 횟수를 최소화하는 아키텍처 설계 기법이다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 백엔드 주니어 개발자들이 가장 흔하게 맞닥뜨리는 장애가 "엑셀 파일 10만 줄 업로드 기능을 만들었는데, API 응답에 20분이 걸리고 타임아웃이 터져요"라는 호소다. 이들이 짠 코드를 뜯어보면 십중팔구 <code>for (i=0; i&lt;100,000; i++) { db.save(data[i]); }</code> 형태의 루프가 존재한다.
+이 코드가 물리적으로 왜 느린지 해부해 보자. DB에 데이터를 1건 쓸 때 데이터 엔진이 할당하는 시간은 0.1ms에 불과하다. 하지만 1건을 쓰기 위해 1) WAS 서버에서 DB 서버로 패킷 전송 (네트워크 RTT 1ms), 2) DB가 쿼리 구문 분석 및 실행 계획 생성 (파싱 1ms), 3) 트랜잭션 열기 (Lock 획득), 4) 데이터 기록, 5) Redo 로그 및 트랜잭션 커밋 승인, 6) WAS로 결과 반환 (네트워크 1ms) 이라는 어마어마한 부대 비용이 발생한다. 데이터 1건당 배보다 배꼽이 큰 이 오버헤드(Overhead) 4ms를 10만 번 곱하면 순수 통신 낭비로만 400초(약 7분)가 날아가는 비극이 연출된다.</p>
+</li>
+<li>
+<p><strong>등장 배경 및 기술적 해결</strong>:
+이 네트워크 병목 현상은 하드디스크 시절부터 이어져 온 전통적 RDBMS의 아킬레스건이다. 이를 피하기 위해 DBA와 아키텍트들은 "통신 횟수를 죽이고, 짐칸(Payload)을 넓히는" 물리적 최적화의 길을 택했다. 애플리케이션 서버 프레임워크(Spring JDBC, Hibernate)들은 캐시 메모리에 Insert 구문을 차곡차곡 쌓아뒀다가 한 번에 쏘는 JDBC 배치 드라이버를 기본 지원하게 되었고, 데이터 웨어하우스(DW)로 데이터를 이관하는 ETL/ELT 파이프라인에서는 아예 SQL 문법 자체를 걷어내고 파일을 DB 커널에 직빵으로 찔러 넣는 Bulk Copy(대량 복사) 프로토콜을 탑재하여 페타바이트급 데이터 이관 시대를 견인하고 있다.</p>
+</li>
+</ul>
+<p>이 다이어그램은 10만 번의 삽입 요청이 단건 처리(1-by-1)와 배칭(Batching) 처리일 때 네트워크 파이프라인과 트랜잭션 벽을 통과하는 구조적 차이를 시각화한다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌───────────────────────────────────────────────────────────────┐
+  │         디스크 I&#x2F;O 및 네트워크 병목: 단건 Insert vs Batch Insert 비교 │
+  ├───────────────────────────────────────────────────────────────┤
+  │                                                               │
+  │  [A. 단건 (1-by-1) Insert의 악몽: 네트워크 톨게이트 지옥]             │
+  │   APP ──(Insert 1건)──▶ [ Network (1ms) ] ──▶ DB [ Trx 시작 → 기록 → Commit ] │
+  │   APP ──(Insert 1건)──▶ [ Network (1ms) ] ──▶ DB [ Trx 시작 → 기록 → Commit ] │
+  │   APP ──(Insert 1건)──▶ [ Network (1ms) ] ──▶ DB [ Trx 시작 → 기록 → Commit ] │
+  │   ... (이 짓을 100,000번 반복)                                  │
+  │   ★ 결과: DB는 데이터 쓸 준비 다 됐는데, 앱에서 찔끔찔끔 보내느라           │
+  │           CPU는 놀고 있고 전체 시간은 끝없이 늘어지는 최악의 병목.        │
+  │                                                               │
+  │  [B. Batch Insert 최적화: 물류 트럭 대량 이송]                      │
+  │   APP (내부 메모리에 1,000건 모음 📦)                               │
+  │     │                                                         │
+  │     └──(1,000건 한 번에 묶음 전송)──▶ [ Network (단 1번 통과!) ]   │
+  │                                           │                   │
+  │                                           ▼                   │
+  │               DB [ Trx 딱 1번 시작 → 메모리에 연속 1,000건 쾌속 기록 → 단 1번 Commit! ] │
+  │                                                               │
+  │   ★ 결과: 10만 번의 네트워크 왕복과 10만 번의 Commit 비용이,             │
+  │           단 100번의 왕복과 100번의 커밋으로 (1&#x2F;1000 압축) 극단적 소멸!🚀│
+  └───────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 도식의 핵심은 '배송 효율성'이다. A 방식은 택배 기사가 트럭에 택배 상자를 10만 개 싣고 아파트에 도착해서, 1층 현관 비밀번호를 누르고 들어가 1층에 물건 하나 놓고 다시 밖으로 나와 문을 닫는 행위(Transaction 열고 닫기)를 10만 번 반복하는 미친 짓이다. 반면 B 방식(Batching)은 택배 기사가 커다란 카트(Memory Buffer)에 상자 1,000개를 한꺼번에 싣고 현관문을 단 한 번만 열고 들어간 뒤(Begin Transaction), 복도를 쭉 돌며 1,000개를 다 뿌리고 나서야 문을 닫고(Commit) 나옵니다. 데이터베이스 엔진 입장에서 연속된 블록에 데이터를 쓰는 순차 I/O는 극도로 빠르지만, 트랜잭션 정합성(ACID) 보장을 위해 Redo 로그를 디스크에 강제 플러시(fsync)하는 커밋(Commit) 작업은 엄청나게 무거운 시스템 콜(System Call)이다. 배칭은 이 무거운 커밋의 횟수를 1/1,000로 쪼개어 버림으로써 데이터베이스가 디스크 경합 없이 본연의 쓰기(Write) 능력을 100% 발휘하도록 해방해 준다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 물 한 숟가락(1건 데이터)을 떠서 1km 떨어진 양동이(DB)에 붓고 돌아오기를 10만 번 반복하면 다리가 부러집니다. 하지만 거대한 수조 트럭(배치 버퍼)에 물을 꽉 채워서 딱 100번만 운전해서 다녀오면 같은 양의 물을 순식간에 옮길 수 있는 통신 낭비 최소화의 물리학입니다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri-deep-dive">Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)</h2>
+<h3 id="baecing-batching-sabibeul-guhyeonhaneun-3dae-akitegceo-gyeceung">배칭(Batching) 삽입을 구현하는 3대 아키텍처 계층</h3>
+<p>배칭은 단순히 쿼리 문법의 문제가 아니라, 애플리케이션 드라이버부터 RDBMS 엔진 코어에 이르기까지 어느 계층(Layer)에서 최적화를 때릴 것인가의 전술이다.</p>
+<table><thead><tr><th style="text-align: left">최적화 기법</th><th style="text-align: left">구현 계층</th><th style="text-align: left">쿼리 형태 및 내부 동작 원리</th><th style="text-align: left">속도</th><th style="text-align: left">비유</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Multi-row Insert</strong></td><td style="text-align: left">SQL 구문 / 드라이버</td><td style="text-align: left"><code>INSERT INTO t VALUES (1), (2), (3)...;</code> <br>하나의 쿼리 문장에 수백 개의 <code>VALUES</code> 절을 길게 이어 붙여 파싱 비용(Parsing Cost) 1번으로 통일</td><td style="text-align: left">빠름</td><td style="text-align: left">우편 묶음 끈으로 묶어 발송</td></tr>
+<tr><td style="text-align: left"><strong>JDBC Batch Update</strong> (JPA 적용)</td><td style="text-align: left">애플리케이션 버퍼 (JVM)</td><td style="text-align: left"><code>PreparedStatement.addBatch()</code> $\rightarrow$ <code>executeBatch()</code>. 동일한 쿼리 뼈대(<code>?</code>)를 재사용하고, 파라미터 메모리 배열을 모았다가 청크(Chunk)로 쏨</td><td style="text-align: left">매우 빠름</td><td style="text-align: left">박스에 담아 팔레트째 상차</td></tr>
+<tr><td style="text-align: left"><strong>COPY / LOAD DATA 명령어</strong></td><td style="text-align: left">RDBMS 스토리지 엔진 코어</td><td style="text-align: left">SQL 파서(Parser)를 완전히 바이패스(Bypass)하고, CSV 등 텍스트 바이너리 스트림을 DB 스토리지 블록에 램 다이렉트 매핑으로 때려 박음</td><td style="text-align: left"><strong>극강</strong></td><td style="text-align: left">덤프트럭 짐칸 쏟아붓기</td></tr>
+</tbody></table>
+<h3 id="orm-hibernate-jpa-akitegceoeseoyi-batch-insert-dilrema">ORM (Hibernate/JPA) 아키텍처에서의 Batch Insert 딜레마</h3>
+<p>엔터프라이즈 환경에서 가장 우아하게 사용되는 JPA 기술은 태생적으로 배치 인서트에 치명적인 약점(제약 조건)을 가지고 있다.</p>
+<ol>
+<li><strong><code>GenerationType.IDENTITY</code> (Auto Increment)의 저주</strong>: (380번 문서 참조) MySQL의 Auto Increment 속성을 쓰면, JPA가 엔티티를 <code>persist()</code> 할 때 영속성 컨텍스트 1차 캐시에 담을 식별자(ID)를 알 길이 없다. 결국 울며 겨자 먹기로 <code>addBatch()</code>를 포기하고 DB에 건바이건으로 <code>INSERT</code>를 때려 ID를 회수해 오는 강제 싱글턴(Singleton) 로직으로 퇴화한다. 즉, MySQL + JPA Identity 환경에서는 아무리 <code>yml</code>에 배치 사이즈 설정을 걸어도 Batch Insert가 절대 동작하지 않는다.</li>
+<li><strong>해결 우회로</strong>: 이를 타파하기 위해 아키텍트는 1) 식별자를 <code>UUID</code>나 타임스탬프로 애플리케이션 단에서 미리 생성해 박아 넣거나, 2) DB가 <code>Sequence</code> 객체를 지원한다면 시퀀스 <code>allocationSize</code> 옵션을 통해 뭉텅이로 ID를 선점하여 1차 캐시에 매핑시킨 후 Batch Insert를 폭발시키는 설계를 적용해야 한다. 혹은 JPA를 잠시 우회하여 Spring JDBC Template의 <code>batchUpdate</code>를 직접 호출하는 CQRS 패턴 식의 이원화 타협이 빈번하게 일어난다.</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌──────────────────────────────────────────────────────────────────┐
+  │        JPA &#x2F; JDBC 배치 인서트(Batch Insert) 아키텍처 메모리 모델      │
+  ├──────────────────────────────────────────────────────────────────┤
+  │                                                                  │
+  │  [ Application JVM Memory ]                                      │
+  │     for(int i=0; i&lt;10,000; i++) { db.save(entity[i]); }          │
+  │                                                                  │
+  │  1. JDBC Driver 내부 배치 버퍼 (설정: batch_size = 1,000)           │
+  │     [ E1, E2, E3 ............. E1000 ] ── 꽉 참! ──▶ 플러시 (Flush)│
+  │     [ E1001, E1002 ........... E2000 ] ── 꽉 참! ──▶ 플러시 (Flush)│
+  │                                                                  │
+  │  2. Network 통신 전송 (총 10,000건을 10번의 덩어리 패킷으로 송출)        │
+  │                                                                  │
+  │  [ Database Server ]                                             │
+  │     - 1번째 수신: INSERT 1000건 실행 ──▶ Commit 🟢                 │
+  │     - 2번째 수신: INSERT 1000건 실행 ──▶ Commit 🟢                 │
+  │                                                                  │
+  │  ★ 주의: 만약 2번째 수신(1001~2000) 중 1500번째 레코드에 &#x27;중복 에러&#x27;가 터지면? │
+  │     ▶ 배칭(Batching) 실패 예외 발생! 프레임워크는 어떤 놈이 실패했는지       │
+  │       정확히 알기 힘듦. 결국 전체 트랜잭션을 Rollback 하고 단건 재처리하는     │
+  │       Fall-back(예외 우회) 로직 작성이 아키텍트의 몫이 됨.                  │
+  └──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 구조도는 마법 같아 보이는 Batch Insert의 치명적 리스크(Risk)를 경고한다. 1,000건을 한 덩어리(Chunk)로 묶어 보내면 속도는 경이롭지만, 데이터가 더러워(Dirty) 1,000개 중 단 1개라도 <code>NULL</code> 제약조건이나 <code>Unique</code> 중복 키 에러가 나면 데이터베이스는 1,000건짜리 덩어리 전체를 <code>Rollback</code> 시켜버린다. (All or Nothing). 에러 메시지는 "Batch Update Failed"로 통째로 떨어지며, 개발자는 1,000개 중 도대체 몇 번째 인덱스의 데이터가 범인인지 역추적(Trace)하기가 몹시 까다롭다. 따라서 배칭을 적용할 원천 데이터는 애플리케이션 단의 입력값 검증(Validation) 파이프라인에서 이미 100% 무결성을 확보한 정제된 상태(Clean Data)여야만 한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 1,000개의 계란을 하나의 큰 바구니에 담아 배달(배칭)하면 빨리 가지만, 가다가 돌부리에 걸리면 바구니 안의 계란 1,000개가 전부 박살(Rollback) 나고 맙니다. 어떤 계란이 불량인지 찾기도 힘들죠. 그래서 큰 바구니를 쓸 때는 계란 포장(데이터 검증)을 훨씬 꼼꼼히 해야 하는 책임이 따릅니다.</li>
+</ul>
+<hr />
+<h2 id="iii-yunghab-bigyo-mic-dagagdo-bunseog-comparison-synergy">Ⅲ. 융합 비교 및 다각도 분석 (Comparison &amp; Synergy)</h2>
+<h3 id="beolkeu-deiteo-rodeu-gisul-maeteurigseu-bigyo">벌크 데이터 로드 기술 매트릭스 비교</h3>
+<p>대량의 데이터를 DB에 쏟아부을 때, "어디서부터" 데이터를 "어떻게" 넣을 것인가에 따라 무기의 급이 달라진다.</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">단건 INSERT (Loop)</th><th style="text-align: left">Multi-Row / JDBC Batch</th><th style="text-align: left">COPY / LOAD DATA (Native)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>초당 삽입 건수(TPS)</strong></td><td style="text-align: left">수십 ~ 수백 건</td><td style="text-align: left">수천 ~ 수만 건</td><td style="text-align: left"><strong>초당 수십만 ~ 수백만 건</strong></td></tr>
+<tr><td style="text-align: left"><strong>병목 원인</strong></td><td style="text-align: left">네트워크 RTT, 잦은 Commit</td><td style="text-align: left">애플리케이션 JVM 힙 메모리 OOM 위험</td><td style="text-align: left">스토리지 디스크 I/O 한계치</td></tr>
+<tr><td style="text-align: left"><strong>SQL 파싱 오버헤드</strong></td><td style="text-align: left">매 건당 파싱 (10만 번)</td><td style="text-align: left">쿼리 뼈대 캐싱 (PreparedStatement)</td><td style="text-align: left"><strong>파싱 아예 생략 (Bypass)</strong></td></tr>
+<tr><td style="text-align: left"><strong>에러 핸들링 난이도</strong></td><td style="text-align: left">매우 쉬움 (1건씩 예외 처리)</td><td style="text-align: left">어려움 (배치 전체 Rollback 대비 필요)</td><td style="text-align: left">거의 불가능 (파일 형식/인코딩 무결성 엄격)</td></tr>
+<tr><td style="text-align: left"><strong>적용 권장 시나리오</strong></td><td style="text-align: left">회원가입, 단건 게시글 작성</td><td style="text-align: left">일일 정산 결과 적재, 카트 상품 일괄 담기</td><td style="text-align: left">DW 마이그레이션, 1천만 건 엑셀 초기화</td></tr>
+</tbody></table>
+<h3 id="seutoriji-enjin-baeggeuraundeuwayi-yunghab-sineoji-indegseu-jeyagjogeon-bihwalseonghwa">스토리지 엔진 백그라운드와의 융합 시너지 (인덱스/제약조건 비활성화)</h3>
+<p>단순히 <code>COPY</code> 명령어를 쓴다고 100% 최적화가 완성되는 것은 아니다. RDBMS는 데이터가 들어올 때마다 B-Tree 인덱스를 업데이트하고, 외래 키(FK)가 엮여있는지 무결성 검사를 수행한다. 1억 건을 쏟아붓는다면 1억 번의 트리 밸런싱(Tree Re-balancing)이 발생해 속도가 처참해진다.
+따라서 극강의 백엔드 엔지니어링은 **"데이터를 쏟아붓기 전에 임시로 인덱스와 FK 제약조건을 <code>DISABLE</code> 시키고(Drop Index), 1억 건의 데이터를 벌크 삽입한 뒤, 마지막에 인덱스를 한 방에 재생성(Rebuild Index)하는 융합 아키텍처"**를 채택한다. 이는 데이터가 다 모인 상태에서 메모리 정렬을 통해 B-Tree를 밑단에서부터 한 번에 구워내는 상향식(Bottom-up) 트리 빌딩이 건바이건 삽입보다 수백 배 빠르다는 알고리즘적 통찰에 기인한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 책장에 책 1만 권을 꽂을 때(데이터 삽입), 책 한 권을 꽂을 때마다 도서관 색인 카드(인덱스)를 알파벳순으로 다시 고쳐 쓰면 시간이 평생 걸립니다. 똑똑한 사서는 색인 카드를 아예 덮어두고(Disable Index) 빈 책장에 1만 권을 종류별로 와르루 던져 넣은 뒤, 마지막에 색인 카드를 한 번에 몰아서 작성(Rebuild Index)하는 마법을 씁니다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsajeog-pandan-strategy-decision">Ⅳ. 실무 적용 및 기술사적 판단 (Strategy &amp; Decision)</h2>
+<h3 id="silmu-sinario-mic-seolgye-antipaeteon">실무 시나리오 및 설계 안티패턴</h3>
+<ol>
+<li>
+<p><strong>시나리오 — JVM Heap Memory 터짐 (Out Of Memory) 사태</strong>: 매월 1일 새벽, 배치(Batch) 서버가 전월 고객 결제 데이터 5,000만 건을 정산 통계 테이블에 Insert 하다가 서버가 붉은색 경고등을 뿜으며 다운(OOM)되었다. JPA의 영속성 컨텍스트가 5,000만 개의 객체를 모두 <code>List</code>에 담아 <code>saveAll()</code>로 넘기려다가 JVM 힙 메모리(8GB)를 초과했기 때문이다.</p>
+<ul>
+<li><strong>의사결정</strong>: 메모리의 물리적 한계를 무시한 안티패턴이다. JPA를 사용할 때는 반드시 <strong>청크 지향 처리(Chunk-oriented Processing)</strong> 아키텍처 (예: Spring Batch)를 도입해야 한다. <code>PagingItemReader</code>로 5,000만 건 중 딱 2,000건(Chunk Size)만 메모리로 퍼올려 읽고, 이 2,000건을 <code>JdbcBatchItemWriter</code>로 DB에 플러시(Flush)한 뒤, <code>EntityManager.clear()</code>를 호출하여 JVM 1차 캐시를 강제로 빗자루로 쓸어(Clear) 가비지 컬렉션(GC)을 유도해야 한다. 이 과정을 2만 5천 번 루프 도는 파이프라인으로 설계해야 메모리 사용량을 100MB 언더로 평탄하게 유지하며 밤새 안전하게 배치 작업을 완수할 수 있다.</li>
+</ul>
+</li>
+<li>
+<p><strong>안티패턴 — 배칭 삽입 시 교착 상태(Deadlock) 유발</strong>: 3대의 API 서버가 동시에 결제 완료 데이터를 Batch Insert로 쏟아붓고 있다. 그런데 서버 A는 100건을 [유저 1, 유저 2, 유저 3] 순서로 넣고, 서버 B는 [유저 3, 유저 1, 유저 2] 순서로 넣다가 MySQL의 갭 락(Gap Lock)과 넥스트 키 락(Next-key Lock)이 엉키며 처참한 데드락 데스 스파이럴(Deadlock Death Spiral)이 터졌다.</p>
+<ul>
+<li><strong>결과</strong>: 다중 스레드가 무작위 순서로 덩어리(Batch) 데이터를 삽입하면, RDBMS 내부에서 서로가 쥔 인덱스 범위 락(Range Lock)을 물고 늘어지는 교착 상태 필연적으로 발생한다.</li>
+<li><strong>해결책</strong>: Batch Insert 배열(List)을 데이터베이스로 전송하기 전에, 반드시 애플리케이션 메모리 단에서 덩어리 내부의 데이터를 **기본 키(PK)나 클러스터링 인덱스 기준 오름차순(ASC)으로 정렬(Sorting)**해야 한다. 모든 쓰레드가 동일한 물리적 순방향(Forward) 화살표를 가지고 디스크 I/O를 밀어내게 강제함으로써 데드락 충돌 확률을 0%로 소멸시키는 것이 고도화된 튜닝 기법이다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="daeyongryang-deiteo-jeogjae-load-akitegceo-yisagyeoljeong-teuri">대용량 데이터 적재(Load) 아키텍처 의사결정 트리</h3>
+<p>수천만 건의 데이터를 어떻게 DB에 구겨 넣을 것인가? 물리학적 장벽에 대한 가이드라인이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌───────────────────────────────────────────────────────────────────┐
+  │           대용량 트랜잭션 삽입(Insert) 튜닝 전략 의사결정 트리            │
+  ├───────────────────────────────────────────────────────────────────┤
+  │                                                                   │
+  │   [수백만 건의 데이터를 DB 테이블로 적재해야 하는 요건 발생]                    │
+  │                │                                                  │
+  │                ▼                                                  │
+  │      적재할 데이터 소스가 외부 파일(CSV, TSV, 압축파일) 형태인가?            │
+  │          ├─ 예 (타 시스템 덤프 데이터, 로그 파일 등)                       │
+  │          │      └──▶ [ RDBMS Native &#x27;COPY &#x2F; LOAD DATA&#x27; 명령어 강제 도입]│
+  │          │             - 앱 서버를 통과시키지 말고 DB가 파일을 직독하게 설정   │
+  │          │                                                        │
+  │          └─ 아니오 (앱 로직에서 실시간 계산&#x2F;가공되어 생성되는 객체 데이터)     │
+  │                │                                                  │
+  │                ▼                                                  │
+  │      사용 중인 ORM 환경이 MySQL의 Auto Increment(Identity)를 의존하는가? │
+  │          ├─ 예 ──▶ [ JPA를 포기하고 Spring JDBC BatchUpdate 혼용 설계 ]   │
+  │          │         - Identity 한계로 JPA 배치가 작동안함. 네이티브 쿼리 우회.│
+  │          │                                                        │
+  │          └─ 아니오 (PostgreSQL, Oracle 또는 Sequence &#x2F; UUID 사용 중)    │
+  │                │                                                  │
+  │                ▼                                                  │
+  │     [ JPA &#x2F; Hibernate 배치 처리(batch_size 튜닝) 전격 활성화! ]         │
+  │       - application.yml에 &#x27;batch_size=1000&#x27; 및 &#x27;order_inserts=true&#x27; 설정 │
+  │       - 영속성 컨텍스트(1차 캐시) 터짐 방지를 위해 Chunk 단위 주기적 clear() 강제│
+  │                                                                   │
+  │   판단 포인트: &quot;단건 처리는 폭포수를 종이컵으로 퍼담는 짓이다.                 │
+  │                데이터의 호스를 가장 넓은 펌프(Batch&#x2F;COPY)에 직결 연결하라.&quot; │
+  └───────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 초보 개발자가 짜는 루프 인서트는 폭포수를 티스푼으로 퍼서 옮기는 행위다. 데이터 엔지니어링의 본질은 이 티스푼을 얼마나 빨리 거대한 송수관(Pipeline)으로 교체하느냐에 있다. 가장 우아한 방법은 애플리케이션 레이어 자체를 생략(Bypass)하는 것이다. 만약 데이터가 파일 형태라면, 자바 코드로 <code>BufferedReader</code>를 열어 파싱하는 순간 메모리와 CPU 자원 낭비가 극심해진다. DB 엔진 자체가 제공하는 <code>LOAD DATA INFILE</code> (MySQL)이나 <code>COPY</code> (PostgreSQL) 명령어를 때리면, 디스크에서 디스크로 바이너리 스트림이 직결되어 파싱 오버헤드 0의 상태로 초당 수십만 건이 빨려 들어간다. 만약 애플리케이션 비즈니스 로직(할인율 계산 등)을 반드시 태워야 하는 도메인이라면, JPA의 고상한 1차 캐시를 적절히 비워주면서(Clear) 메모리 누수를 방어하고 <code>order_inserts=true</code> 옵션으로 데드락을 방어하는 고도의 하이버네이트(Hibernate) 프레임워크 제어 역량이 필수적이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 10만 명의 관객을 경기장에 입장시킬 때(데이터 로드), 정문에서 경비원이 한 명씩 표를 검사하고 들여보내는 것(단건 인서트)은 10시간이 걸립니다. 배칭(Batch Insert)은 1,000명씩 묶어서 버스에 태운 채 검사하고 문을 열어주는 것이며, 카피(COPY 명령어)는 아예 경기장 벽을 부수고 10만 명을 한꺼번에 밀어 넣은 뒤 나중에 벽을 고치는(인덱스 리빌딩) 상상 초월의 스케일입니다.</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">무지성 단건 루프(Loop) Insert</th><th style="text-align: left">Batching 및 벌크 튜닝 완료 시</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량 (시간)</strong></td><td style="text-align: left">10만 건 적재 시 수 분 ~ 수십 분 소요</td><td style="text-align: left">묶음 전송으로 통신 및 락 점유율 소멸</td><td style="text-align: left">대용량 배치 쓰기(Write) 작업 시간 <strong>90% 이상 단축</strong></td></tr>
+<tr><td style="text-align: left"><strong>정량 (네트워크)</strong></td><td style="text-align: left">10만 번의 쿼리 요청과 TCP/IP 핑퐁</td><td style="text-align: left">단 100번의 패킷 압축 전송 (Chunk=1000)</td><td style="text-align: left">DB 접속 세션 및 네트워크 I/O 대역폭 <strong>사용량 1/1,000 절감</strong></td></tr>
+<tr><td style="text-align: left"><strong>정성 (자원)</strong></td><td style="text-align: left">장기간 Trx 점유로 인한 타 API 타임아웃</td><td style="text-align: left">DB의 트랜잭션 및 Undo Log 부하 순간 해소</td><td style="text-align: left">메인 서비스 운영 시간 중에도 안정적인 배치 파이프라인 공존 확보</td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang">미래 전망</h3>
+<ul>
+<li><strong>스트리밍 파이프라인과의 마이크로 배칭(Micro-batching)</strong>: 과거에는 새벽에 한 번 1억 건을 배칭하는 ETL 방식이었다면, 현재는 Kafka나 Spark Streaming과 융합하여 1초에 한 번씩 수만 건의 덩어리를 끊임없이 쏘아대는 마이크로 배칭(Micro-batching) 아키텍처로 진화하여 실시간 분석(Real-time Analytics)과 대용량 I/O 방어를 동시에 달성하고 있다.</li>
+<li><strong>클라우드 데이터 레이크 (Cloud Data Lake) 다이렉트 덤프</strong>: Snowflake나 Redshift 같은 최신 클라우드 DW는 낡은 <code>INSERT</code> 쿼리를 버리고, 데이터 파이프라인에서 S3나 GCS 버킷에 압축된 Parquet 파일을 떨구기만 하면, 클라우드 컴퓨팅 노드가 파티션을 쪼개서 수만 개의 쓰레드로 파일을 뜯어먹고 저장하는 병렬 벌크 로딩(Parallel Bulk Loading, <code>COPY INTO</code>) 방식을 글로벌 스탠다드로 채택하고 있다.</li>
+</ul>
+<h3 id="camgo-pyojun">참고 표준</h3>
+<ul>
+<li><strong>JDBC Statement Batching Specification</strong>: 자바 표준 데이터베이스 통신 규격에서 다중 쿼리 압축 전송을 권고하는 성능 튜닝 표준</li>
+<li><strong>Hibernate Batching Architecture</strong>: JPA 환경에서 JDBC 배치 드라이버를 투명하게 호출하고 영속성 캐시를 우회하기 위한 프레임워크 튜닝 가이드</li>
+</ul>
+<p>서버 개발자가 처음 작성한 단건 삽입 코드는 테스트 DB에서는 찰나의 속도로 돌아가며 완벽해 보인다. 그러나 그 코드가 운영망에 올라가 수백만 개의 트래픽 해일을 만나는 순간, 데이터베이스는 쏟아지는 커밋(Commit) 폭격과 네트워크 핑퐁에 시달리며 질식해 버린다. 대용량 트랜잭션의 배칭(Batching) 최적화는 단순히 "속도를 빠르게 하는 팁"이 아니다. 묶어내지 않으면 시스템이 터진다는 물리학의 절대 법칙을 이해하고, 네트워크의 공차 시간과 디스크 암(Arm)의 물리적 진동을 최소한으로 줄여 데이터베이스 본연의 처리량을 해방시켜 주는 서버 아키텍트의 필수 방어 본능이자 가장 강력한 인프라 공학이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 우물을 파기 위해 삽(단건 인서트)으로 천 번 흙을 퍼내는 사람은 성실해 보이지만 바보입니다. 진정한 아키텍트는 하루 종일 삽질을 하는 대신 포크레인(Batch Insert)과 다이너마이트(COPY)를 동원해 단 세 번의 작업으로 우물을 터트려버리고 쏟아지는 물줄기 속에서 유유히 커피를 마십니다.</li>
+</ul>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Round-Trip Time (RTT)</strong></td><td style="text-align: left">애플리케이션과 DB 간의 네트워크 통신 왕복 시간. 배칭(Batching)이 타파하고자 하는 제1의 무의미한 낭비 요소(병목)다.</td></tr>
+<tr><td style="text-align: left"><strong>ACID 트랜잭션 커밋 (Commit)</strong></td><td style="text-align: left">1건을 쓰나 1만 건을 쓰나 무조건 디스크(Redo Log)에 내려적어야 끝나는 무거운 비용이므로, 배칭을 통해 커밋 횟수를 줄이는 것이 핵심이다.</td></tr>
+<tr><td style="text-align: left"><strong>청크 지향 처리 (Chunk-oriented)</strong></td><td style="text-align: left">무한정 메모리에 담으면 OOM(Out of Memory)이 나므로, 1,000개 단위 등 정해진 상자(Chunk) 크기만큼만 모아서 DB로 플러시하는 방어적 설계다.</td></tr>
+<tr><td style="text-align: left"><strong>OOM (Out of Memory)</strong></td><td style="text-align: left">메모리를 고려하지 않고 무식하게 루프(<code>List.addAll</code>)를 돌려 배칭을 시도할 때 JVM 힙을 박살 내고 서버를 뻗게 만드는 치명적 안티패턴이다.</td></tr>
+<tr><td style="text-align: left"><strong>ETL / ELT 파이프라인</strong></td><td style="text-align: left">여러 DB의 데이터를 모아 DW로 이관하는 작업으로, 이들의 핏줄을 흐르는 피가 바로 COPY 명령어와 Batch Insert 통신 규격이다.</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>레고 블록 1만 개를 친구 방으로 옮겨야 하는데, 내 손에는 블록이 딱 1개만 들어가서 만 번이나 문을 열고 닫으며 뛰어갔다 와야 해요. (너무 힘들어서 쓰러지겠죠?)</li>
+<li>**배칭(Batching)**은 커다란 수레를 가져와서 레고 블록 1,000개를 한 번에 꽉 채운 다음, 문을 한 번만 열고 들어가서 확 부어버리는 엄청 똑똑한 꼼수예요.</li>
+<li>수레로 10번만 갔다 오면 1만 개를 순식간에 다 옮길 수 있으니까, 심부름도 빨리 끝나고 친구 방 문(데이터베이스)이 고장 날 일도 없답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>567. 원자적 읽기-수정-쓰기 (Atomic Read-Modify-Write, RMW) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 20, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote computer architecture
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 원자적 읽기-수정-쓰기 (Atomic RMW)는 메모리에서 값을 읽고, 수정하고, 다시 쓰는 일련의 과정을 중간에 중단되거나 간섭받지 않는 단일 원자 단위(Atomic Unit)로 수행하는 하드웨어 명령어 집합이다.</li>
+<li><strong>가치</strong>: 멀티코어 환경에서 소프트웨어 락(Lock) 없이도 데이터 정합성을 보장하며, 고성능 병렬 알고리즘과 락-프리(Lock-free) 자료구조의 핵심 근간을 제공한다.</li>
+<li><strong>판단 포인트</strong>: 과도한 경합 발생 시 발생하는 캐시 라인 바운싱(Bouncing) 오버헤드와 ABA 문제 같은 논리적 한계를 고려하여, 적절한 백오프(Back-off) 전략 및 보조 기법과 병행해야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<h3 id="1-donggihwayi-geunbonjeog-munje-biweonjajeog-yeonsanyi-bigeug">1. 동기화의 근본적 문제: 비원자적 연산의 비극</h3>
+<p>현대 컴퓨터 구조에서 대부분의 고수준 언어 명령어는 CPU 내부적으로 여러 개의 마이크로 연산으로 쪼개집니다. 예를 들어, 단순히 변수 값을 1 증가시키는 <code>count++</code> 연산은 실제로 **Load (읽기) -&gt; Increment (수정) -&gt; Store (쓰기)**라는 세 단계의 독립된 명령어로 변환됩니다.</p>
+<p>문제는 멀티스레드 환경에서 발생합니다. 스레드 A가 값을 읽은 직후, 아직 수정하여 쓰기 전에 스레드 B가 동일한 값을 읽어가 버리면, 두 스레드가 각자 1을 더해 썼음에도 불구하고 실제 결과는 2가 아닌 1만 증가하는 <strong>데이터 유실(Lost Update)</strong> 현상이 발생합니다. 이를 경쟁 상태(Race Condition)라고 합니다.</p>
+<h3 id="2-hadeuweeojeog-haegyeolcaegyi-pilyoseong">2. 하드웨어적 해결책의 필요성</h3>
+<p>이러한 경쟁 상태를 소프트웨어적인 락(Mutex, Semaphore)으로만 해결하려 하면, 커널 모드 진입에 따른 컨텍스트 스위칭 비용과 대기 시간으로 인해 시스템 전체의 처리량이 급격히 저하됩니다. 따라서 CPU 설계자들은 하드웨어 로직 수준에서 이 3단계를 "절대 쪼개지지 않는 하나"로 묶어주는 특수 명령어를 도입했습니다. 이것이 바로 **원자적 RMW (Atomic Read-Modify-Write)**입니다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 일반 연산이 '서류를 꺼내서(Read), 내용을 고치고(Modify), 다시 서류함에 넣는(Write) 과정 중에 누가 서류를 채갈 수 있는 위험한 방식'이라면, 원자적 RMW는 '서류함을 통째로 잠근 채 그 안에서 순식간에 수정을 끝내고 다시 잠금을 푸는 원터치 작업'과 같습니다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="1-hadeuweeo-guhyeonyi-du-gaji-cug-bus-lock-vs-cache-lock">1. 하드웨어 구현의 두 가지 축: Bus Lock vs. Cache Lock</h3>
+<p>CPU가 메모리 접근의 원자성을 보장하기 위해 사용하는 기술은 시대와 아키텍처에 따라 진화해 왔습니다.</p>
+<h4 id="1-bus-lock-gwageo-mic-teugsu-sanghwang">(1) Bus Lock (과거 및 특수 상황)</h4>
+<ul>
+<li><strong>메커니즘</strong>: CPU가 메모리 버스에 <code>LOCK#</code> 신호를 보냅니다. 이 신호가 활성화된 동안 메모리 컨트롤러는 다른 모든 코어의 메모리 접근 요청을 차단합니다.</li>
+<li><strong>특징</strong>: 확실한 원자성을 보장하지만, 시스템 전체의 메모리 대역폭을 점유하므로 성능 저하가 매우 큽니다.</li>
+</ul>
+<h4 id="2-cache-lock-hyeondaejeog-bangsig">(2) Cache Lock (현대적 방식)</h4>
+<ul>
+<li><strong>메커니즘</strong>: <strong>MESI(Modified, Exclusive, Shared, Invalid)</strong> 캐시 일관성 프로토콜을 활용합니다. RMW 연산을 수행하려는 코어가 해당 데이터가 포함된 캐시 라인을 'Exclusive' 또는 'Modified' 상태로 점유합니다.</li>
+<li><strong>특징</strong>: MESI 프로토콜에 의해 다른 코어는 해당 캐시 라인을 읽거나 쓸 수 없는 상태가 되며, CPU는 버스 전체를 잠그지 않고도 캐시 내부에서 원자적 연산을 완수할 수 있습니다.</li>
+</ul>
+<h3 id="2-juyo-weonjajeog-rmw-myeongryeongeo-yuhyeong">2. 주요 원자적 RMW 명령어 유형</h3>
+<table><thead><tr><th style="text-align: left">명령어 명칭</th><th style="text-align: left">동작 원리</th><th style="text-align: left">주요 활용처</th></tr></thead><tbody>
+<tr><td style="text-align: left">Test-and-Set (TAS)</td><td style="text-align: left">값을 읽으면서 동시에 1(True)을 기록</td><td style="text-align: left">기본 스핀락(Spinlock) 구현</td></tr>
+<tr><td style="text-align: left">Compare-and-Swap (CAS)</td><td style="text-align: left">현재 값이 예상 값과 같을 때만 새 값으로 교체</td><td style="text-align: left">락-프리 자료구조, 데이터베이스 OCC</td></tr>
+<tr><td style="text-align: left">Fetch-and-Add (FAA)</td><td style="text-align: left">이전 값을 반환하고 동시에 특정 값을 더함</td><td style="text-align: left">카운터, 티켓 락(Ticket Lock)</td></tr>
+<tr><td style="text-align: left">Exchange (XCHG)</td><td style="text-align: left">두 메모리/레지스터 값을 원자적으로 교환</td><td style="text-align: left">락 변수 획득 및 해제</td></tr>
+</tbody></table>
+<h3 id="3-hadeuweeo-sujunyi-silhaeng-heureum-ascii-daieogeuraem">3. 하드웨어 수준의 실행 흐름 (ASCII 다이어그램)</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text"> [ CPU Core A ]          [ System Bus &#x2F; Cache ]          [ CPU Core B ]
+       │                         │                             │
+ 1. CMPXCHG 시도 ───────────▶ [MESI: Exclusive 권한 획득]       │
+       │                         │                             │
+       │                         │◀────────── 2. Read 요청 (차단됨)
+       │                         │                             │
+ 3. 값 비교 &amp; 교체 완료 ────────▶ [MESI: Modified 상태]          │
+       │                         │                             │
+ 4. 원자적 구간 종료 ──────────▶ [권한 해제] ──────────────────▶ 5. 접근 허용
+</code></pre>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 버스 락은 '동네 전체의 전기를 끊고 우리 집 전구만 갈아 끼우는 무식한 방법'이라면, 캐시 락은 '우리 집 전구 주위에 울타리를 쳐서 옆집 사람이 못 건드리게 하고 순식간에 갈아 끼우는 스마트한 방법'입니다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="1-cas-compare-and-swap-vs-ll-sc-load-link-store-conditional">1. CAS (Compare-and-Swap) vs. LL/SC (Load-Link / Store-Conditional)</h3>
+<p>원자적 연산을 구현하는 두 가지 주요 철학이 있습니다.</p>
+<ul>
+<li><strong>CAS (x86 아키텍처 중심)</strong>: "값이 A이면 B로 바꿔라"라는 단일 명령어를 사용합니다. 구현이 직관적이지만 ABA 문제에 취약합니다.</li>
+<li><strong>LL/SC (ARM, RISC-V 중심)</strong>: <code>Load-Link</code>로 주소를 감시하고, <code>Store-Conditional</code>로 그사이 변경이 없었을 때만 쓰기에 성공합니다. 하드웨어적으로 ABA 문제를 자연스럽게 방지할 수 있습니다.</li>
+</ul>
+<h3 id="2-weonjajeog-yeonsan-vs-sopeuteuweeo-rag-mutex">2. 원자적 연산 vs. 소프트웨어 락 (Mutex)</h3>
+<ul>
+<li><strong>원자적 연산</strong>: 하드웨어 명령어로 즉시 처리. 대기 시간이 거의 없으나 복잡한 로직 구현이 어렵습니다.</li>
+<li><strong>소프트웨어 락</strong>: OS 커널의 관리를 받음. 스레드를 재울 수 있어 리소스 낭비가 적으나, 컨텍스트 스위칭 비용이 발생합니다.</li>
+</ul>
+<h3 id="3-memori-baerieo-memory-barrier-wayi-yeongyeol">3. 메모리 배리어 (Memory Barrier)와의 연결</h3>
+<p>원자적 RMW 명령어는 보통 **강한 메모리 순서(Strong Memory Ordering)**를 동반합니다. 즉, 원자적 연산 전후의 명령어가 CPU의 최적화에 의해 순서가 뒤바뀌지 않도록 보장하여, 멀티코어 간의 가시성(Visibility) 문제를 동시에 해결합니다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: CAS는 '지정한 비밀번호가 맞을 때만 금고를 여는 방식'이고, LL/SC는 '금고에 손을 대고 있는 동안 누가 건드리지 않았을 때만 여는 방식'입니다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="1-gisulsajeog-pandan-pointeu-eonje-weonjajeog-yeonsaneul-sayonghaneunga">1. 기술사적 판단 포인트: 언제 원자적 연산을 사용하는가?</h3>
+<ol>
+<li><strong>초고속 카운터</strong>: 웹 서버의 방문자 수, 초당 요청 수 등 극도로 빈번한 업데이트가 필요한 경우.</li>
+<li><strong>락-프리(Lock-free) 알고리즘</strong>: 스택, 큐 등 공유 자료구조에서 데드락(Deadlock) 위험을 완전히 제거하고 싶을 때.</li>
+<li><strong>성능 임계 구간</strong>: 뮤텍스 획득/해제 비용이 실제 작업 시간보다 길어지는 아주 짧은 연산 구간.</li>
+</ol>
+<h3 id="2-silmu-jeogyong-si-juyisahang-kaesi-rain-baunsing-cache-line-bouncing">2. 실무 적용 시 주의사항: 캐시 라인 바운싱 (Cache Line Bouncing)</h3>
+<p>여러 코어가 하나의 변수에 대해 원자적 RMW를 동시에 시도하면, 해당 캐시 라인의 소유권이 코어 사이를 미친 듯이 왔다 갔다 하게 됩니다. 이를 '캐시 라인 바운싱'이라고 하며, 연산 속도보다 통신 오버헤드가 더 커지는 역효과가 발생합니다.</p>
+<h3 id="3-cekeuriseuteu-mic-antipaeteon">3. 체크리스트 및 안티패턴</h3>
+<ul>
+<li>
+<p><strong>체크리스트</strong>:</p>
+<ul>
+<li><input disabled="" type="checkbox"/>
+연산 실패 시 재시도(Retry) 로직이 적절한가? (지나친 Busy-wait 방지)</li>
+<li><input disabled="" type="checkbox"/>
+ABA 문제가 발생할 여지가 있는 자료구조인가? (그렇다면 Tagged Pointer 등 도입 검토)</li>
+<li><input disabled="" type="checkbox"/>
+원자적 변수가 서로 다른 캐시 라인에 배치되어 있는가? (False Sharing 방지)</li>
+</ul>
+</li>
+<li>
+<p><strong>안티패턴</strong>:</p>
+<ul>
+<li>모든 동기화를 무조건 CAS로 처리하려는 시도 (로직이 복잡해질수록 락이 더 효율적일 수 있음).</li>
+<li>재시도 루틴에 백오프(Back-off) 없이 무한 루프를 도는 설계 (CPU 점유율 폭증).</li>
+</ul>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 원자적 연산은 '경주용 자동차의 초고속 엔진'과 같습니다. 직선 도로(단순 연산)에서는 최고지만, 복잡한 골목길(복잡한 로직)에서는 일반 승용차(락)보다 운전하기 어렵고 사고 나기 쉽습니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="1-gidaehyogwa">1. 기대효과</h3>
+<p>원자적 RMW를 적재적소에 사용하면 시스템의 동시성(Concurrency) 레벨을 한 차원 높일 수 있습니다. 데드락의 공포에서 벗어날 수 있으며, 하드웨어 성능을 끝까지 쥐어짜는 고성능 서버 프레임워크나 실시간 운영체제(RTOS) 구현이 가능해집니다.</p>
+<h3 id="2-hangye-mic-mirae-jeonmang">2. 한계 및 미래 전망</h3>
+<p>원자적 연산은 '단일 변수'에 대해서만 동작한다는 치명적인 한계가 있습니다. 이를 극복하기 위해 여러 메모리 주소를 한꺼번에 원자적으로 처리하는 <strong>HTM (Hardware Transactional Memory)</strong> 기술이 발전하고 있습니다. 하지만 여전히 가장 밑바닥의 신뢰할 수 있는 도구는 원자적 RMW 명령어입니다.</p>
+<h3 id="3-coejong-gyeolron">3. 최종 결론</h3>
+<p>원자적 RMW는 단순한 명령어가 아니라, 병렬 컴퓨팅이라는 거대한 건물을 지탱하는 **'콘크리트 파일(Pile)'**과 같습니다. 기술사는 이 명령어의 하드웨어적 구현 원리(Cache/Bus Locking)와 부작용(Bouncing, ABA)을 명확히 이해하고, 소프트웨어 락과 원자적 연산 사이에서 최적의 균형점을 찾아낼 수 있는 통찰력을 갖춰야 합니다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 원자적 연산은 화가 난 두 사람(스레드) 사이를 중재하는 '단호한 판사'와 같습니다. 구구절절한 설명(락) 없이 법봉을 한 번 쾅 치는 것(원자적 명령어)으로 모든 상황을 즉시 정리합니다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">MESI 프로토콜</td><td style="text-align: left">원자적 연산이 버스를 잠그지 않고도 성능을 낼 수 있게 하는 물리적 기반</td></tr>
+<tr><td style="text-align: left">ABA Problem</td><td style="text-align: left">CAS 연산의 고질적 논리 결함으로, 값이 바뀌었다 돌아온 것을 감지 못함</td></tr>
+<tr><td style="text-align: left">Memory Barrier</td><td style="text-align: left">원자적 연산의 가시성과 순서 보장을 확정 짓는 보조 명령어</td></tr>
+<tr><td style="text-align: left">False Sharing</td><td style="text-align: left">같은 캐시 라인의 엉뚱한 변수 때문에 원자적 연산 성능이 떨어지는 현상</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>여러 친구가 동시에 사탕 바구니의 개수를 적으려고 하면 숫자가 틀릴 수 있어요.</li>
+<li>그래서 선생님이 "딱 한 명씩만 바구니를 잡고 숫자를 고치고 손을 떼라!"라고 규칙을 정해준 게 원자적 연산이에요.</li>
+<li>이 규칙을 지키면 아무리 많은 친구가 달려들어도 사탕 개수가 틀리는 일 없이 정확하게 관리된답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>364. Adagrad &#x2F; RMSProp 옵티마이저 - 적응적 학습률과 지수 이동 평균 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ai
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: Adagrad(Adaptive Gradient Algorithm)와 RMSProp(Root Mean Square Propagation)은 각 파라미터마다 다른 학습률을 적응적으로 조정하는 옵티마이저로, 희소(Sparse) 특성이 많은 데이터에서 SGD보다 빠른 수렴을 달성한다.</li>
+<li><strong>가치</strong>: Adagrad는 자주 나타나는 특성은 학습률을 줄이고 드문 특성은 크게 유지해 텍스트 모델에 강력하지만, 학습이 진행될수록 학습률이 0에 수렴하는 치명적 소멸 문제가 있고 RMSProp이 이를 지수 이동 평균(EMA)으로 해결한다.</li>
+<li><strong>판단 포인트</strong>: Adam = RMSProp (2차 모멘트, 학습률 적응) + Momentum (1차 모멘트)의 결합이며, Adam이 실무에서 가장 널리 사용되는 이유가 여기에 있다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>기본 SGD(Stochastic Gradient Descent)는 모든 파라미터에 동일한 학습률(η)을 적용한다. 텍스트 데이터에서 "the"같은 자주 나오는 단어의 가중치는 그래디언트가 크므로 큰 업데이트가, "quasar" 같은 드문 단어는 작은 업데이트가 필요하다. Adagrad는 이를 각 파라미터의 과거 그래디언트 제곱 합(G_t)을 학습률 분모에 넣어 자동으로 조정한다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: Adagrad는 "자주 쓰는 도로는 속도를 줄이고, 처음 가는 샛길은 빠르게" 학습하는 지능형 내비게이션이다. 이미 많이 업데이트된 파라미터(자주 쓴 도로)는 학습률을 줄여 안정화하고, 거의 업데이트 안 된 파라미터(새 샛길)는 빠르게 학습시킨다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<pre><code>┌──────────────────────────────────────────────────────────┐
+│      Adagrad vs RMSProp 수식 비교                        │
+├──────────────────────────────────────────────────────────┤
+│  Adagrad:                                                │
+│  G_t = G_{t-1} + g_t²          (누적 제곱 합)          │
+│  θ_t = θ_{t-1} - η&#x2F;√(G_t+ε) · g_t                     │
+│  문제: G_t는 단조 증가 → η&#x2F;√(G_t) → 0 (학습률 소멸!)  │
+│                                                          │
+│  RMSProp:                                               │
+│  E[g²]_t = ρ·E[g²]_{t-1} + (1-ρ)·g_t²  (EMA)         │
+│  θ_t = θ_{t-1} - η&#x2F;√(E[g²]_t+ε) · g_t                │
+│  해결: EMA로 최근 그래디언트만 반영 → 학습률 안정!     │
+│                                                          │
+│  Adam (결합):                                           │
+│  m_t = β₁·m_{t-1} + (1-β₁)·g_t  (1차 모멘트)         │
+│  v_t = β₂·v_{t-1} + (1-β₂)·g_t²  (2차 모멘트)        │
+│  θ_t = θ_{t-1} - η·m̂_t&#x2F;√(v̂_t+ε)                    │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">옵티마이저</th><th style="text-align: left">학습률 누적</th><th style="text-align: left">소멸 문제</th><th style="text-align: left">특이 사항</th></tr></thead><tbody>
+<tr><td style="text-align: left">SGD</td><td style="text-align: left">고정</td><td style="text-align: left">❌ 없음</td><td style="text-align: left">튜닝 어려움</td></tr>
+<tr><td style="text-align: left">Adagrad</td><td style="text-align: left">전체 누적</td><td style="text-align: left">✅ 발생</td><td style="text-align: left">희소 특성에 강함</td></tr>
+<tr><td style="text-align: left">RMSProp</td><td style="text-align: left">EMA (지수)</td><td style="text-align: left">❌ 없음</td><td style="text-align: left">비정상 시계열에 강함</td></tr>
+<tr><td style="text-align: left">Adam</td><td style="text-align: left">EMA + Momentum</td><td style="text-align: left">❌ 없음</td><td style="text-align: left">실무 기본값</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: Adagrad의 학습률 소멸은 "계단 내려가는 로봇"이다. 처음엔 큰 걸음(η)으로 빠르게 내려오지만, 걸음 수(G_t)가 쌓일수록 걸음이 점점 작아져 결국 아예 멈춰버린다(학습 정지). RMSProp은 최근 몇 걸음(EMA)만 기억해 항상 적정 속도를 유지한다.</p>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>AMSGrad는 Adam의 과거 최대 2차 모멘트를 유지해 수렴 보장 문제를 해결한다. AdamW는 Adam에 가중치 감쇠(Weight Decay)를 L2 정규화와 분리하여 더 정확한 정규화를 구현한다(Transformer 훈련의 표준). Lion(Evolved Sign Momentum) 옵티마이저는 Google이 진화 알고리즘으로 발견한 Adam보다 메모리 효율적인 최신 옵티마이저다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: AdamW는 "다이어트와 운동을 분리하는 체중 관리"다. 기존 Adam의 L2 정규화는 그래디언트 업데이트와 뒤섞여 효과가 감소했다. AdamW는 가중치 감쇠를 별도로 적용해 Transformer 같은 대형 모델의 정규화 효과를 극대화한다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p>하이퍼파라미터 기본값(Adam): η=0.001, β₁=0.9, β₂=0.999, ε=1e-8. Warmup 스케줄: 학습 초기에 학습률을 0에서 천천히 올려 초기 학습 불안정성 방지(Transformer 훈련 필수). Cosine Annealing: 학습률을 코사인 커브로 감소시켜 수렴 말기 섬세한 조정. Cyclic LR: 학습률을 주기적으로 올렸다 내렸다 하며 다양한 Loss Landscape 탐색.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 학습률 Warmup은 "엔진 예열"이다. 차(모델)를 처음 출발시킬 때 갑자기 최고 속도로 달리면(큰 학습률) 엔진이 망가진다. 천천히 예열(작은 학습률)한 뒤 최적 속도로 올리는 것이 Warmup이다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>Adagrad → RMSProp → Adam으로 이어지는 적응적 학습률의 진화는 딥러닝 최적화의 핵심 발전사다. RMSProp의 EMA 아이디어가 Adam의 2차 모멘트가 되었고, Momentum이 1차 모멘트가 되어 Adam이 완성됐다. 기술사 시험에서 Adagrad 소멸 문제 → RMSProp EMA 해결 → Adam 수식까지 진화 경로를 설명하면 최고 수준의 답안이다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: Adagrad→Adam 진화는 "손으로 페달 밟기 → 자전거 → 전기자동차"다. 손으로 걷기(SGD)에서 자전거 기어(Adagrad 적응 학습률), 자동 기어(RMSProp EMA), 최첨단 전기차(Adam 모멘텀+적응 학습률) 순으로 편리하고 효율적으로 진화했다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연관 키워드</th><th style="text-align: left">관계</th></tr></thead><tbody>
+<tr><td style="text-align: left">Adam 옵티마이저</td><td style="text-align: left">β₁, β₂모멘트</td><td style="text-align: left">RMSProp + Momentum의 결합</td></tr>
+<tr><td style="text-align: left">AdamW</td><td style="text-align: left">가중치 감쇠 분리</td><td style="text-align: left">Transformer 훈련 표준</td></tr>
+<tr><td style="text-align: left">학습률 스케줄링</td><td style="text-align: left">Warmup, Cosine</td><td style="text-align: left">옵티마이저와 함께 사용</td></tr>
+<tr><td style="text-align: left">그래디언트 소실</td><td style="text-align: left">학습 정지</td><td style="text-align: left">Adagrad의 핵심 문제</td></tr>
+</tbody></table>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>Adagrad는 "자주 쓰는 도구는 조금씩, 새 도구는 많이" 업데이트하는 똑똑한 AI예요.</li>
+<li>하지만 시간이 지나면 모든 도구를 너무 조금씩 업데이트해서 AI가 성장을 멈추는 문제가 있어요.</li>
+<li>RMSProp은 이를 고쳐서 "최근에 쓴 것만 기억"하게 해서 AI가 계속 성장할 수 있게 했어요!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

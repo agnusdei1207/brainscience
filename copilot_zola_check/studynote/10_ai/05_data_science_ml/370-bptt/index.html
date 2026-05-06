@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>370. BPTT (Backpropagation Through Time) - RNN 시간 역전파 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ai
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: BPTT(Backpropagation Through Time, 시간 역전파)는 순환 신경망(RNN, Recurrent Neural Network)에서 시퀀스를 시간 축으로 펼친(unroll) 후 일반 역전파를 적용하는 알고리즘으로, 동일한 가중치 행렬 W_h가 모든 시간 단계에서 공유되어 그래디언트가 T번 곱해진다.</li>
+<li><strong>가치</strong>: 시퀀스 데이터(텍스트, 시계열)에서 현재 출력이 과거 입력에 의존하는 장기 의존성(Long-term Dependency)을 학습하는 유일한 방법이지만, 기울기 소실/폭발 문제로 실용적 길이에 제약이 있다.</li>
+<li><strong>판단 포인트</strong>: 기울기 ∂L/∂W = Σₜ ∂Lₜ/∂W의 각 항이 Πₖ (W_h · diag(tanh'(hₖ)))를 포함하므로, |eigenvalue(W_h)| &lt; 1이면 소실, &gt; 1이면 폭발한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>RNN은 h_t = tanh(W_h·h_{t-1} + W_x·x_t + b)로 이전 은닉 상태를 재귀적으로 사용한다. 이를 T 시간 단계로 펼치면 T개의 층을 가진 깊은 네트워크가 된다. BPTT는 이 펼쳐진 네트워크에서 각 시간 단계의 그래디언트를 체인 룰로 계산하고, W_h가 공유되므로 모든 시간 단계의 그래디언트를 합산한다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: BPTT는 "긴 전화 게임의 책임 역추적"이다. 100명이 릴레이로 메시지를 전달했을 때 오류가 생기면, 오류 신호를 100명 → 99명 → ... → 1번으로 거슬러 올라가며 각자의 잘못(그래디언트)을 계산한다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<pre><code>┌──────────────────────────────────────────────────────────┐
+│              BPTT 수식 전개                              │
+├──────────────────────────────────────────────────────────┤
+│  Forward:  h_t = tanh(W_h·h_{t-1} + W_x·x_t)          │
+│            y_t = W_y·h_t                                │
+│                                                          │
+│  Loss:     L = Σₜ Lₜ(y_t, ŷ_t)                        │
+│                                                          │
+│  Backward: ∂Lₜ&#x2F;∂h_k = (∂Lₜ&#x2F;∂h_t) · Πᵢ₌ₖ₊₁ᵗ W_hᵀ·diag(1-hᵢ²)│
+│            (tanh 도함수: 1-tanh²)                       │
+│                                                          │
+│  기울기 소실: |W_h| &lt; 1 → Πᵀ|W_h|ᵀ → 0              │
+│  기울기 폭발: |W_h| &gt; 1 → Πᵀ|W_h|ᵀ → ∞              │
+│                                                          │
+│  Truncated BPTT: T_bptt &lt;&lt; T로 자른 후 BPTT 적용       │
+│  → 메모리·계산 절감, 단기 의존성만 학습               │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">문제</th><th style="text-align: left">조건</th><th style="text-align: left">증상</th><th style="text-align: left">해결책</th></tr></thead><tbody>
+<tr><td style="text-align: left">기울기 소실</td><td style="text-align: left">|W_h| &lt; 1</td><td style="text-align: left">먼 과거 정보 손실</td><td style="text-align: left">LSTM, GRU</td></tr>
+<tr><td style="text-align: left">기울기 폭발</td><td style="text-align: left">|W_h| &gt; 1</td><td style="text-align: left">NaN 발생</td><td style="text-align: left">Gradient Clipping</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 기울기 소실은 "100년 전 역사가 현재에 미치는 영향"과 같다. 각 세대를 거칠수록 원래 사건의 영향이 희미해진다. W_h가 작으면 1000세대 뒤에는 완전히 잊혀진다(소실). W_h가 크면 영향이 기하급수적으로 폭발한다.</p>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>그래디언트 클리핑(Gradient Clipping): ||g|| &gt; threshold이면 g = g·(threshold/||g||)로 정규화하여 폭발을 방지한다. PyTorch의 nn.utils.clip_grad_norm_(parameters, max_norm)으로 구현. LSTM은 셀 상태(Cell State)를 통한 덧셈 구조로 기울기 소실을 구조적으로 해결한다. 시간적 병렬화가 불가능한 BPTT의 순차적 특성이 Transformer가 Self-Attention으로 대체한 핵심 이유다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: Transformer가 RNN을 대체한 이유는 "릴레이 경주 → 동시 달리기"다. RNN의 BPTT는 100명이 순서대로 달리는 릴레이(순차 처리). Transformer의 Self-Attention은 100명이 동시에 달리는 경주(병렬 처리). 동시 달리기가 훨씬 빠르다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p>Truncated BPTT: 시퀀스를 길이 T_bptt(예: 35)의 청크로 나눠 각 청크에 BPTT 적용. 언어 모델 훈련의 실용적 표준. 초기화 방법: 단위 행렬 초기화(identity initialization) + ReLU로 기울기 소실을 줄이는 IRNN(Identity RNN) 기법. 현대 실무에서는 RNN 대신 Transformer/LSTM을 사용하지만, 임베디드 엣지 디바이스 등 계산 제약 환경에서는 RNN이 여전히 사용된다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: Truncated BPTT는 "독서 클럽에서 매 35페이지마다 내용 정리"하는 방법이다. 책 전체(전체 시퀀스)를 한 번에 읽고 토론하면 너무 오래 걸린다. 35페이지씩 끊어 정리하면 시간도 절약하고 핵심도 잘 잡힌다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>BPTT는 시퀀스 모델링의 핵심 알고리즘으로, 기울기 소실/폭발 문제를 이해하는 것이 LSTM, GRU, Transformer가 왜 필요한지를 설명하는 토대가 된다. 기술사 시험에서 기울기 소실 수식(고유값 조건), Truncated BPTT 의미, LSTM의 구조적 해결책을 연결하여 서술하면 완성도 높은 답안이 된다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: BPTT는 RNN의 "시간 여행 학습기"다. 과거로 거슬러 올라가며 "100 시간 전 결정이 현재 오류에 얼마나 책임이 있는가"를 계산한다. 하지만 너무 먼 과거(소실)나 지나치게 큰 책임(폭발)을 다루기 어려워 LSTM이 탄생했다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연관 키워드</th><th style="text-align: left">관계</th></tr></thead><tbody>
+<tr><td style="text-align: left">LSTM (Long Short-Term Memory)</td><td style="text-align: left">셀 상태, 게이트</td><td style="text-align: left">BPTT 기울기 소실 해결</td></tr>
+<tr><td style="text-align: left">Gradient Clipping</td><td style="text-align: left">그래디언트 정규화</td><td style="text-align: left">폭발 문제 해결</td></tr>
+<tr><td style="text-align: left">Transformer</td><td style="text-align: left">Self-Attention</td><td style="text-align: left">RNN 순차 한계 극복</td></tr>
+<tr><td style="text-align: left">Truncated BPTT</td><td style="text-align: left">청크 분할</td><td style="text-align: left">실용적 BPTT 구현</td></tr>
+</tbody></table>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>BPTT는 "긴 이야기 속 오류를 처음부터 거슬러 찾는 탐정"이에요.</li>
+<li>100번의 시간 단계를 뒤로 거슬러 올라가며 각 단계의 잘못(그래디언트)을 계산해요.</li>
+<li>하지만 너무 멀리 거슬러 가면 단서가 사라지거나(소실) 폭발하는 문제가 생겨서 LSTM이 발명됐어요!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

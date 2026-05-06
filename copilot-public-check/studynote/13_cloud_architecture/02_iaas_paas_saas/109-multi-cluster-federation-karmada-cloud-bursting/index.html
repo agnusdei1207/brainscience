@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>109. K8s 멀티 클러스터 및 연합(Federation) - Karmada·클라우드 버스팅 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 19, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote cloud architecture
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 멀티 클러스터 연합(Federation)은 전 세계에 분산된 <strong>복수의 독립 K8s 클러스터를 단일 제어 평면(Control Plane)에서 통합 관리</strong>하여 단일 클러스터의 확장성 한계(5,000 노드)와 단일 장애점(SPOF)을 제거하는 상위 아키텍처다.</li>
+<li><strong>가치</strong>: 서울 클러스터 장애 시 0.1초 만에 도쿄 클러스터로 파드를 자동 복제하는 **무결점 재해복구(DR)**와, 온프레미스 포화 시 AWS로 트래픽을 넘기는 **클라우드 버스팅(Cloud Bursting)**을 실현한다.</li>
+<li><strong>판단 포인트</strong>: 실패작 Kubefed v1/v2를 넘어 <strong>Karmada</strong>가 기존 K8s YAML 100% 호환·동적 스케줄링으로 차세대 표준에 등극 중이다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>단일 K8s 클러스터는 공식 권고 최대 5,000 노드다. 이를 넘기면 API Server의 Watch/List 트래픽이 폭주하여 마스터가 과부하된다. 또한 1개 클러스터에 모든 워크로드를 집중하면 etcd 장애·네트워크 파티션 시 **폭발 반경(Blast Radius)**이 전체 서비스로 확대된다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌───────────────────────────────────────────────────────┐
+│     싱글 클러스터 vs 멀티 클러스터 연합 비교            │
+├───────────────────────────────────────────────────────┤
+│  [싱글 클러스터]           [멀티 클러스터 + Federation] │
+│  ┌──────────┐             ┌──────────────────┐        │
+│  │ Master 1 │             │ Federation CP    │        │
+│  │ 5000노드 │             │ (중앙 사령부)     │        │
+│  │ 전체서비스│             └──┬─────┬─────┬──┘        │
+│  └──────────┘                │     │     │            │
+│  장애 시 100% 마비          ▼     ▼     ▼            │
+│                          서울500 도쿄500 AWS500       │
+│                          장애 시 1&#x2F;3만 영향           │
+└───────────────────────────────────────────────────────┘
+</code></pre>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 5,000개 마을을 황제 1명이 다스리면 황제 과로사 시 제국 멸망. 10개 주로 쪼개고 영주를 세우면 서울 영주가 쓰러져도 부산·도쿄는 무사하다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<table><thead><tr><th style="text-align: left">구성 요소</th><th style="text-align: left">역할</th><th style="text-align: left">비유</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Federation Control Plane</strong></td><td style="text-align: left">복수 클러스터를 통합 관리하는 상위 마스터</td><td style="text-align: left">제국 황제</td></tr>
+<tr><td style="text-align: left"><strong>Member Cluster</strong></td><td style="text-align: left">독립 운영되는 개별 K8s 클러스터</td><td style="text-align: left">각 주의 영주</td></tr>
+<tr><td style="text-align: left"><strong>Placement Policy</strong></td><td style="text-align: left">파드를 어느 클러스터에 배치할지 결정</td><td style="text-align: left">병력 배치 명령</td></tr>
+<tr><td style="text-align: left"><strong>Override Policy</strong></td><td style="text-align: left">클러스터별로 YAML을 미세 조정</td><td style="text-align: left">지역 특화 명령서</td></tr>
+</tbody></table>
+<h3 id="karmadayi-cabyeoljeom">Karmada의 차별점</h3>
+<ol>
+<li><strong>기존 YAML 100% 호환</strong>: Deployment YAML을 1글자도 수정하지 않고 던지면, Karmada가 알아서 10개 클러스터에 CPU 잔여량 기반 동적 스케줄링.</li>
+<li><strong>PropagationPolicy</strong>: "서울 50%, 도쿄 30%, AWS 20%" 같은 가중치 기반 분배 선언.</li>
+<li><strong>Failover</strong>: 클러스터 헬스체크 실패 시 자동으로 다른 클러스터에 파드 재배치.</li>
+</ol>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 본사 팩스(Federation CP)에 레시피 1장만 넣으면 전국 10개 지점에 동시 전송되고, 부산 지점에는 "밀면 추가"로 자동 수정(Override)된다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">비교</th><th style="text-align: left">Kubefed v2</th><th style="text-align: left">Karmada</th><th style="text-align: left">Admiralty</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>K8s API 호환</strong></td><td style="text-align: left">별도 CRD 필요</td><td style="text-align: left"><strong>100% 호환</strong></td><td style="text-align: left">Virtual Kubelet</td></tr>
+<tr><td style="text-align: left"><strong>동적 스케줄링</strong></td><td style="text-align: left">제한적</td><td style="text-align: left"><strong>CPU/메모리 기반</strong></td><td style="text-align: left">제한적</td></tr>
+<tr><td style="text-align: left"><strong>커뮤니티</strong></td><td style="text-align: left">중단됨</td><td style="text-align: left">CNCF Sandbox→Incubating</td><td style="text-align: left">소규모</td></tr>
+<tr><td style="text-align: left"><strong>Failover</strong></td><td style="text-align: left">수동</td><td style="text-align: left"><strong>자동</strong></td><td style="text-align: left">제한적</td></tr>
+</tbody></table>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="keulraudeu-beoseuting-sinario">클라우드 버스팅 시나리오</h3>
+<p>온프레미스 K8s(100대)가 블랙프라이데이에 포화 → Federation CP가 AWS EKS 예비 클러스터로 파드 400개 즉시 확장 → 폭풍 후 AWS 파드 종료하여 비용 절감.</p>
+<h3 id="cekeuriseuteu">체크리스트</h3>
+<ol>
+<li>클러스터 간 네트워크 지연(Cross-Region Latency) 측정 및 Placement에 반영했는가?</li>
+<li>멀티 클러스터 서비스 메시(Istio Multi-Cluster) 또는 Submariner로 파드 간 통신을 구성했는가?</li>
+</ol>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li><strong>무분별한 클러스터 분할</strong>: 팀당 1개 클러스터를 만들어 100개 → 운영 오버헤드 폭발.</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<table><thead><tr><th style="text-align: left">지표</th><th style="text-align: left">싱글 클러스터</th><th style="text-align: left">멀티+Federation</th><th style="text-align: left">개선</th></tr></thead><tbody>
+<tr><td style="text-align: left">최대 노드 수</td><td style="text-align: left">5,000</td><td style="text-align: left"><strong>무제한 (수만)</strong></td><td style="text-align: left">확장성 해소</td></tr>
+<tr><td style="text-align: left">폭발 반경</td><td style="text-align: left">100%</td><td style="text-align: left"><strong>1/N</strong></td><td style="text-align: left">DR 확보</td></tr>
+<tr><td style="text-align: left">클라우드 버스팅</td><td style="text-align: left">불가</td><td style="text-align: left"><strong>자동</strong></td><td style="text-align: left">비용 최적화</td></tr>
+<tr><td style="text-align: left">배포 복잡도</td><td style="text-align: left">낮음</td><td style="text-align: left">중간 (Karmada 자동화)</td><td style="text-align: left">학습 곡선</td></tr>
+</tbody></table>
+<p>Karmada는 CNCF Incubating 프로젝트로 격상되었으며, OCM(Open Cluster Management)과 함께 멀티 클러스터 관리의 사실상 표준으로 수렴 중이다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Kubernetes</strong></td><td style="text-align: left">멀티 클러스터의 단위 구성 요소</td></tr>
+<tr><td style="text-align: left"><strong>Karmada</strong></td><td style="text-align: left">차세대 멀티 클러스터 오케스트레이션 엔진</td></tr>
+<tr><td style="text-align: left"><strong>Cloud Bursting</strong></td><td style="text-align: left">온프레미스 포화 시 퍼블릭 클라우드로 확장하는 전술</td></tr>
+<tr><td style="text-align: left"><strong>Service Mesh (Istio)</strong></td><td style="text-align: left">클러스터 간 파드 통신을 보장하는 네트워크 레이어</td></tr>
+<tr><td style="text-align: left"><strong>DR (Disaster Recovery)</strong></td><td style="text-align: left">멀티 클러스터의 핵심 가치, 재해복구</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[싱글 K8s 클러스터 (2015~) — 5,000 노드 한계]
+    │
+    ▼
+[Kubefed v1&#x2F;v2 (2018~) — 실패, 복잡한 CRD 문법]
+    │
+    ▼
+[Karmada (2021~) — K8s API 100% 호환, CNCF 프로젝트]
+    │
+    ▼
+[현재: OCM + Karmada + 위성 Edge K3s — 전지구 멀티 클러스터]
+</code></pre>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>한 교실(클러스터)에 학생 5,000명을 넣으면 선생님(마스터)이 힘들어 쓰러져요.</li>
+<li>그래서 교실을 10개로 나누고, **교장 선생님(Federation)**이 10개 교실을 한 번에 관리해요!</li>
+<li>1반이 물난리가 나도 나머지 9개 반은 멀쩡하게 수업을 계속할 수 있답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>669. eBPF 하드웨어 오프로딩 (eBPF Hardware Offloading) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 20, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote computer architecture
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="669-ebpf-hadeuweeo-opeuroding-ebpf-hardware-offloading">669. eBPF 하드웨어 오프로딩 (eBPF Hardware Offloading)</h1>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: eBPF 하드웨어 오프로딩은 커널 내 가상 머신에서 실행되던 eBPF 프로그램을 <strong>SmartNIC(지능형 랜카드)이나 FPGA와 같은 외부 하드웨어 가속기에서 직접 실행</strong>하도록 넘기는 기술이다.</li>
+<li><strong>가치</strong>: 패킷이 호스트 CPU와 커널 네트워킹 스택에 도달하기도 전에 하드웨어 수준에서 필터링, 라우팅, 암호화를 처리함으로써 호스트 자원 소모를 '0'에 가깝게 줄이고 극도의 저지연(Ultra-low Latency)을 실현한다.</li>
+<li><strong>융합</strong>: XDP(eXpress Data Path) 기술과 결합하여 테라비트(Tbps)급 데이터센터 트래픽을 효율적으로 관리하며, 가상화 환경에서 하드웨어 기반의 보안 정책 강제(Security Policy Enforcement)의 핵심 수단이 된다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<h3 id="1-sopeuteuweeo-neteuweokingyi-hangye-cpuneun-imi-neomu-babbeuda">1. 소프트웨어 네트워킹의 한계: "CPU는 이미 너무 바쁘다"</h3>
+<ul>
+<li><strong>현상</strong>: 현대 데이터센터의 대역폭은 100Gbps를 넘어 400Gbps 시대로 가고 있다.</li>
+<li><strong>문제점</strong>: 아무리 빠른 eBPF라도 패킷이 호스트 CPU에 도착하는 순간, 인터럽트 처리와 컨텍스트 스위칭으로 인해 CPU 자원의 상당 부분이 네트워크 처리(Tax)에 소모된다.</li>
+<li><strong>필요성</strong>: CPU를 원래의 비즈니스 로직(App)에 집중시키고, 네트워크 관련 '지능적 처리'는 패킷이 들어오는 입구인 랜카드(NIC)에서 끝내야 한다.</li>
+</ul>
+<h3 id="2-ebpf-opeurodingyi-tansaeng-keoneolyi-jineungeul-hadeuweeoro">2. eBPF 오프로딩의 탄생: "커널의 지능을 하드웨어로"</h3>
+<ul>
+<li><strong>해결책</strong>: 리눅스 커널의 검증기(Verifier)를 통과한 안전한 BPF 바이트코드를 하드웨어가 이해할 수 있는 명령어로 변환(JIT)하여 SmartNIC 내부의 전용 프로세서로 전송한다.</li>
+<li><strong>결과</strong>: 커널은 정책만 세우고, 실제 실행은 하드웨어가 담당하는 '데이터 평면(Data Plane) 분리'가 완성된다.</li>
+</ul>
+<h3 id="3-biyujeog-seolmyeong">3. 비유적 설명</h3>
+<ul>
+<li><strong>💡 비유</strong>: '공항 입국 심사장'과 같습니다.
+<ul>
+<li><strong>전통적 방식</strong>: 모든 승객이 공항 밖 경찰서(호스트 CPU)까지 이동해서 심사를 받아야 합니다. (길이 엄청나게 막힘)</li>
+<li><strong>eBPF 소프트웨어 방식</strong>: 공항 로비에 임시 심사대(커널 XDP)를 만들어 심사합니다. (조금 나아짐)</li>
+<li><strong>eBPF 하드웨어 오프로딩</strong>: 비행기에서 내리는 게이트(SmartNIC)에 자동 출입국 심사기를 설치합니다. 위험한 사람은 게이트에서 바로 돌려보내고, 통과한 사람만 공항 로비로 들어오게 합니다.</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-ebpf-hadeuweeo-opeuroding-akitegceo-ascii">4. eBPF 하드웨어 오프로딩 아키텍처 (ASCII)</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">    [ User-space ]                      [ Control Plane ]
+    ┌──────────────────┐                ┌───────────────────────┐
+    │  BPF Loader App  │───────────────▶│  Linux Kernel (BPF)   │
+    └──────────────────┘                │  (Verifier &amp; JIT)     │
+                                        └──────────┬────────────┘
+                                                   │ (BPF Program Offload)
+    ───────────────────────────────────────────────┼─────────────────────
+    [ SmartNIC Hardware ]                          ▼
+    ┌───────────────────────────────────────────────────────────────────┐
+    │  SmartNIC Engine (NFP &#x2F; BlueField &#x2F; Pensando)                     │
+    │  ┌──────────────────┐      ┌─────────────────┐      ┌──────────┐  │
+    │  │ BPF Exec Context │◀─────┤ BPF Map Storage │◀─────┤ Parser   │  │
+    │  └────────┬─────────┘      └─────────────────┘      └────▲─────┘  │
+    │           │                                              │        │
+    │  ┌────────▼─────────┐      ┌─────────────────┐      ┌────┴─────┐  │
+    │  │ Actions (Drop&#x2F;FW)│──────▶│ Packet Buffer   │◀─────┤ PHY (Rx) │  │
+    │  └──────────────────┘      └─────────────────┘      └──────────┘  │
+    └───────────────────────────────────────────────────────────────────┘
+
+* 특징: 패킷이 PCI 버스를 타고 CPU로 가기 전에 SmartNIC 내부에서 처리가 완료됨.
+</code></pre>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: eBPF 오프로딩은 '두뇌를 손가락 끝에 하나 더 심는 것'입니다. 뇌(CPU)가 생각하기도 전에 뜨거운 물체(공격 패킷)를 만진 손가락(NIC)이 스스로 움츠러드는 반사 신경과 같습니다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="1-bpf-geomjeunggiwa-hadeuweeo-jeyag-sahang">1. BPF 검증기와 하드웨어 제약 사항</h3>
+<ul>
+<li>하드웨어 오프로딩을 위해서는 BPF 프로그램이 하드웨어가 지원하는 명령어 집합(Instruction Set)만 사용해야 한다.</li>
+<li>커널의 BPF 오프로드 드라이버는 프로그램을 하드웨어로 보내기 전, 해당 기능이 오프로드 가능한지 다시 한번 검증한다.</li>
+</ul>
+<h3 id="2-jit-just-in-time-keompailreoyi-yeoghal">2. JIT (Just-In-Time) 컴파일러의 역할</h3>
+<ul>
+<li>eBPF 바이트코드는 하드웨어 독립적이다.</li>
+<li>SmartNIC 제조사는 자사 하드웨어(예: Netronome NFP)에 특화된 BPF JIT 컴파일러를 제공하여, 바이트코드를 NIC 전용 머신 코드로 변환한다.</li>
+</ul>
+<h3 id="3-bpf-mapyi-hadeuweeo-donggihwa">3. BPF Map의 하드웨어 동기화</h3>
+<ul>
+<li>eBPF의 강력함은 맵(Map)을 통한 상태 저장에서 나온다.</li>
+<li>오프로드된 프로그램이 사용하는 맵 데이터는 하드웨어 내장 메모리에 저장되며, 필요한 경우 커널과 실시간으로 동기화되어 통계 수집이나 정책 업데이트가 가능하게 한다.</li>
+</ul>
+<h3 id="4-ceori-heureum-tc-traffic-control-vs-xdp">4. 처리 흐름: TC(Traffic Control) vs XDP</h3>
+<ul>
+<li>
+<p><strong>XDP Offload</strong>: 가장 빠른 경로. NIC 드라이버 수신 단계에서 즉시 실행된다.</p>
+</li>
+<li>
+<p><strong>TC Offload</strong>: 커널의 트래픽 제어(tc) 서브시스템 기능을 하드웨어가 가로채어 실행한다. 패킷 분류(Classification)와 마킹(Marking)에 강점이 있다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: JIT 컴파일러는 '능숙한 번역가'입니다. 리눅스 나라의 언어(BPF)로 작성된 공문을 하드웨어 부족의 언어(Machine Code)로 완벽하게 번역하여 오차 없이 명령을 수행하게 합니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="ebpf-kernel-vs-xdp-driver-vs-ebpf-offload-hw">eBPF (Kernel) vs XDP (Driver) vs eBPF Offload (HW)</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">eBPF (General)</th><th style="text-align: left">XDP (Software)</th><th style="text-align: left"><strong>eBPF Offload (HW)</strong></th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>실행 위치</strong></td><td style="text-align: left">커널 네트워킹 스택</td><td style="text-align: left">NIC 드라이버 수신부</td><td style="text-align: left"><strong>SmartNIC 내부 가속기</strong></td></tr>
+<tr><td style="text-align: left"><strong>CPU 점유율</strong></td><td style="text-align: left">중간</td><td style="text-align: left">낮음</td><td style="text-align: left"><strong>거의 없음 (Zero CPU)</strong></td></tr>
+<tr><td style="text-align: left"><strong>패킷 지연</strong></td><td style="text-align: left">높음</td><td style="text-align: left">낮음</td><td style="text-align: left"><strong>극도로 낮음</strong></td></tr>
+<tr><td style="text-align: left"><strong>개발 난이도</strong></td><td style="text-align: left">보통</td><td style="text-align: left">조금 높음</td><td style="text-align: left">높음 (H/W 제약 고려)</td></tr>
+<tr><td style="text-align: left"><strong>유연성</strong></td><td style="text-align: left">최상 (모든 기능)</td><td style="text-align: left">높음</td><td style="text-align: left">중간 (H/W 지원 범위 내)</td></tr>
+</tbody></table>
+<h3 id="smartnic-solrusyeongwayi-yeongyeol">SmartNIC 솔루션과의 연결</h3>
+<ul>
+<li>
+<p><strong>Netronome NFP</strong>: 선구적인 BPF 오프로드 하드웨어. 수백 개의 마이크로 엔진을 통한 병렬 처리 제공.</p>
+</li>
+<li>
+<p><strong>NVIDIA BlueField (Mellanox)</strong>: DPU(Data Processing Unit)로서 eBPF뿐만 아니라 ARM 코어와 결합된 하이퍼바이저 오프로드까지 확장.</p>
+</li>
+<li>
+<p><strong>FPGA 기반 오프로드</strong>: 특정 알고리즘에 대해 극도의 최적화가 필요할 때 BPF를 FPGA 회로로 변환하여 사용.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 일반 eBPF가 '우수한 행정 공무원'이고 XDP가 '현장 출동 대원'이라면, eBPF 오프로드는 '자동 방어 터렛'입니다. 사람이 개입하기도 전에 기계가 정확히 위협을 제거합니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li>
+<p><strong>테라비트급 분산 서비스 거부(DDoS) 방어</strong></p>
+<ul>
+<li><strong>상황</strong>: 초당 수억 개의 패킷이 쏟아지는 DDoS 공격 발생.</li>
+<li><strong>적용</strong>: 화이트리스트/블랙리스트 기반 BPF 프로그램을 SmartNIC에 오프로드.</li>
+<li><strong>결과</strong>: 공격 패킷이 서버 CPU에 도달하기 전 NIC에서 모두 드롭(Drop)되어 서비스 가용성 유지.</li>
+</ul>
+</li>
+<li>
+<p><strong>클라우드 게이트웨이 부하 분산 (L4 Load Balancing)</strong></p>
+<ul>
+<li><strong>상황</strong>: 수만 대의 마이크로서비스로 트래픽을 분산해야 함.</li>
+<li><strong>적용</strong>: 로드밸런싱 로직(Katran 등)을 하드웨어로 오프로드하여 패킷 캡슐화 및 포워딩 수행.</li>
+<li><strong>결과</strong>: 로드밸런서 장비 대수 1/10로 절감 및 비용 효율 극대화.</li>
+</ul>
+</li>
+</ol>
+<h3 id="antipaeteon-anti-pattern">안티패턴 (Anti-pattern)</h3>
+<ul>
+<li>
+<p><strong>너무 복잡한 루프(Loop)가 포함된 프로그램</strong>: 하드웨어 가속기는 실시간 처리를 위해 복잡한 분기나 루프를 싫어한다. 오프로드가 거부되거나 하드웨어 엔진이 멈출 수 있다.</p>
+</li>
+<li>
+<p><strong>맵(Map) 크기 과다 설정</strong>: 하드웨어의 SRAM/DRAM 용량은 한정되어 있다. 커널에서 쓰던 거대한 맵을 그대로 오프로드 하려 하면 메모리 부족으로 실패한다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 수영장(SmartNIC)에 고래(거대 프로그램)를 넣으려 하면 안 됩니다. 수영장에는 물고기처럼 날렵하고 단순한 로직이 어울립니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="jeongryangjeog-gidaehyogwa">정량적 기대효과</h3>
+<ul>
+<li><strong>CPU 절감</strong>: 네트워크 집약적 워크로드에서 전체 CPU 사용량의 <strong>20~40% 회수</strong>.</li>
+<li><strong>패킷 처리량(PPS)</strong>: 소프트웨어 XDP 대비 <strong>3~5배 이상의 처리 성능</strong> 발휘.</li>
+<li><strong>TCO (Total Cost of Ownership)</strong>: 서버 대수를 줄이면서도 동일한 네트워크 대역폭 처리가 가능하여 데이터센터 구축 비용 절감.</li>
+</ul>
+<h3 id="gyeolron">결론</h3>
+<p>eBPF 하드웨어 오프로딩은 **'소프트웨어 정의 네트워킹(SDN)의 정점'**이다. 유연한 소프트웨어 개발 모델을 유지하면서도 하드웨어의 폭발적인 성능을 손쉽게 활용할 수 있는 길을 열었다. 기술사는 이제 커널 내부의 최적화를 넘어, 하드웨어 가속기와 어떻게 협력하여 'CPU가 일하지 않는 네트워크'를 설계할 것인가에 대한 깊은 통찰을 가져야 한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: eBPF 오프로딩은 '똑똑한 경비견'입니다. 주인(CPU)이 일일이 문앞을 지키지 않아도, 훈련받은(BPF 프로그램) 경비견이 대문(NIC)에서 알아서 외부인을 가려내어 주인은 안심하고 자기 할 일에 집중할 수 있게 해줍니다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>XDP (eXpress Data Path)</strong></td><td style="text-align: left">eBPF 오프로딩이 가장 활발하게 적용되는 고속 데이터 평면.</td></tr>
+<tr><td style="text-align: left"><strong>SmartNIC / DPU</strong></td><td style="text-align: left">eBPF 프로그램을 수용하고 가속할 수 있는 지능형 하드웨어.</td></tr>
+<tr><td style="text-align: left"><strong>Verifier</strong></td><td style="text-align: left">하드웨어로 내려보내기 전 프로그램의 안전성을 검증하는 '게이트키퍼'.</td></tr>
+<tr><td style="text-align: left"><strong>JIT Compiler</strong></td><td style="text-align: left">추상화된 바이트코드를 하드웨어 언어로 바꿔주는 '번역기'.</td></tr>
+<tr><td style="text-align: left"><strong>BPF Maps</strong></td><td style="text-align: left">하드웨어와 커널이 데이터를 공유하고 소통하는 '게시판'.</td></tr>
+</tbody></table>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>eBPF 하드웨어 오프로딩은 컴퓨터 랜카드에 **'작은 뇌'**를 넣어주는 거예요.</li>
+<li>예전에는 모든 편지(데이터)를 큰 뇌(CPU)가 일일이 검사해야 했지만, 이제는 똑똑한 랜카드가 알아서 가짜 편지를 버려줘요.</li>
+<li>덕분에 큰 뇌는 더 재미있는 게임이나 어려운 숙제를 하는 데 집중할 수 있답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

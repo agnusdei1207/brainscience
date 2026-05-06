@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>132. Apache Cassandra — 마스터 없는 링 구조 분산 데이터베이스 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote bigdata
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<ul>
+<li><strong>본질</strong>: Cassandra는 모든 노드가 동등한 마스터리스(Masterless) 피어 링 토폴로지를 통해 단일 장애점 없이 노드 추가만으로 선형적 성능 확장을 실현하는 분산 데이터베이스다.</li>
+<li><strong>가치</strong>: 튜너블 일관성(Tunable Consistency)으로 ONE~ALL까지 연산별로 가용성-일관성 트레이드오프를 조정할 수 있어, 멀티 리전 글로벌 서비스에서 99.999% 가용성을 달성한다.</li>
+<li><strong>판단 포인트</strong>: 쓰기는 항상 빠르지만(O(1) Commit Log), 읽기는 SSTable 수에 비례하므로 Compaction 전략(STCS/LCS/TWCS) 선택이 읽기 성능의 관건이다.</li>
+</ul>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<h3 id="facebookyi-badeun-pyeonjiham-munje">Facebook의 받은 편지함 문제</h3>
+<p>2007년 Facebook은 수십억 개의 메시지를 모든 사용자에게 실시간으로 제공해야 했다. RDBMS는 단일 마스터 구조로 수직 확장의 한계에 부딪혔고, Amazon의 Dynamo 논문(P2P, 결과적 일관성)과 Google의 Bigtable 논문(컬럼 구조)을 결합해 Cassandra를 개발했다.</p>
+<h3 id="haegsim-seolgye-weoncig">핵심 설계 원칙</h3>
+<table><thead><tr><th style="text-align: center">원칙</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: center"><strong>마스터리스</strong></td><td style="text-align: left">모든 노드가 읽기/쓰기 가능, SPOF 없음</td></tr>
+<tr><td style="text-align: center"><strong>일관된 해싱</strong></td><td style="text-align: left">토큰 링으로 데이터를 노드에 균등 분배</td></tr>
+<tr><td style="text-align: center"><strong>튜너블 일관성</strong></td><td style="text-align: left">연산별로 ONE~ALL 설정 가능</td></tr>
+<tr><td style="text-align: center"><strong>결과적 일관성</strong></td><td style="text-align: left">기본값 QUORUM, 최종적으로 모든 복제본 동기화</td></tr>
+<tr><td style="text-align: center"><strong>쓰기 최적화</strong></td><td style="text-align: left">Sequential Append → 디스크 최적화</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong></p>
+<blockquote>
+<p>Cassandra는 선생님(마스터) 없이 모든 학생이 자료를 서로 공유하는 스터디 그룹과 같다. 한 명이 빠져도 나머지가 계속 진행할 수 있고, 인원이 늘어날수록 처리할 수 있는 자료량도 그만큼 늘어난다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="ilgwandoen-haesing-consistent-hashing-tokeun-ring">일관된 해싱 (Consistent Hashing) 토큰 링</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│         Cassandra 토큰 링 (Token Ring)                        │
+│                                                              │
+│  토큰 범위: -2^63 ~ +2^63 (가상 노드 vnodes 사용 시 세분화)     │
+│                                                              │
+│               Node A (tokens: 0~25)                          │
+│              ╱                    ╲                          │
+│  Node E    ●    RF=3 예시:          ●   Node B               │
+│ (76~100)   │    key &quot;user:1&quot;        │   (26~50)              │
+│            │    → hash → 42        │                         │
+│            │    → Node B, C, D     │                         │
+│  Node D  ●                           ●  Node C               │
+│  (51~75)    ╲                    ╱   (26~50 이후)             │
+│              (시계 방향으로 RF개 노드)                          │
+│                                                              │
+│  Vnodes(가상 노드): 각 물리 노드가 여러 토큰 범위를 담당        │
+│  → 노드 추가&#x2F;제거 시 부하 분산 자동화                          │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="ilggi-sseugi-gyeongro-sangse">읽기/쓰기 경로 상세</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────┐
+│                  Cassandra 쓰기 경로                       │
+│                                                          │
+│  Client → 코디네이터 노드 → 복제 노드들                     │
+│                                                          │
+│  각 복제 노드에서:                                         │
+│  1. Commit Log 기록 (내구성, Sequential I&#x2F;O)              │
+│  2. MemTable 업데이트 (인메모리 정렬 구조)                  │
+│  3. MemTable 임계값 도달 → SSTable Flush                  │
+│  4. Bloom Filter, Index Summary 업데이트                  │
+│                                                          │
+│  ┌─────────────────────────────────────────────────┐    │
+│                  Cassandra 읽기 경로                 │    │
+│  └─────────────────────────────────────────────────┘    │
+│  Client → 코디네이터 → 복제 노드 중 1개(or QUORUM)        │
+│                                                          │
+│  복제 노드에서:                                           │
+│  1. MemTable 검색 (최신 데이터)                           │
+│  2. Bloom Filter 확인 (SSTable에 키 존재 여부 빠른 확인)    │
+│  3. Key Cache → Row Cache 확인                           │
+│  4. SSTable 검색 (최신순, 병합 필요 시 Read Repair)        │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="cql-cassandra-query-language-deiteo-model">CQL (Cassandra Query Language) 데이터 모델</h3>
+<pre data-lang="sql" class="language-sql "><code class="language-sql" data-lang="sql">-- 시계열 IoT 센서 테이블 예시
+CREATE TABLE sensor_readings (
+    sensor_id   UUID,
+    reading_time TIMESTAMP,
+    temperature  DOUBLE,
+    humidity     DOUBLE,
+    PRIMARY KEY ((sensor_id), reading_time)
+) WITH CLUSTERING ORDER BY (reading_time DESC)
+  AND default_time_to_live = 2592000;  -- 30일 자동 만료
+
+-- 삽입 (자동으로 올바른 노드로 라우팅)
+INSERT INTO sensor_readings (sensor_id, reading_time, temperature)
+VALUES (uuid(), toTimestamp(now()), 23.5);
+
+-- 최근 24시간 데이터 조회
+SELECT * FROM sensor_readings
+WHERE sensor_id = ? AND reading_time &gt; ?
+LIMIT 1000;
+</code></pre>
+<h3 id="rf-replication-factor-wa-ilgwanseong-susig">RF (Replication Factor)와 일관성 수식</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">N = 노드 수 (RF = 복제 수)
+W = 쓰기 확인 노드 수
+R = 읽기 확인 노드 수
+
+강한 일관성 조건: W + R &gt; N
+
+예시 (RF=3):
+  W=2, R=2 → 2+2=4 &gt; 3 → 강한 일관성 ✓ (QUORUM+QUORUM)
+  W=1, R=1 → 1+1=2 &lt; 3 → 결과적 일관성 (ONE+ONE)
+  W=3, R=1 → 3+1=4 &gt; 3 → 강한 일관성 ✓ (ALL+ONE)
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong></p>
+<blockquote>
+<p>Cassandra의 QUORUM 쓰기는 "3명의 증인 중 2명이 서명하면 계약 성립"과 같다. 1명이 자리를 비워도 나머지 2명으로 계약을 진행할 수 있고, 읽을 때도 2명에게 물어 최신 서명을 확인하면 충분히 신뢰할 수 있다.</p>
+</blockquote>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="cassandra-vs-dynamodb-vs-hbase">Cassandra vs DynamoDB vs HBase</h3>
+<table><thead><tr><th style="text-align: center">비교 항목</th><th style="text-align: center">Cassandra</th><th style="text-align: center">DynamoDB</th><th style="text-align: center">HBase</th></tr></thead><tbody>
+<tr><td style="text-align: center">배포 형태</td><td style="text-align: center">자체 운영/클라우드</td><td style="text-align: center">AWS 완전 관리형</td><td style="text-align: center">Hadoop 클러스터</td></tr>
+<tr><td style="text-align: center">일관성</td><td style="text-align: center">튜너블</td><td style="text-align: center">선택(Eventual/Strong)</td><td style="text-align: center">강한 일관성</td></tr>
+<tr><td style="text-align: center">마스터</td><td style="text-align: center">없음(P2P)</td><td style="text-align: center">없음(관리형)</td><td style="text-align: center">HMaster 있음</td></tr>
+<tr><td style="text-align: center">멀티 리전</td><td style="text-align: center">내장(다중 DC)</td><td style="text-align: center">Global Tables</td><td style="text-align: center">복잡</td></tr>
+<tr><td style="text-align: center">쿼리 언어</td><td style="text-align: center">CQL (SQL 유사)</td><td style="text-align: center">DynamoDB API</td><td style="text-align: center">HBase API</td></tr>
+<tr><td style="text-align: center">비용 모델</td><td style="text-align: center">노드 기반</td><td style="text-align: center">요청 단위 과금</td><td style="text-align: center">클러스터 비용</td></tr>
+</tbody></table>
+<h3 id="cassandra-anti-patterns-pihaeya-hal-paeteon">Cassandra Anti-Patterns (피해야 할 패턴)</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">❌ 1. ALLOW FILTERING 사용
+   → 파티션 키 없는 전체 스캔 → 클러스터 전체 부하
+
+❌ 2. 매우 큰 파티션 (&gt;100MB)
+   → 읽기 타임아웃, GC 압박, 핫 노드
+
+❌ 3. 무한 증가 컬렉션 (Set&#x2F;List&#x2F;Map)
+   → 단일 파티션에 수백만 아이템 → 대형 파티션과 동일 문제
+
+❌ 4. 높은 삭제 비율 + 낮은 TTL
+   → Tombstone 폭발 → 읽기 성능 급락
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong></p>
+<blockquote>
+<p>Cassandra와 HBase의 차이는 자율 관리 아파트 단지(Cassandra)와 관리사무소가 있는 아파트(HBase)의 차이다. 자율 관리는 관리사무소가 없어도 주민들이 자체적으로 운영하지만, 관리사무소가 있으면 더 강력한 규칙(강한 일관성) 적용이 가능하다.</p>
+</blockquote>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="deiteo-senteo-insig-bogje-jeonryag">데이터 센터 인식 복제 전략</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">NetworkTopologyStrategy 사용 (멀티 DC):
+
+CREATE KEYSPACE myapp
+WITH replication = {
+  &#x27;class&#x27;: &#x27;NetworkTopologyStrategy&#x27;,
+  &#x27;dc_seoul&#x27;: 3,    -- 서울 DC에 3개 복제본
+  &#x27;dc_busan&#x27;: 2     -- 부산 DR에 2개 복제본
+};
+
+LOCAL_QUORUM: 서울 DC 내에서만 QUORUM → 네트워크 지연 최소화
+EACH_QUORUM: 모든 DC에서 QUORUM → 최고 일관성 (느림)
+</code></pre>
+<h3 id="unyeong-cekeuriseuteu">운영 체크리스트</h3>
+<table><thead><tr><th style="text-align: center">항목</th><th style="text-align: center">권장값</th><th style="text-align: left">이유</th></tr></thead><tbody>
+<tr><td style="text-align: center">최소 노드 수</td><td style="text-align: center">RF × 2 이상</td><td style="text-align: left">유지보수 중에도 QUORUM 보장</td></tr>
+<tr><td style="text-align: center">힙 메모리</td><td style="text-align: center">최대 32GB</td><td style="text-align: left">GC 압박 최소화</td></tr>
+<tr><td style="text-align: center">Compaction 전략</td><td style="text-align: center">TWCS(시계열), LCS(읽기 집중)</td><td style="text-align: left">워크로드 특성 매칭</td></tr>
+<tr><td style="text-align: center">vnodes 수</td><td style="text-align: center">8~16개</td><td style="text-align: left">균등 분산 + 이동 비용 균형</td></tr>
+<tr><td style="text-align: center">모니터링</td><td style="text-align: center">Tombstone 경고</td><td style="text-align: left">1만 이상 시 즉시 조사</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong></p>
+<blockquote>
+<p>Cassandra 운영에서 Tombstone은 묘지 표시와 같다. 너무 많이 쌓이면 데이터를 읽으러 가는 길에 묘지 표시를 수십만 개 넘어가야 해서 속도가 급격히 떨어진다. 주기적인 TTL 설정과 Compaction으로 청소해야 한다.</p>
+</blockquote>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="netflixyi-cassandra-doib-sarye">Netflix의 Cassandra 도입 사례</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">도입 전: Oracle RAC → 단일 마스터, 수직 확장 한계
+도입 후: Cassandra 수백 노드
+  - 쓰기: 초당 수백만 건(뷰 이력, 재생 상태)
+  - 가용성: 99.999% (5-nines)
+  - 리전: 멀티 AWS 리전 복제
+  - 결과: RDBMS 대비 10배 이상 저렴한 비용으로 100배 처리량
+</code></pre>
+<h3 id="gyeolron">결론</h3>
+<p>Cassandra는 쓰기 집중, 고가용성, 멀티 리전이 필요한 대규모 서비스의 표준 선택지가 되었다. 기술사 시험에서는 <strong>마스터리스 링 구조의 동작 원리</strong>, <strong>RF·W·R 조합과 일관성 보장 수식</strong>, <strong>Compaction 전략별 적합 워크로드</strong>, <strong>CQL Primary Key 설계</strong>가 핵심 논점이다.</p>
+<p>📢 <strong>섹션 요약 비유</strong></p>
+<blockquote>
+<p>Cassandra는 24시간 편의점 체인과 같다. 어느 지점(노드)에서든 물건을 사고 팔 수 있고, 한 지점이 문을 닫아도 다른 지점들이 운영을 이어간다. 인기 상품(데이터)은 여러 지점에 미리 재고를 쌓아두어 어느 지점에서든 즉시 구할 수 있다.</p>
+</blockquote>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: center">개념</th><th style="text-align: center">관계</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: center">일관된 해싱</td><td style="text-align: center">데이터 분산</td><td style="text-align: left">토큰 링으로 노드 할당</td></tr>
+<tr><td style="text-align: center">Gossip Protocol</td><td style="text-align: center">클러스터 관리</td><td style="text-align: left">노드 상태 P2P 전파</td></tr>
+<tr><td style="text-align: center">Bloom Filter</td><td style="text-align: center">읽기 최적화</td><td style="text-align: left">SSTable 존재 여부 빠른 확인</td></tr>
+<tr><td style="text-align: center">Read Repair</td><td style="text-align: center">일관성 유지</td><td style="text-align: left">읽기 시 오래된 복제본 자동 갱신</td></tr>
+<tr><td style="text-align: center">Anti-Entropy</td><td style="text-align: center">백그라운드 동기화</td><td style="text-align: left">주기적 복제본 비교·수정</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[관계형 DB (RDBMS) — 스키마 고정, 수직 확장 한계]
+    │
+    ▼
+[NoSQL — 유연한 스키마, 수평 확장 지향]
+    │
+    ▼
+[Cassandra — 분산 와이드 컬럼 스토어, 고가용성 설계]
+    │
+    ▼
+[Consistent Hashing — 노드 추가 시 최소 리밸런싱 데이터 분산]
+    │
+    ▼
+[쓰기 최적화 (Write-Optimized) — LSM 트리 기반 고처리량 쓰기]
+    │
+    ▼
+[멀티 마스터 복제 (Multi-Master) — 전역 분산 액티브-액티브 구성]
+</code></pre>
+<p>Cassandra는 단일 마스터 RDBMS의 확장 한계를 극복하기 위해 설계된 분산 와이드 컬럼 스토어로, 멀티 마스터 복제와 LSM 트리로 초고속 쓰기를 실현한다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>Cassandra는 원형으로 앉은 친구들이 서로 노트를 돌려보는 스터디 모임 — 선생님 없이도 모두가 같은 내용을 갖게 돼요.</li>
+<li>RF=3이면 노트를 3개 복사해서 서로 다른 친구에게 맡기는 것 — 한 친구가 결석해도 나머지에게 물어볼 수 있어요.</li>
+<li>Compaction은 주기적인 방 정리 — 쓰레기(삭제된 데이터)가 쌓이면 필요한 물건(진짜 데이터)을 찾는 데 시간이 오래 걸리니까요.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

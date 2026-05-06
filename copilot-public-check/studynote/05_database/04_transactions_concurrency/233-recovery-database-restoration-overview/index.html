@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>233. 회복 (Recovery) - 장애 발생 전 일관된 상태로 DB 복원 (원자성, 영속성 보장 기법) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="233-hoebog-recovery-deiteobeiseu-bogweon-weonjaseong-yeongsogseong-teuraenjaegsyeon-oryu-jangae-boggu-aries-jaesilhaeng-cwiso">233. 회복 (Recovery) - 데이터베이스 복원 원자성 영속성 트랜잭션 오류 장애 복구 ARIES 재실행 취소</h1>
+<blockquote>
+<p><strong>핵심 인사이트</strong>: (232번 지옥에서 DB를 살려내는 응급실) "야! 232번에서 정전이 나서 메모리가 타버리고 서버가 뻗었다(시스템 장애)! 재부팅 했더니 방금 전까지 고객들이 송금 누르던 돈 계산 데이터가 허공으로 싹 다 날아갔다! 어떡할래?! 은행 망했냐?!" "걱정 마라!! DB가 괜히 DB냐! DB 안에는 신이 내려준 **'회복(Recovery)'**이라는 심폐소생술 마법이 무조건 돌아가고 있어!! 서버가 다시 켜지는 순간, 1초의 틈도 없이 DB 엔진이 구석에 꽁꽁 숨겨둔 '블랙박스(로그 파일)'를 미친 듯이 뒤져서, 죽기 직전까지 송금 완료(COMMIT) 도장 찍었던 놈들은 억지로 멱살 잡고 끝까지 다시 반영(Redo)해 살려내고!! 덜 익은 채로 중간에 뻗어버린 찌끄러기(미완성) 놈들은 싹 다 파내서 원래 0원으로 완벽하게 지워(Undo) 버려!! 이 짓을 해야만 통장이 반갈죽 되지 않고 완벽한 모순 없는 상태(일관성)로 부활하잖아!!" 우주가 멸망해도 트랜잭션의 원자성과 영속성을 지켜내는 십자가, 회복(Recovery)이다.</p>
+</blockquote>
+<h2 id="i-hoebogi-eobseumyeon-acid-heonbeobi-bunggoehanda">Ⅰ. 회복이 없으면 ACID 헌법이 붕괴한다</h2>
+<ul>
+<li>데이터베이스는 193~196번에서 배운 트랜잭션 4대 특성(ACID)을 목숨 걸고 지켜야 합니다.</li>
+<li><strong>원자성(Atomicity)</strong>: "All or Nothing". 10만 원을 빼고 10만 원을 넣는 도중에 서버가 죽으면? 빼기만 하고 넣지를 못해 10만 원이 증발합니다. 무조건 처음으로 100% 롤백(취소) 시켜야 원자성이 지켜집니다.</li>
+<li><strong>영속성(Durability)</strong>: "한 번 COMMIT 치면 지구가 박살 나도 보존된다." COMMIT 쳤는데 하드디스크에 저장되기 직전에 정전으로 메모리가 증발했다? 무조건 다시 실행해서 하드에 새겨놔야 영속성이 지켜집니다.</li>
+</ul>
+<h2 id="ii-hoebog-recovery-yi-gaenyeom">Ⅱ. 회복 (Recovery)의 개념 🌟</h2>
+<ul>
+<li><strong>개념</strong>: 데이터베이스 시스템에 232번과 같은 장애(트랜잭션, 시스템, 미디어 장애)가 발생하여 데이터가 훼손되거나 모순 상태에 빠졌을 때, <strong>장애가 발생하기 이전의 100% 모순 없는 '안전하고 일관된 상태(Consistent State)'로 시스템을 완벽하게 되돌려 복원해 내는 데이터베이스 관리 시스템(DBMS)의 핵심 기능</strong>입니다.</li>
+</ul>
+<h2 id="iii-hoebogeul-myeogsal-jabgo-kaerihaneun-2dae-heugmabeob-seupoilreo-haegsim-gicul">Ⅲ. 회복을 멱살 잡고 캐리하는 2대 흑마법 (스포일러) 🌟 핵심 기출 🌟</h2>
+<p>DB가 기절했다가 눈을 번쩍 떴습니다. 어떻게 살려낼까요? 234번, 235번에서 단독 문서로 딥하게 팔 2가지 마법을 씁니다.</p>
+<h3 id="1-redo-jaesilhaeng-jeonjin-boggu-roll-forward-yeongsogseongyi-suhoja">1. Redo (재실행 / 전진 복구 Roll-forward) - 영속성의 수호자</h3>
+<ul>
+<li><strong>타겟</strong>: 불 꺼지기 0.1초 전에 <strong>"결제 완료(COMMIT)!"</strong> 도장은 쾅 찍었는데, 너무 급하게 죽느라 디스크(쇳덩어리 원본)에 글씨를 채 못 적고 메모리만 타버린 불쌍한 트랜잭션들.</li>
+<li><strong>조치</strong>: "야 ㅆㅂ 너 COMMIT 쳤잖아! 영속성(Durability) 지켜야지!" DB가 일기장(로그)을 보고 그 놈이 했던 덧셈 뺄셈 작업을 똑같이 **다시 재실행(Redo)**해서, 어떻게든 쇳덩어리 디스크에 억지로 기록을 쑤셔 넣어 영구 보존 시킵니다.</li>
+</ul>
+<h3 id="2-undo-cwiso-hujin-boggu-roll-backward-weonjaseongyi-suhoja">2. Undo (취소 / 후진 복구 Roll-backward) - 원자성의 수호자</h3>
+<ul>
+<li><strong>타겟</strong>: 불 꺼지기 전에 열심히 엑셀을 고치고 있었는데, 아직 <strong>"결제 완료(COMMIT)" 도장을 못 찍은 덜 익은 미완성 상태</strong>로 같이 기절해 버린 쓰레기 트랜잭션들.</li>
+<li><strong>조치</strong>: "야! 너 아직 도장(COMMIT) 안 찍었잖아! 근데 중간에 쓴 더러운 데이터가 디스크에 묻었어? 원자성(Atomicity) 지켜야지! All or Nothing 이니까 너는 Nothing이야!" 일기장(로그)을 거꾸로 뒤지면서, 그놈이 덮어썼던 찌끄러기 흔적을 싹 다 파내어 수정하기 이전의 깨끗한 과거 상태로 완벽하게 <strong>취소(Undo)</strong> 시켜버립니다.</li>
+</ul>
+<h2 id="iv-eoddeohge-gieoghae-naelgga-rogeu-pailyi-jeoldaeseong">Ⅳ. 어떻게 기억해 낼까? (로그 파일의 절대성)</h2>
+<ul>
+<li>정전돼서 메모리가 날아갔는데 DB가 Redo와 Undo를 무슨 수로 귀신같이 알아내서 할까요?</li>
+<li>236번에서 배울 **'WAL (Write-Ahead Logging)'**이라는 목숨 같은 룰 때문입니다. DB는 엑셀을 고치기 전에 하늘이 두 쪽 나도 "나 지금 이거 고친다!"라는 일기장(Log)부터 디스크 깊은 곳에 먼저 안전하게 써둡니다. 이 일기장이 바로 회복의 유일한 나침반입니다.</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: <strong>회복(Recovery)</strong> 기능은 끔찍한 교통사고가 났을 때 출동하는 **'시간 조작 구급대원 2인조'**와 같습니다. 고속도로(DB 서버)에서 트럭 10대가 달리다 연쇄 추돌이 나며 모든 차가 멈췄습니다(시스템 장애 발생). 10초 뒤, 헬기를 타고 '회복 구급대원'이 출동합니다. 구급대원은 차의 블랙박스(로그 파일)를 미친 듯이 뒤집니다. **1번 대원(Redo)**은 톨게이트 요금을 이미 다 냈는데(COMMIT 완료) 사고 여파로 톨게이트 밖으로 튕겨 나간 억울한 차들을 찾습니다. "너희는 요금 냈으니 통과야!" 라며 차의 시동을 억지로 걸어 기어코 목적지까지 밀고 가서 도착(영속성 보장)시켜버립니다. 반면 **2번 대원(Undo)**은 요금소에서 돈을 반쯤 내다 말고 사고가 나서 뻗어버린 미완성 차들을 찾습니다. "너희는 아직 결제 끝(COMMIT) 안 났어! 차 빼!" 라며 차에 사슬을 묶고 톨게이트 진입 1시간 전 과거의 톨게이트 밖으로 질질 끌어당겨(원자성 보장) 사고의 흔적 자체를 100% 깔끔하게 지워버립니다. 이 두 명의 무자비한 전진(Redo)과 후진(Undo) 교통정리 덕분에, 도로는 사고가 났었는지조차 모르게 다시 차들이 매끄럽게 쌩쌩 달리는 평화로운 일관성 상태(Consistent State)로 1초 만에 완벽 복원되는 것입니다.</p>
+</blockquote>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

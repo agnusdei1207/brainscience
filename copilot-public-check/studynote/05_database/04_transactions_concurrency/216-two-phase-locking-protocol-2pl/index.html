@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>216. 2단계 락킹 프로토콜 (2PL, Two-Phase Locking) - 직렬 가능성 보장을 위한 락 프로토콜 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="216-2dangye-ragking-peurotokol-2pl-two-phase-locking-jigryeol-ganeungseong-bojang-rag-hwagjang-dangye-cugso-dangye-dedeurag-yeonswae-boggwi-hangyejeom-teuraenjaegsyeon-dongsiseong-jeeo">216. 2단계 락킹 프로토콜 (2PL, Two-Phase Locking) - 직렬 가능성 보장 락 확장 단계 축소 단계 데드락 연쇄 복귀 한계점 트랜잭션 동시성 제어</h1>
+<blockquote>
+<p><strong>핵심 인사이트</strong>: (211, 212번의 궁극적 정답지) 213번에서 자물쇠(Lock)를 배웠다. 근데 개발자 철수가 미쳐서 코드 한 줄 칠 때마다 "A 락 걸기 ➜ A 풀기 ➜ B 락 걸기 ➜ B 풀기 ➜ 다시 A 락 걸기" 식으로 자물쇠를 정신병자처럼 열었다 풀었다 막 섞어 썼다. 그 틈새로 해커가 비집고 들어와 데이터를 쑥대밭으로 만들고 모순성(직렬 가능성 박살) 에러가 펑펑 터졌다. 학자들이 분노했다. "야 ㅆㅂ!! 네 마음대로 자물쇠를 열었다 풀었다 촐랑대지 마!! 자물쇠 통제에도 '군대식 각개전투 2단계' 절대 규칙을 법으로 박아주마!! <strong>1단계(확장): 방에 들어갈 땐 미친 듯이 필요한 자물쇠를 다 쓸어 모으기만(Lock) 해! 단 1개라도 자물쇠를 바닥에 버리는 순간(Unlock), 넌 즉시 2단계(축소)로 강제 진입당한다! 2단계: 이때부턴 가진 자물쇠를 하나씩 풀고 버리기만 해! 절대 맹세코 단 한 개의 새로운 자물쇠(Lock)도 다시는 쥘 수 없다!!</strong>" 이 2단계 강제 법규(2PL)만 지키면, 신기하게도 수학적으로 무조건 100% 에러 안 나는 '직렬 가능 스케줄(안전빵)'만 튀어나온다!</p>
+</blockquote>
+<h2 id="i-jamulsoe-colranggeorimyi-bigeug-jigryeol-ganeungseong-pagoe">Ⅰ. 자물쇠 촐랑거림의 비극 (직렬 가능성 파괴)</h2>
+<ul>
+<li>트랜잭션이 아무런 룰 없이 <code>Lock(A)</code> ➜ <code>Unlock(A)</code> ➜ <code>Lock(B)</code> ➜ <code>Unlock(B)</code> 순서로 제멋대로 자물쇠를 걸고 풀면, A의 자물쇠를 푼 그 찰나의 빈틈에 딴 놈이 쏜살같이 튀어 들어와 A의 값을 훼손합니다.</li>
+<li>결과적으로 211번에서 그토록 원했던 '충돌 직렬 가능 스케줄(안전빵 시간표)'의 사이클 검사를 통과하지 못하고 <strong>데이터가 박살 나는 쓰레기 스케줄</strong>이 되어버립니다.</li>
+</ul>
+<h2 id="ii-2dangye-ragking-peurotokol-2pl-yi-gaenyeom">Ⅱ. 2단계 락킹 프로토콜 (2PL)의 개념 🌟</h2>
+<ul>
+<li><strong>개념</strong>: 시스템의 모든 트랜잭션이 자물쇠를 획득(Lock)하고 반납(Unlock)하는 행위를 뒤죽박죽 섞어서 하지 못하도록, <strong>오직 락을 모으기만 하는 '확장(Growing) 단계'와 락을 버리기만 하는 '축소(Shrinking) 단계', 두 개의 명확하게 분리된 시간적 페이즈(Phase)로 나누어 실행할 것을 강제하는 락킹 규약</strong>입니다.</li>
+<li><strong>존재 이유 (절대 명제) 🌟 기출</strong>: 이 2PL 규약만 똑바로 지키면, 그 결과로 나오는 병행 짬뽕 시간표(스케줄)는 <strong>아무런 수학적 검증 없이도 무조건 100% 직렬 가능 스케줄(Serializable, 에러 없는 완벽한 스케줄)이 됨을 수학적으로 보장</strong>받습니다. 전 세계 상용 DB가 이 프로토콜을 뼈대로 삼는 이유입니다.</li>
+</ul>
+<h2 id="iii-2pleul-jibaehaneun-2gaeyi-siganpyo-peijeu-haegsim-gicul">Ⅲ. 2PL을 지배하는 2개의 시간표 페이즈 🌟 핵심 기출 🌟</h2>
+<p>오르막길이 끝나야 내리막길이 시작됩니다.</p>
+<h3 id="1-hwagjang-dangye-growing-phase-beulraegholceoreom-jibeosamkigi">1. 확장 단계 (Growing Phase) - "블랙홀처럼 집어삼키기"</h3>
+<ul>
+<li>트랜잭션이 시작되고 처음 진입하는 1단계입니다.</li>
+<li>이 단계에서 트랜잭션은 자신이 필요한 <strong>모든 자물쇠(S-Lock, X-Lock)를 미친 듯이 시스템으로부터 획득(Lock)하고 끌어모으는 것만 가능</strong>합니다.</li>
+<li><strong>절대 룰</strong>: 이 1단계에서는 자신이 이미 손에 쥔 자물쇠를 <strong>단 1개라도 절대 바닥에 던져서 풀 수(Unlock) 없습니다.</strong> 풀면 바로 2단계로 쫓겨납니다.</li>
+</ul>
+<h3 id="2-cugso-dangye-shrinking-phase-hanassig-beorigo-ddeonagi">2. 축소 단계 (Shrinking Phase) - "하나씩 버리고 떠나기"</h3>
+<ul>
+<li>트랜잭션이 드디어 손에 쥔 수많은 자물쇠 중 <strong>'처음으로 딱 1개의 자물쇠를 푼(Unlock) 그 찰나의 순간!'</strong> 트랜잭션은 자동으로 확장 단계를 종료하고 이 2단계(축소 단계)로 강제 진입(Lock Point 도달)하게 됩니다.</li>
+<li><strong>절대 룰</strong>: 축소 단계에 진입한 트랜잭션은 <strong>이제부터 가진 자물쇠를 하나씩 풀어서 반납(Unlock)하는 것만 가능</strong>합니다. 아차! 하고 실수로 까먹은 새로운 자물쇠가 필요해져도 <strong>새로운 락(Lock)을 획득하는 것은 우주가 폭발해도 영원히 절대 불가능</strong>합니다.</li>
+</ul>
+<h2 id="iv-2plyi-pisbic-hangyejeom-2gaji-gicul-dangol">Ⅳ. 2PL의 핏빛 한계점 2가지 🌟 기출 단골 🌟</h2>
+<p>직렬 가능성(안전빵)은 완벽히 보장해 주지만, 세상에 완벽한 무기는 없습니다.</p>
+<h3 id="1-gyocag-sangtae-deadlock-balsaeng">1. 교착 상태 (Deadlock) 발생 🌟</h3>
+<ul>
+<li>2PL은 "풀기 전까진 모으기만 해라"라는 룰 때문에 데드락(서로의 목을 조르고 영원히 멈추는 현상)에 미치도록 취약합니다.</li>
+<li>T1이 A락을 쥐고 확장 단계 중인데 B락이 필요합니다. T2는 B락을 쥐고 확장 단계 중인데 A락이 필요합니다. 둘 다 "풀 수 없는 1단계"에 있으므로 평생 서로의 락을 기다리다 시스템 전체가 먹통이 되는 <strong>데드락(교착상태)을 원천적으로 막지 못하는 치명적 구멍</strong>이 있습니다.</li>
+</ul>
+<h3 id="2-yeonswae-boggwi-cascading-rollback-yi-wiheom">2. 연쇄 복귀 (Cascading Rollback)의 위험 🌟</h3>
+<ul>
+<li>T1이 축소 단계에 접어들어 A락을 살짝 풀었습니다(Unlock). 하지만 아직 T1 자체는 완전히 끝난(COMMIT) 게 아닙니다.</li>
+<li>A락이 풀린 걸 보고 신난 T2가 득달같이 달려와 A락을 줍고 A데이터를 읽었습니다(오손 읽기).</li>
+<li>근데 1초 뒤 T1이 에러가 나서 뒤늦게 <strong>ROLLBACK(취소)</strong> 되어버렸습니다.</li>
+<li>그 찰나의 빈틈에 락을 주워 먹었던 T2, T3까지 모조리 다 도미노처럼 같이 롤백되어버리는 <strong>206번 연쇄 복귀(Cascading Rollback) 재앙</strong>을 2PL 기본형으로는 막아내지 못합니다. (이걸 막기 위해 X-Lock을 트랜잭션이 100% COMMIT 될 때까지 절대 안 풀고 꽉 쥐고 있는 <strong>'엄격한(Strict) 2PL'</strong> 진화형이 등장하게 됩니다.)</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: **2단계 락킹 프로토콜(2PL)**은 마트에서 뷔페 음식을 털어가는 **'이기적인 식판 룰'**입니다. 마트 관리자(DB 엔진)가 음식(데이터)이 섞여서 오염되는 걸 막기 위해 절대 법규를 세웠습니다. <strong>1단계(확장 단계)</strong>: 손님(트랜잭션)은 카트(트랜잭션 공간)를 끌고 매장을 돌며 자기가 요리할 때 필요한 '고기 락, 야채 락, 양념 락' 등 모든 재료의 자물쇠를 카트에 미친 듯이 끌어 담기(Lock 획득)만 해야 합니다. 카트에 담은 걸 중간에 하나라도 다시 진열대에 툭 던져서 내려놓는 순간(Unlock 시도), 경비원이 나타나 호루라기를 불며 "어?! 너 하나 버렸지? 넌 이제 1단계 끝났어! 2단계로 넘어가!"라고 강제 전환시킵니다. <strong>2단계(축소 단계)</strong>: 이때부터 손님은 카트에 담은 자물쇠를 하나씩 진열대에 반납(Unlock)하는 것만 허락됩니다. 가다가 "아차, 소금 락을 깜빡했네!" 하고 소금 락을 새로 집으려(Lock 획득 시도) 해도, 경비원이 몽둥이로 때리며 <strong>"넌 이미 반납(축소) 단계에 접어들었어! 새로운 재료(Lock) 추가 획득은 영원히 불가능하다!!"</strong> 라며 철통같이 막아냅니다. 중간에 촐랑대며 잡았다 놨다 하는 빈틈을 완전히 박살 내버리기 때문에, 뒤따라오는 손님과 재료가 섞이는 에러(데이터 모순)가 수학적으로 100% 완벽하게 차단되어 궁극의 '직렬 가능 스케줄'이라는 안전한 평화를 강제로 쟁취해 내는 DB의 핵심 통제 헌법입니다.</p>
+</blockquote>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

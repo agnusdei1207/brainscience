@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>048. 행 지향 저장소 — Row-Oriented Store &amp; OLTP — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote database
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <blockquote>
+<p><strong>핵심 인사이트</strong></p>
+<ol>
+<li>행 지향 저장소(Row-Oriented Store)는 한 행의 모든 컬럼 데이터를 연속 저장 — 특정 행의 전체 속성을 한 번에 읽는 OLTP(Online Transaction Processing) 워크로드에 최적화되어 있으며, INSERT/UPDATE/DELETE 시 단일 I/O로 행 전체를 처리한다.</li>
+<li>OLTP와 OLAP는 완전히 다른 최적화 방향 — OLTP는 행 지향(단일 행 빠른 접근), OLAP는 컬럼 지향(대용량 컬럼 집계). 같은 물리적 데이터를 두 방향으로 저장하는 HTAP(Hybrid)가 현대 트렌드다.</li>
+<li>버퍼 풀(Buffer Pool)이 OLTP 성능의 핵심 — 행 지향 DB의 메인 성능 메커니즘은 자주 쓰는 페이지를 메모리에 캐싱하는 버퍼 풀이며, 버퍼 풀 히트율 99% 이상이 고성능 OLTP의 목표다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-haeng-jihyang-jeojangso-gujo">Ⅰ. 행 지향 저장소 구조</h2>
+<pre><code>행 지향 (Row-Oriented) 저장:
+
+테이블 데이터:
+  ID  이름   연봉    부서
+  1   김철수  5000   개발
+  2   이영희  6000   마케팅
+  3   박민수  4500   개발
+
+디스크 저장 순서:
+  [1|김철수|5000|개발] [2|이영희|6000|마케팅] [3|박민수|4500|개발]
+  └──── 1페이지(8KB) ────┘
+
+특성:
+  한 행의 모든 컬럼 = 연속된 바이트
+  행 단위 I&#x2F;O = 페이지 1번 읽어 전체 컬럼 접근
+
+OLTP에서의 장점:
+  SELECT * WHERE id = 1
+  → 행 1 포함 페이지 1개만 읽기 (빠름)
+  
+  UPDATE salary WHERE id = 1
+  → 행 1 포함 페이지 읽기 → 수정 → 쓰기
+
+OLAP에서의 단점:
+  SELECT SUM(연봉) FROM employees
+  → 모든 행 전체 컬럼 읽기 (이름, 부서 불필요)
+  → 불필요한 컬럼 I&#x2F;O 발생
+
+페이지 구조 (MySQL InnoDB):
+  페이지 크기: 16KB (기본)
+  
+  페이지 내 구조:
+  [페이지 헤더][행1][행2]...[행N][빈 공간][페이지 디렉토리][페이지 트레일러]
+  
+  가득 찬 페이지(Fill Factor ~87%):
+  INSERT 공간 부족 → 페이지 분할 (Page Split)
+</code></pre>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 행 지향 = 서랍 한 칸에 한 사람 정보 — "김철수" 서랍엔 이름+연봉+부서 한 번에. 한 명 정보 꺼낼 때(OLTP) 빠름. 전체 연봉 합산(OLAP) 땐 모든 서랍 열어야 해서 느림!</p>
+</blockquote>
+<hr />
+<h2 id="ii-oltp-teugseonggwa-coejeoghwa">Ⅱ. OLTP 특성과 최적화</h2>
+<pre><code>OLTP (Online Transaction Processing):
+
+특성:
+  짧고 빠른 트랜잭션 (&lt; 100ms)
+  대량의 동시 사용자 (수천~수만)
+  단일 행 또는 소수 행 접근
+  INSERT&#x2F;UPDATE&#x2F;DELETE 빈번
+  ACID 트랜잭션 필수
+
+워크로드 예:
+  은행 계좌 이체
+  전자상거래 주문 처리
+  좌석 예약 시스템
+  재고 관리
+
+OLTP 최적화 기법:
+
+1. 버퍼 풀 (Buffer Pool):
+  자주 접근하는 페이지 메모리 캐싱
+  히트율 = 메모리에서 직접 읽기 비율
+  
+  목표: 99%+ 히트율
+  
+  LRU 알고리즘으로 페이지 교체
+  버퍼 풀 크기 = 물리 메모리 × 70~80%
+
+2. 인덱스 (Index):
+  B+ 트리 인덱스: 범위 검색 효율
+  복합 인덱스: 자주 쓰는 WHERE 컬럼 조합
+  
+  쓰기 오버헤드:
+  INSERT 1건 → 인덱스 수 × 2 I&#x2F;O 추가
+
+3. 연결 풀 (Connection Pool):
+  DB 연결 생성 비용 절감
+  PgBouncer, HikariCP
+
+4. 파티셔닝:
+  날짜 범위 파티션
+  오래된 파티션 DROP → 빠른 삭제
+
+5. 읽기 복제본 (Read Replica):
+  Write → Primary
+  Read → Replica (SELECT 부하 분산)
+</code></pre>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: OLTP 최적화 = 편의점 운영 — 잘 팔리는 물건(버퍼 풀: 자주 쓰는 페이지 캐시), 빠른 검색(인덱스), 여러 계산대(연결 풀), 창고 분리(파티셔닝)!</p>
+</blockquote>
+<hr />
+<h2 id="iii-oltp-vs-olap-bigyo">Ⅲ. OLTP vs OLAP 비교</h2>
+<pre><code>비교표:
+  특성          | OLTP                | OLAP
+  -------------|---------------------|-------------------
+  목적         | 업무 처리           | 분석, 의사결정
+  쿼리 유형    | 단순 DML&#x2F;PK 조회   | 복잡 집계, JOIN
+  행 접근      | 수~수십 행          | 수백만~수십억 행
+  응답 시간    | 밀리초              | 초~분
+  동시 사용자  | 수천~수만           | 수십~수백
+  데이터 갱신  | 실시간 (빈번)       | 배치 (드문)
+  최적화       | 행 지향 저장        | 컬럼 지향 저장
+  대표 DB      | MySQL, PostgreSQL    | Snowflake, BigQuery
+  트랜잭션     | ACID 필수           | 완화 가능
+
+HTAP (Hybrid Transaction&#x2F;Analytical Processing):
+  단일 DB에서 OLTP + OLAP 동시 처리
+  
+  기술:
+  인메모리 컬럼 저장소:
+  TiDB: RocksDB(OLTP) + TiFlash(OLAP)
+  MySQL HeatWave: InnoDB + 컬럼 가속기
+  SQL Server: In-Memory OLTP + Columnstore
+  
+  장점:
+  ETL 불필요 (OLTP DB에서 직접 분석)
+  데이터 신선도: 실시간 분석
+  
+  단점:
+  자원 경합 (OLTP-OLAP I&#x2F;O 충돌)
+  복잡한 운영
+
+실제 아키텍처 선택:
+  소규모: HTAP 가능 (MySQL HeatWave)
+  중규모: OLTP DB + 야간 ETL + OLAP DB (Redshift)
+  대규모: OLTP (Aurora) + 스트리밍 CDC + 실시간 OLAP (ClickHouse)
+</code></pre>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: OLTP vs OLAP = 편의점 POS vs 마케팅 분석팀 — POS(OLTP)는 1건 빠르게 처리, 마케팅(OLAP)은 전체 데이터 집계. HTAP은 같은 데이터로 두 가지 모두!</p>
+</blockquote>
+<hr />
+<h2 id="iv-innodb-haeng-jihyang-guhyeon">Ⅳ. InnoDB 행 지향 구현</h2>
+<pre><code>MySQL InnoDB 행 저장 상세:
+
+B+ 트리 클러스터드 인덱스:
+  기본 키 순서로 행 저장
+  
+  장점: PK 기반 검색 = 인덱스 + 데이터 1번 I&#x2F;O
+  단점: 무작위 PK INSERT = 페이지 분할 빈번
+
+물리적 행 형식 (COMPACT):
+  [삭제 플래그 1비트][레코드 타입][N-byte 포인터][NULL 비트맵]
+  [가변 길이 컬럼 오프셋 목록][컬럼1][컬럼2]...[컬럼N]
+  
+  가변 길이 컬럼 (VARCHAR):
+  데이터 앞에 실제 길이 저장
+  
+  VARCHAR(255) → 최대 1바이트 오프셋
+  VARCHAR(65535) → 최대 2바이트 오프셋
+
+페이지 분할 (Page Split):
+  B+ 트리 노드 가득 참 → 분할
+  
+  순서 INSERT (PK 1, 2, 3, ...): 분할 적음
+  무작위 INSERT (UUID): 잦은 분할 → 성능 저하
+  
+  해결: UUID v7 (시간 순서 보장)
+  또는 AUTO_INCREMENT + 순서 삽입
+
+MVCC (Multi-Version Concurrency Control):
+  행 변경 시 기존 행 삭제 안 함
+  
+  행에 trx_id, roll_pointer 포함
+  읽기: 자신의 트랜잭션 시작 전 버전 읽기
+  
+  Undo Log: 이전 버전 저장 공간
+  장기 트랜잭션 → Undo Log 급증 → 성능 저하
+</code></pre>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: InnoDB 행 저장 = 파일 캐비닛 정리 — PK 순서로 서랍(페이지) 정렬. UUID로 랜덤 저장하면 서랍 분할(Page Split) 잦아 혼란. 순서대로 넣어야 빠름!</p>
+</blockquote>
+<hr />
+<h2 id="v-silmu-sinario-jeonjasanggeorae-oltp-coejeoghwa">Ⅴ. 실무 시나리오 — 전자상거래 OLTP 최적화</h2>
+<pre><code>전자상거래 주문 시스템 OLTP 튜닝:
+
+현황:
+  MySQL 8.0 (InnoDB)
+  초당 주문: 1,000건
+  평균 응답: 250ms (목표 50ms)
+  
+  슬로우 쿼리:
+  SELECT * FROM orders WHERE user_id = ? AND status = &#x27;pending&#x27;
+  → 200ms (풀 스캔)
+
+분석:
+  orders 테이블: 5천만 행
+  인덱스: PK (order_id) 만 존재
+  
+  쿼리 플랜:
+  → type: ALL (풀 테이블 스캔!)
+  → rows: 50,000,000 (전체 스캔)
+
+최적화:
+
+1. 복합 인덱스 추가:
+  CREATE INDEX idx_user_status
+  ON orders (user_id, status, created_at DESC);
+  
+  쿼리 플랜 재확인:
+  → type: ref (인덱스 사용)
+  → rows: 15 (극적 감소)
+  
+  응답: 200ms → 8ms ✓
+
+2. 버퍼 풀 증설:
+  innodb_buffer_pool_size = 4G → 12G
+  히트율: 92% → 99.3%
+
+3. 읽기 복제본 추가:
+  주문 조회 API → 복제본으로 라우팅
+  Primary 쓰기 부하 40% 감소
+
+4. Connection Pool 최적화:
+  HikariCP maxPoolSize = 50 → 100
+  connectionTimeout = 30s → 5s
+
+결과:
+  평균 응답: 250ms → 35ms (7배 개선)
+  P99: 800ms → 120ms
+  TPS: 1,000 → 3,500
+
+교훈:
+  인덱스 설계가 OLTP 성능의 80% 결정
+  버퍼 풀 크기 = 활성 데이터 셋 크기가 이상적
+</code></pre>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: OLTP 튜닝 결과 — 인덱스 없어서 5천만 행 전체 스캔(200ms)! 복합 인덱스 추가로 15행만 읽기(8ms). 인덱스 하나로 25배 빠르게. OLTP는 인덱스 설계가 90%!</p>
+</blockquote>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h2>
+<pre><code>행 지향 저장소 &#x2F; OLTP
++-- 저장 구조
+|   +-- 행 단위 연속 저장
+|   +-- B+ 트리 클러스터드 인덱스
+|   +-- 페이지 (8~16KB)
++-- OLTP 최적화
+|   +-- 버퍼 풀 (Buffer Pool)
+|   +-- 인덱스 설계
+|   +-- Connection Pool
+|   +-- 읽기 복제본
++-- 비교
+|   +-- OLAP (컬럼 지향)
+|   +-- HTAP (하이브리드)
++-- 대표 DB
+    +-- MySQL InnoDB
+    +-- PostgreSQL
+    +-- Oracle
+</code></pre>
+<hr />
+<h2 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h2>
+<pre><code>[파일 기반 DB (1960s)]
+레코드 순차 저장
+행 지향의 원형
+      |
+      v
+[관계형 DB (1970s)]
+IBM System R
+InnoDB 전신 페이지 구조
+      |
+      v
+[OLTP 최적화 (1980~90s)]
+버퍼 풀, B+ 트리 표준화
+오라클, SQL Server
+      |
+      v
+[인메모리 DB (2000s~)]
+SAP HANA, VoltDB
+RAM = 디스크 대체
+      |
+      v
+[HTAP (2015~)]
+TiDB, MySQL HeatWave
+OLTP + OLAP 통합
+      |
+      v
+[현재: 클라우드 OLTP]
+Aurora, Cloud Spanner
+서버리스 OLTP
+</code></pre>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>행 지향 = 서랍 한 칸에 한 사람 정보 — 서랍 열면 이름+연봉+부서 한꺼번에. 한 명 찾을 때(OLTP) 빠르고, 전체 연봉 합산(OLAP)엔 느려요!</li>
+<li>버퍼 풀 = 책상 위 자주 쓰는 서류 — 자주 꺼내는 서랍(페이지)을 책상(메모리)에 올려두기. 99% 히트율 = 창고 안 가도 됨!</li>
+<li>인덱스 = 목차 — 5천만 페이지 책에서 목차 없이 찾기(풀 스캔: 200ms) vs 목차로 찾기(인덱스: 8ms). 25배 빠름!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

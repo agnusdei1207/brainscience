@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>190. 이벤트 기반 아키텍처 (EDA) - 비동기 메시징 및 퍼블리시&#x2F;서브스크라이브 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote enterprise
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="190-ibenteu-giban-akitegceo-eda-event-driven-architecture">190. 이벤트 기반 아키텍처 (EDA, Event-Driven Architecture)</h1>
+<blockquote>
+<p>⚠️ 이 문서는 마이크로서비스(MSA) 간에 서로를 직접 호출(REST API 동기 통신)하다가 하나가 죽으면 도미노처럼 뻗어버리는 강결합의 치명적 문제를 해결하기 위해, **"나는 방금 이런 일을 했어"라는 이벤트(메시지)만 허공(메시지 브로커)에 던져놓고 쿨하게 자기 할 일을 하러 가는 '퍼블리시/서브스크라이브(Pub/Sub) 기반의 완벽한 비동기 디커플링 아키텍처'**를 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 서비스 A가 서비스 B를 '명령(Command, 너 이거 해라)'하는 구조에서, 서비스 A가 '상태 변화(Event, 나 이거 했음)'를 방송하면 관심 있는 B, C, D가 알아서 그 방송을 듣고 자기 할 일을 처리하는 구조로의 패러다임 전환이다.</li>
+<li><strong>가치</strong>: 주문 서비스는 알림 서비스가 서버 점검으로 죽어 있든 말든 신경 쓰지 않고 주문을 0.1초 만에 받아준다. 알림 서비스는 1시간 뒤에 살아나서 밀려있던 방송(Event)을 마저 듣고 고객에게 카톡을 보내면 그만이다 (극한의 장애 격리와 탄력성).</li>
+<li><strong>기술 체계</strong>: Kafka(카프카), RabbitMQ, AWS SNS/SQS 같은 이벤트 브로커(Event Broker)가 중앙에 위치하며, 한 번 발행된 이벤트는 절대 수정될 수 없는 불변성(Immutability)을 가져 '이벤트 소싱(Event Sourcing)' 패턴과 찰떡궁합을 이룬다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-donggisig-hocul-rest-api-yi-domino-jaeang">Ⅰ. 동기식 호출(REST API)의 도미노 재앙</h3>
+<p>직접 부르면 멱살이 잡혀 같이 죽는다.</p>
+<ol>
+<li><strong>강결합 (Tight Coupling)의 구조</strong>:
+<ul>
+<li>고객이 [주문]을 하면, 주문 서비스는 $\rightarrow$ [결제] API를 부르고 $\rightarrow$ [재고] API를 부르고 $\rightarrow$ 마지막으로 [알림] API를 불러 "고객님 결제 성공 카톡"을 보낸다.</li>
+</ul>
+</li>
+<li><strong>사슬의 붕괴</strong>:
+<ul>
+<li>하필 [알림] 서버에 트래픽이 몰려 응답이 10초 걸렸다.</li>
+<li>[주문] 서버는 알림 서버가 응답을 줄 때까지 HTTP 연결을 끊지 못하고 10초 동안 화면을 멈춘 채(Blocking) 기다려야 한다. 대기하는 손님이 1만 명이 되면 주문 서버의 쓰레드(Thread)가 바닥나 주문 시스템 전체가 뻗어버리는 최악의 장애(Cascading Failure)가 터진다.</li>
+<li>알림 카톡 하나 못 보낸 것 때문에 수십억 원짜리 주문 결제가 불가능해진 어처구니없는 상황이다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 회사에서 결재판을 들고 사장님부터 말단 사원까지 1열로 쭉 서서 앞사람이 도장을 찍어줄 때까지 뒷사람이 아무 일도 못 하고 멍하니 서 있는 것(동기 통신)과 같습니다. 중간에 한 명이라도 화장실에 가면 결재 라인 전체가 마비됩니다.</p>
+<hr />
+<h3 id="ii-peobeulrisi-seobeuseukeuraibeu-pub-sub-yi-haebang">Ⅱ. 퍼블리시/서브스크라이브 (Pub/Sub)의 해방</h3>
+<p>허공에 외치면 누군가는 듣고 일한다. 이것이 느슨한 결합(Loose Coupling)이다.</p>
+<ol>
+<li><strong>이벤트 브로커 (Event Broker) 배치</strong>:
+<ul>
+<li>서비스 사이에 '아파치 카프카(Apache Kafka)' 같은 거대한 게시판을 둔다.</li>
+</ul>
+</li>
+<li><strong>발행자 (Publisher)의 쿨한 퇴장</strong>:
+<ul>
+<li>고객이 주문을 하면, 주문 서비스는 게시판에 <code>[이벤트: 주문생성됨 ID=123]</code>이라는 메모를 딱 하나 붙여놓고(Publish) 0.01초 만에 고객에게 "주문 완료!" 화면을 띄워준다. 뒤에서 결제가 되든 알림이 가든 주문 서비스는 신경 끄고 퇴근한다.</li>
+</ul>
+</li>
+<li><strong>구독자 (Subscriber)들의 자율적 업무</strong>:
+<ul>
+<li>게시판을 구독(Subscribe)하고 있던 [재고] 서비스와 [알림] 서비스가 메모를 발견한다.</li>
+<li>각자 그 메모를 가져가서 자기 페이스대로 창고에서 물건을 빼고, 카톡을 발송한다. 만약 알림 서버가 고장 나 3시간 동안 죽어 있더라도, 메모는 게시판에 안전하게 붙어 있으므로(영속성) 3시간 뒤 살아나서 밀린 메모를 처리하면 그만이다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 각 부서 직원을 일일이 찾아가 말로 지시하는 대신, 휴게소에 있는 거대한 '알림판(카프카)'에 "나 방금 계약 따왔음!"이라고 포스트잇을 딱 붙여놓고 영업사원은 쿨하게 퇴근합니다. 그럼 재무팀, 배송팀이 휴게소에 커피 마시러 왔다가 포스트잇을 보고 "어, 계약 따왔네? 내가 계산서 끊고 배송 준비해야지"라며 알아서 일하는 완벽한 자율 분업(비동기) 시스템입니다.</p>
+<hr />
+<h3 id="iii-edayi-teureideuopeu-cujeogyi-neupgwa-coejong-ilgwanseong">Ⅲ. EDA의 트레이드오프: 추적의 늪과 최종 일관성</h3>
+<p>우아한 아키텍처지만, 디버깅을 하려면 지옥을 맛보게 된다.</p>
+<ol>
+<li><strong>최종 일관성 (Eventual Consistency)의 수용</strong>:
+<ul>
+<li>동기 방식은 즉각적으로 모든 DB가 일치하지만, EDA는 비동기로 처리되므로 사용자가 주문 버튼을 누른 직후에는 '주문됨' 상태인데 정작 '재고'는 아직 안 깎여 있을 수 있다. 수 초 뒤에 늦게 깎여 비로소 데이터가 일치하게 되는 시차(Eventual Consistency)를 비즈니스적으로 수용해야 한다.</li>
+</ul>
+</li>
+<li><strong>트랜잭션 롤백의 불가능 (Saga 패턴 필요)</strong>:
+<ul>
+<li>주문이 게시판에 메모를 붙였고, 재고 서비스가 메모를 보고 물건을 뺐는데, 뒤늦게 결제 서비스가 메모를 보고 카드를 긁으려다 "한도 초과"가 났다.</li>
+<li>일반 DB처럼 <code>ROLLBACK</code> 명령어 하나로 엎을 수가 없으므로, 결제 서비스가 다시 <code>[이벤트: 결제실패됨]</code> 메모를 게시판에 붙이고, 재고 서비스가 그걸 보고 "아까 뺀 물건 다시 채워 넣어야지"라며 보상 트랜잭션(Saga Pattern)을 치는 복잡한 코드를 다 짜주어야 한다.</li>
+</ul>
+</li>
+<li><strong>분산 추적의 난해함</strong>:
+<ul>
+<li>이벤트가 여러 큐를 타고 이리저리 날아다니므로, "사용자의 주문 1건이 도대체 어디서 막혔나?"를 추적하려면 집킨(Zipkin) 같은 분산 추적(Distributed Tracing) 인프라가 100% 필수적이다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 포스트잇(이벤트) 방식은 너무 빠르고 좋지만, 포스트잇이 중간에 바람에 날아가거나(메시지 유실), "아까 그 계약 취소됐대!"라는 두 번째 포스트잇(보상 트랜잭션)을 배송팀이 못 보고 물건을 보내버리는 대형 사고가 날 수 있습니다. 이를 막기 위해 포스트잇마다 고유 번호(Trace ID)를 적고 누가 언제 떼갔는지 cctv(분산 추적)로 꼼꼼히 감시하는 깐깐한 관리가 없으면 난장판이 됩니다.</p>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

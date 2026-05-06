@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>213. 패킷 필터링 방화벽 - 3-4층 헤더 기반 접근 통제 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote security
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="213-paekis-pilteoring-banghwabyeog-packet-filtering-firewall">213. 패킷 필터링 방화벽 (Packet Filtering Firewall)</h1>
+<blockquote>
+<p>⚠️ 이 문서는 컴퓨터 네트워크로 들어오고 나가는 데이터의 조각(Packet)들을 검사할 때, 내용물은 전혀 뜯어보지 않고 <strong>겉봉투에 적힌 IP 주소(네트워크 계층)와 포트 번호(전송 계층)만을 빠르고 기계적으로 대조하여 통과 여부를 결정하는 1세대 초창기 방화벽 기술</strong>을 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: OSI 7계층 중 주로 3계층(L3, Network)과 4계층(L4, Transport)의 헤더(Header) 정보를 사전에 관리자가 정해둔 규칙표(ACL)와 1:1로 매칭하여 허용(Allow) 또는 차단(Drop)하는 무상태(Stateless) 라우터 기반 필터링 장비다.</li>
+<li><strong>가치</strong>: 복잡한 데이터 분석 과정이 없기 때문에 검사 속도가 압도적으로 빠르며, 방대한 트래픽이 몰려오는 네트워크의 최상단 관문에서 뻔한 해킹이나 불필요한 포트 접근을 1차로 대량 걷어내는 강력한 필터 역할을 한다.</li>
+<li><strong>기술 체계</strong>: 들어오는 문과 나가는 문을 각각 따로 열어줘야 하는 구조(Stateless) 때문에, 내부 서버가 내보낸 데이터의 응답을 받기 위해 해커가 들어올 수 있는 포트(High Port)를 억지로 열어두어야 하는 심각한 보안 맹점이 존재한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-paekis-pilteoringyi-simpeulhan-geommunso-nonri">Ⅰ. 패킷 필터링의 심플한 검문소 논리</h3>
+<p>수백만 개의 택배 상자를 순식간에 검사하는 방법은 송장만 보는 것이다.</p>
+<ol>
+<li><strong>OSI 계층별 검사 영역 (L3 &amp; L4)</strong>:
+<ul>
+<li><strong>L3 (네트워크 계층)</strong>: 소포 겉면의 보내는 사람(Source IP)과 받는 사람(Destination IP) 주소를 확인한다.</li>
+<li><strong>L4 (전송 계층)</strong>: 수신 건물의 몇 번 방(Port Number)으로 들어가는지, 규격(TCP, UDP, ICMP)은 무엇인지 확인한다.</li>
+</ul>
+</li>
+<li><strong>접근 제어 목록 (ACL, Access Control List)</strong>:
+<ul>
+<li>관리자가 방화벽에 입력해 둔 '출입 금지 명단'이자 '초대장'이다.</li>
+<li>위에서 아래로 순차적으로 룰(Rule)을 검사하며, 일치하는 조건이 나오면 즉시 허용/차단을 결정한다.</li>
+<li>예: <code>Rule 1: Deny TCP Source 1.1.1.1 Dest Any</code> (1.1.1.1에서 오는 모든 연결 차단)</li>
+</ul>
+</li>
+<li><strong>Default Deny 원칙</strong>:
+<ul>
+<li>ACL 리스트를 다 뒤졌는데 명단에 없는 패킷이 오면? 무조건 마지막 룰에 의해 가차 없이 버려진다(Drop/Deny). 이것이 화이트리스트 기반 통제의 핵심이다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 우편물 분류 센터 기계가 상자를 엑스레이로 뜯어보지 않고(내용 검사 X), 겉에 붙은 운송장에 적힌 출발지(IP)와 배송받을 부서 번호(Port)만 쓱 보고, 허가된 목록(ACL)에 있으면 패스, 없으면 폐기물 통으로 튕겨내는 초고속 분류 작업과 같습니다.</p>
+<hr />
+<h3 id="ii-dansunhami-bureun-cimyeongjeog-yagjeom-statelessyi-hangye">Ⅱ. 단순함이 부른 치명적 약점 (Stateless의 한계)</h3>
+<p>1세대 방화벽은 건망증이 심하다. 방금 자기가 한 일을 기억하지 못한다.</p>
+<ol>
+<li><strong>상태(State)를 모르는 방화벽 (Stateless)</strong>:
+<ul>
+<li>내부 직원이 웹서핑을 하려고 네이버 웹서버(80번 포트)로 패킷을 내보낼 때, 내부 방화벽에서 'Outbound 허용' 룰을 만들어 통과시켜 주었다고 가정하자.</li>
+<li>네이버가 웹페이지 화면 데이터를 담아 다시 직원 PC로 응답(Inbound)을 보내올 때, 이 방화벽은 "얘가 아까 우리 직원이 불렀던 그 네이버 맞나?"를 기억하지 못한다.</li>
+</ul>
+</li>
+<li><strong>에페머럴 포트 (Ephemeral Port) 개방의 저주</strong>:
+<ul>
+<li>결국 직원이 네이버의 응답을 받으려면, 응답이 들어올 높은 번호의 임시 포트(1024 이상의 포트)를 방화벽에서 미리 수동으로 다 열어둬야(Inbound Allow) 한다.</li>
+<li><strong>보안의 구멍</strong>: 해커가 이 넓게 열려있는 포트를 발견하고, 마치 네이버의 정상 응답인 척 위장하여(IP 스푸핑) 뚫고 들어오는 공격(ACK Scanning 등)에 속수무책으로 당하게 된다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 초보 경비원이 피자 배달부를 문밖으로 내보내 주긴 했는데 얼굴을 기억하지 못해서(Stateless), 이 배달부가 그릇을 찾으러 다시 돌아왔을 때 누군지 몰라 문을 안 열어주는 격입니다. 할 수 없이 아파트 뒷문을 아예 다 열어놓고 "돌아올 때 이쪽으로 들어와"라고 했다가 도둑이 그 뒷문으로 들어오는 꼴입니다.</p>
+<hr />
+<h3 id="iii-peirodeu-naeyongmul-eunnig-gonggyeoge-cwiyag">Ⅲ. 페이로드(내용물) 은닉 공격에 취약</h3>
+<p>송장(Header)은 완벽히 속일 수 있는 세상이 되었다.</p>
+<ol>
+<li><strong>포트 위장 공격</strong>:
+<ul>
+<li>회사에서 80번(웹 통신 포트)은 기본적으로 뚫어준다.</li>
+<li>영리한 해커들은 겉봉투에 '목적지 80 포트'라고 적어놓고, 박스 안(Payload)에는 웹 데이터가 아니라 스카이프 채팅, 불법 P2P 트래픽, 심지어 치명적인 웜 바이러스 코드를 넣어 보낸다.</li>
+</ul>
+</li>
+<li><strong>패킷 필터링의 무력화</strong>:
+<ul>
+<li>1세대 방화벽은 "어? 80번 포트로 가네? 정상 트래픽이군! 통과!" 하고 악성코드를 안방까지 들이는 바보 같은 짓을 하게 된다.</li>
+</ul>
+</li>
+<li><strong>진화의 방향 (상태 기반 및 L7 방화벽)</strong>:
+<ul>
+<li>이러한 한계 때문에 현대의 방화벽은 누가 먼저 말을 걸었는지 세션을 기억하는 '상태 기반(Stateful Inspection)' 기능이 기본화되었고, 포트 번호뿐만 아니라 상자 안의 내용물(L7 애플리케이션)까지 뜯어보는 WAF(웹 방화벽)와 NGFW(차세대 방화벽)로 진화하게 된 것이다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 경비원이 겉에 '책 배송'이라고 적힌 택배(80번 포트)는 무조건 열어주는데, 사실 그 박스 안에는 책이 아니라 위험한 폭탄(악성코드)이 들어있는 상황입니다. 겉봉투만 믿는 패킷 필터링의 한계로 인해, 결국 박스를 직접 열어 내용물을 검사하는 공항 엑스레이(차세대 방화벽)가 도입된 것입니다.</p>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

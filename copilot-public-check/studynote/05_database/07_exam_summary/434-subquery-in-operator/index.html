@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>434. 서브쿼리 IN 연산자 최적화 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote database
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="434-seobeukweori-subquery-wa-in-yeonsanja">434. 서브쿼리 (Subquery)와 IN 연산자</h1>
+<blockquote>
+<p>⚠️ 이 문서는 하나의 거대한 SQL 문장 안에 또 다른 SQL 문장이 괄호로 숨어있는 '서브쿼리(Subquery)' 구조와, 그중에서도 <strong>초보 개발자들이 가장 많이 쓰지만 잘못 쓰면 테이블 풀 스캔 지옥을 만들어버리는 <code>IN</code> 연산자의 위험성과 튜닝 방법</strong>을 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 서브쿼리는 쿼리 안의 쿼리다. 실행 결과를 바깥쪽(Main) 쿼리에 넘겨주어 복잡한 조건을 처리할 때 쓰인다.</li>
+<li><strong>IN 연산자의 함정</strong>: <code>WHERE 부서코드 IN (SELECT 부서코드 FROM ...)</code> 구조를 썼을 때, 과거의 DB는 서브쿼리를 먼저 실행하지 않고 메인 쿼리를 한 줄씩 읽을 때마다 서브쿼리를 매번 다시 실행하는 바보짓을 했다.</li>
+<li><strong>해결책 (Semi Join)</strong>: 현대의 똑똑한 옵티마이저는 <code>IN</code> 서브쿼리를 멍청하게 돌리지 않고, 내부적으로 **세미 조인(Semi Join)**이나 <strong>EXISTS</strong>로 자동 변환(Unnesting)하여 중복을 제거하고 초고속으로 처리해 준다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-gaeyo-kweori-sogyi-kweori-context-necessity">Ⅰ. 개요: 쿼리 속의 쿼리 (Context &amp; Necessity)</h3>
+<p>"영업팀에 속한 직원들의 이름과 급여를 뽑아줘!"</p>
+<ul>
+<li><strong>JOIN을 쓴다면</strong>: <code>직원</code> 테이블과 <code>부서</code> 테이블을 엮어서 찾는다.</li>
+<li><strong>서브쿼리를 쓴다면</strong>: "먼저 부서 테이블에서 영업팀의 부서코드를 찾아와!(서브쿼리) 그걸로 직원 테이블을 뒤져보자!(메인쿼리)"</li>
+</ul>
+<pre data-lang="sql" class="language-sql "><code class="language-sql" data-lang="sql">SELECT 이름, 급여 FROM 직원 
+WHERE 부서코드 IN (
+    SELECT 부서코드 FROM 부서 WHERE 부서명 = &#x27;영업팀&#x27;
+);
+</code></pre>
+<p>서브쿼리는 인간이 생각하는 논리적 순서와 일치하기 때문에 코드를 짜기 편하고 읽기 쉽다. 하지만 데이터베이스 엔진 입장에서는 매우 골치 아픈 구조다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 서브쿼리는 **'러시아 인형 마트료시카'**와 같습니다. 큰 인형(메인 쿼리)을 열면 그 안에 작은 인형(서브쿼리)이 또 들어있죠. 데이터베이스는 안에 있는 작은 인형을 먼저 열어서 힌트를 얻은 뒤, 바깥쪽 큰 인형을 해결합니다.</p>
+</blockquote>
+<hr />
+<h3 id="ii-seobeukweoriyi-jongryu-wicie-ddara">Ⅱ. 서브쿼리의 종류 (위치에 따라)</h3>
+<p>서브쿼리는 SQL 문의 어디에 쓰이느냐에 따라 이름과 용도가 다르다.</p>
+<ol>
+<li><strong>SELECT 절 (스칼라 서브쿼리 - Scalar Subquery)</strong>
+<ul>
+<li>"딱 하나의 값(1행 1열)"만 리턴해야 한다. 메인 쿼리가 100줄을 출력하면 이 서브쿼리도 100번 돈다. (성능 주의)</li>
+</ul>
+</li>
+<li><strong>FROM 절 (인라인 뷰 - Inline View)</strong>
+<ul>
+<li>서브쿼리의 결과를 마치 '가상의 테이블'처럼 취급해서 조인할 때 쓴다. (메모리에 임시 테이블이 생기므로 남발하면 안 됨)</li>
+</ul>
+</li>
+<li><strong>WHERE 절 (중첩 서브쿼리 - Nested Subquery)</strong>
+<ul>
+<li><code>IN</code>, <code>EXISTS</code>, <code>&gt;</code>, <code>&lt;</code> 연산자와 함께 쓰여 조건을 필터링한다. (가장 흔함)</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="iii-in-yeonsanjawa-semi-join-semi-join">Ⅲ. IN 연산자와 세미 조인 (Semi Join) ★</h3>
+<p><code>WHERE ... IN (서브쿼리)</code>는 개발자가 가장 사랑하는 문법이지만 성능의 뇌관이다.</p>
+<h4 id="1-in-yeonsanjayi-gwageo-meongceonghan-silhaeng">1. IN 연산자의 과거 (멍청한 실행)</h4>
+<ul>
+<li>옛날 옵티마이저는 메인 쿼리(직원 테이블)의 데이터 10만 건을 차례대로 읽으면서, <strong>한 건을 읽을 때마다 서브쿼리(부서 테이블)를 실행해서 비교</strong>했다. (10만 번의 쿼리 실행)</li>
+</ul>
+<h4 id="2-obtimaijeoyi-jinhwa-subquery-unnesting">2. 옵티마이저의 진화 (Subquery Unnesting)</h4>
+<ul>
+<li>현대의 옵티마이저는 이 쿼리를 받으면 "어? 이거 그냥 JOIN이랑 똑같은 거잖아?"라고 판단하고, 괄호로 묶인 서브쿼리의 포장을 뜯어버린다(Unnesting).</li>
+<li>그리고 내부적으로 **세미 조인(Semi Join)**이라는 특수 기술로 변환해서 돌린다.</li>
+</ul>
+<h4 id="3-semi-join-semi-join-iran">3. 세미 조인 (Semi Join)이란?</h4>
+<ul>
+<li>일반 <code>JOIN</code>은 왼쪽과 오른쪽 데이터를 합친다.</li>
+<li>세미 조인은 합치지 않는다. "오른쪽 테이블(서브쿼리)에 이 값이 <strong>존재하는지(EXISTS)</strong> 확인만 하고, 있으면 바로 통과시키고 다음 데이터로 넘어가는" 필터링 역할만 한다.</li>
+<li>한 번 존재한다는 걸 확인하면 더 이상 오른쪽 테이블을 뒤지지 않으므로 속도가 어마어마하게 빠르다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│           IN 서브쿼리와 세미 조인(Semi Join)의 실행 원리 시각화          │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│ [ 👨‍💼 직원 (Main) ]         [ 🏢 부서 (Subquery) ]              │
+│   사번 │ 부서코드                  부서코드 │ 부서명               │
+│   101 │  D1   ───(IN 검사)──▶    D1   │ 영업팀 (✔ 합격! 다음!) │
+│   102 │  D1   ───(IN 검사)──▶    D2   │ 기획팀                │
+│                                  D1   │ 영업팀 (또 있지만 안 봄)│
+│                                                              │
+│ ★ 특징: 일반 JOIN은 D1이 두 개면 데이터가 뻥튀기(2배)되지만,             │
+│       Semi Join은 &#x27;존재 여부&#x27;만 묻기 때문에 중복을 무시하고 바로 넘어감!     │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h3 id="iv-gyeolron">Ⅳ. 결론</h3>
+<p>"서브쿼리를 쓰는 것을 두려워하지 마라. 단, 옵티마이저를 믿어라."
+"서브쿼리는 무조건 느리니까 무조건 <code>JOIN</code>으로 바꿔라"는 것은 10년 전 RDBMS를 쓰던 호랑이 담배 피우던 시절의 격언이다. 현대의 CBO(비용 기반 옵티마이저 - 420번 문서)는 여러분이 짠 <code>IN</code> 서브쿼리를 기가 막히게 세미 조인으로 뜯어고쳐(Unnesting) 최적의 속도를 내준다. 개발자는 억지로 조인으로 바꾸느라 SQL의 가독성을 망치기보다는, 서브쿼리 안에 걸린 조인 컬럼에 <strong>인덱스가 잘 걸려 있는지</strong>만 확실하게 챙겨주면 된다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>관련 최적화</strong>: Subquery Unnesting, View Merging</li>
+<li><strong>핵심 연산자</strong>: <code>IN</code>, <code>EXISTS</code>, <code>ANY</code>, <code>ALL</code></li>
+<li><strong>조인 기술</strong>: Semi Join (세미 조인), Anti Join (안티 조인 - <code>NOT IN</code>, <code>NOT EXISTS</code>)</li>
+<li><strong>성능 주의</strong>: <code>NOT IN</code>을 쓸 때 서브쿼리 결과에 Null이 하나라도 섞여 있으면 메인 쿼리 결과가 통째로 0건이 나오는 치명적인 버그가 발생함. (반드시 <code>IS NOT NULL</code> 처리 필요)</li>
+</ul>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>서브쿼리는 엄마가 "냉장고에 가서 (아빠가 사 온 아이스크림) 좀 가져와!"라고 심부름을 시키는 거예요. 괄호 안의 심부름을 먼저 알아내야 진짜 심부름을 할 수 있죠.</li>
+<li><code>IN</code> 연산자는 아이스크림이 10개 있든 100개 있든 상관없이 "아이스크림 종류가 있긴 한가요?"라고 묻는 거예요.</li>
+<li>세미 조인(Semi Join)은 냉장고 문을 열고 아이스크림을 딱 1개 발견하는 순간, 더 뒤져보지 않고 바로 "네! 있어요!" 하고 쿨하게 문을 닫아버리는 아주 빠른 검색법이랍니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

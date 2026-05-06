@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>03. SRE 및 관측성 (Observability) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="breadcrumb">
+    <a href="https://agnusdei1207.github.io/brainscience">root</a>
+    
+    
+    <span class="breadcrumb-sep">/</span>
+    <a href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;">학습 노트</a>
+    
+    
+    <span class="breadcrumb-sep">/</span>
+    <a href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;">Study Note</a>
+    
+    
+    <span class="breadcrumb-sep">/</span>
+    <a href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;">15: 데브옵스 및 SRE (DevOps &amp; SRE)</a>
+    
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">03. SRE 및 관측성 (Observability)</span>
+</div>
+
+
+<h1 style="font-size:1.5rem; font-weight:700; margin-bottom:24px;">03. SRE 및 관측성 (Observability)</h1>
+
+
+
+
+<div class="folder-list">
+
+    
+    
+    
+
+    
+
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;121-sre-philosophy&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;121-sre-philosophy&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">121. SRE 철학 (Site Reliability Engineering Philosophy) - 신뢰성 엔지니어링의 핵심 원칙</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;121-sre-philosophy&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;122-sli-service-level-indicator&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;122-sli-service-level-indicator&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">122. SLI (Service Level Indicator) - 서비스 수준 측정 지표</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;122-sli-service-level-indicator&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;123-slo-service-level-objective&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;123-slo-service-level-objective&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">123. SLO (Service Level Objective) - 서비스 수준 목표 설정과 Error Budget</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;123-slo-service-level-objective&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;124-sla-service-level-agreement&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;124-sla-service-level-agreement&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">124. SLA (Service Level Agreement) - 서비스 수준 계약·위반 시 책임</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;124-sla-service-level-agreement&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;125-error-budget&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;125-error-budget&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">125. Error Budget (에러 예산) - 신뢰성과 혁신 속도의 균형 도구</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;125-error-budget&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;126-toil-sre&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;126-toil-sre&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">126. Toil (수동 운영 작업) - SRE의 자동화 대상 반복 작업</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;126-toil-sre&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;127-on-call-management&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;127-on-call-management&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">127. 온콜 관리 (On-Call Management) - SRE 장애 대응 당번 체계</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;127-on-call-management&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;128-blameless-postmortem&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;128-blameless-postmortem&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">128. Blameless Postmortem - 비난 없는 장애 사후 분석</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;128-blameless-postmortem&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;129-observability-vs-monitoring&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;129-observability-vs-monitoring&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">129. 관측 가능성 vs 모니터링 (Observability vs Monitoring)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;129-observability-vs-monitoring&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;130-monitoring-vs-observability&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;130-monitoring-vs-observability&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">130. 모니터링 vs 관측 가능성 심화 - MELT와 OpenTelemetry</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;130-monitoring-vs-observability&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;131-observability-three-pillars&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;131-observability-three-pillars&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">131. 관측 가능성 Three Pillars - Metrics·Logs·Traces 심층 분석</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;131-observability-three-pillars&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;132-metrics-monitoring&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;132-metrics-monitoring&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">132. Metrics &amp; 모니터링 심화 - Prometheus·Grafana 기반 메트릭 수집·시각화</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;132-metrics-monitoring&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;133-four-golden-signals&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;133-four-golden-signals&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">133. 4대 골든 시그널 (Four Golden Signals) - SRE 핵심 모니터링 지표</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;133-four-golden-signals&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;134-use-method-resource-analysis&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;134-use-method-resource-analysis&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">134. USE 메서드 (Utilization·Saturation·Errors) - 리소스 중심 분석</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;134-use-method-resource-analysis&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;135-red-method-service-analysis&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;135-red-method-service-analysis&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">135. RED 메서드 (Rate·Errors·Duration) - 서비스 중심 분석</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;135-red-method-service-analysis&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;136-prometheus&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;136-prometheus&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">136. Prometheus - 클라우드 네이티브 메트릭 수집·저장 엔진</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;136-prometheus&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;137-grafana&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;137-grafana&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">137. Grafana - 통합 관측 가능성 시각화 플랫폼</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;137-grafana&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;138-logs&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;138-logs&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">138. 로그 (Logs) - 구조화 로깅과 중앙 집중 관리</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;138-logs&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;139-distributed-logging-efk-elk-stack&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;139-distributed-logging-efk-elk-stack&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">139. 분산 로깅 (EFK&#x2F;ELK Stack) - 중앙 집중 로그 관리</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;139-distributed-logging-efk-elk-stack&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;140-structured-logging-json-format&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;140-structured-logging-json-format&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">140. 구조화 로깅 (Structured Logging) - JSON 포맷 표준화</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;140-structured-logging-json-format&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;141-distributed-tracing-msa-request-flow&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;141-distributed-tracing-msa-request-flow&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">141. 분산 트레이싱 (Distributed Tracing) - MSA 요청 흐름 추적</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;141-distributed-tracing-msa-request-flow&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;142-trace-request-context&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;142-trace-request-context&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">142. Trace·Span·Context Propagation - 분산 추적의 핵심 구성</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;142-trace-request-context&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;143-span-service-operation-unit&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;143-span-service-operation-unit&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">143. Span 상세 - 서비스·오퍼레이션 단위 추적</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;143-span-service-operation-unit&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;144-context-propagation-trace-id&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;144-context-propagation-trace-id&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">144. Context Propagation &amp; Trace ID 전파 상세</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;144-context-propagation-trace-id&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;145-jaeger-zipkin-distributed-tracing-backend&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;145-jaeger-zipkin-distributed-tracing-backend&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">145. Jaeger &amp; Zipkin - 분산 트레이싱 백엔드 비교</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;145-jaeger-zipkin-distributed-tracing-backend&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;146-opentelemetry-otel-observability-standard&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;146-opentelemetry-otel-observability-standard&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">146. OpenTelemetry (OTel) - 관측 가능성 통합 표준</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;146-opentelemetry-otel-observability-standard&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;147-ebpf-kernel-observability-cilium&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;147-ebpf-kernel-observability-cilium&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">147. eBPF (Extended Berkeley Packet Filter) - 커널 레벨 샌드박스 관측 기술</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-19</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;147-ebpf-kernel-observability-cilium&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;148-chaos-engineering-resiliency-testing&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;148-chaos-engineering-resiliency-testing&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">148. 카오스 엔지니어링 (Chaos Engineering)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-05-03</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;148-chaos-engineering-resiliency-testing&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;149-chaos-monkey-chaos-mesh&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;149-chaos-monkey-chaos-mesh&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">149. 카오스 몽키 (Chaos Monkey) &amp; 카오스 메시 (Chaos Mesh)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-05-03</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;149-chaos-monkey-chaos-mesh&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;150-blast-radius-minimization&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;150-blast-radius-minimization&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">150. 장애 영향 반경 최소화 (Blast Radius Minimization) - 마이크로서비스 최후의 방폭문</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-05-03</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;150-blast-radius-minimization&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;151-steady-state-hypothesis-validation&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;151-steady-state-hypothesis-validation&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">151. 정상 상태 가설 수립 (Steady State Hypothesis) - 카오스 엔지니어링의 생존 척도 록온</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-05-03</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;151-steady-state-hypothesis-validation&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;152-autoscaling-bottleneck-hpa-latency&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;152-autoscaling-bottleneck-hpa-latency&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">152. 오토스케일링 병목 현상 (Autoscaling Bottleneck) - HPA 콜드 스타트의 파국과 KEDA 구원 쉴드</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-05-03</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;152-autoscaling-bottleneck-hpa-latency&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;153-circuit-breaker-state-machine&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;153-circuit-breaker-state-machine&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">153. 서킷 브레이커 (Circuit Breaker) - 마이크로서비스 연쇄 타살 붕괴를 끊는 절대 차단기</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-05-03</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;153-circuit-breaker-state-machine&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;154-retry-exponential-backoff-jitter&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;154-retry-exponential-backoff-jitter&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">154. 재시도, 지수 백오프 및 지터 (Retry, Exponential Backoff, Jitter) - 클라우드 연쇄 폭파 디도스 방어 쉴드</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-05-03</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;154-retry-exponential-backoff-jitter&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;155-timeout-synchronization-strategy&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;155-timeout-synchronization-strategy&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">155. 타임아웃 동기화 전략 (Timeout Synchronization)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;155-timeout-synchronization-strategy&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;156-fallback-mechanism-cache-degraded&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;156-fallback-mechanism-cache-degraded&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">156. 폴백 메커니즘 (Fallback Mechanism)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;156-fallback-mechanism-cache-degraded&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;157-operational-debt-dark-debt&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;157-operational-debt-dark-debt&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">157. 다크 부채 (Dark Debt) &#x2F; 운영 부채 (Operational Debt) 청산 전략</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;157-operational-debt-dark-debt&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;158-mtbf-mttr-optimization&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;158-mtbf-mttr-optimization&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">158. MTBF&#x2F;MTTR 최적화 (MTBF&#x2F;MTTR Optimization)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;158-mtbf-mttr-optimization&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;159-failover-failback-architecture&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;159-failover-failback-architecture&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">159. 페일오버&#x2F;페일백 아키텍처 (Failover&#x2F;Failback Architecture)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;159-failover-failback-architecture&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;160-health-check-probes-liveness-readiness&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;160-health-check-probes-liveness-readiness&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">160. 헬스 체크&#x2F;프로브 (Health Check&#x2F;Probes)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;160-health-check-probes-liveness-readiness&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;161-aiops-anomaly-detection-auto-remediation&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;161-aiops-anomaly-detection-auto-remediation&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">161. AIOps (Artificial Intelligence for IT Operations)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;161-aiops-anomaly-detection-auto-remediation&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;162-apm-application-performance-management&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;162-apm-application-performance-management&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">162. APM (Application Performance Management)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;162-apm-application-performance-management&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;163-rum-real-user-monitoring&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;163-rum-real-user-monitoring&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">163. RUM (Real User Monitoring)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;163-rum-real-user-monitoring&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;164-synthetic-monitoring-dummy-client&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;164-synthetic-monitoring-dummy-client&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">164. 합성 모니터링 (Synthetic Monitoring)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;164-synthetic-monitoring-dummy-client&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;165-service-mesh-telemetry-sidecar&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;165-service-mesh-telemetry-sidecar&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">165. 서비스 메시 기반 텔레메트리 (Service Mesh Telemetry)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;165-service-mesh-telemetry-sidecar&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;166-distributed-lock-bottleneck-observability&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;166-distributed-lock-bottleneck-observability&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">166. 분산 락 병목 관측 (Distributed Lock Observability)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;166-distributed-lock-bottleneck-observability&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;167-traffic-shadowing-sre-testing&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;167-traffic-shadowing-sre-testing&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">167. 트래픽 섀도잉 (Traffic Shadowing)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;167-traffic-shadowing-sre-testing&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;168-event-sourcing-replay-monitoring&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;168-event-sourcing-replay-monitoring&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">168. 이벤트 소싱 상태 복구 모니터링 (Event Sourcing Replay Monitoring)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;168-event-sourcing-replay-monitoring&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;169-finops-cloud-cost-monitoring-sre&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;169-finops-cloud-cost-monitoring-sre&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">169. 클라우드 비용 모니터링 FinOps (Cloud Cost Monitoring)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;169-finops-cloud-cost-monitoring-sre&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;170-self-healing-filesystem-zfs-btrfs&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;170-self-healing-filesystem-zfs-btrfs&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">170. 하드웨어 에러 자가 치유 파일시스템 (Self-Healing Filesystem) — ZFS, Btrfs</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;170-self-healing-filesystem-zfs-btrfs&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;171-capacity-planning-load-testing&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;171-capacity-planning-load-testing&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">171. 용량 계획 및 부하 테스트 (Capacity Planning&#x2F;Load Testing)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;171-capacity-planning-load-testing&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;172-cold-start-provisioning-bottleneck&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;172-cold-start-provisioning-bottleneck&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">172. 프로비저닝 병목 (Cold Start) 관측 지표</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;172-cold-start-provisioning-bottleneck&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;173-microburst-traffic-spike-detection&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;173-microburst-traffic-spike-detection&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">173. 마이크로버스트 트래픽 스파이크 탐지 (Microburst Traffic Spike Detection)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;173-microburst-traffic-spike-detection&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;174-runbook-playbook-incident-management&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;174-runbook-playbook-incident-management&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">174. 런북&#x2F;플레이북 (Runbook&#x2F;Playbook)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;174-runbook-playbook-incident-management&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;175-buffer-queue-telemetry&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;175-buffer-queue-telemetry&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">175. 시스템 경계 완충지대 텔레메트리 (Buffer&#x2F;Queue Telemetry)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;175-buffer-queue-telemetry&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;176-slow-query-distributed-db-tracing&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;176-slow-query-distributed-db-tracing&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">176. 분산 DB 쿼리 플랜 지연 역추적 (Slow Query Tracing)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;176-slow-query-distributed-db-tracing&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;177-serverless-observability-xray&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;177-serverless-observability-xray&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">177. 서버리스 옵저버빌리티 (Serverless Observability) - AWS X-Ray</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;177-serverless-observability-xray&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;178-grafana-dashboard-as-code&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;178-grafana-dashboard-as-code&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">178. 그라파나 대시보드 코드화 (Grafana Dashboard as Code) 프로비저닝</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;178-grafana-dashboard-as-code&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;179-timeseries-db-influxdb-tsdb&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;179-timeseries-db-influxdb-tsdb&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">179. 시계열 DB (Time-Series Database)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;179-timeseries-db-influxdb-tsdb&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;180-devops-org-topology-sre-model&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;180-devops-org-topology-sre-model&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">180. DevOps 조직 토폴로지와 SRE 팀 모델 (50% 인바운드 한계)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;180-devops-org-topology-sre-model&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;181-sre-embedded-model&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;181-sre-embedded-model&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">181. SRE (Site Reliability Engineering) 임베디드 운영 모델 (Embedded Model)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;181-sre-embedded-model&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;182-status-page-public-sla&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;182-status-page-public-sla&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">182. 상태 페이지 (Status Page) - 대외 공개 SLA 운영</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;182-status-page-public-sla&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;183-zero-data-loss-architecture&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;183-zero-data-loss-architecture&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">183. 데이터 손실 제로 (Zero Data Loss) 아키텍처</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;183-zero-data-loss-architecture&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;184-dr-chaos-engineering-fusion&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;184-dr-chaos-engineering-fusion&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">184. 재해 복구 훈련과 카오스 엔지니어링 융합 (Disaster Recovery + Chaos Engineering)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-21</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;15_devops_sre&#x2F;03_sre_observability&#x2F;184-dr-chaos-engineering-fusion&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+
+</div>
+
+<script>
+    function normalizeCardPath(url) {
+        try {
+            var path = new URL(url, window.location.origin).pathname;
+            return path.replace(/\/+$/, '') || '/';
+        } catch (err) {
+            return '';
+        }
+    }
+
+    function highlightLastReadCard() {
+        var raw = localStorage.getItem('lastReadPost');
+        if (!raw) return;
+
+        var saved;
+        try {
+            saved = JSON.parse(raw);
+        } catch (err) {
+            return;
+        }
+
+        if (!saved || !saved.url) return;
+
+        var lastPath = normalizeCardPath(saved.url);
+        document.querySelectorAll('.folder-item[data-page-url]').forEach(function (card) {
+            var isMatch = normalizeCardPath(card.dataset.pageUrl) === lastPath;
+            var badge = card.querySelector('.fi-badge');
+            card.classList.toggle('last-read-card', isMatch);
+            if (badge) badge.hidden = !isMatch;
+        });
+    }
+
+    document.querySelectorAll('.card-copy-btn').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var url = this.dataset.url;
+            var btnEl = this;
+            fetch(url)
+                .then(function (res) { return res.text(); })
+                .then(function (html) {
+                    var parser = new DOMParser();
+                    var doc = parser.parseFromString(html, 'text/html');
+                    var content = doc.querySelector('.post-content');
+                    if (content) {
+                        var text = content.innerText || content.textContent;
+                        navigator.clipboard.writeText(text).then(function () {
+                            btnEl.classList.add('copied');
+                            setTimeout(function () { btnEl.classList.remove('copied'); }, 2000);
+                        });
+                    }
+                });
+        });
+    });
+
+    highlightLastReadCard();
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

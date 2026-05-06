@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>131. ECDHE — Ephemeral ECDH, TLS 1.3 기본 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote security
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="131-ecdhe-ephemeral-elliptic-curve-diffie-hellman">131. ECDHE (Ephemeral Elliptic Curve Diffie-Hellman)</h1>
+<blockquote>
+<p>⚠️ 이 문서는 타원곡선의 빠른 속도(ECC)와 디피-헬만의 키 교환 기법(DH), 그리고 1회용 키 스와핑(Ephemeral)이라는 3대 마법을 완벽하게 융합하여, 과거 암호가 통째로 털리는 재앙을 막아내고 현대 HTTPS 통신의 최고 존엄(TLS 1.3 표준)으로 등극한 ECDHE를 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: ECDHE는 클라이언트와 서버가 통신 세션을 맺을 때마다 타원곡선 그래프상에서 <strong>'1회용(Ephemeral) 출발점과 비밀 횟수'를 무작위로 뽑아 당구공(점 덧셈)을 튕기며 마스터키를 맞추고, 통신 종료 즉시 이를 폐기</strong>하는 키 교환 알고리즘이다.</li>
+<li><strong>가치</strong>: 256비트라는 얇은 키 덕분에 1회용 난수를 1초에 수만 번 뽑아내도 서버 CPU에 거의 부담을 주지 않으며, 해커가 나중에 서버의 고정 개인키를 훔치더라도 이미 소멸해 버린 과거의 1회용 키들은 영원히 풀 수 없는 **완벽한 전방 비밀성(PFS)**을 달성한다.</li>
+<li><strong>융합</strong>: ECDHE 그 자체로는 "상대방이 진짜 네이버인지" 신원 확인이 불가능하므로, 실무(TLS 1.3)에서는 반드시 신원을 증명해 주는 **RSA 서명(또는 ECDSA 서명)**과 완벽히 한 묶음으로 융합되어(<code>TLS_ECDHE_RSA_...</code>) 중간자 공격(MitM)을 차단한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-gaeyo-mic-peopegteu-kombineisyeon-context-necessity">Ⅰ. 개요 및 퍼펙트 콤비네이션 (Context &amp; Necessity)</h3>
+<p>현대 인터넷에서 브라우저가 서버와 비밀번호(대칭키)를 맞추기 위해 극복해야 할 3가지 허들이 있었다.</p>
+<ol>
+<li><strong>해커가 도청해도 비밀번호를 못 훔쳐야 한다.</strong> $\rightarrow$ DH (디피-헬만)가 해결했다.</li>
+<li><strong>나중에 서버가 해킹당해도 과거 데이터가 털리면 안 된다.</strong> $\rightarrow$ DHE (1회용 키)가 해결했다.</li>
+<li><strong>스마트폰에서 1초 만에 로딩되어야 한다.</strong> $\rightarrow$ DHE는 너무 무거워 실패했다. 서버가 터져나갔다.</li>
+</ol>
+<p>암호학계는 고민 끝에 무거운 소수 거듭제곱(DH)을 버리고, 당구공을 튕기는 **타원곡선(ECC)**을 뼈대로 교체했다.
+"매번 통신할 때마다 타원곡선에서 1회용 랜덤 점(Point)을 콕 찍어서 당구를 쳐보자!"
+이것이 <strong>ECDHE</strong>다. 타원곡선의 미친 가벼움(256비트) 덕분에, 서버는 1초에 수만 번의 '1회용 주사위(Ephemeral Key)'를 아무런 발열 없이 굴릴 수 있게 되었고, 모바일 시대의 전방 비밀성(PFS) 딜레마가 마침내 완벽히 종결되었다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 옛날엔 은행에 갈 때마다 집채만 한 바위(DHE)를 들고 가서 비밀번호를 맞추느라 은행 문이 항상 꽉 막혀있었습니다. 지금(ECDHE)은 은행 갈 때마다 새끼손가락만 한 '1회용 홀로그램 열쇠'를 주머니에서 꺼내 맞춘 뒤 쓰레기통에 바로 버립니다. 은행도 손님도 1초 만에 일이 끝나고, 도둑이 나중에 쓰레기통을 뒤져도 이미 열쇠는 녹아 없어진 상태입니다.</p>
+</blockquote>
+<hr />
+<h3 id="ii-ecdheyi-dongjag-mekeonijeum-tls-1-3-haendeusyeikeu-gwanjeom">Ⅱ. ECDHE의 동작 메커니즘 (TLS 1.3 핸드셰이크 관점)</h3>
+<p>웹 브라우저(클라이언트)가 네이버(서버)에 접속할 때 내부에서 일어나는 찰나의 핑퐁 게임이다.</p>
+<h4 id="1-gogseon-habyiwa-seobeoyi-1hoeyong-danggu-cigi">1. 곡선 합의와 서버의 1회용 당구 치기</h4>
+<ul>
+<li><strong>브라우저</strong>: "안녕? 나 X25519 타원곡선 맵 쓸 줄 아는데, 이걸로 비밀번호 맞출래?"</li>
+<li><strong>서버</strong>: "콜! 나 방금 <code>1회용 비밀 횟수(a)</code> 뽑았어. X25519 맵에서 당구공 쳐서 <code>멈춘 좌표(QA)</code>를 너한테 보낼게."
+<ul>
+<li><em>(핵심 방패)</em>: "아 참, 중간에 해커가 내가 보낸 좌표(<code>QA</code>)를 바꿔치기할지 모르니, 내 **진짜 고정 인증서(RSA 개인키)**로 도장 쾅 찍어서 같이 보낸다!"</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-beuraujeoyi-hwagingwa-keuroseu-danggu-cigi">2. 브라우저의 확인과 크로스 당구 치기</h4>
+<ul>
+<li><strong>브라우저</strong>: 서버가 보낸 도장(RSA)을 확인한다. "음, 진짜 네이버가 보낸 좌표(<code>QA</code>) 맞네! 해커 아니군."</li>
+<li>브라우저도 즉석에서 <code>1회용 비밀 횟수(b)</code>를 뽑아 당구공을 치고 <code>멈춘 좌표(QB)</code>를 서버로 휙 던진다.</li>
+<li>그리고 서버가 아까 줬던 좌표(<code>QA</code>)에 내 횟수(<code>b</code>)를 덧대어 튕겨서 **최종 도착점(마스터 비밀키)**을 뽑아낸다.</li>
+</ul>
+<h4 id="3-tongsin-jongryowa-wanjeon-beomjoe-wipe">3. 통신 종료와 완전 범죄(Wipe)</h4>
+<ul>
+<li>서버도 브라우저가 준 <code>QB</code>에 자기 횟수(<code>a</code>)를 덧대어 똑같은 마스터 비밀키를 만든다.</li>
+<li>둘은 이 비밀키로 AES 암호화를 켜고 안전하게 쇼핑을 한다.</li>
+<li>브라우저를 끄는 순간, <strong>방금 썼던 1회용 횟수(<code>a</code>와 <code>b</code>)는 RAM 메모리에서 영원히 <code>Delete</code></strong> 된다!</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌───────────────────────────────────────────────────────────────────────────────┐
+│           ECDHE (1회용 키 교환) + RSA (신원 인증)의 완벽한 방어 시각화        │
+├───────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│ [ 🕵️ 해커 다스(Darth)의 중간자 공격(MitM) 시도 ]                              │
+│                                                                               │
+│   👨 밥 (서버) ───(1회용 좌표 QA + [RSA 인증 도장])───▶ 👩 앨리스             │
+│         │                                                                     │
+│         └───▶ 🕵️ 해커 가로챔!                                                 │
+│             &quot;QA를 내 맘대로 해킹 좌표 QX 로 바꿔서 앨리스 줘야지!&quot;            │
+│             &quot;어랏? 밥의 RSA 도장이 같이 묶여있네? 이걸 위조하려면             │
+│             밥의 고정 개인키를 해킹해야 하잖아? 젠장, 조작 불가능 ☠️&quot;         │
+│                                                                               │
+│ [ 🕵️ 해커의 3년 뒤 존버 공격 시도 (타임머신 해킹) ]                           │
+│   해커가 3년 치 암호 패킷을 다 모아두고, 드디어 밥의 RSA 마스터 개인키를 턺!  │
+│   해커: &quot;와하하! RSA 키를 털었다! 이제 3년 전 패킷 다 풀어봐야지!&quot;            │
+│   결과: 밥의 RSA 키는 오직 &quot;도장 찍는 용도(인증)&quot;였을 뿐.                     │
+│        진짜 데이터를 암호화한 1회용 좌표(QA)의 비밀 횟수(a)는                 │
+│        3년 전에 이미 메모리에서 삭제되어 우주 어디에도 존재하지 않음!         │
+│   -&gt; 🌟 전방 비밀성(PFS) 대성공! 과거의 비밀은 완벽하게 보호됨!               │
+└───────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 시나리오는 암호학 역사상 가장 완벽한 역할 분담(Decoupling)을 보여준다. **신분증(인증)**은 무겁고 변하지 않는 정적 RSA 키(또는 ECDSA)에게 맡겨 중간자 공격(MitM)을 차단한다. 그리고 진짜 **비밀의 자물쇠(암호화 키)**는 한 번 쓰고 버리는 날쌘돌이 ECDHE에게 맡겨 타임머신 공격(소급 해킹)을 막아낸다. 창과 방패의 싸움에서 방패가 창을 영원히 부러뜨린 순간이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 클럽에 들어갈 때, 입구에서 주민등록증(RSA 서명)으로 진짜 어른이 맞는지 확인합니다. 하지만 클럽 안에서 술을 마실 때는 내 진짜 이름이 적힌 카드가 아니라, 카운터에서 발급해 준 1회용 팔찌(ECDHE 난수)로만 결제합니다. 나중에 도둑이 클럽 장부를 털어도, "1회용 팔찌 3번 손님이 술을 마셨다"는 기록만 있을 뿐 그게 누구인지, 비밀번호가 뭔지는 절대 역추적할 수 없습니다.</li>
+</ul>
+<hr />
+<h3 id="iii-gangjejeog-sedae-gyoce-tls-1-2-rightarrow-tls-1-3">Ⅲ. 강제적 세대 교체 (TLS 1.2 $\rightarrow$ TLS 1.3)</h3>
+<p>이 극강의 방어력 때문에, 2018년 전 세계 해커와 보안 전문가들이 합의하여 만든 <strong>TLS 1.3</strong> 인터넷 규격은 역사적인 철퇴를 내렸다.</p>
+<ul>
+<li><strong>"전방 비밀성(PFS)을 제공하지 않는 모든 구형 키 교환 방식을 법으로 금지한다!"</strong></li>
+<li>즉, 정적 RSA 키 교환(서버 고정키로 비밀번호를 잠가서 보내는 짓)과 정적 DH 키 교환은 TLS 1.3 스펙 문서에서 완전히 파내어졌다(Deprecated).</li>
+<li>이제 전 세계의 모든 브라우저(Chrome, Safari)와 웹 서버는 연결을 맺을 때 무조건 <strong>DHE</strong>나 <strong>ECDHE</strong>만을 사용해야 한다. (실무에서는 DHE가 너무 느려서 99.9% **ECDHE (X25519 등)**로 통일된 상태다.)</li>
+</ul>
+<hr />
+<h3 id="iv-gyeolron">Ⅳ. 결론</h3>
+<p>"어제의 비밀을 지키는 유일한 방법은, 오늘 그 열쇠를 망각하는 것이다."
+ECDHE는 타원곡선 수학의 극단적 효율성과, 일회용 난수의 기억 상실이라는 두 가지 천재적 발상이 빚어낸 21세기 보안 아키텍처의 마스터피스다. 이 작은 1회용 덧셈 공식 하나가, 훗날 들이닥칠 양자 컴퓨터의 '저장 후 해독(Store Now, Decrypt Later)' 공격의 위협으로부터 우리 세대의 과거 프라이버시를 처절하게 방어해 내고 있다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>전체 조합</strong>: TLS 1.3 핸드셰이크 아키텍처</li>
+<li><strong>역할 분담 (Cipher Suite)</strong>: 키 교환은 ECDHE 담당 / 신원 인증은 RSA, ECDSA 담당</li>
+<li><strong>보장하는 궁극적 보안 가치</strong>: PFS (Perfect Forward Secrecy)</li>
+<li><strong>내부 코어 수학</strong>: 타원곡선 이산 대수 문제 (ECDLP), X25519 (고속 키 교환 커브)</li>
+</ul>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>내가 친구랑 비밀번호를 정할 때, 옛날엔 내 고유 번호(주민등록번호)를 섞어서 만들었더니 나중에 내 지갑이 털리면 과거 비밀번호도 싹 다 들통났어요.</li>
+<li>ECDHE는 우리가 만날 때마다 그 자리에서 '1회용 뽑기 기계'를 돌려 랜덤한 숫자(당구공 좌표)를 섞어서 비밀번호를 만들고, 뽑기 구슬은 바로 불태워버리는 마법이에요!</li>
+<li>게다가 옛날 무거운 돌덩이 믹서기가 아니라 엄청 가볍고 빠른 '타원곡선 핀볼 믹서기'를 쓰기 때문에, 1초에 만 번을 뽑아도 스마트폰이 뜨거워지지 않는 최고의 비법이랍니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

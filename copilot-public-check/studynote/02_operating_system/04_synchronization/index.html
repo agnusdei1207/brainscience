@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>04. 프로세스 동기화 및 임계구역 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="breadcrumb">
+    <a href="https://agnusdei1207.github.io/brainscience">root</a>
+    
+    
+    <span class="breadcrumb-sep">/</span>
+    <a href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;">학습 노트</a>
+    
+    
+    <span class="breadcrumb-sep">/</span>
+    <a href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;">Study Note</a>
+    
+    
+    <span class="breadcrumb-sep">/</span>
+    <a href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;">02: 운영체제 (Operating System)</a>
+    
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">04. 프로세스 동기화 및 임계구역</span>
+</div>
+
+
+<h1 style="font-size:1.5rem; font-weight:700; margin-bottom:24px;">04. 프로세스 동기화 및 임계구역</h1>
+
+
+
+
+<div class="folder-list">
+
+    
+    
+    
+
+    
+
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;221-hardware-synchronization-tas-cas&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;221-hardware-synchronization-tas-cas&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">221. 하드웨어적 동기화 (TAS, CAS)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;221-hardware-synchronization-tas-cas&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;222-spinlock&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;222-spinlock&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">222. 스핀락 (Spinlock)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;222-spinlock&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;223-mutex&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;223-mutex&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">223. 임계 구역 문제 해결의 3조건 - 상호 배제(Mutual Exclusion), 진행(Progress), 한정된 대기(Bounded Waiting)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;223-mutex&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;224-semaphore&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;224-semaphore&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">224. 세마포어 (Semaphore)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;224-semaphore&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;225-binary-semaphore&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;225-binary-semaphore&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">225. 이진 세마포어 (Binary Semaphore)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;225-binary-semaphore&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;226-counting-semaphore&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;226-counting-semaphore&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">226. 카운팅 세마포어 (Counting Semaphore)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;226-counting-semaphore&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;227-busy-waiting&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;227-busy-waiting&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">227. 바쁜 대기 (Busy Waiting)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;227-busy-waiting&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;228-condition-variable&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;228-condition-variable&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">228. 조건 변수 (Condition Variable)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;228-condition-variable&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;229-monitor&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;229-monitor&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">229. 모니터 (Monitor)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;229-monitor&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;230-deadlock&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;230-deadlock&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">230. 교착 상태 (Deadlock)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;230-deadlock&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;231-hold-and-wait&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;231-hold-and-wait&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">231. 점유 대기 (Hold and Wait)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;231-hold-and-wait&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;232-no-preemption&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;232-no-preemption&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">232. 비선점 (No Preemption)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;232-no-preemption&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;233-circular-wait&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;233-circular-wait&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">233. 스핀락 (Spinlock) - 바쁜 대기(Busy Waiting), 다중 코어에서 문맥 교환 오버헤드 없음</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;233-circular-wait&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;234-deadlock-prevention&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;234-deadlock-prevention&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">234. 교착 상태 예방 (Deadlock Prevention)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;234-deadlock-prevention&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;235-deadlock-avoidance&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;235-deadlock-avoidance&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">235. 교착 상태 회피 (Deadlock Avoidance)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;235-deadlock-avoidance&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;236-safe-state&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;236-safe-state&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">236. 안전 상태 (Safe State)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;236-safe-state&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;237-unsafe-state&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;237-unsafe-state&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">237. 불안전 상태 (Unsafe State)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;237-unsafe-state&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;238-bankers-algorithm&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;238-bankers-algorithm&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">238. 은행원 알고리즘 (Banker&#x27;s Algorithm)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;238-bankers-algorithm&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;239-resource-allocation-graph&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;239-resource-allocation-graph&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">239. 자원 할당 그래프 (Resource Allocation Graph, RAG)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;239-resource-allocation-graph&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;240-ostrich-algorithm&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;240-ostrich-algorithm&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">240. 타조 알고리즘 (Ostrich Algorithm)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;240-ostrich-algorithm&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;241-bankers-algorithm-data-structures&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;241-bankers-algorithm-data-structures&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">241. 은행원 알고리즘의 4대 자료구조 (Max, Allocation, Need, Available)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;241-bankers-algorithm-data-structures&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;242-deadlock-detection&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;242-deadlock-detection&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">242. 교착 상태 탐지 (Deadlock Detection)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;242-deadlock-detection&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;243-deadlock-recovery&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;243-deadlock-recovery&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">243. 교착 상태 복구 (Deadlock Recovery)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;243-deadlock-recovery&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;244-priority-ceiling-protocol&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;244-priority-ceiling-protocol&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">244. 우선순위 올림 (Priority Ceiling Protocol)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;244-priority-ceiling-protocol&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;245-classic-synchronization-problems&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;245-classic-synchronization-problems&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">245. 고전적 동기화 문제들</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;245-classic-synchronization-problems&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;246-bounded-buffer-producer-consumer&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;246-bounded-buffer-producer-consumer&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">246. 유한 버퍼 문제 (Bounded-Buffer Problem) &#x2F; 생산자-소비자 (Producer-Consumer) 문제</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;246-bounded-buffer-producer-consumer&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;247-readers-writers-problem&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;247-readers-writers-problem&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">247. 독자-저자 문제 (Readers-Writers Problem) - 제1유형(독자 우선), 제2유형(저자 우선)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;247-readers-writers-problem&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;248-dining-philosophers-problem&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;248-dining-philosophers-problem&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">248. 식사하는 철학자 문제 (Dining-Philosophers Problem) - 교착상태 및 기아 상태 예방</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;248-dining-philosophers-problem&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;249-java-synchronization&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;249-java-synchronization&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">249. 자바 동기화 - synchronized 키워드, 모니터 락, wait()&#x2F;notify()</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;249-java-synchronization&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;250-pthreads-synchronization&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;250-pthreads-synchronization&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">250. Pthreads 동기화 - pthread_mutex_t, pthread_cond_t, 스핀락, 배리어</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;250-pthreads-synchronization&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;251-windows-synchronization&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;251-windows-synchronization&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">251. 윈도우 동기화 - 크리티컬 섹션 객체(유저모드), 디스패처 객체(커널모드 - 이벤트, 뮤텍스, 세마포어)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;251-windows-synchronization&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;252-memory-hierarchy&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;252-memory-hierarchy&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">252. 메모리 계층 구조 (Memory Hierarchy)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;252-memory-hierarchy&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;253-locality-of-reference&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;253-locality-of-reference&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">253. 참조의 지역성 (Locality of Reference)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;253-locality-of-reference&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;254-rcu-read-copy-update&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;254-rcu-read-copy-update&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">254. RCU (Read-Copy-Update) - 리눅스 고성능 동기화 (읽기는 락 프리, 쓰기는 복사 후 갱신)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;254-rcu-read-copy-update&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;255-demand-paging&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;255-demand-paging&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">255. 요구 페이징 (Demand Paging)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;255-demand-paging&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;256-lock-free-data-structures&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;256-lock-free-data-structures&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">256. 락-프리 (Lock-free) 자료구조 - CAS 연산 적극 활용</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;256-lock-free-data-structures&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;257-thrashing&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;257-thrashing&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">257. 스래싱 (Thrashing)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;257-thrashing&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;258-degree-of-multiprogramming&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;258-degree-of-multiprogramming&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">258. 다중 프로그래밍 정도 (Degree of Multiprogramming)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;258-degree-of-multiprogramming&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;259-paging&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;259-paging&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">259. 페이징 (Paging)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;259-paging&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;260-page-replacement&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;260-page-replacement&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">260. 페이지 교체 (Page Replacement)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;260-page-replacement&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;261-fifo-page-replacement&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;261-fifo-page-replacement&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">261. FIFO (First-In, First-Out) 페이지 교체</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;261-fifo-page-replacement&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;262-lru-page-replacement&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;262-lru-page-replacement&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">262. LRU (Least Recently Used) 페이지 교체</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;262-lru-page-replacement&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;263-lfu-page-replacement&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;263-lfu-page-replacement&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">263. LFU (Least Frequently Used) 페이지 교체</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;263-lfu-page-replacement&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;264-clock-algorithm-nur&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;264-clock-algorithm-nur&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">264. 클럭 알고리즘 (Clock Algorithm &#x2F; NUR)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;264-clock-algorithm-nur&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;265-working-set&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;265-working-set&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">265. 워킹 셋 (Working Set)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;265-working-set&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;266-page-fault-frequency&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;266-page-fault-frequency&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">266. 페이지 부재 빈도 (PFF, Page Fault Frequency)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;266-page-fault-frequency&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;267-atomic-transaction&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;267-atomic-transaction&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">267. 원자적 트랜잭션 (Atomic Transaction) 개념</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-05</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;267-atomic-transaction&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;268-software-transactional-memory&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;268-software-transactional-memory&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">268. 소프트웨어 트랜잭셔널 메모리 (STM)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-05</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;268-software-transactional-memory&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;269-htm-intel-tsx&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;269-htm-intel-tsx&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">269. 하드웨어 트랜잭셔널 메모리 (HTM - Intel TSX)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;269-htm-intel-tsx&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;270-lock-elision&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;270-lock-elision&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">270. 락 엘리전 (Lock Elision) - 하드웨어 지원 락 우회</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-05</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;270-lock-elision&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;271-work-stealing&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;271-work-stealing&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">271. 스레드 풀 스케줄링 락 경합 (Work Stealing)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-05</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;271-work-stealing&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;272-double-checked-locking&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;272-double-checked-locking&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">272. 더블 체크드 락킹 (Double-Checked Locking) 안티패턴 및 해결 (volatile)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-05</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;272-double-checked-locking&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;273-toctou&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;273-toctou&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">273. 세큐어 코딩에서의 동기화 약점 (TOCTOU: Time of Check to Time of Use)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-05</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;273-toctou&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;274-critical-section-minimization&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;274-critical-section-minimization&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">274. 임계 구역 크기 최소화 기법</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;274-critical-section-minimization&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;275-lock-contention-monitoring&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;275-lock-contention-monitoring&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">275. 락 경합 (Lock Contention) 모니터링 도구</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-05</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;275-lock-contention-monitoring&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;276-lock-hierarchy&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;276-lock-hierarchy&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">276. 데드락 회피를 위한 Lock Hierarchy (락 순서화)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-05</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;276-lock-hierarchy&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;277-semaphore-ordering&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;277-semaphore-ordering&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">277. 세마포어를 이용한 순서 제어 (Ordering)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;277-semaphore-ordering&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;278-binary-semaphore-vs-mutex&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;278-binary-semaphore-vs-mutex&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">278. 이진 세마포어 vs 뮤텍스 차이 (소유권 유무)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-05</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;278-binary-semaphore-vs-mutex&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;279-reentrant-lock&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;279-reentrant-lock&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">279. 재진입 가능 락 (Reentrant Lock &#x2F; Recursive Lock)</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-04-05</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;279-reentrant-lock&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+    
+    <div class="folder-item-wrapper">
+        <a class="folder-item" href="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;280-read-write-lock&#x2F;" data-page-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;280-read-write-lock&#x2F;">
+            <span class="fi-icon"><img src="https://api.iconify.design/lucide:file-text.svg?color=%236b7280" width="16"
+                    height="16" alt=""></span>
+            <span class="fi-name">280. 읽기-쓰기 락 (Read-Write Lock) - 다중 읽기 허용, 쓰기 배타적</span>
+            <span class="fi-badge" hidden>LAST READ</span>
+            <span class="fi-meta">2026-03-22</span>
+        </a>
+        <button class="card-copy-btn" data-url="https:&#x2F;&#x2F;agnusdei1207.github.io&#x2F;brainscience&#x2F;studynote&#x2F;02_operating_system&#x2F;04_synchronization&#x2F;280-read-write-lock&#x2F;" title="Copy content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+        </button>
+    </div>
+    
+    
+
+</div>
+
+<script>
+    function normalizeCardPath(url) {
+        try {
+            var path = new URL(url, window.location.origin).pathname;
+            return path.replace(/\/+$/, '') || '/';
+        } catch (err) {
+            return '';
+        }
+    }
+
+    function highlightLastReadCard() {
+        var raw = localStorage.getItem('lastReadPost');
+        if (!raw) return;
+
+        var saved;
+        try {
+            saved = JSON.parse(raw);
+        } catch (err) {
+            return;
+        }
+
+        if (!saved || !saved.url) return;
+
+        var lastPath = normalizeCardPath(saved.url);
+        document.querySelectorAll('.folder-item[data-page-url]').forEach(function (card) {
+            var isMatch = normalizeCardPath(card.dataset.pageUrl) === lastPath;
+            var badge = card.querySelector('.fi-badge');
+            card.classList.toggle('last-read-card', isMatch);
+            if (badge) badge.hidden = !isMatch;
+        });
+    }
+
+    document.querySelectorAll('.card-copy-btn').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var url = this.dataset.url;
+            var btnEl = this;
+            fetch(url)
+                .then(function (res) { return res.text(); })
+                .then(function (html) {
+                    var parser = new DOMParser();
+                    var doc = parser.parseFromString(html, 'text/html');
+                    var content = doc.querySelector('.post-content');
+                    if (content) {
+                        var text = content.innerText || content.textContent;
+                        navigator.clipboard.writeText(text).then(function () {
+                            btnEl.classList.add('copied');
+                            setTimeout(function () { btnEl.classList.remove('copied'); }, 2000);
+                        });
+                    }
+                });
+        });
+    });
+
+    highlightLastReadCard();
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

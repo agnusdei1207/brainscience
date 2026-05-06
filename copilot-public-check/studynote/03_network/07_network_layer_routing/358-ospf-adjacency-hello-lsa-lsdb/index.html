@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>358. OSPF 인접성(Adjacency), Hello 패킷, LSA (Link State Advertisement), LSDB 교환 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: OSPF 라우터가 부팅되어 완벽한 지형도를 그려내기까지의 과정은, 옆 라우터와 **"인사(Hello) -&gt; 정보 엽서 교환(LSA) -&gt; 전체 지도 완성(LSDB)"**이라는 3단계의 매우 체계적이고 수다스러운 핑퐁 과정을 거친다.</li>
+<li><strong>Hello 패킷과 인접성 (Adjacency)</strong>: OSPF 라우터는 무작정 정보를 뿌리지 않고, 먼저 10초마다 <code>Hello</code> 패킷을 쏘아보내 "우리 동네 비밀번호(Area ID)랑 타이머 똑같니?"라며 깐깐하게 면접을 본 뒤 통과한 놈하고만 **친구(Neighbor)를 맺고 깊은 관계(Adjacency)**로 발전한다.</li>
+<li><strong>LSA와 LSDB의 완성</strong>: 친구를 맺으면 각자 자기가 가진 선로 상태(IP, 서브넷 마스크, Cost)를 적은 <strong>LSA(Link State Advertisement)</strong> 엽서를 미친 듯이 주고받으며, 모든 라우터의 메모리에 토시 하나 안 틀리고 100% 똑같은 **동네 전체 지도(LSDB)**를 복사해 넣는다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: OSPF 라우터가 네트워크 토폴로지를 동기화하기 위해 이웃을 탐색하고, 링크 상태 데이터베이스(LSDB)를 일치시키기 위해 5가지 OSPF 패킷(Hello, DBD, LSR, LSU, LSAck)을 교환하는 상태 머신 과정.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 수백 대의 라우터가 무식하게 자기 지형도를 한꺼번에 허공에 뿌리면(Flooding) 네트워크는 그 자체의 소음(오버헤드) 때문에 뻗어버린다. "누가 내 진짜 찐친(Adjacency)인지 먼저 호구조사(Hello)를 깐깐하게 하고, 친구를 맺은 놈들끼리만 내가 모르는 빈칸(LSR)만 콕 집어서 서로 물어보며(LSU) 스마트하게 지도를 복사(LSDB Sync)하자!"라는 정교한 동기화 프로토콜이 필요했다.</p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: OSPF의 지도 동기화 과정은 조별 과제 스터디와 같습니다.</p>
+<ul>
+<li><strong>Hello (인사)</strong>: 스터디원끼리 "너도 네트워크 3조니? (Area ID 확인)" 하고 인사를 나눕니다.</li>
+<li><strong>LSA (엽서)</strong>: "나는 1장 요약본 있어!", "나는 2장 요약본 있어!"라고 각자 조사해 온 A4 용지 조각입니다.</li>
+<li><strong>LSDB (전체 지도)</strong>: 이 A4 용지들을 복사기(LSU)에 넣고 윙 돌려서, 조원 5명이 **"완벽히 똑같은 두께의 최종 보고서 파일(LSDB)"**을 한 부씩 똑같이 손에 쥐게 되는 과정입니다.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유:</strong> OSPF 라우터들은 퍼즐 맞추기 대회 참가자입니다. 먼저 **"너도 우리 팀이니?(Hello)"**라고 명찰을 확인하고, 자기가 들고 있는 **퍼즐 조각(LSA)**을 테이블에 쏟아냅니다. 모두가 힘을 합쳐 **"완성된 거대한 한 폭의 그림(LSDB)"**을 완성하는 팀워크의 결정체입니다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-ospfyi-5gaji-paekisgwa-donggihwa-sangtae-byeonhwa-deep-dive">Ⅱ. OSPF의 5가지 패킷과 동기화 상태 변화 (Deep Dive)</h2>
+<h3 id="1-ospf-5gaji-paekis-amgi-pilsu">1. OSPF 5가지 패킷 (암기 필수)</h3>
+<p>OSPF는 이 5개의 편지 봉투로 모든 대화를 끝낸다.</p>
+<ol>
+<li><strong>Type 1 (Hello)</strong>: 10초마다 쏜다. "안녕? 나 살아서 잘 있어! 너랑 나랑 친구(Neighbor) 할 조건 맞나 맞춰보자."</li>
+<li><strong>Type 2 (DBD / DD)</strong>: "이게 내 수첩(LSDB) 목차(요약본)야! 너랑 나랑 책 두께가 똑같은지 목차만 먼저 대조해 보자."</li>
+<li><strong>Type 3 (LSR)</strong>: "어? 네 목차 보니까 나한테 없는 페이지(LSA)가 있네? 그 페이지 좀 복사해 줘! (요청)"</li>
+<li><strong>Type 4 (LSU)</strong>: "오냐, 네가 달라고 한 페이지(LSA 엽서 모음집) 여기 복사해 준다! (던져줌)"</li>
+<li><strong>Type 5 (LSAck)</strong>: "네가 준 페이지 잘 받았어! 땡큐! (수신 확인 영수증)"</li>
+</ol>
+<h3 id="2-ospf-sangtae-byeonhwa-state-machine-2wayeseo-fullggaji">2. OSPF 상태 변화 (State Machine) - 2Way에서 Full까지</h3>
+<p>라우터 A와 B가 처음 만나서 완벽한 찐친(Full)이 되는 과정이다.</p>
+<ul>
+<li><strong>Init (초기화)</strong>: A가 B의 Hello를 방금 처음 들었다. 아직 내 이름은 불리지 않았다.</li>
+<li><strong>2-Way (양방향)</strong>: B의 Hello 패킷 안에 "어 나 A 알아!"라고 내 이름이 적힌 걸 확인했다. 드디어 서로 알게 되었다! (이웃 맺기 성공).</li>
+<li><strong>ExStart (교환 시작)</strong>: "자, 이제 목차(DBD) 교환하자! 누가 선공 칠래?" 라우터 ID가 높은 놈이 대장(Master)이 된다.</li>
+<li><strong>Exchange (교환)</strong>: 서로 목차(DBD)를 툭툭 던져준다.</li>
+<li><strong>Loading (로딩 중)</strong>: 목차를 보고 앗! 나한테 없는 게 있네? LSR로 물어보고 LSU로 진짜 LSA 조각들을 팍팍 받아온다.</li>
+<li><strong>Full (완벽한 인접성)</strong>: A와 B의 지형도(LSDB) 100% 동기화 완료! 이제부터는 찐친(Adjacency)이며, 평소엔 10초마다 Hello만 던지며 생사만 확인한다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text"> ┌─────────────────────────────────────────────────────────────┐
+ │                OSPF 상태 머신(State Machine) 핵심 도식          │
+ ├─────────────────────────────────────────────────────────────┤
+ │                                                             │
+ │   [ 라우터 A ]                                [ 라우터 B ]     │
+ │       │ ── 1. &quot;안녕 나 A야&quot; (Hello) ─────────▶ (Init 상태) │
+ │       │                                                     │
+ │   (2Way)◀─ 2. &quot;안녕 A야 나 B야&quot; (Hello) ───────── │             │
+ │   서로 친구 됨!                                                 │
+ │                                                             │
+ │       │ ── 3. &quot;이게 내 지도 목차다&quot; (DBD) ──────▶           │
+ │       ◀── 4. &quot;네 목차 3쪽 나한테 줘봐&quot; (LSR) ─────│ (Loading)  │
+ │       │ ── 5. &quot;옛다 3쪽 복사본!&quot; (LSU) ─────────▶           │
+ │       ◀── 6. &quot;잘 받았음!&quot; (LSAck) ─────────────│             │
+ │                                                             │
+ │   ▶ &quot;로딩 끝! 너와 내 머릿속의 지도(LSDB)는 이제 100% 똑같다! (Full)&quot;│
+ └─────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="3-lsa-link-state-advertisement-yi-jeongce">3. LSA (Link State Advertisement)의 정체</h3>
+<ul>
+<li>LSA는 그 자체로 패킷이 아니라, Type 4(LSU)라는 택배 상자 안에 들어가는 **'데이터 알맹이(내용물)'**다.</li>
+<li>LSA 안에는 라우터의 이름(Router ID), 어떤 포트에 어떤 IP와 마스크가 꽂혀있는지, 그 길의 Cost(대역폭 점수)는 얼마인지 등 라우터의 "신상 명세서"가 아주 낱낱이 적혀 있다.</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유:</strong> Hello 패킷은 소개팅에서 **"나이랑 취미 맞는지 호구조사"**하는 것이고, LSA는 각자의 살아온 **"이력서(상태)"**이며, LSDB는 그 이력서들을 철해놓은 **"회사 전체 직원 명부"**입니다. OSPF는 모든 라우터가 이 직원 명부를 100% 똑같이 나눠 갖는 완벽한 동기화 시스템입니다.</p>
+</blockquote>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

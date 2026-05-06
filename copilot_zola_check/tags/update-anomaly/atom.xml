@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Brain Science - update-anomaly</title>
+    <subtitle>AI, Infra, DevSecOps, Cloud Native, Security</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://agnusdei1207.github.io/brainscience/tags/update-anomaly/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://agnusdei1207.github.io/brainscience"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2026-03-26T00:00:00+00:00</updated>
+    <id>https://agnusdei1207.github.io/brainscience/tags/update-anomaly/atom.xml</id>
+    <entry xml:lang="en">
+        <title>530. 이상 (Anomaly)</title>
+        <published>2026-03-26T00:00:00+00:00</published>
+        <updated>2026-03-26T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://agnusdei1207.github.io/brainscience/studynote/05_database/04_transactions_concurrency/530-anomaly/"/>
+        <id>https://agnusdei1207.github.io/brainscience/studynote/05_database/04_transactions_concurrency/530-anomaly/</id>
+        
+        <content type="html" xml:base="https://agnusdei1207.github.io/brainscience/studynote/05_database/04_transactions_concurrency/530-anomaly/">&lt;h1 id=&quot;isang-anomaly&quot;&gt;이상 (Anomaly)&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;haegsim-insaiteu-3jul-yoyag&quot;&gt;핵심 인사이트 (3줄 요약)&lt;&#x2F;h2&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;본질&lt;&#x2F;strong&gt;: 이상 (Anomaly)은 정규화되지 않은 또는 불완전한 정규화로 인해 발생하는 데이터 불일치 현상으로, 삽입 이상, 삭제 이상, 갱신 이상의 세 가지 유형이 있다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;가치&lt;&#x2F;strong&gt;: 이상의 원인을 이해하면 정규화의 필요성과 적절한 분해 방법의 근거가 된다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;융합&lt;&#x2F;strong&gt;: 이상의 개념은 데이터 품질 관리, 데이터 무결성 연구와 연결되며, 반정규화 시의 트레이드오프 판단 기준이 된다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;i-gaeyo-mic-pilyoseong-context-necessity&quot;&gt;Ⅰ. 개요 및 필요성 (Context &amp;amp; Necessity)&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;gaenyeom-jeongyi&quot;&gt;개념 정의&lt;&#x2F;h3&gt;
+&lt;p&gt;이상 (Anomaly)은 &lt;strong&gt;데이터베이스에서 데이터 중복으로 인해 발생하는 불일치 현상&lt;&#x2F;strong&gt;으로, 삽입 이상, 삭제 이상, 갱신 이상의 세 가지 유형이 있다.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;biyu&quot;&gt;비유&lt;&#x2F;h3&gt;
+&lt;p&gt;이상은 &lt;strong&gt;여러 곳에 적힌 메모의 문제&lt;&#x2F;strong&gt;와 같다. 한 곳의 메모를 변경해도 다른 곳의 메모는 그대로이면 정보가 불일치하게 된다.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;**📢 섹션 요약 비유:**여기저기 적어둔 전화번호부에서 한 명만 번호를 바꾸면, 다른 곳에 적어둔 번호와 달라져서 문제가 생기는 것과 같아요.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;ii-se-gaji-yuhyeongyi-isang&quot;&gt;Ⅱ. 세 가지 유형의 이상&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;1-gaengsin-isang-update-anomaly&quot;&gt;1. 갱신 이상 (Update Anomaly)&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                    갱신 이상 (Update Anomaly)                              │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   ┌────────┬────────┬────────┬──────────────┐                    │
+│   │ 학번   │ 이름    │ 반     │ 담임선생님    │                    │
+│   ├────────┼────────┼────────┼──────────────┤                    │
+│   │ S001   │ 김철수  │ 1반    │ 박선생님     │                    │
+│   │ S002   │ 이영희  │ 1반    │ 박선생님     │ ← 중복            │
+│   │ S003   │ 박민수  │ 2반    │ 이선생님     │                    │
+│   └────────┴────────┴────────┴──────────────┘                    │
+│                                                                     │
+│   문제: 1반의 담임선생님이 최선생님으로 바뀌면?                         │
+│   → S001, S002 두 행 모두 수정해야 함                                │
+│   → 하나라도 누락되면 → 데이터 불일치!                                 │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; 갱신 이상은 동일한 데이터가 여러 행에 중복 저장되어 있을 때, 일부만 수정되어 발생하는 불일치다. 담임선생님 정보가 반 단위로 중복되어 있으므로, 변경 시 여러 행을 동시에 수정해야 한다. 하나라도 누락되면 데이터베이스 내부에 서로 다른 &quot;1반&quot;이 생기는矛盾 상태가 된다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;2-sabib-isang-insert-anomaly&quot;&gt;2. 삽입 이상 (Insert Anomaly)&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                    삽입 이상 (Insert Anomaly)                              │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   ┌────────┬────────┬────────┬──────────────┐                    │
+│   │ 학번   │ 이름    │ 반     │ 담임선생님    │                    │
+│   ├────────┼────────┼────────┼──────────────┤                    │
+│   │ S001   │ 김철수  │ 1반    │ 박선생님     │                    │
+│   │ S002   │ 이영희  │ 1반    │ 박선생님     │                    │
+│   └────────┴────────┴────────┴──────────────┘                    │
+│                                                                     │
+│   문제: 3반과 담임선생님 &amp;#x27;최선생님&amp;#x27; 정보를 추가하고 싶다면?           │
+│   → 학번이 PRIMARY KEY이므로 NULL 불가!                               │
+│   → 학생 정보 없이 담임선생님 정보만 삽입 불가능!                       │
+│                                                                     │
+│   해결: (반, 담임선생님)을 별도 테이블로 분리                         │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설)&lt;&#x2F;strong&gt; 삽입 이상은 기본 키 제약으로 인해 특정 데이터만 독립적으로 삽입할 수 없는 상황이다. 3반과 최선생님 정보만 추가하고 싶지만, 학번이 PRIMARY KEY여서 NULL일 수 없고, 따라서 새로운 행을 추가할 수 없다. 이는 반과 담임선생님의 관계가 학생 테이블에 포함되어 있기 때문에 발생하는 문제다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;3-sagje-isang-delete-anomaly&quot;&gt;3. 삭제 이상 (Delete Anomaly)&lt;&#x2F;h3&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                    삭제 이상 (Delete Anomaly)                              │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   ┌────────┬────────┬────────┬──────────────┐                    │
+│   │ 학번   │ 이름    │ 반     │ 담임선생님    │                    │
+│   ├────────┼────────┼────────┼──────────────┤                    │
+│   │ S001   │ 김철수  │ 1반    │ 박선생님     │                    │
+│   │ S002   │ 이영희  │ 1반    │ 박선생님     │                    │
+│   └────────┴────────┴────────┴──────────────┘                    │
+│                                                                     │
+│   문제: S002 학생의 행을 삭제하면?                                   │
+│   → 1반의 담임선생님이 &amp;#x27;박선생님&amp;#x27;이라는 정보도 함께 삭제됨!          │
+│   → 1반에 학생이 1명만 남으면 반 정보가 사라짐!                      │
+│                                                                     │
+│   해결: 반 정보를 별도 테이블로 분리                                  │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; 삭제 이상은 특정 행을 삭제할 때, 의도와 달리 다른 정보까지 함께 삭제되는 상황이다. S002 학생을 삭제하면 1반의 담임선생님 정보가 사라진다. 이는 반과 담임선생님의 정보가 학생 테이블에 같이 저장되어 있기 때문에 발생하는 문제다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;iii-isangyi-weonin&quot;&gt;Ⅲ. 이상의 원인&lt;&#x2F;h2&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                    이상의 원인                                          │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   1. 데이터 중복                                                    │
+│   • 동일 정보가 여러 행에 저장 → 갱신 시 불일치 위험                  │
+│                                                                     │
+│   2. 정규화 미실시 또는 불완전                                        │
+│   • 테이블 구조가 비정규형 → 삽입&amp;#x2F;삭제 제약                          │
+│                                                                     │
+│   3. 부분 종속성 또는 이행적 종속성                                  │
+│   • 복합 기본 키의 일부에만 종속 → 부분 종속 이상                     │
+│   • 비키 속성 간 종속 → 이행적 종속 이상                             │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph&quot;&gt;📌 관련 개념 맵 (Knowledge Graph)&lt;&#x2F;h2&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;개념 명칭&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;관계 및 시너지 설명&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;갱신 이상&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;중복 데이터 수정 시 일부만 변경되어 발생하는 불일치다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;삽입 이상&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;기본 키 제약으로 특정 데이터만 독립적으로 삽입할 수 없는 상황이다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;삭제 이상&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;행 삭제 시 의도와 달리 다른 정보까지 함께 삭제되는 상황이다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;정규화&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;이상의 원인를 제거하기 위한 테이블 분해 과정이다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;baby-eorinireul-wihan-3jul-biyu-seolmyeong&quot;&gt;👶 어린이를 위한 3줄 비유 설명&lt;&#x2F;h2&gt;
+&lt;ol&gt;
+&lt;li&gt;이상은 &lt;strong&gt;여러 명에게 같은 이야기를 각각 다른 방식으로 적어두는 것&lt;&#x2F;strong&gt;과 같아요.&lt;&#x2F;li&gt;
+&lt;li&gt;한 명에게서 이야기를 들었는데 다른 사람의 적어둔 이야기는 다르다면 (갱신 이상), 어떤 게 진짜인지 알 수 없어요.&lt;&#x2F;li&gt;
+&lt;li&gt;정보를 나누어 정리하면 (정규화), 이런 문제가 생기지 않아요!&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+</content>
+        
+    </entry>
+</feed>

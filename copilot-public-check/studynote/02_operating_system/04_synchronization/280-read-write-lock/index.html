@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>280. 읽기-쓰기 락 (Read-Write Lock) - 다중 읽기 허용, 쓰기 배타적 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 22, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="ilggi-sseugi-rag-read-write-lock">읽기-쓰기 락 (Read-Write Lock)</h1>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 읽기-쓰기 락 (Read-Write Lock, RW Lock)은 다수의 독자가 동시에 읽을 수 있으며 단 하나의 저자만 독점적으로 쓸 수 있는 동기화 원시 객체로, 뮤텍스보다 읽기 집중 환경에서 높은 동시성을 제공한다.</li>
+<li><strong>가치</strong>: 읽기 연산이 쓰기보다 훨씬 빈번한 공유 자료구조(설정 객체, 캐시, 라우팅 테이블 등)에서 뮤텍스 대비 처리량을 N배(동시 독자 수만큼) 향상시킬 수 있다.</li>
+<li><strong>융합</strong>: POSIX <code>pthread_rwlock_t</code>, Java <code>ReentrantReadWriteLock</code>, C++ <code>std::shared_mutex</code>, Linux 커널의 <code>rwlock_t</code>와 <code>rw_semaphore</code>가 표준 구현이며, RCU (Read-Copy-Update)는 독자 측 락조차 제거한 진화 형태다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>뮤텍스는 모든 접근을 직렬화하므로, 읽기 작업도 순차적으로 처리된다. 하지만 읽기는 데이터를 수정하지 않으므로 여러 스레드가 동시에 읽어도 일관성이 깨지지 않는다. 읽기-쓰기 락은 이 특성을 활용하여 독자들의 동시 읽기를 허용하고, 저자만 독점 접근을 요구한다.</p>
+<p><strong>접근 규칙:</strong></p>
+<ul>
+<li>독자 N명 ↔ 독자 M명: <strong>허용</strong> (동시 읽기)</li>
+<li>독자 N명 ↔ 저자 1명: <strong>상호 배제</strong> (읽기-쓰기 분리)</li>
+<li>저자 1명 ↔ 저자 1명: <strong>상호 배제</strong> (쓰기 독점)</li>
+</ul>
+<p><strong>💡 비유</strong>: 도서관의 참고서 — 여러 학생이 동시에 볼 수 있지만, 선생님이 내용을 수정할 때는 모두 자리를 비워야 한다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────┐
+│       읽기-쓰기 락 접근 매트릭스                         │
+├──────────────────────────────────────────────────────────┤
+│                                                          │
+│           │  Reader      │  Writer                       │
+│  ─────────┼──────────────┼──────────                     │
+│  Reader   │    ✅ OK     │   ❌ Block                    │
+│  Writer   │   ❌ Block   │   ❌ Block                    │
+│                                                          │
+│  처리량 향상:                                            │
+│  뮤텍스: 최대 1×              (항상 직렬화)              │
+│  RWLock: 최대 독자수×         (동시 읽기)                │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>📢 섹션 요약 비유</strong>: 읽기-쓰기 락은 도서관 열람실 — 여러 학생이 동시에 책을 펼칠 수 있지만, 사서가 서가를 재배치할 때는 모두 나가야 합니다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="posix-guhyeon">POSIX 구현</h3>
+<pre data-lang="c" class="language-c "><code class="language-c" data-lang="c">#include &lt;pthread.h&gt;
+
+pthread_rwlock_t rwlock = PTHREAD_RWLOCK_INITIALIZER;
+
+&#x2F;&#x2F; 독자 (Reader)
+pthread_rwlock_rdlock(&amp;rwlock);   &#x2F;&#x2F; 읽기 락 획득 (다른 독자와 공유)
+read_shared_data();
+pthread_rwlock_unlock(&amp;rwlock);
+
+&#x2F;&#x2F; 저자 (Writer)
+pthread_rwlock_wrlock(&amp;rwlock);   &#x2F;&#x2F; 쓰기 락 획득 (독점)
+update_shared_data();
+pthread_rwlock_unlock(&amp;rwlock);
+</code></pre>
+<h3 id="naebu-sangtae-gigye">내부 상태 기계</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│        읽기-쓰기 락 내부 상태 전이                           │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  상태: [Idle] ──rdlock──▶ [ReadLocked: count=N]              │
+│          │                      │                            │
+│          │ wrlock          모든 독자 unlock                  │
+│          ▼                      ▼                            │
+│       [WriteLocked]  ◀── [Idle]                              │
+│          │                                                   │
+│       writlock 해제                                          │
+│          ▼                                                   │
+│        [Idle]                                                │
+│                                                              │
+│  변수:                                                       │
+│  read_count : 현재 읽고 있는 독자 수                         │
+│  write_pending : 대기 중인 저자 수                           │
+│  write_locked : 쓰기 락 획득 여부                            │
+│                                                              │
+│  독자 우선 정책: write_pending 무시하고 새 독자 진입 허용    │
+│  저자 우선 정책: write_pending &gt; 0이면 새 독자 차단          │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> RW Lock의 내부 구현은 독자 카운터와 쓰기 잠금 플래그를 원자적으로 관리한다. 독자 우선(Reader-Preference) 구현에서는 독자가 있으면 새 독자가 즉시 진입하여 저자 기아(Writer Starvation)가 발생할 수 있다. 저자 우선(Writer-Preference)에서는 그 반대다. 공정(Fair) 구현은 대기 큐로 기아를 방지하지만 처리량이 감소한다.</p>
+<h3 id="java-reentrantreadwritelock">Java ReentrantReadWriteLock</h3>
+<pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">import java.util.concurrent.locks.*;
+
+ReadWriteLock rwLock = new ReentrantReadWriteLock();
+Lock readLock  = rwLock.readLock();
+Lock writeLock = rwLock.writeLock();
+
+&#x2F;&#x2F; 캐시 읽기 (여러 스레드 동시)
+readLock.lock();
+try {
+    return cache.get(key);
+} finally {
+    readLock.unlock();
+}
+
+&#x2F;&#x2F; 캐시 갱신 (단독)
+writeLock.lock();
+try {
+    cache.put(key, value);
+} finally {
+    writeLock.unlock();
+}
+</code></pre>
+<h3 id="ilggi-sseugi-rag-eobgeureideu-munje">읽기→쓰기 락 업그레이드 문제</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────┐
+│    읽기→쓰기 업그레이드 교착 상태 시나리오               │
+├──────────────────────────────────────────────────────────┤
+│                                                          │
+│  T1: readLock() 획득                                     │
+│  T2: readLock() 획득                                     │
+│                                                          │
+│  T1: writeLock() 시도 → T2의 readLock 해제 대기          │
+│  T2: writeLock() 시도 → T1의 readLock 해제 대기          │
+│                                                          │
+│  → 교착 상태! 두 스레드가 서로를 기다림                  │
+│                                                          │
+│  해결: 읽기를 포기하고 쓰기 락을 처음부터 획득           │
+│  또는 StampedLock (Java 8+)의 tryConvertToWriteLock()    │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 락 업그레이드(읽기→쓰기 변환)는 대부분의 RW Lock 구현에서 지원하지 않거나 교착 상태를 유발한다. Java의 <code>StampedLock</code>은 낙관적 읽기(Optimistic Read)와 <code>tryConvertToWriteLock()</code>으로 이 문제를 보다 안전하게 처리한다.</p>
+<p><strong>📢 섹션 요약 비유</strong>: 읽기→쓰기 업그레이드 교착은 두 학생이 서로 "당신이 책을 놓으면 내가 수정하겠다"고 고집하다가 영원히 기다리는 상황입니다.</p>
+<hr />
+<h2 id="iii-yunghab-bigyo-mic-dagagdo-bunseog">Ⅲ. 융합 비교 및 다각도 분석</h2>
+<h3 id="rw-lock-vs-mutex-vs-rcu-bigyo">RW Lock vs Mutex vs RCU 비교</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────┬────────────┬────────────┬──────────────┐
+│ 항목             │ Mutex      │ RW Lock    │ RCU          │
+├──────────────────┼────────────┼────────────┼──────────────┤
+│ 동시 읽기        │ 불가       │ 가능       │ 가능         │
+│ 독자 오버헤드    │ 락비용     │ 카운터비용 │ 사실상 0     │
+│ 저자 레이턴시    │ 즉시(다음) │ 즉시(다음) │ Grace Period │
+│ 기아 방지        │ 정책 필요  │ 정책 필요  │ 없음         │
+│ 구현 복잡도      │ 낮음       │ 중간       │ 높음         │
+│ 적합 환경        │ 균등 R&#x2F;W   │ 읽기 집중  │ SMP 읽기 집중│
+└──────────────────┴────────────┴────────────┴──────────────┘
+</code></pre>
+<p><strong>📢 섹션 요약 비유</strong>: Mutex는 단차선, RW Lock은 버스 전용 차선(읽기)/일반 차선(쓰기) 분리, RCU는 차선 없는 자율 주행 고속도로입니다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsajeog-pandan">Ⅳ. 실무 적용 및 기술사적 판단</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li><strong>설정 객체 동기화</strong>: 마이크로서비스에서 수백 개 스레드가 설정을 초당 수만 번 읽고, 관리자가 분당 1번 업데이트. RW Lock으로 읽기 처리량 최대화.</li>
+<li><strong>데이터베이스 인덱스</strong>: B-Tree 인덱스의 읽기 접근에 RW Lock을 적용하여 SELECT 동시성 최대화, INSERT/UPDATE/DELETE만 독점.</li>
+</ol>
+<h3 id="doib-cekeuriseuteu">도입 체크리스트</h3>
+<ul>
+<li><strong>읽기:쓰기 비율 측정</strong>: 90:10 이상이면 RW Lock 효과적. 50:50이면 Mutex와 성능 차이 미미.</li>
+<li><strong>기아 방지 정책</strong>: 저자 기아가 허용되지 않는다면 공정 모드 설정 필요.</li>
+<li><strong>업그레이드 없음 원칙</strong>: 읽기 락 보유 중 쓰기 락 획득 시도 금지.</li>
+</ul>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li><strong>쓰기 집중 환경</strong>: 쓰기가 잦으면 독자 우선 RW Lock이 계속 락-언락을 반복해 오히려 뮤텍스보다 느림.</li>
+<li><strong>읽기 락 범위 과대</strong>: 락을 오래 보유하면 저자 기아 심화.</li>
+</ul>
+<p><strong>📢 섹션 요약 비유</strong>: 읽기-쓰기 락은 쓰기가 매우 드문 환경에서만 약이 되는 처방 — 쓰기가 잦은 환경에서는 오히려 독이 됩니다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">Mutex</th><th style="text-align: left">RW Lock (공정)</th></tr></thead><tbody>
+<tr><td style="text-align: left">독자 8개 동시 처리량</td><td style="text-align: left">1×</td><td style="text-align: left">최대 8×</td></tr>
+<tr><td style="text-align: left">저자 기아</td><td style="text-align: left">없음</td><td style="text-align: left">정책 필요</td></tr>
+<tr><td style="text-align: left">구현 복잡도</td><td style="text-align: left">낮음</td><td style="text-align: left">중간</td></tr>
+</tbody></table>
+<p>읽기-쓰기 락은 읽기 집중 환경에서 동시성을 극적으로 향상시키는 강력한 도구다. 단, 쓰기 비율, 기아 허용 여부, 락 업그레이드 필요성을 사전에 분석해야 올바른 선택이 가능하다.</p>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h2>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">관계</th></tr></thead><tbody>
+<tr><td style="text-align: left">독자-저자 문제</td><td style="text-align: left">RW Lock이 해결하는 이론적 원형</td></tr>
+<tr><td style="text-align: left">RCU</td><td style="text-align: left">RW Lock의 진화형 (독자 측 락 제거)</td></tr>
+<tr><td style="text-align: left">Java StampedLock</td><td style="text-align: left">낙관적 읽기 + 업그레이드 지원 확장</td></tr>
+<tr><td style="text-align: left">저자 기아</td><td style="text-align: left">RW Lock 설계 시 반드시 고려해야 할 위험</td></tr>
+<tr><td style="text-align: left"><code>pthread_rwlock_t</code></td><td style="text-align: left">POSIX 표준 구현</td></tr>
+</tbody></table>
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>읽기-쓰기 락은 도서관 규칙 — 여러 친구가 동시에 같은 책을 읽어도 되지만, 내용을 고치려면 모두 나가야 해요.</li>
+<li>읽기가 쓰기보다 훨씬 많을 때(예: 읽기 100번, 쓰기 1번) 뮤텍스보다 훨씬 빠른 처리가 가능해요.</li>
+<li>주의: 읽고 있던 사람이 "고칠게요"로 바꾸려 하면 교착 상태가 생길 수 있어요 — 항상 다시 줄을 서야 해요!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

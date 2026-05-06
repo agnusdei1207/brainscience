@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>480. 텔레메트리 스트리밍 gRPC 폴링 탈피 능동 감시 (Streaming Telemetry, gRPC, Active Monitoring) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote enterprise systems
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 스트리밍 텔레메트리(Streaming Telemetry)는 네트워크 장비가 주기적 폴링(SNMP)을 기다리지 않고 데이터를 능동적으로 Push하는 모델로, gRPC/gNMI를 통해 밀리초 단위의 실시간 네트워크 상태 모니터링을 실현하는 차세대 관측 가능성 기반이다.</li>
+<li><strong>가치</strong>: SNMP 폴링 대비 5~10배 높은 데이터 수집 빈도와 70% 낮은 CPU 오버헤드로, 대규모 데이터센터·클라우드 네트워크의 마이크로버스트·간헐적 혼잡을 실시간으로 탐지하여 능동적 장애 예방이 가능하다.</li>
+<li><strong>판단 포인트</strong>: gNMI(gRPC Network Management Interface) + gNOI(gRPC Network Operations Interface)는 이종 벤더 장비의 설정·운영을 단일 표준 API로 통합하여, 멀티벤더 네트워크 자동화의 핵심 표준이 된다.</li>
+</ol>
+</blockquote>
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>전통 네트워크 모니터링의 한계: SNMP(Simple Network Management Protocol) 폴링 방식은 30초~5분 간격으로 장비에 질의하여 데이터를 수집한다. 이 방식은 30초 간격이라는 "눈을 감는 시간" 동안 발생하는 마이크로버스트(수ms~수초의 폭발적 트래픽), 순간 패킷 손실, 버퍼 포화를 완전히 놓친다.</p>
+<p>현대 데이터센터에서 수십만 TPS를 처리하는 환경에서 30초 폴링은 고고학적 데이터일 뿐이다. 이것이 스트리밍 텔레메트리가 필요한 이유이다.</p>
+<p><strong>스트리밍 텔레메트리</strong>는 네트워크 장비(라우터·스위치)가 수집 서버로 데이터를 능동적으로 Push한다. gRPC의 양방향 스트리밍을 활용하여 초당 수십~수백 개의 메트릭을 밀리초 단위로 전송한다.</p>
+<p>국내에서는 SKT, KT, 삼성SDS 등 대규모 네트워크 인프라를 운용하는 조직에서 스트리밍 텔레메트리 + gNMI 도입이 진행 중이다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: SNMP 폴링은 30분마다 전화해서 "지금 어때?"를 묻는 것이고, 스트리밍 텔레메트리는 장비가 계속 "지금 이렇게 되고 있어"를 실시간으로 문자를 보내는 것이다.</p>
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="snmp-vs-seuteuriming-telremeteuri-bigyo">SNMP vs 스트리밍 텔레메트리 비교</h3>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">SNMP 폴링</th><th style="text-align: left">스트리밍 텔레메트리</th></tr></thead><tbody>
+<tr><td style="text-align: left">데이터 방향</td><td style="text-align: left">Pull (수집 서버 → 장비 질의)</td><td style="text-align: left">Push (장비 → 수집 서버 능동 전송)</td></tr>
+<tr><td style="text-align: left">수집 주기</td><td style="text-align: left">30초~5분</td><td style="text-align: left">100ms~1초 (실시간)</td></tr>
+<tr><td style="text-align: left">프로토콜</td><td style="text-align: left">UDP/SNMP</td><td style="text-align: left">gRPC/gNMI, Kafka</td></tr>
+<tr><td style="text-align: left">확장성</td><td style="text-align: left">장비 수 증가 시 폴링 부하 급증</td><td style="text-align: left">구독 기반, 확장성 우수</td></tr>
+<tr><td style="text-align: left">마이크로버스트 탐지</td><td style="text-align: left">불가</td><td style="text-align: left">가능</td></tr>
+<tr><td style="text-align: left">데이터 형식</td><td style="text-align: left">MIB OID (비구조적)</td><td style="text-align: left">구조화 JSON/Protobuf</td></tr>
+<tr><td style="text-align: left">보안</td><td style="text-align: left">SNMPv3 (복잡)</td><td style="text-align: left">gRPC + TLS (현대적)</td></tr>
+</tbody></table>
+<h3 id="gnmi-grpc-telremeteuri-gujo">gNMI/gRPC 텔레메트리 구조</h3>
+<pre><code>┌────────────────────────────────────────────────────────────────┐
+│           gNMI 스트리밍 텔레메트리 아키텍처                    │
+├────────────────────────────────────────────────────────────────┤
+│                                                                │
+│  [네트워크 장비 (IOS-XR, JunOS, EOS)]                         │
+│       │                                                        │
+│  gNMI Subscribe (Path: interfaces&#x2F;interface[name=*]&#x2F;state&#x2F;*)  │
+│       │  스트리밍 Push 시작 (100ms 주기)                       │
+│       ▼                                                        │
+│  [gRPC 수집 서버 (Telegraf &#x2F; gNMIc)]                           │
+│       │  데이터 정규화 + 파싱                                  │
+│       ▼                                                        │
+│  [시계열 DB (InfluxDB &#x2F; Prometheus)]                           │
+│       │  메트릭 저장                                           │
+│       ▼                                                        │
+│  [시각화 (Grafana)]                                             │
+│  + [이상 탐지 엔진 (AI&#x2F;ML)]                                    │
+│                                                                │
+│  gNMI 주요 RPC:                                               │
+│  - Get: 현재 상태 단회 조회                                    │
+│  - Set: 구성 변경 (IBN 통합 포인트)                            │
+│  - Subscribe: 실시간 스트리밍 (STREAM&#x2F;POLL&#x2F;ON_CHANGE)          │
+│                                                                │
+└────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="subscribe-modeu-3jong">Subscribe 모드 3종</h3>
+<table><thead><tr><th style="text-align: left">모드</th><th style="text-align: left">동작</th><th style="text-align: left">사용 사례</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>STREAM</strong></td><td style="text-align: left">주기적 지속 전송</td><td style="text-align: left">인터페이스 카운터, 버퍼 사용률</td></tr>
+<tr><td style="text-align: left"><strong>POLL</strong></td><td style="text-align: left">수집 서버 요청 시 응답</td><td style="text-align: left">즉시 상태 확인</td></tr>
+<tr><td style="text-align: left"><strong>ON_CHANGE</strong></td><td style="text-align: left">상태 변경 시에만 전송</td><td style="text-align: left">링크 UP/DOWN, 라우팅 변경</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: Subscribe 모드의 차이는 TV 방송 방식의 차이처럼, STREAM은 24시간 방송(주기 전송), POLL은 주문형 다시보기(요청 시 응답), ON_CHANGE는 속보 알림(이벤트 발생 시만)이다.</p>
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="openconfigwa-yang-deiteo-model">OpenConfig와 YANG 데이터 모델</h3>
+<table><thead><tr><th style="text-align: left">요소</th><th style="text-align: left">역할</th></tr></thead><tbody>
+<tr><td style="text-align: left">OpenConfig</td><td style="text-align: left">벤더 중립 네트워크 구성 데이터 모델 (구글 주도 컨소시엄)</td></tr>
+<tr><td style="text-align: left">YANG</td><td style="text-align: left">네트워크 관리 데이터 모델링 언어 (RFC 6020)</td></tr>
+<tr><td style="text-align: left">gNMI</td><td style="text-align: left">YANG 모델 기반 gRPC 인터페이스</td></tr>
+<tr><td style="text-align: left">gNOI</td><td style="text-align: left">네트워크 운영 (재부팅, 파일 복사) gRPC API</td></tr>
+</tbody></table>
+<p>OpenConfig + gNMI 조합은 Cisco IOS-XR, Juniper JunOS, Arista EOS, Nokia SR-OS 모두 지원하는 멀티벤더 표준으로, 단일 수집 도구로 이종 벤더 장비를 동일하게 모니터링·제어할 수 있다.</p>
+<h3 id="ebpf-giban-gogeub-telremeteuri">eBPF 기반 고급 텔레메트리</h3>
+<p>**eBPF(extended Berkeley Packet Filter)**를 네트워크 장비(Linux 기반)에 적용하면 커널 수준에서 패킷 단위의 초정밀 텔레메트리를 오버헤드 없이 수집할 수 있다. 이 기술은 서버 레벨 네트워크 관측 가능성의 미래이다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: OpenConfig는 전 세계 항공기 제조사들이 사용하는 공통 계기판 규격처럼, 보잉(Cisco)·에어버스(Juniper)·기타 제조사(Arista) 비행기 모두 동일한 계기판 언어로 조종사(관리 시스템)가 읽을 수 있게 표준화된 항공 계기 언어이다.</p>
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="deiteosenteo-telremeteuri-paipeurain-seolgye">데이터센터 텔레메트리 파이프라인 설계</h3>
+<ol>
+<li><strong>수집</strong>: gNMI + Telegraf → 이종 벤더 장비에서 인터페이스 통계, BGP 상태, 버퍼 사용률 수집</li>
+<li><strong>전처리</strong>: Kafka로 고속 메시지 버퍼링 → 백프레셔 방지</li>
+<li><strong>저장</strong>: InfluxDB (시계열), Elasticsearch (로그), Prometheus (메트릭)</li>
+<li><strong>분석</strong>: Grafana 대시보드 + ML 이상 탐지 (마이크로버스트, 링크 품질 저하 예측)</li>
+<li><strong>액션</strong>: 이상 탐지 시 IBN 컨트롤러에 트리거 → 자동 QoS 조정 또는 트래픽 우회</li>
+</ol>
+<p><strong>KPI 설정</strong>:</p>
+<ul>
+<li>이벤트 탐지 지연 시간 &lt; 1초 (SNMP 30초 대비)</li>
+<li>마이크로버스트 탐지 정확도 &gt; 95%</li>
+<li>수집 에이전트 CPU 오버헤드 &lt; 2%</li>
+</ul>
+<p>📢 <strong>섹션 요약 비유</strong>: 텔레메트리 파이프라인 설계는 도시 교통 관제 센터처럼, 수천 개 교차로(장비)의 신호 데이터를 실시간으로 수집해 분석하고, 교통 정체(마이크로버스트)를 감지하면 즉시 신호 주기(QoS)를 조정하는 스마트 교통 관리 체계이다.</p>
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p><strong>기대효과</strong>: 네트워크 장애의 80%를 사전 감지·예방, MTTR(평균 복구 시간) 60% 단축, SNMP 기반 대비 데이터 정확도 10배 향상, 멀티벤더 운영 단순화.</p>
+<p><strong>한계</strong>: gNMI 지원이 레거시 장비에서 미비, 대규모 텔레메트리 데이터 저장 비용 증가, 스트리밍 파이프라인 구축의 초기 복잡도, 보안 설정(mTLS) 의무화 필요.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 스트리밍 텔레메트리의 미래는 인체 실시간 건강 모니터링처럼, 30분마다 혈압 측정(SNMP)에서 24시간 연속 심전도 모니터링(스트리밍 텔레메트리)으로 전환하여 심장 마비(네트워크 장애)를 예측하는 예방 의학 네트워크 시대를 향한다.</p>
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">관계</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">gNMI</td><td style="text-align: left">핵심 프로토콜</td><td style="text-align: left">gRPC 기반 네트워크 관리 인터페이스</td></tr>
+<tr><td style="text-align: left">OpenConfig</td><td style="text-align: left">데이터 표준</td><td style="text-align: left">벤더 중립 네트워크 구성 모델</td></tr>
+<tr><td style="text-align: left">YANG</td><td style="text-align: left">모델링 언어</td><td style="text-align: left">네트워크 데이터 구조 정의 표준</td></tr>
+<tr><td style="text-align: left">InfluxDB</td><td style="text-align: left">저장 도구</td><td style="text-align: left">시계열 텔레메트리 데이터 저장</td></tr>
+<tr><td style="text-align: left">IBN</td><td style="text-align: left">연계 시스템</td><td style="text-align: left">텔레메트리 기반 의도 자동 보증</td></tr>
+<tr><td style="text-align: left">eBPF</td><td style="text-align: left">고급 기술</td><td style="text-align: left">커널 레벨 초정밀 네트워크 텔레메트리</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>스트리밍 텔레메트리는 스마트워치가 내 심장박동을 초마다 기록하는 것처럼, 네트워크 장비도 스스로 자신의 상태를 계속 보고하는 능동적 건강 보고 시스템이에요.</li>
+<li>예전 SNMP는 30분마다 "지금 어때요?"를 물어봤는데, 스트리밍은 장비 스스로 "지금 이렇게 바쁘고 있어요!"를 0.1초마다 알려줘요.</li>
+<li>덕분에 네트워크가 막히기 전에 미리 알아채고 자동으로 길을 넓혀주는(QoS 조정) 예방 관리가 가능해요!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

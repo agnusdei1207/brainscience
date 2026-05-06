@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>236. 키-값 저장소 (Key-Value Store) - Redis &#x2F; DynamoDB — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote cloud architecture
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 키-값 저장소(Key-Value Store)는 고유한 키(Key)로 값(Value)을 O(1) 시간에 조회하는 가장 단순한 NoSQL 구조로, <strong>밀리초 이하 응답 속도</strong>가 핵심 가치다.</li>
+<li><strong>가치</strong>: Redis는 인메모리 기반으로 문자열·해시·리스트·셋·정렬셋 등 <strong>풍부한 자료구조</strong>를 제공해 세션·캐시·리더보드에, DynamoDB는 완전관리형 서버리스로 <strong>무한 확장</strong>에 적합하다.</li>
+<li><strong>판단 포인트</strong>: Redis는 단일 서버 메모리 용량이 한계이므로 대용량 영구 저장은 DynamoDB가 적합하고, 두 시스템을 **DynamoDB DAX(캐시) + DynamoDB(영구)**처럼 조합하는 패턴이 일반적이다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>웹 서비스에서 DB 쿼리 병목은 만성적 문제다. 매 페이지 요청마다 복잡한 SQL을 실행하면 응답이 수백ms~수초로 늘어난다. 키-값 저장소는 이 병목을 해결하는 첫 번째 방어선이다.</p>
+<pre><code>[캐시 패턴 - Cache Aside]
+1. 앱 → Redis 조회 (Cache Hit: 1ms 응답)
+        ↓ Cache Miss
+2. 앱 → DB 조회 (100ms 응답)
+3. 앱 → Redis 저장 (TTL 설정)
+4. 다음 요청 → Redis 캐시 Hit (1ms 응답)
+
+효과: DB 부하 90%+ 감소, 응답 속도 100배 향상
+</code></pre>
+<p><strong>키-값 저장소 주요 사용 사례:</strong></p>
+<ul>
+<li><strong>세션 관리</strong>: 로그인 사용자 세션 토큰 저장 (TTL 자동 만료)</li>
+<li><strong>캐시</strong>: DB/API 응답 캐싱 (Cache Aside, Write-Through)</li>
+<li><strong>실시간 리더보드</strong>: 게임 점수 랭킹 (Redis ZSet)</li>
+<li><strong>분산 락</strong>: 동시성 제어 (Redlock 알고리즘)</li>
+<li><strong>Rate Limiting</strong>: API 요청 속도 제한 (Sliding Window)</li>
+<li><strong>Pub/Sub</strong>: 경량 실시간 메시지 발행/구독</li>
+</ul>
+<p>📢 <strong>섹션 요약 비유</strong>: 키-값 저장소는 열쇠고리다. 각 열쇠(키)에 방(값)이 매핑되어 있어, 열쇠만 있으면 즉시 방을 열 수 있다. 열쇠가 없으면 방 목록 전체를 뒤져야(DB 풀스캔) 하지만, 열쇠고리는 O(1)이다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="redis-jaryogujo-mic-hwalyong-paeteon">Redis 자료구조 및 활용 패턴</h3>
+<pre><code>[Redis 5가지 핵심 자료구조]
+┌────────────┬───────────────────────────────────────────────┐
+│ String     │ SET&#x2F;GET, INCR&#x2F;DECR, EXPIRE (TTL)              │
+│            │ 사례: 세션 토큰, 카운터, 분산 락               │
+├────────────┼───────────────────────────────────────────────┤
+│ Hash       │ HSET&#x2F;HGET, HMGET, HGETALL                     │
+│            │ 사례: 사용자 프로필, 상품 정보                  │
+├────────────┼───────────────────────────────────────────────┤
+│ List       │ LPUSH&#x2F;RPUSH, LPOP&#x2F;RPOP, LRANGE                │
+│            │ 사례: 메시지 큐, 최근 방문 기록                 │
+├────────────┼───────────────────────────────────────────────┤
+│ Set        │ SADD&#x2F;SMEMBERS, SUNION, SINTER                 │
+│            │ 사례: 유니크 방문자, 태그 교집합                │
+├────────────┼───────────────────────────────────────────────┤
+│ Sorted Set │ ZADD&#x2F;ZRANGE, ZREVRANGEBYSCORE                 │
+│  (ZSet)    │ 사례: 실시간 점수 랭킹, 시간 순 이벤트          │
+└────────────┴───────────────────────────────────────────────┘
+</code></pre>
+<h3 id="redis-yeongsogseong-obsyeon">Redis 영속성 옵션</h3>
+<table><thead><tr><th style="text-align: left">옵션</th><th style="text-align: left">설명</th><th style="text-align: left">특성</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>RDB (Snapshot)</strong></td><td style="text-align: left">주기적 스냅샷 파일 저장</td><td style="text-align: left">빠른 복구, 마지막 스냅샷 이후 데이터 손실</td></tr>
+<tr><td style="text-align: left"><strong>AOF (Append Only File)</strong></td><td style="text-align: left">모든 쓰기 명령 로그 기록</td><td style="text-align: left">높은 내구성, 디스크 비용 ↑</td></tr>
+<tr><td style="text-align: left"><strong>RDB + AOF 혼합</strong></td><td style="text-align: left">스냅샷 + 이후 AOF</td><td style="text-align: left">균형 잡힌 복구</td></tr>
+<tr><td style="text-align: left"><strong>No Persistence</strong></td><td style="text-align: left">메모리만 (순수 캐시)</td><td style="text-align: left">최고 성능, 재시작 시 데이터 삭제</td></tr>
+</tbody></table>
+<h3 id="dynamodb-akitegceo">DynamoDB 아키텍처</h3>
+<pre><code>[DynamoDB 핵심 개념]
+테이블: users
+┌────────────────────────────────────────────────────────┐
+│ Partition Key (PK): user_id  (해시 키)                  │
+│ Sort Key (SK): created_at    (선택적 범위 키)            │
+├────────────────────────────────────────────────────────┤
+│ {PK:&quot;U001&quot;, SK:&quot;2024-01-01&quot;, name:&quot;김철수&quot;, tier:&quot;VIP&quot;} │
+│ {PK:&quot;U001&quot;, SK:&quot;2024-01-15&quot;, name:&quot;김철수&quot;, tier:&quot;VIP&quot;} │
+│ {PK:&quot;U002&quot;, SK:&quot;2024-01-10&quot;, name:&quot;이영희&quot;, tier:&quot;일반&quot;} │
+└────────────────────────────────────────────────────────┘
+
+PK 기반 조회: O(1) 해시 조회
+SK 기반 범위: PK 고정 + SK 범위 쿼리
+GSI (Global Secondary Index): 다른 속성으로 추가 인덱스
+</code></pre>
+<h3 id="dynamodb-dax-gasog-kaesi">DynamoDB DAX (가속 캐시)</h3>
+<pre><code>앱 → DAX (인메모리, 마이크로초 응답)
+       ↓ Cache Miss
+     DynamoDB (밀리초 응답)
+
+DAX: DynamoDB용 인메모리 캐시 클러스터
+     Redis와 유사하지만 DynamoDB API와 완전 호환
+     코드 변경 없이 URL만 DAX로 변경
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: DynamoDB의 PK와 SK는 주민등록 시스템이다. 주민번호(PK)로 사람을 찾고, 사건 날짜(SK)로 특정 기간 기록만 조회한다. 인덱스 없이 다른 속성으로 찾으면 전수조사(Full Scan) 해야 한다.</p>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="redis-vs-dynamodb-bigyo">Redis vs DynamoDB 비교</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">Redis</th><th style="text-align: left">Amazon DynamoDB</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>스토리지 유형</strong></td><td style="text-align: left">인메모리 (+ 디스크 영속)</td><td style="text-align: left">분산 SSD</td></tr>
+<tr><td style="text-align: left"><strong>응답 속도</strong></td><td style="text-align: left">마이크로초~밀리초</td><td style="text-align: left">밀리초</td></tr>
+<tr><td style="text-align: left"><strong>데이터 크기</strong></td><td style="text-align: left">수십GB ~ 수TB</td><td style="text-align: left">무제한</td></tr>
+<tr><td style="text-align: left"><strong>비용</strong></td><td style="text-align: left">메모리 비용</td><td style="text-align: left">처리량/스토리지 과금</td></tr>
+<tr><td style="text-align: left"><strong>자료구조</strong></td><td style="text-align: left">풍부 (Hash, ZSet, List…)</td><td style="text-align: left">단순 (Item 기반)</td></tr>
+<tr><td style="text-align: left"><strong>트랜잭션</strong></td><td style="text-align: left">제한적 (MULTI/EXEC)</td><td style="text-align: left">ACID (같은 파티션)</td></tr>
+<tr><td style="text-align: left"><strong>관리</strong></td><td style="text-align: left">직접 관리 or Redis Cloud</td><td style="text-align: left">완전 관리형 (서버리스)</td></tr>
+<tr><td style="text-align: left"><strong>적합 사례</strong></td><td style="text-align: left">캐시, 세션, 리더보드</td><td style="text-align: left">대규모 SaaS 앱, 완전 서버리스</td></tr>
+</tbody></table>
+<h3 id="kaesi-paeteon-bigyo">캐시 패턴 비교</h3>
+<table><thead><tr><th style="text-align: left">패턴</th><th style="text-align: left">설명</th><th style="text-align: left">특성</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Cache Aside (Lazy)</strong></td><td style="text-align: left">캐시 미스 시 앱이 DB 조회 후 캐시 저장</td><td style="text-align: left">가장 일반적</td></tr>
+<tr><td style="text-align: left"><strong>Write-Through</strong></td><td style="text-align: left">쓰기 시 캐시+DB 동시 저장</td><td style="text-align: left">일관성 ↑, 쓰기 지연 ↑</td></tr>
+<tr><td style="text-align: left"><strong>Write-Behind</strong></td><td style="text-align: left">캐시 먼저 쓰고 비동기로 DB 저장</td><td style="text-align: left">쓰기 성능 ↑, 손실 위험</td></tr>
+<tr><td style="text-align: left"><strong>Read-Through</strong></td><td style="text-align: left">캐시가 DB 조회를 대행</td><td style="text-align: left">캐시 계층 추상화</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: Cache Aside는 편의점이 없으면 대형마트에서 가져오는 것, Write-Through는 편의점 납품할 때 창고에도 동시에 넣는 것, Write-Behind는 편의점에만 먼저 넣고 나중에 창고 정리하는 것이다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="redis-silmu-myeongryeongeo">Redis 실무 명령어</h3>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">import redis
+r = redis.Redis(host=&#x27;localhost&#x27;, port=6379, db=0)
+
+# String: 세션 저장 (TTL 1시간)
+r.setex(&#x27;session:tok123&#x27;, 3600, &#x27;{&quot;user_id&quot;: &quot;U001&quot;, &quot;role&quot;: &quot;admin&quot;}&#x27;)
+
+# Hash: 사용자 프로필 (부분 업데이트)
+r.hset(&#x27;user:U001&#x27;, mapping={&#x27;name&#x27;: &#x27;김철수&#x27;, &#x27;tier&#x27;: &#x27;VIP&#x27;, &#x27;points&#x27;: 5000})
+r.hincrby(&#x27;user:U001&#x27;, &#x27;points&#x27;, 500)  # 포인트 증가
+
+# Sorted Set: 실시간 리더보드
+r.zadd(&#x27;leaderboard:2024-01&#x27;, {&#x27;player1&#x27;: 1500, &#x27;player2&#x27;: 2300})
+top10 = r.zrevrange(&#x27;leaderboard:2024-01&#x27;, 0, 9, withscores=True)
+
+# 분산 락 (Redlock)
+lock = r.set(&#x27;lock:order_123&#x27;, &#x27;worker_1&#x27;, nx=True, ex=30)
+if lock:
+    # 독점 작업 수행
+    r.delete(&#x27;lock:order_123&#x27;)
+</code></pre>
+<h3 id="dynamodb-seolgye-juyisahang">DynamoDB 설계 주의사항</h3>
+<pre><code>[핫 파티션 방지]
+문제: user_type=&#x27;VIP&#x27; 파티션에 80% 트래픽 집중
+해결: PK에 랜덤 접미사 추가 (Write Sharding)
+     user_id#1, user_id#2, ... user_id#N
+
+[Single Table Design 패턴]
+RDB 여러 테이블을 DynamoDB 단일 테이블로 모델링
+PK=&quot;USER#U001&quot;, SK=&quot;PROFILE&quot; → 사용자 정보
+PK=&quot;USER#U001&quot;, SK=&quot;ORDER#20240115&quot; → 사용자의 주문
+PK=&quot;ORDER#O001&quot;, SK=&quot;ITEM#P001&quot; → 주문의 상품
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: DynamoDB Single Table Design은 다용도 가구와 같다. 여러 서랍(PK+SK 조합)이 있어 사람 정보, 주문 정보, 상품 정보를 하나의 가구(테이블)에 넣지만, 서랍 라벨(PK/SK 네이밍 규칙)을 잘 설계해야 원하는 걸 찾을 수 있다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="gidaehyogwa">기대효과</h3>
+<table><thead><tr><th style="text-align: left">효과</th><th style="text-align: left">내용</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>응답 속도 향상</strong></td><td style="text-align: left">DB 대비 100~10,000배 빠른 조회</td></tr>
+<tr><td style="text-align: left"><strong>DB 부하 감소</strong></td><td style="text-align: left">반복 쿼리를 캐시에서 처리해 DB 트래픽 90%+ 감소</td></tr>
+<tr><td style="text-align: left"><strong>무한 확장</strong></td><td style="text-align: left">DynamoDB: 요청량에 따른 자동 확장</td></tr>
+<tr><td style="text-align: left"><strong>TTL 자동 만료</strong></td><td style="text-align: left">세션 만료, 임시 데이터 자동 삭제</td></tr>
+</tbody></table>
+<h3 id="hangye-mic-juyijeom">한계 및 주의점</h3>
+<table><thead><tr><th style="text-align: left">한계</th><th style="text-align: left">내용</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Cache Invalidation</strong></td><td style="text-align: left">캐시 무효화 시점 관리가 데이터 일관성의 핵심 과제</td></tr>
+<tr><td style="text-align: left"><strong>Redis 메모리 한계</strong></td><td style="text-align: left">데이터가 메모리를 초과하면 Eviction 발생</td></tr>
+<tr><td style="text-align: left"><strong>DynamoDB 비용</strong></td><td style="text-align: left">읽기/쓰기 단위(RCU/WCU)로 과금, 예측 어려움</td></tr>
+<tr><td style="text-align: left"><strong>핫 파티션</strong></td><td style="text-align: left">DynamoDB PK 설계 오류 시 특정 파티션 과부하</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: Redis 캐시는 책상 위 자주 보는 책이다. 책장(DB)에 가지 않아도 즉시 꺼낼 수 있지만, 책상이 꽉 차면 덜 보는 책을 치워야 한다(Eviction). 캐시 무효화는 책 내용이 바뀌면 책상의 책도 교체하는 것이다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">CAP 정리</td><td style="text-align: left">Redis/DynamoDB의 AP 특성 (가용성 우선)</td></tr>
+<tr><td style="text-align: left">캐시 패턴</td><td style="text-align: left">Cache Aside, Write-Through 등 캐싱 전략</td></tr>
+<tr><td style="text-align: left">세션 관리</td><td style="text-align: left">Redis의 핵심 사용 사례</td></tr>
+<tr><td style="text-align: left">DynamoDB DAX</td><td style="text-align: left">DynamoDB 전용 인메모리 캐시 계층</td></tr>
+<tr><td style="text-align: left">컨시스턴트 해싱</td><td style="text-align: left">DynamoDB 파티션 분산 메커니즘</td></tr>
+<tr><td style="text-align: left">Redis Sentinel</td><td style="text-align: left">Redis 고가용성 구성</td></tr>
+<tr><td style="text-align: left">Redis Cluster</td><td style="text-align: left">Redis 수평 확장 분산 구성</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>키-값 저장소는 자동 판매기와 같다. 버튼(키)을 누르면 음료(값)가 즉시 나온다. 슈퍼마켓(DB)보다 훨씬 빠르지만, 넣을 수 있는 음료 종류(데이터 구조)가 정해져 있다.</li>
+</ol>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">Key-Value: O(1) 조회 · 초저지연
+    ├─► In-Memory: Redis · Memcached (캐시)
+    └─► Persistent: DynamoDB · etcd (영속)
+    │
+    ▼
+활용: 세션 · 캐시 · 설정 · 분산 락
+</code></pre>
+<ol start="2">
+<li>Redis는 교실 앞 칠판이다. 자주 필요한 내용을 칠판(메모리)에 적어두면 교과서(DB)를 매번 찾을 필요가 없다. 단, 칠판 크기(메모리)는 정해져 있다.</li>
+<li>DynamoDB는 무제한 자동 창고다. 물건이 아무리 많아도 자동으로 공간이 늘어나고(서버리스 확장), 바코드(키)로 즉시 찾을 수 있지만, 바코드 분류 체계(PK/SK 설계)를 잘 만들어야 한다.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

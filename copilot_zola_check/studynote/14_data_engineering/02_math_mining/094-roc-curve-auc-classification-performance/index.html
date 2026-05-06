@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ROC-AUC: 분류 모델의 종합 변별력 측정표 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 04, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote data engineering
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: ROC-AUC는 분류 모델이 양성과 음성을 얼마나 잘 구별(Discriminative Power)하는지 임계값 변화에 따른 궤적으로 보여주는 종합 평가 지표다.</li>
+<li><strong>가치</strong>: 특정 임계값(Threshold)에 얽매이지 않고, 데이터 라벨 불균형 상황에서도 모델 자체의 우수성을 객관적인 면적(AUC) 수치로 비교할 수 있게 해준다.</li>
+<li><strong>판단 포인트</strong>: 훈련된 수많은 모델 중 챔피언 모델을 선정할 때는 단편적인 정확도보다 AUC가 높은 모델을 우선 선택하는 것이 일반화 성능 확보에 유리하다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>ROC (Receiver Operating Characteristic) 곡선은 이진 분류 모델의 성능을 측정하기 위해 고안된 그래프다. X축에는 위양성률(FPR), Y축에는 진양성률(TPR)을 두고, 분류 판단의 기준이 되는 임계값을 0부터 1까지 변화시킬 때 모델의 예측 성능이 어떻게 변하는지 선으로 그려낸다. AUC (Area Under Curve)는 이 ROC 곡선 아래의 면적을 의미한다.</p>
+<p>단일 임계값(예: 0.5)에서 측정한 정확도(Accuracy)나 F1-Score는 임시적인 수치에 불과하다. 임계값을 조금만 조정해도 성능이 요동치기 때문이다. 특히 현실 데이터처럼 클래스 불균형이 심한 경우(예: 암 환자 1%, 정상인 99%), 단순 정확도는 모델의 진짜 변별력을 속일 수 있다. ROC-AUC는 이러한 임계값이라는 변수를 제거하고, 모든 상황에서의 종합적인 모델 성능을 평가하기 위해 필수적으로 사용된다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 하나의 커트라인으로만 학생을 평가하면 진짜 실력을 알기 어렵습니다. 커트라인을 10점부터 100점까지 촘촘히 바꿔가며 합격자 비율이 어떻게 변하는지 궤적을 그려보는 종합 건강검진과 같습니다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>ROC 곡선은 모델의 예측 확률값에 따라 FPR(가짜를 진짜로 오해)과 TPR(진짜를 잘 찾아냄)의 트레이드오프 관계를 시각화한다. 임계값이 높으면 깐깐하게 판단하여 FPR은 줄지만 TPR도 감소한다. 반대로 임계값이 낮으면 관대하게 판단하여 TPR은 오르지만 FPR도 급증한다. 좋은 모델은 임계값이 높아도 TPR을 높게 유지하며 좌상단 모서리로 향한다.</p>
+<table><thead><tr><th style="text-align: left">구성 요소</th><th style="text-align: left">의미</th><th style="text-align: left">식</th><th style="text-align: left">목표</th></tr></thead><tbody>
+<tr><td style="text-align: left">TPR (True Positive Rate)</td><td style="text-align: left">진양성률 (Recall): 실제 양성 중 맞춘 비율</td><td style="text-align: left">TP / (TP + FN)</td><td style="text-align: left">1에 가까울수록 좋음 (위쪽)</td></tr>
+<tr><td style="text-align: left">FPR (False Positive Rate)</td><td style="text-align: left">위양성률: 실제 음성 중 양성으로 틀린 비율</td><td style="text-align: left">FP / (FP + TN)</td><td style="text-align: left">0에 가까울수록 좋음 (왼쪽)</td></tr>
+<tr><td style="text-align: left">Threshold (임계값)</td><td style="text-align: left">양성/음성 판단 커트라인 조절 단추</td><td style="text-align: left">0 ~ 1.0 범위</td><td style="text-align: left">(0,0)에서 (1,1) 사이를 이동</td></tr>
+<tr><td style="text-align: left">AUC (Area Under Curve)</td><td style="text-align: left">ROC 곡선 아래 면적 크기</td><td style="text-align: left">0.5 ~ 1.0 범위</td><td style="text-align: left">1.0에 가까울수록 우수함</td></tr>
+</tbody></table>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│                  ROC Curve &amp; AUC Score                     │
+├──────────────────────────────────────────────────────────────┤
+│ TPR (Recall) ^   [ AUC = 1.0 : 완벽한 모델 ]               │
+│      1.0 ────┼───────────────▶                             │
+│          │   │ ┌─────────                              │
+│          │   │ │      [ AUC = 0.8 : 우수한 모델 ]          │
+│          │   │.                                        │
+│          │   . │                                       │
+│          │   │                                         │
+│      0.5 ────┼── . ── ─ ─ ─ ─[ AUC = 0.5 : 무작위 찍기 ] │
+│          │   │        .                                │
+│          │   │            .                            │
+│      0.0 ────┼───────────────▶ FPR (False Positive Rate)│
+│              0.0    0.5    1.0                         │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>아무런 학습 능력이 없는 무작위 예측(Random Guess) 모델은 대각선을 형성하여 AUC가 0.5가 된다. 반면 양성과 음성을 100% 완벽하게 분리해 내는 모델은 곡선이 왼쪽 위 꼭짓점(0,1)에 닿아 전체 면적인 1.0을 차지하게 된다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 모델의 지능(AUC)이 높으면, 임계값(안경)을 조금 잘못 써도 진짜 양성을 잘 찾아냅니다. 지능이 낮으면 안경 도수를 바꿀 때마다 엉뚱한 사람을 범인으로 지목합니다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>분류 성능 평가에서 가장 많이 헷갈리는 지표가 ROC 곡선과 PR (Precision-Recall) 곡선이다. 두 지표는 모두 모델의 종합 성능을 보지만, 데이터의 형태에 따라 사용처가 갈린다.</p>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">ROC-AUC</th><th style="text-align: left">PR-AUC (Precision-Recall)</th></tr></thead><tbody>
+<tr><td style="text-align: left">X축 기준</td><td style="text-align: left">FPR (위양성률)</td><td style="text-align: left">Recall (재현율 = TPR)</td></tr>
+<tr><td style="text-align: left">Y축 기준</td><td style="text-align: left">TPR (진양성률)</td><td style="text-align: left">Precision (정밀도)</td></tr>
+<tr><td style="text-align: left">라벨 분포</td><td style="text-align: left">양성/음성 클래스가 비교적 균일할 때 적합</td><td style="text-align: left">정상 99%, 비정상 1% 등 극심한 불균형일 때 권장</td></tr>
+<tr><td style="text-align: left">평가 초점</td><td style="text-align: left">양성과 음성 두 클래스 모두에 대한 분별력</td><td style="text-align: left">압도적으로 적은 '양성(True)' 클래스 탐지에 집중</td></tr>
+<tr><td style="text-align: left">강점</td><td style="text-align: left">기준선(0.5)이 명확해 서로 다른 도메인 모델 간 비교 용이</td><td style="text-align: left">소수 클래스를 잘못 예측(FP)하는 것에 매우 민감함</td></tr>
+</tbody></table>
+<p>일반적인 머신러닝 모델의 체급을 비교할 때는 ROC-AUC가 표준이 되지만, 금융 사기 탐지(FDS)나 희귀 암 진단처럼 소수 클래스 탐지가 절대적으로 중요한 환경에서는 PR-AUC를 함께 크로스체크해야 모델의 약점이 가려지지 않는다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: ROC 곡선은 마라톤과 단거리 모두 적당히 잘 뛰는 종합 체력장(균형 모델)이라면, PR 곡선은 오직 과녁의 정중앙을 맞추는 데만 미친 듯이 집중하는 양궁 대회(불균형 모델)와 같습니다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p>실무에서 ROC-AUC는 모델을 개발하고 튜닝하는 사이클의 가장 중요한 의사결정 나침반으로 사용된다.</p>
+<h3 id="silmu-hwalyong-jeonryag">실무 활용 전략</h3>
+<ol>
+<li><strong>챔피언 모델 선별</strong>: 수십 개의 알고리즘(Random Forest, XGBoost 등)을 돌렸을 때, "정확도 95% 모델"보다 "AUC 0.90 모델"을 다음 스테이지로 올리는 것이 안전하다. AUC가 높은 모델은 임계값 튜닝을 통해 비즈니스 요구에 맞게 조율할 여력이 크기 때문이다.</li>
+<li><strong>최적 임계값 도출</strong>: ROC 곡선에서 좌상단 꼭짓점(0,1)에 가장 가까운 거리를 가지는 점(Youden's J Index)을 계산하면, 수학적으로 가장 이상적인 분류 임계값을 도출할 수 단추를 설정할 수 있다.</li>
+</ol>
+<h3 id="pandan-jipyo-gijun-gaideurain">판단 지표 기준 (가이드라인)</h3>
+<ul>
+<li>
+<p><strong>AUC 0.9 ~ 1.0</strong>: 매우 훌륭함 (Excellent) - 간혹 데이터 누수(Data Leakage)를 의심해야 할 정도로 높음</p>
+</li>
+<li>
+<p><strong>AUC 0.8 ~ 0.9</strong>: 좋음 (Good) - 실제 운영 환경에 적용 가능한 준수한 성능</p>
+</li>
+<li>
+<p><strong>AUC 0.7 ~ 0.8</strong>: 보통 (Fair) - 추가적인 Feature Engineering이 요구됨</p>
+</li>
+<li>
+<p><strong>AUC 0.5 ~ 0.6</strong>: 나쁨 (Poor) - 동전 던지기 수준, 모델 활용 불가</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 수많은 신입사원 중 한 명을 뽑을 때, 면접관은 특정 상황에서만 반짝 잘하는 사람보다 어떤 업무 환경(임계값)에 던져놔도 기본 이상을 해내는 기초 체력(AUC)이 높은 사람을 뽑습니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>ROC-AUC 지표를 표준으로 삼으면 비즈니스 환경이 급변하여 커트라인(Threshold)을 바꿔야 할 때마다 모델을 새로 훈련할 필요 없이, 기존 모델의 임계값 단추만 돌려 대응할 수 있는 유연성을 확보하게 된다. 이는 운영 비용 감소와 빠른 대응력으로 이어진다.</p>
+<p>머신러닝 평가지표는 단순히 "숫자가 높으니 좋다"로 끝나서는 안 된다. 기술사는 데이터의 특성(불균형 여부)과 비즈니스 목적(오탐을 줄일 것인가, 미탐을 줄일 것인가)을 먼저 파악한 후, ROC-AUC와 같은 지표가 모델의 본질적 변별력을 제대로 증명하고 있는지 비판적으로 검증할 수 있어야 한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: ROC-AUC는 자동차의 최대 마력(엔진 잠재력)입니다. 도로 사정에 따라 액셀(임계값)을 밟는 정도는 달라지겠지만, 마력이 높은 차가 어떤 길에서든 더 잘 달리는 것은 변하지 않는 진리입니다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">혼동 행렬 (Confusion Matrix)</td><td style="text-align: left">TP, TN, FP, FN을 산출하여 ROC 곡선의 기초 좌표를 제공하는 표</td></tr>
+<tr><td style="text-align: left">Youden's J Index</td><td style="text-align: left">ROC 곡선 상에서 최적의 임계값 위치를 수학적으로 찾는 기법</td></tr>
+<tr><td style="text-align: left">정밀도-재현율 곡선 (PR Curve)</td><td style="text-align: left">데이터 불균형이 극심할 때 ROC 곡선의 사각지대를 보완해 주는 대안 지표</td></tr>
+<tr><td style="text-align: left">교차 검증 (Cross Validation)</td><td style="text-align: left">데이터 분할에 따른 AUC 점수의 편차를 줄이고 신뢰도를 높이기 위해 함께 쓰는 기법</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">Confusion Matrix (단일 임계값 평가)
+    │
+    ▼
+FPR &#x2F; TPR 계산 · Threshold 이동
+    │
+    ▼
+ROC Curve 도출 (연속적 성능 궤적)
+    │
+    ▼
+AUC (Area Under Curve) 면적 정량화
+    │
+    ▼
+PR Curve 병행 분석 (클래스 불균형 극복)
+</code></pre>
+<p>이 흐름도는 "점(단일 지표) → 선(곡선 궤적) → 면(통합 수치) → 보완(PR)"으로 모델 평가 방법이 정교해지는 과정을 보여준다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>시력이 아주 좋은 친구는 안경을 썼다 벗었다(임계값 변경) 해도 진짜 강아지와 인형을 잘 구별해내요.</li>
+<li>ROC 곡선은 그 친구가 얼마나 헷갈리지 않고 진짜를 척척 골라내는지를 그린 성적표예요.</li>
+<li>이 성적표의 색칠된 넓이(AUC)가 넓을수록, 그 친구는 어떤 상황에서도 눈이 밝은 똘똘이라는 뜻이랍니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

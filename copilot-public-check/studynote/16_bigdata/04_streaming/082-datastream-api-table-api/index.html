@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>07. DataStream API &#x2F; Table API &amp; SQL — Flink 두 계층 처리 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote bigdata
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<ul>
+<li><strong>본질</strong>: Apache Flink는 두 가지 프로그래밍 계층을 제공한다. DataStream API (데이터스트림 API)는 이벤트 단위의 세밀한 스트림 처리를 위한 저수준 API이고, Table API &amp; SQL (테이블 API)은 관계형 테이블 개념을 스트림에 적용한 고수준 선언적 API로, 두 계층은 내부적으로 동일한 DataStream 실행 엔진으로 컴파일된다.</li>
+<li><strong>가치</strong>: SQL을 아는 데이터 엔지니어는 Table API/SQL로 스트리밍 집계·조인·윈도우를 신속하게 개발하고, 복잡한 상태 관리나 커스텀 타임스탬프 추출이 필요한 경우 DataStream API로 세밀하게 제어하는 <strong>계층화된 유연성</strong>이 Flink의 큰 장점이다.</li>
+<li><strong>판단 포인트</strong>: Table API/SQL은 선언적이라 Flink가 최적화(술어 푸시다운, 공통 부분식 제거 등)를 자동으로 수행하지만, DataStream API는 개발자가 직접 최적화해야 하므로 운영 경험과 스트리밍 지식이 더 많이 요구된다.</li>
+</ul>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<h3 id="1-flink-api-gyeceung-gujo">1. Flink API 계층 구조</h3>
+<pre><code>사용자 편의성 ↑          ↑ 표현력
+┌────────────────────────────────────────┐
+│  SQL (문자열 SQL 쿼리)                  │  ← 가장 선언적
+├────────────────────────────────────────┤
+│  Table API (Java&#x2F;Scala&#x2F;Python DSL)     │
+├────────────────────────────────────────┤
+│  DataStream &#x2F; DataSet API              │  ← 세밀한 제어
+├────────────────────────────────────────┤
+│  Stateful Functions (저수준)           │  ← 가장 강력한 제어
+└────────────────────────────────────────┘
+</code></pre>
+<h3 id="2-gag-apiyi-sayong-sanghwang">2. 각 API의 사용 상황</h3>
+<ul>
+<li><strong>SQL</strong>: "Kafka 토픽에서 5분 집계를 구하라" — BI 엔지니어, 빠른 프로토타이핑</li>
+<li><strong>Table API</strong>: SQL이지만 프로그래밍 방식으로 동적 쿼리 생성 필요 시</li>
+<li><strong>DataStream API</strong>: 커스텀 타임스탬프 추출, 복잡한 상태 로직, ML 모델 인라인 실행</li>
+</ul>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Flink의 두 계층은 "자동 변속기(Table/SQL)와 수동 변속기(DataStream API)"와 같다. 일반 운전에는 자동이 편리하지만, 험한 오프로드(복잡한 비즈니스 로직)는 수동이 더 정밀하게 제어된다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="1-datastream-api-haegsim-gujo">1. DataStream API 핵심 구조</h3>
+<pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">&#x2F;&#x2F; Java DataStream API 예시
+StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
+&#x2F;&#x2F; 1. Source: Kafka에서 데이터 읽기
+DataStream&lt;String&gt; stream = env.fromSource(
+    KafkaSource.&lt;String&gt;builder()
+        .setBootstrapServers(&quot;kafka:9092&quot;)
+        .setTopics(&quot;events&quot;)
+        .build(),
+    WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofSeconds(5)),
+    &quot;KafkaSource&quot;
+);
+
+&#x2F;&#x2F; 2. Transformation
+DataStream&lt;Tuple2&lt;String, Integer&gt;&gt; result = stream
+    .map(json -&gt; parseEvent(json))          &#x2F;&#x2F; map: 1:1 변환
+    .filter(e -&gt; e.getAmount() &gt; 100)        &#x2F;&#x2F; filter: 필터링
+    .keyBy(e -&gt; e.getUserId())               &#x2F;&#x2F; keyBy: 키 분할
+    .window(TumblingEventTimeWindows.of(Time.minutes(5)))  &#x2F;&#x2F; 윈도우
+    .sum(1);                                 &#x2F;&#x2F; 집계
+
+&#x2F;&#x2F; 3. Sink: 결과 저장
+result.addSink(new ElasticsearchSink&lt;&gt;(...));
+
+env.execute(&quot;UserActivityAggregation&quot;);
+</code></pre>
+<h3 id="2-table-api-sql-haegsim-gujo">2. Table API &amp; SQL 핵심 구조</h3>
+<pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">&#x2F;&#x2F; Java Table API + SQL 예시
+StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
+
+&#x2F;&#x2F; DataStream → Table 변환
+Table eventTable = tableEnv.fromDataStream(
+    stream,
+    Schema.newBuilder()
+        .columnByExpression(&quot;rowtime&quot;, &quot;CAST(ts AS TIMESTAMP_LTZ(3))&quot;)
+        .watermark(&quot;rowtime&quot;, &quot;rowtime - INTERVAL &#x27;5&#x27; SECOND&quot;)
+        .build()
+);
+
+&#x2F;&#x2F; SQL로 5분 텀블링 윈도우 집계
+Table result = tableEnv.sqlQuery(
+    &quot;SELECT user_id, TUMBLE_END(rowtime, INTERVAL &#x27;5&#x27; MINUTE) as window_end, &quot; +
+    &quot;       SUM(amount) as total_amount &quot; +
+    &quot;FROM events &quot; +
+    &quot;GROUP BY user_id, TUMBLE(rowtime, INTERVAL &#x27;5&#x27; MINUTE)&quot;
+);
+
+&#x2F;&#x2F; Table → DataStream 변환 (다시 저수준으로)
+DataStream&lt;Row&gt; outputStream = tableEnv.toDataStream(result);
+</code></pre>
+<h3 id="3-yeonsanja-bigyo">3. 연산자 비교</h3>
+<table><thead><tr><th style="text-align: left">연산</th><th style="text-align: left">DataStream API</th><th style="text-align: left">Table API / SQL</th></tr></thead><tbody>
+<tr><td style="text-align: left">필터</td><td style="text-align: left"><code>.filter(pred)</code></td><td style="text-align: left"><code>WHERE condition</code></td></tr>
+<tr><td style="text-align: left">변환</td><td style="text-align: left"><code>.map(func)</code></td><td style="text-align: left"><code>SELECT expr</code></td></tr>
+<tr><td style="text-align: left">집계</td><td style="text-align: left"><code>.reduce()</code> / <code>.aggregate()</code></td><td style="text-align: left"><code>GROUP BY ... SUM()</code></td></tr>
+<tr><td style="text-align: left">조인</td><td style="text-align: left"><code>.connect().flatMap()</code></td><td style="text-align: left"><code>JOIN ... ON</code></td></tr>
+<tr><td style="text-align: left">윈도우</td><td style="text-align: left"><code>.window(TumblingEventTime...)</code></td><td style="text-align: left"><code>TUMBLE()</code>, <code>HOP()</code>, <code>SESSION()</code></td></tr>
+<tr><td style="text-align: left">상태</td><td style="text-align: left"><code>ValueState</code>, <code>MapState</code> 직접 사용</td><td style="text-align: left">내부 자동 처리</td></tr>
+</tbody></table>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>DataStream API는 "재료를 직접 손질하고 요리하는 셰프"이고, Table API/SQL은 "레시피 카드(SQL)대로 로봇이 자동으로 조리하는 방식"이다. 셰프는 더 창의적이지만 기술이 필요하고, 로봇은 빠르고 표준화되어 있다.</p>
+</blockquote>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="1-table-api-sqlyi-flink-goyu-sql-hwagjang">1. Table API SQL의 Flink 고유 SQL 확장</h3>
+<p>표준 SQL에 없는 스트리밍 전용 구문들:</p>
+<pre data-lang="sql" class="language-sql "><code class="language-sql" data-lang="sql">-- 텀블링 윈도우 집계
+SELECT TUMBLE_START(event_time, INTERVAL &#x27;10&#x27; MINUTE) AS window_start,
+       user_id, COUNT(*) AS cnt
+FROM events
+GROUP BY TUMBLE(event_time, INTERVAL &#x27;10&#x27; MINUTE), user_id;
+
+-- 슬라이딩 윈도우 (HOP)
+SELECT HOP_START(event_time, INTERVAL &#x27;5&#x27; MINUTE, INTERVAL &#x27;1&#x27; HOUR) AS win_start,
+       AVG(score) AS avg_score
+FROM events
+GROUP BY HOP(event_time, INTERVAL &#x27;5&#x27; MINUTE, INTERVAL &#x27;1&#x27; HOUR);
+
+-- 스트림-스트림 인터벌 조인
+SELECT a.user_id, b.product_id
+FROM clicks a JOIN purchases b
+ON a.user_id = b.user_id
+AND b.event_time BETWEEN a.event_time AND a.event_time + INTERVAL &#x27;30&#x27; MINUTE;
+</code></pre>
+<h3 id="2-api-gan-sangho-byeonhwan">2. API 간 상호 변환</h3>
+<pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">&#x2F;&#x2F; Table → DataStream (복잡한 로직 처리 후 Table로 복귀)
+DataStream&lt;Row&gt; ds = tableEnv.toDataStream(table);
+DataStream&lt;Row&gt; processed = ds.process(new ComplexProcessFunction());
+Table backToTable = tableEnv.fromDataStream(processed);
+</code></pre>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Flink의 두 API 전환은 "번역가(Table API/SQL)와 원어민 대화(DataStream API)를 필요에 따라 섞어 쓰는 것"이다. 표준 대화는 번역기로 충분하지만, 세밀한 감정 표현은 원어민과 직접 소통해야 한다.</p>
+</blockquote>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="1-api-seontaeg-gaideu">1. API 선택 가이드</h3>
+<table><thead><tr><th style="text-align: left">요구사항</th><th style="text-align: left">권장 API</th></tr></thead><tbody>
+<tr><td style="text-align: left">Kafka 이벤트 SQL 집계/필터</td><td style="text-align: left">Table API / SQL</td></tr>
+<tr><td style="text-align: left">5분 윈도우 집계 대시보드</td><td style="text-align: left">SQL (TUMBLE 윈도우)</td></tr>
+<tr><td style="text-align: left">커스텀 타임스탬프 파싱</td><td style="text-align: left">DataStream API</td></tr>
+<tr><td style="text-align: left">ML 모델 인라인 호출</td><td style="text-align: left">DataStream API</td></tr>
+<tr><td style="text-align: left">CDC(Change Data Capture) 처리</td><td style="text-align: left">Table API (Upsert 커넥터)</td></tr>
+<tr><td style="text-align: left">복잡한 패턴 매칭 (CEP)</td><td style="text-align: left">DataStream API + Flink CEP 라이브러리</td></tr>
+</tbody></table>
+<h3 id="2-juyo-keonegteo-source-sink">2. 주요 커넥터 (Source/Sink)</h3>
+<table><thead><tr><th style="text-align: left">커넥터</th><th style="text-align: left">방향</th><th style="text-align: left">비고</th></tr></thead><tbody>
+<tr><td style="text-align: left">Apache Kafka Connector</td><td style="text-align: left">Source + Sink</td><td style="text-align: left">Exactly-Once 지원</td></tr>
+<tr><td style="text-align: left">JDBC Connector</td><td style="text-align: left">Source + Sink</td><td style="text-align: left">MySQL, PostgreSQL</td></tr>
+<tr><td style="text-align: left">Elasticsearch Connector</td><td style="text-align: left">Sink</td><td style="text-align: left">검색 인덱스 업데이트</td></tr>
+<tr><td style="text-align: left">Hadoop FileSystem</td><td style="text-align: left">Source + Sink</td><td style="text-align: left">HDFS, S3</td></tr>
+<tr><td style="text-align: left">Apache HBase Connector</td><td style="text-align: left">Source + Sink</td><td style="text-align: left">랜덤 읽기/쓰기</td></tr>
+</tbody></table>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>DataStream API는 "맞춤 양복", Table API/SQL은 "기성복"이다. 기성복(SQL)이 대부분 상황에 잘 맞고 빠르지만, 특별한 체형(복잡한 비즈니스 로직)에는 맞춤 양복(DataStream)이 필요하다.</p>
+</blockquote>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="1-gidaehyogwa">1. 기대효과</h3>
+<table><thead><tr><th style="text-align: left">효과</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">개발 생산성</td><td style="text-align: left">SQL 알면 스트리밍 앱 빠르게 개발 가능</td></tr>
+<tr><td style="text-align: left">최적화 자동화</td><td style="text-align: left">Table API/SQL은 Flink 옵티마이저가 자동 최적화</td></tr>
+<tr><td style="text-align: left">유연성</td><td style="text-align: left">두 API 혼용으로 선언적+절차적 처리 결합</td></tr>
+<tr><td style="text-align: left">생태계 통합</td><td style="text-align: left">JDBC, Kafka, ES 등 다양한 커넥터</td></tr>
+</tbody></table>
+<h3 id="2-gyeolron">2. 결론</h3>
+<p>Flink의 DataStream API와 Table API/SQL은 <strong>상호 보완적인 두 층의 프로그래밍 모델</strong>이다. 기술사 답안에서는 두 API의 추상화 수준 차이, 내부적으로 동일한 실행 엔진으로 컴파일된다는 통합성, 그리고 스트리밍 SQL의 고유 구문(TUMBLE, HOP, SESSION 윈도우)을 서술하는 것이 핵심이다.</p>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Flink의 두 API는 "같은 공장의 두 입구"다. 자동화 생산 라인(Table API/SQL)으로 들어가면 로봇이 알아서 처리하고, 수작업 라인(DataStream API)으로 들어가면 세밀하게 직접 제어한다. 두 라인의 결과물은 같은 공장 창고에 모인다.</p>
+</blockquote>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">관계</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">Flink 아키텍처</td><td style="text-align: left">실행 환경</td><td style="text-align: left">DataStream/Table API의 실행 기반</td></tr>
+<tr><td style="text-align: left">윈도우 연산</td><td style="text-align: left">핵심 활용</td><td style="text-align: left">TUMBLE/HOP/SESSION 윈도우</td></tr>
+<tr><td style="text-align: left">Watermark</td><td style="text-align: left">연동 개념</td><td style="text-align: left">Table API의 WATERMARK 정의와 연동</td></tr>
+<tr><td style="text-align: left">Kafka 커넥터</td><td style="text-align: left">Source/Sink</td><td style="text-align: left">가장 많이 사용되는 스트리밍 소스</td></tr>
+<tr><td style="text-align: left">CEP (Complex Event Processing)</td><td style="text-align: left">확장 기능</td><td style="text-align: left">DataStream API 위의 패턴 감지 라이브러리</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[Flink RDD]
+    │
+    ▼
+[DataStream API]
+    │
+    ▼
+[Table API&#x2F;SQL]
+    │
+    ▼
+[통합 스트리밍]
+    │
+    ▼
+[Kappa 아키텍처]
+</code></pre>
+<p>Flink의 스트리밍 API가 저수준 RDD에서 고수준 SQL까지 통합되며 카파 아키텍처로 수렴하는 흐름이다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<p>Flink에는 두 가지 요리 방법이 있어요. Table API/SQL은 "레시피대로 요리하는 방법"(편리하고 빠름)이고, DataStream API는 "셰프가 직접 창의적으로 요리하는 방법"(어렵지만 자유로움)이에요. 같은 Flink 주방(실행 엔진)에서 요리하지만, 어떤 방법으로 요청하느냐가 다를 뿐이고 최종 음식(결과 데이터)은 같은 품질이랍니다!</p>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

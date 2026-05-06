@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>18. Azure Event Hubs — Kafka 호환 이벤트 스트리밍 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote bigdata
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<ul>
+<li><strong>본질</strong>: Azure Event Hubs (애저 이벤트 허브)는 Microsoft Azure의 완전 관리형 이벤트 스트리밍 서비스로, Apache Kafka 프로토콜 호환 엔드포인트를 제공하여 기존 Kafka 클라이언트 코드 변경 없이(Drop-in Replacement) 마이그레이션이 가능하다.</li>
+<li><strong>가치</strong>: Kafka 호환 API 덕분에 온프레미스 Kafka → Azure 마이그레이션 경로가 쉽고, AMQP/HTTPS도 지원하여 다양한 클라이언트와 통합되며, Capture 기능으로 원본 이벤트를 Azure Data Lake Storage(ADLS)에 자동 백업하여 장기 분석 파이프라인을 구성한다.</li>
+<li><strong>판단 포인트</strong>: Event Hubs Standard vs Premium vs Dedicated 티어 선택이 핵심이다. Standard는 비용 효율적이나 처리량 제한이 있고, Premium은 전용 컴퓨팅으로 예측 가능한 성능을, Dedicated는 전용 클러스터로 최대 100TB 스토리지와 VNET 격리를 제공한다.</li>
+</ul>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<h3 id="1-azure-event-hubs-wici">1. Azure Event Hubs 위치</h3>
+<p>Azure의 이벤트 서비스 패밀리에서 Event Hubs의 역할:</p>
+<table><thead><tr><th style="text-align: left">서비스</th><th style="text-align: left">역할</th><th style="text-align: left">비교</th></tr></thead><tbody>
+<tr><td style="text-align: left">Event Hubs</td><td style="text-align: left">대용량 스트림 수집 (초당 수백만 이벤트)</td><td style="text-align: left">Kafka, Kinesis</td></tr>
+<tr><td style="text-align: left">Service Bus</td><td style="text-align: left">큐/토픽 기반 메시징 (트랜잭션 보장)</td><td style="text-align: left">RabbitMQ, SQS</td></tr>
+<tr><td style="text-align: left">Event Grid</td><td style="text-align: left">이벤트 라우팅 (Azure 서비스 이벤트)</td><td style="text-align: left">EventBridge</td></tr>
+</tbody></table>
+<h3 id="2-kafka-hohwan-endeupointeu">2. Kafka 호환 엔드포인트</h3>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python"># 기존 Kafka 클라이언트 코드를 Event Hubs에서 사용
+# bootstrap.servers만 변경하면 됨!
+
+from confluent_kafka import Producer
+
+config = {
+    &#x27;bootstrap.servers&#x27;: &#x27;my-eh-namespace.servicebus.windows.net:9093&#x27;,
+    &#x27;security.protocol&#x27;: &#x27;SASL_SSL&#x27;,
+    &#x27;sasl.mechanism&#x27;: &#x27;PLAIN&#x27;,
+    &#x27;sasl.username&#x27;: &#x27;$ConnectionString&#x27;,
+    &#x27;sasl.password&#x27;: &#x27;Endpoint=sb:&#x2F;&#x2F;my-eh-namespace...&#x27;,  # SAS 연결 문자열
+}
+
+producer = Producer(config)
+producer.produce(&#x27;my-event-hub&#x27;, key=&#x27;user-001&#x27;, value=&#x27;{&quot;action&quot;: &quot;click&quot;}&#x27;)
+</code></pre>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Kafka 호환 API는 "해외 전자 제품의 어댑터(어댑터)"와 같다. 플러그 모양(Kafka API)은 같고 소켓(Event Hubs)만 다른데, 어댑터(Kafka 프로토콜 지원)를 꽂으면 기존 제품(Kafka 클라이언트)을 그대로 사용할 수 있다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="1-event-hubs-gujo">1. Event Hubs 구조</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│  Event Hubs Namespace                                        │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  Event Hub (토픽): &quot;telemetry&quot;                       │   │
+│  │                                                      │   │
+│  │  파티션 0 ─── 이벤트 스트림 ──→ Consumer Group A     │   │
+│  │  파티션 1 ─── 이벤트 스트림 ──→ Consumer Group A     │   │
+│  │  파티션 2 ─── 이벤트 스트림 ──→ Consumer Group B     │   │
+│  │                                                      │   │
+│  │  Capture: 자동 → Azure Blob Storage &#x2F; ADLS Gen2      │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                                                             │
+│  프로토콜: AMQP 1.0 &#x2F; Kafka API (9093) &#x2F; HTTPS             │
+└─────────────────────────────────────────────────────────────┘
+                              │
+         ┌───────────────────┼──────────────────┐
+         ▼                   ▼                  ▼
+  Azure Stream           Azure Databricks    Azure Function
+  Analytics              (Spark Streaming)   (서버리스)
+</code></pre>
+<h3 id="2-tieobyeol-bigyo">2. 티어별 비교</h3>
+<table><thead><tr><th style="text-align: left">티어</th><th style="text-align: left">처리량 단위</th><th style="text-align: left">파티션 수</th><th style="text-align: left">스토리지</th><th style="text-align: left">특징</th></tr></thead><tbody>
+<tr><td style="text-align: left">Standard</td><td style="text-align: left">TU (처리량 단위)</td><td style="text-align: left">최대 32</td><td style="text-align: left">최대 1TB</td><td style="text-align: left">비용 효율적, 소규모</td></tr>
+<tr><td style="text-align: left">Premium</td><td style="text-align: left">PU (처리 단위)</td><td style="text-align: left">최대 100</td><td style="text-align: left">10GB/PU</td><td style="text-align: left">전용 컴퓨팅, 예측 성능</td></tr>
+<tr><td style="text-align: left">Dedicated</td><td style="text-align: left">CU (용량 단위)</td><td style="text-align: left">최대 1,024</td><td style="text-align: left">최대 100TB/CU</td><td style="text-align: left">전용 클러스터, VNET</td></tr>
+</tbody></table>
+<h3 id="3-capture-gineung">3. Capture 기능</h3>
+<pre data-lang="json" class="language-json "><code class="language-json" data-lang="json">&#x2F;&#x2F; Event Hub Capture 설정
+{
+  &quot;capture&quot;: {
+    &quot;enabled&quot;: true,
+    &quot;encoding&quot;: &quot;Avro&quot;,
+    &quot;intervalInSeconds&quot;: 300,       &#x2F;&#x2F; 5분마다 캡처
+    &quot;sizeLimitInBytes&quot;: 314572800,  &#x2F;&#x2F; 300MB마다 캡처
+    &quot;destination&quot;: {
+      &quot;storageAccountResourceId&quot;: &quot;&#x2F;subscriptions&#x2F;...&#x2F;storageAccounts&#x2F;myStorage&quot;,
+      &quot;blobContainer&quot;: &quot;event-hub-data&quot;,
+      &quot;archiveNameFormat&quot;: &quot;{Namespace}&#x2F;{EventHub}&#x2F;{PartitionId}&#x2F;{Year}&#x2F;{Month}&#x2F;{Day}&#x2F;{Hour}&#x2F;{Minute}&#x2F;{Second}&quot;
+    }
+  }
+}
+</code></pre>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Capture 기능은 "TV 방송 자동 녹화 기능"이다. 라이브 스트림(Event Hubs)을 보면서 동시에 녹화(ADLS에 저장)하여 나중에 다시 볼 수 있다.</p>
+</blockquote>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="1-azure-event-hubs-vs-apache-kafka-vs-amazon-kinesis">1. Azure Event Hubs vs Apache Kafka vs Amazon Kinesis</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">Azure Event Hubs</th><th style="text-align: left">Apache Kafka</th><th style="text-align: left">Amazon Kinesis</th></tr></thead><tbody>
+<tr><td style="text-align: left">Kafka 호환</td><td style="text-align: left">✅ (드롭인 교체)</td><td style="text-align: left">원본</td><td style="text-align: left">❌</td></tr>
+<tr><td style="text-align: left">관리 방식</td><td style="text-align: left">완전 관리형</td><td style="text-align: left">자체/MSK/Confluent</td><td style="text-align: left">완전 관리형</td></tr>
+<tr><td style="text-align: left">파티션 수</td><td style="text-align: left">최대 1,024 (Dedicated)</td><td style="text-align: left">무제한</td><td style="text-align: left">샤드 수 기반</td></tr>
+<tr><td style="text-align: left">보존 기간</td><td style="text-align: left">최대 90일</td><td style="text-align: left">무제한</td><td style="text-align: left">최대 365일</td></tr>
+<tr><td style="text-align: left">글로벌 Geo-DR</td><td style="text-align: left">✅ (Event Hubs Geo-DR)</td><td style="text-align: left">수동 MirrorMaker 2</td><td style="text-align: left">❌ 기본</td></tr>
+<tr><td style="text-align: left">프로토콜</td><td style="text-align: left">AMQP, Kafka, HTTPS</td><td style="text-align: left">Kafka binary</td><td style="text-align: left">HTTP</td></tr>
+<tr><td style="text-align: left">Azure 통합</td><td style="text-align: left">최고</td><td style="text-align: left">별도 커넥터</td><td style="text-align: left">❌</td></tr>
+</tbody></table>
+<h3 id="2-schema-registry-event-hubs">2. Schema Registry (Event Hubs)</h3>
+<p>Azure Event Hubs는 <strong>Schema Registry</strong>를 내장하여 Avro/JSON Schema 기반의 메시지 스키마를 중앙에서 관리한다.</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python"># Event Hubs Schema Registry 활용
+from azure.schemaregistry import SchemaRegistryClient
+from azure.identity import DefaultAzureCredential
+
+credential = DefaultAzureCredential()
+schema_registry = SchemaRegistryClient(
+    fully_qualified_namespace=&quot;my-namespace.servicebus.windows.net&quot;,
+    credential=credential
+)
+</code></pre>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Event Hubs의 Kafka 호환성은 "국제 표준 철도 궤도 폭 채택"과 같다. 한국(Kafka 애플리케이션) 열차가 유럽(Azure) 선로에서도 달릴 수 있도록 궤도 폭(프로토콜)을 맞춘 것이다.</p>
+</blockquote>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="1-azure-kafka-maigeureisyeon-gyeongro">1. Azure + Kafka 마이그레이션 경로</h3>
+<pre><code>온프레미스 Kafka 클러스터
+  ↓ MirrorMaker 2 (병렬 복제)
+Azure Event Hubs (Kafka 호환)
+  ↓ 검증 완료 후 기존 클러스터 종료
+</code></pre>
+<h3 id="2-ibenteu-ceori-akitegceo">2. 이벤트 처리 아키텍처</h3>
+<pre><code>IoT 디바이스&#x2F;웹앱 → Event Hubs → Azure Stream Analytics → Power BI (실시간 대시보드)
+                              └──→ Azure Databricks&#x2F;Spark → ADLS Gen2 (배치 분석)
+                              └──→ Azure Functions → Azure Cosmos DB (실시간 상태 업데이트)
+                              └──→ Capture → ADLS Gen2 (원본 보존)
+</code></pre>
+<h3 id="3-cekeuriseuteu">3. 체크리스트</h3>
+<ul>
+<li><input disabled="" type="checkbox"/>
+처리량 요구사항 기반 티어 선택 (Standard → Premium → Dedicated)</li>
+<li><input disabled="" type="checkbox"/>
+Kafka 마이그레이션: 연결 문자열만 변경하여 테스트</li>
+<li><input disabled="" type="checkbox"/>
+Capture 설정: 원본 이벤트 보존 정책 수립</li>
+<li><input disabled="" type="checkbox"/>
+Geo-DR 설정: 페어링 네임스페이스로 DR 구성</li>
+<li><input disabled="" type="checkbox"/>
+Consumer Group 격리: 서비스별 독립적 오프셋 관리</li>
+</ul>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Event Hubs Standard → Dedicated는 "공용 수영장 → 개인 수영장 임대"와 같다. 공용(Standard)은 저렴하지만 피크 시간에 혼잡하고, 개인(Dedicated)은 비싸지만 항상 전용 레인을 보장한다.</p>
+</blockquote>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="1-gidaehyogwa">1. 기대효과</h3>
+<table><thead><tr><th style="text-align: left">효과</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">Kafka 마이그레이션 용이</td><td style="text-align: left">코드 변경 없이 Azure로 전환</td></tr>
+<tr><td style="text-align: left">Azure 통합</td><td style="text-align: left">Databricks/Stream Analytics/Functions 네이티브 연동</td></tr>
+<tr><td style="text-align: left">Geo-DR</td><td style="text-align: left">자동 지역 페일오버로 비즈니스 연속성 보장</td></tr>
+<tr><td style="text-align: left">Capture</td><td style="text-align: left">원본 이벤트 자동 보관으로 감사 및 재처리 지원</td></tr>
+</tbody></table>
+<h3 id="2-gyeolron">2. 결론</h3>
+<p>Azure Event Hubs는 <strong>Kafka 호환성을 통한 점진적 마이그레이션</strong>과 Azure 생태계 최적화를 동시에 달성하는 엔터프라이즈 스트리밍 플랫폼이다. 기술사 답안에서는 Kafka 드롭인 교체의 의미, 티어별 특성, Capture를 통한 레이크하우스 연계, Geo-DR 구성을 중심으로 서술하면 된다.</p>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Event Hubs는 "Microsoft의 스트리밍 다리"다. Azure라는 섬으로 Kafka라는 대륙에서 건너올 수 있는 다리를 놓아서, 기존 Kafka 여행자들이 배(완전한 이식)가 아닌 차(Kafka 호환 API)로 바로 건너올 수 있게 했다.</p>
+</blockquote>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">관계</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">Apache Kafka</td><td style="text-align: left">호환 대상</td><td style="text-align: left">Kafka 프로토콜 드롭인 교체</td></tr>
+<tr><td style="text-align: left">Amazon Kinesis</td><td style="text-align: left">경쟁 서비스</td><td style="text-align: left">AWS 동등 포지션</td></tr>
+<tr><td style="text-align: left">Azure Databricks</td><td style="text-align: left">통합 처리</td><td style="text-align: left">Spark Structured Streaming과 연동</td></tr>
+<tr><td style="text-align: left">Azure Data Lake Gen2</td><td style="text-align: left">저장 대상</td><td style="text-align: left">Capture 기능으로 자동 보관</td></tr>
+<tr><td style="text-align: left">Kafka MirrorMaker 2</td><td style="text-align: left">마이그레이션 도구</td><td style="text-align: left">온프레미스 → Event Hubs 마이그레이션</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[이벤트 소스 (Event Sources) — IoT·앱·클릭스트림, 초당 수백만 이벤트]
+    │
+    ▼
+[아파치 카프카 (Apache Kafka) — 오픈소스 고처리량 메시지 스트리밍]
+    │
+    ▼
+[Azure Event Hubs — Kafka 호환, 완전 관리형 이벤트 스트리밍 서비스]
+    │
+    ▼
+[Azure Stream Analytics — 실시간 SQL 쿼리 처리, 창 집계(Window)]
+    │
+    ▼
+[Azure Synapse Analytics &#x2F; Power BI — 배치 분석 및 시각화 대시보드]
+</code></pre>
+<p>Azure Event Hubs는 Apache Kafka 호환 API를 제공하며, 완전 관리형 서비스로 대규모 이벤트를 수집하여 Azure 분석 파이프라인의 진입점 역할을 한다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<p>Azure Event Hubs는 Microsoft의 편지 배달 시스템이에요. 특별한 점은 Kafka라는 다른 우편 시스템의 편지(Kafka 메시지)도 받을 수 있어요(Kafka 호환 API). 중요한 편지는 자동으로 사진을 찍어 보관(Capture → ADLS)하고, 다른 도시(다른 Azure 리전)에도 복사본을 보내서 편지가 절대 없어지지 않도록 해요(Geo-DR)!</p>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

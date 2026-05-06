@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>445. YOLO (You Only Look Once)와 1-Stage 객체 탐지 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 18, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ict
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: YOLO(You Only Look Once)는 사진 속의 물체가 '어디에 있는지(Bounding Box)'와 '무엇인지(Class)'를 찾기 위해 두 번 나눠서 스캔하던 기존의 느려 터진 방식을 버리고, 한 장의 사진을 거대한 그리드(Grid) 격자로 쪼갠 뒤 단 한 번의 신경망 연산으로 위치와 정답을 동시에 찍어내는 1-Stage 객체 탐지 알고리즘이다.</li>
+<li><strong>가치</strong>: 기존 R-CNN 계열 모델들이 사진 한 장 분석하는 데 수 초가 걸렸다면, YOLO는 초당 45~155프레임(FPS)이라는 미친 속도로 이미지를 썰어버려 자율주행 자동차나 CCTV 등에서 '실시간(Real-time) 객체 탐지'라는 완전히 새로운 산업을 창조해 냈다.</li>
+<li><strong>판단 포인트</strong>: 속도는 타의 추종을 불허하지만, 그림의 뼈대를 큰 격자로 나누어 보기 때문에 아주 멀리 있는 작은 물체나 떼 지어 모여 있는 새 떼(작은 객체)를 찾는 데는 정확도가 떨어지므로 도메인에 따라 속도와 정확도의 밸런스를 맞춰야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>자율주행 자동차가 도로를 달린다. 앞에 튀어나온 사물이 '사람'인지 '비닐봉지'인지 0.1초 안에 파악해서 브레이크를 밟아야 한다.
+이전의 최고 모델이었던 **R-CNN(2-Stage Detector)**은 사진을 받으면 이렇게 일했다. "음, 사람처럼 보이는 영역을 일단 2,000개로 쪼개서 찾아보자(1단계: 영역 제안). 그다음 그 2,000개의 조각들을 하나하나 CNN에 집어넣어서 진짜 사람인지 확인해 보자(2단계: 분류)." 너무 정확했지만, 한 장 처리하는 데 20초가 걸렸다. 자율주행차가 20초를 고민하면 이미 사고가 난 뒤다.</p>
+<p>"사진을 2,000조각으로 자르지 말고, <strong>그냥 사진 1장을 통째로 신경망에 1번만 쑤셔 넣고(You Only Look Once), 위치와 종류를 한 번에 다 계산해버리면 안 될까?</strong>"
+이 미친 속도 철학에서 탄생한 것이 바로 1-Stage Detector의 전설, <strong>YOLO</strong>다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 숨은그림찾기를 할 때 R-CNN은 그림을 2,000조각의 퍼즐로 잘라서 하나하나 돋보기로 들여다보는 거북이(느리지만 꼼꼼함)라면, YOLO는 그림 전체에 모기장을 덮어씌워 놓고 한눈에 "저기 3번째 줄에 고양이! 저기 5번째 줄에 개!"라고 직관적으로 때려 맞추는 스피드광이다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>YOLO는 이미지를 $S \times S$ 개의 격자(Grid) 방으로 쪼개고, 각 방의 주인이 스스로 자기가 가진 물체를 신고하게 만드는 파이프라인이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────┐
+│             [ YOLO 알고리즘의 1-Stage 스캔 파이프라인 ]         │
+├────────────────────────────────────────────────────────┤
+│ 1. 그리드(Grid) 분할                                    │
+│    - 사진 1장을 7 x 7 (총 49개)의 격자 방으로 쪼갬           │
+│    - 개가 사진에 찍혀있다면, 개의 &#x27;배꼽(중심점)&#x27;이 속한 격자 방이 │
+│      그 개를 찾아낼 100%의 책임을 짐                       │
+│                                                        │
+│ 2. 바운딩 박스(Bounding Box)와 신뢰도(Confidence) 예측     │
+│    - 각 격자 방은 &quot;내 구역에 물체가 있을 것 같아!&quot;라며 B개의 박스를 그림│
+│    - 박스의 [X, Y 좌표, 가로, 세로]와 [신뢰도 점수]를 한방에 출력 │
+│                                                        │
+│ 3. NMS (Non-Maximum Suppression, 비최대 억제)         │
+│    - 개 한 마리 주변에 &quot;내가 개를 찾았소!&quot;라며 수십 개의 박스가 겹침│
+│    - 겹친 박스 중 &#x27;가장 확률이 높은 대장 박스&#x27; 딱 1개만 남기고   │
+│      나머지 잔챙이 박스들은 전부 다 지워버림! (깔끔한 결과 도출)   │
+└────────────────────────────────────────────────────────┘
+</code></pre>
+<ol>
+<li><strong>단 한 번의 연산 (One-Shot Regression)</strong>: YOLO의 신경망(CNN) 맨 끝은 이미지가 아니라 거대한 1차원 숫자 배열 텐서(Tensor)가 출력된다. 이 텐서 안에 49개 격자의 X, Y 좌표, 높이, 너비, 클래스(종류) 확률이 다 들어있다. 사진을 한 번 넣으면 결과가 숫자로 툭 튀어나오는 완벽한 회귀(Regression) 문제로 둔갑시킨 것이다.</li>
+<li><strong>작은 물체 탐지의 맹점</strong>: 하나의 격자 방은 오직 1가지 종류의 물체만 예측할 수 있다. 만약 1개의 격자 방(예: 멀리 있는 하늘) 안에 참새 떼 10마리가 모여 있다면, YOLO는 구조적으로 참새 1마리밖에 찾지 못하고 9마리를 포기해 버린다.</li>
+</ol>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 49명의 경비원에게 바둑판처럼 구역을 나눠주고, 자기 구역에 범인이 들어오면 각자 박스를 쳐서 보고하라고 지시한다(그리드 분할). 여러 명이 동시에 겹치게 박스를 치면(중복 탐지), 반장이 나서서 가장 정확한 박스 1개만 남기고 다 지워버리는(NMS) 아주 빠르고 효율적인 수사 기법이다.</p>
+</blockquote>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>객체 탐지(Object Detection) 시장을 양분한 2-Stage와 1-Stage의 철학을 비교해 본다.</p>
+<table><thead><tr><th style="text-align: center">비교 항목</th><th style="text-align: left">R-CNN 계열 (2-Stage)</th><th style="text-align: left">YOLO 계열 (1-Stage)</th></tr></thead><tbody>
+<tr><td style="text-align: center"><strong>작동 원리</strong></td><td style="text-align: left">1. 어디 있는지 찾기 (Region Proposal) <br>2. 그게 뭔지 맞추기 (Classification)</td><td style="text-align: left"><strong>"어디 있는 무언가"를 한 번에 퉁쳐서 계산</strong></td></tr>
+<tr><td style="text-align: center"><strong>대표 모델</strong></td><td style="text-align: left">Fast R-CNN, Faster R-CNN, Mask R-CNN</td><td style="text-align: left"><strong>YOLO (v1 ~ v10), SSD (Single Shot Detector)</strong></td></tr>
+<tr><td style="text-align: center"><strong>탐지 속도</strong></td><td style="text-align: left">초당 5~10프레임 (느림)</td><td style="text-align: left"><strong>초당 45~155프레임 (미치도록 빠름)</strong></td></tr>
+<tr><td style="text-align: center"><strong>탐지 정확도</strong></td><td style="text-align: left">작은 객체(Small Object)도 정교하게 다 잡아냄</td><td style="text-align: left"><strong>큰 객체는 잘 잡지만, 작은 객체나 겹친 객체는 놓침</strong></td></tr>
+<tr><td style="text-align: center"><strong>활용 도메인</strong></td><td style="text-align: left">의료 영상(암세포 탐지), 위성 사진 분석</td><td style="text-align: left"><strong>자율주행(보행자 탐지), 공장 불량품 실시간 모니터링</strong></td></tr>
+</tbody></table>
+<p>YOLO는 버전 1부터 최신 버전(v8, v10)까지 폭풍 진화 중이다. 초창기 YOLO의 단점이었던 '작은 객체를 못 찾는다'는 맹점을 극복하기 위해, 최근 버전들은 서로 다른 크기(해상도)의 특징 맵을 엮어서 작은 물체는 큰 특징 맵에서 찾고, 큰 물체는 작은 특징 맵에서 찾는 <strong>FPN(Feature Pyramid Network)</strong> 아키텍처를 도입하여 정확도마저 R-CNN의 턱밑까지 쫓아왔다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: R-CNN이 수술실에서 돋보기를 들고 암세포 하나하나를 세밀하게 도려내는 현미경 수술(정확도 100%)이라면, YOLO는 시속 100km로 달리는 고속도로에서 "방금 지나간 게 노루다!"라고 1초 만에 외쳐야 하는 야생의 스피드 서바이벌이다.</p>
+</blockquote>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p><strong>실무 적용 시나리오:</strong>
+스마트 공장의 컨베이어 벨트 위로 초당 10개의 과자가 지나간다. 불량 과자를 실시간으로 골라내서 로봇 팔이 버려야 한다. 데이터 과학자는 <code>Ultralytics</code> 라이브러리를 써서 <strong>YOLOv8 모델</strong>을 파이토치로 띄운다. 불량 과자 사진 1,000장으로 파인 튜닝(Transfer Learning)을 돌린다.
+YOLO는 1초에 50장의 과자 사진을 처리(50 FPS)하며, 불량 과자 위에 빨간색 네모 박스(Bounding Box)를 완벽하게 치고 <code>[x_center, y_center, width, height]</code> 좌표를 로봇 팔에 쏴준다. 컨베이어 벨트를 1초도 멈추지 않고 공장의 실시간 탐지 파이프라인이 완성된다.</p>
+<p><strong>기술사 판단 포인트 (Trade-off):</strong>
+객체 탐지 아키텍처 설계 시 기술사는 **'FPS(Frames Per Second)'와 'mAP(Mean Average Precision)'**의 비용을 계산해야 한다.</p>
+<ol>
+<li>CCTV나 블랙박스처럼 엣지 디바이스(Edge Device)에 모델을 심어야 할 때, 무거운 R-CNN을 올리면 연산이 밀려 화면이 뚝뚝 끊긴다. 이때는 무조건 정확도(mAP)를 3~5% 포기하더라도 가볍고 빠른 **YOLO 계열(Nano 버전)**을 선택해야 한다.</li>
+<li>반면, 드론으로 찍은 수만 픽셀짜리 논밭 사진에서 지름 1cm짜리 병충해를 찾아야 하는 초정밀 농업 환경이라면? 이때는 1장 분석에 5초가 걸려도 상관없다. YOLO를 버리고 무조건 꼼꼼한 <strong>Faster R-CNN</strong>으로 라우팅을 틀어야 한다.</li>
+</ol>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 100m 달리기 시합(실시간 처리)에 나갈 때는 무겁고 튼튼한 전투화(R-CNN)를 버리고, 방어력은 떨어지지만 압도적으로 가벼운 런닝화(YOLO)를 신어야 넘어지지 않고 끝까지 완주할 수 있다.</p>
+</blockquote>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>YOLO(You Only Look Once)는 "인공지능이 인간의 반사 신경을 뛰어넘을 수 있는가?"라는 질문에 완벽한 "Yes"를 던져준 컴퓨터 비전의 엔진이다. 이미지를 조각내던 패러다임을 부수고 전체 맥락(Global Context)을 한 번에 읽어 내는 1-Stage 철학은 딥러닝 산업을 통째로 실시간(Real-time) 영역으로 밀어 넣었다.</p>
+<p>결론적으로 자율주행, 무인 편의점(아마존 고), 국경 감시 CCTV 등 지금 이 순간에도 우리 주변의 수백만 대 카메라 뒤에는 YOLO 알고리즘이 24시간 깜빡임 없이 세상을 스캔하고 있다. 기술사는 단순히 Bounding Box를 잘 그리는 것을 넘어, NMS(비최대 억제)와 FPN(특징 피라미드)이라는 백엔드 파이프라인의 조율을 통해 현장의 연산 자원(Edge AI)과 인식률 사이의 황금 타점을 찾아내는 실시간 비전 아키텍트가 되어야 한다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 사진을 한 번만 흘겨보고(You Only Look Once) 그 안의 모든 사물의 이름과 위치를 단번에 외쳐버리는 서번트 증후군 천재다. 이 천재 덕분에 인류는 달리는 자동차와 날아가는 드론에도 인공지능의 실시간 눈(Vision)을 달아줄 수 있게 되었다.</p>
+</blockquote>
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>상위 개념</strong>: 딥러닝 컴퓨터 비전 (Computer Vision), 객체 탐지 (Object Detection)</li>
+<li><strong>하위 개념</strong>: 바운딩 박스 (Bounding Box), NMS (비최대 억제), 그리드 (Grid), 1-Stage Detector</li>
+<li><strong>연결 개념</strong>: R-CNN (2-Stage Detector), FPN (Feature Pyramid Network), 자율주행</li>
+</ul>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>숨은그림찾기를 할 때 옛날 로봇은 그림을 2,000조각으로 오려서 돋보기로 하나하나 보느라 시간이 엄청 오래 걸렸어요.</li>
+<li>욜로(YOLO) 마법사는 그림에 바둑판처럼 줄을 죽죽 긋더니, 1초 만에 사진 전체를 한 번에 쓱 훑어보고(Look Once) 정답을 다 찾았어요!</li>
+<li>너무너무 빨라서, 시속 100km로 달리는 자동차 안에서도 앞에 사람이 튀어나오면 "위험해!"라고 바로 알려줄 수 있는 천재 눈동자랍니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

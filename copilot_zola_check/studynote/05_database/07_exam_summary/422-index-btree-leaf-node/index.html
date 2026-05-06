@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>422. B+Tree 인덱스와 리프 노드 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote database
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="422-indegseu-b-tree-ripeu-nodeu-sunca-yeongyeol">422. 인덱스 B+Tree 리프 노드 순차 연결</h1>
+<blockquote>
+<p>⚠️ 이 문서는 "1억 명의 회원 중에서 20대(20살~29살)를 가장 빨리 찾는 방법은 무엇일까?"라는 질문에 대해, 일반적인 이진 트리(Binary Tree)의 한계를 극복하고 **현대 관계형 데이터베이스의 99%가 채택하고 있는 가장 완벽한 인덱스 구조인 'B+Tree'**를 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: B+Tree는 데이터를 나무(Tree) 모양으로 뒤집어 놓은 구조다. 일반 B-Tree와 달리, <strong>가장 아래에 있는 나뭇잎(리프 노드)에만 실제 데이터(또는 주소)를 저장</strong>하는 것이 가장 큰 특징이다.</li>
+<li><strong>가치 (범위 검색 최적화)</strong>: 리프 노드들끼리 서로 **기차처럼 연결(Linked List)**되어 있어서, <code>BETWEEN</code> 이나 <code>&gt;</code> 같은 범위 검색을 할 때 처음부터 다시 나무를 탈 필요 없이 기차를 타고 옆 칸으로 쭉 넘어가면 된다.</li>
+<li><strong>구조</strong>: 검색을 안내하는 표지판 역할의 **'브랜치 노드'**와, 실제 데이터가 담겨 기차처럼 연결된 **'리프 노드'**로 완벽하게 역할이 분리되어 있다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-gaeyo-caeggalpiwa-mogca-context-necessity">Ⅰ. 개요: 책갈피와 목차 (Context &amp; Necessity)</h3>
+<p>데이터베이스에서 인덱스(Index)는 두꺼운 전공서적 맨 뒤에 있는 **'찾아보기(색인)'**와 같다.
+"데이터베이스"라는 단어가 350페이지에 있다는 걸 알면, 처음부터 책을 다 넘길(Full Scan) 필요 없이 350페이지로 바로 점프하면 된다.</p>
+<p>문제는 이 '찾아보기' 자체도 데이터가 1억 건이면 엄청나게 크다는 것이다. 찾아보기 안에서 내가 원하는 단어를 빨리 찾기 위해 수학자들이 만들어낸 자료구조가 바로 **B-Tree (Balanced Tree)**다. B-Tree는 어떤 데이터를 찾든 무조건 3~4번 만에 찾아낼 수 있게 트리의 균형을 항상 1:1로 맞춘다.
+하지만 일반 B-Tree는 치명적인 단점이 하나 있었다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 일반 B-Tree가 **'단어 1개를 찾기'**에 최적화된 구조라면, B+Tree는 **'10번부터 20번까지 통째로 찾기(범위 검색)'**를 위해 나뭇잎들을 끈(Linked List)으로 다 묶어버린 업그레이드 버전입니다.</p>
+</blockquote>
+<hr />
+<h3 id="ii-ilban-b-treeyi-hangyewa-b-treeyi-deungjang">Ⅱ. 일반 B-Tree의 한계와 B+Tree의 등장</h3>
+<h4 id="1-ilban-b-treeyi-munjejeom-beomwi-geomsaeg-jwiyag">1. 일반 B-Tree의 문제점 (범위 검색 쥐약)</h4>
+<ul>
+<li>20살부터 25살까지 찾고 싶다.</li>
+<li>뿌리에서 출발해 20살을 찾았다. (성공)</li>
+<li>21살을 찾으려면? 다시 뿌리(Root)로 돌아가서 21살로 가는 길을 새로 찾아야 한다.</li>
+<li>22살을 찾으려면? 또 뿌리로 돌아가야 한다. 미치도록 비효율적이다.</li>
+</ul>
+<h4 id="2-b-treeyi-hyeogmyeong-ripeu-nodeu-sunca-yeongyeol">2. B+Tree의 혁명 (리프 노드 순차 연결) ★</h4>
+<ul>
+<li>B+Tree는 **가장 아래층(Leaf Node)**에만 진짜 데이터를 몰아넣었다.</li>
+<li>그리고 이 리프 노드들끼리 서로 손을 잡게 만들었다. (Linked List)</li>
+<li>20살을 찾았다. 21살을 찾기 위해 뿌리로 돌아가지 않는다. <strong>그냥 옆 사람(21살) 손을 잡고 넘어간다.</strong> 22살? 또 옆으로 넘어간다.</li>
+<li>관계형 DB에서 가장 많이 쓰이는 쿼리인 <code>WHERE age BETWEEN 20 AND 25</code>가 0.01초 만에 실행되는 비밀이 바로 이 **'리프 노드 순차 연결'**에 있다.</li>
+</ul>
+<hr />
+<h3 id="iii-b-treeyi-3gyeceung-gujo">Ⅲ. B+Tree의 3계층 구조</h3>
+<p>B+Tree는 깊이(Depth)가 깊어지는 것을 극도로 혐오한다. 보통 1억 건의 데이터도 3~4층(Depth 3~4) 안에서 다 끝난다.</p>
+<ol>
+<li><strong>루트 노드 (Root Node)</strong>: 트리의 꼭대기. "100 이하는 왼쪽으로 가, 100 이상은 오른쪽으로 가!"</li>
+<li><strong>브랜치 노드 (Branch Node)</strong>: 중간 표지판들. 오직 '길 안내'용 숫자만 들어있고, 실제 데이터는 절대 안 들고 있다.</li>
+<li><strong>리프 노드 (Leaf Node)</strong>: 트리의 바닥. 진짜 데이터(또는 데이터가 있는 디스크 주소인 ROWID)가 들어있다. 여기서부터는 옆방으로 마음껏 이동할 수 있다.</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│           B+Tree 인덱스의 리프 노드 연결망 시각화                │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│           [ 👑 Root: 50을 기준으로 ]                          │
+│            &#x2F;                     \                           │
+│     (50 미만)                    (50 이상)                     │
+│        ▼                            ▼                        │
+│ [ 🎋 Branch: 30 기준 ]        [ 🎋 Branch: 70 기준 ]         │
+│    &#x2F;       \                      &#x2F;       \                  │
+│   ▼         ▼                    ▼         ▼                 │
+│ [🍃 10,20] ──▶ [🍃 30,40] ──▶ [🍃 50,60] ──▶ [🍃 70,80]        │
+│                                                              │
+│ ★ 검색 예시: &quot;20부터 60까지 다 가져와!&quot; (BETWEEN 20 AND 60)         │
+│   1. 루트 -&gt; 브랜치 -&gt; 🍃20이 있는 리프 노드로 착지 (수직 탐색)            │
+│   2. 뿌리로 안 돌아가고, 화살표(▶)를 타고 오른쪽으로 계속 전진! (수평 탐색)  │
+│   3. 60을 만날 때까지 그냥 옆방 문만 열면 됨. 속도 최고! 🚀              │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h3 id="iv-gyeolron">Ⅳ. 결론</h3>
+<p>"DB의 심장은 B+Tree다."
+MySQL의 InnoDB, Oracle, PostgreSQL 등 우리가 아는 거의 모든 RDBMS는 인덱스를 만들 때 <code>CREATE INDEX ... USING BTREE</code>를 기본값으로 사용한다. (이름은 B-Tree지만 내부적으로는 모두 업그레이드된 B+Tree를 쓴다). 메모리에 올려두고 쓰는 캐시(Hash)나 빅데이터 쓰기 전용 엔진(LSM-Tree - 377번 문서)이 유행하는 시대에도, '수시로 변경되는 데이터'와 '범위 검색'이라는 두 마리 토끼를 동시에 잡는 자료구조는 B+Tree가 유일무이하다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>관련 인덱스</strong>: Clustered Index (424번), Non-Clustered Index (423번)</li>
+<li><strong>대안 자료구조</strong>: Hash Index (정확히 일치하는 <code>=</code> 검색만 가능, 범위 검색 불가)</li>
+<li><strong>발생하는 문제</strong>: 인덱스 단편화 (데이터가 자꾸 끼어들면 노드가 쪼개지며 빈 공간이 생기는 Page Split 현상 발생)</li>
+</ul>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>일반 B-Tree는 아파트 1층부터 10층까지 배달을 할 때, 1층 배달하고 다시 1층 로비(뿌리)로 내려갔다가, 2층 배달하고 또 1층 로비로 내려가는 바보 같은 배달부예요.</li>
+<li>B+Tree는 꼭대기 층(리프 노드)에 올라가면, 옥상끼리 다 구름다리(연결선)로 연결되어 있는 멋진 아파트예요.</li>
+<li>그래서 101동 옥상에 한 번만 올라가면, 102동, 103동으로 1층에 안 내려가고 바로바로 건너갈 수 있어서 배달(범위 검색)이 엄청 빨라요!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

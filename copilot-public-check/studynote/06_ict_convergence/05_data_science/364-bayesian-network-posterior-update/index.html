@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>364. 베이즈 정리 기반 사후 확률 갱신 및 베이지안 네트워크 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 18, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ict
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 새로운 데이터(증거)가 들어올 때마다 과거의 믿음(사전 확률)을 수학적으로 업데이트하여 더 정확한 미래 예측(사후 확률)을 도출하는 갱신형 확률 모델 아키텍처다.</li>
+<li><strong>가치</strong>: 정적인 통계학의 한계를 벗어나, 베이지안 네트워크를 통해 수많은 변수 간의 인과관계와 조건부 확률을 직관적인 방향성 비순환 그래프(DAG) 형태로 모델링하여 추론할 수 있다.</li>
+<li><strong>판단 포인트</strong>: 변수가 많아질수록 모든 경우의 수를 갱신하는 적분 연산이 기하급수적으로 폭발하므로, 실무 파이프라인에서는 마르코프 체인 몬테카를로(MCMC) 같은 근사 추론(Approximate Inference) 기법을 반드시 결합해야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>의사가 환자의 증상을 보고 진단을 내리는 과정을 생각해보자. 처음에는 환자가 감기일 확률을 10%라고 생각했다(사전 확률). 그런데 기침을 심하게 한다는 증거를 본 뒤 감기일 확률을 50%로 올렸다. 잠시 후 열도 난다는 사실을 확인하고는 그 확률을 90%로 확정(사후 확률) 지었다.</p>
+<p>이처럼 인간의 뇌는 끊임없이 새로운 힌트(증거)를 흡수하여 초기 판단을 수정해 나간다. 이것을 인공지능에 이식하기 위해 '베이즈 정리(Bayes Theorem)'를 여러 변수로 엮어서 확장한 것이 <strong>사후 확률 갱신 구조망</strong>이자 **베이지안 네트워크(Bayesian Network)**다. 변수들 간의 인과관계를 그래프로 그려, 꼬리에 꼬리를 무는 확률 업데이트를 자동화한 시스템이다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 탐정이 단서 하나(증거)를 발견할 때마다 용의자의 범인일 가능성(확률)을 수첩에서 썼다 지웠다 반복하며 갱신하다가, 마침내 100% 확신(사후 확률)에 도달하는 범인 추적 지도(네트워크)와 같다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>베이지안 네트워크는 변수(노드)와 조건부 의존성(간선)으로 이루어진 방향성 비순환 그래프(DAG) 아키텍처를 가진다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────┐
+│             [ 베이지안 네트워크의 사후 확률 갱신 매커니즘 ]    │
+├────────────────────────────────────────────────────────┤
+│ 1. 구조망 설정 (Directed Acyclic Graph, DAG)           │
+│    [외출] ──▶ [비 옴] ──▶ [우산 챙김]                     │
+│    (각 노드는 조건부 확률표, CPT를 가짐)                     │
+│                                                        │
+│ 2. 사전 확률 및 우도 세팅                              │
+│    - P(비 올 확률) = 30% (Prior)                       │
+│    - P(비 올 때 우산을 챙길 확률) = 90% (Likelihood)      │
+│                                                        │
+│ 3. 증거 관측에 따른 사후 확률 갱신 (Bayesian Update)     │
+│    - &quot;친구가 우산을 챙겼다&quot;는 증거 관측!                    │
+│    - P(비 올 확률 | 친구 우산 챙김) 계산 돌입!                │
+│    - 결과: &quot;비 올 확률이 30%에서 80%로 갱신됨!&quot; (Posterior)│
+└────────────────────────────────────────────────────────┘
+</code></pre>
+<ol>
+<li><strong>마르코프 블랭킷 (Markov Blanket)</strong>: 복잡한 네트워크에서 특정 노드(사건)의 확률을 갱신할 때, 우주의 모든 변수를 볼 필요 없이 그 노드의 부모, 자식, 그리고 자식의 부모(마르코프 블랭킷)만 알면 나머지 변수들은 조건부 독립(무시)이 성립하여 연산량이 획기적으로 줄어든다.</li>
+<li><strong>사후 확률 갱신의 체인 리액션</strong>: 끝단의 증거(예: 우산)가 관측되면, 그 윗단의 원인(예: 비 옴) 확률이 업데이트되고, 이는 다시 그 윗단(예: 저기압)의 확률까지 도미노처럼 거슬러 올라가며 갱신(Belief Updating) 시킨다.</li>
+</ol>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 거미줄의 맨 끝을 톡 건드리면(증거 관측), 그 진동이 거미줄의 교차점(조건부 확률)을 타고 중심부까지 징-징-징- 퍼져나가 거미(네트워크 전체)가 상황을 100% 알아차리게 되는 통신망이다.</p>
+</blockquote>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>확률을 추론하고 업데이트하는 다양한 AI 아키텍처들을 비교하면 베이지안 네트워크의 위치를 알 수 있다.</p>
+<table><thead><tr><th style="text-align: center">비교 항목</th><th style="text-align: left">나이브 베이즈 (Naive Bayes)</th><th style="text-align: left">베이지안 네트워크 (Bayesian Net)</th><th style="text-align: left">마르코프 체인 (Markov Chain)</th></tr></thead><tbody>
+<tr><td style="text-align: center"><strong>변수 간의 관계</strong></td><td style="text-align: left"><strong>모든 변수가 서로 완벽히 독립이라 가정</strong></td><td style="text-align: left"><strong>변수들 간의 복잡한 인과관계를 DAG로 표현</strong></td><td style="text-align: left">오직 현재 상태가 다음 상태에만 영향을 줌</td></tr>
+<tr><td style="text-align: center"><strong>장점</strong></td><td style="text-align: left">수식이 엄청나게 단순하고 계산이 빠름</td><td style="text-align: left">직관적이고 현실의 복잡한 인과를 모델링</td><td style="text-align: left">시계열 데이터(시간 흐름) 모델링에 최고</td></tr>
+<tr><td style="text-align: center"><strong>한계 (Trade-off)</strong></td><td style="text-align: left">현실에서 독립 가정이 다 깨짐 (비현실적)</td><td style="text-align: left">변수가 늘어나면 확률표(CPT) 작성과 갱신 연산이 터짐</td><td style="text-align: left">과거의 기억을 완전히 무시하는 한계</td></tr>
+<tr><td style="text-align: center"><strong>적용 도메인</strong></td><td style="text-align: left">스팸 메일 필터링</td><td style="text-align: left"><strong>의료 진단 AI, 원전 고장 진단 트리</strong></td><td style="text-align: left">날씨 예측, 주가 틱 변동 추정</td></tr>
+</tbody></table>
+<p>초기 인공지능인 전문가 시스템(Expert System)이 단순히 "If A then B"라는 딱딱한 규칙으로 만들어졌다면, 이 베이지안 네트워크의 확률 갱신 구조망이 도입되면서 "If A then 아마도 80% 확률로 B"라는 훨씬 부드럽고 현실적인 불확실성 제어가 가능해졌다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 나이브 베이즈가 "증상 하나하나를 따로따로 계산해 더하는 1년 차 의사"라면, 베이지안 네트워크는 "기침과 콧물이라는 증상이 어떻게 서로 엮여 있는지 인과관계를 종합적으로 머릿속에서 굴려보는 베테랑 의사"다.</p>
+</blockquote>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p><strong>실무 적용 시나리오:</strong>
+반도체 공정 장비의 '이상 진단(Root Cause Analysis)' 시스템이다. 수백 개의 밸브와 모터가 엮여 있다. 최종 제품에 불량이 났을 때, 엔지니어는 베이지안 네트워크 소프트웨어의 맨 끝 노드(결과)에 '불량 100%'를 입력(증거 관측)한다. 그러면 0.1초 만에 사후 확률 갱신이 역주행하여, 수백 개의 밸브 중 "A밸브 고장 확률 95%, B센서 고장 확률 3%"라는 확률 지도를 모니터에 뿌려준다.</p>
+<p><strong>기술사 판단 포인트 (Trade-off):</strong>
+베이지안 네트워크 아키텍처 구축 시 가장 큰 난관은 <strong>'추론의 정확도'와 'NP-Hard 적분 연산 비용'</strong> 간의 조율이다.</p>
+<ol>
+<li>노드(변수)가 50개를 넘어가고 확률이 조금만 복잡해져도, 사후 확률을 정확히 계산하는 데 우주의 나이보다 긴 시간이 걸린다 (차원의 저주, NP-Hard).</li>
+<li>따라서 기술사는 모든 확률을 100% 완벽하게 계산하려는 시도(Exact Inference)를 버려야 한다. 대신 깁스 샘플링(Gibbs Sampling)이나 <strong>MCMC (마르코프 체인 몬테카를로)</strong> 기법을 파이프라인에 결합하여, 주사위를 수만 번 던져 대충 이쯤이 정답이겠거니 근사(Approximate)해 내는 현실적인 아키텍처로 타협해야 한다.</li>
+</ol>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 얽힌 실타래(베이지안망)를 완벽하게 수학 공식으로 푸는 것은 불가능하니까, 대신 수만 마리의 개미(MCMC 샘플링)를 실타래 속에 풀어놓고 개미들이 가장 많이 몰려있는 곳을 찾아내어 정답으로 인정하는 타협의 미학이다.</p>
+</blockquote>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>베이즈 정리 기반의 갱신망은 딥러닝이 지배하는 현재에도 그 가치가 빛바래지 않는다. 딥러닝은 "왜 그런 결과가 나왔는지" 설명할 수 없는 블랙박스(Black-box)지만, 베이지안 네트워크는 변수 간의 화살표(인과관계)를 인간의 눈으로 뚜렷이 볼 수 있는 화이트박스(White-box) AI의 정수이기 때문이다.</p>
+<p>결론적으로 사후 확률 갱신망은 불확실성이 가득한 세상에서 인공지능이 끊임없이 스스로의 편견을 교정해 나가는 '지능의 기계적 진화 과정'이다. 기술사는 최근의 트렌드인 인과 추론(Causal Inference)이나 베이지안 최적화(Bayesian Optimization)의 핵심 엔진이 바로 이 확률 갱신에 있음을 통찰하고, 모델의 설명력(XAI)이 요구되는 생명, 국방, 금융 아키텍처의 베이스라인으로 활용해야 한다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 딥러닝이 묻지도 따지지도 않고 결과만 내뱉는 무뚝뚝한 점쟁이라면, 베이지안 갱신망은 "비가 오고(30%), 바람도 부니(50%), 이럴 땐 80% 확률로 태풍입니다"라며 논리의 흐름을 칠판에 적어주는 친절하고 투명한 논리학자다.</p>
+</blockquote>
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>상위 개념</strong>: 확률론 (Probability), 인공지능 추론 (AI Inference)</li>
+<li><strong>하위 개념</strong>: 베이즈 정리 (사전/우도/사후 확률), 조건부 독립, 마르코프 블랭킷</li>
+<li><strong>연결 개념</strong>: MCMC (몬테카를로 시뮬레이션), 나이브 베이즈, 인과 추론 (Causal Inference)</li>
+</ul>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>"우리 강아지가 소시지를 먹었을까?" 처음엔 10% 정도 의심했어요. (사전 확률)</li>
+<li>그런데 강아지 입 주변에 케첩이 묻어있는 걸 봤어요! (새로운 증거 발견)</li>
+<li>베이지안 네트워크는 증거를 바탕으로 "입에 케첩 묻을 확률"을 거꾸로 계산해서, "소시지 먹은 게 99% 확실해!"라고 내 생각을 업데이트해 주는 탐정 수첩이랍니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

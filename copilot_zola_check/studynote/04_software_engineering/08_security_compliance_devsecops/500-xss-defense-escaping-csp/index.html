@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>500. 크로스 사이트 스크립팅 (XSS) 방어 - 입&#x2F;출력값 인코딩, CSP(Content Security Policy) 헤더 설정 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="500-keuroseu-saiteu-seukeuribting-xss-bangeo-ib-culryeoggabs-inkoding-csp-content-security-policy-hedeo-seoljeong">500. 크로스 사이트 스크립팅 (XSS) 방어 - 입/출력값 인코딩, CSP(Content Security Policy) 헤더 설정</h1>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: XSS 방어는 사용자가 게시판에 몰래 써둔 <code>&lt;script&gt;해킹&lt;/script&gt;</code> 이라는 무기(독약)를 서버가 지우지 못했다 하더라도, <strong>브라우저 화면에 출력(Output)될 때 꺾쇠(<code>&lt;</code>)를 <code>&amp;lt;</code> 라는 단순 텍스트 껍데기로 치환(Escaping)하여, 브라우저가 이를 '실행 코드'가 아닌 멍청한 '글씨'로 읽게 만드는 출력 인코딩 철학</strong>이다.</li>
+<li><strong>가치</strong>: 해커가 나를 뚫고 들어와 다른 선량한 수만 명의 고객 세션 쿠키를 털어가거나 악성 사이트로 강제 납치(Redirect)하는 끔찍한 연쇄 감염(마치 전염병 같은 파괴력)을 프레임워크 레벨(Spring, React)에서 100% 무력화하는 웹 보안의 절대적 기본기다.</li>
+<li><strong>융합</strong>: 소스코드 단의 **출력값 이스케이프(HTML Entity Encoding)**와 더불어, 설령 프론트엔드 개발자가 이스케이프를 빼먹더라도 브라우저 자체가 "외부에서 날아온 낯선 자바스크립트는 절대 실행 안 해!"라고 멱살을 잡아버리는 <strong>CSP(Content Security Policy) HTTP 헤더</strong>라는 인프라 방어막이 융합되어 2중 콘크리트 방패를 이룬다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: XSS(Cross-Site Scripting)는 해커가 내 웹사이트 게시판이나 댓글 창에 악성 자바스크립트 코드(<code>&lt;script&gt;내 쿠키를 해커서버로 보내라!&lt;/script&gt;</code>)를 써놓는 것이다. 내 서버(DB)는 이걸 그냥 글씨인 줄 알고 저장한다. 문제는 다른 착한 사용자가 그 게시글을 클릭하는 순간, 사용자의 브라우저가 저 글씨를 '명령어(Code)'로 찰떡같이 알아듣고 실행시켜 버려서 사용자의 영혼(세션)을 해커에게 날름 바치는 환장할 사태다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: SQL 인젝션(480번)이 내 서버의 심장(DB)을 찌르는 거라면, XSS는 내 사이트를 놀이터로 삼아 <strong>내 손님들의 주머니(브라우저 쿠키)를 터는 범죄</strong>다. 손님은 "난 네이버(내 사이트)에 들어왔는데 왜 네이버가 내 돈을 털어가?"라며 회사를 고소한다. 개발자가 <code>input.replace("&lt;script&gt;", "")</code> 처럼 블랙리스트로 꼼수를 부리려 해봤자, 해커들은 <code>&lt;img src="x" onerror="해킹"&gt;</code> 같은 수만 가지의 우회 스크립트 기법으로 필터를 비웃으며 뚫어냈다. <strong>블랙리스트의 오만을 쓰레기통에 처박고, 렌더링 단계에서 모든 특수문자를 물리적으로 거세해 버리는(Escaping) 무자비한 전역 아키텍처</strong>가 절대적으로 필요했다.</p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: XSS 해킹은 식당 게시판에 **'최면술 편지'**를 붙여놓는 것과 같습니다. 해커가 "이 글을 읽는 자, 지갑을 해커에게 바쳐라"라는 최면 편지를 붙입니다. 식당 주인(서버)은 글을 못 읽어서 그냥 냅둡니다. 밥 먹으러 온 순진한 손님(브라우저)이 그 편지를 읽는 순간, 최면에 걸려 지갑을 해커에게 던집니다. XSS 방어(이스케이프)는 주인이 그 편지 위에 **'빨간 펜으로 낙서를 쫙쫙 그어버리는 것'**입니다. 손님이 편지를 보긴 보는데, 글씨가 찌그러져(치환됨) 있어서 "뭐야 이 낙서는?" 하고 그냥 지나가 버리게 만들어 최면(실행) 발동을 원천적으로 깨버리는 위대한 소독 작업입니다.</p>
+</li>
+<li>
+<p><strong>등장 배경 및 발전 과정</strong>:</p>
+<ol>
+<li><strong>게시판의 시대와 웜(Worm)의 공포</strong>: 2000년대 마이스페이스(Samy 웜) 시절, 누군가 프로필에 코드 한 줄을 썼더니 100만 명의 프로필이 똑같이 전염되는 전무후무한 XSS 바이러스 대참사가 터졌다.</li>
+<li><strong>필터링의 헛발질과 이스케이프의 정립</strong>: 개발자들이 특수문자를 정규식으로 지우려다(블랙리스트) 다 뚫리자, "지우지 마! 그냥 <code>&lt;</code>를 <code>&amp;lt;</code> 로 바꿔서 브라우저를 멍청하게 만들어!"라는 출력 인코딩 패러다임이 전 세계 국룰로 자리 잡았다.</li>
+<li><strong>현대 프레임워크와 CSP의 융합 (현재)</strong>: 요즘은 개발자가 손으로 이스케이프를 치지 않는다. React, Vue, Spring 템플릿(Thymeleaf)이 출력할 때 알아서 100% 특수문자를 치환해 버린다(Auto-Escaping). 여기에 더해 브라우저 헤더에 **CSP(Content Security Policy)**를 박아, "우리 허락 없는 남의 집 스크립트는 원천 차단!"이라는 이중 잠금장치 시대가 열렸다.</li>
+</ol>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: SQL 인젝션이 은행 금고(DB)에 다이너마이트를 던지는 거라면, XSS는 은행 로비에 **'독가스 풍선(악성 스크립트)'**을 몰래 달아놓고 도망간 것입니다. 은행 직원은 멀쩡하지만, 로비에 들어온 선량한 고객들이 그 풍선 옆을 지나가다 쓰러집니다. 고객이 쓰러져도 은행(우리 회사)이 물어내야 하므로, 풍선을 터뜨려 내용물(공기)을 무해하게 바꿔버리는 공기청정기(이스케이핑)가 필수입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri-deep-dive">Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)</h2>
+<h3 id="1-jeonseolyi-bangpae-1-culryeoggabs-inkoding-html-entity-escaping">1. 전설의 방패 1: 출력값 인코딩 (HTML Entity Escaping)</h3>
+<p>XSS 방어의 99%를 차지하는 궁극의 치트키. "문자열 5개"만 바꿔치기하면 세상이 평화롭다.</p>
+<ul>
+<li><strong>원리</strong>: 브라우저는 꺾쇠(<code>&lt;</code>, <code>&gt;</code>)를 보면 "오! 여기서부터 코드가 시작되네!"라고 발작한다. 그래서 백엔드나 프론트엔드가 화면에 데이터를 뱉어낼 때, 이 위험한 문자를 브라우저가 '그냥 그림(텍스트)'으로만 인식하는 <strong>HTML 엔티티(Entity) 문자</strong>로 싹 다 갈아버린다(치환).</li>
+<li><strong>5대 변환 공식 (절대 암기)</strong>:
+<ol>
+<li><code>&lt;</code> ➡ <code>&amp;lt;</code> (Less than)</li>
+<li><code>&gt;</code> ➡ <code>&amp;gt;</code> (Greater than)</li>
+<li><code>&amp;</code> ➡ <code>&amp;amp;</code></li>
+<li><code>"</code> ➡ <code>&amp;quot;</code></li>
+<li><code>'</code> ➡ <code>&amp;#x27;</code></li>
+</ol>
+</li>
+</ul>
+<p><strong>[ 💥 공격 시나리오 ]</strong></p>
+<ul>
+<li>해커 입력: <code>&lt;script&gt;alert(1)&lt;/script&gt;</code></li>
+<li><strong>방어(치환) 후 출력</strong>: <code>&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;</code></li>
+<li><strong>결과</strong>: 브라우저는 이 더러운 문자를 보고 실행(팝업창)하지 않는다. 대신 화면 게시판에 친절하게 <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> 라는 "글씨"를 그대로 멍청하게 예쁘게 그려준다. 무기(Code)가 단순 장난감(Data)으로 100% 무력화되었다.</li>
+</ul>
+<h3 id="2-jeonseolyi-bangpae-2-csp-content-security-policy-http-hedeo">2. 전설의 방패 2: CSP (Content Security Policy) HTTP 헤더</h3>
+<p>개발자가 실수로 이스케이프를 빼먹어서 XSS 폭탄이 화면에 터지려는 찰나의 순간을 구원하는 인프라 쉴드.</p>
+<ul>
+<li>
+<p><strong>원리</strong>: 서버가 브라우저에게 HTML을 내려줄 때, <strong>HTTP 응답 헤더</strong>에 엄격한 룰(CSP)을 하나 적어서 보낸다.
+<code>Content-Security-Policy: default-src 'self'; script-src 'self' https://trusted.com;</code></p>
+</li>
+<li>
+<p><strong>마법의 효과</strong>:</p>
+<ul>
+<li>이 헤더를 받은 브라우저(크롬 등)는 절대적인 헌법을 부여받는다.</li>
+<li>해커가 내 게시판에 <code>&lt;script src="http://hacker.com/steal.js"&gt;&lt;/script&gt;</code> 라고 외부 악성 코드를 심어놨다.</li>
+<li>개발자가 이스케이프를 빼먹어서 이 태그가 그대로 실행되려 한다.</li>
+<li><strong>브라우저의 입구컷</strong>: "어? 헌법(CSP 헤더)에 따르면 우리 서버(<code>self</code>)랑 <code>trusted.com</code> 에서 온 스크립트만 실행하라고 했는데? <code>hacker.com</code>? 넌 헌법 위반이야! 실행 거부(Block)!"</li>
+<li>XSS가 코드 단에서 뚫렸음에도 불구하고, 브라우저(인프라) 레벨에서 뒷목을 잡아 살려내는 <strong>다층 방어(Defense in Depth)의 꽃</strong>이다.</li>
+</ul>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: <strong>출력 인코딩</strong>은 맹견(스크립트)의 이빨을 다 뽑고 입마개를 씌워서 풀어놓는 것입니다. 물려고 해도 물 수가 없습니다. <strong>CSP 헤더</strong>는 우리 집 마당에 **'등록된 우리 집 강아지 외에는 1초도 못 살게 하는 레이저 돔'**을 씌우는 것입니다. 내가 실수로 입마개를 안 씌운 맹견(이스케이프 누락)이 들어와도, 레이저 돔(브라우저)이 "넌 허락된 놈이 아니야!"라며 그 즉시 태워버립니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="iii-yunghab-bigyo-mic-dagagdo-bunseog">Ⅲ. 융합 비교 및 다각도 분석</h2>
+<h3 id="1-ibryeog-pilteoring-vs-culryeog-iseukeiping-eodiseo-mageul-geosinga">1. 입력 필터링 vs 출력 이스케이핑 (어디서 막을 것인가?)</h3>
+<p>주니어와 시니어가 가장 많이 싸우는 보안 논쟁의 마침표.</p>
+<table><thead><tr><th style="text-align: left">척도</th><th style="text-align: left">입력 시 필터링 (Input Filtering)</th><th style="text-align: left">출력 시 이스케이핑 (Output Escaping) 👑 정답</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>적용 시점</strong></td><td style="text-align: left">DB에 <code>INSERT</code> 하기 전 (들어올 때)</td><td style="text-align: left">화면에 <code>SELECT</code> 한 값을 뿌릴 때 (나갈 때)</td></tr>
+<tr><td style="text-align: left"><strong>방식</strong></td><td style="text-align: left"><code>&lt;script&gt;</code>가 들어오면 지워버리거나 튕겨냄.</td><td style="text-align: left">DB에는 쌩으로 넣고, 보여줄 때 <code>&amp;lt;</code>로 둔갑시킴.</td></tr>
+<tr><td style="text-align: left"><strong>치명적 단점</strong></td><td style="text-align: left">데이터가 훼손됨. 만약 수학 블로그에서 <code>x &lt; y</code> 를 썼는데 <code>&lt;</code> 가 짤려서 <code>x y</code> 가 되는 끔찍한 부작용(비즈니스 로직 파괴).</td><td style="text-align: left"><strong>단점 거의 없음.</strong> 원본 데이터 100% 보존.</td></tr>
+<tr><td style="text-align: left"><strong>아키텍처 철학</strong></td><td style="text-align: left">나쁜 놈을 잡겠다는 '블랙리스트'의 오만함.</td><td style="text-align: left">**"DB는 무결해야 하며, 독은 터지기 직전(화면)에 뽑는다"**는 늦은 바인딩(Late-Binding)의 철학.</td></tr>
+</tbody></table>
+<h3 id="gwamog-yunghab-gwanjeom">과목 융합 관점</h3>
+<ul>
+<li>
+<p><strong>프론트엔드 프레임워크 (React, Vue의 축복)</strong>: 옛날 JSP, PHP 시절엔 개발자가 화면에 변수를 찍을 때마다 <code>&lt;c:out value="${text}"&gt;</code> 처럼 이스케이프 함수를 노가다로 감싸야 했다. 하나라도 빼먹으면 뚫렸다(Human Error). 현대의 뷰(Vue)나 리액트(React) 아키텍처는 이 짓을 아예 멸망시켰다. 리액트에서 <code>{userInput}</code> 으로 변수를 렌더링하면, 프레임워크 엔진이 **100% 디폴트로 강제 자동 이스케이프(Auto-escaping)**를 먹여버린다. 개발자가 일부러 뚫으려고 <code>dangerouslySetInnerHTML</code> 이라는 무서운 이름의 함수를 억지로 치지 않는 이상, 현대 프론트엔드 생태계에서 XSS는 태생적으로 숨을 쉴 수 없는 불모지로 융합 진화했다.</p>
+</li>
+<li>
+<p><strong>백엔드 프레임워크 (서블릿 필터 / Lucy XSS)</strong>: 그래도 API 서버(JSON) 자체에서 1차 방어막을 치고 싶다면? 아키텍트는 1만 개의 컨트롤러에 코드를 치지 않는다. 스프링(Spring) 부트의 문지기 격인 **서블릿 필터(Filter)**나 <strong>AOP(관점 지향 프로그래밍)</strong> 단 한 곳에 <code>Naver Lucy XSS Filter</code>나 <code>ObjectMapper</code> 커스텀 모듈을 꽂아 넣는다. 밖에서 들어오고 나가는 모든 JSON 덩어리의 특수문자가 0.01초 만에 일괄 소독되는 거대한 중앙 통제 댐을 세우는 위대한 공학적 게으름이다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 입력 필터링은 **'손님이 식당에 들어올 때 옷에 묻은 먼지(특수문자)를 강제로 털어서 옷을 찢어지게 만드는 것(데이터 훼손)'**입니다. 출력 이스케이핑은 손님을 흙먼지 묻은 그대로 편하게 방에 모셔둔(DB 원본 저장) 다음, 나중에 손님이 밖으로 나갈 때(화면 출력) **'무해한 투명 비닐 코팅'**을 씌워 내보내는 것입니다. 원본은 100% 보존하면서 누구도 다치지 않는 가장 세련된 접객술입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsajeog-pandan">Ⅳ. 실무 적용 및 기술사적 판단</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li>
+<p><strong>시나리오 — 부자연스러운 문자 치환이 부른 비즈니스 데이터 붕괴</strong>: 보안을 한답시고 게시판 글쓰기 API 입구에 <code>input.replace("&lt;", "&amp;lt;")</code> 를 박아넣었다. 사용자가 "제 연봉은 <code>5000 &lt; 6000</code> 입니다" 라고 쓰고 글을 폰 앱과 웹 브라우저, 외부 메일로 보냈다. 웹 브라우저는 <code>&amp;lt;</code>를 <code>&lt;</code>로 예쁘게 그려주어 괜찮았다. 하지만 텍스트만 읽는 안드로이드 폰 푸시 알람이나 SMS 문자 메시지에는 <code>제 연봉은 5000 &amp;lt; 6000 입니다</code> 라고 미친 외계어가 그대로 노출되어 CS 클레임이 폭주했다.</p>
+<ul>
+<li><strong>아키텍트의 해결책</strong>: <strong>저장 계층(DB)과 렌더링 계층(View)의 책임 분리 붕괴</strong>다. 입구(Input)에서 문자를 강제로 인코딩해서 DB에 박아버리면, 그 데이터를 가져다 쓰는 수많은 이기종 클라이언트(모바일, 배치, 메일)들이 전부 꼬여버린다. 아키텍트는 "DB에는 무조건 유저가 입력한 날 것(Raw)의 원본을 그대로 저장해라! 그리고 <strong>그 원본을 뿌려주는 '뷰(View)' 기술(웹 브라우저 렌더링 서버)의 맨 마지막 종착지에서만, 그 환경에 맞는 이스케이프(Output Encoding)를 적용하라!</strong>"는 클린 아키텍처의 의무를 강제해야 한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>시나리오 — 완벽한 이스케이프를 뚫어버린 자바스크립트 내장 XSS</strong>: 개발자가 HTML 태그 바깥쪽에는 이스케이프를 다 잘 걸었다. 그런데 사용자가 입력한 검색어를 자바스크립트 변수 안에 넣을 때 <code>let keyword = '${userInput}';</code> 라고 따옴표 안에 쌩으로 찔러넣었다. 해커가 검색창에 <code>'; alert(1); //</code> 라고 입력하자, 치환기도 뚫어내고 코드가 <code>let keyword = ''; alert(1); //';</code> 로 완벽한 JS 문법으로 조립되어 100만 명의 쿠키가 다 털렸다.</p>
+<ul>
+<li><strong>아키텍트의 해결책</strong>: <strong>컨텍스트(Context)를 무시한 획일적 방어의 참사</strong>다. 꺾쇠(<code>&lt;</code>)를 <code>&amp;lt;</code>로 바꾸는 건 HTML 몸통 영역(HTML Context)에서만 방어력을 가진다. 위 상황처럼 <code>&lt;script&gt;</code> 안쪽이나 태그의 속성값(<code>&lt;img src="..."&gt;</code>) 영역으로 값이 들어갈 때는 꺾쇠가 아무 의미가 없다. 해커는 홑따옴표(<code>'</code>)나 더블따옴표(<code>"</code>)를 깨고 탈출(Break out)해 버리기 때문이다. 아키텍트는 뷰 템플릿 엔진을 고를 때, 데이터가 떨어지는 위치(HTML, JS, CSS, URL 속성)를 스마트하게 인지하여 **'컨텍스트에 맞는 각기 다른 이스케이핑'**을 자동으로 때려주는 지능형 템플릿(<code>Thymeleaf</code>, <code>React</code>)으로 인프라 뼈대를 갈아타야 한다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="doib-cekeuriseuteu">도입 체크리스트</h3>
+<ul>
+<li><strong>비즈니스적</strong>: <strong>웹 에디터(Smart Editor) 허용 시의 보안 대책을 세웠는가?</strong> 쇼핑몰 관리자 페이지나 블로그에서 글자 굵게 하고 색깔 넣으려면 썸머노트(Summernote) 같은 WYSIWYG 에디터를 쓴다. 이건 태생적으로 HTML 태그(<code>&lt;p&gt;</code>, <code>&lt;b&gt;</code>)를 통째로 입력받아야 작동한다. 여기에 XSS 필터를 세게 걸면 글씨 색깔이 다 날아가서 비즈니스가 망한다. 아키텍트는 이 딜레마를 해결하기 위해, <code>Naver Lucy</code>의 화이트리스트 옵션을 켜서 <strong>"오직 <code>&lt;b&gt;</code>, <code>&lt;p&gt;</code> 같은 안전한(Safe) 태그 10개만 살려주고, <code>script</code>, <code>iframe</code> 같은 치명적 태그만 무자비하게 썰어버리는" 극도의 정밀 필터링(Sanitization) 튜닝</strong>에 시간을 쏟아야 한다.</li>
+<li><strong>기술적</strong>: <strong>쿠키에 HttpOnly 플래그가 꽂혀 있는가?</strong> 만약 내가 개발을 바보같이 해서 게시판 어딘가에 XSS 해킹 코드가 1줄 뚫렸다 치자. 해커가 <code>&lt;script&gt;document.cookie 훔쳐가!&lt;/script&gt;</code>를 실행했을 때 최후의 보험이 있어야 한다. 아키텍트는 서버가 로그인 쿠키(Session)를 발급할 때 무조건 뒤에 <code>; HttpOnly; Secure</code> 옵션 도장을 쾅 찍어버려야 한다. 이 도장이 찍힌 쿠키는 브라우저가 자물쇠를 채워버려서, 자바스크립트 따위가 아무리 해킹 코드를 돌려도 절대 쿠키값(영혼)을 읽을 수 없는 <strong>'물리적 절연(Isolation)'</strong> 상태가 되어 2차 대형 사고를 완벽히 튕겨낸다.</li>
+</ul>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p><strong>"프론트엔드에서 정규식으로 검사했으니 통과!" (책임 전가의 죄)</strong>: 프론트엔드 Vue/React에서 <code>&lt;script&gt;</code>를 치면 "특수문자 입력 금지" 얼럿을 띄웠다며 백엔드 개발자는 아무 이스케이핑 로직 없이 쌩으로 화면에 뿌리는 안티패턴. 해커는 브라우저 안 쓴다. Postman 켜서 백엔드 API에 특수문자 다이렉트로 직사포를 날려 DB에 악성 코드를 심는다. <strong>XSS 방어의 최후 진실의 방(Source of Truth)은 무조건 화면을 최종적으로 렌더링하여 뱉어내는 서버(또는 뷰 엔진)의 출력부(Output) 단 한 곳뿐이다.</strong></p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 프론트엔드 방어만 믿는 것은, **'놀이공원 정문에 키 120cm 이하 탑승 금지 팻말만 세워두고, 롤러코스터 앞에는 안전요원을 안 두는 짓'**과 같습니다. 규칙을 지키는 척하며 담장을 넘고 들어온 꼬마(우회 해킹)가 롤러코스터에 그냥 탔다가(백엔드 프리패스) 하늘에서 떨어집니다. 진정한 안전은 롤러코스터 의자에 앉혀놓고 출발 스위치를 누르기 직전(최종 화면 출력 직전)에, 안전바가 잠겼는지 안전요원(이스케이핑 엔진)이 한 번 더 철컥! 하고 땡겨보는(Output Validation) 지독한 결벽증입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">블랙리스트 방식의 어설픈 입력값 치환 (AS-IS)</th><th style="text-align: left">출력값 이스케이핑 + CSP 헤더 이중 방벽 (TO-BE)</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">해커의 인코딩/대소문자 우회 공격으로 매월 세션 털림</td><td style="text-align: left">꺾쇠(<code>&lt;</code>) 무력화 및 CSP 허용 정책으로 XSS 100% 차단</td><td style="text-align: left">사용자 세션(Cookie) <strong>탈취 사고 발생률 제로(0%) 수렴</strong></td></tr>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">수백 개의 API마다 개발자가 특수문자 필터 치느라 100시간 소요</td><td style="text-align: left">React/Vue 프레임워크 렌더링에 자동 위임 및 헤더 1줄 컷</td><td style="text-align: left">보안 코드 파편화 제거로 <strong>유지보수 생산성 90% 이상 펌핑</strong></td></tr>
+<tr><td style="text-align: left"><strong>정성</strong></td><td style="text-align: left">"이 게시판에 누가 해킹 코드 쓸까?" 덜덜 떠는 공포</td><td style="text-align: left">"네가 백날 폭탄을 써봐라, 어차피 화면엔 글씨로 뜬다"</td><td style="text-align: left">블랙리스트의 불안감을 버리고 <strong>구조적 폐쇄주의(Whitelist)의 압도적 안도감 획득</strong></td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang">미래 전망</h3>
+<ul>
+<li><strong>브라우저 자체의 면역 체계 진화 (Trusted Types)</strong>: CSP를 넘어 구글이 주도하는 차세대 브라우저 보안 규격 <code>Trusted Types</code>가 웹의 심장부를 뜯어고치고 있다. 자바스크립트의 위험한 함수(예: <code>innerHTML</code>)를 쓸 때, 그냥 문자열(String)을 쑤셔 넣으면 브라우저가 화면을 찢어버리며 실행을 거부한다. 무조건 서버에서 "이 데이터는 내가 안전하다고 확인 도장을 찍어준 놈이야(Trusted Type)"라는 특별한 객체 껍데기로 감싼 놈들만 렌더링을 허락하는, <strong>브라우저 커널 레벨의 XSS 원천 멸망 프로젝트</strong>가 5년 내 글로벌 표준을 장악할 것이다.</li>
+<li><strong>WAF(웹 방화벽)의 AI 문맥 인지 (Context-Aware XSS Blocking)</strong>: 과거 WAF는 <code>&lt;script&gt;</code> 글자만 보면 다 차단하는 바보였다. IT 블로거가 자바스크립트 코딩 강좌 글을 올리는데 WAF가 오탐해서 다 잘라버렸다. 미래의 WAF는 거대 언어 모델(LLM)을 탑재하여, "아, 이 사이트는 프로그래밍 블로그네? 이 <code>&lt;script&gt;</code> 텍스트는 해킹 시도가 아니라 IT 강좌 글씨(Context)니까 통과시켜 줄게!" 라며 진짜 독극물과 문맥적 데이터를 0.1초 만에 직관적으로 갈라치는 지능형 XSS 차단 방패로 진화 중이다.</li>
+</ul>
+<h3 id="camgo-pyojun">참고 표준</h3>
+<ul>
+<li><strong>OWASP XSS Prevention Cheat Sheet</strong>: 전 세계 웹 개발자들을 수십 번 구원해 낸 마법의 두루마리. "입력은 필터링하고 출력은 이스케이프하라"는 절대 헌장과, 위치(HTML, JS, CSS)마다 어떤 치환 함수를 써야 하는지 숟가락으로 입에 떠먹여 주는 성서.</li>
+<li><strong>Content Security Policy (CSP) W3C Standard</strong>: "내 사이트에서 실행되는 모든 스크립트, 이미지, 통신(AJAX)의 출처를 명확히 백색 목록(Whitelist)으로 선언하지 않으면 브라우저 렌더링을 터뜨리겠다"는, XSS를 목 졸라 죽이는 가장 무식하고도 가장 완벽한 인프라 HTTP 헤더 규격.</li>
+</ul>
+<p>크로스 사이트 스크립팅(XSS) 방어는 소프트웨어 공학이 <strong>'해커의 교활함'을 '프레임워크의 기계적인 무식함'으로 짓밟아버린 가장 통쾌한 승리</strong>다. 우리는 과거 "해커가 어떤 신기한 특수문자 꼼수로 들어올까?"를 상상하며 블랙리스트 정규식을 수백 줄씩 짜느라 밤을 새웠다. 하지만 해커의 창의성을 이기는 유일한 길은, 모든 창의성을 거세해 버리는 무자비한 이스케이핑(Escaping)뿐이었다. 기술사는 개발자의 불안한 손끝에 기대어 1만 개의 게시판 출력부를 검사하는 바보가 되어선 안 된다. 프론트엔드 엔진(React)의 기본 기능 뒤로 물러서서 방패를 치고, 브라우저가 쏘는 헌법(CSP) 헤더 딱 1줄을 중앙 게이트웨이에 박아 넣어, 해커가 10년을 고민해 만든 천재적인 해킹 스크립트가 고객의 화면 위에서 고작 "우스꽝스러운 알파벳 쪼가리"로 비참하게 렌더링되어 허공에 흩어지게 만드는 웅장한 코미디를 연출해야 한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: XSS 해킹 방어는 왕을 독살하려는 <strong>'독이 든 편지'를 처리하는 어전 경호원의 방식</strong>과 같습니다. 바보 경호원은 편지를 일일이 읽어보며 독이 든 글자(블랙리스트)를 찾다가 자기가 독에 중독되어 죽습니다. 천재 경호원(이스케이프와 CSP)은 편지 내용을 아예 읽지 않습니다. 그저 펄펄 끓는 **'소독액(Escaping 치환기)'**에 편지를 푹 담갔다 꺼냅니다. 종이의 글씨(데이터 본질)는 100% 보존되지만, 편지에 묻어있던 어떤 맹독성 세균(실행 코드)이든 흔적도 없이 완벽하게 박멸됩니다. 왕은 무균 상태의 편지를 안전하게 읽으며 제국(시스템)을 다스립니다.</li>
+</ul>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>입력 데이터 검증 (Input Validation)</strong></td><td style="text-align: left">XSS 방어의 영혼의 짝궁. 들어올 때 화이트리스트로 1차 흙탕물을 걷어내고(498번), 나갈 때(출력) 이스케이프로 2차 소독을 때려야만 1,000% 완벽한 방어가 끝난다. (이전 장 498번)</td></tr>
+<tr><td style="text-align: left"><strong>인젝션 (Injection)</strong></td><td style="text-align: left">XSS의 거대 카테고리 형님. 인젝션이 "서버의 뇌(DB)"를 뚫어버리는 놈이라면, XSS는 똑같이 특수문자로 공격하지만 그 종착역이 "고객의 브라우저(화면)"라는 타겟팅의 차이만 있을 뿐이다. (이전 장 480번)</td></tr>
+<tr><td style="text-align: left"><strong>CSRF (크로스 사이트 요청 위조)</strong></td><td style="text-align: left">XSS와 세트 메뉴로 나오는 헷갈림 방지용 빌런. XSS가 자바스크립트 '코드'를 훔쳐 넣는 거라면, CSRF는 코드는 없고 그냥 클릭 유도 '버튼(URL)'을 속여서 결제를 누르게 만드는 낚시질이다. (다음 장 502번)</td></tr>
+<tr><td style="text-align: left"><strong>CWE-79 (XSS 약점 번호)</strong></td><td style="text-align: left">전 세계 보안 스캐너(SAST)들이 이 약점 번호를 뇌에 박아두고, 개발자가 <code>replace</code> 함수를 빼먹은 찰나의 순간을 귀신같이 짚어내어 젠킨스 빌드를 박살 내는 기계적 채점표. (이전 장 488번)</td></tr>
+<tr><td style="text-align: left"><strong>SameSite 쿠키 속성</strong></td><td style="text-align: left">브라우저 차원에서의 든든한 빽. 해커가 XSS로 스크립트를 돌려서 내 세션 쿠키를 훔치려 할 때, 이 속성이 걸려있으면 "응? 너 외부 도메인이네? 우리 쿠키 안 줘!"라며 튕겨내는 절대 방패.</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>내가 유치원 게시판에 멋진 그림일기를 붙여놨어요. 그런데 나쁜 친구가 몰래 와서 **"이 글을 본 사람은 나한테 사탕을 바쳐라!(해킹 스크립트)"**라는 마법 주문을 밑에 적어놨어요!</li>
+<li>내 친구들이 일기장을 보다가 그 마법 주문(코드)을 소리 내서 읽는 순간, 최면에 걸려 나쁜 친구에게 사탕(세션 쿠키)을 뺏기게 생겼죠!</li>
+<li>그래서 유치원 선생님(서버)이 일기장을 벽에 붙이기 직전에, 빨간 펜으로 <strong>나쁜 마법 주문 글씨 위에 찌익 찌익 낙서를 해서(이스케이핑)</strong>, 친구들이 봐도 최면에 안 걸리고 "이게 무슨 이상한 글씨람?" 하고 그냥 지나가게(단순 텍스트 처리) 만드는 소독 마법을 **'XSS 방어'**라고 부른답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

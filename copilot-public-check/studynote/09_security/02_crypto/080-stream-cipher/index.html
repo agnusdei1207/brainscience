@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>080. 스트림 암호 (Stream Cipher - RC4, ChaCha20) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>May 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote security
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 스트림 암호(Stream Cipher)는 데이터를 뭉텅이(Block)로 모아서 처리하는 블록 암호와 달리, 평문 데이터를 물 흐르듯 연속적으로 들이부으며 <strong>난수 생성기가 뽑아낸 '키 스트림(Key Stream)'과 1비트(또는 1바이트) 단위로 실시간 XOR(배타적 논리합) 연산을 때려버리는 초고속 암호화 아키텍처</strong>다.</li>
+<li><strong>가치</strong>: 데이터를 모을 때까지 기다릴 필요가 없어 지연 시간(Latency)이 사실상 '0'에 수렴하며, 복잡한 치환(S-box)이나 라운드 뺑뺑이 없이 논리 게이트 하나(XOR)로 암호화와 복호화를 동시에 끝내버리므로 모바일 기기나 저전력 IoT 환경에서 극강의 가성비와 속도를 자랑한다.</li>
+<li><strong>판단 포인트</strong>: 엄청나게 빠르고 가볍지만, 동일한 암호키와 초기화 벡터(IV)를 두 번 재사용(Key Reuse)하는 순간 두 암호문을 XOR 연산만 해도 원본 평문이 홀라당 벗겨지는 치명적인 수학적 태생의 약점을 가지므로 키 관리 거버넌스에 목숨을 걸어야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>군대의 무전병이 실시간으로 "적진 100m 앞 도달"이라고 음성 무전을 치고 있다고 치자. 이 엄청나게 빠른 실시간 스트리밍 음성 데이터를 128비트씩 뭉텅이(Block)로 모아서 암호화(AES)하려고 기다리면 무전에 렉(Lag)이 걸려 전투에서 진다.</p>
+<p>아키텍트들은 "기다리지 말고, 평문이 1비트 들어오는 그 찰나의 순간에 마법의 난수(Key Stream) 1비트를 섞어서 곧바로 내보내자!"라고 결단했다. 쇳덩어리(CPU) 입장에서 가장 싸고 빠른 연산은 두 개의 비트가 다르면 1, 같으면 0을 뱉는 <strong>XOR(배타적 논리합)</strong> 게이트다. 평문 <code>A</code>에 마법의 열쇠 <code>K</code>를 XOR하면 쓰레기 값 <code>C</code>가 되고, 목적지에서 그 쓰레기 값 <code>C</code>에 똑같은 열쇠 <code>K</code>를 다시 XOR하면 기적처럼 평문 <code>A</code>가 튀어나온다. 이 극도의 단순함과 빛의 속도가 스트림 암호가 와이파이(WEP, WPA)와 구글의 웹 브라우저(TLS/ChaCha20) 통신을 지배하게 만든 근원적 힘이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 블록 암호가 컨베이어 벨트에 상자 100개(블록)가 다 찰 때까지 기다렸다가 한 번에 포장지를 씌우는 '도매상'이라면, 스트림 암호는 사탕이 파이프에서 하나씩 떨어질 때마다 레이저를 쏴서 실시간으로 껍질을 코팅해 버리는 광속의 '소매상'이다. 기다림(지연)이란 존재하지 않는다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="ki-seuteurim-saengseonggi-prng-wa-xoryi-wanbyeoghan-ijungju">키 스트림 생성기(PRNG)와 XOR의 완벽한 이중주</h3>
+<p>스트림 암호의 설계 철학은 "어떻게 하면 우주 끝까지 패턴이 반복되지 않는 진짜 같은 가짜 난수(Pseudo Random Number)를 무한대로 뿜어낼 것인가?"에 모든 것을 건다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────┐
+│           스트림 암호(Stream Cipher)의 초고속 XOR 파이프라인        │
+├────────────────────────────────────────────────────────┤
+│                                                        │
+│  [ 씨앗 (Seed Key + IV) ] ──▶ (해커가 절대 모르는 비밀 암호키)│
+│            │                                           │
+│            ▼                                           │
+│  [ 난수 생성 공장 (PRNG &#x2F; LFSR) ]                       │
+│    - 알고리즘: &quot;1011001110001011...&quot; (끝없이 뿜어지는 키 스트림!)│
+│            │                                           │
+│            ▼      (XOR 연산: ⊕)                        │
+│   평문(Data) ──▶ ⊕ ──▶ [ 암호문(Cipher Text) 실시간 전송! ]│
+│   (10011010)            (00101001)                     │
+│                                                        │
+│ * 핵심 논리: 암호화 기계와 복호화 기계는 &#x27;100% 똑같은 구조&#x27;다.   │
+│   목적지에서도 똑같은 씨앗(Key)을 넣고 똑같은 난수 폭포를 뿜어내어│
+│   암호문에 한 번 더 XOR(⊕)를 때리면 원래의 평문이 돌아온다.      │
+└────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>동기화(Synchronization)의 절대 법칙</strong>: 송신자와 수신자의 난수 생성 공장(PRNG)은 무조건 똑같은 타이밍에 똑같은 난수를 뱉어야 한다. 네트워크 전송 중에 중간에 1비트가 유실(소실)되어 박자가 어긋나버리면, 그 뒤에 오는 모든 데이터는 엉뚱한 난수와 섞여 영구적인 쓰레기가 되어버린다(에러 증식). 그래서 현대 스트림 암호는 데이터를 잘게 자른 뒤 초기화 벡터(IV/Nonce)를 계속 섞어주어 박자를 리셋한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 스트림 암호는 '송신자와 수신자의 싱크로나이즈드 수영(동기화)'이다. 두 선수가 똑같은 비밀 카세트테이프(키 스트림)를 들으며 물 밖과 물속에서 똑같은 동작(XOR)을 쳐내야 한다. 중간에 이어폰이 끊겨 한 선수가 1초라도 박자를 놓치면, 그 뒤의 모든 안무(데이터 복호화)는 엉망진창으로 꼬여버려 완전히 망친다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="1biteuyi-mihag-seuteurim-vs-128biteuyi-pagoeryeog-beulrog">1비트의 미학(스트림) vs 128비트의 파괴력(블록)</h3>
+<p>암호 아키텍트는 하드웨어(CPU) 환경에 맞춰 이 두 쇳덩어리를 취사선택한다.</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">스트림 암호 (Stream Cipher)</th><th style="text-align: left">블록 암호 (Block Cipher)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>처리 단위</strong></td><td style="text-align: left"><strong>1 bit 또는 1 Byte 단위 (물 흐르듯)</strong></td><td style="text-align: left"><strong>64 bit, 128 bit 덩어리 단위</strong></td></tr>
+<tr><td style="text-align: left"><strong>핵심 연산 구조</strong></td><td style="text-align: left">난수 생성기(PRNG) + 단일 XOR 논리합</td><td style="text-align: left">10회 이상의 반복 치환(S-box)과 섞기(Permutation)</td></tr>
+<tr><td style="text-align: left"><strong>속도 및 하드웨어</strong></td><td style="text-align: left"><strong>엄청나게 빠름. 회로 면적이 작고 가벼움</strong></td><td style="text-align: left">상대적으로 무겁고 전력을 더 먹음 (AES-NI 가속기 필요)</td></tr>
+<tr><td style="text-align: left"><strong>데이터 변형 전파</strong></td><td style="text-align: left">1비트 에러는 딱 1비트만 망가뜨림 (전파 안 됨)</td><td style="text-align: left"><strong>1비트만 바뀌어도 128비트 블록 전체가 폭발함 (눈사태)</strong></td></tr>
+<tr><td style="text-align: left"><strong>치명적 약점</strong></td><td style="text-align: left"><strong>같은 키(Key) 두 번 쓰면 평문 100% 털림</strong></td><td style="text-align: left">파일 끝 빈 공간을 강제로 채워야 함 (Padding 오라클 위협)</td></tr>
+<tr><td style="text-align: left"><strong>대표 알고리즘</strong></td><td style="text-align: left"><strong>RC4(털려서 사망), ChaCha20(현재 대장)</strong></td><td style="text-align: left">DES(사망), <strong>AES(현존 최강의 황제)</strong></td></tr>
+</tbody></table>
+<p>과거엔 스트림 암호로 RC4가 와이파이(WEP)를 지배했으나 쇳덩어리 수학적 결함으로 박살이 났다. 하지만 스마트폰 시대에 블록 암호(AES) 연산조차 배터리를 갉아먹자, 구글(Google)은 모바일 환경에서 AES보다 3배나 빠르고 전력을 아끼는 새로운 스트림 암호 <strong>ChaCha20</strong>을 들고나와 TLS 1.3 웹 표준의 판도를 뒤집어버렸다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 블록 암호는 튼튼하지만 무거운 '전신 갑옷'이다. 적의 칼은 잘 막지만, 입고 벗는 데 오래 걸리고 기사가 뛰어다니면(모바일 환경) 금방 지친다. 스트림 암호는 방탄유리 섬유로 짠 '가벼운 쫄쫄이 타이츠'다. 엄청나게 가볍고 빨라서 닌자처럼 날아다니면서도 총알을 튕겨내는 최고의 기동성(속도)을 자랑한다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li><strong>모바일 우선(Mobile First) 통신 환경의 ChaCha20-Poly1305 융합</strong>: 스마트폰에서 카카오톡이나 유튜브 웹(HTTPS)에 접속할 때, 아키텍트는 서버와 클라이언트 협상(Handshake) 과정에서 1순위 암호 알고리즘을 <code>AES-256-GCM</code> 대신 <code>ChaCha20-Poly1305</code>로 우선 제안(Cipher Suite)하게 셋팅한다. 최신 PC CPU는 AES 가속 칩(AES-NI)이 있어 AES가 빠르지만, 저가형 스마트폰이나 구형 ARM AP에서는 하드웨어 가속이 없어 AES가 배터리를 녹인다. 순수 소프트웨어 연산만으로도 AES보다 압도적으로 빠른 스트림 암호(ChaCha20)가 모바일 통신의 최후의 구원자다.</li>
+<li><strong>동기식(Synchronous) 난수 붕괴 시 재동기화 아키텍처</strong>: 과거의 단순 스트림 암호는 중간에 패킷이 하나 유실되면 뒤따라오는 수 기가바이트의 영상 데이터가 몽땅 노이즈(쓰레기 화면)로 변했다. 이를 막기 위해 현대 네트워크 보안 설계자는 데이터 프레임마다 평문과 독립적인 고유의 'IV(Initialization Vector, 초기화 벡터)'를 끼워 넣어 매번 난수 공장(PRNG)의 박자를 초기화해 준다. 1번 프레임이 날아가도 2번 프레임부터는 다시 IV로 리셋되어 깨끗하게 복호화되는 완벽한 스트리밍 생존성을 획득한다.</li>
+</ol>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p><strong>키 스트림 재사용(Key Reuse / Two-Time Pad)에 의한 자살 행위</strong>: 스트림 암호 최악의 금기. "암호키 하나 잘 만들어 놨으니, A한테 메시지 보낼 때도 이 키로 섞고, 내일 B한테 보낼 때도 똑같은 키로 섞어서 XOR 해야지!"라고 하는 순간 시스템은 끝장난다. 암호문 A와 암호문 B를 가로챈 해커가 두 암호문끼리 XOR 연산(⊕)을 때려버리는 순간, 수학적으로 공통된 난수(키 스트림)가 <code>0</code>이 되어 소멸하고 평문 A와 평문 B의 순수한 결합이 튀어나와 버린다. 키(Key)와 IV의 조합은 우주가 끝날 때까지 단 한 번만 쓰고 버려야(Nonce) 한다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 스트림 암호 키를 두 번 재사용하는 것은, 보안 문서를 가리기 위해 '구멍 뚫린 똑같은 패턴의 검은 도화지(키 스트림)'를 여러 다른 문서 위에 덮어서 보여주는 짓이다. 도둑이 그 도화지가 덮인 사진 두 장을 겹쳐보는 순간(XOR), 구멍의 패턴이 지워지고 뒤에 숨은 원래 글씨(평문)가 선명하게 다 드러나는 치명적인 마술 트릭의 붕괴다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>스트림 암호(Stream Cipher)는 한때 무겁고 강력한 블록 암호(AES)의 그늘에 가려져 "보안이 약하고 가벼운 싸구려 암호"로 무시당했던 시절이 있었다(RC4 붕괴 사건).</p>
+<p>하지만 스마트폰과 IoT 센서 등 저전력 기기 100억 대가 인터넷에 연결되는 초연결 시대가 도래하자, 극도로 가벼운 연산량으로 1비트의 지연도 없이 데이터를 암호화해 쏘아내는 이 단순한 XOR 기계장치는 'ChaCha20'이라는 완전체로 진화하며 웹 보안 생태계의 패권을 되찾았다. 스트림 암호는 데이터의 쇳덩어리 덩치를 키우지 않고 물의 흐름처럼 순결하고 빠르게 흘려보내는, 속도와 전력 최적화의 극의에 달한 아키텍처다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 스트림 암호는 디지털 세계의 '투명 망토 스프레이'다. 블록 암호처럼 데이터를 무거운 쇳덩어리 철가방에 담고 자물쇠를 채울(지연 발생) 필요 없이, 파이프라인을 통과하는 데이터 위에 실시간으로 투명 스프레이(XOR 키 스트림)를 칙 뿌리기만 하면 즉시 외계어로 변해서 0.001초의 딜레이도 없이 날아가는 궁극의 스피드 마법이다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>XOR 연산 (배타적 논리합, ⊕)</strong></td><td style="text-align: left">스트림 암호를 구성하는 유일무이한 마법의 수학 기호. 두 값이 같으면 0, 다르면 1을 뱉는 이 단순한 스위치가 암호화와 복호화를 동시에 1클럭 만에 끝내버린다.</td></tr>
+<tr><td style="text-align: left"><strong>PRNG (의사 난수 생성기)</strong></td><td style="text-align: left">짧은 암호키(Seed)를 먹고, 우주 끝까지 패턴이 반복되지 않는 거대한 난수 폭포(키 스트림)를 뿜어내는 스트림 암호의 심장 엔진 (LFSR 구조 등)</td></tr>
+<tr><td style="text-align: left"><strong>IV (초기화 벡터) / Nonce</strong></td><td style="text-align: left">고정된 암호키만 계속 쓰면 해커에게 난수 패턴이 털리므로(Key Reuse 붕괴), 통신할 때마다 매번 키 꼬리에 랜덤한 소금을 쳐서 완전히 새로운 난수가 뿜어지게 만드는 1회용 쇳덩어리 조미료</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">무전 통신 등 실시간 스트리밍 환경에서 블록 암호(기다림)의 지연(Latency) 한계 직면
+    │
+    ▼
+평문 1비트와 난수 1비트를 실시간 XOR 융합하는 스트림 암호 (Stream Cipher) 탄생
+    │
+    ▼
+RC4 알고리즘의 무선 인터넷(WEP, WPA&#x2F;TKIP) 싹쓸이 및 전성기
+    │
+    ▼
+RC4 초기 키 스트림의 수학적 편향성(취약점) 폭로 및 몰락 ──▶ 한동안 AES(블록 암호) 천하
+    │
+    ▼
+모바일&#x2F;IoT 폭증으로 가벼운 암호화 수요 재점화 ──▶ 초경량&#x2F;초강력 난수 엔진 &#x27;ChaCha20&#x27; 등장 및 TLS 표준 장악
+</code></pre>
+<p>이 흐름도는 "실시간성 요구 → 단순 구조의 성공(RC4) → 치명적 수학 결함으로 인한 몰락 → 모바일 시대의 배터리 최적화 요구에 맞춘 완벽한 부활(ChaCha20)"이라는 스트림 암호의 롤러코스터 같은 생존사를 보여준다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>스트림 암호는 사탕이 컨베이어 벨트를 지나갈 때 상자에 다 찰 때까지 기다리지 않고, 1개씩 지나갈 때마다 실시간으로 보이지 않는 투명 페인트를 뿌리는(암호화) 기술이에요.</li>
+<li>기다리는 시간이 0초라서 엄청나게 빠르고 스마트폰 배터리도 거의 닳지 않는 최고의 가성비 마법이죠.</li>
+<li>하지만 투명 페인트 통(암호키)을 실수로 두 번 재사용하면 도둑이 마법의 비밀을 바로 눈치채버리니까, 매번 새로운 페인트 통을 까서 써야 한답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

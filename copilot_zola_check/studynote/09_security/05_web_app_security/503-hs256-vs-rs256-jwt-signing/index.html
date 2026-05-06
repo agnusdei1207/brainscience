@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>503. HS256 vs RS256 (JWT 서명 방식 비교) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 22, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote security
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: HS256은 하나의 비밀키로 서명과 검증을 모두 수행하는 대칭키 방식이고, RS256은 비밀키로 서명하고 공개키로 검증하는 비대칭키 방식이다.</li>
+<li><strong>가치</strong>: HS256은 속도가 빠르고 단일 서버 환경에 적합하며, RS256은 서명 권한과 검증 권한을 분리할 수 있어 다수의 마이크로서비스(MSA) 환경에서 보안성이 월등하다.</li>
+<li><strong>판단 포인트</strong>: 인증 서버와 검증 서버가 동일하거나 신뢰할 수 있는 단일 조직 내부라면 HS256을, 외부 파트너나 분산된 서비스들 간의 인증이라면 RS256을 채택해야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>JWT의 안전성은 **서명(Signature)**에서 나온다. 서명은 "이 토큰이 진짜 내가 만든 것이 맞는가?"를 확인하는 과정인데, 이때 어떤 알고리즘을 쓰느냐에 따라 키 관리 방식과 시스템 아키텍처가 완전히 달라진다.</p>
+<p>**HS256 (HMAC with SHA-256)**은 암호화와 복호화에 같은 키를 쓰는 자물쇠와 같다. 반면 **RS256 (RSA Signature with SHA-256)**은 편지를 쓸 때 나만 가진 인감(Private Key)을 찍고, 남들은 내가 나눠준 인감 증명서(Public Key)로 확인만 할 수 있게 하는 방식이다. 현대적인 분산 시스템에서는 검증 서버가 비밀키를 몰라도 된다는 점 때문에 RS256이 강력히 권장된다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: HS256은 현관 비밀번호를 온 가족이 공유하는 것이고, RS256은 나만 가진 도장으로 서명한 문서를 전 세계 사람들이 주민센터에서 뗀 인감 증명서로 대조해보는 것과 같다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>HS256과 RS256은 키의 소유권과 분배 방식에서 근본적인 차이를 보인다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[ HS256: Symmetric ]                   [ RS256: Asymmetric ]
+┌──────────────┐                       ┌──────────────┐
+│ Auth Server  │ ── (Shared Secret) ──▶│ Resource Srv │
+└──────┬───────┘                       └──────┬───────┘
+       │ (Sign with Secret)                   │ (Verify with Secret)
+       └────────────────▶ [ JWT ] ────────────┘
+
+[ RS256: Asymmetric ]
+┌──────────────┐                       ┌──────────────┐
+│ Auth Server  │ ── (Public Key) ────▶ │ Resource Srv │
+└──────┬───────┘                       └──────┬───────┘
+       │ (Sign with Private Key)              │ (Verify with Public Key)
+       └────────────────▶ [ JWT ] ────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">HS256 (HMAC + SHA256)</th><th style="text-align: left">RS256 (RSA + SHA256)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>알고리즘 유형</strong></td><td style="text-align: left">대칭키 (Symmetric)</td><td style="text-align: left">비대칭키 (Asymmetric)</td></tr>
+<tr><td style="text-align: left"><strong>사용 키</strong></td><td style="text-align: left">1개 (Shared Secret)</td><td style="text-align: left">2개 (Private / Public Key)</td></tr>
+<tr><td style="text-align: left"><strong>서명/검증 속도</strong></td><td style="text-align: left"><strong>매우 빠름</strong> (연산 가벼움)</td><td style="text-align: left">상대적으로 느림 (연산 무거움)</td></tr>
+<tr><td style="text-align: left"><strong>보안성 (키 관리)</strong></td><td style="text-align: left">비밀키 유출 시 서명 위조 가능</td><td style="text-align: left">공개키가 유출되어도 서명 위조 불가능</td></tr>
+<tr><td style="text-align: left"><strong>적합한 환경</strong></td><td style="text-align: left">소규모, 단일 서버, 내부망 서비스</td><td style="text-align: left"><strong>MSA, Open API, 연합 인증</strong></td></tr>
+</tbody></table>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: HS256은 복사하기 쉬운 열쇠를 여러 명에게 나눠주는 것이고, RS256은 나만 가진 마스터키로 잠근 상자를 남들에게는 투명한 창(Public Key)으로 안의 내용만 확인하게 하는 것이다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>기술적 완성도 측면에서 RS256은 키 순환(Key Rotation)과 신뢰 체계 구축에 유리하다.</p>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">HS256의 한계</th><th style="text-align: left">RS256의 해결책</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>키 분배 문제</strong></td><td style="text-align: left">모든 서버에 비밀키를 전달해야 함</td><td style="text-align: left">공개키만 안전하게 배포하면 됨</td></tr>
+<tr><td style="text-align: left"><strong>위조 가능성</strong></td><td style="text-align: left">검증 서버가 해킹되면 서명 위조 가능</td><td style="text-align: left">검증 서버는 공개키만 가지므로 위조 불가</td></tr>
+<tr><td style="text-align: left"><strong>확장성</strong></td><td style="text-align: left">서버가 늘어날수록 키 유출 위험 증가</td><td style="text-align: left">수천 개의 서버로 공개키를 뿌려도 안전</td></tr>
+<tr><td style="text-align: left"><strong>표준화</strong></td><td style="text-align: left">개별적인 키 공유 방식 필요</td><td style="text-align: left"><strong>JWKS (JSON Web Key Set)</strong> 엔드포인트로 표준화된 배포 가능</td></tr>
+</tbody></table>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: HS256은 친구끼리 암호를 정하는 '우정의 암호'라면, RS256은 국가가 발행하는 '공인된 여권'과 같다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p>기술사는 시스템의 성능 요구사항과 보안 경계(Security Boundary)를 기준으로 알고리즘을 선택해야 한다.</p>
+<h3 id="cekeuriseuteu">체크리스트</h3>
+<ol>
+<li><strong>서버 간 신뢰도</strong>: 토큰을 검증하는 서버가 내가 직접 관리하는 서버인가? (Yes -&gt; HS256 고려 가능)</li>
+<li><strong>키 노출 위험</strong>: 인프라 환경에서 비밀키를 안전하게 보관할 수 있는가? (No -&gt; 무조건 RS256)</li>
+<li><strong>성능 병목</strong>: 초당 인증 요청이 수십만 건 이상이라 CPU 부하가 우려되는가? (Yes -&gt; HS256 검토)</li>
+<li><strong>키 순환 전략</strong>: 정기적으로 키를 바꿀 때 클라이언트 중단 없이 가능한가? (RS256 + JWKS 권장)</li>
+</ol>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p>RS256을 쓰면서 비밀키(Private Key)를 검증 서버나 클라이언트에 함께 배포하는 행위.</p>
+</li>
+<li>
+<p>HS256의 비밀키를 소스코드나 <code>.env</code> 파일에 평문으로 적고 Git에 올리는 것.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 상황에 맞는 신분증을 골라야 한다. 가족끼리는 목소리(HS256)로도 충분하지만, 낯선 사람에게는 주민등록증(RS256)이 필요하다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>RS256의 도입은 현대적인 <strong>무상태(Stateless) 아키텍처</strong>를 완성하는 핵심 요소이다. 이를 통해 인증 서버의 부하를 줄이고, 각 서비스가 독립적으로 인증을 수행하면서도 전체 시스템의 무결성을 유지할 수 있다. 반면 HS256은 특유의 속도를 살려 내부 서비스 간의 빠른 통신에 활용될 수 있다.</p>
+<p>결론적으로, **"보안은 키 관리에서 결정된다"**는 원칙에 따라, 대규모 시스템일수록 키 노출 위험이 적은 RS256을 지향하는 것이 맞다. 기술사는 알고리즘의 이름보다 그 뒤에 숨겨진 키 관리의 복잡성과 안전성을 먼저 보아야 한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 빠르기만 한 자전거(HS256)보다는, 조금 무겁더라도 튼튼한 장갑차(RS256)가 험한 길(Public Internet)에는 더 적합하다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>JWKS (JSON Web Key Set)</strong></td><td style="text-align: left">RS256 공개키를 JSON 형식으로 나열하여 자동 배포하는 표준</td></tr>
+<tr><td style="text-align: left"><strong>KID (Key ID)</strong></td><td style="text-align: left">여러 개의 키 중 어떤 키로 서명했는지 식별하기 위해 JWT 헤더에 넣는 값</td></tr>
+<tr><td style="text-align: left"><strong>HMAC</strong></td><td style="text-align: left">HS256의 기반이 되는 해시 기반 메시지 인증 코드 알고리즘</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>HS256은 친구와 나만 아는 '비밀 암호'를 정해서 편지를 주고받는 거예요.</li>
+<li>RS256은 나만 쓸 수 있는 '특수 도장'으로 편지를 쓰고, 친구들에게는 도장 모양이 그려진 '설명서'를 나눠주는 거예요.</li>
+<li>내 도장을 훔치지 않는 이상 아무도 내 편지를 흉내 낼 수 없어서 RS256이 더 튼튼하답니다.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

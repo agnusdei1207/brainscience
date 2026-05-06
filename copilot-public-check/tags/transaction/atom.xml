@@ -1,0 +1,818 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Brain Science - Transaction</title>
+    <subtitle>AI, Infra, DevSecOps, Cloud Native, Security</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://agnusdei1207.github.io/brainscience/tags/transaction/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://agnusdei1207.github.io/brainscience"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2026-03-26T00:00:00+00:00</updated>
+    <id>https://agnusdei1207.github.io/brainscience/tags/transaction/atom.xml</id>
+    <entry xml:lang="en">
+        <title>506. 트랜잭션 (Transaction)</title>
+        <published>2026-03-26T00:00:00+00:00</published>
+        <updated>2026-03-26T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://agnusdei1207.github.io/brainscience/studynote/05_database/04_transactions_concurrency/506-transaction/"/>
+        <id>https://agnusdei1207.github.io/brainscience/studynote/05_database/04_transactions_concurrency/506-transaction/</id>
+        
+        <content type="html" xml:base="https://agnusdei1207.github.io/brainscience/studynote/05_database/04_transactions_concurrency/506-transaction/">&lt;h1 id=&quot;teuraenjaegsyeon-transaction&quot;&gt;트랜잭션 (Transaction)&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;haegsim-insaiteu-3jul-yoyag&quot;&gt;핵심 인사이트 (3줄 요약)&lt;&#x2F;h2&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;본질&lt;&#x2F;strong&gt;: 트랜잭션 (Transaction)은 데이터베이스에서 수행되는 논리적 작업 단위로, 하나의 통합된 작업으로 취급되는 SQL 문의 시퀀스를 의미한다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;가치&lt;&#x2F;strong&gt;: 트랜잭션은 ACID (원자성, 일관성, 고립성, 영속성) 속성을 보장하여, 장애 발생 시에도 데이터의 정확성과 신뢰성을 유지한다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;융합&lt;&#x2F;strong&gt;: 분산 환경에서 2PC (Two-Phase Commit), 사기 결재, Saga 패턴 등 트랜잭션 관리 기술이 클라우드 마이크로서비스와 결합하여 진화하고 있다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;i-gaeyo-mic-pilyoseong-context-necessity&quot;&gt;Ⅰ. 개요 및 필요성 (Context &amp;amp; Necessity)&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;gaenyeom-jeongyi&quot;&gt;개념 정의&lt;&#x2F;h3&gt;
+&lt;p&gt;트랜잭션 (Transaction)은 &lt;strong&gt;데이터베이스 상태를 변화시키는 SQL 문들의 논리적 단위&lt;&#x2F;strong&gt;로, 다음 조건을 만족해야 한다.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;하나의 논리적 작업으로 취급되는 SQL 문의 묶음&lt;&#x2F;li&gt;
+&lt;li&gt;전체가 성공하거나 전체가 실패하는 &lt;strong&gt;전무전결 (All-or-Nothing)&lt;&#x2F;strong&gt; 특성&lt;&#x2F;li&gt;
+&lt;li&gt;독립적으로 실행될 때와 동일한 결과 보장&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;eunhaeng-gyejwa-iceyi-ye&quot;&gt;은행 계좌 이체의 예&lt;&#x2F;h3&gt;
+&lt;p&gt;트랜잭션이 왜 필요한지 은행 계좌 이체로 설명한다. 계좌 A에서 계좌 B로 100원을 이체하는 작업은 다음과 같이 두 단계로 구성된다.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                    계좌 이체와 트랜잭션                               │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   [이체 작업: 계좌 A(1000원) → 계좌 B(500원)]                       │
+│                                                                     │
+│   단계 1: 계좌 A에서 100원 차감                                      │
+│           UPDATE 계좌 SET 잔액 = 잔액 - 100 WHERE 계좌ID = &amp;#x27;A&amp;#x27;       │
+│           → 계좌 A 잔액: 1000원 → 900원                             │
+│                                                                     │
+│   단계 2: 계좌 B에 100원 추가                                       │
+│           UPDATE 계좌 SET 잔액 = 잔액 + 100 WHERE 계좌ID = &amp;#x27;B&amp;#x27;       │
+│           → 계좌 B 잔액: 500원 → 600원                              │
+│                                                                     │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │ 트랜잭션 없이運行될 때의 문제:                                  │  │
+│   │ • 단계 1 성공 후 시스템 장애 → 계좌 A만 차감, B는 증가 안 됨   │  │
+│   │ • → 잔액 합계가 원래보다 100원 적어짐 (不일치)                  │  │
+│   │                                                               │  │
+│   │ 트랜잭션으로運行될 때:                                          │  │
+│   │ • 모든 단계 성공 → COMMIT (확정)                               │  │
+│   │ • 한 단계라도 실패 → ROLLBACK (전체 취소)                      │  │
+│   │ • → 잔액 합계가 항상 1500원으로 유지!                           │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; 계좌 이체에서 핵심은 &lt;strong&gt;잔액의 합계가 이체 전후로 불변&lt;&#x2F;strong&gt;해야 한다는 것이다. 단계 1만 성공하고 단계 2가 실패하면 (또는 시스템 장애로 중지되면), 계좌 A에서만 돈이 빠지고 계좌 B에 추가되지 않아 전체 잔액 합계가 원래와 달라진다. 이것은 &lt;strong&gt;데이터 불일치&lt;&#x2F;strong&gt;를 초래한다. 트랜잭션은 이러한 문제를 해결한다. 모든 단계가 성공하면 COMMIT으로 작업을 확정하고, 하나라도 실패하면 ROLLBACK으로 이전 상태로 완전히 되돌린다. 이로 인해 잔액 합계의 불일치를 원천적으로防止한다.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;biyu&quot;&gt;비유&lt;&#x2F;h3&gt;
+&lt;p&gt;트랜잭션은 &lt;strong&gt;물건 교환 계약서&lt;&#x2F;strong&gt;와 같다. 계약서에는 &quot;A가 차 키를 넘기고, B가 500만원을 지급하면 거래 성립&quot;으로 기재되어 있으며, 어느 한쪽이 조건을 충족하지 못하면 전체 거래가 취소되고 모든 것이 원래 상태로 돌아간다.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;📢 섹션 요약 비유&lt;&#x2F;strong&gt;: 요리 레시피에서 재료를 준비하고, 굽고, 양념하는 단계가 모두 성공해야 맛있는 요리가 되듯이, 트랜잭션도 모든 단계가 성공해야 데이터베이스의 올바른 상태를 달성합니다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;ii-akitegceo-mic-haegsim-weonri-deep-dive&quot;&gt;Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;acid-sogseong&quot;&gt;ACID 속성&lt;&#x2F;h3&gt;
+&lt;p&gt;트랜잭션이 보장해야 할 네 가지 핵심 속성을 ACID라 한다.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;속성&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;영문명&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;정의&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;보장 메커니즘&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;원자성&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Atomicity&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;트랜잭션의 모든 操作이 하나로 동작 (전무전결)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Undo 로그, 2PC 프로토콜&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;일관성&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Consistency&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;트랜잭션前后数据库 상태가 유효 (제약조건 충족)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;무결성 제약조건, 트리거&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;고립성&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Isolation&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;동시 실행 시 각 트랜잭션이 독립적으로 동작&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;잠금, MVCC&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;영속성&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Durability&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;성공 완료된 트랜잭션의 결과는 영구적으로 유지&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Redo 로그, 백업&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;teuraenjaegsyeon-sangtae-daieogeuraem&quot;&gt;트랜잭션 상태 다이어그램&lt;&#x2F;h3&gt;
+&lt;p&gt;트랜잭션은 활동 (Active), 부분 완료 (Partially Committed), 완료 (Committed), 실패 (Failed), aborted (Aborted) 상태를 가진다.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                    트랜잭션 상태 다이어그램                             │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│                          ┌──────────────┐                            │
+│                          │    활동      │                            │
+│                          │   (Active)   │                            │
+│                          └──────┬───────┘                            │
+│                                 │                                    │
+│                                 │ 모든 操作 성공                      │
+│                                 ▼                                    │
+│                          ┌──────────────┐                            │
+│                          │  부분 완료   │                            │
+│            ┌─────────────│(Partially   │─────────────┐             │
+│            │             │ Committed)  │             │             │
+│            │             └──────────────┘             │             │
+│            │                                        │             │
+│            │ 발견                   │ 발견            │ 장애        │
+│            ▼                                        ▼             │
+│     ┌──────────────┐                      ┌──────────────┐       │
+│     │    실패      │                      │   중단       │       │
+│     │   (Failed)   │                      │  (Aborted)   │       │
+│     └──────────────┘                      └──────────────┘       │
+│            │                                        │             │
+│            │ ROLLBACK                              │ ROLLBACK   │
+│            │ 취소                                   │ 취소        │
+│            └──────────────┐          ┌─────────────┘             │
+│                          │          │                             │
+│                          └──────────┘                             │
+│                          (일관된 상태로 복귀)                       │
+│                                                                     │
+│     ┌───────────────────────────────────────────────────────────┐  │
+│     │  완료 (Committed): 트랜잭션 결과가 영구적으로 데이터베이스에   │  │
+│     │                 기록됨 → 이후 ROLLBACK 불가                │  │
+│     │  중단 (Aborted): 트랜잭션이 롤백되어 이전 상태로 복귀         │  │
+│     │                 → 재시도하거나 폐기                         │  │
+│     └───────────────────────────────────────────────────────────┘  │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; 활동 상태에서 트랜잭션이 모든 SQL 문을 성공적으로 실행하면 부분 완료 상태가 된다. 이 시점에서 데이터는 변경되었지만 아직 디스크에 영구적으로 기록되기 전이다. 만약 이 순간 시스템 장애가 발생하면, Redo 로그를 통해 복구할 수 있다. 시스템이 실제로 디스크에 변경 내용을 기록하면 (체크포인트) 완료 상태가 된다. 반면 활동 또는 부분 완료 상태에서 오류가 발생하면 실패 상태가 되고, 모든 변경을 취소하여 중단 상태가 된다. 중단된 트랜잭션은 재실행하거나 폐기할 수 있다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;weonjaseong-atomicity-bojang-mekeonijeum&quot;&gt;원자성 (Atomicity) 보장 메커니즘&lt;&#x2F;h3&gt;
+&lt;p&gt;원자성을 보장하기 위해 DBMS는 &lt;strong&gt;Undo 로그&lt;&#x2F;strong&gt;를 사용한다. 트랜잭션이 데이터를 수정하기 전에 이전 값을 로그에 기록한다.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                    Undo 로그를 통한 원자성 보장                        │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   T1: UPDATE 계좌 SET 잔액 = 900 WHERE 계좌ID = &amp;#x27;A&amp;#x27;                 │
+│   T1: UPDATE 계좌 SET 잔액 = 600 WHERE 계좌ID = &amp;#x27;B&amp;#x27;                 │
+│                                                                     │
+│   Undo 로그 내용:                                                   │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │ &amp;lt;T1, 계좌A, 이전값=1000&amp;gt;  ← 수정 전 기록                       │  │
+│   │ &amp;lt;T1, 계좌B, 이전값=500&amp;gt;  ← 수정 전 기록                       │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+│   [Case 1: T1 완료 후 시스템 장애]                                   │
+│   → Redo 로그에 COMMIT 레코드 존재 → 장애 복구 시 Redo 실행         │
+│                                                                     │
+│   [Case 2: T1 실행 중 시스템 장애]                                   │
+│   → 장애 복구 시 Undo 로그를 보고 이전 상태로 Rollback               │
+│   → 계좌 A: 900 → 1000 (복원)                                      │
+│   → 계좌 B: 600 → 500 (복원)                                      │
+│   → 트랜잭션 T1은 원자성 유지!                                      │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; Undo 로그는 트랜잭션이 변경하기 전의 값을 기록한다. 시스템 장애가 발생하면 DBMS는 로그를檢azor하여 완료되지 않은 트랜잭션을 찾아 롤백한다. 이렇게 함으로써 T1의 작업이 부분만 적용되는 것을防止한다. 또한 이미 완료(Committed)된 트랜잭션의 변경 내용은 Redo 로그를 통해 재적용 (Redo)하여 영속성을 보장한다. 장애 복구 시는 먼저 Undo로 불완전한 트랜잭션을 롤백한 뒤, Redo로 완료된 트랜잭션의 변경 내용을 재적용한다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;yeongsogseong-durability-bojang-mekeonijeum&quot;&gt;영속성 (Durability) 보장 메커니즘&lt;&#x2F;h3&gt;
+&lt;p&gt;영속성을 보장하기 위해 DBMS는 **Redo 로그 (WAL: Write-Ahead Logging)**를 사용한다. 트랜잭션이 완료되기 전에 로그를 디스크에 기록한다.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                 Write-Ahead Logging (WAL) 원리                        │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   트랜잭션 T1이 계좌 A의 잔액을 1000→900으로 수정하려고 한다:         │
+│                                                                     │
+│   순서:                                                             │
+│   1. Undo 정보를 로그 버퍼에 기록                                     │
+│   2. Redo 정보를 로그 버퍼에 기록 (예: &amp;lt;T1, 계좌A, 새값=900&amp;gt;)         │
+│   3. 로그 버퍼를 디스크에 강제 기록 (fsync) ← 핵심!                   │
+│   4. 데이터 페이지를 디스크에 기록                                    │
+│   5. COMMIT 레코드를 로그에 기록                                     │
+│                                                                     │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │  왜 로그를 먼저 기록해야 할까?                                  │  │
+│   │                                                               │  │
+│   │  시스템 장애 발생 시:                                          │  │
+│   │  • 로그가 디스크에 있으면 → 트랜잭션 완료를 알 수 있음          │  │
+│   │  • 데이터보다 로그가 먼저 기록됨 → 복구 시 로그 기준으로 작업     │  │
+│   │                                                               │  │
+│   │  반대로 데이터만 기록되고 로그가 기록되기 전에 장애가 나면:      │  │
+│   │  • 데이터는 변경되었지만 → 트랜잭션 완료를 알 수 없음           │  │
+│   │  • 복구 시 이 변경을 처리할 수 없음 → 영속성 위반!              │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; WAL의 핵심 원칙은 &quot;&lt;strong&gt;로그가 디스크에 기록되기 전에는 데이터를 디스크에 기록하지 않는다&lt;&#x2F;strong&gt;&quot;이다. 이것은 장애 복구 가능성을保証する. 만약 데이터만 디스크에 기록되고 시스템이 꺼지면, 해당 트랜잭션이 완료된 것인지 아닌지를 알 수 없다. 그러나 로그가 먼저 기록되면, 복구 시 로그를檢azor하여 완료된 트랜잭션은 Redo하고, 완료되지 않은 트랜잭션은 Undo한다. fsync() 시스템 호출이 로그 버퍼를 디스크에 강제flush하는 역할을 한다.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;📢 섹션 요약 비유&lt;&#x2F;strong&gt;: 친구에게 편지를 보내면서 등기 우편 영수증 (로그)을 먼저 받은 뒤, 실제 소포 (데이터)를 보내는 것과 같습니다. 소포가 분실되어도 영수증이 있으면 친구는 당신이 보냈음을 증명할 수 있습니다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;iii-yunghab-bigyo-mic-dagagdo-bunseog&quot;&gt;Ⅲ. 융합 비교 및 다각도 분석&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;bigyo-1-teuraenjaegsyeon-vs-baeci-ceori&quot;&gt;비교 1: 트랜잭션 vs 배치 처리&lt;&#x2F;h3&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;구분&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;트랜잭션&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;배치 처리&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;실행 방식&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;실시간, 대화형&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;일괄 처리, 예약 실행&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;커밋 빈도&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;각 트랜잭션마다 즉시 커밋&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;여러 操作을 묶어 한 번에 커밋&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;응답 시간&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;밀리초~초 단위&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;분~시간 단위&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;실패 시 복구&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;해당 트랜잭션만 롤백&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;배치 전체 또는 체크포인트부터 재시작&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;적용 사례&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;금융 거래, 주문 처리&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;일结算, 데이터 내보내기, 로그 분석&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;배치 처리도 내부적으로는 여러 트랜잭션으로 구성되지만, 각 단계마다 COMMIT하지 않고 전체完成后에 한 번에 COMMIT하여 성능을 향상시킨다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;bigyo-2-local-vs-distributed-transaction&quot;&gt;비교 2: Local vs Distributed Transaction&lt;&#x2F;h3&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;구분&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;로컬 트랜잭션&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;분산 트랜잭션&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;참여 노드&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;단일 DBMS&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;여러 DBMS&#x2F;서비스&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;교차 통신&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;불필요&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;필요 (네트워크)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;커밋 프로토콜&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;1PC (단일 Phase Commit)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;2PC (Two-Phase Commit), 3PC&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;장애 처리&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;해당 DBMS만 고려&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;모든 노드의 상태 동기화 필요&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;성능 오버헤드&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;낮음&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;높음 (네트워크 지연)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;분산 트랜잭션은 네트워크 분할 (Network Partition) 상황에서 &lt;strong&gt;CAP 정리&lt;&#x2F;strong&gt;의 영향으로 가용성과 일관성 사이의 트레이드오프에 직면한다.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;📢 섹션 요약 비유&lt;&#x2F;strong&gt;: 한 건물 안에서 물건을 옮기는 일 (로컬 트랜잭션)은 감독자 한 명이 지시하면 되지만, 여러 건물 간 동시에 물건을 옮기는 일 (분산 트랜잭션)은 각 건물의 관리자들이 함께 조율해야 해서 훨씬 복잡합니다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;iv-silmu-jeogyong-mic-gisulsajeog-pandan&quot;&gt;Ⅳ. 실무 적용 및 기술사적 판단&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;silmu-sinario&quot;&gt;실무 시나리오&lt;&#x2F;h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;시나리오 — 재고 관리 시스템&lt;&#x2F;strong&gt;: 고객이 상품을 주문하면 (1) 재고 차감, (2) 주문 생성, (3) 결제 처리, (4) 배송 예약의 4단계 操作이 수행된다. 어느 한 단계라도 실패하면 전체를 롤백하여 재고가 꼼 Intelligence订单도 생성되지 않도록 보장한다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;시나리오 — 마이크로서비스의 Saga 패턴&lt;&#x2F;strong&gt;: 각 마이크로서비스가 자신의局部 트랜잭션을管理하고, 다음 서비스의 호출 결과를 받아补偿 transaction (보상 트랜잭션)을 실행하여 전체 일관성을 달성한다. 2PC의 대안으로 네트워크 분할에更强的 내성을 보인다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                트랜잭션 설계 시 의사결정 체크리스트                     │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   □ 트랜잭션 크기 (Granularity):                                     │
+│      너무 크면 →ロック 경합 증가, 복구 시간 증가                        │
+│      너무 작으면 → 묶음效果 없음                                      │
+│      →业务 작업 기준으로 적절한 크기로 설정                            │
+│                                                                     │
+│   □ 동시성 제어 수준 (Isolation Level):                              │
+│      SERIALIZABLE → 가장 엄격, 성능 저하                             │
+│      READ COMMITTED → 대부분 기본값, 성능&amp;#x2F;일관성 균형                  │
+│      → 업무의 일관성 요구 수준에 따라 선택                            │
+│                                                                     │
+│   □ 장애 복구 전략:                                                 │
+│      WRITE-AHEAD LOGGING → 대부분의 RDBMS가 채택                     │
+│      → 로그 파일 관리와 체크포인트 빈도 설정 중요                      │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; 실무에서 트랜잭션 설계는 성능과 일관성의 트레이드오프다. 너무 큰 트랜잭션(예: 수백만 행을 하나의 트랜잭션에서 처리)은 장시간 잠금을 유발하여 다른 작업의 진행을阻塞한다. 반면 너무 작은 트랜잭션(예: 행 하나씩 COMMIT)은 성능 오버헤드만 증가시키고 묶음效果가 없다. Isolation level도重要하며, 금리 계산처럼 정확한 수치가 필요한場合は SERIALIZABLE, 대시보드 조회처럼 약간의 불일치가 허용되면 READ COMMITTED로 성능을 향상시킬 수 있다.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;doib-cekeuriseuteu&quot;&gt;도입 체크리스트&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;기술적&lt;&#x2F;strong&gt;: 트랜잭션 크기가 적절한가? 롤백 시나리오를 테스트했는가? 교차 테이블 操作의 트랜잭션 경계를 설정했는가?&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;운영·보안적&lt;&#x2F;strong&gt;: 긴 트랜잭션 (долгоиграющие_transaction)의 모니터링 체계를 갖추었는가? 트랜잭션 로그의成長 관리하고 있는가?&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;antipaeteon&quot;&gt;안티패턴&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;긴 트랜잭션 (Long-Running Transaction)&lt;&#x2F;strong&gt;: 트랜잭션이 오래 지속되면 잠금이 장시간 점유되어 다른 작업의 병목이 된다. 배치处理와 대화형 작업을同一 트랜잭션에서 처리하지 말아야 한다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;불필요한 트랜잭션 범위 확장&lt;&#x2F;strong&gt;: 네트워크 I&#x2F;O, 사용자 입력 대기 등을 트랜잭션 내에서 처리하면 불필요하게 리소스를 점유한다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;📢 섹션 요약 비유&lt;&#x2F;strong&gt;: 긴 트랜잭션은 혼자 자전거를 오랫동안 빌려서 다른 사람이 탈 수 없는 상황과 같습니다. 적절한 시간 내에 반납해야 모두에게公平합니다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;v-gidaehyogwa-mic-gyeolron&quot;&gt;Ⅴ. 기대효과 및 결론&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;jeongryang-jeongseong-gidaehyogwa&quot;&gt;정량&#x2F;정성 기대효과&lt;&#x2F;h3&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;구분&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;트랜잭션 미사용&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;트랜잭션 사용&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;개선 효과&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;정량&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;데이터 불일치율 5~30%&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;불일치율 0% (엄밀히 보장)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;데이터 신뢰성 &lt;strong&gt;100% 향상&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;정량&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;장애 복구 시간 수시간~수일&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;자동 복구 수분~수시간&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;복구 시간 &lt;strong&gt;80% 단축&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;정성&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;수동 보정 작업 常見&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;자동 복구&#x2F;롤백&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;운영 부담大幅 감소&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h3 id=&quot;mirae-jeonmang&quot;&gt;미래 전망&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Accordian&#x2F;TempDB&lt;&#x2F;strong&gt;: 트랜잭션의 크기를dynamically 조절하여 긴 트랜잭션과 짧은 트랜잭션의 장점을 적절히 활용&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Application不做 Transactions&lt;&#x2F;strong&gt;: AI가 업무 패턴을 분석하여 트랜잭션 경계를 자동으로 최적화&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                    트랜잭션 기술 진화 방향                            │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   Classical RDBMS        Modern Distributed        Future: AI-Enhanced │
+│   (단일 노드)              (다중 노드)              ( autonomus)        │
+│                                                                     │
+│   ACID严格保证 ──────────▶ ACID 유연화 ──────────▶ ACID + AI优化      │
+│   (2PL, WAL)              ( eventual consistency)   ( 자동 경계 설정)  │
+│        │                     │                       │              │
+│        │                     ├─ Saga, 2PC&amp;#x2F;3PC        │              │
+│        │                     └─ CQRS, Event Sourcing  ├─ 예측적 동시성 │
+│        └─ 전통적 RDBMS           │                     │  控制           │
+│                                   └─ 클라우드 네이티브   └─ self-조율    │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; 전통적인 RDBMS의 ACID 보장은 단일 노드 환경에서는 효과적이지만, 분산 환경에서는 네트워크 지연과 분할 때문에 성능 저하가 심하다. 그래서 최신 분산 시스템에서는 eventual consistency와 같은 유연한 모델을 채택하거나, Saga 패턴처럼局部 트랜잭션을 조합하는 방법을 사용한다. 미래에는 AI가 업무 패턴을 학습하여 트랜잭션의 크기와 격리를 수준을 예측하고 자동으로 조정하는 것이 가능하다.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;📢 섹션 요약 비유:&lt;&#x2F;strong&gt; 옛날에는 혼자서는 움직일 수 없는 큰 돌을 여러 사람이 함께 들어서 옮겼지만 (ACID), 요즘은 각자 조각을 나누어 옮기면서도 결과적으로는 전체가 정확히 배열되도록 조율합니다 (Saga&#x2F;이벤트 소싱).&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph&quot;&gt;📌 관련 개념 맵 (Knowledge Graph)&lt;&#x2F;h2&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;개념 명칭&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;관계 및 시너지 설명&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;ACID&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;트랜잭션이 보장해야 할 네 가지 속성 (원자성, 일관성, 고립성, 영속성)이다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;COMMIT&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;트랜잭션의 모든 操作을 확정하여 영구적으로 저장하는 명령이다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;ROLLBACK&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;트랜잭션의 모든 변경을 취소하여 이전 상태로 되돌리는 명령이다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;잠금 (Lock)&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;고립성을 실현하기 위해 다른 트랜잭션의 접근을 제어하는 메커니즘이다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;MVCC&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Multi-Version Concurrency Control로, 잠금 없이 일관된 읽기를 가능하게 한다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;WAL&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Write-Ahead Logging의 약자로, 로그를 먼저 기록해야 데이터 변경을 허용하는 프로토콜이다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;2PC&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Two-Phase Commit으로, 분산 환경에서 원자성을 보장하는 커밋 프로토콜이다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;baby-eorinireul-wihan-3jul-biyu-seolmyeong&quot;&gt;👶 어린이를 위한 3줄 비유 설명&lt;&#x2F;h2&gt;
+&lt;ol&gt;
+&lt;li&gt;트랜잭션은 &lt;strong&gt;수수께끼 게임&lt;&#x2F;strong&gt;과 같아요. 여러 단계를 한꺼번에 맞춰야 하는데, 하나라도 틀리면 처음부터 다시 해야 해요.&lt;&#x2F;li&gt;
+&lt;li&gt;예를 들어, &quot;상자를 열고, 종이를 넣고, 상자를 닫는다&quot;는 세 단계를 모두 성공해야ertificate를 받을 수 있어요. 중간에 하나를 빼먹으면 실패!&lt;&#x2F;li&gt;
+&lt;li&gt;컴퓨터에서도 돈을 옮기거나 글을 저장할 때, 모든 단계가 성공해야 &quot;완료!&quot;라고 하고, 하나라도 문제가 있으면 &quot;다시 시작!&quot;하는 거예요. 그래서 우리 데이터가 항상 안전한 거예요!&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>507. ACID 속성</title>
+        <published>2026-03-26T00:00:00+00:00</published>
+        <updated>2026-03-26T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://agnusdei1207.github.io/brainscience/studynote/05_database/04_transactions_concurrency/507-acid-properties/"/>
+        <id>https://agnusdei1207.github.io/brainscience/studynote/05_database/04_transactions_concurrency/507-acid-properties/</id>
+        
+        <content type="html" xml:base="https://agnusdei1207.github.io/brainscience/studynote/05_database/04_transactions_concurrency/507-acid-properties/">&lt;h1 id=&quot;acid-sogseong&quot;&gt;ACID 속성&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;haegsim-insaiteu-3jul-yoyag&quot;&gt;핵심 인사이트 (3줄 요약)&lt;&#x2F;h2&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;본질&lt;&#x2F;strong&gt;: ACID는 트랜잭션이 신뢰할 수 있는 작업을 수행하기 위해 보장해야 할 네 가지 핵심 속성(원자성, 일관성, 고립성, 영속성)의 약어다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;가치&lt;&#x2F;strong&gt;: ACID를 준수함으로써 다수의 사용자가 동시에 데이터를 조작해도 결과적으로는 정확한 데이터를 얻을 수 있으며, 시스템 장애가 발생해도 데이터의 무결성이 보존된다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;융합&lt;&#x2F;strong&gt;: CAP 정리와 함께 이해해야 하며, 분산 시스템에서는 일관성과 가용성 사이의 트레이드오프가 존재한다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;i-gaeyo-mic-pilyoseong-context-necessity&quot;&gt;Ⅰ. 개요 및 필요성 (Context &amp;amp; Necessity)&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;gaenyeom-jeongyi&quot;&gt;개념 정의&lt;&#x2F;h3&gt;
+&lt;p&gt;ACID는 트랜잭션의 신뢰성을 보장하는 네 가지 속성의 약어로, 1983년 Andreas Reuter와 Theo Härder가 제안한 데이터베이스 트랜잭션 처리의 기본 원칙이다.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;A&lt;&#x2F;strong&gt;tomicity (원자성): 트랜잭션은 하나의 원자적 작업으로 동작&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;C&lt;&#x2F;strong&gt;onsistency (일관성): 트랜잭션前后数据库 상태가 유효&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;I&lt;&#x2F;strong&gt;solation (고립성): 동시 실행 트랜잭션이 서로 영향을 주지 않음&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;D&lt;&#x2F;strong&gt;urability (영속성): 완료된 트랜잭션 결과는 영구적으로 보존&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;gag-sogseongi-pilyohan-iyu&quot;&gt;각 속성이 필요한 이유&lt;&#x2F;h3&gt;
+&lt;p&gt;ACID 네 가지 속성이 없다면 데이터베이스는 예측 불가능한 상태에 놓이게 된다. 그 이유를각 속성별로 살펴본다.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                    ACID 속성 부재로 인한 문제점                         │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   [원자성 부재]                                                     │
+│   &amp;quot;계좌 A에서 100원 차감&amp;quot; 후 시스템关机 → 계좌 A만 차감된 상태!       │
+│   → 잔액 불일치 발생                                                 │
+│                                                                     │
+│   [일관성 부재]                                                     │
+│   제약조건 &amp;quot;잔액은 0 이상&amp;quot; 미적용 → 잔액 -500원 발생 가능!            │
+│   → 비즈니스 규칙 위반                                                │
+│                                                                     │
+│   [고립성 부재]                                                     │
+│   트랜잭션 A: 계좌 잔액 확인 → 1000원                               │
+│   트랜잭션 B: 같은 계좌에서 500원 인출 → 잔액 500원                   │
+│   트랜잭션 A: 1000 - 200원 = 800원 입금 → 실제 잔액 300원!           │
+│   → 잘못된 계산 결과                                                 │
+│                                                                     │
+│   [영속성 부재]                                                     │
+│   이체 완료 확인 후 시스템关机 → 변경 내용 유실!                     │
+│   → 거래 성립 여부 불명확                                            │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; 각 속성이 하나라도缺失되면 심각한 문제가 발생한다. 원자성이 없으면 작업의 일부만 적용되어 데이터 상태가 불완전해지고, 일관성이 없으면 제약조건이 깨져 잘못된 데이터가 저장될 수 있다. 고립성이 없으면 동시 작업이 서로 간섭하여 잘못된 결과가 도출되고, 영속성이 없으면 완료된 작업도 사라질 수 있다. ACID는 이러한 문제들을系統적으로 해결한다.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;biyu&quot;&gt;비유&lt;&#x2F;h3&gt;
+&lt;p&gt;ACID는 &lt;strong&gt;은행의 four major 안전장치&lt;&#x2F;strong&gt;와 같다. 원자성은 거래가 완전히 완료되거나 완전히 취소되거나 둘 중 하나만을 보장하고, 일관성은 거래 후 잔액이 논리적으로 유효한지 확인하며, 고립성은 동시에 거래가 발생해도 서로 충돌하지 않도록 하고, 영속성은 거래 완료 후 내역이 영구히 기록됨을 보장한다.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;📢 섹션 요약 비유&lt;&#x2F;strong&gt;: 화물을 선적할 때 화물이 모두 적재되거나(원자성), 화물 목록과 일치하거나(일관성), 다른 화물과 섞이지 않거나(고립성), 항해 후 화물이 목적지에 무사히 도착하거나(영속성)하는 보장 장치와 같습니다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;ii-akitegceo-mic-haegsim-weonri-deep-dive&quot;&gt;Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;weonjaseong-atomicity-sangse&quot;&gt;원자성 (Atomicity) 상세&lt;&#x2F;h3&gt;
+&lt;p&gt;원자성은 트랜잭션 내의 모든 操作이 하나로 묶여 동작하는 성질이다. 트랜잭션 내의 모든 操作이 성공하거나, 하나라도 실패하면 전체가 롤백된다.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                       원자성 동작 과정                                 │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   트랜잭션 T1: 계좌 A(1000원)에서 계좌 B(500원)로 200원 이체         │
+│                                                                     │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │  정상 처리:                                                   │  │
+│   │  T1: UPDATE 계좌 SET 잔액 = 800 WHERE 계좌ID = &amp;#x27;A&amp;#x27;         │  │
+│   │  T1: UPDATE 계좌 SET 잔액 = 700 WHERE 계좌ID = &amp;#x27;B&amp;#x27;         │  │
+│   │  T1: COMMIT → 계좌 A: 800원, 계좌 B: 700원 (합계 동일)      │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │  장애 발생 시 (A 차감 후 B 추가 전 시스템 장애):              │  │
+│   │  T1: UPDATE 계좌 SET 잔액 = 800 WHERE 계좌ID = &amp;#x27;A&amp;#x27;         │  │
+│   │  [시스템 장애!]                                              │  │
+│   │                                                              │  │
+│   │  → 복구 시 Undo 로그에 따라 A를 1000원으로 롤백              │  │
+│   │  → B는 변경된 적이 없으므로 불필요                             │  │
+│   │  → 결과: 계좌 A: 1000원, 계좌 B: 500원 (원래 상태로)         │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; 원자성의 핵심은 트랜잭션이 &quot;전부 아니면 전무&quot;으로 동작한다는 점이다. 계좌 A 차감이 성공한 후 시스템이 장애를 일으키면, 복구 메커니즘은 A의 변경분을 취소 (Undo)하여 원래 상태로 만든다. 이것이 가능한 이유는 DBMS가 모든 변경 전에 이전 값을 로그에 기록하기 때문이다. 만약 원자성이 없다면, A만 차감된 채로 시스템이 재시작되어 잔액이 불일치하게 된다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;ilgwanseong-consistency-sangse&quot;&gt;일관성 (Consistency) 상세&lt;&#x2F;h3&gt;
+&lt;p&gt;일관성은 트랜잭션前后数据库 상태가 모든 제약조건, 무결성 규칙, 트리거를 만족하는 성질이다.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                       일관성 보장 예시                                 │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   [일관성 제약조건 정의]                                             │
+│                                                                     │
+│   CREATE TABLE 계좌 (                                                │
+│       계좌ID VARCHAR(10) PRIMARY KEY,                                │
+│       잔액 NUMBER CHECK (잔액 &amp;gt;= 0),  -- 잔액은 0 이상               │
+│       등급 VARCHAR(1) CHECK (등급 IN (&amp;#x27;A&amp;#x27;, &amp;#x27;B&amp;#x27;, &amp;#x27;C&amp;#x27;))               │
+│   );                                                                 │
+│                                                                     │
+│   트랜잭션 T1: 계좌 A(잔액=100)에서 150원 인출                        │
+│                                                                     │
+│   ① 잔액 확인: 100 &amp;gt;= 0 (현재)                                     │
+│   ② 차감 시도: 100 - 150 = -50                                     │
+│   ③ CHECK(잔액 &amp;gt;= 0) 검증 → -50 &amp;gt;= 0? FALSE!                       │
+│   ④ → 트랜잭션 거부! (ROLLBACK)                                     │
+│                                                                     │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │  결과: 일관성 유지!                                           │  │
+│   │  • &amp;quot;잔액은 0 이상&amp;quot; 규칙 위반 → 변경 거부                     │  │
+│   │  • 잔액은 여전히 100원                                        │  │
+│   │  • 시스템은 항상 유효한 상태를 유지                           │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; 일관성은 데이터베이스에 정의된 제약조건(CHECK, FOREIGN KEY, UNIQUE, NOT NULL 등)이 트랜잭션 후에 항상 만족되도록 보장하는 것이다. 위 예시에서 잔액이 -50이 되려는 순간 CHECK 제약조건이 이를 막는다. 일관성은 트랜잭션이&#x2F;business 규칙을 위반하는 것을 시스템 수준에서防止한다. 개발자가 일관성을 직접 검증할 필요 없이, DBMS가 자동으로制約を執行한다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;goribseong-isolation-sangse&quot;&gt;고립성 (Isolation) 상세&lt;&#x2F;h3&gt;
+&lt;p&gt;고립성은 동시 실행되는 트랜잭션들이 서로 영향을 주지 않는 것처럼 동작하는 성질이다. 실제 동작 수준은 고립 수준 (Isolation Level)에 따라 달라진다.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                    고립성 위반 예시 (Dirty Read)                       │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   시간 | 트랜잭션 A (읽기)        | 트랜잭션 B (쓰기)                │
+│   ───┼────────────────────────┼──────────────────────────          │
+│   T1 | SELECT 잔액 → 1000원    |                               │
+│   T2 |                        | UPDATE 잔액 = 500원              │
+│   T3 |                        | ROLLBACK                        │
+│   T4 | SELECT 잔액 → 500원!!  |                               │
+│       │ (1000이 아닌 500!)     |                               │
+│                                                                     │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │  문제: A가 B의未コミット 변경을 읽음 (Dirty Read)            │  │
+│   │  → B가 롤백되면, A가 읽은 값은 존재하지 않는 것!             │  │
+│   │  → A의 판단&amp;#x2F;작업이 잘못된 데이터에 기반하게 됨               │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+│   [고립 수준별 동작]                                                │
+│                                                                     │
+│   READ UNCOMMITTED: Dirty Read 허용 (가장 낮은 고립)               │
+│   READ COMMITTED:   커밋된 데이터만 읽기 (대부분의 DBMS 기본값)     │
+│   REPEATABLE READ:  동일 트랜잭션에서 동일 읽기 결과 보장           │
+│   SERIALIZABLE:     트랜잭션을 순차 실행한 것과 동일하게 동작       │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; 고립성이 없으면 트랜잭션 A가 트랜잭션 B의 아직 롤백되지 않은 변경(Dirty Read)을 읽을 수 있다. B가 최종적으로 롤백되면, A가 읽고 사용한 데이터는 사실 존재하지 않는 것이 된다. 고립 수준은 이러한 문제를 어느 정도まで防止할지를 결정한다. READ COMMITTED는 커밋된 데이터만 읽도록 하여 Dirty Read를 방지하지만, NON-REPEATABLE READ(같은 트랜잭션에서 다시 읽을 때 값이 바뀜)는 허용한다. REPEATABLE READ는 한 트랜잭션에서 읽은 값을 보장하지만, Phantom Read(새로 나타난 행)는 허용한다. SERIALIZABLE은 가장 엄격하지만 성능 저하가 있다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;yeongsogseong-durability-sangse&quot;&gt;영속성 (Durability) 상세&lt;&#x2F;h3&gt;
+&lt;p&gt;영속성은 성공적으로 완료된 트랜잭션의 결과가 시스템 장애가 발생하더라도 영구적으로 보존되는 성질이다.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                    영속성 보장 메커니즘                               │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   [시스템 장애 시나리오]                                             │
+│                                                                     │
+│   T1: COMMIT 완료 (계좌 A → B 이체)                                 │
+│   [시스템 전원 꺼짐!]                                                │
+│   [시스템 재시작]                                                    │
+│                                                                     │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │  로그 파일 검사를 통한 복구 과정:                               │  │
+│   │                                                               │  │
+│   │  1. COMMIT 로그 존재 확인 → T1은 완료된 트랜잭션             │  │
+│   │  2. T1의 변경 내용 Redo 실행:                                 │  │
+│   │     • 계좌 A: 1000 → 800                                     │  │
+│   │     • 계좌 B: 500 → 700                                      │  │
+│   │  3. 장애 직전 상태로 복구 완료!                               │  │
+│   │  4. 사용자에게 &amp;quot;이체 완료&amp;quot; 확인 가능                           │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+│   [WAL (Write-Ahead Logging) 순서]                                 │
+│                                                                     │
+│   ① Undo 정보 로그에 기록                                           │
+│   ② Redo 정보 로그에 기록                                           │
+│   ③ 로그를 디스크에 강제 기록 (fsync) ← 핵심!                       │
+│   ④ 데이터 페이지를 디스크에 기록                                    │
+│   ⑤ COMMIT 완료 응답                                              │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; 영속성 보장의 핵심은 COMMIT 완료 응답을 사용자에게 보내기 전에, 트랜잭션 로그를 디스크에 기록하는 것이다. 데이터 페이지는 버퍼 풀(메모리)에만 있을 수 있고, COMMIT 시점에 디스크 쓰기가 완료되지 않을 수 있다. 그러나 로그가 디스크에 기록되어 있으면, 장애 복구 시 해당 로그를 읽고 변경 내용을 재적용(Redo)할 수 있다. 이것이 RAID, SSD, 배터리 지원 디스크 контр처 등 다양한 복구 기술과 결합되어 영속성을 保证한다.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;📢 섹션 요약 비유&lt;&#x2F;strong&gt;: 항공사 예약 시스템에서 좌석을確定하고 티켓을發行받은 후 (COMMIT), 항공사 컴퓨터가 고장이 나도 예약 기록은 다른 서버에 보존되어 있어서 좌석이 확정된 것으로 유지되는 것과 같습니다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;iii-yunghab-bigyo-mic-dagagdo-bunseog&quot;&gt;Ⅲ. 융합 비교 및 다각도 분석&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;bigyo-rdbms-vs-nosqleseoyi-acid-jiweon&quot;&gt;비교: RDBMS vs NoSQL에서의 ACID 지원&lt;&#x2F;h3&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;구분&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;전통 RDBMS&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;NoSQL (Eventual Consistency)&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;원자성&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;완전 지원&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;부분 지원 (단일 문서&#x2F;키 수준)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;일관성&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;즉시 일관성 (Immediate Consistency)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;최종 일관성 (Eventual Consistency)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;고립성&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;MVCC, 2PL 등 완전 지원&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;제한적 (파티션 방식)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;영속성&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;완전 지원&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;약화될 수 있음 (메모리 기반)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;트레이드오프&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;성능보다 일관성 우선&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;확장성·가용성 우선, 일관성 희생&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;NoSQL은 CAP 정리에 따라 가용성(A)과 일관성(C) 사이에서 가용성을 선택한 경우가 많다. 이는 &quot;일관성이 없egen 아니라 최종적으로 일관되는&quot; 모델을 의미한다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;cap-jeongriwayi-gwangye&quot;&gt;CAP 정리와의 관계&lt;&#x2F;h3&gt;
+&lt;p&gt;CAP 정리는 분산 시스템에서 일관성(Consistency), 가용성(Availability), 네트워크 분할 내성(Partition Tolerance) 세 가지를 모두 동시에 보장할 수 없다는 정리다.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                    CAP 정리와 ACID의 관계                             │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│         C (일관성)                                                  │
+│           &amp;#x2F;\\                                                       │
+│          &amp;#x2F;  \\                                                       │
+│         &amp;#x2F;    \\                                                      │
+│        &amp;#x2F;      \\                                                     │
+│       &amp;#x2F;   CA   \\                                                    │
+│      &amp;#x2F;          \\                                                   │
+│     &amp;#x2F;────────────\\                                                 │
+│    P             A                                                  │
+│  (분할 내성)    (가용성)                                             │
+│                                                                     │
+│   ┌─────────────────────────────────────────────────────────────┐  │
+│   │  • CA (일관성+가용성): 전통적 RDBMS, 단일 노드               │  │
+│   │  • CP (일관성+분할 내성): MongoDB, HBase, Redis             │  │
+│   │  • AP (가용성+분할 내성): Cassandra, DynamoDB               │  │
+│   │                                                             │  │
+│   │  → 분산 환경에서는 P는 피할 수 없으므로 C vs A 선택!         │  │
+│   └─────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+│   ACID의 D (영속성)와 CAP의 P (분할 내성)는 직접적인 관련은 없지만,  │
+│   영속성을 높이려면 디스크 I&amp;#x2F;O와 연결되어 있어 성능에 영향           │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; CAP 정리는 분산 시스템에만 적용되는 이론이지만, 단일 노드 데이터베이스에서도参考할 점이 있다. P(네트워크 분할)가 없으면 CA를 동시에 달성할 수 있지만, 실제로는 네트워크 장애가 발생할 수 있으므로 분산 시스템 설계 시에는 C와 A 사이의 선택이 필요하다.金融システムのように一貫性が重要な場合はCPを选择し、コンテンツ配信のように可用性が重要な場合はAPを選択する.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;📢 섹션 요약 비유:&lt;&#x2F;strong&gt; 세 명의 친구가 전화를해서 같은 이야기를 동시에 전해야 하는데, 전화선이 끊어지면 (분할) &quot;같은 이야기를 전할 수 없게 된다&quot;는 CAP 정리의 비유처럼, 분산 컴퓨터에서도 모든 것이 동시에 완벽하게 일치하는 것은 불가능합니다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;iv-silmu-jeogyong-mic-gisulsajeog-pandan&quot;&gt;Ⅳ. 실무 적용 및 기술사적 판단&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;silmu-sinario&quot;&gt;실무 시나리오&lt;&#x2F;h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;시나리오 — 금융 기관의 이체 거래&lt;&#x2F;strong&gt;: ACID의 모든 속성이 필수적이다. 원자성으로 이체 중 장애 시 전체 취소, 일관성으로 잔액 마이너스 방지, 고립성으로 동시 이체 거래 처리, 영속성으로 거래 완료 후 기록 보존이 각각 필요하다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;시나리오 — SNS의 좋아요 수 갱신&lt;&#x2F;strong&gt;: 이 경우 완전한 ACID 대신 eventual consistency로 충분한 경우도 있다. 좋아요 수가 약간 지연되어 갱신되어도 사용자에게 큰 문제가 되지 않는다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h3 id=&quot;doib-cekeuriseuteu&quot;&gt;도입 체크리스트&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;기술적&lt;&#x2F;strong&gt;: 업무의 일관성 요구 수준에 맞는 격리 수준 (Isolation Level)을 설정했는가? 트랜잭션 로그의 성장 관리와 백업 전략을 수립했는가?&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;운영·보안적&lt;&#x2F;strong&gt;: 장기 트랜잭션의 모니터링과 조기 경고 체계를 갖추었는가? 장애 복구 테스트를 정기적으로 수행하고 있는가?&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;antipaeteon&quot;&gt;안티패턴&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;ACID 미준수&lt;&#x2F;strong&gt;: 금융 거래에서 일관성을 희생하면 잔액 계산 오류가 발생할 수 있다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;과도한 ACID&lt;&#x2F;strong&gt;: 읽기 전용 대시보드 查询에까지 높은 격리 수준을 적용하면 불필요한 성능 저하가 발생한다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;📢 섹션 요약 비유:&lt;&#x2F;strong&gt; 모든 건물의 내진 설계를 동일하게 하면 비용이 너무 많이 드는 것처럼, 모든 데이터 작업에 완전한 ACID를 적용하면 성능이 저하됩니다. 업무의 중요도에 따라 적절한 수준을 선택하는 것이 핵심입니다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;v-gidaehyogwa-mic-gyeolron&quot;&gt;Ⅴ. 기대효과 및 결론&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;jeongryang-jeongseong-gidaehyogwa&quot;&gt;정량&#x2F;정성 기대효과&lt;&#x2F;h3&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;구분&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;ACID 미준수 환경&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;ACID 완전 준수&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;개선 효과&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;정량&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;데이터 불일치율 5~30%&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;0% 불일치&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;신뢰성 &lt;strong&gt;100% 향상&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;정량&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;장애 시 복구율 50~70%&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;99.99% 복구&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;복구 신뢰도大幅 향상&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;정성&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;감사&#x2F;법적 분쟁 위험 높음&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;규정 준수의しやすさ&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;컴플라이언스大幅 향상&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h3 id=&quot;mirae-jeonmang&quot;&gt;미래 전망&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;NewSQL&lt;&#x2F;strong&gt;: 분산 환경에서도 ACID를 지원하는 새로운 데이터베이스 (CockroachDB, TiDB, Google Spanner)&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Hybrid 아키텍처&lt;&#x2F;strong&gt;: 중요 거래는 ACID RDBMS, 일반 조회는 NoSQL로 분리&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                    ACID 기술의 진화                                  │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   1980s-2000s: 단일 RDBMS의 ACID (Oracle, DB2)                     │
+│       │                                                              │
+│       ▼                                                              │
+│   2000s-2010s: NoSQL의 BASE (Basically Available, Soft state,      │
+│                        Eventual consistency)                        │
+│       │                                                              │
+│       ▼                                                              │
+│   2010s~: NewSQL의 분산 ACID (CockroachDB, TiDB, Spanner)          │
+│                                                                     │
+│   핵심 과제: 확장성과 일관성을 동시에 달성하는 것                      │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;📢 섹션 요약 비유:&lt;&#x2F;strong&gt; 옛날에는 한 사람이 모든 장부를 직접 처리했지만 (ACID), 회사가 커지자 사람이 많아져서 분산해서 처리하게 되었습니다 (NoSQL BASE). 하지만 서로의 기록이 안 맞는 문제가 생겨서, 다시 분산되어도 전체의 일관성을 맞추는 방법을 찾고 있습니다 (NewSQL).&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph&quot;&gt;📌 관련 개념 맵 (Knowledge Graph)&lt;&#x2F;h2&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;개념 명칭&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;관계 및 시너지 설명&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;트랜잭션&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;ACID 속성을 보장하는 논리적 작업 단위이다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;MVCC&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Multi-Version Concurrency Control로, 잠금 없이 고른 읽기를 가능하게 하는 기법이다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;2PC&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Two-Phase Commit으로, 분산 트랜잭션에서 원자성을 보장하는 프로토콜이다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;CAP 정리&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;분산 시스템에서 일관성, 가용성, 분할 내성 중 두 가지만 동시에 보장 가능하다는 이론이다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;BASE&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;NoSQL에서 사용되는 일관성 모델로, Basically Available, Soft state, Eventual consistency의 약어다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;baby-eorinireul-wihan-3jul-biyu-seolmyeong&quot;&gt;👶 어린이를 위한 3줄 비유 설명&lt;&#x2F;h2&gt;
+&lt;ol&gt;
+&lt;li&gt;ACID는 &lt;strong&gt;은행 금고의 네 가지 열쇠&lt;&#x2F;strong&gt;예요. 네 개를 모두 맞춰야 금고가 열리고 (원자성), 안에 있는 물건이 모두 알맞아야 하고 (일관성), 다른 사람이 동시에 열쇠를 돌려도 서로 안 충돌하고 (고립성), 한 번 열린 금고는 계속 열려 있어야 합니다 (영속성).&lt;&#x2F;li&gt;
+&lt;li&gt;만약 네 열쇠 중 하나라도 빠지면 금고가 제대로 작동하지 않아요.&lt;&#x2F;li&gt;
+&lt;li&gt;컴퓨터도 데이터를 다루면서 이 네 가지를 다 지켜야 우리가 사용하는 앱이 정확하고 안전하게 작동하는 거예요!&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>21. DML (Data Manipulation Language) - 데이터 조작 언어 (SELECT, INSERT, UPDATE, DELETE)</title>
+        <published>2026-03-04T00:00:00+00:00</published>
+        <updated>2026-03-04T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://agnusdei1207.github.io/brainscience/studynote/05_database/01_db_architecture_relational/021-dml/"/>
+        <id>https://agnusdei1207.github.io/brainscience/studynote/05_database/01_db_architecture_relational/021-dml/</id>
+        
+        <content type="html" xml:base="https://agnusdei1207.github.io/brainscience/studynote/05_database/01_db_architecture_relational/021-dml/">&lt;h1 id=&quot;21-deiteo-jojag-eoneo-dml-data-manipulation-language&quot;&gt;21. 데이터 조작 언어 (DML: Data Manipulation Language)&lt;&#x2F;h1&gt;
+&lt;h4 id=&quot;haegsim-insaiteu-3jul-yoyag&quot;&gt;핵심 인사이트 (3줄 요약)&lt;&#x2F;h4&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;본질&lt;&#x2F;strong&gt;: DDL이 데이터베이스의 뼈대와 규칙을 세운다면, DML은 그 구조 안에 실제 비즈니스 가치를 지닌 데이터를 생성, 수정, 삭제, 조회(CRUD)하는 생명선 역할을 한다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;가치&lt;&#x2F;strong&gt;: 관계 대수(Relational Algebra) 기반의 선언적 문법을 통해 수천만 건의 데이터를 루프(Loop) 없이 단 한 줄의 질의어로 고속 조작할 수 있는 극강의 쿼리 생산성을 제공한다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;융합&lt;&#x2F;strong&gt;: DML은 데이터 버퍼 갱신, 행 잠금(Row-level Lock), Undo&#x2F;Redo 로깅을 동반하는 트랜잭션의 실체적 트리거이며, 옵티마이저의 성능 튜닝 대상이 되는 핵심 워크로드다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;i-gaeyo-mic-pilyoseong-context-necessity&quot;&gt;Ⅰ. 개요 및 필요성 (Context &amp;amp; Necessity)&lt;&#x2F;h3&gt;
+&lt;p&gt;데이터베이스의 존재 이유는 결국 &#x27;데이터를 활용&#x27;하기 위함이다. 아무리 견고한 스키마(DDL)가 준비되어 있더라도, 사용자와 애플리케이션이 원하는 시점에 정확한 데이터를 밀어 넣고, 뽑아보고, 수정하지 못한다면 의미가 없다. 이 실제적인 데이터 조작 요구를 해결하기 위해 설계된 것이 DML(Data Manipulation Language)이다.&lt;&#x2F;p&gt;
+&lt;p&gt;과거 파일 시스템이나 초기 네트워크 DB 시절에는 데이터를 검색(SELECT)하거나 변경(UPDATE)하려면 개발자가 직접 물리적인 디스크 블록 주소를 따라가는 절차적 코드를 작성해야 했다. 이로 인해 데이터가 조금만 커져도 애플리케이션 코드가 스파게티처럼 엉키고 시스템 메모 시 스파게티처럼 엉키고 시스템 메모리가 마비되었다. 그러나 SQL 표준의 DML은 데이터를 철저히 &#x27;수학적 집합(Set)&#x27;으로 대우한다. 사용자가 &quot;연봉이 5000 이상인 영업부 직원의 이름을 가져와(SELECT)&quot;라고 집합적 요구사항만 던지면, 내부의 옵티마이저가 가장 빠른 물리적 디스크 접근 알고리즘을 찾아내 대신 수행해주는 패러다임의 혁명이 일어났다.&lt;&#x2F;p&gt;
+&lt;p&gt;오늘날 전 세계 수조 건의 전자상거래, 금융 결제, 물류 시스템 백엔드는 바로 이 DML의 &lt;code&gt;INSERT&lt;&#x2F;code&gt;, &lt;code&gt;UPDATE&lt;&#x2F;code&gt;, &lt;code&gt;DELETE&lt;&#x2F;code&gt;, &lt;code&gt;SELECT&lt;&#x2F;code&gt; 네 가지 기본 동사에 의해 실시간으로 통제되고 있으며, 이 명령어들의 실행 최적화 여부가 전체 서비스의 응답 지연(Latency)을 결정짓는 척도가 된다.&lt;&#x2F;p&gt;
+&lt;p&gt;아래 다이어그램은 애플리케이션의 DML 쿼리가 어떻게 디스크 I&#x2F;O를 우회하여 메모리(버퍼 풀) 공간에서 초고속으로 처리되는지, 현대 DBMS 아키텍처의 비동기적 쓰기(Write-behind) 구조를 보여준다.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[DML 실행에 따른 메모리 및 디스크 상태 전이]
+
+ App ──&amp;quot;UPDATE 급여 SET 5000&amp;quot;──▶ (DBMS 엔진 진입)
+                                         ↓
+┌───────────────── Memory (Buffer Pool) ──────────────────┐
+│ 1. 해당 데이터 블록이 메모리에 없으면 디스크에서 적재 │
+│ 2. Row Lock 획득 후 데이터 값 변경 (Dirty Block 발생) │
+│ 3. 이전 값(Old)은 Undo 버퍼에, 새 값(New)은 Redo 버퍼에 기록 │
+└─────────────────────────┬───────────────────────────────┘
+  (비동기 I&amp;#x2F;O 대기)       │ (Commit 시점 또는 체크포인트 시점에 내려씀)
+┌─────────────────────────▼───────────────────────────────┐
+│ ┌───────────────┐ ┌──────────────┐ ┌────────────────┐ │
+│ │ Data File(DB) │ │ Undo Segments│ │ Redo Log Files │ │
+│ └───────────────┘ └──────────────┘ └────────────────┘ │
+└────────────────────── Physical Disk ────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 구조도의 핵심은 DML 작업(갱신&#x2F;삽입&#x2F;삭제)이 &lt;strong&gt;디스크(Data File)에 즉시 기록되지 않고 메모리(버퍼 풀) 위에서 논리적으로 먼저 수행된다는 점&lt;&#x2F;strong&gt;이다. 만약 수천 건의 &lt;code&gt;UPDATE&lt;&#x2F;code&gt;를 할 때마다 디스크 헤더를 움직여 기록한다면, 물리적 I&#x2F;O 병목으로 인해 트랜잭션 성능은 바닥으로 곤두박질칠 것이다. DBMS는 메모리의 블록만 수정한 상태(Dirty Block)로 애플리케이션에 완료 신호를 보낸 뒤, 변경 내역만 시퀀셜(Sequential)하게 Redo 로그에 남겨 영속성을 보장하고, 실제 데이터 파일 반영은 백그라운드 프로세스가 여유 있을 때 몰아서(Batch) 처리하는 지연 쓰기(Deferred Write) 기법을 사용한다. 따라서 개발자는 DML이 단순히 텍스트 명령이 아니라, 메모리 스와핑과 트랜잭션 로그를 대량 생산하는 무거운 시스템 콜임을 인지해야 한다.&lt;&#x2F;p&gt;
+&lt;p&gt;📢 &lt;strong&gt;섹션 요약 비유&lt;&#x2F;strong&gt;: 마치 결제 내역(DML)을 발생할 때마다 은행 금고(디스크)까지 뛰어가서 기록하는 대신, 빠른 장부(메모리 버퍼)에 우선 적어두고 나중에 퇴근할 때 한 번에 금고 장부를 정리하여 속도를 극대화하는 것과 같습니다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;ii-akitegceo-mic-haegsim-weonri-deep-dive&quot;&gt;Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)&lt;&#x2F;h3&gt;
+&lt;p&gt;DML의 핵심 명령어 4가지는 데이터를 조작하지만, 시스템 내부에서 발생시키는 &#x27;락(Lock)&#x27;의 수준과 장애 발생 시나리오의 성격이 각기 다르다.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;DML 명령어&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;핵심 동작 및 용도&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;내부 시스템 오버헤드 (Lock 및 병목 요소)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;비유&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;SELECT&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;조건에 맞는 데이터 집합 필터링 조회&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;Shared Lock (읽기 락)&lt;&#x2F;strong&gt;: 타 세션 읽기는 허용하나 X-Lock 획득은 차단. 테이블 풀 스캔 시 메모리(PGA)와 I&#x2F;O 부하 심각&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;도서관에서 책 찾아 읽기&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;INSERT&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;새로운 데이터 튜플(행) 삽입&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;고유성 체크 병목&lt;&#x2F;strong&gt;: PK 중복 여부를 찾기 위해 인덱스 리프 노드 분할(Index Split) 유발 빈번&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;도서관 서가에 새 책 꽂기&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;UPDATE&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;기존 데이터 행의 속성값 갱신&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;Row Exclusive Lock&lt;&#x2F;strong&gt;: 타 세션 동시 갱신 차단. 이전 값 보존을 위해 대량의 Undo 세그먼트 생성 유발&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;책의 특정 페이지 내용 고쳐쓰기&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;DELETE&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;조건에 맞는 튜플을 개별 삭제&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;가장 무거운 부하&lt;&#x2F;strong&gt;: 행 단위 지움 + 삭제 복구를 위한 전체 Undo 로깅 + 인덱스 트리 재정렬&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;책을 한 권씩 폐기하고 기록 남기기&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;이 중에서도 데이터를 조회하는 &lt;code&gt;SELECT&lt;&#x2F;code&gt; 구문은 가장 복잡한 파싱 구조를 지닌다. RDBMS는 SELECT 쿼리 내의 &lt;code&gt;FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY&lt;&#x2F;code&gt; 순서로 논리적 실행 단계를 거치며, 집합을 축소(Filter)하고 결합(Join)한다.&lt;&#x2F;p&gt;
+&lt;p&gt;다음 다이어그램은 가장 심각한 DML 성능 저하 원인 중 하나인 &lt;code&gt;인덱스 스플릿(Index Split)&lt;&#x2F;code&gt;이 대량 &lt;code&gt;INSERT&lt;&#x2F;code&gt; DML 환경에서 어떻게 일어나는지 구조적으로 설명한다.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[B-Tree 인덱스 구조의 잦은 INSERT 병목 현상]
+
+        [ Root Node (10~50) ]
+             ↙      ↘
+  [ Leaf (10, 20) ]  [ Leaf (30, 40, 50) ] ◀ (빈 공간 없음)
+                               ▲
+                 (새로운 DML) INSERT VALUES (35) 발생
+
+       (결과: 블록 분할 및 트리 재구성 오버헤드 발생)
+        [ Root Node (10~50) ]
+             ↙       ↓      ↘
+[ Leaf (10, 20) ] [Leaf(30, 35)] [Leaf(40, 50)] =&amp;gt; 구조 변경을 위한 심각한 I&amp;#x2F;O 블로킹 유발
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 도식의 핵심은 테이블에 데이터를 밀어 넣는(INSERT, DML) 행위가 단일 동작으로 끝나지 않고, 테이블에 연결된 &lt;strong&gt;모든 인덱스 자료구조(B-Tree)의 연쇄적인 수정&lt;&#x2F;strong&gt;을 강제한다는 점이다. 특히 인덱스의 특정 리프 블록이 가득 찬 상태에서 중간 값(예: 35)이 인서트되면, DBMS는 블록을 반으로 쪼개고(Split) 부모 노드의 포인터를 갱신하는 무거운 물리적 작업을 수행한다. 이 짧은 순간 동안 해당 인덱스 구간은 배타적 잠금 상태가 되어 후속 DML들이 모두 대기(Wait)하게 된다. 초당 만 건씩 인서트되는 대규모 로깅 시스템에서 인덱스를 5개씩 걸어두면 디스크 I&#x2F;O가 마비되는 이유가 바로 이 아키텍처 원리 때문이다.&lt;&#x2F;p&gt;
+&lt;p&gt;📢 &lt;strong&gt;섹션 요약 비유&lt;&#x2F;strong&gt;: 책꽂이(인덱스 블록)가 가득 찼는데 억지로 중간에 새 책(INSERT DML)을 꽂으려면, 책꽂이를 통째로 분해해서 칸을 늘리는 대공사(인덱스 스플릿)를 치러야 하므로 삽입 속도가 느려지는 것과 같습니다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;iii-yunghab-bigyo-mic-dagagdo-bunseog-comparison-synergy&quot;&gt;Ⅲ. 융합 비교 및 다각도 분석 (Comparison &amp;amp; Synergy)&lt;&#x2F;h3&gt;
+&lt;p&gt;DML을 사용할 때 가장 크게 부딪히는 실무적 트레이드오프는 &quot;단건 처리(Row-by-Row)&quot;와 &quot;집합적 처리(Set-based&#x2F;Bulk)&quot; 패러다임 간의 성능 및 자원 소모 비교다.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;비교 요소&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;단건 루프 DML (Procedural &#x2F; Row-by-Row)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;집합적 Bulk DML (Set-based)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;판단 포인트&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;처리 방식&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;애플리케이션 FOR 루프 내에서 1건씩 INSERT&#x2F;UPDATE&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;INSERT INTO .. SELECT&lt;&#x2F;code&gt; 등 하나의 SQL로 수만 건 갱신&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;네트워크 비용 및 파싱&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;네트워크 I&#x2F;O&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;10만 건 처리 시 10만 번의 DB 왕복 트래픽&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;1번의 쿼리 전송으로 엔진 내부 연산&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;I&#x2F;O 지연(Latency) 압도적&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;트랜잭션&#x2F;로그&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;1건마다 자동 커밋 시 과도한 Redo&#x2F;Undo 플러시 부하&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;한 번의 거대한 트랜잭션 묶음&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;복구 안정성 vs Lock 점유 시간&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;적용 시나리오&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;복잡한 외부 API 결합 등 분기 로직이 섞인 작업&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;단순 대용량 데이터 마이그레이션, 집계 갱신&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;성능 튜닝의 최우선순위&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;초보 개발자들은 객체지향적 사고에 익숙해진 나머지 대용량 데이터를 처리할 때 배열 리스트를 가져와서 반복문(Loop)을 돌리며 건건이 &lt;code&gt;UPDATE&lt;&#x2F;code&gt; 구문을 날린다. 이는 데이터베이스 성능을 갉아먹는 최악의 안티패턴(Anti-pattern)이다.&lt;&#x2F;p&gt;
+&lt;p&gt;아래는 단건 DML 처리 방식과 다중버전 동시성 제어(MVCC) 하에서의 읽기&#x2F;쓰기 충돌 회피 메커니즘을 비교한 상태도이다.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;┌────────────────── [동시성 모델 (MVCC 지원)] ─────────────────┐
+│ TX 1 (DML 쓰기): UPDATE 계좌 SET 잔액=0 WHERE ID=A             │
+│   └─ [레코드 A에 X-Lock 획득, 버퍼 갱신, 이전 값은 Undo에 저장]│
+├──────────────────────────────────────────────────────────────┤
+│ TX 2 (DML 읽기): SELECT 잔액 FROM 계좌 WHERE ID=A              │
+│   └─ 💥 충돌 회피: TX 1의 X-Lock 대기 없이, Undo 영역에        │
+│                    저장된 &amp;#x27;이전 값(원래 잔액)&amp;#x27;을 읽어옴(CR Read)│
+└──────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 동시성 흐름도의 핵심은 DML의 읽기(SELECT)와 쓰기(UPDATE) 간의 블로킹(Blocking) 한계를 혁신적으로 풀어낸 MVCC(Multi-Version Concurrency Control) 아키텍처다. 과거 시스템은 누군가 데이터를 갱신(UPDATE)하고 있으면 커밋 전까지 아무도 그 데이터를 읽을 수 없어 시스템 대기 시간이 길었다. 하지만 현대 DBMS는 DML 갱신 시 발생하는 &#x27;Undo 세그먼트(롤백 용도)&#x27;를 재활용하여, 쓰기 트랜잭션이 끝나지 않았더라도 다른 사용자가 과거 시점의 스냅샷 버전을 막힘없이 읽게 해준다. 따라서 실무에서 수백만 건의 집계 DML 쿼리가 돌고 있는 도중에도 사용자들은 서비스 중단 없이 실시간 조회가 가능한 시너지를 얻게 된다.&lt;&#x2F;p&gt;
+&lt;p&gt;📢 &lt;strong&gt;섹션 요약 비유&lt;&#x2F;strong&gt;: 문서(데이터) 원본을 동료가 수정(UPDATE)하고 있을 때, 밖에서 기다리는 대신 수정 전 복사본(Undo 스냅샷)을 미리 받아 읽어봄으로써 업무(SELECT)가 정체되지 않고 돌아가게 하는 것과 같습니다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;iv-silmu-jeogyong-mic-gisulsajeog-pandan-strategy-decision&quot;&gt;Ⅳ. 실무 적용 및 기술사적 판단 (Strategy &amp;amp; Decision)&lt;&#x2F;h3&gt;
+&lt;p&gt;운영 환경에서 잘못 작성된 1줄의 DML 쿼리는 옵티마이저를 속여 전체 DB 서버의 CPU를 100%로 솟구치게 만드는 시한폭탄이다. DML 작성 시의 인덱스 설계와 트랜잭션 분할 전략이 필수적이다.&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;실무 시나리오: 풀 테이블 스캔(Full Table Scan)을 유발하는 DML 실수&lt;&#x2F;strong&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;상황&lt;&#x2F;strong&gt;: 수억 건의 결제 테이블에서 &lt;code&gt;SELECT * FROM PAY WHERE TO_CHAR(pay_date, &#x27;YYYY&#x27;) = &#x27;2023&#x27;&lt;&#x2F;code&gt; 형태의 조회를 실행하여 DB 서버가 뻗음.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;원인 및 판단&lt;&#x2F;strong&gt;: 좌변 가공 금지 원칙(인덱스 무효화)을 위반. 컬럼(&lt;code&gt;pay_date&lt;&#x2F;code&gt;) 자체를 함수로 가공하면 옵티마이저는 해당 컬럼의 B-Tree 인덱스를 타지 못하고 테이블 전체 블록을 뒤지는 풀 스캔(FTS)을 강행한다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;개선 로직&lt;&#x2F;strong&gt;: 질의 조건을 &lt;code&gt;WHERE pay_date &amp;gt;= &#x27;2023-01-01&#x27; AND pay_date &amp;lt; &#x27;2024-01-01&#x27;&lt;&#x2F;code&gt; 형태로 수정(범위 검색)하여 인덱스 스캔을 강제 유도(Index Range Scan)한다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;도입 체크리스트: 대용량 데이터 일괄 삭제&#x2F;갱신 (Chunk DML)&lt;&#x2F;strong&gt;
+&lt;ul&gt;
+&lt;li&gt;1억 건의 오래된 이력 데이터를 삭제(&lt;code&gt;DELETE&lt;&#x2F;code&gt;)해야 한다. 한 번의 쿼리로 실행하면?&lt;&#x2F;li&gt;
+&lt;li&gt;트랜잭션 로그 버퍼 및 Undo 테이블스페이스가 터져(ORA-01555 Snapshot Too Old 등) 쿼리가 강제 취소되고 롤백되는 대형 장애 발생. 또한 대량의 배타 락(X-Lock)을 장시간 점유하여 동시성 마비.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;기술사적 결단&lt;&#x2F;strong&gt;: 대용량 DML은 절대 한 트랜잭션에 담지 마라. &lt;code&gt;LIMIT 10000&lt;&#x2F;code&gt;이나 일자별&#x2F;PK 범위별로 쪼개어(Chunking) 여러 번의 작고 짧은 트랜잭션으로 커밋하면서 삭제 루프를 돌리는 &#x27;배치 분할 처리 아키텍처&#x27;를 반드시 구성해야 한다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;아래 의사결정 트리는 애플리케이션에서 대량의 데이터를 삽입(Insert)해야 할 때 발생하는 오버헤드를 제어하기 위한 성능 분기 플로우이다.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[대규모 데이터 INSERT DML 발생]
+   ↓
+(Q1. 건수가 수백만 건 이상이며, 일회성 마이그레이션 성격인가?)
+   ├─ 예 ────&amp;gt; [DB Native 벌크 로더 사용 (SQL*Loader, COPY 명령어)] =&amp;gt; 파싱 우회 초고속 적재
+   └─ 아니오 ──&amp;gt; (Q2. 실시간 트랜잭션이며 테이블에 인덱스가 많은가?)
+                   ├─ 아니오 ──&amp;gt; [일반 INSERT 구문 실행]
+                   └─ 예 ─────&amp;gt; [비동기 메시지 큐(Kafka) + 버퍼링 기반 배치 인서트(Batch Insert) 튜닝]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 의사결정 흐름의 핵심은 DML의 파싱 비용(Parsing Cost)과 I&#x2F;O 충돌 병목을 우회하는 설계 지혜다. 한 건씩 &lt;code&gt;INSERT&lt;&#x2F;code&gt;를 날리면 네트워크 지연과 SQL 파싱 오버헤드가 건건이 누적된다. 따라서 개발자는 JDBC의 &lt;code&gt;executeBatch()&lt;&#x2F;code&gt; 같은 벌크 인서트(Batch DML) 기능을 활용하여 수천 건의 페이로드를 단 한 번의 네트워크 호출로 밀어 넣거나, 초고부하 상태에서는 Kafka 같은 메시지 큐를 앞에 두어 DML 트래픽을 완충(Buffering)하는 방어막을 구축해야 데이터베이스 다운을 막을 수 있다.&lt;&#x2F;p&gt;
+&lt;p&gt;📢 &lt;strong&gt;섹션 요약 비유&lt;&#x2F;strong&gt;: 수만 명의 관객(대량 INSERT 데이터)을 경기장에 입장시킬 때, 1명씩 신분증 검사를 하면 입구가 마비됩니다. 100명 단위 단체 티켓(Batch DML)으로 묶거나, 대기열 공간(메시지 큐)을 만들어 입장 속도를 부하에 맞게 조절해야 하는 것과 같습니다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;v-gidaehyogwa-mic-gyeolron-future-standard&quot;&gt;Ⅴ. 기대효과 및 결론 (Future &amp;amp; Standard)&lt;&#x2F;h3&gt;
+&lt;p&gt;DML은 데이터라는 자산을 가공하고 추출하여 비즈니스 통찰력과 서비스 가치로 변환시키는 엔진의 피스톤 운동이다. SQL이라는 세계 공통의 비절차적 질의어를 통해 개발자는 더 이상 복잡한 자료구조 알고리즘을 고민하지 않아도 되게 되었다.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;구분&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;비즈니스&#x2F;기술적 파급 효과&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;최적화 결과 지표&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;데이터 활용성 극대화&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;조인(Join)과 집계 함수(Group By)를 통한 다차원 분석 실시간 추출&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;의사결정 정보 도출(BI&#x2F;DW) 시간 극단적 단축&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;안전한 동시 작업&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;락(Lock) 및 격리 수준(Isolation Level)을 통한 동시성 보장&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;데이터 손실(Lost Update) 무결점 트랜잭션 유지&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;아키텍처 확장&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;DML 튜닝, 인덱스 효율화에 따른 디스크 I&#x2F;O 절감&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;동일 DB 서버 스펙으로 TPS 수십 배 방어 가능&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;미래의 데이터 조작 트렌드는 인간이 직접 복잡한 SQL DML을 짜는 단계에서, LLM 기반의 Text-to-SQL 기술이나 AI가 쿼리 실행 계획을 스스로 교정하는 자율주행 데이터베이스(Autonomous Database)로 넘어가고 있다. 그러나 도구가 발전할수록 옵티마이저가 잘못된 실행 계획을 선택하여 발생하는 악성 쿼리의 폐해는 숨겨지기 더 쉽다. 결국 관계형 대수에 입각해 논리적 집합을 필터링하고 물리적인 조인 메커니즘(Nested Loop, Hash Join)을 꿰뚫어 보는 DML 최적화 역량은 수석 백엔드&#x2F;데이터 엔지니어를 가르는 가장 중요한 기준점이 될 것이다.&lt;&#x2F;p&gt;
+&lt;p&gt;📢 &lt;strong&gt;섹션 요약 비유&lt;&#x2F;strong&gt;: 엔진(DBMS)이 아무리 거대해도, 실제로 바퀴를 돌려 차를 앞으로 나가게 만드는 것은 정교하게 분사되는 연료(DML)의 효율성에 달린 것과 같습니다. 좋은 연비(옵티마이저 튜닝)를 얻으려면 엔진의 폭발 방식(관계 대수)을 정확히 이해해야 합니다.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph&quot;&gt;📌 관련 개념 맵 (Knowledge Graph)&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;옵티마이저 (Optimizer)&lt;&#x2F;strong&gt; | 사용자가 던진 DML(SELECT) 구문을 분석하여 디스크에서 데이터를 가장 적은 I&#x2F;O 비용으로 읽어올 수 있는 실행 계획(Plan)을 생성하는 핵심 AI 두뇌&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;풀 테이블 스캔 (Full Table Scan &#x2F; FTS)&lt;&#x2F;strong&gt; | DML 질의 시 적절한 인덱스를 타지 못해 처음부터 끝까지 전체 디스크 블록을 모두 메모리로 올려서 읽는 고비용 병목 패턴&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;인덱스 (Index)&lt;&#x2F;strong&gt; | 검색(SELECT) DML의 속도를 높이기 위해 특정 컬럼의 값을 B-Tree 등으로 정렬해 둔 자료구조. 단, INSERT&#x2F;UPDATE&#x2F;DELETE DML 시에는 오히려 오버헤드로 작용함&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;MVCC (Multi-Version Concurrency Control)&lt;&#x2F;strong&gt; | 데이터를 갱신(DML)하는 도중에도 과거의 스냅샷 데이터를 읽을 수 있게 하여 읽기와 쓰기 작업 간의 충돌 블로킹을 회피하는 아키텍처 기술&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;트랜잭션 (Transaction)&lt;&#x2F;strong&gt; | 원자성을 보장하기 위해 한 개 이상의 DML(삽입, 갱신, 삭제) 문장들을 논리적으로 하나로 묶어 커밋(Commit)하거나 롤백(Rollback)하는 단위&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo&quot;&gt;📈 관련 키워드 및 발전 흐름도&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[DDL (Data Definition Language) — 스키마·테이블 구조 정의]
+    │
+    ▼
+[DML (Data Manipulation Language) — SELECT&amp;#x2F;INSERT&amp;#x2F;UPDATE&amp;#x2F;DELETE]
+    │
+    ▼
+[옵티마이저 (Query Optimizer) — 실행 계획(Execution Plan) 수립]
+    │
+    ▼
+[트랜잭션 (Transaction) &amp;#x2F; MVCC — 원자성·격리성 보장]
+    │
+    ▼
+[Text-to-SQL &amp;#x2F; 자율주행 DB (Autonomous Database) — 차세대]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;DDL이 테이블 구조를 정의하고 나면 DML이 실질적인 데이터 가치를 생산하며, 옵티마이저와 트랜잭션이 DML의 성능과 안전성을 함께 보장한다.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;baby-eorinireul-wihan-3jul-biyu-seolmyeong&quot;&gt;👶 어린이를 위한 3줄 비유 설명&lt;&#x2F;h3&gt;
+&lt;ol&gt;
+&lt;li&gt;완성된 장난감 성(데이터베이스) 안에서 &quot;파란색 인형 3개만 찾아줘(SELECT)&quot; 하거나 &quot;인형을 더 넣어줘(INSERT)&quot;라고 부탁하는 마법 주문이 DML이에요.&lt;&#x2F;li&gt;
+&lt;li&gt;이 마법 주문은 아주 똑똑해서, 우리가 굳이 성 안을 일일이 돌아다니지 않아도 가장 빠른 길을 알아서 찾아(옵티마이저) 장난감을 가져온답니다.&lt;&#x2F;li&gt;
+&lt;li&gt;하지만 한 번에 너무 많은 장난감을 꺼내달라고 떼쓰거나 길을 꼬이게 잘못 주문하면, 마법사(서버)가 지쳐 쓰러질 수 있으니 예쁘게 잘 말해야 해요!&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+</content>
+        
+    </entry>
+</feed>

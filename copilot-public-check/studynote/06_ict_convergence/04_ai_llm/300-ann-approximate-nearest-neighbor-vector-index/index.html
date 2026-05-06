@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>300. ANN 근사 최근접 이웃과 벡터 인덱싱 (ANN Approximate Nearest Neighbor Vector Indexing) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ict convergence
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: ANN(Approximate Nearest Neighbor)은 정확도를 약간 희생하는 대신 수십만~수억 벡터를 밀리초 내에 검색하는 근사 알고리즘이다.</li>
+<li><strong>가치</strong>: RAG(Retrieval-Augmented Generation) 파이프라인에서 임베딩 벡터 검색의 응답 지연을 O(N)에서 O(log N) 이하로 낮춰 실시간 서비스를 가능하게 한다.</li>
+<li><strong>판단 포인트</strong>: Recall@K(재현율)와 QPS(Queries Per Second) 트레이드오프를 요구사항에 맞게 설정하고, 메모리 예산에 따라 HNSW·IVFFlat·PQ 중 적합한 인덱스를 선택한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>정확한 최근접 이웃(Exact Nearest Neighbor) 검색은 쿼리 벡터와 데이터베이스 내 모든 벡터 간의 거리를 계산하므로 O(N) 시간이 소요된다. 벡터 DB에 수천만 개의 임베딩이 저장된 실제 RAG 환경에서는 이 방식이 불가능하다.</p>
+<p>ANN은 "약간의 오답 허용"이라는 실용적 타협을 통해 검색 속도를 극적으로 향상시킨다. 대부분의 애플리케이션에서 정확도 95~99%의 근사 결과는 실제 서비스 품질에 큰 영향을 미치지 않는다.</p>
+<p><strong>ANN의 등장 배경</strong></p>
+<ul>
+<li>고차원 벡터 공간에서의 "차원의 저주(Curse of Dimensionality)"</li>
+<li>BERT, OpenAI text-embedding 등 대형 언어 모델이 생성하는 768~3072차원 임베딩</li>
+<li>실시간 질의응답 요구: 수백 ms 이내 응답 필요</li>
+</ul>
+<p>📢 <strong>섹션 요약 비유</strong>: 도서관 사서가 모든 책을 뒤지는 대신 분류 카드함을 먼저 열어 "비슷한 구역"으로 이동하는 것이 ANN이다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="juyo-ann-indegseu-algorijeum">주요 ANN 인덱스 알고리즘</h3>
+<pre><code>쿼리 벡터 입력
+       │
+       ▼
+┌─────────────────────────────────────────────┐
+│          ANN 인덱스 레이어                   │
+│  ┌──────────┐  ┌──────────┐  ┌───────────┐ │
+│  │  HNSW   │  │ IVFFlat  │  │    PQ     │ │
+│  │계층 그래프│  │클러스터분할│  │벡터압축   │ │
+│  │O(log N) │  │O(√N)     │  │메모리절약 │ │
+│  └──────────┘  └──────────┘  └───────────┘ │
+└─────────────────────────────────────────────┘
+       │
+       ▼
+  후보 K개 반환 (Recall@K 평가)
+</code></pre>
+<p><strong>HNSW(Hierarchical Navigable Small World)</strong>: 소셜 네트워크의 "작은 세상" 현상을 모방한 계층적 그래프 구조. 상위 레이어는 큰 도약, 하위 레이어는 정밀 탐색. 검색 복잡도 O(log N).</p>
+<p><strong>IVFFlat(Inverted File Index Flat)</strong>: 전체 벡터 공간을 K-Means로 nlist개 클러스터로 분할. 쿼리는 가장 가까운 nprobe개 클러스터만 탐색. 정확도는 nprobe 값으로 조정 가능.</p>
+<p><strong>PQ(Product Quantization, 곱 양자화)</strong>: 고차원 벡터를 m개 부분 공간으로 분리하고 각각을 코드북(Codebook)으로 압축. 원래 크기의 1/10~1/32로 메모리 절약.</p>
+<h3 id="ann-indegseu-bigyo">ANN 인덱스 비교</h3>
+<table><thead><tr><th style="text-align: center">항목</th><th style="text-align: center">HNSW</th><th style="text-align: center">IVFFlat</th><th style="text-align: center">IVFPQ</th></tr></thead><tbody>
+<tr><td style="text-align: center">검색 속도</td><td style="text-align: center">★★★★★</td><td style="text-align: center">★★★★</td><td style="text-align: center">★★★★</td></tr>
+<tr><td style="text-align: center">메모리 사용</td><td style="text-align: center">높음</td><td style="text-align: center">중간</td><td style="text-align: center">낮음</td></tr>
+<tr><td style="text-align: center">정확도</td><td style="text-align: center">★★★★★</td><td style="text-align: center">★★★★</td><td style="text-align: center">★★★</td></tr>
+<tr><td style="text-align: center">구축 시간</td><td style="text-align: center">느림</td><td style="text-align: center">빠름</td><td style="text-align: center">중간</td></tr>
+<tr><td style="text-align: center">대표 라이브러리</td><td style="text-align: center">FAISS, Hnswlib</td><td style="text-align: center">FAISS</td><td style="text-align: center">FAISS</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: HNSW는 엘리베이터+계단 조합으로 빠르게 찾고, IVFFlat은 구역별 담당자에게 먼저 물어보는 방식이다.</p>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="recall-kwa-qps-teureideuopeu">Recall@K와 QPS 트레이드오프</h3>
+<ul>
+<li><strong>Recall@K</strong>: 실제 정답 K개 중 ANN이 반환한 올바른 개수의 비율</li>
+<li><strong>QPS(Queries Per Second)</strong>: 초당 처리 쿼리 수</li>
+<li>nprobe(IVF) 또는 ef(HNSW) 파라미터를 높이면 Recall↑, QPS↓</li>
+</ul>
+<h3 id="begteo-db-saengtaegyewa-ann-tonghab">벡터 DB 생태계와 ANN 통합</h3>
+<table><thead><tr><th style="text-align: center">벡터 DB</th><th style="text-align: center">기본 인덱스</th><th style="text-align: center">특이사항</th></tr></thead><tbody>
+<tr><td style="text-align: center">Pinecone</td><td style="text-align: center">HNSW</td><td style="text-align: center">완전 관리형 SaaS</td></tr>
+<tr><td style="text-align: center">Weaviate</td><td style="text-align: center">HNSW</td><td style="text-align: center">GraphQL 지원</td></tr>
+<tr><td style="text-align: center">Milvus</td><td style="text-align: center">HNSW, IVF, PQ</td><td style="text-align: center">오픈소스, 대규모 특화</td></tr>
+<tr><td style="text-align: center">pgvector</td><td style="text-align: center">IVFFlat, HNSW</td><td style="text-align: center">PostgreSQL 확장</td></tr>
+<tr><td style="text-align: center">Chroma</td><td style="text-align: center">HNSW(hnswlib)</td><td style="text-align: center">경량, 로컬 개발</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 벡터 DB는 ANN이라는 검색 엔진을 장착한 고성능 창고이며, 창고마다 선반 배치 방식(인덱스)이 다르다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p><strong>RAG 파이프라인에서의 역할</strong></p>
+<p>사용자 질의 → 임베딩 모델 → 쿼리 벡터 → <strong>ANN 검색(Top-K)</strong> → 컨텍스트 주입 → LLM 생성</p>
+<p><strong>기술사 판단 포인트</strong></p>
+<ol>
+<li><strong>정확도 요구 수준</strong>: 의료/법률 문서 검색 → Recall@10 ≥ 0.99 → HNSW + ef_search 상향</li>
+<li><strong>메모리 제약</strong>: GPU 메모리 부족 → IVFPQ로 벡터 압축 → Recall 소폭 하락 감수</li>
+<li><strong>데이터 규모 임계점</strong>: 100만 건 이하 → HNSW 권장, 1억 건 이상 → IVF + PQ 또는 분산 Milvus</li>
+<li><strong>실시간 vs 배치</strong>: 온라인 서비스는 HNSW의 낮은 레이턴시 우선, 배치 분석은 정확도 우선</li>
+</ol>
+<p><strong>운영 전략</strong>: 핫/콜드 분리 — 최근 임베딩은 HNSW 메모리 인덱스, 오래된 데이터는 IVF+PQ 디스크 인덱스로 계층 관리.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 응급실은 HNSW(빠른 응답), 서류 보관소는 PQ(공간 절약) — 용도에 맞는 인덱스 전략이 핵심이다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>ANN 인덱싱은 대형 언어 모델 기반 서비스가 실시간으로 방대한 지식을 검색할 수 있도록 하는 핵심 인프라다. 정확도 손실을 수용 가능한 수준으로 제한하면서 검색 속도를 수천 배 향상시키며, RAG 시스템의 응답 품질과 비용 효율을 동시에 달성한다.</p>
+<p>향후 뉴럴 인덱스(DiskANN, ScaNN)와 학습 기반 양자화 방법이 Recall-QPS 경계를 더욱 확장할 전망이다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: ANN은 완벽한 지도 없이도 목적지에 95% 확률로 빠르게 도달하게 해주는 GPS 약식 경로 안내다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: center">연결</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">HNSW</td><td style="text-align: center">ANN</td><td style="text-align: left">계층 그래프 기반 고속 검색</td></tr>
+<tr><td style="text-align: left">IVFFlat</td><td style="text-align: center">ANN</td><td style="text-align: left">클러스터 분할 후 탐색</td></tr>
+<tr><td style="text-align: left">PQ(Product Quantization)</td><td style="text-align: center">ANN</td><td style="text-align: left">벡터 압축, 메모리 절약</td></tr>
+<tr><td style="text-align: left">Recall@K</td><td style="text-align: center">평가 지표</td><td style="text-align: left">정확도 측정</td></tr>
+<tr><td style="text-align: left">FAISS</td><td style="text-align: center">라이브러리</td><td style="text-align: left">Meta AI의 ANN 라이브러리</td></tr>
+<tr><td style="text-align: left">RAG</td><td style="text-align: center">응용</td><td style="text-align: left">벡터 검색 주요 사용처</td></tr>
+<tr><td style="text-align: left">임베딩(Embedding)</td><td style="text-align: center">입력</td><td style="text-align: left">ANN 검색 대상 벡터</td></tr>
+</tbody></table>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>수백만 장의 카드 중에서 내 카드와 가장 비슷한 것을 찾을 때, 모두 뒤지는 대신 색깔별로 나눠놓은 상자를 먼저 여는 것이 ANN이에요.</li>
+<li>조금 틀릴 수도 있지만, 100만 배 빠르게 찾을 수 있어요.</li>
+<li>AI가 질문에 답할 때 관련 정보를 순식간에 찾아주는 마법 색인표예요.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

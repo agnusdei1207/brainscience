@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>563. 해시 충돌(Collision) 해결 - 체이닝 및 선형 탐사 성능 오버헤드 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote database
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="563-haesi-cungdol-collision-haegyeol-gibeobgwa-db-maeping-obeohedeu">563. 해시 충돌(Collision) 해결 기법과 DB 매핑 오버헤드</h1>
+<blockquote>
+<p>⚠️ 이 문서는 데이터베이스 해시 인덱스나 메모리 캐시(Redis, Memcached)에서 데이터를 눈 깜짝할 새($O(1)$) 찾아내기 위해 사용하는 해시 함수가 필연적으로 겪게 되는 <strong>'서로 다른 데이터가 똑같은 해시 주소를 배정받는 충돌(Collision)' 현상과, 이를 해결하기 위한 체이닝(Chaining) 및 선형 탐사(Linear Probing) 방식의 디스크/메모리 성능 오버헤드</strong>를 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 해시 함수는 무한한 우주의 데이터를 한정된 개수의 방(Bucket)에 구겨 넣는 마법이다. 방의 개수가 유한하므로, 언젠가는 한 방에 두 명의 데이터가 배정되는 '충돌'이 반드시 수학적(비둘기집 원리)으로 일어난다.</li>
+<li><strong>가치</strong>: 이 충돌을 어떻게 기발하게 처리하느냐에 따라 DB의 탐색 속도가 결정된다. 충돌이 너무 잦아지면 자랑하던 $O(1)$의 초고속 검색 속도가 $O(N)$으로 곤두박질치는 최악의 성능 저하(Performance Degradation)를 겪게 된다.</li>
+<li><strong>기술 체계</strong>: 꽉 찬 방에 연결 리스트로 줄을 세우는 <strong>'체이닝(Chaining)'</strong> 방식과, 옆에 있는 빈방을 찾아 헤매는 <strong>'개방 주소법(Open Addressing / 선형 탐사)'</strong> 방식이 양대 산맥으로 쓰인다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-haesi-cungdolyi-pilyeonseonggwa-bidulgijib-weonri">Ⅰ. 해시 충돌의 필연성과 비둘기집 원리</h3>
+<p>아무리 똑똑한 해시 함수라도 비좁은 방 앞에서는 무력하다.</p>
+<ol>
+<li><strong>비둘기집 원리 (Pigeonhole Principle)</strong>:
+<ul>
+<li>비둘기가 10마리인데 비둘기집이 9개뿐이라면, 최소한 1개의 집에는 비둘기가 2마리 이상 들어가야 한다는 절대적인 수학 법칙이다.</li>
+<li>데이터베이스에서 해시 공간(버킷 배열의 크기)이 $100$개인데, 저장할 데이터가 $101$개가 들어오면 무조건 충돌이 발생한다.</li>
+</ul>
+</li>
+<li><strong>충돌 (Collision)의 발생</strong>:
+<ul>
+<li><code>Hash("Alice") % 10</code>의 결과가 3번 방이었는데, 나중에 가입한 <code>Hash("Bob") % 10</code>의 결과도 똑같이 3번 방이 나오는 현상이다.</li>
+<li>DB 엔진은 이 불청객 Bob을 어떻게 처리할지 1밀리초 안에 결정해야 한다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 호텔 방이 100개뿐인데 손님이 150명 예약했습니다. 프런트 직원이 아무리 방 배정을 똑똑하게 해도, 누군가는 반드시 모르는 사람과 같은 방(충돌)을 써야만 하는 피할 수 없는 물리적 한계입니다.</p>
+<hr />
+<h3 id="ii-haegyeolcaeg-1-ceining-chaining-jabiroun-ggori-mulgi">Ⅱ. 해결책 1: 체이닝 (Chaining) - 자비로운 꼬리 물기</h3>
+<p>방이 꽉 찼다면 방 밖으로 줄을 세운다. Java의 HashMap이 쓰는 방식이다.</p>
+<ol>
+<li><strong>작동 원리 (연결 리스트)</strong>:
+<ul>
+<li>3번 방에 Alice가 이미 들어있는데 Bob이 3번 방으로 배정받았다.</li>
+<li>3번 방 안에 억지로 우겨 넣지 않고, 3번 방 밖으로 '포인터(Pointer)'라는 끈을 달아 Bob을 묶어둔다. (연결 리스트 생성)</li>
+<li>나중에 Charlie도 3번 방에 오면, Bob 뒤에 끈으로 다시 묶는다. <code>[3번 방] -&gt; Alice -&gt; Bob -&gt; Charlie</code></li>
+</ul>
+</li>
+<li><strong>성능 오버헤드와 DB 적용의 한계</strong>:
+<ul>
+<li><strong>장점</strong>: 빈방(버킷)을 낭비하지 않고 방이 꽉 차도 계속 데이터를 무한정 저장할 수 있다.</li>
+<li><strong>단점 (Cache Miss)</strong>: 꼬리에 꼬리를 무는 포인터 탐색은 메모리나 디스크상에서 데이터가 물리적으로 흩어져(파편화) 있게 된다. 이 때문에 CPU 캐시 적중률(Cache Hit Rate)이 바닥을 치고, 디스크에서는 랜덤 I/O를 유발해 속도가 느려진다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 방이 꽉 차면 방 밖 복도에 캠핑 의자를 두고 손님들을 일렬로 앉혀서 기다리게 하는 것입니다. 방은 넉넉히 쓸 수 있지만, 배달부가 3번 방 손님 3명에게 피자를 배달하려면 복도를 길게 따라가며 한 명씩 찾아야 해서(포인터 탐색) 배달 시간(오버헤드)이 길어집니다.</p>
+<hr />
+<h3 id="iii-haegyeolcaeg-2-gaebang-jusobeobgwa-seonhyeong-tamsa-linear-probing">Ⅲ. 해결책 2: 개방 주소법과 선형 탐사 (Linear Probing)</h3>
+<p>내 방이 없으면 남의 빈방을 뺏어버린다. 파이썬의 dict나 하드웨어 캐시가 사랑하는 방식이다.</p>
+<ol>
+<li><strong>선형 탐사 (Linear Probing) 작동 원리</strong>:
+<ul>
+<li>3번 방에 Alice가 있는데 Bob이 3번 방을 배정받았다.</li>
+<li>Bob은 3번 방 밖에서 기다리지 않고, 바로 옆 방인 4번 방 문을 두드려본다. 비어있으면 4번 방을 낼름 차지한다. 4번 방마저 꽉 차 있으면 5번 방, 6번 방으로 계속 옆으로 한 칸씩 이동하며 빈방을 찾는다.</li>
+</ul>
+</li>
+<li><strong>성능 오버헤드의 장단점</strong>:
+<ul>
+<li><strong>장점 (Cache Hit 극대화)</strong>: 데이터가 배열에 연속적으로 물리적으로 다닥다닥 붙어 저장되므로, CPU가 캐시 메모리로 읽어 들일 때 한 번에 왕창 퍼 올릴 수 있어 <strong>속도가 어마어마하게 빠르다</strong>.</li>
+<li><strong>단점 (Clustering 현상)</strong>: 한 번 충돌이 나서 옆 방을 뺏기 시작하면, 데이터들이 특정 구간에 떡지듯 뭉치는 '군집화(Clustering)' 현상이 발생한다. 데이터가 꽉 찰수록 빈방을 찾기 위해 수십 개의 방을 열어봐야 하므로 성능이 곤두박질친다.</li>
+</ul>
+</li>
+<li><strong>해결책 (Rehashing / 리사이징)</strong>:
+<ul>
+<li>방이 70~80% 정도 차면(Load Factor 초과), DB는 일시정지하고 방을 2배(200개)로 늘린 거대한 새 호텔을 짓는다. 그리고 기존 손님들을 새로운 해시 함수로 모조리 다 다시 배정(Rehashing)하는 엄청난 이사 작업을 백그라운드에서 수행해야 한다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 3번 방이 꽉 차면 짐을 들고 바로 옆 4번 방, 5번 방 문을 두드려 빈방에 무단 침입하는 방식입니다. 데이터가 몰려있는 곳은 다 같이 붙어있어서 청소하기(캐시 읽기) 편하지만, 호텔이 꽉 차갈수록 빈방 찾느라 복도를 끝도 없이 헤매야 하므로, 호텔 지배인(DB)은 방이 70%쯤 차면 아예 2배 크기의 새 호텔을 짓고 모두 강제 이사를 시키는 엄청난 대공사(Rehashing)를 벌여야 합니다.</p>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

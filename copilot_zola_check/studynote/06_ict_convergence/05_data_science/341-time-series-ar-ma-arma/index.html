@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>341. 시계열 분석 - AR (자기회귀), MA (이동평균), ARMA 모델 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 18, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ict
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 시계열 분석(Time Series Analysis)은 주식 가격이나 날씨처럼 '시간의 흐름'에 따라 순서대로 기록된 데이터를 분석하여, 과거의 패턴이 미래에도 반복될 것이라는 가정하에 내일의 값을 예측하는 통계 기법이다.</li>
+<li><strong>가치</strong>: AR(자기회귀) 모델은 "오늘의 날씨는 어제의 날씨와 비슷하다"는 과거의 '값'에 주목하고, MA(이동평균) 모델은 "어제 기상청의 예보가 빗나간 오차만큼 오늘도 빗나갈 것이다"라는 과거의 '오차(Error)'에 주목하여 불확실성을 통제한다.</li>
+<li><strong>판단 포인트</strong>: AR과 MA를 결합한 ARMA 모델은 데이터의 평균과 분산이 시간에 따라 변하지 않는다는 '정상성(Stationarity)'을 엄격하게 만족해야만 작동하므로, 실무에서는 비정상 데이터를 차분(Differencing)하여 정상화시키는 전처리(ARIMA 모델로 확장)가 필수적이다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>데이터 과학에서 변수 간의 관계를 분석할 때, 일반적인 머신러닝 모델은 데이터의 순서를 무시한다(예: 10년 전 집값이나 어제 집값이나 순서를 섞어도 상관없음). 하지만 주식 가격, 환율, 기온 등은 철저하게 '시간(Time)'이라는 끈으로 묶여 있다. 오늘 주식이 오르면 내일도 오를 확률이 높듯, 과거와 현재 사이에 끈끈한 자기 상관성(Autocorrelation)이 존재한다.</p>
+<p>"과거의 나(과거 데이터)를 보면 미래의 나(내일의 데이터)를 예측할 수 있지 않을까?" 이 질문에서 시작된 통계학의 한 분야가 시계열 분석이며, 그 가장 기초적이면서도 강력한 두 개의 기둥이 바로 과거의 값을 보는 <strong>AR(Auto-Regressive)</strong> 모델과 과거의 오차를 보는 <strong>MA(Moving Average)</strong> 모델이다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: AR은 "어제 내가 10km를 뛰었으니 오늘도 그 관성으로 9km는 뛰겠지"라고 어제의 '행동'을 보는 것이고, MA는 "어제 목표치보다 2km 덜 뛰었으니(오차), 오늘도 며칠간의 피로도 오차 때문에 목표를 못 채우겠지"라고 '실수'의 흐름을 보는 것이다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>시계열 예측 모델은 어떤 과거(값 vs 오차)를 재료로 쓰느냐에 따라 수식이 갈린다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────┐
+│             [ 시계열 AR, MA, ARMA 모델의 수학적 구조 ]         │
+├────────────────────────────────────────────────────────┤
+│ 1. AR 모델 (Auto-Regressive, 자기회귀)                  │
+│    Y_t = a·Y_t-1 + b·Y_t-2 + ... + ε_t                   │
+│    - 내일(Y_t)은 오늘(Y_t-1)과 어제(Y_t-2)의 값에           │
+│      가중치(a, b)를 곱해서 예측!                            │
+│                                                        │
+│ 2. MA 모델 (Moving Average, 이동평균)                   │
+│    Y_t = 평균 + ε_t - θ·ε_t-1 - ...                     │
+│    - 내일(Y_t)은 어제 예측하다가 틀린 오차(ε_t-1)들의        │
+│      영향(Shock)이 오늘까지 이어져서 결정됨!                │
+│                                                        │
+│ 3. ARMA 모델 (AR + MA 융합)                           │
+│    Y_t = (어제까지의 값들) + (어제까지의 오차들) + 현재노이즈  │
+│    - 과거의 관성(AR)과 최근의 외부 충격(MA)을 모두 짬뽕함!    │
+└────────────────────────────────────────────────────────┘
+</code></pre>
+<ol>
+<li><strong>AR (자기회귀)</strong>: 말 그대로 자기 자신(Auto)의 과거 데이터를 독립 변수 삼아 선형 회귀(Regression)를 돌리는 것이다. "오늘 온도는 어제 온도와 매우 비슷하다"는 직관을 따른다.</li>
+<li><strong>MA (이동평균)</strong>: 여기서 말하는 MA는 주식 차트에서 보는 '5일 이동평균선(단순 평균)'이 아니다. 과거에 발생했던 백색 잡음(White Noise, 예측할 수 없었던 외부 충격이나 오차)들이 현재에 미치는 영향을 모델링한 것이다.</li>
+<li><strong>ARMA ($p, q$)</strong>: AR 모델의 과거 변수 개수($p$)와 MA 모델의 과거 오차 개수($q$)를 합친 완벽한 선형 시계열 모델이다.</li>
+</ol>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 아이스크림을 팔 때, AR은 "어제 100개 팔았으니 오늘도 100개 팔리겠지(과거의 값)"라고 예측하는 것이고, MA는 "어제 갑자기 소나기가 와서 30개 못 팔았는데(과거의 오차 쇼크), 그 비구름이 오늘까지 남아있으니 오늘도 덜 팔리겠지"라고 충격의 여파를 계산하는 것이다.</p>
+</blockquote>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>시계열 분석 모델이 몇 개의 파라미터(시차)를 볼 것인지를 결정하기 위해 꼭 필요한 도구가 ACF와 PACF다.</p>
+<table><thead><tr><th style="text-align: center">비교 항목</th><th style="text-align: left">ACF (자기상관함수, Auto-Correlation)</th><th style="text-align: left">PACF (편자기상관함수, Partial Auto-Correlation)</th></tr></thead><tbody>
+<tr><td style="text-align: center"><strong>측정 대상</strong></td><td style="text-align: left">현재 시점($Y_t$)과 $k$일 전($Y_{t-k}$)의 <strong>총체적 상관관계</strong></td><td style="text-align: left"><strong>중간에 낀 날들의 영향을 다 제거한</strong>, 현재와 $k$일 전의 <strong>순수한 상관관계</strong></td></tr>
+<tr><td style="text-align: center"><strong>AR 모델 판단</strong></td><td style="text-align: left">시차가 길어질수록 점진적으로 감소함 (쓸모없음)</td><td style="text-align: left"><strong>특정 시점(p) 이후 팍 꺾여서 0이 됨 (AR의 차수 p 결정에 씀!)</strong></td></tr>
+<tr><td style="text-align: center"><strong>MA 모델 판단</strong></td><td style="text-align: left"><strong>특정 시점(q) 이후 팍 꺾여서 0이 됨 (MA의 차수 q 결정에 씀!)</strong></td><td style="text-align: left">시차가 길어질수록 점진적으로 감소함 (쓸모없음)</td></tr>
+</tbody></table>
+<p>즉, 시계열 데이터를 분석할 때 제일 먼저 ACF와 PACF 그래프를 그려보고, 그래프가 언제 0으로 떨어지는지 눈으로 확인하여 "아, 이 데이터는 AR(2) 모델과 MA(1) 모델을 섞어 쓰면 완벽하겠군!"이라는 아키텍처 설계를 할 수 있다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 할아버지(그저께)가 아빠(어제)에게 유전자를 주고, 아빠가 나(오늘)에게 유전자를 줬을 때, ACF는 할아버지와 나의 겉모습 닮은 꼴(총체적 상관)을 보고, PACF는 아빠의 영향을 빼고 할아버지가 나에게 직접 준 순수 유전자(편상관)만 골라내는 현미경이다.</p>
+</blockquote>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p><strong>실무 적용 시나리오:</strong>
+통신사에서 내일 아침의 트래픽 부하량을 예측할 때 ARMA 모델을 쓴다. 어제 트래픽 패턴(AR)과 어제 새벽에 터진 갑작스러운 장애 여파(MA)를 조합하여, 트래픽이 몰리기 10분 전에 미리 클라우드 서버의 오토 스케일링(Auto Scaling)을 작동시키는 데 활용된다.</p>
+<p><strong>기술사 판단 포인트 (Trade-off):</strong>
+ARMA 모델을 실무에 적용할 때 기술사는 데이터의 **'정상성(Stationarity) 위배 현상'**을 반드시 차단해야 한다.</p>
+<ol>
+<li>ARMA 모델은 "데이터의 평균과 흩어짐(분산)이 10년 전이나 지금이나 항상 일정하다"는 깐깐한 조건(정상성)을 요구한다.</li>
+<li>하지만 주식이나 집값 데이터는 우상향하는 '추세(Trend)'가 있고, 여름마다 에어컨이 팔리는 '계절성(Seasonality)'이 있다. 이 비정상적인 데이터를 그대로 ARMA에 넣으면 예측이 100% 빗나간다.</li>
+<li>따라서 기술사는 반드시 데이터를 그대로 넣지 말고, "오늘 값에서 어제 값을 뺀" **차분(Differencing)**이나 자연로그를 씌우는 전처리(ETL) 파이프라인을 구축하여 억지로 데이터를 '정상성' 상태로 다듬어 주어야 한다.</li>
+</ol>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: ARMA는 매일 잔잔하게 출렁이는 호수(정상성 데이터)의 물결을 맞추는 데는 천재지만, 점점 높아지는 거대한 쓰나미(추세)나 겨울마다 어는 빙판(계절성) 앞에서는 바보가 된다. 파도가 치는 경사(추세)를 평평하게 깎아내야(차분) 이 공식을 쓸 수 있다.</p>
+</blockquote>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>AR과 MA 모델은 수백 년 전부터 인류가 불확실한 미래를 통제하기 위해 고안해 낸 통계학의 가장 직관적이고 강력한 도구다. 딥러닝 시대가 도래하여 LSTM, GRU 같은 거대한 시계열 신경망이 등장했음에도 불구하고, 단기 예측이나 금융 데이터 분석에서는 여전히 ARMA 계열의 모델이 압도적인 가성비와 설명력(Explainability)을 무기로 현업 표준을 지키고 있다.</p>
+<p>결론적으로 ARMA 모델은 '과거가 미래를 지배한다'는 시계열 분석의 철학을 가장 아름다운 선형 방정식 두 개로 빚어낸 명작이다. 기술사는 아무리 복잡한 딥러닝을 설계하더라도 시계열 도메인에 섰을 때는, 언제나 데이터의 정상성을 먼저 의심하고 ACF/PACF를 뚫어져라 쳐다보는 통계학자의 시선을 잃지 말아야 한다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 첨단 인공위성(딥러닝)으로 내일 날씨를 맞출 수도 있지만, AR과 MA는 마당에 서서 바람의 방향(과거의 값)과 먹구름의 움직임(오차의 충격)만 보고도 내일 날씨를 꽤 정확히 맞춰내는 수백 년 된 베테랑 농부의 지혜다.</p>
+</blockquote>
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>상위 개념</strong>: 시계열 분석 (Time Series Analysis), 통계학</li>
+<li><strong>하위 개념</strong>: ACF (자기상관함수), PACF (편자기상관함수), 정상성 (Stationarity)</li>
+<li><strong>연결 개념</strong>: 차분 (Differencing), ARIMA 모델, 백색 잡음 (White Noise)</li>
+</ul>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>"내일 내가 몇 시에 일어날까?"를 맞출 때, AR 모델은 "어제와 그제 7시에 일어났으니 내일도 7시겠지!"라고 과거의 습관을 보는 거예요.</li>
+<li>MA 모델은 "어젯밤에 늦게 자서 오늘 엄청 피곤했으니(오차 쇼크), 그 피로가 내일까지 가서 내일은 늦잠 자겠지!"라고 피로의 여파를 보는 거예요.</li>
+<li>ARMA는 이 두 가지를 섞어서 내일 일어날 시간을 아주 과학적이고 똑똑하게 예측해 주는 마법 공식이랍니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

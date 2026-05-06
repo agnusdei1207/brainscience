@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>192. gRPC - Protocol Buffers 기반 HTTP&#x2F;2 바이너리 스트림 통신 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote enterprise
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="192-grpc-google-remote-procedure-call-gujo">192. gRPC (Google Remote Procedure Call) 구조</h1>
+<blockquote>
+<p>⚠️ 이 문서는 마이크로서비스(MSA) 간의 백엔드 내부 통신에서, 텍스트로 된 무겁고 느린 JSON과 HTTP/1.1 기반의 REST API를 버리고, **데이터를 가벼운 이진(Binary) 코드로 압축하고 양방향 스트리밍(HTTP/2)을 지원하여 내부 서버 간 통신 속도를 극도로 끌어올리는 구글의 오픈소스 고성능 원격 프로시저 호출(RPC) 프레임워크인 'gRPC'**를 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 다른 서버(컴퓨터)에 있는 함수나 메서드를 마치 내 컴퓨터(로컬)에 있는 함수(<code>user.getProfile()</code>)처럼 투명하고 쉽게 불러 쓰게 해주는 원격 호출(RPC) 기술의 현대적 최강자다.</li>
+<li><strong>가치</strong>: REST API가 JSON이라는 '사람이 읽기 편한 텍스트'를 보내느라 낭비하던 네트워크 대역폭과 파싱(직렬화/역직렬화) 시간을, '기계만 알아듣는 압축된 0과 1의 바이너리'로 바꿔버려 속도를 10배 이상 가속화한다. MSA 백엔드 내부망 통신의 필수 무기다.</li>
+<li><strong>기술 체계</strong>: 통신의 운반체로는 빠르고 끈질긴 <strong>HTTP/2</strong>를 채택하고, 상자에 담을 데이터의 규격(포맷)으로는 구글이 만든 가볍고 엄격한 **Protocol Buffers (프로토버프, Protobuf)**를 사용하여 두 마리 토끼(속도와 효율)를 다 잡았다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-rest-apiwa-jsonyi-cimyeongjeog-hangye">Ⅰ. REST API와 JSON의 치명적 한계</h3>
+<p>사용자(프론트엔드)와 소통하기엔 최고지만, 기계끼리 대화하기엔 너무 수다스럽다.</p>
+<ol>
+<li><strong>JSON의 비만 문제 (Payload Bloat)</strong>:
+<ul>
+<li>A 서버가 B 서버로 <code>{"id": 123, "name": "홍길동"}</code>을 보낸다 치자.</li>
+<li>진짜 필요한 정보는 <code>123</code>과 <code>홍길동</code>인데, 기계는 굳이 필요 없는 <code>id</code>, <code>name</code>, 큰따옴표(<code>""</code>), 중괄호(<code>{}</code>) 같은 텍스트 껍데기까지 모두 네트워크로 실어 보내야 한다.</li>
+</ul>
+</li>
+<li><strong>직렬화(Serialization) 파싱 병목</strong>:
+<ul>
+<li>텍스트 덩어리로 날아온 JSON을 자바나 파이썬 객체(Object)로 변환(역직렬화)하는 과정은 은근히 CPU를 많이 잡아먹는다. 초당 수십만 번 호출되는 내부망 서버끼리의 통신에서는 이 낭비가 거대한 병목이 된다.</li>
+</ul>
+</li>
+<li><strong>HTTP/1.1의 답답함</strong>:
+<ul>
+<li>기존 REST는 HTTP/1.1을 써서, 한 번 질문(Request)하면 대답(Response)을 받을 때까지 회선이 꽉 막혀있다(Head-of-Line Blocking). 한 번의 연결로 데이터를 쉴 새 없이 주고받는 양방향 스트리밍 통신이 불가능했다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: REST API(JSON) 통신은 같은 회사 직원(기계)들끼리 100원짜리 메모를 넘길 때마다, 굳이 비싼 금박 봉투에 담고 "존경하는 수신자 제위께..."라고 장황한 인사말(불필요한 텍스트 헤더)을 꽉꽉 채워 우편으로 주고받는 낭비적인 회사 문화와 같습니다.</p>
+<hr />
+<h3 id="ii-grpcyi-mugi-1-protocol-buffers-peurotobeopeu">Ⅱ. gRPC의 무기 1: Protocol Buffers (프로토버프)</h3>
+<p>군더더기를 싹 빼고 오직 순수한 뼈대와 알맹이만 남긴다.</p>
+<ol>
+<li><strong>IDL (인터페이스 정의 언어)의 계약서</strong>:
+<ul>
+<li>gRPC를 쓰려면 A 서버(Java)와 B 서버(Python)가 통신하기 전에 <code>user.proto</code>라는 설계도(명세서) 파일을 먼저 작성해야 한다.</li>
+<li><code>message User { int32 id = 1; string name = 2; }</code> 처럼 "1번 자리는 무조건 32비트 숫자 ID, 2번 자리는 무조건 이름 문자열이야"라고 법으로 강제한다.</li>
+</ul>
+</li>
+<li><strong>바이너리 압축의 마법</strong>:
+<ul>
+<li>이제 B 서버로 데이터를 보낼 때 <code>{"id": 123, "name": "홍길동"}</code>이라는 텍스트를 보내지 않는다.</li>
+<li>그냥 컴퓨터 이진수로 <code>[1번 자리 123, 2번 자리 홍길동]</code>이라는 빽빽하게 압축된 바이트(Byte) 덩어리만 휙 던진다. 수신자도 <code>user.proto</code> 설계도를 갖고 있으니 "아, 첫 번째 덩어리는 ID구나" 하고 0.001초 만에 조립(역직렬화)해버린다.</li>
+</ul>
+</li>
+<li><strong>강타입(Strongly Typed)의 안전성</strong>:
+<ul>
+<li>REST API는 상대방이 JSON 필드를 멋대로 바꾸면 런타임 중에 에러가 터진다.</li>
+<li>Protobuf는 컴파일 시점에 클래스 코드를 자동 생성해 주므로, 개발자가 실수로 숫자 자리에 문자를 넣으려 하면 타이핑할 때 에러 밑줄을 그어주어(Compile Error) 런타임 사고를 원천 봉쇄한다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 군대에서 통신병들이 무전할 때 "본부, 현재 1소대가 적군 10명을 발견했습니다"라고 길게 말하지 않고, 암호표(Proto 파일)를 보고 "알파-1-탱고-10" 이라는 짧은 음어(바이너리)만 툭 던져버려 통신 시간과 적의 도청을 완벽히 차단하는 초고속 전문 통신 체계입니다.</p>
+<hr />
+<h3 id="iii-grpcyi-mugi-2-http-2wa-yangbanghyang-seuteuriming">Ⅲ. gRPC의 무기 2: HTTP/2와 양방향 스트리밍</h3>
+<p>전화 한 통 걸어서 끊지 않고 무제한으로 대화를 나눈다.</p>
+<ol>
+<li><strong>HTTP/2 멀티플렉싱 (Multiplexing)</strong>:
+<ul>
+<li>gRPC의 기저에 깔려 있는 HTTP/2는 하나의 파이프(TCP 연결) 안에 수많은 요청과 응답을 차선 구분 없이 마구잡이로 동시에 쏟아부을 수 있다. 연결을 맺고 끊는 지연 시간(Handshake)이 획기적으로 사라진다.</li>
+</ul>
+</li>
+<li><strong>4가지 통신 패턴의 지원</strong>:
+<ul>
+<li><strong>Unary</strong>: 일반 REST처럼 하나 던지고 하나 받는 방식.</li>
+<li><strong>Server Streaming</strong>: 클라이언트가 요청 하나를 던지면, 서버가 주식 호가처럼 수천 개의 데이터를 끊지 않고 콸콸콸 내려보냄.</li>
+<li><strong>Client Streaming</strong>: 클라이언트가 센서 데이터 수만 개를 쏴주고, 다 끝나면 서버가 "잘 받았어" 하고 하나만 응답함.</li>
+<li><strong>Bidirectional (양방향) Streaming</strong>: 채팅 앱이나 줌(Zoom) 화상 회의처럼 서버와 클라이언트가 연결을 계속 살려둔 채 양쪽에서 미친 듯이 실시간으로 동시에 데이터를 주고받음.</li>
+</ul>
+</li>
+<li><strong>한계와 실무 적용 (프론트엔드의 벽)</strong>:
+<ul>
+<li>gRPC는 인간(브라우저)이 읽을 수 없는 바이너리 포맷이라 디버깅이 까다롭고, 웹 브라우저(JS)에서 직접 HTTP/2를 깊게 제어하기 힘들어 프론트엔드와 백엔드 간 통신에는 여전히 REST API(또는 GraphQL)가 주로 쓰인다.</li>
+<li>하지만 <strong>사내망 깊숙이 숨어있는 마이크로서비스들(백엔드 $\leftrightarrow$ 백엔드) 간의 초고속 동기식 혈관 망</strong>으로는 gRPC가 사실상 만장일치의 표준(De facto)이 되었다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 과거의 편지(REST API)는 우체통에 넣고 며칠 뒤 답장을 받아야 했지만, gRPC(HTTP/2 스트리밍)는 아예 상대방 서버와 상시 통화 상태로 '핫라인 무전기'를 켜놓은 것입니다. 내가 말을 하는 도중에도 상대방의 대답이 쉴 새 없이 스피커로 흘러나오는 완벽한 쌍방향 실시간 대화 채널입니다.</p>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

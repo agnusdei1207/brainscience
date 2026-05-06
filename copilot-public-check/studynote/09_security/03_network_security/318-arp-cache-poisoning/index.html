@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>318. ARP 캐시 오염 (ARP Cache Poisoning) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote security
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: ARP 캐시 오염(ARP Cache Poisoning)은 ARP (Address Resolution Protocol)의 인증 없는 설계를 악용해 가짜 MAC 주소를 네트워크 이웃에게 브로드캐스트하고, 피해자의 ARP 캐시(Cache) 테이블을 오염시켜 트래픽을 탈취하는 L2 계층 공격이다.</li>
+<li><strong>가치</strong>: 동일 L2 네트워크 내에서 암호화되지 않은 트래픽(HTTP, Telnet, FTP)을 실시간 도청하거나, HTTPS 세션도 SSLStrip 공격과 결합하면 탈취 가능하므로, 내부 네트워크 보안에서 핵심 방어 대상이다.</li>
+<li><strong>판단 포인트</strong>: DAI (Dynamic ARP Inspection)가 핵심 방어 기술이며, DHCP 스누핑(DHCP Snooping) 바인딩 테이블과 연동하여 IP-MAC 매핑 신뢰성을 검증하는 원리를 정확히 이해해야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>ARP는 1982년 RFC 826으로 정의된 프로토콜로, IP 주소를 MAC (Media Access Control) 주소로 변환하는 L2/L3 경계 역할을 한다. 문제는 ARP가 "무신뢰(Stateless)" 설계라는 점이다. ARP Reply는 Request가 없어도 보낼 수 있으며(Gratuitous ARP), 수신 측은 이를 그대로 캐시에 저장한다. 인증이나 검증 메커니즘이 전혀 없다.</p>
+<p>공격자는 이 취약점을 이용해 "나는 게이트웨이(192.168.1.1)이고, 내 MAC은 AA:BB:CC:DD:EE:FF야"라는 거짓 ARP Reply를 피해자들에게 지속적으로 보낸다. 피해자들은 이를 신뢰하고 ARP 캐시를 갱신하며, 이후 모든 외부 통신이 공격자를 경유하게 된다. 이것이 MITM (Man-in-the-Middle) 공격의 전형적인 L2 구현이다.</p>
+<p>내부망 보안 사고에서 ARP 캐시 오염은 가장 빈번하게 활용되는 공격 기법 중 하나다. Ettercap, Arpspoof, Bettercap 같은 공개 도구로 클릭 몇 번이면 실행 가능하므로 기술 장벽이 낮다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: ARP 캐시 오염은 동네 게시판에 "우체국 주소가 바뀌었어요, 이제 우리 집으로 편지 보내세요"라는 가짜 공지를 붙이는 것이다. 주민들이 이를 믿고 편지를 보내면 우편물이 모두 공격자 손에 들어간다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="arp-kaesi-oyeom-gonggyeog-heureum">ARP 캐시 오염 공격 흐름</h3>
+<pre><code>정상 상태:
+  피해자 A (192.168.1.10) ──► 게이트웨이 (192.168.1.1, MAC: 00:11:22:33:44:55)
+  피해자 B (192.168.1.20) ──► 게이트웨이 (192.168.1.1, MAC: 00:11:22:33:44:55)
+
+공격 시작 (Gratuitous ARP 전송):
+  공격자 → 피해자 A: &quot;192.168.1.1 = AA:BB:CC:DD:EE:FF&quot; (공격자 MAC)
+  공격자 → 피해자 B: &quot;192.168.1.10 = AA:BB:CC:DD:EE:FF&quot; (공격자 MAC)
+  공격자 → 게이트웨이: &quot;192.168.1.10 = AA:BB:CC:DD:EE:FF&quot;
+
+공격 성공 후 (MITM 상태):
+  피해자 A ──► 공격자 ──► 게이트웨이 (트래픽 도청)
+  피해자 B ──► 공격자 ──► 피해자 A   (트래픽 도청)
+</code></pre>
+<h3 id="arp-dongjag-weonriwa-cwiyagjeom">ARP 동작 원리와 취약점</h3>
+<pre><code>┌──────────────────────────────────────────────┐
+│  정상 ARP 흐름                               │
+│                                              │
+│  호스트 A: &quot;192.168.1.1 MAC이 뭐야?&quot; (Broadcast)│
+│       │                                     │
+│       ▼                                     │
+│  게이트웨이: &quot;내 MAC은 00:11:22:33:44:55야&quot; │
+│       │                                     │
+│       ▼                                     │
+│  호스트 A ARP 캐시: 192.168.1.1 → 00:11:... │
+│                                              │
+│  취약점: 응답 인증 없음 + Gratuitous ARP 수용│
+│  → 공격자 무응답 요청 없이도 캐시 덮어쓰기 가능│
+└──────────────────────────────────────────────┘
+</code></pre>
+<h3 id="haegsim-bangeo-gisul-bigyo">핵심 방어 기술 비교</h3>
+<table><thead><tr><th style="text-align: left">방어 기술</th><th style="text-align: left">동작 원리</th><th style="text-align: center">적용 위치</th><th style="text-align: left">특징</th></tr></thead><tbody>
+<tr><td style="text-align: left">DAI (Dynamic ARP Inspection)</td><td style="text-align: left">DHCP Snooping 테이블과 ARP 패킷 IP-MAC 비교</td><td style="text-align: center">스위치</td><td style="text-align: left">가장 강력한 방어</td></tr>
+<tr><td style="text-align: left">정적 ARP 항목 (Static ARP)</td><td style="text-align: left">수동으로 신뢰 IP-MAC 매핑 고정</td><td style="text-align: center">호스트</td><td style="text-align: left">소규모에서만 실용적</td></tr>
+<tr><td style="text-align: left">IPSG (IP Source Guard)</td><td style="text-align: left">포트별 IP-MAC 트래픽 필터링</td><td style="text-align: center">스위치</td><td style="text-align: left">DAI와 함께 사용</td></tr>
+<tr><td style="text-align: left">포트 보안 (Port Security)</td><td style="text-align: left">포트당 허용 MAC 수 제한</td><td style="text-align: center">스위치</td><td style="text-align: left">MAC Flooding 방어 겸용</td></tr>
+<tr><td style="text-align: left">ARP 모니터링 도구</td><td style="text-align: left">Arpwatch 등으로 MAC 변화 감지</td><td style="text-align: center">서버/관리</td><td style="text-align: left">탐지만 가능, 차단 불가</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: DAI는 스위치에 경비원을 세우는 것이다. ARP 패킷이 들어올 때마다 "이 IP-MAC 쌍이 DHCP 장부에 있어?"를 확인하고, 없으면 바로 차단한다.</p>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="dai-dynamic-arp-inspection-dongjag-sangse">DAI (Dynamic ARP Inspection) 동작 상세</h3>
+<table><thead><tr><th style="text-align: left">단계</th><th style="text-align: left">처리 내용</th></tr></thead><tbody>
+<tr><td style="text-align: left">DHCP Snooping 활성화</td><td style="text-align: left">스위치가 DHCP 교환을 감청해 IP-MAC-포트 바인딩 테이블 구축</td></tr>
+<tr><td style="text-align: left">Trusted 포트 설정</td><td style="text-align: left">업링크 포트는 신뢰(Trusted)로 설정 → ARP 검사 생략</td></tr>
+<tr><td style="text-align: left">Untrusted 포트 ARP 검사</td><td style="text-align: left">모든 ARP 패킷의 IP-MAC 쌍을 바인딩 테이블과 비교</td></tr>
+<tr><td style="text-align: left">불일치 시 드롭</td><td style="text-align: left">바인딩 테이블에 없는 IP-MAC 조합의 ARP는 차단 + 로그</td></tr>
+<tr><td style="text-align: left">정적 바인딩 추가</td><td style="text-align: left">DHCP 미사용 장비는 수동으로 IP-MAC 바인딩 등록</td></tr>
+</tbody></table>
+<h3 id="gonggyeog-yeongye-sinario">공격 연계 시나리오</h3>
+<pre><code>ARP 캐시 오염
+    │
+    ├── MITM 트래픽 도청
+    │   ├── HTTP → 평문 탈취
+    │   ├── HTTPS + SSLStrip → 세션 쿠키 탈취
+    │   └── DNS 응답 변조 (DNS Spoofing)
+    │
+    ├── DoS (Denial of Service)
+    │   └── 잘못된 MAC 주소 → 패킷 블랙홀
+    │
+    └── 세션 하이재킹 (Session Hijacking)
+        └── TCP 세션 탈취 → 인증 우회
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: IPSG + DAI + 포트 보안은 세 겹의 검문소다. 포트 보안은 신분증 개수 제한, DHCP Snooping은 실제 주소 등록부, DAI는 등록부와 현재 신분증 대조다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="cisco-seuwici-dai-seoljeong-yesi">Cisco 스위치 DAI 설정 예시</h3>
+<pre><code>! DHCP Snooping 활성화
+ip dhcp snooping
+ip dhcp snooping vlan 10,20,30
+
+! DAI 활성화
+ip arp inspection vlan 10,20,30
+
+! 업링크 포트 Trusted 설정
+interface GigabitEthernet0&#x2F;1
+  ip dhcp snooping trust
+  ip arp inspection trust
+
+! 엔드포인트 포트 Rate-Limit (DoS 방어)
+interface GigabitEthernet0&#x2F;2
+  ip arp inspection limit rate 100
+
+! 정적 ARP 바인딩 (DHCP 미사용 장비)
+arp access-list STATIC_ARP
+  permit ip host 192.168.1.100 mac host 00:50:56:AA:BB:CC
+ip arp inspection filter STATIC_ARP vlan 10
+</code></pre>
+<h3 id="ipsg-ip-source-guard-cuga-seoljeong">IPSG (IP Source Guard) 추가 설정</h3>
+<pre><code>interface GigabitEthernet0&#x2F;2
+  ip verify source
+! → 포트에서 수신된 패킷의 IP-MAC을 DHCP Snooping 테이블과 비교
+!   불일치 패킷 전부 드롭
+</code></pre>
+<h3 id="gisulsa-siheom-pandan-pointeu">기술사 시험 판단 포인트</h3>
+<p>시험에서 ARP 캐시 오염 관련 문제는 주로 두 가지 형태다. 첫째, 공격 메커니즘 설명 → "Gratuitous ARP + 인증 부재"를 핵심으로 서술. 둘째, 방어 방안 논술 → DAI와 DHCP Snooping의 연계 동작, 신뢰/비신뢰 포트 구분을 도식과 함께 설명. "왜 DAI만으로는 부족하고 IPSG가 필요한가"를 계층적으로 설명하면 고득점이다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 기술사 답안에서 ARP 방어는 "누가 어디서 들어오는지 장부에 적고(DHCP Snooping), 들어오는 패킷과 장부를 대조하고(DAI), 모르는 패킷은 문 앞에서 차단(IPSG)"이라는 3단계 논리로 서술해야 한다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>DAI와 DHCP Snooping을 스위치 레벨에서 활성화하면, 내부 네트워크에서 발생하는 ARP 캐시 오염 공격의 대부분을 자동으로 차단할 수 있다. 공격자가 동일 L2 세그먼트에 물리적으로 접근했더라도, 트래픽 탈취가 불가능해진다.</p>
+<p>포트 보안(Port Security)을 추가로 적용하면 MAC Flooding 공격도 방어하여 스위치가 허브(Hub)처럼 동작하는 상태를 막을 수 있다. 이들 설정은 스위치 CLI에서 수 분 내에 적용 가능하며, 별도 장비 구매 없이 기존 인프라에서 구현된다는 점에서 비용 효율이 높다.</p>
+<p>장기적으로는 IPv6 환경으로의 전환과 함께 NDP (Neighbor Discovery Protocol) 기반 공격(NDPv6 Spoofing)으로 위협이 확장되므로, RA Guard (Router Advertisement Guard)와 IPv6 Source Guard도 병행 적용이 필요하다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: ARP 방어 완료는 동네 우편함에 잠금장치를 달고, 집배원 명단을 확인하고, 모르는 배달부가 오면 경비에게 신고하는 체계를 갖춘 것이다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">관계</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">ARP (Address Resolution Protocol)</td><td style="text-align: left">공격 대상 프로토콜</td><td style="text-align: left">IP → MAC 변환, RFC 826</td></tr>
+<tr><td style="text-align: left">Gratuitous ARP</td><td style="text-align: left">공격 수단</td><td style="text-align: left">요청 없이 보내는 ARP Reply</td></tr>
+<tr><td style="text-align: left">MITM (Man-in-the-Middle)</td><td style="text-align: left">공격 결과</td><td style="text-align: left">ARP 오염 후 트래픽 도청</td></tr>
+<tr><td style="text-align: left">DAI (Dynamic ARP Inspection)</td><td style="text-align: left">핵심 방어</td><td style="text-align: left">DHCP Snooping 테이블 기반 ARP 검증</td></tr>
+<tr><td style="text-align: left">DHCP Snooping</td><td style="text-align: left">DAI 전제조건</td><td style="text-align: left">IP-MAC-포트 바인딩 테이블 구축</td></tr>
+<tr><td style="text-align: left">IPSG (IP Source Guard)</td><td style="text-align: left">보완 방어</td><td style="text-align: left">포트 단위 IP-MAC 필터링</td></tr>
+<tr><td style="text-align: left">포트 보안 (Port Security)</td><td style="text-align: left">추가 방어</td><td style="text-align: left">포트당 허용 MAC 수 제한</td></tr>
+<tr><td style="text-align: left">SSLStrip</td><td style="text-align: left">연계 공격</td><td style="text-align: left">ARP 오염 후 HTTPS를 HTTP로 다운그레이드</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ul>
+<li>ARP 캐시 오염은 동네 게시판에 "우리 집이 우체국이야"라는 가짜 공지를 붙이는 거야.</li>
+<li>주민들이 이를 믿으면 편지가 모두 공격자 집으로 가서 내용이 들켜버려.</li>
+<li>방어는 스위치가 "진짜 우체국 주소 장부"를 갖고 있어서 가짜 공지를 바로 거부하는 거야.</li>
+</ul>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

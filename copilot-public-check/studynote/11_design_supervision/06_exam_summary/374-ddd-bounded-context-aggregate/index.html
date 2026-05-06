@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>374. DDD (Domain-Driven Design) 바운디드 컨텍스트와 애그리게이트 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote design supervision
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: DDD (Domain-Driven Design)는 복잡한 비즈니스 도메인을 소프트웨어 모델로 정확히 표현하는 설계 방법론으로, 바운디드 컨텍스트 (Bounded Context)가 마이크로서비스 분할의 자연스러운 경계를 제공한다.</li>
+<li><strong>가치</strong>: 유비쿼터스 언어 (Ubiquitous Language)로 개발자와 도메인 전문가가 동일하게 소통하면, 코드와 비즈니스 개념의 간극이 사라진다.</li>
+<li><strong>판단 포인트</strong>: "한 트랜잭션 = 한 애그리게이트 (Aggregate)" 원칙이 설계 핵심으로, 경계 설정 오류 시 분산 트랜잭션이 필요해진다.</li>
+</ol>
+</blockquote>
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>기술 계층(Controller-Service-Repository)으로만 코드를 나누면, 비즈니스 규칙이 여러 클래스에 분산되어 복잡성이 증가한다. DDD는 코드를 도메인 모델 중심으로 구성한다.</p>
+<p><strong>DDD 핵심 개념:</strong></p>
+<ul>
+<li><strong>유비쿼터스 언어</strong>: 팀 전체 공유 도메인 용어</li>
+<li><strong>바운디드 컨텍스트</strong>: 도메인 모델이 유효한 명시적 경계</li>
+<li><strong>엔티티 (Entity)</strong>: 식별자로 구별되는 객체</li>
+<li><strong>값 객체 (Value Object)</strong>: 속성으로만 구별되는 불변 객체</li>
+<li><strong>애그리게이트</strong>: 일관성 경계 단위, 루트를 통해서만 접근</li>
+</ul>
+<p>📢 <strong>섹션 요약 비유</strong>: DDD는 업계 전문가와 개발자가 같은 지도를 보며 이야기하는 것이다.</p>
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────────┐
+│                 DDD 바운디드 컨텍스트 맵 예시                   │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌────────────────┐  Customer&#x2F;Supplier  ┌────────────────┐      │
+│  │  주문 컨텍스트  │◄───────────────────►│  결제 컨텍스트  │      │
+│  │  Order (AR)    │                    │  Payment (AR)  │      │
+│  │  - OrderId     │                    │  - PaymentId   │      │
+│  └────────────────┘                    └────────────────┘      │
+│           │ Context Map                                         │
+│  ┌────────────────┐                                             │
+│  │  재고 컨텍스트  │                                             │
+│  │  Product (AR)  │  AR = Aggregate Root                        │
+│  └────────────────┘                                             │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">설명</th><th style="text-align: left">MSA 연관</th></tr></thead><tbody>
+<tr><td style="text-align: left">바운디드 컨텍스트</td><td style="text-align: left">도메인 모델의 명시적 경계</td><td style="text-align: left">서비스 분할 경계 기준</td></tr>
+<tr><td style="text-align: left">애그리게이트</td><td style="text-align: left">일관성 경계 단위</td><td style="text-align: left">한 서비스 내 DB 범위</td></tr>
+<tr><td style="text-align: left">도메인 이벤트</td><td style="text-align: left">상태 변화 사실 표현</td><td style="text-align: left">서비스 간 통신 수단</td></tr>
+<tr><td style="text-align: left">컨텍스트 맵</td><td style="text-align: left">컨텍스트 간 관계 명시</td><td style="text-align: left">API 계약, ACL 설계</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 애그리게이트는 팀 리더가 있는 프로젝트 팀이다. 외부는 반드시 팀 리더를 통해 접근해야 한다.</p>
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">트랜잭션 스크립트</th><th style="text-align: left">도메인 모델 (DDD)</th></tr></thead><tbody>
+<tr><td style="text-align: left">비즈니스 로직</td><td style="text-align: left">서비스 레이어 집중</td><td style="text-align: left">도메인 객체 내부</td></tr>
+<tr><td style="text-align: left">복잡성 대응</td><td style="text-align: left">로직 증가 시 스파게티화</td><td style="text-align: left">캡슐화로 관리</td></tr>
+<tr><td style="text-align: left">도메인 전문가 소통</td><td style="text-align: left">코드와 불일치</td><td style="text-align: left">유비쿼터스 언어 일치</td></tr>
+<tr><td style="text-align: left">적합 규모</td><td style="text-align: left">단순 CRUD</td><td style="text-align: left">복잡한 비즈니스 규칙</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 트랜잭션 스크립트는 요리사 한 명이 모든 요리를 담당, DDD는 각 요리마다 전담 요리사가 레시피를 지키는 분업이다.</p>
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p><strong>애그리게이트 설계 원칙:</strong></p>
+<ol>
+<li>작게 유지: 엔티티 수 최소화</li>
+<li>ID로만 참조: 다른 애그리게이트는 ID만으로 연결</li>
+<li>한 트랜잭션 = 한 애그리게이트</li>
+<li>불변식 (Invariant) 내재화</li>
+</ol>
+<p><strong>이벤트 스토밍 (Event Storming):</strong>
+도메인 이벤트 → 커맨드 → 애그리게이트 → 바운디드 컨텍스트 순 식별 워크숍</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 이벤트 스토밍은 포스트잇으로 벽에 비즈니스 시나리오를 펼쳐 "누가 책임질지" 찾는 과정이다.</p>
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>DDD는 복잡한 비즈니스 도메인을 코드에 정확히 반영하며, MSA와 결합하면 서비스 경계가 비즈니스 경계와 일치하여 변경 영향 범위가 명확해진다. 기술사 시험에서는 바운디드 컨텍스트와 마이크로서비스 분할의 연관성, 애그리게이트 설계 원칙을 구체적으로 서술해야 한다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: DDD는 건물 설계도에서 각 방의 용도를 명확히 정하는 것이다.</p>
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">관계</th><th style="text-align: left">개념</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">상위 개념</td><td style="text-align: left">도메인 모델링</td><td style="text-align: left">DDD가 속하는 설계 접근법</td></tr>
+<tr><td style="text-align: left">핵심 개념</td><td style="text-align: left">바운디드 컨텍스트, 애그리게이트</td><td style="text-align: left">DDD 전술 패턴</td></tr>
+<tr><td style="text-align: left">연관 개념</td><td style="text-align: left">사가 패턴</td><td style="text-align: left">애그리게이트 간 트랜잭션 처리</td></tr>
+<tr><td style="text-align: left">연관 개념</td><td style="text-align: left">이벤트 소싱 (Event Sourcing)</td><td style="text-align: left">상태 대신 이벤트로 저장</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ul>
+<li>학교에서 각 반이 자기 규칙으로 운영되는 것처럼 각 컨텍스트는 자기만의 의미로 움직여요.</li>
+<li>반장(루트 엔티티)을 통해서만 반 내부에 접근할 수 있어요.</li>
+<li>선생님과 학생이 같은 용어를 써야 오해가 없는 것처럼 개발자와 전문가가 같은 말을 써요.</li>
+</ul>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

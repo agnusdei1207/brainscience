@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Brain Science - OLAP</title>
+    <subtitle>AI, Infra, DevSecOps, Cloud Native, Security</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://agnusdei1207.github.io/brainscience/tags/olap/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://agnusdei1207.github.io/brainscience"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-05-24T00:00:00+00:00</updated>
+    <id>https://agnusdei1207.github.io/brainscience/tags/olap/atom.xml</id>
+    <entry xml:lang="en">
+        <title>2. 정형 데이터 (Structured Data) - RDBMS 테이블 같이 엄격한 스키마 구조 보유</title>
+        <published>2024-05-24T00:00:00+00:00</published>
+        <updated>2024-05-24T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://agnusdei1207.github.io/brainscience/studynote/14_data_engineering/01_infrastructure/002-structured-data/"/>
+        <id>https://agnusdei1207.github.io/brainscience/studynote/14_data_engineering/01_infrastructure/002-structured-data/</id>
+        
+        <content type="html" xml:base="https://agnusdei1207.github.io/brainscience/studynote/14_data_engineering/01_infrastructure/002-structured-data/">&lt;h1 id=&quot;02-jeonghyeong-deiteo-structured-data&quot;&gt;02. 정형 데이터 (Structured Data)&lt;&#x2F;h1&gt;
+&lt;h4 id=&quot;haegsim-insaiteu-3jul-yoyag&quot;&gt;핵심 인사이트 (3줄 요약)&lt;&#x2F;h4&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;본질&lt;&#x2F;strong&gt;: 정형 데이터는 행( Row )과 열( Column )로 구성된 사전에 정의된 스키마를 따르며, 각 필드의 데이터 타입이 고정되어 있어 쿼리 검색과 분석이 매우 효율적이다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;구조&lt;&#x2F;strong&gt;: 관계형 데이터베이스 관리 시스템( RDBMS )인 오라클, MySQL, PostgreSQL 등의 테이블 구조를 기반으로 하며, 외래 키( Foreign Key )와 조인( Join ) 연산을 통해 데이터 무결성을 유지한다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;한계&lt;&#x2F;strong&gt;: 스키마가 고정되어 있어 새로운 필드 추가 시 마이그레이션이 필요하며, 비정형 데이터( 텍스트, 이미지, 로그 )를 직접 저장するには不向きである.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;i-gaeyo-mic-pilyoseong-context-necessity&quot;&gt;Ⅰ. 개요 및 필요성 (Context &amp;amp; Necessity)&lt;&#x2F;h3&gt;
+&lt;p&gt;정형 데이터( Structured Data )란事前定義されたスキーマ에 따라 구성되며, 행( Row )과 열( Column )의 2차원 테이블 형태로 저장되는 데이터를 의미한다. 이는 마치 엑셀 스프레드시트의 셀(cell)처럼 각 열( Column )이 주민등록번호, 이름, 주소처럼 정해진 데이터 타입( 문자열, 정수, 날짜 등 )을 갖고, 각 행( Row )이 하나의 레코드( Record )를 대표한다.
+전통적인 기업 정보 시스템은 1970년대 관계형 데이터베이스( Relational Database )의 등장 이래로 정형 데이터를 기반으로 구축되었다. 이러한 정형 데이터는은행업의 계좌 거래, 제조업의 재고 관리, 소매업의 매출 기록 등业务的 핵심 자산으로 활용되어 왔다. 스키마가 미리 정의되어 있기 때문에 데이터 무결성( Data Integrity )制約을 걸 수 있고, 급en&#x27;s 행( ACID ) 트랜잭션을 안전하게 처리할 수 있다.
+그러나, 인터넷과 SNS, IoT 기기에서 발생하는 비정형 및 반정형 데이터( JSON, XML, 로그 파일 등 )는 기존의 RDBMS 방식으로는 저장소 구조가 맞지 않아 별도의 처리 파이프라인이 필요하게 되었다.&lt;&#x2F;p&gt;
+&lt;p&gt;[전통적 정형 데이터 처리 환경과 RDBMS 한계 도식도]&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[기업 업무 시스템]                    [정형 데이터의 흐름]
+ ERP &amp;#x2F; SAP  ──&amp;gt;  [OLTP DB]  ──&amp;gt;  [정기 배치 ETL]  ──&amp;gt;  [Data Warehouse]
+(정형 거래)       (실시간 갱신)      (야간DW이전)          (경영분석Reporting)
+     │                │                  │                      │
+     └───── 트랜잭션 ACID 보존 ─┴────── 매일 수십GB ──────────┴───── BI 대시보드
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 도식은 전통적인 기업의 정형 데이터 흐름을 보여준다. ERP나업paeos에서 발생한 정형 거래 데이터는 OLTP( Online Transaction Processing ) 데이터베이스에 실시간으로 저장되고, 야간에 ETL( Extract, Transform, Load ) 작업을 통해 Data Warehouse로 이전되어 경영진용 BI 리포팅에 활용된다. 이러한 배치 처리는 하룻밤 사이에 모든 거래 데이터가 DW에 반영되어야 하므로 일(日) 단위 분석만 가능하다는 속도(Velocity) 한계가 존재한다.&lt;&#x2F;p&gt;
+&lt;p&gt;📢 &lt;strong&gt;섹션 요약 비유&lt;&#x2F;strong&gt;: 정형 데이터는 도서관의 정화된 분류표에 맞게 정리된 도서 목록 카드( 카탈로그 )와 같다. 카드는 미리 정해진 항목( 청구기호, 저자, 제목 )으로 구성되어 있어 빠르게 검색( SQL )할 수 있지만, 그림이나 표지 색깔 같은 비정형 속성은 표현할 수 없다.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ii-akitegceo-mic-haegsim-weonri-deep-dive&quot;&gt;Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)&lt;&#x2F;h3&gt;
+&lt;p&gt;정형 데이터는 그 구조적 특성 인해 OLTP와 OLAP라는 두 가지 다른運用 환경으로 나뉘며, 각각 최적화된 데이터베이스 아키텍처가 존재한다.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;구분&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;OLTP (Online Transaction Processing)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;OLAP (Online Analytical Processing)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;판단 기준&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;목적&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;일상적 거래( 등록, 수정, 삭제 )의 실시간 처리&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;대규모 데이터의 분석, 집계, 통계 처리&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;처리 유형&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;데이터 크기&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;수천~수백만 건 (단위: 레코드)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;수십억~수천억 건 (단위: 기가~테라바이트)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;데이터 볼륨&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;스키마&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;정규화( 3차 정규형~BCNF )鸥&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;다차원 모델( 스타 스키마, 눈송이 스키마 )&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;설계 방법론&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;쿼리 패턴&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;단일 레코드 CRUD (수십 건&#x2F;초)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;복잡한 JOIN, 그룹핑, 윈도우 함수 (수백 건&#x2F;일)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;액세스 패턴&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;인덱스&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;B-Tree, 해시 인덱스&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;클러스터드, 비트맵 인덱스&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;성능 최적화&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;트랜잭션&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;ACID 완전 준수&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;읽기 전용大宗查询 위주&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;일관성 요구&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;대표 제품&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Oracle, MySQL, PostgreSQL&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Snowflake, BigQuery, Redshift, Teradata&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;商用 솔루션&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;[정형 데이터의 OLTP에서 OLAP로의 이동 아키텍처]&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[OLTP 계층 - 실시간 정형 거래 처리]
+┌─────────────────────────────────────────────────────┐
+│  웹&amp;#x2F;App  ──&amp;gt;  [Load Balancer]  ──&amp;gt;  [MySQL Primary] │
+│                    │                  │              │
+│                 읽기 전용              │ RAID 1 복제  │
+│                    ↓                   ↓              │
+│              [MySQL Replica 1]  [MySQL Replica 2]     │
+│                  (샤딩&amp;#x2F;Sharding 수평 확장)            │
+└─────────────────────────────────────────────────────┘
+                        │ 야간 ETL &amp;#x2F; CDC
+                        ↓ (아마존 DMS, Debezium)
+┌─────────────────────────────────────────────────────┐
+│  [OLAP 계층 - 분석용 데이터 웨어하우스]              │
+│                                                     │
+│  Snowflake &amp;#x2F; Redshift &amp;#x2F; BigQuery                    │
+│  ┌─────────┬─────────┬─────────┬─────────┐         │
+│  │ Fact    │ Fact    │ Dim     │ Dim     │         │
+│  │ Sales   │ Inventory│ Customer│ Product │         │
+│  └─────────┴─────────┴─────────┴─────────┘         │
+│       (스타 스키마 &amp;#x2F; 눈송이 스키마 구성)             │
+└─────────────────────────────────────────────────────┘
+                        │
+                        ↓ (BI 도구: Tableau, Looker)
+              [경영진 대시보드 &amp;#x2F; 자가 보고서]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 구조는 정형 데이터가 실시간 거래 환경( OLTP )에서 분석 환경( OLAP )으로 어떻게 흐르는지를 보여준다. OLTP 데이터는 매일 밤 또는 CDC( Change Data Capture )를 통해 실시간으로 DW로 이전되며, DW에서는 정규화된 테이블이 분석에 유리한 다차원 스타 스키마로 재구성된다. OLTP 환경에서는高频交易的 단일 레코드 접근에 최적화된 B-Tree 인덱스가 필수적이고, OLAP 환경에서는 대규모 스캔과 집계에 적합한 컬럼 스토어 인덱스가 핵심이다.&lt;&#x2F;p&gt;
+&lt;p&gt;📢 &lt;strong&gt;섹션 요약 비유&lt;&#x2F;strong&gt;: OLTP는 놀이공원의 입장권 발권 시스템( 빠른 처리 )이고, OLAP는 하루 종일 모인万名 利用자 데이터를汇总하여 어떤 놀이기구가 가장 인기가 있는지 분석するバックオフィス統計システムです.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;iii-yunghab-bigyo-mic-dagagdo-bunseog-comparison-synergy&quot;&gt;Ⅲ. 융합 비교 및 다각도 분석 (Comparison &amp;amp; Synergy)&lt;&#x2F;h3&gt;
+&lt;p&gt;정형 데이터와 반정형( Semi-structured ), 비정형( Unstructured ) 데이터는 각각 다른 저장소와 처리 패러다임을 요구하며, 현대 데이터 플랫폼에서는 이三者가 공존한다.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;비교 항목&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;정형 데이터 (Structured)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;반정형 데이터 (Semi-structured)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;비정형 데이터 (Unstructured)&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;스키마&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;사전 정의된 고정 스키마&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;데이터 내부에 메타데이터 포함&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;스키마 없음&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;보관 형태&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;RDBMS 테이블 (행&#x2F;열)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;JSON, XML, CSV, 로그&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;텍스트, 이미지, 영상, 음성&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;검색 방식&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;SQL (정형 쿼리)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;JSONPath, XPath, 정규식&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;풀 텍스트 검색, 임베딩 벡터&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;확장성&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;수직 확장 (Scale-up) 한계&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;수평 확장 (Scale-out) 가능&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;대규모 분산 파일 시스템&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;ACID 트랜잭션&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;완전 지원&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;부분 지원 (MongoDB 등)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;미지원&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;대표 저장소&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Oracle, MySQL, PostgreSQL&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;MongoDB, Elasticsearch, S3&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;HDFS, S3, Vector DB&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;분석 용도&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;집계, 리포팅, BI&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;로그 분석, 실시간 모니터링&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;AI&#x2F;ML 훈련, NLP, 이미지 인식&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;비용&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;라이선스 비용 높음&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;오픈소스 중심 (저렴)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;클라우드 오브젝트 스토리지 (저렴)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;[현대 데이터 플랫폼에서 정형-반정형-비정형 데이터의 공존 구조]&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;┌─────────────────────────────────────────────────────────────────────┐
+│                     통합 데이터 플랫폼 (Modern Data Stack)           │
+├──────────────────┬──────────────────┬────────────────────────────────┤
+│   [정형 데이터]     │  [반정형 데이터]    │     [비정형 데이터]            │
+│   Oracle &amp;#x2F; MySQL  │  Kafka &amp;#x2F; MongoDB │     S3 &amp;#x2F; HDFS                  │
+│   Snowflake        │  Elasticsearch   │     Vector DB (Pinecone)       │
+│   (OLAP DW)        │  (로그&amp;#x2F;스트림)    │     (AI Training Data)         │
+├──────────────────┴──────────────────┴────────────────────────────────┤
+│                    공통 메타데이터 계층 (Data Catalog &amp;#x2F; Lineage)      │
+│                    AWS Glue &amp;#x2F; Amundsen &amp;#x2F; DataHub                     │
+├─────────────────────────────────────────────────────────────────────┤
+│                    통합 쿼리 엔진 (Federated Query)                  │
+│                    Trino &amp;#x2F; Presto &amp;#x2F; Apache Drill                    │
+└─────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 다이어그램은 현대 데이터 플랫폼에서 세 가지数据类型가 공존하면서 통합되는 구조를 보여준다. 각기 다른 저장소에 분산되어 있지만, Data Catalog( 메타데이터 관리 )와 Federated Query( 연방 쿼리 ) 기술을 통해 논리적으로 단일 뷰( Single View )를 제공한다. 정형 데이터는 전통적인 RDBMS와 DW에서 가장 효율적으로 처리되고, 반정형 데이터는 Kafka나 Elasticsearch 같은 스트림&#x2F;로그 특화 시스템에서, 비정형 데이터는 S3와 Vector DB에서 각각 관리된다.&lt;&#x2F;p&gt;
+&lt;p&gt;📢 &lt;strong&gt;섹션 요약 비유&lt;&#x2F;strong&gt;: 정형 데이터는事前に包装된 도시락( 규격화된 밥盒과 반찬 )이고, 반정형 데이터는 덮밥( 위에 뭐가 올지 모르는灵活性 )이며, 비정형 데이터는 재료시장( 어떤 것도 다 들어올 수 있는自由度 )과 같다. 도시락은 세상 어디든 표준화되어 있지만 변화가 어렵고, 재료시장은 뭐든 넣을 수 있지만 관리가 어렵다.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;iv-silmu-jeogyong-mic-gisulsajeog-pandan-strategy-decision&quot;&gt;Ⅳ. 실무 적용 및 기술사적 판단 (Strategy &amp;amp; Decision)&lt;&#x2F;h3&gt;
+&lt;p&gt;실무에서 정형 데이터를 다루면서 마주치는 기술적 판단 상황과 그에 따른 의사결정 기준을 정리한다.&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;정규화( Normalization ) vs 역정규화( Denormalization )&lt;&#x2F;strong&gt;: OLTP 환경에서는 데이터 중복을 제거하고 무결성을 보장하기 위해 3차 정규형( 3NF )까지 정규화하는 것이 원칙이다.
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;판단&lt;&#x2F;strong&gt;: 그러나 분석가을 위한 DW에서는 JOIN 비용을 줄이기 위해 역정규화된 스타 스키마가 더 효율적이며, 이 두 목적은 물리적으로 분리된 OLTP와 OLAP 시스템으로 구현된다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;인덱스 설계의 중요성&lt;&#x2F;strong&gt;: 정형 데이터의 查询 성능은 인덱스 전략에 의해 결정된다.
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;판단&lt;&#x2F;strong&gt;: B-Tree 인덱스는 등치 검색( = )과 범위 검색( BETWEEN )에 강하지만, 너무 많은 인덱스는 쓰기( INSERT&#x2F;UPDATE ) 성능을 저하시킨다. 반면 비트맵 인덱스는 카디널리티( 종류 )가 낮은 도메인( 성별, 지역코드 )에 극도로 효율적이다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;파티셔닝과 샤딩&lt;&#x2F;strong&gt;: 단일 테이블이 수십억 행에 도달하면 테이블 파티셔닝( 수평 분할 )이 필수적이다.
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;판단&lt;&#x2F;strong&gt;:_RANGE 파티셔닝( 날짜별 ), _HASH 파티셔닝( 키分散) 등을 통해 쿼리 프루닝( 불필요한 파티션 읽기 건너뛰기 )으로 查询 범위를 좁혀 성능을 향상시킨다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;[정형 데이터의 查询 최적화를 위한 실무 의사결정 트리]&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[SQL 查询 실행 계획 분석]
+        │
+        ├── [Full Table Scan 발생?]
+        │       └── Yes ──&amp;gt; [적합한 인덱스 추가 검토]
+        │                      ├─ B-Tree (등치&amp;#x2F;범위 검색)
+        │                      └─ 복합 인덱스 (선행 열 우선)
+        │
+        ├── [JOIN 비용 과다?]
+        │       └── Yes ──&amp;gt; [조인 순서 최적화 &amp;#x2F; 힌트 사용]
+        │                      ├─ 드라이빙 테이블 선정
+        │                      └─ 중첩 루프 vs 해시 조인 vs 정렬 병합
+        │
+        └── [정규화 vs 역정규화 판단]
+                ├── OLTP (거래 처리) ──&amp;gt; 3NF 정규화
+                └── OLAP (분석 처리) ──&amp;gt; 역정규화 (합성키, 누적으로드)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 의사결정 트리는 정형 데이터의 SQL 查询 성능 문제를 진단하고 해결하는流程を 보여준다. 먼저 실행 계획( EXPLAIN )을 분석하여 Full Table Scan이 발생하면 인덱스를 검토하고, JOIN 비용이 높으면 조인 순서와 알고리즘을 변경하며, 시스템 목적에 따라 정규화 전략을 선택한다. 이러한 튜닝은 수십억 행의 정형 데이터를 다루는 데이터 엔지니어의 핵심 역량이다.&lt;&#x2F;p&gt;
+&lt;p&gt;📢 &lt;strong&gt;섹션 요약 비유&lt;&#x2F;strong&gt;: 정형 데이터의 查询 최적화는 교통 정체( Full Table Scan )가 발생한 고속도로에 입체 교차로( 인덱스 )를增设하거나, 골목 길( JOIN )을 광장快捷로우는 것과 같다. 목적지( 쿼리 )에 빨리 도착하려면 경로( 실행 계획 )를事前に分析して最適化することが重要です.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;v-gidaehyogwa-mic-gyeolron-future-standard&quot;&gt;Ⅴ. 기대효과 및 결론 (Future &amp;amp; Standard)&lt;&#x2F;h3&gt;
+&lt;p&gt;정형 데이터는 인공지능과 빅데이터 시대에도 여전히 기업 정보 시스템의 중추( 中枢 ) 역할을 하며, 클라우드 데이터 웨어하우스의 발전으로 그 활용 범위가 확대되고 있다.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;관점&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;기대 효과 (Before &amp;amp; After)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;정량 지표&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;인프라 비용&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;온프레미스 RDBMS 라이선스 → 클라우드 서버리스 DW (Snowflake, BigQuery)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;DB 유지보수 비용 50% 절감&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;분석 속도&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;일 배칭 → 실시간 스트리밍 SQL 查询&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;查询 지연 시간 90% 단축&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;확장성&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;수직 확장 (Scale-up) 한계 → 自动扩展 (Auto-scaling)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;피크 타임 처리량 10배 향상&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;미래에는 정형 데이터의 관리에서도 머신러닝이 활용되어, 查询 패턴을 학습하여 자동으로 인덱스를 추천하고 파티셔닝 전략을 최적화하는 **자율 데이터베이스( Autonomous Database )**가 표준이 될 것이다. 또한, 정형与非정형 데이터를 통합적으로 查询하는 Federated Query 기술이 성숙하면서, 사용자는 데이터의 물리적 위치를気にせず SQL 하나로 모든 데이터를 분석할 수 있는 세상이 올 것이다.&lt;&#x2F;p&gt;
+&lt;p&gt;📢 &lt;strong&gt;섹션 요약 비유&lt;&#x2F;strong&gt;: 정형 데이터 기술は:classical 오케스트라의 기본 악기( 비올라, 첼로 )처럼 오랜 역사와 안정감을 갖추면서도, 클라우드 오케스트라( 서버리스 DW )의 시대에는 더 이상 개별 악기의音色( 인프라 )을 관리하지 않고 지휘자( ML 기반 오토 튜닝 )에게 전체 작품( 데이터 플랫폼 )을托的管理委托人数字化的未来が到来している.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph&quot;&gt;📌 관련 개념 맵 (Knowledge Graph)&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;관계형 데이터베이스 (RDBMS) | 정형 데이터를 저장하는 2차원 테이블 기반 데이터베이스 시스템&lt;&#x2F;li&gt;
+&lt;li&gt;OLTP (Online Transaction Processing) | 일상적 거래의 실시간 처리 환경&lt;&#x2F;li&gt;
+&lt;li&gt;OLAP (Online Analytical Processing) | 대규모 분석을 위한 다차원 데이터 모델&lt;&#x2F;li&gt;
+&lt;li&gt;스키마 온 라이트 (Schema-on-Write) | 저장 시 사전에 스키마를 정의하고 정제하는 방식&lt;&#x2F;li&gt;
+&lt;li&gt;데이터 웨어하우스 (Data Warehouse) | 전사적 관점의 분석을 위한 통합 데이터 저장소&lt;&#x2F;li&gt;
+&lt;li&gt;정규화 (Normalization) | 데이터 중복 제거와 무결성 보장을 위한 테이블 설계 기법&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo&quot;&gt;📈 관련 키워드 및 발전 흐름도&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[관계형 데이터베이스 (RDBMS)]
+    │
+    ▼
+[OLTP (Online Transaction Processing)]
+    │
+    ▼
+[OLAP (Online Analytical Processing)]
+    │
+    ▼
+[스키마 온 라이트 (Schema-on-Write)]
+    │
+    ▼
+[데이터 웨어하우스 (Data Warehouse)]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 흐름도는 관계형 데이터베이스 (RDBMS)에서 출발해 정규화 (Normalization)까지 이어지며, 중간 단계가 기초 개념을 실무 구조로 발전시키는 과정을 보여준다.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;baby-eorinireul-wihan-3jul-biyu-seolmyeong&quot;&gt;👶 어린이를 위한 3줄 비유 설명&lt;&#x2F;h3&gt;
+&lt;ol&gt;
+&lt;li&gt;정형 데이터는 칸막이가 나누어진 필통과 같아서, 연필( 데이터 )마다 정해진 칸이 있어 바로 찾을 수 있어요.&lt;&#x2F;li&gt;
+&lt;li&gt;하지만 칸에 맞는 연필만 넣을 수 있어서 크레파스( 비정형 데이터 )는 넣을 수 없어요.&lt;&#x2F;li&gt;
+&lt;li&gt;그래서 데이터 세계에서는 연필도 크레파스도 모두 넣을 수 있는 서랍장( Data Lake )도 함께 필요해요.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>6. 데이터 마트 (Data Mart) - 부서별(영업, 재무 등) 필요에 맞춘 소규모 분석 DB (Kimball 모델)</title>
+        <published>2024-05-15T00:00:00+00:00</published>
+        <updated>2024-05-15T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://agnusdei1207.github.io/brainscience/studynote/14_data_engineering/01_infrastructure/006-data-mart/"/>
+        <id>https://agnusdei1207.github.io/brainscience/studynote/14_data_engineering/01_infrastructure/006-data-mart/</id>
+        
+        <content type="html" xml:base="https://agnusdei1207.github.io/brainscience/studynote/14_data_engineering/01_infrastructure/006-data-mart/">&lt;h1 id=&quot;deiteo-mateu-data-mart&quot;&gt;데이터 마트 (Data Mart)&lt;&#x2F;h1&gt;
+&lt;h4 id=&quot;haegsim-insaiteu-3jul-yoyag&quot;&gt;핵심 인사이트 (3줄 요약)&lt;&#x2F;h4&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;본질&lt;&#x2F;strong&gt;: 데이터 웨어하우스 (DW)의 하위 집합으로, 전사 데이터 중 특정 부서(영업, 재무 등)나 비즈니스 도메인의 요구사항에 맞게 구조화된 소규모 분석용 데이터베이스입니다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;가치&lt;&#x2F;strong&gt;: 방대한 전사 데이터에서 필요한 정보만 추출·가공해 제공함으로써 분석 쿼리 응답 시간을 단축하고, 현업(Business User)의 데이터 접근성과 BI (Business Intelligence) 도구 활용의 직관성을 극대화합니다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;융합&lt;&#x2F;strong&gt;: 상향식 (Bottom-up)인 킴볼 (Kimball) 아키텍처의 핵심 요소이며, 최근에는 클라우드 네이티브 DW 내에서 물리적 복제를 줄이는 가상 데이터 마트(Virtual Data Mart) 형태로 융합 발전하고 있습니다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;i-gaeyo-mic-pilyoseong-context-necessity&quot;&gt;Ⅰ. 개요 및 필요성 (Context &amp;amp; Necessity)&lt;&#x2F;h3&gt;
+&lt;p&gt;**데이터 마트 (Data Mart)**는 전사적 통합 데이터 저장소인 데이터 웨어하우스(DW)와 달리, 단일 부서나 특정 비즈니스 프로세스의 분석 요구에 초점을 맞춘 목적 지향적 데이터 저장소입니다. 과거 RDBMS 환경에서 방대한 전사 DW에 직접 복잡한 분석 쿼리를 날릴 경우, 극심한 성능 저하와 병목 현상이 발생했습니다. 이를 해결하기 위해 현업이 자주 사용하는 데이터만 미리 집계하고 다차원 모델링(Dimensional Modeling)을 적용하여 분리해 낸 것이 데이터 마트의 시작입니다.&lt;&#x2F;p&gt;
+&lt;p&gt;실무적으로 데이터 마트는 &quot;현업 부서가 IT의 도움 없이 데이터를 스스로 이해하고 분석할 수 있는가?&quot;라는 셀프 서비스 (Self-Service) BI의 핵심 전제 조건을 해결합니다. 전사 DW가 수백 개의 정규화된 테이블로 이루어져 있다면, 조인(Join) 로직이 지나치게 복잡해져 쿼리 실패율이 급증합니다. 따라서 특정 주제(예: 월별 영업 실적)에 맞춰 스키마를 비정규화하고 직관적으로 재설계할 필요성이 대두되었습니다.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[전사 데이터 구조의 한계와 데이터 마트의 워크로드 격리]
+
+┌─────────────────── 기존: 전사 DW 직접 쿼리 (병목 발생) ─────────────────┐
+│ [Sales App] ─┐                                                        │
+│ [HR App]    ─┼─&amp;gt; [ Enterprise Data Warehouse ] &amp;lt;── (Slow Query!) ── [ BI &amp;#x2F; Analytics ]
+│ [ERP App]   ─┘   (수백 개 정규화 테이블, 조인 지옥)                   │
+└───────────────────────────────────────────────────────────────────────┘
+                                   ↓ (아키텍처 개선)
+┌─────────────────── 개선: 데이터 마트를 통한 워크로드 분산 ────────────────┐
+│                   ┌─&amp;gt; [ Sales Data Mart ]  &amp;lt;── (Fast!) ── [ Sales BI ]│
+│ [ EDW ] ──────────┼─&amp;gt; [ HR Data Mart ]     &amp;lt;── (Fast!) ── [ HR BI ]   │
+│ (통합 저장소)     └─&amp;gt; [ Finance Data Mart] &amp;lt;── (Fast!) ── [ Fin BI ]  │
+└───────────────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 도식은 데이터 마트가 어떻게 전사 시스템의 읽기 부하를 분산시키고 각 부서의 쿼리 성능을 격리 보장하는지를 보여줍니다. 기존에는 모든 무거운 분석 쿼리가 단일 EDW로 집중되어 락 경합과 리소스 고갈이 빈번했습니다. 마트 계층을 도입하면 장애를 부서 단위로 격리할 수 있으며, 각 도메인에 최적화된 맞춤형 스키마를 제공하여 BI 대시보드의 렌더링 속도를 밀리초 단위로 끌어올릴 수 있습니다.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;📢 &lt;strong&gt;섹션 비유&lt;&#x2F;strong&gt;: 대형 창고형 할인매장(데이터 웨어하우스)에서 원하는 물건을 찾으려면 복잡한 지도가 필요하지만, 집 앞 동네 편의점(데이터 마트)은 소비자가 자주 찾는 물건만 눈에 띄게 진열해 두어 누구나 빠르게 쇼핑할 수 있는 원리와 같습니다.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;ii-akitegceo-mic-haegsim-weonri-deep-dive&quot;&gt;Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)&lt;&#x2F;h3&gt;
+&lt;p&gt;데이터 마트 설계의 근간은 Ralph Kimball이 제안한 **다차원 모델링 (Dimensional Modeling)**입니다. 이 기법은 데이터를 &#x27;측정 가능한 수치(Fact)&#x27;와 &#x27;이를 설명하는 텍스트 맥락(Dimension)&#x27;으로 엄격히 분리합니다.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;구성 요소&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;역할&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;내부 동작 메커니즘&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;실무 비유&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;Fact Table (팩트 테이블)&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;비즈니스 이벤트의 정량적 수치 보관&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;트랜잭션 발생 시 대리 키(Surrogate Key)와 측정값(매출, 수량) 위주로 Append 기록&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;영수증의 결제 금액과 수량&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;Dimension Table (차원 테이블)&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;팩트의 맥락(Who, What, Where) 제공&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;카테고리, 속성 등을 텍스트 형태로 비정규화하여 저장. 필터링 조건으로 사용됨&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;영수증의 품목 상세 설명&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;Surrogate Key (대리 키)&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;테이블 간 조인 속도 향상 및 이력 격리&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;원본 시스템의 비즈니스 키 대신 독립적인 정수(Integer) 시퀀스를 발급하여 매핑&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;주민번호 대신 쓰는 사내 사원번호&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;ETL Pipeline&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;소스에서 마트로 데이터 정제 및 적재&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;증분 추출, 차원 속성 업데이트(SCD 처리), 팩트 테이블 로드 스케줄링 수행&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;창고에서 편의점으로의 새벽 배송 트럭&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;OLAP Engine&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;다차원 데이터 고속 탐색 및 집계 지원&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;데이터 마트 구조 위에서 드릴다운(Drill-down), 롤업(Roll-up) 등 사전 큐브(Cube) 연산&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;3D 루빅스 큐브의 단면 돌려보기&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;마트 설계의 표준은 팩트 테이블을 중앙에 두고 차원 테이블이 방사형으로 연결되는 **스타 스키마 (Star Schema)**입니다.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[스타 스키마 (Star Schema) 아키텍처 흐름]
+
+       [ Dim_Time ] (시간 차원)     [ Dim_Product ] (상품 차원)
+       - Time_Key (PK)              - Product_Key (PK)
+       - Year, Month, Date          - Category, Brand, Name
+            |                             |
+            +-------------+---------------+
+                          | (1:N 조인)
+                  [ Fact_Sales ] (중앙 팩트 테이블)
+                  - Time_Key (FK)
+                  - Product_Key (FK)
+                  - Store_Key (FK)
+                  - Sales_Amount (Measure &amp;#x2F; 수치)
+                  - Discount_Amount (Measure &amp;#x2F; 수치)
+                          |
+            +-------------+
+            |
+       [ Dim_Store ] (매장 차원)
+       - Store_Key (PK)
+       - Region, City, Manager
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 구조도의 핵심은 조인(Join)의 깊이가 항상 &#x27;1단계&#x27;로 고정된다는 점입니다. 정규화된 DB에서는 카테고리 이름을 찾기 위해 여러 테이블을 거쳐야 하지만, 스타 스키마에서는 &lt;code&gt;Dim_Product&lt;&#x2F;code&gt; 하나에 모든 텍스트 정보가 중복을 감수하고 들어가 있습니다. 분석 쿼리는 항상 &lt;code&gt;차원 필터링(Where) -&amp;gt; 팩트 조인(Join) -&amp;gt; 집계(Sum)&lt;&#x2F;code&gt;의 단순한 실행 계획(Execution Plan)을 가지게 되며, 이는 RDBMS 옵티마이저가 가장 빠르고 효율적으로 처리할 수 있는 패턴입니다. 데이터 중복으로 인한 스토리지 비용 상승보다, 조인 제거로 얻는 CPU 연산 속도 향상이 압도적으로 크기 때문에 채택됩니다.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;📢 &lt;strong&gt;섹션 비유&lt;&#x2F;strong&gt;: 팩트 테이블이 &#x27;매출액&#x27;이라는 요리의 &#x27;메인 식재료&#x27;라면, 차원 테이블은 &#x27;언제, 어디서, 누가&#x27;라는 요리의 맛을 다채롭게 만드는 &#x27;다양한 양념 세트&#x27;입니다. 이 구조를 미리 세팅해 두면 주문(쿼리) 즉시 완제품을 낼 수 있습니다.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;iii-yunghab-bigyo-mic-dagagdo-bunseog-comparison-synergy&quot;&gt;Ⅲ. 융합 비교 및 다각도 분석 (Comparison &amp;amp; Synergy)&lt;&#x2F;h3&gt;
+&lt;p&gt;데이터 플랫폼을 설계할 때 가장 많이 대립하는 철학이 Bill Inmon의 하향식(Top-down) 접근과 Ralph Kimball의 상향식(Bottom-up) 데이터 마트 접근입니다.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;1. 데이터 마트 vs 데이터 웨어하우스 (Kimball vs Inmon)&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;비교 항목&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;데이터 웨어하우스 (Inmon 모델)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;데이터 마트 (Kimball 모델)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;아키텍처 판단 포인트&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;목적과 사상&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;전사 데이터의 단일 진실 공급원 (SSOT) 구축&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;특정 부서의 신속한 의사결정 및 BI 분석&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;데이터의 보편성 vs 특수성&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;설계 구조&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;3차 정규화 (3NF) 중심의 릴레이션 모델&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;다차원 모델 (Star Schema 중심의 비정규화)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;중복 제거(쓰기 최적화) vs 조인 축소(읽기 최적화)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;구축 방식&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;하향식 (전사 모델링 완료 후 배포, 수년 소요)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;상향식 (부서별 마트를 먼저 짓고 점진적 통합)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;초기 도입 속도와 투자 대비 효용 (ROI)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;데이터 범위&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;엔터프라이즈 전체의 상세 트랜잭션&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;단일 비즈니스 주제 (예: 마케팅 캠페인 성과)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;분석 스코프의 폭&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;&lt;strong&gt;2. 독립형 (Independent) vs 종속형 (Dependent) 데이터 마트&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;데이터 마트를 구축할 때 데이터를 소스(운영 DB)에서 직접 가져올지, 아니면 EDW를 거쳐서 가져올지가 시스템 안정성을 결정합니다.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[독립형 마트의 사일로 위협 vs 종속형 마트의 정합성]
+
+[A. 독립형 (Independent) - 안티패턴]
+운영 DB ─(ETL)─&amp;gt; [ Data Mart 영업 ] ──&amp;gt; 영업 BI (매출: 100억)
+운영 DB ─(ETL)─&amp;gt; [ Data Mart 재무 ] ──&amp;gt; 재무 BI (매출: 95억) 
+===&amp;gt; 부서별 로직 차이로 &amp;quot;데이터 사일로(Silo)&amp;quot; 및 신뢰도 하락 발생
+
+[B. 종속형 (Dependent) - 권장 아키텍처]
+운영 DB ─(ETL)─&amp;gt; [ EDW (통합&amp;#x2F;정제) ] ─(추출)─&amp;gt; [ Data Mart 영업 ]
+                                     ─(추출)─&amp;gt; [ Data Mart 재무 ]
+===&amp;gt; 중앙 통제를 통해 &amp;quot;단일 진실 공급원(SSOT)&amp;quot; 기반 파생 보장
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 비교도는 단기적인 구축 속도와 장기적인 데이터 거버넌스 사이의 트레이드오프를 보여줍니다. 독립형 방식(A)은 EDW가 없어도 되므로 구축이 매우 빠르지만, 부서마다 &#x27;매출&#x27;을 정의하는 기준(예: 부가세 포함 여부)이 달라져 전사 회의에서 지표가 어긋나는 치명적 결함을 낳습니다. 반면 종속형 방식(B)은 EDW라는 거대한 필터를 거치므로 일관성이 완벽히 보장됩니다. 실무에서는 B 방식을 기본으로 하되, 클라우드 환경에서는 물리적 이동 없이 &#x27;View&#x27;만 생성하는 가상 마트(Virtual Mart)로 비용을 상쇄합니다.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;📢 &lt;strong&gt;섹션 비유&lt;&#x2F;strong&gt;: 독립형 마트가 각 지점이 알아서 레시피를 만들어 파는 &#x27;개인 식당&#x27;이라면, 종속형 마트는 중앙 본사(EDW)에서 통일된 재료를 받아 요리하는 &#x27;프랜차이즈 체인점&#x27;과 같습니다. 프랜차이즈만이 전국 어디서나 일관된 맛(데이터 정합성)을 보장합니다.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;iv-silmu-jeogyong-mic-gisulsajeog-pandan-strategy-decision&quot;&gt;Ⅳ. 실무 적용 및 기술사적 판단 (Strategy &amp;amp; Decision)&lt;&#x2F;h3&gt;
+&lt;p&gt;실무에서 데이터 마트를 운영할 때 가장 큰 기술적 난제는 과거의 이력 데이터를 어떻게 보존할 것인가를 다루는 &lt;strong&gt;SCD (Slowly Changing Dimension, 느리게 변하는 차원)&lt;&#x2F;strong&gt; 처리입니다.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;실무 시나리오: 고객 등급 변경에 따른 과거 실적 왜곡 방어&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;상황&lt;&#x2F;strong&gt;: 고객 A가 1월에는 &#x27;실버&#x27; 등급으로 100만 원을 구매했고, 2월에 &#x27;VIP&#x27;로 승급. 영업팀은 1월의 실적도 VIP의 실적으로 소급 적용되는 데이터 왜곡(Overwrite) 현상을 리포팅함.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;원인&lt;&#x2F;strong&gt;: 차원 테이블(Dim_Customer) 업데이트 시 기존 데이터를 덮어쓰는 무조건적인 SCD Type 1 방식을 적용했기 때문.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;해결 (운영 의사결정 플로우)&lt;&#x2F;strong&gt;:&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[SCD(Slowly Changing Dimension) 전략 의사결정 트리]
+
+[차원 데이터 변경 이벤트 발생 (예: 주소, 등급 변경)]
+         ↓
+[Q1. 과거 데이터(Fact) 분석 시, 과거 시점의 상태가 필요한가?]
+ ├── (No) ──&amp;gt; [SCD Type 1 적용]: 기존 레코드 단순 UPDATE (덮어쓰기) =&amp;gt; 이력 유실
+ └── (Yes) ─&amp;gt; [Q2. 이력 추적 테이블 관리에 리소스를 투자할 수 있는가?]
+               ├── (No) ──&amp;gt; [SCD Type 3 적용]: 현재값&amp;#x2F;과거값 컬럼 분리 추가
+               └── (Yes) ─&amp;gt; [SCD Type 2 적용]: 신규 레코드 INSERT 및 유효기간(Start&amp;#x2F;End Date) 플래그 관리
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 흐름도는 데이터 정합성을 지키기 위한 핵심 의사결정 과정을 나타냅니다. 실무적으로 마케팅이나 재무 분석에서는 특정 시점(Point-in-Time)의 고객 상태를 아는 것이 필수적이므로, 레코드 자체를 새로 생성하고 이력 기간(Valid_From, Valid_To)을 명시하는 &lt;strong&gt;SCD Type 2&lt;&#x2F;strong&gt; 적용이 표준입니다. 이는 데이터 마트의 복잡도를 높이지만, 비즈니스 인텔리전스의 신뢰도를 결정짓는 가장 중요한 방어선이 됩니다. 또한 서로 다른 마트 간 교차 분석을 위해서는 &#x27;Conformed Dimension(전사 공통 차원)&#x27;을 반드시 사전에 정의해야 합니다.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;도입 및 운영 체크리스트&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;모델링 품질&lt;&#x2F;strong&gt;: 팩트 테이블에 문자열 정보가 섞여 있어 스토리지를 낭비하고 있지 않은가?&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;파이프라인 지연&lt;&#x2F;strong&gt;: 마트를 생성하기 위한 ETL 작업이 야간 배치를 초과하여 아침 업무 시간에 영향을 주지 않는가?&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;📢 &lt;strong&gt;섹션 비유&lt;&#x2F;strong&gt;: 이력 관리가 없는 데이터 마트(Type 1)는 과거의 일기장을 오늘의 감정으로 전부 고쳐 쓰는 것과 같아 역사적 진실을 알 수 없게 됩니다. 올바른 마트(Type 2)는 과거의 기록을 보존한 채 새로운 페이지를 추가해 나가는 충실한 연대기입니다.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;v-gidaehyogwa-mic-gyeolron-future-standard&quot;&gt;Ⅴ. 기대효과 및 결론 (Future &amp;amp; Standard)&lt;&#x2F;h3&gt;
+&lt;p&gt;데이터 마트 아키텍처는 데이터의 비즈니스적 가치를 폭발시키는 라스트 마일(Last Mile) 딜리버리 시스템입니다.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;도입 효과 영역&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;도입 전 (As-Is)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;도입 후 (To-Be)&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;조직&#x2F;문화&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;분석을 위해 IT 부서에 SQL 추출 요청(티켓팅) 후 수일 대기&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;현업 사용자가 BI 툴로 직접 드래그 앤 드롭 분석 (Self-Service)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;시스템 성능&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;복잡한 정규화 테이블 조인으로 수십 분 소요되던 쿼리&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;비정규화된 스타 스키마 구조로 수 초 이내 응답 보장&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;&lt;strong&gt;미래 전망 및 결론&lt;&#x2F;strong&gt;
+과거에는 스토리지와 컴퓨팅 성능의 물리적 한계 때문에 데이터를 직접 복사하여 마트를 구성하는 방식이 필수적이었습니다. 그러나 Snowflake나 BigQuery 같은 현대적 클라우드 데이터 웨어하우스의 등장으로 &lt;strong&gt;스토리지와 연산의 완전한 분리&lt;&#x2F;strong&gt;가 이루어졌습니다. 이에 따라 데이터 엔지니어링의 패러다임은 물리적인 데이터 이동을 지양하고, 원본 데이터 위에 논리적인 뷰(View) 형태로 모델링만 입히는 **가상화된 데이터 마트(Virtual Data Mart)**와 dbt(Data Build Tool) 기반의 모듈화 코드로 진화하고 있습니다.
+결론적으로 물리적 형태는 클라우드 안으로 흡수되더라도, 비즈니스 요건을 반영하여 직관적으로 데이터를 펼쳐내는 &lt;strong&gt;다차원 모델링(Kimball)의 철학 자체&lt;&#x2F;strong&gt;는 AI&#x2F;BI 시대에도 변함없는 데이터 아키텍처의 황금률로 남을 것입니다.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;📢 &lt;strong&gt;섹션 비유&lt;&#x2F;strong&gt;: 무거운 종이책(물리적 마트)이 가벼운 전자책(가상 마트)으로 매체는 바뀌었더라도, 독자가 이해하기 쉽게 목차를 짜고 편집하는 작가의 저술 방식(다차원 모델링)은 영원히 필수적인 것과 같습니다.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph&quot;&gt;📌 관련 개념 맵 (Knowledge Graph)&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Data Warehouse (DW)&lt;&#x2F;strong&gt; | 데이터 마트에 검증되고 통합된 데이터를 공급하는 전사적 진실의 원천(SSOT).&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Star Schema&lt;&#x2F;strong&gt; | 데이터 마트 구축의 뼈대가 되는 다차원 물리 모델로, 조인 성능을 극대화한 구조.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;OLAP (Online Analytical Processing)&lt;&#x2F;strong&gt; | 데이터 마트에 적재된 데이터를 다차원으로 슬라이스 앤 다이스(Slice &amp;amp; Dice)하여 분석하는 처리 엔진.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;SCD (Slowly Changing Dimension)&lt;&#x2F;strong&gt; | 차원 속성(예: 고객의 주소 변경)의 변화 이력을 관리하는 데이터 마트 핵심 갱신 기법.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;dbt (Data Build Tool)&lt;&#x2F;strong&gt; | 최신 데이터 환경에서 ELT 방식으로 논리적 데이터 마트를 코드(SQL)로 정의하고 구축하는 데이터옵스 툴.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo&quot;&gt;📈 관련 키워드 및 발전 흐름도&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[데이터 웨어하우스 (Data Warehouse)]
+    │
+    ▼
+[데이터 마트 (Data Mart)]
+    │
+    ▼
+[OLAP (Online Analytical Processing)]
+    │
+    ▼
+[BI (Business Intelligence)]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;이 흐름도는 데이터 웨어하우스에서 데이터 마트와 OLAP, BI로 이어지는 분석 체계를 보여준다.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;baby-eorinireul-wihan-3jul-biyu-seolmyeong&quot;&gt;👶 어린이를 위한 3줄 비유 설명&lt;&#x2F;h3&gt;
+&lt;ol&gt;
+&lt;li&gt;도서관 전체(데이터 웨어하우스)에는 수백만 권의 책이 섞여 있어서 원하는 내용을 찾기 너무 힘들어요.&lt;&#x2F;li&gt;
+&lt;li&gt;그래서 과학 숙제를 할 때는 과학 책만 모아둔 작은 &#x27;과학 전용 책장(데이터 마트)&#x27;을 만들면 훨씬 편해요.&lt;&#x2F;li&gt;
+&lt;li&gt;이렇게 부서마다 자기들이 필요한 정보만 예쁘게 모아둔 작고 빠른 맞춤형 데이터베이스를 데이터 마트라고 부른답니다!&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+</content>
+        
+    </entry>
+</feed>

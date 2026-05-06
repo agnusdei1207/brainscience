@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>280. PPO (Proximal Policy Optimization) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 22, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ict
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: PPO (Proximal Policy Optimization)는 강화 학습에서 모델의 파라미터를 업데이트할 때, 너무 급격한 변화를 방지하여 학습의 안정성을 보장하는 알고리즘이다.</li>
+<li><strong>가치</strong>: 기존 강화 학습 알고리즘(TRPO 등)의 복잡한 계산량은 줄이면서도, 데이터 효율성과 견고함을 높여 RLHF 프로세스의 핵심 엔진으로 자리 잡았다.</li>
+<li><strong>판단 포인트</strong>: 모델이 보상을 받으려고 무리하게 가중치를 수정하다가 성능이 망가지는 '붕괴' 현상을 막기 위해 클리핑(Clipping) 기법을 사용하는 것이 핵심이다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>강화 학습은 "시행착오를 통한 학습"이다. 하지만 인공신경망 학습에서 한 번의 실수로 가중치를 너무 많이 바꿔버리면, 모델은 이전까지 쌓아온 지능을 한순간에 잃어버리는 '재앙적 붕괴'에 빠질 수 있다. 그렇다고 너무 조금씩 바꾸면 학습 속도가 너무 느려진다.</p>
+<p>PPO는 이 딜레마를 해결하기 위해 등장했다. "현재의 정책(Policy)이 이전 정책에서 너무 멀어지지 않게(Proximal)" 범위를 제한하면서 최적의 지점을 찾는다. 챗GPT의 제작사인 OpenAI가 개발한 이 알고리즘은 RLHF 단계에서 언어 모델을 안전하고 효율적으로 튜닝하기 위한 표준으로 쓰인다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────┐
+│          PPO의 핵심: &quot;안전벨트를 매고 달리는 강화 학습&quot;           │
+├──────────────────────────────────────────────────────────┤
+│ [일반 RL] : 높은 보상을 향해 무모하게 돌진 (추락 위험)          │
+│ [PPO]     : 보상을 쫓되, 이전 상태에서 일정 범위 내에서만 이동    │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: PPO는 산 정상(최대 보상)을 오를 때, 한 걸음에 수 미터를 뛰어오르려다 낭떠러지로 떨어지는 대신 로프를 몸에 묶고 안전한 보폭으로 올라가는 것과 같다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>PPO의 핵심은 **클립형 대리 목적 함수(Clipped Surrogate Objective)**에 있다.</p>
+<h3 id="1-ppoyi-eobdeiteu-mekeonijeum">1. PPO의 업데이트 메커니즘</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  [이전 정책 (Old Policy)] ──▶ [현재 정책 (New Policy)]
+             │                        │
+             └───────────┬────────────┘
+                         ▼
+                [비율 (Ratio) 계산]
+                         │
+        ┌────────────────┴────────────────┐
+        │                                 │
+ [Case 1: 너무 큰 변화]           [Case 2: 적절한 변화]
+  =&gt; Clipping 적용                 =&gt; 그대로 업데이트
+ (1-ε ~ 1+ε 범위 제한)
+</code></pre>
+<h3 id="2-juyo-guseong-yosowa-susigyi-yimi">2. 주요 구성 요소와 수식의 의미</h3>
+<table><thead><tr><th style="text-align: left">요소</th><th style="text-align: left">역할</th><th style="text-align: left">비고</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Objective Function</strong></td><td style="text-align: left">모델이 극대화해야 할 목표값</td><td style="text-align: left">보상을 최대화하는 방향</td></tr>
+<tr><td style="text-align: left"><strong>Clipping ($\epsilon$)</strong></td><td style="text-align: left">업데이트 비율을 일정 범위(보통 0.2)로 강제 제한</td><td style="text-align: left">PPO의 가장 큰 특징</td></tr>
+<tr><td style="text-align: left"><strong>Advantage ($A_t$)</strong></td><td style="text-align: left">현재 행동이 평균보다 얼마나 더 좋은지 평가</td><td style="text-align: left">업데이트의 방향과 크기 결정</td></tr>
+<tr><td style="text-align: left"><strong>Entropy Bonus</strong></td><td style="text-align: left">모델이 너무 일찍 하나의 답에 고착되지 않게 유도</td><td style="text-align: left">탐험(Exploration) 장려</td></tr>
+</tbody></table>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: PPO는 주식 투자에서 대박을 노리고 전 재산을 몰빵하는 대신, 매일 정해진 금액만큼만 분할 매수하며 리스크를 관리하는 전략과 같다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>강화 학습 알고리즘의 족보에서 PPO의 위치를 확인한다.</p>
+<table><thead><tr><th style="text-align: left">알고리즘</th><th style="text-align: left">특징</th><th style="text-align: left">단점</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>VPG</strong></td><td style="text-align: left">가장 기본적인 정책 경사법</td><td style="text-align: left">성능이 불안정하고 데이터 효율 낮음</td></tr>
+<tr><td style="text-align: left"><strong>TRPO</strong></td><td style="text-align: left">수학적으로 매우 정밀한 신뢰 영역 설정</td><td style="text-align: left">계산이 너무 복잡하고 구현이 어려움</td></tr>
+<tr><td style="text-align: left"><strong>PPO</strong></td><td style="text-align: left">TRPO의 성능을 유지하면서 구현을 대폭 단순화</td><td style="text-align: left"><strong>현재 RLHF의 업계 표준</strong></td></tr>
+</tbody></table>
+<p>PPO는 <strong>RLHF</strong>의 마지막 단계에서 언어 모델(Policy)을 업데이트하는 도구로 쓰인다. 최근에는 PPO의 복잡한 최적화 과정조차 생략하는 <strong>DPO</strong>와 경쟁하고 있지만, 여전히 대규모 모델의 세밀한 정렬에는 PPO가 강력한 도구로 남아있다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: VPG가 지도 없이 산을 타는 것이고, TRPO가 정밀 지형도를 그리는 것이라면, PPO는 누구나 쓸 수 있는 GPS 앱을 들고 산을 타는 것이다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p>실무에서 PPO 학습이 잘 안 된다면 대부분 '보상 함수'의 설계나 '클리핑 범위' 설정 문제다. 학습 곡선이 요동친다면 클리핑 값을 줄여야 하고, 학습이 너무 정체되어 있다면 엔트로피 보너스를 조절해야 한다.</p>
+<h3 id="cekeuriseuteu">체크리스트</h3>
+<ol>
+<li>KL 발산(KL Divergence) 값이 적절하게 유지되는가? (모델이 이상한 쪽으로 튀지 않는지 확인)</li>
+<li>보상(Reward)이 특정 행동에만 편향되어 있는가? (Reward Hacking 징후)</li>
+<li>에피소드 길이가 모델의 컨텍스트에 적합한가?</li>
+<li>학습률(Learning Rate)이 강화 학습에 맞게 충분히 작은가?</li>
+</ol>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p>사전 학습된 능력을 완전히 잃어버릴 정도로 PPO를 강하게 돌리는 경우 (Catastrophic Forgetting)</p>
+</li>
+<li>
+<p>클리핑 범위를 너무 넓게 잡아 PPO를 사용하는 의미를 스스로 없애는 경우</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 운전대를 너무 홱홱 꺾으면 차가 뒤집히듯, PPO의 클리핑은 핸들이 일정 각도 이상 돌아가지 않게 막아주는 안전장치다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>PPO는 대형 언어 모델이 인간과 소통할 수 있는 '상식적인 존재'로 거듭나게 하는 핵심 수학적 기반을 제공했다. 복잡한 강화 학습 이론을 실용적인 수준으로 끌어내려, 누구나 안정적으로 모델을 훈련시킬 수 있는 길을 열었다.</p>
+<p>앞으로 LLM뿐만 아니라 로보틱스, 자율주행 등 실생활의 복잡한 의사결정이 필요한 분야에서도 PPO는 가장 신뢰받는 강화 학습 알고리즘으로 계속 쓰일 것이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: PPO는 AI가 '최고의 결과'를 향해 나아가되 '안전한 길'을 잃지 않게 붙잡아주는 지혜로운 나침반이다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">RLHF</td><td style="text-align: left">PPO가 가장 활발하게 사용되는 대표적인 응용 분야</td></tr>
+<tr><td style="text-align: left">TRPO (Trust Region Policy Optimization)</td><td style="text-align: left">PPO의 복잡한 조상 격인 알고리즘</td></tr>
+<tr><td style="text-align: left">클리핑 (Clipping)</td><td style="text-align: left">PPO의 핵심 아이디어로 급격한 업데이트를 막는 기술</td></tr>
+<tr><td style="text-align: left">보상 모델</td><td style="text-align: left">PPO 알고리즘에 입력될 '점수'를 계산해주는 모델</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>PPO는 로봇이 공부할 때 너무 한꺼번에 많은 걸 바꾸려다 머리가 뒤섞이지 않게 도와주는 선생님이에요.</li>
+<li>"조금씩, 천천히, 하지만 확실하게" 배우도록 규칙을 정해주는 거죠.</li>
+<li>이 선생님 덕분에 로봇은 실수를 해도 금방 바른 길로 돌아와서 훌륭하게 공부를 마친답니다.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

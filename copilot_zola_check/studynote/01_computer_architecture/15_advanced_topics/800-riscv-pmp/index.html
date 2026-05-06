@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>800. RISC-V PMP (Physical Memory Protection) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote computer architecture
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: RISC-V PMP (Physical Memory Protection)는 머신 모드 (M-mode) 소프트웨어가 하위 특권 모드 (S-mode, U-mode)의 물리 메모리 접근 권한을 제한하여 시스템의 신뢰 경계를 물리적으로 강제하는 하드웨어 보안 메커니즘이다.</li>
+<li><strong>가치</strong>: MMU (Memory Management Unit)가 활성화되기 전이나 가상화 기능이 없는 임베디드 환경에서도 리소스 격리(Isloation)를 제공하며, 설정 레지스터의 락 (Lock) 비트를 통해 머신 모드 자체의 실수나 공격까지 방어한다.</li>
+<li><strong>융합</strong>: 보안 마이크로커널 및 TEE (Trusted Execution Environment)의 기반 기술로 활용되며, 주소 매칭 방식 (TOR, NA4, NAPOT)의 조합을 통해 파편화된 메모리 영역을 효율적으로 보호한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: RISC-V PMP (Physical Memory Protection)는 RISC-V 프로세서 아키텍처에서 제공하는 물리 메모리 보호 기술로, 각 하트 (Hart, Hardware Thread)마다 독립적으로 구성된다. 머신 모드 (Machine Mode)에서 구성 레지스터 (pmpcfg)와 주소 레지스터 (pmpaddr)를 설정하여 특정 물리 주소 범위에 대해 읽기(R), 쓰기(W), 실행(X) 권한을 세밀하게 제어한다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 가상 메모리 시스템이 없는 소형 IoT 장치나 실시간 운영체제 (RTOS, Real-Time Operating System) 환경에서는 사용자 애플리케이션의 버그가 시스템 전체 메모리를 오염시킬 위험이 크다. PMP는 이러한 환경에서 최소한의 하드웨어 비용으로 '샌드박스'를 구축하여 시스템 안정성을 보장한다. 또한 하이퍼바이저 환경에서도 부팅 초기 단계의 물리 메모리 오염을 막는 필수 안전장치 역할을 수행한다.</p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: PMP는 "박물관의 전시관 유리벽"과 같다. 관람객(S/U 모드)이 전시품(메모리)을 볼 수는 있지만(R), 만지거나(W) 가져갈 수 없도록 투명한 벽을 세우는 것과 같다. 박물관 관리자(M-mode)만이 이 유리벽을 설치하고 제거할 수 있는 권한을 가진다.</p>
+</li>
+<li>
+<p><strong>등장 배경</strong>:</p>
+<ol>
+<li><strong>임베디드 보안 강화</strong>: 기존 MCU 환경에서는 특권 모드 구분이 모호하여 단일 루틴의 실패가 전체 시스템 셧다운으로 이어지는 경우가 많았다.</li>
+<li><strong>RISC-V의 모듈형 구조</strong>: MMU 없이도 보안을 유지해야 하는 가벼운 코어 설계 철학에 따라, 필수 보안 기능으로 PMP가 아키텍처에 내장되었다.</li>
+<li><strong>TEE (Trusted Execution Environment) 구현</strong>: 하드웨어적으로 완전히 격리된 보안 영역을 생성하기 위해, 가상 주소가 아닌 물리 주소 레벨의 직접적인 통제가 필요해졌다.</li>
+</ol>
+</li>
+</ul>
+<p>PMP가 물리 메모리 공간을 어떻게 여러 영역(Regions)으로 나누어 보호하는지 시각화하면 다음과 같다. 우선순위 규칙에 따라 가장 낮은 번호의 PMP 항목이 적용되는 특성을 가진다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌───────────────────────────────────────────────────────────────────────┐
+  │                 PMP 물리 메모리 영역 분할 개념도                      │
+  ├───────────────────────────────────────────────────────────────────────┤
+  │                                                                       │
+  │  [물리 메모리 주소 공간 (Physical Address Space)]                     │
+  │  0xFFFFFFFF ┌──────────────────────────────┐                          │
+  │             │   Unprotected (Default)      │  ◀─ 매칭 안됨            │
+  │             ├──────────────────────────────┤                          │
+  │             │   PMP Entry 2 (Read-Only)    │  ◀─ Static Data          │
+  │             ├──────────────────────────────┤                          │
+  │             │   PMP Entry 1 (Read&#x2F;Write)   │  ◀─ Stack&#x2F;Heap           │
+  │             ├──────────────────────────────┤                          │
+  │             │   PMP Entry 0 (Execute-Only) │  ◀─ Code Section         │
+  │  0x00000000 └──────────────────────────────┘                          │
+  │                                                                       │
+  │  * 동작 원리:                                                         │
+  │  1. 접근 주소가 0번부터 순차적으로 검사됨                             │
+  │  2. 가장 먼저 매칭된 항목의 권한(R&#x2F;W&#x2F;X) 적용                          │
+  │  3. 어떤 항목에도 매칭되지 않으면 M-mode 외에는 접근 거부             │
+  └───────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> RISC-V PMP는 최대 16개(최신 규격에 따라 확장 가능)의 엔트리를 제공한다. 위 그림처럼 메모리를 용도별로 나누어 0번 엔트리에는 실행 권한만 부여하여 코드 영역을 보호하고, 1번에는 데이터 쓰기 권한을 주는 식이다. 여기서 중요한 것은 '우선순위(Priority)'다. 만약 주소 범위가 겹친다면 번호가 낮은 엔트리가 승리한다. 또한, M-mode 소프트웨어가 실수로 영역 설정을 빠뜨린 주소 공간(Default 영역)은 보안을 위해 S/U 모드에서 접근이 원천 차단된다. 이는 "명시되지 않은 것은 모두 금지한다"는 보안의 기본 원칙을 충실히 따르는 구조다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 건물 전체에 각기 다른 출입 권한이 걸린 여러 개의 문을 순서대로 배치하여, 첫 번째 문에서 권한이 확인되면 그 즉시 통과 여부를 결정하는 시스템과 같습니다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri-deep-dive">Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)</h2>
+<h3 id="guseong-yoso">구성 요소</h3>
+<table><thead><tr><th style="text-align: left">요소명</th><th style="text-align: left">전체 명칭 (Full Name)</th><th style="text-align: left">역할</th><th style="text-align: left">내부 동작</th><th style="text-align: left">비유</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>PMPCFG</strong></td><td style="text-align: left">PMP Configuration Register</td><td style="text-align: left">각 엔트리의 권한 및 모드 설정</td><td style="text-align: left">8비트 단위로 L, A, X, W, R 비트 관리</td><td style="text-align: left">도어락 설정 버튼</td></tr>
+<tr><td style="text-align: left"><strong>PMPADDR</strong></td><td style="text-align: left">PMP Address Register</td><td style="text-align: left">보호할 물리 메모리의 경계 주소 저장</td><td style="text-align: left">A 모드에 따라 주소 해석 방식 변경</td><td style="text-align: left">구역 경계선</td></tr>
+<tr><td style="text-align: left"><strong>L Bit</strong></td><td style="text-align: left">Lock Bit</td><td style="text-align: left">설정 고정 및 M-mode 권한 제한</td><td style="text-align: left">한번 설정 시 리셋 전까지 변경 불가</td><td style="text-align: left">일회용 봉인 씰</td></tr>
+<tr><td style="text-align: left"><strong>A Field</strong></td><td style="text-align: left">Address Matching Mode</td><td style="text-align: left">주소 범위를 계산하는 알고리즘 선택</td><td style="text-align: left">TOR, NA4, NAPOT 중 하나 선택</td><td style="text-align: left">경계선 측정 도구</td></tr>
+<tr><td style="text-align: left"><strong>Exception</strong></td><td style="text-align: left">Store/Load/Instruction Fault</td><td style="text-align: left">권한 위반 시 발생하는 하드웨어 트랩</td><td style="text-align: left">CPU 파이프라인 중단 및 M-mode 전이</td><td style="text-align: left">경보 사이렌</td></tr>
+</tbody></table>
+<hr />
+<h3 id="pmpcfg-rejiseuteo-gujo-mic-gweonhan-jeeo">PMPCFG 레지스터 구조 및 권한 제어</h3>
+<p>PMP 설정은 <code>pmpcfg0</code>~<code>pmpcfg3</code> 레지스터(RV32 기준)에 저장된다. 각 레지스터는 4개의 엔트리 설정을 포함하며, 1개 엔트리는 8비트로 구성된다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌──────────────────────────────────────────────────────────────────────┐
+  │              PMPCFG 엔트리 비트 구조 (8-bit)                         │
+  ├──────────────────────────────────────────────────────────────────────┤
+  │                                                                      │
+  │    7      6      5      4      3      2      1      0                │
+  │  ┌───┬──────┬──────┬──────────┬──────┬──────┬──────┐                 │
+  │  │ L │  0   │  0   │    A     │  X   │  W   │  R   │                 │
+  │  └───┴──────┴──────┴──────────┴──────┴──────┴──────┘                 │
+  │                                                                      │
+  │  - R&#x2F;W&#x2F;X: 읽기, 쓰기, 실행 권한 (1=허용, 0=거부)                     │
+  │  - A (Address Matching):                                             │
+  │    00: OFF (비활성)                                                  │
+  │    01: TOR (Top of Range) - 이전 엔트리와 현재 엔트리 사이 범위      │
+  │    10: NA4 (Naturally Aligned 4-byte)                                │
+  │    11: NAPOT (Naturally Aligned Power-of-Two)                        │
+  │  - L (Lock):                                                         │
+  │    1=설정 고정 및 M-mode에도 권한 적용 (보안 강화)                   │
+  └──────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> PMPCFG의 각 비트는 물리적 차단벽의 속성을 정의한다. 특히 <code>L (Lock)</code> 비트는 PMP의 강력한 보안성을 상징한다. 일반적으로 M-mode는 모든 권한을 가진 절대자이지만, <code>L=1</code>이 설정되면 M-mode 조차도 해당 PMP 엔트리가 허용한 권한 내에서만 메모리에 접근할 수 있다. 이는 M-mode에서 동작하는 펌웨어에 취약점이 생겨 임의의 메모리 쓰기를 시도하더라도, 하드웨어가 이를 차단할 수 있음을 의미한다. <code>A</code> 필드는 주소를 어떻게 해석할지 결정하는데, 가장 유연한 방식은 <code>TOR</code>이지만 레지스터를 2개 소모하는 단점이 있어, 효율적인 범위를 설정할 때는 <code>NAPOT</code> 방식을 주로 사용한다.</p>
+<hr />
+<h3 id="juso-maecing-modeu-tor-vs-napot">주소 매칭 모드: TOR vs NAPOT</h3>
+<p>PMP는 한정된 레지스터 자원으로 복잡한 메모리 범위를 표현하기 위해 여러 매칭 방식을 제공한다. 특히 TOR와 NAPOT의 차이를 이해하는 것이 실무 설계의 핵심이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌────────────────────────────────────────────────────────────────────────┐
+  │                 PMP 주소 매칭 메커니즘 비교                            │
+  ├────────────────────────────────────────────────────────────────────────┤
+  │                                                                        │
+  │  [TOR: Top of Range]            [NAPOT: Nat. Aligned Power of 2]       │
+  │                                                                        │
+  │   pmpaddr(i-1) ───┐              pmpaddr(i) 속의 0비트 개수로          │
+  │                   │ 범위 형성      범위 크기 결정 (Mask 방식)          │
+  │   pmpaddr(i)   ───┘                                                    │
+  │                                                                        │
+  │  ┌───────────────┐               ┌───────────────┐                     │
+  │  │   Protected   │               │   Protected   │                     │
+  │  │    Region     │               │    Region     │                     │
+  │  └───────────────┘               └───────────────┘                     │
+  │  임의의 시작&#x2F;끝 주소 설정 가능      2^N 크기의 정렬된 범위만 가능      │
+  │  (레지스터 2개 소요)               (레지스터 1개로 충분)               │
+  └────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> <code>TOR (Top of Range)</code> 방식은 현재 엔트리(<code>pmpaddr[i]</code>)를 상한선으로, 이전 엔트리(<code>pmpaddr[i-1]</code>)를 하한선으로 삼는다. 이는 주소 경계가 복잡할 때 매우 유용하지만 엔트리를 2개 소모하므로 자원이 낭비될 수 있다. 반면 <code>NAPOT (Naturally Aligned Power-of-Two)</code>은 주소 레지스터 하위 비트에 연속된 1과 마지막 0을 배치하여 범위의 크기를 인코딩한다. 예를 들어 하위 비트가 <code>...0111</code>이면 16바이트 범위를 의미한다. 이 방식은 레지스터 1개만으로 보호 영역을 정의할 수 있어 효율적이지만, 반드시 주소 범위가 자신의 크기에 맞춰 정렬(Alignment)되어 있어야 한다는 제약이 있다. 실무에서는 OS 커널이나 스택처럼 크기가 정형화된 영역은 NAPOT을, 파편화된 데이터 영역은 TOR를 혼용하여 설계한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: TOR가 원하는 지점 어디든 줄자를 늘려 범위를 재는 방식이라면, NAPOT은 정해진 크기의 타일(2의 거듭제곱)을 격자에 맞춰 배치하는 방식과 같습니다.</li>
+</ul>
+<hr />
+<h2 id="iii-yunghab-bigyo-mic-dagagdo-bunseog">Ⅲ. 융합 비교 및 다각도 분석</h2>
+<h3 id="simceung-gisul-bigyo-pmp-vs-mmu">심층 기술 비교: PMP vs MMU</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">PMP (Physical)</th><th style="text-align: left">MMU (Virtual)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>대상 주소</strong></td><td style="text-align: left">물리 주소 (PA)</td><td style="text-align: left">가상 주소 (VA)</td></tr>
+<tr><td style="text-align: left"><strong>동작 시점</strong></td><td style="text-align: left">PA 발생 직후 (항시 동작)</td><td style="text-align: left">가상 주소 사용 시 (S/U 모드 주력)</td></tr>
+<tr><td style="text-align: left"><strong>제어 주체</strong></td><td style="text-align: left">머신 모드 (M-mode)</td><td style="text-align: left">슈퍼바이저 모드 (S-mode, OS)</td></tr>
+<tr><td style="text-align: left"><strong>자원 소모</strong></td><td style="text-align: left">고정된 하드웨어 레지스터</td><td style="text-align: left">메모리 상의 페이지 테이블 (RAM 소모)</td></tr>
+<tr><td style="text-align: left"><strong>보안 강도</strong></td><td style="text-align: left">하드웨어적 강제, 우회 불가</td><td style="text-align: left">페이지 테이블 오염 시 우회 가능</td></tr>
+</tbody></table>
+<p>PMP는 하드웨어 비용이 적고 반응 속도가 빠르기 때문에, MMU가 탑재된 고성능 프로세서에서도 OS 커널이 손상되었을 때의 '최후의 방어선'으로 PMP를 병행 사용한다.</p>
+<h3 id="gwamog-yunghab-gwanjeom-gasanghwa-mic-imbedideu-boan">과목 융합 관점: 가상화 및 임베디드 보안</h3>
+<ul>
+<li><strong>임베디드 (Embedded Systems)</strong>: 실시간성(Real-time)이 중요한 환경에서 MMU의 주소 변환 지연(Translation Overhead) 없이 메모리 보안을 유지할 수 있게 해준다.</li>
+<li><strong>보안 (Security)</strong>: <code>L</code> 비트와 우선순위 규칙을 활용하여 "보안 모니터" 영역을 물리 메모리 최하단에 배치하고, 그 상위 영역에 대해서만 하위 모드의 접근을 허용함으로써 'M-mode 루트킷' 공격을 원천 차단한다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌─────────────────────────────────────────────────────────────┐
+  │                PMP 권한 결정 의사결정 트리                  │
+  ├─────────────────────────────────────────────────────────────┤
+  │                                                             │
+  │   [메모리 액세스 요청 (Addr, Mode)]                         │
+  │                │                                            │
+  │          ┌─────┴─────┐                                      │
+  │          ▼           ▼                                      │
+  │     [M-mode인가?]   [S&#x2F;U-mode인가?]                         │
+  │          │           │                                      │
+  │    ┌─────┴──┐    ┌───┴───────────────────┐                  │
+  │    ▼        ▼    ▼                       ▼                  │
+  │ [L=1인   [L=0인 [매칭 엔트리           [매칭 안됨]          │
+  │  엔트리]  엔트리]  존재?]                   │               │
+  │    │        │      │                       ▼                │
+  │  PMP권한  무조건  PMP권한               접근 거부!          │
+  │  체크     허용    체크                  (Access Fault)      │
+  └─────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> PMP의 접근 제어 로직은 모드와 L비트 설정에 따라 달라진다. M-mode의 경우, L비트가 0이면 PMP의 제약을 받지 않고 자유롭게 접근한다(단, 매칭되는 엔트리가 있을 때만). 하지만 L비트가 1이면 M-mode 조차도 PMP 설정 권한을 따라야 한다. 반면 S/U 모드는 어떤 경우에도 PMP 설정 범위를 벗어날 수 없으며, 매칭되는 엔트리가 하나도 없다면 보안을 위해 접근이 거부된다. 이러한 계층적 권한 구조는 "권한의 분리(Separation of Privilege)"를 하드웨어 수준에서 완성시킨다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 일반 시민(S/U 모드)은 허가된 구역만 다닐 수 있고, 관리자(M-mode)는 마스터키가 있어 어디든 가지만 스스로 잠근 문(L=1)에는 들어가지 못하게 하여 보안 사고를 예방하는 것과 같습니다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsajeog-pandan">Ⅳ. 실무 적용 및 기술사적 판단</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li><strong>시나리오 — 부트 로더 보호</strong>: 시스템 부팅 초기 단계에서 머신 모드 펌웨어가 PMP를 설정하여 부트 ROM 영역을 'Read/Execute'로 고정하고 <code>L</code> 비트를 세팅한다. 이후 로드되는 운영체제가 취약점을 통해 부트 로더를 변조하려 해도 물리적으로 쓰기가 차단되어 '신뢰의 뿌리(Root of Trust)'가 보호된다.</li>
+<li><strong>시나리오 — 주변 장치(I/O) 접근 제어</strong>: RISC-V는 Memory-mapped I/O를 사용하므로, 특정 하드웨어 레지스터 주소 범위를 PMP 엔트리로 등록하여 특정 애플리케이션만 직접 I/O를 조작하도록 제한할 수 있다. 이는 장치 드라이버 격리(Driver Isolation)를 실현한다.</li>
+<li><strong>시나리오 — 스택 오버플로우 방어</strong>: 사용자 스택 영역의 하단에 권한이 없는 'Guard Page'를 PMP로 설정한다. 스택이 넘쳐서 이 영역을 침범하는 순간 하드웨어 예외가 발생하여, 인접한 데이터가 파괴되기 전에 시스템을 안전하게 중단시킬 수 있다.</li>
+</ol>
+<hr />
+<h3 id="doib-cekeuriseuteu-mic-antipaeteon">도입 체크리스트 및 안티패턴</h3>
+<p>PMP를 설계에 반영할 때 엔지니어가 반드시 검토해야 할 리스트다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌─────────────────────────────────────────────────────────────┐
+  │                PMP 설계 및 검증 체크리스트                  │
+  ├─────────────────────────────────────────────────────────────┤
+  │                                                             │
+  │  [ ] 엔트리 개수가 보호할 영역 수보다 충분한가? (최소 8개)  │
+  │  [ ] TOR 방식 사용 시 주소 정렬(Alignment) 오류가 없는가?   │
+  │  [ ] NAPOT 사용 시 2^N 정렬 조건이 하드웨어와 일치하는가?   │
+  │  [ ] L비트 설정 전, M-mode 자신의 스택&#x2F;데이터 영역 확보?    │
+  │  [ ] 예외 처리 루틴(Trap Handler)이 PMP 영역 외부에 위치?   │
+  └─────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> PMP 설정 시 가장 치명적인 실수는 '스스로를 가두는 것'이다. M-mode에서 특정 영역에 L비트를 걸고 쓰기 권한을 제거했는데, 그곳에 M-mode의 스택이 포함되어 있다면 즉시 시스템은 패닉에 빠진다. 따라서 체크리스트의 4번 항목처럼, M-mode를 위한 최소한의 작업 공간을 먼저 확보하거나 M-mode 전용 보호 영역을 가장 먼저 설정하는 전략이 필요하다. 또한 예외 처리기 자체가 PMP에 의해 실행이 막혀 있다면 보안 위반 시 복구가 불가능하므로, 트랩 핸들러 주소는 항상 실행 가능(X) 상태여야 한다.</p>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p><strong>우선순위 혼동</strong>: 번호가 높은 엔트리에 넓은 범위를 허용하고, 번호가 낮은 엔트리에 좁은 범위를 금지하면 의도한 대로 동작한다. 하지만 반대로 설정하면 넓은 범위 허용이 우선 적용되어 금지 구역이 뚫리게 된다.</p>
+</li>
+<li>
+<p><strong>영역 파편화 (Fragmentation)</strong>: 16개뿐인 엔트리를 너무 잘게 쪼개서 사용하다가, 정작 중요한 커널 영역 보호를 위한 엔트리가 부족해지는 경우. (NAPOT 활용을 극대화해야 함)</p>
+</li>
+<li>
+<p><strong>L비트 오남용</strong>: 모든 엔트리에 락을 걸어버리면 동적인 메모리 권한 변경이 불가능해져, OS의 동적 메모리 할당 기능을 마비시킬 수 있다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 줄자를 잘못 읽어 경계선을 1cm만 틀리게 그어도(주소 설정 오류), 옆집 마당(보안 영역)을 침범하는 것과 같은 위험이 따르므로 정밀한 계산이 필수입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="doib-hyogwa-bunseog">도입 효과 분석</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">도입 전</th><th style="text-align: left">도입 후</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>보안 신뢰성</strong></td><td style="text-align: left">소프트웨어 기반 격리 (우회 가능)</td><td style="text-align: left">하드웨어 기반 물리 격리 (우회 불가)</td><td style="text-align: left">보안 강도 극대화</td></tr>
+<tr><td style="text-align: left"><strong>시스템 안정성</strong></td><td style="text-align: left">앱 오류가 시스템 전체 중단 유발</td><td style="text-align: left">오류 발생 즉시 해당 앱만 차단</td><td style="text-align: left">고신뢰성 시스템 구현</td></tr>
+<tr><td style="text-align: left"><strong>자원 효율성</strong></td><td style="text-align: left">MMU 운영을 위한 큰 메모리 소모</td><td style="text-align: left">몇 개의 CSR 레지스터만 사용</td><td style="text-align: left">초소형/저전력 장치 최적화</td></tr>
+<tr><td style="text-align: left"><strong>개발 복잡도</strong></td><td style="text-align: left">복잡한 가상화 기술 필요</td><td style="text-align: left">단순 레지스터 설정으로 구현</td><td style="text-align: left">개발 기간 단축 및 검증 용이</td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang-mic-pyojun">미래 전망 및 표준</h3>
+<ul>
+<li><strong>ePMP (Enhanced PMP)</strong>: M-mode 자체를 더 세밀하게 격리하기 위해, M-mode 내에서도 권한을 강제하는 ePMP 규격이 확산되고 있다.</li>
+<li><strong>가상화 확장 (H-extension)</strong>: 하이퍼바이저 모드가 추가됨에 따라, 2단계 주소 변환(2-stage Translation)과 PMP가 결합하여 가상 머신 간의 물리 메모리 격리를 더욱 공고히 할 것이다.</li>
+</ul>
+<p>RISC-V PMP는 단순하지만 강력한 물리적 장벽이다. 오픈 아키텍처인 RISC-V가 다양한 보안 칩 시장을 장악할 수 있었던 비결은, 바로 이 PMP와 같은 하드웨어 기반 보안 메커니즘이 군더더기 없이 설계되어 있기 때문이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 작지만 단단한 울타리를 꼼꼼하게 치는 것이, 크고 복잡한 성벽을 대충 쌓는 것보다 훨씬 안전하다는 것을 증명하는 기술입니다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h3>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>M-mode (Machine Mode)</strong></td><td style="text-align: left">PMP를 설정하고 관리하는 최상위 특권 모드이다.</td></tr>
+<tr><td style="text-align: left"><strong>NAPOT (Naturally Aligned Power-of-Two)</strong></td><td style="text-align: left">1개의 레지스터로 효율적인 메모리 범위를 지정하는 PMP의 핵심 주소 매칭 방식이다.</td></tr>
+<tr><td style="text-align: left"><strong>CSR (Control and Status Register)</strong></td><td style="text-align: left">PMP 설정값이 저장되는 프로세서 내부 특수 레지스터 군이다.</td></tr>
+<tr><td style="text-align: left"><strong>TEE (Trusted Execution Environment)</strong></td><td style="text-align: left">PMP를 활용해 하드웨어적으로 격리된 보안 실행 환경을 구축할 수 있다.</td></tr>
+<tr><td style="text-align: left"><strong>Memory-mapped I/O</strong></td><td style="text-align: left">PMP는 메모리뿐만 아니라 이 방식으로 연결된 주변 장치 접근 제어에도 사용된다.</td></tr>
+</tbody></table>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>PMP는 컴퓨터 안에 사는 <strong>경비원 아저씨</strong>예요. 아저씨는 "여기는 들어가면 안 돼!"라고 적힌 종이(설정값)를 들고 메모리 복도를 지키고 있어요.</li>
+<li>나쁜 프로그램이 금지된 방에 들어가려고 하면, 아저씨가 바로 <strong>사이렌</strong>을 울려서 막아준답니다.</li>
+<li>아저씨는 아주 힘이 세서, 컴퓨터 대장님(M-모드)이 스스로 만든 규칙도 꼭 지키게 만들어요!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

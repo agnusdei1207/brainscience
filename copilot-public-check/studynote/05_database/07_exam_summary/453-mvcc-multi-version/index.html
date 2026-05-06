@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>453. MVCC 다중 버전 동시성 제어 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote database
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="453-mvcc-dajung-beojeon-dongsiseong-jeeo">453. MVCC (다중 버전 동시성 제어)</h1>
+<blockquote>
+<p>⚠️ 이 문서는 "누가 데이터를 고치고 있을 때 다른 사람은 그 데이터를 아예 보지도 못하고 기다려야 하는" 끔찍한 잠금(Lock)의 한계를 깨고, **데이터의 과거 버전(스냅샷)을 여러 개 만들어두어 읽는 사람과 쓰는 사람이 서로를 방해하지 않게 만드는 현대 RDBMS의 핵심 엔진인 'MVCC'**를 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: Multi-Version Concurrency Control. 하나의 데이터에 대해 여러 개의 버전(과거의 모습들)을 유지하여, 트랜잭션마다 자기가 봐야 할 '적절한 과거의 모습'을 보여주는 기술이다.</li>
+<li><strong>가치</strong>: 가장 큰 장점은 **"읽기(Select)는 쓰기(Update)를 막지 않고, 쓰기는 읽기를 막지 않는다"**는 것이다. 덕분에 자물쇠(Lock) 대기 시간이 사라져 동시 처리 속도가 압도적으로 빨라진다.</li>
+<li><strong>기술 체계</strong>: MySQL(InnoDB)과 Oracle은 이를 구현하기 위해 **Undo Log(441번 문서)**를 활용하여 과거의 데이터를 조립(스냅샷 생성)해 낸다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-gaeyo-eunhaengweonyi-meomcun-sigan-context-necessity">Ⅰ. 개요: 은행원의 멈춘 시간 (Context &amp; Necessity)</h3>
+<p>"A 고객의 잔액이 100만 원이네. 이자율 계산해야지..." (은행원 T1이 데이터를 읽고 있다.)
+이때 A 고객이 스마트폰으로 접속해서 <code>50만 원</code>을 출금하려고 한다(T2).</p>
+<ul>
+<li><strong>과거의 DB (2PL, Lock 사용)</strong>: 은행원(T1)이 읽는 동안 S-Lock(공유 락)이 걸려 있어서, 고객(T2)은 출금을 못 하고 "잠시 후 다시 시도해 주세요"라며 무한 대기해야 한다. (고객 극대노)</li>
+<li><strong>현대의 DB (MVCC 사용)</strong>: 고객(T2)은 바로 출금하고 통장 잔액을 <code>50만 원</code>으로 고친다(Lock 없음). 하지만 은행원(T1)의 모니터에는 고객이 방금 고친 50만 원이 아니라, **자기가 처음 조회했을 때의 '100만 원짜리 스냅샷(과거 버전)'**이 계속해서 보인다!</li>
+</ul>
+<p>MVCC는 이렇게 각자의 시간(버전)을 분리해 줌으로써 모두가 행복해지는 마법을 부렸다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: MVCC는 **'웹페이지의 구글 캐시(저장된 페이지)'**와 같습니다. 원본 웹사이트 주인이 지금 막 사이트 디자인을 뜯어고치고 있어도, 나는 구글이 어제 찍어둔 '저장된 페이지(과거 버전)'를 보면서 기사를 읽을 수 있는 것과 똑같은 원리입니다.</p>
+</blockquote>
+<hr />
+<h3 id="ii-mvccyi-haegsim-jagdong-weonri-undo-log">Ⅱ. MVCC의 핵심 작동 원리 (Undo Log) ★</h3>
+<p>DB는 데이터의 과거 버전을 도대체 어디에 숨겨두는 걸까?
+정답은 롤백(Rollback)할 때 쓰려고 만들어둔 **Undo Log(언두 로그)**를 재활용하는 것이다.</p>
+<ol>
+<li><strong>초기 상태</strong>: X = 100</li>
+<li><strong>T2의 수정</strong>: T2가 X를 50으로 바꾼다.
+<ul>
+<li>진짜 디스크의 데이터는 50으로 바뀐다.</li>
+<li>하지만 바뀌기 전의 원본 <code>X=100</code>은 Undo Log라는 휴지통에 슬쩍 넣어둔다.</li>
+</ul>
+</li>
+<li><strong>T1의 조회</strong>: T1이 X를 달라고 한다.
+<ul>
+<li>DB 엔진은 T1의 트랜잭션 시작 시간을 본다. "아, 너는 T2가 고치기 전에 들어온 옛날 사람이네?"</li>
+<li>디스크에 있는 진짜 데이터 <code>50</code>을 주지 않는다. 대신 <strong>Undo Log를 뒤져서 <code>X=100</code>이라는 옛날 퍼즐을 다시 조립해서 T1에게 던져준다.</strong> (이것을 Consistent Read, 일관된 읽기라고 부른다.)</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="iii-mvccyi-cimyeongjeogin-danjeom-2gaji">Ⅲ. MVCC의 치명적인 단점 2가지</h3>
+<p>MVCC가 아무리 완벽해 보여도 만능은 아니다.</p>
+<h4 id="1-undo-log-hyujitong-pogbal-hyeonsang">1. Undo Log (휴지통) 폭발 현상</h4>
+<ul>
+<li>만약 은행원(T1)이 "어제부터 오늘까지의 모든 거래 내역 통계"를 내는 엄청나게 긴 트랜잭션(Long Transaction)을 돌리고 있다고 치자.</li>
+<li>이 트랜잭션이 끝날 때까지 DB는 Undo Log(과거 데이터)를 지우지 못하고 계속 쌓아둬야 한다. (T1이 언제 볼지 모르니까)</li>
+<li>결국 Undo Log 공간이 터져버려서(ORA-01555: snapshot too old 에러) DB가 멈춰버리는 대참사가 발생한다.</li>
+</ul>
+<h4 id="2-sseugi-write-ggirineun-yeojeonhi-rag-lock-i-geolrinda">2. 쓰기(Write)끼리는 여전히 락(Lock)이 걸린다</h4>
+<ul>
+<li>"읽기는 쓰기를 막지 않는다"고 했다.</li>
+<li>하지만 <strong>"쓰기(Update)는 쓰기(Update)를 막는다."</strong></li>
+<li>나와 엄마가 동시에 통장 잔고를 업데이트하려고 하면, 둘 중 하나는 결국 배타 락(X-Lock)에 걸려 무조건 대기해야 한다. 갱신 손실(Lost Update - 445번 문서)을 막아야 하기 때문이다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│           MVCC (다중 버전 동시성 제어) 작동 흐름 시각화               │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│ [ 💾 디스크의 실제 데이터 ] : 잔고 50만 원 (최신!)                    │
+│ [ 🗑️ Undo Log (과거) ]   : 잔고 100만 원                         │
+│                                                              │
+│ 👨‍💻 사용자 A (늦게 온 사람) ───(조회)──▶ 50만 원 (디스크에서 바로 읽음) │
+│                                                              │
+│ 👨‍💼 사용자 B (일찍 온 사람) ───(조회)──▶ 100만 원 (Undo에서 복원해줌) │
+│                                                              │
+│ ★ 특징: A와 B가 똑같은 SELECT 쿼리를 날렸는데, DB가 사람(트랜잭션 나이)을  │
+│       차별해서 서로 다른 두 가지 버전의 데이터를 보여줌!                 │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h3 id="iv-gyeolron">Ⅳ. 결론</h3>
+<p>"Lock 없는 동시성 제어의 예술."
+과거의 개발자들은 동시성(속도)을 높이기 위해 격리 수준을 <code>Read Uncommitted</code>로 낮추며 엉망진창인 데이터(Dirty Read)를 감수해야만 했다. 하지만 MVCC가 도입되면서, 속도 저하 없이도 <code>Repeatable Read</code>(반복 읽기 가능 - 447번 문서)라는 엄청나게 높은 수준의 데이터 정합성을 누릴 수 있게 되었다. 현대 백엔드 엔지니어라면 자신이 사용하는 RDBMS(MySQL, PostgreSQL)가 MVCC를 기반으로 작동한다는 사실을 이해하고, 불필요하게 긴 롱 트랜잭션을 만들어 Undo 영역을 찢어버리는 실수를 하지 말아야 한다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>관련 특성</strong>: 고립성 (Isolation - 443번 문서), Non-Repeatable Read 방어 (447번)</li>
+<li><strong>대척점 기술</strong>: 2PL (2단계 잠금 규약 - 450번 문서)</li>
+<li><strong>핵심 컴포넌트</strong>: Undo Log (언두 세그먼트 - 454번 문서)</li>
+<li><strong>동작 원리</strong>: Consistent Read (읽기 일관성)</li>
+</ul>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>MVCC는 미술관에 있는 '마법의 그림'이에요.</li>
+<li>화가 아저씨가 지금 막 그림에 빨간색 덧칠(Update)을 하고 있어요.</li>
+<li>원래는 아저씨가 다 칠할 때까지 우리는 그림을 볼 수 없어야 하지만, 마법의 그림은 나한테만 아저씨가 덧칠하기 전의 '원래 그림(스냅샷)'을 뿅! 하고 보여준답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

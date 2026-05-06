@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>113. 스레드 로컬 저장소 (TLS, Thread-Local Storage) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 22, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote opering system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: TLS (Thread-Local Storage)는 각 스레드마다 독립적으로 소유하는 데이터 저장 공간이다. 전역 변수(global variable)와 달리 TLS 변수는 스레드 간에 공유되지 않으므로 동기화 없이 안전하게 접근할 수 있다.</li>
+<li><strong>가치</strong>: errno, 스레드 ID, 난수 생성기 시드, per-thread 버퍼 등 스레드마다 고유해야 하는 데이터를 관리하는 표준 수단이다. 동기화 없이 thread-safe한 데이터 공유 패턴을 실현할 수 있다.</li>
+<li><strong>융합</strong>: C11의 _Thread_local, C++의 thread_local, Java의 ThreadLocal, Go의 goroutine-local storage, Rust의 thread_local! 등 현대 언어에서 광범위하게 지원된다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: TLS는 각 스레드에 고유한 저장 공간을 제공하는 메커니즘이다. 컴파일러와 런타임이 협력하여, 동일한 변수 이름이라도 각 스레드가 접근하는 인스턴스가 물리적으로 다른 메모리 위치를 가리키도록 구현한다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 다중 스레드 환경에서 전역 변수를 사용하면 레스 컨디션(Race Condition)이 발생한다. 매번 뮤텍스로 보호할 수 있지만 오버헤드가 크다. TLS는 이 문제를 근본적으로 해결하여, 스레드별 고유 데이터를 동기화 없이 안전하게 유지한다.</p>
+</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────────────┐
+│           전역 변수 vs TLS — 스레드별 데이터 격리                   │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  전역 변수 (공유 — 레스 컨디션 위험):                               │
+│  ┌─────────────────────────────┐                                    │
+│  │ int thread_id = 0;          │  Thread A: thread_id = 1           │
+│  │ srand(42);                 │  Thread B: thread_id = 1  │ ▶ 충돌! │
+│  └─────────────────────────────┘                                    │
+│                                                                     │
+│  TLS 변수 (스레드별 독립 — 안전):                                   │
+│  ┌─────────────┐ ┌─────────────┐                                    │
+│  │ Thread A    │ │ Thread B    │                                    │
+│  │ tid = 1   │ │ tid = 2    │  ← 각자 독립 저장                     │
+│  │ seed = 42 │ │ seed = 99 │  ← 동기화 불필요                       │
+│  │ buf = ... │ │ buf = ... │                                        │
+│  └─────────────┘ └─────────────┘                                    │
+└─────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 전역 변수 thread_id를 두 스레드가 동시에 쓰면 레스 컨디션이 발생하여 결과가 예측 불가능해진다. 반면 TLS 변수 tid는 각 스레드가 물리적으로 다른 메모리에 접근하므로 동기화 없이 안전하다. errno가 TLS로 구현되어 있는 이유가 바로 이것이다 — 각 스레드의 시스템 콜 오류 번호가 독립적으로 유지되어야 하기 때문이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: TLS는 "각 직원의 개인 사물함"과 같습니다. 같은 이름의 사물함이 직원별로 따로 있으므로 동시에 열어도 충돌하지 않습니다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="guhyeon-bangsig">구현 방식</h3>
+<table><thead><tr><th style="text-align: left">구현</th><th style="text-align: left">언어</th><th style="text-align: left">특징</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>__thread (GCC)</strong></td><td style="text-align: left">C</td><td style="text-align: left">컴파일러가 TLS 레지스터(FS/GS 세그먼트)로 구현</td></tr>
+<tr><td style="text-align: left"><strong>_Thread_local</strong></td><td style="text-align: left">C11</td><td style="text-align: left">C11 표준, 모든 스레드에서 초기화 가능</td></tr>
+<tr><td style="text-align: left"><strong>thread_local</strong></td><td style="text-align: left">C++</td><td style="text-align: left">C++11 키워드, static + non-static 모두 지원</td></tr>
+<tr><td style="text-align: left"><strong>ThreadLocal</strong></td><td style="text-align: left">Java</td><td style="text-align: left">java.lang.ThreadLocal, 커스텀 익명명으로 접근</td></tr>
+<tr><td style="text-align: left"><strong>__declspec(thread)</strong></td><td style="text-align: left">Windows MSVC</td><td style="text-align: left">마이크로소프트 특수 키워드</td></tr>
+<tr><td style="text-align: left"><strong>__thread_local</strong></td><td style="text-align: left">Rust</td><td style="text-align: left">rust 1.59+, std::thread::LocalKey</td></tr>
+</tbody></table>
+<h3 id="tls-seutoriji-reiaus">TLS 스토리지 레이아웃</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────────────────┐
+│              TLS 메모리 레이아웃 (x86-64 예시)                          │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  고주소 (High Address)                                                  │
+│  ┌────────────────────────────────────────────────┐                     │
+│  │         TCB (Thread Control Block)                 │                 │
+│  │         ┌─────────────────────────────┐          │                   │
+│  │         │ TLS Array (스레드별 데이터)     │          │               │
+│  │         │  ┌──────┐ ┌──────┐ ... ┌──────┐│          │                │
+│  │         │  │t_id  │ │seed  │ ... │buf  ││          │                 │
+│  │         │  └──────┘ └──────┘     └──────┘│          │                │
+│ │         └─────────────────────────────────────┘          │            │
+│  └────────────────────────────────────────────────┘                     │
+│                                                                         │
+│  FS (fs = 0) 레지스터 → __thread 변수 저장                              │
+│  GS (gs = 지정) 레지스터 → 현재 스레드 TCB 주소                         │
+│                                                                         │
+│  fs:[tls_index] → 해당 스레드의 TLS 데이터에 직접 접근                  │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램활</strong> x86-64 아키텍처에서 TLS는 FS (FS Segment Register) 레지스터를 통해 접근된다. 각 스레드의 TCB 내부에 TLS 배열이 위치하며, FS 레지스터가 현재 스레드의 TCB를 가리키므로, FS 오프셋 계산으로 TLS 데이터에 직접 접근할 수 있다. 이것이 TLS 접근이 전역 변수 접근과 거의 동일한 성능을 보장하는 이유다 (단일 명령어로 접근 가능).</p>
+<ul>
+<li><strong>📢 섹션 요약 비연</strong>: TLS 레이아웃은 "각 사원함의 ID 카드"와 같습니다. FS 레지스터로 ID 카드를 찾아 바로 접근하므로 검색 시간이 거의 0에 가깝니다.</li>
+</ul>
+<hr />
+<h2 id="iii-yunghab-bigyo">Ⅲ. 융합 비교</h2>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">전역 변수 + 뮤텍스</th><th style="text-align: center">TLS</th><th style="text-align: center">__thread</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>레이스 컨디션</strong></td><td style="text-align: left">위험 (보호 필요)</td><td style="text-align: center">없음 (독립)</td><td style="text-align: center">없음</td></tr>
+<tr><td style="text-align: left"><strong>접근 성능</strong></td><td style="text-align: left">L1 캐시 (공유)</td><td style="text-align: center">L1 캐시 (TLS 캐시)</td><td style="text-align: center">L1 캐시 (동일 성능)</td></tr>
+<tr><td style="text-align: left"><strong>동적 생성</strong></td><td style="text-align: left">불가 (컴파일 타임)</td><td style="text-align: center">한계적 (C11)/풍부</td><td style="text-align: center">불가 (컴파일 타임)</td></tr>
+<tr><td style="text-align: left"><strong>포터터 공유</strong></td><td style="text-align: left">가능 (위험)</td><td style="text-align: center">불가</td><td style="text-align: center">불가</td></tr>
+</tbody></table>
+<ul>
+<li><strong>📢 섹션 요약 비율</strong>: TLS는 "각 직원이 개인 사물함을 가지는 방식"으로, 데이터 격리를 통해 레스 컨디션 문제를 근본적으로 해결합니다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong">Ⅳ. 실무 적용</h2>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p><strong>과도한 TLS 사용</strong>: 모든 변수를 TLS로 만들면 메모리 사용량이 N배가 된다. 진짜 스레드별 고유 데이터만 TLS에 저장해야 한다.</p>
+</li>
+<li>
+<p><strong>TLS로 숨검번호 생성</strong>: TLS에 rand() 시드를 저장하면 스레드 간 독립 난수 생성이 보장되지만, 보안상 예측 가능한 난수는 보안에 취약점이 될 수 있다. 암호학적으로 안전한 난수에는 /dev/urandom 사용.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비율</strong>: TLS는 "필요한 것만 개인 사물함에 넣는" 원칙을 지켜야 합니다. 모든 물건을 사물함에 넣으면 공간이 부족해집니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<ul>
+<li><strong>📢 섹션 요약 비율</strong>: TLS는 다중 스레드 환경에서 "동기화 없는 안전한 데이터 공유"의 핵심 기법이며, errno가 TLS인 이유는 시스템 콜 오류 처리의 thread-safety를 보장하기 위해서입니다.</li>
+</ul>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>전역 변수</strong></td><td style="text-align: left">TLS의 반대 개념. 레스 컨디션 위험</td></tr>
+<tr><td style="text-align: left"><strong>errno</strong></td><td style="text-align: left">대표적 TLS 변수. 각 스레드의 오류 코드 독립 저장</td></tr>
+<tr><td style="text-align: left"><strong>스레드 ID</strong></td><td style="text-align: left">pthread_self()도 TLS 기반으로 스레드별 ID 반환</td></tr>
+<tr><td style="text-align: left"><strong>래스 컨디션 (Race Condition)</strong></td><td style="text-align: left">TLS가 원천적으로 해결하는 동시성 문제</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>TLS는 "학생 번호표"와 같아요. 같은 "번호"라도 각 학생이 자기만의 번호표를 가지고 있어서 섞이 볼 일이 없어요.</li>
+<li>컴퓨터에서도 각 스레드(작업자)가 자기만의 번호표(TLS)를 가지면, 서로 다른 사람 번호를 읽을 때 혼선이 생기지 않아요.</li>
+<li>예를 들어 오류 번호(errno)를 저장할 때 TLS를 쓰면, 한 작업자의 오류가 다른 작업자의 화면에 뜨지 않아 안전하답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

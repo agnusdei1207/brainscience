@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>509. 인가 (Authorization) 모델 - RBAC(역할 기반), ABAC(속성 기반, 조건부 규칙) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="509-inga-authorization-model-rbac-yeoghal-giban-abac-sogseong-giban-jogeonbu-gyucig">509. 인가 (Authorization) 모델 - RBAC(역할 기반), ABAC(속성 기반, 조건부 규칙)</h1>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 인가(Authorization) 모델은 사용자가 정문(로그인/인증)을 통과한 뒤 시스템 내부에 들어왔을 때, <strong>"네 직급(Role)이 뭐냐?" 혹은 "지금 접속한 시간과 IP 위치(Attribute)가 어디냐?"라는 깐깐한 조건표를 들이밀며 폴더와 데이터의 열람 권한을 허락하거나 몽둥이로 쫓아내는(403 Forbidden) 내부 통제 아키텍처</strong>다.</li>
+<li><strong>가치</strong>: 2021년 해킹 1위 취약점인 **Broken Access Control(취약한 접근 제어, A01)**을 물리적으로 박살 낸다. 개발자가 귀찮아서 각 페이지마다 흩뿌려놓은 구질구질한 <code>if (user == 'admin')</code> 쌩코딩을 지워버리고, 전사적으로 통일된 권한 매트릭스를 강제하여 하급자가 사장님 게시판을 훔쳐보는 쿠데타(권한 상승)를 100% 원천 봉쇄한다.</li>
+<li><strong>융합</strong>: 단순 획일적인 **RBAC(역할 기반)**의 경직성을 탈피하여, 제로 트러스트(Zero Trust) 시대의 동적이고 정밀한 **ABAC(속성 기반)**으로 진화하며, 스프링 시큐리티(Spring Security)의 전역 필터망 및 OPA(Open Policy Agent) 같은 인프라 레벨의 인가 정책 코딩(Policy as Code) 트렌드와 거대하게 융합된다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: **인증(AuthN)**이 "너 신분증 내놔(누구야?)"라면, **인가(AuthZ)**는 "네 신분증이 대리(Role)네? 그럼 이 VVIP 폴더는 못 읽어. 꺼져!" 라고 권한을 제어하는 행위다.</p>
+<ul>
+<li><strong>RBAC (Role-Based)</strong>: 부장, 대리, 사원이라는 '명찰(역할)' 딱지를 기준으로 폴더 출입문을 막는다.</li>
+<li><strong>ABAC (Attribute-Based)</strong>: 명찰뿐만 아니라, "퇴근 시간 후(시간 속성)에 폰으로 접속(기기 속성)"하면 부장이라도 폴더를 못 열게 하는 미친 듯이 깐깐한 동적 규칙이다.</li>
+</ul>
+</li>
+<li>
+<p><strong>필요성</strong>: 병원 시스템을 만들었다. 의사(Role)는 환자의 차트를 볼 수 있어야 한다. 그래서 코드를 <code>if (role == '의사') return 환자정보;</code> 라고 RBAC로 대충 짰다. 그랬더니 서울 병원에 있는 A의사가, 부산 병원에 있는 B의사 환자의 차트까지 모조리 다 볼 수 있는 끔찍한 대참사(IDOR 해킹)가 터졌다. <strong>단순한 '역할(Role)' 1차원 통제로는 "나와 관련된 진짜 데이터(Ownership)만 볼 수 있는가?"라는 복잡다단한 현대 비즈니스의 경계를 절대 지켜낼 수 없기 때문에, 속성(Attribute)까지 쥐어짜 내 검사하는 고도의 인가 아키텍처가 필수적으로 진화했다.</strong></p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: 인가 모델은 **'군부대 출입 통제 스위치'**와 똑같습니다. 위병소에서 민증 검사(인증)를 하고 들어왔다 칩시다.</p>
+<ul>
+<li><strong>RBAC</strong>: 병사가 가슴에 **'대위'**라는 계급장(Role)을 달고 있으니까 식당과 연병장(일반 페이지)은 다 패스시키고, 장군 화장실(관리자 페이지)은 막는 단순 무식한 룰입니다.</li>
+<li><strong>ABAC</strong>: 계급이 '대위'라도, **지금 시간이 밤 12시(시간 속성)**이고, **대위가 만취 상태(상태 속성)**라면, 식당(일반 페이지) 출입조차 기계가 즉각 거부해 버리는 훨씬 정밀하고 융통성 있는 스마트 도어록입니다.</li>
+</ul>
+</li>
+<li>
+<p><strong>등장 배경 및 발전 과정</strong>:</p>
+<ol>
+<li><strong>MAC/DAC의 낭만 (과거)</strong>: 운영체제(리눅스 폴더 권한 777) 시절 쓰던 군대식 보안. 사용자가 직접 자기 폴더 권한을 남에게 주거나(DAC), 국가가 1급/2급 기밀 딱지를 붙여 통제(MAC)했다. 웹 환경에 맞지 않아 버려졌다.</li>
+<li><strong>RBAC의 대통일 (2000년대)</strong>: 엔터프라이즈(B2B) 기업 환경이 웹에 올라타며, 사원/대리/부장 이라는 '직급 그룹(Role)'에 권한 100개를 묶어서 던져주는 방식이 천하를 통일했다. (관리가 짱 편함)</li>
+<li><strong>ABAC와 제로 트러스트의 강림 (현재)</strong>: MSA와 클라우드가 열리며 유저가 집(재택), 카페, 모바일 어디서 접속할지 모르는 시대가 왔다. Role만 믿다간 다 털린다! "접속 환경, 시간, 위치, 자원 주인(Owner)"의 속성 변수들을 런타임에 1초 단위로 씹어먹으며 허락해 주는 ABAC 시대가 인프라를 장악 중이다.</li>
+</ol>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 이 과정은 **'놀이공원 놀이기구 탑승 룰'**과 같습니다. 옛날(RBAC)엔 <strong>"어른(Role)은 청룡열차 탈 수 있음, 애들은 회전목마만"</strong> 이 끝이었습니다. 하지만 사고가 났죠. 지금(ABAC)은 **"어른이라도 심장병이 있고(속성), 비가 오는 날(환경)에는 청룡열차 탑승 불가!"**라는 복잡한 변수를 조합해 생명(데이터)을 더욱 완벽하게 지켜내는 맞춤형 통제로 진화한 것입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri-deep-dive">Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)</h2>
+<h3 id="1-yangdae-sanmaeg-bigyopyo-rbac-vs-abac-myeonjeob-silmu-jeoldae-gugrul">1. 양대 산맥 비교표: RBAC vs ABAC (면접/실무 절대 국룰)</h3>
+<p>둘 다 권한 통제지만 뼈대 철학이 완전히 다르다.</p>
+<table><thead><tr><th style="text-align: left">척도</th><th style="text-align: left">RBAC (Role-Based Access Control) 👑 전통의 왕</th><th style="text-align: left">ABAC (Attribute-Based Access Control) 👑 미래의 왕</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>통제 기준</strong></td><td style="text-align: left"><strong>사용자에게 부여된 껍데기 '역할(Role)'</strong></td><td style="text-align: left"><strong>사용자, 자원, 환경(시간/IP)이 가진 '속성(Attribute)'의 조합</strong></td></tr>
+<tr><td style="text-align: left"><strong>코드 로직의 모습</strong></td><td style="text-align: left"><code>if (user.role == 'ADMIN') pass;</code></td><td style="text-align: left"><code>if (user.team == doc.team &amp;&amp; time &lt; 18:00) pass;</code></td></tr>
+<tr><td style="text-align: left"><strong>장점 (가치)</strong></td><td style="text-align: left">관리하기 엄청나게 <strong>편하고 직관적임</strong>. (권한 묶음 배포 용이)</td><td style="text-align: left">어떤 복잡한 엣지 케이스 비즈니스 룰도 <strong>초정밀 방어(Fine-grained) 가능</strong>.</td></tr>
+<tr><td style="text-align: left"><strong>단점 (아킬레스건)</strong></td><td style="text-align: left">역할이 폭증하는 <strong>Role Explosion(직급 100개 생김) 재앙</strong>. 자원 소유권(내 글만 수정) 통제 불가.</td><td style="text-align: left">매번 접속할 때마다 변수를 검사하느라 <strong>서버 연산 오버헤드 큼, 설계가 지옥같이 복잡함.</strong></td></tr>
+<tr><td style="text-align: left"><strong>대표 사용처</strong></td><td style="text-align: left">사내 백오피스 메뉴 숨기기, 카페 게시판 등급제</td><td style="text-align: left">국가 기밀문서 관리, 클라우드 IAM 통제, 금융권</td></tr>
+</tbody></table>
+<h3 id="2-cimyeongjeog-maengjeom-pagoe-soyugweon-geomjeung-data-ownership">2. 치명적 맹점 파괴: 소유권 검증 (Data Ownership)</h3>
+<p>RBAC만 믿는 멍청한 개발자를 찢어버리는 가장 악질적인 해킹(IDOR / A01 권한 우회)의 원리.</p>
+<p><strong>[ 💥 RBAC의 파멸적 한계 코드 (해커의 맛집) ]</strong></p>
+<pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">&#x2F;&#x2F; &quot;USER 권한만 있으면 글 지워줄게!&quot; (RBAC 완료)
+@PreAuthorize(&quot;hasRole(&#x27;USER&#x27;)&quot;) 
+public void deleteBoard(int boardId) {
+    &#x2F;&#x2F; 해커가 Postman으로 남의 글 번호 boardId=99 를 던짐.
+    &#x2F;&#x2F; 어? 해커도 로그인한 &#x27;USER&#x27;니까 룰 통과네?
+    boardRepository.delete(boardId); &#x2F;&#x2F; 💥 남의 글이 날아감 대참사!
+}
+</code></pre>
+<p><strong>[ 🛡️ ABAC 융합 방패 코드 (소유권 무결점 검증) ]</strong></p>
+<pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">&#x2F;&#x2F; &quot;니가 USER인 건 알겠는데, 지우려는 그 99번 글의 진짜 &#x27;작성자(Owner)&#x27;가 너 맞어?!&quot;
+@PreAuthorize(&quot;hasRole(&#x27;USER&#x27;)&quot;) 
+public void deleteBoard(int boardId, User loginUser) {
+    Board board = boardRepository.findById(boardId);
+    
+    &#x2F;&#x2F; 이 딱 1줄의 속성(Attribute) 비교 검증이 시스템을 구한다. (ABAC 융합)
+    if (!board.getOwnerId().equals(loginUser.getId())) {
+        throw new SecurityException(&quot;남의 글 건드리지 마라 403 퉤!&quot;); 
+    }
+    boardRepository.delete(board); &#x2F;&#x2F; 완벽하게 내 글만 지워짐.
+}
+</code></pre>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: RBAC는 헬스장에서 **'골드 멤버(Role)는 락커룸에 들어갈 수 있다'**는 룰입니다. 하지만 골드 멤버(해커)가 락커룸에 들어가서 남의 사물함을 마구 뜯어 물건을 훔칠 수 있습니다. ABAC 방어는 락커룸에 들어가더라도 **'그 사물함의 자물쇠 비밀번호(Owner 속성)가 내 팔찌와 일치해야만 열 수 있다'**는 2차 정밀 통제입니다. 방에 들어간다고 모든 걸 만질 수 있게 허락하면 시스템은 그날로 멸망합니다.</li>
+</ul>
+<hr />
+<h2 id="iii-yunghab-bigyo-mic-dagagdo-bunseog">Ⅲ. 융합 비교 및 다각도 분석</h2>
+<h3 id="1-boan-inga-peureimweokeuyi-daegyeol-spring-security-kodeu-vs-opa-inpeura">1. 보안 인가 프레임워크의 대결: Spring Security (코드) vs OPA (인프라)</h3>
+<p>인증/인가를 어디서 때려 막을 것인가에 대한 아키텍처 전쟁이다.</p>
+<table><thead><tr><th style="text-align: left">척도</th><th style="text-align: left">Spring Security / Shiro (애플리케이션 레벨)</th><th style="text-align: left">OPA (Open Policy Agent) / Istio (인프라 레벨)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>위치</strong></td><td style="text-align: left"><strong>앱 소스 코드 안</strong> (자바 어노테이션, Config 파일)</td><td style="text-align: left"><strong>앱 밖</strong> (컨테이너 옆 사이드카 프록시, 서비스 메시)</td></tr>
+<tr><td style="text-align: left"><strong>특징</strong></td><td style="text-align: left">비즈니스 로직(DB 소유권 검사 등)과 찰떡같이 얽혀서 정밀한 컨트롤 가능.</td><td style="text-align: left">자바, 파이썬 등 언어에 상관없이 인프라 전체에 **통일된 중앙 룰(Policy)**을 일괄 컷오프(Cut-off)로 뿌려버림.</td></tr>
+<tr><td style="text-align: left"><strong>단점</strong></td><td style="text-align: left">앱 50개면 50개 앱 소스코드를 다 열어서 고쳐야 함. (MSA에서 유지보수 지옥)</td><td style="text-align: left">DB 안의 비즈니스 오너십(Owner)까지 섬세하게 찔러서 검사하기엔 엔진이 너무 무식함(단순 룰 엔진).</td></tr>
+<tr><td style="text-align: left"><strong>융합 (Best Practice)</strong></td><td style="text-align: left">OPA(인프라)가 정문에서 큰 덩어리(RBAC: 이 API는 관리자만 쳐!)를 빠르게 막아주고, 앱 깊숙한 비즈니스 로직(ABAC: 내 글만 삭제해)은 Spring Security로 핀셋 제어하는 <strong>다층 인가(Defense in Depth) 아키텍처</strong>가 대세.</td><td style="text-align: left"></td></tr>
+</tbody></table>
+<h3 id="gwamog-yunghab-gwanjeom">과목 융합 관점</h3>
+<ul>
+<li>
+<p><strong>소프트웨어 공학 (AOP와 권한의 분리)</strong>: 권한 검사는 1,000개의 API마다 다 들어가야 하는 '지루한 관심사(Cross-cutting Concern)'다. 주니어들은 함수마다 10줄짜리 if문을 복붙해서 박는다. 아키텍트는 분노하며 **AOP(Aspect-Oriented Programming)**를 융합시킨다. 개발자는 비즈니스 로직만 짜고, 함수 껍데기 위에 <code>@Secured("ROLE_ADMIN")</code> 딱 1줄만 딱지 붙이면 스프링 런타임이 0.1초 만에 권한 검사 코드를 앞뒤로 찰칵 씌워주며(Weaving) 코드가 깃털처럼 깨끗해지는(Decoupling) 마법이 완성된다.</p>
+</li>
+<li>
+<p><strong>클라우드 컴퓨팅 (AWS IAM)</strong>: 우리가 배우는 이 골치 아픈 ABAC 모델의 전 우주급 최종 실사판이 바로 <strong>AWS IAM(Identity and Access Management)</strong> JSON 쪼가리 정책들이다. <code>"Condition": { "IpAddress": {"aws:SourceIp": "192.168.0.0/16"} }</code> 처럼 "사내 IP 대역(환경 속성)에서 들어올 때만 S3 버킷을 열어줘라" 라며, 자원(Resource), 행위(Action), 조건(Condition)을 수만 가지로 비틀어대는 클라우드 네이티브의 심장 엔진이 100% 순수 ABAC 철학이다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: Spring Security가 내 방(앱) 문 앞에서 엄마가 **"너 숙제 다 했어?(비즈니스 로직)"**라고 검사하는 디테일한 확인이라면, OPA(인프라)는 아예 아파트 경비실에서 **"너 우리 아파트 주민(RBAC) 맞아?"**라며 언어 불문 통일되게 몽둥이로 막아내는 거대한 게이트입니다. 이 둘은 경쟁자가 아니라, 현관과 방문이라는 완벽한 이중 잠금장치입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsajeog-pandan">Ⅳ. 실무 적용 및 기술사적 판단</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li>
+<p><strong>시나리오 — 'Role 폭발 (Role Explosion)'로 붕괴된 백오피스 행정 마비</strong>: B2B ERP 시스템을 만들며 RBAC 모델을 썼다. 사원, 대리, 부장 Role 3개면 될 줄 알았다. 회사가 커졌다. "경리팀 대리인데, 휴가 기안은 보되 결재는 못 하게 하는 Role 파줘!" "영업팀 과장인데, 서울 지사 데이터만 읽을 수 있는 Role 파줘!" 이런 엣지 케이스 예외 룰이 터지며, 결국 100명의 직원에게 권한을 주려고 <strong><code>Role_Seoul_Manager_Readonly</code>, <code>Role_Finance_Junior_Write</code> 등 무려 5,000개의 끔찍하고 기괴한 Role 껍데기</strong>가 파생되었다. 아무도 이 5,000개 Role이 무슨 권한을 가졌는지 기억 못 해 회사가 마비됐다.</p>
+<ul>
+<li><strong>아키텍트의 해결책</strong>: <strong>1차원적 RBAC 모델의 임계점 폭발</strong>이다. 거대한 시스템에선 Role만으로 비벼볼 수 없다. 아키텍트는 즉시 5,000개 껍데기를 다 찢어버리고 <strong>ABAC (속성 기반)</strong> 뼈대로 대수술을 단행해야 한다. Role은 딱 3개(사원, 대리, 부장)로 돌려놓고, 권한 엔진 중앙에 **"부장(Role)이면서 + 서울 지사(User 속성) 소속이고 + 열람하려는 문서가 서울 문서(Resource 속성)일 때만 통과!"**라는 3차원 방정식 엔진(Rule Engine)을 물려버린다. 5,000개의 지저분한 Role 껍데기들이 1개의 스마트한 수학 공식으로 압축되며 시스템이 평온을 되찾는다.</li>
+</ul>
+</li>
+<li>
+<p><strong>시나리오 — 권한 상승 꼼수를 낳은 JWT (Json Web Token)의 조작</strong>: 프론트엔드가 백엔드에 보낸 JWT 껍데기 안에 <code>{"role": "USER"}</code>가 찍혀 있었다. 해커가 프록시(Burp Suite) 툴로 이 글씨를 <code>{"role": "ADMIN"}</code>으로 쓱 바꿔서 서버로 쐈다. 멍청한 백엔드 API는 "오, 어드민이시군요!" 라며 VIP 게시판을 활짝 열어줬고(Broken Access Control) 1억 고객 DB가 털렸다.</p>
+<ul>
+<li><strong>아키텍트의 해결책</strong>: <strong>인가(AuthZ)와 무결성(Integrity) 검증의 순서 역전 붕괴</strong>다. 백엔드가 토큰 안의 텍스트(Role)를 읽기(디코딩) 전에, <strong>무조건 최상위 인터셉터 단에서 <code>서명(Signature) 검증</code>을 1번 타자로 강제 컷오프(Cut-off)</strong> 했어야 한다. 서버가 비밀키로 도장을 확인했다면, 글자가 1바이트라도 조작된 순간 서명이 펑 깨져서 401 에러로 튕겨 나갔을 것이다. 인가(인가) 로직은 반드시 "100% 무결성이 증명된 팩트 토큰"을 받았을 때만 2차로 구동해야 하는 방패 뒤의 방패다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="doib-cekeuriseuteu">도입 체크리스트</h3>
+<ul>
+<li><strong>비즈니스적</strong>: <strong>"B2B 멀티 테넌트(Multi-tenant)" 구조인가?</strong> SaaS(예: 잔디, 슬랙)를 만들어서 여러 회사(A회사, B회사)에 서비스한다. 이때 A회사 사장님(Admin)이 B회사 사원들의 정보를 볼 수 있는 미친 버그(Tenant Bleed)가 가장 자주 터진다. 아키텍트는 단순 RBAC(Admin)로는 절대 못 막는다. 무조건 모든 API, 모든 쿼리의 WHERE 절 바닥에 **<code>tenant_id = 현재_로그인한_회사의_ID</code>**라는 절대 분리 속성(ABAC) 족쇄를 데이터베이스 최하단 베이스 엔티티(Base Entity) 계층에 강제 융합시켜, 실수로도 남의 회사 데이터를 침범할 수 없는 영구적 칸막이를 세워야 한다.</li>
+<li><strong>조직적</strong>: <strong>권한 통제 실패 시 "기본 차단 (Deny by Default)" 원칙이 살아있는가?</strong> 주니어 개발자가 새로운 이벤트 API <code>/api/event</code> 를 만들었다. 스프링 시큐리티 설정 파일(<code>Config.java</code>)에 이 주소 권한을 적어 넣는 걸 깜빡했다! 배포가 떴다. 이 API는 어떻게 동작해야 할까? 만약 시스템이 "룰에 안 적혀 있네? 그럼 걍 열어둬(PermitAll)"라고 동작하면 회사가 털린다. 훌륭한 인가 아키텍처는 **"내가 명시적으로 허락하지 않은 전 우주의 모든 길은 100% 닫혀 있다(DenyAll)"**는 편집증적 기본값을 세팅하여 개발자의 멍청한 망각을 방화벽으로 자동 커버쳐주어야 한다.</li>
+</ul>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p><strong>"프론트엔드 버튼 숨기기 맹신 (Security by Obscurity)"</strong>: 프론트엔드 React 개발자가 "일반 유저는 '삭제' 버튼 아예 화면에서 안 보이게 <code>display: none</code> 걸었으니까 권한 방어 완벽함!"이라고 뿌듯해한다. 백엔드 개발자는 그걸 믿고 백엔드 API에 인가(<code>@PreAuthorize</code>) 필터를 치지 않는다. 해커는 브라우저를 끄고 터미널(cURL)로 쌩 API(<code>POST /delete</code>)를 찔러 데이터를 다 지우고 코웃음 친다. <strong>권한 인가(AuthZ)의 진실의 방(Source of Truth)은 무조건 백엔드 서버(API) 코어 단 한 곳뿐이며, 프론트엔드 방어는 선량한 고객의 눈요기 편의용(UX) 껍데기에 불과하다.</strong></p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 프론트엔드 권한 숨기기는, 클럽에서 **'미성년자한테 양주 메뉴판(버튼) 안 보여주기'**와 같습니다. 양주 메뉴판을 숨겨봤자, 똘똘한 미성년자(해커)가 웨이터(API)한테 다이렉트로 귓속말해서 "발렌타인 1병 줘(권한 우회 찌르기)"라고 주문합니다. 메뉴판을 숨기는 게 아니라, 웨이터 뇌 속에 "미성년자가 달라고 하면 무조건 싸대기 때려(백엔드 인가 검증)"라는 룰이 강력하게 세팅되어 있어야만 완벽한 합법 클럽이 유지됩니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">프론트 버튼 숨김 의존 + IF문 권한 도배 쌩코딩 (AS-IS)</th><th style="text-align: left">중앙 AOP 필터 적용 + 소유권 검증 ABAC 융합 (TO-BE)</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">수평적/수직적 권한 우회(A01)로 개인정보 열람 연 5건 터짐</td><td style="text-align: left">소유권(Data Ownership) 재검증 로직으로 우회 100% 컷오프</td><td style="text-align: left">OWASP 1위 <strong>Broken Access Control 탈취 리스크 0% 락인</strong></td></tr>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">비즈니스 로직 1만 줄에 권한 체크 코드가 스파게티처럼 섞임</td><td style="text-align: left"><code>@Secured</code> 딱지 1개로 분리, 권한 로직 50% 파일 라인 감소</td><td style="text-align: left">권한 변경 시 파편화 방지 및 <strong>보안 룰 수정 소요 시간 99% 단축</strong></td></tr>
+<tr><td style="text-align: left"><strong>정성</strong></td><td style="text-align: left">"이 관리자 권한이 어디까지 볼 수 있지?" 끝없는 혼돈</td><td style="text-align: left">"중앙 인가 룰(Policy)이 헌법처럼 명세화됨" 투명성 획득</td><td style="text-align: left">데브섹옵스(DevSecOps) 팀 간의 <strong>결함 제로(Defect-Free) 100% 아키텍처 신뢰</strong></td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang">미래 전망</h3>
+<ul>
+<li><strong>Policy as Code (인가 정책의 코드화, OPA의 천하통일)</strong>: 옛날엔 자바 코드 안에 <code>if (role == admin)</code> 짰다. 이제는 OPA(Open Policy Agent)의 <code>Rego</code>라는 특수 언어를 써서, "사장님은 9시부터 6시까지만 결재 폴더 열림"이라는 룰 자체를 텍스트 파일(Code)로 빼버린다. 개발팀은 로직만 짜고, 보안팀은 깃허브(Git)에서 이 Rego 정책 파일만 승인/수정(Merge)하면, 서버를 1도 안 껐다 켜도 런타임에 1초 만에 전사 500개 마이크로서비스의 권한 룰이 동시에 싹 다 업데이트(동적 바인딩)되는 환상적인 중앙 권력 통제 시대가 도래하고 있다.</li>
+<li><strong>AI 머신러닝 기반 무중단 적응형 인가 (Adaptive AuthZ)</strong>: 기존 ABAC는 "서울 IP면 허락" 식의 딱딱한 규칙(Rule)이었다. 미래의 인가 모델은 AI 딥러닝 봇이 유저의 행동 패턴 점수(Trust Score)를 매초 계산한다. "어? 이 직원이 맨날 1개씩만 조회하던 문서 폴더를 1초에 100개씩 긁어가네? 계급은 '사장(Role)'이 맞는데... 속성 행동(Behavior) 점수가 미달이야!" 라며 인간이 짜놓은 룰을 무시하고 AI가 0.1초 만에 스스로 차단 스위치를 닫아버리는 '지능형 인지 방패(AI-Driven Identity)'가 진정한 인가 1티어로 군림할 것이다.</li>
+</ul>
+<h3 id="camgo-pyojun">참고 표준</h3>
+<ul>
+<li><strong>OWASP Top 10 (A01: Broken Access Control)</strong>: "비밀번호 암호화(A02) 100% 해놔도, 인가 로직(A01) 허술하게 짜면 그냥 해커한테 프리패스로 다 털린다"며 전 세계 아키텍트들의 뺨을 갈겨버리고 2021년 영광의 해킹 1위 왕좌에 오른 최악의 논리 결함. (이전 장 478번 연계)</li>
+<li><strong>NIST ABAC Guide (SP 800-162)</strong>: 미국 표준국이 "니들 직급(Role) 1만 개 파다가 조직 망할래? 주체, 객체, 환경(Attribute) 3대 변수를 섞어 쓰는 ABAC 모델로 무조건 넘어가라"고 멱살 잡아버린 글로벌 차세대 인가 헌법.</li>
+</ul>
+<p>인가(Authorization) 모델, 즉 RBAC와 ABAC의 설계는 단순한 코딩 스킬이 아니다. 그것은 수십만 명이 접속하는 아수라장(인터넷) 속에서, **"누가 감히 신의 권좌(DB)에 닿을 수 있는가?"를 수학적이고 기계적으로 갈라치는 '가장 완벽하고 피도 눈물도 없는 신분 계급제 아키텍처'**의 건설이다. 기술사는 개발자들이 귀찮다고 앞문 방화벽(WAF)에만 기대고 방문을 다 열어두고 자는 오만함을 강제로 짓밟아야 한다. 프론트엔드 버튼을 숨기는 눈속임 따위를 경멸하고, 백엔드의 가장 깊고 은밀한 데이터 코어(Core) 앞단에 스프링 시큐리티와 ABAC의 거대한 콘크리트 검문소(Interceptor)를 내리꽂아, 황제(Admin)의 옥새를 훔친 놈이 나타나도 그놈이 진짜 주인이 아님을 1초 만에 간파하고 목을 베어버리는 최후의 절대 성벽을 쳐두는 것, 그것이 인가(AuthZ)가 선사하는 무결점 제로 트러스트의 진정한 심장이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 이 웅장한 인가(AuthZ) 방어 시스템은 철벽의 **'스위스 비밀 금고 시스템'**과 같습니다. 은행 정문을 통과해 로비에 들어오는 것(인증, AuthN)은 돈만 있으면 누구나 다 합니다. 하지만 지하 100층의 개인 금고 앞(인가, AuthZ)에 서는 순간 게임이 다릅니다. 경호원(중앙 필터)은 당신이 VIP(Role) 배지를 달았다고 문을 열어주지 않습니다. 1. 당신의 열쇠, 2. 직원의 열쇠, 3. 사전에 약속한 시간(Attribute 속성) 이 세 톱니바퀴가 0.1초의 오차 없이 동시에 굴러가야만 비로소 육중한 금고(데이터)가 스르륵 입을 엽니다. 이 중 하나라도 어긋나면 그 자리에서 경보가 울리고 갇혀버리는 가혹한 감시, 그것이 완벽한 접근 통제입니다.</li>
+</ul>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Broken Access Control (A01)</strong></td><td style="text-align: left">인가(AuthZ) 설계를 발가락으로 짰을 때 터지는 OWASP 만악의 근원 1위. 해커가 버튼 조작 한 방에 관리자 계정으로 올라가 DB를 지워버리는 끔찍한 권한 우회 참사. (이전 장 478번)</td></tr>
+<tr><td style="text-align: left"><strong>인증 (Authentication, AuthN)</strong></td><td style="text-align: left">인가(AuthZ)의 영혼의 앞잡이. 인증이 "너구구야?(신분 확인)"를 따지는 정문 경비원이라면, 인가는 "너 들어온 건 알겠는데, 부장님 방에 들어갈 짬짜미 되냐?"를 따지는 복도 경비원이다.</td></tr>
+<tr><td style="text-align: left"><strong>제로 트러스트 (Zero Trust)</strong></td><td style="text-align: left">인가(ABAC) 아키텍처의 사상적 기반. "VPN 타고 사내망 들어온 사장님이니까 믿어주자!"라는 오만함을 버리고, 사장님이라도 퇴근 시간(속성)에 엑셀 다운(행위)하면 즉시 목을 쳐버리는 편집증적 신뢰 파괴술.</td></tr>
+<tr><td style="text-align: left"><strong>AOP / Interceptor</strong></td><td style="text-align: left">수만 개의 컨트롤러 함수마다 권한 검사 <code>if</code> 문을 치다 미쳐버린 개발자들을 구원한 스프링(Spring)의 마법. 껍데기에 딱지(<code>@PreAuthorize</code>)만 붙이면 런타임에 기계가 100% 컷오프(Cut-off) 쳐주는 중앙 방패.</td></tr>
+<tr><td style="text-align: left"><strong>OIDC / JWT</strong></td><td style="text-align: left">클라우드 MSA 시대의 인가 통행증. 이 무상태성 토큰 뱃속에 <code>{"role": "ADMIN"}</code> 이라는 도장이 콱 찍혀있어, 50개 서버들이 DB를 뒤지지 않고도 토큰 서명만 찰칵 보고 1초 만에 권한을 프리패스 컷 해주는 고속도로 하이패스.</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>내가 학교(서버) 정문을 무사히 통과했어요(인증 성공). 이제 나는 학교 안에 있는 사람이죠.</li>
+<li>하지만 교장 선생님 자리에 앉아서 방송 마이크(관리자 권한)를 맘대로 켤 수 있나요? 절대 안 되죠! 내가 목에 건 **'1학년 학생 명찰(역할, Role)'**을 보고 방송반 형들이 "애기들은 못 들어와!" 하고 쫓아냅니다(인가 실패).</li>
+<li>이렇게 정문을 통과했다고 끝이 아니라, <strong>학교 안의 특별한 방과 위험한 물건(데이터)을 만질 때 "네가 이걸 만질 등급(자격)이 되냐?!" 하고 깐깐하게 또 검사해서 막아주는 내부 경비 시스템</strong>을 **'인가 (Authorization)'**라고 부른답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

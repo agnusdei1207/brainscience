@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>191. 하이퍼바이저 (Hypervisor) Type 1 (베어메탈) vs Type 2 (호스트형) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 16, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ict convergence
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="haipeobaijeo-hypervisor-akitegceo-type-1-beeometal-vs-type-2-hoseuteuhyeong">하이퍼바이저 (Hypervisor) 아키텍처: Type 1 (베어메탈) vs Type 2 (호스트형)</h1>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 하이퍼바이저(Hypervisor)는 물리적 하드웨어(CPU, RAM)와 가상 머신(VM) 사이에 끼어들어 자원을 분배하고 통제하는 가상화의 심장(VMM)이다. 이 심장이 하드웨어 위에 '다이렉트로' 깔리느냐(Type 1), 아니면 '기존 윈도우 OS 위'에 얹혀서 깔리느냐(Type 2)에 따라 성능과 구조가 완벽하게 갈린다.</li>
+<li><strong>가치</strong>: Type 2(호스트형)는 개인 PC에서 윈도우와 리눅스를 쉽게 번갈아 띄워보는 개발/테스트용 장난감에 가깝다. 반면, 중간 OS 껍데기를 다 벗겨내고 쇳덩어리에 밀착한 Type 1(베어메탈형)은 오버헤드(Overhead)를 극한으로 깎아내어, 1대의 서버에서 100대의 VM을 실시간으로 굴려내는 전 세계 데이터센터와 클라우드(AWS, GCP)의 절대적 권력자로 군림하고 있다.</li>
+<li><strong>융합</strong>: 초창기의 느렸던 전가상화(Full Virtualization) 구조를 타파하기 위해, 리눅스 커널 자체를 하이퍼바이저로 개조해 버린 **KVM(Kernel-based Virtual Machine)**이 등장하면서, Type 1과 2의 경계를 허물고 사실상 천하를 통일한 현대 클라우드 인프라의 마스터피스로 융합되었다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: 가상화의 핵심 모듈인 하이퍼바이저(또는 VMM, Virtual Machine Monitor)는 물리적 하드웨어를 논리적 자원으로 추상화(Abstraction)하여 다수의 운영체제(Guest OS)가 동시에 실행될 수 있게 한다. 설치되는 위치에 따라 하드웨어 위에 직접 설치되는 **Type 1 (Bare-Metal, 베어메탈형)**과, 호스트 운영체제 위에 일반 애플리케이션처럼 설치되는 **Type 2 (Hosted, 호스트형)**로 나뉜다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 2000년대 초반, 개발자들은 자기 윈도우 데스크톱에서 리눅스 서버 환경을 테스트하고 싶었다. 그래서 윈도우 OS 위에 일반 프로그램 깔듯이 'VMware Workstation(Type 2)'을 깔고 리눅스를 돌렸다. 편하긴 했지만 미친 듯이 느렸다. 리눅스가 하드디스크에 파일을 쓰려고 하면, '리눅스 $\rightarrow$ 하이퍼바이저 $\rightarrow$ 윈도우 OS $\rightarrow$ 진짜 하드디스크'라는 4단계의 번역을 거쳐야 했기 때문이다. 윈도우가 버벅대면 리눅스도 같이 뻗었다.
+"이거 기업용(Enterprise) 서버 전산실에서는 절대 못 쓴다. 중간에 껴서 속도를 다 까먹고 램을 혼자 2GB나 처먹는 호스트 OS(윈도우)를 당장 삭제해 버려라!" 엔지니어들은 이 중간 기착지를 완전히 도려내고, 하이퍼바이저 자체가 초경량 운영체제 역할을 겸하며 쇳덩어리(Hardware)와 다이렉트로 키스하는 극강의 최적화 구조인 Type 1(베어메탈) 아키텍처를 창조해 냈다.</p>
+</li>
+<li>
+<p><strong>등장 배경 및 기술적 패러다임 전환</strong>:
+Type 1 하이퍼바이저는 엔터프라이즈 가상화 시장의 황금기를 열었다. VMware의 <strong>ESXi</strong>와 오픈소스 <strong>Xen</strong>이 등장하여 거대 데이터센터의 물리 서버들을 마법처럼 VM으로 쪼개기 시작했다.
+하지만 오픈소스 진영(Linux)은 여기서 멈추지 않았다. "어차피 리눅스 커널 자체가 하드웨어를 완벽하게 통제하는데, 굳이 Xen이라는 하이퍼바이저를 따로 얹을 필요가 있나? 리눅스 커널 소스 코드에 가상화 기능 모듈(KVM)만 딱 꽂아 넣어서, 리눅스 자체를 하이퍼바이저로 변신시키자!" 이 발상의 전환이 **KVM(Kernel-based Virtual Machine)**을 탄생시켰고, KVM은 AWS, 구글 클라우드를 거쳐 글로벌 표준 하이퍼바이저로 왕좌를 차지하며 패러다임을 또 한 번 갈아엎었다.</p>
+</li>
+</ul>
+<p>이 다이어그램은 왜 Type 2가 느리고 무거운지, 왜 Type 1이 클라우드를 지배할 수밖에 없는지 층(Layer)의 개수로 명확히 증명한다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌───────────────────────────────────────────────────────────────┐
+  │         하이퍼바이저 아키텍처: Type 2 (호스트형) vs Type 1 (베어메탈)  │
+  ├───────────────────────────────────────────────────────────────┤
+  │                                                               │
+  │  [A. Type 2 (Hosted) - 내 컴퓨터 장난감용 (오버헤드 폭발 🐢)]         │
+  │                                                               │
+  │      ┌── (VM 1) ──┐        ┌── (VM 2) ──┐                     │
+  │      │ [ App ]    │        │ [ App ]    │                     │
+  │      │ [ Guest OS ]│        │ [ Guest OS ]│  ◀ (번역 병목 발생)  │
+  │      └─────┬──────┘        └─────┬──────┘                     │
+  │  ──────────┼─────────────────────┼───────── [ App (워드&#x2F;크롬) ] │
+  │  [ 🛡️ 하이퍼바이저 (VMware Workstation, VirtualBox 등) ]       │
+  │  ─────────────────────────────────────────────────────────────│
+  │  [ 🪟 호스트 OS (Host OS - 윈도우 11, macOS) ] ◀ 무겁고 자원 낭비 심함 │
+  │  ─────────────────────────────────────────────────────────────│
+  │                  [ 💻 물리 하드웨어 (CPU, RAM) ]                   │
+  │                                                               │
+  │  [B. Type 1 (Bare-Metal) - 엔터프라이즈 전산실용 (초고속&#x2F;초경량 🚀)]  │
+  │                                                               │
+  │      ┌── (VM 1) ──┐        ┌── (VM 2) ──┐                     │
+  │      │ [ App ]    │        │ [ App ]    │                     │
+  │      │ [ Guest OS ]│        │ [ Guest OS ]│  ◀ (다이렉트 통신)  │
+  │      └─────┬──────┘        └─────┬──────┘                     │
+  │  ──────────┴─────────────────────┴─────────────────────────────│
+  │  [ 🛡️ 하이퍼바이저 (VMware ESXi, Xen, Hyper-V) ] ◀ OS 없이 쇠에 착붙!│
+  │  ─────────────────────────────────────────────────────────────│
+  │                  [ 💻 물리 하드웨어 (CPU, RAM) ]                   │
+  └───────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 아키텍처 최적화의 제1원칙은 "거치는 단계(Hop)가 많을수록 시스템은 느려지고 버그가 터질 확률은 제곱으로 뛴다"는 것이다. A 방식(Type 2)에서 가상 머신(VM) 안의 리눅스가 CPU 연산을 요청하면, 하이퍼바이저가 이를 받아서 다시 밑에 있는 '진짜 윈도우 11'에게 "나 CPU 좀 쓰게 해 줘"라고 허락을 받아야 한다. 중간 유통 업자(호스트 OS)가 너무 많은 수수료(오버헤드)를 떼어간다. 게다가 윈도우 11 자체가 램을 4GB나 잡아먹는다.
+반면 B 방식(Type 1)은 아예 하드 포맷된 빈 서버의 쇳덩어리(Bare-Metal) 위에 100MB도 안 되는 초경량 하이퍼바이저 전용 운영체제(ESXi 등)를 USB로 꽂아서 다이렉트로 깔아버린다. 호스트 OS가 존재하지 않는다. 하이퍼바이저가 곧 시스템의 신(God)이자 OS다. VM의 하드웨어 요청을 중간 거침 없이 즉시 쇳덩어리에 때려 박기 때문에, 성능 오버헤드가 1~5% 미만으로 극단적으로 압축된다. 이 구조적 날렵함 없이는 수만 대의 서버를 돌리는 아마존 클라우드(AWS)의 이윤 창출은 물리적으로 불가능하다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Type 2(호스트형)는 **'집주인(호스트 OS)이 살고 있는 30평 아파트의 방 하나를 월세로 빌려 들어가는 것'**입니다. 내가 화장실을 쓰려면 집주인의 눈치를 봐야 하고, 집주인이 술 먹고 난동(블루스크린)을 부리면 나도 피해를 봅니다. Type 1(베어메탈)은 아예 **'집주인 없이 관리인(하이퍼바이저)만 상주하는 100가구 전용 오피스텔 건물 전체'**입니다. 관리인은 방(VM)만 배정해 줄 뿐 귀찮게 굴지 않아서 쾌적하게 100% 성능을 뽑아내며 살 수 있습니다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri-deep-dive">Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)</h2>
+<h3 id="haipeobaijeo-typebyeol-gisul-seutaeg-mic-silmu-jeogyong-maeteurigseu">하이퍼바이저 Type별 기술 스택 및 실무 적용 매트릭스</h3>
+<p>아키텍트는 개발자의 로컬 테스트 환경과 상용 서버 환경의 갭(Gap)을 인지해야 한다.</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">Type 1 (Bare-Metal / 네이티브)</th><th style="text-align: left">Type 2 (Hosted / 호스트형)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>설치 방식 및 위치</strong></td><td style="text-align: left">하드웨어 디스크에 포맷 후 <strong>가장 먼저 다이렉트 설치</strong></td><td style="text-align: left">일반 PC에 깔린 윈도우/맥 OS 위에 <strong>일반 응용 프로그램(.exe)처럼 설치</strong></td></tr>
+<tr><td style="text-align: left"><strong>운영체제(OS) 존재 여부</strong></td><td style="text-align: left">호스트 OS 없음 (하이퍼바이저가 미니 OS 역할 겸임)</td><td style="text-align: left"><strong>무거운 호스트 OS가 반드시 존재</strong>하여 밑바닥 하드웨어를 통제함</td></tr>
+<tr><td style="text-align: left"><strong>성능 오버헤드</strong></td><td style="text-align: left">극히 낮음 (Native H/W Speed의 95% 이상 달성)</td><td style="text-align: left">높음 (호스트 OS가 중간에서 번역하느라 속도/메모리 다 까먹음)</td></tr>
+<tr><td style="text-align: left"><strong>안정성 (가용성)</strong></td><td style="text-align: left">완벽함 (VM끼리 격리. 하나의 VM이 터져도 전체 영향 0%)</td><td style="text-align: left">취약함 (밑에 깔린 호스트 윈도우가 재부팅되면 위쪽 VM들 전멸)</td></tr>
+<tr><td style="text-align: left"><strong>대표적인 솔루션</strong></td><td style="text-align: left">VMware <strong>ESXi</strong>, MS <strong>Hyper-V</strong>, 오픈소스 <strong>Xen</strong></td><td style="text-align: left">VMware <strong>Workstation</strong>, Oracle <strong>VirtualBox</strong>, Parallels</td></tr>
+<tr><td style="text-align: left"><strong>주요 사용처</strong></td><td style="text-align: left">전 세계 클라우드(AWS, Azure) 및 기업 24시간 전산실</td><td style="text-align: left">개인 개발자 PC 1대에서 우분투와 윈도우를 번갈아 띄워보는 샌드박스</td></tr>
+</tbody></table>
+<h3 id="dibdaibeu-kvm-kernel-based-virtual-machine-type-1gwa-2yi-haibeurideu-dolyeonbyeoni">딥다이브: KVM (Kernel-based Virtual Machine) - Type 1과 2의 하이브리드 돌연변이</h3>
+<p>전통적 분류에서는 쇳덩어리에 붙으면 Type 1, 윈도우/리눅스 위에 깔리면 Type 2다. 그렇다면 전 세계 클라우드 인프라의 90%를 씹어 먹고 있는 최고 존엄 <strong>KVM</strong>은 어디에 속할까?</p>
+<ol>
+<li><strong>리눅스(Linux) 커널의 흡수</strong>: KVM은 리눅스 커널(Kernel) 2.6 버전부터 아예 기본 모듈로 흡수 통일되었다.</li>
+<li><strong>Type 2처럼 생겼지만</strong>: 우분투(Linux)라는 버젓한 호스트 OS 위에 일반 패키지(<code>apt-get install qemu-kvm</code>)처럼 설치되니까 겉보기엔 Type 2다.</li>
+<li><strong>Type 1처럼 행동함</strong>: 그런데 모듈이 깔리는 순간, 우분투의 리눅스 커널 자체가 **'나 자신이 바로 하이퍼바이저다!'**라고 각성(변신)해 버린다. 즉, 별도의 무거운 중간 번역기를 거치는 게 아니라, 리눅스 운영체제의 심장(커널)이 다이렉트로 가상 머신의 CPU와 메모리를 스케줄링해 버리는 구조다.
+이 기묘한 성질 때문에 KVM은 "리눅스 OS를 쓰니까 Type 2 아니냐?"는 시비를 가볍게 씹어먹으며, **'성능은 완벽한 Type 1 베어메탈이면서, 겉모습은 범용 리눅스의 편의성을 그대로 누리는 궁극의 하이브리드(Type 1.5)'**로 진화해 과거의 강자였던 Xen을 관짝에 묻어버렸다.</li>
+</ol>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Xen(전통 Type 1)은 아예 '가상화 전용 언어만 쓰는 외국인 관리인'을 데려다 건물을 관리시킨 거라 속도는 빠르지만 대화(설정)하기가 너무 힘듭니다. KVM은 그냥 우리 동네 아저씨(친숙한 리눅스 OS)에게 '가상화 마스터 자격증(KVM 모듈)'을 딱 쥐여준 것입니다. 아저씨가 익숙한 동네 말로 엄청나게 편하게 대화해 주면서도, 일(가상화 성능)은 외국인 전문가 뺨치게 완벽하게 해내는 기적의 하이브리드 관리인입니다.</li>
+</ul>
+<hr />
+<h2 id="iii-yunghab-bigyo-mic-dagagdo-bunseog-comparison-synergy">Ⅲ. 융합 비교 및 다각도 분석 (Comparison &amp; Synergy)</h2>
+<h3 id="hadeuweeo-gweonhan-ring-privilege-gujoyi-bunggoewa-geugbog">하드웨어 권한 (Ring Privilege) 구조의 붕괴와 극복</h3>
+<p>하이퍼바이저의 진짜 싸움은 "누가 CPU의 신(God) 권한인 Ring 0를 먹을 것인가"다.</p>
+<table><thead><tr><th style="text-align: left">권한 계층</th><th style="text-align: left">운영체제/소프트웨어의 위치</th><th style="text-align: left">가상화 도입 시 발생하는 권한 탈취의 충돌 (Privilege Ring)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Ring 0</strong> (절대 권력)</td><td style="text-align: left"><strong>운영체제 커널 (OS Kernel)</strong></td><td style="text-align: left">원래 윈도우(OS)가 여기서 하드웨어를 100% 조종했다. 하지만 가상화 시대엔 <strong>하이퍼바이저</strong>가 여기를 뺏어서 자리 잡는다.</td></tr>
+<tr><td style="text-align: left"><strong>Ring 1, 2</strong> (중간 관리자)</td><td style="text-align: left">원래 안 쓰던 잉여 계층</td><td style="text-align: left">Ring 0에서 쫓겨난 **가상 머신의 Guest OS(윈도우/리눅스)**들이 여기로 억지로 밀려난다(Privilege Deprivileging).</td></tr>
+<tr><td style="text-align: left"><strong>Ring 3</strong> (일반 백성)</td><td style="text-align: left"><strong>일반 애플리케이션 (워드, 게임)</strong></td><td style="text-align: left">옛날이나 지금이나 똑같이 유저 프로그램이 도는 가장 권한 없는 구역.</td></tr>
+</tbody></table>
+<p><strong>[문제점]</strong> Guest OS(VM 속 윈도우)는 자기가 진짜 컴퓨터의 신(Ring 0)인 줄 알고 으스대며 "CPU 전원 당장 꺼!"라는 특권 명령을 내린다. 하지만 사실 그는 권한이 강등된(Ring 1) 셋방살이 신세다. 컴퓨터가 에러를 뿜는다(Trap).
+<strong>[해결책]</strong> 하이퍼바이저(진짜 Ring 0)가 이걸 밑에서 몰래 낚아채서(Trap), "아이고 우리 VM님, 제가 대신 전원 꺼드리는 '시늉'을 해드릴게요"라며 가짜로 명령을 번역해서 실행(Emulate)해 준다. 이 눈물겨운 사기극(<strong>Trap-and-Emulate</strong>)이 소프트웨어 가상화의 핵심이지만 너무 버벅댄다. 결국 다음 문서(193번)에서 배울 **하드웨어 보조 가상화(Intel VT-x)**가 등장해 "CPU 칩셋 안에 아예 신(Ring 0)보다 더 높은 초월적 신의 공간(Ring -1)을 만들어 주마!"라고 구원하기 전까지, 하이퍼바이저 엔지니어들은 이 권한 충돌의 저주를 풀기 위해 밤을 새워야 했다.</p>
+<h3 id="keonteineo-gasanghwa-docker-wayi-cungdol-gasang-meosinyi-molraginga">컨테이너 가상화(Docker)와의 충돌: 가상 머신의 몰락인가?</h3>
+<p>Type 1 하이퍼바이저(VM)가 아무리 가벼워졌어도, 앱 하나를 띄우려면 수 기가바이트짜리 윈도우/리눅스(Guest OS) 덩어리를 무조건 같이 띄워야 한다. 그래서 "OS 껍데기 다 버리고(가상 머신 삭제), 그냥 쇳덩어리 위에 리눅스 하나만 깐 다음에 프로그램(컨테이너)만 10,000개 띄우자!"라는 혁명이 **도커(Docker)**다.
+그럼 하이퍼바이저는 멸종할까? 아니다. 아마존(AWS) 서버실을 까보면, 빈 쇳덩어리(Bare-Metal) 위에 일단 하이퍼바이저(KVM/Nitro)를 깔아서 EC2 가상 머신(VM)을 10대 찍어낸다. 그리고 그 가상 머신 '안'에서 도커 컨테이너를 100개씩 또 띄워서 판다. 왜냐하면 컨테이너는 가볍지만 10,000개가 OS 커널 하나를 공유하기 때문에 보안 격리가 뚫리기 십상이라, 해커가 옆 컨테이너를 털기 쉽다. 반면 하이퍼바이저(VM)는 강철 금고처럼 서로를 완벽하게 차단한다. 결국 **"하이퍼바이저(VM)로 철벽 보안의 큰 방을 만들고, 그 방 안에서 컨테이너(Docker)로 종이 파티션을 쳐서 수천 개의 앱을 가볍게 띄운다"**는 융합 아키텍처가 우주 최강의 클라우드 표준으로 군림하고 있다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 하이퍼바이저(VM)는 벽돌과 시멘트로 '완벽히 방음과 보안이 되는 원룸' 10개를 짓는 겁니다. 무겁고 짓기 힘들지만 옆방에 불이 나도 안전하죠. 컨테이너(Docker)는 거대한 체육관에 '합판 파티션'만 1,000개 쳐놓고 고시원을 만든 겁니다. 미친 듯이 빠르고 가볍지만, 옆 사람이 기침(해킹)하면 다 퍼집니다. 아마존은 그래서 튼튼한 시멘트 원룸(VM)을 먼저 짓고, 그 원룸 한 칸 안에 파티션(컨테이너)을 수백 개 치는 이중 방어 전략을 씁니다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsajeog-pandan-strategy-decision">Ⅳ. 실무 적용 및 기술사적 판단 (Strategy &amp; Decision)</h2>
+<h3 id="silmu-sinario-mic-seolgye-antipaeteon">실무 시나리오 및 설계 안티패턴</h3>
+<ol>
+<li>
+<p><strong>시나리오 — AWS EC2와 KVM (Type 1)의 클라우드 대륙 정복기</strong>: 2010년대 중반, 아마존(AWS)은 원래 오픈소스 하이퍼바이저인 'Xen'을 개조해서 EC2 가상 서버를 팔았다. 하지만 Xen은 너무 구형이고 뚱뚱해서 성능 튜닝에 한계가 왔다.</p>
+<ul>
+<li><strong>의사결정</strong>: 아마존은 피를 흘리며 10년 넘게 쓴 Xen을 버리고, 초경량 하이퍼바이저인 <strong>KVM (Kernel-based Virtual Machine)</strong> 생태계로 전면 이사(Migration)를 감행했다. KVM 기반 위에 자신들의 칩셋 가속기를 융합한 'AWS Nitro System'을 창조해 낸 것이다. 무거운 번역 작업을 하이퍼바이저 소프트웨어가 아니라 물리적인 암(ARM) 칩 카드(Nitro)에 전부 떠넘겨(Offloading) 버림으로써, 가상 머신(EC2)이 베어메탈 물리 서버 속도의 99.9%에 도달하는 경이로운 하이퍼바이저의 궁극 진화를 이룩했다.</li>
+</ul>
+</li>
+<li>
+<p><strong>안티패턴 — 사내망 구축 시 개발자 PC용 Type 2 가상화의 프로덕션 투입</strong>: 한 짠돌이 중소기업이 사내 인트라넷 서버를 구축하려는데, 윈도우 서버(물리) 1대 위에 리눅스 메일 서버를 같이 띄워야 했다. IT 팀장이 "내 노트북에서 쓰던 VirtualBox(Type 2) 무료니까 그거 윈도우 서버에 깔아서 우분투 띄워!"라고 지시했다.</p>
+<ul>
+<li><strong>결과</strong>: 주말에 윈도우 서버가 강제 자동 업데이트(Windows Update)를 먹고 지 혼자 재부팅되어 버렸다. 밑바닥 호스트 OS가 꺼지자, 그 위에서 VirtualBox 일반 프로그램으로 아슬아슬하게 돌고 있던 사내 리눅스 메일 서버 프로세스가 그냥 강제 킬(Kill)당하며 메일 데이터 DB가 모조리 깨져버렸다.</li>
+<li><strong>해결책</strong>: Type 2(호스트형) 하이퍼바이저는 철저히 장난감이자 로컬 개발/테스트용이다. 절대 상용(Production) 서비스에 올려서는 안 된다. 기업의 운영 서버는 무조건 윈도우를 밀어버리고 <strong>VMware ESXi나 Proxmox(KVM) 같은 Type 1 베어메탈 하이퍼바이저</strong>를 USB로 다이렉트로 구워서 쇳덩어리에 바른 뒤, 그 위에서 윈도우 VM과 리눅스 VM을 독립적인 동급(Peer)으로 안전하게 띄워야 호스트 재부팅의 참사를 막을 수 있다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="seobeo-inpeura-gasanghwa-doib-yisagyeoljeong-teuri">서버 인프라 가상화 도입 의사결정 트리</h3>
+<p>아키텍트의 무지는 곧 속도 저하와 보안 참사로 직결된다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌───────────────────────────────────────────────────────────────────┐
+  │           가상화 솔루션 (Hypervisor Type) 스택 설계 의사결정 트리         │
+  ├───────────────────────────────────────────────────────────────────┤
+  │                                                                   │
+  │   [새로운 가상 머신(VM) 또는 리눅스 게스트 환경 구동 요건 발생]                  │
+  │                │                                                  │
+  │                ▼                                                  │
+  │      이 가상 머신이 올라갈 하드웨어가 개발자의 &#x27;개인 노트북(PC)&#x27;인가?             │
+  │          ├─ 예 (맥북이나 윈도우 노트북에서 잠시 리눅스를 띄워보고 싶음)           │
+  │          │      └──▶ [ Type 2 호스트형 (VirtualBox, VMware Workstation) ] │
+  │          │             - 윈도우&#x2F;맥 OS 끄지 않고 앱처럼 1초 만에 켜고 끄며 테스트 완료.│
+  │          │                                                        │
+  │          └─ 아니오 (서버실 랙에 꽂혀 있는 24시간 365일 안 꺼지는 물리 서버임)      │
+  │                │                                                  │
+  │                ▼                                                  │
+  │      그 서버 위에서 수백 대의 VM을 띄우고 라이브 마이그레이션(Live Migration) 등    │
+  │      무중단 하이엔드 엔터프라이즈 기능이 완벽하게 지원되어야 하는가?              │
+  │          ├─ 예 ──▶ [ 상용 Type 1 베어메탈 (VMware ESXi &#x2F; vSphere) 도입! ]  │
+  │          │         - 비용은 수천만 원 들지만 완벽한 하이퍼바이저 안정성과 GUI 제공. │
+  │          │                                                        │
+  │          └─ 아니오 (비용을 0원으로 맞추고 오픈소스 생태계로 커스텀 튜닝할 거임)     │
+  │                │                                                  │
+  │                ▼                                                  │
+  │     [ 리눅스 커널 기반 KVM (Type 1.5 하이브리드) 오픈소스 생태계 구축! ]       │
+  │       - Ubuntu&#x2F;CentOS를 깔고 커널에 KVM 모듈을 활성화하여 쇳덩어리와 직결 통신.   │
+  │       - OpenStack이나 Proxmox를 얹어 프라이빗 클라우드의 제국을 공짜로 구축.      │
+  │                                                                   │
+  │   판단 포인트: &quot;서버 위에서 윈도우 지뢰찾기나 카톡을 할 게 아니라면, 서버 쇳덩어리에  │
+  │                GUI(그래픽)가 있는 무거운 운영체제를 덮는 짓은 100% 죄악이다.&quot;     │
+  └───────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 트리는 무식한 하드웨어 오버헤드 낭비를 막는 문지기다. 서버(Server)의 미덕은 오직 연산에 100% CPU를 바치는 것이다. 그런데 쇳덩어리 서버에 윈도우 10을 깔아버리면(Type 2 구조), 윈도우 10은 백그라운드에서 백신을 돌리고 화면의 예쁜 아이콘(GUI)을 렌더링하느라 황금 같은 CPU와 RAM을 수십 기가바이트씩 허공에 버린다. 진정한 아키텍트는 쇳덩어리에 검은색 터미널 창(CLI) 하나만 달랑 뜨는 용량 100MB짜리 뼈다귀 하이퍼바이저(VMware ESXi, Type 1)를 직빵으로 깔아버린다. 껍데기(Host OS)를 벗어 던진 이 극강의 다이어트야말로 VM 100대를 렉 없이 돌려내는 엔터프라이즈 전산실의 물리적 토대다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 노트북에서 VirtualBox(Type 2)를 켜는 건, 내가 피자에 떡볶이에 콜라(호스트 윈도우)까지 다 먹어 배가 터지기 직전인 상태에서, 억지로 케이크(가상 머신)를 또 입에 쑤셔 넣는 겁니다. 엄청 버겁고 소화 불량이 옵니다. 전산실의 서버(Type 1)는 아침부터 철저하게 위장을 싹 다 비워놓고 단식한 상태에서 오직 케이크(수백 대의 가상 머신)만 미친 듯이 흡입하는 챔피언입니다.</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">Type 2 (Host OS 경유 가상화)</th><th style="text-align: left">Type 1 (Bare-Metal 직접 가상화)</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량 (I/O 병목)</strong></td><td style="text-align: left">디스크 읽기/쓰기 시 Host OS 커널을 거치며 지연</td><td style="text-align: left">하이퍼바이저가 하드웨어 드라이버 다이렉트 패스스루</td><td style="text-align: left">파일 및 네트워크 I/O 속도 <strong>Native 대비 95~99% 극한 보장</strong></td></tr>
+<tr><td style="text-align: left"><strong>정량 (메모리 점유)</strong></td><td style="text-align: left">Host OS가 기본 2~4GB RAM 잉여 점유(낭비)</td><td style="text-align: left">100MB 미만의 초경량 커널만 메모리 점유</td><td style="text-align: left">서버 가상화 집적도(Density) <strong>30% 이상 초과 할당(Overcommit) 달성</strong></td></tr>
+<tr><td style="text-align: left"><strong>정성 (안정성)</strong></td><td style="text-align: left">Host OS 윈도우 업데이트 시 전 체계 다운</td><td style="text-align: left">VM 간 절대적 모래상자(Sandbox) 격리 벽 형성</td><td style="text-align: left">블루스크린 연쇄 붕괴 방지 및 <strong>가용성 99.999% 무결점 서버 팜 구축</strong></td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang">미래 전망</h3>
+<ul>
+<li><strong>마이크로VM (MicroVM)과 파이어크래커 (Firecracker)</strong>: Type 1 가상화가 아무리 가벼워졌어도 VM 하나 부팅하는 데 수십 초가 걸리는 건 못 참는다. AWS는 람다(Lambda, 서버리스) 함수를 0.1초 만에 띄우기 위해, KVM을 뼈대까지 도려내어 부팅 시간을 '밀리초(ms)' 단위로 잘라버린 **초경량 하이퍼바이저 'Firecracker'**를 오픈소스로 공개했다. 도커 컨테이너의 1초 기동 속도와 가상 머신(VM)의 강철 보안 격리를 하나로 합친 궁극의 돌연변이 하이퍼바이저가 서버리스 우주를 평정하고 있다.</li>
+<li><strong>하드웨어 디스어그리게이션 (DPU/IPU 장착)</strong>: 메인 CPU가 가상화(하이퍼바이저) 짐을 지느라 피곤해 죽으려고 하자, 차세대 데이터센터 랙에는 랜카드(NIC)에 아예 ARM 칩셋(DPU)을 달아놓는다. VMware의 ESXi 엔진 자체가 메인 서버가 아닌 랜카드 칩셋 안에서 돌아간다(Project Monterey). 메인 쇳덩어리 서버의 CPU는 100% 고객의 넷플릭스 영상 처리용으로만 풀가동하고, 귀찮은 가상화 쪼개기 잡일은 모조리 랜카드가 처리해 버리는 엑소더스(Offloading)가 완성되었다.</li>
+</ul>
+<h3 id="camgo-pyojun">참고 표준</h3>
+<ul>
+<li><strong>KVM (Kernel-based Virtual Machine)</strong>: Type 1.5의 이단아이자 전 세계 클라우드(AWS, GCP, OpenStack)를 지배하는, 리눅스 커널에 내장된 오픈소스 가상화 인프라 절대 표준.</li>
+<li><strong>Virtio (Virtual I/O Device)</strong>: 가상 머신 안의 윈도우가 하드디스크에 파일을 저장할 때 하이퍼바이저를 거치며 생기는 병목을 없애기 위해, 게스트와 호스트가 다이렉트로 데이터를 던지게 뚫어놓은 반가상화(Para-virtualization) 네트워크/디스크 드라이버의 국제 표준(192번 문서에서 계속).</li>
+</ul>
+<p>"가장 위대한 소프트웨어는 자신이 존재한다는 사실조차 하드웨어에게 숨기는 것이다."
+하이퍼바이저(Hypervisor)의 60년 역사는 '눈치채지 못하게 속이는 사기극'의 역사였다. 자신이 운영체제(Host OS) 위에 빌붙어 사는 기생충(Type 2) 시절을 거쳐, 마침내 운영체제의 껍데기를 찢어발기고 쇳덩어리(Bare-Metal)와 직접 키스하며 세상의 신으로 군림(Type 1)하기까지. 이들은 컴퓨터의 영혼(OS)과 육체(Hardware)를 강제로 분리해 내어 허공에 수만 대의 유령 컴퓨터(Cloud)를 창조해 낸 연금술사들이다. 비록 가벼운 도커(Docker) 컨테이너의 거센 반격에 직면해 있지만, 아마존과 구글 클라우드의 가장 깊숙하고 어두운 지하 데이터센터 바닥에는 여전히 KVM과 Nitro 하이퍼바이저가 피 흘리며 묵묵히 전 세계의 가상 세계를 떠받치고 있는 견고한 강철 기둥이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Type 2(호스트형)는 내가 식당(호스트 OS)에 들어가서 알바생(하이퍼바이저)에게 요리를 시키면, 알바생이 다시 주방장(하드웨어)에게 허락을 받고 요리를 가져오는 복잡하고 느린 심부름입니다. Type 1(베어메탈)은 알바생과 식당 주인을 다 잘라버리고, <strong>내가 직접 주방장(하드웨어) 코앞에 카운터(하이퍼바이저)를 차리고 다이렉트로 명령을 꽂아 넣는</strong> 초고속 패스트푸드 공장입니다. 클라우드가 빛의 속도로 서버를 찍어낼 수 있는 유일한 비결입니다.</li>
+</ul>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>가상화 아키텍처 (190번 문서)</strong></td><td style="text-align: left">물리 서버 1대를 수백 대로 찢어발기는 클라우드의 뼈대 원리. 하이퍼바이저(Type 1/2)는 이 마법을 실제로 부리는 구체적인 '지휘봉'이자 엔진이다.</td></tr>
+<tr><td style="text-align: left"><strong>전가상화 vs 반가상화 (192번)</strong></td><td style="text-align: left">하이퍼바이저 위에서 도는 가상 머신(OS)이 자기가 가상 현실(매트릭스)에 있다는 걸 '모르는 척'할지, '알고 쿨하게 협조'할지에 따른 성능 최적화의 꿀잼 갈림길이다.</td></tr>
+<tr><td style="text-align: left"><strong>도커 컨테이너 (194번 문서)</strong></td><td style="text-align: left">무거운 하이퍼바이저(VM) 방식을 버리고, 리눅스 OS 커널 딱 하나만 두고 1만 개의 프로그램(파티션)을 초경량으로 띄우는 가상화 다이어트의 넥스트 레벨 기술이다.</td></tr>
+<tr><td style="text-align: left"><strong>IaaS (183번 문서)</strong></td><td style="text-align: left">하이퍼바이저 Type 1이 쇳덩어리 100대를 가상 머신 1만 대로 쪼개주면, 아마존(AWS)은 거기에 시간당 요금 미터기를 달아서 IaaS라는 이름의 클라우드 상품으로 판다.</td></tr>
+<tr><td style="text-align: left"><strong>오버커밋 (Over-commit)</strong></td><td style="text-align: left">하이퍼바이저가 실제 램(RAM) 100GB밖에 없으면서 가상 머신 10대에게 "너희 다 30GB씩 줄게!"라고 뻥을 쳐서 서버를 돌려 막는 천재적인 폰지 사기(이윤 극대화) 기술이다.</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>**Type 2 (호스트형)**는 내 방(윈도우 컴퓨터) 안에 작은 '텐트(가상 머신)'를 치고 노는 거예요. 방 주인이 불을 끄거나 방 청소를 하면 텐트 안에서 놀던 나도 쫓겨나고 엄청 불편하죠.</li>
+<li>**Type 1 (베어메탈)**은 아예 방주인을 쫓아내고, 텅 빈 거대한 공터(빈 쇳덩어리 컴퓨터)에 엄청나게 튼튼하고 거대한 아파트(가상 머신들)를 다이렉트로 쾅! 하고 지어버리는 거예요.</li>
+<li>중간에 잔소리하는 집주인(윈도우)이 아예 사라졌기 때문에, 수백 개의 방(서버)들이 전기를 마음껏 빨아들이며 빛의 속도로 신나게 돌아가는 진짜 어른들의 클라우드 마법이랍니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

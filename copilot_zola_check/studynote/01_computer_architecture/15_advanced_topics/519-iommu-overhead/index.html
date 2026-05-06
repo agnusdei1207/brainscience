@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>519. IOMMU 오버헤드 (IOMMU Overhead) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 20, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote computer architecture
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: IOMMU 오버헤드(IOMMU Overhead)는 주변 장치가 시스템 메모리에 직접 접근(DMA)할 때 주소 변환과 메모리 격리를 수행하는 과정에서 발생하는 추가적인 지연 시간과 성능 저하를 의미한다.</li>
+<li><strong>가치</strong>: IOMMU는 가상화 환경에서의 장치 패스스루(Passthrough)와 보안성(DMA 공격 방어)을 제공하는 핵심 장치이지만, IOTLB 미스 시 발생하는 페이지 워크(Page Walk)와 매핑 관리를 위한 소프트웨어 비용이 병목이 된다.</li>
+<li><strong>판단 포인트</strong>: 고속 네트워크(100GbE+)나 저지연 스토리지(NVMe) 환경에서는 IOMMU를 통한 격리와 성능 사이의 트레이드오프를 정밀하게 분석하여, 정적 매핑이나 거대 페이지(Huge Page) 적용 여부를 결정해야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<h3 id="1-1-iommuyi-yeoghalgwa-busang">1.1 IOMMU의 역할과 부상</h3>
+<p>과거에는 CPU만이 가상 주소를 사용하고 주변 장치는 물리 주소로 메모리에 직접 접근(DMA)했습니다. 하지만 가상화 기술이 보편화되고 보안 위협이 증가하면서, 주변 장치도 주소 변환과 보호가 필요해졌습니다. **IOMMU(Input-Output Memory Management Unit)**는 장치가 보는 가상 주소(IOVA)를 실제 물리 주소(HPA)로 변환해주는 역할을 합니다.</p>
+<h3 id="1-2-wae-obeohedeuga-balsaenghaneunga">1.2 왜 오버헤드가 발생하는가?</h3>
+<p>주소 변환은 공짜가 아닙니다. 장치가 데이터를 보낼 때마다 IOMMU를 거쳐야 하므로 다음과 같은 지연이 추가됩니다.</p>
+<ol>
+<li><strong>주소 변환 지연</strong>: CPU의 MMU와 마찬가지로 IOMMU도 테이블을 뒤져야 하며, 정보가 없으면(IOTLB Miss) 메모리를 여러 번 읽어야 합니다.</li>
+<li><strong>동적 매핑 비용</strong>: 장치가 메모리를 쓸 때마다 운영체제가 IOMMU 페이지 테이블을 업데이트하고(Map/Unmap), IOTLB를 무효화(Flush)하는 소프트웨어 연산이 필요합니다.</li>
+<li><strong>가상화의 가중</strong>: 가상 머신(VM) 환경에서는 게스트 주소와 호스트 주소를 모두 변환해야 하므로 계층이 더 깊어집니다.</li>
+</ol>
+<h3 id="1-3-iommu-obeohedeuyi-samyeong">1.3 IOMMU 오버헤드의 사명</h3>
+<p>IOMMU 오버헤드를 연구하는 목적은 "보안과 성능의 공존"입니다. IOMMU가 주는 강력한 격리 기능을 포기하지 않으면서도, 하드웨어 성능을 100% 끌어내기 위한 최적화 지점을 찾는 것이 현대 시스템 아키텍트의 과제입니다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: IOMMU는 공항의 보안 검색대와 같습니다. 테러(DMA 공격)를 막기 위해 반드시 거쳐야 하지만, 검색대가 좁으면 비행기(장치 대역폭)가 제때 뜨지 못하고 승객(데이터)들이 줄을 서서 기다리게 되는 것과 같습니다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="2-1-iommu-juso-byeonhwan-akitegceo">2.1 IOMMU 주소 변환 아키텍처</h3>
+<p>IOMMU는 PCIe 장치와 시스템 버스 사이에 위치하여 모든 DMA 요청을 가로챕니다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────────────────┐
+│                    IOMMU를 통한 DMA 주소 변환 과정 및 병목 지점                    │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│    [ PCIe Device ] ──▶ [ DMA Request (IOVA) ]                                │
+│          │                       │                                           │
+│          ▼                       ▼                                           │
+│    ┌────────────────────────────────────────────────────────────────┐        │
+│    │  IOMMU (Intel VT-d &#x2F; AMD-Vi &#x2F; ARM SMMU)                        │        │
+│    ├────────────────────────────────────────────────────────────────┤        │
+│    │  [ IOTLB (Address Cache) ] ◀───▶ [ Bottleneck 1: IOTLB Miss ]   │        │
+│    ├────────────────────────────────────────────────────────────────┤        │
+│    │  [ Page Table Walker ] ────────▶ [ Bottleneck 2: Table Walk ]   │        │
+│    └─────────────┬──────────────────────────────────────────────────┘        │
+│                  │ (Translated Physical Address)                             │
+│                  ▼                                                           │
+│    [ System Interconnect &#x2F; Bus ] ──▶ [ Bottleneck 3: Queue Contention ]      │
+│                  │                                                           │
+│                  ▼                                                           │
+│           [ Main Memory &#x2F; DRAM ]                                             │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="2-2-obeohedeuyi-sebu-guseong-yoso">2.2 오버헤드의 세부 구성 요소</h3>
+<ol>
+<li>
+<p><strong>IOTLB 미스 페널티</strong>:</p>
+<ul>
+<li>IOTLB는 CPU TLB에 비해 크기가 작고 연관도가 낮은 경우가 많습니다. 고속 장치가 넓은 범위의 메모리를 건드리면 미스가 빈번하게 발생하며, 한 번의 미스는 메모리 접근을 4~5회 유발합니다.</li>
+</ul>
+</li>
+<li>
+<p><strong>소프트웨어 커널 지연 (Map/Unmap)</strong>:</p>
+<ul>
+<li>데이터 전송 시마다 <code>iommu_map()</code> 함수를 호출하여 페이지를 할당하고 권한을 설정합니다. 특히 멀티코어 환경에서는 페이지 테이블 수정을 위한 락(Lock) 경합이 발생합니다.</li>
+</ul>
+</li>
+<li>
+<p><strong>IOTLB 무효화 (Flush)</strong>:</p>
+<ul>
+<li>매핑을 해제할 때마다 IOTLB에 남아있는 낡은 정보를 지워야 합니다. 이는 PCIe 메시지를 통해 명령을 내리고 확인을 받아야 하므로 응답 시간이 길어집니다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-3-hadeuweeo-jiweon-gisul-ats-address-translation-services">2.3 하드웨어 지원 기술: ATS (Address Translation Services)</h3>
+<p>오버헤드를 줄이기 위해 장치가 직접 주소를 미리 변환해두는 ATS 규격이 사용됩니다. 장치가 IOMMU에게 "미리 주소 좀 알려줘"라고 물어본 뒤, 자신의 내부 캐시(Device TLB)에 담아두고 IOMMU를 통과(By-pass)하는 방식입니다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: IOTLB는 입국 심사대의 '자주 방문하는 승객 명단'과 같습니다. 명단에 없으면 서류를 일일이 확인(Table Walk)해야 하므로 통과 시간이 훨씬 길어집니다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="3-1-iommu-sayong-vs-misayong-passthrough-strict-vs-bypass">3.1 IOMMU 사용 vs 미사용 (Passthrough/Strict vs Bypass)</h3>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">IOMMU 사용 (Strict)</th><th style="text-align: left">IOMMU 사용 (Lazy/Dynamic)</th><th style="text-align: left">IOMMU 미사용 (Bypass)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>보안성</strong></td><td style="text-align: left">최상 (완벽 격리)</td><td style="text-align: left">우수</td><td style="text-align: left">낮음 (DMA 공격 취약)</td></tr>
+<tr><td style="text-align: left"><strong>지연 시간</strong></td><td style="text-align: left">높음</td><td style="text-align: left">보통</td><td style="text-align: left">매우 낮음</td></tr>
+<tr><td style="text-align: left"><strong>가상화 지원</strong></td><td style="text-align: left">필수 (SR-IOV 등)</td><td style="text-align: left">필수</td><td style="text-align: left">불가능 (Direct HW)</td></tr>
+<tr><td style="text-align: left"><strong>처리량</strong></td><td style="text-align: left">저하 가능성 있음</td><td style="text-align: left">양호</td><td style="text-align: left">최대 성능</td></tr>
+</tbody></table>
+<h3 id="3-2-cpu-mmu-vs-iommu">3.2 CPU MMU vs IOMMU</h3>
+<ul>
+<li><strong>MMU</strong>: CPU의 빠른 속도에 맞춰 극도로 최적화되어 있으며 계층화된 TLB를 가집니다.</li>
+<li><strong>IOMMU</strong>: 상대적으로 느린 주변 장치 인터페이스(PCIe)에 맞춰져 있으며, 여러 장치가 하나를 공유하므로 자원 경합이 더 심합니다.</li>
+</ul>
+<h3 id="3-3-sr-iovwayi-gwangye">3.3 SR-IOV와의 관계</h3>
+<p>SR-IOV 기술을 쓰면 하나의 물리 장치가 여러 가상 장치(VF)로 나뉩니다. 이때 IOMMU는 각 VF가 서로의 메모리 영역을 침범하지 못하게 막아주는 '가상화의 경찰' 역할을 수행하며, 이에 따른 오버헤드는 가상화 성능의 핵심 지표가 됩니다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: IOMMU 미사용은 고속도로 통행료를 안 내고 그냥 달리는 것이고, 사용은 톨게이트를 거치는 것입니다. Lazy 방식은 하이패스처럼 어느 정도 편의를 봐주는 방식이라 할 수 있습니다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="4-1-obeohedeu-gamsoreul-wihan-coejeoghwa-jeonryag">4.1 오버헤드 감소를 위한 최적화 전략</h3>
+<p>기술사 관점에서 고성능 시스템 설계 시 고려해야 할 사항입니다.</p>
+<ol>
+<li><strong>Huge Page 사용</strong>: 페이지 단위를 2MB나 1GB로 키우면 IOTLB 한 개가 커버하는 영역이 넓어져 미스율이 급감합니다.</li>
+<li><strong>IOMMU Passthrough</strong>: 신뢰할 수 있는 장치에 대해서는 커널 파라미터(<code>iommu=pt</code>)를 통해 변환 과정을 생략하여 베어메탈(Bare-metal) 수준의 성능을 확보합니다.</li>
+<li><strong>IOMMU 지연 매핑 (Deferred Invalidation)</strong>: 매번 무효화하지 않고 한꺼번에 모아서 처리하여 소프트웨어 오버헤드를 줄입니다. (단, 보안성이 약간 희생됨)</li>
+</ol>
+<h3 id="4-2-silje-jangae-sarye-neteuweokeu-paekis-deurab">4.2 실제 장애 사례: 네트워크 패킷 드랍</h3>
+<p>초고속 네트워크 카드(NIC)에서 IOMMU 오버헤드로 인해 패킷 수신 속도가 IOMMU 처리 속도를 넘어서면, 장치 버퍼가 가득 차 패킷 드랍이 발생할 수 있습니다. 이때는 IOMMU를 끄거나 ATS 기능을 활성화하여 병목을 풀어야 합니다.</p>
+<h3 id="4-3-gisulsa-gwanjeomyi-seolgye-cekeuriseuteu">4.3 기술사 관점의 설계 체크리스트</h3>
+<ol>
+<li><strong>장치 특성</strong>: 데이터 전송이 빈번하고 작은가(Interrupt 위주), 아니면 덩어리가 크고 드문가(Bulk)?</li>
+<li><strong>IOMMU 그룹</strong>: 하드웨어 구조상 여러 장치가 하나의 IOMMU에 묶여 경합이 발생하지 않는가?</li>
+<li><strong>보안 요구 수준</strong>: 외부 장치(예: 썬더볼트)를 통한 메모리 덤프 공격을 막아야 하는 환경인가?</li>
+</ol>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: IOMMU 최적화는 마트 계산대 줄을 줄이는 것과 같습니다. 한꺼번에 많이 사는 손님(Huge Page)을 전용 계산대로 보내고, 단골 손님(ATS)은 검사를 간소화하는 지혜가 필요합니다.</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="5-1-gidaehyogwa">5.1 기대효과</h3>
+<ul>
+<li><strong>안전한 가상화</strong>: 여러 테넌트가 섞인 클라우드에서 장치 공유의 안정성을 보장합니다.</li>
+<li><strong>DMA 공격 차단</strong>: 악의적인 펌웨어를 가진 장치가 운영체제 메모리를 훔쳐보는 것을 원천 봉쇄합니다.</li>
+<li><strong>주소 공간 확장</strong>: 32비트 장치가 64비트 메인 메모리 전체에 접근할 수 있게 해주는 '주소 확장(Window)' 효과를 얻습니다.</li>
+</ul>
+<h3 id="5-2-mirae-jeonmang-casedae-iommu-gasoggi">5.2 미래 전망: 차세대 IOMMU 가속기</h3>
+<p>미래의 CPU는 IOMMU 기능을 CPU 코어 내부로 더 깊숙이 통합하거나, 네트워크 카드 자체에 IOMMU 연산을 오프로딩하는 방식으로 발전할 것입니다. 또한, CXL(Compute Express Link) 환경에서 이종 장치들이 메모리 풀을 공유할 때, 분산된 IOMMU들이 어떻게 협력하여 오버헤드를 0에 수렴시킬지가 주요 연구 과제입니다.</p>
+<h3 id="5-3-gyeolron">5.3 결론</h3>
+<p>IOMMU 오버헤드는 현대 컴퓨팅 시스템이 치러야 할 '보안의 세금'입니다. 하지만 기술의 발전은 이 세금을 면제하거나 획기적으로 줄여주는 방향으로 가고 있습니다. 아키텍트라면 무조건 IOMMU를 끄는 것이 답이 아님을 인지하고, ATS, Huge Page, Passthrough 등 다양한 기법을 조합하여 보안과 성능의 황금비율을 찾아야 합니다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: IOMMU는 컴퓨터의 '관세청'입니다. 물건이 들어올 때마다 검사하느라 시간은 걸리지만, 밀수품(해킹 데이터)을 막아 나라(시스템) 전체의 안전을 지키는 없어서는 안 될 존재입니다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">관련 개념</th><th style="text-align: left">연결 핵심 포인트</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>DMA (Direct Memory Access)</strong></td><td style="text-align: left">대상 동작</td><td style="text-align: left">IOMMU가 주소를 감시하고 변환하는 실제 데이터 이동 행위</td></tr>
+<tr><td style="text-align: left"><strong>IOTLB</strong></td><td style="text-align: left">핵심 성능 지표</td><td style="text-align: left">IOMMU 내부의 주소 변환 캐시, 히트율이 성능을 좌우함</td></tr>
+<tr><td style="text-align: left"><strong>VT-d / AMD-Vi</strong></td><td style="text-align: left">제조사별 기술</td><td style="text-align: left">인텔과 AMD의 대표적인 IOMMU 하드웨어 가상화 기술 명칭</td></tr>
+<tr><td style="text-align: left"><strong>SR-IOV</strong></td><td style="text-align: left">응용 분야</td><td style="text-align: left">하나의 물리 장치를 여러 가상 머신에 할당할 때 IOMMU가 필수</td></tr>
+<tr><td style="text-align: left"><strong>ATS / PRI</strong></td><td style="text-align: left">최적화 규격</td><td style="text-align: left">장치와 IOMMU 간의 원활한 주소 통신을 위한 PCIe 표준 서비스</td></tr>
+</tbody></table>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>IOMMU는 컴퓨터 안에 들어오는 택배들을 검사하는 '택배 검문소'와 같아요.</li>
+<li>상자 안에 위험한 게 없는지 일일이 열어보고 주소를 다시 적어주느라 시간이 조금 더 걸리지만, 컴퓨터가 해킹당하지 않게 지켜준답니다.</li>
+<li>택배가 너무 많이 올 때는 검문소를 더 넓게 만들거나(ATS), 아주 큰 상자(Huge Page)로 한 번에 통과시켜서 속도를 높이기도 해요.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

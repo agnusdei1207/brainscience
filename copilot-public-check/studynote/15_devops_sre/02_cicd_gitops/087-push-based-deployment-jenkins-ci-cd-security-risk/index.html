@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>87. 푸시 기반(Push-based) 배포 - 기존 CI&#x2F;CD 젠킨스의 보안 한계 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote devops
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<pre><code>&gt; 1. **본질**: 푸시 기반 (Push-based) 배포는 CI&#x2F;CD 서버가 대상 서버로 직접 배포 명령과 자산을 밀어 넣는 방식이다.
+&gt; 2. **가치**: Jenkins (Continuous Integration&#x2F;Continuous Delivery orchestrator)는 간단한 자동화에 강하지만, 대상 서버 접근 권한이 집중되어 보안 경계가 넓어진다.
+&gt; 3. **판단 포인트**: 배포 편의성을 얻는 대신 자격 증명, 네트워크 노출, 감사 책임이 커지므로 대규모 환경에서는 pull 기반이나 GitOps가 더 안전할 수 있다.
+
+---
+
+## Ⅰ. 개요 및 필요성
+
+푸시 기반 배포는 중앙 CI 서버가 빌드 산출물을 대상 환경으로 직접 밀어 넣는 방식이다. Jenkins 같은 오케스트레이터가 SSH (Secure Shell), API, 원격 에이전트를 사용해 배포를 수행한다.
+</code></pre>
+<p>이 방식은 구현이 쉽고 기존 온프레미스 환경과 잘 맞지만, 배포 서버가 사실상 특권 계정의 관문이 된다. 따라서 배포 편의성만 보고 선택하면 보안 경계가 넓어지고, 장애가 나면 중앙 배포 엔진이 단일 실패 지점이 될 수 있다.</p>
+<pre><code>- **📢 섹션 요약 비유**: 한 사람이 모든 집의 열쇠를 들고 다니는 배달 방식이라고 생각하면 된다.
+
+---
+
+## Ⅱ. 아키텍처 및 핵심 원리
+
+푸시 모델의 흐름은 개발자 변경 → 빌드 → Jenkins → 대상 서버 순서로 진행된다. 이때 Jenkins는 아티팩트를 전달할 뿐 아니라 운영 명령까지 수행하므로, 네트워크와 권한이 배포 서버에 집중된다.
+</code></pre>
+<table><thead><tr><th style="text-align: left">구성요소</th><th style="text-align: left">역할</th><th style="text-align: left">보안 리스크</th></tr></thead><tbody>
+<tr><td style="text-align: left">Jenkins</td><td style="text-align: left">빌드·배포 오케스트레이션</td><td style="text-align: left">관리자 권한 집중</td></tr>
+<tr><td style="text-align: left">Artifact Repo</td><td style="text-align: left">검증된 빌드 저장소</td><td style="text-align: left">위변조 방지 필요</td></tr>
+<tr><td style="text-align: left">Deploy Credential</td><td style="text-align: left">원격 실행 자격</td><td style="text-align: left">장기 비밀키 유출 위험</td></tr>
+<tr><td style="text-align: left">Target Server</td><td style="text-align: left">실제 서비스 실행</td><td style="text-align: left">침해 시 수평 이동 경로</td></tr>
+</tbody></table>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">개발자 코드 푸시
+    │
+    ▼
+CI 빌드 &#x2F; 테스트
+    │
+    ▼
+Jenkins 배포 실행
+    │  (SSH &#x2F; API &#x2F; Agent)
+    ▼
+대상 서버에 직접 반영
+</code></pre>
+<p>문제는 배포가 편할수록 권한이 넓어진다는 점이다. 그래서 푸시 모델은 운영 편의성보다 통제와 감사가 더 중요한 곳에서 특히 주의가 필요하다.</p>
+<pre><code>- **📢 섹션 요약 비유**: 물건은 간단히 옮길 수 있지만, 열쇠를 잃으면 모두가 곤란해진다.
+
+---
+
+## Ⅲ. 비교 및 연결
+
+푸시 기반과 pull 기반 배포는 신뢰 경계가 다르다.
+</code></pre>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">Push-based</th><th style="text-align: left">Pull-based / GitOps</th></tr></thead><tbody>
+<tr><td style="text-align: left">누가 시작하는가</td><td style="text-align: left">중앙 서버가 대상에 밀어 넣음</td><td style="text-align: left">대상이 저장소에서 당겨옴</td></tr>
+<tr><td style="text-align: left">네트워크 노출</td><td style="text-align: left">대상 서버 inbound가 늘어남</td><td style="text-align: left">대상 서버 outbound 중심</td></tr>
+<tr><td style="text-align: left">자격 증명</td><td style="text-align: left">중앙 배포 서버에 집중</td><td style="text-align: left">짧은 수명의 토큰으로 분산</td></tr>
+<tr><td style="text-align: left">감사 추적</td><td style="text-align: left">중앙 로그에 의존</td><td style="text-align: left">선언형 상태와 기록이 남음</td></tr>
+</tbody></table>
+<p>GitOps는 선언된 상태를 기준으로 클러스터가 스스로 맞추게 하므로, 사람이 직접 서버에 접속하는 면적을 줄인다. 따라서 푸시 모델은 소규모 폐쇄망에서 유효할 수 있지만, 보안과 재현성이 중요해질수록 pull 기반이 더 낫다.</p>
+<pre><code>- **📢 섹션 요약 비유**: 각 집이 스스로 배달표를 확인하는 방식이 더 조심스럽고 안전하다.
+
+---
+
+## Ⅳ. 실무 적용 및 기술사 판단
+
+실무에서는 배포 서버를 특권 시스템으로 다루어야 한다. 계정은 최소 권한으로 분리하고, 비밀 정보는 짧게 살며, 배포 명령은 아티팩트 서명과 승인 절차를 거쳐야 한다.
+</code></pre>
+<h3 id="cekeuriseuteu">체크리스트</h3>
+<ol>
+<li>배포용 계정이 운영 전 권한까지 갖고 있지 않은가?</li>
+<li>자격 증명이 장기 SSH 키에 고정되어 있지 않은가?</li>
+<li>아티팩트가 서명되거나 해시 검증되는가?</li>
+<li>배포 실패 시 자동 롤백이나 정지 정책이 있는가?</li>
+</ol>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p>Jenkins 한 대가 모든 서버의 root 비밀번호를 아는 구조</p>
+</li>
+<li>
+<p>개발과 운영 환경이 같은 비밀 키를 공유하는 구조</p>
+</li>
+<li>
+<p>배포 이력과 실제 서버 상태가 따로 노는 구조</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 편하다고 문을 다 열어 두면, 누가 들어왔는지 기록하기 어렵다.</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>푸시 기반 배포는 시작하기 쉽지만, 커질수록 권한 집중 문제를 드러낸다. 운영 편의와 보안 통제는 같이 봐야 하며, 규모가 커질수록 선언형 pull 모델이 더 매력적이 된다.</p>
+</li>
+</ul>
+<p>따라서 이 방식은 "빠른 자동화"의 출발점으로는 좋지만, 최종 목적지는 아니다. 배포 서버가 곧 신뢰 경계라는 사실을 기억하면 위험을 훨씬 정확하게 다룰 수 있다.</p>
+<pre><code>- **📢 섹션 요약 비유**: 서랍 하나에 열쇠를 다 넣기보다, 필요한 집만 그때그때 여는 방식이 낫다.
+
+---
+
+### 📌 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+</code></pre>
+<p>| :-- | :-- |
+| Jenkins | 배포 오케스트레이션 |
+| CI/CD (Continuous Integration/Continuous Delivery) | 자동 빌드·배포 파이프라인 |
+| SSH (Secure Shell) | 원격 실행 자격 수단 |
+| Artifact | 배포 대상 산출물 |
+| GitOps | pull 기반 선언형 배포 모델 |</p>
+<pre><code>### 📈 관련 키워드 및 발전 흐름도
+
+코드 커밋
+│
+▼
+</code></pre>
+<p>Jenkins 빌드 / 테스트
+│
+▼
+대상 서버로 push 배포
+│
+▼
+권한 집중 / 감사 / 롤백 관리</p>
+<pre><code>### 👶 어린이를 위한 3줄 비유 설명
+
+1. 한 사람이 모든 도시의 문을 직접 열어 주는 것과 비슷해요.
+2. 빠르긴 하지만, 열쇠를 잘못 쓰면 위험이 커져요.
+3. 그래서 가끔은 도시가 스스로 배달 목록을 확인하는 편이 더 안전해요.
+</code></pre>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

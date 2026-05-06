@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>712. SYN Flood 대응 - SYN Cookie 기술 (상태비저장 SYN&#x2F;ACK 암호화 처리 후 최종 ACK서 검증) 서버 완화 제어 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="712-syn-flood-daeeung-syn-cookie-gisul-sangtaebijeojang-geomjeung">712. SYN Flood 대응 - SYN Cookie 기술 (상태비저장 검증)</h1>
+<blockquote>
+<p><strong>핵심 인사이트</strong>: 장난 전화(SYN Flood)가 너무 많이 걸려와 예약 장부(메모리)가 터져버릴 위기다. 똑똑한 식당 주인이 아이디어를 냈다. "이제부터 예약 장부에 아예 이름을 안 적겠습니다! 대신 손님에게 암호화된 '특수 예약 영수증(쿠키)'을 던져줄 테니, 진짜 밥 먹을 거면 식당에 올 때 그 영수증을 꼭 쥐고 다시 오세요!" 장부를 쓰지 않으니(상태 비저장) 메모리가 터질 일이 원천 차단되는 기적의 방어술, 그것이 SYN Cookie다.</p>
+</blockquote>
+<h2 id="i-gijon-bangeobeobyi-hangye">Ⅰ. 기존 방어법의 한계</h2>
+<p>SYN Flood 공격(711번)에 당하지 않으려면 대기열 장부(Backlog Queue)를 무한정 늘리면 될까요? 불가능합니다. 서버 메모리는 한정되어 있고, 대기 시간을 짧게 줄이면 네트워크가 느린 정상 고객까지 튕겨버립니다. 근본적으로 <strong>서버가 <code>[SYN]</code>을 받자마자 메모리에 기록(Stateful)해야만 하는 TCP의 약점 자체</strong>를 부숴야 했습니다.</p>
+<h2 id="ii-syn-cookie-sin-kuki-yi-bangeo-weonri">Ⅱ. SYN Cookie (신 쿠키)의 방어 원리 🌟</h2>
+<p>대기열 장부를 쓰지 않는 <strong>상태 비저장(Stateless) TCP 연결 생성 기법</strong>입니다. 리눅스 등 대부분의 운영체제에 기본 내장되어 있습니다.</p>
+<h3 id="1-gajja-eungdab-deonjigi-amhohwadoen-beonhopyo">1. 가짜 응답 던지기 (암호화된 번호표)</h3>
+<ul>
+<li>해커(또는 정상 고객)가 <code>[SYN]</code> 패킷을 보냅니다.</li>
+<li>서버는 이 요청을 <strong>자기 장부(Backlog Queue)에 절대 적지 않습니다.</strong> 메모리 소비가 0입니다.</li>
+<li>대신, 방금 받은 클라이언트의 IP, 포트, 현재 시간 등을 서버만 아는 비밀키로 암호화(해싱)하여 독특한 난수를 하나 만듭니다. 이것이 바로 **'쿠키(Cookie)'**입니다.</li>
+<li>서버는 이 쿠키값을 TCP 패킷의 <code>Sequence Number</code> 란에 딱 적어서 <code>[SYN+ACK]</code>로 클라이언트에게 냅다 던져버리고는, <strong>자신이 패킷을 보냈다는 사실조차 머릿속에서 완전히 지워버립니다.</strong></li>
+</ul>
+<h3 id="2-coejong-3dangye-geomjeung-jinsilyi-sungan">2. 최종 3단계 검증 (진실의 순간)</h3>
+<ul>
+<li><strong>해커(가짜 주소)인 경우</strong>: 가짜 IP로 던졌으니, 서버가 보낸 쿠키(SYN+ACK)를 받을 리 없고 당연히 최종 응답도 안 옵니다. 서버는 애초에 장부에 적지도 않았으니 잃은 게 0입니다.</li>
+<li><strong>진짜 고객인 경우</strong>: 정상 고객은 서버가 준 쿠키가 담긴 패킷을 잘 받고, 마지막 3단계인 <code>[ACK]</code> 패킷을 보낼 때 <strong>규칙에 따라 아까 받은 쿠키값에 +1을 더해서(Acknowledge Number) 서버로 보냅니다.</strong></li>
+</ul>
+<h3 id="3-tonggwa-mic-jinjja-yeongyeol-hwagrib">3. 통과 및 진짜 연결 확립</h3>
+<ul>
+<li>서버는 문을 두드리는 <code>[ACK]</code> 패킷을 받습니다.</li>
+<li>패킷 겉면에 적힌 쿠키값을 보고, "어? 내가 만든 비밀 암호 공식에 맞아떨어지는 진짜 영수증(쿠키)이네?"라고 1초 만에 검증해 냅니다.</li>
+<li>그제야 서버는 비로소 이 고객을 진짜 손님으로 인정하고, 메모리에 정식으로 자리를 내어주며(Established) TCP 연결을 완성합니다.</li>
+</ul>
+<h2 id="iii-syn-cookieyi-jangdanjeom">Ⅲ. SYN Cookie의 장단점</h2>
+<ul>
+<li><strong>장점</strong>: 대기 큐 메모리 고갈을 100% 완벽하게 막아주어, 서버가 수십만 개의 SYN 폭격 속에서도 꿋꿋하게 살아남게 해 줍니다.</li>
+<li><strong>단점</strong>: 서버가 <code>[ACK]</code> 패킷이 올 때마다 이게 내가 구워준 쿠키가 맞는지 암호 해시 연산(CPU 계산)을 계속 돌려야 합니다. 메모리는 지켰지만 CPU 부하가 약간 생깁니다. (따라서 평소엔 꺼두다가 SYN 큐가 80% 이상 차오르면 비상용으로 탁 켜지는 식으로 동작합니다.)</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: SYN Cookie는 뷔페의 '디지털 대기표'입니다. 장난 전화 예약이 너무 많아 직원의 예약 수첩(메모리)이 찢어지기 일보 직전입니다. 직원은 수첩을 덮고, 전화를 거는 모든 사람에게 식당 자체 암호로 만든 '문자 바코드(쿠키)'만 무작정 쏴주고 전화를 끊습니다(기억 안 함). 장난전화범(가짜 번호)은 바코드를 받지 못해 못 오고, 진짜 손님은 그 바코드를 폰에 띄운 채 식당에 방문합니다. 직원은 스캐너로 바코드가 진짜인지만 1초 만에 스캔(검증)한 뒤 손님을 바로 자리(정식 연결)로 안내합니다. 수첩이 필요 없는 완벽한 방어입니다.</p>
+</blockquote>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

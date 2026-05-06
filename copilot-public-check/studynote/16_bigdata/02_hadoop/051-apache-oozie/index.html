@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>29. Apache Oozie — Hadoop 워크플로 스케줄러 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 29, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote bigdata
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: Apache Oozie는 Hadoop 에코시스템 기반 워크플로(Workflow)와 코디네이터(Coordinator) 잡을 관리하는 서버 기반 스케줄러다. MapReduce·Hive·Pig·Sqoop 등 Hadoop 잡을 DAG(방향성 비순환 그래프)로 구성하여 복잡한 ETL 파이프라인을 자동화한다.</li>
+<li><strong>가치</strong>: Hadoop 기반 ETL에서 여러 잡이 의존 관계를 가질 때, Oozie는 순서·조건·병렬 실행을 중앙에서 관리한다. 시간 기반(Coordinator)·데이터 가용성 기반 트리거로 배치 파이프라인을 자동 스케줄링한다.</li>
+<li><strong>판단 포인트</strong>: Oozie의 약점은 XML 기반 복잡한 설정과 현대 클라우드 파이프라인과의 통합 어려움이다. 현대 데이터 파이프라인에서는 Apache Airflow가 Python 기반 DAG로 더 직관적이고 클라우드 네이티브 통합이 뛰어난 대안이다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────┐
+│          Oozie 워크플로 구조                               │
+├──────────────────────────────────────────────────────────┤
+│                                                           │
+│  워크플로 DAG:                                            │
+│  [START] → [Sqoop 임포트] → [Hive ETL] → [Pig 집계]      │
+│                                 │                         │
+│                           성공&#x2F;실패 분기                  │
+│                         &#x2F;              \                  │
+│                    [이메일 알림]    [오류 처리 잡]          │
+│                         \              &#x2F;                  │
+│                              [END]                        │
+│                                                           │
+│  코디네이터:                                              │
+│  매일 02:00 → 전날 데이터 준비 확인 → 워크플로 자동 실행  │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Oozie는 데이터 공장의 자동화 관리자다. 매일 새벽 원재료(데이터) 도착을 확인하고, 순서대로 공정(ETL 잡)을 실행하며, 문제가 생기면 알림을 보내는 공장 자동화 시스템이다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="oozie-guseong-yoso">Oozie 구성 요소</h3>
+<table><thead><tr><th style="text-align: left">구성 요소</th><th style="text-align: left">역할</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>워크플로</strong></td><td style="text-align: left">잡 실행 순서·분기·병렬 정의 (XML DAG)</td></tr>
+<tr><td style="text-align: left"><strong>코디네이터</strong></td><td style="text-align: left">시간/데이터 기반 워크플로 자동 트리거</td></tr>
+<tr><td style="text-align: left"><strong>번들</strong></td><td style="text-align: left">여러 코디네이터 묶음 관리</td></tr>
+<tr><td style="text-align: left"><strong>액션 노드</strong></td><td style="text-align: left">MapReduce/Hive/Pig/Sqoop 잡 실행 단위</td></tr>
+<tr><td style="text-align: left"><strong>컨트롤 노드</strong></td><td style="text-align: left">start·end·fork·join·decision</td></tr>
+</tbody></table>
+<h3 id="oozie-vs-apache-airflow">Oozie vs Apache Airflow</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">Oozie:
+  - XML 기반 설정 (workflow.xml)
+  - Hadoop 전용 (YARN&#x2F;HDFS 의존)
+  - 레거시 Hadoop 환경에 적합
+  - 데이터 가용성 기반 트리거 강점
+
+Airflow:
+  - Python 기반 DAG (코드로 파이프라인)
+  - 클라우드·다양한 시스템 통합
+  - 모니터링 UI, 동적 DAG, 풍부한 플러그인
+  - 현대 데이터 엔지니어링 표준
+</code></pre>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Oozie vs Airflow는 공장 수동 제어반 vs 스마트 공장 SCADA다. Oozie(수동 제어반)는 Hadoop 공장 전용이고, Airflow(SCADA)는 모든 공장을 시각적으로 모니터링하고 스마트하게 제어한다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">비교</th><th style="text-align: left">Oozie</th><th style="text-align: left">Airflow</th><th style="text-align: left">NiFi</th></tr></thead><tbody>
+<tr><td style="text-align: left">설정 방식</td><td style="text-align: left">XML</td><td style="text-align: left">Python DAG</td><td style="text-align: left">GUI</td></tr>
+<tr><td style="text-align: left">생태계</td><td style="text-align: left">Hadoop 전용</td><td style="text-align: left">범용</td><td style="text-align: left">범용</td></tr>
+<tr><td style="text-align: left">모니터링</td><td style="text-align: left">기본</td><td style="text-align: left">강력</td><td style="text-align: left">강력</td></tr>
+<tr><td style="text-align: left">현황</td><td style="text-align: left">레거시</td><td style="text-align: left">현재 표준</td><td style="text-align: left">스트리밍 강점</td></tr>
+</tbody></table>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 세 파이프라인 도구는 공장 자동화 도구 세대다. Oozie(1세대-기계식 타이머), Airflow(2세대-PLC 프로그래밍), NiFi(3세대-스마트 자동화 모니터링)로 발전했다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="oozie-weokeupeulro-yesi-xml-gaeyo">Oozie 워크플로 예시 (XML 개요)</h3>
+<pre data-lang="xml" class="language-xml "><code class="language-xml" data-lang="xml">&lt;!-- workflow.xml 구조 --&gt;
+&lt;workflow-app name=&quot;daily-etl&quot;&gt;
+  &lt;start to=&quot;sqoop-import&quot;&#x2F;&gt;
+  
+  &lt;action name=&quot;sqoop-import&quot;&gt;
+    &lt;sqoop&gt;...&lt;&#x2F;sqoop&gt;
+    &lt;ok to=&quot;hive-transform&quot;&#x2F;&gt;
+    &lt;error to=&quot;fail&quot;&#x2F;&gt;
+  &lt;&#x2F;action&gt;
+  
+  &lt;action name=&quot;hive-transform&quot;&gt;
+    &lt;hive&gt;...&lt;&#x2F;hive&gt;
+    &lt;ok to=&quot;end&quot;&#x2F;&gt;
+    &lt;error to=&quot;fail&quot;&#x2F;&gt;
+  &lt;&#x2F;action&gt;
+  
+  &lt;kill name=&quot;fail&quot;&gt;
+    &lt;message&gt;ETL 실패: ${wf:errorMessage(wf:lastErrorNode())}&lt;&#x2F;message&gt;
+  &lt;&#x2F;kill&gt;
+  &lt;end name=&quot;end&quot;&#x2F;&gt;
+&lt;&#x2F;workflow-app&gt;
+</code></pre>
+<h3 id="maigeureisyeon-oozie-airflow">마이그레이션: Oozie → Airflow</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">1. Oozie XML 워크플로를 Airflow Python DAG로 변환
+2. YARN 직접 실행 → SparkSubmitOperator, HiveOperator
+3. 코디네이터 스케줄 → Airflow cron expression
+4. 데이터 가용성 트리거 → Airflow Sensor (HdfsFileSensor)
+</code></pre>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Oozie → Airflow 마이그레이션은 구형 팩스기에서 이메일로 전환하는 것이다. 기능(문서 전달)은 같지만, 더 빠르고 추적 가능하며 다른 시스템과 통합이 훨씬 쉬워진다.</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<table><thead><tr><th style="text-align: left">기대효과</th><th style="text-align: left">내용</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>자동화</strong></td><td style="text-align: left">복잡한 Hadoop ETL 파이프라인 스케줄링</td></tr>
+<tr><td style="text-align: left"><strong>모니터링</strong></td><td style="text-align: left">잡 실행 이력·상태 중앙 관리</td></tr>
+<tr><td style="text-align: left"><strong>의존성 관리</strong></td><td style="text-align: left">데이터 가용성 기반 자동 트리거</td></tr>
+</tbody></table>
+<p>온프레미스 Hadoop 환경에서는 Oozie가 여전히 현역이지만, 클라우드 레이크하우스로 이전하는 기업들은 Airflow·AWS MWAA·Google Cloud Composer로 파이프라인을 마이그레이션하고 있다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Oozie의 현재 위치는 구형 공장 기계와 같다. 오래됐지만 아직 현역이고, 대체 작업은 계획 중이다. 단, 새로 짓는 공장(신규 클라우드 환경)에는 최신 설비(Airflow)만 들어간다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Apache Airflow</strong></td><td style="text-align: left">Oozie의 현대적 대안</td></tr>
+<tr><td style="text-align: left"><strong>DAG</strong></td><td style="text-align: left">워크플로 비순환 의존성 그래프</td></tr>
+<tr><td style="text-align: left"><strong>Hadoop YARN</strong></td><td style="text-align: left">Oozie 잡 실행 환경</td></tr>
+<tr><td style="text-align: left"><strong>코디네이터</strong></td><td style="text-align: left">시간/데이터 기반 워크플로 트리거</td></tr>
+<tr><td style="text-align: left"><strong>NiFi</strong></td><td style="text-align: left">GUI 기반 데이터 플로우 관리</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[Cron + 쉘 스크립트 — 기본 배치 스케줄링]
+    │
+    ▼
+[Apache Oozie — Hadoop 전용 워크플로 스케줄러]
+    │
+    ▼
+[Apache Airflow — Python DAG 기반 범용 오케스트레이터]
+    │
+    ▼
+[클라우드 관리형 — AWS MWAA, GCP Composer]
+    │
+    ▼
+[AI 파이프라인 — MLflow·Kubeflow·Vertex AI 워크플로]
+</code></pre>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>Oozie는 데이터 공장 자동화 관리자예요! 매일 정해진 시간에 데이터 처리 작업을 순서대로 자동 실행해요.</li>
+<li>현대 데이터 엔지니어는 Airflow를 더 선호해요 — Python으로 파이프라인을 쉽게 작성하고 예쁜 화면으로 모니터링할 수 있어요!</li>
+<li>Oozie는 온프레미스 Hadoop 환경에서 여전히 현역이지만, 클라우드로 이전할 때는 Airflow로 마이그레이션한답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

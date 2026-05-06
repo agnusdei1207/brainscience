@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>309. CQRS 아키텍처와 DB 동기화 (Event Sourcing 연동) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 07, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote database
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="cqrs-akitegceowa-db-donggihwa-event-sourcing-yeondong">CQRS 아키텍처와 DB 동기화 (Event Sourcing 연동)</h1>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: CQRS(명령 조회 책임 분리) 환경에서 <strong>DB 동기화</strong>는 쓰기 전용 DB(Command Model)에 발생한 상태 변경 내역을 읽기 전용 DB(Query Model, View DB)로 전파하여 두 물리적 데이터베이스 간의 데이터 무결성을 맞추는 비동기 아키텍처 매커니즘이다.</li>
+<li><strong>가치</strong>: 쓰기(RDBMS)와 읽기(NoSQL, Search Engine)에 가장 특화된 이기종 데이터베이스의 장점을 극대화하면서도, 두 시스템 간의 결합도를 끊어내어 어느 한쪽의 장애나 병목이 다른 쪽에 영향을 주지 않도록 시스템의 고가용성(High Availability)을 보장한다.</li>
+<li><strong>융합</strong>: 완벽한 DB 동기화를 위해서는 트랜잭션 도중 메시지 유실을 막는 <strong>아웃박스(Outbox) 패턴</strong>과, 데이터의 진실의 원천(Source of Truth)을 확보하는 **이벤트 소싱(Event Sourcing)**을 결합하여, **최종 일관성(Eventual Consistency)**을 100% 보장하는 파이프라인(Kafka 등)을 구축하는 것이 핵심이다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: CQRS 아키텍처는 쓰기(Write) DB와 읽기(Read) DB를 물리적으로 완전히 분리한다. 클라이언트가 데이터를 수정하면 Write DB만 업데이트된다. 이때 Read DB는 여전히 과거의 데이터를 가지고 있으므로, Write DB에서 변경된 사실을 Read DB 쪽으로 넘겨주어 화면에 뿌려질 모양(Materialized View)으로 즉각 반영(Projection)해야 한다. 이 일련의 비동기 흐름이 CQRS의 DB 동기화다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 만약 동기화 파이프라인이 멈추거나 메시지가 중간에 유실되면(Message Loss), 사용자는 "방금 결제했는데 마이페이지에 결제 내역이 안 뜬다"는 심각한 정합성 장애를 겪게 된다. 분리된 두 DB 간에 2PC(Two-Phase Commit) 같은 분산 락(Lock)을 걸면 CQRS의 존재 이유인 '성능'이 죽어버린다. 따라서 락을 걸지 않고도(비동기) 반드시 1번 이상 메시지가 전달(At-least-once delivery)되어 언젠가는 데이터가 100% 일치하게 되는 최종 일관성의 아키텍처적 보증 수단이 필수적이다.</p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: 요리사(Write DB)가 주방에서 맛있는 스테이크를 완성했습니다. 완성되었다는 사실을 밖의 웨이터(Read DB)에게 즉각 알려줘야 웨이터가 손님 메뉴판(화면)에 '스테이크 주문 가능'이라고 적을 수 있죠. 요리사가 종이에 "스테이크 1개 추가됨"이라고 적어서 알림통(Kafka)에 던져 넣으면, 웨이터가 그걸 꺼내 보고 자기 수첩에 업데이트하는 과정이 바로 DB 동기화입니다.</p>
+</li>
+<li>
+<p><strong>등장 배경 및 발전 과정</strong>:</p>
+<ol>
+<li><strong>Dual-Write의 비극</strong>: 초기에는 로직에서 Write DB에 <code>insert</code>를 하고, 그 바로 아랫줄에 Read DB에 <code>insert</code>를 날리는 이중 쓰기(Dual-Write)를 시도했다. 하지만 첫 줄은 성공하고 두 번째 줄에서 네트워크 에러가 나면 데이터가 영원히 틀어지는 참사가 발생했다.</li>
+<li><strong>CDC (Change Data Capture) 활용</strong>: RDBMS의 트랜잭션 로그(예: MySQL의 Binlog)를 긁어내서(Debezium 등) 타깃 DB로 쏴주는 인프라 레벨의 동기화가 유행했다.</li>
+<li><strong>Event Sourcing과 Outbox의 결합</strong>: 비즈니스 맥락(Domain Event)을 잃어버리는 CDC의 한계를 극복하고자, 애플리케이션 레벨에서 도메인 이벤트를 발행하는 이벤트 소싱과 아웃박스 패턴이 현대 MSA-CQRS 동기화의 디팩토 표준(De facto standard)이 되었다.</li>
+</ol>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 두 명의 화가(DB)가 등을 대고 앉아서 똑같은 그림을 그려야 할 때, 한 명이 먼저 그리고 "나 여기 빨간색 칠했어!"라고 소리치면(이벤트), 다른 한 명이 듣고 자기 캔버스에도 똑같이 빨간색을 칠해서 결국 똑같은 그림(최종 일관성)을 완성하는 과정과 같습니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri-deep-dive">Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)</h2>
+<h3 id="cqrs-db-donggihwayi-3dae-haegsim-paeteon">CQRS DB 동기화의 3대 핵심 패턴</h3>
+<p>동기화 과정에서 가장 중요한 것은 **"Write DB 업데이트"**와 **"메시지(이벤트) 큐 발송"**이라는 2개의 행동을 **원자적(Atomic)**으로 처리하는 것이다.</p>
+<h4 id="1-ijung-sseugi-antipaeteon-dual-write-anti-pattern">1. 이중 쓰기 안티패턴 (Dual-Write Anti-Pattern)</h4>
+<pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">&#x2F;&#x2F; [최악의 설계]
+@Transactional
+public void createOrder(Order order) {
+    orderRepository.save(order);  &#x2F;&#x2F; 1. Write DB(PostgreSQL) 저장 (성공)
+    kafkaTemplate.send(&quot;order_events&quot;, order);  &#x2F;&#x2F; 2. Kafka 전송 (네트워크 장애로 실패!)
+    &#x2F;&#x2F; 결과: DB에는 주문이 있는데, 읽기 DB에는 영원히 반영되지 않음 (고아 데이터 발생)
+}
+</code></pre>
+<h4 id="2-transactional-outbox-paeteon-gajang-gweonjangdoem">2. Transactional Outbox 패턴 (가장 권장됨)</h4>
+<p>비즈니스 테이블(Order)과 이벤트 발행 대기열 테이블(Outbox)을 같은 DB 안에 두고, 단일 로컬 트랜잭션으로 묶어서 저장한다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">  ┌───────────────────────────────────────────────────────────────┐
+  │         아웃박스 (Transactional Outbox) 패턴 아키텍처            │
+  ├───────────────────────────────────────────────────────────────┤
+  │                                                               │
+  │   [ 1. 애플리케이션 (Write Model) ]                             │
+  │     │                                                         │
+  │     ▼ (하나의 로컬 트랜잭션 안에서 2개 테이블에 동시 저장)            │
+  │   ┌──────────────────────────────────────────────┐            │
+  │   │  Write Database (PostgreSQL)                 │            │
+  │   │                                              │            │
+  │   │  [Order Table]        [Outbox Table]         │            │
+  │   │  - OrderId: 1         - EventId: E_123       │            │
+  │   │  - Status: PENDING    - Payload: OrderCreated│            │
+  │   │                       - Status: UNPUBLISHED  │            │
+  │   └──────┬───────────────────────┬───────────────┘            │
+  │          │ (CDC &#x2F; Polling)       │                            │
+  │          ▼                       │                            │
+  │   [ 2. Message Relay (Debezium 등) ]                          │
+  │     - Outbox 테이블을 감시하다가 새 row가 생기면 읽어서 Kafka로 쏜다. │
+  │     - 발송 성공 시 Status를 PUBLISHED로 바꿈 (또는 삭제).         │
+  │          │                                                    │
+  │          ▼                                                    │
+  │   [ 3. Message Broker (Kafka) ]                               │
+  │          │                                                    │
+  │          ▼                                                    │
+  │   [ 4. 애플리케이션 (Read Model &#x2F; Projector) ]                   │
+  │     - Kafka 이벤트를 Consume하여 Read DB (Elasticsearch) 업데이트!│
+  └───────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[장점]</strong>: 데이터베이스 저장과 이벤트 생성이 100% 원자적(Atomic)으로 묶인다. Kafka가 잠시 죽어있어도 Outbox 테이블에 데이터가 안전하게 남아있으므로 유실이 절대 발생하지 않는다 (최소 1회 전달 보장).</p>
+<h4 id="3-ibenteu-sosing-event-sourcing-gyeolhab">3. 이벤트 소싱 (Event Sourcing) 결합</h4>
+<p>이벤트 소싱은 Outbox 패턴을 한 차원 더 극한으로 밀어붙인 형태다. "현재 상태 테이블(Order Table)" 자체가 없고, <strong>"오직 이벤트 저장소(Event Store)"만 존재</strong>한다. 상태를 변경하는 쓰기 행위 자체가 이벤트를 추가하는 것이므로, 상태 저장과 이벤트 발행을 동기화할 고민조차 필요 없다(둘이 같은 행위이기 때문).</p>
+<hr />
+<h3 id="donggihwa-gwajeongeseoyi-deiteo-myeogdeungseong-idempotency-hwagbo">동기화 과정에서의 데이터 멱등성 (Idempotency) 확보</h3>
+<p>Outbox 패턴이나 이벤트 소싱을 통해 이벤트를 읽기 DB로 넘길 때, 메시지 브로커(Kafka)의 특성상 네트워크 지연으로 인해 <strong>동일한 메시지가 2번 이상 전달</strong>될 수 있다 (At-least-once delivery).
+따라서 읽기 모델의 프로젝션 로직(Consumer)은 똑같은 이벤트를 2번 받아도 Read DB가 꼬이지 않도록 **멱등성(Idempotency)**을 반드시 구현해야 한다.</p>
+<ul>
+<li><em>구현 예</em>: <code>UPDATE read_table SET ... WHERE version = 1</code> 처럼 버전 기반 동시성 제어(Optimistic Locking)를 하거나, 이미 처리한 <code>Event ID</code>를 기록해 두고 중복이 오면 무시하는 로직을 방어 코드로 넣는다.</li>
+</ul>
+<hr />
+<h2 id="iii-silmu-jeogyong-mic-gisulsajeog-pandan">Ⅲ. 실무 적용 및 기술사적 판단</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li>
+<p><strong>시나리오 — 조회(Read) DB의 데이터 오염 / 완전 재생(Replay)</strong>: 신규 기능 배포 중 개발자의 실수로 Elasticsearch(Read DB)의 데이터 매핑 로직(Projector)에 버그가 들어가, 일주일치 상품 조회 데이터가 모두 엉망으로 꼬여버린 상황.</p>
+<ul>
+<li><strong>판단</strong>: CQRS 모델에서 Read DB는 일회용 소모품(Disposable)에 불과하다. 진정한 원본(Source of Truth)은 Write DB 또는 Event Store에 안전하게 보존되어 있다.</li>
+<li><strong>해결책</strong>: 오염된 Read DB 인덱스를 통째로 날려버린다(Drop). 그리고 Kafka의 Offset을 일주일 전으로 되돌리거나, Event Store의 모든 이벤트를 시퀀스 넘버(Seq=0)부터 처음부터 다시 재생(Replay / Rebuild)시켜 새로운 Read DB를 순식간에 재구축한다. 이것이 CQRS와 이벤트 소싱이 결합했을 때 얻는 궁극의 데이터 회원 탄력성(Resiliency)이다.</li>
+</ul>
+</li>
+<li>
+<p><strong>시나리오 — CQRS 최종 일관성 타임랙(Lag)으로 인한 UX 결함</strong>: 사용자가 "내 정보 수정"을 누르고 이름을 바꾼 뒤 리다이렉트되어 마이페이지로 돌아왔는데, 아직 Kafka를 거쳐 Read DB로 동기화가 되지 않아 (Lag 0.5초 발생) 옛날 이름이 그대로 보이는 상황. 사용자는 에러인 줄 알고 '수정' 버튼을 계속 연타하게 됨.</p>
+<ul>
+<li><strong>판단</strong>: 백엔드 아키텍처의 최종 일관성 지연시간(Replication Lag)을 화면 프론트엔드가 커버하지 못해 발생한 문제다.</li>
+<li><strong>해결책</strong>: 백엔드 동기화 속도를 0으로 만드는 것은 물리적으로 불가능하다. 프론트엔드 단에서 **낙관적 업데이트(Optimistic UI)**를 적용하여 로컬 캐시 데이터를 우선 변경해 화면에 보여주거나, 백엔드 API가 Write DB 수정 직후 "당신의 데이터는 N초 후에 변경될 예정입니다" 식의 버전 정보(ETag)를 주고 프론트엔드가 폴링(Polling)하도록 UX를 설계해야 한다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="doib-cekeuriseuteu">도입 체크리스트</h3>
+<ul>
+<li><strong>기술적</strong>: 이벤트 소비(Consume) 순서가 보장되는가? 주문 생성(<code>OrderCreated</code>) 이벤트보다 주문 취소(<code>OrderCanceled</code>) 이벤트가 Read DB에 먼저 도착하면 심각한 논리 오류가 발생한다. Kafka 파티션 키(Partition Key)를 <code>OrderId</code>로 설정하여 **순차적 처리(Ordering)**를 보장했는가?</li>
+<li><strong>아키텍처적</strong>: CDC(Debezium)를 쓸 것인가, 아니면 애플리케이션에서 Outbox 도메인 이벤트를 직접 구울 것인가? (순수 데이터 복제가 목적이면 CDC가 낫고, 타 서비스에 비즈니스 의미를 전달하려면 Outbox 이벤트 발행이 필수적이다).</li>
+</ul>
+<hr />
+<h2 id="iv-gidaehyogwa-mic-gyeolron">Ⅳ. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">Dual-Write (안티패턴)</th><th style="text-align: left">Transactional Outbox + CQRS</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량 (신뢰도)</strong></td><td style="text-align: left">네트워크 불안정 시 Read DB 데이터 누락율 존재</td><td style="text-align: left">최소 1회 전달 및 최종 일관성 100% 보장</td><td style="text-align: left">읽기/쓰기 DB 간 데이터 <strong>유실률 0%</strong> 달성</td></tr>
+<tr><td style="text-align: left"><strong>정량 (복구력)</strong></td><td style="text-align: left">Read DB 깨지면 수동 스크립트 복구 (수 일)</td><td style="text-align: left">Event Store 전체 Replay 버튼 클릭 (수 분)</td><td style="text-align: left">재난 복구(DR) 및 데이터 재생 시간 <strong>극적 단축</strong></td></tr>
+<tr><td style="text-align: left"><strong>정성 (결합도)</strong></td><td style="text-align: left">Read DB 지연이 Write 트랜잭션 속도를 갉아먹음</td><td style="text-align: left">비동기 큐잉으로 결합도 완전 분리</td><td style="text-align: left">한쪽 DB가 죽어도 다른 쪽은 생존하는 <strong>Fault Tolerance</strong></td></tr>
+</tbody></table>
+<p>CQRS 아키텍처의 진정한 승부처는 "명령과 조회를 분리했다"는 껍데기가 아니라, "분리된 두 세계를 어떻게 유실 없이, 그리고 비즈니스 순서에 맞게 동기화시킬 것인가" 하는 파이프라인의 견고함에 있다. 기술사는 단순히 Kafka를 도입하는 것을 넘어, Outbox 패턴을 통한 원자성 확보, 파티션 키 설계를 통한 이벤트 순서 보장, 그리고 재시도로 인한 중복을 방어하는 멱등성(Idempotency) 로직을 Consumer 쪽에 강제하는 디테일한 백엔드 거버넌스를 이끌어야 한다.</p>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>CQRS (명령 조회 책임 분리)</strong></td><td style="text-align: left">쓰기와 읽기 DB를 분리하는 모체 아키텍처로, 이 둘 사이의 강을 건너기 위해 동기화 파이프라인이 필수불가결하다.</td></tr>
+<tr><td style="text-align: left"><strong>이벤트 소싱 (Event Sourcing)</strong></td><td style="text-align: left">상태 대신 이벤트 자체를 영속화하여, 동기화를 위한 이벤트 발행 행위와 데이터 저장을 일치시키는 CQRS의 최상위 진화 형태다.</td></tr>
+<tr><td style="text-align: left"><strong>Outbox 패턴 (아웃박스 패턴)</strong></td><td style="text-align: left">RDBMS의 로컬 트랜잭션을 활용해 "데이터 저장"과 "메시지 발송 대기열"을 한 트랜잭션으로 묶어 유실을 원천 차단하는 설계다.</td></tr>
+<tr><td style="text-align: left"><strong>CDC (Change Data Capture)</strong></td><td style="text-align: left">애플리케이션 코드를 수정하지 않고 DB의 트랜잭션 로그(Binlog)를 긁어서 타깃 DB로 스트리밍해주는 로우 레벨 데이터 동기화 기술이다.</td></tr>
+<tr><td style="text-align: left"><strong>멱등성 (Idempotency)</strong></td><td style="text-align: left">이벤트를 받아 Read DB를 업데이트하는 Consumer 로직이 동일한 이벤트를 N번 받아도 상태가 1번만 적용되도록 보장하는 방어 기법이다.</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>내가 일기장에 "오늘은 짜장면을 먹었다"라고 글(Write DB)을 썼어요. 그런데 거실에 있는 엄마(Read DB)도 내가 뭘 먹었는지 실시간으로 알아야 한대요.</li>
+<li>만약 내가 직접 거실로 뛰어가서 알려주려다가 넘어지면(에러 발생), 엄마는 내가 뭘 먹었는지 영영 모르게 돼요. (이중 쓰기의 문제)</li>
+<li>그래서 내가 일기장에 글을 씀과 동시에, 방문 앞 우체통(Outbox)에 똑같은 내용의 쪽지를 넣어두면 튼튼한 우체부 아저씨(Kafka)가 무조건 엄마에게 전달해 주는 안전한 방법을 'DB 동기화 아웃박스 패턴'이라고 해요!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

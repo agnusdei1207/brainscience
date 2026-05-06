@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>387. Top-K &#x2F; Top-P (Nucleus Sampling) - 샘플링 디코딩 확률 분포 커트라인 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ai
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: Top-K 샘플링은 확률 상위 K개 토큰에서, Top-P (Nucleus Sampling, 핵 샘플링)는 누적 확률 합이 P 이상인 최소 토큰 집합에서 다음 토큰을 샘플링하여 저확률 토큰을 제거한다.</li>
+<li><strong>가치</strong>: Top-K는 고정 개수로 단순하지만 분포 형태 무시의 단점이 있고, Top-P는 분포 뾰족함에 적응적으로 대응해 더 자연스러운 텍스트를 생성한다.</li>
+<li><strong>판단 포인트</strong>: Top-P=0.9와 Temperature=0.8의 조합이 일반 목적 생성의 현업 표준이며, 두 기법을 순차 적용해 사용하는 것이 일반적이다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>그리디 디코딩(Greedy)은 항상 최고 확률 토큰만 선택해 반복적이고 지루한 텍스트를 생성한다. 완전 무작위 샘플링은 문법·의미 오류가 많다. 두 극단 사이의 균형을 위해 Top-K와 Top-P가 도입됐다.</p>
+<p>두 방법 모두 "저확률 쓰레기 토큰"을 제거하고 의미 있는 후보 토큰 집합에서 샘플링한다는 공통 목적을 가진다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: Top-K는 "항상 상위 10명 중 무작위 선택", Top-P는 "합격점 이상인 사람들 중에서 무작위 선택"이다. 인원이 고정이냐 기준이 고정이냐의 차이다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="top-k-saempeulring">Top-K 샘플링</h3>
+<pre><code>1. 소프트맥스 확률 계산: P = [p₁, p₂, ..., p|V|]
+2. 상위 K개 토큰 선택: S_K = top-K(P)
+3. S_K 내 확률 재정규화: P&#x27;ᵢ = pᵢ &#x2F; Σⱼ∈S_K pⱼ
+4. P&#x27;에서 샘플링
+</code></pre>
+<p><strong>문제점</strong>: 확률 분포가 평평할 때(불확실할 때) K가 충분히 크지 않으면 좋은 후보 배제, 뾰족할 때는 너무 많은 후보 포함.</p>
+<h3 id="top-p-nucleus-sampling">Top-P (Nucleus Sampling)</h3>
+<pre><code>1. 확률 내림차순 정렬
+2. 누적 확률 합 계산
+3. P 임계값 초과하는 최소 집합 S_P 선택
+4. S_P 내 확률 재정규화 후 샘플링
+
+P=0.9 예시:
+토큰:  [A=0.50, B=0.30, C=0.15, D=0.03, E=0.02]
+누적:  [0.50,  0.80,  0.95,  0.98, 1.00]
+→ C까지(누적 0.95 ≥ 0.9) → S_P = {A, B, C}
+</code></pre>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│  뾰족한 분포 (확신)       평평한 분포 (불확실)         │
+│                                                      │
+│  Top-K=3:                 Top-K=3:                   │
+│  [████ A, ██ B, █ C]      [█ A, █ B, █ C]            │
+│  (K=3으로 충분)            (K=3이 너무 적음)           │
+│                                                      │
+│  Top-P=0.9:               Top-P=0.9:                 │
+│  → S_P={A,B} (2개)        → S_P={A,B,...,J} (많음)   │
+│  (분포에 적응적)            (분포에 적응적)             │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">방법</th><th style="text-align: left">후보 크기</th><th style="text-align: left">분포 적응</th><th style="text-align: left">하이퍼파라미터</th><th style="text-align: left">권장 값</th></tr></thead><tbody>
+<tr><td style="text-align: left">그리디</td><td style="text-align: left">1</td><td style="text-align: left">✗</td><td style="text-align: left">없음</td><td style="text-align: left">코드/사실</td></tr>
+<tr><td style="text-align: left">Top-K</td><td style="text-align: left">고정 K</td><td style="text-align: left">✗</td><td style="text-align: left">K</td><td style="text-align: left">K=40~50</td></tr>
+<tr><td style="text-align: left">Top-P</td><td style="text-align: left">가변</td><td style="text-align: left">✓</td><td style="text-align: left">p</td><td style="text-align: left">p=0.9~0.95</td></tr>
+<tr><td style="text-align: left">Top-K + Top-P</td><td style="text-align: left">교집합</td><td style="text-align: left">✓</td><td style="text-align: left">K, p</td><td style="text-align: left">K=50, p=0.9</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: Top-P는 "시험 합격선(P=90점)"으로 합격자를 가르는 방식이다. 시험이 쉬우면 합격자가 많고, 어려우면 합격자가 적다. 기준이 고정되어 있지만 결과 인원은 유동적이다.</p>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>Top-P는 2019년 Holtzman et al.의 "The Curious Case of Neural Text Degeneration" 논문에서 제안됐다. 이 논문은 그리디/Beam Search가 반복 루프에 빠지고, 완전 무작위 샘플링은 일관성 없는 텍스트를 생성하는 <strong>텍스트 퇴화 (Text Degeneration)</strong> 문제를 분석했다.</p>
+<p><strong>η-샘플링 (Epsilon Sampling)</strong>: 확률 ε 이하 토큰 제거 (Top-P의 절대값 버전)
+<strong>Typical Sampling</strong>: 정보 이론적 전형성(Typicality)으로 후보 선택</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 텍스트 퇴화는 "한 번 잘못된 생각에 빠지면 계속 그 생각을 반복하는" AI의 강박 증상이다. Top-P는 이를 다양한 옵션을 유지함으로써 방지한다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p><strong>ChatGPT/GPT-4</strong>: Top-P=1.0, Temperature=1.0 기본값 (사용자 설정 가능)
+<strong>창의적 글쓰기</strong>: Temperature=0.9, Top-P=0.95
+<strong>코드 생성</strong>: Temperature=0.2, Top-P=0.95 또는 Greedy
+<strong>다양성 강화</strong>: Temperature + Top-P 둘 다 높게 + Presence Penalty 추가</p>
+<p>주의: Temperature와 Top-P를 동시에 매우 높이면 일관성 없는 출력 발생.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 디코딩 파라미터 조합은 요리 레시피다. 재료(Top-P), 불 세기(Temperature), 조리 시간(반복 제한)을 상황에 맞게 조절해야 맛있는 요리(좋은 텍스트)가 나온다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>Top-K와 Top-P는 LLM 디코딩의 핵심 제어 파라미터로, 창의성과 일관성의 균형을 잡는 실용적 도구다. Top-P의 적응적 후보 선택은 분포의 형태에 관계없이 일정 수준의 텍스트 품질을 보장한다. 현대 LLM 서비스의 기본 파라미터 이해는 프롬프트 엔지니어링의 필수 기초다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: Top-K와 Top-P는 AI의 "언어 다양성 조절 밸브"다. 잠그면 깨끗하고 단조로운 물, 열면 풍부하지만 예측 불가능한 물이 나온다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연관 키워드</th><th style="text-align: left">관계</th></tr></thead><tbody>
+<tr><td style="text-align: left">Top-K 샘플링</td><td style="text-align: left">상위 K 후보</td><td style="text-align: left">고정 후보 수 필터</td></tr>
+<tr><td style="text-align: left">Top-P (Nucleus)</td><td style="text-align: left">누적 확률 P</td><td style="text-align: left">적응적 후보 필터</td></tr>
+<tr><td style="text-align: left">그리디 디코딩</td><td style="text-align: left">argmax, T→0</td><td style="text-align: left">결정론적 디코딩</td></tr>
+<tr><td style="text-align: left">텍스트 퇴화</td><td style="text-align: left">반복, 불일관성</td><td style="text-align: left">Top-P 필요 이유</td></tr>
+<tr><td style="text-align: left">온도 (T)</td><td style="text-align: left">분포 뾰족함</td><td style="text-align: left">Top-P와 병행</td></tr>
+<tr><td style="text-align: left">Beam Search</td><td style="text-align: left">k 빔, 시퀀스 확률</td><td style="text-align: left">대안 디코딩 전략</td></tr>
+</tbody></table>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>Top-K는 "경주에서 상위 10명만 뽑아서 그 중 무작위로 승자를 결정"하는 방식이야.</li>
+<li>Top-P는 "점수 합이 90점이 되는 최소한의 선수들만 모아서 그 중에서 뽑는" 방식이야. 잘하는 날엔 선수가 적고, 다들 비슷한 날엔 선수가 많아.</li>
+<li>두 방법을 합치면 "상위 10명 AND 점수 합 90점" 조건을 모두 만족하는 선수에서 뽑아서 더 좋은 결과가 나와.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

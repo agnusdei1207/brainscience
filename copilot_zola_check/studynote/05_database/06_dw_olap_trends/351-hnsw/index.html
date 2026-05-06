@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>351. ANN (Approximate Nearest Neighbor) 알고리즘 - 벡터 DB의 고속 근사치 검색 (정확도 일부 희생, 속도 극대화) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <blockquote>
+<p><strong>💡 핵심 인사이트</strong>
+HNSW(Hierarchical Navigable Small World)는 <strong>"다층 그래프(Multi-layer Graph) 구조를 이용해 벡터 공간에서 가까운 이웃을 계층적으로 탐색하는"</strong> 대표적인 ANN(Approximate Nearest Neighbor) 알고리즘입니다.
+상위 레이어에서는 **<em>대략적인 위치</em>**를 빠르게 파악하고, 하위 레이어로 <strong><em>점진적으로 내려가며</em></strong> (<em>세밀하게 탐색</em>) 합니다. 이 "_ Hierarchical_" 구조 덕분에 **<em>수천 차원의 벡터에서도 수십 밀리초 내에 정확한 유사 이웃을 발견</em>**할 수 있습니다. Milvus, Weaviate, Qdrant 등 **<em>주요 벡터 데이터베이스의 기본 인덱싱 알고리즘</em>**으로 사용됩니다.</p>
+</blockquote>
+<hr />
+<h2 id="i-hnswyi-tansaeng-nswyi-hangyereul-geugbog">Ⅰ. HNSW의 탄생: NSW의 한계를 극복</h2>
+<p>HNSW은 <strong>NSW(Navigable Small World)</strong> 알고리즘에서 영감을 받았습니다.</p>
+<pre><code>[NSW의 문제점]
+
+NSW는 단일 레이어의 그래프입니다.
+- 가까운 노드를 순차적으로 탐색
+- 시작 위치에 따라 탐색 경로가 크게 달라질 수 있음
+- 전역적 최적값을 보장하기 어려움
+
+NSW 그래프 예시:
+      ●────────────────●
+     &#x2F;                  \
+    ●───────●────────────●
+    |       |           &#x2F;
+    |       |          &#x2F;
+    ●───────●─────────●
+
+    문제: 시작점이 &quot;좌측 상단&quot;이면
+          &quot;우측 하단&quot;의 노드를 못 찾을 수 있음
+</code></pre>
+<p><strong>HNSW의 해결책:</strong></p>
+<ul>
+<li><strong><em>다층 레이어</em></strong> 도입 → 상위 레이어에서 넓은 범위 탐색, 하위 레이어에서 세밀한 탐색</li>
+<li><strong><em>점진적 세분화</em></strong> (Progressive Refinement)</li>
+<li><strong><em>O(log N) 시간 복잡도</em></strong> 달성</li>
+</ul>
+<hr />
+<h2 id="ii-hnswyi-gujo-daceung-geuraepeu">Ⅱ. HNSW의 구조: 다층 그래프</h2>
+<pre><code>[HNSW 다층 구조]
+
+┌─────────────────────────────────────────────────────────────────┐
+│                       HNSW 다층 구조                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Layer 3 (최상위):                                              │
+│       ●━━━━━━━━━━━━━━━━━━━━━━━━━●                               │
+│       │                         │                               │
+│       │   (검색 시작 시 랜덤 엔트리 포인트에서 시작)               │
+│       │   전역적으로 가장 가까운 클러스터 발견                      │
+│       │                                                       │
+│  Layer 2:                                                      │
+│       ●━━━●━━━●━━━●━━━●━━━●━━━●━━━●━━━●━━━●━━━●               │
+│       │                                                           │
+│       │   (발견된 클러스터 내 하위 레이어로 이동)                    │
+│       │                                                           │
+│  Layer 1:                                                      │
+│       ●━●━●━●━●━●━●━●━●━●━●━●━●━●━●━●━●━●━●━●               │
+│       │                                                           │
+│       │   (더 세밀한 지역 탐색)                                    │
+│       │                                                           │
+│  Layer 0:                                                      │
+│  ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●         │
+│       │                                                           │
+│       │   (가장 세밀한 레벨, 모든 벡터가 이 레벨에 존재)             │
+│       │   ef 파라미터만큼 탐색하여最近的 이웃 도출                   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>각 레이어의 역할:</strong></p>
+<ul>
+<li><strong><em>Layer 3, 2 (상위)</em></strong>: (<em>전역적으로</em>) (<em>가장 가까운</em>) (<em>노드를</em>) (<em>빠르게</em>) (<em>발견</em>)</li>
+<li><strong><em>Layer 1 (중간)</em></strong>: (<em>지역적</em>) (<em>세분화</em>)</li>
+<li><strong><em>Layer 0 (최하위)</em></strong>: (<em>가장 세밀한</em>) (<em>탐색</em>, (<em>ef</em>) (<em>파라미터</em>) (<em>만큼</em>) (<em>탐색</em>) (_))</li>
+</ul>
+<hr />
+<h2 id="iii-hnsw-tamsaeg-algorijeum-greedy-search">Ⅲ. HNSW 탐색 알고리즘: Greedy Search</h2>
+<p>HNSW의 검색은 <strong><em>greedy traversal</em></strong> 방식으로 이루어집니다.</p>
+<pre><code>[HNSW 탐색 과정]
+
+입력: 쿼리 벡터 q, 파라미터 ef (탐색 범위)
+
+1. 최상위 레이어에서 시작 (엔트리 포인트)
+   - 랜덤하게 선택된 노드에서 시작
+   - 또는 사전에 지정된 엔트리 포인트
+
+2. 현재 레이어에서 q와 가장 가까운 노드 탐색
+   while (현재 레이어에서 개선 가능한 이웃이 있으면):
+       가장 가까운 이웃 = ef개의 후보 중 q와 거리 가장 가까운 노드
+       if (가장 가까운 이웃 != 현재 노드):
+           현재 노드 = 가장 가까운 이웃
+       else:
+           break
+
+3. 더 하위 레이어가 있으면:
+   - 현재 노드에서 하위 레이어로 이동
+   - 2번 과정 반복
+
+4. 최하위 레이어에서 ef개의最近的 이웃 반환
+</code></pre>
+<p><strong>시간 복잡도:</strong></p>
+<pre><code>탐색 시간 = Σ(1&#x2F;M)^i  (i = 0부터 레이어 수-1)
+          ≈ 1 &#x2F; (1 - 1&#x2F;M)  (상수)
+
+→ O(log N)  (N = 전체 벡터 수)
+</code></pre>
+<hr />
+<h2 id="iv-hnsw-paramiteowa-seongneung-jojeol">Ⅳ. HNSW 파라미터와 성능 조절</h2>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python"># HNSWlib (Python) 예시
+import hnswlib
+
+# 인덱스 초기화
+dim = 1536  # 벡터 차원
+max_elements = 1000000  # 벡터 수
+
+index = hnswlib.Index(space=&#x27;cosine&#x27;, dim=dim)
+index.init_index(max_elements=max_elements, ef_construction=200, M=16)
+
+# 벡터 추가
+index.add_items(vectors, ids=range(len(vectors)))
+
+# 검색
+index.set_ef(100)  # 검색 시 탐색 범위
+labels, distances = index.knn_query(query_vectors, k=10)
+</code></pre>
+<p><strong>핵심 파라미터:</strong></p>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                    HNSW 파라미터 설명                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  M (Maximum connections per node):                              │
+│  - 각 노드가 상위 레이어에서 가질 수 있는 최대 연결 수              │
+│  - 기본값: 16                                                   │
+│  - ↑ M: 정확도↑, 메모리↑, 빌드 시간↑                              │
+│  - ↓ M: 정확도↓, 메모리↓, 빌드 시간↓                              │
+│                                                                 │
+│  efConstruction (Build time search breadth):                     │
+│  - 인덱스 빌드 시 각 레이어에서 탐색할 후보 수                       │
+│  - 기본값: 200                                                   │
+│  - ↑ efConstruction: 정확도↑, 빌드 시간↑                           │
+│  - ↓ efConstruction: 정확도↓, 빌드 시간↓                          │
+│                                                                 │
+│  efSearch (Query time search breadth):                           │
+│  - 검색 시 최하위 레이어에서 탐색할 후보 수                          │
+│  - 기본값: M과 efConstruction에 따라 결정                          │
+│  - ↑ efSearch: 정확도↑, 검색 시간↑                                │
+│  - ↓ efSearch: 정확도↓, 검색 시간↓                                │
+│                                                                 │
+│  권장 조합:                                                      │
+│  - 빠른 응답 (추천 시스템): M=8, efConstruction=100, ef=50        │
+│  - 균형: M=16, efConstruction=200, ef=100                        │
+│  - 고정확도 (RAG): M=32, efConstruction=400, ef=200             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h2 id="v-hnswyi-memori-gwanriwa-loudspeaker-biyu">Ⅴ. HNSW의 메모리 관리와 📢 비유</h2>
+<p><strong>메모리 사용량:</strong></p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python"># 메모리估算
+# 대략: (M * 2 * bytes_per_float + overhead) * num_vectors
+
+# 예시:
+M = 16
+dim = 1536
+num_vectors = 10_000_000
+bytes_per_float = 4
+
+memory_per_vector = M * 2 * dim * bytes_per_float  # 양방향 연결
+memory = memory_per_vector * num_vectors
+# = 16 * 2 * 1536 * 4 * 10,000,000
+# = 약 2.5 GB
+</code></pre>
+<p><strong>메모리 최적화 기법:</strong></p>
+<ul>
+<li><strong>_PQ (Product Quantization)</strong>: 벡터를 저차원으로 압축하여 메모리 절감</li>
+<li><strong><em>자연적 계층 활용</em></strong>: 자주アクセス되는データを上層에配置</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유:</strong> HNSW는 **"대형 도시에서 가장近い 맛집을 찾는 것에 비유"**할 수 있습니다. (<em>전체</em>) (<em>도시간</em>) (<em>道路</em>) (<em>네트워크</em>) (<em>에서</em>) (<em>'가장 가까운 맛집'</em>) (<em>을</em>) (<em>찾는</em>) (<em>것은</em>) (<em>거의</em>) (<em>불가능</em>) (<em>합니다</em>) (<em>→</em>) (<em>KNN의</em>) (<em>수백만</em>) (<em>계산</em>) (<em>문제</em>) (<em>)</em>。(<em>HNSW는</em>) (<em>지도를</em>) (<em>3단계</em>) (<em>계층으로</em>) (<em>나누어</em>) (<em>探します</em>: (<em>1단계</em>) (_ Province/시_) (<em>단위</em>) (<em>에서</em>) (<em>검색</em>) (<em>→</em>) (<em>2단계</em>) (<em>区/군</em>) (<em>단위</em>) (<em>에서</em>) (<em>검색</em>) (<em>→</em>) (<em>3단계</em>) (<em>개별</em>) (<em>맛집</em>) (<em>에서</em>) (<em>세밀한</em>) (<em>비교</em>) (<em>→</em>) (<em>거의</em>) (<em>정확한</em>) (<em>최 가까운</em>) (<em>맛집</em>) (<em>을</em>) (<em>수</em>) (<em>분</em>) (<em>안에</em>) (<em>발견</em>) (<em>하는</em>) (<em>것</em>) (<em>과</em>) (<em>같습니다</em>) (<em>)</em>)。(<em>다만</em>) (<em>가끔</em>) (_ Province_) (<em>단계</em>) (<em>에서</em>) (<em>잘못된</em>) (<em>시</em>) (<em>를</em>) (<em>선택</em>) (<em>하면</em>) (<em>최종</em>) (<em>결과가</em>) (<em>100%</em>) (<em>정확하지</em>) (<em>않을</em>) (<em>수</em>) (<em>있는</em>) (<em>것처럼</em>) (<em>HNSW도</em>) (<em>근사값</em>) (<em>을</em>) (<em>반환하는</em>) (<em>것을</em>) (<em>감안</em>) (<em>해야</em>) (<em>합니다</em>) (<em>)</em>)。</p>
+</blockquote>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

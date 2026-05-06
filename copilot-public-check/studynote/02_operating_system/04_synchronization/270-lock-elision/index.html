@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>270. 락 엘리전 (Lock Elision) - 하드웨어 지원 락 우회 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote os
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="270-rag-elrijeon-lock-elision">270. 락 엘리전 (Lock Elision)</h1>
+<blockquote>
+<p>⚠️ 이 문서는 다중 코어 시스템에서 스레드들이 불필요하게 락(Lock)을 획득하느라 성능이 처참하게 무너지는 현상을 막기 위해, 최신 CPU 하드웨어가 개입하여 "어차피 충돌 안 날 것 같으면 락을 아예 안 건 것처럼 무시하고 통과시켜 버리는" 극한의 최적화 기술인 '락 엘리전'을 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 락 엘리전(Lock Elision)은 번역하면 '락 생략'이다. 프로그램 코드에는 <code>lock()</code>이라고 적혀 있지만, CPU(하드웨어 트랜잭셔널 메모리, HTM)가 이를 무시하고 락을 쥐지 않은 채 냅다 코드를 실행시킨 뒤, 충돌이 나지 않으면 그대로 반영하고 충돌이 나면 몰래 롤백하는 하드웨어 가속 기술이다.</li>
+<li><strong>가치</strong>: 소프트웨어 개발자가 보수적이고 멍청하게(혹시 몰라서) 걸어둔 넓은 범위의 락 때문에 10개의 코어가 줄 서서 노는 병목 현상을 CPU 스스로 타파하여, <strong>코드 수정 0줄로 멀티코어 병렬 처리 성능을 수 배 이상 뻥튀기</strong>시킨다.</li>
+<li><strong>융합</strong>: 운영체제나 프로그래밍 언어가 제공하는 고수준의 '락(Mutex)' 메커니즘과 인텔(Intel) TSX(Transactional Synchronization Extensions) 같은 최하위 실리콘 '하드웨어 구조'가 결합된 컴퓨터 구조와 OS의 가장 아름다운 크로스오버 최적화 사례다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-gaeyo-mic-tansaeng-baegyeong-context-necessity">Ⅰ. 개요 및 탄생 배경 (Context &amp; Necessity)</h3>
+<p>프로그래머들은 데드락과 경쟁 조건(Race Condition)이 너무 무서운 나머지 방어적인 코딩을 한다.
+1만 개의 배열 데이터 중 스레드 A는 <code>[1]</code>번 방을 수정하고, 스레드 B는 <code>[9999]</code>번 방을 수정하려고 한다. 둘은 전혀 겹치지 않으므로 동시에 작업해도 아무 문제가 없다.
+하지만 귀찮은 프로그래머는 그냥 <strong>배열 전체(1만 개)를 통째로 락(Lock)</strong> 걸어버린다 (Coarse-grained Lock). 결과적으로 A가 1번 방을 고치는 동안, 9999번 방을 고치려던 B는 의미 없이 밖에서 멍하니 기다려야 한다. (성능의 학살)</p>
+<p>하드웨어 엔지니어들은 이 꼴을 보고 탄식했다. "저 바보 같은 소프트웨어 락 때문에 우리가 만든 16코어 CPU가 1코어 빼고 다 놀고 있잖아! 우리가 실리콘(하드웨어) 차원에서 직접 개입해서, <strong>안 겹칠 것 같으면 락을 그냥 무시(Elision)하게 만들어주자!</strong>" 이렇게 탄생한 기술이 바로 하드웨어 기반의 **락 엘리전(Lock Elision)**이다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 넓은 고속도로 톨게이트에 관리자가 "혹시 사고 날까 봐" 1차로만 열어두고 9개 차로를 다 막아버린(소프트웨어 Lock) 상황입니다. 락 엘리전은 경찰(CPU)이 몰래 나타나서 막힌 9개 차로의 바리케이드를 확 치워버리고(락 생략), 차들이 쌩쌩 달리게 놔두다가 진짜 부딪칠 뻔한 차만 뒤로 빽(롤백) 시키는 놀라운 교통정리 기술입니다.</p>
+</blockquote>
+<hr />
+<h3 id="ii-rag-elrijeonyi-hadeuweeojeog-jagdong-mekeonijeum-intel-tsx-giban">Ⅱ. 락 엘리전의 하드웨어적 작동 메커니즘 (Intel TSX 기반)</h3>
+<p>락 엘리전은 소프트웨어 단독으로는 불가능하다. 인텔의 TSX 같은 하드웨어 트랜잭셔널 메모리(HTM) 지원 칩이 반드시 필요하다.</p>
+<ol>
+<li><strong>도박의 시작 (Speculative Execution)</strong>
+<ul>
+<li>스레드가 <code>lock()</code> 명령어에 도달한다.</li>
+<li>CPU는 락을 실제로 거는(메모리 값을 1로 바꾸어 문을 잠그는) 무거운 작업을 **생략(Elision)**해 버린다. 대신 이 구간을 <strong>하드웨어 트랜잭션</strong> 모드로 몰래 전환하고 냅다 코드를 실행해 버린다.</li>
+</ul>
+</li>
+<li><strong>충돌 감시망 (Cache Coherency Protocol 활용)</strong>
+<ul>
+<li>CPU는 스레드가 이 구간에서 읽고 쓰는 메모리 주소들을 CPU 내부의 L1/L2 캐시(Cache)에 꼬리표를 달아 감시한다. (읽은 곳 꼬리표, 쓴 곳 꼬리표).</li>
+<li>CPU 내부망(캐시 일관성 프로토콜, MESI)을 통해 다른 코어가 감시 중인 주소에 접근하려고 하는지 매의 눈으로 지켜본다.</li>
+</ul>
+</li>
+<li><strong>도박의 결과 (Commit vs Abort)</strong>
+<ul>
+<li><strong>대성공 (충돌 없음)</strong>: 스레드가 <code>unlock()</code> 지점까지 도달했는데 꼬리표 달린 주소를 아무도 안 건드렸다? (예: A는 1번 방, B는 9999번 방). 그러면 락을 걸었던 것처럼 뻔뻔하게 결과를 메모리에 커밋하고 끝낸다. 병렬 처리 효율 100%!</li>
+<li><strong>실패 (충돌 감지)</strong>: 도중에 다른 코어가 내 꼬리표 주소를 덮어쓰려 한다? CPU는 번개처럼 하드웨어 롤백(Abort)을 때려버린다. 트랜잭션을 취소하고, <strong>"아휴 꼼수 쓰려다 걸렸네, 얌전히 원래 소프트웨어 락(Mutex) 걸고 순서대로 해야지..."</strong> 라며 보수적인 락 모드로 되돌아간다 (Fallback).</li>
+</ul>
+</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────────────────────┐
+│           락 엘리전 (Lock Elision) 작동 흐름도: 꼼수와 롤백의 미학          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│ 코드:   lock(mutex);                                                        │
+│        array[1] = 50;                                                       │
+│        unlock(mutex);                                                       │
+│                                                                             │
+│ [ CPU 하드웨어의 은밀한 처리 과정 ]                                         │
+│                                                                             │
+│  1. 락 무시! (Elision) &quot;진짜 락 걸면 느려지니까 락 안 건척 하고 달려보자!&quot;  │
+│         │                                                                   │
+│         ▼                                                                   │
+│  2. 캐시에 기록 &quot;내가 array[1] 건드린다! 남들 건드리나 감시해!&quot;             │
+│         │                                                                   │
+│    (분기점: 다른 코어의 간섭 여부)                                          │
+│     ┌───┴────────────────────────────────┐                                  │
+│     ▼ (아무도 안 건드림)                      ▼ (누가 array[1] 건드림!)     │
+│  3. unlock() 무사 도달                 3. 🚨 앗 충돌 났다!! (Abort)         │
+│  4. 변경사항 영구 저장 (Commit)          4. 작업 취소, 롤백 (Rollback)      │
+│     -&gt; 🚀 초고속 병렬 처리 성공!           5. 이번엔 꼼수 안 쓰고 진짜      │
+│                                       소프트웨어 락 걸어서 다시 처리!       │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 메커니즘의 천재성은 '실패 시의 대비책(Fallback)'에 있다. 락을 우회하다가 실패하면 시스템이 뻗는 게 아니라, CPU가 원래의 코드대로 정직하게 락을 획득하도록 자연스럽게 흐름을 돌려준다. 따라서 개발자는 하드웨어를 전혀 신경 쓸 필요 없이 평소처럼 <code>lock()</code>과 <code>unlock()</code>만 적어두면, 밑에서 CPU가 알아서 눈치껏 병렬화를 폭발시켜 주는 것이다.</p>
+<hr />
+<h3 id="iii-rag-elrijeonyi-hangyewa-juyijeom">Ⅲ. 락 엘리전의 한계와 주의점</h3>
+<p>"마법의 지팡이처럼 보이지만 만능은 아니다."</p>
+<ol>
+<li><strong>캐시 크기의 한계 (Capacity Abort)</strong>
+<ul>
+<li>락 엘리전은 CPU 캐시 메모리를 임시 연습장(트랜잭션 로그)으로 쓴다. 만약 락 블록 안에서 1GB짜리 사진 파일을 이리저리 수정한다면? 캐시 용량이 꽉 차서 락 우회를 유지할 수 없어 무조건 하드웨어 롤백(Abort)이 터진다. 즉, 아주 짧고 가벼운 임계 구역(Critical Section)에서만 빛을 발한다.</li>
+</ul>
+</li>
+<li><strong>I/O 연산 불가</strong>
+<ul>
+<li>앞선 STM 문서와 동일하게, 하드웨어 롤백이 불가능한 시스템 콜(System Call), 파일 출력, 네트워크 통신 등이 락 블록 안에 포함되어 있으면 CPU는 락 엘리전을 시도조차 하지 않고 포기한다.</li>
+</ul>
+</li>
+<li><strong>CPU 보안 취약점 여파</strong>
+<ul>
+<li>인텔의 TSX 기능은 락 엘리전을 상용화한 위대한 기능이었으나, 멜트다운(Meltdown)이나 스펙터(Spectre) 같은 캐시 기반 하드웨어 보안 취약점 공격의 통로로 악용될 우려가 발견되면서 마이크로코드 업데이트를 통해 강제로 꺼버린(Disable) 흑역사가 존재한다. 하드웨어 최적화가 보안의 구멍이 될 수 있음을 보여준 씁쓸한 사례다.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="iv-gyeolron">Ⅳ. 결론</h3>
+<p>"소프트웨어의 둔함을 하드웨어의 재치로 덮다."
+락 엘리전은 다중 스레드 환경의 본질적 병목인 '동기화 오버헤드'를 운영체제가 아닌 실리콘 레벨에서 해킹해 버린 획기적인 아이디어다. 프로그래머가 복잡하고 촘촘한 세밀한 락(Fine-grained Lock)을 설계하느라 머리를 쥐어뜯지 않더라도, 대충 큰 락을 하나만 걸어두면 CPU가 알아서 안 부딪히는 놈들을 솎아내 병렬로 달리게 해주는 이 기술은 미래 멀티코어 최적화의 교과서적인 모범 답안으로 평가받는다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>전제 문제점</strong>: 거친 락 (Coarse-grained Lock) 병목, 데드락의 공포</li>
+<li><strong>핵심 하드웨어 기술</strong>: HTM (Hardware Transactional Memory), 캐시 일관성 (Cache Coherency, MESI)</li>
+<li><strong>상위 소프트웨어 개념</strong>: STM (소프트웨어 트랜잭셔널 메모리 - 268번 문서)</li>
+<li><strong>Intel 구현체</strong>: TSX (Transactional Synchronization Extensions) 명령어 셋</li>
+</ul>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>100명이 달리기 경주를 하는데, 규칙이 "혹시 부딪칠 수 있으니까 한 명씩만 결승선을 통과해라(소프트웨어 락)!"라고 멍청하게 정해져 있어요. 너무 느리겠죠?</li>
+<li>심판(CPU)이 몰래 눈치를 봅니다. "야, 너네 어차피 달리는 트랙이 서로 달라서 안 부딪칠 거 같은데? 규칙 무시하고 일단 다 같이 동시에 뛰어봐!(락 엘리전)"</li>
+<li>다들 동시에 쌩쌩 달리다가, 정말로 서로 부딪칠 뻔한 두 명만 "야 너네 둘은 스톱! 뒤로 가서 원래 규칙대로 한 명씩 가!"라고 뒤로 돌려보내는 엄청나게 똑똑한 심판의 기술이랍니다.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

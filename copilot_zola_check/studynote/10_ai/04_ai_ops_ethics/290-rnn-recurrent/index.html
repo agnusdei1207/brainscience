@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>290. RNN (Recurrent Neural Network) - 시계열 순서 기억 은닉 상태 루프 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ai
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: RNN (Recurrent Neural Network, 순환 신경망)은 입력 데이터를 시간 순서대로 하나씩 처리하면서 이전 시점의 정보를 **은닉 상태 (Hidden State, h_t)**라는 내부 메모리에 담아 다음 시점으로 전달하는 시계열 전용 신경망이다.</li>
+<li><strong>가치</strong>: 문장의 단어, 주가 데이터, 음성 신호처럼 "순서가 의미를 만드는" 시퀀스 데이터를 처리하기 위해 설계되었으며, 같은 가중치(Weight)를 모든 시점에 재사용하는 <strong>파라미터 공유</strong> 구조로 가변 길이 입력을 처리한다.</li>
+<li><strong>판단 포인트</strong>: RNN의 치명적 단점은 시퀀스가 길어질수록 과거 정보가 기울기 소실 (Vanishing Gradient)로 증발하는 <strong>장기 의존성 문제</strong>이며, 이를 해결하기 위해 LSTM과 GRU가 등장했다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>기존 완전연결층(Fully Connected Layer)과 CNN은 입력의 순서에 무감각하다. "오늘 주식 가격이 올랐다"는 문장을 처리할 때, 단어를 뒤죽박죽 섞어도 같은 결과를 낸다면 번역 시스템은 쓸모없어진다. 언어, 음성, 센서 시계열 데이터처럼 <strong>앞 순서가 뒤 순서의 의미를 결정하는 Sequential 데이터</strong>를 처리하려면 순서 기억 메커니즘이 필수다.</p>
+<p>**RNN (Recurrent Neural Network)**은 네트워크에 루프(Loop)를 도입하여 이전 시점의 출력(은닉 상태)을 현재 시점 입력과 함께 받아들인다. 덕분에 "어제의 정보 + 오늘의 입력 → 오늘의 판단"이라는 인과 연쇄가 수학적으로 구현된다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: RNN은 선생님이 매일 일기(오늘 배운 것)를 쓰는데, 어제 일기장을 오늘도 펼쳐 놓고 참고하며 새로운 내용을 덧붙이는 방식이다. CNN은 오직 오늘 교과서만 본다. RNN은 어제까지의 기억(은닉 상태)을 들고 수업에 참석하는 연속성 있는 학생이다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>RNN의 핵심 수식은 단순하다. 현재 은닉 상태 h_t는 이전 은닉 상태 h_(t-1)과 현재 입력 x_t의 함수다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│            RNN (순환 신경망) 시간 전개 구조                         │
+├──────────────────────────────────────────────────────────────┤
+│  입력 시퀀스: x_1 = &quot;나&quot;, x_2 = &quot;는&quot;, x_3 = &quot;학교&quot;, x_4 = &quot;간다&quot;   │
+│                                                              │
+│  t=1           t=2           t=3           t=4              │
+│  [x_1]──┐    [x_2]──┐    [x_3]──┐    [x_4]──┐             │
+│          ▼           ▼           ▼           ▼             │
+│  [h_0]──▶[RNN셀]──▶[RNN셀]──▶[RNN셀]──▶[RNN셀]──▶ y_4      │
+│          │  h_1      │  h_2      │  h_3      │             │
+│          ▼           ▼           ▼           ▼             │
+│         y_1         y_2         y_3         출력            │
+│                                                              │
+│  핵심 수식:  h_t = tanh(W_h · h_(t-1) + W_x · x_t + b)       │
+│  [동일한 가중치 W_h, W_x 를 모든 시점에서 공유!]                    │
+│                                                              │
+│  ⚠ 문제: t=4에서 t=1 &quot;나&quot;의 정보가 h_1→h_2→h_3→h_4 로 전달되는    │
+│          동안 곱해지는 tanh 미분값 (≤1)이 4번 곱해짐 → 신호 소멸!   │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">구조</th><th style="text-align: left">설명</th><th style="text-align: left">활용 예</th></tr></thead><tbody>
+<tr><td style="text-align: left">One-to-One</td><td style="text-align: left">단일 입력 → 단일 출력</td><td style="text-align: left">일반 분류</td></tr>
+<tr><td style="text-align: left">One-to-Many</td><td style="text-align: left">하나 입력 → 시퀀스 출력</td><td style="text-align: left">이미지 자막 생성</td></tr>
+<tr><td style="text-align: left">Many-to-One</td><td style="text-align: left">시퀀스 입력 → 하나 출력</td><td style="text-align: left">감성 분석</td></tr>
+<tr><td style="text-align: left">Many-to-Many</td><td style="text-align: left">시퀀스 → 시퀀스</td><td style="text-align: left">기계 번역, 챗봇</td></tr>
+</tbody></table>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: RNN의 은닉 상태는 달리기 선수가 바통을 들고 계주 경기를 하는 것이다. 1번 선수(t=1)가 달리다가 바통(h_1)을 2번 선수에게 넘기고, 2번도 달리다가 바통(h_2)을 3번에게 넘긴다. 최종 4번 선수의 손에는 1·2·3번의 기억이 바통 안에 담겨 있다. 문제는 바통을 넘길 때마다 내용이 조금씩 지워진다는 것이다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">RNN</th><th style="text-align: left">LSTM</th><th style="text-align: left">GRU</th></tr></thead><tbody>
+<tr><td style="text-align: left">메모리 구조</td><td style="text-align: left">은닉 상태 h_t만</td><td style="text-align: left">셀 상태 C_t + 은닉 상태 h_t</td><td style="text-align: left">은닉 상태 h_t (단일)</td></tr>
+<tr><td style="text-align: left">게이트 수</td><td style="text-align: left">없음</td><td style="text-align: left">3개 (입력/삭제/출력)</td><td style="text-align: left">2개 (업데이트/리셋)</td></tr>
+<tr><td style="text-align: left">장기 의존성</td><td style="text-align: left">취약 (기울기 소실)</td><td style="text-align: left">강함</td><td style="text-align: left">강함 (LSTM보다 경량)</td></tr>
+<tr><td style="text-align: left">파라미터 수</td><td style="text-align: left">가장 적음</td><td style="text-align: left">많음</td><td style="text-align: left">중간</td></tr>
+</tbody></table>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: RNN은 메모만 적는 노트 한 권이고, LSTM은 노트 + 장기 금고(셀 상태)를 별도로 가진 이중 기억 시스템이다. GRU는 LSTM의 금고를 단순화해서 무게를 줄인 경량 버전이다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<ul>
+<li><strong>자연어 처리 (NLP)</strong>: 텍스트를 단어 단위로 순차 입력받아 번역, 요약, 감성 분석에 활용</li>
+<li><strong>시계열 예측</strong>: 주가, 전력 수요, 센서 이상 탐지 등 시간 의존성 있는 데이터 예측</li>
+<li><strong>음성 인식 (ASR)</strong>: 오디오 프레임을 순차 처리하여 텍스트로 변환</li>
+</ul>
+<p><strong>실무 주의사항</strong>: 긴 시퀀스(1000 토큰 이상)에서는 RNN보다 Transformer가 병렬 처리와 장거리 의존성 모두에서 압도적으로 유리하므로, RNN/LSTM은 중·단기 시계열이나 온디바이스 경량 모델에서 여전히 사용된다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: RNN은 책을 한 글자씩 소리 내어 읽으며 앞 내용을 머릿속으로 기억하는 학생이다. 책이 10페이지면 괜찮지만, 1,000페이지짜리 소설을 읽을 때는 1페이지 내용을 999페이지에서 기억하기 어렵다. 그래서 두꺼운 책(긴 시퀀스)은 Transformer라는 "책 전체를 펼쳐놓고 동시에 보는 사진 찍기"로 넘어가게 된다.</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>RNN (Recurrent Neural Network)은 딥러닝의 순서 인식 능력을 최초로 구현한 혁신이었다. 비록 장기 의존성 문제와 순차적 처리의 속도 한계로 Transformer에게 NLP 왕좌를 넘겨주었지만, 경량성과 시계열 처리 적합성 덕분에 IoT 센서, 의료 생체 신호, 엣지 디바이스 AI에서 여전히 실전 배치된다. LSTM, GRU, Transformer 모두 RNN에서 시작된 "순서를 기억하는 AI"라는 철학의 진화체다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: RNN은 스마트폰 이전 시대의 MP3 플레이어다. 오늘날에는 스마트폰(Transformer)이 훨씬 강력하지만, 단순한 음악 재생(경량 시계열 처리)에는 MP3가 배터리도 덜 먹고 충분히 쓸만하다. 역사의 시작점이자 진화의 발판으로서 RNN의 가치는 영원하다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연관 키워드</th><th style="text-align: left">관계</th></tr></thead><tbody>
+<tr><td style="text-align: left">은닉 상태 (Hidden State)</td><td style="text-align: left">h_t, 기울기 소실</td><td style="text-align: left">RNN의 핵심 메모리 단위</td></tr>
+<tr><td style="text-align: left">LSTM</td><td style="text-align: left">셀 상태, 3 게이트</td><td style="text-align: left">RNN의 장기 의존성 문제를 해결한 진화형</td></tr>
+<tr><td style="text-align: left">GRU</td><td style="text-align: left">업데이트/리셋 게이트</td><td style="text-align: left">LSTM보다 경량화된 RNN 변종</td></tr>
+<tr><td style="text-align: left">Transformer</td><td style="text-align: left">셀프 어텐션, 병렬 처리</td><td style="text-align: left">RNN을 대체한 현대 NLP 기반 구조</td></tr>
+<tr><td style="text-align: left">BPTT</td><td style="text-align: left">시간 역전파, 기울기</td><td style="text-align: left">RNN 학습 알고리즘</td></tr>
+</tbody></table>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>일반 신경망이 "오늘 날씨만 보고 내일을 예측"한다면, **RNN(순환 신경망)**은 <strong>"오늘까지 1주일 날씨 기록을 다 기억하면서"</strong> 내일을 예측하는 더 똑똑한 신경망이에요!</li>
+<li>문장에서 "나는 학교에 <strong>간다</strong>"를 이해하려면 앞에 "나는"이 있다는 걸 기억해야 하는데, RNN은 **앞 단어를 메모(은닉 상태)**해두면서 뒤를 읽어요.</li>
+<li>하지만 아주 긴 소설을 읽으면 <strong>맨 처음 문장이 뭐였는지 까먹어버리는 문제</strong>가 있어서, 더 좋은 LSTM이 그 문제를 해결하러 나왔어요!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>
