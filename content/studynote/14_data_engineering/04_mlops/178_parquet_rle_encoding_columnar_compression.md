@@ -1,370 +1,193 @@
 +++
 weight = 178
-title = "178. 파케이 (Parquet) 스토리지 압축 포맷 RLE 스킵 인코딩 최적 성능"
+title = "178. 파케이 (Parquet) 컬럼형 압축 포맷과 RLE (Run-Length Encoding) 최적화"
 date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Parquet은 컬럼형(Columnar) 저장 포맷으로, 분석 쿼리가 필요한 컬럼만 읽고(Column Pruning), 통계 기반으로 불필요한 Row Group을 건너뛰어(Predicate Pushdown) I/O를 최소화한다.
-> 2. **가치**: RLE (Run-Length Encoding)·Dictionary Encoding·Snappy 압축 조합으로 원본 데이터 대비 5~10배 압축하면서도 쿼리 성능은 행 기반 포맷(CSV/Avro) 대비 10~100배 향상된다.
-> 3. **판단 포인트**: ORC는 Hive/MapReduce 생태계에, Parquet은 Spark/Presto/Flink 멀티 엔진에, Avro는 스키마 진화가 잦은 스트리밍 직렬화에 최적이다.
+
+> 1. **본질**: Parquet은 데이터를 행(Row)이 아니라 열(Column) 단위로 저장해, 분석 엔진이 필요한 컬럼만 읽고 같은 성질의 값을 더 강하게 압축하게 만드는 대표적인 컬럼형 저장 포맷이다.
+> 2. **가치**: Dictionary Encoding과 RLE/Bit-Packing 하이브리드, Row Group 통계, Predicate Pushdown이 함께 작동하면 "적게 읽고 늦게 해제하는" 구조가 만들어져 스캔 비용과 쿼리 지연이 동시에 줄어든다.
+> 3. **판단 포인트**: Parquet 성능은 포맷 이름만으로 결정되지 않으며, 파티셔닝·정렬 순서·Row Group 크기·코덱 선택이 쿼리 패턴과 맞아야 RLE 이점과 스킵 효과가 실제로 살아난다.
 
 ---
 
 ## Ⅰ. 개요 및 필요성
 
-### 1.1 행 기반 vs 컬럼 기반 저장
+Parquet은 분석 워크로드를 위해 설계된 컬럼형 저장 포맷이다. 운영 데이터베이스(Database, DB)나 이벤트 수집 단계에서는 보통 한 행 전체를 자주 읽고 쓰므로 행 기반 저장이 자연스럽다. 하지만 데이터 레이크와 웨어하우스에서는 수억 행 중 몇 개 컬럼만 집계하거나 필터링하는 일이 훨씬 많다. 이때 행 기반 포맷은 필요 없는 컬럼까지 함께 읽어야 하므로, 저장 비용보다 스캔 비용이 더 큰 병목이 된다.
 
-```
-행 기반 (Row-oriented, CSV/Avro):
-  레코드 1: [id=1, name="Alice", age=30, salary=5000]
-  레코드 2: [id=2, name="Bob",   age=25, salary=6000]
-  레코드 3: [id=3, name="Carol", age=35, salary=5500]
-  
-  쿼리: SELECT AVG(salary) FROM employees
-  → 모든 레코드의 모든 컬럼을 읽어야 함 (불필요한 I/O)
+아래 그림은 왜 분석 쿼리에서 컬럼형 저장이 유리한지 보여준다. 핵심은 "많은 행 전체"보다 "적은 컬럼 대량 스캔"이 분석의 기본 패턴이라는 점이다.
 
-컬럼 기반 (Column-oriented, Parquet/ORC):
-  id 컬럼:     [1, 2, 3, ...]
-  name 컬럼:   ["Alice", "Bob", "Carol", ...]
-  age 컬럼:    [30, 25, 35, ...]
-  salary 컬럼: [5000, 6000, 5500, ...]
-  
-  쿼리: SELECT AVG(salary) FROM employees
-  → salary 컬럼만 읽으면 됨 → I/O 75% 절감
-  → 같은 타입 값이 연속 → 압축률 10배 향상
+```text
+┌──────────────────────────────────────────────────────────────┐
+│ 행 저장 vs 열 저장의 차이                                    │
+├──────────────────────────────────────────────────────────────┤
+│ 행 저장: [id region status amount] [id region status amount] │
+│         질의 시 불필요한 컬럼도 함께 읽음                    │
+│                                                              │
+│ 열 저장: id[] | region[] | status[] | amount[]              │
+│         sum(amount) where status='PAID'                      │
+│         → status, amount 컬럼만 읽으면 됨                    │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-### 1.2 Parquet 사용 현황
+컬럼형 포맷이 압축에도 강한 이유는 같은 타입의 값이 연속으로 배치되기 때문이다. 예를 들어 `status`, `country`, `is_active`처럼 카디널리티가 낮은 컬럼은 같은 값이 길게 반복되기 쉬워 RLE과 Dictionary Encoding의 효과가 커진다. 반대로 행 기반 포맷에서는 문자열, 숫자, 날짜가 한 레코드 안에 섞여 있어 압축기는 일반 목적 알고리즘에 더 의존하게 된다.
 
-| 분야 | 활용 사례 |
-|:---|:---|
-| **데이터 레이크** | S3/ADLS의 기본 저장 포맷 |
-| **Delta/Iceberg/Hudi** | 모든 오픈 테이블 포맷의 기반 |
-| **Spark/Presto/Trino** | 기본 지원 포맷 |
-| **ML 피처 스토어** | 피처 데이터 저장 |
-| **데이터 웨어하우스** | Redshift Spectrum, BigQuery External Table |
+그래서 Parquet은 단순한 파일 형식이 아니라, "분석 쿼리의 I/O를 어떻게 줄일 것인가"에 대한 설계 답안으로 보는 편이 맞다. Delta Lake, Apache Iceberg, Apache Hudi 같은 레이크하우스 테이블 포맷도 실제 데이터 파일은 Parquet로 저장하는 경우가 많은데, 이는 개방성·압축 효율·다양한 엔진 호환성이 동시에 좋기 때문이다.
 
-📢 **섹션 요약 비유**: Parquet은 도서관의 과목별 책장 시스템이다. "수학 책 평균 두께"를 알고 싶으면 수학 책장(컬럼)만 보면 되지, 모든 책장(행)을 뒤질 필요 없다.
+- **📢 섹션 요약 비유**: Parquet은 모든 서류를 한 봉투에 섞어 넣는 대신, 종류별 서랍으로 나누어 보관하는 문서함과 같다. 급여만 찾고 싶으면 급여 서랍만 열면 되니 훨씬 빠르고 정리도 잘 된다.
 
 ---
 
 ## Ⅱ. 아키텍처 및 핵심 원리
 
-### 2.1 Parquet 파일 구조
+Parquet 파일의 성능은 단순 압축률보다 "어느 단계에서 얼마나 많이 건너뛸 수 있는가"에 의해 결정된다. 파일은 Row Group, Column Chunk, Page, Footer로 나뉘며, 쿼리 엔진은 가능한 한 뒤 단계로 갈수록 적은 바이트만 읽도록 설계된다.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                  Parquet 파일 내부 구조                       │
+| 계층 | 역할 | 성능에 미치는 영향 |
+| :--- | :--- | :--- |
+| Row Group | 여러 행을 묶은 큰 읽기 단위 | 통계 기반 스킵과 병렬 읽기 기준이 됨 |
+| Column Chunk | Row Group 안의 컬럼별 구간 | Column Pruning으로 필요한 컬럼만 읽음 |
+| Page | 실제 인코딩·압축이 적용되는 내부 블록 | 디코딩 비용과 메모리 지역성에 영향 |
+| Footer | 스키마, 통계, 인코딩 메타데이터 | Predicate Pushdown과 파일 해석의 출발점 |
+
+아래 구조를 보면 Parquet이 "파일 하나"가 아니라, 컬럼별 청크와 통계 정보를 함께 가진 작은 저장 엔진처럼 동작한다는 점이 보인다.
+
+```text
+┌───────────────────────── Parquet File ───────────────────────┐
+│ Row Group 0                                                  │
+│  ├─ status Column Chunk ─▶ Dictionary Page + Data Pages      │
+│  ├─ amount Column Chunk ─▶ Data Pages                        │
+│  └─ country Column Chunk ─▶ Dictionary Page + Data Pages     │
 │                                                              │
-│  ┌────────────────────────────────────────────────────┐     │
-│  │                    File Header                      │     │
-│  │  Magic Number: "PAR1" (4 bytes)                    │     │
-│  └────────────────────────────────────────────────────┘     │
+│ Row Group 1                                                  │
+│  ├─ status Column Chunk                                      │
+│  ├─ amount Column Chunk                                      │
+│  └─ country Column Chunk                                     │
 │                                                              │
-│  ┌────────────────────────────────────────────────────┐     │
-│  │             Row Group 0 (기본 128MB)                │     │
-│  │  ┌────────────────────────────────────────────┐   │     │
-│  │  │  Column Chunk: id                           │   │     │
-│  │  │  ├── Page 0 (8KB~): Dictionary Page        │   │     │
-│  │  │  ├── Page 1: Data Page (RLE 인코딩)        │   │     │
-│  │  │  └── Page 2: Data Page                     │   │     │
-│  │  ├────────────────────────────────────────────┤   │     │
-│  │  │  Column Chunk: name                         │   │     │
-│  │  │  Column Chunk: age                          │   │     │
-│  │  │  Column Chunk: salary                       │   │     │
-│  │  └────────────────────────────────────────────┘   │     │
-│  └────────────────────────────────────────────────────┘     │
-│                                                              │
-│  ┌────────────────────────────────────────────────────┐     │
-│  │             Row Group 1 (다음 128MB)                │     │
-│  └────────────────────────────────────────────────────┘     │
-│                                                              │
-│  ┌────────────────────────────────────────────────────┐     │
-│  │              File Footer (메타데이터)               │     │
-│  │  - 스키마 정보                                      │     │
-│  │  - Row Group 통계: min/max/null_count               │     │
-│  │  - Column 통계 (Predicate Pushdown 핵심)            │     │
-│  │  - 인코딩/압축 방식                                 │     │
-│  └────────────────────────────────────────────────────┘     │
-│  ┌────────────────────────────────────────────────────┐     │
-│  │  Magic Number: "PAR1" (4 bytes)                    │     │
-│  └────────────────────────────────────────────────────┘     │
-└─────────────────────────────────────────────────────────────┘
+│ Footer: schema · min/max · null_count · encodings            │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-### 2.2 인코딩 방식
+RLE (Run-Length Encoding)는 Parquet에서 특히 저카디널리티 컬럼과 중첩 데이터의 level 정보에 강하다. 문자열 자체를 바로 RLE 하는 것이 아니라, 먼저 Dictionary Encoding으로 값을 작은 정수 ID로 바꾸고, 그 뒤 반복되는 ID 구간을 RLE/Bit-Packing 하이브리드로 저장하는 경우가 많다. 반복이 길면 RLE가 이득이고, 값이 자주 바뀌면 Bit-Packing으로 촘촘히 묶어 손해를 줄인다.
 
-#### RLE (Run-Length Encoding)
+```text
+원본 status 값:
+PAID PAID PAID PAID FAIL FAIL REFUND REFUND REFUND
 
-```
-원본 데이터 (status 컬럼):
-  ACTIVE ACTIVE ACTIVE INACTIVE INACTIVE ACTIVE ACTIVE ACTIVE ACTIVE
+Dictionary ID:
+0    0    0    0    1    1    2      2      2
 
-RLE 인코딩:
-  (ACTIVE × 3), (INACTIVE × 2), (ACTIVE × 4)
-  → 9개 값 → 3개 레코드로 압축
-
-이진 표현:
-  원본: 9 × 1 byte = 9 bytes
-  RLE:  3 × (1 byte count + 1 byte value) = 6 bytes → 33% 절감
-  
-  정수 컬럼 (반복 많을수록 효율 극대화):
-  원본: [1,1,1,1,2,2,2,3,3] = 9 × 4 bytes = 36 bytes
-  RLE:  [(4,1),(3,2),(2,3)] = 3 × (4+4) = 24 bytes → 33% 절감
+RLE 표현:
+(0 × 4) (1 × 2) (2 × 3)
 ```
 
-#### Dictionary Encoding (딕셔너리 인코딩)
+이 메커니즘이 중요한 이유는 디코딩 비용까지 줄이기 때문이다. 긴 반복 구간은 같은 값을 여러 번 복원하지 않고 횟수만 보고 처리할 수 있어 CPU 캐시 친화적이다. 또한 중첩 스키마에서 정의 수준(Definition Level), 반복 수준(Replication/Repetition Level)도 같은 하이브리드 방식으로 저장되기 때문에, `null`이 많거나 배열 구조가 규칙적인 데이터에서 효과가 특히 커진다.
 
-```
-원본 country 컬럼:
-  ["Korea", "USA", "Japan", "Korea", "USA", "Korea", "Japan", "Korea"]
-  
-  가정: 각 문자열 5 bytes → 8 × 5 = 40 bytes
+Parquet의 또 다른 핵심은 스킵 인코딩 관점의 Footer 통계다. 쿼리 엔진은 Footer의 `min/max/null_count`를 보고 Row Group 전체를 건너뛸 수 있다. 예를 들어 `event_date = '2026-04-21'` 조건인데 특정 Row Group의 날짜 범위가 `2026-04-01~2026-04-10`이면, 해당 구간은 디코딩조차 하지 않는다. 즉 Parquet 성능은 "강한 압축"보다도 "불필요한 해제를 최대한 늦추는 구조"에서 나온다.
 
-Dictionary Encoding:
-  딕셔너리: {0:"Korea", 1:"USA", 2:"Japan"}  (15 bytes)
-  정수 코드: [0, 1, 2, 0, 1, 0, 2, 0]       (8 bytes, 1 byte/값)
-  합계: 23 bytes → 40 bytes 대비 42% 절감
-
-  + RLE 결합:
-  정수 코드: [(0×1), (1×1), (2×1), (0×1), (1×1), (0×1), (2×1), (0×1)]
-  
-  카디널리티 낮을수록 효율 증가
-  (예: status, country, category 컬럼)
-```
-
-#### Predicate Pushdown (술어 푸시다운)
-
-```
-쿼리: SELECT * FROM sales WHERE date = '2024-01-15'
-
-Parquet 통계 기반 스킵:
-  ┌────────────────────────────────────────────────────┐
-  │  Row Group 0: date min='2024-01-01', max='2024-01-10' │
-  │              → 조건 불만족, 전체 스킵! (I/O 절감)   │
-  │                                                    │
-  │  Row Group 1: date min='2024-01-11', max='2024-01-20' │
-  │              → 조건 만족 가능, 읽어야 함            │
-  │                                                    │
-  │  Row Group 2: date min='2024-01-21', max='2024-01-31' │
-  │              → 조건 불만족, 전체 스킵!              │
-  └────────────────────────────────────────────────────┘
-  
-  결과: 3개 Row Group 중 1개만 읽음 → I/O 66% 절감
-```
-
-### 2.3 압축 코덱 비교
-
-| 코덱 | 압축률 | 압축 속도 | 해제 속도 | 특징 |
-|:---|:---|:---|:---|:---|
-| **Snappy** | 중간 (2~3×) | 매우 빠름 | 매우 빠름 | Google 개발, 기본값 |
-| **LZ4** | 중간 (2~3×) | 최고 속도 | 최고 속도 | 실시간 처리에 최적 |
-| **GZIP (Deflate)** | 높음 (4~6×) | 느림 | 중간 | 보관·전송 최적 |
-| **ZSTD** | 높음 (4~6×) | 빠름 | 빠름 | Zstandard, 최신 최고 균형 |
-| **Brotli** | 매우 높음 | 매우 느림 | 빠름 | 웹 전송 특화 |
-| **None** | 없음 | — | — | 이미 압축된 데이터 |
-
-```
-실무 선택 기이드:
-  실시간 처리 (Flink/Spark Streaming) → LZ4 또는 Snappy
-  대화형 쿼리 (Presto/Athena)         → Snappy (기본)
-  장기 보관 / 비용 절감               → GZIP 또는 ZSTD
-  최신 Spark 3.x+                     → ZSTD 권장 (성능+압축 균형)
-```
-
-📢 **섹션 요약 비유**: Parquet 인코딩은 똑똑한 압축 포장이다. 반복 값은 RLE로 "10개짜리 세트"로 묶고, 카테고리는 딕셔너리로 코드화하고, 불필요한 상자(Row Group)는 태그(통계)만 보고 건너뛴다.
+- **📢 섹션 요약 비유**: Parquet은 택배 상자를 무조건 꽉 누르는 기계가 아니라, 비슷한 물건은 묶음 포장하고, 상자 겉면에는 내용물 범위를 써 두어 필요 없는 상자는 아예 열지 않게 만드는 물류 시스템과 같다.
 
 ---
 
 ## Ⅲ. 비교 및 연결
 
-### 3.1 Parquet vs ORC vs Avro
+Parquet을 이해할 때는 ORC와 Avro를 함께 비교하는 편이 좋다. Parquet과 ORC는 둘 다 컬럼형 포맷이지만, Parquet은 Spark·Trino·Flink·Snowflake 외부 테이블처럼 멀티 엔진 호환성에서 강점을 보이는 반면, ORC는 Hive 계열 생태계와 세밀한 인덱스·통계 최적화에서 장점이 있었다. Avro는 행 기반 포맷이라 분석 스캔에는 불리하지만, 스키마 진화와 레코드 직렬화가 쉬워 메시징과 스트리밍 전송에 잘 맞는다.
 
 | 항목 | Parquet | ORC | Avro |
-|:---|:---|:---|:---|
-| **저장 방식** | 컬럼형 | 컬럼형 | 행 기반 |
-| **압축 최적화** | ✓ | ✓ (더 나은 통계) | 제한적 |
-| **읽기 성능 (분석)** | 매우 빠름 | 매우 빠름 | 느림 |
-| **쓰기 성능** | 중간 | 중간 | 빠름 |
-| **스키마 진화** | 제한적 | 제한적 | 강력 |
-| **스트리밍 직렬화** | 부적합 | 부적합 | 최적 |
-| **Hive 최적화** | 보통 | 최강 (ACID 내장) | — |
-| **Spark 최적화** | 최강 | 강력 | 보통 |
-| **주요 사용처** | 분석, Delta/Iceberg | Hive, HBase | Kafka, Avro Registry |
+| :--- | :--- | :--- | :--- |
+| 저장 방식 | 컬럼형 | 컬럼형 | 행 기반 |
+| 대표 강점 | 멀티 엔진 호환성, 범용성 | Hive 친화성, 풍부한 인덱싱 | 직렬화·스키마 진화, 스트리밍 |
+| 잘 맞는 작업 | 대규모 분석, 레이크하우스 | Hive 중심 분석 환경 | 이벤트 전송, 레코드 교환 |
+| 약한 지점 | 잦은 행 단위 수정 | 생태계 범용성 | 대량 컬럼 스캔 성능 |
 
-### 3.2 Bloom Filter 활용
+Parquet 내부에서도 스킵 전략은 여러 층으로 나뉜다. 가장 바깥쪽은 디렉터리 수준의 Partition Pruning이고, 다음은 Footer 기반 Row Group 스킵, 더 안쪽은 선택적 Page Index나 Bloom Filter, 마지막이 실제 컬럼 데이터 디코딩이다. 이 구조를 이해하면 "파티션만 잘 나누면 끝"이라는 오해를 줄일 수 있다. 실제로는 파티션, 정렬, 통계, 인코딩이 겹쳐야 읽기 비용이 크게 내려간다.
 
-```
-Parquet Bloom Filter (v2.0+):
-  - 특정 컬럼에 Bloom Filter 저장
-  - "이 Row Group에 값 X가 존재하는가?" 빠른 판별
-  - False Positive 가능, False Negative 불가
-  
-  사용 예:
-  SELECT * FROM events WHERE user_id = 'uuid-12345'
-  
-  Bloom Filter로 대부분 Row Group 스킵 가능
-  (Dictionary Encoding과 달리 고카디널리티 컬럼에 효과적)
-```
+Parquet은 레이크하우스와도 직접 연결된다. Delta Lake, Apache Iceberg, Apache Hudi는 메타데이터 계층과 트랜잭션 기능은 다르지만, 물리 저장 단위로는 Parquet을 즐겨 사용한다. 즉 Parquet은 단독 포맷인 동시에, 현대 데이터 플랫폼의 물리적 기반층 역할도 한다.
 
-### 3.3 Column Statistics vs Bloom Filter
-
-```
-┌────────────────────────────────────────────────────────┐
-│       데이터 스킵 기법 비교                             │
-│                                                        │
-│  Column Statistics (항상 기록):                        │
-│  - min/max/null_count/distinct_count                  │
-│  - 범위 필터에 효과적 (date BETWEEN, age > 30)         │
-│  - 등치 필터에 범위가 넓으면 효과 제한                  │
-│                                                        │
-│  Dictionary Encoding:                                  │
-│  - 저카디널리티: 딕셔너리로 필터링                       │
-│  - 10,000개 미만 고유값에 효과적                        │
-│                                                        │
-│  Bloom Filter:                                         │
-│  - 고카디널리티 + 등치 필터                              │
-│  - user_id, session_id, UUID 등에 효과적               │
-│  - 저장 오버헤드: 설정 가능 (기본 1MB/column/group)     │
-└────────────────────────────────────────────────────────┘
-```
-
-📢 **섹션 요약 비유**: Parquet vs ORC vs Avro는 냉장고, 서랍, 배낭의 차이다. 냉장고(Parquet)와 서랍(ORC)은 분석용 정리 보관에 최적이고, 배낭(Avro)은 이동(스트리밍 전송) 중에 빠르게 넣고 꺼내기 좋다.
+- **📢 섹션 요약 비유**: Parquet, ORC, Avro는 모두 짐을 담는 방식이지만, Parquet은 창고 보관과 검색에 강한 선반, ORC는 특정 물류센터에 최적화된 전용 랙, Avro는 이동 중 전달이 쉬운 운송 상자에 가깝다.
 
 ---
 
 ## Ⅳ. 실무 적용 및 기술사 판단
 
-### 4.1 Spark Parquet 최적화 설정
+실무에서 Parquet 최적화의 핵심은 "RLE이 잘 먹는 데이터 모양을 만들고, 스킵이 잘 되는 배치 순서를 만드는 것"이다. 같은 Parquet라도 정렬 없이 무작위로 적재된 데이터와, 필터 컬럼 기준으로 정렬·클러스터링된 데이터의 성능은 크게 다르다. 예를 들어 `country`, `status`, `event_date`로 자주 조회한다면, 너무 세밀한 파티션보다는 날짜 단위 파티셔닝 후 국가·상태 기준 정렬이 Row Group 통계와 RLE 둘 다에 유리할 수 있다.
 
-```python
-from pyspark.sql import SparkSession
+| 상황 | 권장 판단 | 이유 |
+| :--- | :--- | :--- |
+| 날짜 범위 분석이 많음 | 날짜 파티셔닝 + Row Group 128~512MB | Partition Pruning과 통계 스킵이 동시에 작동 |
+| 저카디널리티 필터 컬럼이 중요 | 정렬 또는 클러스터링으로 같은 값 묶기 | Dictionary ID 반복이 길어져 RLE 효과 증가 |
+| 고카디널리티 ID 등치 검색 | Bloom Filter 또는 별도 인덱스 계층 고려 | RLE은 거의 이득이 없고 통계 범위도 넓어지기 쉬움 |
+| 스트리밍 적재로 작은 파일이 많음 | 주기적 Compaction 수행 | 작은 파일은 Footer 오버헤드와 메타데이터 비용이 커짐 |
+| 저장비 절감이 우선 | Zstandard (ZSTD) 중심 검토 | 해제 속도와 압축률 균형이 좋음 |
+| 대화형 분석 지연이 우선 | Snappy 또는 LZ4 우선 | CPU 해제 비용이 낮아 체감 응답이 빠름 |
 
-spark = SparkSession.builder \
-    .config("spark.sql.parquet.compression.codec", "zstd") \
-    .config("spark.sql.parquet.mergeSchema", "false")       \
-    .config("spark.sql.parquet.filterPushdown", "true")     \
-    .config("spark.sql.parquet.enableVectorizedReader", "true") \
-    .config("spark.hadoop.parquet.block.size", str(128*1024*1024)) \  # 128MB
-    .getOrCreate()
+체크리스트는 다음과 같다.
 
-# 파티셔닝 + 컬럼 프루닝 최적화
-df = spark.read.parquet("s3://datalake/sales/")
+1. 자주 필터링되는 컬럼이 파티션, 정렬, 통계에 반영되어 있는가?
+2. `SELECT *` 남발 때문에 Column Pruning 이점을 스스로 죽이고 있지 않은가?
+3. Row Group 크기가 너무 작아 스킵보다 메타데이터 비용이 커지지 않는가?
+4. 작은 파일 병합, 통계 수집, 코덱 선택이 함께 관리되는가?
+5. RLE 이점을 기대하는 컬럼이 실제로는 난수형 고카디널리티 값이 아닌가?
 
-# 1. 컬럼 프루닝: 필요한 컬럼만 선택
-df.select("date", "amount", "region") \
-  .filter("date >= '2024-01-01' AND date < '2024-02-01'") \
-  .filter("region = 'Seoul'") \
-  .groupBy("date").agg({"amount": "sum"}) \
-  .write.parquet("s3://datalake/result/")
+흔한 안티패턴도 분명하다. `user_id`처럼 고카디널리티 컬럼으로 과도한 파티셔닝을 하면 디렉터리는 늘고 건너뛸 범위는 오히려 줄어든다. 또 Parquet을 쓴다고 자동으로 빨라지는 것도 아니다. 랜덤 정렬, 소형 파일 폭증, 쓸모없는 `SELECT *`, 의미 없는 압축 코덱 설정은 컬럼형 포맷의 장점을 쉽게 무력화한다.
 
-# 2. 파티션 프루닝을 위한 파티셔닝 저장
-df.write \
-  .partitionBy("year", "month", "region") \
-  .mode("overwrite") \
-  .parquet("s3://datalake/sales_partitioned/")
-```
+중요한 판단은 Parquet을 "업데이트 친화적 저장소"로 오해하지 않는 것이다. Parquet은 읽기 최적화 포맷이므로, 잦은 행 단위 수정이나 저지연 키 조회가 핵심인 온라인 트랜잭션 처리(Online Transaction Processing, OLTP)에는 맞지 않는다. 이런 경우는 레이크하우스 메타데이터 계층이나 별도 서빙 저장소가 함께 필요하다.
 
-### 4.2 Parquet 성능 최적화 체크리스트
-
-| 항목 | 권장 설정 | 이유 |
-|:---|:---|:---|
-| **Row Group 크기** | 128MB~1GB | 클수록 압축률 높음, 작을수록 스킵 세밀 |
-| **Page 크기** | 1MB | 메모리-I/O 균형 |
-| **압축 코덱** | ZSTD (최신) / Snappy (빠른 처리) | 용도에 따라 |
-| **파티셔닝 컬럼** | 날짜, 지역 등 필터 조건 | 파티션 프루닝 |
-| **Z-ORDER (Delta)** | 자주 필터링하는 컬럼 | Data Skipping 강화 |
-| **통계 수집** | nullCount, minMax | Predicate Pushdown |
-| **Bloom Filter** | UUID, ID 컬럼 | 고카디널리티 스킵 |
-
-### 4.3 Parquet 파일 크기 최적화
-
-```
-소형 파일 문제:
-  S3에 수천 개의 10KB Parquet 파일 → S3 LIST API 병목
-  → Spark job 시작이 수 분 걸림
-
-해결 방법:
-  1. repartition/coalesce로 출력 파일 수 조정
-     df.repartition(200).write.parquet(...)
-  
-  2. Delta Lake OPTIMIZE (소형 파일 병합)
-     OPTIMIZE table_name
-  
-  3. Spark 3.x AQE (Adaptive Query Execution)
-     spark.conf.set("spark.sql.adaptive.enabled", "true")
-     → 자동 파티션 병합
-  
-  권장 파일 크기: 128MB~1GB/파일
-```
-
-📢 **섹션 요약 비유**: Parquet 최적화는 효율적인 서류 정리함이다. 서랍별 라벨(파티셔닝)로 서랍 통째로 건너뛰고, 각 서류 요약본(통계/Bloom Filter)으로 세부 검색 없이 결과를 찾는다.
+- **📢 섹션 요약 비유**: Parquet 최적화는 옷장을 많이 사는 일이 아니라, 계절별로 나누고 색상 순으로 정리하며 자주 입는 옷은 앞에 두는 정리법과 같다. 정리 규칙이 맞아야 서랍 구조의 장점이 살아난다.
 
 ---
 
 ## Ⅴ. 기대효과 및 결론
 
-### 5.1 Parquet 도입 효과
+Parquet을 잘 설계하면 저장 크기 절감, 스캔 비용 축소, 대규모 분석 성능 향상이 동시에 가능하다. 특히 컬럼 선택 폭이 작은 집계 쿼리, 날짜 범위 필터, 저카디널리티 상태 코드 분석에서 효과가 크다. 데이터 레이크 관점에서는 같은 저장소 위에서 여러 엔진이 공통 포맷을 읽을 수 있어 상호 운용성이 좋아지고, 레이크하우스 계층과 결합하면 트랜잭션·버전 관리까지 확장할 수 있다.
 
-| 항목 | CSV | Parquet (ZSTD) | 개선률 |
-|:---|:---|:---|:---|
-| **저장 크기** | 100GB | 10~20GB | 5~10× 절감 |
-| **쿼리 속도 (SELECT cols)** | 기준 | 10~100× 빠름 | 컬럼 수에 비례 |
-| **I/O 비용 (S3)** | 100% | 10~20% | 80~90% 절감 |
-| **스캔 비용 (Athena)** | $5/TB | $0.5~1/TB | 5~10× 절감 |
+하지만 Parquet은 만능 압축 포맷이 아니다. 압축률과 읽기 성능은 데이터 분포, 정렬 상태, 파일 크기, 코덱 선택에 크게 좌우된다. 또한 소형 파일 문제, 잦은 업데이트, 운영계 조회처럼 읽기 패턴이 다르면 별도 전략이 필요하다. 즉 Parquet의 가치는 "파일을 압축한다"는 사실보다, 쿼리 패턴에 맞게 저장 구조를 조정할 수 있다는 데 있다.
 
-### 5.2 기술사 답안 핵심 논점
+결론적으로 기억해야 할 핵심은 이렇다. Parquet 성능은 단일 기법에서 오지 않는다. Column Pruning, Dictionary Encoding, RLE/Bit-Packing, 통계 기반 스킵, 적절한 파일 설계가 겹쳐질 때 비로소 강력해진다. 그래서 Parquet은 포맷 이름보다 저장 레이아웃 설계 역량이 더 중요한 기술이다.
 
-1. **컬럼형 저장의 핵심**: 분석 쿼리는 대부분 몇 개 컬럼만 접근 → Column Pruning으로 I/O 90% 절감
-2. **RLE + Dictionary 시너지**: Dictionary로 저카디널리티 컬럼 코드화 후 RLE 적용 → 압축률 극대화
-3. **Predicate Pushdown 조건**: Row Group 통계(min/max)가 필터 조건과 겹치지 않으면 전체 Row Group 스킵
-4. **포맷 선택**: Parquet(분석+멀티엔진), ORC(Hive+ACID), Avro(스트리밍 직렬화)
-
-📢 **섹션 요약 비유**: Parquet은 도서관이 "책 목록 카드(Footer 통계)"만 보고 "이 선반 전체는 1950년대 책이니까 2024년 찾으면 건너뛰세요!"라고 알려주는 지능형 색인 시스템이다.
+- **📢 섹션 요약 비유**: Parquet은 진공 압축팩 하나가 아니라, 분류·라벨링·묶음 포장·보관 동선을 모두 갖춘 정리 시스템과 같다. 전체 흐름이 맞아야 진짜 공간 절약과 빠른 찾기가 동시에 된다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 관계 | 개념 | 설명 |
-|:---|:---|:---|
-| 경쟁 포맷 | ORC | Hive 특화 컬럼형, 내장 ACID |
-| 직렬화 포맷 | Avro | 스트리밍 스키마 직렬화 |
-| 인코딩 기법 | RLE | 반복 값 압축 |
-| 인코딩 기법 | Dictionary Encoding | 저카디널리티 코드화 |
-| 쿼리 최적화 | Predicate Pushdown | 통계 기반 Row Group 스킵 |
-| 쿼리 최적화 | Column Pruning | 필요 컬럼만 읽기 |
-| 고급 스킵 | Bloom Filter | 고카디널리티 등치 필터 가속 |
-| 통합 | Delta Lake | Parquet 기반 ACID 레이크하우스 |
-
----
-
-### 👶 어린이를 위한 3줄 비유 설명
-
-1. Parquet은 반찬을 종류별로 따로 담아두는 도시락 통이야 — "김치만 주세요"라고 하면 김치 칸만 열면 되니까 훨씬 빠르게 꺼낼 수 있어!
+| 개념 | 연결 포인트 |
+| :--- | :--- |
+| Row Group | 통계 기반 스킵과 병렬 읽기의 기본 단위 |
+| Column Pruning | 필요한 컬럼만 읽어 I/O를 줄이는 컬럼형 포맷의 핵심 이점 |
+| Dictionary Encoding | 문자열·범주형 값을 작은 정수 ID로 바꾸는 전처리 인코딩 |
+| RLE (Run-Length Encoding) / Bit-Packing | 반복 구간은 길이로, 다양한 짧은 값은 촘촘한 비트로 저장하는 하이브리드 방식 |
+| Predicate Pushdown | Footer 통계를 이용해 불필요한 Row Group을 읽기 전에 제외하는 최적화 |
+| Bloom Filter | 고카디널리티 등치 조건에서 추가 스킵을 돕는 선택적 보조 구조 |
+| Delta Lake / Apache Iceberg | Parquet를 물리 저장 포맷으로 활용하는 상위 레이크하우스 계층 |
 
 ### 📈 관련 키워드 및 발전 흐름도
 
 ```text
-CSV/JSON (행 기반, 비압축)
+행 기반 파일 포맷
     │
     ▼
-열 지향 포맷: Parquet · ORC
-    ├─► 컬럼별 독립 압축 (RLE · Dictionary · Snappy)
-    ├─► 프레디케이트 푸시다운: 불필요 컬럼 스킵
-    └─► Row Group + Page 구조: 병렬 읽기
+컬럼형 저장 포맷 (Parquet · ORC)
     │
     ▼
-Lakehouse 기반 테이블 포맷
-    ├─► Delta Lake (.parquet + 트랜잭션 로그)
-    ├─► Apache Iceberg (.parquet + 메타데이터 트리)
-    └─► Apache Hudi (.parquet + Upsert)
+Dictionary Encoding · RLE/Bit-Packing
     │
     ▼
-Arrow In-Memory Format → 제로 복사 교환
+Row Group 통계 · Predicate Pushdown
+    │
+    ▼
+Bloom Filter · Page Index · Vectorized Read
+    │
+    ▼
+Lakehouse 물리 저장 계층
 ```
-2. RLE 압축은 "같은 말 반복 줄이기"야 — "A A A A A B B B"를 "A 5번 B 3번"으로 짧게 표현하는 거지.
-3. Predicate Pushdown은 책을 하나하나 펼치는 대신, 책 표지 요약(min/max 통계)만 보고 "이 책장엔 원하는 내용 없다!"고 통째로 건너뛰는 똑똑한 도서관 검색이야.
+
+이 흐름은 압축의 초점이 "파일을 작게 만들기"에서 "필요 없는 데이터를 읽지 않기"로 발전하는 과정을 보여준다.
+
+### 👶 어린이를 위한 3줄 비유 설명
+
+1. Parquet은 장난감을 종류별 상자에 나눠 담아 두는 정리법이라서, 자동차만 찾고 싶으면 자동차 상자만 열면 돼요.
+2. RLE 압축은 같은 블록이 여러 개 이어져 있으면 "빨간 블록 5개"처럼 묶어서 적는 방법이에요.
+3. 그래서 상자도 덜 열고, 안에 무엇이 있는지도 더 빨리 알 수 있어요.

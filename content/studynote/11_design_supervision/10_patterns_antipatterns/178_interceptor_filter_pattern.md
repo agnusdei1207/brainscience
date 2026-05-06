@@ -1,242 +1,188 @@
 +++
 weight = 178
-title = "178. 인터셉터/필터 패턴 (Interceptor / Filter Pattern)"
-date = "2026-04-21"
+title = "178. 인터셉터 / 필터 패턴 (Interceptor / Filter Pattern)"
+date = "2026-05-06"
 [extra]
 categories = "studynote-design-supervision"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
 
-> 1. **본질**: 인터셉터 (Interceptor)와 필터 (Filter)는 AOP (Aspect-Oriented Programming)의 횡단 관심사(인증, 로깅, 인코딩)를 요청/응답 처리 파이프라인에서 분리하는 체인 패턴이다.
-> 2. **가치**: 핵심 비즈니스 로직에 영향을 주지 않고 공통 처리를 추가/제거할 수 있어 개방-폐쇄 원칙(OCP, Open-Closed Principle)을 실현한다.
-> 3. **판단 포인트**: Filter는 서블릿 컨테이너 레벨(모든 요청 대상), Interceptor는 Spring 컨텍스트 레벨(Spring Bean 접근 가능)이라는 위치 차이가 선택 기준이다.
+> 1. **본질**: 인터셉터 / 필터 패턴은 요청·응답 흐름 바깥에 횡단 관심사(Cross-Cutting Concern)를 체인 형태로 배치해, 핵심 비즈니스 로직을 건드리지 않고 공통 정책을 삽입하는 설계망 구조다.
+> 2. **가치**: 인증, 로깅, 인코딩, 보안 헤더, 감사 추적, 성능 계측을 중앙화해 코드 중복과 정책 누락을 줄이고, 요청을 중간에서 차단하거나 후처리할 수 있게 한다.
+> 3. **판단 포인트**: Filter는 컨테이너/미들웨어 레벨의 전역 처리에, Interceptor는 프레임워크·핸들러 문맥을 아는 세밀한 처리에 적합하며, 서비스 메서드 수준 횡단 관심사는 AOP (Aspect-Oriented Programming)와 구분해 써야 한다.
 
 ---
 
 ## Ⅰ. 개요 및 필요성
 
-### 횡단 관심사 문제
+웹 시스템이 커질수록 비즈니스 로직보다 더 자주 반복되는 코드가 생긴다. 로그인 여부 확인, 요청 추적 ID 부여, 공통 예외 포맷, 응답 압축, 보안 헤더 추가 같은 로직이다. 이런 코드를 각 Controller나 Handler마다 직접 넣기 시작하면 공통 정책이 흩어지고, 한 군데 누락된 곳이 보안 사고나 운영 장애의 시작점이 된다.
 
-소프트웨어에는 **핵심 관심사 (Core Concern)** 와 **횡단 관심사 (Cross-Cutting Concern)** 가 있다.
+인터셉터와 필터 패턴은 이 문제를 해결하기 위해 등장했다. 핵심 아이디어는 단순하다. **업무 처리 전에 지나가는 공통 통로를 만들고, 그 통로에 정책을 배치한다.** 그러면 프론트 컨트롤러 (Front Controller)가 요청을 한곳으로 모으고, 필터와 인터셉터가 그 주변에서 정책을 분담하는 구조가 된다.
 
-- **핵심 관심사**: 주문 처리, 결제, 상품 조회 등 비즈니스 로직
-- **횡단 관심사**: 인증(Authentication), 인가(Authorization), 로깅(Logging), 트랜잭션(Transaction), 성능 측정
+즉 이 패턴의 필요성은 "후킹 포인트가 있으면 편하다"가 아니라, **횡단 관심사를 업무 코드에서 분리해 책임 경계를 선명하게 만드는 것**에 있다. 설계감리 관점에서도 공통 정책의 위치와 순서를 눈으로 확인할 수 있어 구조 품질을 평가하기 쉽다.
 
-횡단 관심사를 각 Controller/Service에 직접 코딩하면 다음 문제가 발생한다.
-
-```
-[문제 있는 구조] - 횡단 관심사 코드 중복
-┌────────────────────────────────────────────┐
-│  UserController                            │
-│    if (!isAuthenticated()) return 401; ◄── 중복!
-│    log.info("Request received");       ◄── 중복!
-│    // 실제 비즈니스 로직 5줄              │
-└────────────────────────────────────────────┘
-┌────────────────────────────────────────────┐
-│  OrderController                           │
-│    if (!isAuthenticated()) return 401; ◄── 중복!
-│    log.info("Request received");       ◄── 중복!
-│    // 실제 비즈니스 로직 3줄              │
-└────────────────────────────────────────────┘
+```text
+┌──────────────────────────────────────────────────────────────────────┐
+│ Without interception pattern                                         │
+├──────────────────────────────────────────────────────────────────────┤
+│ Controller A -> auth + log + business                               │
+│ Controller B -> auth + log + business                               │
+│ Controller C -> auth missing + business                             │
+│                                                                      │
+│ result: duplication, drift, missing policy                          │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
-Filter와 Interceptor는 이 횡단 관심사를 **파이프라인의 특정 시점에 삽입**함으로써 핵심 로직을 깨끗하게 유지한다.
-
-📢 **섹션 요약 비유**: 공항 보안 검색대(Filter/Interceptor)는 어느 항공사 비행기를 타든 동일하게 통과해야 한다. 각 항공사(Controller)가 자체 보안 검색을 운영할 필요가 없다.
+- **📢 섹션 요약 비유**: 인터셉터와 필터는 교실마다 따로 출석 확인을 하는 대신, 학교 정문과 복도에 공통 검사 지점을 두어 규칙을 한 번에 지키게 만드는 방식과 같다.
 
 ---
 
 ## Ⅱ. 아키텍처 및 핵심 원리
 
-### Filter와 Interceptor의 위치 비교
+이 패턴은 보통 요청 파이프라인의 서로 다른 층에 두 겹으로 배치된다. Filter는 웹 컨테이너나 미들웨어 레벨에서 가장 먼저 요청을 받으며, Interceptor는 프레임워크가 핸들러를 고른 뒤 더 풍부한 문맥을 가진 상태에서 동작한다. 둘 다 체인(Chain of Responsibility) 구조를 이루며, 조건에 따라 다음 단계로 넘기거나 즉시 차단할 수 있다.
 
-```
-HTTP 요청
-    │
-    ▼
-┌──────────────────────────────────────────────────────────────┐
-│               서블릿 컨테이너 (Tomcat, Jetty)                  │
-│                                                              │
-│  ┌──────────┐   ┌──────────┐   ┌──────────┐                 │
-│  │ Filter 1 │──►│ Filter 2 │──►│ Filter 3 │                 │
-│  │(인코딩)   │   │(CORS)    │   │(XSS 방어) │                 │
-│  └──────────┘   └──────────┘   └──────────┘                 │
-│                                      │                       │
-│                               ┌──────▼──────────────────┐   │
-│                               │  DispatcherServlet       │   │
-│                               │   (Spring MVC)           │   │
-│                               │                          │   │
-│                               │  ┌────────────────────┐  │   │
-│                               │  │  Interceptor 1     │  │   │
-│                               │  │  (인증/인가)         │  │   │
-│                               │  ├────────────────────┤  │   │
-│                               │  │  Interceptor 2     │  │   │
-│                               │  │  (성능 측정)         │  │   │
-│                               │  └────────┬───────────┘  │   │
-│                               │           │               │   │
-│                               │  ┌────────▼───────────┐  │   │
-│                               │  │    Controller       │  │   │
-│                               │  └────────────────────┘  │   │
-│                               └──────────────────────────┘   │
-└──────────────────────────────────────────────────────────────┘
-    │
-    ▼
-HTTP 응답
-```
+| 구성 요소 | 위치 | 주된 역할 | 대표 예시 |
+| :--- | :--- | :--- | :--- |
+| Filter / Middleware | 웹 컨테이너 앞단 | 인코딩, CORS (Cross-Origin Resource Sharing), 압축, 보안 헤더, 요청 래핑 | Servlet Filter, Node Middleware |
+| Front Controller | 프레임워크 진입점 | 라우팅, 공통 제어 시작점 | DispatcherServlet |
+| Interceptor | 핸들러 전후 | 인증/인가, 감사, 성능 계측, 메뉴/권한 문맥 | Spring HandlerInterceptor |
+| Handler / Controller | 업무 처리 | 실제 유스케이스 수행 | Controller, Endpoint |
+| Exception Resolver | 후단 응답 표준화 | 예외를 공통 응답으로 변환 | Error Handler |
 
-### Interceptor의 3단계 생명주기
+아래 그림은 요청이 들어와 응답이 나가기까지 이 설계망이 어떻게 작동하는지 보여 준다.
 
-Spring HandlerInterceptor는 3개의 메서드로 요청 처리 전/후를 감싼다.
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    요청 처리 흐름                              │
-│                                                             │
-│  preHandle()       Handler 실행      postHandle()           │
-│  ─────────────►  ──────────────►  ─────────────►           │
-│  true 반환 시        비즈니스         ModelAndView            │
-│  처리 계속           로직 실행         수정 가능               │
-│                                                             │
-│                                  afterCompletion()          │
-│  ◄─────────────────────────────────────────────────────     │
-│  응답 완료 후 항상 실행 (예외 발생 시에도)                       │
-└─────────────────────────────────────────────────────────────┘
+```text
+┌──────────────────────────────────────────────────────────────────────┐
+│ Request / response policy mesh                                       │
+├──────────────────────────────────────────────────────────────────────┤
+│ Client                                                               │
+│   │ request                                                          │
+│   ▼                                                                  │
+│ [Filter 1] -> [Filter 2] -> [Filter N]                               │
+│   │ reject? yes -> 4xx/5xx response                                  │
+│   ▼ no                                                               │
+│ Front Controller                                                     │
+│   │                                                                  │
+│   ▼                                                                  │
+│ [Interceptor preHandle]                                              │
+│   │ reject? yes -> 401/403 / redirect                                │
+│   ▼ no                                                               │
+│ Handler / Service                                                    │
+│   │                                                                  │
+│   ▼                                                                  │
+│ [Interceptor postHandle / afterCompletion]                           │
+│   ▼                                                                  │
+│ [Response Filters: header / compression / trace finish]              │
+│   ▼                                                                  │
+│ Client                                                               │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
-| 메서드 | 실행 시점 | 반환값 | 주요 용도 |
-|:---|:---|:---|:---|
-| `preHandle()` | Controller 실행 전 | boolean (true=계속) | 인증, 인가, 파라미터 검증 |
-| `postHandle()` | Controller 실행 후, View 렌더링 전 | void | 모델 데이터 추가, 응답 수정 |
-| `afterCompletion()` | View 렌더링 완료 후 | void | 리소스 정리, 성능 로그 기록 |
+이 구조의 핵심은 **순서와 중단 가능성**이다. 예를 들어 문자 인코딩은 가장 앞단에서 처리해야 하고, 인증 실패는 Controller에 도달하기 전에 막는 편이 낫다. 반면 어떤 핸들러가 선택되었는지 알아야 하는 권한 검사나 메뉴 감사는 Interceptor가 더 적합하다. 응답이 나갈 때는 필터가 헤더나 압축을 마무리하고, 인터셉터는 실행 시간과 예외 정보를 정리한다.
 
-📢 **섹션 요약 비유**: 인터셉터는 도로 톨게이트(preHandle), 목적지 도착 후 주차 확인(postHandle), 귀가 후 정산(afterCompletion)의 3단계로 여행 전체를 감싸는 서비스다.
+또한 이 패턴은 Decorator처럼 요청과 응답을 감싸기도 한다. 일부 Filter는 Request/Response 객체를 래핑해 본문 캐싱, XSS (Cross-Site Scripting) 방어, 압축 해제를 수행한다. 그래서 단순 "전/후 콜백"이 아니라 **제어 흐름과 데이터 형식 모두에 영향을 주는 외곽 정책층**으로 이해해야 한다.
+
+- **📢 섹션 요약 비유**: 필터와 인터셉터는 경기장 입구의 보안 검색대와 경기장 안쪽의 구역별 출입 통제처럼, 같은 사람을 검사하더라도 위치와 확인 기준이 다른 두 단계의 안전망이다.
 
 ---
 
 ## Ⅲ. 비교 및 연결
 
-### Filter vs Spring Interceptor 비교
+인터셉터와 필터를 정확히 이해하려면 AOP, 미들웨어, 프론트 컨트롤러와의 경계를 같이 봐야 한다. 세 개념 모두 공통 처리를 분리하지만, 관찰하는 대상과 개입 지점이 다르다.
 
-| 비교 항목 | Java EE Filter | Spring Interceptor |
-|:---|:---|:---|
-| **실행 위치** | 서블릿 컨테이너 레벨 | Spring DispatcherServlet 이후 레벨 |
-| **스펙** | Servlet Spec (`javax.servlet.Filter`) | Spring Framework (`HandlerInterceptor`) |
-| **Spring Bean 접근** | 불가 (컨테이너 레벨) | 가능 (Spring Context 내) |
-| **적용 범위** | 모든 요청 (정적 파일 포함) | DispatcherServlet 처리 요청만 |
-| **처리 가능 대상** | HttpServletRequest/Response 원본 | Controller 정보, ModelAndView |
-| **주요 용도** | 인코딩, CORS, XSS 방어, 압축 | 인증/인가, 로깅, 성능 측정 |
-| **설정 방식** | `@WebFilter` 또는 `FilterRegistrationBean` | `WebMvcConfigurer.addInterceptors()` |
+| 비교 축 | Filter / Middleware | Interceptor | AOP |
+| :--- | :--- | :--- | :--- |
+| 개입 지점 | 웹 컨테이너, 요청 입구 | 프레임워크가 핸들러를 선택한 이후 | 메서드 호출 경계 |
+| 다룰 수 있는 정보 | 원시 Request/Response | 핸들러, 모델, 라우팅 정보 | 서비스/리포지토리 메서드와 인자 |
+| 대표 용도 | 인코딩, CORS, 보안 헤더, 압축 | 인증/인가, 감사, 실행 시간 측정 | 트랜잭션, 공통 로깅, 권한 검사 |
+| 적용 범위 | 정적 자원 포함 전역 | 프레임워크가 관리하는 요청 | 웹 외 영역까지 포함 |
+| 판단 기준 | 가장 앞단에서 처리해야 하는가 | 어떤 핸들러인지 알아야 하는가 | HTTP와 무관한 비즈니스 경계인가 |
 
-### Filter Chain 패턴
+프론트 컨트롤러와의 관계도 중요하다. 프론트 컨트롤러는 요청을 중앙 진입점으로 모아 어떤 핸들러를 호출할지 결정한다. 필터는 그 앞뒤에서 **전역 규칙**을 적용하고, 인터셉터는 프론트 컨트롤러 내부에서 **선택된 핸들러 주변 규칙**을 적용한다. 따라서 이 패턴은 프론트 컨트롤러를 대체하는 것이 아니라, 그 주변에 정책망을 친 구조다.
 
-```
-Filter 체인 처리 흐름:
+현대 프레임워크에서 이름은 달라도 본질은 같다. Java의 Servlet Filter, Spring Interceptor, Node.js의 middleware, ASP.NET Core pipeline 모두 "체인으로 요청을 감싸며 조건에 따라 중단·후처리한다"는 공통 철학을 공유한다. 즉 특정 기술 문법보다 **정책을 외곽 체인에 둔다**는 설계 원리를 기억해야 한다.
 
-Request ──► [Filter1] ──► [Filter2] ──► [Filter3] ──► Servlet
-                                                           │
-Response ◄── [Filter1] ◄── [Filter2] ◄── [Filter3] ◄── 처리
-```
-
-각 Filter는 `chain.doFilter(request, response)` 호출로 다음 Filter에 제어를 넘긴다. 호출하지 않으면 요청 처리가 중단된다(예: 인증 실패 시).
-
-📢 **섹션 요약 비유**: Filter는 양파 껍질처럼 겹겹이 쌓여 있다. 안쪽(Servlet)으로 들어갈 때도, 바깥쪽으로 나올 때도 각 껍질(Filter)을 통과한다.
+- **📢 섹션 요약 비유**: 프론트 컨트롤러가 중앙 안내 데스크라면, 필터는 건물 정문 경비, 인터셉터는 해당 부서 앞 출입 카드 확인, AOP는 건물 안 사무실에서 이루어지는 공통 업무 규칙에 가깝다.
 
 ---
 
 ## Ⅳ. 실무 적용 및 기술사 판단
 
-### Spring Interceptor 구현 예시
+실무에서는 "모든 공통 로직을 인터셉터로" 또는 "보안은 전부 필터로"처럼 단순화하면 실패한다. 중요한 것은 책임 배치다. 전역적이고 저수준인 작업은 Filter에, 핸들러 문맥이 필요한 작업은 Interceptor에, HTTP 요청과 무관한 서비스 계층 공통 로직은 AOP에 두는 것이 일반적으로 안정적이다.
 
-```java
-// Interceptor 구현
-@Component
-public class AuthInterceptor implements HandlerInterceptor {
+| 처리 요구 | 적합한 위치 | 이유 |
+| :--- | :--- | :--- |
+| UTF-8 인코딩, CORS, 보안 헤더, 압축 | Filter | 가장 앞단에서 모든 요청·응답에 공통 적용해야 함 |
+| JWT (JSON Web Token) 파싱, 인증 체인 | Filter 또는 보안 필터 체인 | Controller 도달 전 차단이 유리함 |
+| 핸들러별 권한 검사, 메뉴 감사, 실행 시간 측정 | Interceptor | 어떤 핸들러가 선택되었는지 알아야 함 |
+| 트랜잭션, 서비스 메서드 로깅 | AOP | 웹 요청 여부와 무관하게 메서드 단위로 적용 가능 |
 
-    @Autowired
-    private TokenService tokenService; // Spring Bean 주입 가능!
+### 실무 체크리스트
 
-    @Override
-    public boolean preHandle(HttpServletRequest request,
-                             HttpServletResponse response,
-                             Object handler) throws Exception {
-        String token = request.getHeader("Authorization");
-        if (!tokenService.isValid(token)) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return false; // 처리 중단
-        }
-        return true; // 계속 진행
-    }
+1. 필터와 인터셉터의 순서가 문서와 코드에서 일치하는가?
+2. 차단 로직이 어디서 끝나는지와 에러 응답 형식이 일관적인가?
+3. Request Body를 읽는 Filter가 있다면 이후 단계에서 다시 읽을 수 있게 래핑했는가?
+4. 인스턴스 필드에 요청별 상태를 저장하지 않아 멀티스레드 안전성을 지키는가?
+5. 인증, 인가, 감사, 예외 처리의 책임이 Filter / Interceptor / Service 사이에서 중복되지 않는가?
 
-    @Override
-    public void afterCompletion(HttpServletRequest request,
-                                HttpServletResponse response,
-                                Object handler, Exception ex) {
-        // 성능 측정 로그 기록
-        long elapsed = System.currentTimeMillis() - startTime;
-        log.info("Request {} took {}ms", request.getRequestURI(), elapsed);
-    }
-}
+### 자주 발생하는 안티패턴
 
-// Interceptor 등록
-@Configuration
-public class WebConfig implements WebMvcConfigurer {
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthInterceptor())
-                .addPathPatterns("/api/**")
-                .excludePathPatterns("/api/auth/**");
-    }
-}
-```
+- 필터 안에서 비즈니스 규칙과 DB (Database) 업데이트까지 수행하는 구조
+- 인터셉터와 컨트롤러가 같은 인증 검사를 중복 수행하는 설계
+- 순서가 중요한 체인을 설정 파일과 코드에서 다르게 관리하는 운영
+- Request Body를 한 번 읽고 소모해 버려 하위 핸들러가 본문을 못 읽는 구현
+- 상태를 멤버 변수에 저장해 동시 요청 간 값이 섞이는 구현
 
-### 실무 활용 패턴
+기술사 답안에서는 **"인터셉터 / 필터 패턴은 횡단 관심사를 요청 파이프라인 외곽 체인에 배치해 중앙화하는 구조이며, 적용 위치에 따라 전역 처리와 핸들러 문맥 처리를 구분해야 한다"**라고 정리하면 설계 판단력이 드러난다.
 
-| 활용 사례 | Filter 또는 Interceptor | 이유 |
-|:---|:---|:---|
-| 문자 인코딩 (UTF-8) | Filter | Servlet 전 단계에서 처리 필요 |
-| CORS 헤더 추가 | Filter | 모든 요청에 적용, Spring 불필요 |
-| XSS (Cross-Site Scripting) 방어 | Filter | 요청/응답 스트림 조작 필요 |
-| JWT 인증/인가 | Interceptor | Spring Bean(TokenService) 필요 |
-| API 성능 로깅 | Interceptor | preHandle/afterCompletion 조합 |
-| 요청 압축/압축 해제 | Filter | Servlet 전 단계 처리 |
-
-📢 **섹션 요약 비유**: 건물 입구 보안 게이트(Filter)와 층별 출입 카드 리더기(Interceptor)는 역할이 다르다. 게이트는 건물에 들어오는 모든 사람에게, 카드 리더기는 특정 층(Spring 컨텍스트)의 사람에게만 적용된다.
+- **📢 섹션 요약 비유**: 좋은 인터셉터와 필터 설계는 회사 규정을 각 팀장 머릿속에 두는 대신, 출입구와 업무 절차에 공식 규칙으로 붙여 두는 것과 같다.
 
 ---
 
 ## Ⅴ. 기대효과 및 결론
 
-### 도입 기대효과
+인터셉터 / 필터 패턴이 잘 적용되면 시스템은 공통 정책을 추가하거나 변경할 때 핵심 업무 코드를 덜 건드리게 된다. 그 결과 인증 누락, 로그 형식 불일치, 예외 응답 편차, 관측성 부재 같은 문제가 줄고, 운영팀은 요청 흐름의 어느 지점에서 정책이 적용되는지 더 쉽게 추적할 수 있다. 설계감리에서도 체인 구조와 순서만 보아도 많은 품질 이슈를 빠르게 발견할 수 있다.
 
-| 기대효과 | 설명 |
-|:---|:---|
-| **관심사 분리** | 비즈니스 로직이 인증/로깅 코드로 오염되지 않음 |
-| **재사용성** | 동일 Interceptor를 여러 URL 패턴에 적용 |
-| **유지보수성** | 인증 로직 변경 시 Interceptor 하나만 수정 |
-| **OCP 실현** | 새 공통 처리 추가 시 기존 코드 수정 없이 확장 |
-| **테스트 독립성** | Interceptor 단독으로 단위 테스트 가능 |
+반대로 이 패턴을 과도하게 남용하면 숨겨진 제어 흐름이 늘어나 디버깅이 어려워진다. 그래서 좋은 구조는 **얇고, 순서가 명확하고, 상태를 갖지 않으며, 책임이 분명한 체인**이다. 결국 이 패턴은 "어디든 끼워 넣는 후킹 기술"이 아니라, **정책을 외곽으로 밀어내어 본업 코드를 깨끗하게 만드는 설계망**으로 기억해야 한다.
 
-Filter와 Interceptor 패턴은 AOP의 핵심 사상인 **"관심사의 외부화"** 를 HTTP 요청 처리 파이프라인에 적용한 실용적 패턴이다. Spring Security도 내부적으로 Filter Chain으로 구현되어 있어, 이 패턴에 대한 깊은 이해는 실무와 기술사 시험 모두에서 필수적이다.
-
-📢 **섹션 요약 비유**: 배관 시스템에서 정수 필터(Filter)와 수도꼭지 필터(Interceptor)는 다른 위치에서 물을 정화한다. 둘 다 없으면 마실 수 없는 물이 나온다.
+- **📢 섹션 요약 비유**: 인터셉터와 필터는 집 안 모든 방마다 소화기를 두는 대신, 복도와 현관에 소방 설비를 체계적으로 배치해 집 전체를 지키는 안전 설계와 같다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 관계 | 개념 | 설명 |
-|:---|:---|:---|
-| 상위 개념 | AOP (Aspect-Oriented Programming) | 횡단 관심사 분리 패러다임 |
-| 상위 개념 | Chain of Responsibility 패턴 | Filter Chain의 이론적 기반 |
-| 하위 개념 | Servlet Filter | Java EE 표준 Filter 인터페이스 |
-| 하위 개념 | HandlerInterceptor | Spring MVC Interceptor 인터페이스 |
-| 연관 개념 | Front Controller 패턴 | DispatcherServlet이 Interceptor를 관리 |
-| 연관 개념 | Spring Security | SecurityFilterChain 기반 보안 처리 |
-| 연관 개념 | Decorator 패턴 | Filter는 요청/응답을 감싸는 Decorator |
+| 개념 | 연결 포인트 |
+| :--- | :--- |
+| Front Controller | 모든 요청을 모은 뒤 인터셉터를 호출하는 중앙 진입점이다. |
+| Chain of Responsibility | 필터와 인터셉터가 순차적으로 제어를 넘기는 이론적 기반이다. |
+| Middleware | 다른 플랫폼에서 같은 철학을 구현하는 유사 개념이다. |
+| AOP (Aspect-Oriented Programming) | HTTP 밖의 메서드 단위 횡단 관심사를 분리하는 상위 개념이다. |
+| Spring Security Filter Chain | 실무에서 보안 정책을 필터 체인으로 구현하는 대표 사례다. |
+| Exception Resolver | 체인에서 발생한 오류를 표준 응답으로 바꾸는 후단 협력 요소다. |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+개별 Controller마다 공통 코드 중복
+    │
+    ▼
+Front Controller 도입
+    │
+    ▼
+Filter / Middleware 전역 체인
+    │
+    ▼
+Interceptor 기반 핸들러 전후 제어
+    │
+    ▼
+AOP · Security Chain · Observability로 확장된 정책망
+```
+
+이 흐름은 웹 요청 처리가 단순 라우팅에서 출발해, 공통 정책을 외곽 체인으로 분리하는 프레임워크 중심 구조로 발전하는 과정을 보여 준다.
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
-- 학교 급식소(Controller)에 들어가기 전에 손 씻기 검사대(Filter)와 배지 확인대(Interceptor)를 통과해야 한다.
-- 손 씻기 검사(Filter)는 학교 건물 입구에서 모든 학생에게 공통으로 적용된다.
-- 배지 확인(Interceptor)은 급식소 담당 선생님(Spring)이 관리하며, 특정 메뉴를 먹기 전후에도 체크할 수 있다.
+1. 필터와 인터셉터는 학교에 들어갈 때 먼저 손 씻기 검사하고, 교실 앞에서 이름표를 다시 보는 두 단계 규칙이에요.
+2. 그래서 선생님은 수업만 잘하면 되고, 검사 규칙은 따로 맡은 곳이 처리해 줘요.
+3. 규칙을 어디에서 검사할지만 잘 정하면 학교가 훨씬 안전하고 깔끔하게 돌아간답니다.
