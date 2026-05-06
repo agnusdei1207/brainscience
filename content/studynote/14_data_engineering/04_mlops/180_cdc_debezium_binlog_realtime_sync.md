@@ -1,388 +1,189 @@
 +++
 weight = 180
-title = "180. CDC (Change Data Capture) 실시간 로그 캡처 데베지움 (Debezium) 파이프 동기망"
+title = "180. CDC (Change Data Capture)와 Debezium 기반 Binlog 실시간 동기화"
 date = "2026-04-21"
 [extra]
 categories = "studynote-data-engineering"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: CDC (Change Data Capture, 변경 데이터 캡처)는 데이터베이스의 변경 사항(INSERT/UPDATE/DELETE)을 트랜잭션 로그에서 실시간으로 캡처하여 다른 시스템에 전파하는 기술로, 애플리케이션 부하 없이 데이터 동기화를 구현한다.
-> 2. **가치**: Debezium은 MySQL Binlog, PostgreSQL WAL, Oracle Redo Log를 통해 밀리초 단위 지연으로 DW·데이터 레이크·마이크로서비스를 실시간 동기화하며, 기존 ETL 배치의 T+1 지연을 근실시간으로 단축한다.
-> 3. **판단 포인트**: 로그 기반(Log-based) CDC가 트리거 기반·쿼리 기반 대비 DB 부하 최소·정확한 삭제 캡처·모든 변경 순서 보장 측면에서 프로덕션 최선책이지만, CDC 활성화를 위한 DB 설정 변경이 필요하다.
+
+> 1. **본질**: CDC (Change Data Capture, 변경 데이터 캡처)는 데이터베이스(Database, DB)의 INSERT·UPDATE·DELETE를 트랜잭션 로그에서 읽어 순서 있는 변경 이벤트 스트림으로 바꾸는 기술이다.
+> 2. **가치**: Debezium은 MySQL Binary Log (Binlog), PostgreSQL Write-Ahead Log (WAL) 같은 로그를 Kafka로 흘려 보내 DW (Data Warehouse), 검색 인덱스, 캐시, 피처 스토어를 초 단위로 동기화하게 해 준다.
+> 3. **판단 포인트**: 실시간성보다 중요한 것은 **정확한 삭제 반영, 순서 보존, 재시작 복구, Sink의 멱등 반영**이며, 이를 위해 로그 기반 CDC·스냅샷 전략·스키마 진화·키 설계를 함께 잡아야 한다.
 
 ---
 
 ## Ⅰ. 개요 및 필요성
 
-### 1.1 데이터 동기화 전통 방식의 한계
+CDC는 "원본 DB에 생긴 변화를 다른 시스템으로 언제, 얼마나 정확하게 옮길 것인가?"라는 문제에서 출발한다. 전통적인 배치 ETL (Extract, Transform, Load)은 하루 한 번 전체 테이블을 읽거나 `updated_at` 기준으로 증분을 가져와 DW에 적재한다. 이 방식은 구현이 단순하지만, 데이터가 이미 늦고 삭제가 빠지기 쉬우며 소스 DB에 스캔 부하를 준다.
 
-```
-전통 ETL 방식:
-  Source DB ──→ (야간 배치) ──→ DW
-  
-  문제:
-  1. T+1 지연: 오늘 거래가 내일 DW에 반영
-  2. 전체 테이블 스캔: DB 부하 급증 (새벽 3시 배치)
-  3. 삭제(DELETE) 감지 불가: 논리 삭제만 가능
-  4. 중간 상태 소실: A→B→C 변경 시 C만 감지
-  
-CDC 개선:
-  Source DB ──→ (로그 스트리밍) ──→ Kafka ──→ DW
-  
-  장점:
-  1. 밀리초 단위 실시간 반영
-  2. WAL/Binlog 읽기 → 소스 DB 부하 최소
-  3. 물리적 DELETE 완벽 캡처
-  4. 모든 중간 변경 이력 보존
+특히 주문, 결제, 사용자 프로필처럼 계속 바뀌는 Online Transaction Processing (OLTP) 데이터에서는 "최종 상태만" 복사하는 방식이 부족하다. 오전 10시에 `A → B`, 10시 1분에 `B → C`로 바뀐 행을 밤 12시에 한 번 읽으면 중간 상태와 정확한 변경 순서를 잃는다. 검색 인덱스, 캐시 무효화, 머신러닝(Machine Learning, ML) 온라인 피처, 실시간 대시보드는 바로 이 중간 변화까지 필요로 하는 경우가 많다.
+
+아래 그림은 전통 동기화와 로그 기반 CDC의 차이를 보여 준다. 핵심은 CDC가 테이블을 반복 조회하는 것이 아니라, **이미 DB가 쓰고 있는 커밋 로그를 읽는다**는 점이다.
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│ 전통 동기화 vs 로그 기반 CDC                                  │
+├──────────────────────────────────────────────────────────────┤
+│ Polling / Batch                                               │
+│ Source DB ─▶ SELECT updated_at > t ─▶ ETL ─▶ Target          │
+│   └─ full scan · delete 누락 · T+1 지연                      │
+│                                                              │
+│ Log-based CDC                                                 │
+│ COMMIT ─▶ Binlog / WAL ─▶ Debezium ─▶ Kafka ─▶ Targets       │
+│   └─ 순서 보존 · delete 캡처 · source 부하 최소화            │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-### 1.2 CDC 구현 방식 비교
+그래서 CDC는 단순 복제 기술이 아니라, 운영계 데이터를 분석계·검색계·이벤트계로 안전하게 확장하는 연결 계층이다. 데이터 엔지니어링 관점에서는 배치 지연을 줄이는 수단이고, MLOps (Machine Learning Operations) 관점에서는 온라인·오프라인 데이터의 시간 차를 줄이는 기반이 된다.
 
-| 방식 | 원리 | 장점 | 단점 |
-|:---|:---|:---|:---|
-| **로그 기반 (Log-based)** | DB 트랜잭션 로그 파싱 | DB 부하 최소, 정확한 순서, DELETE 감지 | DB 설정 변경 필요 |
-| **트리거 기반 (Trigger-based)** | DB 트리거로 변경 기록 테이블 작성 | 구현 단순 | DB 부하 증가, 모든 DML에 트리거 |
-| **쿼리 기반 (Query-based)** | updated_at 컬럼 주기적 폴링 | 구현 매우 단순 | 폴링 지연, DELETE 감지 불가 |
-| **이벤트 기반** | 앱이 직접 이벤트 발행 | 유연함 | 앱 코드 변경, 누락 위험 |
-
-📢 **섹션 요약 비유**: CDC는 창고의 CCTV 시스템이다. 직원이 물건을 옮길 때마다 일일이 보고할 필요 없이(트리거/쿼리 기반 부담), CCTV(트랜잭션 로그)가 자동으로 모든 움직임을 기록한다.
+- **📢 섹션 요약 비유**: CDC는 창고 재고를 밤마다 다시 세는 방식이 아니라, 입고·출고가 일어날 때마다 CCTV로 바로 기록해 다른 창고에도 동시에 알려 주는 방식과 같다.
 
 ---
 
 ## Ⅱ. 아키텍처 및 핵심 원리
 
-### 2.1 Debezium 아키텍처
+Debezium 기반 CDC 파이프라인은 보통 네 층으로 이해하면 쉽다. **소스 로그**, **커넥터**, **메시지 버스**, **반영 Sink** 층이다. 소스 DB는 트랜잭션 로그를 만들고, Debezium 커넥터는 그 로그를 읽어 이벤트로 변환하며, Apache Kafka는 이를 내구성 있는 스트림으로 보관하고 여러 소비자에게 전달한다. 마지막으로 Sink는 이 이벤트를 MERGE, UPSERT, 인덱싱, 캐시 무효화 같은 방식으로 반영한다.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│              Debezium 기반 CDC 파이프라인                     │
+| 구성 요소 | 역할 | 핵심 판단 |
+| :--- | :--- | :--- |
+| Binary Log / WAL | 커밋 순서와 행 변경 기록 보존 | 행 단위 로그 설정과 보존 기간 필요 |
+| Debezium Connector | 로그 파싱 후 변경 이벤트 생성 | 초기 스냅샷, 오프셋 관리, DDL 감지 |
+| Kafka Connect / Kafka | 이벤트 전달·재시작·팬아웃 | 토픽 키, 파티션, 재처리 전략 설계 |
+| Schema Registry | 스키마 진화 관리 | 호환성 정책 없으면 Sink 연쇄 장애 발생 |
+| Sink Applier | 타깃 시스템 반영 | 멱등 처리, upsert key, delete 정책 필요 |
+
+Debezium의 동작은 **초기 스냅샷**과 **로그 스트리밍** 두 단계로 나뉜다. 초기 스냅샷은 현재 테이블 상태를 한 번 읽어 기준선을 만들고, 이후부터는 Binlog/WAL에서 들어오는 변경만 계속 전송한다. 이때 Debezium은 마지막으로 읽은 로그 위치를 저장해 재시작 뒤에도 이어서 읽을 수 있게 한다.
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│ Debezium 동작 단계                                            │
+├──────────────────────────────────────────────────────────────┤
+│ 1) Initial Snapshot                                           │
+│    Table Scan ─▶ op = r 이벤트 생성                           │
+│                     │                                         │
+│                     └─ 현재 로그 위치 기록                    │
 │                                                              │
-│  소스 데이터베이스                                            │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │  MySQL:       Binary Log (Binlog) ─────────────────┐│   │
-│  │  PostgreSQL:  Write-Ahead Log (WAL) ───────────────┤│   │
-│  │  Oracle:      Redo Log ────────────────────────────┤│   │
-│  │  SQL Server:  Transaction Log ─────────────────────┤│   │
-│  │  MongoDB:     Oplog ───────────────────────────────┘│   │
-│  └─────────────────────────────────────────────────────┘   │
-│                    │                                         │
-│                    ▼ Debezium Connector (Kafka Connect)      │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │  Kafka Connect (분산 커넥터 플랫폼)                   │   │
-│  │  ├── Source Connector (Debezium)                    │   │
-│  │  │   - 로그 파싱 → 이벤트 생성                       │   │
-│  │  │   - 스키마 레지스트리 연동 (Avro/JSON)            │   │
-│  │  │   - 커서 상태 관리 (오프셋 추적)                  │   │
-│  │  └── Sink Connector                                 │   │
-│  │      - JDBC Sink (DW 동기화)                        │   │
-│  │      - Elasticsearch Sink                           │   │
-│  │      - S3 Sink (데이터 레이크)                      │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                    │                                         │
-│                    ▼                                         │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │  Kafka Topic: dbserver.mydb.orders (테이블별 토픽)    │   │
-│  │  이벤트 구조:                                         │   │
-│  │  {                                                   │   │
-│  │    "before": {"id":1, "amount":100},  ← 변경 전      │   │
-│  │    "after":  {"id":1, "amount":150},  ← 변경 후      │   │
-│  │    "op":     "u",                     ← 연산 타입     │   │
-│  │    "ts_ms":  1705046400000,           ← 타임스탬프    │   │
-│  │    "source": {"db":"mydb",                           │   │
-│  │               "table":"orders",                     │   │
-│  │               "pos": 12345678}       ← 로그 위치     │   │
-│  │  }                                                   │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                    │                                         │
-│         ┌──────────┼──────────────────────┐                 │
-│         ▼          ▼                      ▼                  │
-│     Data DW    Elasticsearch         Data Lake (S3)         │
-│    (Redshift)  (실시간 검색)           (Parquet/Delta)       │
-└─────────────────────────────────────────────────────────────┘
+│ 2) Streaming Phase                                            │
+│    Binlog / WAL ─▶ op = c / u / d 이벤트 ─▶ Kafka Topic      │
+│                     │                                         │
+│                     └─ Offset 저장 후 재시작 복구             │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-### 2.2 DB별 CDC 설정
+이벤트 구조도 중요하다. Debezium 이벤트는 보통 `before`, `after`, `op`, `source`, `ts_ms` 정보를 가진다. `before/after`는 변경 전후 값을, `op`는 생성(Create)·수정(Update)·삭제(Delete)를, `source`는 로그 위치와 테이블 정보를 나타낸다. 그래서 Sink는 "지금 상태가 무엇인가"뿐 아니라 "무슨 이유로 바뀌었는가"를 기준으로 반영 정책을 세울 수 있다.
 
-#### MySQL Binlog 설정
+다만 Debezium을 쓴다고 자동으로 end-to-end Exactly-Once가 보장되는 것은 아니다. Kafka Connect와 Kafka는 재시작 복구와 재전송에 강하지만, 최종 Sink가 중복 이벤트를 안전하게 처리하지 못하면 결과는 흔들릴 수 있다. 따라서 실무 핵심은 **소스 로그의 정확성 + 커넥터 오프셋 복구 + Sink의 멱등 반영**을 하나의 체인으로 보는 것이다.
 
-```sql
--- MySQL my.cnf 설정
-[mysqld]
-server-id         = 1
-log_bin           = mysql-bin
-binlog_format     = ROW        -- 행 단위 변경 기록 (CDC 필수)
-binlog_row_image  = FULL       -- 전체 행 기록 (before/after)
-expire_logs_days  = 7          -- 로그 보존 기간
-
--- Debezium 전용 사용자 권한
-CREATE USER 'debezium'@'%' IDENTIFIED BY 'password';
-GRANT SELECT, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'debezium'@'%';
-FLUSH PRIVILEGES;
-```
-
-#### PostgreSQL WAL 설정
-
-```sql
--- postgresql.conf 설정
-wal_level = logical           -- 논리적 복제 레벨 (CDC 필수)
-max_replication_slots = 4     -- 복제 슬롯 수
-max_wal_senders = 4           -- WAL 발신자 수
-
--- Debezium 전용 복제 슬롯 생성
-SELECT pg_create_logical_replication_slot(
-  'debezium_slot', 'pgoutput'
-);
-
--- 복제 권한 부여
-CREATE ROLE debezium REPLICATION LOGIN;
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO debezium;
-```
-
-### 2.3 Debezium 이벤트 작동 원리
-
-```
-이벤트 타입 (op 필드):
-  "c" → CREATE (INSERT)
-  "u" → UPDATE
-  "d" → DELETE
-  "r" → READ (초기 스냅샷)
-
-초기 스냅샷 단계:
-  1. 소스 테이블 전체 스캔 (op="r")
-  2. 현재 Binlog 포지션 기록
-  3. 이후 변경은 Binlog에서 실시간 스트리밍
-
-오프셋 관리:
-  - Kafka Connect가 처리한 Binlog 위치 추적
-  - Kafka Topic "__connect-offsets"에 저장
-  - 재시작 시 마지막 처리 위치부터 재시작
-```
-
-### 2.4 스키마 레지스트리 통합
-
-```
-┌────────────────────────────────────────────────────────┐
-│  Confluent Schema Registry + Debezium                  │
-│                                                        │
-│  Source DB                                             │
-│  ├── 컬럼 추가: ALTER TABLE orders ADD COLUMN tax INT  │
-│  └── Debezium이 자동 감지 → 스키마 진화 이벤트         │
-│                                                        │
-│  Schema Registry:                                      │
-│  - 이전 스키마 (v1): {id, amount}                     │
-│  - 새 스키마 (v2):   {id, amount, tax}                │
-│  - 호환성 검사: BACKWARD / FORWARD / FULL             │
-│                                                        │
-│  Sink Connector:                                       │
-│  - 스키마 v2 감지 → DW 테이블에 컬럼 자동 추가        │
-│  - 또는 변환 SMT(Single Message Transform)으로 처리   │
-└────────────────────────────────────────────────────────┘
-```
-
-📢 **섹션 요약 비유**: Debezium + Kafka는 공장의 실시간 생산 로그 시스템이다. 각 생산 라인(DB 테이블)의 모든 변경이 자동으로 기록(CDC)되어 중앙 모니터링 센터(Kafka)에 실시간 전달된다.
+- **📢 섹션 요약 비유**: Debezium은 공장 컨베이어벨트의 감시 카메라와 같다. 물건이 언제 올라왔고, 무엇이 수정됐고, 무엇이 폐기됐는지를 순서대로 기록해 다른 창고가 같은 상태를 재현하도록 돕는다.
 
 ---
 
 ## Ⅲ. 비교 및 연결
 
-### 3.1 CDC 도구 비교
+CDC는 구현 방식에 따라 성격이 크게 달라진다. 쿼리 기반 증분은 가장 단순하지만 삭제 감지와 중간 상태 보존이 약하고, 트리거 기반은 즉시성은 좋지만 원본 DB 부하와 운영 복잡도가 커진다. 로그 기반 CDC가 현대 시스템에서 선호되는 이유는 **애플리케이션 코드 변경 없이, 커밋 순서를 유지한 채, 삭제까지 잡을 수 있기 때문**이다.
 
-| 도구 | 개발사 | 강점 | 지원 DB |
-|:---|:---|:---|:---|
-| **Debezium** | Red Hat | 오픈소스, Kafka 통합 | MySQL, PG, Oracle, MongoDB, SQL Server |
-| **AWS DMS** | AWS | 완전 관리형, 마이그레이션 | 주요 상용 DB |
-| **Fivetran** | Fivetran | SaaS, 다양한 커넥터 | 100+ 소스 |
-| **Airbyte** | Airbyte | 오픈소스 ELT | 300+ 커넥터 |
-| **Maxwell** | Zendesk | MySQL 특화, 경량 | MySQL 전용 |
-| **Canal** | Alibaba | MySQL 특화 | MySQL 전용 |
+| 방식/개념 | Source of Truth | 장점 | 한계 | 잘 맞는 경우 |
+| :--- | :--- | :--- | :--- | :--- |
+| 쿼리 기반 증분 | 테이블 최종 상태 | 구현 단순 | delete 누락, 순서 손실, 폴링 지연 | 소규모 레거시 |
+| 트리거 기반 CDC | 테이블 + 트리거 테이블 | 즉시성 확보 가능 | DB 부하, 트리거 관리 부담 | 제한적 시스템 연동 |
+| 로그 기반 CDC | Binlog / WAL | 순서 보존, delete 캡처, source 부하 낮음 | DB 설정·운영 지식 필요 | 프로덕션 실시간 동기화 |
+| Outbox Pattern | 비즈니스 트랜잭션 + Outbox 테이블 | DB 저장과 이벤트 발행 원자성 확보 | 앱 스키마 설계 필요 | 마이크로서비스 이벤트 발행 |
+| Event Sourcing | 이벤트 저장소 자체 | 완전한 도메인 이력 | 모델 복잡도 높음 | 이벤트 중심 시스템 |
 
-### 3.2 CDC 토폴로지 패턴
+여기서 Outbox Pattern은 CDC와 자주 같이 등장한다. CDC가 "기존 테이블 변경을 읽는 기술"이라면, Outbox는 "도메인 이벤트를 안전하게 내보내기 위한 설계 패턴"이다. 즉 주문 테이블에 변경이 생겼다고 해서 항상 의미 있는 비즈니스 이벤트가 되는 것은 아니므로, 마이크로서비스에서는 주문 저장과 함께 outbox 테이블에 발행할 이벤트를 기록하고, Debezium이 그 outbox만 읽도록 만드는 경우가 많다.
 
-```
-패턴 1: DB → Debezium → Kafka → 단일 Sink
-  가장 단순한 구성, 단일 타겟 동기화
+또한 CDC는 레이크하우스(Lakehouse)와 ML 피처 파이프라인에도 연결된다. 주문 변경이 Kafka로 들어오면 Bronze 영역에는 원본 변경 이벤트를 쌓고, Silver 영역에서는 최신 상태를 재구성하며, 온라인 피처 스토어는 초 단위로 최신 값을 공급할 수 있다. 이렇게 하면 배치 학습용 데이터와 실시간 추론 입력 사이의 시차를 줄일 수 있다.
 
-패턴 2: DB → Debezium → Kafka → 멀티 Sink
-  ┌──────────────────────────────────────────────┐
-  │  MySQL ──→ Debezium ──→ Kafka                │
-  │                              │               │
-  │               ┌──────────────┼─────────────┐ │
-  │               ▼              ▼             ▼  │
-  │          Elasticsearch    Redshift        S3  │
-  │          (검색 인덱스)    (데이터 웨어하우스) (레이크) │
-  └──────────────────────────────────────────────┘
-
-패턴 3: 마이크로서비스 이벤트 스트리밍 (Outbox Pattern)
-  ┌──────────────────────────────────────────────┐
-  │  Order Service ──→ orders 테이블              │
-  │                 └──→ outbox 테이블            │
-  │                      │                       │
-  │                      ▼ Debezium CDC           │
-  │                   Kafka Topic                │
-  │                      │                       │
-  │          ┌───────────┴──────────────┐        │
-  │          ▼                          ▼        │
-  │    Inventory Service          Notification   │
-  └──────────────────────────────────────────────┘
-```
-
-### 3.3 Outbox 패턴 (Transactional Outbox)
-
-```
-문제: 마이크로서비스에서 DB 저장 + 이벤트 발행의 원자성 보장
-  ┌──────────────────────────────────────────────┐
-  │  Without Outbox:                             │
-  │  BEGIN TX                                    │
-  │  INSERT INTO orders ...    ← 성공             │
-  │  COMMIT                    ← 성공             │
-  │  Kafka.publish(event)      ← 실패! (이중화)  │
-  │  → DB는 저장됐지만 이벤트 누락!              │
-  │                                              │
-  │  With Outbox Pattern:                        │
-  │  BEGIN TX                                    │
-  │  INSERT INTO orders ...    ← 성공             │
-  │  INSERT INTO outbox        ← 성공 (동일 TX)  │
-  │  COMMIT                    ← 원자적 성공      │
-  │                                              │
-  │  Debezium → outbox 테이블 CDC → Kafka        │
-  │  → DB 저장과 이벤트 발행의 원자성 보장!      │
-  └──────────────────────────────────────────────┘
-```
-
-📢 **섹션 요약 비유**: Outbox 패턴은 편지를 직접 우체통에 넣는 대신, 일단 서랍에 보관하고(Outbox) 우편부(Debezium)가 주기적으로 수거하는 방식이다. 편지 분실 없이 안전하게 전달된다.
+- **📢 섹션 요약 비유**: 로그 기반 CDC와 Outbox의 차이는 CCTV와 우편 발송함의 차이와 같다. CCTV는 실제로 일어난 모든 움직임을 기록하고, Outbox는 밖으로 보내야 할 공식 편지만 따로 담아 두는 장치다.
 
 ---
 
 ## Ⅳ. 실무 적용 및 기술사 판단
 
-### 4.1 Debezium Connector 설정
+실무에서는 도구 선택보다 **CDC가 실패하는 지점을 먼저 통제**해야 한다. 소스 DB 설정이 잘못되면 아예 필요한 로그가 남지 않고, 테이블에 안정적인 키가 없으면 Sink가 중복을 제거하지 못하며, 스키마 진화가 통제되지 않으면 하류 파이프라인이 연쇄 실패한다.
 
-```json
-{
-  "name": "mysql-source-connector",
-  "config": {
-    "connector.class": "io.debezium.connector.mysql.MySqlConnector",
-    "database.hostname": "mysql-host",
-    "database.port": "3306",
-    "database.user": "debezium",
-    "database.password": "secret",
-    "database.server.id": "12345",
-    "topic.prefix": "dbserver",
-    "database.include.list": "mydb",
-    "table.include.list": "mydb.orders,mydb.customers",
-    "snapshot.mode": "initial",
-    "include.schema.changes": "true",
-    
-    "transforms": "unwrap",
-    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
-    "transforms.unwrap.drop.tombstones": "false",
-    "transforms.unwrap.delete.handling.mode": "rewrite",
-    
-    "key.converter": "io.confluent.kafka.serializers.KafkaAvroSerializer",
-    "value.converter": "io.confluent.kafka.serializers.KafkaAvroSerializer",
-    "schema.registry.url": "http://schema-registry:8081"
-  }
-}
+대표적인 MySQL 설정 예시는 아래와 같다. 핵심은 행 기반 로그와 충분한 로그 보존 기간이다.
+
+```ini
+[mysqld]
+server-id=1
+log_bin=mysql-bin
+binlog_format=ROW
+binlog_row_image=FULL
+expire_logs_days=7
 ```
 
-### 4.2 CDC 기반 실시간 DW 동기화
+| 판단 항목 | 권장 선택 | 이유 |
+| :--- | :--- | :--- |
+| 초기 적재가 큰 테이블 | `initial` 대신 증분 스냅샷 또는 별도 백필 검토 | 첫 스냅샷이 운영 부하와 지연을 키울 수 있음 |
+| 기본 키(Primary Key)가 없음 | CDC 대상에서 제외하거나 대체 키 설계 | 멱등 upsert와 delete 반영이 어려움 |
+| 삭제 반영 필요 | tombstone 또는 명시적 delete 정책 유지 | 최신 상태 테이블과 이벤트 로그의 의미가 달라짐 |
+| 다수 Sink 팬아웃 | Kafka 토픽 키·스키마 레지스트리 고정 | 검색, DW, 캐시가 같은 계약을 보게 해야 함 |
+| 초단위 신선도 요구 | source commit 시각 vs sink 반영 시각 모니터링 | Kafka lag만 보면 전체 지연을 놓칠 수 있음 |
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│     CDC 기반 실시간 DW (Lambda Architecture vs 순수 CDC)     │
-│                                                              │
-│  전통 Lambda Architecture:                                   │
-│  Source DB ──→ 배치(Spark) ──→ DW (T+1)                    │
-│           └──→ 스트리밍(Flink) ──→ 집계 테이블 (근실시간)    │
-│  → 두 파이프라인 유지 비용 높음                              │
-│                                                              │
-│  CDC 기반 단순화:                                            │
-│  Source DB ──→ Debezium ──→ Kafka ──→ Flink ──→ DW         │
-│  → 하나의 파이프라인으로 배치 + 실시간 통합                  │
-│  → Kafka의 내구성으로 배치 처리도 가능                       │
-│                                                              │
-│  실시간 DW 패턴 (Redshift/Snowflake):                        │
-│  Kafka JDBC Sink ──→ DW 스테이징 테이블                     │
-│  Flink ──→ MERGE INTO DW 타겟 테이블 (UPSERT)               │
-└─────────────────────────────────────────────────────────────┘
-```
+운영 체크리스트는 다음과 같다.
 
-### 4.3 CDC 지연 모니터링
+1. Binlog/WAL 보존 기간이 장애 복구 시간보다 충분히 긴가?
+2. Snapshot 중에도 애플리케이션 쓰기와 일관성이 유지되는가?
+3. Sink는 `UPSERT`나 `MERGE`로 중복 이벤트를 안전하게 처리하는가?
+4. DDL (Data Definition Language) 변경 시 Schema Registry 호환성 정책이 있는가?
+5. 테이블별 토픽 파티션 전략이 키 분산과 순서 보존 요구를 동시에 만족하는가?
 
-| 지표 | 설명 | 임계값 |
-|:---|:---|:---|
-| **CDC 레이턴시** | DB 변경 → Kafka 도착 시간 | < 1초 |
-| **싱크 레이턴시** | Kafka → 타겟 도착 시간 | < 5초 |
-| **로그 위치 지연** | 현재 로그 포지션 vs Debezium 처리 위치 | 모니터링 |
-| **Kafka Consumer Lag** | 프로듀서 vs 컨슈머 오프셋 차이 | < 10,000 |
-| **커넥터 오류율** | 처리 실패 이벤트 비율 | < 0.01% |
+흔한 안티패턴도 분명하다. `updated_at` 폴링을 "사실상 CDC"라고 착각하는 경우, 기본 키 없는 테이블을 그대로 싱크에 밀어 넣는 경우, CDC 이벤트를 중복 제거 없이 바로 집계 테이블에 합산하는 경우가 대표적이다. 기술사 답안에서는 단순히 "Debezium이 편하다"가 아니라, **로그 설정 → snapshot → offset 복구 → sink 멱등성 → 스키마 진화**를 한 줄로 이어 설명해야 설계력이 드러난다.
 
-📢 **섹션 요약 비유**: CDC 모니터링은 물 파이프의 유량계와 수압 측정과 같다. 파이프 어디에서 막히거나(지연 급증) 누수(데이터 손실)가 있으면 즉시 알림을 보내야 한다.
+- **📢 섹션 요약 비유**: CDC 운영은 수도관을 여는 일보다 수압·밸브·역류 방지 장치를 함께 설계하는 일에 가깝다. 물이 흐르기만 하면 끝이 아니라, 끊겨도 다시 이어지고 새지도 않아야 한다.
 
 ---
 
 ## Ⅴ. 기대효과 및 결론
 
-### 5.1 CDC 도입 효과
+CDC를 잘 도입하면 OLTP와 Online Analytical Processing (OLAP) 계층 사이의 시간 간격이 크게 줄어든다. 검색 인덱스는 최신 주문 상태를 더 빨리 반영하고, DW는 새벽 배치 대신 근실시간 분석이 가능해지며, 피처 스토어와 캐시는 최신 비즈니스 상태를 따라간다. 무엇보다 원본 시스템은 반복 조회 부하에서 어느 정도 해방된다.
 
-| 항목 | 배치 ETL | CDC (Debezium) |
-|:---|:---|:---|
-| **데이터 지연** | T+1 (수 시간) | < 1초 |
-| **소스 DB 부하** | 야간 집중 피크 | 지속적 저부하 |
-| **DELETE 감지** | 불가 (논리 삭제만) | 완전 감지 |
-| **중간 상태 보존** | 최종 상태만 | 모든 변경 이력 |
-| **운영 복잡도** | 단순 | 중간 (Kafka Connect 관리) |
+하지만 CDC는 만능이 아니다. 로그 보존이 끊기면 재동기화 비용이 커지고, 큰 스냅샷은 운영 부하를 만들며, 잘못된 스키마 변경은 하류 전체를 무너뜨릴 수 있다. 또한 CDC는 "변경을 옮기는 기술"이지, 의미 없는 이벤트를 자동으로 비즈니스 가치로 바꾸는 기술은 아니다. 그래서 Domain Event 설계, Upsert 정책, 품질 검증이 함께 따라가야 한다.
 
-### 5.2 기술사 답안 핵심 논점
+결론적으로 CDC는 DB를 이벤트 소스로 승격시키는 현실적인 방법이다. Debezium은 그 과정에서 로그를 안전한 스트림으로 바꾸는 표준 도구이고, Binlog/WAL은 그 스트림의 진짜 출발점이다. 이 둘을 제대로 이해하면 배치 중심 동기화에서 실시간 데이터 제품화로 자연스럽게 넘어갈 수 있다.
 
-1. **로그 기반 CDC의 우위**: WAL/Binlog 파싱은 소스 DB 쿼리 부하 없이 모든 변경(삭제 포함)을 순서대로 캡처 — 트리거·쿼리 기반 대비 완전성과 효율성 모두 우월
-2. **Debezium + Kafka 조합**: Kafka Connect 플랫폼이 장애 복구·오프셋 관리·스케일아웃을 자동 처리 — 복잡한 CDC 운영을 표준화
-3. **Outbox 패턴**: 마이크로서비스에서 DB 저장과 이벤트 발행의 원자성 보장 — 분산 트랜잭션 없이 이벤트 기반 일관성 달성
-4. **실시간 DW 활용**: CDC로 Lambda Architecture의 이중 파이프라인을 단일화하여 운영 비용 절감
-
-📢 **섹션 요약 비유**: CDC는 데이터 세계의 실시간 뉴스 통신사다. 세상에서 일어나는 모든 변화(DB 변경)를 밀리초 단위로 포착하여 전 세계 구독자(Sink 시스템)에게 즉시 전달한다.
+- **📢 섹션 요약 비유**: CDC는 매일 밤 장부를 다시 베끼는 일이 아니라, 거래가 일어나는 순간 거래 전표가 자동으로 복사돼 회계팀·물류팀·매장에 동시에 전달되는 시스템과 같다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 관계 | 개념 | 설명 |
-|:---|:---|:---|
-| 핵심 기술 | MySQL Binlog | 행 단위 변경 이진 로그 |
-| 핵심 기술 | PostgreSQL WAL | 쓰기 전 로그, 논리 복제 기반 |
-| CDC 플랫폼 | Debezium | Kafka Connect 기반 오픈소스 CDC |
-| 메시지 버스 | Kafka | 변경 이벤트 중계 |
-| 이벤트 패턴 | Outbox Pattern | 원자적 DB 저장 + 이벤트 발행 |
-| 스키마 관리 | Schema Registry | Avro 스키마 버전화 |
-| 쿼리 패턴 | MERGE/UPSERT | CDC 이벤트를 타겟에 반영 |
-| 아키텍처 | Kappa Architecture | 배치 없이 스트리밍만으로 처리 |
-
----
-
-### 👶 어린이를 위한 3줄 비유 설명
-
-1. CDC는 도서관 책 대출 기록이야 — 누가 어떤 책을 가져갔는지, 반납했는지, 새 책이 들어왔는지 모든 변화를 실시간으로 기록해.
+| 개념 | 연결 포인트 |
+| :--- | :--- |
+| Binlog / WAL | DB 커밋 순서와 변경 내용을 담는 CDC의 출발점 |
+| Debezium | 로그를 변경 이벤트로 바꾸는 Kafka Connect 기반 커넥터 |
+| Apache Kafka | 변경 이벤트를 내구성 있게 팬아웃하는 메시지 버스 |
+| Schema Registry | CDC 이벤트 스키마 진화를 통제하는 계약 저장소 |
+| Outbox Pattern | 도메인 이벤트를 원자적으로 발행하기 위한 마이크로서비스 패턴 |
+| MERGE / UPSERT | 최신 상태 테이블에 CDC를 멱등 반영하는 핵심 연산 |
+| Feature Store | CDC 기반 최신 피처를 온라인 추론에 제공하는 소비자 계층 |
 
 ### 📈 관련 키워드 및 발전 흐름도
 
 ```text
-배치 ETL (주기적 전체 복사)
+OLTP 트랜잭션 커밋
     │
     ▼
-CDC (Change Data Capture): 변경분만 실시간 캡처
-    ├─► 로그 기반 CDC: MySQL Binlog · PostgreSQL WAL
-    └─► 쿼리 기반 CDC: 타임스탬프 비교 (레거시)
+Binlog / WAL 기록
     │
     ▼
-Debezium (오픈소스 CDC 커넥터)
-    └─► DB → Kafka Connect → Kafka Topic → 소비자
+Debezium CDC 이벤트 변환
     │
     ▼
-실시간 동기화 파이프라인
-    ├─► OLTP → OLAP 실시간 복제
-    ├─► 캐시 무효화 · 검색 인덱스 동기화
-    └─► Event Sourcing · 마이크로서비스 데이터 통합
+Kafka Topic 축적 · 재전송
+    │
+    ├─▶ DW / Lakehouse 적재
+    ├─▶ Search / Cache 동기화
+    └─▶ Feature Store / Microservice 소비
 ```
-2. Debezium은 DB 일기를 읽는 탐정이야 — DB가 매일 쓰는 일기(트랜잭션 로그)를 분석해서 "오늘 주문이 3건 생기고 1건 취소됐어!"를 알려줘.
-3. Outbox 패턴은 편지를 직접 우체통에 넣는 대신 서랍에 먼저 보관하는 거야 — 편지 쓰기(DB 저장)와 발송(이벤트 발행)이 한 번에 실패하거나 한 번에 성공해서 편지를 잃어버릴 일이 없어!
+
+이 흐름은 테이블 복사 중심 사고에서, 변경 이벤트를 여러 소비자가 재사용하는 실시간 데이터 파이프라인으로의 전환을 보여 준다.
+
+### 👶 어린이를 위한 3줄 비유 설명
+
+1. CDC는 책장에서 책이 빠지거나 새로 들어올 때마다 바로 기록하는 똑똑한 사서 메모장이에요.
+2. Debezium은 그 메모장을 읽고 "이 책이 옮겨졌어!"라고 다른 방 친구들에게 바로 알려 주는 전달자예요.
+3. 그래서 모두가 밤까지 기다리지 않고도 같은 책장 상태를 거의 바로 알 수 있어요.
