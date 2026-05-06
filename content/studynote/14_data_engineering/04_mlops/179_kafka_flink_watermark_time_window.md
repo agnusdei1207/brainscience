@@ -7,371 +7,196 @@ categories = "studynote-data-engineering"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: Kafka + Flink 조합은 분산 메시지 브로커와 상태 기반(Stateful) 스트림 처리를 결합하여, 수억 이벤트/초 규모의 실시간 분석 파이프라인을 구축한다.
-> 2. **가치**: Watermark (워터마크) 메커니즘은 네트워크 지연으로 늦게 도착하는 이벤트를 허용 범위 내에서 처리하여, Event Time 기반의 정확한 시계열 집계를 보장한다.
-> 3. **판단 포인트**: Exactly-Once 처리는 Flink Checkpoint + Kafka Transactional API의 2단계 커밋(Two-Phase Commit)으로만 완전 보장되며, 이 없이는 최소 At-Least-Once만 보장된다.
+
+> 1. **본질**: Kafka는 재생 가능한 분산 이벤트 로그를, Flink는 상태 기반 이벤트 시간(Event Time) 처리 엔진을 제공하여 실시간 데이터 흐름을 계산 가능한 시간 모델로 바꾼다.
+> 2. **가치**: Watermark는 "어느 시점까지의 이벤트가 거의 다 도착했는가"를 표현해, 네트워크 지연과 순서 뒤바뀜이 있어도 Time Window 집계를 일관되게 닫을 수 있게 한다.
+> 3. **판단 포인트**: 허용 지연, 윈도우 종류, 키 분산, Exactly-Once 보장 수준을 어떻게 잡느냐가 지연시간·정확도·상태 크기의 균형을 결정한다.
 
 ---
 
 ## Ⅰ. 개요 및 필요성
 
-### 1.1 실시간 스트리밍 처리의 필요성
+Kafka + Flink 조합은 "이벤트를 잃지 않고 모으는 계층"과 "그 이벤트를 시간 기준으로 계산하는 계층"을 분리해 실시간 분석과 의사결정을 가능하게 만든다. 클릭 로그, 결제 이벤트, 센서 데이터, 온라인 피처(Feature) 생성처럼 수집은 끊기지 않고 들어오지만 결과는 분·초 단위로 바로 필요할 때 특히 강력하다. 이때 Kafka는 입력을 순서 있는 로그로 보존하고, Flink는 그 로그를 다시 읽어 상태 기반 계산과 재처리를 수행한다.
 
-```
-배치 처리의 한계:
-  사기 탐지: T+1일에 발견 → 이미 피해 발생
-  실시간 추천: 5분 전 클릭 기반 → 이미 페이지 이탈
-  IoT 이상 감지: 1시간 평균 → 장비 이미 고장
-  
-스트리밍 처리로 해결:
-  사기 탐지: 거래 후 100ms 이내 차단
-  실시간 추천: 현재 세션 행동 기반
-  IoT 이상 감지: 초당 센서 데이터 실시간 모니터링
-```
+배치 처리만으로는 이런 요구를 만족하기 어렵다. 하루 뒤 집계로는 이상 거래를 막기 늦고, 몇 분 전 행동으로는 세션 기반 추천이 이미 식어 버릴 수 있다. 반대로 처리 시간(Processing Time)만 믿고 즉시 집계하면 모바일 네트워크 지연이나 파티션 재균형 때문에 늦게 도착한 이벤트가 잘못된 창에 들어가 결과가 흔들린다.
 
-### 1.2 Kafka 기본 아키텍처
+아래 구조는 Kafka가 "이벤트를 보존"하고 Flink가 "시간 의미를 계산"하는 역할을 각각 맡는다는 점을 보여준다. 실시간 파이프라인의 핵심은 빠르게 읽는 것보다, 시간이 뒤엉킨 이벤트를 비즈니스적으로 올바른 결과로 정리하는 데 있다.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│              Apache Kafka 클러스터 구조                       │
-│                                                              │
-│  Producer → Topic (파티션 분산)  → Consumer Group           │
-│                                                              │
-│  Topic: "user-events" (파티션 4개)                           │
-│  ┌────────────────────────────────────────────────────┐     │
-│  │ Partition 0: [msg0] [msg1] [msg4] [msg8] ...        │     │
-│  │ Partition 1: [msg2] [msg5] [msg9] ...               │     │
-│  │ Partition 2: [msg3] [msg6] [msg10] ...              │     │
-│  │ Partition 3: [msg7] [msg11] ...                     │     │
-│  └────────────────────────────────────────────────────┘     │
-│         │                  │                                 │
-│  Broker 1              Broker 2                              │
-│  (Leader: P0, P2)      (Leader: P1, P3)                     │
-│  (Follower: P1, P3)    (Follower: P0, P2)                   │
-│                                                              │
-│  Consumer Group A:                                           │
-│  - Consumer 0 ← Partition 0, 1                              │
-│  - Consumer 1 ← Partition 2, 3                              │
-│  (파티션 수 = 최대 병렬 컨슈머 수)                            │
-└─────────────────────────────────────────────────────────────┘
+```text
+┌──────────────────────────────────────────────────────────────┐
+│ Kafka + Flink 실시간 파이프라인                               │
+├──────────────────────────────────────────────────────────────┤
+│ App / Sensor / Event Source                                  │
+│          │                                                   │
+│          ▼                                                   │
+│ Kafka Topic (Partitioned Log)                                │
+│          │                                                   │
+│          ▼                                                   │
+│ Flink Source ─▶ keyBy ─▶ Watermark ─▶ Window / State         │
+│                                   │                          │
+│                                   ├─▶ Alert / Online Feature │
+│                                   └─▶ Lake / Warehouse Sink  │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-| Kafka 핵심 개념 | 설명 |
-|:---|:---|
-| **Topic** | 메시지 범주, 논리적 채널 |
-| **Partition** | 토픽의 물리적 분할, 병렬성 단위 |
-| **Offset** | 파티션 내 메시지 순서 번호 |
-| **Consumer Group** | 소비자 집합, 파티션 균등 할당 |
-| **Retention** | 메시지 보존 기간 (기본 7일) |
-| **Replication Factor** | 복제 수 (고가용성) |
+특히 Machine Learning (ML) 파이프라인에서는 이벤트가 언제 처리되었는지보다 "언제 발생했는지"가 더 중요하다. 사용자 클릭이 늦게 도착하더라도 실제 발생 시각 기준으로 세션, 구매 전환, 실시간 피처를 계산해야 모델 입력과 사후 분석이 일치하기 때문이다. 그래서 Kafka + Flink에서 Watermark와 Window는 단순 API가 아니라 시간 정의 자체라고 볼 수 있다.
 
-📢 **섹션 요약 비유**: Kafka는 거대한 고속도로 시스템이다. 차선(파티션)이 많을수록 동시에 더 많은 차(메시지)가 달릴 수 있고, 각 출구(Consumer Group)는 자기 구역의 차만 담당한다.
+- **📢 섹션 요약 비유**: Kafka는 우편물을 잃지 않고 쌓아 두는 우체국 창고이고, Flink는 도착 순서가 뒤죽박죽이어도 실제 발송 시간 순서로 다시 정리하는 분류 기계와 같다.
 
 ---
 
 ## Ⅱ. 아키텍처 및 핵심 원리
 
-### 2.1 Flink 스트림 처리 아키텍처
+Kafka + Flink의 핵심은 파티션별로 흘러오는 이벤트에 타임스탬프를 부여하고, Watermark로 시간 진행 정도를 추정하며, Window 안에 상태를 모았다가 적절한 시점에 결과를 내보내는 것이다. 여기서 Kafka는 순서 보장 단위를 파티션으로 나누고, Flink는 각 파티션을 병렬 태스크가 읽으면서 키별 상태와 체크포인트를 관리한다.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│           Apache Flink 클러스터 아키텍처                      │
-│                                                              │
-│  ┌──────────────────────┐                                    │
-│  │  JobManager (마스터)  │                                    │
-│  │  - Job 스케줄링       │                                    │
-│  │  - Checkpoint 조정    │                                    │
-│  │  - 장애 복구 관리     │                                    │
-│  └──────────┬───────────┘                                    │
-│             │                                                │
-│  ┌──────────┼──────────────────────────────────────┐        │
-│  │          │                                       │        │
-│  ▼          ▼          ▼          ▼                 │        │
-│  TaskManager  TaskManager  TaskManager  TaskManager │        │
-│  (Slot × N)   (Slot × N)   (Slot × N)   (Slot × N) │        │
-│                                                     │        │
-│  Task Slot = 병렬 처리 단위                          │        │
-│  Pipeline:  Source → Transform → Window → Sink      │        │
-│             (각 단계 = 별도 스레드/슬롯)             │        │
-└─────────────────────────────────────────────────────┘        
-```
+| 구성 요소 | 역할 | 실무 포인트 |
+| :--- | :--- | :--- |
+| Kafka Topic / Partition | 이벤트 보존, 병렬 처리 단위 제공 | 파티션 수가 처리 병렬성과 재처리 속도에 영향 |
+| Timestamp Assigner | 이벤트 발생 시각 부여 | 소스 시스템 시계를 신뢰할 수 있는지 확인 필요 |
+| Watermark Strategy | 시간 진행 하한선 계산 | 허용 지연과 유휴 파티션 감지가 중요 |
+| Window Operator | 일정 시간 구간별 상태 집계 | 창 크기와 상태 크기가 함께 증가 |
+| Checkpointed Sink | 장애 시 중복/손실 제어 | 정확한 결과가 필요하면 트랜잭션 싱크 고려 |
 
-### 2.2 시간 개념 (Time Semantics)
+Watermark의 핵심 수식은 보통 `watermark = 지금까지 본 최대 event time - 허용 지연`이다. 그러나 병렬 처리에서는 이 Watermark가 파티션마다 따로 계산된 뒤, 전체 연산자는 보통 "활성 입력 중 최소 Watermark"를 사용한다. 즉 빠른 파티션 하나가 아니라 가장 늦은 파티션이 창 종료를 결정한다.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    3가지 시간 개념                             │
+```text
+┌──────────────────────────────────────────────────────────────┐
+│ 파티션별 Watermark가 하나로 합쳐지는 방식                     │
+├──────────────────────────────────────────────────────────────┤
+│ 허용 지연 = 1분                                               │
 │                                                              │
-│  Event Time (이벤트 발생 시간):                               │
-│  → 실제 사건이 발생한 시간 (이벤트 페이로드에 포함)           │
-│  → 가장 정확한 시간적 의미론                                  │
-│  → Watermark 필요 (늦은 도착 처리)                           │
+│ Partition A : 10:00 ─ 10:02 ─ 10:05      WM_A = 10:04        │
+│ Partition B : 10:01 ─ 10:03 ─ 10:04      WM_B = 10:03        │
 │                                                              │
-│  Processing Time (처리 시간):                                │
-│  → Flink 서버가 이벤트를 처리하는 시간                        │
-│  → 구현 간단, 지연 적음                                       │
-│  → 네트워크 지연에 따라 결과 달라짐 (재현 불가)               │
-│                                                              │
-│  Ingestion Time (수집 시간):                                 │
-│  → Kafka에서 Flink Source가 이벤트를 받은 시간               │
-│  → Event Time과 Processing Time의 중간                       │
-└─────────────────────────────────────────────────────────────┘
+│ Global Watermark = min(WM_A, WM_B) = 10:03                  │
+│ Window [10:00, 10:03) 는 Global Watermark > 10:03일 때 종료  │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-### 2.3 Watermark (워터마크)
+이 구조 때문에 유휴 파티션(Idleness)을 처리하지 않으면 전체 Watermark가 멈출 수 있다. 예를 들어 한 파티션은 더 이상 이벤트가 없는데 "아직 늦은 데이터가 올지도 모른다"고 간주되면, 다른 파티션이 아무리 앞으로 나아가도 창이 닫히지 않는다. 실무에서 Watermark가 느리다고 느껴질 때는 대개 계산식보다 파티션 편차와 유휴 입력 처리가 원인이다.
 
-```
-늦은 데이터 (Late Data) 문제:
+윈도우는 Watermark와 함께 작동하는 상태 컨테이너다. 비중첩 집계에는 Tumbling Window, 이동 평균에는 Sliding Window, 사용자 활동 구간 분석에는 Session Window가 잘 맞는다. 중요한 것은 윈도우가 단순한 그룹 함수가 아니라 "언제까지 기다리고, 언제 결과를 닫을지"를 포함한 시간 정책이라는 점이다.
 
-  시간축:    [10:00] [10:01] [10:02] [10:03] [10:04]
-  Kafka 도착: 10:00  10:02  10:01  10:03  → 10:01이 늦게 도착!
-  
-  "10:00~10:02 창에서 10:02에 집계하면 10:01 데이터 누락!"
+| Window 종류 | 특징 | 잘 맞는 사례 |
+| :--- | :--- | :--- |
+| Tumbling Window | 고정 길이, 서로 겹치지 않음 | 1분 거래 건수, 분당 오류율 |
+| Sliding Window | 고정 길이, 주기적으로 겹침 | 최근 5분 이동 평균, 이상 탐지 |
+| Session Window | 활동 공백으로 닫힘 | 사용자 세션 분석, 기기 활동 구간 |
 
-Watermark 해결:
-  W(t) = max_event_time_seen - lateness_tolerance
-  
-  예: 최신 이벤트 타임 = 10:05, 허용 지연 = 30초
-  Watermark = 10:04:30
-  
-  → "10:04:30 이전 이벤트는 모두 도착했다고 가정"
-  → 10:00~10:03 윈도우는 Watermark가 10:03을 넘으면 닫힘
-  → 30초 이내 지연 데이터는 처리, 30초 초과 → 늦은 데이터로 처리
+즉 Kafka + Flink의 핵심 원리는 "로그를 읽는 것"이 아니라 "시간의 불완전성을 정책으로 통제하는 것"이다. Watermark, Window, State, Checkpoint가 함께 맞물려야 실시간 파이프라인이 빠르면서도 재현 가능한 결과를 낸다.
 
-┌──────────────────────────────────────────────────────────┐
-│  Watermark 진행 흐름                                     │
-│                                                          │
-│  이벤트 스트림:                                          │
-│  t=100 t=102 t=103 t=101 t=105 t=104 t=110 ...          │
-│  │     │     │     │     │     │     │                   │
-│  W=90  W=92  W=93  W=92  W=95  W=95  W=100              │
-│                                                          │
-│  (Watermark = 이벤트 타임 최댓값 - 10초 지연 허용)      │
-│  (모노토닉 증가, 절대 감소하지 않음)                    │
-└──────────────────────────────────────────────────────────┘
-```
-
-### 2.4 윈도우 종류
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Flink 윈도우 종류                         │
-│                                                              │
-│  Tumbling Window (비중첩 고정 창):                            │
-│  [────10분────][────10분────][────10분────]                  │
-│  완전 비중첩, 각 이벤트가 정확히 1개 창에 속함               │
-│  용도: 분당 거래 건수, 10분 합계                             │
-│                                                              │
-│  Sliding Window (슬라이딩 창):                               │
-│  [────────10분────────]                                      │
-│     [────────10분────────]                                   │
-│        [────────10분────────]                                │
-│  5분 슬라이드 → 각 이벤트가 2개 창에 중복 속함              │
-│  용도: 이동 평균, 이상 탐지                                  │
-│                                                              │
-│  Session Window (세션 창):                                   │
-│  [──이벤트들──] 30초 공백 [──이벤트들──]                    │
-│  활동 없으면 창 닫힘, 사용자 세션 분석에 적합               │
-│                                                              │
-│  Global Window:                                              │
-│  [────────────────────────────────]                          │
-│  트리거 조건 만족 시 처리 (예: 100개 이벤트마다)            │
-└─────────────────────────────────────────────────────────────┘
-```
-
-📢 **섹션 요약 비유**: Watermark는 버스 기사가 "30초 더 기다리고 출발합니다"라고 말하는 것과 같다. 지각하는 승객(늦은 이벤트)을 위해 잠시 기다리되, 무한정 기다리지는 않는다.
+- **📢 섹션 요약 비유**: Watermark는 시험 답안 마감 시각과 같다. 조금 늦게 들어오는 학생은 받아 주되, 영원히 기다릴 수는 없으니 어느 순간 "이제 채점 시작"을 선언해야 한다.
 
 ---
 
 ## Ⅲ. 비교 및 연결
 
-### 3.1 처리 시맨틱 비교
+Kafka + Flink를 제대로 이해하려면 시간 기준과 엔진 역할의 경계를 함께 봐야 한다. 먼저 Processing Time은 가장 단순하지만 입력 지연이 결과를 바꿀 수 있고, Event Time + Watermark는 더 복잡하지만 실제 비즈니스 시점을 기준으로 재현 가능한 결과를 제공한다. 특히 모바일, 글로벌 네트워크, 사물인터넷(Internet of Things, IoT)처럼 지연 편차가 큰 환경에서는 이 차이가 직접적인 품질 차이로 이어진다.
 
-| 시맨틱 | 정의 | 구현 방법 | 성능 영향 |
-|:---|:---|:---|:---|
-| **At-Most-Once** | 최대 1회 (손실 가능) | 체크포인트 없음 | 가장 빠름 |
-| **At-Least-Once** | 최소 1회 (중복 가능) | Flink Checkpoint | 중간 |
-| **Exactly-Once** | 정확히 1회 | Flink CP + Kafka TxAPI | 오버헤드 있음 |
+| 시간 기준 | 장점 | 약점 | 잘 맞는 경우 |
+| :--- | :--- | :--- | :--- |
+| Processing Time | 구현 단순, 지연 최소 | 늦은 데이터에 취약, 재현성 약함 | 내부 운영 지표, 극저복잡 집계 |
+| Event Time + Watermark | 정확한 시간 의미, 재처리 일관성 | 상태·설계 복잡도 증가 | 결제, 사용자 세션, ML 피처 생성 |
 
-### 3.2 Exactly-Once 2단계 커밋
+엔진 관점에서도 역할이 다르다. Kafka는 로그 저장과 전송의 중심이고, Kafka Streams는 애플리케이션 안에서 비교적 가벼운 스트림 처리를 수행한다. 반면 Flink는 큰 상태, 복잡한 조인, 정교한 Event Time 제어, Exactly-Once 복구가 필요한 분산 처리에 더 적합하다.
 
-```
-Flink + Kafka Exactly-Once (2PC):
+| 기술 | 주 역할 | 강점 | 한계 |
+| :--- | :--- | :--- | :--- |
+| Kafka | 이벤트 로그 / 버퍼 | 재생 가능, 파티션 확장성 | 자체적으로 윈도우·상태 계산은 제한적 |
+| Kafka Streams | 애플리케이션 내 스트림 처리 | 단순 배포, 로컬 상태 | 대규모 분산 상태·복잡 조인 한계 |
+| Flink | 분산 상태ful 스트림 처리 | Event Time, 대규모 상태, 정교한 복구 | 운영 복잡도 높음 |
 
-  ┌────────────────────────────────────────────────────────┐
-  │  정상 처리 흐름:                                        │
-  │                                                        │
-  │  1. Flink Checkpoint 시작                              │
-  │  2. 각 Kafka Sink에 Pre-commit (트랜잭션 열기)          │
-  │  3. Checkpoint 완료 신호                               │
-  │  4. 모든 Sink에 Commit (트랜잭션 확정)                  │
-  │  → Kafka 토픽에 메시지 최종 가시화                     │
-  │                                                        │
-  │  장애 발생 시:                                          │
-  │  2단계 사이 장애 → Checkpoint 재시작 → 트랜잭션 롤백   │
-  │  → 정확히 한 번만 전달 보장                             │
-  │                                                        │
-  │  조건:                                                  │
-  │  - Kafka transactional.id 설정                         │
-  │  - Flink CheckpointingMode.EXACTLY_ONCE                │
-  │  - isolation.level = read_committed (소비자 설정)       │
-  └────────────────────────────────────────────────────────┘
-```
+이 조합은 Machine Learning Operations (MLOps)와도 연결된다. 같은 Kafka 로그를 재생하면 온라인 피처 계산 로직을 과거 데이터에 다시 적용해 검증할 수 있고, Feature Store나 레이크하우스와 연결해 오프라인 학습 데이터와 실시간 추론 입력의 의미 차이를 줄일 수 있다. 즉 Watermark와 Window는 단순 스트리밍 기술이 아니라, 온라인·오프라인 데이터 일관성을 지키는 장치이기도 하다.
 
-### 3.3 Kafka vs Kafka Streams vs Flink
-
-| 항목 | Kafka | Kafka Streams | Flink |
-|:---|:---|:---|:---|
-| **역할** | 메시지 브로커 | 경량 스트림 처리 | 분산 스트림 처리 |
-| **상태 관리** | Partition 기반 | RocksDB (로컬) | RocksDB + 원격 |
-| **Checkpoint** | 오프셋 커밋 | Changelog Topic | 분산 스냅샷 |
-| **이벤트 타임** | ✗ | 제한적 | ✓ (완전 지원) |
-| **복잡한 조인** | ✗ | 제한적 | ✓ |
-| **규모** | N/A (브로커) | 중소규모 | 대규모 |
-| **운영 복잡도** | 낮음 | 낮음 | 높음 |
-
-📢 **섹션 요약 비유**: Kafka Streams는 편의점 POS 시스템(간단한 처리)이고, Flink는 증권거래소 처리 시스템(복잡한 이벤트, 고신뢰)이다. 복잡도와 규모에 따라 선택해야 한다.
+- **📢 섹션 요약 비유**: Processing Time은 버스 정류장 시계만 보고 출발하는 방식이고, Event Time + Watermark는 승객이 실제 언제 도착했는지까지 반영해 노선을 기록하는 방식과 같다.
 
 ---
 
 ## Ⅳ. 실무 적용 및 기술사 판단
 
-### 4.1 Flink Java/Python 구현
+실무에서는 Window와 Watermark를 "정답 공식"으로 잡는 것이 아니라, 비즈니스 손실과 운영 비용의 균형으로 결정해야 한다. 허용 지연을 길게 잡으면 정확도는 올라가지만 상태가 오래 남아 메모리와 체크포인트 비용이 커진다. 반대로 너무 짧게 잡으면 결과는 빨리 나오지만 늦은 데이터가 많아 보정 로직이나 재처리 비용이 증가한다.
 
-```python
-from pyflink.datastream import StreamExecutionEnvironment
-from pyflink.datastream.connectors.kafka import KafkaSource, KafkaOffsetResetStrategy
-from pyflink.datastream.window import TumblingEventTimeWindows
-from pyflink.common.time import Time, Duration
-from pyflink.common.watermark_strategy import WatermarkStrategy
+| 시나리오 | 권장 설계 | 이유 |
+| :--- | :--- | :--- |
+| 실시간 대시보드 | 1분 Tumbling Window + 짧은 허용 지연 | 빠른 가시성이 우선, 소폭 오차 허용 가능 |
+| 결제/정산 집계 | Event Time + Exactly-Once Sink + 보정 경로 | 중복·누락 비용이 매우 큼 |
+| 모바일 세션 분석 | Session Window + 비교적 긴 허용 지연 | 네트워크 지연과 앱 백그라운드 복귀 고려 |
+| IoT 센서 모니터링 | Event Time + 유휴 파티션 감지 + 큰 상태 관리 | 연결 불안정과 파티션 편차가 흔함 |
 
-env = StreamExecutionEnvironment.get_execution_environment()
-env.enable_checkpointing(60000)  # 60초 체크포인트 간격
+늦은 데이터 처리 정책도 미리 정해야 한다. 허용 지연 안에 들어오면 기존 결과를 업데이트하고, 조금 더 늦은 데이터는 사이드 출력으로 보내 보정 배치에 합류시키며, 매우 늦은 데이터는 감사 로그만 남기고 버리는 방식이 흔하다. 이 정책을 명시하지 않으면 운영 중 "왜 숫자가 뒤늦게 바뀌었는가"라는 갈등이 반복된다.
 
-# Kafka Source 설정
-kafka_source = KafkaSource.builder() \
-    .set_bootstrap_servers("kafka:9092") \
-    .set_topics("user-events") \
-    .set_group_id("flink-consumer-group") \
-    .set_starting_offsets(KafkaOffsetResetStrategy.LATEST) \
-    .set_value_only_deserializer(SimpleStringSchema()) \
-    .build()
-
-# Watermark 전략 설정 (Event Time + 30초 지연 허용)
-watermark_strategy = WatermarkStrategy \
-    .for_bounded_out_of_orderness(Duration.of_seconds(30)) \
-    .with_timestamp_assigner(EventTimestampAssigner())
-
-stream = env.from_source(
-    kafka_source,
-    watermark_strategy,
-    "Kafka Source"
-)
-
-# 5분 Tumbling Window에서 사용자별 이벤트 수 집계
-result = stream \
-    .key_by(lambda event: event['user_id']) \
-    .window(TumblingEventTimeWindows.of(Time.minutes(5))) \
-    .aggregate(CountAggregateFunction()) \
-    .filter(lambda count: count.event_count > 100)  # 이상 탐지
-
-result.print()
-env.execute("Fraud Detection Job")
+```text
+┌──────────────────────────────────────────────────────────────┐
+│ 늦은 데이터 처리 경로                                         │
+├──────────────────────────────────────────────────────────────┤
+│ Late Event                                                    │
+│    │                                                          │
+│    ├─ 허용 지연 이내 ─▶ Window 재계산 / 결과 갱신             │
+│    ├─ 약간 초과      ─▶ Side Output → 보정 파이프라인         │
+│    └─ 크게 초과      ─▶ Drop / Audit Log                      │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-### 4.2 Kafka 성능 튜닝 파라미터
+체크리스트는 다음과 같다.
 
-| 파라미터 | 기본값 | 권장값 | 목적 |
-|:---|:---|:---|:---|
-| `num.partitions` | 1 | CPU 코어 수 × 배수 | 병렬성 |
-| `replication.factor` | 1 | 3 (프로덕션) | 고가용성 |
-| `batch.size` | 16KB | 1~2MB | 처리량 향상 |
-| `linger.ms` | 0 | 5~20ms | 배치 누적 |
-| `compression.type` | none | lz4/zstd | 처리량/비용 |
-| `max.poll.records` | 500 | 1000~5000 | 소비자 처리량 |
-| `fetch.min.bytes` | 1 | 1MB | 소비자 배치 |
+1. 이벤트 타임스탬프가 신뢰 가능한 소스에서 오는가?
+2. 파티션 키가 특정 고객·디바이스에 치우쳐 상태 편중을 만들지 않는가?
+3. Watermark 지연의 원인이 허용 지연인지, 유휴 파티션인지, 백프레셔인지 구분되고 있는가?
+4. 결과 업데이트를 허용할지, 한 번 출력 후 보정 배치로 돌릴지 정책이 정해져 있는가?
+5. 체크포인트 간격과 Kafka 트랜잭션 시간 제한이 서로 맞는가?
 
-### 4.3 Flink Checkpoint 설정
+흔한 안티패턴은 Processing Time으로 시작한 뒤, 늦은 데이터가 쌓이자 나중에 수작업 보정을 붙이는 것이다. 또 허용 지연을 과도하게 길게 잡아 상태가 폭증하거나, 한 개의 Hot Key 때문에 특정 태스크만 느려지는 경우도 많다. 기술사 답안에서는 Watermark 정의, Window 종류, Exactly-Once 보장, Late Data 처리까지 한 묶음으로 설명해야 실제 설계 역량이 드러난다.
 
-```java
-StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-
-// Checkpoint 설정
-env.enableCheckpointing(60_000L); // 60초마다
-env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
-env.getCheckpointConfig().setMinPauseBetweenCheckpoints(30_000L);
-env.getCheckpointConfig().setCheckpointTimeout(120_000L);
-env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
-
-// 상태 백엔드 (RocksDB: 대용량 상태)
-env.setStateBackend(new EmbeddedRocksDBStateBackend());
-env.getCheckpointConfig().setCheckpointStorage("s3://flink-checkpoints/");
-```
-
-📢 **섹션 요약 비유**: Flink Checkpoint는 게임의 세이브 포인트와 같다. 장애가 발생해도 마지막 세이브 지점부터 다시 시작하므로 데이터를 잃지 않는다.
+- **📢 섹션 요약 비유**: 실무의 Watermark 설계는 버스를 몇 분까지 기다릴지 정하는 운행 정책과 같다. 너무 오래 기다리면 전체 노선이 밀리고, 너무 빨리 떠나면 승객을 잃는다.
 
 ---
 
 ## Ⅴ. 기대효과 및 결론
 
-### 5.1 Kafka + Flink 도입 효과
+Kafka + Flink 기반 Event Time 처리는 순서가 뒤엉킨 현실 세계의 이벤트를 재현 가능한 숫자로 바꿔 준다. 같은 Kafka 로그를 다시 읽어도 비슷한 Window 결과를 재구성할 수 있고, 실시간 경보와 피처 계산을 배치 재처리와 같은 의미 체계 위에 둘 수 있다. 이는 실시간 분석뿐 아니라 모델 검증, 사후 정산, 장애 복구에도 큰 장점이다.
 
-| 항목 | 배치 처리 | Kafka + Flink |
-|:---|:---|:---|
-| **지연 시간** | 분~시간 | 밀리초 |
-| **처리 규모** | 제한적 | 수억 이벤트/초 |
-| **정확성 보장** | 재처리로 보장 | Exactly-Once |
-| **장애 복구** | 전체 재실행 | 마지막 체크포인트부터 |
-| **Event Time 집계** | 파일 기준 가능 | Watermark로 정확 보장 |
+하지만 이 접근이 공짜는 아니다. 상태 저장소 크기, 체크포인트 비용, Key Skew, 잘못된 타임스탬프, 복잡한 Sink 일관성 문제가 함께 따라온다. 특히 Watermark는 "정확한 진실"이 아니라 "이 정도 늦음까지는 기다리겠다"는 운영 합의이므로, 비즈니스 부서와 데이터 엔지니어가 같은 기준을 공유해야 한다.
 
-### 5.2 기술사 답안 핵심 논점
+결론적으로 기억할 핵심은 단순하다. Kafka가 이벤트를 잃지 않게 해 주고, Flink가 시간을 계산 가능하게 만든다. 그리고 Window와 Watermark는 그 사이에서 "언제 결과를 확정할 것인가"를 정하는 계약이다. 이 계약을 잘 설계할수록 실시간 파이프라인은 빠르면서도 신뢰할 수 있게 된다.
 
-1. **Watermark 설계**: 허용 지연 시간(lateness tolerance)은 데이터 품질과 지연 레이턴시의 트레이드오프 — 너무 짧으면 데이터 손실, 너무 길면 출력 지연
-2. **Exactly-Once 조건**: Flink Checkpoint + Kafka Transactional API 둘 다 필요, 하나만으로는 At-Least-Once
-3. **파티션 수 설계**: Kafka 파티션 수 = Flink 병렬도의 상한, 나중에 늘리기 어려우므로 여유 있게 설정
-4. **윈도우 선택**: 집계 결과가 중복 없어야 함 → Tumbling, 이동 평균·이상 감지 → Sliding, 세션 분석 → Session
-
-📢 **섹션 요약 비유**: Kafka + Flink는 초고속 컨베이어 벨트(Kafka)와 정밀 조립 로봇(Flink)의 조합이다. 벨트는 쉬지 않고 부품을 공급하고, 로봇은 정확한 타이밍에 조립하며 중간에 전원이 끊겨도 마지막 작업부터 재개한다.
+- **📢 섹션 요약 비유**: Kafka + Flink는 택배를 모아 두는 창고와 배송 시간을 계산하는 관제실이 함께 움직이는 구조와 같다. 창고만 있어도, 관제실만 있어도 부족하고 둘이 맞물려야 정확한 배송 일정이 나온다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 관계 | 개념 | 설명 |
-|:---|:---|:---|
-| 메시지 브로커 | Kafka | 분산 발행-구독 스트리밍 플랫폼 |
-| 스트림 처리 | Flink | 상태 기반 분산 스트림 처리 엔진 |
-| 시간 개념 | Event Time | 실제 이벤트 발생 시간 |
-| 지연 처리 | Watermark | 늦은 이벤트 허용 기준 진행 표시 |
-| 집계 단위 | Tumbling Window | 비중첩 고정 크기 시간 창 |
-| 집계 단위 | Sliding Window | 중첩 슬라이딩 시간 창 |
-| 신뢰성 | Exactly-Once | 2PC 기반 정확히 한 번 처리 |
-| 경쟁 기술 | Spark Structured Streaming | 마이크로배치 기반 스트리밍 |
-
----
-
-### 👶 어린이를 위한 3줄 비유 설명
-
-1. Kafka는 무한히 긴 우편함이야 — 편지(메시지)가 끊임없이 들어오고, 여러 집(Consumer)이 각자 담당 구역의 편지만 가져가.
+| 개념 | 연결 포인트 |
+| :--- | :--- |
+| Kafka Topic / Partition | 이벤트 로그 보존과 병렬성의 기본 단위 |
+| Event Time | 실제 비즈니스 발생 시각을 기준으로 계산하는 시간 모델 |
+| Watermark | 시간 진행 하한선을 표현해 Window 종료 시점을 정하는 정책 |
+| Time Window | 일정 구간의 이벤트를 상태로 모아 집계·조인하는 연산 단위 |
+| Checkpoint | 장애 후 상태와 오프셋을 복구해 일관성을 유지하는 장치 |
+| State Backend | 키별 상태를 메모리 또는 디스크에 저장하는 계층 |
+| Exactly-Once | 재처리 시 중복·누락 없이 결과를 내기 위한 보장 수준 |
 
 ### 📈 관련 키워드 및 발전 흐름도
 
 ```text
-배치 처리 (MapReduce · Spark Batch)
+이벤트 발생
     │
     ▼
-메시지 브로커: Kafka (Topic · Partition · Offset)
-    ├─► Producer → Broker → Consumer
-    └─► Consumer Group: 파티션별 병렬 소비
+Kafka Append Log
     │
     ▼
-스트림 처리 엔진: Apache Flink
-    ├─► 이벤트 시간 (Event Time) 기반 처리
-    ├─► 워터마크 (Watermark): 지연 데이터 허용 범위
-    └─► 시간 창 (Window): Tumbling · Sliding · Session
+Timestamp Assign / Watermark 계산
     │
     ▼
-실시간 분석: Kafka + Flink → 실시간 대시보드 · 이상 탐지
+Keyed Window State
+    │
+    ├─▶ 실시간 결과 출력
+    └─▶ Replay / Backfill 검증
 ```
-2. Watermark는 "30분 기다렸으니 늦은 편지는 포기하고 결산하자"는 우체부의 규칙 — 무한정 기다릴 수 없으니 기준을 정하는 거야.
-3. Exactly-Once는 "편지가 반드시 딱 한 번만 배달되도록" 하는 등기 우편 시스템 — Flink 세이브포인트 + Kafka 트랜잭션이 함께 있어야 가능해!
+
+이 흐름은 로그 저장, 시간 진행 추정, 상태 기반 집계, 재처리 가능성이 하나의 파이프라인으로 연결되는 구조를 보여준다.
+
+### 👶 어린이를 위한 3줄 비유 설명
+
+1. Kafka는 편지를 잃어버리지 않게 순서대로 쌓아 두는 큰 우체통이에요.
+2. Flink는 조금 늦게 온 편지도 원래 보낸 시간대로 다시 정리해 주는 똑똑한 분류기예요.
+3. Watermark는 "이제 이 시간까지 온 편지는 거의 다 모였어"라고 알려 주는 마감선이에요.

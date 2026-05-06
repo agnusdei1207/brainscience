@@ -1,258 +1,175 @@
 +++
 weight = 179
 title = "179. 레파지토리 패턴 (Repository Pattern)"
-date = "2026-04-21"
+date = "2026-05-06"
 [extra]
 categories = "studynote-design-supervision"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
 
-> 1. **본질**: 레파지토리 (Repository) 패턴은 DDD (Domain-Driven Design)에서 도메인 객체의 컬렉션처럼 동작하는 추상화 레이어로, 인프라 기술(DB)을 도메인으로부터 완전히 격리한다.
-> 2. **가치**: "인메모리 컬렉션(List, Map)처럼 도메인 객체를 다룰 수 있다"는 추상화가 도메인 모델의 순수성을 지키고, JPA 교체나 DB 변경을 도메인 코드 수정 없이 가능하게 한다.
-> 3. **판단 포인트**: DAO는 DB 테이블 중심(기술 관점), Repository는 도메인 Aggregate(비즈니스 관점) 중심이다. DDD를 적용하는 시스템에서는 DAO보다 Repository가 더 적합하다.
+> 1. **본질**: 레파지토리 패턴 (Repository Pattern)은 도메인 애그리게이트를 메모리 컬렉션처럼 조회·저장하게 만드는 추상화로, 도메인 모델이 SQL이나 ORM (Object-Relational Mapping) 세부사항보다 비즈니스 의미에 집중하게 한다.
+> 2. **가치**: 애그리게이트 경계를 지키고 테스트 대역을 쉽게 만들며, 인프라 기술 교체나 쿼리 최적화가 상위 도메인 코드로 새어 나오는 것을 줄인다.
+> 3. **판단 포인트**: 단순 CRUD (Create, Read, Update, Delete) 화면까지 무조건 레파지토리로 감싸면 과잉 추상화가 되므로, DDD (Domain-Driven Design) 수준의 모델과 애그리게이트 경계가 실제로 필요한지 먼저 판단해야 한다.
 
 ---
 
 ## Ⅰ. 개요 및 필요성
 
-### DDD와 Repository
+레파지토리 패턴은 "데이터베이스를 직접 다루지 말고, 도메인 객체 집합을 다루듯 설계하자"는 발상에서 출발한다. 서비스가 `SELECT`, `JOIN`, `EntityManager`, `ResultSet` 같은 저장 기술 언어를 알기 시작하면, 도메인 규칙은 점점 저장소 구조에 끌려간다. 그 결과 비즈니스 개념보다 테이블 구조가 상위 설계를 지배하게 된다.
 
-마틴 파울러(Martin Fowler)의 『Patterns of Enterprise Application Architecture』와 에릭 에반스(Eric Evans)의 『Domain-Driven Design』에서 Repository 패턴이 공식화되었다.
+DDD에서는 특히 이 문제가 크게 드러난다. 주문, 회원, 결제 같은 애그리게이트는 일관성 경계를 가진 도메인 단위인데, 테이블 단위 접근만 반복하면 애그리게이트 내부 규칙이 쉽게 파편화된다. 예를 들어 `OrderItem`만 따로 저장·수정하는 식으로 흐르면, 주문 총액 계산이나 상태 전이 규칙이 여러 곳에 흩어진다.
 
-Repository의 핵심 아이디어는 다음과 같다.
+레파지토리는 이런 문제를 막기 위해 등장했다. 서비스는 "주문을 찾는다", "회원을 저장한다"처럼 도메인 언어로 말하고, 실제 영속화는 레파지토리 구현체가 담당한다. 즉 레파지토리의 필요성은 객체 하나 더 만드는 데 있지 않고, **도메인 언어와 저장 기술 언어 사이에 명확한 번역 경계**를 세우는 데 있다.
 
-> **"데이터베이스가 아니라 컬렉션처럼 다루어라"**
-
-```java
-// DAO 방식 (DB 중심 사고)
-userDao.executeQuery("SELECT * FROM users WHERE id = ?", id);
-userDao.update("UPDATE users SET email = ? WHERE id = ?", email, id);
-
-// Repository 방식 (도메인 객체 컬렉션 사고)
-User user = userRepository.findById(id);
-user.changeEmail(email); // 도메인 메서드
-userRepository.save(user);
-```
-
-DAO는 "SQL을 실행한다"는 사고, Repository는 "컬렉션에서 찾아서 수정한다"는 사고다.
-
-### Repository가 필요한 이유
-
-| 문제 | DAO 방식의 한계 | Repository의 해결 |
-|:---|:---|:---|
-| 도메인 순수성 | 도메인 코드에 DB 기술 코드 침투 | 도메인은 인터페이스만 의존 |
-| 테스트 어려움 | DB 없이 도메인 로직 테스트 불가 | InMemoryRepository로 도메인 테스트 |
-| 애그리게이트 경계 | 테이블 단위 접근으로 애그리게이트 파편화 | 애그리게이트 루트 단위 접근 |
-
-📢 **섹션 요약 비유**: DAO는 창고 관리인이 "창고 B구역 3번 선반에서 가져오기"라고 말하는 것이고, Repository는 "고객 컬렉션에서 홍길동씨 찾기"라고 말하는 것이다. 후자가 비즈니스 언어다.
+- **📢 섹션 요약 비유**: 레파지토리는 창고 구조를 외우게 하는 대신 "필요한 책을 도서관에서 빌린다"는 식으로 업무 언어를 단순하게 만드는 사서 역할과 같다.
 
 ---
 
 ## Ⅱ. 아키텍처 및 핵심 원리
 
-### Repository 구조 다이어그램
+레파지토리의 핵심 원리는 두 가지다. 첫째, 인터페이스는 애그리게이트 중심 도메인 언어를 사용한다. 둘째, 구현체는 영속성 기술을 숨기되 애그리게이트를 재구성해서 반환한다. 따라서 레파지토리는 보통 애그리게이트 루트(Aggregate Root) 기준으로 하나씩 설계되며, 테이블마다 1개씩 자동 생성하는 구조와는 철학이 다르다.
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                     Domain Layer                             │
-│                                                              │
-│  ┌────────────────┐     ┌────────────────────────────────┐   │
-│  │  UserService   │────►│  <<interface>>                 │   │
-│  │ (도메인 서비스)  │     │  UserRepository                │   │
-│  └────────────────┘     │  + findById(UserId): User      │   │
-│                         │  + findByEmail(Email): User    │   │
-│  ┌────────────────┐     │  + save(User)                  │   │
-│  │  User          │     │  + remove(User)                │   │
-│  │ (Aggregate Root)     └────────────────┬───────────────┘   │
-│  │ + changeEmail()│                      │                   │
-│  └────────────────┘                      │                   │
-└─────────────────────────────────────────┼────────────────────┘
-                                           │ implements
-┌─────────────────────────────────────────┼────────────────────┐
-│             Infrastructure Layer        │                    │
-│                                         │                    │
-│          ┌──────────────────────────────▼──────────────┐     │
-│          │  JpaUserRepository                          │     │
-│          │  (JPA 구현체)                                │     │
-│          └──────────────────────────────────────────────┘     │
-│                                                              │
-│          ┌──────────────────────────────────────────────┐     │
-│          │  InMemoryUserRepository                      │     │
-│          │  (테스트용 인메모리 구현체)                     │     │
-│          └──────────────────────────────────────────────┘     │
-└──────────────────────────────────────────────────────────────┘
-```
+| 구성 요소 | 역할 | 설계 포인트 |
+| :--- | :--- | :--- |
+| Application Service | 유스케이스 조합, 트랜잭션 시작점 | 레파지토리를 사용하지만 저장 기술은 몰라야 함 |
+| Repository Interface | 도메인 계층 계약 | `findByOrderId`, `save`처럼 도메인 의도 표현 |
+| Aggregate Root | 저장·복원의 기준 단위 | 내부 불변식과 일관성 경계 유지 |
+| Repository Implementation | JPA, SQL Mapper, NoSQL 등 실제 영속화 | 매핑, 쿼리, 예외 변환 담당 |
+| Unit of Work / Transaction | 변경 추적과 커밋 협력 | 저장 시점과 일관성 관리 |
 
-### Spring Data JPA Repository 계층 구조
+아래 그림은 레파지토리가 계층 사이에서 어떤 역할을 하는지 보여 준다.
 
-```
-Repository (최상위 인터페이스)
-    │
-    ▼
-CrudRepository<T, ID>
-│  + save(T), findById(ID), findAll(), delete(T)
-│
-    ▼
-PagingAndSortingRepository<T, ID>
-│  + findAll(Pageable), findAll(Sort)
-│
-    ▼
-JpaRepository<T, ID>
-   + flush(), saveAndFlush(), deleteInBatch()
-   + findAll(Example), getOne(ID)
+```text
+┌──────────────────────────────────────────────────────────────────────┐
+│ Repository in domain-centered architecture                           │
+├──────────────────────────────────────────────────────────────────────┤
+│ Application Service                                                  │
+│   │  findByOrderId() / save(order)                                   │
+│   ▼                                                                  │
+│ OrderRepository interface                                            │
+│   │  speaks domain language                                          │
+│   ▼                                                                  │
+│ Repository implementation                                            │
+│   ├─ ORM mapping                                                     │
+│   ├─ SQL / query builder                                             │
+│   └─ transaction / unit-of-work cooperation                          │
+│   │                                                                  │
+│   ▼                                                                  │
+│ Database / cache / external store                                    │
+│                                                                      │
+│ Returned to service: Aggregate Root + Value Objects                  │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
-### Aggregate Root와 Repository의 1:1 관계
+여기서 중요한 규칙이 있다. 레파지토리는 보통 **애그리게이트 루트만 외부에 노출**한다. `OrderRepository`는 있어도 `OrderItemRepository`를 따로 두지 않는 식이다. 그래야 애그리게이트 내부 규칙이 바깥에서 임의로 깨지지 않는다. 또한 조회 요구가 지나치게 복잡해져 리포트·대시보드·통계 성격이 강해지면, 모든 읽기 작업을 레파지토리에 억지로 넣기보다 Query Service나 CQRS (Command Query Responsibility Segregation) 읽기 모델로 분리하는 편이 낫다.
 
-```
-┌──────────────────────────────────────────────────────────┐
-│                    Order Aggregate                        │
-│                                                          │
-│  ┌──────────────────┐   포함   ┌──────────────────┐      │
-│  │  Order           │─────────►│  OrderItem       │      │
-│  │ (Aggregate Root) │          │  (Value Object)  │      │
-│  └──────────────────┘          └──────────────────┘      │
-│           │                                               │
-└───────────┼───────────────────────────────────────────────┘
-            │
-            ▼  ← Repository는 Aggregate Root만 접근
-    OrderRepository (인터페이스)
-    (OrderItemRepository는 별도로 존재하지 않음)
-```
+즉 레파지토리는 "모든 데이터 접근의 만능 통로"가 아니라, **애그리게이트를 저장하고 다시 살려내는 도메인 경계 장치**로 이해해야 한다.
 
-📢 **섹션 요약 비유**: 책장(Repository)에서 책(Aggregate)을 찾을 때, 책의 특정 페이지(하위 객체)를 직접 꺼내지 않는다. 항상 책 전체를 꺼내서 필요한 페이지를 읽는다.
+- **📢 섹션 요약 비유**: 레파지토리는 책 한 장씩 뜯어 건네는 복사실이 아니라, 책 한 권 전체를 제대로 보관하고 다시 빌려주는 도서관 서가와 같다.
 
 ---
 
 ## Ⅲ. 비교 및 연결
 
-### Repository vs DAO 상세 비교
+레파지토리를 DAO (Data Access Object)와 같은 것으로 보면 절반만 이해한 셈이다. 둘 다 저장소 세부사항을 숨기지만, 무엇을 중심에 두는지가 다르다.
 
-| 비교 항목 | Repository 패턴 | DAO 패턴 |
-|:---|:---|:---|
-| **출처** | DDD (Eric Evans, 2003) | J2EE Core Patterns (Sun, 2001) |
-| **추상화 관점** | 도메인 컬렉션 (비즈니스 관점) | DB 테이블 (기술 관점) |
-| **단위** | Aggregate Root 1개 ↔ Repository 1개 | DB 테이블 1개 ↔ DAO 1개 |
-| **메서드 언어** | `findByCustomerEmail()` (도메인 언어) | `selectByEmail()` (SQL 언어) |
-| **도메인 모델** | 풍부한 도메인 객체 반환 | DTO/VO 반환 |
-| **인프라 결합도** | 도메인에서 인프라 완전 격리 | 구현에 SQL/JDBC 노출 가능 |
-| **적합 아키텍처** | DDD, 헥사고날 아키텍처 | 단순 CRUD, 3계층 아키텍처 |
+| 비교 축 | 레파지토리 패턴 | DAO 패턴 | Active Record |
+| :--- | :--- | :--- | :--- |
+| 중심 관점 | 애그리게이트와 도메인 의미 | 테이블/쿼리/저장 기술 | 객체가 스스로 저장 |
+| 대표 메서드 언어 | `findActiveOrdersByCustomerId()` | `selectByCustomerId()` | `order.save()` |
+| 반환 초점 | 도메인 객체 집합 | 엔티티 / DTO / 행 데이터 | 자기 자신 |
+| 적합한 환경 | DDD, 헥사고날 아키텍처 | 레거시 DB, 저장 기술 중심 계층화 | 단순 CRUD와 빠른 개발 |
+| 주의점 | 과잉 추상화 가능 | 도메인 의미 약화 가능 | 도메인과 저장 결합 심화 |
 
-### Repository 구현 전략
+DAO가 "어떻게 조회할까"에 더 가깝다면, 레파지토리는 "어떤 도메인 대상을 어떤 의미로 다룰까"에 가깝다. 그래서 복잡한 리포팅 쿼리, 대량 배치 조회, 화면 전용 DTO 투영은 DAO나 Query Service가 더 잘 맞을 수 있다. 반대로 애그리게이트 규칙을 지키며 상태를 변경해야 하는 쓰기 모델에는 레파지토리가 더 적합하다.
 
-| 구현 방식 | 장점 | 단점 | 적합 상황 |
-|:---|:---|:---|:---|
-| Spring Data JPA | 코드 최소화 | 복잡한 쿼리 제한 | CRUD 위주 단순 조회 |
-| JPA + @Query | 커스텀 쿼리 지원 | JPQL 학습 필요 | 중간 복잡도 |
-| QueryDSL | 타입 안전 복잡 쿼리 | 초기 설정 복잡 | 복잡한 동적 쿼리 |
-| InMemoryRepository | DB 없는 단위 테스트 | 실제 환경과 차이 | 테스트 전용 |
+Spring Data JPA가 제공하는 `JpaRepository`도 이 관점에서 봐야 한다. 프레임워크가 레파지토리 구현을 쉽게 만들어 줄 수는 있지만, 메서드가 전부 테이블 조작 중심이고 도메인 의미가 사라진다면 이름만 레파지토리인 DAO에 가까워질 수 있다.
 
-📢 **섹션 요약 비유**: DAO는 "SQL 번역가"고, Repository는 "도메인 언어 통역관"이다. 통역관은 내부적으로 SQL을 쓸 수도 있지만, 대화는 항상 도메인 언어로 한다.
+- **📢 섹션 요약 비유**: DAO가 창고의 선반 번호를 잘 아는 관리인이라면, 레파지토리는 "고객 주문서 묶음" 자체를 어떻게 다뤄야 하는지 이해하는 기록 관리자에 가깝다.
 
 ---
 
 ## Ⅳ. 실무 적용 및 기술사 판단
 
-### Spring Data JPA 구현 예시
+레파지토리는 풍부한 도메인 모델이 있는 시스템에서 빛난다. 주문 상태 전이, 결제 승인, 재고 예약처럼 애그리게이트 단위 규칙이 중요한 경우에는 서비스가 레파지토리를 통해 애그리게이트를 불러오고, 도메인 메서드로 상태를 바꾼 뒤, 다시 저장하는 흐름이 자연스럽다. 반면 관리 화면의 단순 목록 조회나 복잡한 통계 리포트까지 모두 레파지토리로 밀어 넣으면 인터페이스가 비대해지고 도메인 의미도 흐려진다.
 
-```java
-// 도메인 계층의 Repository 인터페이스 (인프라 기술 없음)
-public interface UserRepository {
-    Optional<User> findById(UserId id);
-    Optional<User> findByEmail(Email email);
-    List<User> findAll();
-    void save(User user);
-    void remove(User user);
-}
+| 적용 상황 | 레파지토리 적합도 | 판단 이유 |
+| :--- | :--- | :--- |
+| 애그리게이트 규칙이 강한 주문·결제 도메인 | 매우 높음 | 일관성 경계를 지키며 상태를 다뤄야 함 |
+| 헥사고날 아키텍처 기반 서비스 | 높음 | 포트로서 인프라 의존성을 잘 분리할 수 있음 |
+| 단순 CRUD 백오피스 | 보통 이하 | DAO나 프레임워크 기본 Repository면 충분할 수 있음 |
+| 대규모 조회·통계 화면 | 낮음 | Query Service / 읽기 모델 분리가 더 적합 |
 
-// 인프라 계층의 Spring Data JPA 구현
-@Repository
-public interface UserJpaRepository extends JpaRepository<UserEntity, Long> {
-    Optional<UserEntity> findByEmail(String email);
-}
+### 실무 체크리스트
 
-// 어댑터: 인프라와 도메인을 연결
-@Component
-public class UserRepositoryAdapter implements UserRepository {
-    private final UserJpaRepository jpaRepository;
-    private final UserMapper mapper;
+1. 레파지토리가 애그리게이트 루트 기준으로 설계되어 있는가?
+2. 인터페이스 메서드가 도메인 용어를 사용하고 있는가?
+3. 서비스가 ORM 세션, 쿼리 빌더, 테이블 조인 세부사항에 직접 접근하지 않는가?
+4. 복잡한 조회 전용 요구는 별도 Query Service로 분리되어 있는가?
+5. 테스트에서 In-Memory 구현체나 Fake Repository로 도메인 규칙을 검증할 수 있는가?
 
-    @Override
-    public Optional<User> findById(UserId id) {
-        return jpaRepository.findById(id.getValue())
-                            .map(mapper::toDomain);
-    }
-}
+### 자주 발생하는 안티패턴
 
-// 테스트용 InMemory 구현체 (DB 불필요)
-public class InMemoryUserRepository implements UserRepository {
-    private final Map<UserId, User> store = new HashMap<>();
+- 모든 엔티티를 `GenericRepository<T>` 하나로 몰아넣어 도메인 의미를 지우는 설계
+- 레파지토리 안에서 비즈니스 규칙과 화면용 DTO 조립까지 모두 처리하는 구현
+- 애그리게이트 내부 객체를 별도 레파지토리로 직접 수정해 일관성 경계를 깨는 구조
+- 이름만 레파지토리이고 실제로는 서비스가 `EntityManager`를 직접 사용하는 반쪽 분리
 
-    @Override
-    public Optional<User> findById(UserId id) {
-        return Optional.ofNullable(store.get(id));
-    }
+기술사 답안에서는 **"레파지토리 패턴은 애그리게이트를 컬렉션처럼 다루게 해 도메인 모델을 저장 기술로부터 보호하는 패턴이며, 단순 CRUD나 대형 조회에는 DAO·Query Service와 역할을 분리해야 한다"**라고 정리하면 설계 판단이 분명해진다.
 
-    @Override
-    public void save(User user) {
-        store.put(user.getId(), user);
-    }
-}
-```
-
-### 헥사고날 아키텍처(Ports & Adapters)에서의 Repository
-
-```
-┌────────────────────────────────────────────────────┐
-│               Application Core (Domain)             │
-│                                                    │
-│  UserService ──► UserRepository (Port/Interface)   │
-│                                                    │
-└────────────────────────────┬───────────────────────┘
-                             │ implements (Adapter)
-                ┌────────────▼────────────────────┐
-                │  JpaUserRepositoryAdapter        │
-                │  (Infrastructure Adapter)        │
-                └─────────────────────────────────┘
-```
-
-📢 **섹션 요약 비유**: 전기 콘센트 규격(Repository 인터페이스)이 표준화되어 있으면, 어떤 나라의 전자제품(JPA 어댑터, InMemory 어댑터)이든 변환 플러그만 꽂으면 동작한다.
+- **📢 섹션 요약 비유**: 레파지토리를 잘 쓰는 것은 서류를 아무 서랍에나 넣는 대신, 한 사건에 속한 서류 묶음을 한 폴더로 관리해 규칙이 흐트러지지 않게 하는 일과 같다.
 
 ---
 
 ## Ⅴ. 기대효과 및 결론
 
-### Repository 패턴 도입 기대효과
+레파지토리 패턴을 제대로 적용하면 도메인 코드는 저장 방식보다 업무 규칙을 더 선명하게 드러낸다. 테스트에서는 가짜 레파지토리로 비즈니스 규칙을 빠르게 검증할 수 있고, 인프라 계층에서는 ORM 교체, 쿼리 최적화, 저장소 분산 전략을 비교적 독립적으로 조정할 수 있다. 결국 가장 큰 효과는 **변경 비용이 저장 기술 경계 안에 머무르게 만드는 것**이다.
 
-| 기대효과 | 구체적 내용 |
-|:---|:---|
-| **도메인 순수성** | 비즈니스 로직에 JPA, JDBC 코드 없음 |
-| **테스트 용이성** | InMemoryRepository로 빠른 단위 테스트 |
-| **기술 독립성** | JPA → MongoDB 전환 시 도메인 코드 무변경 |
-| **DDD 실현** | 애그리게이트 경계를 Repository가 보장 |
-| **팀 협업** | 도메인 팀과 인프라 팀의 독립적 개발 |
+하지만 레파지토리가 모든 데이터 접근 패턴을 대표하지는 않는다. 단순한 화면 조회나 리포팅까지 모두 레파지토리로 묶으면 인터페이스가 비대해지고 책임이 흐려진다. 그래서 레파지토리는 "무조건 한 계층 더"가 아니라, **도메인 애그리게이트를 보호할 필요가 있을 때 쓰는 선택적 경계**로 기억하는 것이 맞다.
 
-Repository 패턴은 단순한 DAO의 "업그레이드"가 아니라, **도메인 주도 설계의 철학을 코드로 실현하는 구조적 선택**이다. 복잡한 비즈니스 도메인을 가진 시스템일수록, Repository 패턴이 장기적으로 시스템의 유지보수성과 확장성을 결정짓는 핵심 설계가 된다.
+결론적으로 레파지토리 패턴은 데이터베이스 추상화 자체보다, 도메인 언어를 보존하는 구조에 더 가깝다. 즉 "테이블을 감추는 도구"가 아니라, "애그리게이트를 제대로 다루게 만드는 설계 장치"라고 보는 것이 핵심이다.
 
-📢 **섹션 요약 비유**: DAO가 창고(DB)의 "위치 기반 주소 시스템"이라면, Repository는 도서관의 "주제 기반 분류 시스템"이다. 원하는 책을 찾는 방법이 훨씬 자연스럽다.
+- **📢 섹션 요약 비유**: 레파지토리는 부품 창고의 문을 하나 더 만드는 것이 아니라, 완성품을 안전하게 맡기고 다시 꺼내 쓸 수 있게 하는 보관 규칙을 세우는 것과 같다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 관계 | 개념 | 설명 |
-|:---|:---|:---|
-| 상위 개념 | DDD (Domain-Driven Design) | Repository 패턴의 이론적 기반 |
-| 상위 개념 | 헥사고날 아키텍처 | Repository는 Secondary Port |
-| 하위 개념 | Aggregate Root | Repository가 관리하는 단위 |
-| 하위 개념 | Spring Data JPA | Java Repository 구현 프레임워크 |
-| 연관 개념 | DAO 패턴 | 기술 관점의 유사 패턴 |
-| 연관 개념 | Unit of Work 패턴 | Repository와 함께 트랜잭션 관리 |
-| 연관 개념 | Specification 패턴 | 복잡한 조건 쿼리를 Repository에 전달 |
+| 개념 | 연결 포인트 |
+| :--- | :--- |
+| DDD (Domain-Driven Design) | 레파지토리는 애그리게이트 중심 모델을 저장 기술로부터 분리하는 대표 패턴이다. |
+| Aggregate Root | 레파지토리가 외부에 노출하는 기본 저장·조회 단위다. |
+| DAO (Data Access Object) | 저장 기술 중심 계층화 패턴으로, 레파지토리와 초점이 다르다. |
+| Hexagonal Architecture | 레파지토리를 포트로 두고 구현체를 어댑터로 배치하기 좋은 구조다. |
+| Unit of Work | 레파지토리 저장과 함께 변경 추적·트랜잭션 커밋을 협력한다. |
+| CQRS (Command Query Responsibility Segregation) | 읽기 모델과 쓰기 모델을 분리해 레파지토리 책임을 과도하게 늘리지 않게 한다. |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+직접 SQL / ORM 노출
+    │
+    ▼
+DAO 수준의 저장 분리
+    │
+    ▼
+DDD에서 애그리게이트 경계 인식
+    │
+    ▼
+Repository interface 도입
+    ├─ 도메인 언어 메서드
+    ├─ 테스트 대역 교체
+    └─ 인프라 구현 은닉
+    │
+    ▼
+CQRS · Query Service · Unit of Work와 결합한 고도화
+```
+
+이 흐름은 레파지토리가 단순 저장 래퍼가 아니라, 도메인 모델과 영속성 경계를 더 정교하게 분리하는 방향으로 발전했음을 보여 준다.
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
-- 도서관 사서(Repository)는 "홍길동이 쓴 동화책 주세요"라는 말을 알아듣는다. 창고(DB)에서 직접 꺼내오지만 우리는 그냥 요청만 하면 된다.
-- DAO 방식 사서는 "3층 동관 B27 선반 5번 책 가져와"라고 말해야 알아듣는다 — 창고 구조를 외워야 한다.
-- Repository는 도메인 언어(비즈니스 용어)로 말할 수 있는 스마트한 사서다.
+1. 레파지토리는 장난감을 아무 상자에나 넣지 않고, 같은 세트끼리 한 상자에 잘 모아 두는 정리함이에요.
+2. 그래서 꺼낼 때도 부품 하나만 찾는 게 아니라 필요한 세트를 한 번에 가져올 수 있어요.
+3. 정리함이 잘 되어 있으면 장난감 만드는 규칙도 덜 헷갈리고 다시 놀기도 쉬워져요.
