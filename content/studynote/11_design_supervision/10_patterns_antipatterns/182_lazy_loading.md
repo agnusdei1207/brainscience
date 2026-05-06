@@ -1,246 +1,170 @@
 +++
 weight = 182
 title = "182. 지연 로딩 (Lazy Loading)"
-date = "2026-04-21"
+date = "2026-05-06"
 [extra]
 categories = "studynote-design-supervision"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
 
-> 1. **본질**: 지연 로딩 (Lazy Loading)은 연관 객체를 즉시 조회하지 않고 가상 프록시(Virtual Proxy)를 배치해두다가 실제 접근 시점에 DB 쿼리를 실행하는 최적화 패턴이다.
-> 2. **가치**: 사용하지 않을 연관 데이터를 쿼리하지 않아 초기 로딩 성능을 극적으로 향상시키지만, N+1 문제라는 위험을 동반한다.
-> 3. **판단 포인트**: "@ManyToOne은 EAGER, @OneToMany는 LAZY"가 JPA 기본값이다. N+1 문제가 발생하면 Fetch Join 또는 @BatchSize로 해결하며, 이 트레이드오프를 이해하는 것이 실무 핵심이다.
+> 1. **본질**: 지연 로딩 (Lazy Loading)은 연관 객체나 무거운 자원을 즉시 가져오지 않고, 가상 프록시 (Virtual Proxy)나 지연 초기화 장치를 통해 실제 접근 시점까지 비용을 미루는 패턴이다.
+> 2. **가치**: 목록 조회나 큰 객체 그래프에서 초기 응답 시간과 메모리 사용량을 줄여 주며, ORM (Object-Relational Mapping) 환경에서는 불필요한 JOIN과 과다 로딩을 억제하는 핵심 전략이 된다.
+> 3. **판단 포인트**: Lazy Loading은 비용을 없애는 것이 아니라 뒤로 미루는 것이므로, 명시적 Fetch Plan과 트랜잭션 경계를 함께 설계하지 않으면 N+1 문제, LazyInitializationException, 직렬화 오류 같은 안티패턴으로 곧바로 바뀐다.
 
 ---
 
 ## Ⅰ. 개요 및 필요성
 
-### 즉시 로딩의 문제점
+지연 로딩은 "지금 당장 필요하지 않은 것은 아직 읽지 말자"는 설계 원리다. 엔터프라이즈 애플리케이션에서 주문, 회원, 결제, 상품처럼 객체 관계가 깊어질수록 연관 객체를 모두 즉시 로드하면 초기 조회가 무거워지고, 화면이나 API (Application Programming Interface)가 실제로 쓰지 않는 데이터까지 메모리에 올리게 된다. 이 문제는 ORM을 쓰는 도메인 모델에서 특히 자주 드러난다.
 
-Order 엔티티를 조회할 때 연관된 모든 데이터(Member, OrderItems, Product)를 즉시 로딩(Eager Loading)하면 어떻게 될까?
+예를 들어 주문 목록 화면이 주문번호, 상태, 주문일자만 보여 준다면 회원 주소, 주문 상세, 상품 설명까지 동시에 가져오는 것은 낭비다. 반대로 상세 화면에서는 그 연관 객체들이 곧바로 필요할 수 있다. 즉 같은 엔티티라도 유스케이스마다 필요한 데이터 폭이 달라지므로, 로딩 전략을 하나로 고정하면 과소 조회 또는 과다 조회가 발생한다.
 
-```sql
--- Order 조회 시 즉시 로딩으로 실행되는 쿼리
-SELECT o.*, m.*, oi.*, p.*
-FROM orders o
-JOIN members m ON o.member_id = m.id
-JOIN order_items oi ON oi.order_id = o.id
-JOIN products p ON oi.product_id = p.id
-WHERE o.id = ?
+그래서 Lazy Loading은 "기본은 가볍게 읽고, 필요한 순간에만 확장하자"는 균형점을 제공한다. 설계감리 관점에서 중요한 것은 이 패턴이 단순 ORM 옵션이 아니라, **응답 시간·메모리·쿼리 수를 유스케이스별로 조절하는 비용 통제 장치**라는 점이다.
 
--- 주문 목록 조회 시: N개 주문 × M개 상품 = 대규모 카테시안 곱 발생
-```
-
-주문 목록에서 주문 번호와 날짜만 보여줄 때도 Member, OrderItem, Product 전체를 조회하는 것은 낭비다.
-
-### 지연 로딩의 아이디어
-
-```
-즉시 로딩 (Eager Loading):
-  Order 조회 → [Order + Member + OrderItems + Products 전부 조회]
-  모든 연관 데이터를 한 번에 가져옴 (필요 없어도)
-
-지연 로딩 (Lazy Loading):
-  Order 조회 → [Order만 조회]
-                     │
-                     └── member 접근 시 → [Member 조회]
-                     └── items 접근 시  → [OrderItems 조회]
-                     └── 접근 안 하면 → 쿼리 없음
-```
-
-📢 **섹션 요약 비유**: 백과사전을 읽을 때 모든 항목을 한 번에 외우려 하지 않는다. 필요한 항목이 생겼을 때 그 페이지를 펴는 것이 지연 로딩이다.
+- **📢 섹션 요약 비유**: 지연 로딩은 책 한 권을 빌릴 때 도서관 전체 책장을 집으로 가져오지 않고, 읽고 싶은 책만 나중에 꺼내 오는 방식과 같다.
 
 ---
 
 ## Ⅱ. 아키텍처 및 핵심 원리
 
-### 가상 프록시 (Virtual Proxy) 패턴
+지연 로딩은 보통 실제 객체 대신 프록시를 먼저 돌려주는 방식으로 구현된다. 애플리케이션은 엔티티를 받지만, 연관 필드에는 아직 초기화되지 않은 프록시나 컬렉션 래퍼가 들어 있다. 코드가 해당 필드에 처음 접근하면 영속성 컨텍스트(Persistence Context)나 세션(Session)이 SQL을 실행해 실제 데이터를 로드하고, 이후부터는 초기화된 객체를 재사용한다.
 
-JPA는 지연 로딩을 위해 실제 객체 대신 **프록시(Proxy) 객체**를 반환한다.
+| 구성 요소 | 역할 | 설계 포인트 |
+| :--- | :--- | :--- |
+| 엔티티 / Aggregate | 비즈니스 데이터를 담는 주체 | 어떤 연관이 기본 조회 대상인지 판단 필요 |
+| 프록시 (Proxy) | 실제 객체 대리자 | 첫 접근 시 로딩 트리거 발생 |
+| Persistence Context / Session | 로딩 가능 범위 유지 | 경계가 종료되면 Lazy 접근 실패 가능 |
+| Fetch Join / Entity Graph | 명시적 선로딩 도구 | 필요한 경우만 계획적으로 사용 |
+| Batch Fetch | 여러 Lazy 접근을 묶어 완화 | N+1 완화에 유용 |
 
-```
-em.find(Order.class, 1L) 실행 시:
+아래 그림은 Lazy Loading의 실행 경로를 요약한다.
 
-[Lazy Loading 설정]
-┌────────────────────────────────────────────────────────┐
-│  Order 프록시 객체                                       │
-│  ┌──────────────────────┐  ┌──────────────────────┐    │
-│  │  order.id = 1        │  │  member = ??         │    │
-│  │  order.date = today  │  │  (프록시: 미초기화)    │    │
-│  │  order.status = PAID │  │  → 접근 시 DB 조회    │    │
-│  └──────────────────────┘  └──────────────────────┘    │
-└────────────────────────────────────────────────────────┘
-
-order.getMember() 호출 시:
-    ↓ 프록시 초기화 트리거
-    ↓ SELECT * FROM members WHERE id = ? 실행
-    ↓ 실제 Member 객체 반환
-```
-
-### 프록시 클래스 구조
-
-```
-<<interface>>              <<concrete>>         <<proxy>>
-Order ◄─────────────── OrderProxy extends Order
-                          │
-                          │ target 필드: 실제 Order 객체 (초기엔 null)
-                          │
-                          │ getMember() {
-                          │   if (target == null) {
-                          │     target = em.load(Order.class, id);
-                          │   }
-                          │   return target.getMember();
-                          │ }
+```text
+┌──────────────────────────────────────────────────────────────────────┐
+│ Lazy loading execution path                                          │
+├──────────────────────────────────────────────────────────────────────┤
+│ Service / Use case                                                   │
+│    │                                                                 │
+│    ▼                                                                 │
+│ Order entity loaded                                                  │
+│   ├─ id, status, orderedAt   -> loaded now                           │
+│   └─ member, items           -> proxy / lazy collection              │
+│                                  │ first access                      │
+│                                  ▼                                   │
+│                       Persistence Context / Session                  │
+│                                  │ SQL / cache lookup                │
+│                                  ▼                                   │
+│                           DB or 2nd-level cache                      │
+│                                  │                                   │
+│                                  └─ real object initialized          │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
-### JPA 로딩 전략
+핵심은 "지연"이지 "무료"가 아니라는 점이다. 초기 쿼리는 가벼워지지만, 나중에 접근하는 순간 추가 쿼리가 발생한다. 따라서 Lazy Loading의 품질은 프록시 기술 자체보다, 어떤 화면과 서비스가 어떤 시점에 어떤 연관을 실제로 읽는지 예측하고 설계했는가에 달려 있다.
 
-| 어노테이션 | 기본 전략 | 권장 전략 | 이유 |
-|:---|:---|:---|:---|
-| `@ManyToOne` | EAGER | LAZY | 조회 시 불필요한 JOIN 방지 |
-| `@OneToOne` | EAGER | LAZY | 같은 이유 |
-| `@OneToMany` | LAZY | LAZY (기본값 유지) | 컬렉션 전체 로딩 방지 |
-| `@ManyToMany` | LAZY | LAZY | 대량 데이터 방지 |
-
-📢 **섹션 요약 비유**: 프록시는 음식 배달 앱의 "예약 버튼"이다. 버튼(프록시)은 즉시 나타나지만, 실제 음식(데이터)은 주문(접근)했을 때 배달(쿼리)된다.
+- **📢 섹션 요약 비유**: 지연 로딩은 커튼 뒤에 필요한 소품만 숨겨 두었다가 장면이 시작될 때 꺼내는 무대 연출과 같다.
 
 ---
 
 ## Ⅲ. 비교 및 연결
 
-### Eager Loading vs Lazy Loading 비교
+Lazy Loading은 즉시 로딩 (Eager Loading)의 반대말처럼 보이지만, 실제 실무에서는 "명시적 Fetch Plan"과 함께 봐야 한다. 기본 전략을 Lazy로 두고, 상세 조회나 리포트처럼 반드시 필요한 경우에만 Fetch Join이나 DTO (Data Transfer Object) Projection으로 선로딩하는 방식이 가장 안정적이다.
 
-| 비교 항목 | 즉시 로딩 (Eager Loading) | 지연 로딩 (Lazy Loading) |
-|:---|:---|:---|
-| **로딩 시점** | 부모 엔티티 조회 시 즉시 | 연관 객체 실제 접근 시 |
-| **초기 조회 쿼리 수** | 1개 (복잡한 JOIN 포함) | 1개 (단순, JOIN 없음) |
-| **총 쿼리 수** | 적음 (JOIN으로 한 번에) | 많을 수 있음 (N+1 위험) |
-| **메모리 사용** | 많음 (불필요한 데이터 포함) | 적음 (필요한 것만 로드) |
-| **주의 위험** | 카테시안 곱, 과다 로딩 | N+1 문제 |
-| **적합 상황** | 항상 같이 사용하는 연관 객체 | 선택적으로 사용하는 연관 객체 |
+| 비교 축 | Eager Loading | Lazy Loading | 명시적 Fetch Plan |
+| :--- | :--- | :--- | :--- |
+| 기본 시점 | 조회 즉시 연관 데이터 로드 | 첫 접근 시 로드 | 유스케이스에 맞춰 필요한 것만 선별 로드 |
+| 장점 | 한 번에 가져와 예측 가능 | 초기 응답 가벼움, 메모리 절감 | 과소/과다 로딩 균형 조절 |
+| 대표 위험 | 과다 JOIN, 카테시안 곱, 메모리 증가 | N+1, 세션 종료 후 예외 | 쿼리 설계 복잡도 증가 |
+| 적합 상황 | 항상 함께 쓰는 관계 | 선택적으로 쓰는 관계 | 목록/상세/배치별 최적화 |
 
-### N+1 문제 및 해결 방법
+이 패턴은 Repository Pattern, Unit of Work Pattern과도 밀접하다. Repository는 어떤 Aggregate를 어떤 방식으로 꺼낼지 결정하는 입구이고, Unit of Work는 같은 트랜잭션 안에서 프록시 초기화와 변경 추적을 가능하게 하는 실행 맥락이다. 즉 Lazy Loading은 혼자 작동하는 패턴이 아니라, **조회 전략과 트랜잭션 경계 패턴 위에서 비로소 안전해지는 패턴**이다.
 
-```
-[N+1 문제 발생 예시]
-List<Order> orders = orderRepository.findAll(); // SELECT * FROM orders (1번)
-for (Order order : orders) {
-    order.getMember().getName(); // 각 Order마다 SELECT * FROM members (N번)
-}
-// 총 쿼리: 1 + N번 → 1,000개 주문 시 1,001번!
+또한 Lazy Loading은 캐시와도 다르다. 캐시는 이미 읽은 데이터를 다시 빠르게 주는 메커니즘이고, Lazy Loading은 처음 읽는 시점을 미루는 메커니즘이다. 둘을 혼동하면 "Lazy면 무조건 빠르다" 같은 잘못된 결론에 이르기 쉽다.
 
-[해결 1: Fetch Join]
-SELECT o FROM Order o JOIN FETCH o.member
-// 1번 쿼리로 해결 (INNER JOIN)
-
-[해결 2: @BatchSize (배치 IN 쿼리)]
-@BatchSize(size = 100)
-@ManyToOne(fetch = FetchType.LAZY)
-private Member member;
-// SELECT * FROM members WHERE id IN (?, ?, ..., ?) (N/100 번)
-
-[해결 3: EntityGraph]
-@EntityGraph(attributePaths = {"member"})
-List<Order> findAll();
-```
-
-| N+1 해결 방법 | 특징 | 적합 상황 |
-|:---|:---|:---|
-| **Fetch Join** | 단일 쿼리로 해결, 카테시안 곱 주의 | 단순 연관 관계 |
-| **@BatchSize** | IN 절로 배치 로딩 | 컬렉션 연관 |
-| **@EntityGraph** | 어노테이션으로 선언적 설정 | 특정 조회 메서드 |
-| **QueryDSL fetchJoin()** | 타입 안전 동적 Fetch Join | 복잡한 동적 쿼리 |
-
-📢 **섹션 요약 비유**: N+1 문제는 편의점에서 학생 100명 도시락 주문을 받았는데, 각 학생에게 일일이 전화해서 반찬을 확인하는 것이다. Fetch Join은 한 번에 묶어서 "100개 도시락, 반찬 포함"으로 주문하는 것이다.
+- **📢 섹션 요약 비유**: Eager가 장을 볼 때 필요한지 모르더라도 카트에 다 담는 방식이라면, Lazy는 메모만 해 두었다가 실제 요리할 때만 재료를 가져오는 방식이다.
 
 ---
 
 ## Ⅳ. 실무 적용 및 기술사 판단
 
-### 지연 로딩 설정 및 주의점
+실무에서 가장 안전한 원칙은 "기본은 Lazy, 조회별로 Fetch Plan을 명시"다. 특히 JPA (Java Persistence API)에서는 `@ManyToOne`, `@OneToOne` 기본값이 즉시 로딩이지만, 대부분의 실무 프로젝트는 이를 LAZY로 바꿔 두고 필요한 조회 메서드에서 Fetch Join, `@EntityGraph`, DTO Projection을 선택적으로 사용한다. 그래야 화면별 요구에 맞는 쿼리 제어가 가능하다.
 
-```java
-@Entity
-public class Order {
-    @Id
-    private Long id;
+| 실무 상황 | 권장 전략 | 이유 |
+| :--- | :--- | :--- |
+| 목록 화면 | Lazy + DTO Projection 또는 필요한 Join만 사용 | 불필요한 연관 객체 방지 |
+| 상세 화면 | Lazy 기본 + Fetch Join / Entity Graph | 필요한 연관을 한 번에 로드 |
+| 대량 배치 처리 | Lazy + Batch Fetch + 주기적 flush/clear | 메모리와 쿼리 폭증 방지 |
+| API 직렬화 | 엔티티 직접 노출 지양, DTO 변환 | 프록시 직렬화·순환 참조 방지 |
 
-    // 권장: LAZY로 변경
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+### 실무 체크리스트
 
-    // 기본값 LAZY, 유지
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-    private List<OrderItem> items = new ArrayList<>();
-}
+1. 연관 관계 기본값이 도메인 습관이 아니라 실제 조회 패턴에 맞춰 설정되어 있는가?
+2. 트랜잭션 밖에서 프록시를 건드려 LazyInitializationException이 나지 않도록 경계를 관리하는가?
+3. 반복문 안의 Lazy 접근으로 N+1 문제가 발생하지 않는지 SQL 로그로 검증하는가?
+4. 목록/상세/배치/리포트 각각에 맞는 Fetch Join, Batch Fetch, DTO Projection 전략이 있는가?
+5. Open Session In View를 성능 문제 은폐 수단으로 남용하지 않는가?
 
-// Fetch Join 사용 예
-@Query("SELECT o FROM Order o JOIN FETCH o.member WHERE o.status = :status")
-List<Order> findByStatusWithMember(@Param("status") OrderStatus status);
-```
+### 자주 발생하는 안티패턴
 
-### LazyInitializationException 방지
+- 모든 연관을 무조건 EAGER로 바꿔 두고 "예외가 안 나니 안전하다"고 생각하는 설계
+- REST (Representational State Transfer) 응답에서 엔티티를 그대로 직렬화해 프록시 초기화와 순환 참조 문제를 일으키는 구조
+- 템플릿 또는 Controller 계층에서 반복문마다 Lazy 연관을 접근해 N+1을 만드는 구현
+- Open Session In View에 의존해 조회 계획 없이 화면 계층에서 아무 때나 로딩하는 운영
 
-```java
-// 트랜잭션 밖에서 지연 로딩 접근 시 LazyInitializationException 발생!
-@Service
-public class OrderService {
-    @Transactional(readOnly = true)  // 트랜잭션 내에서 접근
-    public OrderDto getOrder(Long id) {
-        Order order = orderRepository.findById(id).orElseThrow();
-        // 여기서 order.getMember() 접근 가능
-        return OrderDto.from(order);
-    }
-}
-// 트랜잭션 종료 후 Controller에서 getMember() 접근 → 예외!
-```
+기술사 답안에서는 **"Lazy Loading은 프록시로 비용을 뒤로 미루는 패턴이며, 기본 전략으로는 유용하지만 유스케이스별 Fetch Plan과 트랜잭션 경계가 함께 설계되지 않으면 곧바로 성능 안티패턴이 된다"**고 정리하면 좋다.
 
-### 기술사 판단 포인트
-
-| 상황 | 전략 | 이유 |
-|:---|:---|:---|
-| 상세 페이지 (모든 연관 필요) | Fetch Join | 단일 쿼리로 완전 로딩 |
-| 목록 페이지 (일부만 필요) | Lazy + 필요 시 Fetch | 불필요한 데이터 미조회 |
-| 배치 처리 대용량 | Lazy + @BatchSize | 메모리 최적화 |
-| 실시간 API 응답 속도 중요 | 상황별 Fetch Join | N+1 방지 필수 |
-
-📢 **섹션 요약 비유**: 레스토랑 메뉴(Lazy)는 손님이 주문할 때 요리한다. 주문하지 않은 모든 요리를 미리 만들어놓는(Eager) 것은 낭비다. 단, 세트 메뉴(Fetch Join)는 한 번에 만들어 효율적이다.
+- **📢 섹션 요약 비유**: 지연 로딩을 잘 쓰는 팀은 필요한 물건만 제때 가져오는 창고 관리자이고, 못 쓰는 팀은 찾을 때마다 창고를 들락거리며 줄을 세우는 팀과 같다.
 
 ---
 
 ## Ⅴ. 기대효과 및 결론
 
-### 지연 로딩 도입 기대효과
+지연 로딩의 가장 큰 효과는 기본 조회를 가볍게 만들 수 있다는 점이다. 목록 화면, 검색 API, 대시보드처럼 일부 필드만 필요한 경우에는 과다 JOIN과 메모리 사용을 줄이고 응답 시간을 개선할 수 있다. 또한 설계자가 유스케이스별로 데이터 폭을 조절할 수 있어, 대형 도메인 모델에서도 확장성이 좋아진다.
 
-| 기대효과 | 구체적 내용 |
-|:---|:---|
-| **초기 로딩 성능 향상** | 불필요한 연관 데이터 미조회 |
-| **메모리 최적화** | 실제 사용하는 데이터만 메모리에 적재 |
-| **유연한 로딩 전략** | 화면/기능에 따라 선택적 Fetch 가능 |
-| **과도한 JOIN 방지** | 복잡한 카테시안 곱 쿼리 생성 억제 |
+반면 잘못 적용하면 문제는 더 교묘해진다. 예외는 실행 후반부에 터지고, N+1은 기능 테스트에서는 잘 보이지 않다가 운영 데이터에서 폭발하며, 장수명 세션은 원인 파악을 어렵게 만든다. 그래서 Lazy Loading은 "성능 최적화 옵션"이라기보다, **의도적인 조회 설계와 관측성을 요구하는 패턴**으로 이해하는 편이 맞다.
 
-지연 로딩은 ORM 사용 시 선택이 아닌 **필수 이해 영역**이다. N+1 문제를 모르고 지연 로딩을 사용하면 오히려 즉시 로딩보다 더 많은 쿼리가 발생한다. **"Lazy로 설정하되, 필요한 연관 관계는 반드시 Fetch Join으로 명시"** 하는 것이 JPA 실무 최적 전략이다.
+결론적으로 기억할 문장은 간단하다. **Lazy Loading은 비용을 숨기는 기술이 아니라, 비용 발생 시점을 통제하는 기술이다.** 설계감리에서는 이 통제가 실제로 쿼리 계획, 트랜잭션 경계, DTO 전략으로 구현되어 있는지를 확인해야 한다.
 
-📢 **섹션 요약 비유**: 넷플릭스는 당신이 실제로 재생 버튼을 누른 영상만 스트리밍한다. 가입한다고 모든 영상을 다운로드하지 않는 것이 지연 로딩이다.
+- **📢 섹션 요약 비유**: 지연 로딩은 냉장고를 꽉 채워 두는 대신, 오늘 요리할 재료만 꺼내 쓰는 습관과 같지만 장보기 계획이 없으면 오히려 더 자주 왕복하게 된다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 관계 | 개념 | 설명 |
-|:---|:---|:---|
-| 상위 개념 | 프록시 패턴 (Proxy Pattern) | 가상 프록시가 지연 로딩의 기반 |
-| 상위 개념 | Unit of Work 패턴 | 영속성 컨텍스트 내에서 지연 로딩 관리 |
-| 하위 개념 | 가상 프록시 (Virtual Proxy) | 실제 객체 대신 배치되는 대리 객체 |
-| 하위 개념 | Fetch Join | N+1 문제 해결을 위한 명시적 조인 |
-| 연관 개념 | N+1 문제 | 지연 로딩의 대표적 성능 안티패턴 |
-| 연관 개념 | @BatchSize | N+1 완화를 위한 IN 절 배치 로딩 |
-| 연관 개념 | LazyInitializationException | 트랜잭션 외부에서 지연 로딩 접근 시 예외 |
+| 개념 | 연결 포인트 |
+| :--- | :--- |
+| Virtual Proxy | Lazy Loading을 구현하는 대표적인 대리 객체 메커니즘이다. |
+| Repository Pattern | 어떤 Aggregate를 어떤 Fetch Plan으로 로드할지 결정하는 입구가 된다. |
+| Unit of Work Pattern | 같은 트랜잭션 안에서 프록시 초기화와 변경 추적이 일어나는 실행 맥락이다. |
+| Fetch Join | 필요한 연관을 한 번에 선로딩해 N+1을 줄이는 대표 기법이다. |
+| Batch Fetch | Lazy 접근이 여러 번 발생할 때 IN 조회 등으로 완화하는 전략이다. |
+| DTO Projection | 프록시 직렬화와 과다 로딩을 피하기 위한 읽기 전용 대안이다. |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+객체 그래프 확장
+    │
+    ▼
+즉시 로딩의 과다 JOIN / 메모리 증가
+    │
+    ▼
+Lazy Loading + Virtual Proxy 도입
+    │
+    ├─ first access -> 추가 SQL
+    ├─ transaction boundary 중요
+    ├─ N+1 -> fetch join / batch fetch
+    └─ API 응답 -> DTO projection 필요
+    │
+    ▼
+유스케이스별 Fetch Plan 설계
+```
+
+이 흐름은 Lazy Loading이 단순 ORM 속성이 아니라, 객체 그래프 비용을 유스케이스 단위로 재배치하는 설계 기법임을 보여 준다.
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
-- 도서관에서 책을 빌릴 때, 책 목록(Order)만 먼저 보고, 실제로 읽고 싶은 책(Member, Item)만 대출한다 — 그것이 지연 로딩이다.
-- 모든 책을 한꺼번에 집으로 가져갔다가 안 읽으면(즉시 로딩) 엄청난 낭비다.
-- 하지만 책 100권을 한 번에 1권씩 100번 왕복해서 빌리면(N+1) 더 힘드니까, 필요한 책 목록을 미리 알면 한 번에 여러 권 빌려야(Fetch Join) 한다.
+1. 지연 로딩은 장난감 상자를 전부 꺼내지 않고, 지금 놀 장난감만 하나씩 꺼내는 거예요.
+2. 그래서 처음에는 방이 덜 어질러지지만, 필요할 때마다 어디 있는지 잘 알아야 해요.
+3. 많이 놀 장난감이면 처음부터 같이 꺼내 두는 게 더 편할 때도 있어요.
