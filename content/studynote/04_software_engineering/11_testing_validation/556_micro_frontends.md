@@ -43,6 +43,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 각 팀은 자신의 UI와 배포 파이프라인을 갖고, 호스트 애플리케이션이 이를 조립한다.
@@ -58,6 +60,8 @@ Host App + Team A App + Team B App + Team C App
 | Shared | 공통 자산 |
 
 - **📢 섹션 요약 비유**: 여러 퍼즐 조각을 한 장의 그림으로 합치는 방식이다.
+
+---
 
 ---
 
@@ -83,6 +87,8 @@ Host App + Team A App + Team B App + Team C App
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 공통 디자인 시스템, 라우팅, 상태 공유 규칙을 강하게 정해야 한다.
@@ -100,6 +106,8 @@ Host App + Team A App + Team B App + Team C App
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 마이크로 프론트엔드는 프런트엔드에도 서비스 분해의 원리를 적용한다.
@@ -107,6 +115,8 @@ Host App + Team A App + Team B App + Team C App
 결론적으로 이 항목은 "프런트엔드를 팀 단위 독립 배포 조각으로 나누는 구조"다.
 
 - **📢 섹션 요약 비유**: 큰 포스터를 여러 장으로 나눠 그리지만, 붙이면 하나가 되어야 한다.
+
+---
 
 ---
 
