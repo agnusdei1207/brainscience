@@ -43,6 +43,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 상태는 Closed, Open, Half-Open으로 바뀐다. 실패율이 기준을 넘으면 Open으로 전환된다.
@@ -58,6 +60,8 @@ Closed -> Open -> Half-Open -> Closed
 | Half-Open | 시험 통과 |
 
 - **📢 섹션 요약 비유**: 문을 닫았다가 조금 열어 보고 다시 판단하는 방식이다.
+
+---
 
 ---
 
@@ -83,6 +87,8 @@ Closed -> Open -> Half-Open -> Closed
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 실패율과 대기 시간을 기준으로 상태 전환을 조정한다.
@@ -100,6 +106,8 @@ Closed -> Open -> Half-Open -> Closed
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 서킷 브레이커는 장애 확산을 끊어 시스템을 보호한다.
@@ -107,6 +115,8 @@ Closed -> Open -> Half-Open -> Closed
 결론적으로 이 항목은 "실패가 반복되면 호출을 차단하는 안전장치"다.
 
 - **📢 섹션 요약 비유**: 과열되면 자동으로 꺼지는 보호 스위치다.
+
+---
 
 ---
 

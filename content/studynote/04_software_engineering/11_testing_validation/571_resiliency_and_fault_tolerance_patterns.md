@@ -43,6 +43,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 장애를 감지하고, 격리하고, 우회하고, 회복하는 흐름이 핵심이다.
@@ -58,6 +60,8 @@ Detect -> Isolate -> Recover -> Stabilize
 | Degradation | 성능 저하 허용 |
 
 - **📢 섹션 요약 비유**: 다친 부위를 고정하고 다른 쪽으로 움직이는 응급처치다.
+
+---
 
 ---
 
@@ -83,6 +87,8 @@ Detect -> Isolate -> Recover -> Stabilize
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 장애를 숨기기보다 통제 가능한 수준으로 줄인다.
@@ -100,6 +106,8 @@ Detect -> Isolate -> Recover -> Stabilize
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 탄력성은 서비스 신뢰성과 사용자 경험을 지킨다.
@@ -107,6 +115,8 @@ Detect -> Isolate -> Recover -> Stabilize
 결론적으로 이 항목은 "장애를 흡수하고 회복하는 설계 철학"이다.
 
 - **📢 섹션 요약 비유**: 부러지지 않는 대신 휘어지는 스프링이다.
+
+---
 
 ---
 

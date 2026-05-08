@@ -43,6 +43,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 Trace ID는 하나의 트랜잭션을 묶고, Span ID는 각 단계의 작업을 구분한다.
@@ -58,6 +60,8 @@ Request Header -> Trace ID / Span ID -> Next Service
 | Parent ID | 상위 관계 |
 
 - **📢 섹션 요약 비유**: 같은 여행권 안에 각 구간 스탬프가 찍히는 구조다.
+
+---
 
 ---
 
@@ -83,6 +87,8 @@ Request Header -> Trace ID / Span ID -> Next Service
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 HTTP 헤더, 메시지 헤더, 비동기 큐 메시지 모두에 동일한 원칙을 적용한다.
@@ -100,6 +106,8 @@ Request Header -> Trace ID / Span ID -> Next Service
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 Context Propagation은 분산 추적의 뼈대다.
@@ -107,6 +115,8 @@ Context Propagation은 분산 추적의 뼈대다.
 결론적으로 이 항목은 "요청의 식별 정보를 서비스 간에 계속 이어 주는 방식"이다.
 
 - **📢 섹션 요약 비유**: 같은 이름표를 끝까지 붙여 가는 일이다.
+
+---
 
 ---
 
