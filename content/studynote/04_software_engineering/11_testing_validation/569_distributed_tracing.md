@@ -43,6 +43,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 Trace는 전체 요청, Span은 각 구간이다. OpenTelemetry가 표준 전파와 수집을 돕고, Jaeger/Zipkin이 시각화한다.
@@ -59,6 +61,8 @@ Request -> Span A -> Span B -> Span C
 | Context Propagation | ID 전달 |
 
 - **📢 섹션 요약 비유**: 여행 경로의 각 스탬프를 한 장에 모아 보는 일이다.
+
+---
 
 ---
 
@@ -84,6 +88,8 @@ Request -> Span A -> Span B -> Span C
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 Trace ID가 모든 서비스에 전파되도록 해야 한다.
@@ -101,6 +107,8 @@ Request -> Span A -> Span B -> Span C
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 분산 추적은 복잡한 요청 경로를 한눈에 보여 준다.
@@ -108,6 +116,8 @@ Request -> Span A -> Span B -> Span C
 결론적으로 이 항목은 "요청 경로를 추적해 병목과 오류를 찾는 체계"다.
 
 - **📢 섹션 요약 비유**: 택배 길을 끝까지 따라가는 추적기다.
+
+---
 
 ---
 

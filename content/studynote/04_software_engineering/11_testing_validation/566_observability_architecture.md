@@ -43,6 +43,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 옵저버빌리티는 Metrics, Logs, Traces를 결합한다. 각각 수치, 기록, 경로를 담당한다.
@@ -58,6 +60,8 @@ Metrics + Logs + Traces -> Observability
 | Traces | 경로 추적 |
 
 - **📢 섹션 요약 비유**: 온도계, 일기장, 지도 세 개를 같이 보는 일이다.
+
+---
 
 ---
 
@@ -83,6 +87,8 @@ Metrics + Logs + Traces -> Observability
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 상관관계 ID, 표준 태그, 알람 기준을 통일해야 한다.
@@ -100,6 +106,8 @@ Metrics + Logs + Traces -> Observability
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 옵저버빌리티는 장애 분석과 운영 안정성을 높인다.
@@ -107,6 +115,8 @@ Metrics + Logs + Traces -> Observability
 결론적으로 이 항목은 "메트릭, 로그, 추적을 종합해 내부를 이해하는 능력"이다.
 
 - **📢 섹션 요약 비유**: 여러 창문으로 방 안을 비춰 보는 것이다.
+
+---
 
 ---
 

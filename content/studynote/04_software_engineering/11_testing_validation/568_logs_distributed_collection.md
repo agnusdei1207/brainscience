@@ -43,6 +43,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 로그 수집기는 Fluentd나 Logstash로 흔히 구성하고, 검색과 시각화는 Elasticsearch와 Kibana를 쓴다.
@@ -58,6 +60,8 @@ App Logs -> Collector -> Elasticsearch -> Kibana
 | Kibana | 조회 |
 
 - **📢 섹션 요약 비유**: 흩어진 메모를 한 서랍에 모아 색인표를 붙이는 방식이다.
+
+---
 
 ---
 
@@ -83,6 +87,8 @@ App Logs -> Collector -> Elasticsearch -> Kibana
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 구조화 로그(JSON), 상관관계 ID, 보존 정책을 정한다.
@@ -100,6 +106,8 @@ App Logs -> Collector -> Elasticsearch -> Kibana
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 로그는 문제 상황의 맥락을 복원하는 핵심 자료다.
@@ -107,6 +115,8 @@ App Logs -> Collector -> Elasticsearch -> Kibana
 결론적으로 이 항목은 "사건을 텍스트로 남기고 중앙에서 검색하는 체계"다.
 
 - **📢 섹션 요약 비유**: 사건 일지를 한곳에 모아 수사하는 것이다.
+
+---
 
 ---
 

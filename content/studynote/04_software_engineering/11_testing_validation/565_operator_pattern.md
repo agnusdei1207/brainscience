@@ -43,6 +43,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 오퍼레이터는 Custom Resource Definition (CRD, 사용자 정의 리소스 정의)를 감시하고, 원하는 상태와 실제 상태의 차이를 메운다.
@@ -58,6 +60,8 @@ CRD -> Operator -> Reconcile Loop -> Kubernetes State
 | Reconcile Loop | 상태 맞춤 |
 
 - **📢 섹션 요약 비유**: 체크리스트를 보고 부족한 걸 다시 채우는 매니저다.
+
+---
 
 ---
 
@@ -83,6 +87,8 @@ CRD -> Operator -> Reconcile Loop -> Kubernetes State
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 상태 전이와 실패 복구를 명확히 설계해야 한다.
@@ -100,6 +106,8 @@ CRD -> Operator -> Reconcile Loop -> Kubernetes State
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 오퍼레이터는 쿠버네티스 운영을 코드화해 안정성과 일관성을 높인다.
@@ -107,6 +115,8 @@ CRD -> Operator -> Reconcile Loop -> Kubernetes State
 결론적으로 이 항목은 "사용자 정의 리소스를 자동 조정하는 전문 컨트롤러"다.
 
 - **📢 섹션 요약 비유**: 정원 관리를 자동으로 해 주는 똑똑한 도우미다.
+
+---
 
 ---
 

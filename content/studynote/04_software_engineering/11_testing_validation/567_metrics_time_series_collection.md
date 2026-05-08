@@ -43,6 +43,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 Prometheus는 pull 방식으로 메트릭을 수집하고, Grafana는 이를 시각화한다.
@@ -58,6 +60,8 @@ Target -> Prometheus -> Time Series DB -> Grafana
 | Grafana | 시각화 |
 
 - **📢 섹션 요약 비유**: 숫자를 모아 그래프로 보여 주는 성적표 시스템이다.
+
+---
 
 ---
 
@@ -83,6 +87,8 @@ Target -> Prometheus -> Time Series DB -> Grafana
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 지표 정의를 신중히 하고, 경보는 단순하게 유지한다.
@@ -100,6 +106,8 @@ Target -> Prometheus -> Time Series DB -> Grafana
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 메트릭은 시스템 건강 상태를 빠르게 보여 준다.
@@ -107,6 +115,8 @@ Target -> Prometheus -> Time Series DB -> Grafana
 결론적으로 이 항목은 "시간에 따라 변하는 수치를 수집해 추세를 보는 도구"다.
 
 - **📢 섹션 요약 비유**: 매일 기록한 체온표로 건강 흐름을 보는 일이다.
+
+---
 
 ---
 
