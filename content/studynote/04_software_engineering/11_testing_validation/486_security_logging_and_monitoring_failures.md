@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 중요한 것은 적절한 이벤트와 경보를 남기는 것이다.
@@ -62,6 +64,8 @@ categories = "studynote-software-engineering"
 민감정보는 로그에 그대로 남기지 않아야 한다.
 
 - **📢 섹션 요약 비유**: 도착 시간이 적힌 택배 기록이 있어야 분실을 빨리 찾는다.
+
+---
 
 ---
 
@@ -89,6 +93,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 인증 실패, 권한 변경, 결제, 관리자 작업, 데이터 삭제 같은 이벤트를 반드시 기록한다.
@@ -106,6 +112,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 로깅과 모니터링이 제대로 되면 침해 탐지와 포렌식이 쉬워진다.
@@ -113,6 +121,8 @@ categories = "studynote-software-engineering"
 결론적으로 이 항목은 "사고를 보고 대응하는 능력의 실패"다.
 
 - **📢 섹션 요약 비유**: 길을 잃었을 때 지도도, 나침반도, 표시도 없으면 못 찾는다.
+
+---
 
 ---
 
