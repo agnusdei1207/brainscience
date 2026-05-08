@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 핵심은 "의존성은 코드가 아니라 자산"으로 관리하는 것이다.
@@ -62,6 +64,8 @@ categories = "studynote-software-engineering"
 SBOM (Software Bill of Materials)이 중요한 이유도 여기에 있다.
 
 - **📢 섹션 요약 비유**: 식재료 유통기한을 모르고 음식을 만들면 안 된다.
+
+---
 
 ---
 
@@ -89,6 +93,8 @@ SBOM (Software Bill of Materials)이 중요한 이유도 여기에 있다.
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 Dependency Scan, SCA (Software Composition Analysis), 패치 일정 관리가 필요하다.
@@ -106,6 +112,8 @@ SBOM (Software Bill of Materials)이 중요한 이유도 여기에 있다.
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 의존성 관리를 잘하면 재발성 취약점을 줄이고 유지보수성을 높일 수 있다.
@@ -113,6 +121,8 @@ SBOM (Software Bill of Materials)이 중요한 이유도 여기에 있다.
 결론적으로 이 항목은 "외부 코드의 보안 관리 실패"다.
 
 - **📢 섹션 요약 비유**: 남의 자전거를 빌릴 때도 바퀴 상태는 꼭 확인해야 한다.
+
+---
 
 ---
 
