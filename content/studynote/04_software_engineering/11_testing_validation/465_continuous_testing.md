@@ -43,6 +43,10 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 코드가 바뀌면 단위 테스트부터 통합, 보안, 성능까지 자동으로 연동한다. 테스트는 한 번이 아니라 흐름 전체에 걸쳐 배치된다.
@@ -66,6 +70,10 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
+---
+
 ## Ⅲ. 비교 및 연결
 
 지속적 테스팅은 단일 테스트가 아니라 운영 체계다. CI/CD, DevOps, 품질 게이트와 연결된다.
@@ -79,6 +87,10 @@ categories = "studynote-software-engineering"
 배포 빈도가 높은 팀일수록 중요하다.
 
 - **📢 섹션 요약 비유**: 매주 한 번 청소보다, 조금씩 계속 치우는 것이 낫다.
+
+---
+
+---
 
 ---
 
@@ -99,6 +111,10 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 지속적 테스팅은 품질을 흐름 속에 넣는다. 그래서 문제가 누적되기 전에 막는다.
@@ -106,6 +122,10 @@ categories = "studynote-software-engineering"
 결론적으로 이 개념은 "테스트를 파이프라인의 일부로 만드는 것"이다.
 
 - **📢 섹션 요약 비유**: 길게 쌓인 오답을 마지막에 몰아서 보는 대신, 틀릴 때마다 바로 고치는 것이다.
+
+---
+
+---
 
 ---
 
