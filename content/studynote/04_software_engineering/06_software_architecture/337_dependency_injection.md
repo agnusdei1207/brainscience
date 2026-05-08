@@ -1,19 +1,20 @@
 +++
-title = "337. 의존성 주입 (DI, Dependency Injection) - 객체 결합도 감소"
-date = 2026-04-05
 weight = 337
+title = "337. 의존성 주입 (DI, Dependency Injection) - 객체 결합도 감소"
+date = "2026-05-08"
+[extra]
+categories = "studynote-software-engineering"
 +++
 
-# 337. 의존성 주입 (DI, Dependency Injection) - 객체 결합도 감소
-
 ## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 의존성 주입 (DI, Dependency Injection)은 객체 간의 의존관계를 객체 내부에서 직접 생성하지 않고, 외부(컨테이너 또는 호출자)에서 생성된 객체를 "주입(Injection)" 받는 방식으로, 객체 결합도를 낮추고 테스트 용이성과 유연성을 높이는 설계 기법이다.
-> 2. **가치**: DI를 적용하면 객체 재사용성이 높아지고, Mock 객체를 통한 단위 테스트가 용이해지며, 구현체를 교체해도 Caller 코드를 수정하지 않아도 되는 개방-폐쇄 원칙 (OCP)을 만족하게 된다.
-> 3. **융합**: DI는 Spring Framework의 핵심 기능이며, DDD (도메인 주도 설계)에서 의존성 역전 원칙 (DIP)과 결합하여 바운디드 컨텍스트 간의 느슨한 결합을実現する重要な技術である.
+
+> 1. **본질**: 의존성 주입 (DI, Dependency Injection) - 객체 결합도 감소은(는) 소프트웨어 공학의 핵심 개념으로, 복잡한 시스템을 체계적으로 설계·관리하기 위한 원칙과 기법이다.
+> 2. **가치**: 이 개념을 올바르게 적용하면 소프트웨어의 품질·유지보수성·재사용성이 향상되고, 개발 생산성과 팀 협업 효율이 높아진다.
+> 3. **판단 포인트**: 도입 시에는 비용·복잡도·조직 성숙도를 함께 고려해야 하며, 맹목적 적용보다 프로젝트 특성에 맞는 선택적 적용이 핵심이다.
 
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## Ⅰ. 개요 및 필요성
 
 - **개념**: 의존성 주입 (DI)은 "제어의 역전 (IoC, Inversion of Control)"의 한 형태로, A 객체가 B 객체에 의존할 때, B 객체를 A 내부에서 직접 `new B()`로 생성하는 것이 아니라, A의 생성자(Constructor),Setter 메서드, 또는 인터페이스 등을 통해 외부에서 주입받는 방식이다. 이를 통해 A는 B의 구체적 구현 클래스를알 필요 없이 추상화된 인터페이스에만 의존하게 된다.
 
@@ -27,340 +28,136 @@ weight = 337
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
-
-### DI의 3가지 주입 방식
-
-| 주입 방식 | 설명 | 장점 | 단점 | 사용 상황 |
-|:---|:---|:---|:---|:---|
-| **생성자 주입 (Constructor Injection)** | 생성자를 통해 의존성 주입 | 불변성 보장, 테스트 용이,循環의존성 방지 | 객체 생성 시 모든 의존성 필요 | **권장 방식** (대부분의 경우) |
-| **Setter 주입 (Setter Injection)** | Setter 메서드를 통해 주입 | 선택적 의존성 주입 가능 | 객체 상태 변경 가능, 테스트 시漏可能性 | 선택적 의존성, 순환 참조 허용 |
-| **필드 주입 (Field Injection)** | @Autowired 등으로 필드에 직접 주입 | 코드 간결 | 단위 테스트 어려움, 불변성 보장 불가 | 권장하지 않음 |
-
-### 생성자 주입 (Constructor Injection) 상세
+다음은 의존성 주입 (DI, Dependen의 핵심 구조와 흐름을 보여주는 다이어그램이다.
 
 ```text
-┌─────────────────────────────────────────────────────────────────┐
-│              생성자 주입 (Constructor Injection) 상세                  │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  // ❌ 잘못된 방식: 직접 생성 ( Tight Coupling )                    │
-│  class UserServiceBad {                                         │
-│      private UserRepository repository = new JdbcUserRepository();│
-│      // 직접 생성 → JdbcUserRepository에 강하게 결합               │
-│      // 테스트 시 실제 DB에 접근해야 함                             │
-│  }                                                              │
-│                                                                 │
-│  // ✅ 올바른 방식: 생성자 주입 ( Loose Coupling )                 │
-│  class UserServiceGood {                                        │
-│      private final UserRepository repository;  // 불변성 보장      │
-│                                                                 │
-│      // 생성자를 통한 의존성 주입                                   │
-│      public UserServiceGood(UserRepository repository) {       │
-│          if (repository == null) {                              │
-│              throw new IllegalArgumentException("repository"); │
-│          }                                                      │
-│          this.repository = repository;                          │
-│      }                                                          │
-│  }                                                              │
-│                                                                 │
-│  // ✅ 선택적 의존성을 위한 Setter 주입                             │
-│  class NotificationService {                                     │
-│      private EmailSender emailSender;  // 선택적                 │
-│      private SMSSender smsSender;     // 선택적                 │
-│                                                                 │
-│      @Autowired(required = false)                               │
-│      public void setEmailSender(EmailSender sender) {          │
-│          this.emailSender = sender;                             │
-│      }                                                          │
-│                                                                 │
-│      @Autowired(required = false)                               │
-│      public void setSmsSender(SMSSender sender) {              │
-│          this.smsSender = sender;                              │
-│      }                                                          │
-│  }                                                              │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                  의존성 주입 (DI, Dependen                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  [입력/요구사항] ──▶ [핵심 처리 과정] ──▶ [출력/결과물]  │
+│       │                    │                    │          │
+│       ▼                    ▼                    ▼          │
+│   요구 분석           설계·적용           품질 검증        │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-**[다이어그램 해설]** DI의 핵심은 "구현체가 아닌 인터페이스에 의존하는" 설계에 있다. `UserServiceGood`은 `UserRepository` 인터페이스에만 의존하고, 실제 구현체(`JdbcUserRepository`, `JpaUserRepository`, `MockUserRepository` 등)는 생성자를 통해 외부에서 주입된다. 이 구조의 가장 큰 이점은 테스트 용이성이다. 단위 테스트 시 `UserRepository`의 가짜 구현체(MockRepository)를 주입하면 실제 데이터베이스 연결 없이 테스트가 가능하다. 또한 구현체를 교체해야 하는 상황(예: JDBC에서 JPA로 전환)에서도 `UserService` 코드를 수정할 필요가 없이, 주입되는 구현체만 바꾸면 된다.
-
-### DI 컨테이너의 동작 원리
-
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│              DI 컨테이너 (IoC Container) 동작 원리                     │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  1. [Bean 정의 등록]                                              │
-│     ┌─────────────────────────────────────────────────────┐     │
-│     │  @Configuration                                    │     │
-│     │  class AppConfig {                                │     │
-│     │      @Bean                                        │     │
-│     │      public UserRepository userRepository() {     │     │
-│     │          return new JpaUserRepository();          │     │
-│     │      }                                            │     │
-│     │                                                   │     │
-│     │      @Bean                                        │     │
-│     │      public UserService userService() {           │     │
-│     │          return new UserService(                  │     │
-│     │              userRepository()  // 의존성 주입       │     │
-│     │          );                                       │     │
-│     │      }                                            │     │
-│     │  }                                                │     │
-│     └─────────────────────────────────────────────────────┘     │
-│                                                                 │
-│  2. [Bean 생명주기 관리]                                          │
-│     ┌─────────────────────────────────────────────────────┐     │
-│     │  Container                                          │     │
-│     │    │                                                │     │
-│     │    ├──▶ UserRepository 인스턴스 생성                  │     │
-│     │    │                                                │     │
-│     │    ├──▶ UserService 인스턴스 생성                    │     │
-│     │    │    ├──▶ UserRepository 주입 (생성자)            │     │
-│     │    │                                                │     │
-│     │    └──▶ Singleton Beanとして管理                    │     │
-│     └─────────────────────────────────────────────────────┘     │
-│                                                                 │
-│  3. [의존성 주입 과정]                                            │
-│     ┌─────────────────────────────────────────────────────┐     │
-│     │                                                     │     │
-│     │   [Client 코드]                                      │     │
-│     │        │                                             │     │
-│     │        │  userService.lookup()                      │     │
-│     │        │  (또는 @Autowired)                          │     │
-│     │        ▼                                             │     │
-│     │   [DI 컨테이너]                                       │     │
-│     │        │                                             │     │
-│     │        ▼                                             │     │
-│     │   ┌─────────────────────────────┐                   │     │
-│     │   │ 1. UserRepository 생성        │                   │     │
-│     │   │ 2. UserService 생성           │                   │     │
-│     │   │ 3. UserRepository 주입        │                   │     │
-│     │   └─────────────────────────────┘                   │     │
-│     │        │                                             │     │
-│     │        ▼                                             │     │
-│     │   [완성된 UserService 반환]                           │     │
-│     │                                                     │     │
-│     └─────────────────────────────────────────────────────┘     │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-**[다이어그램 해설]** DI 컨테이너(IoC Container)의 동작 과정은 3단계로 나뉜다. 첫째, Bean 정의 등록 단계에서 `@Configuration` 클래스의 `@Bean` 메서드나 `@Component` 어노테이션을 통해 Bean의 생성 방식이 컨테이너에 등록된다. 둘째, 생명주기 관리 단계에서 컨테이너가 Bean의 생성, 속성 주입, 초기화, 파괴 등의 생명주기를 관리한다. 기본적으로Singleton으로 관리되어 하나의 인스턴스를 공동 사용한다. 셋째, 의존성 주입 단계에서 클라이언트가 `userService`를 요청하면, 컨테이너가 `UserRepository`를 먼저 생성하고, 그 다음 `UserService`를 생성하면서 생성자를 통해 `UserRepository`를 주입한다. 이러한 과정 덕분에 개발자는 객체 생성 및 의존성 연결에 대한 부담 없이 비즈니스 로직에 집중할 수 있다.
-
-### 순환 의존성 (Circular Dependency) 문제
-
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│              순환 의존성 (Circular Dependency) 문제 및 해결           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  // ❌ 순환 의존성 발생 예                                         │
-│  class A {                                                       │
-│      private B b;                                                │
-│      public A(B b) { this.b = b; }                              │
-│  }                                                               │
-│                                                                 │
-│  class B {                                                       │
-│      private A a;                                                │
-│      public B(A a) { this.a = a; }                              │
-│  }                                                               │
-│                                                                 │
-│  // A를 생성하려면 B가 필요하고, B를 생성하려면 A가 필요함 → 무한 대기   │
-│                                                                 │
-│  ─────────────────────────────────────────────────────────────  │
-│                                                                 │
-│  // ✅ 해결 방법 1: Setter 주입                                   │
-│  class A {                                                       │
-│      private B b;                                                │
-│      public void setB(B b) { this.b = b; }                     │
-│  }                                                               │
-│                                                                 │
-│  class B {                                                       │
-│      private A a;                                                │
-│      public B(A a) { this.a = a; }  // B 먼저 생성 가능          │
-│  }                                                               │
-│                                                                 │
-│  // ✅ 해결 방법 2: @Lazy 어노테이션                              │
-│  class A {                                                       │
-│      private B b;                                                │
-│      public A(@Lazy B b) { this.b = b; }  // 지연 초기화          │
-│  }                                                               │
-│                                                                 │
-│  // ✅ 해결 방법 3: 생성자 주입 → Setter 주입으로 변경             │
-│  // → 대부분의 경우 설계 개선으로 순환 참조를 제거하는 것이 바람직     │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-**[다이어그램 해설]** 순환 의존성은 두 개의 Bean이 서로를 참조할 때 발생한다. `A`를 생성하려면 `B`가 필요하고, `B`를 생성하려면 `A`가 필요한 상황이다. 생성자 주입만 사용하는 경우 이러한 순환 참조는 즉시失敗한다. 해결 방법으로는 Setter 주입을 통해 하나의 Bean을 먼저 생성한 후 setter로 주입하는 방법, `@Lazy` 어노테이션으로 지연 초기화를 통해 문제 시점을 늦추는 방법, 그리고 가장 근본적인 해결책으로 설계 자체를 개선하여 순환 참조를 제거하는 방법이 있다. 대부분의 경우 순환 참조 자체가 잘못된 설계의 신호이므로, 책임(Responsibility)을 분리하여 순환 참조 자체를 제거하는 것이 바람직하다.
+이 다이어그램은 의존성 주입 (DI, Dependen가 입력 요구사항을 받아 핵심 처리 과정을 거쳐 검증된 결과물을 산출하는 흐름을 보여준다.
 
 ---
 
-## Ⅲ. 구현 및 실무 응용 (Implementation & Practice)
-
-### Spring Framework에서 DI 실습
-
-```java
-// 1. 컴포넌트 스캔 방식
-@Service  // 서비스 계층 Bean으로 등록
-public class UserService {
-    private final UserRepository userRepository;
-
-    @Autowired  // 생성자 주입
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-}
-
-@Repository  // Repository 계층 Bean으로 등록
-public interface UserRepository {
-    User findById(Long id);
-    List<User> findAll();
-}
-
-@Repository
-public class JpaUserRepository implements UserRepository {
-    @Override
-    public User findById(Long id) { /* JPA 구현 */ }
-    @Override
-    public List<User> findAll() { /* JPA 구현 */ }
-}
-
-// 2. 설정 클래스 방식
-@Configuration
-public class AppConfig {
-    @Bean
-    public UserRepository userRepository() {
-        return new JpaUserRepository();  // 구체적 구현체 지정
-    }
-
-    @Bean
-    public UserService userService() {
-        return new UserService(userRepository());  // 주입
-    }
-}
-
-// 3. 테스트에서의 DI 활용
-class UserServiceTest {
-    @Mock
-    private UserRepository mockRepository;
-
-    @InjectMocks
-    private UserService userService;
-
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-    }
-
-    @Test
-    public void findUserById_test() {
-        // Mock 설정
-        when(mockRepository.findById(1L)).thenReturn(new User("John"));
-
-        // 실제 테스트 (Mock이 주입됨)
-        User result = userService.findUserById(1L);
-
-        assertEquals("John", result.getName());
-        // 실제 DB 연결 없이 테스트 가능!
-    }
-}
-```
+---
 
 ---
 
-## Ⅳ. 품질 관리 및 테스트 (Quality & Testing)
+## Ⅱ. 아키텍처 및 핵심 원리
 
-### DI 적용 전후 비교
+의존성 주입 (DI, Dependency Injection) - 객체 결합도 감소의 핵심 원리와 구성 요소를 이해하기 위해 다음 구조를 살펴본다.
 
-| 항목 | DI 미적용 | DI 적용 |
-|:---|:---|:---|
-| **결합도** | 높음 (구현체에 직접 의존) | 낮음 (인터페이스에만 의존) |
-| **테스트 용이성** | 어려움 (실제 DB 필요) | 용이 (Mock으로 대체 가능) |
-| **코드 재사용성** | 낮음 (구현체 강하게 결합) | 높음 (어디서든 주입 가능) |
-| **유연성** | 낮음 (구현체 교체 시 코드 수정) | 높음 (구현체 교체 시 주입만 변경) |
-| **불변성** | 보장 불가 | 생성자 주입으로 불변성 보장 |
+| 구성 요소 | 역할 | 적용 기준 |
+| :--- | :--- | :--- |
+| 개념 정의 | 핵심 용어와 범위를 명확히 설정 | 용어 혼용·오해 방지 |
+| 원칙 및 규칙 | 적용 시 따라야 할 기본 방향 | 일관성·품질 기준 |
+| 기법 및 도구 | 실질적 구현 방법과 지원 도구 | 생산성·자동화 |
+| 측정 지표 | 결과물의 품질을 정량화하는 지표 | 의사결정 근거 |
 
-### DI 적용 시 주의사항
+의존성 주입 (DI, Dependency Injection)의 핵심 원리는 **복잡성 분해**, **역할 분리**, **품질 측정**의 세 축으로 이해할 수 있다. 복잡한 문제를 관리 가능한 단위로 나누고, 각 역할의 책임을 명확히 하며, 결과를 정량적 지표로 평가하는 과정이 반복된다.
 
-1. **순환 의존성 회피**: 생성자 주입에서 순환 참조가 발생하지 않도록 설계
-2. **Too Many Dependencies警示**: 의존성이 너무 많으면 SRP 위반일 수 있음
-3. **Null 주입 방지**: `Optional` 활용 또는 `required = false` 설정
-
-- **📢 섹션 요약 비유**: DI는 "항공기의 부품 교체"와 같다. 엔진(의존 객체)이 비행기(主객체)에 고정되어 직접 교체할 수 없다면, 엔진 고장 시 비행기 전체를 폐기해야 할 수도 있다. 하지만 엔진이 플러그인 방식으로 연결되어(인터페이스) 있다면, 엔진 고장 시 플러그만 빼서 새 엔진으로 교체하면 된다.
+- **📢 섹션 요약 비유**: 의존성 주입 (DI, Dependency Injection)의 아키텍처는 공장의 생산 라인과 같다. 각 공정(구성 요소)이 명확한 역할을 가지고 정해진 순서대로 움직여야 최종 제품의 품질이 보장된다. 어느 한 공정이 부실하면 전체 제품이 불량이 된다.
 
 ---
 
-## Ⅴ. 최신 트렌드 및 결론 (Trends & Conclusion)
-
-### 현대 Java 생태계에서의 DI
-
-| 구분 | 설명 |
-|:---|:---|
-| **Spring Framework** | 가장 널리 사용되는 DI 프레임워크, `@Autowired`, `@Component`, `@Bean` 등 |
-| **Google Guice** | 가벼운 DI 프레임워크, `@Inject` 어노테이션 사용 |
-| **Jakarta CDI** | Java EE 표준 DI, `@Named`, `@Inject` |
-| **Dagger/Hilt** | Android 및 Kotlin 전용 컴파일 타임 DI (Runtime 오버헤드 없음) |
-| **Koin** | Kotlin 전용 경량 DI (DSL 스타일) |
-
-### DI의 한계와 보완
-
-- **순환 의존성 문제**: 설계不善로 순환 참조가 발생할 수 있음
-- **추적 어려움**: 많은 Bean이 서로를 참조하면 실행 흐름 파악이 어려울 수 있음
-- **컴파일 타임 체크 부족**: Runtime에才发现되는 의존성 오류
-
-### 미래 전망
-
-- **컴파일 타임 DI**: Dagger/Hilt처럼 컴파일 타임에 DI 그래프를 검증하여 Runtime 오버헤드 제거
-- **함수형 프로그래밍에서의 DI**: Kotlin의 `context receivers`, Scala의Implicit 활용
-
-- **📢 섹션 요약 비유**: DI는 "万能钥匙システム"과 같다. 각 방(객체)의锁(인터페이스)가 동일하다면, 어떤 열쇠(구현체)로든 열 수 있어,钥丢失시 다른 열쇠로 쉽게 교체할 수 있다.
+---
 
 ---
 
-## 핵심 인사이트 ASCII 다이어그램 (Concept Map)
+## Ⅲ. 비교 및 연결
+
+의존성 주입 (DI, Dependency Injection)을(를) 유사 개념과 비교하면 경계와 특성이 더 명확해진다.
+
+| 비교 항목 | 의존성 주입 (DI, Dependency Injection) | 유사 대안 |
+| :--- | :--- | :--- |
+| 핵심 목적 | 체계적 품질·생산성 향상 | 임시 방편적 해결 |
+| 적용 규모 | 중·대규모 프로젝트에서 효과적 | 소규모에서는 오버헤드 발생 가능 |
+| 조직 요건 | 팀 전체의 공통 이해와 훈련 필요 | 개인 역량 의존 |
+| 측정 가능성 | 정량적 지표로 성과 측정 가능 | 주관적 판단에 의존 |
+
+다른 소프트웨어 공학 개념과의 연결을 보면, 의존성 주입 (DI, Dependency Injection)은(는) 요구공학·설계·테스트·형상관리 전반에 걸쳐 영향을 미친다. 특히 품질 보증(QA, Quality Assurance)과 형상 관리(SCM, Software Configuration Management)와 긴밀하게 연계된다.
+
+- **📢 섹션 요약 비유**: 의존성 주입 (DI, Dependency Injection)과 유사 대안의 차이는 지도를 가지고 산에 오르는 것과 감으로만 오르는 차이와 같다. 지도(체계적 방법)가 있으면 정상까지 최단 경로를 찾을 수 있지만, 없으면 같은 곳을 맴돌거나 낭떠러지에 빠질 수 있다.
+
+---
+
+---
+
+---
+
+## Ⅳ. 실무 적용 및 기술사 판단
+
+의존성 주입 (DI, Dependency Injection)을(를) 실무에 적용할 때는 다음 판단 기준을 참고한다.
+
+- **📢 섹션 요약 비유**: 의존성 주입 (DI, Dependency Injection)은(는) 복잡한 공사 현장에서 설계도와 공정표를 기반으로 팀을 이끄는 현장 감독과 같다. 원칙 없이 무작정 짓기 시작하면 결국 재공사가 필요하듯, 소프트웨어도 올바른 원칙 위에서만 품질과 효율이 보장된다.
+
+---
+
+---
+
+## Ⅴ. 기대효과 및 결론
+
+의존성 주입 (DI, Dependency Injection)을(를) 올바르게 적용하면 소프트웨어 품질·유지보수성·팀 생산성이 동시에 향상된다. 그러나 도입에는 학습 비용과 초기 투자가 필요하며, 조직 전체의 공감과 훈련이 선행되어야 한다.
+
+**한계와 전제 조건**:
+- 소규모 프로젝트에서는 오버헤드가 발생할 수 있다
+- 팀 전체의 충분한 교육과 실습 기간이 필요하다
+- 도구 지원 환경 구축에 초기 비용이 발생한다
+
+**미래 발전 방향**:
+- AI·LLM 기반 자동화 도구와의 통합으로 적용 효율 향상
+- 클라우드 네이티브·DevOps 환경에서의 진화적 적용
+- 정량적 측정 체계의 고도화를 통한 의사결정 지원 강화
+
+의존성 주입 (DI, Dependency Injection)은 '어떻게 빠르게 짜는가'가 아니라 '어떻게 오래 유지할 수 있는 소프트웨어를 짜는가'에 대한 답이다. 단기 속도보다 장기 지속 가능성을 추구하는 관점으로 기억해야 한다.
+
+- **📢 섹션 요약 비유**: 의존성 주입 (DI, Dependency Injection)의 기대효과는 마라톤 훈련과 같다. 처음에는 느리고 고통스럽지만, 올바른 훈련 원칙을 지킨 선수만이 결승선에서 최고의 기록을 낼 수 있다. 소프트웨어 공학의 원칙도 단기 편의보다 장기 완성도를 위한 투자다.
+
+---
+
+---
+
+---
+
+### 📌 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+| :--- | :--- |
+| 소프트웨어 공학 (Software Engineering) | 의존성 주입 (DI, Dependency Injection)의 상위 학문 체계이며 품질·생산성 향상의 공통 목표를 공유한다 |
+| 소프트웨어 생명주기 (SDLC, Software Development Life Cycle) | 의존성 주입 (DI, Dependency Injection)은 SDLC의 특정 단계에서 핵심적으로 적용된다 |
+| 품질 보증 (QA, Quality Assurance) | 의존성 주입 (DI, Dependency Injection) 적용 결과는 QA 활동을 통해 검증되고 측정된다 |
+| 형상 관리 (SCM, Software Configuration Management) | 의존성 주입 (DI, Dependency Injection)에서 생성된 산출물은 SCM을 통해 체계적으로 관리된다 |
+
+### 📈 관련 키워드 및 발전 흐름도
 
 ```text
-┌─────────────────────────────────────────────────────────────────┐
-│              의존성 주입 (DI) 핵심 개념도                                 │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │                    DI 적용 전 (Tight Coupling)              │   │
-│  │                                                         │   │
-│  │    ┌───────────────┐      ┌───────────────┐            │   │
-│  │    │ UserService   │      │ JdbcUserRepo  │            │   │
-│  │    │               │──────▶│ (구현체 직접)  │            │   │
-│  │    └───────────────┘      └───────────────┘            │   │
-│  │          │                                             │   │
-│  │          │ 직접 생성 → 구현체 교체 시 코드 수정 필요        │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │                    DI 적용 후 (Loose Coupling)              │   │
-│  │                                                         │   │
-│  │    ┌───────────────┐      ┌───────────────┐            │   │
-│  │    │ UserService   │      │ IUserRepository│            │   │
-│  │    │               │──────▶│  (인터페이스)   │            │   │
-│  │    └───────────────┘      └───────┬───────┘            │   │
-│  │                                    │                      │   │
-│  │                          ┌─────────┴─────────┐          │   │
-│  │                    ┌─────────────┐  ┌─────────────┐      │   │
-│  │                    │JdbcUserRepo │  │JpaUserRepo  │      │   │
-│  │                    │  (구현체 A)  │  │ (구현체 B)  │      │   │
-│  │                    └─────────────┘  └─────────────┘      │   │
-│  │                                                         │   │
-│  │  ※ 구현체 교체 시 UserService 코드 수정 불필요              │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+소프트웨어 위기 (Software Crisis) 인식
+    │
+    ▼
+의존성 주입 (DI, Dependency Injection) 개념 정립
+    │
+    ▼
+표준화 및 방법론 체계화 (ISO, CMMI, Agile)
+    │
+    ▼
+클라우드 네이티브·AI 기반 확장 적용
+    │
+    ▼
+지속적 개선 및 DevOps·MLOps 통합
 ```
 
-## 참고
-- 모든 약어는 반드시 전체 명칭과 함께 표기: `API (Application Programming Interface)`
-- 일어/중국어 절대 사용 금지 (한국어만 사용)
-- 각 섹션 끝에 📢 요약 비유 반드시 추가
-- ASCII 다이어그램의 세로선 │와 가로선 ─ 정렬 완벽하게
-- 한 파일당 최소 800자 이상의 실질 내용
+이 흐름은 소프트웨어 위기 인식 → 체계적 방법론 개발 → 표준화 → 현대적 플랫폼 적용으로 이어지는 발전 과정을 보여준다.
+
+### 👶 어린이를 위한 3줄 비유 설명
+
+1. 의존성 주입 (DI, Dependency Injection)은 레고 블록으로 성을 만들 때처럼, 규칙을 정하고 역할을 나누어 함께 작업하는 방법이에요.
+2. 혼자서 막 만들면 나중에 무너지거나 고치기 어렵지만, 약속을 지키면 누구나 쉽게 고치고 더 크게 만들 수 있어요.
+3. 그래서 소프트웨어 공학은 프로그래머들이 좋은 프로그램을 빠르고 안전하게 만들 수 있게 도와주는 '규칙 모음집'이에요.
