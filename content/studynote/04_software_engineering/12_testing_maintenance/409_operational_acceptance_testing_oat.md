@@ -51,6 +51,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 운영팀은 소프트웨어의 기능(비즈니스 로직)에는 관심이 1도 없다. 그들의 관심사는 오직 "서버가 죽었을 때 어떻게 살릴 것인가" 뿐이다.
@@ -100,6 +102,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅲ. 비교 및 연결
 
 많은 SI(외주) 프로젝트에서 납기일이 부족하면 "OAT는 대충 서버 세팅 됐으니까 스킵하시죠. UAT 기능 다 돌아가잖아요?"라며 구렁이 담 넘어가듯 넘긴다.
@@ -112,6 +116,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 "완벽한 소프트웨어란 에러가 나지 않는 것이 아니라, 에러가 났을 때 우아하게 복구되는 것이다."
@@ -120,6 +126,8 @@ categories = "studynote-software-engineering"
 ---
 
 - **📢 섹션 요약 비유**: OAT (Operational Acceptance Testing)은(는) 복잡한 공사 현장에서 설계도와 공정표를 기반으로 팀을 이끄는 현장 감독과 같다. 원칙 없이 무작정 짓기 시작하면 결국 재공사가 필요하듯, 소프트웨어도 올바른 원칙 위에서만 품질과 효율이 보장된다.
+
+---
 
 ---
 
@@ -140,6 +148,8 @@ OAT (Operational Acceptance Testing)을(를) 올바르게 적용하면 소프트
 OAT (Operational Acceptance Testing)은 '어떻게 빠르게 짜는가'가 아니라 '어떻게 오래 유지할 수 있는 소프트웨어를 짜는가'에 대한 답이다. 단기 속도보다 장기 지속 가능성을 추구하는 관점으로 기억해야 한다.
 
 - **📢 섹션 요약 비유**: OAT (Operational Acceptance Testing)의 기대효과는 마라톤 훈련과 같다. 처음에는 느리고 고통스럽지만, 올바른 훈련 원칙을 지킨 선수만이 결승선에서 최고의 기록을 낼 수 있다. 소프트웨어 공학의 원칙도 단기 편의보다 장기 완성도를 위한 투자다.
+
+---
 
 ---
 
