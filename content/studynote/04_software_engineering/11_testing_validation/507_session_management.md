@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 세션 관리는 발급, 저장, 갱신, 폐기의 생명주기를 가진다.
@@ -60,6 +62,8 @@ categories = "studynote-software-engineering"
 | Rotation | 재사용 방지 |
 
 - **📢 섹션 요약 비유**: 입장권은 시간 지나면 자동으로 못 쓰게 해야 한다.
+
+---
 
 ---
 
@@ -87,6 +91,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 로그아웃, 비밀번호 변경, 권한 변경 시 세션을 재발급하거나 폐기한다.
@@ -104,6 +110,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 세션 관리가 좋으면 탈취 피해를 줄이고 사용자 신뢰를 높인다.
@@ -111,6 +119,8 @@ categories = "studynote-software-engineering"
 결론적으로 이 항목은 "로그인 상태의 보안 운영"이다.
 
 - **📢 섹션 요약 비유**: 문이 잠겼는지뿐 아니라, 열쇠를 다시 쓸 수 없는지도 봐야 한다.
+
+---
 
 ---
 

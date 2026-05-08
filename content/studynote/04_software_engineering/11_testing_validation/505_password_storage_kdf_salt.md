@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 KDF는 입력 비밀번호를 느리고 강하게 변환한다.
@@ -62,6 +64,8 @@ KDF는 입력 비밀번호를 느리고 강하게 변환한다.
 PBKDF2 (Password-Based Key Derivation Function 2), bcrypt, scrypt, Argon2가 대표적이다.
 
 - **📢 섹션 요약 비유**: 같은 비밀이라도 다른 자물쇠를 걸어 두면 한꺼번에 열기 어렵다.
+
+---
 
 ---
 
@@ -89,6 +93,8 @@ PBKDF2 (Password-Based Key Derivation Function 2), bcrypt, scrypt, Argon2가 대
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 파라미터 튜닝, 알고리즘 선택, 마이그레이션 정책이 중요하다.
@@ -106,6 +112,8 @@ PBKDF2 (Password-Based Key Derivation Function 2), bcrypt, scrypt, Argon2가 대
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 비밀번호 저장을 제대로 하면 유출 사고의 피해를 줄인다.
@@ -113,6 +121,8 @@ PBKDF2 (Password-Based Key Derivation Function 2), bcrypt, scrypt, Argon2가 대
 결론적으로 이 항목은 "검증용 비밀번호 저장 방식"이다.
 
 - **📢 섹션 요약 비유**: 비밀을 기억하지 말고, 맞는지만 확인하는 금고다.
+
+---
 
 ---
 
