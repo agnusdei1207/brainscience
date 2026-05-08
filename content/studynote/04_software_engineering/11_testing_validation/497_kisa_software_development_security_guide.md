@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 가이드는 입력 검증, 인증, 세션, 접근 제어, 오류 처리, 암호화 같은 분야를 포괄한다.
@@ -61,6 +63,8 @@ categories = "studynote-software-engineering"
 | 암호화 | 민감 정보 보호 |
 
 - **📢 섹션 요약 비유**: 집을 지을 때 전기, 수도, 잠금장치를 설계도에 같이 넣는 것과 같다.
+
+---
 
 ---
 
@@ -88,6 +92,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 개발 표준, 보안 리뷰, 교육 자료, 점검표로 쓴다.
@@ -105,6 +111,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 이 가이드는 보안을 개인의 감이 아니라 조직의 기준으로 만든다.
@@ -112,6 +120,8 @@ categories = "studynote-software-engineering"
 결론적으로 이 항목은 "47개 보안 약점 기반 개발 가이드"다.
 
 - **📢 섹션 요약 비유**: 운동장에서 모두가 같은 안전 규칙을 따르면 사고가 줄어든다.
+
+---
 
 ---
 

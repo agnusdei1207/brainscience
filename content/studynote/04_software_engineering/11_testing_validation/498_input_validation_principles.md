@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 검증은 허용 목록, 정규식, 길이 제한, 범위 제한 등으로 이뤄진다.
@@ -61,6 +63,8 @@ categories = "studynote-software-engineering"
 | Encoding | 표현 변환 |
 
 - **📢 섹션 요약 비유**: 재료를 냉장고에 넣기 전에 씻고 다듬는 것과 같다.
+
+---
 
 ---
 
@@ -88,6 +92,8 @@ SQL Injection, XSS (Cross-Site Scripting) 방어와 직접 연결된다.
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 사용자 입력, API payload, 파일 업로드, 경로 값 등을 모두 검증한다.
@@ -105,6 +111,8 @@ SQL Injection, XSS (Cross-Site Scripting) 방어와 직접 연결된다.
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 입력 검증과 안전한 표현은 대부분의 웹 취약점의 첫 방어선이다.
@@ -112,6 +120,8 @@ SQL Injection, XSS (Cross-Site Scripting) 방어와 직접 연결된다.
 결론적으로 이 항목은 "입력을 믿지 않고 통제하는 원칙"이다.
 
 - **📢 섹션 요약 비유**: 손님 말은 듣되, 문 열기는 다시 확인하는 것이다.
+
+---
 
 ---
 
