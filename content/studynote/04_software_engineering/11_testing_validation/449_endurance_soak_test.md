@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 내구성 테스트는 일정한 부하를 오랜 시간 유지하면서 메모리, CPU, 응답시간 변화를 관찰한다.
@@ -63,6 +65,8 @@ categories = "studynote-software-engineering"
 시간이 길수록 작은 누적 문제가 드러난다.
 
 - **📢 섹션 요약 비유**: 물통에 아주 작은 구멍이 있는지 오래 지켜보는 것이다.
+
+---
 
 ---
 
@@ -90,6 +94,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 메모리 누수, 연결 자원 누적, 로그 폭증, 캐시 팽창을 찾는다. 모니터링이 같이 있어야 의미가 있다.
@@ -107,6 +113,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 내구성 테스트는 장기 운영의 신뢰성을 높인다. 순간 성능보다 지속 가능성을 검증하는 데 필수다.
@@ -114,6 +122,8 @@ categories = "studynote-software-engineering"
 결론적으로 이 개념은 "오래 버티는 힘을 보는 테스트"다. 장기 장애를 줄이는 핵심이다.
 
 - **📢 섹션 요약 비유**: 오래 달려도 엔진이 식지 않는지 확인하는 것이다.
+
+---
 
 ---
 

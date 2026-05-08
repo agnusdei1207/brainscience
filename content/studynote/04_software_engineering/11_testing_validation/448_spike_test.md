@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 스파이크는 짧고 급격하다. 테스트도 급격한 증가와 빠른 정상화 반응을 함께 본다.
@@ -63,6 +65,8 @@ categories = "studynote-software-engineering"
 순간 버벅임이 있어도 회복이 빠르면 허용될 수 있다.
 
 - **📢 섹션 요약 비유**: 문이 갑자기 열려도 다시 잘 닫히는지 보는 것이다.
+
+---
 
 ---
 
@@ -90,6 +94,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 세일 오픈, 방송 시작, 알림 발송, 인기 콘텐츠 공개 때 쓴다. 급증 직후의 타임아웃과 실패 복구를 본다.
@@ -107,6 +113,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 스파이크 테스트는 순간 장애를 줄이는 데 유용하다. 급증 상황에 강한 구조를 설계하게 해 준다.
@@ -114,6 +122,8 @@ categories = "studynote-software-engineering"
 결론적으로 이 개념은 "갑작스런 폭주 대응"이다. 이벤트가 많은 서비스에서 꼭 필요하다.
 
 - **📢 섹션 요약 비유**: 갑자기 쏟아진 비를 배수구가 바로 받아내는지 보는 것이다.
+
+---
 
 ---
 
