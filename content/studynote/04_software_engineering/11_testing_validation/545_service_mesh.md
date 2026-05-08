@@ -43,6 +43,8 @@ MSA(Microservices Architecture)에서는 서비스마다 통신 정책이 달라
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 서비스 메시에서는 애플리케이션 옆에 프록시를 두고 통신을 우회시킨다. 정책은 제어 평면(Control Plane)에서, 실제 전달은 데이터 평면(Data Plane)에서 처리한다.
@@ -59,6 +61,8 @@ App -> Sidecar Proxy -> Other Service
 | Proxy | 요청 중계 |
 
 - **📢 섹션 요약 비유**: 지시하는 사령부와 실제 움직이는 경비원이 나뉜 구조다.
+
+---
 
 ---
 
@@ -84,6 +88,8 @@ App -> Sidecar Proxy -> Other Service
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 mTLS (mutual TLS), retries, circuit breaker, traffic shifting을 공통 정책으로 넣는다.
@@ -101,6 +107,8 @@ App -> Sidecar Proxy -> Other Service
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 서비스 메시는 보안과 트래픽 제어를 일관되게 만들고, 서비스 코드의 부담을 줄인다.
@@ -108,6 +116,8 @@ App -> Sidecar Proxy -> Other Service
 결론적으로 이 항목은 "인프라 계층에서 분산 통신 정책을 통합 제어하는 구조"다.
 
 - **📢 섹션 요약 비유**: 각 방이 따로 문지기를 두는 대신, 건물 전체 관리실이 통제하는 방식이다.
+
+---
 
 ---
 
