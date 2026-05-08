@@ -43,6 +43,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 정책은 선언형 규칙과 검사 도구로 구현된다.
@@ -58,6 +60,8 @@ categories = "studynote-software-engineering"
 | Evidence | 증거 |
 
 - **📢 섹션 요약 비유**: 시험 규칙을 적어두고 답안지 제출 전에 자동 채점하는 것과 같다.
+
+---
 
 ---
 
@@ -81,6 +85,8 @@ Compliance as Code는 Security as Code, Infrastructure as Code와 잘 맞는다.
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 IaC, 정책 엔진, 배포 파이프라인, 감사 증적 관리가 필요하다.
@@ -96,6 +102,8 @@ Compliance as Code는 Security as Code, Infrastructure as Code와 잘 맞는다.
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 Compliance as Code는 규정 준수를 운영 가능한 시스템으로 바꾼다.
@@ -103,6 +111,8 @@ Compliance as Code는 규정 준수를 운영 가능한 시스템으로 바꾼�
 결론적으로 이 항목은 "정책 자동화"다.
 
 - **📢 섹션 요약 비유**: 규칙을 자동문으로 만들면 실수할 틈이 줄어든다.
+
+---
 
 ---
 
