@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 오라클은 테스트 입력과 실제 결과 사이의 판정자다. 기대 결과와 실제 결과를 비교해 합격/실패를 결정한다.
@@ -72,6 +74,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅲ. 비교 및 연결
 
 오라클은 모든 테스트 기법의 뒤에 숨어 있다. 블랙박스 테스트는 명세 오라클을, 회귀 테스트는 일관성 오라클을 많이 쓴다.
@@ -85,6 +89,8 @@ categories = "studynote-software-engineering"
 좋은 테스트는 좋은 입력뿐 아니라 좋은 오라클도 필요하다.
 
 - **📢 섹션 요약 비유**: 요리 맛을 보려면 비교할 기준 맛이 있어야 한다.
+
+---
 
 ---
 
@@ -109,6 +115,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 테스트 오라클은 테스트의 의미를 만들어 준다. 입력만 던지고 끝나는 작업을, 판정 가능한 검증으로 바꾼다.
@@ -116,6 +124,8 @@ categories = "studynote-software-engineering"
 결론적으로 이 개념은 "테스트의 채점자"다. 좋은 오라클이 있어야 좋은 테스트가 된다.
 
 - **📢 섹션 요약 비유**: 답안지 없는 시험은 점수를 매길 수 없다.
+
+---
 
 ---
 
