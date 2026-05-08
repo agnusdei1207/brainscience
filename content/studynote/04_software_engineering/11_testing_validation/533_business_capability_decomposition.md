@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 능력은 주문, 결제, 배송, 재고 같은 업무 단위다.
@@ -60,6 +62,8 @@ categories = "studynote-software-engineering"
 | Ownership | 책임 소유 |
 
 - **📢 섹션 요약 비유**: 각 매대가 자기 물건만 책임지는 것과 같다.
+
+---
 
 ---
 
@@ -87,6 +91,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 조직도, 프로세스, 사용자 흐름을 함께 본다.
@@ -104,6 +110,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 비즈니스 능력 기준 분해는 조직과 시스템을 정렬한다.
@@ -111,6 +119,8 @@ categories = "studynote-software-engineering"
 결론적으로 이 항목은 "업무 기준의 경계 설정"이다.
 
 - **📢 섹션 요약 비유**: 가게에서 맡은 코너가 분명하면 일하기 쉽다.
+
+---
 
 ---
 

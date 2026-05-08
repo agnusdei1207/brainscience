@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 분해 기준은 기능, 데이터, 변경 빈도, 팀 구조다.
@@ -60,6 +62,8 @@ categories = "studynote-software-engineering"
 | Independence | 독립성 |
 
 - **📢 섹션 요약 비유**: 방을 나눌 때 벽은 세우되 문은 지나치게 많지 않아야 한다.
+
+---
 
 ---
 
@@ -87,6 +91,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 서비스 간 경계, 데이터 소유권, 관측성, 배포 독립성을 본다.
@@ -104,6 +110,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 좋은 분해는 팀과 시스템의 민첩성을 높인다.
@@ -111,6 +119,8 @@ categories = "studynote-software-engineering"
 결론적으로 이 항목은 "경계 중심의 서비스 분해"다.
 
 - **📢 섹션 요약 비유**: 경계선이 잘 그려진 지도가 길을 찾기 쉽다.
+
+---
 
 ---
 
