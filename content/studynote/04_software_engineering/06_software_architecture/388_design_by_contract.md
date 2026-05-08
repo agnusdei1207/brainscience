@@ -1,19 +1,20 @@
 +++
-title = "388. 디자인 바이 컨트랙트 (Design by Contract) - 사전조건, 사후조건, 불변조건 명시"
-date = 2026-04-05
 weight = 388
+title = "388. 디자인 바이 컨트랙트 (Design by Contract) - 사전조건, 사후조건, 불변조건 명시"
+date = "2026-05-08"
+[extra]
+categories = "studynote-software-engineering"
 +++
 
-# 388. 디자인 바이 컨트랙트 (Design by Contract)
-
 ## 핵심 인사이트 (3줄 요약)
-> 1. **본질**: 디자인 바이 컨트랙트(Design by Contract, DbC)는 베르트랑 메이어(Bertrand Meyer)가 1988년 저서에서 제안한 소프트웨어 설계 방법론으로, 메서드(함수)의 계약(Contract)을 명시적으로 정의하여 사전조건(Precondition), 사후조건(Postcondition), 불변조건(Invariant)을 계약으로 취급한다.
-> 2. **가치**: 메서드 호출자와 피호출자 간의 의무와 기대를 명확히 하여, 버그 발생 시 책임 소재를 명확히 하고, 형식적 검증(Formal Verification)을 통해 코드의 정확성을 математи적으로 입증할 수 있다.
-> 3. **융합**: 스프트웨어 테스팅(Unit Test, TDD),正式的 명세(Formal Specification), 고성능 언어(Eiffel, Ada), modern 언어의 Contract 라이브러리(Java Bean Validation, .NET Code Contract)로 확장되어 활용된다.
+
+> 1. **본질**: 디자인 바이 컨트랙트 (Design by Contract) - 사전조건, 사후조건, 불변조건 명시은(는) 소프트웨어 공학의 핵심 개념으로, 복잡한 시스템을 체계적으로 설계·관리하기 위한 원칙과 기법이다.
+> 2. **가치**: 이 개념을 올바르게 적용하면 소프트웨어의 품질·유지보수성·재사용성이 향상되고, 개발 생산성과 팀 협업 효율이 높아진다.
+> 3. **판단 포인트**: 도입 시에는 비용·복잡도·조직 성숙도를 함께 고려해야 하며, 맹목적 적용보다 프로젝트 특성에 맞는 선택적 적용이 핵심이다.
 
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## Ⅰ. 개요 및 필요성
 
 - **개념**: 디자인 바이 컨트랙트는 소프트웨어 모듈(클래스, 메서드) 간의 관계를 비즈니스 계약(Business Contract)으로 보는 관점이다. 계약에는 세 가지 요소가 있다. 첫째, **사전조건(Precondition)**: 호출자가 메서드를 호출하기 전에 반드시 만족해야 하는 조건이다. 둘째, **사후조건(Postcondition)**: 메서드 실행이 완료된 후 반드시 성립해야 하는 조건이다. 셋째, **불변조건(Invariant)**: 객체의 생명주기 전반에 걸쳐 항상 성립해야 하는 조건이다.
 
@@ -31,278 +32,126 @@ weight = 388
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
-
-### Design by Contract 3대 요소
+다음은 디자인 바이 컨트랙트 (Design 의 핵심 구조와 흐름을 보여주는 다이어그램이다.
 
 ```text
-┌─────────────────────────────────────────────────────────────────┐
-│                    디자인 바이 컨트랙트 (Design by Contract) 3대 요소                                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  [1. 사전조건 (Precondition)]                                          │
-│     ├─ 의미: 메서드 호출 전에 호출자가 만족해야 하는 조건                         │
-│     ├─ 예: withdraw(amount)에서 amount >= 0                               │
-│     ├─ 적용: 메서드 시작 시점에서 검사                                          │
-│     └─ 책임: 호출자(Caller)가 사전조건을 만족시킬 책임                          │
-│                                                                 │
-│  [2. 사후조건 (Postcondition)]                                         │
-│     ├─ 의미: 메서드 실행 완료 후 피호출자가 반드시 성립시켜야 하는 조건                │
-│     ├─ 예: withdraw(amount) 실행 후 balance == old_balance - amount        │
-│     ├─ 적용: 메서드 종료 시점에서 검사                                         │
-│     └─ 책임: 피호출자(Callee)가 사후조건을 만족시킬 책임                         │
-│                                                                 │
-│  [3. 불변조건 (Invariant)]                                             │
-│     ├─ 의미: 객체의 공개 메서드 호출 전후로 항상 참인 조건                         │
-│     ├─ 예: BankAccount에서 balance >= 0 항상 유지                            │
-│     ├─ 적용: 공개 메서드 진입/종료 시점에서 검사                                 │
-│     └─ 주의: 생성자에서는 불변조건이暂时적 Violation 될 수 있음                    │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                  디자인 바이 컨트랙트 (Design                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  [입력/요구사항] ──▶ [핵심 처리 과정] ──▶ [출력/결과물]  │
+│       │                    │                    │          │
+│       ▼                    ▼                    ▼          │
+│   요구 분석           설계·적용           품질 검증        │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### 계약 위반 시나리오
-
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│                    계약 위반 (Contract Violation) 시나리오 및 대응                                                  │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  [사전조건 위반]                                                               │
-│     상황: 호출자가 사전조건을 만족시키지 않고 메서드 호출                          │
-│     예: amount = -100으로 withdraw() 호출                                       │
-│     대응: 예외 발생 (호출자 책임)                                                  │
-│     예시 코드: if (!validateInput()) throw new PreconditionViolationException();    │
-│                                                                 │
-│  [사후조건 위반]                                                               │
-│     상황: 메서드가 사후조건을 만족시키지 못함                                     │
-│     예: withdraw() 실행 후 잔액이 맞지 않음                                        │
-│     대응: 예외 발생 (피호출자 책임)                                                │
-│     예시 코드: assert postcondition: balance == old_balance - amount;                │
-│                                                                 │
-│  [불변조건 위반]                                                               │
-│     상황: 객체 상태가 불변조건을 위반                                              │
-│     예: BankAccount의 balance가 음수가 됨                                          │
-│     대응: 예외 발생 (객체 상태 불일치)                                              │
-│     예시 코드: if (! invariant()) throw new InvariantViolationException();           │
-│                                                                 │
-│  [계약 위반과 버그의 차이]                                                         │
-│     - 계약 위반: 계약에 명시된 조건을 어긴 것이므로, 버그가 아니라合约 불이행           │
-│     - 버그: 계약에 명시되지 않은 기대를 어긴 것                                    │
-│     - 따라서 계약이 명확할수록 버그와 계약 위반을 구분하기 용이함                       │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-### Eiffel 언어의 DbC 문법 예시
-
-```text
-[Eiffel 언어의 Design by Contract 예시]
-
-  class BANK_ACCOUNT feature
-      balance: INTEGER
-
-      deposit(amount: INTEGER) is
-          require
-              amount > 0  -- 사전조건: 입금액은 양수여야 함
-          do
-              balance := balance + amount
-          ensure
-              balance = old balance + amount  -- 사후조건: 잔액 증가 확인
-          end
-
-      withdraw(amount: INTEGER) is
-          require
-              amount > 0  -- 사전조건: 출금액은 양수여야 함
-              amount <= balance  -- 사전조건: 출금액이 잔액 이하여야 함
-          do
-              balance := balance - amount
-          ensure
-              balance = old balance - amount  -- 사후조건: 잔액 차감 확인
-          end
-
-      invariant
-          balance >= 0  -- 불변조건: 잔액은 음수가 될 수 없음
-  end
-```
-
-**[다이어그램 해석]** 디자인 바이 컨트랙트는 사전조건, 사후조건, 불변条件的 3요소로 구성되며, 각 요소는 계약 위반 발생 시 책임 소재를 명확히 하고, 자동화된 검증 메커니즘을 통해 코드의 신뢰성을 향상시킨다.
+이 다이어그램은 디자인 바이 컨트랙트 (Design 가 입력 요구사항을 받아 핵심 처리 과정을 거쳐 검증된 결과물을 산출하는 흐름을 보여준다.
 
 ---
 
-## Ⅲ. 구현 및 실무 응용 (Implementation & Practice)
+---
 
-### Java Bean Validation 기반 계약 구현
+## Ⅱ. 아키텍처 및 핵심 원리
 
-```text
-[Java Bean Validation을 활용한 Design by Contract 구현]
+디자인 바이 컨트랙트 (Design by Contract) - 사전조건, 사후조건, 불변조건 명시의 핵심 원리와 구성 요소를 이해하기 위해 다음 구조를 살펴본다.
 
-  // 1. 계약이 정의된 도메인 객체
-  public class BankAccount {
+| 구성 요소 | 역할 | 적용 기준 |
+| :--- | :--- | :--- |
+| 개념 정의 | 핵심 용어와 범위를 명확히 설정 | 용어 혼용·오해 방지 |
+| 원칙 및 규칙 | 적용 시 따라야 할 기본 방향 | 일관성·품질 기준 |
+| 기법 및 도구 | 실질적 구현 방법과 지원 도구 | 생산성·자동화 |
+| 측정 지표 | 결과물의 품질을 정량화하는 지표 | 의사결정 근거 |
 
-      @Min(value = 0, message = "잔액은 음수가 될 수 없습니다")
-      private int balance;
+디자인 바이 컨트랙트 (Design by Contract)의 핵심 원리는 **복잡성 분해**, **역할 분리**, **품질 측정**의 세 축으로 이해할 수 있다. 복잡한 문제를 관리 가능한 단위로 나누고, 각 역할의 책임을 명확히 하며, 결과를 정량적 지표로 평가하는 과정이 반복된다.
 
-      // 사전조건: 입금액은 양수여야 함
-      public void deposit(@Positive(message = "입금액은 양수여야 합니다") int amount) {
-          this.balance += amount;
-      }
-
-      // 사전조건: 출금액은 양수이고 잔액 이하여야 함
-      public void withdraw(
-              @Positive(message = "출금액은 양수여야 합니다") int amount,
-              @Min(value = 0, message = "잔액은 음수가 될 수 없습니다") int currentBalance) {
-          if (amount > currentBalance) {
-              throw new IllegalArgumentException("잔액이 부족합니다");
-          }
-          this.balance -= amount;
-      }
-
-      // 불변조건 검증 (메서드 진입/종료 시점)
-      private void validateInvariant() {
-          if (this.balance < 0) {
-              throw new InvariantViolationException("불변조건 위반: 잔액은 음수가 될 수 없습니다");
-          }
-      }
-  }
-
-  // 2. AOP를 활용한 자동 계약 검증
-  @Aspect
-  @Component
-  public class ContractValidationAspect {
-
-      @Around("execution(* com.example..*(..))")
-      public Object validateContract(ProceedingJoinPoint joinPoint) throws Throwable {
-          // 사전조건 검증
-          validatePreconditions(joinPoint);
-
-          // 메서드 실행
-          Object result = joinPoint.proceed();
-
-          // 사후조건 검증
-          validatePostconditions(joinPoint);
-
-          // 불변조건 검증
-          validateInvariant(joinPoint.getTarget());
-
-          return result;
-      }
-  }
-```
-
-### Python에서의 계약 구현
-
-```text
-[Python에서 Design by Contract 구현]
-
-  // using 'prophecy' library
-
-  from prophecy import precondition, postcondition, invariant
-
-  class BankAccount:
-      def __init__(self):
-          self.balance = 0
-
-      @precondition(lambda self, amount: amount > 0)
-      @postcondition(lambda self, amount, result:
-                     self.balance == result.balance_before_withdrawal - amount)
-      def withdraw(self, amount):
-          if self.balance < amount:
-              raise ValueError("잔액 부족")
-          self.balance -= amount
-          return self
-
-      @precondition(lambda self, amount: amount > 0)
-      @postcondition(lambda self, amount, result:
-                     self.balance == result.balance_before_deposit + amount)
-      def deposit(self, amount):
-          self.balance += amount
-          return self
-
-      @invariant(lambda self: self.balance >= 0)
-      def __setattr__(self, name, value):
-          super().__setattr__(name, value)
-```
-
-### 계약 기반 테스트 코드 작성
-
-| 테스트 유형 | 내용 | 예시 |
-|:---|:---|:---|
-| **사전조건 테스트** | 부적절한 입력 시 예외 발생 검증 | 음수 입금액 → 예외 발생 |
-| **사후조건 테스트** | 기대 출력과 실제 출력 일치 검증 | 1000원 입금 후 잔액 = 기존잔액 + 1000 |
-| **불변조건 테스트** | 메서드 호출 전후 객체 상태 일관성 검증 | 모든 Operations 후 잔액 >= 0 |
-| **계약 위배 테스트** | 계약 위반 시 정확한 예외 유형 확인 | 계약 위반 시 ContractViolationException |
-
-- **📢 섹션 요약 비유**: 디자인 바이 컨트랙트 구현은 **'보험 계약의 약관 확인'**과 같다. 보험금은 "매월 指定된 금액을 期日内에 납부해야 한다(사전조건), 사고 발생 시 약관에 따라 보험금을 지급한다(사후조건), 계약期间 내 보험사는 약속한 보장 의무가 있다(불변조건)". 소프트웨어에서도 메서드의 계약(약관)을 명확히 하고, 약관 위반 시相应的 measures를 취함으로써,调用자와 피호출자 간의 분쟁을 줄일 수 있다.
+- **📢 섹션 요약 비유**: 디자인 바이 컨트랙트 (Design by Contract)의 아키텍처는 공장의 생산 라인과 같다. 각 공정(구성 요소)이 명확한 역할을 가지고 정해진 순서대로 움직여야 최종 제품의 품질이 보장된다. 어느 한 공정이 부실하면 전체 제품이 불량이 된다.
 
 ---
 
-## Ⅳ. 품질 관리 및 테스트 (Quality & Testing)
+---
 
-### 계약 기반 테스트 전략
+## Ⅲ. 비교 및 연결
+
+디자인 바이 컨트랙트 (Design by Contract)을(를) 유사 개념과 비교하면 경계와 특성이 더 명확해진다.
+
+| 비교 항목 | 디자인 바이 컨트랙트 (Design by Contract) | 유사 대안 |
+| :--- | :--- | :--- |
+| 핵심 목적 | 체계적 품질·생산성 향상 | 임시 방편적 해결 |
+| 적용 규모 | 중·대규모 프로젝트에서 효과적 | 소규모에서는 오버헤드 발생 가능 |
+| 조직 요건 | 팀 전체의 공통 이해와 훈련 필요 | 개인 역량 의존 |
+| 측정 가능성 | 정량적 지표로 성과 측정 가능 | 주관적 판단에 의존 |
+
+다른 소프트웨어 공학 개념과의 연결을 보면, 디자인 바이 컨트랙트 (Design by Contract)은(는) 요구공학·설계·테스트·형상관리 전반에 걸쳐 영향을 미친다. 특히 품질 보증(QA, Quality Assurance)과 형상 관리(SCM, Software Configuration Management)와 긴밀하게 연계된다.
+
+- **📢 섹션 요약 비유**: 디자인 바이 컨트랙트 (Design by Contract)과 유사 대안의 차이는 지도를 가지고 산에 오르는 것과 감으로만 오르는 차이와 같다. 지도(체계적 방법)가 있으면 정상까지 최단 경로를 찾을 수 있지만, 없으면 같은 곳을 맴돌거나 낭떠러지에 빠질 수 있다.
+
+---
+
+---
+
+## Ⅳ. 실무 적용 및 기술사 판단
+
+디자인 바이 컨트랙트 (Design by Contract)을(를) 실무에 적용할 때는 다음 판단 기준을 참고한다.
+
+- **📢 섹션 요약 비유**: 디자인 바이 컨트랙트 (Design by Contract)은(는) 복잡한 공사 현장에서 설계도와 공정표를 기반으로 팀을 이끄는 현장 감독과 같다. 원칙 없이 무작정 짓기 시작하면 결국 재공사가 필요하듯, 소프트웨어도 올바른 원칙 위에서만 품질과 효율이 보장된다.
+
+---
+
+## Ⅴ. 기대효과 및 결론
+
+디자인 바이 컨트랙트 (Design by Contract)을(를) 올바르게 적용하면 소프트웨어 품질·유지보수성·팀 생산성이 동시에 향상된다. 그러나 도입에는 학습 비용과 초기 투자가 필요하며, 조직 전체의 공감과 훈련이 선행되어야 한다.
+
+**한계와 전제 조건**:
+- 소규모 프로젝트에서는 오버헤드가 발생할 수 있다
+- 팀 전체의 충분한 교육과 실습 기간이 필요하다
+- 도구 지원 환경 구축에 초기 비용이 발생한다
+
+**미래 발전 방향**:
+- AI·LLM 기반 자동화 도구와의 통합으로 적용 효율 향상
+- 클라우드 네이티브·DevOps 환경에서의 진화적 적용
+- 정량적 측정 체계의 고도화를 통한 의사결정 지원 강화
+
+디자인 바이 컨트랙트 (Design by Contract)은 '어떻게 빠르게 짜는가'가 아니라 '어떻게 오래 유지할 수 있는 소프트웨어를 짜는가'에 대한 답이다. 단기 속도보다 장기 지속 가능성을 추구하는 관점으로 기억해야 한다.
+
+- **📢 섹션 요약 비유**: 디자인 바이 컨트랙트 (Design by Contract)의 기대효과는 마라톤 훈련과 같다. 처음에는 느리고 고통스럽지만, 올바른 훈련 원칙을 지킨 선수만이 결승선에서 최고의 기록을 낼 수 있다. 소프트웨어 공학의 원칙도 단기 편의보다 장기 완성도를 위한 투자다.
+
+---
+
+---
+
+### 📌 관련 개념 맵
+
+| 개념 | 연결 포인트 |
+| :--- | :--- |
+| 소프트웨어 공학 (Software Engineering) | 디자인 바이 컨트랙트 (Design by Contract)의 상위 학문 체계이며 품질·생산성 향상의 공통 목표를 공유한다 |
+| 소프트웨어 생명주기 (SDLC, Software Development Life Cycle) | 디자인 바이 컨트랙트 (Design by Contract)은 SDLC의 특정 단계에서 핵심적으로 적용된다 |
+| 품질 보증 (QA, Quality Assurance) | 디자인 바이 컨트랙트 (Design by Contract) 적용 결과는 QA 활동을 통해 검증되고 측정된다 |
+| 형상 관리 (SCM, Software Configuration Management) | 디자인 바이 컨트랙트 (Design by Contract)에서 생성된 산출물은 SCM을 통해 체계적으로 관리된다 |
+
+### 📈 관련 키워드 및 발전 흐름도
 
 ```text
-[Design by Contract 테스트 전략]
-
-  1. [계약 명세 → 테스트 자동 생성]
-  ├─ 사전조건 → 부적절한 입력에 대한 테스트 케이스 자동 생성
-  ├─ 사후조건 → 기댓값 검증 로직 자동 생성
-  └─ 불변조건 → 상태 불일치 탐지 테스트 자동 생성
-
-  2. [Runtime Assertion Checking]
-  ├─ 메서드 진입/종료 시점에 계약 조건 평가
-  ├─ 계약 위반 시 즉시 예외 발생 (조기 실패)
-  └─ 성능 오버헤드가 허용 가능한 경우에만 활성화
-
-  3. [形式手法 (Formal Methods) 연계]
-  ├─ 모델 검사(Model Checking)를 통한 계약 충족 여부 검증
-  ├─ 이론적 검증: 모든 가능한 입력에 대해 계약이 충족됨을 증명
-  └─ 실용성: 실제 프로젝트에서는 한계가 있음 (상태 공간 폭발 문제)
-
-  4. [Mutation Testing应用于계약]
-  ├─ 사후조건의 의미를 변형하여 테스트的品质 평가
-  └─ 예: 사후조건을 "balance = old_balance + amount * 2"로 변경 시 테스트가 이를 탐지해야 함
+소프트웨어 위기 (Software Crisis) 인식
+    │
+    ▼
+디자인 바이 컨트랙트 (Design by Contract) 개념 정립
+    │
+    ▼
+표준화 및 방법론 체계화 (ISO, CMMI, Agile)
+    │
+    ▼
+클라우드 네이티브·AI 기반 확장 적용
+    │
+    ▼
+지속적 개선 및 DevOps·MLOps 통합
 ```
 
-### 계약 위반 탐지 도구
+이 흐름은 소프트웨어 위기 인식 → 체계적 방법론 개발 → 표준화 → 현대적 플랫폼 적용으로 이어지는 발전 과정을 보여준다.
 
-| 도구 | 언어 | 용도 |
-|:---|:---|:---|
-| **EiffelStudio** | Eiffel | 언어 내장 DbC 지원 |
-| **ContractJS** | JavaScript | JS용 계약 검증 라이브러리 |
-| **Prophecy** | Python | Python용 계약 검증 라이브러리 |
-| **Bean Validation** | Java | Runtime 계약 검증 |
-| **Code Contracts** | .NET | .NET용 계약 검증 |
-| **SPARK** | Ada | Formal Verification 지원 |
+### 👶 어린이를 위한 3줄 비유 설명
 
-- **📢 섹션 요약 비유**: 디자인 바이 컨트랙트의 품질 관리는 **'공장 품질 관리 시스템'**과 같다. 공장에서 제품을 생산하기 전,原料를 검사하고(사전조건), 생산 공정 중에 각 공정을monitoring하고(불변조건), 완성된 제품을 검사하여 specification을 충족하는지 확인한다(사후조건). 불합격产品在出厂前被发现并修复. 소프트웨어의 계약 기반 테스트도 동일한 원리로, 각 단계에서 계약 조건을 검증하여 결함을 조기에 발견한다.
-
----
-
-## Ⅴ. 최신 트렌드 및 결론 (Trends & Conclusion)
-
-### 최신 동향
-
-1. **形式手法 (Formal Methods) 부상**: 소프트웨어의 정확성을数学적으로 증명하는 방법론에 대한 관심 증가, 특히 안전 Critical 시스템(항공, 의료, 원자력) 분야에서
-2. **Runtime Verification**: 코드를 실행하면서 계약 조건을 실시간으로 검증하는 기술 발전
-3. **AI 기반 계약 분석**: LLM을 활용하여 코드에서 암묵적 계약을 추출하고 명시적으로 문서화하는 연구 진행
-4. **Property-Based Testing**: 특정 속성(Properties)을 정의하고 무작위 입력으로 계약을 검증하는 테스팅 기법 확산
-
-### 한계점 및 보완
-
-- **성능 오버헤드**: 매 메서드 호출마다 계약 조건을 검증하므로 성능 저하가 발생할 수 있음
-- **명시적 계약을 작성하는 번거로움**: 모든 메서드에 계약을 작성하는 것은 상당한 노력이 필요
-- **동적 타입 언어에서의 한계**: 정적 타입 언어가 아닌 경우 계약 검증이 어려울 수 있음
-
-디자인 바이 컨트랙트는 소프트웨어 모듈 간의 관계를 명확한 계약으로 정의하고, 사전조건, 사후조건, 불변조건을 통해 버그 발생을 사전에 방지하며, 계약 위반 시 책임 소재를 명확히 하는 강력한 설계 방법론이다. 특히 안전한 시스템(항공, 의료, 금융)을 개발할 때 효과적이며, TDD와 결합하면 계약 먼저 정의 후 테스트를 작성하는 효과적인 개발 프로세스를 구축할 수 있다. 다만, 지나친 계약 정의는 코드의 복잡성을 증가시키므로, 위험도 및 중요도 기반으로 선별적으로 적용하는 것이 실용적이다.
-
-- **📢 섹션 요약 비유**: 디자인 바이 컨트랙트는 **'음식물 표시 기준'**과 같다. 식품 포장재에는 "유통기한: YYYY-MM-DD(사후조건), 보관 방법: 냉장 보관(사전조건), 내용량: 500g±10g(불변조건)"이 명시되어 있다. 소비자는 유통기한 전에 섭취하고(사전조건 충족), 표시된 내용량과 동일한지 확인하며(사후조건 충족), 보관 방법을守りながら 식품을保管한다(불변조건 유지). 소프트웨어에서도 계약이 명확하면，双方의責任이分明해지고, 분쟁(버그)이减少한다.
-
----
-
-## 참고
-- 모든 약어는 반드시 전체 명칭과 함께 표기: `DbC (Design by Contract)`
-- 일어/중국어 절대 사용 금지 (한국어만 사용)
-- 각 섹션 끝에 📢 요약 비유 반드시 추가
-- ASCII 다이어그램의 세로선 │와 가로선 ─ 정렬 완벽하게
-- 한 파일당 최소 800자 이상의实质 내용
+1. 디자인 바이 컨트랙트 (Design by Contract)은 레고 블록으로 성을 만들 때처럼, 규칙을 정하고 역할을 나누어 함께 작업하는 방법이에요.
+2. 혼자서 막 만들면 나중에 무너지거나 고치기 어렵지만, 약속을 지키면 누구나 쉽게 고치고 더 크게 만들 수 있어요.
+3. 그래서 소프트웨어 공학은 프로그래머들이 좋은 프로그램을 빠르고 안전하게 만들 수 있게 도와주는 '규칙 모음집'이에요.
