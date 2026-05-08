@@ -1,14 +1,13 @@
 +++
 weight = 251
-title = "251. 윈도우 동기화 - 크리티컬 섹션 객체(유저모드), 디스패처 객체(커널모드 - 이벤트, 뮤텍스, 세마포어)"
-date = "2026-03-22"
+title = "251. 윈도우 동기화 (Windows Synchronization)"
+date = "2026-05-09"
 [extra]
-categories = ["studynote-operating-system"]
+categories = "studynote-operating-system"
 +++
 
-# 윈도우 동기화 (Windows Synchronization)
-
 ## 핵심 인사이트 (3줄 요약)
+
 > 1. **본질**: Windows 동기화는 유저 모드와 커널 모드 두 계층으로 나뉘며, Critical Section (유저 모드 스핀락+뮤텍스 혼합), Mutex/Semaphore/Event (커널 모드 디스패처 객체)로 성능과 기능을 분리한다.
 > 2. **가치**: 커널 모드 디스패처 객체는 프로세스 간 공유와 Wait 통지를 지원하며, SRWLOCK (Slim Reader/Writer Lock)과 CONDITION_VARIABLE은 Vista 이후 저비용 고성능 동기화를 제공한다.
 > 3. **융합**: Windows I/O Completion Port (IOCP)는 비동기 I/O와 스레드 풀 동기화를 결합한 거대 규모 서버 설계의 핵심이며, ETW (Event Tracing for Windows)로 동기화 병목을 실시간 모니터링할 수 있다.
@@ -124,7 +123,7 @@ switch (dwResult) {
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## Ⅲ. 비교 및 연결
 
 ### Critical Section vs Mutex 비교
 
@@ -145,7 +144,7 @@ switch (dwResult) {
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## Ⅳ. 실무 적용 및 기술사 판단
 
 ### 실무 시나리오
 1. **SQL Server 내부 락**: Critical Section으로 버퍼 풀 접근을, Kernel Mutex로 파일 핸들 공유를 각각 분리 관리하여 성능 최적화.
@@ -163,19 +162,35 @@ switch (dwResult) {
 
 Windows 동기화 설계는 유저 모드와 커널 모드의 분리를 통해 성능과 기능의 트레이드오프를 명확히 한다. 현대 Windows 개발에서는 SRWLock(읽기-쓰기)과 CONDITION_VARIABLE(조건 대기)을 Critical Section과 조합하는 것이 권장 패턴이다.
 
+- **📢 섹션 요약 비유**: 도구의 장점만 외우는 것이 아니라 어디까지 믿고 어디서 보완해야 하는지 기억하는 정리 노트와 같다.
+
 ---
 
-## 📌 관련 개념 맵
+### 📌 관련 개념 맵
 
-| 개념 | 관계 |
+| 개념 | 연결 포인트 |
 |:---|:---|
-| Critical Section | Windows의 유저 모드 고성능 뮤텍스 |
-| Futex (Linux) | Critical Section과 동일한 설계 철학 |
-| Event 객체 | Windows의 조건 변수 대응 |
-| WaitForMultipleObjects | 다중 자원 동시 대기 API |
-| IOCP | Windows 비동기 I/O와 스레드 풀 동기화 결합 |
+| 자바 동기화 | 현재 개념으로 들어오기 전에 함께 이해하면 경계가 선명해지는 기반 개념이다. |
+| Pthreads 동기화 | 현재 개념이 등장하게 만든 직접적인 선행 흐름이다. |
+| 이벤트 객체 (Event Object) | 현재 개념이 구현·세분화될 때 바로 연결되는 후속 개념이다. |
+| 리눅스 동기화 | 확장 학습이나 심화 비교로 이어지는 다음 단계의 키워드다. |
 
-## 👶 어린이를 위한 3줄 비유 설명
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[Pthreads 동기화]
+    │
+    ▼
+[윈도우 동기화 (Windows Synchronization)]
+    │
+    ├──▶ [이벤트 객체 (Event Object)]
+    └──▶ [리눅스 동기화]
+```
+
+이 흐름도는 선행 개념에서 현재 개념으로 넘어온 뒤, 구현 세분화와 후속 확장으로 이어지는 학습 순서를 압축해 보여준다.
+
+### 👶 어린이를 위한 3줄 비유 설명
+
 1. Critical Section은 같은 반 안에서만 쓰는 내부 자물쇠 — 빠르지만 다른 반과 공유 불가.
 2. Kernel Mutex는 선생님 도장이 찍힌 공식 출입증 — 느리지만 학교 전체(다른 프로세스)에서도 인정.
 3. Event 객체는 '이제 들어와도 돼요' 신호등 — 자동 리셋은 한 명씩, 수동 리셋은 모두에게 신호!

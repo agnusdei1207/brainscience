@@ -1,14 +1,13 @@
 +++
 weight = 256
 title = "256. 락-프리 (Lock-free) 자료구조 - CAS 연산 적극 활용"
-date = "2026-03-22"
+date = "2026-05-09"
 [extra]
-categories = ["studynote-operating-system"]
+categories = "studynote-operating-system"
 +++
 
-# 락-프리 자료구조 (Lock-Free Data Structures)
-
 ## 핵심 인사이트 (3줄 요약)
+
 > 1. **본질**: 락-프리 (Lock-Free) 자료구조는 뮤텍스 없이 CAS (Compare-And-Swap) 같은 하드웨어 원자적 명령어만으로 동시성을 제어하여, 스레드 중 최소 하나는 항상 전진한다는 Live 보장을 제공한다.
 > 2. **가치**: 뮤텍스의 스케줄러 암전(Preemption Under Lock), 우선순위 역전, 데드락 문제를 완전히 제거하며, 멀티코어 확장성이 극도로 높아 고성능 시스템에서 핵심 알고리즘으로 사용된다.
 > 3. **융합**: Java의 `ConcurrentLinkedQueue`, `LongAdder`, Linux 커널의 `ring buffer`, Go runtime의 goroutine 채널 내부, Rust std의 `Mutex`-free 타입들이 락-프리 알고리즘 기반이다.
@@ -133,7 +132,7 @@ bool success = atomic_compare_exchange_strong(&counter, &expected, desired);
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## Ⅲ. 비교 및 연결
 
 ### 동시성 보장 수준 비교
 
@@ -158,7 +157,7 @@ bool success = atomic_compare_exchange_strong(&counter, &expected, desired);
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## Ⅳ. 실무 적용 및 기술사 판단
 
 ### 실무 시나리오
 1. **고처리량 메시지 큐**: 뮤텍스 기반 큐는 생산자-소비자 수 증가 시 락 경합으로 처리량 감소. `ConcurrentLinkedQueue`(락-프리)는 코어 수 증가에 선형 확장.
@@ -181,19 +180,35 @@ bool success = atomic_compare_exchange_strong(&counter, &expected, desired);
 | 구현 난이도 | 낮음 | 높음 (ABA 등 함정) |
 | 최적 환경 | 일반 동기화 | 고성능 생산자-소비자 |
 
+- **📢 섹션 요약 비유**: 도구의 장점만 외우는 것이 아니라 어디까지 믿고 어디서 보완해야 하는지 기억하는 정리 노트와 같다.
+
 ---
 
-## 📌 관련 개념 맵
+### 📌 관련 개념 맵
 
-| 개념 | 관계 |
+| 개념 | 연결 포인트 |
 |:---|:---|
-| CAS (Compare-And-Swap) | 락-프리의 핵심 하드웨어 원시 연산 |
-| ABA 문제 | 락-프리 포인터 조작의 핵심 함정 |
-| 웨이트-프리 (Wait-free) | 락-프리보다 강한 개별 완료 보장 |
-| 메모리 순서 (Memory Order) | CAS 정확성을 위한 메모리 배리어 설정 |
-| Java LongAdder | 락-프리 분산 카운터의 실무 구현 |
+| RCU (Read-Copy-Update) | 현재 개념으로 들어오기 전에 함께 이해하면 경계가 선명해지는 기반 개념이다. |
+| SeqLock (순차 락) | 현재 개념이 등장하게 만든 직접적인 선행 흐름이다. |
+| 웨이트-프리 (Wait-free) 알고리즘 | 현재 개념이 구현·세분화될 때 바로 연결되는 후속 개념이다. |
+| 스케줄러 일드 (sched_yield) | 확장 학습이나 심화 비교로 이어지는 다음 단계의 키워드다. |
 
-## 👶 어린이를 위한 3줄 비유 설명
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[SeqLock (순차 락)]
+    │
+    ▼
+[락-프리 (Lock-free) 자료구조]
+    │
+    ├──▶ [웨이트-프리 (Wait-free) 알고리즘]
+    └──▶ [스케줄러 일드 (sched_yield)]
+```
+
+이 흐름도는 선행 개념에서 현재 개념으로 넘어온 뒤, 구현 세분화와 후속 확장으로 이어지는 학습 순서를 압축해 보여준다.
+
+### 👶 어린이를 위한 3줄 비유 설명
+
 1. 락-프리는 마트 쿠폰 선착순 — 자기 쿠폰을 먼저 잡으면 되고, 실패하면 다시 시도해요. 누군가는 항상 성공합니다!
 2. ABA 문제는 쿠폰 번호가 같지만 내용이 달라진 상황을 알아채지 못하는 버그예요 — 번호에 버전을 붙이면 해결돼요.
 3. 웨이트-프리는 더 강한 보장 — 모든 사람이 정해진 시간 안에 반드시 성공해요. 구현은 훨씬 어렵지만요!

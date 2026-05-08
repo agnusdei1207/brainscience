@@ -1,14 +1,13 @@
 +++
 weight = 245
-title = "245. 고전적 동기화 문제들"
-date = "2026-03-22"
+title = "245. 고전적 동기화 문제들 (Classic Synchronization Problems)"
+date = "2026-05-09"
 [extra]
-categories = ["studynote-operating-system"]
+categories = "studynote-operating-system"
 +++
 
-# 고전적 동기화 문제들 (Classic Synchronization Problems)
-
 ## 핵심 인사이트 (3줄 요약)
+
 > 1. **본질**: 고전적 동기화 문제는 실제 운영체제와 병렬 시스템에서 반복적으로 등장하는 경쟁 조건·교착 상태·기아 상태 패턴을 추상화한 교과서적 벤치마크 세트다.
 > 2. **가치**: 유한 버퍼, 독자-저자, 식사하는 철학자 문제는 세마포어·모니터·조건 변수의 올바른 사용법을 검증하는 표준 시험대이며, 잘못 설계하면 데드락·기아가 발생하는 생생한 시뮬레이터다.
 > 3. **융합**: 각 문제는 생산자-소비자(메시지 큐), 데이터베이스 읽기-쓰기 잠금, 분산 자원 할당 등 실무 시스템 설계의 직접적인 원형(Archetype)이다.
@@ -124,7 +123,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## Ⅲ. 비교 및 연결
 
 ### 세 문제 비교 매트릭스
 
@@ -143,7 +142,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## Ⅳ. 실무 적용 및 기술사 판단
 
 ### 실무 시나리오
 
@@ -167,17 +166,31 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## 📌 관련 개념 맵
+### 📌 관련 개념 맵
 
-| 개념 | 관계 |
+| 개념 | 연결 포인트 |
 |:---|:---|
-| 세마포어 (Semaphore) | 세 문제 모두의 주요 동기화 도구 |
-| 모니터 (Monitor) | 식사 철학자의 고수준 해결 수단 |
-| MVCC (Multi-Version Concurrency Control) | 독자-저자 문제의 데이터베이스 산업적 해법 |
-| 교착 상태 (Deadlock) | 식사 철학자의 핵심 위협 |
-| 기아 상태 (Starvation) | 독자-저자·식사 철학자 공통 주의 사항 |
+| 우선순위 상속 (Priority Inheritance Protocol) | 현재 개념으로 들어오기 전에 함께 이해하면 경계가 선명해지는 기반 개념이다. |
+| 우선순위 올림 (Priority Ceiling Protocol) | 현재 개념이 등장하게 만든 직접적인 선행 흐름이다. |
+| 유한 버퍼 문제 (Bounded-Buffer Problem) / 생산자-소비자 (Producer-Consumer) 문제 | 현재 개념이 구현·세분화될 때 바로 연결되는 후속 개념이다. |
+| 독자-저자 문제 (Readers-Writers Problem) | 확장 학습이나 심화 비교로 이어지는 다음 단계의 키워드다. |
 
-## 👶 어린이를 위한 3줄 비유 설명
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[우선순위 올림 (Priority Ceiling Protocol)]
+    │
+    ▼
+[고전적 동기화 문제들 (Classic Synchronization Problems)]
+    │
+    ├──▶ [유한 버퍼 문제 (Bounded-Buffer Problem) / 생산자-소비자 (Producer-Consumer) 문제]
+    └──▶ [독자-저자 문제 (Readers-Writers Problem)]
+```
+
+이 흐름도는 선행 개념에서 현재 개념으로 넘어온 뒤, 구현 세분화와 후속 확장으로 이어지는 학습 순서를 압축해 보여준다.
+
+### 👶 어린이를 위한 3줄 비유 설명
+
 1. 유한 버퍼는 편의점 냉장고에요 — 냉장고가 가득 차면 납품업자(생산자)는 기다리고, 비면 손님(소비자)이 기다려요.
 2. 독자-저자는 도서관 규칙 — 여러 명이 같은 책을 동시에 읽을 수 있지만, 책을 수정하려면 독점해야 해요.
 3. 식사하는 철학자는 젓가락 나눠 쓰기 게임 — 몇 가지 규칙만 지키면 아무도 굶지 않아요!

@@ -1,14 +1,13 @@
 +++
 weight = 244
 title = "244. 우선순위 올림 (Priority Ceiling Protocol)"
-date = "2026-03-22"
+date = "2026-05-09"
 [extra]
-categories = ["studynote-operating-system"]
+categories = "studynote-operating-system"
 +++
 
-# 우선순위 올림 프로토콜 (Priority Ceiling Protocol)
-
 ## 핵심 인사이트 (3줄 요약)
+
 > 1. **본질**: PCP (Priority Ceiling Protocol)는 각 자원(락)에 해당 자원을 사용할 수 있는 최고 우선순위 프로세스의 우선순위를 미리 부여(천장값)하여, 락 획득 시 보유 프로세스의 우선순위를 즉시 그 천장값으로 올리는 실시간 동기화 기법이다.
 > 2. **가치**: 우선순위 역전 (Priority Inversion)과 교착 상태 (Deadlock) 모두를 단일 프로토콜로 예방할 수 있으며, RTOS (Real-Time Operating System) 환경에서 마감시간 (Deadline) 보장의 핵심 메커니즘이다.
 > 3. **융합**: PIP (Priority Inheritance Protocol)가 역전 발생 후 사후 처리라면, PCP는 사전 예방으로서 POSIX (Portable Operating System Interface) 실시간 확장과 AUTOSAR OS에서 표준으로 채택된다.
@@ -97,7 +96,7 @@ PCP는 순환 대기 (Circular Wait)를 구조적으로 차단한다. 태스크�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## Ⅲ. 비교 및 연결
 
 ### PIP vs PCP 비교
 
@@ -125,7 +124,7 @@ PCP는 순환 대기 (Circular Wait)를 구조적으로 차단한다. 태스크�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## Ⅳ. 실무 적용 및 기술사 판단
 
 ### 실무 시나리오
 
@@ -166,17 +165,31 @@ PCP는 순환 대기 (Circular Wait)를 구조적으로 차단한다. 태스크�
 
 ---
 
-## 📌 관련 개념 맵
+### 📌 관련 개념 맵
 
-| 개념 | 관계 및 시너지 |
+| 개념 | 연결 포인트 |
 |:---|:---|
-| 우선순위 상속 프로토콜 (PIP) | PCP의 대안. 사후 처리 방식으로 체인 차단 여전히 가능 |
-| 우선순위 역전 (Priority Inversion) | PCP가 예방하는 핵심 문제 |
-| 뮤텍스 (Mutex Lock) | PCP가 적용되는 동기화 원시 객체 |
-| RTOS (Real-Time Operating System) | PCP의 주 적용 환경. 마감 보장이 법적 요구 |
-| EDF / RM 스케줄링 | PCP로 차단 상한이 결정되어야 스케줄링 분석 가능 |
+| 우선순위 역전 (Priority Inversion) | 현재 개념으로 들어오기 전에 함께 이해하면 경계가 선명해지는 기반 개념이다. |
+| 우선순위 상속 (Priority Inheritance Protocol) | 현재 개념이 등장하게 만든 직접적인 선행 흐름이다. |
+| 고전적 동기화 문제들 | 현재 개념이 구현·세분화될 때 바로 연결되는 후속 개념이다. |
+| 유한 버퍼 문제 (Bounded-Buffer Problem) / 생산자-소비자 (Producer-Consumer) 문제 | 확장 학습이나 심화 비교로 이어지는 다음 단계의 키워드다. |
 
-## 👶 어린이를 위한 3줄 비유 설명
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[우선순위 상속 (Priority Inheritance Protocol)]
+    │
+    ▼
+[우선순위 올림 (Priority Ceiling Protocol)]
+    │
+    ├──▶ [고전적 동기화 문제들]
+    └──▶ [유한 버퍼 문제 (Bounded-Buffer Problem) / 생산자-소비자 (Producer-Consumer) 문제]
+```
+
+이 흐름도는 선행 개념에서 현재 개념으로 넘어온 뒤, 구현 세분화와 후속 확장으로 이어지는 학습 순서를 압축해 보여준다.
+
+### 👶 어린이를 위한 3줄 비유 설명
+
 1. 친구가 공용 레고 박스를 빌리는 순간, 선생님이 "지금부터 이 친구가 가장 먼저 돌려줘야 하는 사람 수준"으로 대우해줘요.
 2. 그래서 다른 어떤 친구도 레고 박스를 가진 친구를 방해하거나 끼어들 수 없어요.
 3. 레고를 다 쓰고 돌려주면, 그 친구는 다시 원래 자기 차례로 돌아가요 — 공평하죠!

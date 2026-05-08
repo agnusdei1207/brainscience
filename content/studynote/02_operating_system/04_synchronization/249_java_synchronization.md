@@ -1,14 +1,13 @@
 +++
 weight = 249
-title = "249. 자바 동기화 - synchronized 키워드, 모니터 락, wait()/notify()"
-date = "2026-03-22"
+title = "249. 자바 동기화 (Java Synchronization)"
+date = "2026-05-09"
 [extra]
-categories = ["studynote-operating-system"]
+categories = "studynote-operating-system"
 +++
 
-# 자바 동기화 (Java Synchronization)
-
 ## 핵심 인사이트 (3줄 요약)
+
 > 1. **본질**: Java는 언어 수준에서 `synchronized` 키워드로 모니터 기반 상호 배제를 제공하며, `wait()/notify()/notifyAll()`로 조건 변수 동기화를 지원하는 고수준 동기화 모델을 채택했다.
 > 2. **가치**: `java.util.concurrent` 패키지 (JUC)는 ReentrantLock, ReadWriteLock, Semaphore, CountDownLatch 등 세마포어·모니터를 모두 추상화한 고성능 동기화 라이브러리를 제공한다.
 > 3. **융합**: JVM (Java Virtual Machine)의 객체 헤더에 내장된 모니터 락(Biased→Lightweight→Heavyweight 락 승격)은 OS 뮤텍스와 연계되어 성능과 공정성을 동적으로 조정한다.
@@ -161,7 +160,7 @@ synchronized vs ReentrantLock 비교:
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## Ⅲ. 비교 및 연결
 
 ### JVM 내부 락 승격 메커니즘
 
@@ -192,7 +191,7 @@ synchronized vs ReentrantLock 비교:
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## Ⅳ. 실무 적용 및 기술사 판단
 
 ### 실무 시나리오
 1. **고성능 캐시 업데이트**: `ConcurrentHashMap` + `ReadWriteLock`으로 읽기 우세 환경에서 독자-저자 문제 해결. `computeIfAbsent()`로 원자적 캐시 미스 처리.
@@ -234,19 +233,35 @@ private volatile static Singleton instance;
 | ReadWriteLock | 읽기 집중 공유 데이터 | 저자 기아 모니터링 |
 | CountDownLatch | 작업 완료 동기화 | 재사용 불가 (CyclicBarrier 대안) |
 
+- **📢 섹션 요약 비유**: 도구의 장점만 외우는 것이 아니라 어디까지 믿고 어디서 보완해야 하는지 기억하는 정리 노트와 같다.
+
 ---
 
-## 📌 관련 개념 맵
+### 📌 관련 개념 맵
 
-| 개념 | 관계 |
+| 개념 | 연결 포인트 |
 |:---|:---|
-| 모니터 (Monitor) | synchronized의 이론적 기반 |
-| volatile | 메모리 가시성 보장, DCLK 안전화 |
-| CAS (Compare-And-Swap) | JUC 동기화 클래스의 내부 구현 기반 |
-| JVM Biased Locking | synchronized 성능 최적화 내부 메커니즘 |
-| POSIX Pthreads | Java 동기화의 OS 수준 기반 |
+| 독자-저자 문제 (Readers-Writers Problem) | 현재 개념으로 들어오기 전에 함께 이해하면 경계가 선명해지는 기반 개념이다. |
+| 식사하는 철학자 문제 (Dining-Philosophers Problem) | 현재 개념이 등장하게 만든 직접적인 선행 흐름이다. |
+| Pthreads 동기화 | 현재 개념이 구현·세분화될 때 바로 연결되는 후속 개념이다. |
+| 윈도우 동기화 | 확장 학습이나 심화 비교로 이어지는 다음 단계의 키워드다. |
 
-## 👶 어린이를 위한 3줄 비유 설명
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[식사하는 철학자 문제 (Dining-Philosophers Problem)]
+    │
+    ▼
+[자바 동기화 (Java Synchronization)]
+    │
+    ├──▶ [Pthreads 동기화]
+    └──▶ [윈도우 동기화]
+```
+
+이 흐름도는 선행 개념에서 현재 개념으로 넘어온 뒤, 구현 세분화와 후속 확장으로 이어지는 학습 순서를 압축해 보여준다.
+
+### 👶 어린이를 위한 3줄 비유 설명
+
 1. `synchronized`는 화장실 문 자물쇠 — 들어갈 때 잠그고, 나올 때(예외가 나도!) 자동으로 열려요.
 2. `wait()`는 "줄이 너무 길면 잠깐 대기실로 가세요", `notify()`는 "이제 들어오세요!" 신호예요.
 3. `ReentrantLock`은 더 똑똑한 자물쇠 — "5초 기다려도 안 열리면 포기"나 "키 가진 사람 순서대로" 같은 세밀한 규칙도 설정할 수 있어요!
