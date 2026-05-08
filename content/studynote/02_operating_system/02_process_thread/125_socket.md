@@ -1,25 +1,24 @@
 +++
 weight = 125
 title = "125. 소켓 (Socket) 통신 - 네트워크, 서로 다른 시스템 간 통신"
-date = "2026-03-22"
+date = "2026-05-08"
 [extra]
 categories = "studynote-operating-system"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
+
 > 1. **본질**: 소켓 (Socket)은 네트워크 상에서 프로세스 간 통신을 가능하게 하는 양방향 통신 종단점 (Endpoint)으로, IP (Internet Protocol) 주소와 포트 (Port) 번호의 조합으로 식별되는 소프트웨어적 창구다.
 > 2. **가치**: 파일 디스크립터 (File Descriptor) 기반의 단일 추상화 계층을 통해 TCP (Transmission Control Protocol) 스트림과 UDP (User Datagram Protocol) 데이터그램이라는 상이한 통신 의미론 (Semantics)을 동일한 `read()`/`write()` 인터페이스로 통합하여, 네트워크 프로그래밍의 복잡도를 극적으로 낮춘다.
 > 3. **융합**: 로컬 IPC (Inter-Process Communication)로서의 UNIX Domain Socket에서부터 글로벌 네트워크 통신까지 범용적으로 사용되며, RPC (Remote Procedure Call), 분산 데이터베이스, 마이크로서비스 아키텍처 등 거의 모든 분산 시스템의 근간을 이루는 가장 일반적인 통신 메커니즘이다.
 
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## Ⅰ. 개요 및 필요성
 
 - **개념**: 소켓 (Socket)은 1983년 BSD (Berkeley Software Distribution) UNIX에서 처음 도입된 네트워크 통신 인터페이스로, 두 프로세스가 네트워크를 통해 데이터를 주고받을 수 있게 해주는 표준화된 API (Application Programming Interface)다. 각 소켓은 (IP 주소, 포트 번호)의 쌍으로 유일하게 식별된다.
 
 - **필요성**: 물리적으로 분리된 호스트에서 실행되는 프로세스 간에 데이터를 교환하려면 라우팅, 패킷 분할, 흐름 제어, 오류 복구 등 수많은 네트워크 계층의 복잡한 작업이 필수적으로 수반된다. 파이프 (Pipe)나 공유 메모리 (Shared Memory) 같은 기존 IPC는 동일 머신 내에서만 동작하므로, 서로 다른 시스템 간 통신에는 사용할 수 없다. 소켓은 이러한 네트워크 하위 계층의 복잡성을 OS (Operating System) 커널로 은닉하고, 애플리케이션에게는 파일 입출력 (File I/O)과 동일한 친숙한 인터페이스를 제공하여 네트워크 프로그래밍을 실용화한다.
-
-- **💡 비유**: 소켓은 마치 '국제 전화 교환기'와 같다. 전 세계 어디에 있는 상대방과도 전화번호 (IP 주소 + 포트 번호)만 알면 통화 (데이터 전송)를 시작할 수 있으며, 중간에 놓인 수많은 교환기와 해저 케이블이 어떻게 동작하는지는 몰라도 된다.
 
 - **등장 배경 및 발전 과정**:
   1. **초기 네트워크 프로그래밍의 파편화**: 1970년대 각 벤더마다 고유의 네트워크 API를 제공하여, 하드웨어가 바뀌면 애플리케이션을 전면 재작성해야 하는 심각한 이식성 (Portability) 문제가 존재했다.
@@ -72,7 +71,7 @@ categories = "studynote-operating-system"
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## Ⅱ. 아키텍처 및 핵심 원리
 
 ### 구성 요소
 
@@ -141,7 +140,7 @@ TCP (Transmission Control Protocol) 소켓 기반의 클라이언트-서버 통�
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## Ⅲ. 비교 및 연결
 
 ### 비교 1: 네트워크 소켓 (TCP/UDP) vs 로컬 소켓 (UNIX Domain Socket)
 
@@ -203,7 +202,7 @@ TCP (Transmission Control Protocol) 소켓 기반의 클라이언트-서버 통�
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## Ⅳ. 실무 적용 및 기술사 판단
 
 ### 실무 시나리오
 
@@ -260,7 +259,7 @@ TCP (Transmission Control Protocol) 소켓 기반의 클라이언트-서버 통�
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## Ⅴ. 기대효과 및 결론
 
 ### 정량/정성 기대효과
 
@@ -283,20 +282,31 @@ TCP (Transmission Control Protocol) 소켓 기반의 클라이언트-서버 통�
 
 ---
 
-## 📌 관련 개념 맵 (Knowledge Graph)
+### 📌 관련 개념 맵
 
-| 개념 명칭 | 관계 및 시너지 설명 |
+| 개념 | 연결 포인트 |
 |:---|:---|
-| **TCP (Transmission Control Protocol)** | 소켓의 가장 널리 사용되는 전송 프로토콜로, 연결 지향적 신뢰성을 보장하며 SOCK_STREAM 타입으로 소켓 API와 통합된다. |
-| **UDP (User Datagram Protocol)** | 비연결형 경량 전송 프로토콜로, SOCK_DGRAM 타입으로 실시간 스트리밍과 DNS 등 낮은 레이턴시 통신에 사용된다. |
-| **I/O 멀티플렉싱 (epoll, kqueue)** | 단일 스레드가 다수의 소켓 상태를 동시 감시하여 C10K 문제를 해결하는 핵심 동시성 기술이다. |
-| **RPC (Remote Procedure Call)** | 소켓 API 위에 구현된 분산 통신 추상화로, 네트워크 세부 사항을 함수 호출로 감추어 마이크로서비스 통신을 단순화한다. |
-| **UNIX Domain Socket (UDS)** | 동일 호스트 내에서 네트워크 스택을 우회하는 소켓 변형으로, 로컬 IPC에서 최고의 성능을 제공한다. |
-| **TLS/SSL** | 소켓 위에 암호화 계층을 추가하여 중간자 공격 (Man-in-the-Middle)을 방지하는 보안 기술이다. |
+| 파이프 (Pipe) | 현재 개념으로 들어오기 전에 함께 이해하면 경계가 선명해지는 기반 개념이다. |
+| 지명 파이프 (Named Pipe / FIFO) | 현재 개념이 등장하게 만든 직접적인 선행 흐름이다. |
+| RPC (Remote Procedure Call) | 현재 개념이 구현·세분화될 때 바로 연결되는 후속 개념이다. |
+| XDR (External Data Representation) | 확장 학습이나 심화 비교로 이어지는 다음 단계의 키워드다. |
 
----
+### 📈 관련 키워드 및 발전 흐름도
 
-## 👶 어린이를 위한 3줄 비유 설명
+```text
+[지명 파이프 (Named Pipe / FIFO)]
+    │
+    ▼
+[소켓 (Socket) 통신]
+    │
+    ├──▶ [RPC (Remote Procedure Call)]
+    └──▶ [XDR (External Data Representation)]
+```
+
+이 흐름도는 선행 개념에서 현재 개념으로 넘어온 뒤, 구현 세분화와 후속 확장으로 이어지는 학습 순서를 압축해 보여준다.
+
+### 👶 어린이를 위한 3줄 비유 설명
+
 1. 소켓은 집에 설치된 **"마법의 전화기"**예요. 전 세계 어디든 전화번호(IP 주소)와 방 번호(포트 번호)만 알면 연결할 수 있어요.
 2. 전화를 걸 때 "여보세요~" 하고 연결을 확인하는 것(TCP 3-Way Handshake)처럼, 소켓도 통신하기 전에 꼭 악수(Handshake)를 해야 해요.
 3. TCP는 실수하면 다시 말해주는 친절한 통화 방식이고, UDP는 편지를 마구 던져 넣어 빠르지만 가끔 편지가 분실될 수도 있는 우편 방식이에요!
