@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 위협 모델링은 일반적으로 4단계(What are we building? $\rightarrow$ What can go wrong? $\rightarrow$ What are we going to do? $\rightarrow$ Did we do a good job?)로 진행된다. 
@@ -84,6 +86,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅲ. 비교 및 연결
 
 위협 모델링에는 STRIDE 외에도 DREAD, PASTA 등 여러 방법론이 존재한다.
@@ -104,11 +108,15 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 위협 모델링은 훌륭한 도구지만, 현업 개발팀에게 "설계 단계에서 무조건 해라"고 던져주면 프로젝트 일정이 박살 난다.
 
 - **📢 섹션 요약 비유**: 위협 모델링 STRIDE은(는) 복잡한 공사 현장에서 설계도와 공정표를 기반으로 팀을 이끄는 현장 감독과 같다. 원칙 없이 무작정 짓기 시작하면 결국 재공사가 필요하듯, 소프트웨어도 올바른 원칙 위에서만 품질과 효율이 보장된다.
+
+---
 
 ---
 
@@ -121,6 +129,8 @@ categories = "studynote-software-engineering"
 결론적으로 시큐어 코딩이 '어떻게(How) 안전하게 짤 것인가'를 다룬다면, 위협 모델링은 '무엇을(What) 방어하도록 설계할 것인가'를 정의하는 나침반이다. 기술 리더는 개발팀이 코드를 짜기 전, 다이어그램을 보며 "해커라면 여기를 어떻게 찌를까?"라고 질문하는 문화를 정착시켜야 한다.
 
 - **📢 섹션 요약 비유**: 설계도 없이 무작정 벽돌부터 쌓은 성은 나중에 무너뜨리고 다시 지어야 한다. 위협 모델링은 설계도 위에 빨간펜으로 적군의 침투 경로를 미리 그려보고, 성벽 두께를 미리 결정하는 가장 현명한 장군의 전략이다.
+
+---
 
 ---
 
