@@ -43,6 +43,10 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 감사는 상태 변경, 외부 호출, 권한, 예외 처리를 살핀다.
@@ -58,6 +62,10 @@ categories = "studynote-software-engineering"
 | Audit | 코드/로직 점검 |
 
 - **📢 섹션 요약 비유**: 문을 잠그기 전에 안쪽 문부터 닫아야 한다.
+
+---
+
+---
 
 ---
 
@@ -81,6 +89,10 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 권한 분리, 재진입 방지 패턴, 외부 호출 최소화가 중요하다.
@@ -96,6 +108,10 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 스마트 컨트랙트 감사는 배포 후 손실을 예방한다.
@@ -103,6 +119,10 @@ categories = "studynote-software-engineering"
 결론적으로 이 항목은 "불변 코드의 사전 안전 점검"이다.
 
 - **📢 섹션 요약 비유**: 돌에 새길 글씨는 더 신중하게 써야 한다.
+
+---
+
+---
 
 ---
 
