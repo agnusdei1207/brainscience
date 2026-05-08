@@ -41,6 +41,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 콜드 스타트는 런타임 준비, 종속성 로드, 연결 설정 비용이 합쳐져 생긴다. 예열된 인스턴스는 이 지연을 줄인다.
@@ -62,6 +64,8 @@ First request -> Init -> Response
 
 ---
 
+---
+
 ## Ⅲ. 비교 및 연결
 
 Provisioned Concurrency, pre-warming, 최소 인스턴스 유지 같은 방법으로 지연을 줄인다. 대신 비용이 늘어난다.
@@ -73,6 +77,8 @@ Provisioned Concurrency, pre-warming, 최소 인스턴스 유지 같은 방법�
 | 사용자 경험 | 나쁨 | 좋음 |
 
 - **📢 섹션 요약 비유**: 밥솥을 미리 취사해 두면 바로 먹을 수 있지만 전기를 더 쓴다.
+
+---
 
 ---
 
@@ -93,6 +99,8 @@ Provisioned Concurrency, pre-warming, 최소 인스턴스 유지 같은 방법�
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 콜드 스타트는 서버리스 설계의 핵심 리스크다.
@@ -100,6 +108,8 @@ Provisioned Concurrency, pre-warming, 최소 인스턴스 유지 같은 방법�
 결론적으로 이 항목은 "처음 켜질 때 생기는 초기 지연과 예열로 줄이는 문제"다.
 
 - **📢 섹션 요약 비유**: 바로 뛰게 하려면 몸풀기를 미리 해 둬야 한다.
+
+---
 
 ---
 

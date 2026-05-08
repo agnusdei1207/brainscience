@@ -41,6 +41,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 Host는 Remote가 공개한 모듈을 런타임에 로드한다. Webpack의 federation 설정이 이 관계를 만든다.
@@ -56,6 +58,8 @@ Host -> Remote Container -> Shared Modules
 | Shared | 공용 의존성 |
 
 - **📢 섹션 요약 비유**: 필요한 부품을 각 창고에서 꺼내 조립하는 것이다.
+
+---
 
 ---
 
@@ -77,6 +81,8 @@ Host -> Remote Container -> Shared Modules
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 원격 모듈의 버전 변경과 장애를 감당할 수 있는지 확인해야 한다.
@@ -92,6 +98,8 @@ Host -> Remote Container -> Shared Modules
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 모듈 페더레이션은 프런트엔드의 독립성과 공유를 동시에 살린다.
@@ -99,6 +107,8 @@ Host -> Remote Container -> Shared Modules
 결론적으로 이 항목은 "런타임에 외부 모듈을 공유·조립하는 방식"이다.
 
 - **📢 섹션 요약 비유**: 다른 상자에서 부품을 꺼내도 한 장난감처럼 맞춰지는 구조다.
+
+---
 
 ---
 
