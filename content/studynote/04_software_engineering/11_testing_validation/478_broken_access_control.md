@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 핵심은 인증(Authentication)과 인가(Authorization)를 분리해서 생각하는 것이다.
@@ -62,6 +64,8 @@ categories = "studynote-software-engineering"
 객체 ID를 바꾸는 직접 참조 (IDOR, Insecure Direct Object Reference)도 흔한 예다.
 
 - **📢 섹션 요약 비유**: 이름표를 확인한 뒤에도, 그 사람이 들어갈 방이 맞는지 또 봐야 한다.
+
+---
 
 ---
 
@@ -89,6 +93,8 @@ OWASP Top 10에서 반복적으로 강조되는 이유도 여기에 있다.
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 모든 민감 API와 관리 기능에 서버 측 권한 검사를 넣어야 한다.
@@ -106,6 +112,8 @@ OWASP Top 10에서 반복적으로 강조되는 이유도 여기에 있다.
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 Broken Access Control을 막으면 데이터 유출과 기능 오용을 크게 줄일 수 있다.
@@ -113,6 +121,8 @@ Broken Access Control을 막으면 데이터 유출과 기능 오용을 크게 �
 결론적으로 이 항목은 "권한 검사가 빠진 상태"를 뜻한다.
 
 - **📢 섹션 요약 비유**: 자물쇠가 있어도 열쇠 주인을 잘못 정하면 아무 소용이 없다.
+
+---
 
 ---
 
