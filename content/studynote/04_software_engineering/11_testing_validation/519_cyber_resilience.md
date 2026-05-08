@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 사이버 레질리언스는 예방, 탐지, 대응, 복구, 적응의 단계로 본다.
@@ -60,6 +62,8 @@ categories = "studynote-software-engineering"
 | 복구 | 정상 복귀 |
 
 - **📢 섹션 요약 비유**: 소화기, 경보기, 대피, 재정비를 함께 준비하는 것이다.
+
+---
 
 ---
 
@@ -87,6 +91,8 @@ BCP (Business Continuity Planning), DR (Disaster Recovery)와도 연결된다.
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 백업, 복구 훈련, 장애 대응, 복원력 테스트가 중요하다.
@@ -104,6 +110,8 @@ BCP (Business Continuity Planning), DR (Disaster Recovery)와도 연결된다.
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 레질리언스는 사고를 없애는 게 아니라 피해를 작게 만든다.
@@ -111,6 +119,8 @@ BCP (Business Continuity Planning), DR (Disaster Recovery)와도 연결된다.
 결론적으로 이 항목은 "버티고 복구하는 보안 아키텍처"다.
 
 - **📢 섹션 요약 비유**: 비가 와도 우산, 장화, 대피소가 있으면 버틸 수 있다.
+
+---
 
 ---
 

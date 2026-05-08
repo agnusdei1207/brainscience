@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 가명 처리 (Pseudonymization)는 다시 식별 가능성이 일부 남고, 비식별화 (Anonymization)는 재식별 가능성을 낮추려 한다.
@@ -60,6 +62,8 @@ categories = "studynote-software-engineering"
 | T-closeness | 분포 차이 제한 |
 
 - **📢 섹션 요약 비유**: 반 친구 몇 명과 똑같이 보이게 하면 개인이 덜 드러난다.
+
+---
 
 ---
 
@@ -87,6 +91,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 마스킹, 토큰화, 집계, 구간화, 노이즈 주입 등을 사용한다.
@@ -104,6 +110,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 비식별화는 데이터 활용과 프라이버시를 동시에 지키는 도구다.
@@ -111,6 +119,8 @@ categories = "studynote-software-engineering"
 결론적으로 이 항목은 "식별 가능성을 낮추는 기술"이다.
 
 - **📢 섹션 요약 비유**: 사람을 알아보기 어렵게 하지만, 필요한 정보는 남겨 두는 것이다.
+
+---
 
 ---
 

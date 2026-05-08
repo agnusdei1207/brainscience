@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 감사 트레일은 이벤트와 상태 변화를 연결한다.
@@ -60,6 +62,8 @@ categories = "studynote-software-engineering"
 | Before/After | 변경 전후 |
 
 - **📢 섹션 요약 비유**: 누가 책을 빌렸는지, 언제 반납했는지 적는 도서관 기록이다.
+
+---
 
 ---
 
@@ -87,6 +91,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 변경 이벤트, 승인 이벤트, 관리자 작업을 반드시 기록한다.
@@ -104,6 +110,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 감사 트레일은 내부 통제와 사고 대응의 핵심 기반이다.
@@ -111,6 +119,8 @@ categories = "studynote-software-engineering"
 결론적으로 이 항목은 "책임 추적을 위한 구조화된 기록"이다.
 
 - **📢 섹션 요약 비유**: 누가 한 일인지 남아야 다음에 다시 확인할 수 있다.
+
+---
 
 ---
 

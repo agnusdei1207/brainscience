@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 난독화는 이름과 흐름을 읽기 어렵게 만들고, 안티 디버깅은 디버깅 시도를 감지한다.
@@ -61,6 +63,8 @@ categories = "studynote-software-engineering"
 | Anti-tamper | 변조 감지 |
 
 - **📢 섹션 요약 비유**: 집 주소를 직접 쓰지 않고 약도를 그리는 것과 같다.
+
+---
 
 ---
 
@@ -88,6 +92,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 중요한 로직, 문자열, 키 관련 부분에 적용한다.
@@ -105,6 +111,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 난독화와 안티 디버깅은 분석 비용을 높이는 실용적 방어다.
@@ -112,6 +120,8 @@ categories = "studynote-software-engineering"
 결론적으로 이 항목은 "역공학 저항성 강화"다.
 
 - **📢 섹션 요약 비유**: 바로 보이지 않게 만들면 쉽게 훔치기 어렵다.
+
+---
 
 ---
 

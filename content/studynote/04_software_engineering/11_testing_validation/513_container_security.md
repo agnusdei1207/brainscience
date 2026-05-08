@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 컨테이너는 이미지, 런타임, 네임스페이스, cgroups로 구성된 보호층 위에서 동작한다.
@@ -60,6 +62,8 @@ categories = "studynote-software-engineering"
 | Namespace | 격리 |
 
 - **📢 섹션 요약 비유**: 주방, 거실, 창고를 벽으로 나누는 것과 같다.
+
+---
 
 ---
 
@@ -87,6 +91,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 취약 이미지 차단, 최소 권한, 읽기 전용 파일시스템, 보안 정책을 적용한다.
@@ -104,6 +110,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 컨테이너 보안은 배포 속도와 안전성을 같이 지킨다.
@@ -111,6 +119,8 @@ categories = "studynote-software-engineering"
 결론적으로 이 항목은 "컨테이너 실행 환경의 최소권한/격리"다.
 
 - **📢 섹션 요약 비유**: 가벼운 상자라도 내용물은 철저히 지켜야 한다.
+
+---
 
 ---
 

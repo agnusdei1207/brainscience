@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 쿠버네티스 보안은 여러 계층으로 나뉜다.
@@ -60,6 +62,8 @@ categories = "studynote-software-engineering"
 | Pod Security Admission | 파드 보안 기준 |
 
 - **📢 섹션 요약 비유**: 문지기, 복도, 방 잠금장치가 각각 따로 있다.
+
+---
 
 ---
 
@@ -87,6 +91,8 @@ Service Account, Secret, Admission Controller와도 연결된다.
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 최소 권한, 네임스페이스 분리, 네트워크 격리, 정책 코드화가 중요하다.
@@ -104,6 +110,8 @@ Service Account, Secret, Admission Controller와도 연결된다.
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 쿠버네티스 보안은 클라우드 네이티브 환경의 기본 방어선이다.
@@ -111,6 +119,8 @@ Service Account, Secret, Admission Controller와도 연결된다.
 결론적으로 이 항목은 "클러스터 수준의 최소권한/격리"다.
 
 - **📢 섹션 요약 비유**: 큰 아파트는 층별로 잠금이 있어야 안전하다.
+
+---
 
 ---
 

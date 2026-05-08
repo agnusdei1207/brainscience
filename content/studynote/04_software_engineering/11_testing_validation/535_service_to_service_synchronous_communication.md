@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 REST는 HTTP (Hypertext Transfer Protocol)와 리소스 중심 설계이고, gRPC는 Protocol Buffers를 쓰는 고성능 RPC다.
@@ -60,6 +62,8 @@ REST는 HTTP (Hypertext Transfer Protocol)와 리소스 중심 설계이고, gRP
 | Sync | 즉시 응답 |
 
 - **📢 섹션 요약 비유**: 편지는 읽기 쉬운 대신 오래 걸리고, 전화는 빠르지만 즉시 받아야 한다.
+
+---
 
 ---
 
@@ -87,6 +91,8 @@ REST는 HTTP (Hypertext Transfer Protocol)와 리소스 중심 설계이고, gRP
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 timeout, retry, circuit breaker, idempotency를 고려한다.
@@ -104,6 +110,8 @@ REST는 HTTP (Hypertext Transfer Protocol)와 리소스 중심 설계이고, gRP
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 동기 통신은 단순한 호출 구조를 제공한다.
@@ -111,6 +119,8 @@ REST는 HTTP (Hypertext Transfer Protocol)와 리소스 중심 설계이고, gRP
 결론적으로 이 항목은 "즉시 응답형 서비스 간 통신"이다.
 
 - **📢 섹션 요약 비유**: 묻고 답하기가 빠를수록 일이 쉬워진다.
+
+---
 
 ---
 

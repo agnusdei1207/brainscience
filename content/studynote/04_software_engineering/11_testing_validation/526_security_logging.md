@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 6하 원칙(누가, 언제, 어디서, 무엇을, 어떻게, 왜)을 포함하면 분석이 쉬워진다.
@@ -60,6 +62,8 @@ categories = "studynote-software-engineering"
 | WORM | 위변조 방지 |
 
 - **📢 섹션 요약 비유**: 사진을 찍을 때 인물, 장소, 시간표가 같이 있어야 기억하기 쉽다.
+
+---
 
 ---
 
@@ -87,6 +91,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 중앙화, 접근 제어, 암호화, 보존 정책이 중요하다.
@@ -104,6 +110,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 좋은 보안 로깅은 사고 대응을 빠르게 만든다.
@@ -111,6 +119,8 @@ categories = "studynote-software-engineering"
 결론적으로 이 항목은 "사건 추적을 위한 안전한 기록"이다.
 
 - **📢 섹션 요약 비유**: 흔적이 있어야 어디서 무슨 일이 있었는지 알 수 있다.
+
+---
 
 ---
 
