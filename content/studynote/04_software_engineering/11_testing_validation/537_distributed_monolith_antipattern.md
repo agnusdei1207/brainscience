@@ -45,6 +45,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅱ. 아키텍처 및 핵심 원리
 
 의존성이 너무 촘촘하면 변경이 한꺼번에 번진다.
@@ -61,6 +63,8 @@ categories = "studynote-software-engineering"
 | 공유 DB | 경계 붕괴 |
 
 - **📢 섹션 요약 비유**: 여러 방이 있어도 문이 다 열려 있으면 큰 방과 같다.
+
+---
 
 ---
 
@@ -88,6 +92,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 실무에서는 팀 구조, 데이터 소유권, API 의존, 배포 단위를 본다.
@@ -105,6 +111,8 @@ categories = "studynote-software-engineering"
 
 ---
 
+---
+
 ## Ⅴ. 기대효과 및 결론
 
 분산 모놀리스를 피하면 마이크로서비스의 장점을 살릴 수 있다.
@@ -112,6 +120,8 @@ categories = "studynote-software-engineering"
 결론적으로 이 항목은 "분산된 듯하지만 한 덩어리인 안티패턴"이다.
 
 - **📢 섹션 요약 비유**: 쪼갠 것 같아도 결국 다 같이 넘어지면 의미가 없다.
+
+---
 
 ---
 
