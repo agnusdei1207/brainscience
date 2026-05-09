@@ -1,7 +1,7 @@
 +++
 weight = 502
 title = "502. 쿠버네티스 Pod 오케스트레이션 배포 (Kubernetes Pod Orchestration Deployment)"
-date = "2026-04-21"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ict-convergence"
 +++
@@ -24,7 +24,7 @@ categories = "studynote-ict-convergence"
 - **서비스 디스커버리**: Pod IP가 변경되어도 Service 오브젝트가 안정적인 엔드포인트 제공
 - **오토스케일링**: 부하에 따라 Pod 수를 자동으로 증감
 
-📢 **섹션 요약 비유**: 쿠버네티스는 대형 물류 창고의 관리 시스템이다 — 박스(컨테이너)가 어디 있어야 하는지, 몇 개여야 하는지 자동으로 정리하고, 박스가 부서지면 새 박스를 즉시 보충한다.
+- **📢 섹션 요약 비유**: 쿠버네티스는 대형 물류 창고의 관리 시스템이다 — 박스(컨테이너)가 어디 있어야 하는지, 몇 개여야 하는지 자동으로 정리하고, 박스가 부서지면 새 박스를 즉시 보충한다.
 
 ---
 
@@ -65,7 +65,7 @@ categories = "studynote-ict-convergence"
 - VPA(Vertical Pod Autoscaler): Pod의 CPU/메모리 할당량 자동 조정
 - KEDA(Kubernetes Event-Driven Autoscaling): 이벤트 기반(Queue 길이, HTTP 요청 수) 스케일링
 
-📢 **섹션 요약 비유**: Deployment는 레스토랑 매니저다 — 주문이 몰리면 서빙 직원(Pod)을 더 부르고, 한가하면 줄이며, 직원이 쓰러지면 즉시 새 직원을 대기석에서 불러낸다.
+- **📢 섹션 요약 비유**: Deployment는 레스토랑 매니저다 — 주문이 몰리면 서빙 직원(Pod)을 더 부르고, 한가하면 줄이며, 직원이 쓰러지면 즉시 새 직원을 대기석에서 불러낸다.
 
 ---
 
@@ -82,7 +82,7 @@ categories = "studynote-ict-convergence"
 
 **etcd(분산 KV)**: Raft 합의 알고리즘 기반, 홀수 개(3 또는 5) 노드로 HA 구성. 클러스터의 "두뇌 저장소" — 이 데이터가 손실되면 클러스터 전체 복구 불가.
 
-📢 **섹션 요약 비유**: etcd는 회사의 인사 서류 창고다. 누가 어디 배치됐는지, 몇 명이 필요한지 기록한 문서가 타면 회사 전체가 혼란에 빠진다.
+- **📢 섹션 요약 비유**: etcd는 회사의 인사 서류 창고다. 누가 어디 배치됐는지, 몇 명이 필요한지 기록한 문서가 타면 회사 전체가 혼란에 빠진다.
 
 ---
 
@@ -95,7 +95,7 @@ categories = "studynote-ict-convergence"
 
 **실무 시나리오**: 이커머스 플랫폼의 주문 서비스 배포 시 — Deployment(replicas: 3), HPA(CPU 70% 기준, max: 20), PodDisruptionBudget(PDB, 최소 2개 유지)을 함께 설정하여 정기 점검 중에도 서비스 무중단을 보장.
 
-📢 **섹션 요약 비유**: PodDisruptionBudget은 공사 현장 안전 규정이다 — 건물(서비스)을 리모델링하는 동안에도 최소 몇 개의 방(Pod)은 항상 사용 가능하도록 보장한다.
+- **📢 섹션 요약 비유**: PodDisruptionBudget은 공사 현장 안전 규정이다 — 건물(서비스)을 리모델링하는 동안에도 최소 몇 개의 방(Pod)은 항상 사용 가능하도록 보장한다.
 
 ---
 
@@ -109,21 +109,25 @@ Kubernetes 도입으로:
 
 K8s는 클라우드 네이티브 생태계의 사실상 표준(De Facto Standard)이며, 서비스 메시, GitOps, 서버리스 프레임워크 모두 K8s를 기반으로 동작한다.
 
-📢 **섹션 요약 비유**: Kubernetes는 컨테이너 세계의 '항공 관제탑'이다 — 수백 개의 비행기(컨테이너)가 충돌 없이 이착륙(배포/종료)할 수 있도록 전체 공역을 자동으로 조율한다.
+- **📢 섹션 요약 비유**: Kubernetes는 컨테이너 세계의 '항공 관제탑'이다 — 수백 개의 비행기(컨테이너)가 충돌 없이 이착륙(배포/종료)할 수 있도록 전체 공역을 자동으로 조율한다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 개념 | 연결 키워드 | 참조 번호 |
-|:---|:---|:---:|
-| 도커 컨테이너 (Docker Container) | 이미지, Namespace, OCI | 501 |
-| HPA (Horizontal Pod Autoscaler) | 오토스케일링, CPU 메트릭 | 503 |
-| etcd (분산 KV 저장소) | Raft 합의, 클러스터 상태 | 506 |
-| 서비스 메시 (Service Mesh) | Istio, 사이드카, mTLS | 505 |
-| GitOps | ArgoCD, Flux, 선언적 배포 | 504 |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| 도커 컨테이너 (Docker Container) | 이미지, Namespace, OCI · 501 |
+| HPA (Horizontal Pod Autoscaler) | 오토스케일링, CPU 메트릭 · 503 |
+| etcd (분산 KV 저장소) | Raft 합의, 클러스터 상태 · 506 |
+| 서비스 메시 (Service Mesh) | Istio, 사이드카, mTLS · 505 |
+| GitOps | ArgoCD, Flux, 선언적 배포 · 504 |
 
----
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[이미지 · Namespace] → [쿠버네티스 Pod 오케스트레이션 배포] → [ArgoCD · Flux]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
