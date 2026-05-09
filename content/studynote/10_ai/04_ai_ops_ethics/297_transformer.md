@@ -1,12 +1,13 @@
 +++
 weight = 297
-title = "297. 트랜스포머 (Transformer) - RNN 배제 병렬 셀프 어텐션"
-date = "2026-04-21"
+title = "297. 트랜스포머 (Transformer)"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ai"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
+
 > 1. **본질**: 트랜스포머 (Transformer)는 RNN/LSTM의 순차 처리를 완전히 제거하고, **셀프 어텐션 (Self-Attention)**으로 시퀀스 내 모든 위치 간의 의존성을 단 한 번의 병렬 행렬 연산으로 포착하는 2017년 혁명적 신경망 아키텍처다.
 > 2. **가치**: 순차 처리 제거로 GPU 병렬화 효율이 비약적으로 높아져 수조 개의 파라미터를 가진 초거대 언어 모델(LLM) 학습이 가능해졌으며, BERT·GPT·T5·ChatGPT·Stable Diffusion 등 현대 AI 혁명의 설계도다.
 > 3. **판단 포인트**: "Attention Is All You Need"라는 논문 제목처럼 RNN이 없어도 어텐션만으로 순서 정보(Positional Encoding)와 장거리 의존성을 모두 처리할 수 있음을 증명한 것이 핵심 혁신이다.
@@ -18,6 +19,15 @@ categories = "studynote-ai"
 RNN/LSTM의 근본적 한계는 **순차 처리(Sequential Processing)**다. "나는 학교에 간다"를 처리할 때 t=1→2→3→4로 순서대로 처리해야 하므로 GPU의 병렬 코어를 100% 활용할 수 없다. 긴 시퀀스에서 기울기 소실도 여전히 위협이다.
 
 2017년 구글 브레인의 "Attention Is All You Need" 논문은 RNN을 완전히 제거하고, 시퀀스 전체를 한꺼번에 행렬 연산으로 처리하는 Transformer를 제안했다. 셀프 어텐션이 시퀀스 내 모든 위치를 동시에 연결하므로, 위치 1과 위치 1000의 의존성을 거리 1홉(Hop)으로 처리한다.
+
+```text
+┌──────────────────────────────────────────────┐
+│ Background Problem → Need → Adoption Value   │
+├──────────────────────────────────────────────┤
+│ Existing limitation │ Operational pressure   │
+│ New requirement     │ Design decision point  │
+└──────────────────────────────────────────────┘
+```
 
 - **📢 섹션 요약 비유**: RNN은 책을 한 글자씩 소리 내어 읽는 학생이고, Transformer는 책 전체를 카메라로 한 번에 찍어 사진에서 동시에 모든 관계를 파악하는 AI다. 한 글자씩 읽는 건 느리고 앞 페이지를 잊지만, 사진 한 장은 빠르고 전체를 동시에 기억한다.
 
@@ -103,15 +113,19 @@ Transformer는 AI 역사에서 가장 파급력 있는 단일 아키텍처 혁�
 
 ### 📌 관련 개념 맵
 
-| 개념 | 연관 키워드 | 관계 |
-|:---|:---|:---|
-| 셀프 어텐션 (Self-Attention) | Q/K/V, 병렬 | Transformer의 핵심 연산 |
-| 포지셔널 인코딩 | 삼각함수, 순서 정보 | RNN 없이 순서를 처리하는 방법 |
-| BERT | 양방향, MLM, 인코더 전용 | Transformer 인코더 기반 대표 모델 |
-| GPT | 자기회귀, 디코더 전용 | Transformer 디코더 기반 대표 모델 |
-| 스케일링 법칙 | 파라미터, 데이터, 성능 | LLM 확장의 이론적 근거 |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| 셀프 어텐션 (Self-Attention) | Q/K/V, 병렬 / Transformer의 핵심 연산 |
+| 포지셔널 인코딩 | 삼각함수, 순서 정보 / RNN 없이 순서를 처리하는 방법 |
+| BERT | 양방향, MLM, 인코더 전용 / Transformer 인코더 기반 대표 모델 |
+| GPT | 자기회귀, 디코더 전용 / Transformer 디코더 기반 대표 모델 |
+| 스케일링 법칙 | 파라미터, 데이터, 성능 / LLM 확장의 이론적 근거 |
 
----
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[입력 표현·특징 추출] → [트랜스포머 (Transformer)] → [경량화·멀티모달·서비스 적용]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 

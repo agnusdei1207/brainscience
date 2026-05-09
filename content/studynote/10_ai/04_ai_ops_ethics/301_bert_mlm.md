@@ -1,12 +1,13 @@
 +++
 weight = 301
-title = "301. BERT (Bidirectional Encoder Representations from Transformers) - 양방향 이해 MLM"
-date = "2026-04-21"
+title = "301. BERT (Bidirectional Encoder Representations from Transformers)"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ai"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
+
 > 1. **본질**: BERT (Bidirectional Encoder Representations from Transformers)는 Transformer 인코더를 양방향(Bidirectional)으로 학습하여, 각 토큰의 표현을 좌우 양방향 문맥을 동시에 반영해 생성하는 2018년 구글의 사전 학습 언어 모델이다.
 > 2. **가치**: 마스크 언어 모델링 (MLM, Masked Language Modeling)과 다음 문장 예측 (NSP, Next Sentence Prediction) 두 가지 비지도 사전 학습 태스크로 대규모 텍스트에서 깊은 양방향 언어 표현을 학습한 뒤, 다운스트림 태스크에 파인 튜닝만으로 SOTA를 달성한다.
 > 3. **판단 포인트**: BERT는 인코더 전용(Encoder-only) 구조라 텍스트 **이해** 태스크(분류, NER, QA)에 강하고, GPT처럼 텍스트 **생성**은 하지 않는다. 이 차이를 기술사 시험에서 반드시 구별해야 한다.
@@ -18,6 +19,15 @@ categories = "studynote-ai"
 기존 언어 모델(ELMo, GPT-1)은 단방향(좌→우 또는 우→좌)으로만 학습했다. "그는 은행에 **앉았다**"에서 "은행"의 의미가 '금융 기관'인지 '강가의 둑'인지 판단하려면, 앞의 "그는"과 뒤의 "앉았다"를 동시에 고려해야 한다. 단방향 모델은 이 양방향 문맥을 동시에 볼 수 없어 의미 모호성 해소에 취약했다.
 
 BERT는 Transformer 인코더를 양방향으로 활용하여 이 문제를 해결했다. 입력 전체를 동시에 보는 셀프 어텐션 덕분에 각 토큰은 자신의 좌측과 우측 모든 토큰으로부터 정보를 받아 표현(Representation)이 생성된다.
+
+```text
+┌──────────────────────────────────────────────┐
+│ Background Problem → Need → Adoption Value   │
+├──────────────────────────────────────────────┤
+│ Existing limitation │ Operational pressure   │
+│ New requirement     │ Design decision point  │
+└──────────────────────────────────────────────┘
+```
 
 - **📢 섹션 요약 비유**: 단방향 모델은 눈가리개를 하고 오른쪽에서 왼쪽으로만 책을 읽는 것이고, BERT는 눈가리개를 벗고 책 전체를 동시에 보면서 "앞 문장, 뒷 문장 다 보고 이 단어가 어떤 뜻인지 결정"하는 것이다. 두 눈으로 보면 깊이감(문맥 이해)이 달라진다.
 
@@ -101,15 +111,19 @@ BERT는 "사전 학습(Pre-training) + 파인 튜닝(Fine-tuning)"이라는 전�
 
 ### 📌 관련 개념 맵
 
-| 개념 | 연관 키워드 | 관계 |
-|:---|:---|:---|
-| MLM (마스크 언어 모델링) | [MASK], 빈칸 예측, 비지도 | BERT 사전 학습의 핵심 태스크 1 |
-| NSP (다음 문장 예측) | [CLS], 문장 쌍, IsNext | BERT 사전 학습의 핵심 태스크 2 |
-| 파인 튜닝 (Fine-Tuning) | 다운스트림, 소량 데이터 | BERT를 특정 태스크에 적응시키는 방법 |
-| GPT | 디코더 전용, 생성 | BERT의 반대 방향 학습 방식의 언어 모델 |
-| 파운데이션 모델 | 사전 학습, 전이 학습 | BERT가 확립한 AI 패러다임 |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| MLM (마스크 언어 모델링) | [MASK], 빈칸 예측, 비지도 / BERT 사전 학습의 핵심 태스크 1 |
+| NSP (다음 문장 예측) | [CLS], 문장 쌍, IsNext / BERT 사전 학습의 핵심 태스크 2 |
+| 파인 튜닝 (Fine-Tuning) | 다운스트림, 소량 데이터 / BERT를 특정 태스크에 적응시키는 방법 |
+| GPT | 디코더 전용, 생성 / BERT의 반대 방향 학습 방식의 언어 모델 |
+| 파운데이션 모델 | 사전 학습, 전이 학습 / BERT가 확립한 AI 패러다임 |
 
----
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[입력 표현·특징 추출] → [BERT (Bidirectional Encoder Representations from Transformers)] → [경량화·멀티모달·서비스 적용]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
