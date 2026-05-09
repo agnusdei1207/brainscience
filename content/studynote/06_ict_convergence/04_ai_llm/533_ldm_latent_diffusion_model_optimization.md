@@ -1,7 +1,7 @@
 +++
 weight = 533
 title = "533. LDM 잠재 디퓨전 모델과 생성 최적화 (LDM Latent Diffusion Model Generation Optimization)"
-date = "2026-04-21"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ict-convergence"
 +++
@@ -22,7 +22,7 @@ categories = "studynote-ict-convergence"
 - **순방향(Forward) 확산**: 원본 이미지 x₀에 단계별 가우시안 노이즈 추가 → xₜ (순수 노이즈)
 - **역방향(Reverse) 확산**: 노이즈 xₜ에서 출발해 U-Net으로 반복적 노이즈 제거 → x₀ 복원
 
-📢 **섹션 요약 비유**: LDM은 조각상을 원래 크기로 조각하지 않고 1/8 크기 미니어처를 먼저 완성한 후 크게 확대하는 방식 — 시간과 재료(메모리)를 크게 절약한다.
+- **📢 섹션 요약 비유**: LDM은 조각상을 원래 크기로 조각하지 않고 1/8 크기 미니어처를 먼저 완성한 후 크게 확대하는 방식 — 시간과 재료(메모리)를 크게 절약한다.
 
 ---
 
@@ -68,7 +68,7 @@ categories = "studynote-ict-convergence"
 | DPM-Solver | 10~20 | ✓ | 수치 ODE 해법, 고품질 |
 | LCM(Latent Consistency Model) | 4~8 | ✓ | 일관성 증류, 초고속 |
 
-📢 **섹션 요약 비유**: DDPM은 1000번 지우고 다시 그리기, DDIM은 20번만에 같은 품질, LCM은 단 4번에 OK — 샘플링 기법의 발전이다.
+- **📢 섹션 요약 비유**: DDPM은 1000번 지우고 다시 그리기, DDIM은 20번만에 같은 품질, LCM은 단 4번에 OK — 샘플링 기법의 발전이다.
 
 ---
 
@@ -97,7 +97,7 @@ categories = "studynote-ict-convergence"
 | SDXL | 1024px, 이중 텍스트 인코더 |
 | SD 3.0 | DiT(Diffusion Transformer), MMDiT |
 
-📢 **섹션 요약 비유**: CFG 스케일은 수채화 그릴 때 물 비율 — 물을 많이 넣으면 자유롭게 번지고, 적게 넣으면 선명한 경계선이 나온다.
+- **📢 섹션 요약 비유**: CFG 스케일은 수채화 그릴 때 물 비율 — 물을 많이 넣으면 자유롭게 번지고, 적게 넣으면 선명한 경계선이 나온다.
 
 ---
 
@@ -119,7 +119,7 @@ categories = "studynote-ict-convergence"
 3. **추론 비용**: SDXL 1024px, 50 스텝 → A100 1초 내외 → DPM-Solver 20스텝으로 절감
 4. **프라이빗 배포**: Hugging Face Space, ComfyUI 자체 서버 구축으로 API 의존성 제거
 
-📢 **섹션 요약 비유**: Stable Diffusion은 강력한 디지털 화가 — 잘 쓰면 창작 도구, 잘못 쓰면 사회적 위험 — 거버넌스 설계가 핵심이다.
+- **📢 섹션 요약 비유**: Stable Diffusion은 강력한 디지털 화가 — 잘 쓰면 창작 도구, 잘못 쓰면 사회적 위험 — 거버넌스 설계가 핵심이다.
 
 ---
 
@@ -127,23 +127,25 @@ categories = "studynote-ict-convergence"
 
 LDM은 잠재 공간으로의 이동으로 디퓨전 모델의 상용화를 가능하게 했다. Stable Diffusion의 오픈소스 공개 이후 수만 개의 파인튜닝 모델과 생태계가 형성됐다. DiT(Diffusion Transformer) 기반 SD 3.0·Flux로의 발전이 차세대 아키텍처를 이끌고 있으며, 비디오 생성(Sora, Gen-3)으로 응용 범위가 확장되고 있다.
 
-📢 **섹션 요약 비유**: LDM은 조각가에게 거대한 대리석 대신 진흙으로 먼저 만들어보고 완성품을 석고로 찍는 방법을 알려준 혁신이다.
+- **📢 섹션 요약 비유**: LDM은 조각가에게 거대한 대리석 대신 진흙으로 먼저 만들어보고 완성품을 석고로 찍는 방법을 알려준 혁신이다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 개념 | 연결 | 설명 |
-|:---|:---:|:---|
-| VAE(Variational Autoencoder) | LDM 기반 | 픽셀↔잠재 공간 압축 |
-| U-Net | LDM 핵심 | 잠재 노이즈 예측 |
-| CLIP 텍스트 인코더 | 조건화 | 텍스트→임베딩 |
-| DDIM | 샘플링 | 결정론적 빠른 샘플링 |
-| CFG | 품질 조절 | 텍스트 충실도 스케일 |
-| LoRA | 파인튜닝 | 경량 어댑터 학습 |
-| ControlNet | 조건 제어 | 포즈/엣지 조건화 |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| VAE(Variational Autoencoder) | LDM 기반 · 픽셀↔잠재 공간 압축 |
+| U-Net | LDM 핵심 · 잠재 노이즈 예측 |
+| CLIP 텍스트 인코더 | 조건화 · 텍스트→임베딩 |
+| DDIM | 샘플링 · 결정론적 빠른 샘플링 |
+| CFG | 품질 조절 · 텍스트 충실도 스케일 |
 
----
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[LDM 기반 · 픽셀↔잠재 공간 압축] → [LDM 잠재 디퓨전 모델과 생성 최적화] → [품질 조절 · 텍스트 충실도 스케일]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
