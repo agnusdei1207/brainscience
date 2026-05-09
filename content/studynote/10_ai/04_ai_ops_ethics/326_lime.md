@@ -1,12 +1,13 @@
 +++
 weight = 326
-title = "326. LIME (Local Interpretable Model-agnostic Explanations) - 국소적 모델 대리"
-date = "2026-04-21"
+title = "326. LIME (Local Interpretable Model-agnostic Explanations)"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ai"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
+
 > 1. **본질**: LIME (Local Interpretable Model-agnostic Explanations)은 특정 예측 인스턴스 주변에 수백 개의 가짜 샘플을 생성하여 **해석 가능한 선형 모델(대리 모델, Surrogate Model)**을 국소적으로 근사 학습하고, 이 간단한 모델의 계수로 원본 블랙박스 모델의 해당 예측을 설명하는 모델 불가지론적 XAI 기법이다.
 > 2. **가치**: 딥러닝·랜덤 포레스트·XGBoost 등 어떤 복잡한 모델에도 적용 가능(Model-Agnostic)하며, 특정 고객의 대출 거절 이유, 특정 이미지 분류 결정 이유를 인간 친화적으로 설명하는 실용적 국소 설명 도구다.
 > 3. **판단 포인트**: LIME의 한계는 가짜 샘플 생성 방법과 커널 너비(ε) 설정에 따라 설명이 불안정하게 변하는 **설명 불안정성(Explanation Instability)**이다. 동일 예측에 대해 LIME 실행 시마다 다른 설명이 나올 수 있어, 안정성이 중요한 규제 환경에서는 SHAP을 선호한다.
@@ -18,6 +19,15 @@ categories = "studynote-ai"
 "고양이 vs 개" 분류 딥러닝 모델이 왜 특정 사진을 "고양이"로 예측했는가? 딥러닝 전체를 해석하기는 너무 복잡하다. 그러나 이 사진 주변의 아주 작은 영역에서 모델이 어떻게 행동하는지는 간단한 선형 모델로 설명할 수 있지 않을까?
 
 **LIME**은 이 아이디어를 구현한다: 해당 예측 인스턴스 x₀의 "근방(Neighborhood)"에서 복잡한 블랙박스 f가 어떻게 행동하는지 관찰하고, 이를 설명 가능한 간단한 모델 g(x)(선형 회귀, 결정 트리)로 근사한다.
+
+```text
+┌──────────────────────────────────────────────┐
+│ Background Problem → Need → Adoption Value   │
+├──────────────────────────────────────────────┤
+│ Existing limitation │ Operational pressure   │
+│ New requirement     │ Design decision point  │
+└──────────────────────────────────────────────┘
+```
 
 - **📢 섹션 요약 비유**: LIME은 지구 전체 지형(블랙박스 모델 전체)을 이해하려는 대신, 현재 서 있는 서울 강남구(설명할 예측 인스턴스) 주변만 평평한 지도(선형 대리 모델)로 만드는 것이다. 전체 지구 지도는 복잡하지만, 강남구만 확대하면 단순한 격자 지도로 길 안내(설명)가 가능하다.
 
@@ -107,15 +117,19 @@ LIME은 XAI 도구 중 구현이 가장 직관적이고 사용이 쉬워, AI 팀
 
 ### 📌 관련 개념 맵
 
-| 개념 | 연관 키워드 | 관계 |
-|:---|:---|:---|
-| 대리 모델 (Surrogate Model) | 선형 회귀, 해석 가능 | LIME이 국소 근사에 사용하는 간단한 모델 |
-| 섭동 샘플 (Perturbed Samples) | 단어 제거, 마스킹, 노이즈 | LIME의 데이터 타입별 샘플 생성 방법 |
-| SHAP | 샤플리 값, 안정성 | LIME보다 이론적으로 엄격한 XAI 방법 |
-| XAI | 모델 불가지론, 국소/전역 | LIME이 속하는 AI 설명 가능성 분야 |
-| Faithfulness | 설명 검증, 특징 변경 | LIME 설명 품질 검증 핵심 기준 |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| 대리 모델 (Surrogate Model) | 선형 회귀, 해석 가능 / LIME이 국소 근사에 사용하는 간단한 모델 |
+| 섭동 샘플 (Perturbed Samples) | 단어 제거, 마스킹, 노이즈 / LIME의 데이터 타입별 샘플 생성 방법 |
+| SHAP | 샤플리 값, 안정성 / LIME보다 이론적으로 엄격한 XAI 방법 |
+| XAI | 모델 불가지론, 국소/전역 / LIME이 속하는 AI 설명 가능성 분야 |
+| Faithfulness | 설명 검증, 특징 변경 / LIME 설명 품질 검증 핵심 기준 |
 
----
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[데이터 수집·평가] → [LIME (Local Interpretable Model-agnostic Explanations)] → [감사·규제 대응·지속 개선]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
