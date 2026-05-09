@@ -1,12 +1,13 @@
 +++
 weight = 338
-title = "338. vLLM과 PagedAttention (페이지드 어텐션) - KV 캐시 최적 생성 가속"
-date = "2026-04-21"
+title = "338. vLLM과 PagedAttention (페이지드 어텐션)"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ai"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
+
 > 1. **본질**: vLLM 의 PagedAttention (페이지드 어텐션) 은 OS 의 가상 메모리 페이징 아이디어를 KV 캐시 (Key-Value Cache) 에 적용해, 사전 할당 없이 블록 단위 동적 메모리 관리로 GPU 메모리 단편화 (Fragmentation) 를 90% 이상 제거한다.
 > 2. **가치**: Continuous Batching 과 결합해 동일 GPU 에서 기존 대비 처리량 (Throughput) 을 최대 24배 향상시켜 LLM 서비스의 단가를 혁신적으로 낮춘다.
 > 3. **판단 포인트**: KV 캐시가 생성 길이에 따라 동적으로 증가하는 구조이기 때문에 정적 사전 할당은 메모리 낭비를 초래하며, PagedAttention 이 이를 해결하는 방식을 블록 테이블과 함께 설명해야 한다.
@@ -27,7 +28,16 @@ categories = "studynote-ai"
 
 실제로 기존 LLM 서빙 시스템에서 KV 캐시 메모리의 20~40%만 실질적으로 활용되고 있었다.
 
-📢 **섹션 요약 비유**: 기존 KV 캐시는 "호텔에서 손님이 오기 전에 최대 인원수로 방을 미리 전부 예약해두는" 방식이다. 손님이 2명만 와도 20명 방이 잡혀있어 다른 손님을 받지 못한다.
+```text
+┌──────────────────────────────────────────────┐
+│ Background Problem → Need → Adoption Value   │
+├──────────────────────────────────────────────┤
+│ Existing limitation │ Operational pressure   │
+│ New requirement     │ Design decision point  │
+└──────────────────────────────────────────────┘
+```
+
+- **📢 섹션 요약 비유**: 기존 KV 캐시는 "호텔에서 손님이 오기 전에 최대 인원수로 방을 미리 전부 예약해두는" 방식이다. 손님이 2명만 와도 20명 방이 잡혀있어 다른 손님을 받지 못한다.
 
 ---
 
@@ -81,7 +91,14 @@ categories = "studynote-ai"
 
 동일한 시스템 프롬프트를 공유하는 요청들의 KV 블록을 재사용해 중복 계산 제거. vLLM v0.3+ 에서 자동 활성화.
 
-📢 **섹션 요약 비유**: PagedAttention 은 "OS 가 RAM 을 페이지 단위로 관리하듯, GPU 메모리를 고정 블록으로 나눠 필요할 때만 할당하는 가상 메모리 시스템"이다. 연속 메모리 없이도 논리적으로 연속인 것처럼 처리한다.
+| 요소 | 역할 |
+|:---|:---|
+| 임베딩 | 질문과 문서를 같은 벡터 공간에 배치해 검색 가능하게 만든다. |
+| 검색 파이프라인 | 관련 컨텍스트를 찾아 생성 모델에 주입하는 단계다. |
+| 관측성 | 응답 품질, 지연, 실패 원인을 운영 중에 추적하게 만든다. |
+| 거버넌스 | 출처, 평가, 접근 통제로 생성형 AI의 신뢰성을 확보한다. |
+
+- **📢 섹션 요약 비유**: PagedAttention 은 "OS 가 RAM 을 페이지 단위로 관리하듯, GPU 메모리를 고정 블록으로 나눠 필요할 때만 할당하는 가상 메모리 시스템"이다. 연속 메모리 없이도 논리적으로 연속인 것처럼 처리한다.
 
 ---
 
@@ -103,7 +120,7 @@ categories = "studynote-ai"
 
 예: LLaMA-2 7B, FP16, seq=2048: 약 2 × 2048 × 32 × 128 × 2 = 32 MB (레이어당)
 
-📢 **섹션 요약 비유**: Continuous Batching 은 "버스가 종점까지 기다리지 않고, 내리는 승객 자리가 생기면 바로 다음 손님을 태우는" 급행 버스 운영 방식이다. 빈 좌석이 생기는 즉시 채운다.
+- **📢 섹션 요약 비유**: Continuous Batching 은 "버스가 종점까지 기다리지 않고, 내리는 승객 자리가 생기면 바로 다음 손님을 태우는" 급행 버스 운영 방식이다. 빈 좌석이 생기는 즉시 채운다.
 
 ---
 
@@ -127,7 +144,7 @@ python -m vllm.entrypoints.openai.api_server \
 - Continuous Batching vs Static Batching 처리량 차이 설명
 - Prefix Caching 으로 공유 프롬프트 중복 계산 제거 방식 언급
 
-📢 **섹션 요약 비유**: vLLM 은 "AI 응답 공장의 생산 라인 최적화" — 기존엔 한 주문 끝날 때까지 다음 주문 시작 못했는데, 이제는 각 기계가 다른 주문을 동시에 처리하며 빈 순간을 없앤다.
+- **📢 섹션 요약 비유**: vLLM 은 "AI 응답 공장의 생산 라인 최적화" — 기존엔 한 주문 끝날 때까지 다음 주문 시작 못했는데, 이제는 각 기계가 다른 주문을 동시에 처리하며 빈 순간을 없앤다.
 
 ---
 
@@ -141,24 +158,29 @@ python -m vllm.entrypoints.openai.api_server \
 
 vLLM 과 PagedAttention 은 LLM 을 상용 서비스로 배포하는 데 있어 사실상 표준 기술이 됐다. 기술사 시험에서는 KV 캐시 단편화 → 블록 테이블 해결 → Continuous Batching 처리량 향상의 논리 흐름을 명확히 서술하면 고득점 가능하다.
 
-📢 **섹션 요약 비유**: PagedAttention 은 "컴퓨터가 RAM 부족 문제를 가상 메모리로 해결했듯, GPU 가 LLM 메모리 부족을 블록 매핑으로 해결한" 동일한 천재적 아이디어의 AI 버전이다.
+- **📢 섹션 요약 비유**: PagedAttention 은 "컴퓨터가 RAM 부족 문제를 가상 메모리로 해결했듯, GPU 가 LLM 메모리 부족을 블록 매핑으로 해결한" 동일한 천재적 아이디어의 AI 버전이다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 개념 | 연관 키워드 | 관계 |
-|:---|:---|:---|
-| KV 캐시 (Key-Value Cache) | 어텐션, 자동회귀 | 생성 중 재사용할 K·V 저장소 |
-| PagedAttention | 블록 테이블, 비연속 메모리 | KV 단편화 해결 핵심 기술 |
-| Continuous Batching | 동적 배치, GPU 활용률 | 처리량 극대화 스케줄링 |
-| Prefix Caching | 공유 프롬프트 | 중복 KV 계산 제거 |
-| vLLM | TGI, TensorRT-LLM | PagedAttention 오픈소스 구현체 |
-| 가상 메모리 (Virtual Memory) | OS 페이징, 페이지 테이블 | PagedAttention 의 영감 원천 |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| KV 캐시 (Key-Value Cache) | 어텐션, 자동회귀 / 생성 중 재사용할 K·V 저장소 |
+| PagedAttention | 블록 테이블, 비연속 메모리 / KV 단편화 해결 핵심 기술 |
+| Continuous Batching | 동적 배치, GPU 활용률 / 처리량 극대화 스케줄링 |
+| Prefix Caching | 공유 프롬프트 / 중복 KV 계산 제거 |
+| vLLM | TGI, TensorRT-LLM / PagedAttention 오픈소스 구현체 |
+| 가상 메모리 (Virtual Memory) | OS 페이징, 페이지 테이블 / PagedAttention 의 영감 원천 |
 
----
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[문서·임베딩 준비] → [vLLM과 PagedAttention (페이지드 어텐션)] → [관측성·평가·거버넌스 확장]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
-- 📖 AI 가 글을 쓸 때 앞에서 한 말을 계속 기억해야 해서(KV 캐시), 메모장을 많이 써요.
-- 📄 PagedAttention 은 메모장을 조각조각 나눠서 필요할 때만 쓰니까 낭비가 없어요.
-- 🚌 Continuous Batching 덕분에 AI 가 여러 질문을 동시에 처리해서 24배나 빠르게 답해줄 수 있어요!
+
+1. 📖 AI 가 글을 쓸 때 앞에서 한 말을 계속 기억해야 해서(KV 캐시), 메모장을 많이 써요.
+2. 📄 PagedAttention 은 메모장을 조각조각 나눠서 필요할 때만 쓰니까 낭비가 없어요.
+3. 🚌 Continuous Batching 덕분에 AI 가 여러 질문을 동시에 처리해서 24배나 빠르게 답해줄 수 있어요!
