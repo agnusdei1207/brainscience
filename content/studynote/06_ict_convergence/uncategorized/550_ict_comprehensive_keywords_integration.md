@@ -1,7 +1,7 @@
 +++
 weight = 550
 title = "550. 정보통신기술사 ICT 신기술 통합 정리 (PE ICT Emerging Technologies Comprehensive Review)"
-date = "2026-04-21"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ict-convergence"
 +++
@@ -20,7 +20,7 @@ categories = "studynote-ict-convergence"
 
 5대 축은 서로 독립적이지 않다. AI가 블록체인 거버넌스를 개선하고, 5G가 디지털 트윈을 실시간으로 동기화하며, 쿠버네티스 위에서 LLMOps가 실행된다. **교차 관계를 파악하는 것**이 ICT 신기술 통합 정리의 핵심이다.
 
-📢 **섹션 요약 비유**: ICT 신기술 맵은 도시 지도—각 구역(기술 영역)을 알아야 하지만, 어떤 도로(연결)로 이어지는지 모르면 길을 잃는다.
+- **📢 섹션 요약 비유**: ICT 신기술 맵은 도시 지도—각 구역(기술 영역)을 알아야 하지만, 어떤 도로(연결)로 이어지는지 모르면 길을 잃는다.
 
 ---
 
@@ -54,7 +54,7 @@ categories = "studynote-ict-convergence"
 | AI/LLM | RAG(Retrieval-Augmented Generation), LoRA(Low-Rank Adaptation), RLHF(Reinforcement Learning from Human Feedback), MoE(Mixture of Experts) | 온디바이스 AI, 멀티모달, AI 에이전트 |
 | 데이터 과학 | ANOVA(Analysis of Variance), PCA(Principal Component Analysis), SGD(Stochastic Gradient Descent) | 과적합, 교차 검증, 불균형 데이터 |
 
-📢 **섹션 요약 비유**: 5대 축은 오케스트라의 5개 파트—현악(AI), 관악(클라우드), 타악(데이터), 피아노(Web3), 성악(IoT)이 따로 연습하고 함께 연주해야 교향곡(ICT 생태계)이 완성된다.
+- **📢 섹션 요약 비유**: 5대 축은 오케스트라의 5개 파트—현악(AI), 관악(클라우드), 타악(데이터), 피아노(Web3), 성악(IoT)이 따로 연습하고 함께 연주해야 교향곡(ICT 생태계)이 완성된다.
 
 ---
 
@@ -67,7 +67,7 @@ categories = "studynote-ict-convergence"
 | LLM × RAG × Vector DB | 환각 감소, 최신 정보 주입 | "RAG 아키텍처 설계" |
 | Zero Trust × PQC | 양자 내성 + 지속 인증으로 미래 보안 | "포스트 양자 Zero Trust 설계" |
 
-📢 **섹션 요약 비유**: 기술 교차는 레고 블록 조합—각 블록이 튼튼해야 하지만, 어떻게 연결하느냐에 따라 완전히 다른 구조물이 만들어진다.
+- **📢 섹션 요약 비유**: 기술 교차는 레고 블록 조합—각 블록이 튼튼해야 하지만, 어떻게 연결하느냐에 따라 완전히 다른 구조물이 만들어진다.
 
 ---
 
@@ -83,7 +83,7 @@ categories = "studynote-ict-convergence"
 
 **2025~2026 출제 예상 키워드**: LLM Agent, 양자 내성 암호(PQC), 6G NTN(Non-Terrestrial Network), 모듈러 블록체인(Modular Blockchain), 온디바이스 AI(Edge AI).
 
-📢 **섹션 요약 비유**: 기술사 논술은 판사가 판결문 쓰는 것—"이 기술이 좋다"만 쓰면 0점, "어떤 조건에서, 왜, 어떤 한계 속에서 이 기술이 최선인가"를 논증해야 고득점이다.
+- **📢 섹션 요약 비유**: 기술사 논술은 판사가 판결문 쓰는 것—"이 기술이 좋다"만 쓰면 0점, "어떤 조건에서, 왜, 어떤 한계 속에서 이 기술이 최선인가"를 논증해야 고득점이다.
 
 ---
 
@@ -91,19 +91,25 @@ categories = "studynote-ict-convergence"
 
 ICT 신기술을 5대 축과 교차 관계로 통합 이해하면, 처음 보는 출제 문제도 기존 지식 프레임으로 분해하여 논리적 답안을 구성할 수 있다. 기술 정의 암기에서 **"기술 간 관계와 트레이드오프 논증"**으로 학습 방향을 전환하는 것이 기술사 합격의 핵심 전략이다.
 
-📢 **섹션 요약 비유**: ICT 신기술 통합 정리는 지도 그리기—개별 도시(기술)를 알고, 도로(연결)를 외우며, 어디서 막히는지(한계)를 알아야 진짜 여행자(기술사)가 된다.
+- **📢 섹션 요약 비유**: ICT 신기술 통합 정리는 지도 그리기—개별 도시(기술)를 알고, 도로(연결)를 외우며, 어디서 막히는지(한계)를 알아야 진짜 여행자(기술사)가 된다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 영역 | 핵심 약어 | 연결 개념 |
-|:---|:---|:---|
-| Web3 | DLT, ZKP, DID, DAO | 블록체인 트릴레마, L2 롤업, 스마트 컨트랙트 |
-| IoT/모빌리티 | LPWAN, V2X, CPS | 디지털 트윈, 5G URLLC, NTN |
-| 클라우드 | IaC, MSA, CQRS | 서비스 메시, FinOps, GitOps |
-| AI/LLM | RAG, LoRA, RLHF, MoE | 환각, 온디바이스 AI, AI 에이전트 |
-| 데이터 과학 | PCA, ANOVA, SGD | 과적합, 편향-분산 트레이드오프 |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| 영역 | 핵심 약어 · 연결 개념 |
+| Web3 | DLT, ZKP, DID, DAO · 블록체인 트릴레마, L2 롤업, 스마트 컨트랙트 |
+| IoT/모빌리티 | LPWAN, V2X, CPS · 디지털 트윈, 5G URLLC, NTN |
+| 클라우드 | IaC, MSA, CQRS · 서비스 메시, FinOps, GitOps |
+| AI/LLM | RAG, LoRA, RLHF, MoE · 환각, 온디바이스 AI, AI 에이전트 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[핵심 약어 · 연결 개념] → [정보통신기술사 ICT 신기술 통합 정리] → [RAG · LoRA]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
