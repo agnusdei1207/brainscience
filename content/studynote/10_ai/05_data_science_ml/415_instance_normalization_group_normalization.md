@@ -1,7 +1,7 @@
 +++
 weight = 415
 title = "415. 인스턴스 정규화 vs 그룹 정규화 (Instance Normalization vs Group Normalization)"
-date = "2026-04-25"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ai"
 +++
@@ -137,13 +137,19 @@ IN과 GN은 "배치가 작아도 학습이 흔들리지 않게 하자"는 현실
 
 ### 📌 관련 개념 맵
 
-| 개념                     | 연결 포인트                                     |
-| :----------------------- | :---------------------------------------------- |
-| Batch Normalization (BN) | 대배치 학습에서 강하지만 소배치에서 흔들림      |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| Batch Normalization (BN) | 대배치 학습에서 강하지만 소배치에서 흔들림 |
 | Layer Normalization (LN) | RNN, Transformer에서 자주 쓰는 배치 독립 정규화 |
-| Style Transfer           | IN의 대표 적용 분야                             |
-| SyncBN                   | 분산 환경에서 BN 통계를 동기화하는 대안         |
-| Small Batch Training     | GN이 실무적으로 많이 선택되는 배경              |
+| Style Transfer | IN의 대표 적용 분야 |
+| SyncBN | 분산 환경에서 BN 통계를 동기화하는 대안 |
+| Small Batch Training | GN이 실무적으로 많이 선택되는 배경 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[손실 함수·기울기 계산] → [인스턴스 정규화 vs 그룹 정규화 (Instance Normalization vs Group Normalization)] → [대규모 분산 학습·서빙 최적화]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 

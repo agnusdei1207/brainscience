@@ -1,12 +1,13 @@
 +++
 weight = 413
 title = "413. 자율주행 모방 학습 (Imitation Learning / Behavior Cloning)"
-date = "2026-04-24"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ai"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
+
 > 1. **본질**: 모방 학습 (Imitation Learning)은 전문가의 시연 데이터를 보고 정책 (Policy)을 배우는 학습 방식이고, 행동 복제 (Behavior Cloning)는 그중 가장 직접적인 지도학습형 접근이다.
 > 2. **가치**: 보상 설계가 어려운 자율주행처럼 복잡한 제어 문제에서, 인간 운전자의 궤적을 그대로 흡수해 빠르게 동작 가능한 정책을 만들 수 있다.
 > 3. **판단 포인트**: 데이터 분포가 바뀌면 오차가 누적되는 covariate shift를 조심하고, DAgger (Dataset Aggregation) 같은 보완책을 고려해야 한다.
@@ -115,6 +116,12 @@ categories = "studynote-ai"
 | DAgger | 분포 이동을 줄이는 보완 전략 |
 | Covariate Shift | 배포 시 오차가 커지는 원인 |
 | Policy | 상태를 행동으로 바꾸는 함수 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[데이터 전처리] → [자율주행 모방 학습 (Imitation Learning / Behavior Cloning)] → [최적화·운영 자동화]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 

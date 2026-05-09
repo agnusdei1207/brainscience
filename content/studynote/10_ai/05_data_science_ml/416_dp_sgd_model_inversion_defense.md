@@ -1,7 +1,7 @@
 +++
 weight = 416
 title = "416. 모델 역산 공격 방어와 DP-SGD (Differentially Private Stochastic Gradient Descent)"
-date = "2026-04-25"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ai"
 +++
@@ -134,13 +134,19 @@ DP-SGD를 적용하면 민감 데이터 학습에서 "모델 성능"만이 아�
 
 ### 📌 관련 개념 맵
 
-| 개념                      | 연결 포인트                                    |
-| :------------------------ | :--------------------------------------------- |
-| Model Inversion Attack    | 출력/기울기에서 민감 속성을 복원하려는 공격    |
-| Membership Inference      | 훈련 포함 여부를 추론하는 인접 공격            |
-| Differential Privacy (DP) | 개별 레코드 영향력을 제한하는 이론             |
-| DP-SGD                    | 클리핑과 노이즈로 DP를 학습 과정에 구현        |
-| Federated Learning        | 기울기 공유 때문에 DP-SGD가 자주 결합되는 환경 |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| Model Inversion Attack | 출력/기울기에서 민감 속성을 복원하려는 공격 |
+| Membership Inference | 훈련 포함 여부를 추론하는 인접 공격 |
+| Differential Privacy (DP) | 개별 레코드 영향력을 제한하는 이론 |
+| DP-SGD | 클리핑과 노이즈로 DP를 학습 과정에 구현 |
+| Federated Learning | 기울기 공유 때문에 DP-SGD가 자주 결합되는 환경 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[데이터 수집·평가] → [모델 역산 공격 방어와 DP-SGD (Differentially Private Stochastic Gradient Descent)] → [감사·규제 대응·지속 개선]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
