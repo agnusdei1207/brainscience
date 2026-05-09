@@ -1,7 +1,7 @@
 +++
 weight = 525
 title = "525. 공간 컴퓨팅, 마이크로 프론트엔드, WebAssembly (Spatial Computing Micro Frontends WebAssembly)"
-date = "2026-04-21"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ict-convergence"
 +++
@@ -18,7 +18,7 @@ categories = "studynote-ict-convergence"
 
 스마트폰 중심 2D 인터페이스의 한계가 드러나면서 **공간 컴퓨팅(Spatial Computing)**이 차세대 인터랙션 패러다임으로 부상하고 있다. 동시에 수십 팀이 하나의 프론트엔드를 공유하는 "프론트엔드 모노리스" 문제를 해결하기 위해 **마이크로 프론트엔드(MFE)**가 확산됐다. **WebAssembly(WASM)**는 웹 플랫폼의 성능 한계를 극복해 브라우저를 게임·AI 추론의 실행 환경으로 끌어올린다.
 
-📢 **섹션 요약 비유**: 공간 컴퓨팅은 방 전체를 스크린으로 만드는 기술, 마이크로 프론트엔드는 건물 각 방을 독립 팀이 관리하는 구조, WASM은 종이 건물에 철근 콘크리트를 입히는 성능 혁명이다.
+- **📢 섹션 요약 비유**: 공간 컴퓨팅은 방 전체를 스크린으로 만드는 기술, 마이크로 프론트엔드는 건물 각 방을 독립 팀이 관리하는 구조, WASM은 종이 건물에 철근 콘크리트를 입히는 성능 혁명이다.
 
 ---
 
@@ -48,7 +48,7 @@ categories = "studynote-ict-convergence"
 
 **WASM 실행 흐름**: C/C++/Rust 소스 → LLVM 컴파일 → `.wasm` 이진 → 브라우저 JIT 컴파일 → 네이티브에 가까운 실행 (JavaScript 대비 최대 20배 빠름). **WASI(WebAssembly System Interface)**는 WASM을 서버·엣지 환경에서도 실행 가능하게 하는 표준 인터페이스다.
 
-📢 **섹션 요약 비유**: WASM은 영어 소설을 각 나라 언어로 즉시 번역하는 번역기처럼, 어떤 언어로 짠 코드도 브라우저가 이해하는 빠른 언어로 변환한다.
+- **📢 섹션 요약 비유**: WASM은 영어 소설을 각 나라 언어로 즉시 번역하는 번역기처럼, 어떤 언어로 짠 코드도 브라우저가 이해하는 빠른 언어로 변환한다.
 
 ---
 
@@ -67,7 +67,7 @@ categories = "studynote-ict-convergence"
 
 **WASM + Edge Workers**: Cloudflare Workers, Fastly Compute에서 WASM 실행 → 서버 없이 엣지에서 AI 추론·영상 처리 수행. 낮은 지연 시간(< 1ms cold start)이 핵심 장점.
 
-📢 **섹션 요약 비유**: WASM Edge는 전국 편의점(엣지 서버)에서 즉석으로 요리(연산)하는 것—중앙 주방(데이터센터)까지 배달 오는 시간 없이 바로 서빙된다.
+- **📢 섹션 요약 비유**: WASM Edge는 전국 편의점(엣지 서버)에서 즉석으로 요리(연산)하는 것—중앙 주방(데이터센터)까지 배달 오는 시간 없이 바로 서빙된다.
 
 ---
 
@@ -82,7 +82,7 @@ categories = "studynote-ict-convergence"
 
 **기술사 판단**: WASM의 보안 모델은 기본적으로 샌드박스이지만, WASI를 통해 파일 시스템·네트워크 접근 권한을 부여할 때 **최소 권한 원칙(Least Privilege)**을 엄격히 적용해야 한다.
 
-📢 **섹션 요약 비유**: MFE는 건물 각 층을 독립된 가게처럼 운영하는 것—편하지만 공용 엘리베이터(공유 의존성) 관리를 잘 못 하면 전체 건물이 느려진다.
+- **📢 섹션 요약 비유**: MFE는 건물 각 층을 독립된 가게처럼 운영하는 것—편하지만 공용 엘리베이터(공유 의존성) 관리를 잘 못 하면 전체 건물이 느려진다.
 
 ---
 
@@ -92,19 +92,25 @@ categories = "studynote-ict-convergence"
 
 세 기술이 융합되면 공간 인터페이스를 각 팀이 독립적으로 개발하고, WASM으로 고성능 3D 렌더링을 처리하는 차세대 프론트엔드 아키텍처가 현실이 된다.
 
-📢 **섹션 요약 비유**: 공간 컴퓨팅이 무대, 마이크로 프론트엔드가 독립 배우 팀, WASM이 빠른 조명 장치—세 가지가 모이면 최고의 공연(앱)이 탄생한다.
+- **📢 섹션 요약 비유**: 공간 컴퓨팅이 무대, 마이크로 프론트엔드가 독립 배우 팀, WASM이 빠른 조명 장치—세 가지가 모이면 최고의 공연(앱)이 탄생한다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 개념 | 연결 키워드 |
+| 개념 | 연결 포인트 |
 |:---|:---|
 | 공간 컴퓨팅 | Apple Vision Pro, ARKit, WebXR, LiDAR, 디지털 트윈 |
 | 마이크로 프론트엔드 | Module Federation, single-spa, 수직 분해 |
 | WebAssembly | WASI, Emscripten, Edge Workers, 온디바이스 AI |
 | 프론트엔드 성능 | Core Web Vitals, LCP, INP, 번들 최적화 |
 | XR (Extended Reality) | AR, VR, MR, 공간 오디오, 손 추적 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[Apple Vision Pro · ARKit] → [공간 컴퓨팅 · 마이크로 프론트엔드] → [AR · VR]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 

@@ -1,7 +1,7 @@
 +++
 weight = 526
 title = "526. DPU SmartNIC 인프라 오프로딩 가속 (DPU SmartNIC Infrastructure Offloading Acceleration)"
-date = "2026-04-21"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ict-convergence"
 +++
@@ -25,7 +25,7 @@ categories = "studynote-ict-convergence"
 
 **DPU 등장**: 네트워크 처리를 위한 전용 프로세서가 필요하다는 인식에서 탄생. NVIDIA BlueField, Intel IPU(Infrastructure Processing Unit), Marvell OCTEON 등이 대표 제품.
 
-📢 **섹션 요약 비유**: DPU 없는 CPU는 연구자가 모든 행정 업무까지 직접 처리하는 상황이다 — 행정 직원(DPU)을 두면 연구자(CPU)는 연구에만 집중할 수 있다.
+- **📢 섹션 요약 비유**: DPU 없는 CPU는 연구자가 모든 행정 업무까지 직접 처리하는 상황이다 — 행정 직원(DPU)을 두면 연구자(CPU)는 연구에만 집중할 수 있다.
 
 ---
 
@@ -63,7 +63,7 @@ categories = "studynote-ict-convergence"
 - SmartNIC: NIC + 경량 FPGA/ASIC. 패킷 처리 특화.
 - DPU: NIC + ARM 코어(완전한 OS 실행) + FPGA/ASIC. 더 광범위한 인프라 기능 실행 가능.
 
-📢 **섹션 요약 비유**: SmartNIC이 빠른 자동 계산원이라면, DPU는 계산뿐 아니라 재고 확인, 보안 감시, 물류 조율까지 하는 스마트 매장 관리 시스템이다.
+- **📢 섹션 요약 비유**: SmartNIC이 빠른 자동 계산원이라면, DPU는 계산뿐 아니라 재고 확인, 보안 감시, 물류 조율까지 하는 스마트 매장 관리 시스템이다.
 
 ---
 
@@ -78,7 +78,7 @@ categories = "studynote-ict-convergence"
 - 데이터 평면(Data Plane): DPU가 처리 — 패킷 포워딩, 암호화, 필터링 (성능 집약)
 - 제어 평면(Control Plane): CPU가 처리 — 라우팅 테이블 갱신, 정책 배포 (지능적 결정)
 
-📢 **섹션 요약 비유**: DPU는 도로에서 신호를 처리하는 교통 카메라(데이터 평면)고, CPU는 전체 교통 흐름을 조율하는 교통 관제 센터(제어 평면)다. 카메라가 현장을 처리해야 센터가 전략에 집중할 수 있다.
+- **📢 섹션 요약 비유**: DPU는 도로에서 신호를 처리하는 교통 카메라(데이터 평면)고, CPU는 전체 교통 흐름을 조율하는 교통 관제 센터(제어 평면)다. 카메라가 현장을 처리해야 센터가 전략에 집중할 수 있다.
 
 ---
 
@@ -91,7 +91,7 @@ categories = "studynote-ict-convergence"
 
 **실무 시나리오**: 하이퍼스케일 클라우드 공급자(AWS Nitro, Azure Maia)는 자체 DPU/커스텀 칩을 개발하여 하이퍼바이저 기능을 서버 외부 카드로 완전 이전. 결과: 고객 VM은 하이퍼바이저 오버헤드 없이 베어메탈에 가까운 성능 제공. AWS Nitro 시스템이 이 구조의 대표 사례.
 
-📢 **섹션 요약 비유**: AWS Nitro는 건물 관리자(하이퍼바이저)를 건물 밖 관리실(DPU)로 이전한 것이다 — 세입자(VM)가 복도 대신 전 공간을 쓸 수 있게 된다.
+- **📢 섹션 요약 비유**: AWS Nitro는 건물 관리자(하이퍼바이저)를 건물 밖 관리실(DPU)로 이전한 것이다 — 세입자(VM)가 복도 대신 전 공간을 쓸 수 있게 된다.
 
 ---
 
@@ -105,21 +105,25 @@ DPU/SmartNIC 도입의 기대 효과:
 
 DPU는 서버 아키텍처를 "하나의 CPU가 모든 것을 처리"에서 "전문 프로세서들의 협업"으로 진화시키는 핵심 기술이다.
 
-📢 **섹션 요약 비유**: DPU는 현대 도시의 상하수도·전기·통신 인프라처럼, 보이지 않는 곳에서 모든 것을 지탱한다 — 인프라가 탄탄해야 그 위의 건물(애플리케이션)이 자유롭게 올라간다.
+- **📢 섹션 요약 비유**: DPU는 현대 도시의 상하수도·전기·통신 인프라처럼, 보이지 않는 곳에서 모든 것을 지탱한다 — 인프라가 탄탄해야 그 위의 건물(애플리케이션)이 자유롭게 올라간다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 개념 | 연결 키워드 | 참조 번호 |
-|:---|:---|:---:|
-| CXL (Compute Express Link) | 인터커넥트, 메모리 공유 | 509 |
-| Zero Trust | 마이크로 세그멘테이션, 인라인 보안 | 508 |
-| SDN (Software Defined Networking) | 데이터/제어 평면 분리, vSwitch | 540 |
-| NVMe-oF (NVMe over Fabrics) | 원격 스토리지, 저지연 I/O | 541 |
-| AWS Nitro / Azure Maia | 커스텀 칩, 하이퍼바이저 오프로딩 | 541 |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| CXL (Compute Express Link) | 인터커넥트, 메모리 공유 · 509 |
+| Zero Trust | 마이크로 세그멘테이션, 인라인 보안 · 508 |
+| SDN (Software Defined Networking) | 데이터/제어 평면 분리, vSwitch · 540 |
+| NVMe-oF (NVMe over Fabrics) | 원격 스토리지, 저지연 I/O · 541 |
+| AWS Nitro / Azure Maia | 커스텀 칩, 하이퍼바이저 오프로딩 · 541 |
 
----
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[인터커넥트 · 메모리 공유] → [DPU SmartNIC 인프라 오프로딩 가속] → [커스텀 칩 · 하이퍼바이저 오프로딩]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 

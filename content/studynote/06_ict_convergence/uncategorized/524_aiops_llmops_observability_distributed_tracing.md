@@ -1,7 +1,7 @@
 +++
 weight = 524
 title = "524. AIOps, LLMOps, 옵저버빌리티, 분산 추적 (AIOps LLMOps Observability Distributed Tracing)"
-date = "2026-04-21"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ict-convergence"
 +++
@@ -18,7 +18,7 @@ categories = "studynote-ict-convergence"
 
 클라우드 네이티브 환경에서 서비스는 수백 개의 마이크로서비스(Microservice)로 분해된다. 전통적인 모니터링 도구는 개별 서비스 지표는 보여주지만, 요청이 서비스 체인을 따라 흐르는 **인과 관계**를 추적하지 못한다. 동시에 LLM 기반 서비스는 토큰 비용·환각률·지연 시간 등 기존 ML과 다른 운영 지표를 필요로 한다.
 
-📢 **섹션 요약 비유**: 수십 개 역을 지나는 지하철 노선에서 어느 역에서 지연이 시작됐는지 알려면 전 노선을 실시간으로 추적하는 관제 시스템(옵저버빌리티)이 필수다.
+- **📢 섹션 요약 비유**: 수십 개 역을 지나는 지하철 노선에서 어느 역에서 지연이 시작됐는지 알려면 전 노선을 실시간으로 추적하는 관제 시스템(옵저버빌리티)이 필수다.
 
 ---
 
@@ -54,7 +54,7 @@ categories = "studynote-ict-convergence"
 
 **분산 추적(Distributed Tracing)**에서 TraceID는 요청 전 구간에 공통으로 부여되며, SpanID는 각 서비스에서의 처리 단위를 식별한다. Jaeger·Zipkin은 이 Span 데이터를 수집해 폭포수(Waterfall) 형태의 호출 타임라인으로 시각화한다.
 
-📢 **섹션 요약 비유**: TraceID는 택배 운송장 번호, SpanID는 각 물류 센터의 스캔 기록—번호 하나로 택배가 어디서 얼마나 머물렀는지 전부 추적할 수 있다.
+- **📢 섹션 요약 비유**: TraceID는 택배 운송장 번호, SpanID는 각 물류 센터의 스캔 기록—번호 하나로 택배가 어디서 얼마나 머물렀는지 전부 추적할 수 있다.
 
 ---
 
@@ -73,7 +73,7 @@ categories = "studynote-ict-convergence"
 - 환각(Hallucination) 감지: FactScore, RAGAS 프레임워크 자동 평가
 - 토큰 비용 추적: 모델별 입출력 토큰 단가 × 쿼리 수 = 일일 비용 예측
 
-📢 **섹션 요약 비유**: LLMOps는 AI 작가의 원고를 버전 관리하고, 오타(환각)를 자동 교정하며, 원고료(토큰 비용)를 집계하는 편집부다.
+- **📢 섹션 요약 비유**: LLMOps는 AI 작가의 원고를 버전 관리하고, 오타(환각)를 자동 교정하며, 원고료(토큰 비용)를 집계하는 편집부다.
 
 ---
 
@@ -89,7 +89,7 @@ categories = "studynote-ict-convergence"
 
 **기술사 판단**: 옵저버빌리티 구축 시 고카디널리티(High Cardinality) 지표(예: 사용자 ID별 메트릭)는 저장 비용이 폭증한다. Prometheus의 Label 정책과 샘플링(Sampling) 전략을 사전에 설계해야 한다.
 
-📢 **섹션 요약 비유**: 모든 차의 GPS를 실시간 수집하면 교통 상황을 완벽히 파악하지만 서버 비용이 폭증한다—10%만 샘플링해도 전체 흐름을 충분히 추론할 수 있다.
+- **📢 섹션 요약 비유**: 모든 차의 GPS를 실시간 수집하면 교통 상황을 완벽히 파악하지만 서버 비용이 폭증한다—10%만 샘플링해도 전체 흐름을 충분히 추론할 수 있다.
 
 ---
 
@@ -99,19 +99,25 @@ AIOps는 IT 운영팀이 이벤트 홍수 속에서 진짜 장애를 빠르게 �
 
 세 영역은 OpenTelemetry라는 공통 표준 위에서 통합되어, 현대 클라우드 네이티브 운영의 기반 인프라를 구성한다.
 
-📢 **섹션 요약 비유**: AIOps는 의사, LLMOps는 AI 전담 간호사, 옵저버빌리티는 병원 전체 MRI 장비—세 가지가 있어야 환자(시스템)의 상태를 정확히 진단하고 치료할 수 있다.
+- **📢 섹션 요약 비유**: AIOps는 의사, LLMOps는 AI 전담 간호사, 옵저버빌리티는 병원 전체 MRI 장비—세 가지가 있어야 환자(시스템)의 상태를 정확히 진단하고 치료할 수 있다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 개념 | 연결 키워드 |
+| 개념 | 연결 포인트 |
 |:---|:---|
 | AIOps | 이상 감지, RCA, 자동 치유, MTTR |
 | LLMOps | RAG 파이프라인, 환각 모니터링, 프롬프트 버저닝 |
 | Observability | 로그·메트릭·트레이스, OpenTelemetry, Grafana |
 | Distributed Tracing | TraceID, SpanID, Jaeger, Zipkin |
 | SRE | SLO/SLA/SLI, 에러 버짓(Error Budget) |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[이상 감지 · RCA] → [AIOps · LLMOps] → [SLO · SLA]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
