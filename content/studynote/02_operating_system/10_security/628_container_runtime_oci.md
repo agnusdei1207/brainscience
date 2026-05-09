@@ -1,21 +1,20 @@
 +++
 weight = 628
 title = "628. 컨테이너 런타임 (runc, containerd) OCI 규격 표준화"
-date = "2026-03-29"
+date = "2026-05-09"
 [extra]
-categories = ["studynote-operating-system"]
+categories = "studynote-operating-system"
 +++
 
-# 컨테이너 런타임 (runc, containerd) OCI 규격 표준화
-
 ## 핵심 인사이트 (3줄 요약)
+
 > 1. **본질**: 과거 도커(Docker)라는 단일 거대 소프트웨어가 독점하던 컨테이너 생태계는, 기술의 발전과 함께 '이미지 포맷'과 '실행 엔진'을 분리하여 개방형 표준으로 정의하는 **OCI (Open Container Initiative)** 규격으로 파편화 및 표준화되었다.
 > 2. **계층화**: 이 표준화에 따라 컨테이너 런타임은 고수준 런타임(containerd, CRI-O - 이미지 풀링, 네트워크 관리)과 저수준 런타임(runc - 실제 리눅스 namespace와 cgroup을 조작하여 프로세스 생성)으로 계층이 명확히 분리되었다.
 > 3. **가치**: OCI 표준화 덕분에 쿠버네티스(Kubernetes)는 무거운 Docker 엔진(dockerd)을 버리고 containerd나 CRI-O와 직접 통신(CRI)할 수 있게 되었으며, gVisor나 Kata Containers 같은 강력한 보안 샌드박스 런타임을 `runc` 대신 손쉽게 끼워 넣을 수 있는 플러그인 생태계가 완성되었다.
 
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## Ⅰ. 개요 및 필요성
 
 - **개념**: 
   - **OCI (Open Container Initiative)**: 리눅스 재단 산하에서 컨테이너의 이미지 포맷(Image Spec)과 런타임 실행 방식(Runtime Spec)을 정의한 산업 표준이다.
@@ -28,8 +27,6 @@ categories = ["studynote-operating-system"]
   - 그러나 K8s 입장에서 Docker는 볼륨 관리, 스웜(Swarm), 빌드 등 불필요한 기능이 너무 많은 '무거운 뚱보'였다. 게다가 Docker가 업데이트될 때마다 K8s 호환성이 깨지는 문제가 발생했다.
   - 이를 해결하기 위해 업계는 Docker의 핵심 부품(runc, containerd)을 적출하여 오픈소스로 기증하고, 누구든 이 규격(OCI)만 맞추면 컨테이너 엔진을 만들 수 있도록 표준화(Democratization)했다.
 
-- **💡 비유**: 과거에는 '도커(Docker)'라는 종합 건설사가 벽돌 제조, 운송, 건물 조립까지 다 독점했다. 이제는 **OCI**라는 '국가 건축 표준법'이 생겼다. 벽돌 규격(Image Spec)과 조립 매뉴얼(Runtime Spec)이 통일되자, 벽돌만 전문으로 운송하는 업체(containerd)와 현장에서 조립만 전문으로 하는 하청업체(runc)로 분업화가 이루어져 효율이 극대화된 것이다.
-
 - **발전 과정**:
   1. **모놀리식 시대 (2013년)**: Docker 단일 데몬(dockerd)이 모든 것을 처리. LXC(LinuX Containers) 의존.
   2. **OCI 설립 및 runc 기증 (2015년)**: Docker사가 핵심 실행 모듈(libcontainer)을 `runc`로 분리하여 OCI에 기증.
@@ -40,7 +37,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## Ⅱ. 아키텍처 및 핵심 원리
 
 ### 컨테이너 생태계의 계층 구조 (Layered Architecture)
 
@@ -127,7 +124,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석
+## Ⅲ. 비교 및 연결
 
 ### 런타임(Runtime) 종류별 비교
 
@@ -149,7 +146,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단
+## Ⅳ. 실무 적용 및 기술사 판단
 
 ### 실무 시나리오
 
@@ -217,19 +214,31 @@ OCI 규격 표준화와 컨테이너 런타임의 계층 분리는, 한 기업(D
 
 ---
 
-## 📌 관련 개념 맵 (Knowledge Graph)
+### 📌 관련 개념 맵
 
-| 개념 명칭 | 관계 및 시너지 설명 |
+| 개념 | 연결 포인트 |
 |:---|:---|
-| **CRI (Container Runtime Interface)** | K8s(Kubelet)와 고수준 런타임(containerd)을 이어주는 플러그인 통신 규약 |
-| **OCI (Open Container Initiative)** | 컨테이너 이미지의 압축/포맷 규격과 runc가 따라야 할 실행 규격을 제정한 리눅스 재단 산하 표준 기구 |
-| **Namespace & Cgroups** | runc가 실제로 호출하여 리눅스 커널 내부에 논리적인 '컨테이너(격리 공간)'를 만들어내는 핵심 커널 기능 |
-| **Dockershim** | K8s가 CRI를 모르는 구버전 Docker와 통신하기 위해 썼던 번역기로 현재는 공식적으로 제거됨(Deprecated) |
-| **Kata Containers / gVisor** | runc를 대신하여 K8s에 끼워넣을 수 있는 보안 강화형 OCI 호환 저수준 런타임들 |
+| 쉐도우 페이지 테이블 (Shadow Page Table) vs 확장 페이지 테이블 (EPT/NPT 하드웨어 보조) | 현재 개념으로 들어오기 전에 함께 이해하면 경계가 선명해지는 기반 개념이다. |
+| IOMMU (Input/Output MMU) 역할 | 현재 개념이 등장하게 만든 직접적인 선행 흐름이다. |
+| 라이브 마이그레이션 (Live Migration) 메모리 더티 페이지 프리-카피(Pre-copy) 알고리즘 방식 | 현재 개념이 구현·세분화될 때 바로 연결되는 후속 개념이다. |
+| 가상 스위치 (vSwitch) 패킷 오버헤드 VNF 구조 적용 방식 | 확장 학습이나 심화 비교로 이어지는 다음 단계의 키워드다. |
 
----
+### 📈 관련 키워드 및 발전 흐름도
 
-## 👶 어린이를 위한 3줄 비유 설명
+```text
+[IOMMU (Input/Output MMU) 역할]
+    │
+    ▼
+[컨테이너 런타임 (runc, containerd) OCI 규격 표준화]
+    │
+    ├──▶ [라이브 마이그레이션 (Live Migration) 메모리 더티 페이지 프리-카피(Pre-copy) 알고리즘 방식]
+    └──▶ [가상 스위치 (vSwitch) 패킷 오버헤드 VNF 구조 적용 방식]
+```
+
+이 흐름도는 선행 개념에서 현재 개념으로 넘어온 뒤, 구현 세분화와 후속 확장으로 이어지는 학습 순서를 압축해 보여준다.
+
+### 👶 어린이를 위한 3줄 비유 설명
+
 1. 예전에는 '도커(Docker)'라는 하나의 큰 공장이 장난감(컨테이너) 포장부터 배달, 조립까지 전부 다 혼자서 했어요.
 2. 그러다 공장이 너무 무거워지니까, 사람들이 'OCI'라는 조립 설명서(표준)를 만들고 일을 나눴어요.
 3. 이제는 '컨테이너디(containerd)' 아저씨가 택배를 받아오면, '런씨(runc)'라는 조립 전문가가 설명서대로 1초 만에 장난감을 뚝딱 조립해 준답니다!

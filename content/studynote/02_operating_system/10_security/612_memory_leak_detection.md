@@ -1,21 +1,20 @@
 +++
 weight = 612
 title = "612. 메모리 누수 (Memory Leak) 탐지 도구 구조 (Valgrind 등)"
-date = "2026-03-29"
+date = "2026-05-09"
 [extra]
-categories = ["studynote-operating-system"]
+categories = "studynote-operating-system"
 +++
 
-# 메모리 누수 (Memory Leak) 탐지 도구 구조 (Valgrind 등)
-
 ## 핵심 인사이트 (3줄 요약)
+
 > 1. **본질**: 메모리 누수(Memory Leak)는 동적 할당된 메모리(malloc/new)가 더 이상 참조되지 않음에도 해제(free/delete)되지 않아 프로세스의 RSS(Resident Set Size)가 지속적으로 증가하는 결함으로, 장기간 실행 서버에서 OOM(Out-Of-Memory) Kill을 유발하는 치명적 버그다.
 > 2. **가치**: Valgrind Memcheck, AddressSanitizer(ASan), LeakSanitizer(LSan) 등은 각각 시뮬레이션 기반·컴파일러 계측 기반으로 동작하여, 힙(Heap) 할당-해제 불일치, use-after-free, double-free 등을 정적·동적으로 탐지한다.
 > 3. **융합**: eBPF (#615) 기반 memleak 도구는 프로덕션 환경에서 오버헤드 <5%로 실시간 메모리 누수 탐지가 가능하여, 개발 단계(Valgrind)와 운영 단계(eBPF)의互补적(complementary) 메모리 안전망을 구성한다.
 
 ---
 
-## Ⅰ. 개요 및 필요성 (Context & Necessity)
+## Ⅰ. 개요 및 필요성
 
 ### 개념
 메모리 누수는 프로그램이 동적 할당한 메모리 블록에 대한 포인터를 잃어버려(또는 해제를 누락하여) 해당 메모리가 반환되지 않는 현상이다. C/C++처럼 수동 메모리 관리 언어에서 특히 빈번하다.
@@ -55,7 +54,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)
+## Ⅱ. 아키텍처 및 핵심 원리
 
 ### 탐지 도구 비교
 
@@ -133,7 +132,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅲ. 융합 비교 및 다각도 분석 (Comparison & Synergy)
+## Ⅲ. 비교 및 연결
 
 ### Valgrind vs ASan 상세 비교
 
@@ -151,7 +150,7 @@ categories = ["studynote-operating-system"]
 
 ---
 
-## Ⅳ. 실무 적용 및 기술사적 판단 (Strategy & Decision)
+## Ⅳ. 실무 적용 및 기술사 판단
 
 ### 실무 시나리오
 
@@ -181,7 +180,7 @@ bpftrace -e 'uprobe:/path/bin:malloc { @alloc[arg0] = arg1 }'
 
 ---
 
-## Ⅴ. 기대효과 및 결론 (Future & Standard)
+## Ⅴ. 기대효과 및 결론
 
 | 항목 | 도입 전 | 도입 후 |
 |:---|:---|:---|
@@ -193,15 +192,30 @@ bpftrace -e 'uprobe:/path/bin:malloc { @alloc[arg0] = arg1 }'
 
 ---
 
-## 📌 관련 개념 맵 (Knowledge Graph)
+### 📌 관련 개념 맵
 
-| 관련 개념 | 설명 |
+| 개념 | 연결 포인트 |
 |:---|:---|
-| **eBPF (#615)** | 프로덕션 메모리 추적 |
-| **가비지 컬렉션** | 언어 수준 자동 메모리 관리 |
-| **OOM Killer** | 누수의 최종 결과 |
+| 리틀의 법칙 (Little's Law) | 현재 개념으로 들어오기 전에 함께 이해하면 경계가 선명해지는 기반 개념이다. |
+| CPU 유휴 (Idle) 대기 루프 최적화 | 현재 개념이 등장하게 만든 직접적인 선행 흐름이다. |
+| 프로파일링 (Profiling) 도구 Gprof 커널 후킹 작동 원리 | 현재 개념이 구현·세분화될 때 바로 연결되는 후속 개념이다. |
+| 시스템 DTrace 선언적 동적 트레이싱 엔진 메커니즘 | 확장 학습이나 심화 비교로 이어지는 다음 단계의 키워드다. |
 
-## 👶 어린이를 위한 3줄 비유 설명
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[CPU 유휴 (Idle) 대기 루프 최적화]
+    │
+    ▼
+[메모리 누수 (Memory Leak) 탐지 도구 구조 (Valgrind 등)]
+    │
+    ├──▶ [프로파일링 (Profiling) 도구 Gprof 커널 후킹 작동 원리]
+    └──▶ [시스템 DTrace 선언적 동적 트레이싱 엔진 메커니즘]
+```
+
+이 흐름도는 선행 개념에서 현재 개념으로 넘어온 뒤, 구현 세분화와 후속 확장으로 이어지는 학습 순서를 압축해 보여준다.
+
+### 👶 어린이를 위한 3줄 비유 설명
 
 **개념**: 장난감(메모리)을 꺼내서 놀고 나서 다시 상자에 안 넣으면(누수), 방이 점점 지저분해져요.
 
