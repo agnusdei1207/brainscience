@@ -1,7 +1,7 @@
 +++
 weight = 541
 title = "541. 베어메탈 클라우드 가상화 오버헤드 없는 서비스 (Bare Metal Cloud No Hypervisor)"
-date = "2026-04-21"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ict-convergence"
 +++
@@ -24,7 +24,7 @@ categories = "studynote-ict-convergence"
 - HPC 워크로드: MPI(Message Passing Interface) 통신, RDMA 네트워크 직접 접근
 - GPU 집약 AI 학습: NVIDIA GPU를 하이퍼바이저 없이 직접 접근
 
-📢 **섹션 요약 비유**: VM은 아파트(공동 건물)에 사는 것이고, 베어메탈은 내 단독 주택이다 — 옆집 소음(Noisy Neighbor)도 없고, 건물 관리비(하이퍼바이저 오버헤드)도 없다.
+- **📢 섹션 요약 비유**: VM은 아파트(공동 건물)에 사는 것이고, 베어메탈은 내 단독 주택이다 — 옆집 소음(Noisy Neighbor)도 없고, 건물 관리비(하이퍼바이저 오버헤드)도 없다.
 
 ---
 
@@ -68,7 +68,7 @@ categories = "studynote-ict-convergence"
 **베어메탈 + 컨테이너(CaaS)**:
 CaaS(Container as a Service) 위에서 컨테이너를 실행하되, 기반을 VM 대신 베어메탈로 구성. 컨테이너 밀도와 베어메탈 성능을 동시에 확보. Google Kubernetes Engine Bare Metal, AWS EKS on Bare Metal.
 
-📢 **섹션 요약 비유**: 베어메탈 클라우드는 렌터카(VM)가 아니라 구독제 자가용이다 — 타인이 이전에 쓴 흔적 없고, 내 마음대로 튜닝(OS 설정) 가능하며, 최대 성능이 보장된다.
+- **📢 섹션 요약 비유**: 베어메탈 클라우드는 렌터카(VM)가 아니라 구독제 자가용이다 — 타인이 이전에 쓴 흔적 없고, 내 마음대로 튜닝(OS 설정) 가능하며, 최대 성능이 보장된다.
 
 ---
 
@@ -81,7 +81,7 @@ CaaS(Container as a Service) 위에서 컨테이너를 실행하되, 기반을 V
 
 **AWS Bare Metal 인스턴스(i3.metal, m7i.metal)**: 물리 서버 직접 접근이지만, AWS의 Nitro 시스템(전용 DPU)이 네트워킹과 스토리지를 관리하여 클라우드 서비스(S3, VPC)와 완전 통합.
 
-📢 **섹션 요약 비유**: AWS 베어메탈은 개인실 제공 코워킹 스페이스다 — 방(물리 서버)은 혼자 쓰지만, 공용 시설(네트워크, 스토리지)은 클라우드 인프라를 함께 사용한다.
+- **📢 섹션 요약 비유**: AWS 베어메탈은 개인실 제공 코워킹 스페이스다 — 방(물리 서버)은 혼자 쓰지만, 공용 시설(네트워크, 스토리지)은 클라우드 인프라를 함께 사용한다.
 
 ---
 
@@ -94,7 +94,7 @@ CaaS(Container as a Service) 위에서 컨테이너를 실행하되, 기반을 V
 
 **실무 시나리오**: 증권사 초단타 매매(HFT) 시스템 — μs 단위 주문 처리 필요. VM 기반 구성 시 하이퍼바이저 콘텍스트 스위칭 지연 + Noisy Neighbor 지터가 허용 한계 초과. 베어메탈 클라우드(IBM Bare Metal, Equinix Metal) 전환 후 P99 레이턴시 40% 개선, 최대 지터 90% 감소.
 
-📢 **섹션 요약 비유**: 베어메탈 vs VM은 전용 고속도로(베어메탈) vs 일반 고속도로(VM)의 차이다 — 전용 차선은 막힘이 없지만 비싸고, 일반 차선은 가격이 저렴한 대신 교통량에 따라 속도가 달라진다.
+- **📢 섹션 요약 비유**: 베어메탈 vs VM은 전용 고속도로(베어메탈) vs 일반 고속도로(VM)의 차이다 — 전용 차선은 막힘이 없지만 비싸고, 일반 차선은 가격이 저렴한 대신 교통량에 따라 속도가 달라진다.
 
 ---
 
@@ -108,21 +108,25 @@ CaaS(Container as a Service) 위에서 컨테이너를 실행하되, 기반을 V
 
 베어메탈 클라우드는 모든 워크로드의 답이 아니라, **성능과 예측성이 비용보다 중요한 특정 워크로드**의 최적 선택이다.
 
-📢 **섹션 요약 비유**: 베어메탈은 스포츠카이고 VM은 대중교통이다 — 빠르고 예측 가능하지만 비용이 크고, 혼자만 쓰기 때문에 빈 시간엔 낭비가 생긴다.
+- **📢 섹션 요약 비유**: 베어메탈은 스포츠카이고 VM은 대중교통이다 — 빠르고 예측 가능하지만 비용이 크고, 혼자만 쓰기 때문에 빈 시간엔 낭비가 생긴다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 개념 | 연결 키워드 | 참조 번호 |
-|:---|:---|:---:|
-| 하이퍼바이저 (Hypervisor) | KVM, VMware, Xen, 가상화 계층 | 540 |
-| DPU (Data Processing Unit) | AWS Nitro, 오프로딩, 하드웨어 격리 | 526 |
-| CaaS (Container as a Service) | 베어메탈 + K8s, EKS on Bare Metal | 502 |
-| Noisy Neighbor | 자원 경합, 성능 예측, IOPS | 503 |
-| HPC (High Performance Computing) | MPI, RDMA, 초저지연 | 509 |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| 하이퍼바이저 (Hypervisor) | KVM, VMware, Xen, 가상화 계층 · 540 |
+| DPU (Data Processing Unit) | AWS Nitro, 오프로딩, 하드웨어 격리 · 526 |
+| CaaS (Container as a Service) | 베어메탈 + K8s, EKS on Bare Metal · 502 |
+| Noisy Neighbor | 자원 경합, 성능 예측, IOPS · 503 |
+| HPC (High Performance Computing) | MPI, RDMA, 초저지연 · 509 |
 
----
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[KVM · VMware] → [베어메탈 클라우드 가상화 오버헤드 없는 서비스] → [MPI · RDMA]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 

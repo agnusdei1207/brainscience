@@ -1,7 +1,7 @@
 +++
 weight = 539
 title = "539. 클라우드 마이그레이션 6R 전략 (Cloud Migration 6R Strategy)"
-date = "2026-04-21"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ict-convergence"
 +++
@@ -24,7 +24,7 @@ categories = "studynote-ict-convergence"
 - 레거시 시스템 현대화, 기술 부채 해소
 - DevOps/클라우드 네이티브 역량 확보
 
-📢 **섹션 요약 비유**: 6R은 이사 전략이다 — 짐을 통째로 옮기거나(Rehost), 가구를 재배치하거나(Replatform), 새 집에 맞게 리모델링하거나(Refactor), 아예 새 가구를 사거나(Repurchase), 필요 없는 짐을 버리거나(Retire), 그냥 안 가거나(Retain).
+- **📢 섹션 요약 비유**: 6R은 이사 전략이다 — 짐을 통째로 옮기거나(Rehost), 가구를 재배치하거나(Replatform), 새 집에 맞게 리모델링하거나(Refactor), 아예 새 가구를 사거나(Repurchase), 필요 없는 짐을 버리거나(Retire), 그냥 안 가거나(Retain).
 
 ---
 
@@ -59,7 +59,7 @@ categories = "studynote-ict-convergence"
 5. 관리형 서비스로 최소 변경 가능한가? → YES: Replatform
 6. 나머지: Rehost
 
-📢 **섹션 요약 비유**: Refactor는 집을 최신 스마트홈으로 전면 리모델링하는 것, Rehost는 가구 배치도 안 바꾸고 그냥 이사하는 것, Retain은 이사 자체를 안 하는 것이다.
+- **📢 섹션 요약 비유**: Refactor는 집을 최신 스마트홈으로 전면 리모델링하는 것, Rehost는 가구 배치도 안 바꾸고 그냥 이사하는 것, Retain은 이사 자체를 안 하는 것이다.
 
 ---
 
@@ -79,7 +79,7 @@ categories = "studynote-ict-convergence"
 
 **마이그레이션 파동(Wave) 접근법**: 전체 앱 포트폴리오를 3~5개 파동으로 나누어 이전. 1파동: 비핵심 앱(Rehost), 2파동: 중요 앱(Replatform), 3파동: 핵심 앱(Refactor) 순서.
 
-📢 **섹션 요약 비유**: 마이그레이션 파동은 군대 이동과 같다 — 선발대(비핵심 앱)가 먼저 이동하여 기지를 설치하고, 본대(핵심 앱)는 안전이 확보된 후 이동한다.
+- **📢 섹션 요약 비유**: 마이그레이션 파동은 군대 이동과 같다 — 선발대(비핵심 앱)가 먼저 이동하여 기지를 설치하고, 본대(핵심 앱)는 안전이 확보된 후 이동한다.
 
 ---
 
@@ -98,7 +98,7 @@ categories = "studynote-ict-convergence"
 - 물류 최적화 AI: Refactor (클라우드 ML 서비스 활용, 경쟁력 핵심)
 - 배치 리포팅 서버: Replatform (EC2 → Lambda 전환, 최소 변경)
 
-📢 **섹션 요약 비유**: 6R 분류는 이사할 때 짐을 정리하는 것이다 — 자주 쓰는 것(Rehost), 버릴 것(Retire), 새 것으로 살 것(Repurchase)을 먼저 분류해야 이사가 효율적이다.
+- **📢 섹션 요약 비유**: 6R 분류는 이사할 때 짐을 정리하는 것이다 — 자주 쓰는 것(Rehost), 버릴 것(Retire), 새 것으로 살 것(Repurchase)을 먼저 분류해야 이사가 효율적이다.
 
 ---
 
@@ -112,21 +112,25 @@ categories = "studynote-ict-convergence"
 
 클라우드 마이그레이션은 기술 프로젝트인 동시에 **비즈니스 변환 프로젝트**이며, 6R 프레임워크는 이 두 관점을 연결하는 공통 언어다.
 
-📢 **섹션 요약 비유**: 6R 없는 클라우드 이전은 설계도 없는 이사다 — 짐을 다 옮긴 후에야 새 집에 맞지 않는 가구를 발견하고, 다시 비용을 들여 바꾸는 상황이 생긴다.
+- **📢 섹션 요약 비유**: 6R 없는 클라우드 이전은 설계도 없는 이사다 — 짐을 다 옮긴 후에야 새 집에 맞지 않는 가구를 발견하고, 다시 비용을 들여 바꾸는 상황이 생긴다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 개념 | 연결 키워드 | 참조 번호 |
-|:---|:---|:---:|
-| IaaS / PaaS / SaaS | 클라우드 서비스 모델, 관리 부담 | 499 |
-| IaC (Infrastructure as Code) | Terraform, 마이그레이션 자동화 | 504 |
-| 클라우드 네이티브 (Cloud Native) | Refactor, MSA, 컨테이너 | 501 |
-| FinOps | 마이그레이션 비용 관리, TCO 분석 | 500 |
-| SDDC (Software Defined Data Center) | 온프레미스 현대화, Retain 대안 | 540 |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| IaaS / PaaS / SaaS | 클라우드 서비스 모델, 관리 부담 · 499 |
+| IaC (Infrastructure as Code) | Terraform, 마이그레이션 자동화 · 504 |
+| 클라우드 네이티브 (Cloud Native) | Refactor, MSA, 컨테이너 · 501 |
+| FinOps | 마이그레이션 비용 관리, TCO 분석 · 500 |
+| SDDC (Software Defined Data Center) | 온프레미스 현대화, Retain 대안 · 540 |
 
----
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[클라우드 서비스 모델 · 관리 부담] → [클라우드 마이그레이션 6R 전략] → [온프레미스 현대화 · Retain 대안]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
