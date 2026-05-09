@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>78. etcd (엣시디) - 클러스터의 모든 상태 정보(설정, 메타데이터)를 저장하는 고가용성 분산 Key-Value 저장소 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 07, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote cloud
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: etcd는 작은 크기의 중요한 상태 정보를 저장하는 강한 일관성의 분산 K/V (Key-Value) 저장소다.</li>
+<li><strong>가치</strong>: Raft (Raft Consensus Algorithm) 합의를 통해 클러스터가 같은 사실을 보게 만든다.</li>
+<li><strong>판단 포인트</strong>: etcd는 설정과 메타데이터를 위한 저장소이지, 큰 본문 데이터를 담는 범용 데이터베이스가 아니다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>분산 시스템은 설정, 서비스 디스커버리, 리더 선출처럼 모두가 같은 값을 봐야 하는 순간이 많다. etcd는 그런 "공통 메모" 역할을 한다.
+특히 Kubernetes 같은 클라우드 제어면에서는 노드 상태와 오브젝트 상태가 흔들리면 전체 운영이 불안정해진다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">Client -&gt; Leader -&gt; Followers
+         | Raft log commit |
+         v
+     snapshot &#x2F; watch event
+</code></pre>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 분산 시스템은 모두가 같은 상태를 봐야 흔들리지 않는다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>etcd는 클라이언트 API (Application Programming Interface)를 통해 쓰기와 읽기를 받는다. 쓰기 요청은 리더를 거쳐 합의되고, 커밋된 로그는 팔로워에 복제된다.
+watch는 키 변화 알림을, lease는 임시 자원의 생명주기를, snapshot과 compaction은 로그를 정리하는 역할을 한다.</p>
+<table><thead><tr><th>구성 요소</th><th>역할</th><th>판단 포인트</th></tr></thead><tbody>
+<tr><td>Leader</td><td>쓰기 합의의 중심</td><td>쿼럼을 만족해야 반영된다</td></tr>
+<tr><td>Followers</td><td>로그 복제와 읽기 보조</td><td>상태를 따라간다</td></tr>
+<tr><td>Watch</td><td>변경 이벤트 전달</td><td>구성 관리에 자주 쓴다</td></tr>
+<tr><td>Lease</td><td>TTL 기반 임시값 관리</td><td>세션·에페메랄 자원에 유리하다</td></tr>
+<tr><td>Snapshot/Compaction</td><td>로그 압축과 백업</td><td>운영 안정성을 높인다</td></tr>
+</tbody></table>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Raft, watch, lease, snapshot이 제어면을 만든다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>etcd는 Redis처럼 빠른 캐시가 아니라, 정확한 합의가 필요한 제어면 저장소다. ZooKeeper와 비교하면 모두 분산 조정에 쓰이지만, etcd는 watch와 간결한 K/V API가 강점이다.
+클라우드 관점에서는 설정 파일 하나보다 등가 복제된 저장소가 훨씬 안전하다. 그래서 etcd는 인프라의 기준점이 된다.</p>
+<table><thead><tr><th>비교축</th><th>etcd</th><th>Redis</th><th>ZooKeeper</th></tr></thead><tbody>
+<tr><td>일관성</td><td>강한 일관성</td><td>설정 가능</td><td>조정 중심</td></tr>
+<tr><td>주요 용도</td><td>메타데이터/설정</td><td>캐시/세션</td><td>분산 조정</td></tr>
+<tr><td>클라우드 적합성</td><td>매우 높다</td><td>보조적</td><td>높다</td></tr>
+</tbody></table>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: etcd는 캐시가 아니라 합의 기반 메타데이터 저장소다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p>실무에서는 작은 값, 낮은 쓰기 빈도, 높은 정확성이 필요한 곳에 etcd를 둔다. 반대로 큰 오브젝트나 대량 쓰기, 장기 보관 데이터는 적합하지 않다.
+백업, quorum, 네트워크 지연, compaction 주기를 함께 점검해야 한다. 특히 단일 리전이 아니라면 복제 지연과 장애 복구 절차를 먼저 설계해야 한다.</p>
+<h3 id="cekeuriseuteu">체크리스트</h3>
+<ol>
+<li>설정과 메타데이터처럼 작은 값을 저장하는가?</li>
+<li>watch와 lease가 실제 운영 패턴에 맞는가?</li>
+<li>백업과 복구 절차가 문서화되어 있는가?</li>
+</ol>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p>큰 파일이나 로그를 그대로 넣는 것</p>
+</li>
+<li>
+<p>백업 없이 quorum만 믿고 운영하는 것</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 작고 중요한 상태에만 써야 제 역할을 한다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>etcd를 잘 쓰면 동적 설정, 서비스 디스커버리, 리더 선출이 안정된다. 제어면의 단일 진실 공급원으로 볼 수 있다.
+앞으로는 멀티 클러스터와 엣지 환경에서 etcd의 운영 패턴과 복구 자동화가 더 중요해진다.
+기술사는 이 주제를 "클러스터가 함께 보는 작은 공용 노트"로 기억하면 된다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 제어면의 기준점을 하나로 묶는 것이 핵심이다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th>개념</th><th>연결 포인트</th></tr></thead><tbody>
+<tr><td>Raft</td><td>합의 알고리즘이다</td></tr>
+<tr><td>Quorum</td><td>쓰기 반영의 기준이다</td></tr>
+<tr><td>Watch</td><td>변경 이벤트를 알린다</td></tr>
+<tr><td>Lease</td><td>임시 자원 수명을 관리한다</td></tr>
+<tr><td>Snapshot</td><td>로그를 압축하고 복구한다</td></tr>
+<tr><td>Leader election</td><td>분산 제어의 핵심 기능이다</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">write request
+  │
+  ▼
+Raft consensus
+  │
+  ▼
+commit to log
+  │
+  ▼
+watch event
+  │
+  ▼
+controllers react
+</code></pre>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>반장 셋이 모두 도장 찍어야 공책 내용을 바꾸는 반 공책과 같다.</li>
+<li>한 명만 마음대로 적으면 반 전체가 헷갈린다.</li>
+<li>그래서 모두가 같은 공책을 보게 만드는 것이 중요하다.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

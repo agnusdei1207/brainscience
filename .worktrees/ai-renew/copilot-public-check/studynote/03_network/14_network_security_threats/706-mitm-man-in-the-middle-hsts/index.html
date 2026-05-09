@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>706. 중간자 공격 (MitM, Man-in-the-Middle) 도청 흐름과 통제 조치 (TLS 암호 검증 중요성, HSTS 설정 이유) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="706-jungganja-gonggyeog-mitm-man-in-the-middle-doceong-heureumgwa-tongje-joci-hsts">706. 중간자 공격 (MitM, Man-in-the-Middle) 도청 흐름과 통제 조치 (HSTS)</h1>
+<blockquote>
+<p><strong>핵심 인사이트</strong>: 앨리스가 밥과 편지를 주고받고 있다. 그런데 우체부(해커)가 몰래 편지를 뜯어보고, 심지어 내용을 "1만 원 송금"에서 "100만 원 송금"으로 바꿔서 전달한다. 앨리스와 밥은 중간에 우체부가 껴있는 줄 꿈에도 모르고 서로 대화하고 있다고 철썩같이 믿는다. 이것이 인터넷 역사상 가장 교묘하고 막기 힘든 환영(Illusion) 공격, '중간자 공격(MitM)'이다.</p>
+</blockquote>
+<h2 id="i-jungganja-gonggyeog-mitm-yi-gaenyeom">Ⅰ. 중간자 공격 (MitM)의 개념</h2>
+<ul>
+<li><strong>개념</strong>: 네트워크 통신을 하는 두 주체(클라이언트와 서버) 사이에 해커가 몰래 끼어들어, <strong>서로가 상대방과 직접 연결되어 있다고 착각하게 만든 뒤, 중간에서 모든 트래픽을 가로채 도청(Sniffing), 변조(Tampering), 가짜 데이터 주입(Injection)을 수행하는 극악의 해킹 기법</strong>입니다.</li>
+<li>앞서 배운 703번(ARP 스푸핑)과 705번(DNS 스푸핑)이 결국 이 중간자(MitM)의 위치를 차지하기 위해 쓰는 대표적인 낚시 수법들입니다.</li>
+</ul>
+<h2 id="ii-mitm-gonggyeogyi-sinario-heureum">Ⅱ. MitM 공격의 시나리오 흐름</h2>
+<ol>
+<li><strong>가로채기</strong>: 해커 다스가 ARP 스푸핑을 써서 앨리스의 컴퓨터를 속여, 네이버로 가는 패킷이 자기(다스)에게 오도록 만듭니다.</li>
+<li><strong>대리 통신 (프록시 행세)</strong>: 다스는 앨리스에게 받은 요청을 자기가 네이버인 척 열어보고, 다시 자기가 앨리스인 척 네이버 서버에 전달합니다.</li>
+<li><strong>조작 및 전달</strong>: 네이버가 주는 정상적인 응답 패킷을 다스가 먼저 받아서 안에 악성코드를 섞거나 금액을 바꾼 뒤 앨리스에게 넘깁니다. 앨리스는 화면에 뜬 네이버 로고를 보고 해킹당하는 줄 꿈에도 모릅니다.</li>
+</ol>
+<h2 id="iii-mitmyi-gajang-gangryeoghan-bangpae-tls-https-amhohwa-geomjeung">Ⅲ. MitM의 가장 강력한 방패: TLS(HTTPS) 암호화 검증 🌟</h2>
+<p>중간자가 패킷을 가로채더라도 뜯어보지 못하게 하려면 데이터를 **HTTPS(TLS)**로 완벽하게 암호화해야 합니다.</p>
+<ul>
+<li><strong>해커의 가짜 인증서 공격</strong>: 해커가 중간에서 가짜 네이버 인증서를 만들어서 앨리스에게 던지면 어떻게 될까요?</li>
+<li><strong>PKI의 위력</strong>: 앨리스의 브라우저는 그 가짜 인증서를 보자마자 "어? 이 인증서에는 글로벌 최상위 기관(Root CA)의 도장(서명)이 안 찍혀있잖아? 이거 가짜다!"라며 새빨간 경고창(ERR_CERT_AUTHORITY_INVALID)을 띄우고 접속을 아예 차단해 버려 해커의 MitM을 처참히 분쇄합니다. (676번 문서 참조)</li>
+</ul>
+<h2 id="iv-haekeoyi-balag-ssl-stripping-daungeureideu-gonggyeog-gwa-hsts-bangeo-gibeob">Ⅳ. 해커의 발악: SSL Stripping (다운그레이드 공격)과 HSTS 방어 기법 🌟</h2>
+<p>하지만 해커도 만만치 않습니다. 사용자가 주소창에 귀찮아서 <code>naver.com</code>만 치면 브라우저는 일단 기본적으로 암호화가 안 된 평문 통신인 <code>http://naver.com</code>으로 먼저 접속을 시도한다는 허점을 노립니다.</p>
+<ul>
+<li><strong>SSL Stripping 공격</strong>: 해커가 이 첫 번째 <code>http://</code> 접속 요청을 중간에서 낚아챈 뒤, 자신이 네이버와 대신 <code>https://</code> 보안 통신을 맺고, 사용자에게는 영원히 암호화되지 않은 낡은 <code>http://</code> 화면만 던져줍니다. 사용자는 자물쇠 마크가 없는지도 모르고 평문으로 비밀번호를 갖다 바칩니다.</li>
+<li><strong>궁극의 통제 조치 (HSTS, HTTP Strict Transport Security)</strong>:
+<ul>
+<li>웹서버가 응답 헤더에 <code>Strict-Transport-Security</code>라는 명령을 달아서 보냅니다.</li>
+<li>이 명령을 받은 내 크롬 브라우저는 기억해 둡니다. "아! 네이버는 앞으로 1년 동안 무조건 <code>https://</code>로만 접속해야 하는 사이트구나!"</li>
+<li>다음 날 내가 실수로 주소창에 평문 <code>http://naver.com</code>을 쳐도, <strong>브라우저 자체가 내부에서 강제로 <code>https://</code>로 주소를 뜯어고친 뒤 발송</strong>해 버립니다. 해커가 중간에서 평문 요청을 가로채려던 꼼수(SSL Stripping)가 100% 무력화되는 완벽한 방어막입니다.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 중간자 공격(MitM)은 이산가족이 북한에 보낸 편지를, 중간 배달부(브로커)가 마음대로 다 뜯어보고 "나 돈 더 필요해"라고 위조해서 상대에게 넘겨 사기를 치는 짓입니다. 이를 막기 위해 우리는 편지를 철제 금고(HTTPS)에 담고 자물쇠를 채워 보냅니다. 배달부가 금고를 부수고 자기가 만든 허접한 가짜 플라스틱 상자에 편지를 담아 가족에게 건네려(SSL Stripping) 하겠지만, 가족들은 "우리 집은 무조건 강철 금고(HSTS 설정)로만 대화하기로 약속했어! 플라스틱 상자 가져온 넌 가짜다!"라며 배달부의 사기극을 문전에서 박살 내버립니다.</p>
+</blockquote>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

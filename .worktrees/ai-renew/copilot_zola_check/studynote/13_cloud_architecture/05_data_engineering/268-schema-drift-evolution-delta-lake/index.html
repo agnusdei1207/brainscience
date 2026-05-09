@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>268. 스키마 드리프트 (Schema Drift) - Delta Lake 에볼루션 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote cloud architecture
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 스키마 드리프트(Schema Drift)는 데이터 소스의 스키마(컬럼 추가/삭제/타입 변경)가 소비자에게 사전 통보 없이 변경되어 파이프라인이 실패하거나 조용히 데이터 오염을 일으키는 현상이다.</li>
+<li><strong>가치</strong>: Delta Lake의 스키마 에볼루션(Auto Schema Evolution), Apache Avro의 스키마 레지스트리(Schema Registry)를 통해 호환성 있는 스키마 변경을 제어하면 파이프라인의 중단 없이 안전하게 스키마 변경을 수용할 수 있다.</li>
+<li><strong>판단 포인트</strong>: 스키마 변경 정책 3단계 — 신규 컬럼 추가(하위 호환, 자동 허용) → 컬럼 삭제(파괴적, 소비자 검토 필요) → 타입 변경(가장 위험, 명시적 마이그레이션 필요) — 각 단계별로 다른 대응 전략이 필요하다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>데이터 파이프라인에서 가장 흔하고 골치 아픈 문제 중 하나가 스키마 드리프트다. 업스트림 팀이 "고객 테이블에 phone_number 컬럼을 추가했습니다"라는 공지 없이 스키마를 변경하면, 다운스트림 ETL 파이프라인이 갑자기 실패한다.</p>
+<p>더 나쁜 경우는 **조용한 오염(Silent Corruption)**이다. STRING → INT 타입 변경이 있었는데 파이프라인이 실패하지 않고 계속 실행되면서 잘못된 데이터를 DW에 적재하는 것이다.</p>
+<pre><code>[스키마 드리프트 시나리오]
+
+소스 DB (어제):               소스 DB (오늘):
+┌──────────────────┐         ┌──────────────────────┐
+│ id: INT          │         │ id: INT              │
+│ name: STRING     │         │ name: STRING         │
+│ amount: DECIMAL  │         │ amount: STRING ← 타입 변경!
+└──────────────────┘         │ discount: DECIMAL ← 신규!
+                             └──────────────────────┘
+
+ETL 파이프라인:
+amount를 DECIMAL로 처리 → CAST 실패 → 파이프라인 오류
+→ 새벽에 DW 적재 실패, 오전 보고서 없음 → 긴급 대응!
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: 스키마 드리프트는 계약서 양식이 몰래 바뀐 것이다. 자동 서명 시스템이 원래 양식을 기준으로 동작하는데, 양식이 바뀐 줄 모르고 계속 서명하면 엉뚱한 내용에 서명하게 된다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="seukima-byeongyeong-yuhyeongbyeol-hohwanseong">스키마 변경 유형별 호환성</h3>
+<table><thead><tr><th style="text-align: left">변경 유형</th><th style="text-align: left">하위 호환성</th><th style="text-align: left">상위 호환성</th><th style="text-align: left">대응 방법</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>컬럼 추가</strong></td><td style="text-align: left">✅ 안전</td><td style="text-align: left">✅ 안전</td><td style="text-align: left">자동 허용 권장</td></tr>
+<tr><td style="text-align: left"><strong>컬럼 삭제</strong></td><td style="text-align: left">❌ 위험</td><td style="text-align: left">✅ 안전</td><td style="text-align: left">소비자 검토 후 단계적 제거</td></tr>
+<tr><td style="text-align: left"><strong>타입 변경 (안전)</strong></td><td style="text-align: left">STRING→INT</td><td style="text-align: left">부분</td><td style="text-align: left">INT→STRING (확장)</td></tr>
+<tr><td style="text-align: left"><strong>타입 변경 (위험)</strong></td><td style="text-align: left">❌ 위험</td><td style="text-align: left">❌ 위험</td><td style="text-align: left">명시적 마이그레이션 필수</td></tr>
+<tr><td style="text-align: left"><strong>컬럼 리네임</strong></td><td style="text-align: left">❌ 위험</td><td style="text-align: left">❌ 위험</td><td style="text-align: left">별칭(alias) + 이중 적재</td></tr>
+</tbody></table>
+<h3 id="delta-lake-seukima-ebolrusyeon">Delta Lake 스키마 에볼루션</h3>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python"># Delta Lake: mergeSchema 옵션으로 신규 컬럼 자동 추가
+df_new.write.format(&quot;delta&quot;) \
+    .option(&quot;mergeSchema&quot;, &quot;true&quot;) \
+    .mode(&quot;append&quot;) \
+    .save(&quot;&#x2F;delta&#x2F;customers&quot;)
+
+# ALTER TABLE로 명시적 스키마 변경 허용
+spark.sql(&quot;&quot;&quot;
+    ALTER TABLE customers
+    ADD COLUMNS (email STRING, phone_number STRING)
+&quot;&quot;&quot;)
+
+# 컬럼 타입 변경 (안전한 캐스팅만)
+spark.sql(&quot;&quot;&quot;
+    ALTER TABLE orders
+    CHANGE COLUMN amount amount DECIMAL(15, 2)
+&quot;&quot;&quot;)
+</code></pre>
+<h3 id="seukima-rejiseuteuri-schema-registry">스키마 레지스트리 (Schema Registry)</h3>
+<pre><code>[Confluent Schema Registry 아키텍처]
+
+프로듀서                 스키마 레지스트리           컨슈머
+┌──────────┐           ┌────────────────────┐    ┌──────────┐
+│ 메시지 작성│──▶ Avro  │ 스키마 버전 관리    │    │ 스키마 조회│
+│ (스키마   │   직렬화  │ 호환성 검증         │◄───│ Avro     │
+│  v2 기준) │          │ (BACKWARD&#x2F;FORWARD&#x2F; │    │ 역직렬화  │
+└──────────┘           │  FULL 호환성 정책)  │    └──────────┘
+      │                └────────────────────┘
+      ▼ 검증 실패 시 게시 거부
+Kafka Topic
+
+호환성 정책:
+BACKWARD: 새 스키마로 구버전 메시지 읽기 가능
+FORWARD:  구 스키마로 새버전 메시지 읽기 가능
+FULL:     양방향 호환성 보장
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: 스키마 레지스트리는 계약서 공증 시스템이다. 새 양식(스키마)을 적용하기 전에 공증소(레지스트리)에서 기존 양식과의 호환성을 검증하고 승인받아야만 배포할 수 있다.</p>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="seukima-gwanri-dogu-bigyo">스키마 관리 도구 비교</h3>
+<table><thead><tr><th style="text-align: left">도구</th><th style="text-align: left">프레임워크</th><th style="text-align: left">특징</th><th style="text-align: left">적합 환경</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Confluent Schema Registry</strong></td><td style="text-align: left">Kafka + Avro/Protobuf</td><td style="text-align: left">스트리밍 메시지 스키마 관리</td><td style="text-align: left">Kafka 기반 파이프라인</td></tr>
+<tr><td style="text-align: left"><strong>Delta Lake</strong></td><td style="text-align: left">Apache Spark</td><td style="text-align: left">테이블 스키마 에볼루션</td><td style="text-align: left">배치/스트리밍 레이크하우스</td></tr>
+<tr><td style="text-align: left"><strong>dbt</strong></td><td style="text-align: left">SQL 변환</td><td style="text-align: left">컬럼 계약, 테스트 자동화</td><td style="text-align: left">SQL 기반 변환</td></tr>
+<tr><td style="text-align: left"><strong>Great Expectations</strong></td><td style="text-align: left">Python</td><td style="text-align: left">데이터 품질 + 스키마 검증</td><td style="text-align: left">범용 파이프라인</td></tr>
+</tbody></table>
+<h3 id="avro-vs-protobuf-vs-json-schema">Avro vs Protobuf vs JSON Schema</h3>
+<table><thead><tr><th style="text-align: left">포맷</th><th style="text-align: left">크기</th><th style="text-align: left">스키마 진화</th><th style="text-align: left">언어 지원</th><th style="text-align: left">적합 사례</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Avro</strong></td><td style="text-align: left">소</td><td style="text-align: left">우수</td><td style="text-align: left">다수</td><td style="text-align: left">Kafka, Hadoop</td></tr>
+<tr><td style="text-align: left"><strong>Protobuf</strong></td><td style="text-align: left">최소</td><td style="text-align: left">우수</td><td style="text-align: left">다수</td><td style="text-align: left">gRPC, 마이크로서비스</td></tr>
+<tr><td style="text-align: left"><strong>JSON Schema</strong></td><td style="text-align: left">중간</td><td style="text-align: left">중간</td><td style="text-align: left">모든 언어</td><td style="text-align: left">REST API, 간단한 경우</td></tr>
+<tr><td style="text-align: left"><strong>Parquet</strong></td><td style="text-align: left">최소 (컬럼형)</td><td style="text-align: left">지원</td><td style="text-align: left">주로 빅데이터</td><td style="text-align: left">배치 분석</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: Avro와 Protobuf는 압축 된 계약서 형식이다. 사람이 읽기 어렵지만(바이너리), 용량이 작고 호환성 규칙이 엄격하여 시스템 간 안전한 통신에 적합하다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="seukima-deuripeuteu-bangeo-jeonryag">스키마 드리프트 방어 전략</h3>
+<pre><code>[스키마 드리프트 방어 체계]
+
+단계 1: 탐지 (Early Detection)
+  - 데이터 품질 모니터링 (컬럼 수, 타입, null 비율)
+  - 스키마 변경 자동 알림 (Catalog 도구)
+
+단계 2: 검증 (Validation at Ingestion)
+  - Schema Registry로 입력 스키마 검증
+  - Great Expectations: 스키마 일치 테스트
+
+단계 3: 에볼루션 (Safe Evolution)
+  - 컬럼 추가: mergeSchema=true 자동 허용
+  - 컬럼 삭제: 소비자 마이그레이션 후 실행
+  - 타입 변경: 이중 컬럼 전략 (구버전 유지 + 신버전 추가)
+
+단계 4: 알림 (Stakeholder Communication)
+  - 스키마 변경 → Data Contract 업데이트 → 자동 알림
+</code></pre>
+<h3 id="ijung-keolreom-maigeureisyeon-jeonryag">이중 컬럼 마이그레이션 전략</h3>
+<pre data-lang="sql" class="language-sql "><code class="language-sql" data-lang="sql">-- 안전한 컬럼 타입 변경 (amount: STRING → DECIMAL)
+
+-- 1단계: 새 컬럼 추가
+ALTER TABLE orders ADD COLUMN amount_v2 DECIMAL(15, 2);
+
+-- 2단계: 데이터 마이그레이션
+UPDATE orders SET amount_v2 = CAST(amount AS DECIMAL(15, 2));
+
+-- 3단계: 소비자들이 amount_v2 사용으로 전환 (검증 기간)
+
+-- 4단계: 원본 컬럼 제거 (모든 소비자 전환 완료 후)
+ALTER TABLE orders DROP COLUMN amount;
+ALTER TABLE orders RENAME COLUMN amount_v2 TO amount;
+</code></pre>
+<h3 id="gisulsa-siheom-pandan-pointeu">기술사 시험 판단 포인트</h3>
+<ul>
+<li><strong>스키마 드리프트 3가지 결과</strong>: 파이프라인 실패 / 조용한 데이터 오염 / 성공적 처리</li>
+<li><strong>Delta Lake mergeSchema</strong>: 신규 컬럼 추가 시 자동 허용, 타입 변경은 명시적 허용 필요</li>
+<li><strong>Data Contract 연계</strong>: 스키마 드리프트 방지의 근본 해결책은 생산자-소비자 간 명시적 계약</li>
+</ul>
+<p>📢 <strong>섹션 요약 비유</strong>: 스키마 드리프트 방어는 공사 현장 안전 수칙이다. 도면(스키마)이 변경되면 모든 시공팀(소비자)에게 사전 통보하고, 변경 전 영향도를 검토한다. "나는 벌써 시공 완료했는데 도면이 바뀌었다"는 상황이 가장 위험하다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="gidaehyogwa">기대효과</h3>
+<table><thead><tr><th style="text-align: left">영역</th><th style="text-align: left">효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>파이프라인 안정성</strong></td><td style="text-align: left">스키마 변경으로 인한 파이프라인 실패 방지</td></tr>
+<tr><td style="text-align: left"><strong>데이터 품질</strong></td><td style="text-align: left">조용한 오염(Silent Corruption) 조기 탐지</td></tr>
+<tr><td style="text-align: left"><strong>개발 민첩성</strong></td><td style="text-align: left">안전한 스키마 변경으로 소스팀 자율성 향상</td></tr>
+<tr><td style="text-align: left"><strong>운영 비용</strong></td><td style="text-align: left">스키마 이슈 긴급 대응 비용 감소</td></tr>
+</tbody></table>
+<h3 id="hangye-mic-juyisahang">한계 및 주의사항</h3>
+<ul>
+<li><strong>완전 자동화의 위험</strong>: mergeSchema 자동 허용이 의도치 않은 스키마 변경까지 수용할 수 있음</li>
+<li><strong>하위 호환성의 한계</strong>: 컬럼 삭제, 타입 변경은 자동화가 아닌 조율 과정 필요</li>
+<li><strong>레거시 시스템</strong>: 스키마 레지스트리를 지원하지 않는 레거시 소스에서 드리프트 탐지 어려움</li>
+<li><strong>운영 복잡성</strong>: Schema Registry, Delta Lake, Data Catalog 등 여러 도구의 조합 관리 부담</li>
+</ul>
+<p>📢 <strong>섹션 요약 비유</strong>: 스키마 에볼루션은 진화가 아니라 계획적 개조다. 자연 진화처럼 무작위로 바뀌면 시스템이 죽는다. 설계자(스키마 오너)와 사용자(소비자)가 합의하여 단계적으로 변경하는 것이 살아남는 방법이다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">Data Contract</td><td style="text-align: left">스키마 드리프트 방지의 근본 해결책</td></tr>
+<tr><td style="text-align: left">Schema Registry</td><td style="text-align: left">Kafka 기반 스트리밍에서 스키마 버전 관리</td></tr>
+<tr><td style="text-align: left">Delta Lake</td><td style="text-align: left">레이크하우스 스키마 에볼루션 지원</td></tr>
+<tr><td style="text-align: left">Great Expectations</td><td style="text-align: left">스키마 + 데이터 품질 자동 검증</td></tr>
+<tr><td style="text-align: left">Data Lineage</td><td style="text-align: left">스키마 변경의 다운스트림 영향도 추적</td></tr>
+<tr><td style="text-align: left">Avro/Protobuf</td><td style="text-align: left">스키마 진화를 지원하는 직렬화 포맷</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>스키마 드리프트는 레고 블록 모양이 몰래 바뀌는 것이야. 원래 8개 구멍짜리였는데 6개로 바뀌면 만들던 집이 무너져.</li>
+<li>Delta Lake mergeSchema는 "새 블록이 추가됐어도 알아서 맞춰줄게"라고 하는 스마트 레고야.</li>
+<li>하지만 구멍 위치가 완전히 바뀌면(타입 변경) 자동으로 안 돼 - 직접 새 블록용 설명서(마이그레이션)를 다시 써야 해!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

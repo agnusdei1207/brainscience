@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>81. 지속적 배포 (CD Pipeline) - 무중단 블루&#x2F;그린 롤링 아키텍처 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote devops
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="81-jisogjeog-baepo-cd-continuous-deployment-paipeurain-akitegceo">81. 지속적 배포 (CD, Continuous Deployment) 파이프라인 아키텍처</h1>
+<blockquote>
+<p>⚠️ 이 문서는 개발자가 소스코드를 커밋하고 테스트(CI)를 통과해 구워진 완제품(아티팩트, Docker Image)을 100대의 운영 서버에 어떻게 안전하고 빠르게, 그리고 **사용자 접속이 끊기지 않는 무중단(Zero Downtime) 상태로 밀어 넣을 것인지에 대한 전체 배포 컨베이어 벨트 설계이자 데브옵스(DevOps)의 궁극적 종착지인 '지속적 배포(CD) 파이프라인'**을 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: CI(지속적 통합)가 요리를 맛있고 불량 없이 '구워내는(Build)' 단계라면, CD는 구워진 그 요리를 홀에 있는 수만 명의 손님 식탁(운영 서버) 위로 식지 않게, 그리고 그릇을 엎지르지 않고 안전하게 '서빙(Deploy)'하는 치밀한 물류 배송망이다.</li>
+<li><strong>가치</strong>: "오늘 밤 12시에 서비스 점검 창 띄우고 배포할게요"라는 원시 시대의 야근 문화를 완벽하게 파괴했다. 대낮에 고객 10만 명이 결제를 누르고 있는 와중에도 백그라운드에서 서버 100대가 스르륵 v2.0으로 갈아타게 만드는 쾌거를 이룩했다.</li>
+<li><strong>기술 체계</strong>: 구워진 이미지를 중앙 창고(ECR)에서 꺼내 와서, 쿠버네티스 클러스터나 AWS EC2 서버에 <strong>블루/그린(Blue/Green)</strong>, <strong>롤링(Rolling)</strong>, 또는 **카나리(Canary)**라는 3대 무중단 배포 전술을 사용하여 트래픽을 정교하게 꺾어 넘기는 것이 아키텍처의 핵심이다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-yageunyi-myeolmang-sudong-baepo-jiogeseo-cd-paipeuraineuro">Ⅰ. 야근의 멸망: 수동 배포 지옥에서 CD 파이프라인으로</h3>
+<p>서버를 끄고 파일을 복사하는 짓은 원시인들의 축제였다.</p>
+<ol>
+<li><strong>기존 배포(Manual Deploy)의 참사</strong>:
+<ul>
+<li>옛날 데브옵스가 없던 시절, 배포 날은 공포 그 자체였다. 새벽 1시에 톰캣(Tomcat) 서버 10대를 내린다(서비스 점검 화면 송출).</li>
+<li>FTP로 <code>app.war</code> 파일을 10대 서버에 일일이 복사하고 서버를 다시 켠다. 하필 1대 서버 폴더 권한이 꼬여서 톰캣이 안 올라온다. 에러 로그를 뒤지다 아침 해가 뜬다. 피눈물을 흘리며 원래 파일(v1.0)로 롤백한다. (RTO, 복구 시간이 박살 난다.)</li>
+</ul>
+</li>
+<li><strong>CD (Continuous Delivery / Deployment)의 철학</strong>:
+<ul>
+<li>인간의 손가락(마우스)이 닿는 순간 에러가 발생한다는 것을 깨달았다.</li>
+<li><strong>Delivery(지속적 제공)</strong>: CI가 구워준 파일(도커 이미지)을 운영 서버 배포 직전의 대기실(Staging)까지만 100% 자동으로 밀어 넣고, 마지막 "운영에 쏴라!"라는 최후의 [Approve] 버튼 딱 하나만 사람(팀장)이 누르게 하는 보수적 방식 (대부분의 금융/대기업이 선호).</li>
+<li><strong>Deployment(지속적 배포)</strong>: 넷플릭스나 구글 수준이다. 인간의 버튼 터치조차 없앴다. 개발자가 <code>Git Push</code>를 하는 순간 1시간 뒤에 고객의 브라우저 화면이 v2.0으로 싹 바뀌어 있는, 100% 무인 로봇 배송(극단의 자동화) 방식이다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 수동 배포는 택배 기사가 100집의 대문을 일일이 두드려 문을 열게 한 뒤(서버 내리기), 거실에 물건을 던져놓고 나오는 끔찍한 막노동입니다. CD 파이프라인은 고객 집 벽에 아예 '진공 파이프'를 연결해 둬서, 공장에서 물건이 완성되는 즉시 버튼 한 번만 누르면 수만 가구의 파이프를 타고 거실 탁자 위에 완제품이 동시에 뽁! 하고 떨어지는 미친 스마트 물류 배송망입니다.</p>
+<hr />
+<h3 id="ii-mujungdan-baepo-zero-downtime-yi-3dae-jeonsul">Ⅱ. 무중단 배포(Zero Downtime)의 3대 전술</h3>
+<p>점검 화면을 띄우는 회사는 실력이 없는 회사다. 서버를 끄지 말고 바꿔치기해라.</p>
+<ol>
+<li><strong>롤링 배포 (Rolling Update)</strong>:
+<ul>
+<li>서버가 10대 떠 있다. 한 번에 다 끄지 않고, <strong>1대씩(또는 2대씩) 차례대로</strong> v1.0을 내리고 v2.0을 띄운다.</li>
+<li>1대가 업그레이드되는 동안 남은 9대가 빡세게 고객의 접속(트래픽)을 버텨낸다. 10대가 차례로 도미노처럼 교체되므로 서버가 1초도 안 꺼진다 (K8s의 디플로이먼트 기본 배포 방식).</li>
+<li><strong>단점</strong>: 배포 도중에는 구버전(v1.0) 화면을 보는 고객과 신버전(v2.0) 화면을 보는 고객이 뒤섞이는 혼란의 시간(10~20분)이 존재한다.</li>
+</ul>
+</li>
+<li><strong>블루/그린 배포 (Blue / Green Deployment)</strong>:
+<ul>
+<li>클라우드 시대 최고의 배포법. 현재 돌고 있는 파란색 서버 10대(v1.0)를 놔두고, 바로 옆 허공에 <strong>똑같은 덩치의 녹색 서버 10대(v2.0)를 새로 하나 더 몽땅</strong> 띄운다 (자원 2배 소모).</li>
+<li>녹색 서버 10대가 완벽히 켜진 것을 확인하면, 로드밸런서(스위치)의 길을 파란색에서 녹색으로 <strong>단 0.1초 만에 팍 꺾어버린다.</strong></li>
+<li>고객 전원이 순식간에 v2.0 화면으로 넘어간다(혼란 0%). 만약 v2.0에 버그가 나면? 로드밸런서 스위치를 다시 파란색(구버전)으로 0.1초 만에 원상복구(광속 롤백)해 버린다.</li>
+</ul>
+</li>
+<li><strong>카나리 배포 (Canary Release)</strong>:
+<ul>
+<li>탄광에 새(카나리아)를 먼저 보내 독가스를 확인하듯, 위험한 배포에 쓴다.</li>
+<li>v1.0 서버 100대가 있는데, <strong>딱 1대만 슬쩍 v2.0으로 띄워본다.</strong> 전체 고객의 1%만 이 새 서버로 보낸다. 반나절 동안 고객이 결제를 잘하는지(결함 없음) 매의 눈으로 모니터링한다. 에러가 없으면 서서히 5%, 10%, 100%로 v2.0 서버를 점진적으로 늘려나가는 가장 보수적이고 안전한 배포다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 도로의 차선 도색 공사를 합니다. <strong>롤링</strong>은 4차선 중 1차선만 막고 칠하고, 그다음 2차선을 막고 칠하며 차들이 밀리며 통과하게 하는 방식입니다. <strong>블루그린</strong>은 아예 옆에 똑같은 4차선 다리를 통째로 새로 지어두고, 밤 12시에 꼬깔콘(로드밸런서) 위치만 1초 만에 확 바꿔서 모든 차가 새 다리로 달리게 하는 엄청난 돈지랄 공법입니다. <strong>카나리 배포</strong>는 새 다리를 지어놓고 처음엔 오토바이 1대만 보내보고(1%), 다리가 안 무너지면 택시 5대(5%), 나중에 트럭(100%)을 보내는 완벽한 돌다리 두드리기 공법입니다.</p>
+<hr />
+<h3 id="iii-pull-giban-gitops-akitegceo-argocd">Ⅲ. Pull 기반 GitOps 아키텍처 (ArgoCD)</h3>
+<p>내가 젠킨스에게 "배포해!"라고 명령하는 것조차 위험하다. 로봇이 스스로 가져가게 하라.</p>
+<ol>
+<li><strong>기존 Push 방식의 한계</strong>:
+<ul>
+<li>젠킨스(CI 서버)가 도커 이미지를 구운 뒤, K8s 클러스터 멱살을 잡고 <code>kubectl apply</code>를 날려 억지로 쑤셔 넣었다(Push).</li>
+<li>이렇게 하면 젠킨스가 K8s 클러스터의 마스터 비밀번호(권한)를 통째로 들고 있어야 하므로, 젠킨스가 해킹당하면 회사 전 서버가 다 털리는 끔찍한 보안 구멍이 열렸다.</li>
+</ul>
+</li>
+<li><strong>GitOps 패러다임과 ArgoCD의 반란 (Pull 방식)</strong>:
+<ul>
+<li>"야 젠킨스, 넌 선 넘지 말고 중앙 창고(ECR)에 이미지 던져놓고 깃허브(Git)에 '오늘 버전 2.0으로 배포해'라고 <strong>텍스트 파일만 수정해 놔.</strong> 배포는 내가 할게!"</li>
+<li>K8s 클러스터 내부에 안전하게 숨어있는 **ArgoCD (CD 전용 로봇)**가 3분에 한 번씩 깃허브를 쳐다본다. "어? 어제까진 1.0 띄우라더니, 오늘 깃허브 보니까 2.0으로 글씨가 바뀌었네?"</li>
+<li>ArgoCD 봇이 스스로 깃허브의 선언문(Desired State)을 읽고 중앙 창고에서 이미지를 주워 와 자기 클러스터에 배포(Pull)해 버린다.</li>
+</ul>
+</li>
+<li><strong>선언적 시스템의 궁극체</strong>:
+<ul>
+<li>젠킨스는 권한을 잃었고(보안 100%), 만약 누가 K8s 서버에 몰래 들어가 2.0 파드를 실수로 지워버려도, ArgoCD가 "어? 깃허브 문서엔 2.0이 떠 있어야 하는데 현실은 꺼져있네?"라며 무한 부활(Sync)시켜버리는 **절대 무적의 불변성 인프라(GitOps)**가 완성된다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 기존(Push)은 셰프(젠킨스)가 요리를 다 하고, 오토바이를 몰고 손님 집(운영 서버) 비밀번호를 치고 들어가 거실에 요리를 냅다 던져두고 오는 위험한 침입 배달이었습니다. GitOps(Pull) 방식은 손님 집 안에 충견(ArgoCD)을 키웁니다. 셰프는 문밖 우편함(Git)에 '오늘 메뉴는 치킨'이라고 쪽지만 적어둡니다. 셰프는 손님 집 비밀번호를 모릅니다. 집 안의 충견이 문을 살짝 열고 우편함을 읽은 뒤, 자기가 직접 치킨을 물고 거실로 가져다 놓는 가장 완벽하고 닫혀있는 안전한 셀프 배달 시스템의 완성입니다.</p>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

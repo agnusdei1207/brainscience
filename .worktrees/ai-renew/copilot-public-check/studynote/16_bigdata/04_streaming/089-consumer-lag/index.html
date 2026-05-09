@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>14. Consumer Lag — Kafka 소비 지연 모니터링 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote bigdata
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<ul>
+<li><strong>본질</strong>: Consumer Lag (소비자 지연)은 Kafka 토픽의 최신 오프셋(Latest Offset)과 Consumer 그룹이 커밋한 오프셋(Committed Offset)의 차이로, "Consumer가 Producer보다 얼마나 뒤처져 있는가"를 나타내는 스트리밍 파이프라인의 핵심 건강 지표다.</li>
+<li><strong>가치</strong>: Consumer Lag 급증은 파이프라인 병목(처리 속도 &lt; 수신 속도)의 조기 경보이며, Lag=0이 목표이나 일시적 급증은 정상이므로 <strong>트렌드와 임계값</strong>을 기반으로 오토스케일링과 알림 트리거를 설정해야 한다.</li>
+<li><strong>판단 포인트</strong>: Consumer Lag이 계속 증가하면 Consumer를 수평 확장하거나(파티션 수만큼), 소비 처리 로직을 최적화하거나, 메시지 생산 속도를 낮추는 세 가지 대응 중 병목 위치에 따라 선택해야 한다.</li>
+</ul>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<h3 id="1-consumer-lagyi-jeongyi">1. Consumer Lag의 정의</h3>
+<pre><code>Kafka Topic &quot;orders&quot;:
+  파티션 0: 최신 오프셋 = 10,000 (Producer가 여기까지 씀)
+  파티션 0: Consumer 커밋 오프셋 = 9,500 (Consumer가 여기까지 읽음)
+  → Lag = 10,000 - 9,500 = 500 (메시지 500개 미처리)
+
+파티션 1: 최신 = 8,000, 커밋 = 8,000 → Lag = 0
+파티션 2: 최신 = 12,000, 커밋 = 11,000 → Lag = 1,000
+
+총 Consumer Lag = 500 + 0 + 1,000 = 1,500
+</code></pre>
+<h3 id="2-consumer-lagi-jungyohan-iyu">2. Consumer Lag이 중요한 이유</h3>
+<ul>
+<li><strong>실시간 처리 SLA</strong>: Lag이 크면 데이터 신선도(Data Freshness)가 낮아짐</li>
+<li><strong>장애 예측</strong>: Lag 급증 → 처리 병목 → 잠재적 OOM/장애 전조</li>
+<li><strong>스케일링 신호</strong>: 지속적인 Lag 증가 = Consumer 추가 또는 파이프라인 최적화 필요</li>
+</ul>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Consumer Lag는 "편의점 계산대 앞 대기 줄 길이"다. 줄이 0이면 실시간 처리, 줄이 100명이면 주문이 100개 밀려 있다는 의미다. 줄이 계속 길어지면 계산원(Consumer)을 더 배치해야 한다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="1-lag-gyesan-mic-moniteoring-bangbeob">1. Lag 계산 및 모니터링 방법</h3>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash"># Kafka CLI로 Consumer Lag 조회
+kafka-consumer-groups.sh \
+    --bootstrap-server kafka:9092 \
+    --group my-consumer-group \
+    --describe
+
+# 출력 예시:
+# TOPIC          PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG
+# orders         0          9500            10000           500
+# orders         1          8000            8000            0
+# orders         2          11000           12000           1000
+</code></pre>
+<h3 id="2-juyo-moniteoring-dogu">2. 주요 모니터링 도구</h3>
+<table><thead><tr><th style="text-align: left">도구</th><th style="text-align: left">특징</th><th style="text-align: left">권장 사용 환경</th></tr></thead><tbody>
+<tr><td style="text-align: left">Kafka CLI (<code>kafka-consumer-groups.sh</code>)</td><td style="text-align: left">기본 제공, 실시간 조회</td><td style="text-align: left">개발/디버깅</td></tr>
+<tr><td style="text-align: left">Burrow (LinkedIn 오픈소스)</td><td style="text-align: left">트렌드 분석, 알림, 슬라이딩 윈도우 판단</td><td style="text-align: left">프로덕션 모니터링</td></tr>
+<tr><td style="text-align: left">JMX Metrics</td><td style="text-align: left"><code>kafka.consumer.fetch-manager-metrics</code></td><td style="text-align: left">Prometheus/Grafana 통합</td></tr>
+<tr><td style="text-align: left">Kafka UI / Confluent Control Center</td><td style="text-align: left">시각화 대시보드</td><td style="text-align: left">운영 가시성</td></tr>
+<tr><td style="text-align: left">AWS MSK Console (MSK 사용 시)</td><td style="text-align: left">관리형 클러스터 내장</td><td style="text-align: left">AWS 환경</td></tr>
+</tbody></table>
+<h3 id="3-burrowyi-lag-pandan-rojig">3. Burrow의 Lag 판단 로직</h3>
+<p>Burrow (LinkedIn, 오픈소스)는 단순 Lag 숫자가 아닌 <strong>Consumer의 처리 진행 여부</strong>로 판단한다.</p>
+<pre><code>판단 기준:
+  OK:       Consumer가 계속 진행 중 (Lag이 있어도 줄어들고 있으면 OK)
+  WARNING:  Consumer가 느려지고 있음 (Lag이 천천히 증가)
+  ERROR:    Consumer가 멈춤 (커밋 오프셋이 변하지 않음)
+  STALLED:  Consumer가 커밋을 못함 (처리 중이지만 커밋 미완료)
+  STOPPED:  Consumer 그룹 전체 정지
+</code></pre>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Burrow는 "대기 줄 분석가"다. 단순히 "줄이 500명이다"가 아니라 "줄이 줄어드는 중인가, 늘어나는 중인가, 멈췄는가"를 판단한다. 줄이 500명이어도 줄어드는 중이면 문제없고, 줄이 10명이어도 계속 늘어나면 위험 신호다.</p>
+</blockquote>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="1-consumer-lag-geubjeung-weoninbyeol-haegyeolcaeg">1. Consumer Lag 급증 원인별 해결책</h3>
+<table><thead><tr><th style="text-align: left">원인</th><th style="text-align: left">증상</th><th style="text-align: left">해결책</th></tr></thead><tbody>
+<tr><td style="text-align: left">Consumer 처리 속도 부족</td><td style="text-align: left">Lag 지속 증가, Consumer CPU 높음</td><td style="text-align: left">Consumer 수 증가 (파티션 수 이내)</td></tr>
+<tr><td style="text-align: left">Consumer 로직 병목</td><td style="text-align: left">특정 처리 단계에서 느림</td><td style="text-align: left">처리 로직 최적화, I/O 비동기화</td></tr>
+<tr><td style="text-align: left">프로듀서 버스트 트래픽</td><td style="text-align: left">일시적 Lag 급등 후 회복</td><td style="text-align: left">버퍼 크기 조정, 처리 용량 예비 확보</td></tr>
+<tr><td style="text-align: left">Consumer 장애</td><td style="text-align: left">Lag 무한 증가, Consumer 0개</td><td style="text-align: left">장애 복구, 자동 재시작 설정</td></tr>
+<tr><td style="text-align: left">파티션 수 &lt; Consumer 수</td><td style="text-align: left">일부 Consumer 유휴</td><td style="text-align: left">파티션 수 증가</td></tr>
+</tbody></table>
+<h3 id="2-kafka-lag-giban-otoseukeilring">2. Kafka Lag 기반 오토스케일링</h3>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml"># KEDA (Kubernetes Event-Driven Autoscaling) 예시
+apiVersion: keda.sh&#x2F;v1alpha1
+kind: ScaledObject
+spec:
+  triggers:
+  - type: kafka
+    metadata:
+      bootstrapServers: kafka:9092
+      consumerGroup: my-consumer-group
+      topic: orders
+      lagThreshold: &quot;100&quot;   # Lag 100 초과 시 스케일아웃
+      offsetResetPolicy: latest
+</code></pre>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Kafka Lag 기반 오토스케일링은 "주문 대기열에 따라 배달원을 자동으로 더 투입하는 시스템"이다. 주문이 100개 밀리면(Lag &gt; 100) 배달원(Consumer Pod)을 자동으로 추가하고, 다 처리되면 줄인다.</p>
+</blockquote>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="1-consumer-lag-moniteoring-akitegceo">1. Consumer Lag 모니터링 아키텍처</h3>
+<pre><code>Kafka Cluster
+    ↓ JMX Metrics 수집
+JMX Exporter (Prometheus)
+    ↓
+Prometheus → Grafana 대시보드
+    ↓ Lag &gt; 임계값
+AlertManager → PagerDuty &#x2F; Slack 알림
+    ↓ Lag 지속 증가
+KEDA &#x2F; Custom HPA → Consumer Pod 스케일아웃
+</code></pre>
+<h3 id="2-alrim-imgyegabs-seoljeong-gaideu">2. 알림 임계값 설정 가이드</h3>
+<table><thead><tr><th style="text-align: left">Lag 수준</th><th style="text-align: left">의미</th><th style="text-align: left">권장 대응</th></tr></thead><tbody>
+<tr><td style="text-align: left">Lag &lt; 허용_지연 × EPS</td><td style="text-align: left">정상</td><td style="text-align: left">모니터링 유지</td></tr>
+<tr><td style="text-align: left">Lag 증가 추세 지속 5분+</td><td style="text-align: left">경고</td><td style="text-align: left">원인 분석 시작</td></tr>
+<tr><td style="text-align: left">Lag &gt; 최대_허용_지연 × EPS</td><td style="text-align: left">알림</td><td style="text-align: left">즉시 대응</td></tr>
+<tr><td style="text-align: left">Consumer 진행 멈춤</td><td style="text-align: left">긴급</td><td style="text-align: left">PagerDuty 알림</td></tr>
+</tbody></table>
+<p>(EPS = Events Per Second = 초당 이벤트 수)</p>
+<h3 id="3-cekeuriseuteu">3. 체크리스트</h3>
+<ul>
+<li><input disabled="" type="checkbox"/>
+Prometheus + JMX Exporter로 Consumer Lag 지표 수집</li>
+<li><input disabled="" type="checkbox"/>
+Grafana 대시보드에 파티션별 Lag 시각화</li>
+<li><input disabled="" type="checkbox"/>
+Lag 증가 추세에 대한 알림 규칙 설정 (단순 임계값이 아닌 트렌드)</li>
+<li><input disabled="" type="checkbox"/>
+Burrow 또는 유사 도구로 Consumer 상태 분류 모니터링</li>
+<li><input disabled="" type="checkbox"/>
+KEDA/HPA 기반 오토스케일링 설정</li>
+</ul>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Consumer Lag 모니터링은 "혈압 측정"과 같다. 단일 측정값보다 시간 추이가 중요하다. 혈압이 높아도 안정적이면 문제없지만, 계속 오르는 추세면 의사에게 가야 한다.</p>
+</blockquote>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="1-gidaehyogwa">1. 기대효과</h3>
+<table><thead><tr><th style="text-align: left">효과</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">장애 조기 예방</td><td style="text-align: left">Lag 증가 추세로 병목 사전 감지</td></tr>
+<tr><td style="text-align: left">SLA 보장</td><td style="text-align: left">데이터 신선도(Data Freshness) 모니터링</td></tr>
+<tr><td style="text-align: left">비용 최적화</td><td style="text-align: left">Lag 기반 오토스케일링으로 불필요한 과잉 Consumer 방지</td></tr>
+</tbody></table>
+<h3 id="2-gyeolron">2. 결론</h3>
+<p>Consumer Lag는 Kafka 기반 스트리밍 파이프라인의 <strong>가장 중요한 단일 건강 지표</strong>다. 기술사 답안에서는 Lag의 수식 정의(Latest - Committed Offset), 모니터링 도구(Burrow, JMX), 원인별 해결 전략, 오토스케일링과의 연계를 체계적으로 서술하면 된다.</p>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Consumer Lag는 공장 생산라인의 "미완성 재공품(WIP) 수량"이다. WIP가 0이면 완벽한 흐름, WIP가 늘어나면 어딘가 병목이 있다는 신호다. 공장 관리자(모니터링 시스템)는 WIP 추이를 실시간으로 보고 라인을 조정한다.</p>
+</blockquote>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">관계</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">Kafka 파티셔닝</td><td style="text-align: left">전제 구조</td><td style="text-align: left">파티션별 Lag을 개별 추적</td></tr>
+<tr><td style="text-align: left">Consumer Group</td><td style="text-align: left">측정 단위</td><td style="text-align: left">Lag는 Consumer Group 기준 측정</td></tr>
+<tr><td style="text-align: left">Burrow</td><td style="text-align: left">모니터링 도구</td><td style="text-align: left">LinkedIn의 Lag 상태 분류 도구</td></tr>
+<tr><td style="text-align: left">KEDA</td><td style="text-align: left">오토스케일링</td><td style="text-align: left">Lag 기반 K8s Consumer 자동 확장</td></tr>
+<tr><td style="text-align: left">Kafka MirrorMaker 2</td><td style="text-align: left">연관 운영</td><td style="text-align: left">복제 클러스터 간 Lag 차이 모니터링</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[Kafka 프로듀서 (Producer) — 토픽 파티션에 메시지 비동기 발행]
+    │
+    ▼
+[오프셋 (Offset) — 파티션 내 메시지 위치, LEO vs 커밋 오프셋 구분]
+    │
+    ▼
+[Consumer Lag — LEO - Current Offset, 소비 지연 누적량 정량 측정]
+    │
+    ▼
+[컨슈머 그룹 모니터링 — Burrow·kafka-consumer-groups로 실시간 Lag 추적]
+    │
+    ▼
+[자동 스케일링 (KEDA) — Lag 임계값 기반 컨슈머 인스턴스 수평 확장·축소]
+</code></pre>
+<p>이 흐름은 Kafka 메시지 발행에서 오프셋 개념으로 Consumer Lag이 정의되고, 모니터링 도구로 가시화된 뒤 KEDA 기반 자동 스케일링으로 Lag을 능동적으로 제어하는 스트리밍 파이프라인 운영의 핵심 계보를 보여준다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<p>카카오톡 메시지를 받았지만 아직 읽지 않은 것처럼, Consumer Lag는 "Kafka에 메시지가 왔는데 아직 처리 못한 개수"예요. 읽지 않은 메시지가 0개면 실시간 처리, 1000개면 1000개 뒤처진 것이에요. 메시지가 계속 쌓이면(Lag 증가) 더 많은 처리자(Consumer)를 투입하거나 읽는 속도를 높여야 해요!</p>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

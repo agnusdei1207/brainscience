@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>433. 해시 조인 (Hash Join) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote database
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="433-haesi-join-hash-join-buildwa-probe">433. 해시 조인 (Hash Join) - Build와 Probe</h1>
+<blockquote>
+<p>⚠️ 이 문서는 인덱스도 없고 데이터도 엄청나게 많은 두 테이블을 조인할 때, 디스크를 미친 듯이 긁어대는 NL 조인(431번)과 정렬하느라 메모리를 다 써버리는 소트 머지 조인(432번)의 단점을 모두 씹어먹고 **대용량 데이터 조인의 끝판왕으로 군림하는 '해시 조인'**을 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 두 테이블 중 작은 테이블을 메모리로 가져와서 초고속 해시 맵(Hash Map)을 만들고, 큰 테이블을 읽으면서 그 해시 맵에 하나씩 던져서 짝을 맞추는 방식이다.</li>
+<li><strong>가치</strong>: 정렬(Sort)할 필요가 없고, 디스크 랜덤 액세스(Random I/O)도 전혀 발생하지 않기 때문에 대용량 데이터 웨어하우스(OLAP) 환경에서 압도적인 속도를 낸다.</li>
+<li><strong>한계</strong>: 해시 함수의 특성상 값이 정확히 일치하는 <strong>동등 조인(Equi Join, <code>=</code>)에서만 사용 가능</strong>하며, 크기가 작은 쪽을 'Build Input'으로 잡아야 메모리 초과(OOM)를 막을 수 있다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-gaeyo-1eog-geonyi-miting-context-necessity">Ⅰ. 개요: 1억 건의 미팅 (Context &amp; Necessity)</h3>
+<p>"10만 건의 <code>부서</code> 테이블과 1억 건의 <code>직원</code> 테이블을 조인해 줘!"
+두 테이블 모두 부서코드에 인덱스가 없다.</p>
+<ul>
+<li><strong>NL 조인</strong>: 10만 번 $\times$ 1억 번 = 10조 번 디스크를 읽어야 한다. (서버 터짐)</li>
+<li><strong>소트 머지 조인</strong>: 1억 건의 직원을 부서코드로 '가나다순' 정렬해야 한다. (메모리 터짐)</li>
+</ul>
+<p>이때 구원투수로 등장하는 것이 **해시 조인(Hash Join)**이다.
+옵티마이저는 짱구를 굴린다. "작은 쪽인 <code>부서</code> 테이블을 싹 다 메모리에 올려서 **해시 자판기(Hash Map)**로 만들어버리자! 그리고 1억 명의 <code>직원</code>들을 한 명씩 불러서 이 자판기에 동전(부서코드)을 넣게 하면, 1초 만에 자기 부서를 찾아갈 수 있잖아?"</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 해시 조인은 **'우편물 분류 자동화 기계'**와 같습니다. 기계 안에 지역별(해시 함수) 칸막이를 미리 쫙 만들어두고(Build), 1억 통의 편지를 컨베이어 벨트에 태워서 휙휙 던지면(Probe) 0.01초 만에 자기 칸으로 쏙쏙 떨어지는 마법의 속도입니다.</p>
+</blockquote>
+<hr />
+<h3 id="ii-haesi-joinyi-2dangye-mekeonijeum">Ⅱ. 해시 조인의 2단계 메커니즘 ★</h3>
+<p>면접에서 "해시 조인의 원리를 설명해 보세요"라고 할 때 반드시 나와야 하는 두 단어가 있다.</p>
+<h4 id="1-build-phase-bildeu-dangye-jageun-teibeulro-japangi-mandeulgi">1. Build Phase (빌드 단계) - 작은 테이블로 자판기 만들기</h4>
+<ul>
+<li>조인할 두 테이블 중 **작은 테이블(Build Input)**을 고른다.</li>
+<li>이 테이블의 데이터를 처음부터 끝까지 한 번 싹 읽으면서(Full Scan), 조인 컬럼의 값을 해시 함수에 넣어 메모리(Hash Area)에 <strong>해시 맵</strong>을 생성한다.</li>
+</ul>
+<h4 id="2-probe-phase-peurobeu-dangye-keun-teibeulro-japangi-jjilreobogi">2. Probe Phase (프로브 단계) - 큰 테이블로 자판기 찔러보기</h4>
+<ul>
+<li>이제 **큰 테이블(Probe Input)**을 처음부터 끝까지 한 번 싹 읽는다(Full Scan).</li>
+<li>여기서 나온 조인 컬럼의 값을 똑같은 해시 함수에 넣는다.</li>
+<li>메모리에 만들어둔 자판기(해시 맵)를 쿡 찌르면(Probe), 짝꿍이 있는지 없는지 0.0001초 만에 튀어나온다.</li>
+</ul>
+<hr />
+<h3 id="iii-cimyeongjeog-danjeomgwa-tyuning-pointeu">Ⅲ. 치명적 단점과 튜닝 포인트</h3>
+<p>해시 조인도 약점은 있다.</p>
+<h4 id="1-memori-pogbal-hash-area-bujog">1. 메모리 폭발 (Hash Area 부족)</h4>
+<ul>
+<li>자판기(Build)를 만들 때, 작은 테이블이라고 골랐는데도 메모리 공간(Hash Area)보다 크면 어떻게 될까?</li>
+<li>메모리에 다 못 들어가서 디스크(Temp 공간)에 임시로 썼다 지웠다 하는 <strong>'Grace Hash Join'</strong> 모드로 강제 전환되며 속도가 박살 난다.</li>
+<li><strong>튜닝 힌트</strong>: <code>Build Input</code>을 최대한 쥐어짜서 작게 만들어야 한다.</li>
+</ul>
+<h4 id="2-ojig-jogeonman-ganeung-bidongdeung-join-bulga">2. 오직 "=" 조건만 가능 (비동등 조인 불가)</h4>
+<ul>
+<li>해시 함수는 <code>3</code>과 <code>3</code>이 똑같다는 건 1초 만에 알지만, <code>3</code>이 <code>5</code>보다 작다는 사실은 모른다. (425번 문서 참조)</li>
+<li>그래서 조인 조건이 <code>A.date &gt;= B.date</code> 처럼 부등호가 들어가면 해시 조인은 아예 작동을 거부하고 소트 머지 조인(432번 문서)으로 도망가 버린다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│           해시 조인 (Hash Join: Build &amp; Probe) 시각화                 │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│ [ 1️⃣ Build 단계: 작은 테이블로 메모리에 해시 맵 만들기 ]                  │
+│                                                              │
+│  [🏢 부서(10건)] ──(Hash 함수)──▶  🗄️ 메모리 해시 맵 (Hash Area)     │
+│                                   Hash(D1) -&gt; 영업팀           │
+│                                   Hash(D2) -&gt; 개발팀           │
+│                                                              │
+│ [ 2️⃣ Probe 단계: 큰 테이블을 읽으면서 맵 찔러보기 ]                     │
+│                                                              │
+│  [👨‍💼 직원(1억건)] ──(Hash 함수)──▶  🗄️ 메모리 해시 맵 찔러보기!        │
+│   직원A(D1)     ──(Hash 함수)──▶ &quot;영업팀이네!&quot; (0.01초 만에 매칭 완료) │
+│   직원B(D2)     ──(Hash 함수)──▶ &quot;개발팀이네!&quot; (0.01초 만에 매칭 완료) │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h3 id="iv-gyeolron">Ⅳ. 결론</h3>
+<p>"디스크 시대의 한계를 메모리의 힘으로 박살 내다."
+해시 조인은 CPU가 메모리에서 해시 테이블을 뒤지는 속도가, 디스크 바늘이 인덱스를 찾아 널뛰는 속도(랜덤 I/O)보다 수천 배 빠르다는 물리적 진리에 기반한 알고리즘이다. 그래서 하루 1번, 수억 건의 데이터를 통째로 조인해서 집계해야 하는 데이터 웨어하우스(DW) 환경에서는 해시 조인이 절대적인 권력을 쥔다. 백엔드 개발자는 쿼리를 짤 때 <code>A = B</code>라는 동등 조건이 있는지, 그리고 두 테이블 중 한쪽이 메모리에 쏙 들어갈 만큼 작은지를 파악하여 옵티마이저가 해시 조인을 선택하도록 판을 깔아주어야 한다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>관련 연산</strong>: 관계 대수 JOIN ($\bowtie$, 409번 문서)</li>
+<li><strong>대안 방식</strong>: Nested Loop Join (431번), Sort Merge Join (432번)</li>
+<li><strong>핵심 키워드</strong>: Build Input (작은 쪽), Probe Input (큰 쪽), Equi Join (동등 조인)</li>
+<li><strong>튜닝 힌트 (Oracle)</strong>: <code>/*+ USE_HASH(A B) SWAP_JOIN_INPUTS(B) */</code></li>
+</ul>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>해시 조인은 놀이공원 '분실물 센터'와 같아요.</li>
+<li>Build 단계는 분실물 센터 직원이 주워온 우산, 지갑(작은 테이블)을 'ㄱ,ㄴ,ㄷ' 서랍(해시 맵)에 예쁘게 싹 정리해 두는 거예요.</li>
+<li>Probe 단계는 수만 명의 손님(큰 테이블)이 와서 "저 우산 잃어버렸어요!"라고 할 때, 직원이 'ㅇ' 서랍만 쏙 열어서 1초 만에 찾아주는(찔러보기) 방식이랍니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

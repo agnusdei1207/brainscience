@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>320. Time Exceeded (TTL 만료, Traceroute 원리) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: ICMP Type 11 (Time Exceeded) 메시지는 IP 패킷의 생명줄인 <strong>TTL(Time To Live) 값이 라우터를 지날 때마다 1씩 깎이다가 마침내 0이 되는 순간, 해당 패킷을 쏴 죽인(Drop) 라우터가 송신자에게 날려주는 사망 통보서</strong>다.</li>
+<li><strong>루프 방지의 증거</strong>: 이 에러 메시지가 모니터에 계속 뜬다는 것은, 내 패킷이 길을 잃고 두 라우터 사이를 탁구공처럼 핑퐁 치며(라우팅 루프) 평생 맴돌다가 늙어 죽었음을 의미하는 확실한 네트워크 장애 증거다.</li>
+<li><strong>Traceroute의 해킹(?) 원리</strong>: 이 '죽을 때 유언(에러 메시지)을 남기며 자기 IP를 노출하는 성질'을 교묘하게 역이용하여, 일부러 TTL을 1, 2, 3으로 조작해 쏴서 <strong>경로상에 있는 모든 라우터를 차례대로 자폭시켜 라우터들의 IP 지도를 빼내는 기술이 바로 Traceroute(경로 추적) 명령어</strong>다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: IPv4 패킷 헤더의 TTL 필드 값이 0이 되어 패킷이 폐기되었을 때, 패킷을 폐기한 라우터가 출발지(송신자)로 보내는 ICMP 오류 보고 메시지 (Type 11, Code 0).</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 만약 A 라우터는 B로 던지고, B 라우터는 A로 던지게끔 설정이 꼬였다고(Routing Loop) 치자. 패킷은 빛의 속도로 A와 B 사이를 맴돈다. 다행히 TTL 제도가 있어서 64바퀴를 돌면 패킷은 삭제된다. 그런데 만약 아무도 "패킷 죽었음"이라고 송신자에게 안 알려주면? 송신자는 패킷이 정상적으로 가고 있는 줄 착각하거나, 서버가 느리다고 오해할 것이다. "너의 패킷이 수명을 다해 객사했다"고 명확히 알려주어야 관리자가 라우팅 꼬임을 인지하고 뜯어고칠 수 있다.</p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: 배달 기사님 오토바이에 **"연료(TTL)"**가 10리터 들어있습니다. 톨게이트(라우터)를 하나 지날 때마다 연료가 1리터씩 닳습니다. 연료가 0이 되어 오토바이가 고속도로 한가운데서 멈춰 서면, 그 구역 관할 톨게이트 직원이 본사에 전화를 걸어 **"당신네 기사님 여기서 기름 떨어져서(Time Exceeded) 멈췄습니다!"**라고 신고해 주는 서비스입니다.</p>
+</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유:</strong> Time Exceeded는 첩보 영화에서 적진에 침투한 스파이(패킷)가 제한 시간(TTL) 내에 임무를 완수하지 못해 자폭 장치가 터지는 순간, 본부에 마지막으로 송출하는 <strong>"나 여기서 죽는다(나를 죽인 건 이 동네 라우터다)"라는 최후의 단말마 통신</strong>입니다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-traceroute-tracert-yi-dongjag-mekeonijeum-deep-dive">Ⅱ. Traceroute(Tracert)의 동작 메커니즘 (Deep Dive)</h2>
+<p>이 ICMP Type 11 에러 메시지는 네트워크 엔지니어들이 장애가 어느 구간에서 터졌는지 색출해 내는 궁극의 진단 무기인 <strong><code>traceroute</code> (윈도우에서는 <code>tracert</code>)</strong> 명령어의 핵심 구동 원리로 승화되었다.</p>
+<p>목적지가 미국 구글 서버(<code>8.8.8.8</code>)라고 가정하고, 그 사이의 모든 점퍼(라우터) IP를 캐내는 과정이다.</p>
+<h3 id="1-ceos-beonjjae-jeompeu-ttl-1">1. 첫 번째 점프 (TTL = 1)</h3>
+<ul>
+<li>내 PC가 핑(UDP나 ICMP Echo Request) 패킷을 만들 때, 헤더의 <strong>TTL 값을 강제로 <code>1</code>로 조작</strong>해서 쏜다.</li>
+<li>패킷이 내 방 공유기(첫 번째 라우터)에 도달한다. 라우터는 룰에 따라 TTL을 1 깎아서 0으로 만든다.</li>
+<li>"어? TTL 0이네? 죽여!" 공유기는 패킷을 쓰레기통에 넣고, 내 PC로 <code>ICMP Type 11 (Time Exceeded)</code> 에러를 날린다.</li>
+<li>내 PC는 에러 메시지가 날아온 출발지 주소를 읽는다. <strong>"오케이, 첫 번째 길목 라우터 IP는 <code>192.168.0.1</code> 획득!"</strong></li>
+</ul>
+<h3 id="2-du-beonjjae-jeompeu-ttl-2">2. 두 번째 점프 (TTL = 2)</h3>
+<ul>
+<li>내 PC가 이번엔 <strong>TTL을 <code>2</code>로 조작</strong>해서 다시 쏜다.</li>
+<li>첫 번째 공유기를 무사히 통과한다 (TTL 2 -&gt; 1).</li>
+<li>두 번째 톨게이트인 KT 전화국 라우터에 도착한다. 라우터가 TTL을 깎으니 0이 된다.</li>
+<li>KT 라우터가 패킷을 죽이고 에러 메시지를 쏜다.</li>
+<li>내 PC: <strong>"오케이, 두 번째 라우터 IP는 <code>211.200.1.5</code> 획득!"</strong></li>
+</ul>
+<h3 id="3-mogjeogji-dodalggaji-muhan-banbog">3. 목적지 도달까지 무한 반복</h3>
+<ul>
+<li>이 짓을 TTL 3, 4, 5... 1씩 늘려가며 목적지(<code>8.8.8.8</code>)에서 "나 살아있어(Type 0 Echo Reply)"라는 찐 응답이 올 때까지 계속 쏜다.</li>
+<li>결과적으로 목적지까지 가는 길목에 있는 15개의 라우터 IP 리스트가 내 화면에 쭉 텍스트로 찍히게 된다.</li>
+<li>만약 8번째 라우터 IP까지 잘 찍히다가 9번째부터 <code>* * * Request timed out</code>이 뜬다면? <strong>8번째 라우터와 9번째 라우터 사이의 해저 광케이블이 끊어졌거나, 9번째 라우터가 죽어버렸다는 완벽한 심증</strong>을 잡아낼 수 있다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text"> ┌─────────────────────────────────────────────────────────────┐
+ │                Tracert (Traceroute) 실행 원리 시각화           │
+ ├─────────────────────────────────────────────────────────────┤
+ │                                                             │
+ │   C:\&gt; tracert 8.8.8.8                                      │
+ │                                                             │
+ │   1    &lt;1 ms    &lt;1 ms    &lt;1 ms  192.168.0.1  ◀─ (TTL=1 폭사) │
+ │   2     2 ms     1 ms     2 ms  211.100.1.1  ◀─ (TTL=2 폭사) │
+ │   3     5 ms     5 ms     4 ms  112.22.33.4  ◀─ (TTL=3 폭사) │
+ │   4     *        *        *     요청 시간 초과. ◀─ (여기서 망 끊김!!)│
+ │                                                             │
+ │   ▶ &quot;3번 라우터(112.22.33.4)까지는 살아서 갔는데, 그다음 놈이         │
+ │      대답이 없네! 저기 3번 구간 가서 선로 점검해라!!&quot;라고 진단 가능.    │
+ └─────────────────────────────────────────────────────────────┘
+</code></pre>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유:</strong> Traceroute는 첩보 영화에서 **"요원에게 일부러 10초짜리, 20초짜리 산소통(TTL)을 매어 적진에 침투시키는 잔인한 작전"**입니다. 요원이 산소가 떨어져 쓰러진 위치에서 보내는 구조 신호(Type 11)를 바탕으로, 지휘관은 안갯속 적진의 지도를 한 칸 한 칸 밝혀냅니다.</p>
+</blockquote>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

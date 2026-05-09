@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>18. 허용적 휴리스틱 (Admissible Heuristic) - A*가 최적해를 보장하기 위한 조건, h(n)이 실제 목표까지의 비용을 과대평가하지 않아야 함 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>May 24, 2024</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="18-heoyongjeog-hyuriseutig-admissible-heuristic">18. 허용적 휴리스틱 (Admissible Heuristic)</h1>
+<h4 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h4>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: A* 탐색 알고리즘에서 사용되는 평가 함수 (h(n))이, 현재 노드에서 목표 지점까지의 '실제 최소 비용'인 (h^*(n))을 결코 과대평가(Overestimation)하지 않는 수학적 성질이다.</li>
+<li><strong>가치</strong>: 이 조건이 지켜질 때만 A* 알고리즘이 최단 경로(Global Optimum)를 100% 보장한다는 강력한 수학적 무결성을 시스템에 부여한다.</li>
+<li><strong>융합</strong>: 복잡한 상태 공간 모델링 시 맨해튼 거리, 유클리디안 거리 등은 언제나 장애물이 없는 이상적 상황을 가정하므로 자연스럽게 허용적 조건을 만족하여 탐색 뼈대로 사용된다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h3>
+<p>A* (A-Star) 알고리즘은 (f(n) = g(n) + h(n))이라는 합산 공식을 통해 노드를 탐색한다. 여기서 (h(n))은 목표까지 남은 예상 거리를 뜻하는데, 만약 이 예상치가 너무 부풀려져 있으면 알고리즘은 그 경로를 포기하고 더 돌아가는 잘못된 경로를 선택하는 치명적 오류를 범한다. 따라서 A*가 완벽한 최적해를 도출하기 위해서는 예상 비용 산정 방식에 강력한 '제어선'이 필요하며, 이것이 바로 허용적 휴리스틱(Admissible Heuristic)의 등장 배경이다.</p>
+<p>이 도식은 휴리스틱 함수가 과대평가되었을 때 시스템이 어떻게 진짜 지름길을 누락(Pruning Error)하는지 그 병목과 한계를 보여준다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[과대평가(Overestimation)에 의한 최적해 누락 구조]
+
+               (Start) S 
+             &#x2F;          \
+  실제비용:10 &#x2F;            \ 실제비용:100
+           &#x2F;              \
+         (A)              (B) 
+          |                |
+  실제비용:5|                | 실제비용:5
+          |                |
+         (Goal)          (Goal)
+
+[만약 h(A) = 150 으로 과대평가 했다면?]
+ - f(A) = g(A) + h(A) = 10 + 150 = 160
+ - f(B) = g(B) + h(B) = 100 + 5 = 105
+
+결과: S는 f값이 더 작아보이는 B 방향(총 105 지연)으로 잘못된 탐색을 확정!
+(실제 최소비용은 S-&gt;A-&gt;Goal인 15임에도 불구하고 우회함)
+</code></pre>
+<p>이 구조도의 핵심은 (h(A))가 실제 비용인 5보다 훨씬 큰 150으로 잡히는 순간, 훌륭한 노드인 A의 전체 평가액 (f(A))가 오염되어 우선순위 대기열 뒤로 밀려버린다는 점이다. 결국 시스템은 가짜 최적해인 B를 먼저 도달하게 된다. 실무에서는 이처럼 휴리스틱이 실제를 초과하는 순간 탐색 로직의 무결성이 붕괴된다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 회사까지 가는 지름길을 5분 거리인데 50분이 걸릴 거라고 과도하게 겁먹고 예상해버리면, 그 길을 아예 포기하고 30분이나 걸리는 먼 길로 돌아가는 실수를 하는 것과 같습니다.</p>
+</blockquote>
+<hr />
+<h3 id="ii-akitegceo-mic-haegsim-weonri-deep-dive">Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)</h3>
+<p>허용적 휴리스틱이 성립하기 위한 대원칙은 다음과 같은 부등식으로 정의된다.</p>
+<p><strong>(0 \le h(n) \le h^*(n))</strong></p>
+<table><thead><tr><th style="text-align: left">구성 요소</th><th style="text-align: left">의미</th><th style="text-align: left">역할 및 조건</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>(n)</strong></td><td style="text-align: left">현재 상태 노드</td><td style="text-align: left">평가의 대상이 되는 트리 상의 특정 지점</td></tr>
+<tr><td style="text-align: left"><strong>(h(n))</strong></td><td style="text-align: left">휴리스틱 예상 함수</td><td style="text-align: left">현재 시스템이 설계한 목표까지의 남은 '예측' 비용</td></tr>
+<tr><td style="text-align: left"><strong>(h^*(n))</strong></td><td style="text-align: left">실제 최적 비용</td><td style="text-align: left">n에서 목표까지 도달하는 실제 존재할 수 있는 '가장 적은' 비용 (신(God)만 아는 값)</td></tr>
+</tbody></table>
+<p>위 조건이 유지될 때, A*가 최적해를 찾는 증명 과정 논리는 상태 전이 트리상에서 완벽하게 보장된다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[최적해 보장 증명 메커니즘 흐름도]
+
+[전제 조건]
+- G_opt : 진짜 최적의 목표 노드 (실제비용 f*)
+- G_sub : 가짜 목표 노드 (더 비용이 큼. g(G_sub) &gt; f*)
+- N : G_opt로 가는 길목에 있는 현재 노드
+
+[검증 단계]
+  ① G_sub 평가치 산출 : h(G_sub) = 0 이므로 f(G_sub) = g(G_sub) &gt; f*
+           │
+           ▼
+  ② 노드 N 평가치 산출 : f(N) = g(N) + h(N)
+           │
+           ▼
+  ③ 허용적 성질 대입 : h(N) &lt;= h*(N) 이므로,
+    f(N) = g(N) + h(N) &lt;= g(N) + h*(N) = f*
+           │
+           ▼
+  ④ 최종 비교 판단 : f(N) &lt;= f* &lt; f(G_sub)
+    =&gt; 결과: 알고리즘은 언제나 가짜 목표 G_sub를 선택하기 전에, 
+       반드시 노드 N을 먼저 확장(Expand)하게 된다. (최적해 우회 원천 차단)
+</code></pre>
+<p>이 논리 흐름의 핵심은 가짜 목표 노드(G_sub)가 큐에서 추출되기 전에, 무조건 진짜 경로에 있는 노드(N)가 더 작은 평가값을 가져 우선순위에서 앞선다는 점이다. 이는 허용적 휴리스틱이 A* 내부의 정렬 로직을 지배하는 브레이크 장치임을 수학적으로 확정해 준다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 경매에서 어떤 물건의 "최소 낙찰 가능가(h)"를 실제 가치보다 무조건 보수적으로(낮게) 잡아두어야만, 진짜 좋은 물건이 비싸 보인다는 이유로 목록에서 누락되는 대참사를 막을 수 있는 원리입니다.</p>
+</blockquote>
+<hr />
+<h3 id="iii-yunghab-bigyo-mic-dagagdo-bunseog-comparison-synergy">Ⅲ. 융합 비교 및 다각도 분석 (Comparison &amp; Synergy)</h3>
+<p>허용적(Admissible) 성질은 완결성을 보장하지만, 이보다 더 강력하고 엄격한 조건인 일관적(Consistent, 또는 Monotonic) 휴리스틱과 비교하면 구조적 차이가 명확하다.</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">허용적 휴리스틱 (Admissible)</th><th style="text-align: left">일관적 휴리스틱 (Consistent)</th><th style="text-align: left">실무적 영향 차이</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정의 수식</strong></td><td style="text-align: left">(h(n) \le h^*(n))</td><td style="text-align: left">(h(n) \le c(n, a, n') + h(n'))</td><td style="text-align: left">일관성이 훨씬 더 까다로운 조건</td></tr>
+<tr><td style="text-align: left"><strong>적용 자료구조</strong></td><td style="text-align: left">트리 탐색 (Tree Search)</td><td style="text-align: left">그래프 탐색 (Graph Search)</td><td style="text-align: left">중복 방문이 많은 그래프망에서의 성능</td></tr>
+<tr><td style="text-align: left"><strong>f(n) 값의 변화</strong></td><td style="text-align: left">감소할 수도 있음 (들쭉날쭉)</td><td style="text-align: left">항상 비내림차순 (단조 증가)</td><td style="text-align: left">일관성이 만족되면 재방문(Closed List 복귀)이 발생하지 않음</td></tr>
+</tbody></table>
+<p>이 매트릭스에서 가장 중요한 트레이드오프는 성능이다. 허용적 성질만 갖춘 휴리스틱을 노드 간 재방문이 잦은 그물망(Graph) 지도에서 사용할 경우, 이미 방문했던 노드를 더 적은 비용으로 다시 발견해 Closed List에서 Open List로 끄집어내는 오버헤드가 발생한다. 반면 일관성(Consistency)까지 만족하는 휴리스틱을 쓰면 첫 방문이 무조건 최단 경로임이 보장되어 지연 시간 변동성을 없앨 수 있다. 실무의 직선거리(유클리디안)나 맨해튼 거리 공식은 대개 이 두 가지 조건을 동시에 만족한다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 허용성이 단순히 "목표까지 절대 거짓말을 부풀려 치지 않는 것"이라면, 일관성은 "한 걸음 걸을 때마다 목표까지 줄어드는 거리가 내가 걸은 거리보다 작아서 수학적으로 완벽한 모순이 없는 상태"를 말합니다.</p>
+</blockquote>
+<hr />
+<h3 id="iv-silmu-jeogyong-mic-gisulsajeog-pandan-strategy-decision">Ⅳ. 실무 적용 및 기술사적 판단 (Strategy &amp; Decision)</h3>
+<p>실무 게임 엔진이나 자율 배송 로봇 설계 시, 환경에 맞는 올바른 (h(n)) 수식을 설정하는 것이 알고리즘 최적화의 전부라고 해도 과언이 아니다. 장애물이 아예 없다고 가정한 '직선거리'가 가장 훌륭한 허용적 휴리스틱의 예이다.</p>
+<p><strong>도입 및 의사결정 트리 (휴리스틱 함수 설계)</strong></p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[맵 구조에 따른 휴리스틱 함수 결정]
+[이동 형태: 격자(Grid)형 타일 맵인가?]
+ ├─ [Yes] ─► [대각선 이동이 허용되는가?]
+ │            ├─ [No (상하좌우만)] ─► 맨해튼 거리 (Manhattan Distance) 적용
+ │            │                       h = |x1-x2| + |y1-y2|
+ │            └─ [Yes (대각선가능)] ─► 체비셰프 거리 (Chebyshev Distance) 적용
+ │                                    h = max(|x1-x2|, |y1-y2|)
+ └─ [No (자유 각도 공간)] ─► 유클리디안 거리 (Euclidean Distance) 적용
+                             h = sqrt((x1-x2)^2 + (y1-y2)^2)
+</code></pre>
+<p>이 결정 트리의 핵심은 채택된 모든 거리가 "장애물을 무시한 상태의 물리적 최소 거리"라는 점이다. 장애물을 돌아가는 실제 거리 (h^*(n))은 무조건 직선거리보다 길 수밖에 없으므로, 위 세 공식은 태생적으로 과대평가를 원천 차단하여 허용적(Admissible) 조건을 우아하게 만족한다.</p>
+<p>만약 허용성을 약간 포기하고 (h(n))에 가중치 (W &gt; 1)을 곱하여 과대평가를 고의로 일으키면(Weighted A*), 최적해 보장은 깨지지만 연산 속도는 수십 배 빨라진다. 이는 실시간 게임 렌더링에서 프레임 저하를 막기 위해 고의로 사용하는 실무적 타협안이다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 건물이 빽빽한 도시에서 길을 찾을 때, 벽을 무시하고 새가 날아가는 "직선거리"로 예상 시간을 잡는 것이 가장 완벽한 허용적 휴리스틱의 본보기입니다. (실제로는 돌아가야 하니 무조건 직선거리보단 오래 걸림)</p>
+</blockquote>
+<hr />
+<h3 id="v-gidaehyogwa-mic-gyeolron-future-standard">Ⅴ. 기대효과 및 결론 (Future &amp; Standard)</h3>
+<p>허용적 휴리스틱의 원리는 단순히 경로 탐색을 넘어, 복잡한 인공지능 탐색 트리에서 최적해의 보장(Optimality Theorem)을 수학적으로 증명하는 근간이다. 시스템의 오차 범위를 설계할 때 보수적 기준선을 제공하여 신뢰성 있는 AI 인프라 구축을 가능케 한다.</p>
+<p>향후 거대 언어 모델(LLM)의 추론 탐색 트리(Tree of Thought)에서도 가지치기 기준을 세울 때, 이러한 허용적 비용 평가 철학을 결합하여 환각(Hallucination)에 의한 오답 탐색을 억제하는 제약 조건 설계에 영감을 주고 있다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 알고리즘이라는 기차에 달린 "과속 방지 브레이크"입니다. 목표에 대한 희망 회로를 과하게 돌리지 않게 통제하여, 안전하고 완벽한 최종 목적지에 무사히 닿게 만듭니다.</p>
+</blockquote>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h3>
+<ul>
+<li><em><em>A</em> (A-Star) 알고리즘</em>* | 허용적 휴리스틱 조건 하에서 완성되는 가장 대표적인 지향성 탐색 기법</li>
+<li><strong>일관적 휴리스틱 (Consistent Heuristic)</strong> | 허용적 성질을 포함하며, 노드 간 이동 시 삼각 부등식을 만족하는 더 강력한 조건</li>
+<li><strong>맨해튼 거리 (Manhattan)</strong> | 격자 맵에서 과대평가가 발생하지 않음을 증명한 대표적 허용적 함수</li>
+<li><strong>과대평가 (Overestimation)</strong> | 휴리스틱이 허용성을 상실하여 A* 알고리즘의 최적해 도출을 실패하게 만드는 원인</li>
+<li><em><em>가중치 A</em> (Weighted A</em>)** | 실시간 처리를 위해 고의로 허용성을 포기하고 h(n)에 가중치를 곱해 탐색 속도를 높이는 타협안</li>
+</ul>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[맹목적 탐색 (Blind Search: BFS&#x2F;DFS) — 휴리스틱 없음, 전수 탐색]
+    │
+    ▼
+[정보 탐색 (Informed Search) — 휴리스틱 함수 h(n) 활용]
+    │
+    ▼
+[허용적 휴리스틱 (Admissible Heuristic) — h(n) ≤ h*(n), 과대평가 금지]
+    │
+    ▼
+[A* 알고리즘 (A* Search) — f(n)=g(n)+h(n), 최적해 보장]
+    │
+    ▼
+[일관적 휴리스틱 (Consistent Heuristic) — 삼각 부등식, A* 효율 극대화]
+</code></pre>
+<p>허용적 휴리스틱은 A*가 최적해를 보장하기 위한 필수 조건으로, 실제 비용을 절대 과대평가하지 않는 추정 함수의 성질이다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>내가 도착지까지 "10 발자국"이 남았다고 상상해볼까요?</li>
+<li>만약 실제로 15 발자국이 남았는데 10 발자국이라고 조금 작게 말하는 건 괜찮아요.</li>
+<li>하지만 실제론 5 발자국인데 100 발자국이나 남았다고 뻥튀기해서 포기하게 만들면 절대 안 된다는 약속이 바로 이 규칙이랍니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

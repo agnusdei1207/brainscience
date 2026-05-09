@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>583. SELinux - 레이블 기반 MAC 구현체, 보안 컨텍스트 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 25, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="selinux-security-enhanced-linux-nsaga-mandeun-rinugseu-keoneolyong-gangje-jeobgeun-jeeo-boan-modyul">SELinux (Security-Enhanced Linux) - NSA가 만든 리눅스 커널용 강제 접근 제어 보안 모듈</h1>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: SELinux는 1990년대 NSA(미국 국가안보국)와 함께 개발된 리눅스 커널용 MAC(강제적 접근 제어) 보안 모듈로, 582장의 LSM(Linux Security Modules) 프레임워크 위에 구현된다. 모든 프로세스와 파일에 <strong>"보안 컨텍스트(Security Context = user:role:type:level)"</strong> 라는 4단계 라벨을 부착하고, <strong>Type Enforcement(유형 강제)</strong> 방식으로 접근을 통제하는 커널 레벨 보안 시스템이다.</li>
+<li><strong>가치</strong>: <strong>유형 강제 통제(Type-Enforced Confinement)</strong> 덕분에, Nginx 웹 서버가 해킹당해 <code>rm -rf /</code>(시스템 삭제) 명령을 내려도, LSM 훅에서 Nginx 프로세스의 유형(<code>httpd_t</code>)이 <code>/etc/shadow</code>(파일 유형 <code>shadow_t</code>)에 접근할 수 없도록 차단한다. 제로 데이(Zero-Day) 취약점이 발견되어도, 권한 상승(Privilege Escalation)을 원천 차단하는 방어선을 제공한다.</li>
+<li><strong>한계</strong>: SELinux의 가장 큰 약점은 <strong>디버깅 지옥(Debugging Nightmare)</strong> 과 비활성화 유혹이다. SELinux가 적용된 환경에서 접근 거부(<code>Permission Denied</code>) 오류가 발생하면, 해당 프로세스와 파일의 유형(<code>_t</code> 접미사)을 하나하나 추적해야 한다. 이 과정에서 90%의 관리자가 <code>/etc/selinux/config</code>에서 <code>SELINUX=disabled</code>로 설정하여(SELinux 끄기) 방어망을 해제하는 문제가 발생한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="1-gaeyo-mic-baegyeong-context-necessity">1. 개요 및 배경 (Context &amp; Necessity)</h2>
+<h3 id="1-1-jeontongjeog-dac-bangsigyi-hangye">1.1 전통적 DAC 방식의 한계</h3>
+<p>과거 리눅스의 <strong>임의적 접근 제어(DAC)</strong> 환경에서는 <code>root</code> 사용자가 시스템의 모든 권한을 보유한다. Apache 서버가 <code>root</code> 권한으로 실행되고 있다면, 공격자가 해당 서버를 침투하여 **권한 상승(Privilege Escalation)**에 성공하면 <code>/etc/shadow</code>(패스워드 데이터베이스)까지 접근하여 모든 사용자 패스워드를 탈취할 수 있다.</p>
+<h3 id="1-2-selinuxyi-haegyeolcaeg-type-enforcement-bangsig">1.2 SELinux의 해결책 (Type Enforcement 방식)</h3>
+<p>NSA는 리눅스에 <strong>"유형(Type)"</strong> 기반 보안 모델을 도입했다. 프로세스의 유형(<code>httpd_t</code>)과 파일의 유형(<code>httpd_sys_content_t</code>)이 명시적으로 매핑되어야 접근이 허용된다. 이는 다음과 같은 원리다:</p>
+<pre><code>[ 전통 DAC ]   : root가 모든 파일 접근 가능 -&gt; 위험!
+[ SELinux MAC ]: &quot;httpd_t 프로세스는 shadow_t 파일에 접근 불가!&quot; -&gt; O(1) 차단
+</code></pre>
+<h3 id="1-3-boan-keontegseuteu-security-context-yi-gujo">1.3 보안 컨텍스트(Security Context)의 구조</h3>
+<p>SELinux는 모든 주체(프로세스)와 객체(파일)에 **"보안 컨텍스트(Security Context)"**라는 4단계 라벨을 부여한다:</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[ 확인 방법: ls -Z (SELinux 맥락 확인) ]
+=&gt; -rw-r--r--. root root system_u:object_r:shadow_t:s0 &#x2F;etc&#x2F;shadow
+
+[ 보안 컨텍스트의 4가지 구성 요소 ]
+
+   system_u    :  object_r    :    shadow_t     :     s0
+  (1. User)      (2. Role)        (3. Type)   (4. Level&#x2F;Category)
+
+  [ SELinux 유형 강제(Type Enforcement) ]
+    =&gt; 웹 서버(Apache) 프로세스 유형: `system_u:system_r:httpd_t:s0`
+    =&gt; 비밀 번호 파일 유형: `system_u:object_r:shadow_t:s0`
+
+  [ 결론 ]
+    OS 심판: &quot;httpd_t(웹 서버 유형)가 shadow_t(비밀번호 유형)에 접근?
+    내 정책(Policy)에 없어! 거부(Denied)!!&quot;
+</code></pre>
+<p><strong>[핵심 포인트]</strong> SELinux 접근 제어에서 가장 중요한 요소는 <strong><code>3. Type(유형)</code></strong> 이다. 일반적인 User, Role 등은 SELinux 정책에서 보조적 역할을 하며, <code>httpd_t</code>와 같이 <code>_t</code> 접미사를 가진 유형이 핵심 접근 결정 기준이 된다.</p>
+<hr />
+<h2 id="2-akitegceo-mic-haegsim-weonri-deep-dive">2. 아키텍처 및 핵심 원리 (Deep Dive)</h2>
+<h3 id="2-1-selinux-dongjag-modeu-enforcing-vs-permissive">2.1 SELinux 동작 모드: Enforcing vs Permissive</h3>
+<p>SELinux는 두 가지 동작 모드를 지원하며, 운영 환경에 따라 선택적으로 적용한다.</p>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">Enforcing (강제 모드)</th><th style="text-align: left">Permissive (허용 모드)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>LSM 훅 후 동작</strong></td><td style="text-align: left"><code>httpd_t</code>가 <code>shadow_t</code>에 접근 시 <strong><code>Permission Denied</code> 오류를 반환하고 접근을 차단.</strong></td><td style="text-align: left">접근을 허용하되, <strong>거부(Deny) 시뮬레이션을 audit.log에 기록.</strong></td></tr>
+<tr><td style="text-align: left"><strong>정책 튜닝 효과</strong></td><td style="text-align: left">실제 환경에서 테스트 시 <strong>서비스 중단(Real Impact) 위험.</strong></td><td style="text-align: left">실제 환경에서도 <strong>거부 로그만 출력</strong>하여 정책 디버깅에 활용.</td></tr>
+<tr><td style="text-align: left"><strong>운영 전환</strong></td><td style="text-align: left">문제 발생 시 <code>setenforce 0</code>으로 <strong>Permissive로 일시 전환 가능.</strong></td><td style="text-align: left">테스트 완료 후 <strong>NSA 제공 도구로 정책을 컴파일(.pp)하여 Enforcing으로 전환.</strong></td></tr>
+</tbody></table>
+<h3 id="2-2-keontegseuteu-sangsil-munje-bogsa-vs-idong">2.2 컨텍스트 상실 문제: 복사 vs 이동</h3>
+<p>파일 시스템을 조작할 때 **SELinux 컨텍스트가 손실(Relabeling Loss)**되는 문제가 발생한다:</p>
+<ul>
+<li><strong>문제 상황</strong>: 사용자가 <code>/home/user/</code> 디렉터리의 <code>index.html</code>을 웹 서버 디렉터리(<code>/var/www/html</code>)로 **복사(<code>cp</code>)**하면, 복사된 파일은 새로운 컨텍스트(<code>httpd_sys_content_t</code>)를 할당받는다.</li>
+<li><strong>심각한 문제</strong>: 하지만 **이동(<code>mv</code>)**할 경우, inode가 유지되어 기존 컨텍스트(<code>user_home_t</code>)가 그대로 유지된다. 웹 서버(<code>httpd_t</code>)가 <code>user_home_t</code> 유형의 파일에 접근하면 <code>Permission Error</code>가 발생한다.</li>
+</ul>
+<p><strong>SRE 문제 해결 방법</strong>:</p>
+<ol>
+<li><strong><code>restorecon -Rv /var/www/html</code></strong>: 파일 시스템에 정의된 기본 컨텍스트를 기준으로 재설정</li>
+<li><strong><code>audit2allow</code></strong>: 거부 로그를 분석하여 필요한 정책 규칙(.pp 모듈)을 자동 생성</li>
+</ol>
+<hr />
+<h2 id="3-dockerwa-selinuxyi-yeongye">3. Docker와 SELinux의 연계</h2>
+<h3 id="3-1-munje-sanghwang-docker-bolryum-maunteuwa-selinux-cungdol">3.1 문제 상황: Docker 볼륨 마운트와 SELinux 충돌</h3>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash">docker run -v &#x2F;home&#x2F;user&#x2F;data:&#x2F;app
+</code></pre>
+<p>위 명령어로 호스트 디렉터리를 컨테이너에 마운트하면, Docker 컨테이너의 유형(<code>container_t</code>)이 호스트 파일의 유형(<code>user_home_t</code>)과 맞지 않아 접근이 거부된다.</p>
+<h3 id="3-2-haegyeolcaeg-selinux-reibeul-jijeong-z-ddoneun-z-obsyeon">3.2 해결책: SELinux 레이블 지정 (:z 또는 :Z 옵션)</h3>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash">docker run -v &#x2F;home&#x2F;user&#x2F;data:&#x2F;app:z
+</code></pre>
+<p><code>:z</code>(또는 <code>:Z</code>) 옵션은 Docker에게 ** SELinux 컨텍스트 재지정**을 지시한다. Docker가 대상 디렉터리에 <code>container_file_t</code> 유형을 부여하여, 컨테이너가 정상적으로 접근할 수 있도록 한다.</p>
+<hr />
+<h2 id="4-gidaehyogwa-mic-gyeolron">4. 기대효과 및 결론</h2>
+<ul>
+<li><strong>강제적 접근 제어(MAC) 체계</strong>는 SELinux를 통해 리눅스 커널에 내장되어, Red Hat/CentOS 등 엔터프라이즈 배포판에서 기본 보안 시스템으로 채택되었다. 이는 "관리자가 모든 접근을 통제(강제)"하는 접근 방식을 구현한다.</li>
+<li><strong>레이블 기반 통제(Label-based Confinement)</strong> 원칙에 따라, Android(SEAndroid 포함) 등 모바일 플랫폼에서도 SELinux 기술이 활용되어,** 샌드박스(Sandbox) 격리 환경**을 구현한다.</li>
+<li><strong>정책 디버깅의 복잡성</strong>은 여전히 과제다. "너무 복잡해서 <code>setenforce 0</code>(비활성화)으로 전환하는 관리자(admin nightmare)" 문제를 해결하기 위해, <strong><code>audit2allow</code> 도구</strong>와 <strong><code>:z</code> 옵션</strong> 등 실질적인 편의를 제공한다.</li>
+</ul>
+<hr />
+<h2 id="gwanryeon-gaenyeom-maeb-knowledge-graph">관련 개념 맵 (Knowledge Graph)</h2>
+<table><thead><tr><th style="text-align: left">관련 개념</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>LSM 프레임워크 (582장)</strong></td><td style="text-align: left">SELinux는 582장의 LSM(150개 훅) 위에 구현되는 보안 모듈이다. SELinux는 150개의 LSM 훅 중 '보안 검사' 훅에 부착되는 주요 플러그인이다.</td></tr>
+<tr><td style="text-align: left"><strong>MAC 강제적 접근 제어 (579장)</strong></td><td style="text-align: left">SELinux는 579장의 MAC(Mandatory Access Control) 접근 방식을 구현한다. SELinux의 컨텍스트(Context) 매핑이 O(1) 시간에 접근 권한을 결정하는 것이 DAC와의 핵심 차이다.</td></tr>
+<tr><td style="text-align: left"><strong>AppArmor (584장)</strong></td><td style="text-align: left">RedHat 진영의 SELinux와 달리, Ubuntu/SUSE 진영에서는 AppArmor를 사용한다. SELinux가 유형(Type) 라벨로 접근을 제어한다면, AppArmor는 경로(Path <code>/var/www/</code>) 기반으로 접근을 제어하는 것이 핵심 차이다.</td></tr>
+<tr><td style="text-align: left"><strong>도메인 전환 (Domain Transition)</strong></td><td style="text-align: left">프로세스가 다른 보안 도메인으로 전환할 때, CPU 권한 레벨과 SELinux 컨텍스트가 동시에 변경되어야 한다. 이 이중 검사가 O(1) 시간에 수행되어야 시스템 성능을 보장한다.</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>
+<p><strong>SELinux는 박물관 경비 시스템</strong>과 같다. 구경꾼(일반 사용자)은 일반 전시실만 돌아다닐 수 있고, 학예사(웹 서버)도 별도의 경비증을 받아야 특정 금고(비밀 파일)에 접근할 수 있다. <strong>경비원이 경비증을 확인하지 않으면 아무도 들어갈 수 없게</strong>锁(쇠창)를 채우는 것과 같다.</p>
+</li>
+<li>
+<p><strong>SELinux는 "보안 라벨"을 이용해 접근을 제어</strong>한다. 웹 서버에는 <code>httpd_t</code>(웹 유형)라는 라벨이 붙어있고, 비밀 파일에는 <code>shadow_t</code>(비밀 유형)라는 라벨이 붙어있다. 웹 서버가 비밀 파일에 접근하려고 하면, <strong>"네 라벨은 웹服务器인데, 여기 들어갈 수 있어?"라는 질문에 "안 돼!"</strong> 하고 쫓겨난다.</p>
+</li>
+<li>
+<p><strong>SELinux의 어려운 점</strong>은 <strong>설정 파일에서 <code>SELINUX=disabled</code>로 끌 수 있다는 것</strong>이다. 마치 "火灾(화재) 경보기 때문에 귀찮다"고 Alarm(경보)을 꺼버리면, 정말로 火事(화재)가 났을 때 알림을 받을 수 없는 것과 같다. 이것이 SELinux를 해제하면 안 되는 이유다.</p>
+</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

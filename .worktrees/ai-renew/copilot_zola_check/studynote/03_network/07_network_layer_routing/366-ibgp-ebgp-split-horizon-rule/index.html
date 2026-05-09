@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>366. iBGP (내부 맺음), eBGP (외부 맺음), BGP Split Horizon 룰 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: BGP 라우터들은 친구(Neighbor)를 맺을 때 상대방이 나랑 다른 나라(다른 AS)인지, 같은 나라(같은 AS)인지에 따라 <strong>'eBGP(외부)'와 'iBGP(내부)'로 철저히 급을 나누어 각기 다른 외교 규칙을 적용</strong>한다.</li>
+<li><strong>iBGP 스플릿 호라이즌 룰</strong>: eBGP는 남의 나라에서 받아온 정보를 우리나라(AS)로 무조건 뿌리지만, iBGP는 "내부 식구(iBGP)한테서 받은 찌라시는 절대로 또 다른 내부 식구(iBGP)에게 전달하지 않는다"라는 치명적인 **침묵의 규칙(Split Horizon)**을 가지고 있다.</li>
+<li><strong>풀 메시(Full-Mesh)의 저주</strong>: 이 침묵의 룰 때문에, 하나의 통신사 망(AS) 안에 BGP 라우터가 100대 있다면 서로 정보를 건네듣지 못하므로, <strong>100대의 라우터가 1:1로 직접 모조리 친구를 맺어야만(Full-Mesh) 나라 안의 모든 라우터가 인터넷 지도를 복사 받을 수 있는 엄청난 노가다 구조</strong>가 형성된다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: BGP 피어링(Peering)의 두 가지 형태와, 단일 AS 내부에서 BGP 라우팅 정보가 루프(Loop) 도는 것을 방지하기 위한 핵심 알고리즘.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: SKT 관문 라우터(A)가 미국 구글에서 eBGP로 최신 90만 개짜리 인터넷 지도를 받아왔다. 이제 A는 부산에 있는 SKT 관문 라우터(B)에게 이 지도를 넘겨줘야, B도 일본으로 나가는 트래픽을 처리할 수 있다. A와 B는 같은 SKT(AS 100) 소속이므로 iBGP로 지도를 교환한다. 이때 B가 C한테 주고, C가 다시 A한테 주면 사내에서 BGP 루프가 돌아 망이 터진다. **"우리 식구(iBGP)끼리는 한번 받은 지도는 절대 다른 식구한테 토스하지 말자! 무조건 자기가 직접 받은 것만 쓰자!"**라는 극단적인 룰이 스플릿 호라이즌이다.</p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: iBGP 스플릿 호라이즌 룰은 **"사내 메신저 귓속말 규칙"**과 같습니다.</p>
+<ul>
+<li>외부 손님(eBGP)에게 들은 정보는 사내 직원(iBGP)에게 전달할 수 있습니다.</li>
+<li>하지만 사내 직원(iBGP)에게 귓속말로 들은 소문을, 또 다른 사내 직원(iBGP)에게 전달하는 것은 **"사내 루머 양산(루핑)"**으로 간주하여 엄격히 금지됩니다.</li>
+<li>따라서 사장님(eBGP에서 정보를 받은 라우터)이 공지사항을 전파하려면 직원 한 명에게 전달해서 퍼뜨리게 할 수 없고, <strong>직원 100명 전원에게 일일이 1:1로 귓속말(Full-Mesh)을 해줘야만 합니다.</strong></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유:</strong> eBGP는 국경을 넘어 백신(인터넷 정보)을 수입해 오는 **"밀수선"**이고, iBGP 스플릿 호라이즌은 국내에 들어온 백신이 2차, 3차 감염(루프)을 일으키지 못하게 막는 **"접촉 금지법"**입니다. 이 법 때문에 국내 유통은 오직 수입상과 1:1 직거래(Full-Mesh)로만 이루어져야 합니다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-ebgpwa-ibgpyi-dongjag-caiwa-pul-mesiyi-abbag-deep-dive">Ⅱ. eBGP와 iBGP의 동작 차이와 풀 메시의 압박 (Deep Dive)</h2>
+<p>네트워크 실무에서 이 둘의 동작 차이를 모르면 BGP 망을 절대 설계할 수 없다.</p>
+<h3 id="1-ebgp-external-bgp-guggyeongseon-neomgi">1. eBGP (External BGP) - 국경선 넘기</h3>
+<ul>
+<li><strong>대상</strong>: AS 번호가 서로 다른 라우터 간의 Peering.</li>
+<li><strong>연결 조건</strong>: 보안과 신뢰성을 위해 물리적으로 <strong>랜선이 1:1로 직접 꽂혀 있어야(Directly Connected)</strong> 맺어지는 것이 원칙이다. (패킷 수명인 TTL 값이 1로 고정되어 있어 라우터를 하나라도 더 거치면 패킷이 폐기된다).</li>
+<li><strong>정보 전달</strong>: 남의 나라에서 지도를 받아오면, 우리나라(iBGP)에도 뿌리고 또 다른 남의 나라(eBGP)에도 자유롭게 뿌린다.</li>
+</ul>
+<h3 id="2-ibgp-internal-bgp-sanae-jeongbo-gongyu">2. iBGP (Internal BGP) - 사내 정보 공유</h3>
+<ul>
+<li><strong>대상</strong>: AS 번호가 서로 같은 라우터 간의 Peering.</li>
+<li><strong>연결 조건</strong>: 같은 회사망이므로 랜선이 직접 꽂혀 있을 필요가 없다. 중간에 OSPF 라우터들이 수십 대 끼어 있어도, <strong>논리적으로(TCP 179번 포트) 통신만 뚫려 있으면</strong> 저 멀리 있는 라우터와 가상의 친구를 맺을 수 있다. (TTL 값이 255다).</li>
+<li><strong>정보 전달 (스플릿 호라이즌 룰)</strong>: <strong>"iBGP 피어로부터 학습한 경로는 다른 iBGP 피어에게 절대 광고하지 않는다."</strong> 이것이 알파이자 오메가다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text"> ┌─────────────────────────────────────────────────────────────┐
+ │                iBGP 스플릿 호라이즌과 풀 메시(Full-Mesh)의 비극       │
+ ├─────────────────────────────────────────────────────────────┤
+ │                                                             │
+ │   [ 외국(구글) ] ── eBGP ──▶ [ 라우터 A ] (우리나라 관문)           │
+ │                                                             │
+ │   [ 라우터 A ] ── iBGP ──▶ [ 라우터 B ] ── iBGP ──▶ [ 라우터 C ] │
+ │                                                             │
+ │   * 멍청한 설계의 최후:                                         │
+ │     1. A가 구글 정보를 eBGP로 받아 B에게 iBGP로 준다. (정상)       │
+ │     2. B는 이 정보를 C에게 넘겨주지 않고 입을 닫는다. (스플릿 호라이즌)  │
+ │     3. C는 인터넷 지도를 못 받아서 인터넷이 끊겨(블랙홀) 버린다!      │
+ │                                                             │
+ │   * 올바른 풀 메시(Full-Mesh) 설계:                              │
+ │     A는 B와도 iBGP를 맺고, &quot;반드시 C와도 별도의 iBGP&quot;를 직접 맺어서  │
+ │     지도를 일일이 떠먹여 줘야 한다!                              │
+ └─────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="3-full-mesh-gujoyi-hwagjangseong-munje">3. Full-Mesh 구조의 확장성 문제</h3>
+<p>라우터가 3대(A, B, C)면 1:1로 맺을 iBGP 연결은 $3 \times (3-1)/2 = 3$개로 할 만하다.
+하지만 통신사처럼 BGP 라우터가 1,000대가 되면?
+$1000 \times 999 / 2 = 499,500$개의 TCP 179번 연결 세션이 필요하다.
+이 50만 개의 세션을 라우터가 맺다가 CPU가 타버린다(확장성 붕괴).
+이 끔찍한 노가다를 피하기 위해 등장한 꼼수가 바로 다음 장에 배울 **Route Reflector(경로 반사기)**다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유:</strong> iBGP 스플릿 호라이즌은 다단계 판매(루핑)를 금지하는 **"방문판매법"**입니다. 물건(라우팅 정보)은 본사(A)에서 지사장(B, C)에게만 팔 수 있고, 지사장이 다른 지사장에게 되파는 짓은 절대 금지됩니다. 그래서 본사(A)는 전국 모든 지사장과 일일이 계약(Full-Mesh)을 맺어야 하는 지옥의 노가다에 시달립니다.</p>
+</blockquote>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

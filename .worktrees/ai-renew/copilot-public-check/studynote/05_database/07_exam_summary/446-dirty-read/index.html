@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>446. 오손 읽기 (Dirty Read) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote database
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="446-oson-ilggi-dirty-read-mikeomis-ilggi">446. 오손 읽기 (Dirty Read - 미커밋 읽기)</h1>
+<blockquote>
+<p>⚠️ 이 문서는 트랜잭션의 고립성(Isolation)이 완전히 무너졌을 때 발생하는 가장 최악의 버그로, <strong>남이 아직 확정(Commit)하지도 않고 쓰다만 '임시 데이터'를 훔쳐보았다가 그 데이터가 취소(Rollback)되어 버리면서 내 계산까지 전부 망가지는 '오손 읽기' 현상</strong>을 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 커밋되지 않은(Uncommitted) 더러운(Dirty) 임시 데이터를 다른 트랜잭션이 읽어가는 현상이다.</li>
+<li><strong>위험성</strong>: 내가 읽어간 그 '임시 데이터'를 작성한 트랜잭션이 나중에 <code>ROLLBACK</code>을 해버리면, 나는 이 세상에 존재하지도 않는 가짜 데이터를 바탕으로 돈을 계산하는 끔찍한 금융 사고를 치게 된다.</li>
+<li><strong>해결책</strong>: 트랜잭션 격리 수준(Isolation Level)을 가장 낮은 <code>Read Uncommitted</code>에서 <strong><code>Read Committed</code> 이상으로 한 단계만 올려도 완벽하게 방어</strong>된다. (현대 대부분의 RDBMS는 기본적으로 방어됨)</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-gaeyo-jiweojin-cilpanyi-geulssi-context-necessity">Ⅰ. 개요: 지워진 칠판의 글씨 (Context &amp; Necessity)</h3>
+<p>은행에서 이런 일이 일어났다고 가정해보자.</p>
+<ul>
+<li><strong>T1 (직원)</strong>: A의 계좌에 100만 원을 입금하려다가 실수로 '1,000만 원'을 입금했다(UPDATE). 아직 <code>COMMIT</code>은 안 누르고 눈치채서 취소(<code>ROLLBACK</code>)를 누를 준비를 하고 있다.</li>
+<li><strong>T2 (A 고객)</strong>: 마침 딱 그 찰나의 순간에 A가 자기 폰으로 잔액 조회를 눌렀다. 통장에 '1,000만 원'이 찍혀있는 걸 보고(Dirty Read), 신나서 즉시 친구에게 500만 원을 이체해 버렸다(다른 트랜잭션 성공).</li>
+<li><strong>T1 (직원)</strong>: 아차! 하고 아까의 1,000만 원 입금을 <code>ROLLBACK</code> 해서 없던 일로 만들었다.</li>
+</ul>
+<p><strong>결과</strong>: A의 원래 통장 잔고는 0원이었는데, 있지도 않은 가짜 돈 1,000만 원을 보고 친구에게 500만 원을 보냈다. A의 통장 잔고는 <code>-500만 원</code>이 되어버리고 은행 전산은 붕괴된다.</p>
+<p>이 끔찍한 현상이 바로 <strong>Dirty Read</strong>다. "더럽다(Dirty)"는 말은 데이터가 아직 검증(Commit)되지 않은 쓰레기 상태라는 뜻이다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: Dirty Read는 **'작가의 초고 훔쳐보기'**와 같습니다. 작가가 일기장에 "범인은 철수다"라고 대충 적어놨는데(Uncommitted), 내가 그걸 몰래 훔쳐보고 온 동네에 "범인이 철수래!"라고 소문을 냈죠. 그런데 작가가 나중에 "아, 철수가 아니네" 하고 지우개로 지워버리면(Rollback), 나는 세상에 존재하지도 않는 거짓말을 퍼뜨린 바보가 됩니다.</p>
+</blockquote>
+<hr />
+<h3 id="ii-dirty-readga-balsaenghaneun-jogeongwa-bangeo">Ⅱ. Dirty Read가 발생하는 조건과 방어 ★</h3>
+<p>이 현상은 데이터베이스의 자물쇠(Lock)가 완전히 풀려있을 때만 발생한다.</p>
+<h4 id="1-balsaeng-jogeon-read-uncommitted">1. 발생 조건 (Read Uncommitted)</h4>
+<ul>
+<li>트랜잭션 격리 수준이 **Level 0 (Read Uncommitted)**일 때 발생한다.</li>
+<li>누군가 데이터를 수정(UPDATE) 중일 때도, 다른 사람이 그 테이블을 읽는(SELECT) 것을 100% 허용하는 가장 빠르지만 가장 위험한 상태다.</li>
+</ul>
+<h4 id="2-bangeo-bangbeob-read-committed">2. 방어 방법 (Read Committed)</h4>
+<ul>
+<li>격리 수준을 **Level 1 (Read Committed)**로 올리면 완벽하게 막힌다.</li>
+<li><strong>원리</strong>: 누군가 <code>UPDATE</code> 중인 데이터를 다른 사람이 <code>SELECT</code> 하려고 하면, DB는 수정 중인 임시 값을 보여주지 않는다. 대신 **Undo Log(441번 문서)**에 저장되어 있던 '수정되기 전의 깨끗하고 완벽한 옛날 값'을 보여준다.</li>
+<li>T1이 <code>COMMIT</code> 도장을 쾅 찍어야만, 비로소 T2의 화면에 새로운 값이 보이게 된다.</li>
+</ul>
+<hr />
+<h3 id="iii-silmueseoyi-cwigeub">Ⅲ. 실무에서의 취급</h3>
+<p>"Dirty Read를 실무에서 일부러 쓰는 경우가 있나요?"</p>
+<ul>
+<li><strong>있긴 하다.</strong> 완벽한 정합성보다는 1초라도 빠른 응답 속도가 중요한 **조회용 통계 시스템(Admin 대시보드)**에서 가끔 쓴다.</li>
+<li>예: "오늘 현재까지 접속한 유저 수 총 몇 명이야?"</li>
+<li>이 숫자가 1~2명 틀리거나 롤백된 데이터가 섞여 들어가도 회사 매출에는 아무 타격이 없다. 이럴 땐 오히려 락(Lock) 때문에 기다리지 않고 0.01초 만에 더러운 데이터라도 팍팍 긁어오는 <code>Read Uncommitted</code>가 훌륭한 선택이 될 수 있다. (NOLOCK 힌트 사용)</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│           오손 읽기 (Dirty Read) 타임라인 시각화                       │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│ 시간  │ T1 (직원: 실수함)                │ T2 (고객: 조회함)            │
+│ ────┼─────────────────────────┼─────────────────────────│
+│ T1  │ UPDATE 잔고 = 1000만 원        │                         │
+│ T2  │ (아직 COMMIT 안 함)            │ SELECT 잔고 ──▶ 1000만 원!!│
+│ T3  │                             │ (1000만 원 믿고 다른 일 저지름) │
+│ T4  │ ROLLBACK! (1000만 원 취소)     │                         │
+│                                                              │
+│ ★ 최종 결과: T2는 환상(1000만 원)을 보고 실제 비즈니스 로직을 처리해 버렸다💥│
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h3 id="iv-gyeolron">Ⅳ. 결론</h3>
+<p>"검증되지 않은 정보는 차라리 모르는 게 낫다."
+Dirty Read는 ACID의 고립성(Isolation)이 완전히 파괴된 상태다. 이 문제가 너무 치명적이기 때문에, 오라클(Oracle)이나 MySQL 같은 현대의 모든 RDBMS는 아예 태어날 때부터 <code>Read Committed</code> 이상의 격리 수준을 기본값(Default)으로 세팅해 두고 이 버그를 원천 차단하고 있다. 백엔드 개발자라면 이 현상의 무서움을 이해하고, 웬만하면 락을 푸는 <code>NOLOCK</code> 옵션을 남발하지 말아야 한다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>관련 특성</strong>: 고립성 (Isolation - 443번 문서)</li>
+<li><strong>방어막 (격리 수준)</strong>: <code>READ COMMITTED</code> (오라클 기본값)</li>
+<li><strong>보조 기술</strong>: Undo Log (언두 로그 - Dirty Read를 막기 위해 옛날 값을 보여줄 때 사용)</li>
+<li><strong>다음 단계의 이상 현상</strong>: Non-Repeatable Read (447번 문서)</li>
+</ul>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>엄마가 내일 소풍 도시락에 '소시지'를 싸줄지 '계란말이'를 싸줄지 고민하다가 일단 메모장에 '소시지'라고 대충 적어두셨어요. (Uncommitted)</li>
+<li>내가 몰래 그 메모장을 보고 친구들에게 "나 낼 소시지 싸 온다!"라고 다 자랑해 버렸죠. (Dirty Read)</li>
+<li>근데 엄마가 맘이 바뀌어서 메모장에 줄을 긋고 '계란말이'로 확정(Commit) 지으시면? 나는 친구들에게 거짓말을 한 바보가 되어버린답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+# ============================================================
+#  Git pre-commit hook — commit 전 자동 빌드 사전 검사
+#  설치: bash scripts/install-hooks.sh
+# ============================================================
+
+REPO_ROOT=$(git rev-parse --show-toplevel)
+CONTENT_DIR="$REPO_ROOT/content"
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+ERRORS=0
+
+fail() { echo -e "${RED}[pre-commit ✗] $1${NC}"; ERRORS=$((ERRORS+1)); }
+log()  { echo -e "${GREEN}[pre-commit ✓]${NC} $1"; }
+
+echo ""
+echo "─── pre-commit: Zola 빌드 사전 검사 ───"
+
+# 1. _index.md에 date 필드 금지
+INDEX_DATE=$(grep -rl "^date = " "$CONTENT_DIR" --include="*_index.md" 2>/dev/null || true)
+if [ -n "$INDEX_DATE" ]; then
+  fail "_index.md에 허용되지 않는 'date' 필드:"
+  echo "$INDEX_DATE" | sed 's/^/   /'
+else
+  log "date 필드 검사 통과"
+fi
+
+# 2. categories 값 이중 따옴표 오염 검사
+BAD_CAT=$(grep -rn '^categories = "' "$CONTENT_DIR" | grep -E '"[^"]*"[a-zA-Z0-9_]+' 2>/dev/null || true)
+if [ -n "$BAD_CAT" ]; then
+  fail "categories TOML 오류:"
+  echo "$BAD_CAT" | sed 's/^/   /'
+else
+  log "categories 필드 검사 통과"
+fi
+
+# 2.5. front matter 형식 검사
+BAD_FM=$(while IFS= read -r -d '' file; do
+  first_line=$(sed -n '1p' "$file" | tr -d '\r')
+  fm_delim=""
+  case "$first_line" in
+    "+++") fm_delim="+++" ;;
+    "---") fm_delim="---" ;;
+    "+++"*|"---"*) printf '%s (delimiter)\n' "$file" ;;
+    *) continue ;;
+  esac
+  fm_body=$(awk 'NR==1 {delim=$0; sub(/\r$/, "", delim); next} {line=$0; sub(/\r$/, "", line); if (line==delim) exit; if (NR>1) print line}' "$file")
+  if [ "$fm_delim" = "+++" ]; then
+    if printf '%s\n' "$fm_body" | grep -qE '^[[:space:]]*[A-Za-z_][A-Za-z0-9_]*:[[:space:]]*'; then
+      printf '%s (TOML-style mismatch)\n' "$file"
+    fi
+  else
+    if printf '%s\n' "$fm_body" | grep -qE '^[[:space:]]*[A-Za-z_][A-Za-z0-9_]* =[[:space:]]*'; then
+      printf '%s (YAML-style mismatch)\n' "$file"
+    fi
+  fi
+done < <(find "$CONTENT_DIR" -name "*.md" -type f -print0 | sort -z))
+if [ -n "$BAD_FM" ]; then
+  fail "front matter 형식이 섞이거나 구분자가 깨진 파일:"
+  echo "$BAD_FM" | sed 's/^/   /'
+else
+  log "front matter 형식 검사 통과"
+fi
+
+# 3. 경로 충돌 (xxx.md + xxx/_index.md 공존)
+while IFS= read -r idx; do
+  dir=$(dirname "$idx")
+  base=$(basename "$dir")
+  parent=$(dirname "$dir")
+  dup="$parent/$base.md"
+  if [ -f "$dup" ]; then
+    fail "경로 충돌: $dup ↔ $idx"
+  fi
+done < <(find "$CONTENT_DIR" -name "_index.md")
+
+# 4. Zola 빌드 (설치된 경우만)
+if command -v zola &>/dev/null; then
+  if ! zola build --output-path /tmp/zola_check_output 2>&1; then
+    fail "Zola 빌드 실패"
+  else
+    log "Zola 빌드 통과"
+    rm -rf /tmp/zola_check_output
+  fi
+else
+  echo -e "${YELLOW}[pre-commit !]${NC} Zola 미설치 — 빌드 검사 생략 (scripts/check.sh 로 설치 가능)"
+fi
+
+echo "──────────────────────────────────────"
+
+if [ "$ERRORS" -gt 0 ]; then
+  echo -e "${RED}오류 ${ERRORS}개 — commit이 중단됩니다. 수정 후 다시 시도하세요.${NC}"
+  exit 1
+fi
+echo -e "${GREEN}OK — commit 진행${NC}"
+echo ""

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>420. 빅데이터 처리 하둡 (Hadoop) HDFS 블록 복제와 랙 인지 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 18, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ict
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 하둡 분산 파일 시스템(HDFS)은 100TB짜리 초거대 빅데이터를 하나의 비싼 슈퍼컴퓨터에 저장하는 대신, 128MB 단위의 레고 블록(Block)으로 잘게 쪼개어 수천 대의 싸구려 컴퓨터(DataNode)에 흩뿌려 저장하는 분산 스토리지 아키텍처다.</li>
+<li><strong>가치</strong>: 싸구려 컴퓨터는 고장이 잘 난다는 치명적 약점을 극복하기 위해, 똑같은 블록을 무조건 3벌씩 복사해 두는 '3벌 복제(3-Way Replication)'와, 노드가 고장 나면 1초 만에 다른 노드의 복사본을 땡겨오는 '자동 복구' 메커니즘으로 무결성(Fault Tolerance)을 100% 달성했다.</li>
+<li><strong>판단 포인트</strong>: 똑같은 블록 3개를 같은 서버랙(Rack)에 넣어두면 랙 스위치에 불이 났을 때 데이터가 다 날아가므로, HDFS는 반드시 2개는 같은 랙에, 나머지 1개는 아예 다른 랙에 저장하는 <strong>랙 인지(Rack Awareness)</strong> 알고리즘을 강제하여 데이터 유실 확률을 0에 수렴하게 만든다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>구글이 전 세계의 웹페이지를 수집했더니 데이터가 페타바이트(PB) 단위로 폭발했다. 기존의 오라클(Oracle)이나 엔터프라이즈 스토리지로는 턱도 없었고, 수십억 원짜리 슈퍼컴퓨터를 사기엔 구글도 돈이 없었다.
+"차라리 용산에서 파는 100만 원짜리 싸구려 컴퓨터(Commodity Hardware) 1만 대를 랜선으로 엮어서 1대의 슈퍼컴퓨터처럼 쓰면 어떨까?"</p>
+<p>문제는 싸구려 컴퓨터는 하드디스크 고장률이 매우 높다는 것이다. 매일 컴퓨터 10대가 고장 나는데, 그 안에 들어있던 데이터가 영원히 날아가면 안 된다. 그래서 고안된 것이 **"데이터를 잘게 쪼개서 여기저기 뿌리고, 고장 날 것을 대비해 똑같은 걸 3개씩 복사해 두자!"**는 더그 커팅(Doug Cutting)의 철학, 바로 **하둡 HDFS(Hadoop Distributed File System)**다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 100억 원짜리 거대한 금고 1개를 사는 대신, 1만 원짜리 플라스틱 돼지저금통 1만 개를 사서 돈을 쪼개 넣는 것이다. 저금통은 잘 부서지니까, 만약의 사태를 대비해 돈을 복사해서 똑같은 저금통 3군데에 분산시켜 두는 절대 털리지 않는 은행 시스템이다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>HDFS는 우두머리 1대와 부하 수천 대로 이루어진 완벽한 마스터-슬레이브(Master-Slave) 아키텍처다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────┐
+│             [ HDFS의 분산 저장 및 3벌 복제 파이프라인 ]         │
+├────────────────────────────────────────────────────────┤
+│ 1. NameNode (우두머리, Master)                          │
+│    - 자기는 데이터를 안 가짐. &quot;어떤 데이터가 몇 번 컴퓨터에 있는지&quot;│
+│      라는 주소록(Metadata, Namespace)만 RAM에 쥐고 있음. │
+│                                                        │
+│ 2. DataNode (부하, Slave)                               │
+│    - 실제 데이터가 128MB짜리 블록(Block)으로 쪼개져서 저장됨    │
+│    - 3초마다 NameNode에게 &quot;저 살아있어요!&quot;(Heartbeat) 신호 보냄 │
+│                                                        │
+│ 3. 3-Way Replication (3벌 복제) 룰                       │
+│    - 원본 데이터가 들어오면 무조건 3개의 똑같은 블록이 생성됨     │
+│    - 1번 블록: 내 컴퓨터(Local Node)에 저장                │
+│    - 2번 블록: 나랑 같은 랙(Rack)에 있는 다른 컴퓨터에 저장     │
+│    - 3번 블록: 아예 다른 랙(Remote Rack)에 있는 컴퓨터에 저장   │
+└────────────────────────────────────────────────────────┘
+</code></pre>
+<ol>
+<li><strong>블록 크기 128MB의 철학</strong>: 일반 PC의 하드디스크 블록은 4KB다. HDFS가 128MB로 어마어마하게 뚱뚱한 이유는, 하드디스크의 핀이 데이터를 찾으러 이동하는 시간(Seek Time)을 줄이고 덩어리째 쭉쭉 읽어 들이는 전송 시간(Transfer Time)에 올인하기 위해서다. (빅데이터는 찔끔찔끔 안 읽고 한 번에 TB 단위를 스캔해야 하기 때문)</li>
+<li><strong>랙 인지 (Rack Awareness)</strong>: 만약 블록 3개를 전부 'A동네(같은 랙)' 컴퓨터들에 몰아넣었다고 치자. A동네에 불이 나거나 인터넷 스위치가 고장 나면 3개가 통째로 타버린다. 그래서 네임노드는 무조건 마지막 3번째 블록은 'B동네(다른 랙)'의 컴퓨터로 멀리 보내버려 물리적 재난을 완벽하게 방어한다.</li>
+</ol>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 왕(NameNode)은 보물 지도만 가지고 있고, 수만 명의 병사(DataNode)들이 보물을 나눠서 들고 있다. 병사 하나가 절벽에서 떨어지면(하드 고장), 왕은 지도를 보고 "저 병사랑 똑같은 보물을 가진 다른 병사 나와라!" 해서 보물을 다시 복제해 내는 불사신 군대다.</p>
+</blockquote>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>데이터를 다루는 3대 파일 시스템 아키텍처의 패러다임을 비교해 본다.</p>
+<table><thead><tr><th style="text-align: center">비교 항목</th><th style="text-align: left">RDBMS (오라클, MySQL)</th><th style="text-align: left">NAS / SAN (기업용 스토리지)</th><th style="text-align: left">HDFS (하둡 분산 파일 시스템)</th></tr></thead><tbody>
+<tr><td style="text-align: center"><strong>저장 사상</strong></td><td style="text-align: left">완벽한 테이블 구조 (정형)</td><td style="text-align: left">파일 서버 공유 (네트워크)</td><td style="text-align: left"><strong>거대한 파일을 128MB 블록으로 박살 냄</strong></td></tr>
+<tr><td style="text-align: center"><strong>하드웨어</strong></td><td style="text-align: left">최고급 하이엔드 서버 (Scale-up)</td><td style="text-align: left">값비싼 전용 스토리지 장비</td><td style="text-align: left"><strong>용산 조립 PC 수천 대 (Scale-out)</strong></td></tr>
+<tr><td style="text-align: center"><strong>수정/삭제</strong></td><td style="text-align: left">실시간 Update, Delete 완벽 지원</td><td style="text-align: left">자유롭게 파일 덮어쓰기 가능</td><td style="text-align: left"><strong>한 번 쓰면 수정 불가 (WORM, Read-Only)</strong></td></tr>
+<tr><td style="text-align: center"><strong>최적 활용처</strong></td><td style="text-align: left">은행 계좌이체 (트랜잭션)</td><td style="text-align: left">사내 문서 및 미디어 공유</td><td style="text-align: left"><strong>수백 테라바이트의 로그, 센서 데이터 분석</strong></td></tr>
+</tbody></table>
+<p>HDFS는 WORM(Write Once Read Many) 철학을 가진다. 100TB짜리 로그 파일을 한 번 쾅! 하고 저장해 둔 뒤, 수천 대의 컴퓨터가 동시에 달라붙어서(MapReduce) 데이터를 읽어내는 '배치 처리(Batch Processing)'에 극단적으로 최적화된 아키텍처다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: RDBMS가 한 글자 틀리면 화이트로 지우고 다시 예쁘게 쓰는 다이어리라면, HDFS는 한 번 글씨를 파버리면 절대 지우거나 고칠 수 없는 거대한 고대 이집트의 석판이다. 대신 한 번 파놓으면 수만 명이 동시에 달려들어 글씨를 읽어낼 수 있다.</p>
+</blockquote>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p><strong>실무 적용 시나리오:</strong>
+통신사에서 하루에 10TB씩 쏟아지는 고객 스마트폰 접속 로그를 분석해야 한다. 데이터 과학자는 이 로그를 오라클 DB에 넣는 것을 포기하고, 하둡 클러스터 100대로 구성된 HDFS에 들이붓는다. 파일이 128MB 단위로 수만 개로 쪼개져 100대의 노드에 흩뿌려진다. 밤에 분석을 돌리는데, 노드 3대에서 삐빅거리며 디스크 배드섹터 에러(고장)가 발생했다. 하지만 NameNode는 0.1초 만에 랙 인지 알고리즘으로 타 랙에 백업된 블록들을 찾아내 새로운 노드로 복사 복구(Self-healing)를 마친다. 분석 작업(MapReduce)은 단 1초의 중단도 없이 무사히 결과를 뱉어낸다.</p>
+<p><strong>기술사 판단 포인트 (Trade-off):</strong>
+빅데이터 플랫폼 아키텍처 설계 시 기술사는 **'NameNode의 단일 장애점(SPOF)'**을 가장 먼저 방어해야 한다.</p>
+<ol>
+<li>DataNode는 수만 대라 몇 대 죽어도 3벌 복제 덕에 끄떡없다. 하지만 주소록을 들고 있는 대장인 <strong>NameNode가 죽으면 HDFS 전체가 깡통이 된다 (SPOF)</strong>.</li>
+<li>따라서 기술사는 반드시 NameNode를 두 대 준비하여, 평소에 일하는 <strong>Active NameNode</strong>와 뒤에서 주소록을 실시간으로 베껴 적고 있는 <strong>Standby NameNode</strong>의 2중화(HA, High Availability) 파이프라인을 묶어야 한다.</li>
+<li>또한 데이터 블록이 128MB인데, 1KB짜리 자잘한 파일 1억 개를 넣으면 블록 개수만 1억 개가 되어 NameNode의 메모리(RAM)가 펑 터져버리는 'Small File Problem'이 발생한다. 기술사는 자잘한 파일들을 압축 포맷(Parquet, SequenceFile)으로 크게 합쳐서 적재하도록 강제해야 한다.</li>
+</ol>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 수만 명의 병사(DataNode)가 불사신이라도, 작전을 지시하는 장군(NameNode)이 암살당하면 군대는 끝이다. 장군 옆에 항상 판박이 부장군(Standby)을 세워두고, 장군이 쓰러지는 즉시 부장군이 마이크를 잡고 명령을 이어가게 하는 완벽한 지휘 계통 설계다.</p>
+</blockquote>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>하둡 HDFS는 "빅데이터를 저장하려면 비싼 슈퍼컴퓨터가 필요하다"는 전 세계 IT 업계의 고정관념을 '비용 효율성(Cost-effective)'과 '분산 복제'라는 무기로 박살 낸 21세기 오픈소스 진영의 위대한 상징이다.</p>
+<p>결론적으로 HDFS의 블록 쪼개기와 3벌 복제 철학은, 오늘날 클라우드 생태계를 지배하는 아마존 S3와 구글 GCS 등 모든 오브젝트 스토리지(Object Storage)의 설계 사상에 고스란히 녹아들어 있다. 기술사는 딥러닝과 실시간 처리에 밀려 하둡이 한물갔다고 평가절하할 것이 아니라, 거대 데이터를 분산시키고 고장(Fault)을 상수로 인정하며 시스템을 굴려 나가는 이 '결함 허용(Fault Tolerance) 아키텍처'의 본질을 완벽하게 체화해야 한다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 옛날엔 비바람에 무너지지 않는 거대한 통뼈 건물을 지으려고 수백억을 썼다. HDFS는 "건물은 어차피 무너진다"고 인정하고, 레고 블록 수만 개로 텐트를 친 뒤 바람에 날아가면 주머니에 숨겨둔 똑같은 레고(복제본)를 꺼내 1초 만에 다시 조립하는 세상에서 가장 가성비 좋은 건축술이다.</p>
+</blockquote>
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>상위 개념</strong>: 빅데이터 플랫폼 (Big Data Platform), 분산 파일 시스템</li>
+<li><strong>하위 개념</strong>: NameNode, DataNode, 블록 (128MB), 3벌 복제 (3-Way Replication)</li>
+<li><strong>연결 개념</strong>: 맵리듀스 (MapReduce), 랙 인지 (Rack Awareness), SPOF (단일 장애점)</li>
+</ul>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>10만 조각짜리 엄청나게 큰 레고 성(빅데이터)을 한 번에 옮길 수가 없어요.</li>
+<li>하둡은 이 성을 100개의 덩어리로 부순 다음(블록 쪼개기), 친구들 100명에게 하나씩 나눠서 들고 가라고 시켰어요.</li>
+<li>가다가 친구 한 명이 넘어져서 레고가 부서질까 봐, 똑같은 레고 덩어리를 무조건 3명씩 복사해서 들게 했어요(3벌 복제). 이제 넘어져도 끄떡없답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

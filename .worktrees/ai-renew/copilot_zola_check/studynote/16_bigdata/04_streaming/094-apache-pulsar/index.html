@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>19. Apache Pulsar — 컴퓨팅&#x2F;스토리지 분리 메시징 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote bigdata
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<ul>
+<li><strong>본질</strong>: Apache Pulsar (아파치 펄사)는 메시지 라우팅을 담당하는 브로커(Broker)와 데이터 저장을 담당하는 북키퍼(BookKeeper)를 물리적으로 분리하는 계층화 아키텍처를 채택하여, 브로커와 스토리지를 독립적으로 확장하고 토픽을 중단 없이 다른 브로커로 이동할 수 있다.</li>
+<li><strong>가치</strong>: Kafka는 파티션이 특정 브로커에 고정되어 있어 브로커 장애 시 해당 파티션의 리밸런싱 지연이 발생하지만, Pulsar는 스토리지가 브로커와 분리되어 있어 브로커 장애 시 즉각적인 토픽 이전(Topic Ownership Transfer)이 가능하고 스케일 인/아웃이 유연하다.</li>
+<li><strong>판단 포인트</strong>: Pulsar는 멀티 테넌시(Multi-Tenancy), 지역 복제(Geo-Replication), 계층형 스토리지(Tiered Storage)가 기본 내장되어 대형 클라우드 서비스 제공자에게 유리하지만, 운영 복잡도(브로커 + BookKeeper + ZooKeeper 3계층 관리)가 Kafka보다 높다.</li>
+</ul>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<h3 id="1-kafkayi-gujojeog-hangye">1. Kafka의 구조적 한계</h3>
+<p>Kafka는 파티션이 특정 브로커에 고정(Coupled)되어 있다.</p>
+<pre><code>Kafka 문제:
+  Broker 1: Partition 0, 1 (Leader)
+  Broker 2: Partition 2 (Leader) ← 이 브로커 장애 발생!
+  
+  → Partition 2의 팔로워가 리더가 될 때까지 일시 불가용
+  → 새 브로커 추가 시 파티션 재배치 필요 (시간 소요)
+  → 클러스터 규모 커질수록 리밸런싱 비용 증가
+</code></pre>
+<h3 id="2-pulsaryi-bunri-akitegceo">2. Pulsar의 분리 아키텍처</h3>
+<pre><code>Pulsar 해결책:
+  Broker: 라우팅·서빙 담당 (상태 없음, Stateless)
+  BookKeeper: 실제 데이터 저장 (상태 있음, Stateful)
+  
+  Broker 2 장애 시:
+  → 해당 토픽의 소유권(Ownership)만 다른 Broker로 즉시 이전
+  → 데이터는 BookKeeper에 그대로 있어 손실 없음
+  → 리밸런싱 수 초 내 완료
+</code></pre>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Kafka는 "창고(스토리지)를 가진 배달부(브로커)"이고, Pulsar는 "창고(BookKeeper)는 창고업체에 맡기고 배달만 하는 배달부(브로커)"이다. 배달부가 교체되도 창고는 그대로라 물건을 다시 찾을 필요가 없다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="1-pulsar-akitegceo-daieogeuraem">1. Pulsar 아키텍처 다이어그램</h3>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│  Apache Pulsar 클러스터                                       │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  서빙 계층 (Brokers) — Stateless                     │    │
+│  │  Broker 1   Broker 2   Broker 3                      │    │
+│  │  (토픽 소유권 관리, 프로토콜 처리)                     │    │
+│  └──────────────────────┬──────────────────────────────┘    │
+│                         │ 읽기&#x2F;쓰기 (Ledger)                 │
+│  ┌──────────────────────▼──────────────────────────────┐    │
+│  │  스토리지 계층 (Apache BookKeeper) — Stateful         │    │
+│  │  Bookie 1   Bookie 2   Bookie 3                      │    │
+│  │  (데이터 영구 저장, Ledger 기반)                       │    │
+│  └──────────────────────┬──────────────────────────────┘    │
+│                         │                                    │
+│  ┌──────────────────────▼──────────────────────────────┐    │
+│  │  계층형 스토리지 (Tiered Storage) — 선택적            │    │
+│  │  S3 &#x2F; GCS &#x2F; ADLS (콜드 데이터 자동 이전)              │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                                                              │
+│  메타데이터: ZooKeeper (또는 Oxia, BookKeeper Metadata)       │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="2-pulsaryi-haegsim-gineung">2. Pulsar의 핵심 기능</h3>
+<table><thead><tr><th style="text-align: left">기능</th><th style="text-align: left">설명</th><th style="text-align: left">Kafka 비교</th></tr></thead><tbody>
+<tr><td style="text-align: left">Multi-Tenancy</td><td style="text-align: left">테넌트/네임스페이스 계층 구조로 완전 격리</td><td style="text-align: left">토픽 명명 규칙으로만 구분</td></tr>
+<tr><td style="text-align: left">Geo-Replication</td><td style="text-align: left">클러스터 간 비동기 복제 내장</td><td style="text-align: left">MirrorMaker 2 별도 필요</td></tr>
+<tr><td style="text-align: left">Tiered Storage</td><td style="text-align: left">오래된 데이터를 S3/GCS로 자동 이전</td><td style="text-align: left">Confluent Tiered Storage (유료)</td></tr>
+<tr><td style="text-align: left">Pulsar Functions</td><td style="text-align: left">경량 스트림 처리 함수 내장</td><td style="text-align: left">Kafka Streams 별도 라이브러리</td></tr>
+<tr><td style="text-align: left">구독 유형</td><td style="text-align: left">Exclusive/Shared/Failover/Key-Shared</td><td style="text-align: left">컨슈머 그룹으로만 구분</td></tr>
+</tbody></table>
+<h3 id="3-gudog-yuhyeong-subscription-types">3. 구독 유형(Subscription Types)</h3>
+<pre><code>Exclusive:   하나의 Consumer만 구독 (순서 보장 강력)
+Shared:      여러 Consumer에 메시지 분배 (병렬 처리, 순서 불보장)
+Failover:    하나가 Active, 나머지 Standby (HA)
+Key-Shared:  같은 키는 같은 Consumer로 (순서 보장 + 병렬)
+</code></pre>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Pulsar의 멀티 테넌시는 "오피스 빌딩 임대 구조"와 같다. 한 빌딩(클러스터)에 여러 회사(테넌트)가 입주하되, 각 회사의 사무실(네임스페이스)은 완전히 격리된다. 복도(브로커)는 공유하지만 내부는 독립적이다.</p>
+</blockquote>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="1-pulsar-vs-kafka-simceung-bigyo">1. Pulsar vs Kafka 심층 비교</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">Apache Kafka</th><th style="text-align: left">Apache Pulsar</th></tr></thead><tbody>
+<tr><td style="text-align: left">아키텍처</td><td style="text-align: left">모놀리식 (브로커 = 스토리지)</td><td style="text-align: left">분리 아키텍처 (Broker + BookKeeper)</td></tr>
+<tr><td style="text-align: left">스케일링</td><td style="text-align: left">브로커 단위 (파티션 재배치 필요)</td><td style="text-align: left">브로커/스토리지 독립 스케일링</td></tr>
+<tr><td style="text-align: left">멀티 테넌시</td><td style="text-align: left">제한적 (토픽 명명 규칙)</td><td style="text-align: left">네이티브 (Tenant/NS/Topic)</td></tr>
+<tr><td style="text-align: left">Geo-Replication</td><td style="text-align: left">MirrorMaker 2 필요</td><td style="text-align: left">내장</td></tr>
+<tr><td style="text-align: left">운영 복잡도</td><td style="text-align: left">중간 (단일 계층)</td><td style="text-align: left">높음 (3계층: Broker/BK/ZK)</td></tr>
+<tr><td style="text-align: left">생태계</td><td style="text-align: left">성숙 (Confluent 등)</td><td style="text-align: left">성장 중 (StreamNative 등)</td></tr>
+<tr><td style="text-align: left">메시지 보존</td><td style="text-align: left">토픽 단위 설정</td><td style="text-align: left">Ledger 단위, Tiered Storage</td></tr>
+</tbody></table>
+<h3 id="2-yeongyeol-gaenyeom">2. 연결 개념</h3>
+<ul>
+<li><strong>BookKeeper</strong>: Pulsar의 스토리지 엔진, Ledger 기반 순서화된 로그</li>
+<li><strong>Pulsar Functions</strong>: Java/Python/Go로 작성하는 경량 스트림 처리 로직</li>
+<li><strong>Pulsar IO</strong>: Source/Sink 커넥터 프레임워크 (Kafka Connect 유사)</li>
+</ul>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Kafka vs Pulsar는 "아파트(Kafka: 집과 창고 일체형) vs 주상복합(Pulsar: 주거와 창고 분리)"와 같다. 아파트가 더 단순하지만, 주상복합은 창고를 독립적으로 확장하거나 교체할 수 있다.</p>
+</blockquote>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="1-pulsar-seontaeg-jeoghab-sinario">1. Pulsar 선택 적합 시나리오</h3>
+<table><thead><tr><th style="text-align: left">시나리오</th><th style="text-align: left">Pulsar 선택 이유</th></tr></thead><tbody>
+<tr><td style="text-align: left">대규모 SaaS 플랫폼 (멀티 테넌트)</td><td style="text-align: left">기본 내장 테넌트 격리</td></tr>
+<tr><td style="text-align: left">글로벌 서비스 (지역 복제 필수)</td><td style="text-align: left">Geo-Replication 내장</td></tr>
+<tr><td style="text-align: left">무제한 보존 필요 (비용 최적화)</td><td style="text-align: left">Tiered Storage로 콜드 데이터 → S3 이전</td></tr>
+<tr><td style="text-align: left">브로커 확장 빈번</td><td style="text-align: left">스토리지와 독립 스케일링 가능</td></tr>
+</tbody></table>
+<h3 id="2-pulsar-vs-kafka-seontaeg-gijun">2. Pulsar vs Kafka 선택 기준</h3>
+<table><thead><tr><th style="text-align: left">선택 기준</th><th style="text-align: left">Kafka</th><th style="text-align: left">Pulsar</th></tr></thead><tbody>
+<tr><td style="text-align: left">운영 팀 경험</td><td style="text-align: left">풍부한 Kafka 경험 있을 때</td><td style="text-align: left">새로운 아키텍처 도입 가능 시</td></tr>
+<tr><td style="text-align: left">요구 기능</td><td style="text-align: left">단순 메시지 큐 + 스트리밍</td><td style="text-align: left">멀티 테넌시 + Geo-DR + Tiered Storage</td></tr>
+<tr><td style="text-align: left">생태계</td><td style="text-align: left">성숙한 Confluent/MSK</td><td style="text-align: left">성장 중, StreamNative 지원</td></tr>
+<tr><td style="text-align: left">벤더 지원</td><td style="text-align: left">Confluent, Cloudera</td><td style="text-align: left">StreamNative</td></tr>
+</tbody></table>
+<h3 id="3-cekeuriseuteu">3. 체크리스트</h3>
+<ul>
+<li><input disabled="" type="checkbox"/>
+BookKeeper 앙상블 크기: 최소 3 Bookie (쿼럼 2)</li>
+<li><input disabled="" type="checkbox"/>
+ZooKeeper 또는 Oxia 메타데이터 스토어 HA 구성</li>
+<li><input disabled="" type="checkbox"/>
+Broker 메모리: Managed Ledger Cache 최적화</li>
+<li><input disabled="" type="checkbox"/>
+Tiered Storage: 데이터 보존 정책과 비용 계획 수립</li>
+</ul>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Pulsar 운영은 "세 팀이 협업하는 복합 물류센터 관리"와 같다. 배달팀(Broker), 창고팀(BookKeeper), 관리팀(ZooKeeper)이 각자 역할을 하는데, 한 팀이 없으면 전체 운영이 어렵다. 각 팀의 HA를 별도로 보장해야 한다.</p>
+</blockquote>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="1-gidaehyogwa">1. 기대효과</h3>
+<table><thead><tr><th style="text-align: left">효과</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">즉각적 장애 복구</td><td style="text-align: left">브로커 장애 시 수 초 내 토픽 이전</td></tr>
+<tr><td style="text-align: left">독립적 확장</td><td style="text-align: left">처리량 증가 시 브로커만, 스토리지 증가 시 BookKeeper만 추가</td></tr>
+<tr><td style="text-align: left">비용 최적화</td><td style="text-align: left">Tiered Storage로 콜드 데이터 저렴한 오브젝트 스토리지 이전</td></tr>
+<tr><td style="text-align: left">멀티 테넌트</td><td style="text-align: left">단일 클러스터에서 다수 팀/서비스 격리 운영</td></tr>
+</tbody></table>
+<h3 id="2-gyeolron">2. 결론</h3>
+<p>Apache Pulsar는 <strong>대규모 멀티 테넌트 및 글로벌 분산 스트리밍에 최적화된 차세대 메시징 플랫폼</strong>이다. 기술사 답안에서는 Kafka와의 구조적 차이(컴퓨팅/스토리지 분리), 멀티 테넌시·Geo-Replication·Tiered Storage의 기본 내장 가치, 그리고 높은 운영 복잡도를 균형 있게 서술해야 한다.</p>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Pulsar는 "Kafka의 진화형 후계자"를 자처하지만, "더 강력한 무기를 다루려면 더 많은 훈련이 필요하다"는 트레이드오프가 있다. 운영 역량이 충분하고 멀티 테넌시/Geo-DR이 진짜 필요한 환경이라면 Pulsar가 Kafka보다 우위에 있다.</p>
+</blockquote>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">관계</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">Apache Kafka</td><td style="text-align: left">비교/경쟁</td><td style="text-align: left">기존 표준, Pulsar가 해결하려는 한계</td></tr>
+<tr><td style="text-align: left">Apache BookKeeper</td><td style="text-align: left">스토리지 엔진</td><td style="text-align: left">Pulsar의 데이터 저장 계층</td></tr>
+<tr><td style="text-align: left">Pulsar Functions</td><td style="text-align: left">내장 기능</td><td style="text-align: left">경량 스트리밍 로직 실행</td></tr>
+<tr><td style="text-align: left">Tiered Storage</td><td style="text-align: left">비용 최적화</td><td style="text-align: left">오래된 데이터 → 저렴한 오브젝트 스토리지</td></tr>
+<tr><td style="text-align: left">Geo-Replication</td><td style="text-align: left">DR 기능</td><td style="text-align: left">클러스터 간 자동 복제</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[전통 메시지 큐 (ActiveMQ·RabbitMQ) — 단일 브로커, 스케일 한계]
+    │
+    ▼
+[Apache Kafka — 분산 로그, 높은 처리량의 스트리밍 표준]
+    │
+    ▼
+[Apache Pulsar — 브로커·저장소 분리(BookKeeper), 지역 복제 내장]
+    │
+    ▼
+[Pulsar Functions — 경량 스트림 처리 컴퓨팅을 브로커 내 통합]
+    │
+    ▼
+[클라우드 네이티브 스트리밍 — 서버리스 이벤트 허브로 진화]
+</code></pre>
+<p>Apache Pulsar는 Kafka의 처리량과 전통 MQ의 유연성을 결합하고, 저장소 계층 분리와 지역 복제를 기본 내장해 멀티테넌트 클라우드 메시징 플랫폼으로 자리잡았다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<p>Kafka는 "배달부(브로커)가 직접 창고도 가진 구조"이고, Pulsar는 "배달부(브로커)와 창고업체(BookKeeper)가 분리된 구조"예요. 배달부가 아파도(브로커 장애) 창고는 멀쩡하니까 다른 배달부가 즉시 가서 물건을 가져올 수 있어요. 창고를 더 늘리고 싶으면 창고만(BookKeeper) 추가하고, 배달부를 더 늘리고 싶으면 배달부만 추가하면 되니까 각각 독립적으로 키울 수 있어요!</p>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

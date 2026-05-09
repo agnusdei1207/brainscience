@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>617. I&#x2F;O 성능 병목 (Bottleneck) 탐색법 (iostat, vmstat) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 25, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="i-o-ie-ee-bottleneck-iie">I/O ìë ëë (Bottleneck) íìë</h1>
+<h2 id="ii-iiii-3i-ii">íì ìììí (3ì ìì)</h2>
+<blockquote>
+<ol>
+<li><strong>ëì</strong>: I/O ìë ëëìë ììíì ìì ìëë(Throughput)ì ëìí, ëíìí, íìììí ë I/O subsystemì ìë ëëì ìíëë íììë, CPUë ëëëëë I/O ëêê ìì ìì ìêì ëëëì ììíë êìê ëì ííë.</li>
+<li><strong>êì</strong>: I/O ëëì ìíí íìíë, SSD ëì, RAID êì ëê, ëëê I/O ìì, ìì ìë ìë ë ìë íìê êì íêììì íëí ì ìë.</li>
+<li><strong>ìí</strong>: I/O ëë ëìì íìììí(Ext4, XFS, ZFS), ëë ëìì, SCSI/NVMe ëëìë, ëíìí ìí ë ìë êìì êì ììëë, ê êìë ëê(iostat, perf, bpftrace ë)ëììí íí ëìì íìíë.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="1-ei-e-iii">1. êì ë íìì</h2>
+<h3 id="ee-e-ii">êë ë ìì</h3>
+<p>I/O ìë ëëì ììíì ëìíëíëCPUìëëëìììë. ììíì ìì ìë ìêìì I/O ëêê ììíë ëìì ëììë I/O ëëì ìêíëë ëìë.</p>
+<p>I/O ëëì ìì ììì ëìê êë:</p>
+<ul>
+<li><strong>ëìí ììì ìë ìë íê</strong>: HDDì ëëì ìí ìê(íì ìê + íì ìì)</li>
+<li><strong>RAID ìíëë ìì</strong>: RAID5/6ì íëí êìì ëë ìê ëë</li>
+<li><strong>íìììí ëíëìíìì</strong>:ìíëí</li>
+<li><strong>ëë ëìì í êì íê</strong>: ëìì ìë êëí I/O ìì ì ìí</li>
+<li><strong>ëíìí ëìí íí</strong>: ëìë ëìí ìì ì ëíìí ëìí êê</li>
+</ul>
+<h3 id="i-i-o-ee-eii-iiie">ì I/O ëë ëìì ììíê</h3>
+<p>CPUìëê ìëë ëìë, ëìíëìëììíêì ëìíëìì ìë, íì ìë, êì ëì, ë ëëëìI/Oì ëêíëë, I/O ëëì íêíë ììíì íìë ìëììëì êëí ì ìë.</p>
+<pre><code>[ììí ìì ìë ìê ëì]
+
+[CPU ëìë íëêëì êì]
+ìì ìê = 100%
+|| CPU ìë (100%)
+|                              |
+
+[CPU + I&#x2F;O íí íëêëì êì]
+ìì ìê = 100%
+|| CPU ìë (30%)
+|| I&#x2F;O ëê (70%)
+|             ìêì I&#x2F;O ëë!
+
+[I&#x2F;O ëë íê í]
+ìì ìê = 43%
+|| CPU ìë (30%)  &lt;- ììê ëì
+|| I&#x2F;O ëê (13%)   &lt;- 70%ìì 13%ë êì!
+|             I&#x2F;O ììíë ìì ìêì 57% ëìë!
+</code></pre>
+<p><strong>[ëììêë íì]</strong> I/O ëë íêì"ëëìíêì"ì ëìí ì ìë.ëìí ììëCPU(ìê)ì ìëë ëëëI/O(ëë)ê ëëìëìììë</p>
+<ul>
+<li><strong>ìì ëì</strong>: I/O ëëì "êì ëë ëì"ì êë. ìììì ììì ëëêê ìëë ëëë( CPU ), ëë ìëì ìêë(ëìí ìëë) ëë êì ëíë(ëíìí ëìí) íìëì ìëì ììë ëì ëíë.</li>
+</ul>
+<hr />
+<h2 id="2-iiii-e-ii-ie">2. ìííì ë íì ìë</h2>
+<h3 id="i-o-ii-eii-e-eie-ee-iii">I/O ìí êìì ê êìë ëë íìí</h3>
+<pre><code>[]
+  &gt; [File System Layer]  &lt;- ëíëìí ìì, ìê, ëí ìì
+        &gt; [Block Layer]    &lt;- I&#x2F;O ìììë, í êë
+              &gt; [SCSI&#x2F;NVMe Layer]  &lt;- ëìí ìíëë, í êì
+                    &gt; [Physical Disk]  &lt;- ìì ëìí read&#x2F;write
+
+ê êìë ëë íìí:
+
+[File System êì]
+- ëíëìí ìê&#x2F;ìê ìì ìì (íííì)
+- íìììí ëí ìì ëì -&gt;ëìì
+- ìê êí (fs-wide inode mutex ë)
+
+[Block Layer]
+- I&#x2F;O ìììë ìí (noop, cfq, deadline, mq-deadline)
+- í êì (queue depth) ìí
+- ëë (unbalanced I&#x2F;O ëì)
+
+[ëìí ìíëë]
+- RAID íëí êì (RAID5&#x2F;6 ìê)
+- ìíëë ìì Hit&#x2F;Miss
+- SSDì êì FTL(Flash Translation Layer) ìëíë
+
+[ëë ëìí]
+- HDD: íì ìê (seek time) + íì ìì (rotational latency)
+- SSD: NAND íëì I&#x2F;O ìê ( erase + program)
+</code></pre>
+<h3 id="i-o-ee-ie-ee-ei">I/O ëë ìë ëê êì</h3>
+<table><thead><tr><th>ëê</th><th>ëì êì</th><th>íì ìí</th></tr></thead><tbody>
+<tr><td><strong>iostat</strong></td><td>ëë ëìì + ëìí</td><td>tps, KB_read/s, KB_wrtn/s, await, %util</td></tr>
+<tr><td><strong>iotop</strong></td><td>íëììë</td><td>ëìí I/O ììëë íëìì ìë</td></tr>
+<tr><td><strong>pidstat</strong></td><td>íëììë</td><td>PIDë I/O íê</td></tr>
+<tr><td><strong>blktrace</strong></td><td>ëë ëìì</td><td>êë I/O ììì latency ëí</td></tr>
+<tr><td><strong>bpftrace</strong></td><td>ëë êì</td><td>ìë íì ììì ìì ìì</td></tr>
+<tr><td><strong>perf</strong></td><td>CPU + I/O</td><td>CPI, I/O êë íëìì ìëí</td></tr>
+</tbody></table>
+<h3 id="iostat-ii-ii-ie">iostat ìì ìí íë</h3>
+<pre><code>Device  tps    kB_read&#x2F;s  kB_wrtn&#x2F;s  kB_read  kB_wrtn  await  %util
+sda    154.32    1234.56     567.89   123456   56789   12.34  45.67
+
+[ìí ìë]
+tps (Transactions Per Second): ìë ìëëë I&#x2F;O ìì ì
+kB_read&#x2F;s: ìë ìì íëëìí
+kB_wrtn&#x2F;s: ìë ì íëëìí
+await: I&#x2F;O ìììì ëìíì ëëê ìëêììíê ëê ìê (ëëì)
+%util: ëìí ììë (100%ë ëìí íí!)
+</code></pre>
+<p><strong>ëë íë êì</strong>:</p>
+<ul>
+<li><strong>%util &gt; 80%</strong>: ëìí íí -&gt; ìê I/O ììì ëêíì í</li>
+<li><strong>await &gt; 100ms</strong>: ëì ëë ëìí ìë -&gt; HDDì êì typical, SSDëë ëì ìì</li>
+<li><strong>avgqu-sz (ëê í íê) &gt; 4</strong>: ëì I/Oê íìì ëê ì -&gt; ëë íì</li>
+</ul>
+<pre><code>[ëë íë íë]
+
+%utilì 80% ìììê?
+ ì: ëìíê ëëìë
+     ìê ëìì ëëë -&gt; ìê ììí (ìì, ëë ahead)
+     ìê ëìì ëëë -&gt; ìê ììí (ëì ìê, SSD ëì)
+
+ ìëì: CPUë ëíìí ìì íì
+     CPU %iowaitê ëìê?
+         ì: I&#x2F;O ëêë CPUê ëê ìí -&gt; I&#x2F;O ëëìë
+     CPU ììê ëìê?
+          ì: CPU ëëìë
+</code></pre>
+<p><strong>[ëììêë íì]</strong> iostatì %utilì"êìëë ííë"ê êë. 80% ìíìë ìëì ìííê íëìë, 80% ììì ëë ìë ìì êêì ìììê ìëê ëëìë. 100%ì ìëë êìëëê ìì ííëì ìë ìë ìììì ëíë.</p>
+<h3 id="ssd-vs-hdd-ee-ii-ee">SSD vs HDD ëë íì ëê</h3>
+<table><thead><tr><th>ìí</th><th>HDD</th><th>SSD (SATA)</th><th>SSD (NVMe)</th></tr></thead><tbody>
+<tr><td><strong>ìì ìê ìë</strong></td><td>100~200 MB/s</td><td>500~550 MB/s</td><td>3,000~7,000 MB/s</td></tr>
+<tr><td><strong>ìì ìê ìë</strong></td><td>100~200 MB/s</td><td>400~500 MB/s</td><td>2,000~6,000 MB/s</td></tr>
+<tr><td><strong>ìê ìììê</strong></td><td>5~10 ms</td><td>0.05~0.1 ms</td><td>0.01~0.05 ms</td></tr>
+<tr><td><strong>ìê ìììê</strong></td><td>5~10 ms</td><td>0.05~0.1 ms</td><td>0.01~0.05 ms</td></tr>
+<tr><td><strong>ëë</strong></td><td>íì ìê + íì</td><td>SATA ëìí + ìíëë</td><td>í êì (Queue Depth)</td></tr>
+<tr><td><strong>ëë íêì</strong></td><td>SSDë êì</td><td>NVMeë êì</td><td>í êì ììí</td></tr>
+</tbody></table>
+<ul>
+<li><strong>ìì ëì</strong>: I/O ëë ìëì "ëë ììì"ì êë. êêì"ììì ì ììì"ëê íë, restoranìì ëìëì(ììí ì), ëëììììì(I/O ìë), ëëìì ëíëì(ëíìí/ëìí ëë) ê êêì ììíì"ìëì ëìê ëìíëì"ë íìíì íë.</li>
+</ul>
+<hr />
+<h2 id="3-ii-ee-e-eee-ei">3. ìí ëê ë ëêë ëì</h2>
+<h3 id="i-o-ee-vs-cpu-ee-iii-iei-iii">I/O ëë vs CPU ëë: ìíí ìëì ììì</h3>
+<table><thead><tr><th>ìì</th><th>ìì ìì</th><th>ìì ìì</th><th>êê</th></tr></thead><tbody>
+<tr><td>CPU %iowait ëì</td><td>I/O ëë</td><td>ììëë CPUê I/O ëêê ìë ëë ëê ìí</td><td>ìëë ììí</td></tr>
+<tr><td>ìëë ëì</td><td>ëìí ëë</td><td>ëíìí ëìí íí</td><td>ëìí êì</td></tr>
+<tr><td>ìë ìì</td><td>CPU ëì</td><td>I/O ëê í íì</td><td>CPU ì</td></tr>
+</tbody></table>
+<pre><code>[ìíí ëë ìë êì]
+
+ëê 1: ììí ìì íì
+ uptime (ëí íê)
+ vmstat 1 (CPU, I&#x2F;O, ëëë ìí)
+ iostat -x 1 (ëìí ììë, ìë ìê)
+
+ëê 2: CPU vs I&#x2F;O ëë êë
+ vmstatìì CPUë ììë ëì
+     us (user) + sy (system) ëì -&gt; CPU ëì
+     wa (wait I&#x2F;O) ëì -&gt; I&#x2F;O ëê
+
+ iostatìì ëìí ììë ëì
+      %util 80% ìì -&gt; ëìí íí
+      %util 80% ëë -&gt; ëë êì ëì
+
+ëê 3: ìì ìì íì
+ iotop: ìë íëììê I&#x2F;Oë êì ëì ëììíëì
+ blktrace: I&#x2F;O ììë latency ëí
+ bpftrace: ìë ëë I&#x2F;O ìë íì ìì
+</code></pre>
+<p><strong>[ëììêë íì]</strong> I/O ëë ìëì"ìë ìí ìë"ê êë. íìêì(CPU íê), X-ray(ëìí íê), ììë(ëíìí íê) ë ìë êìë íì ìíììë íëíì"ìì ìì"ì ì ì ìë. í êì êìëìë íëíë ìëë ìëë íê ë ì ìë.</p>
+<h3 id="iiiiie-i-o-ii">íìììíë I/O íì</h3>
+<table><thead><tr><th>íìììí</th><th>êì</th><th>ìì</th><th>ìíí ìì</th></tr></thead><tbody>
+<tr><td><strong>Ext4</strong></td><td>ëì ííì, ìëë</td><td>ìë</td><td>ëì ìë, êêì</td></tr>
+<tr><td><strong>XFS</strong></td><td>í íì, ëë ìë</td><td>ëíëìí ìì ìëíë</td><td>ëìíëìì, HPC</td></tr>
+<tr><td><strong>ZFS</strong></td><td>ëìí ëêì, ìëì</td><td>ëëë ìë í</td><td>ëì, íì ìë</td></tr>
+<tr><td><strong>Btrfs</strong></td><td>ìì, ìëìê</td><td>ìì maturity ëì</td><td>êë íê</td></tr>
+</tbody></table>
+<ul>
+<li><strong>ìì ëì</strong>: íìììí ìíì"ëìì ëë êê ìí"ê êë. ëêìëìXFSìSDAìêê ëë ëêë ìë êìë,ì ëê íìììíì ìííì íë.</li>
+</ul>
+<hr />
+<h2 id="4-ie-ii-e-eiii-ie">4. ìë ìì ë êììì íë</h2>
+<h3 id="ie-ieei-eiieii-ie-ie-ii-ie">ìë ìëëì: ëìíëìì ìë ìë ìí íê</h3>
+<p><strong>ìí</strong>:ë ìëì ìíëì ìí êì ìëê ìì ëëìê ììë.ìí ëìíê ëìììë ìëìììëìííìë.</p>
+<p><strong>ìë êì</strong>:</p>
+<ol>
+<li><code>iostat -x 1</code> ìí -&gt; ëìí %utilê 95%ë íí</li>
+<li><code>iotop</code> -&gt; mysql/mariadb íëììêì ëëëì</li>
+<li><code>blktrace</code>ë ìì ëì -&gt; ìì íêê ëëë 4KB~16KB ( ëìí ìê)</li>
+<li><code>perf stat -a -e block:block_rq_issue</code>ë ëì -&gt; ëì ìì 4KB ìê ìì ëì</li>
+</ol>
+<p><strong>ìì</strong>:ìí ìëê ìë êì ììì ëì ììëìê êìëë ëììíì.</p>
+<p><strong>ëìì</strong>:</p>
+<ol>
+<li>ëëíìëëëí ëëëì (Buffer Pool íë)</li>
+<li>ìí ìëìë í íìë íìì sequential readë ëê</li>
+<li>InnoDB ìììì <code>innodb_flush_method = O_DIRECT</code> ììíì OS ìì ìí</li>
+</ol>
+<p><strong>êê</strong>: ëìí %utilê 95%ìì 30%ë êì, ìë ìëê íê 80% íì</p>
+<h3 id="ei-iieii">ëì ìíëìí</h3>
+<ul>
+<li><strong>ëìí íí ìë íì</strong>: iostatìì %utilê 80%ë ëìë ëìíê ëëìë.</li>
+<li><strong>ìê vs ìê ëì ëì</strong>: ìê ëìì ëìë ìì ìì, ìê ëìì ëìë ìê ììí</li>
+<li><strong>íëììë I/O ëì</strong>: iotopìë ìë íëììê êì ëì I/Oë ëìíëì íì</li>
+<li><strong>ìì íì ëëìì</strong>: ëì ìì ìì íììíë ìëíëê íëë, íëë íìêë ìíëì íì</li>
+</ul>
+<h3 id="iiii">ìííí</h3>
+<ul>
+<li>
+<p><strong>"%utilì ëìë I/O ëëì ìëë" íë</strong>: %utilì ëìë await(ìë ìê)ê ëìë ëìí ììì ìë ìë ëìê ìì ì ìë.</p>
+</li>
+<li>
+<p><strong>SSD ëìëìë ëë ëë íê</strong>: SSDë ëëìë,ìì ëìíë I/O ìììììì ììë ììí ëëì ë ì ìë.</p>
+</li>
+<li>
+<p><strong>ììëìë íêíë í</strong>: ìì ííìì ëìë(= ìì íëëì ëëë íêëì ììë) ìíëììììë ëìí ëì ìë ììë ëììêíì íë.</p>
+</li>
+<li>
+<p><strong>ìì ëì</strong>: I/O ëë íêì "ëì êí íì íê"ê êë. Royceíë(SSD êì)ëìëìê ëë(ìì ì ìê) ë ëíë. ììì(ìì), ìë ííì ììê(ìì ììí), ëëìëë íìììë ëëë êììë.</p>
+</li>
+</ul>
+<hr />
+<h2 id="5-eeie-e-ee">5. êëíê ë êë</h2>
+<h3 id="ie-ii-eeie">ìë/ìì êëíê</h3>
+<table><thead><tr><th>êë</th><th>I/O ëë ëíê</th><th>I/O ëë íê í</th></tr></thead><tbody>
+<tr><td><strong>íê ìë ìê</strong></td><td>500ms</td><td>50ms</td></tr>
+<tr><td><strong>ìëë (QPS)</strong></td><td>100 req/s</td><td>1,000 req/s</td></tr>
+<tr><td><strong>CPU íì</strong></td><td>I/O ëêë ëë</td><td>CPUê ìì ììì íì</td></tr>
+<tr><td><strong>íëìì íìë</strong></td><td>ëìí íí, CPU ìì</td><td>êí ìí íì</td></tr>
+</tbody></table>
+<h3 id="ee-ie">ëë ìë</h3>
+<p>NVMe-oF(ëíìíë íí NVMe), ìííììë ìíëì(ìíëììì ìì ìì), êëê AI êë I/O íí ìì ëì ëë I/O ëë íêì ìëì ëíì ë êìë.</p>
+<h3 id="ie-ii">ìê íì</h3>
+<ul>
+<li>
+<p><strong>Linux iostat documentation</strong>: https://man7.org/linux/man-pages/man1/iostat.1.html</p>
+</li>
+<li>
+<p><strong>blktrace documentation</strong>: https://wiki.btrfs.org/wiki/ blktrace</p>
+</li>
+<li>
+<p><strong>NIST SP 800-88</strong>: ìíëì ìíí êìëëì</p>
+</li>
+<li>
+<p><strong>ìì ëì</strong>: I/O ëë íêì "ëë ìê íìí"ì êë. íëìëëê(íëìì ì)ìê ëë íëë ëíê(ìííìì ììí)ëë êë ììíìíë(ìì, ìì) ìì ëë ìëê ëìììë íìëë.</p>
+</li>
+</ul>
+<hr />
+<h2 id="ee-ee-e">êë êë ë</h2>
+<table><thead><tr><th>êë ëì</th><th>êê ë ìëì ìë</th></tr></thead><tbody>
+<tr><td><strong>ëìí ìììë</strong></td><td>I/O ììì ëìíì ëëê ì ìì ìëíë ìêëììë, ìêëì ìíì ëë ëë íì ëë ìíêëíë.</td></tr>
+<tr><td><strong>RAID</strong></td><td>ìë ëìíë íëì ëëì ëëìë êìíë êìë, ìê ìëì íëí êì ìëíëê ëìí ì ìë.</td></tr>
+<tr><td><strong>NVMe</strong></td><td>PCIe ëìì ìì ìêëë êì SSD ìííììë, SATA SSDëëì ìì ìêì ìêíë.</td></tr>
+<tr><td><strong>FUSE</strong></td><td>ììì êêìì íìììíìêíí ì ìëìë, ìë ìì ìì ììí ìíëìëí ì ìë.</td></tr>
+</tbody></table>
+<hr />
+<h2 id="ieie-ii-3i-ei-ie">ìëìë ìí 3ì ëì ìë</h2>
+<ol>
+<li>I/O ëëì "íê êì ëë ëì"ì êë.ìê ììì ëë ëëìë( CPU ), ëë ìê 1ëëìë(ëìí ìëë) ìì êìì ê ìì ìëìëë.</li>
+<li>êëë ëë ìê 10ëë ëìëë( SSD êì), ê ìê ëë ììê 100êëë(ìì íìë) ììí ëë ìêì ìë êëë.</li>
+<li>êëì êì ëëì "ìëë ììì í êëì ëì í ëì ëëíê(íì íìê), ê íêëë ëëë ëë(ìì)"ì êìíë, ì ëìë ëëë êëë íì íìììë êìë ì ìë!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

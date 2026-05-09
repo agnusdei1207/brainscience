@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>620. 안드로이드 리눅스 커널 커스터마이징 (Wakelock 전력 통제 모듈) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 29, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="andeuroideu-rinugseu-keoneol-keoseuteomaijing-wakelock-jeonryeog-tongje-modyul">안드로이드 리눅스 커널 커스터마이징 (Wakelock 전력 통제 모듈)</h1>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: Wakelock은 Android가 리눅스 커널 (Linux Kernel)에 추가한 전력 관리(PM, Power Management) 확장 모듈로, 애플리케이션이나 커널 서브시스템이 CPU, 디스플레이, 무선 통신 장치의 절전(Suspend) 상태 진입을 선점적으로 방지(Lock)하여, 사용자 경험을 해치지 않으면서도 유휴(Idle) 시간에는 최대한 전력을 절약하는 세밀한 전력 통제 메커니즘이다.</li>
+<li><strong>가치</strong>: 기존 리눅스의 OPP (Operating Performance Points) 기반 cpuidle 프레임워크만으로는 모바일 기기의 "화면이 꺼진 상태에서도 음악 재생, GPS 추적, 메시지 수신 대기" 같은 복잡한 전력 시나리오를 처리할 수 없었으나, Wakelock은 이를 우아하게 해결하여 Android가 모바일 OS 시장을 장악하는 핵심 기술 기반이 되었다.</li>
+<li><strong>융합</strong>: Wakelock은 리눅스 커널의 PM 서브시스템과 Android의 PowerManagerService, ActivityManagerService, 그리고 Doze/App Standby 등 상위 전력 정책 계층이 유기적으로 결합된 결과물이며, 커널 수준의 하드웨어 제어와 프레임워크 수준의 앱 생명주기 관리가 융합된 사례다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<p><strong>개념 및 정의</strong>
+Wakelock은 Android가 리눅스 커널의 전력 관리(PM, Power Management) 서브시스템 위에 구현한 <strong>잠금 기반(Lock-based) 전력 상태 제어 메커니즘</strong>이다. 기본적으로 리눅스 커널은 CPU가 유휴(Idle) 상태가 되면 자동으로 저전력 모드(C-State)로 진입하지만, 모바일 기기에서는 "백그라운드에서 음악이 재생 중이거나", "GPS가 위치를 추적 중이거나", "긴급 메시지를 기다리는 중"에 CPU가 잠들어 버리면 치명적인 사용자 경험 저하가 발생한다. Wakelock은 이 문제를 해결하기 위해 <strong>"특정 작업이 완료될 때까지 CPU나 디바이스가 잠들지 못하게 붙잡아 두는(Wake + Lock)" 장치</strong>다.</p>
+<p><strong>필요성 및 등장 배경</strong>
+표준 리눅스 커널의 전력 관리는 서버와 데스크톱 환경에 최적화되어 있었다. 서버는 24시간 가동이 기본이므로 CPU를 적극적으로 suspend할 필요가 없고, 데스크톱은 전원 코드가 연결되어 있어 전력 제약이 심하지 않다. 그러나 모바일 기기는 배터리라는 유한 에너지원으로 동작하며, 사용자는 "화면을 끄고 주머니에 넣어도 음악은 계속 재생되어야 하고, 전화는 걸려오면 바로 받을 수 있어야 하고, 메신저 알림도 실시간으로 와야 한다"는 모순적 요구를 가진다. 기존 리눅스의 <code>pm_suspend()</code>는 "모두 잠들거나 모두 깨어있거나"의 이진적(Binary) 접근만 제공했으나, Android는 <strong>"CPU는 깨어있되 디스플레이는 끄고", "Wi-Fi는 켜두되 셀룰러는 끄고"</strong> 같은 세밀한(Fine-grained) 제어가 필요했고, 이를 위해 Wakelock을 고안했다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────┐
+│      표준 Linux PM vs Android Wakelock 전력 관리 비교             │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  [표준 리눅스 전력 관리]                                          │
+│                                                                  │
+│  CPU 활동 → (유휴 감지) → cpuidle → C1 → C2 → ... → Suspend   │
+│       │                              │                           │
+│       │   &quot;아무도 안 쓰면 전체 잠든다&quot;                            │
+│       └─── 문제: 모바일에서는 백그라운드 작업이 항상 존재 ────→ │
+│           음악 재생, GPS, PUSH 알림 등이 CPU Suspend와 충돌      │
+│                                                                  │
+│  ─────────────────────────────────────────────────────────────  │
+│                                                                  │
+│  [Android Wakelock 전력 관리]                                     │
+│                                                                  │
+│  App A: &quot;음악 재생 중&quot; ──→ PARTIAL_WAKE_LOCK (CPU 유지)         │
+│  App B: &quot;GPS 추적 중&quot;  ──→ PARTIAL_WAKE_LOCK (CPU 유지)         │
+│  System: &quot;전화 대기&quot;   ──→ FULL_WAKE_LOCK (CPU + Display)      │
+│                                                                  │
+│  → 활성 Wakelock이 하나라도 있으면 CPU Suspend 진입 불가        │
+│  → 모든 Wakelock이 해제되면 비로소 Suspend 진입                  │
+│  ※ 디스플레이, Wi-Fi 등은 독립적인 Wakelock으로 제어             │
+└──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 비교도에서 핵심은 Wakelock이 <strong>"참조 카운팅(Reference Counting) 기반의 전력 상태 게이트키퍼(Gatekeeper)"</strong> 역할을 한다는 점이다. 여러 앱이 각각 자신의 Wakelock을 획득(Hold)하고 있는 동안에는 커널이 CPU Suspend를 시도하지 않으며, 마지막 Wakelock이 해제(Release)되는 순간에만 비로소 저전력 모드로 진입한다. 이는 운영체제의 읽기-쓰기 락(Read-Write Lock)과 유사한 개념으로, 자원(CPU)의 활성 상태를 여러 주체가 공유하여 관리하는 분산 제어 모델이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Wakelock은 <strong>'아파트 엘리베이터의 누르고 있기 버튼'</strong> 과 같습니다. 누군가가 버튼을 누르고 있는(Wakelock 획득) 동안에는 엘리베이터 문(CPU)이 닫히지 않고, 모든 사람이 버튼에서 손을 떼면(Wakelock 해제) 비로소 문이 닫혀서 대기 모드(Suspend)로 들어갑니다. 한 사람이라도 버튼을 누르고 있으면 엘리베이터는 계속 켜져 있어요.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri-deep-dive">Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)</h2>
+<h3 id="wakelock-yuhyeong-bunryu">Wakelock 유형 분류</h3>
+<p>Android는 용도에 따라 4가지 Wakelock 유형을 정의한다. API 레벨 17 이후부터는 <code>PARTIAL_WAKE_LOCK</code>만 권장되며, 나머지는 <code>FLAG_KEEP_SCREEN_ON</code> 등 대체 방식을 사용하도록 유도하고 있다.</p>
+<table><thead><tr><th style="text-align: left">Wakelock 유형</th><th style="text-align: center">CPU</th><th style="text-align: center">디스플레이</th><th style="text-align: center">키보드</th><th style="text-align: center">권장 여부</th><th style="text-align: left">주요 사용 사례</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>PARTIAL_WAKE_LOCK</strong></td><td style="text-align: center">ON</td><td style="text-align: center">OFF</td><td style="text-align: center">OFF</td><td style="text-align: center">✅ 권장</td><td style="text-align: left">음악 재생, GPS 추적, 다운로드</td></tr>
+<tr><td style="text-align: left"><strong>SCREEN_DIM_WAKE_LOCK</strong></td><td style="text-align: center">ON</td><td style="text-align: center">Dim</td><td style="text-align: center">OFF</td><td style="text-align: center">❌ Deprecated</td><td style="text-align: left">(구버전) 짧은 알림 표시</td></tr>
+<tr><td style="text-align: left"><strong>SCREEN_BRIGHT_WAKE_LOCK</strong></td><td style="text-align: center">ON</td><td style="text-align: center">Bright</td><td style="text-align: center">OFF</td><td style="text-align: center">❌ Deprecated</td><td style="text-align: left">(구버전) 동영상 재생</td></tr>
+<tr><td style="text-align: left"><strong>FULL_WAKE_LOCK</strong></td><td style="text-align: center">ON</td><td style="text-align: center">Bright</td><td style="text-align: center">Bright</td><td style="text-align: center">❌ Deprecated</td><td style="text-align: left">(구버전) 전화 수신</td></tr>
+</tbody></table>
+<h3 id="naebu-akitegceo-keoneol-peureimweokeu-gyeceung-gujo">내부 아키텍처: 커널-프레임워크 계층 구조</h3>
+<p>Wakelock은 크게 세 계층으로 나뉜다: (1) 커널 수준의 <code>wakelock</code> 드라이버, (2) HAL (Hardware Abstraction Layer) 수준의 전력 인터페이스, (3) 프레임워크 수준의 <code>PowerManagerService</code>이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────┐
+│          Wakelock 아키텍처 계층도 (Architecture Stack)            │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  [③ Application &#x2F; Framework Layer]                               │
+│  ┌─────────────────────────────────────────────────────────┐     │
+│  │  App: PowerManager.newWakeLock()                        │     │
+│  │    ↓                                                     │     │
+│  │  PowerManagerService (시스템 서버)                       │     │
+│  │    - Wakelock 참조 카운트 관리                            │     │
+│  │    - ActivityManagerService와 연동하여                    │     │
+│  │      백그라운드 앱 Wakelock 제한 (Doze 모드)              │     │
+│  │    - 통계 수집 (Battery Stats)                           │     │
+│  └─────────────────────┬───────────────────────────────────┘     │
+│                        │ JNI &#x2F; Sysfs                              │
+│                        ▼                                         │
+│  [② HAL &#x2F; Kernel Interface Layer]                                │
+│  ┌─────────────────────────────────────────────────────────┐     │
+│  │  &#x2F;sys&#x2F;power&#x2F;wake_lock (sysfs 인터페이스)                 │     │
+│  │  &#x2F;sys&#x2F;power&#x2F;wake_unlock                                 │     │
+│  │    ↓                                                     │     │
+│  │  suspend_ops → PM 핵심 서브시스템과 연동                  │     │
+│  └─────────────────────┬───────────────────────────────────┘     │
+│                        │ Kernel API                              │
+│                        ▼                                         │
+│  [① Kernel PM Layer]                                             │
+│  ┌─────────────────────────────────────────────────────────┐     │
+│  │  wakelock.c (커널 드라이버)                              │     │
+│  │    - has_wake_lock() → 활성 Wakelock 존재 여부 확인      │     │
+│  │    - wake_lock() &#x2F; wake_unlock()                         │     │
+│  │    - pm_suspend() 진입 차단 &#x2F; 허용 결정                  │     │
+│  │    - expire 타이머 (timeout 기반 자동 해제)               │     │
+│  └─────────────────────────────────────────────────────────┘     │
+│                        ↓                                         │
+│  [Hardware: CPU C-States, DVFS, Clock Gating]                    │
+└──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 계층도는 Wakelock이 단순한 API가 아니라 커널-프레임워크에 걸친 3계층 아키텍처임을 보여준다. 앱이 <code>PowerManager.newWakeLock()</code>을 호출하면, 요청은 PowerManagerService를 거쳐 <code>/sys/power/wake_lock</code> sysfs 노드로 전달되고, 최종적으로 커널의 <code>wakelock.c</code> 드라이버가 <code>has_wake_lock()</code>을 확인하여 <code>pm_suspend()</code> 진입 여부를 결정한다. 따라서 Wakelock 문제를 디버깅할 때는 앱 코드, 프레임워크 서비스, 커널 드라이버 세 계층 모두를 점검해야 한다.</p>
+<h3 id="wakelock-dongjag-heureum">Wakelock 동작 흐름</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────┐
+│             Wakelock 획득-해제 생명주기 (Lifecycle)               │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  [App Process]                                                   │
+│    │                                                             │
+│    ├──① wl = pm.newWakeLock(PARTIAL_WAKE_LOCK, &quot;MusicPlayback&quot;)│
+│    │                                                             │
+│    ├──② wl.acquire()  ──────────────────────────────┐          │
+│    │    │                                              │          │
+│    │    │    [PowerManagerService]                     │          │
+│    │    │    ├── Wakelock 등록 (mWakeLocks 리스트)     │          │
+│    │    │    ├── ref_count++                           │          │
+│    │    │    └── &#x2F;sys&#x2F;power&#x2F;wake_lock에 &quot;MusicPlayback&quot;│          │
+│    │    │         기록                                │          │
+│    │    │                                              │          │
+│    │    │    [Kernel]                                  │          │
+│    │    │    └── has_wake_lock() = true                │          │
+│    │    │        → pm_suspend() 차단                   │          │
+│    │    │        → CPU 활성 상태 유지                   │          │
+│    │    │                                              │          │
+│    ├──③ ... 음악 재생 중 ...                          │          │
+│    │    │                                              │          │
+│    ├──④ wl.release()  ──────────────────────────────┘          │
+│    │    │                                                        │
+│    │    │    [PowerManagerService]                               │
+│    │    │    ├── ref_count--                                     │
+│    │    │    └── ref_count == 0 ?                                │
+│    │    │         ├── YES → &#x2F;sys&#x2F;power&#x2F;wake_unlock               │
+│    │    │         │        → has_wake_lock() = false             │
+│    │    │         │        → pm_suspend() 진입 허용              │
+│    │    │         └── NO  → 다른 Wakelock 유지                   │
+│    │    │                                                        │
+│    └──⑤ (선택) wl.acquire(60000)  &#x2F;&#x2F; timeout=60초 자동 해제     │
+│         └── 60초 후 커널 타이머가 자동 release                   │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 흐름도는 Wakelock의 핵심 동작인 획득(acquire)과 해제(release)가 세 계층에 걸쳐 어떻게 전파되는지를 보여준다. 특히 ④ 해제 단계에서 <strong>참조 카운트(Reference Count)가 0이 되는지 확인</strong>하는 것이 핵심이다. 하나의 Wakelock이라도 남아 있으면 CPU는 잠들지 못하므로, Wakelock 누수(Leak)는 곧 배터리 방전으로 직결된다. 따라서 timeout 기반 자동 해제(⑤)를 활용하는 것이 안전한 패턴이다.</p>
+<h3 id="doze-modeuwa-wakelockyi-gwangye">Doze 모드와 Wakelock의 관계</h3>
+<p>Android 6.0 (API 23)부터 도입된 Doze 모드는 Wakelock의 남용을 제한하기 위한 시스템 수준 전력 절약 메커니즘이다. 기기가 화면이 꺼진 채 일정 시간 움직임이 없으면, 시스템은 점진적으로 더 깊은(Deeper) Doze 상태로 진입하며, 이 과정에서 백그라운드 앱의 Wakelock 획득을 무시(Ignore)한다.</p>
+<table><thead><tr><th style="text-align: left">Doze 단계</th><th style="text-align: left">윈도우</th><th style="text-align: left">Wakelock 동작</th><th style="text-align: left">네트워크</th><th style="text-align: left">GPS</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Light Doze</strong></td><td style="text-align: left">N/A</td><td style="text-align: left">부분적 무시</td><td style="text-align: left">제한적 허용</td><td style="text-align: left">비활성</td></tr>
+<tr><td style="text-align: left"><strong>Deep Doze - Phase 1</strong></td><td style="text-align: left">30분</td><td style="text-align: left">무시</td><td style="text-align: left">차단</td><td style="text-align: left">비활성</td></tr>
+<tr><td style="text-align: left"><strong>Deep Doze - Phase 2</strong></td><td style="text-align: left">60분</td><td style="text-align: left">무시</td><td style="text-align: left">차단</td><td style="text-align: left">비활성</td></tr>
+<tr><td style="text-align: left"><strong>Deep Doze - Phase N</strong></td><td style="text-align: left">2N×30분</td><td style="text-align: left">무시</td><td style="text-align: left">차단</td><td style="text-align: left">비활성</td></tr>
+</tbody></table>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Wakelock 시스템은 <strong>'병원의 당번 의사(Call Duty) 제도'</strong> 와 같습니다. 당번 의사(Wakelock 획득자)가 병원에 머무르는 동안에는 응급실(CPU)이 완전히 문을 닫을 수 없습니다. 한 명의 의사라도 당번이면 응급실은 24시간 가동되고, 모든 의사가 퇴근하면(Wakelock 해제) 응급실은 대기 모드(Suspend)로 전환됩니다. Doze 모드는 "새벽 2시 이후에는 당번 의사가 있어도 응급실을 대기 모드로 전환"하는 관리자의 규칙과 같습니다.</li>
+</ul>
+<hr />
+<h2 id="iii-yunghab-bigyo-mic-dagagdo-bunseog-comparison-synergy">Ⅲ. 융합 비교 및 다각도 분석 (Comparison &amp; Synergy)</h2>
+<h3 id="wakelock-vs-pyojun-rinugseu-jeonryeog-gwanri">Wakelock vs 표준 리눅스 전력 관리</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">Wakelock (Android)</th><th style="text-align: left">표준 리눅스 PM</th><th style="text-align: left">차이점 요약</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>제어 방식</strong></td><td style="text-align: left">명시적 Lock/Unlock</td><td style="text-align: left">자동 유휴 감지 (cpuidle)</td><td style="text-align: left">Android는 앱이 주도, Linux는 커널이 주도</td></tr>
+<tr><td style="text-align: left"><strong>세분성</strong></td><td style="text-align: left">CPU, Display, Radio 개별 제어</td><td style="text-align: left">CPU C-State 중심</td><td style="text-align: left">Android가 더 세밀(Fine-grained)</td></tr>
+<tr><td style="text-align: left"><strong>백그라운드 고려</strong></td><td style="text-align: left">앱별 Wakelock 관리</td><td style="text-align: left">프로세스 기반 (없음)</td><td style="text-align: left">Android가 앱 생명주기와 연동</td></tr>
+<tr><td style="text-align: left"><strong>오용 방지</strong></td><td style="text-align: left">Doze/App Standby 제한</td><td style="text-align: left">없음 (신뢰 모델)</td><td style="text-align: left">Android가 시스템 수준 제어 추가</td></tr>
+<tr><td style="text-align: left"><strong>업스트림</strong></td><td style="text-align: left">mainline에 통합 시도 중</td><td style="text-align: left">기본 프레임워크</td><td style="text-align: left">Android가 리눅스에 기여한 PM 확장</td></tr>
+</tbody></table>
+<h3 id="dareun-jeonryeog-gwanri-gibeobgwayi-bigyo">다른 전력 관리 기법과의 비교</h3>
+<table><thead><tr><th style="text-align: left">기법</th><th style="text-align: left">계층</th><th style="text-align: left">역할</th><th style="text-align: left">Wakelock과의 관계</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>cpuidle</strong></td><td style="text-align: left">커널</td><td style="text-align: left">CPU C-State 진입 관리</td><td style="text-align: left">Wakelock이 없을 때 작동</td></tr>
+<tr><td style="text-align: left"><strong>cpufreq / DVFS</strong></td><td style="text-align: left">커널</td><td style="text-align: left">CPU 주파수/전압 동적 조절</td><td style="text-align: left">Wakelock과 독립적</td></tr>
+<tr><td style="text-align: left"><strong>Runtime PM</strong></td><td style="text-align: left">커널</td><td style="text-align: left">개별 디바이스 전원 게이팅</td><td style="text-align: left">Wakelock이 장악한 디바이스는 Runtime PM 무시</td></tr>
+<tr><td style="text-align: left"><strong>Doze / App Standby</strong></td><td style="text-align: left">프레임워크</td><td style="text-align: left">백그라운드 앱 활동 제한</td><td style="text-align: left">Wakelock 오용에 대한 안전장치</td></tr>
+<tr><td style="text-align: left"><strong>JobScheduler</strong></td><td style="text-align: left">프레임워크</td><td style="text-align: left">조건부 백그라운드 작업 스케줄링</td><td style="text-align: left">Wakelock 대체 권장 API</td></tr>
+<tr><td style="text-align: left"><strong>WorkManager</strong></td><td style="text-align: left">라이브러리</td><td style="text-align: left">호환성 있는 백그라운드 작업</td><td style="text-align: left">Wakelock 대체 권장 API (권장)</td></tr>
+</tbody></table>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────┐
+│      전력 관리 계층간 상호작용 (Power Management Interaction)     │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  [앱이 Wakelock 획득]                                           │
+│       ↓                                                          │
+│  [PowerManagerService] ──→ Wakelock 등록                       │
+│       ↓                   (Doze 모드면 무시 가능)               │
+│  [Kernel wakelock.c]                                            │
+│       ↓                                                          │
+│  has_wake_lock() == true ?                                       │
+│       ├── YES → cpuidle 차단, CPU 활성 유지                    │
+│       │         단, DVFS는 여전히 동작하여                      │
+│       │         주파수를 낮출 수는 있음                         │
+│       └── NO  → cpuidle 활성화                                  │
+│                 → C1 → C2 → ... → Suspend 순차 진입             │
+│                                                                  │
+│  ※ Wakelock은 &quot;잠들지 마라&quot;이지 &quot;최고 속도로 돌아라&quot;가 아님   │
+│     → Wakelock + DVFS 조합으로 전력 최적화 가능                 │
+└──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 상호작용도에서 중요한 점은 Wakelock과 DVFS (Dynamic Voltage and Frequency Scaling)가 <strong>독립적으로 동작</strong>한다는 것이다. Wakelock은 "CPU를 잠들지 않게만 할 뿐" 최고 클럭으로 구동하라는 의미가 아니다. 따라서 Wakelock을 획득한 상태에서도 cpufreq 정책(예: <code>powersave</code>, <code>schedutil</code>)에 따라 CPU 주파수가 조절된다. 실무에서는 이 두 메커니즘을 조합하여 "CPU는 깨어있되 낮은 클럭으로 동작"시키는 것이 가장 효율적인 전력 관리 전략이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Wakelock과 다른 전력 관리 기법의 관계는 <strong>'자동차의 여러 절전 장치'</strong> 와 같습니다. Wakelock은 시동 끄기 방지(엔진이 꺼지지 않게 함), DVFS는 RPM 조절(속도를 낮춰 연료 절약), Doze는 "고속도로에서 10분 이상 안 움직이면 시동 꺼"라는 규칙과 같아서, 여러 장치가 계층적으로 작동하여 최적의 연비(전력 효율)를 만들어냅니다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsajeog-pandan-strategy-decision">Ⅳ. 실무 적용 및 기술사적 판단 (Strategy &amp; Decision)</h2>
+<h3 id="silmu-sinario-mic-dibeoging">실무 시나리오 및 디버깅</h3>
+<p><strong>시나리오 1: 밤사이 배터리 30% 소모 원인 분석</strong></p>
+<ul>
+<li><strong>현상</strong>: 화면을 끄고 잤는데 아침에 배터리가 30% 이상 소모됨</li>
+<li><strong>진단 도구</strong>: <code>adb shell dumpsys batterystats</code>, <code>Battery Historian</code></li>
+<li><strong>일반적 원인</strong>: 백그라운드 앱이 PARTIAL_WAKE_LOCK을 획득한 채 해제하지 않음 (Wakelock 누수)</li>
+<li><strong>해결</strong>: 해당 앱의 Wakelock 사용 패턴 분석 → Foreground Service로 전환 또는 WorkManager 사용 권장</li>
+<li><strong>명령어 예시</strong>: <code>$ adb shell dumpsys power | grep "Wake Locks"</code></li>
+</ul>
+<p><strong>시나리오 2: GPS 네비게이션 중 화면 꺼짐</strong></p>
+<ul>
+<li><strong>현상</strong>: 네비게이션 앱 사용 중 일정 시간 후 화면이 자동으로 꺼짐</li>
+<li><strong>진단</strong>: <code>FLAG_KEEP_SCREEN_ON</code> 미설정 또는 <code>SCREEN_BRIGHT_WAKE_LOCK</code> 미사용</li>
+<li><strong>해결</strong>: <code>WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON</code> 설정 (Wakelock 직접 사용보다 권장)</li>
+<li><strong>주의</strong>: Wakelock 직접 사용보다 시스템이 관리하는 <code>FLAG_KEEP_SCREEN_ON</code>이 안전함</li>
+</ul>
+<p><strong>시나리오 3: Doze 모드에서 긴급 알림 지연</strong></p>
+<ul>
+<li><strong>현상</strong>: Doze 모드 진입 후 FCM (Firebase Cloud Messaging) 알림이 몇 시간씩 지연됨</li>
+<li><strong>원인</strong>: Doze가 네트워크 접근을 차단하여 일반 FCM 메시지가 즉시 전달되지 않음</li>
+<li><strong>해결</strong>: FCM High Priority 메시지 사용 → 시스템이 Doze를 일시적으로 해제하여 즉시 전달</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────┐
+│        Wakelock 디버깅 체크리스트 (Debugging Checklist)           │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  □ 1. Wakelock 누수 탐지                                        │
+│    □ $ adb shell dumpsys power | grep &quot;Wake Locks&quot;              │
+│    □ Battery Historian에서 Wakelock 지속 시간 시각화             │
+│    □ 특정 앱의 Wakelock hold 시간이 비정상적으로 긴지 확인       │
+│                                                                  │
+│  □ 2. 코드 패턴 점검                                             │
+│    □ acquire()와 release()가 반드시 쌍을 이루는가?              │
+│    □ try-finally 블록으로 release 보장하는가?                    │
+│    □ timeout 파라미터를 사용하는가? (안전망)                    │
+│                                                                  │
+│  □ 3. 대체 API 사용 검토                                         │
+│    □ WorkManager로 대체 가능한가? (권장)                        │
+│    □ Foreground Service로 전환하는 것이 더 적절한가?            │
+│    □ FLAG_KEEP_SCREEN_ON으로 충분한가? (화면 켜짐 유지 시)      │
+│                                                                  │
+│  □ 4. Doze 호환성 확인                                           │
+│    □ Doze 모드에서 Wakelock이 무시되어도 동작하는가?            │
+│    □ FCM High Priority 메시지를 사용하는가?                     │
+│    □ Maintenance Window 동안 작업을 수행하는가?                  │
+└──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 체크리스트는 Wakelock 관련 문제를 체계적으로 진단하기 위한 실무 가이드다. 가장 흔한 실수는 <code>acquire()</code> 후 예외(Exception) 발생 시 <code>release()</code>가 호출되지 않는 것이며, 이를 방지하려면 반드시 try-finally 블록을 사용해야 한다. 또한 Android 6.0+에서는 Doze 모드가 백그라운드 Wakelock을 무시하므로, Wakelock에 의존하는 백그라운드 작업은 WorkManager나 Foreground Service로 전환하는 것이 장기적인 해결책이다.</p>
+<h3 id="antipaeteon-anti-patterns">안티패턴 (Anti-Patterns)</h3>
+<table><thead><tr><th style="text-align: left">안티패턴</th><th style="text-align: left">증상</th><th style="text-align: left">올바른 접근</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Wakelock 누수</strong></td><td style="text-align: left">acquire() 후 release() 누락 → 배터리 급소모</td><td style="text-align: left">try-finally로 release 보장, timeout 사용</td></tr>
+<tr><td style="text-align: left"><strong>과도한 Wakelock</strong></td><td style="text-align: left">짧은 작업에 불필요한 Wakelock 획득</td><td style="text-align: left">WorkManager / JobScheduler로 대체</td></tr>
+<tr><td style="text-align: left"><strong>FULL_WAKE_LOCK 사용</strong></td><td style="text-align: left">화면을 무한정 켜두어 배터리 소모</td><td style="text-align: left">FLAG_KEEP_SCREEN_ON 사용</td></tr>
+<tr><td style="text-align: left"><strong>Doze 무시 시도</strong></td><td style="text-align: left">백그라운드에서 Wakelock으로 Doze 우회</td><td style="text-align: left">FCM High Priority + Maintenance Window 활용</td></tr>
+<tr><td style="text-align: left"><strong>커널 Wakelock 직접 조작</strong></td><td style="text-align: left">/sys/power/wake_lock 직접 기록</td><td style="text-align: left">PowerManager API를 통해서만 접근</td></tr>
+</tbody></table>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Wakelock 디버깅은 <strong>'수도꼭지 누수 점검'</strong> 과 같습니다. 눈에 보이지 않는 곳(백그라운드)에서 물(Wakelock)이 계속 틀어져 있으면 수도요금(배터리)이 폭탄 청구서가 됩니다. 그래서 일일이 꼭지를 점검(dumpsys)하고, 자동 차단 장치(timeout)를 설치하고, 아예 사용하지 않는 꼭지는 잠구는(WorkManager 전환) 것이 중요합니다.</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron-future-standard">Ⅴ. 기대효과 및 결론 (Future &amp; Standard)</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">효과 유형</th><th style="text-align: left">내용</th><th style="text-align: left">정량 지표</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>대기 전력 최적화</strong></td><td style="text-align: left">Wakelock 정상 관리 시 대기 배터리 소모 최소화</td><td style="text-align: left">대기 시간 200시간+ (정상 관리 시) vs 12시간 (누수 시)</td></tr>
+<tr><td style="text-align: left"><strong>사용자 경험 향상</strong></td><td style="text-align: left">백그라운드 작업 중단 방지</td><td style="text-align: left">음악 재생 끊김율 0% (Wakelock 사용 시)</td></tr>
+<tr><td style="text-align: left"><strong>앱 품질 평가</strong></td><td style="text-align: left">Google Play에서 Wakelock 오용 앱 경고</td><td style="text-align: left">Battery Optimized 뱃지 획득 가능</td></tr>
+<tr><td style="text-align: left"><strong>시스템 안정성</strong></td><td style="text-align: left">과도한 Wakelock으로 인한 열 발생(Thermal Throttling) 방지</td><td style="text-align: left">기기 온도 5~10°C 감소</td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang">미래 전망</h3>
+<p>Wakelock은 Android 전력 관리의 핵심 메커니즘이지만, 점진적으로 상위 수준(Higher-level) API로 대체되고 있다. Android 12에서는 <code>Exact Alarm</code> 권한이 제한되고, Android 14에서는 백그라운드 <code>Foreground Service</code>에 더 엄격한 제한이 적용되었다. 향후 방향은 <strong>"개발자가 직접 Wakelock을 관리하지 않고, 시스템이 앱의 작업 특성을 파악하여 자동으로 전력을 최적화하는"</strong> 모델이다. 이를 위해 WorkManager, JobScheduler, FCM (Firebase Cloud Messaging) 등 선언적(Declarative) API가 지속적으로 강화되고 있다.</p>
+<h3 id="camgo-pyojun">참고 표준</h3>
+<ul>
+<li>
+<p><strong>Android Compatibility Definition Document (CDD)</strong>: Wakelock 관련 호환성 요구사항</p>
+</li>
+<li>
+<p><strong>Linux Kernel PM Documentation</strong> (<code>Documentation/power/</code>): 커널 전력 관리 공식 문서</p>
+</li>
+<li>
+<p><strong>Android Developer Guide - Power Management</strong>: Wakelock 및 대체 API 공식 가이드</p>
+</li>
+<li>
+<p><strong>AOSP (Android Open Source Project)</strong>: Wakelock 커널 소스 코드 (<code>kernel/power/wakelock.c</code>)</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: Wakelock의 미래는 <strong>'수동 변속기에서 자동 변속기로의 전환'</strong> 과 같습니다. 과거에는 운전자(개발자)가 직접 기어를 넣어야(Wakelock 획득/해제) 했지만, 점점 더 스마트한 자동 변속기(WorkManager, Doze)가 엔진(CPU)의 상태를 알아서 판단하여 최적의 기어(전력 모드)를 선택하는 방향으로 진화하고 있습니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>리눅스 커널 PM (Power Management)</strong></td><td style="text-align: left">Wakelock이 기반으로 하는 커널 전력 관리 서브시스템으로, cpuidle, cpufreq, Runtime PM 등의 메커니즘과 함께 Android의 전력 최적화를 구성하는 기반 계층이다.</td></tr>
+<tr><td style="text-align: left"><strong>Android Doze / App Standby</strong></td><td style="text-align: left">Wakelock 남용을 시스템 수준에서 제한하는 전력 절약 메커니즘으로, Wakelock에 의존하는 앱은 Doze 모드 진입 시 정상 동작하지 않을 수 있어 대체 API 전환이 필요하다.</td></tr>
+<tr><td style="text-align: left"><strong>WorkManager / JobScheduler</strong></td><td style="text-align: left">Wakelock의 안전한 대체 API로, 개발자가 직접 Wakelock을 관리하지 않고도 조건부 백그라운드 작업(네트워크, 충전 중 등)을 실행할 수 있는 선언적 작업 스케줄링 프레임워크다.</td></tr>
+<tr><td style="text-align: left"><strong>Binder IPC (Inter-Process Communication)</strong></td><td style="text-align: left">App→PowerManagerService→커널로 이어지는 Wakelock 요청 경로에서, 프로세스 간 통신을 담당하는 Android의 핵심 IPC 메커니즘이다.</td></tr>
+<tr><td style="text-align: left"><strong>Foreground Service</strong></td><td style="text-align: left">백그라운드에서 장시간 실행되어야 하는 작업(음악, GPS 등)이 Wakelock 대신 사용해야 하는 Android 공식 백그라운드 실행 메커니즘으로, 사용자에게 알림(Notification)을 표시하여 투명성을 보장한다.</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>스마트폰은 전기를 아끼기 위해 쓰지 않을 때 <strong>잠자리(Zzz)</strong> 에 들어요. 그런데 음악을 듣고 있거나 지도를 보고 있을 때는 잠들면 안 되죠!</li>
+<li>그래서 <strong>"나 아직 일하고 있으니까 잠들지 마!"</strong> 라고 스마트폰에게 말해주는 표시(Wakelock)가 있어요. 이 표시가 붙어 있는 동안에는 스마트폰이 깨어 있어요.</li>
+<li>그런데 표시를 붙여놓고 깜빡해서 안 떼면(누수), 스마트폰이 잠을 못 자서 배터리가 다 닳아버려요! 그래서 꼭 필요할 때만 붙이고, 다 쓰면 바로 떼는 게 중요해요!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

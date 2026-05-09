@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>285. 트리 구조 저장 - Materialized Path, Nested Sets — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="285-teuri-gujo-jeojang-materialized-path-nested-sets">285. 트리 구조 저장 - Materialized Path, Nested Sets</h1>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 트리 구조 저장(Tree Structure Storage)은 계층적(Hierarchical) 데이터인 조직도, 카테고리, 댓글 대댓글 등을 데이터베이스에 효율적으로 저장하고 조회하는 기법이다.</li>
+<li><strong>가치</strong>: Materialized Path, Nested Sets, Adjacency List 등 다양한 모델링 기법으로 트리 연산을 최적화하며, 조회 깊이 제한, 하위 트리 추출, 경로 조회 등이 가능하다.</li>
+<li><strong>융합</strong>: NoSQL 모델링, 몽고DB "$graphLookup", 재귀 CTE, 조직도/카테고리 관리, 메뉴 시스템과 밀접하게 연관된다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<h3 id="gaenyeom-jeongyi">개념 정의</h3>
+<p>트리 구조 저장(Tree Structure Storage)은 계층적(Hierarchical) 데이터 구조를 데이터베이스에 저장하고管理하는 기법이다. 조직도(Organization Chart), 카테고리(Category Tree), 댓글 대댓글(Threaded Comments), 파일 시스템(File System) 등이 트리 구조의 대표적用例다. 이러한 계층적 데이터를 관계형 데이터베이스나 문서 데이터베이스에 어떻게 효율적으로 저장하고, 빠른 조회와 수정을 지원하는지가 핵심 과제이다.</p>
+<h3 id="pilyoseong">필요성</h3>
+<p>계층적 데이터는 일반적인 테이블 구조(2차원 행렬)와 맞지 않는다. 자식-부모 관계를 외래 키로管理하는 방식(Adjacency List)은 구현은 간단하지만, 전체 하위 트리 조회나 특정 깊이의 노드 조회 시 자기 조인(Self-Join)이나 재귀 쿼리가 필요하여 성능이 저하된다. 따라서 트리 특유의 연산(하위 트리 추출,祖先 노드 조회, 깊이 제한 조회 등)을 최적화하는 특별한 저장 기법이 필요하다.</p>
+<h3 id="baegyeong">배경</h3>
+<p>계층적 데이터를管理하기 위한 기법은 오랜 역사를 가지고 있다. 관계형 데이터베이스에서는 Adjacency List, Materialized Path, Nested Sets, Closure Table 등의 기법이 널리 사용되어 왔다. NoSQL 문서 데이터베이스에서는 몽고DB의 "$graphLookup"聚合 연산자나 임베디드 배열(对于 댓글 대댓글) 패턴을活用한다. 각 기법은 장단점이 있어用例에 따라 적절한 것을 선택해야 한다.</p>
+<h3 id="biyu">비유</h3>
+<p>트리 구조 저장은大型기업의 조직도 관리 방법과 같다. 단순한 방법(Adjacency List)은 "내 상사는 누구입니다"만 표시하는 것이고, 고급 방법(Materialized Path)은 "나의 전체 경로: CEO → VP → Director → Manager → 나"를 함께 표시하는 것이다. 전체 부하 목록이 필요할 때, 단순한 방법은 모든层级을 재귀적으로 뒤져야 하고, 고급 방법은 경로 문자열에서 바로 필터링할 수 있다.</p>
+<p>📢 섹션 요약: 트리 구조 저장은 계층적 데이터를 효율적으로 저장하고 조회하는 기법으로, Materialized Path, Nested Sets, Adjacency List 등 다양한 전략을 통해 트리 고유 연산을 최적화한다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri-deep-dive">Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)</h2>
+<h3 id="adjacency-list-model">Adjacency List 모델</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                    Adjacency List 모델                                        │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  [개념]                                                                     │
+│  ─────                                                                     │
+│  • 각 노드가 직접 부모에 대한 참조(Parent_ID)를 가짐                          │
+│  • 가장 단순한 트리 저장 방식, 이해하기 쉬움                                   │
+│  • 쓰기에 유리, 읽기(특히 하위 트리 조회)에 불리                               │
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐  │
+│  │  employees 테이블                                                     │  │
+│  │  ─────────────────                                                    │  │
+│  │  id │ name       │ parent_id │ title                               │  │
+│  │  1  │ CEO        │ NULL     │ Chief Executive Officer            │  │
+│  │  2  │ CTO        │ 1        │ Chief Technology Officer            │  │
+│  │  3  │ CFO        │ 1        │ Chief Financial Officer             │  │
+│  │  4  │ Dev Manager│ 2        │ Development Manager                 │  │
+│  │  5  │ QA Manager │ 2        │ QA Manager                          │  │
+│  │  6  │ Sr Engineer│ 4        │ Senior Engineer                     │  │
+│  │  7  │ Jr Engineer│ 6        │ Junior Engineer                     │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│  [트리 구조]                                                                 │
+│                                                                             │
+│                        CEO (1)                                              │
+│                       &#x2F;    \                                                │
+│                   CTO(2)    CFO(3)                                          │
+│                   &#x2F;    \                                                    │
+│           Dev Mgr(4)  QA Mgr(5)                                            │
+│               &#x2F;                                                          │
+│          Sr Eng(6)                                                        │
+│              &#x2F;                                                             │
+│          Jr Eng(7)                                                        │
+│                                                                             │
+│  [하위 트리 조회 - 재귀 CTE 필요]                                             │
+│                                                                             │
+│  WITH RECURSIVE emp_tree AS (                                               │
+│    SELECT id, name, parent_id, 0 AS depth                                   │
+│    FROM employees WHERE name = &#x27;CTO&#x27;                                        │
+│    UNION ALL                                                               │
+│    SELECT e.id, e.name, e.parent_id, et.depth + 1                           │
+│    FROM employees e                                                        │
+│    JOIN emp_tree et ON e.parent_id = et.id                                 │
+│  )                                                                         │
+│  SELECT * FROM emp_tree;                                                   │
+│                                                                             │
+│  ※ 복잡한 재귀 쿼리 필요, 성능 overhead                                      │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="materialized-path-model">Materialized Path 모델</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                    Materialized Path 모델                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  [개념]                                                                     │
+│  ─────                                                                     │
+│  • 각 노드가 전체 경로(Root에서 현재까지의 모든祖先)를 문자열로 저장           │
+│  • 경로 문자열을 통해 하위 트리&#x2F;祖先 노드를 빠르게 조회                        │
+│  • 읽기에 매우 유리, 쓰기 시 경로 문자열 更新 필요                            │
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐  │
+│  │  employees 테이블                                                     │  │
+│  │  ─────────────────                                                    │  │
+│  │  id │ name       │ parent_id │ path               │ depth            │  │
+│  │  1  │ CEO        │ NULL     │ &#x2F;1                 │ 0               │  │
+│  │  2  │ CTO        │ 1        │ &#x2F;1&#x2F;2               │ 1               │  │
+│  │  3  │ CFO        │ 1        │ &#x2F;1&#x2F;3               │ 1               │  │
+│  │  4  │ Dev Manager│ 2        │ &#x2F;1&#x2F;2&#x2F;4             │ 2               │  │
+│  │  5  │ QA Manager │ 2        │ &#x2F;1&#x2F;2&#x2F;5             │ 2               │  │
+│  │  6  │ Sr Engineer│ 4        │ &#x2F;1&#x2F;2&#x2F;4&#x2F;6           │ 3               │  │
+│  │  7  │ Jr Engineer│ 6        │ &#x2F;1&#x2F;2&#x2F;4&#x2F;6&#x2F;7         │ 4               │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│  [경로 구조 시각화]                                                          │
+│                                                                             │
+│       &#x2F;1                                                                   │
+│       └─ &#x2F;1&#x2F;2  (CTO)                                                       │
+│           ├─ &#x2F;1&#x2F;2&#x2F;4  (Dev Manager)                                         │
+│           │   └─ &#x2F;1&#x2F;2&#x2F;4&#x2F;6  (Sr Engineer)                                  │
+│           │       └─ &#x2F;1&#x2F;2&#x2F;4&#x2F;6&#x2F;7  (Jr Engineer)                            │
+│           └─ &#x2F;1&#x2F;2&#x2F;5  (QA Manager)                                          │
+│       └─ &#x2F;1&#x2F;3  (CFO)                                                       │
+│                                                                             │
+│  [고속 조회 예시]                                                            │
+│                                                                             │
+│  -- CTO의 모든 하위 노드 조회 (LIKE 패턴 매칭)                               │
+│  SELECT * FROM employees WHERE path LIKE &#x27;&#x2F;1&#x2F;2%&#x27;;                         │
+│  → Sr Engineer, Jr Engineer 포함, 단일 쿼리                                   │
+│                                                                             │
+│  -- Jr Engineer의 모든祖先 조회 (경로 파싱)                                  │
+│  SELECT * FROM employees                                                     │
+│  WHERE id IN (1, 2, 4, 6);  -- &#x2F;1&#x2F;2&#x2F;4&#x2F;6&#x2F;7 에서 파싱                        │
+│                                                                             │
+│  -- 깊이 2인 모든 노드 조회                                                  │
+│  SELECT * FROM employees WHERE depth = 2;                                   │
+│  → Dev Manager, QA Manager                                                 │
+│                                                                             │
+│  [쓰기 시 경로 업데이트]                                                      │
+│  ──────────────────────────                                                │
+│  Jr Engineer의 parent가 Sr Engineer에서 Dev Manager로 변경되면:             │
+│  1. Jr Engineer의 path: &#x2F;1&#x2F;2&#x2F;4&#x2F;7로 변경 (祖先 기준 재계산)                   │
+│  2. Jr Engineer의 모든 하위 노드 path 접두사 업데이트                        │
+│  → 쓰기 overhead 발생                                                       │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="nested-sets-model">Nested Sets 모델</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                    Nested Sets 모델                                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  [개념]                                                                     │
+│  ─────                                                                     │
+│  • 각 노드에 left, right 값을 부여하여 트리 구조를二次元 평면에 매핑          │
+│  • left &lt; right이고, 부모 노드의 left&#x2F;right 범위 내에 자식 노드가 위치         │
+│  • 하위 트리 조회가 매우 빠름, 삽입&#x2F;삭제 시 many nodes 업데이트 필요          │
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐  │
+│  │  employees 테이블                                                     │  │
+│  │  ─────────────────                                                    │  │
+│  │  id │ name       │ left  │ right │ depth                             │  │
+│  │  1  │ CEO        │ 1     │ 14    │ 0                                 │  │
+│  │  2  │ CTO        │ 2     │ 9     │ 1                                 │  │
+│  │  3  │ CFO        │ 10    │ 13    │ 1                                 │  │
+│  │  4  │ Dev Manager│ 3     │ 6     │ 2                                 │  │
+│  │  5  │ QA Manager │ 7     │ 8     │ 2                                 │  │
+│  │  6  │ Sr Engineer│ 4     │ 5     │ 3                                 │  │
+│  │  7  │ Jr Engineer│ 11    │ 12    │ 2                                 │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│  [Nested Sets 평면 매핑]                                                     │
+│                                                                             │
+│       1(CEO)────────────────────────────────────────────────────14          │
+│       │                                                                   │
+│       ├─2(CTO)───────────────────────────────────9                        │
+│       │    │                                                              │
+│       │    ├─3(Dev Mgr)────────────────6                                │
+│       │    │       │                                                        │
+│       │    │       └─4(Sr Eng)───────5                                   │
+│       │    │                                                              │
+│       │    └─7(QA Mgr)────────────8                                      │
+│       │                                                                   │
+│       └─10(CFO)────────────────────────────────12                        │
+│                │                                                        │
+│                └─11(Jr Eng)───────────────12                             │
+│                                                                             │
+│  [고속 조회 예시]                                                            │
+│                                                                             │
+│  -- CTO의 모든 하위 노드 조회                                               │
+│  SELECT * FROM employees                                                    │
+│  WHERE left &gt; 2 AND right &lt; 9;                                              │
+│  → Dev Manager, Sr Engineer, QA Manager                                    │
+│                                                                             │
+│  -- 특정 노드의祖先 조회                                                     │
+│  SELECT * FROM employees                                                    │
+│  WHERE left &lt; 5 AND right &gt; 5                                              │
+│  ORDER BY left;                                                             │
+│  → CEO, CTO, Dev Manager (Jr Engineer의祖先)                               │
+│                                                                             │
+│  [삽입&#x2F;삭제 시 문제]                                                        │
+│  ──────────────────────                                                     │
+│  새 노드 삽입 시: 삽입 위치 이후의 모든 left&#x2F;right 값 업데이트 필요            │
+│  노드 삭제 시: 삭제 노드의 하위 트리 처리 + 이후 모든 left&#x2F;right 값 업데이트   │
+│  → 쓰기 overhead非常大,频繁한 변경에는不적합                                    │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="se-model-bigyo">세 모델 비교</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                    Tree Storage Models 비교                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌────────────────┬───────────────┬──────────────┬──────────────┐         │
+│  │ Operations    │ Adjacency List │ Materialized │  Nested Sets │         │
+│  │               │               │    Path      │              │         │
+│  ├────────────────┼───────────────┼──────────────┼──────────────┤         │
+│  │ 하위 트리 조회  │ ★☆☆☆☆       │ ★★★★★     │ ★★★★★     │         │
+│  │ (Read)        │ (재귀 CTE)    │ (LIKE)       │ (범위查询)    │         │
+│  ├────────────────┼───────────────┼──────────────┼──────────────┤         │
+│  │祖先 노드 조회  │ ★★★★★        │ ★★★★☆     │ ★★★★☆     │         │
+│  │ (Ancestor)    │ (재귀 CTE)    │ (파싱)       │ (범위查询)    │         │
+│  ├────────────────┼───────────────┼──────────────┼──────────────┤         │
+│  │ 깊이 제한 조회  │ ★★★☆☆       │ ★★★★★     │ ★★★☆☆     │         │
+│  │               │               │ (depth col)  │              │         │
+│  ├────────────────┼───────────────┼──────────────┼──────────────┤         │
+│  │ 노드 삽입      │ ★★★★★        │ ★★★☆☆     │ ★☆☆☆☆     │         │
+│  │ (Insert)      │               │ (path 갱신)  │ (left&#x2F;right) │         │
+│  ├────────────────┼───────────────┼──────────────┼──────────────┤         │
+│  │ 노드 이동      │ ★★★★☆        │ ★★☆☆☆     │ ★☆☆☆☆     │         │
+│  │ (Move)        │               │ (subtree)    │ (재계산)     │         │
+│  ├────────────────┼───────────────┼──────────────┼──────────────┤         │
+│  │ 구현 난이도    │ 낮음          │ 낮음         │ 중간         │         │
+│  └────────────────┴───────────────┴──────────────┴──────────────┘         │
+│                                                                             │
+│  [결정 가이드]                                                              │
+│  ───────────                                                              │
+│  • 읽기 위주, 변경 드문: Nested Sets (카테고리 목록, 게시판 등)               │
+│  • 읽기&#x2F;쓰기 균형: Materialized Path (조직도, 메뉴 시스템)                    │
+│  • 쓰기 위주, 읽기 단순: Adjacency List (댓글, 좋아요 관계)                  │
+│  • 복잡한階層쿼리: 몽고DB &quot;$graphLookup&quot; 고려                               │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong>
+세 가지 트리 저장 모델은 각각 다른 트레이드오프를 가진다. Adjacency List는 쓰기에 유리하지만 하위 트리 조회가 복잡하고, Nested Sets은 하위 트리 조회가 매우 빠르지만 쓰기 시 overhead가 크다. Materialized Path는 양자의 절충안으로, 대부분의用例에서 좋은 성능을 보인다. 실제 시스템에서는 Hybrid 접근(예: Adjacency List + Materialized Path)을 선택하는 것도 고려할 수 있다.</p>
+<p>📢 섹션 요약: 트리 구조 저장은 Adjacency List(쓰기 유리), Materialized Path(균형), Nested Sets(읽기 유리) 등 다양한 모델이 있으며,用例에 따라 적절한 전략을 선택해야 한다.</p>
+<hr />
+<h2 id="iii-gyeolron">Ⅲ. 결론</h2>
+<p>트리 구조 저장은 계층적 데이터를 데이터베이스에 효율적으로 저장하고 조회하는 중요한 기법이다. Adjacency List, Materialized Path, Nested Sets 각 모델은 읽기/쓰기 성능에서 서로 다른 트레이드오프를 가진다. 읽기 위주이고 변경이 드문 구조(카테고리, 조직도)에는 Nested Sets이나 Materialized Path가 적합하고, 쓰기가 많은 구조에는 Adjacency List가 적합하다. 몽고DB의 "$graphLookup"이나 Closure Table 같은 고급 기법도 있으며, 실무에서는 Hybrid 접근을 선택하는 경우가 많다.</p>
+<p>📢 섹션 요약: 트리 구조 저장 기법은 Adjacency List, Materialized Path, Nested Sets으로 나뉘며, 각각 읽기/쓰기 성능 트레이드오프가 다르므로用例에 맞게 선택해야 한다.</p>
+<hr />
+<h2 id="haegsim-insaiteu-ascii-daieogeuraem-concept-map">핵심 인사이트 ASCII 다이어그램 (Concept Map)</h2>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                    Tree Structure Storage Concept Map                        │
+│                                                                             │
+│              ┌─────────────────────────────────┐                           │
+│              │   Tree Structure Storage        │                           │
+│              │    (트리 구조 저장)              │                           │
+│              └───────────────┬─────────────────┘                           │
+│                              │                                               │
+│         ┌────────────────────┼────────────────────┐                        │
+│         ▼                    ▼                    ▼                        │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐               │
+│  │  Adjacency   │    │ Materialized │    │   Nested    │               │
+│  │    List      │    │    Path      │    │    Sets      │               │
+│  │  (쓰기 유리)  │    │  (균형형)     │    │  (읽기 유리)  │               │
+│  └──────────────┘    └──────────────┘    └──────────────┘               │
+│         │                    │                    │                       │
+│         └────────────────────┼────────────────────┘                        │
+│                              ▼                                               │
+│                   ┌─────────────────────┐                                  │
+│                   │   $graphLookup     │                                  │
+│                   │  (MongoDB的高级)     │                                  │
+│                   │  + Closure Table   │                                  │
+│                   └─────────────────────┘                                  │
+│                                                                             │
+│  선택 기준: 읽기&#x2F;쓰기 비율 | 변경 빈도 | 쿼리 패턴                           │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h2 id="camgo">참고</h2>
+<ul>
+<li>트리 구조 저장은 계층적 데이터를 효율적으로管理하는 기법이다.</li>
+<li>Adjacency List, Materialized Path, Nested Sets이 대표적 모델이다.</li>
+<li>Adjacency List는 쓰기에 유리, Nested Sets은 읽기에 유리하다.</li>
+<li>Materialized Path는 균형 잡힌 성능을 제공한다.</li>
+<li>몽고DB "$graphLookup"은 복잡한階層쿼리에 유용하다.</li>
+<li>실무에서는 Hybrid 접근을 선택하는 것도 고려할 수 있다.</li>
+</ul>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

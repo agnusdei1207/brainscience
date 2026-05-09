@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>487. ANN (HNSW 인덱스) 근사 탐색 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote database
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="487-ann-hnsw-indegseu-geunsa-tamsaeg-gujomang">487. ANN (HNSW 인덱스) 근사 탐색 구조망</h1>
+<blockquote>
+<p>⚠️ 이 문서는 벡터 데이터베이스에 저장된 1억 개의 문서 중에서 나와 가장 비슷한 문서를 찾을 때, **1억 번의 각도 계산(Full Scan)을 하다가 서버가 터지는 것을 막기 위해 "정확도 100%는 포기할 테니까, 대충 99% 비슷한 놈으로 0.01초 만에 찾아줘!"라고 타협하는 'ANN' 기술과 그 끝판왕인 'HNSW 인덱스'**를 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: ANN(Approximate Nearest Neighbor)은 우주 공간에 뿌려진 수억 개의 점(벡터) 중에서 가장 가까운 이웃을 '대략적(Approximate)'으로 빨리 찾아내는 알고리즘들의 총칭이다.</li>
+<li><strong>HNSW</strong>: ANN 알고리즘 중 현재 전 세계 벡터 DB(Milvus, Pinecone 등)가 표준으로 채택하고 있는 가장 압도적인 성능의 인덱스 구조다.</li>
+<li><strong>작동 원리</strong>: 데이터를 여러 층(Layer)의 네트워크망으로 연결해 두고, 꼭대기 층(듬성듬성한 망)에서 대충 위치를 찾은 뒤 $\rightarrow$ 점점 아래층(촘촘한 망)으로 내려가며 정확한 이웃을 찾아가는 '스킵 리스트 + 그래프 탐색'의 혼합 기술이다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-gaeyo-1eog-myeonggwa-ilili-agsuhagi-context-necessity">Ⅰ. 개요: 1억 명과 일일이 악수하기 (Context &amp; Necessity)</h3>
+<p>"내 질문 벡터(<code>[0.1, 0.5]</code>)랑 가장 거리가 가까운 문서 5개를 찾아줘!"</p>
+<ul>
+<li><strong>KNN (K-Nearest Neighbor, K-최근접 이웃)</strong>:
+가장 정확한 방법이다. 1억 개의 문서와 내 질문 사이의 코사인 유사도(486번 문서)를 1억 번 계산한다. 결과는 100% 정확하지만 검색에 10분이 걸린다. (실무 사용 불가)</li>
+</ul>
+<p>이 문제를 해결하기 위해 등장한 것이 **ANN (근사 최근접 이웃)**이다.
+"1억 개를 다 계산하지 마! 미리 점들끼리 가깝게 뭉쳐있는 애들끼리 선을 그어놔(그래프 인덱스). 그리고 내 질문이 떨어지면, 그 근처에 있는 점들 1,000개 정도만 찔러보고 그 안에서 제일 가까운 놈을 리턴해버려!"
+이 방식은 100% 가장 가까운 놈을 찾았다는 보장은 없지만, 99% 가까운 놈을 0.01초 만에 찾아낸다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: KNN이 서울에서 강동원을 찾기 위해 **'천만 시민의 얼굴을 일일이 다 확인하는 무식한 경찰'**이라면, ANN(HNSW)은 **'지하철 노선도를 타고 가는 똑똑한 탐정'**입니다. 1호선을 타고 큰 동네를 대충 찾은 뒤, 동네 버스로 갈아타고, 마지막엔 골목길을 걸어서 강동원과 제일 비슷하게 생긴 사람을 순식간에 찾아냅니다.</p>
+</blockquote>
+<hr />
+<h3 id="ii-hnswyi-jagdong-weonri-hierarchical-navigable-small-world">Ⅱ. HNSW의 작동 원리 (Hierarchical Navigable Small World) ★</h3>
+<p>현재 모든 벡터 DB가 사용하는 마법의 인덱스, HNSW의 이름 뜻을 뜯어보자.</p>
+<h4 id="1-navigable-small-world-nsw-jageun-sesang-geuraepeu">1. Navigable Small World (NSW - 작은 세상 그래프)</h4>
+<ul>
+<li>"여섯 다리만 건너면 전 세계 사람을 다 안다"는 스몰 월드 이론에서 따왔다.</li>
+<li>점(벡터)들을 거미줄처럼 다 연결해 놓되, 가까운 점들끼리 촘촘하게 묶고, 가끔 아주 멀리 있는 점과도 '고속도로(Long-range link)'를 뚫어놓은 형태다.</li>
+</ul>
+<h4 id="2-hierarchical-h-gyeceungjeog-gujo">2. Hierarchical (H - 계층적 구조)</h4>
+<ul>
+<li>NSW 그래프 하나만 있으면 탐색이 여전히 좀 느리다. 그래서 이 거미줄을 **아파트처럼 여러 층(Layer)**으로 쌓아 올렸다.</li>
+<li><strong>Layer 3 (꼭대기 층)</strong>: 점이 딱 3개만 있다. (고속도로 역할, 듬성듬성함)</li>
+<li><strong>Layer 2 (중간 층)</strong>: 점이 30개 있다.</li>
+<li><strong>Layer 0 (바닥 층)</strong>: 1억 개의 모든 점이 촘촘하게 다 연결되어 있다.</li>
+</ul>
+<h4 id="3-hnsw-tamsaeg-gwajeong-top-down-search">3. HNSW 탐색 과정 (Top-Down Search)</h4>
+<p>내 질문이 우주 공간에 떨어졌다.</p>
+<ol>
+<li>**꼭대기 층(Layer 3)**에서 시작한다. 점 3개 중 내 질문과 가장 가까운 1개를 찾는다.</li>
+<li>그 점을 딛고 **아래층(Layer 2)**으로 내려간다. 아까 찾은 점 근처에 있는 거미줄을 타고 조금 더 정밀하게 가까운 점을 찾는다.</li>
+<li>계속 파고 내려가서 **바닥 층(Layer 0)**에 도착하면, 최종적으로 내 질문과 가장 찰떡같이 붙어있는 점 5개를 찾아서 리턴한다.</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│           HNSW (계층적 네비게이션 스몰 월드) 탐색 시각화                │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│ [ 🏢 Layer 2 (꼭대기 층) ]  듬성듬성한 고속도로                      │
+│     (시작점) ──▶ (목표물 근처로 단숨에 50km 점프!)                   │
+│         │                                                    │
+│         ▼                                                    │
+│ [ 🏢 Layer 1 (중간 층) ]    조금 더 촘촘한 국도                      │
+│     (착지) ──▶ ──▶ (목표물 근처로 5km 점프!)                       │
+│         │                                                    │
+│         ▼                                                    │
+│ [ 🏢 Layer 0 (바닥 층) ]    모든 데이터가 있는 촘촘한 골목길            │
+│     (착지) ──▶ ──▶ 🎯 (목표물 도착! 반경 100m 탐색 완료)            │
+│                                                              │
+│ ★ 특징: 1억 개를 다 비교하는 게 아니라, 층을 내려오며 몇십 번의 비교만으로 끝냄!│
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h3 id="iii-silmu-tib-jaehyeonyul-recall-gwa-sogdoyi-dilrema">Ⅲ. 실무 팁: 재현율(Recall)과 속도의 딜레마</h3>
+<p>ANN 인덱스를 만들 때 개발자는 파라미터를 조절해야 한다.</p>
+<ul>
+<li><strong><code>efConstruction</code> / <code>M</code> (인덱스 생성 파라미터)</strong>
+<ul>
+<li>거미줄을 얼마나 촘촘하게 칠 것인가?</li>
+<li>촘촘하게 칠수록 나중에 찾을 때 100% 정답을 찾을 확률(Recall)이 올라가지만, 처음에 인덱스를 만드는 데 시간이 엄청나게 오래 걸리고 메모리 용량도 터져나간다.</li>
+</ul>
+</li>
+<li><strong>실무의 타협점</strong>:
+<ul>
+<li>사람의 언어를 다루는 RAG(488번 문서) 시스템에서 정답이 '1등'이 아니라 '3등' 문서로 나와도 AI가 읽고 대답하는 데는 아무 지장이 없다.</li>
+<li>따라서 속도를 위해 Recall을 95% 수준으로 살짝 양보하는 것이 벡터 DB 튜닝의 기본이다.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h3 id="iv-gyeolron">Ⅳ. 결론</h3>
+<p>"완벽함을 포기하는 순간, 무한한 확장의 문이 열린다."
+HNSW 알고리즘은 검색의 정확도를 1% 양보하는 대가로, 속도를 10,000배 끌어올린 컴퓨터 공학의 걸작이다. 만약 이 알고리즘이 없었다면 챗GPT에 수백만 장의 회사 문서를 집어넣고 질문하는 RAG 아키텍처는 매번 대답을 들을 때마다 1시간씩 기다려야 하는 쓰레기 시스템이 되었을 것이다. '벡터화된 데이터(Embedding)'와 이 데이터를 0.01초 만에 썰어내는 'HNSW 인덱스', 이 두 개의 날개가 결합하여 현대 AI 데이터베이스 혁명을 완성해 냈다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>기반 시스템</strong>: Vector DB (벡터 데이터베이스 - 485번 문서)</li>
+<li><strong>계산 공식</strong>: Cosine Similarity (코사인 유사도 - 486번 문서)</li>
+<li><strong>대척점 알고리즘</strong>: KNN (K-Nearest Neighbor - 100% 정확하지만 느린 풀스캔)</li>
+<li><strong>다른 ANN 알고리즘</strong>: LSH (Locality-Sensitive Hashing), IVF (Inverted File Index)</li>
+</ul>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>1억 개의 구슬 중에서 파란색 구슬과 제일 비슷한 색깔을 찾으려고 해요.</li>
+<li>KNN 방식은 1억 개를 다 꺼내서 파란색이랑 대보는 거예요. 100년이 걸리겠죠.</li>
+<li>HNSW 방식은 헬기를 타고 하늘 높이(꼭대기 층) 올라가서 대충 '푸르스름한 동네'를 찾은 다음, 낙하산을 타고 그 동네에 딱 내려서 근처 구슬 10개만 확인하는 거랍니다! (0.1초 컷)</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

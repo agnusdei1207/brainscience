@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>427. 지연된 ACK (Delayed ACK) - 응답 패킷 모아서 전송 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 지연된 ACK(Delayed ACK)는 수신자가 패킷 1개를 받을 때마다 영수증(ACK)을 1개씩 즉각적으로 쏘면 인터넷 망에 쓸데없는 영수증 쓰레기가 너무 많아지므로, <strong>"패킷을 받아도 0.2초 정도 숨을 참고 기다렸다가, 한 번에 여러 개의 패킷을 몰아서 영수증 1장(누적 ACK)으로 퉁쳐서 보내자!"라는 기막힌 대역폭 다이어트 기술</strong>이다.</li>
+<li><strong>피기배킹 (Piggybacking)의 예술</strong>: 0.2초를 기다리는 진짜 이유는 단순히 모아 보내기 위함만이 아니다. 기다리는 동안 만약 '내가 서버에게 보낼 진짜 데이터(예: 키보드 입력 값)'가 생기면, <strong>그 진짜 데이터 택배 상자 겉면에다가 영수증(ACK) 도장만 슬쩍 같이 찍어서 쏘는(업어 보내기, Piggyback) 궁극의 1+1 꼼수</strong>를 노리기 위함이다.</li>
+<li><strong>네이글(Nagle)과의 치명적 엇박자 (Deadlock)</strong>: 송신자의 네이글 알고리즘(ACK 올 때까지 안 쏨)과 수신자의 Delayed ACK(데이터 더 올 때까지 ACK 안 쏨)가 만나면, **서로 "네가 먼저 쏴!" "네가 먼저 영수증 줘!"라며 0.2초 동안 통신이 얼어붙는 미친 교착 상태(Deadlock 지연)**가 발생하므로 실시간 게임에선 둘 다 목을 비틀어 꺼버려야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: TCP 수신자가 데이터 세그먼트를 수신할 때마다 즉시 독립된 ACK 패킷을 생성하지 않고, 일정 시간(보통 200ms~500ms) 대기하여 다수의 ACK를 하나로 병합(Cumulative)하거나 나가는 데이터에 얹어 보내는 트래픽 억제 메커니즘 (RFC 1122).</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 구글에서 1,000개의 패킷이 쏟아져 온다. 내 컴퓨터가 1번 패킷 받고 ACK 1번, 2번 패킷 받고 ACK 2번... 이렇게 1,000번의 영수증을 보내면 태평양 해저 케이블은 내가 쏘는 헤더 40바이트짜리 빈 껍데기 영수증(ACK)으로 꽉 막혀버린다. <strong>"야! 어차피 누적 ACK 쓴다며! 1, 2, 3번 연달아 들어오면 그냥 0.2초 참았다가 '3번까지 다 받았어!(ACK 4)'라고 한 장만 쏘면 대역폭 3배 절약되잖아!!"</strong></p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: Delayed ACK는 백화점 주차장의 **"영수증 도장 모아 찍기"**와 같습니다.</p>
+<ul>
+<li><strong>즉시 ACK</strong>: 옷가게에서 양말 한 켤레(패킷 1개) 살 때마다 손님이 주차장(서버)으로 뛰어가서 주차 영수증(ACK)을 도장 받아옵니다. (왔다 갔다 하느라 미침).</li>
+<li><strong>Delayed ACK</strong>: 양말, 바지, 코트를 쇼핑할 동안 영수증을 주머니에 <strong>차곡차곡 모아뒀다가(지연)</strong>, 쇼핑이 끝나고 집에 갈 때 주차 정산소에 영수증 3장을 한 번에 내밀어 <strong>주차 도장 딱 1개(누적 ACK)로 퉁치고 빠져나가는 극강의 편의성</strong>입니다.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유:</strong> Delayed ACK는 택배 기사님에게 건네는 **"음료수 얹어주기(Piggybacking)"**입니다. 빈 손(빈 패킷)으로 "잘 받았어요(ACK)" 하고 인사만 하러 나가는 게 아까우니, 기왕 나갈 거 5초만 기다렸다가 <strong>집에 있는 박카스(진짜 내 데이터)를 하나 들고나가면서 "잘 받았어요"라는 인사까지 1석 2조로 끝내는 센스</strong>입니다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-delayed-ackyi-gyuciggwa-naglegwayi-cungdol-deep-dive">Ⅱ. Delayed ACK의 규칙과 Nagle과의 충돌 (Deep Dive)</h2>
+<h3 id="1-jiyeondoen-ackyi-baldong-jogeon-3gaji">1. 지연된 ACK의 발동 조건 3가지</h3>
+<p>수신자 OS는 맘대로 평생 기다리지 않는다. 아래 3가지 중 하나라도 충족되면 즉시 ACK를 발사한다.</p>
+<ol>
+<li><strong>버티기 한계 도달 (Timer Expiration)</strong>: 패킷을 받고 0.2초(200ms)가 지났는데도 다음 패킷이 안 온다. "아, 더 이상 올 게 없나 보네. 그냥 영수증 쏘자!" ──▶ <code>빈 ACK 발송</code></li>
+<li><strong>2개 패킷 연속 수신 (2 Packets Rule)</strong>: 기다리는 중에 패킷이 하나 더 들어와서 <strong>보류 중인 영수증이 2개가 쌓였다</strong>. "야 2개 찼으면 많이 참았다. 더 참으면 상대방이 화낸다!" ──▶ <code>즉시 누적 ACK 발송</code></li>
+<li><strong>내가 보낼 데이터가 생김 (Piggybacking)</strong>: 기다리는 중에 마침 내 앱(크롬)에서 구글로 쏠 진짜 데이터가 내려왔다. "오예! 나가는 택배 박스 겉면에 ACK 도장 슬쩍 찍어(Piggyback)!!" ──▶ <code>데이터 + ACK 동시 발송</code></li>
+</ol>
+<h3 id="2-hwanjangyi-kolrabo-nagle-vs-delayed-ackyi-cungdol-jiogyi-200ms">2. 환장의 콜라보: Nagle vs Delayed ACK의 충돌 (지옥의 200ms)</h3>
+<p>이론상 완벽한 이 두 최적화 꼼수가 실전에서 만나면 서로 뒷목을 잡는 대참사가 터진다.</p>
+<p><strong>[상황: 내가 마우스 클릭 좌표(1바이트) 2개를 0.01초 간격으로 서버에 쏠 때]</strong></p>
+<ol>
+<li>내 PC(Nagle 켜짐)가 마우스 첫 클릭(1바이트)을 서버로 쏜다.</li>
+<li>서버(Delayed ACK 켜짐)가 1바이트를 받는다. "오케이, 0.2초 대기 탔다 영수증 줘야지~(Delayed)"</li>
+<li>내 PC(Nagle)에서 두 번째 클릭(1바이트)이 생겼다. "야 Nagle 룰 알지? 방금 1번째 쏜 거 영수증(ACK) 올 때까지 2번째 건 쏘지 말고 버퍼에 잡아둬!"</li>
+<li><strong>데드락(Deadlock) 발생</strong>:
+<ul>
+<li>내 PC: "서버야 영수증 줘! 그래야 2번째 패킷 쏠 거 아냐!"</li>
+<li>서버: "너 패킷 1개밖에 안 줬잖아. 2개 찰 때까지 0.2초 숨 참고 안 줄 건데?"</li>
+</ul>
+</li>
+<li><strong>결과</strong>: 서버가 0.2초를 꽉 채우고 타이머가 만료되어 마지못해 ACK를 쏴줄 때까지 <strong>내 게임 화면은 0.2초 동안 완벽하게 렉(멈춤)에 걸린다</strong>. 이것이 TCP 기반 게임이 느려지는 가장 치명적인 이유다.</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text"> ┌─────────────────────────────────────────────────────────────┐
+ │                Nagle과 Delayed ACK의 데드락(Deadlock) 핑퐁         │
+ ├─────────────────────────────────────────────────────────────┤
+ │                                                             │
+ │   [ 내 PC (Nagle ON) ]                       [ 서버 (Delay ON) ]│
+ │   1. 1바이트 쏨! ──────────────────────────────▶             │
+ │                                             2. &quot;0.2초 숨 참기 시작!&quot;│
+ │   3. 또 1바이트 생김.                                           │
+ │      &quot;아까 거 ACK 안 왔으니 출발 금지!&quot;                            │
+ │                                                             │
+ │   ... (서로 멀뚱멀뚱 쳐다보며 0.2초간 통신 완전 정지) ...                │
+ │                                                             │
+ │                                             4. &quot;어휴 0.2초 지났다.&quot; │
+ │   6. 두 번째 바이트 출발!! ◀───────── (ACK 도착) ── 5. ACK 발사!    │
+ │                                                             │
+ │   ▶ &quot;이 0.2초 렉을 혐오하는 게임&#x2F;금융 개발자들은 양쪽 다 기능을 끄도록 │
+ │      소켓 코딩 (TCP_NODELAY, TCP_QUICKACK)을 강제로 박아버린다!&quot;│
+ └─────────────────────────────────────────────────────────────┘
+</code></pre>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유:</strong> Delayed ACK와 Nagle의 만남은 **"지독한 자존심 싸움"**입니다. 남자가 "네가 카톡 읽음 표시(ACK) 띄울 때까지 나 두 번째 카톡 안 보낼 거야(Nagle)" 하고 버티고, 여자는 "네가 카톡 두 개 연속으로 보내기 전까진 절대 읽음(Delay ACK) 안 띄울 거야" 하고 버티다가, 결국 여자가 2시간 뒤에 마지못해 1 표시를 지울 때까지 완벽하게 소통이 단절되는 환장의 커플입니다.</p>
+</blockquote>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

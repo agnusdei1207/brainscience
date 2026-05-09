@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TF-IDF 및 코사인 유사도 (TF-IDF &amp; Cosine Similarity) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 04, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote data engineering
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: <code>TF-IDF</code>는 텍스트 내 단어의 단순 빈도(TF)와 문서 간 희소성(IDF)을 결합하여 정보적 가치를 수치화하는 기법이며, <code>코사인 유사도 (Cosine Similarity)</code>는 벡터화된 문서 간의 방향(각도)을 측정해 의미적 유사성을 판별하는 거리 지표다.</li>
+<li><strong>가치</strong>: 비정형 텍스트 데이터를 컴퓨터가 계산 가능한 숫자 벡터 공간으로 옮겨놓아, 키워드 추출, 검색 엔진의 문서 랭킹, 추천 시스템 등 자연어 처리(NLP)의 근간을 제공한다.</li>
+<li><strong>판단 포인트</strong>: 단어의 등장 여부와 빈도를 바탕으로 하는 강력한 베이스라인이지만, 단어의 문맥(Context)이나 순서를 무시하므로 최신 실무에서는 딥러닝 기반의 임베딩(Word2Vec, BERT)과 하이브리드로 결합하여 사용해야 한계를 넘을 수 있다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>자연어 처리(NLP)와 정보 검색 시스템에서 가장 큰 과제는 "비정형 텍스트를 어떻게 기계가 이해할 수 있는 숫자로 변환할 것인가(Vectorization)?"이다. 초기에는 문서 내에 특정 단어가 몇 번 등장했는지 단순히 세는 <code>BoW (Bag-of-Words)</code> 방식이나 <code>Count Vector</code>를 사용했다.</p>
+<p>그러나 이 방식은 치명적인 문제가 있다. '은/는/이/가', '그리고', 'the', 'a' 같은 불용어(Stopwords)는 모든 문서에서 엄청나게 자주 등장하기 때문에 단순 카운트 방식에서는 가장 중요한 단어로 오해받는다. 반면, 특정 문서의 핵심을 찌르는 전문 용어는 빈도수가 낮아 무시된다. 이를 해결하기 위해 흔한 단어의 가중치는 깎아내고 희소한 단어의 가중치는 끌어올리는 <code>TF-IDF</code>가 등장했고, 이렇게 만들어진 문서 벡터들끼리 얼마나 비슷한지 방향성을 기준으로 측정하기 위해 <code>코사인 유사도</code>가 짝꿍으로 활용되기 시작했다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 단순 빈도수는 학생이 하루 종일 제일 많이 한 말("어", "음", "저기")을 그 학생의 특징이라고 착각하는 선생님과 같다. TF-IDF는 다른 반 애들은 안 쓰는데 이 학생만 유독 자주 쓰는 특별한 단어("양자역학")를 콕 집어내어 학생의 진짜 특징을 찾아내는 지능형 분석관이다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>TF-IDF는 두 가지 지표의 곱으로 계산되며, 생성된 가중치 벡터는 코사인 유사도로 비교된다.</p>
+<ol>
+<li><strong>TF (Term Frequency, 단어 빈도)</strong>: 특정 문서 $d$ 내에서 특정 단어 $t$가 등장한 횟수. (이 문서 안에서 얼마나 중요한가?)</li>
+<li><strong>IDF (Inverse Document Frequency, 역문서 빈도)</strong>: 전체 문서 수 $N$을 단어 $t$가 등장한 문서 수 $df(t)$로 나눈 값에 로그를 취한 값. (전체 문서군에서 얼마나 희귀한가?)
+<ul>
+<li>수식: $TF-IDF(t, d, D) = TF(t, d) \times \log\left(\frac{N}{1 + df(t)}\right)$</li>
+</ul>
+</li>
+</ol>
+<p>이렇게 TF-IDF를 통해 문서가 벡터 공간의 좌표로 변환되면, 문서 A와 문서 B의 유사도는 두 벡터가 이루는 **각도(Angle)**를 측정하는 <code>코사인 유사도 (Cosine Similarity)</code>로 구한다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────┐
+│              문서 벡터화 및 코사인 유사도 산출 메커니즘          │
+├──────────────────────────────────────────────────────────────────┤
+│ [문서 A: &quot;사과 바나나 사과&quot;]          [문서 B: &quot;바나나 포도&quot;]        │
+│          │                                   │                   │
+│          ▼                                   ▼                   │
+│ 1. TF-IDF Vectorization (가중치 계산)                            │
+│    Vector A = [0.8(사과), 0.2(바나나), 0(포도)]                  │
+│    Vector B = [0(사과), 0.5(바나나), 0.7(포도)]                  │
+│          │                                                       │
+│          ▼                                                       │
+│ 2. Cosine Similarity (방향성 측정: A·B &#x2F; |A||B|)                 │
+│         y축(사과)                                                │
+│         ▲                                                        │
+│         │   Vector A                                             │
+│         │  ↗     각도(θ)가 작을수록(cosθ ≒ 1) 유사도 높음          │
+│         │ ↙ ─ ─ ─ ─ ─ Vector B                                   │
+│         └──────────────────▶ x축(포도)                           │
+└──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>벡터의 크기(단어의 절대적 길이)가 달라도, 두 벡터가 가리키는 방향이 같으면 코사인 유사도는 1(완전 일치)에 가까워진다. 문서의 길이가 다르더라도 주제 분포가 비슷하면 유사하다고 판별할 수 있는 핵심 원리다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: TF-IDF는 각 재료가 요리에서 얼마나 특별한 맛을 내는지 점수를 매기는 레시피 평가표다. 코사인 유사도는 요리의 양(1인분, 10인분)이 달라도 '짠맛 2, 단맛 1'의 비율(방향)만 같으면 두 요리가 똑같은 맛이라고 정확히 판정해 주는 미식가의 혀다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>문서 간의 거리를 측정할 때 코사인 유사도와 흔히 비교되는 것이 <code>유클리디안 거리 (Euclidean Distance)</code>다. 텍스트 분석에서는 이 둘의 경계를 명확히 알아야 한다.</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">코사인 유사도 (Cosine Similarity)</th><th style="text-align: left">유클리디안 거리 (Euclidean Distance)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>측정 기준</strong></td><td style="text-align: left">두 벡터가 이루는 <strong>각도 (방향)</strong></td><td style="text-align: left">두 벡터의 끝점을 이은 <strong>직선 거리 (크기)</strong></td></tr>
+<tr><td style="text-align: left"><strong>문서 길이 영향</strong></td><td style="text-align: left">영향이 거의 없음 (정규화 효과)</td><td style="text-align: left">문서 길이가 다르면 거리가 기하급수적으로 멀어짐</td></tr>
+<tr><td style="text-align: left"><strong>적합한 데이터</strong></td><td style="text-align: left">텍스트, 희소 벡터 (Sparse Vector), 추천 시스템</td><td style="text-align: left">지리적 위치 데이터, 절대적인 수치 차이가 중요한 데이터</td></tr>
+<tr><td style="text-align: left"><strong>강점</strong></td><td style="text-align: left">"주제가 비슷한가?"를 잘 잡아냄</td><td style="text-align: left">"규모와 스케일이 비슷한가?"를 잘 잡아냄</td></tr>
+</tbody></table>
+<p>짧은 트윗과 긴 블로그 포스트가 같은 주제를 다룰 때, 유클리디안 거리로 계산하면 단어 빈도의 절대적 크기 차이 때문에 "완전 다른 글"로 오판 검사한다. 반면 코사인 유사도는 방향(비율)만 보므로 "비슷한 주제"로 묶어낼 수 있다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 코사인 유사도는 산의 모양(기울기)이 비슷한지를 보는 것이고, 유클리디안 거리는 산의 높이가 비슷한지를 보는 것이다. 텍스트 분석에서는 동네 뒷산과 에베레스트라도 '모양(주제)'이 같으면 유사하다고 봐야 하므로 코사인 유사도를 쓴다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p>TF-IDF와 코사인 유사도는 구현이 가볍고 빠르며 설명 가능성(Explainability)이 높기 때문에 실무 검색 시스템의 강력한 베이스라인(Baseline)으로 작용한다.</p>
+<h3 id="silmu-pandan-gaideu">실무 판단 가이드</h3>
+<ol>
+<li><strong>도입 채택 (Adopt)</strong>:
+<ul>
+<li>쇼핑몰 상품명 검색, 뉴스 기사 키워드 기반 추천 시스템 등 키워드 매칭이 직관적으로 작용하는 도메인.</li>
+<li>딥러닝 모델을 돌리기에는 서버 자원이 부족하거나, 극도의 낮은 지연시간(Low Latency)이 요구되는 초기 검색 필터링(Candidate Generation) 단계.</li>
+</ul>
+</li>
+<li><strong>한계 인식 및 회피 (Avoid)</strong>:
+<ul>
+<li>TF-IDF는 단어의 문맥을 전혀 파악하지 못한다. "배를 먹다"와 "배를 타다"를 같은 단어로 취급한다.</li>
+<li>단어의 철자가 조금만 달라도(예: '노트북', '랩탑') 완전히 다른 축(차원)으로 인식하여 유사도가 0이 되는 희소성(Sparsity) 문제가 발생한다.</li>
+<li>문맥의 의미론적 유사성(Semantic Similarity)이 중요할 때는 반드시 <code>Word2Vec</code>이나 <code>BERT Embedding</code>을 채택해야 한다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="coesin-akitegceo-yeongye-rag">최신 아키텍처 연계 (RAG)</h3>
+<p>현대적인 <code>RAG (Retrieval-Augmented Generation)</code> 기반 시스템에서는 TF-IDF 류의 키워드 검색(BM25)과 딥러닝 임베딩 기반의 벡터 검색을 결합하는 <strong>하이브리드 서치 (Hybrid Search)</strong> 아키텍처가 표준으로 자리 잡았다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: TF-IDF는 책의 '목차'와 '색인'만 보고 책을 찾아주는 도서관 사서와 같다. 빠르고 정확하게 키워드가 든 책을 찾아주지만, 책 안에 숨겨진 미묘한 비유나 철학적 의미까지 파악해서 찾아주려면 딥러닝(AI 사서)이라는 추가적인 뇌가 필요하다.</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>TF-IDF와 코사인 유사도는 비정형 데이터인 텍스트를 기계가 수학적으로 다룰 수 있도록 길을 열어준 고전이자 핵심 알고리즘이다. 문서의 주제를 수치화하여 군집화(Clustering)하고 분류(Classification)하는 모든 후속 머신러닝 작업의 피처(Feature)로 강력한 성능을 발휘한다.</p>
+<p>결론적으로, 딥러닝 모델이 화려한 결과를 내는 현대에도 TF-IDF 기반의 희소 벡터 비교 기법(BM25 등)은 연산 효율성과 직관적 해석력 덕분에 검색 엔진의 최전선을 지키는 필수 기술이다. 이 개념을 명확히 이해해야만 고차원 임베딩 벡터의 본질적인 한계와 성능 트레이드오프를 설계 레벨에서 판단할 수 있다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: TF-IDF는 요리의 기본이 되는 소금과 후추다. 트러플 오일(딥러닝 임베딩) 같은 고급 재료가 유행하더라도, 맛의 뼈대를 잡는 소금과 후추의 원리는 시대가 지나도 결코 사라지지 않는다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>BoW (Bag-of-Words)</strong></td><td style="text-align: left">단어의 순서를 무시하고 빈도만 가방에 담아 측정하는 TF-IDF의 뼈대가 되는 모델</td></tr>
+<tr><td style="text-align: left"><strong>BM25 (Best Matching 25)</strong></td><td style="text-align: left">TF-IDF를 보완하여 문서 길이가 길어짐에 따라 가중치가 무한정 커지는 것을 방지하는 검색 엔진 표준 알고리즘 (ElasticSearch 기본)</td></tr>
+<tr><td style="text-align: left"><strong>Word Embedding (Word2Vec)</strong></td><td style="text-align: left">단어의 빈도가 아닌, 주변 단어와의 동시 등장 확률을 학습해 문맥적 의미를 벡터화하는 딥러닝 기법</td></tr>
+<tr><td style="text-align: left"><strong>희소 행렬 (Sparse Matrix)</strong></td><td style="text-align: left">단어 사전이 커질수록 0이 대부분인 거대한 차원의 행렬이 생성되어 메모리 문제가 발생하는 현상</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">문서 수치화의 초기 접근
+    │
+    ▼
+단순 빈도 기반 모델 (Count Vector &#x2F; Bag-of-Words)
+    │
+    ▼
+희소성 가중치 결합 (TF-IDF: 흔한 단어 패널티)
+    │
+    ▼
+거리 측정 도입 (Cosine Similarity: 문서 방향성 기반 매칭)
+    │
+    ▼
+길이 정규화 개선 (BM25: ElasticSearch 등 현대 검색의 표준)
+    │
+    ▼
+의미론적 임베딩 결합 (Word2Vec · BERT &#x2F; Hybrid Search)
+</code></pre>
+<p>이 흐름도는 "단순 카운트 → 희소성 반영 → 방향성 측정 → 길이 정규화 → 의미 기반 융합"으로 텍스트 벡터화 기술이 진화해 온 과정을 한눈에 보여준다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li><strong>TF-IDF</strong>: 글 속에서 '그리고', '하지만'처럼 흔한 단어는 무시하고, 그 글에서만 유독 반짝이는 '특별한 보석 단어'에 높은 점수를 주는 채점표예요.</li>
+<li><strong>코사인 유사도</strong>: 두 친구가 '로봇'과 '우주선'을 좋아하는 마음의 방향이 얼마나 일치하는지 각도기로 재서, 마음이 통하는 짝꿍을 찾아주는 방법이에요.</li>
+<li><strong>결론</strong>: 글의 겉모습이나 길이가 달라도, 그 안에 담긴 진짜 중요한 핵심 단어들의 비율이 똑같으면 "둘은 비슷한 이야기네!"라고 컴퓨터가 알아채게 해주는 마법의 공식이랍니다.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

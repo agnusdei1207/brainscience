@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>451. 교착 상태 (Deadlock)와 해결 기법 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote database
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="451-gyocag-sangtae-deadlock-wa-hoepi-gibeob-wait-die">451. 교착 상태 (Deadlock)와 회피 기법 (Wait-Die)</h1>
+<blockquote>
+<p>⚠️ 이 문서는 데이터의 무결성을 지키기 위해 서로 자물쇠(Lock)를 걸다가, **"네가 가진 자물쇠를 풀 때까지 나도 내 자물쇠를 안 풀 거야!"라며 두 트랜잭션이 영원한 무한 대기 상태에 빠져버리는 치명적인 시스템 마비 현상인 '교착 상태(데드락)'**를 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 두 개 이상의 트랜잭션이 서로가 점유하고 있는 자원을 요구하면서, 아무도 양보하지 않아 영원히 멈춰버리는 현상이다.</li>
+<li><strong>해결책</strong>: 데드락이 발생하지 않도록 규칙을 정해두는 '회피(Avoidance)'와, 일단 발생하게 두고 주기적으로 검사해서 꼬인 실타래를 끊어버리는 '탐지(Detection)' 기법으로 나뉜다.</li>
+<li><strong>회피 기법</strong>: 트랜잭션에 나이표(Timestamp)를 붙여서 늙은 트랜잭션(먼저 온 사람)과 젊은 트랜잭션(나중에 온 사람) 간의 양보 규칙을 정하는 <strong>Wait-Die</strong>와 <strong>Wound-Wait</strong> 기법이 시험에 자주 출제된다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-gaeyo-jobeun-golmoggilyi-du-jadongca-context-necessity">Ⅰ. 개요: 좁은 골목길의 두 자동차 (Context &amp; Necessity)</h3>
+<p>차 두 대가 외길 한가운데서 마주쳤다.</p>
+<ul>
+<li><strong>A 차</strong>: "네가 뒤로 빼라, 그럼 내가 지나가마."</li>
+<li><strong>B 차</strong>: "싫어, 네가 뒤로 빼라. 그럼 내가 지나가마."</li>
+</ul>
+<p>데이터베이스에서도 똑같은 일이 벌어진다.</p>
+<ul>
+<li><strong>T1</strong>: <code>A 데이터</code> 잠금 획득 $\rightarrow$ (수정 중) $\rightarrow$ <code>B 데이터</code> 내놔! (T2가 잠그고 있어서 대기)</li>
+<li><strong>T2</strong>: <code>B 데이터</code> 잠금 획득 $\rightarrow$ (수정 중) $\rightarrow$ <code>A 데이터</code> 내놔! (T1이 잠그고 있어서 대기)</li>
+</ul>
+<p>서로 락(Lock)을 쥔 채로 상대방의 락이 풀리기만을 기다린다. 2단계 잠금 규약(2PL, 450번 문서)에 따르면 작업이 끝날 때까지 락을 풀 수 없으므로, 이 두 트랜잭션은 우주가 멸망할 때까지 멈춰있게 된다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 데드락은 **'사과와 귤'**을 하나씩 나눠 가진 두 아이와 같습니다. 철수는 사과를 들고 "영희 네가 귤 주면 사과 줄게"라고 하고, 영희는 귤을 쥐고 "철수 네가 사과 먼저 주면 귤 줄게"라고 합니다. 어른(DB 관리자)이 개입해서 한 명의 손을 강제로 펴게 하지 않으면 평생 사과와 귤을 바꿀 수 없습니다.</p>
+</blockquote>
+<hr />
+<h3 id="ii-dedeurag-hoepi-gibeob-wait-die-vs-wound-wait">Ⅱ. 데드락 회피 기법: Wait-Die vs Wound-Wait ★</h3>
+<p>나이(Timestamp)를 기준으로 "누가 양보할 것인가"를 수학적으로 정해둔 규칙이다.
+(오래된 트랜잭션 = 늙은이 / 최근에 시작된 트랜잭션 = 젊은이)</p>
+<h4 id="1-wait-die-gidarigeona-juggeona">1. Wait-Die (기다리거나 죽거나)</h4>
+<p>늙은이가 대우받는 유교(?)적인 방식이다.</p>
+<ul>
+<li><strong>늙은이가 젊은이의 자원을 원할 때 (Wait)</strong>: "내가 어른이니까 기다릴게. 너 다 쓰면 줘." (대기)</li>
+<li><strong>젊은이가 늙은이의 자원을 원할 때 (Die)</strong>: "감히 어른의 물건을 넘봐? 넌 탈락이야!" (젊은이 트랜잭션 강제 종료/Rollback)</li>
+</ul>
+<h4 id="2-wound-wait-bbaesgeona-gidarigeona">2. Wound-Wait (뺏거나 기다리거나)</h4>
+<p>늙은이가 깡패처럼 무자비하게 뺏는 방식이다.</p>
+<ul>
+<li><strong>늙은이가 젊은이의 자원을 원할 때 (Wound)</strong>: "어른이 쓰셔야겠다. 너 비켜!" (젊은이의 자원을 뺏고, 젊은이 강제 종료/Rollback)</li>
+<li><strong>젊은이가 늙은이의 자원을 원할 때 (Wait)</strong>: "어른이 쓰고 계시니 얌전히 기다려야지." (대기)</li>
+</ul>
+<hr />
+<h3 id="iii-dedeurag-tamji-detection-wa-hyisaengja-seontaeg">Ⅲ. 데드락 탐지(Detection)와 희생자 선택</h3>
+<p>실무(MySQL 등)에서는 회피 기법을 쓰지 않는다. 규칙을 지키느라 너무 많은 트랜잭션이 죽어나가기 때문이다.
+대신 **"일단 자유롭게 써봐. 근데 데드락 걸리면 내가 주기적으로 찾아내서 죽여버릴게"**라는 탐지 기법을 쓴다.</p>
+<ul>
+<li>DB 엔진 안에는 <code>Deadlock Detector</code>라는 순찰병이 있다.</li>
+<li>1초마다 누가 누구를 기다리는지 **'대기 그래프(Wait-for Graph)'**를 그린다.</li>
+<li>그래프에서 꼬리물기(Cycle, 원)가 발견되면 데드락이다!</li>
+<li><strong>희생자(Victim) 선택</strong>: 꼬인 실타래를 풀기 위해 누군가 1명을 강제로 롤백시켜야 한다. 이때 가장 '만만한 놈'을 고른다. (지금까지 업데이트한 데이터가 제일 적은 놈, 방금 막 시작한 놈 등)</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│           교착 상태(Deadlock)의 원인과 사이클(Cycle) 시각화           │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│ [ 🔄 대기 그래프 (Wait-for Graph) ]                           │
+│                                                              │
+│        (Lock 획득)            (요청하며 대기)                    │
+│    A 데이터 ◀───── T1 ──────────────────┐                   │
+│                    ▲                    │                   │
+│                    │                    ▼                   │
+│               (요청 대기)            B 데이터                   │
+│                    │                    ▲                   │
+│                    └───────── T2 ───────┘                   │
+│                                (Lock 획득)                   │
+│                                                              │
+│ ★ 특징: 화살표가 꼬리를 물고 뱅글뱅글 도는 &#x27;원(Cycle)&#x27;이 그려지면,           │
+│       DBA의 개입 없이는 절대 풀리지 않는 완벽한 데드락 상태다.              │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h3 id="iv-gyeolron">Ⅳ. 결론</h3>
+<p>"데드락을 완전히 없애는 것은 불가능하다. 어떻게 우아하게 죽일지를 고민하라."
+교착 상태는 코드를 아무리 잘 짜도, 데이터베이스를 동시에 사용하는 사용자가 많아지면 필연적으로 마주칠 수밖에 없는 자연재해와 같다. 백엔드 개발자의 실력은 데드락이 발생했을 때 나타난다. 테이블을 접근하는 순서를 모든 트랜잭션에서 동일하게 맞추고(A-&gt;B 순서), 불필요한 롱 트랜잭션을 잘게 쪼개어 데드락 발생 확률을 극단적으로 낮추는 것, 그리고 에러(<code>Deadlock found when trying to get lock</code>)가 발생했을 때 앱 단에서 안전하게 <code>Retry(재시도)</code> 로직을 구현해 내는 것이 진정한 시니어의 역량이다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>원인 기술</strong>: 2PL (2단계 잠금 규약 - 450번 문서), S/X Lock (449번 문서)</li>
+<li><strong>운영체제(OS) 비교</strong>: OS의 데드락 발생 4조건 (상호배제, 점유대기, 비선점, 환형대기)과 동일함.</li>
+<li><strong>해결책 알고리즘</strong>: Timestamp Ordering (452번), Wait-Die, Wound-Wait</li>
+<li><strong>실무 대처법</strong>: Deadlock Timeout 설정, Retry 로직 구현</li>
+</ul>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>밥을 먹으려면 포크와 숟가락이 모두 필요해요.</li>
+<li>철수는 포크를 쥐고 영희의 숟가락을 달라고 하고, 영희는 숟가락을 쥐고 철수의 포크를 달라고 해요.</li>
+<li>둘 다 자기가 가진 걸 절대 놓지 않으면서 남의 것만 달라고 하니까, 둘 다 굶어 죽을 때까지 밥을 한 술도 못 뜨는 바보 같은 상황이 바로 데드락이랍니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

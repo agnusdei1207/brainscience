@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>337. ASLR (Address Space Layout Randomization) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote security
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: ASLR(Address Space Layout Randomization)은 프로세스의 스택·힙·라이브러리·실행 파일의 가상 주소를 실행마다 무작위로 배치하여, 공격자가 리턴 주소나 코드 위치를 예측할 수 없게 만드는 메모리 방어 기법이다.</li>
+<li><strong>가치</strong>: ROP·ret2libc·힙 스프레이 등 주소 예측에 의존하는 공격 기법에 대해 공격 성공률을 확률적으로 극적으로 낮추며, NX/DEP와 조합 시 대부분의 메모리 공격을 실용적으로 방어한다.</li>
+<li><strong>판단 포인트</strong>: ASLR의 효과는 엔트로피(랜덤화 비트 수)에 비례하며, 64비트 환경에서 최대 효과를 발휘하고 PIE(Position Independent Executable)와 함께 사용해야 실행 파일 코드까지 완전히 랜덤화된다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>ASLR(Address Space Layout Randomization)은 2001년 PaX 패치로 Linux에 처음 도입되었으며, 이후 Linux 커널 2.6.12(2005), Windows Vista(2007), macOS 10.5 Leopard(2007)에 각각 탑재되어 현재 모든 주요 OS의 기본 보안 기능이 되었다.</p>
+<p>ASLR 이전에는 모든 프로세스가 동일한 가상 주소에 로드되었다. 이로 인해 공격자는 libc의 <code>system()</code> 함수 주소를 정확히 알고 있었고, 리턴 주소를 그 고정 주소로 교체하는 것만으로 임의 명령을 실행할 수 있었다.</p>
+<p>ASLR이 활성화되면 스택·힙·라이브러리 기준 주소(Base Address)가 프로세스 실행마다 무작위로 결정된다. 64비트 Linux에서는 스택에 28비트, 공유 라이브러리에 28비트의 엔트로피가 적용되어, 공격자가 정확한 주소를 추측할 확률이 2^28 분의 1(약 2억 7천만 분의 1)이 된다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: ASLR은 "매일 위치가 바뀌는 금고"다. 도둑이 설계도를 외워도 매일 아침 금고가 다른 방에 있으면 찾는 것 자체가 거의 불가능하다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="aslr-raendeomhwa-beomwi-linux-64biteu-gijun">ASLR 랜덤화 범위 (Linux 64비트 기준)</h3>
+<table><thead><tr><th style="text-align: left">영역</th><th style="text-align: left">엔트로피(비트)</th><th style="text-align: left">가능한 위치 수</th></tr></thead><tbody>
+<tr><td style="text-align: left">실행 파일 (PIE)</td><td style="text-align: left">28비트</td><td style="text-align: left">~268백만</td></tr>
+<tr><td style="text-align: left">공유 라이브러리</td><td style="text-align: left">28비트</td><td style="text-align: left">~268백만</td></tr>
+<tr><td style="text-align: left">힙 (mmap)</td><td style="text-align: left">28비트</td><td style="text-align: left">~268백만</td></tr>
+<tr><td style="text-align: left">스택</td><td style="text-align: left">20비트</td><td style="text-align: left">~1백만</td></tr>
+</tbody></table>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│          ASLR 적용 전후 메모리 레이아웃 비교         │
+│                                                      │
+│  ASLR 비활성화              ASLR 활성화              │
+│  ┌──────────────┐           ┌──────────────┐         │
+│  │ 0x7fff0000   │ 스택      │ 0x7a3f9000   │ 스택    │
+│  │ (항상 고정)  │           │ (매번 변경)  │         │
+│  ├──────────────┤           ├──────────────┤         │
+│  │ 0x7f000000   │ libc      │ 0x4c8e2000   │ libc    │
+│  │ (항상 고정)  │           │ (매번 변경)  │         │
+│  ├──────────────┤           ├──────────────┤         │
+│  │ 0x08048000   │ 실행파일  │ 0x5623a000   │ 실행파일│
+│  │ (항상 고정)  │           │ (PIE 필요)   │         │
+│  └──────────────┘           └──────────────┘         │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<p>ASLR의 핵심 원리는 **예측 불가성(Unpredictability)**이다. 공격자가 취약점으로 EIP/RIP를 제어해도, 실행할 코드의 주소를 모르면 공격을 완성할 수 없다. 이 방어는 확률적이지만, 엔트로피가 충분히 높으면 실용적인 브루트 포스(Brute Force)가 불가능하다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: ASLR의 엔트로피는 "비밀번호 길이"와 같다. 4자리(32비트 ASLR)는 만 번이면 뚫리지만, 28자리(64비트 ASLR)는 수억 번이 필요해 사실상 불가능하다.</p>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="aslr-uhoe-gibeob-bigyo">ASLR 우회 기법 비교</h3>
+<table><thead><tr><th style="text-align: left">우회 기법</th><th style="text-align: left">원리</th><th style="text-align: left">효과</th></tr></thead><tbody>
+<tr><td style="text-align: left">Brute Force</td><td style="text-align: left">반복 시도로 올바른 주소 맞춤</td><td style="text-align: left">32비트에서만 실용적</td></tr>
+<tr><td style="text-align: left">Info Leak</td><td style="text-align: left">정보 유출 취약점으로 주소 노출</td><td style="text-align: left">아키텍처 무관하게 효과적</td></tr>
+<tr><td style="text-align: left">Heap Spray</td><td style="text-align: left">힙에 쉘코드를 촘촘히 배포</td><td style="text-align: left">NX와 조합 시 무력화</td></tr>
+<tr><td style="text-align: left">Offset Reuse</td><td style="text-align: left">ASLR 비적용 모듈 악용</td><td style="text-align: left">PIE 미적용 모듈 존재 시</td></tr>
+</tbody></table>
+<p>ASLR은 PIE(Position Independent Executable)와 함께 사용해야 실행 파일 자체도 랜덤 주소에 로드된다. PIE 없이 ASLR만 적용하면 실행 파일 코드 영역은 여전히 고정 주소에 위치하여 ROP 가젯 재사용이 가능하다. 따라서 ASLR+PIE+NX가 현대 바이너리 보호의 표준 조합이다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: ASLR만으로 충분하지 않은 이유는 "건물은 매일 위치가 바뀌는데 정문만 고정된 것"이다. 정문(실행 파일 코드)으로 들어가 건물 내부를 탐색할 수 있다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p><strong>ASLR 활성화 확인:</strong></p>
+<ul>
+<li>Linux: <code>cat /proc/sys/kernel/randomize_va_space</code> (2=완전 랜덤화 권고)</li>
+<li>Windows: <code>bcdedit /set dynamicbase on</code>, 또는 Process Mitigation Policy</li>
+<li>macOS: 기본 활성화, SIP(System Integrity Protection) 연동</li>
+</ul>
+<p><strong>ASLR 효과 극대화 조건:</strong></p>
+<ul>
+<li>64비트 OS + 64비트 프로세스 사용 (엔트로피 최대화)</li>
+<li>PIE로 컴파일된 실행 파일 (<code>-fPIE -pie</code> 옵션)</li>
+<li>모든 공유 라이브러리 ASLR 대응 확인</li>
+<li>정보 유출 취약점 사전 제거</li>
+</ul>
+<p>📢 <strong>섹션 요약 비유</strong>: ASLR 설정은 "금고실 열쇠를 매일 새로운 장소에 숨기는 것"이다. 숨기는 장소가 많을수록(엔트로피) 더 안전하다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>ASLR은 64비트 환경에서 주소 예측 공격을 현실적으로 불가능하게 만드는 핵심 방어 기법이다. NX/DEP와 조합하면 쉘코드 직접 실행과 코드 재사용 공격 모두를 동시에 어렵게 만드는 강력한 이중 방어가 완성된다.</p>
+<p>그러나 Info Leak 취약점과 결합되면 우회될 수 있으므로, 정보 유출 취약점(포맷 스트링 버그, UAF 등)을 함께 차단해야 ASLR 효과를 유지할 수 있다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: ASLR은 "잠금장치(DEP)에 미궁(ASLR)을 더한 것"이다. 잠금장치만으로도 어렵지만, 어디에 있는지도 모르면 시작조차 할 수 없다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">관계</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">PIE</td><td style="text-align: left">보완 기술</td><td style="text-align: left">ASLR 효과를 실행 파일까지 확장</td></tr>
+<tr><td style="text-align: left">NX/DEP</td><td style="text-align: left">보완 기법</td><td style="text-align: left">코드 실행 방지로 ASLR과 시너지</td></tr>
+<tr><td style="text-align: left">Info Leak</td><td style="text-align: left">우회 전제</td><td style="text-align: left">주소 노출로 ASLR 무력화</td></tr>
+<tr><td style="text-align: left">Brute Force</td><td style="text-align: left">우회 기법</td><td style="text-align: left">32비트 낮은 엔트로피 악용</td></tr>
+<tr><td style="text-align: left">ROP</td><td style="text-align: left">ASLR 압박 대상</td><td style="text-align: left">주소 예측 필요로 ASLR이 방어</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>ASLR은 컴퓨터가 실행될 때마다 모든 프로그램 조각들을 랜덤한 위치에 배치하는 거야.</li>
+<li>나쁜 사람이 특정 코드 위치를 외워도, 다음에 켤 때는 그 위치에 없어.</li>
+<li>64비트 컴퓨터에서는 위치가 2억 가지 이상이라 사실상 찾는 게 불가능해.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

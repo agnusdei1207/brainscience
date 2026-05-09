@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>192. 엣지 AI 컴파일러 (Edge AI - ONNX, TensorRT) 모델 직렬화 패키징 배포망 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote data engineering
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 엣지 AI는 모델을 클라우드 대신 엣지 디바이스에서 추론하여 지연 없는 실시간 처리와 오프라인 동작을 실현한다.</li>
+<li><strong>가치</strong>: ONNX(Open Neural Network Exchange)는 프레임워크 독립적 모델 교환 포맷이고, TensorRT는 NVIDIA GPU에서 레이어 융합·양자화로 추론 속도를 최대 8배 향상한다.</li>
+<li><strong>판단 포인트</strong>: 지연(Latency), 비용(Cost), 프라이버시(Privacy), 연결성(Connectivity) 4가지 기준으로 클라우드 vs 엣지 추론을 선택한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<h3 id="1-1-esji-ai-edge-ai-jeongyi">1.1 엣지 AI (Edge AI) 정의</h3>
+<p>엣지 AI는 딥러닝 추론(Inference)을 클라우드 서버가 아닌 <strong>엣지 디바이스(스마트폰, IoT 센서, 카메라, 자동차 ECU)</strong> 에서 직접 수행하는 패러다임이다.</p>
+<h3 id="1-2-keulraudeu-vs-esji-curon-bigyo">1.2 클라우드 vs 엣지 추론 비교</h3>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">클라우드 추론</th><th style="text-align: left">엣지 추론</th></tr></thead><tbody>
+<tr><td style="text-align: left">지연(Latency)</td><td style="text-align: left">100ms ~ 1s (네트워크 포함)</td><td style="text-align: left">1ms ~ 10ms</td></tr>
+<tr><td style="text-align: left">프라이버시</td><td style="text-align: left">데이터가 서버로 전송</td><td style="text-align: left">로컬 처리, 전송 없음</td></tr>
+<tr><td style="text-align: left">비용</td><td style="text-align: left">GPU 서버 임대비</td><td style="text-align: left">초기 하드웨어 비용</td></tr>
+<tr><td style="text-align: left">연결성</td><td style="text-align: left">상시 네트워크 필요</td><td style="text-align: left">오프라인 동작 가능</td></tr>
+<tr><td style="text-align: left">모델 업데이트</td><td style="text-align: left">즉시 반영</td><td style="text-align: left">OTA(Over-the-Air) 배포 필요</td></tr>
+<tr><td style="text-align: left">연산 한계</td><td style="text-align: left">무제한 스케일</td><td style="text-align: left">디바이스 리소스 제한</td></tr>
+</tbody></table>
+<h3 id="1-3-esji-ai-baepo-paipeurain-gaeyo">1.3 엣지 AI 배포 파이프라인 개요</h3>
+<pre><code>모델 학습 (Cloud)
+    │
+    ▼
+모델 변환&#x2F;최적화
+ (ONNX &#x2F; TensorRT &#x2F; TFLite &#x2F; OpenVINO)
+    │
+    ▼
+패키징 (Docker Edge Runtime &#x2F; OCI)
+    │
+    ▼
+배포망 (OTA Update &#x2F; Edge Orchestration)
+    │
+    ▼
+엣지 디바이스에서 추론 실행
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: 엣지 AI는 "현장 출장 의사"와 같다. 병원(클라우드)까지 갈 필요 없이 현장에서 즉시 진단(추론)하고, 환자 정보(데이터)를 외부로 내보내지 않아 프라이버시도 보호된다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="2-1-onnx-open-neural-network-exchange">2.1 ONNX (Open Neural Network Exchange)</h3>
+<p>ONNX는 Microsoft와 Facebook이 공동 개발한 <strong>프레임워크 독립적 모델 교환 표준 포맷</strong>이다. PyTorch, TensorFlow, MXNet 등 다양한 프레임워크 모델을 동일 포맷으로 표현한다.</p>
+<pre><code>PyTorch 모델 (.pth)
+    │ torch.onnx.export()
+    ▼
+┌─────────────────────┐
+│   ONNX 모델 (.onnx) │
+│   - 연산자 그래프    │
+│   - 가중치(Weight)  │
+│   - 입출력 명세      │
+└──────────┬──────────┘
+           │
+    ┌──────┴────────────────────────┐
+    │                               │
+    ▼                               ▼
+ONNX Runtime             TensorRT 변환
+(CPU&#x2F;GPU 범용 추론)        (NVIDIA GPU 최적화)
+    │                               │
+    ▼                               ▼
+Intel OpenVINO           .engine 파일
+ARM NN                   최고 성능 추론
+TFLite (변환)
+</code></pre>
+<h4 id="onnx-juyo-teugjing">ONNX 주요 특징</h4>
+<table><thead><tr><th style="text-align: left">특징</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">표준 연산자 집합</td><td style="text-align: left">150+ 표준 연산자 정의</td></tr>
+<tr><td style="text-align: left">버전 관리</td><td style="text-align: left">opset 버전으로 하위 호환성 유지</td></tr>
+<tr><td style="text-align: left">커스텀 연산자</td><td style="text-align: left">프레임워크별 확장 가능</td></tr>
+<tr><td style="text-align: left">프로파일링</td><td style="text-align: left">연산별 실행 시간 측정</td></tr>
+</tbody></table>
+<h3 id="2-2-tensorrt-nvidia-gpu-coejeoghwa-curon-enjin">2.2 TensorRT (NVIDIA GPU 최적화 추론 엔진)</h3>
+<p>TensorRT는 NVIDIA가 개발한 고성능 딥러닝 추론 라이브러리로, ONNX 모델을 GPU에 최적화된 엔진으로 컴파일한다.</p>
+<pre><code>ONNX 모델 입력
+    │
+    ▼
+┌───────────────────────────────────────┐
+│         TensorRT 최적화 단계           │
+│                                       │
+│  1. 레이어 융합 (Layer Fusion)         │
+│     Conv + BN + ReLU → 단일 커널       │
+│                                       │
+│  2. 정밀도 캘리브레이션 (Calibration)  │
+│     FP32 → FP16 &#x2F; INT8 양자화         │
+│     대표 데이터셋으로 임계값 결정       │
+│                                       │
+│  3. 커널 자동 선택 (Kernel Autotuning) │
+│     GPU 아키텍처별 최적 커널 선택       │
+│                                       │
+│  4. 메모리 최적화 (Memory Optimizer)   │
+│     텐서 메모리 재사용, 레이아웃 최적화 │
+└───────────────────────┬───────────────┘
+                        │
+                        ▼
+              .engine 파일 생성
+              (특정 GPU에 최적화)
+</code></pre>
+<h4 id="tensorrt-jeongmildo-modeu-bigyo">TensorRT 정밀도 모드 비교</h4>
+<table><thead><tr><th style="text-align: left">모드</th><th style="text-align: left">메모리</th><th style="text-align: left">성능</th><th style="text-align: left">정확도 손실</th></tr></thead><tbody>
+<tr><td style="text-align: left">FP32 (기본)</td><td style="text-align: left">4 bytes/값</td><td style="text-align: left">1x</td><td style="text-align: left">없음</td></tr>
+<tr><td style="text-align: left">FP16</td><td style="text-align: left">2 bytes/값</td><td style="text-align: left">2~3x</td><td style="text-align: left">미미</td></tr>
+<tr><td style="text-align: left">INT8</td><td style="text-align: left">1 byte/값</td><td style="text-align: left">3~4x</td><td style="text-align: left">주의 필요</td></tr>
+<tr><td style="text-align: left">INT4</td><td style="text-align: left">0.5 bytes/값</td><td style="text-align: left">4~8x</td><td style="text-align: left">높음</td></tr>
+</tbody></table>
+<h3 id="2-3-model-gyeongryanghwa-gibeob">2.3 모델 경량화 기법</h3>
+<pre><code>┌─────────────────────────────────────────────────┐
+│              모델 경량화 4대 기법                  │
+│                                                 │
+│  ┌───────────────┐  ┌───────────────┐           │
+│  │ 양자화        │  │ 가지치기       │           │
+│  │(Quantization)│  │(Pruning)      │           │
+│  │ FP32 → INT8  │  │ 불필요 뉴런    │           │
+│  │ 연산 정밀도 감소│  │ 가중치 제거  │           │
+│  └───────────────┘  └───────────────┘           │
+│                                                 │
+│  ┌───────────────┐  ┌───────────────┐           │
+│  │ 지식 증류     │  │ 아키텍처 탐색  │           │
+│  │(Distillation) │  │(NAS)          │           │
+│  │ 큰 모델 → 작은│  │ 경량 모델 자동 │           │
+│  │ 모델로 지식전달│  │ 설계          │           │
+│  └───────────────┘  └───────────────┘           │
+└─────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="2-4-juyo-esji-ai-baepo-reontaim">2.4 주요 엣지 AI 배포 런타임</h3>
+<table><thead><tr><th style="text-align: left">런타임</th><th style="text-align: left">개발사</th><th style="text-align: left">타겟 하드웨어</th><th style="text-align: left">특징</th></tr></thead><tbody>
+<tr><td style="text-align: left">ONNX Runtime</td><td style="text-align: left">Microsoft</td><td style="text-align: left">CPU/GPU/NPU</td><td style="text-align: left">범용, 크로스플랫폼</td></tr>
+<tr><td style="text-align: left">TensorRT</td><td style="text-align: left">NVIDIA</td><td style="text-align: left">NVIDIA GPU</td><td style="text-align: left">최고 성능</td></tr>
+<tr><td style="text-align: left">TFLite</td><td style="text-align: left">Google</td><td style="text-align: left">ARM/Cortex-M</td><td style="text-align: left">초경량 MCU</td></tr>
+<tr><td style="text-align: left">OpenVINO</td><td style="text-align: left">Intel</td><td style="text-align: left">Intel CPU/VPU</td><td style="text-align: left">Intel 최적화</td></tr>
+<tr><td style="text-align: left">CoreML</td><td style="text-align: left">Apple</td><td style="text-align: left">Apple Silicon</td><td style="text-align: left">iOS/macOS</td></tr>
+<tr><td style="text-align: left">TorchScript</td><td style="text-align: left">Meta</td><td style="text-align: left">범용</td><td style="text-align: left">PyTorch 모바일</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: TensorRT는 외국 요리 레시피(ONNX)를 받아서 우리 주방(NVIDIA GPU) 환경에 완벽히 최적화하는 전담 요리사다. 같은 레시피라도 주방 도구와 재료 배치를 최적화해 요리 시간(추론 지연)을 대폭 줄인다.</p>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="3-1-model-baepomang-jeonce-akitegceo">3.1 모델 배포망 전체 아키텍처</h3>
+<pre><code>┌────────────────────────────────────────────────────────┐
+│                   엣지 AI 배포망                         │
+│                                                        │
+│  ┌─────────────────────────────────────────────────┐   │
+│  │              클라우드 (Model Registry)            │   │
+│  │  MLflow &#x2F; DVC &#x2F; Vertex AI Model Registry         │   │
+│  │  학습된 모델 버전 관리 + A&#x2F;B 테스트               │   │
+│  └──────────────────────┬──────────────────────────┘   │
+│                         │ OTA(Over-the-Air) 배포        │
+│                ┌────────┴────────┐                     │
+│                │                 │                     │
+│   ┌────────────▼────┐  ┌────────▼──────────┐          │
+│   │  엣지 게이트웨이 │  │  엣지 게이트웨이   │          │
+│   │ (공장 서버)      │  │ (자동차 ECU)       │          │
+│   │ ONNX Runtime    │  │ TensorRT Engine   │          │
+│   └────────┬────────┘  └────────┬──────────┘          │
+│            │                    │                      │
+│   ┌────────▼────┐      ┌────────▼────┐                │
+│   │ IoT 센서    │      │ 카메라 모듈  │                │
+│   │ TFLite      │      │ OpenVINO    │                │
+│   └─────────────┘      └─────────────┘                │
+└────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="3-2-esji-ai-coejeoghwa-heureum-pytorch-tensorrt">3.2 엣지 AI 최적화 흐름 (PyTorch → TensorRT)</h3>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python"># 1. PyTorch 모델 → ONNX 변환
+import torch
+model = MyModel().eval()
+dummy_input = torch.randn(1, 3, 224, 224)
+torch.onnx.export(model, dummy_input, &quot;model.onnx&quot;,
+                  opset_version=17,
+                  input_names=[&quot;input&quot;],
+                  output_names=[&quot;output&quot;])
+
+# 2. ONNX → TensorRT 변환 (trtexec 사용)
+# trtexec --onnx=model.onnx --saveEngine=model.engine \
+#         --fp16 --workspace=4096
+
+# 3. TensorRT 엔진 추론
+import tensorrt as trt
+import numpy as np
+# 엔진 로드 및 컨텍스트 생성으로 추론 실행
+</code></pre>
+<h3 id="3-3-yangjahwa-quantization-bangsig-bigyo">3.3 양자화(Quantization) 방식 비교</h3>
+<table><thead><tr><th style="text-align: left">방식</th><th style="text-align: left">시점</th><th style="text-align: left">정확도</th><th style="text-align: left">구현 난이도</th></tr></thead><tbody>
+<tr><td style="text-align: left">PTQ (Post-Training Quantization)</td><td style="text-align: left">학습 후</td><td style="text-align: left">중간</td><td style="text-align: left">쉬움</td></tr>
+<tr><td style="text-align: left">QAT (Quantization-Aware Training)</td><td style="text-align: left">학습 중</td><td style="text-align: left">높음</td><td style="text-align: left">복잡</td></tr>
+<tr><td style="text-align: left">Dynamic Quantization</td><td style="text-align: left">런타임</td><td style="text-align: left">낮음</td><td style="text-align: left">매우 쉬움</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 모델 직렬화는 복잡한 요리 레시피를 특정 주방에 맞게 단순화하는 것이다. ONNX는 국제 표준 레시피 포맷이고, TensorRT는 NVIDIA 주방에서 가장 빠르게 요리할 수 있도록 재구성한 맞춤 레시피다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="4-1-esji-ai-doib-yisagyeoljeong-peureimweokeu">4.1 엣지 AI 도입 의사결정 프레임워크</h3>
+<pre><code>추론 배포 위치 결정
+
+지연 요구사항 &lt; 10ms?
+├─ YES → 엣지 추론 필수
+│         (자율주행, 로봇 제어, 실시간 QA)
+└─ NO  → 네트워크 연결 안정적?
+          ├─ YES → 클라우드 추론 고려
+          │         (비용 효율, 최신 모델)
+          └─ NO  → 엣지 추론 필요
+                    (공장 자동화, 원격지)
+
+프라이버시 민감 데이터?
+├─ YES → 엣지 추론 강력 권장
+│         (의료 영상, 금융 데이터)
+└─ NO  → 비용&#x2F;성능 기준으로 선택
+</code></pre>
+<h3 id="4-2-tensorrt-coejeoghwa-siljeon-cekeuriseuteu">4.2 TensorRT 최적화 실전 체크리스트</h3>
+<table><thead><tr><th style="text-align: left">단계</th><th style="text-align: left">작업</th><th style="text-align: left">도구</th></tr></thead><tbody>
+<tr><td style="text-align: left">1. 모델 검증</td><td style="text-align: left">ONNX 연산자 호환성 확인</td><td style="text-align: left">onnx-checker</td></tr>
+<tr><td style="text-align: left">2. 프로파일링</td><td style="text-align: left">레이어별 실행 시간 분석</td><td style="text-align: left">Nsight Systems</td></tr>
+<tr><td style="text-align: left">3. 캘리브레이션</td><td style="text-align: left">INT8 대표 데이터셋 준비</td><td style="text-align: left">IInt8EntropyCalibrator</td></tr>
+<tr><td style="text-align: left">4. 엔진 빌드</td><td style="text-align: left">GPU별 최적화 엔진 생성</td><td style="text-align: left">TensorRT Builder</td></tr>
+<tr><td style="text-align: left">5. 벤치마크</td><td style="text-align: left">Latency/Throughput 측정</td><td style="text-align: left">trtexec --iterations=1000</td></tr>
+<tr><td style="text-align: left">6. 정확도 검증</td><td style="text-align: left">FP32 대비 정확도 손실 측정</td><td style="text-align: left">검증 데이터셋</td></tr>
+</tbody></table>
+<h3 id="4-3-silmu-sarye-jejoeob-pumjil-geomsa">4.3 실무 사례: 제조업 품질 검사</h3>
+<pre><code>[카메라 → 엣지 서버 → 불량 탐지]
+
+카메라 (30fps, 4K)
+    │ 이미지 스트림
+    ▼
+NVIDIA Jetson AGX Xavier
+  ├─ TensorRT Engine (YOLOv8-nano INT8)
+  ├─ 추론 시간: 5ms&#x2F;장
+  ├─ 정확도: FP32 대비 99.2% 유지
+  └─ 전력: 30W (클라우드 대비 1&#x2F;100)
+
+결과: 불량품 즉시 라인 제거 (100ms 이내 판단)
+클라우드 업로드: 불량 케이스 샘플만 (데이터 90% 절감)
+</code></pre>
+<h3 id="4-4-esji-ai-boan-goryeosahang">4.4 엣지 AI 보안 고려사항</h3>
+<table><thead><tr><th style="text-align: left">위협</th><th style="text-align: left">대응 방법</th></tr></thead><tbody>
+<tr><td style="text-align: left">모델 도난</td><td style="text-align: left">모델 암호화 + TrustZone/TEE</td></tr>
+<tr><td style="text-align: left">적대적 공격(Adversarial)</td><td style="text-align: left">입력 전처리 방어, 앙상블</td></tr>
+<tr><td style="text-align: left">펌웨어 변조</td><td style="text-align: left">서명 기반 OTA 배포, 부트 검증</td></tr>
+<tr><td style="text-align: left">데이터 유출</td><td style="text-align: left">온디바이스 처리, 차분 프라이버시</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 엣지 AI는 중앙 서버에 의존하지 않는 "현장 전문가 파견"이다. 각 현장에 최적화된 전문가(TensorRT 엔진)를 파견해 빠르고 보안에 강한 처리를 수행하고, 중요한 케이스만 본사(클라우드)에 보고한다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="5-1-esji-ai-doib-gidaehyogwa">5.1 엣지 AI 도입 기대효과</h3>
+<table><thead><tr><th style="text-align: left">효과</th><th style="text-align: left">정량 지표</th></tr></thead><tbody>
+<tr><td style="text-align: left">추론 지연 감소</td><td style="text-align: left">클라우드 대비 10~100배 감소</td></tr>
+<tr><td style="text-align: left">네트워크 비용 절감</td><td style="text-align: left">데이터 전송량 80~95% 감소</td></tr>
+<tr><td style="text-align: left">가용성 향상</td><td style="text-align: left">오프라인 동작으로 99.99% 가용성</td></tr>
+<tr><td style="text-align: left">프라이버시 강화</td><td style="text-align: left">원시 데이터 로컬 처리로 규제 준수</td></tr>
+<tr><td style="text-align: left">전력 효율</td><td style="text-align: left">특수 하드웨어(NPU) 활용 시 10배 이상</td></tr>
+</tbody></table>
+<h3 id="5-2-gisul-teurendeu">5.2 기술 트렌드</h3>
+<pre><code>엣지 AI 기술 발전 방향
+┌─────────────────────────────────────────┐
+│                                         │
+│  현재: 모델 경량화 + 하드웨어 가속        │
+│  ↓                                      │
+│  단기: 연합 학습(Federated Learning)     │
+│       엣지에서 분산 학습                  │
+│  ↓                                      │
+│  중기: 엣지 클라우드 협력 추론            │
+│       (부분 추론 분산)                    │
+│  ↓                                      │
+│  장기: 자율 엣지 AI 에이전트              │
+│       (학습 + 추론 + 자가 업데이트)       │
+└─────────────────────────────────────────┘
+</code></pre>
+<h3 id="5-3-gyeolron-yoyag">5.3 결론 요약</h3>
+<p>ONNX는 딥러닝 모델의 이식성을 보장하는 표준 포맷이고, TensorRT는 NVIDIA GPU에서의 최고 성능을 끌어내는 컴파일러다. 엣지 AI 배포는 지연, 비용, 프라이버시의 균형점을 찾는 엔지니어링 최적화 문제이며, 기술사 관점에서는 <strong>하드웨어 선택 → 모델 최적화 → 배포망 설계 → 보안 강화</strong>의 4단계 프레임워크로 접근해야 한다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 엣지 AI는 대형 병원의 전문 장비(클라우드 AI)를 작은 의료 가방(엣지 디바이스)에 압축하는 기술이다. 작아진 만큼 빠르고 어디서나 쓸 수 있으며, 환자 정보(데이터)도 병원 밖으로 나가지 않아 안전하다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">관계</th><th style="text-align: left">개념</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">포맷 표준</td><td style="text-align: left">ONNX (Open Neural Network Exchange)</td><td style="text-align: left">프레임워크 독립적 모델 교환 포맷</td></tr>
+<tr><td style="text-align: left">추론 엔진</td><td style="text-align: left">TensorRT</td><td style="text-align: left">NVIDIA GPU 최적화 컴파일러</td></tr>
+<tr><td style="text-align: left">경량화</td><td style="text-align: left">Quantization (양자화)</td><td style="text-align: left">FP32→INT8 정밀도 감소로 속도 향상</td></tr>
+<tr><td style="text-align: left">경량화</td><td style="text-align: left">Pruning (가지치기)</td><td style="text-align: left">불필요 뉴런 제거</td></tr>
+<tr><td style="text-align: left">경량화</td><td style="text-align: left">Knowledge Distillation (지식 증류)</td><td style="text-align: left">대형 모델 → 소형 모델 지식 전달</td></tr>
+<tr><td style="text-align: left">런타임</td><td style="text-align: left">ONNX Runtime</td><td style="text-align: left">크로스플랫폼 범용 추론 런타임</td></tr>
+<tr><td style="text-align: left">런타임</td><td style="text-align: left">TFLite</td><td style="text-align: left">Google 초경량 모바일 런타임</td></tr>
+<tr><td style="text-align: left">배포</td><td style="text-align: left">OTA (Over-the-Air)</td><td style="text-align: left">무선 모델 업데이트</td></tr>
+<tr><td style="text-align: left">보안</td><td style="text-align: left">TEE (Trusted Execution Environment)</td><td style="text-align: left">모델 보호 실행 환경</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>엣지 AI는 공부 잘하는 친구(AI 모델)를 여러 곳에 복사해서 파견하는 것이에요. 매번 선생님(클라우드)께 물어볼 필요 없이 현장에서 바로 답을 내줘요.</li>
+</ol>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">클라우드 전용 추론 (지연 · 대역폭 비용)
+    │
+    ▼
+엣지 AI: 디바이스에서 직접 추론
+    ├─► 모델 변환: ONNX · TensorRT · TFLite
+    ├─► 경량화: 양자화 (INT8) · 프루닝 · 지식 증류
+    └─► 직렬화: FlatBuffers · Protocol Buffers
+    │
+    ▼
+엣지 디바이스
+    ├─► NVIDIA Jetson · Google Coral TPU
+    ├─► 스마트폰 NPU · 라즈베리파이
+    └─► WebAssembly (WASM) 추론
+    │
+    ▼
+OTA 모델 업데이트 · 엣지-클라우드 연방 학습
+</code></pre>
+<ol start="2">
+<li>ONNX는 여러 나라 음식 레시피를 하나의 표준 레시피 책으로 만드는 거예요. 어느 주방(디바이스)에서도 같은 책으로 요리(추론)할 수 있어요.</li>
+<li>TensorRT는 요리사가 특정 주방(NVIDIA GPU)에서 가장 빠르게 요리하도록 모든 동선을 최적화한 맞춤 레시피예요.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

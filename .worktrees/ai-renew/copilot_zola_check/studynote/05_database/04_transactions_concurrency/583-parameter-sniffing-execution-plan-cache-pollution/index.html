@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>583. 프로시저 파라미터 스니핑 (Parameter Sniffing) 캐시 오염 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote database
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="583-peurosijeo-paramiteo-seuniping-parameter-sniffing-gwa-kaesi-oyeom">583. 프로시저 파라미터 스니핑 (Parameter Sniffing)과 캐시 오염</h1>
+<blockquote>
+<p>⚠️ 이 문서는 데이터베이스(MS-SQL, Oracle 등)에서 성능을 높이겠다고 개발자가 짜놓은 '저장 프로시저(Stored Procedure)'가, 평소에는 0.1초 만에 돌다가 <strong>어느 날 갑자기 10분이 걸려도 멈춰버리는 끔찍한 병목 현상의 주범인 '파라미터 스니핑(Parameter Sniffing)'이라는, DB의 멍청한 첫 기억(실행 계획 캐시)에 의한 성능 왜곡 참사</strong>를 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: DB 엔진은 쿼리가 처음 들어올 때 딱 1번만 고민(실행 계획을 짬)하고, 그 정답을 램(캐시)에 영구 저장한다. 문제는 '처음 들어온 변수(파라미터)'의 데이터 양에 따라 짠 1번 작전이, 나중에 들어올 2번, 3번 변수에게는 최악의 독약이 될 수 있다는 점이다.</li>
+<li><strong>가치</strong>: "어제까지 잘 되던 쿼리가 오늘 갑자기 타임아웃이 나요!"라는 백엔드 개발자의 절규를 들었을 때, 원인이 하드웨어 고장이 아니라 'DB의 캐시 오염'임을 1초 만에 짚어내고 플랜을 강제로 초기화할 수 있는 DBA의 핵심 진단 능력이다.</li>
+<li><strong>기술 체계</strong>: 이를 막기 위해 프로시저 안에 변수를 한 번 더 옮겨 담는 꼼수(<strong>Local Variable 재할당</strong>), 쿼리에 <code>RECOMPILE</code> 힌트를 달아 매번 뇌를 쓰게 만드는 방법, 또는 <code>OPTIMIZE FOR UNKNOWN</code> 옵션으로 맹목적인 첫사랑(첫 파라미터)을 잊게 만드는 조치를 취한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-ddogddoghami-bureun-jaeang-silhaeng-gyehoeg-kaesing-plan-caching">Ⅰ. 똑똑함이 부른 재앙: 실행 계획 캐싱 (Plan Caching)</h3>
+<p>한 번 짠 작전은 버리지 않는다. 그런데 그 작전이 암살 계획이라면?</p>
+<ol>
+<li><strong>저장 프로시저의 뇌 구조 (컴파일과 캐싱)</strong>:
+<ul>
+<li>프로시저 <code>Get_Orders_By_Status(@상태값)</code>를 만들었다.</li>
+<li>아침 9시. 개발자가 <code>Get_Orders_By_Status('배송완료')</code>를 처음 찔렀다.</li>
+<li>DB 엔진(옵티마이저)이 뇌를 굴린다(파싱). "음, '배송완료' 데이터는 1억 건이나 되네? 인덱스를 타면 오히려 느리니까, 무식하게 하드디스크 전체를 긁는 <strong>[풀 테이블 스캔(Full Scan)]</strong> 작전이 낫겠다!" $\rightarrow$ 이 작전을 램(캐시)에 박제한다.</li>
+</ul>
+</li>
+<li><strong>파라미터 스니핑(Sniffing)의 발동</strong>:
+<ul>
+<li>9시 5분. 다른 직원이 <code>Get_Orders_By_Status('환불대기')</code>를 찔렀다. 환불 대기 데이터는 딱 10건밖에 없다. 당연히 **[인덱스 스캔(Index Scan)]**을 하면 0.001초 만에 찾을 수 있다.</li>
+<li>하지만 DB는 뇌를 쓰지 않는다(Sniffing). "아까 9시에 만들어둔 훌륭한 작전(캐시)이 있네? 이걸로 돌리자!"</li>
+<li>결과는 끔찍하다. 10건의 데이터를 찾기 위해 DB는 1억 건의 하드디스크 전체를 미친 듯이 긁기(풀 스캔) 시작하며, 이 직원의 화면은 10분 동안 하얗게 멈춰버린다. (서버 마비)</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 파라미터 스니핑은 '첫사랑의 저주'입니다. 식당 주방장(DB 엔진)이 아침에 첫 손님으로 온 씨름부 10명(대용량 파라미터)을 보고 "오늘은 밥을 100인분씩 거대한 솥에 끓여야겠다(풀 스캔 작전)"라고 하루 계획을 세워버렸습니다. 5분 뒤 혼자 온 초등학생 손님(소용량 파라미터)이 공깃밥 하나를 시켰는데, 멍청한 주방장은 아까 세운 계획대로 100인분짜리 가마솥에 불을 지피며 1시간을 낭비하는 끔찍한 고정관념(캐시 오염)에 빠진 상태입니다.</p>
+<hr />
+<h3 id="ii-paramiteo-seunipingyi-haegyeolcaeg-uhoe-gibeob">Ⅱ. 파라미터 스니핑의 해결책 (우회 기법)</h3>
+<p>멍청한 주방장의 기억(캐시)을 강제로 지우거나 눈을 가려라.</p>
+<ol>
+<li><strong>Option (RECOMPILE) - "매번 뇌를 새로 갈아 끼워라"</strong>:
+<ul>
+<li>쿼리 맨 끝에 <code>OPTION (RECOMPILE)</code> (MS-SQL 기준)을 적어준다.</li>
+<li><strong>효과</strong>: DB 엔진에게 "내가 이 프로시저를 부를 때마다, 제발 옛날 기억(캐시)은 무시하고 지금 들어온 변수에 맞춰 새로 작전(실행 계획)을 짜라!"라고 강제한다.</li>
+<li><strong>단점</strong>: 1초에 1만 번 호출되는 프로시저에 이걸 달아놓으면, DB가 매번 작전을 짜느라(CPU 파싱 과부하) 서버 전체 CPU가 타버린다. 트래픽이 적고 가끔 도는 무거운 배치 쿼리에만 써야 한다.</li>
+</ul>
+</li>
+<li><strong>OPTIMIZE FOR UNKNOWN - "모든 손님을 공평하게 대하라"</strong>:
+<ul>
+<li>쿼리 끝에 <code>OPTION (OPTIMIZE FOR UNKNOWN)</code>을 적는다.</li>
+<li><strong>효과</strong>: 주방장이 첫 손님('배송완료' 1억 건)의 데이터 크기를 보고 솥을 고르는 행위 자체를 막는다. "지금 들어온 변수값 쳐다보지 마! 그냥 전체 데이터의 평균 통계(중간값)를 짐작해서 가장 무난한 범용 작전을 짜!"라고 눈을 가려버린다. 대박(0.001초)도 안 터지지만, 쪽박(10분 대기)도 막아주는 방어적 튜닝이다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: <code>RECOMPILE</code>은 주방장에게 "손님이 올 때마다 메뉴얼을 찢어버리고 새로 요리법을 연구해라!"라는 지시입니다. 완벽한 요리가 나오지만 주방장이 과로사(CPU 과부하)합니다. <code>OPTIMIZE FOR UNKNOWN</code>은 주방장에게 "첫 손님이 누군지 보지 말고, 그냥 하루 종일 모든 손님에게 똑같이 나갈 가장 무난한 '백반 정식(평균 실행 계획)'을 하나 통일해서 만들어 둬!"라는 지시입니다. 극강의 스피드는 포기하지만 식당이 멈추는 최악의 병목은 안전하게 방어합니다.</p>
+<hr />
+<h3 id="iii-coehuyi-ggomsu-rokeol-byeonsu-local-variable-deopeocigi">Ⅲ. 최후의 꼼수: 로컬 변수 (Local Variable) 덮어치기</h3>
+<p>가장 원시적이지만 개발자들이 10초 만에 에러를 틀어막는 마법의 꼼수.</p>
+<ol>
+<li><strong>로컬 변수 우회 기법의 원리</strong>:
+<ul>
+<li>쿼리에 옵션을 달기 귀찮을 때 백엔드 개발자들이 쓰는 편법이다.</li>
+<li>프로시저 안에서 밖에서 날아온 변수 <code>@상태값</code>을 그대로 쓰지 않는다.</li>
+<li>프로시저 맨 윗줄에 껍데기 변수(<code>DECLARE @Local_상태값</code>)를 새로 하나 파놓고, 바깥에서 들어온 값을 거기에 복사(<code>SET @Local_상태값 = @상태값</code>)해서 쿼리에 집어넣는다.</li>
+</ul>
+</li>
+<li><strong>왜 이 짓이 통하는가? (DB 엔진의 멍청함)</strong>:
+<ul>
+<li>옵티마이저(DB 뇌)는 프로시저가 컴파일될 때 외부 변수 <code>@상태값</code> 안에는 '배송완료(1억 건)'가 들어있다는 걸 냄새 맡고(Sniffing) 풀 스캔 작전을 짠다.</li>
+<li>하지만 변수를 내부 <code>Local</code> 변수로 옮겨 담으면, 옵티마이저는 "어라? 이 내부 변수 안에는 런타임에 무슨 글자가 들어올지 미리 알 수가 없네?" 하고 스니핑을 아예 포기해 버린다.</li>
+<li>결국 옵티마이저는 첫 손님의 데이터에 속지 않고, 어쩔 수 없이 위에서 말한 '무난한 범용 작전(통계 기반)'을 짜게 되어 끔찍한 병목이 해결된다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 주방장(DB 엔진)이 첫 손님 얼굴(외부 파라미터)을 보면 자꾸 편견을 가지고 요리법을 고정(스니핑)해 버립니다. 그래서 홀서빙 직원이 손님 얼굴을 보지 못하게 중간에 가림막(Local Variable)을 치고, "손님 주문은 내가 대신 받아서 메모지에 적어(변수 복사) 주방으로 넘겨줄게!"라고 시스템을 바꿉니다. 주방장은 손님이 뚱뚱한지(1억 건) 마른지(10건) 알 수 없으므로, 멍청한 편견(캐시 오염)을 버리고 무난한 표준 레시피대로만 요리하게 만드는 고도의 심리전 꼼수입니다.</p>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

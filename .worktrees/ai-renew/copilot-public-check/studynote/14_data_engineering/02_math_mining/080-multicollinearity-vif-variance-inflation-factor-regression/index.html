@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>80. 다중 공선성 (Multicollinearity) 및 VIF 지수 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 11, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote data engineering
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="80-dajung-gongseonseong-multicollinearity-mic-vif-jisu-hoegwi-bunseogyi-hamjeong">80. 다중 공선성 (Multicollinearity) 및 VIF 지수 (회귀 분석의 함정)</h1>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 다중 공선성(Multicollinearity)은 다중 회귀 분석 시 독립변수(X)들끼리 서로 너무 강한 선형 상관관계를 가져, 종속변수(Y)에 미치는 각 변수의 순수한 영향력(회귀 계수)을 파악할 수 없게 만드는 치명적인 데이터 질병이다.</li>
+<li><strong>탐지 (VIF)</strong>: 이 질병의 심각도를 진단하는 지표가 VIF(Variance Inflation Factor, 분산 팽창 지수)이며, 통상적으로 VIF 값이 10을 초과하면 해당 변수들 간에 강한 다중 공선성이 있다고 판단하여 조치를 취해야 한다.</li>
+<li><strong>해결책</strong>: 문제가 되는 변수를 모델에서 제거(Drop)하거나, 주성분 분석(PCA)으로 상관성 없는 새로운 차원으로 축소하거나, 능선 회귀(Ridge)나 라쏘(Lasso) 같은 정규화(Regularization) 기법을 적용하여 회귀 계수의 왜곡을 강제로 억제해야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-gaeyo-context-background">Ⅰ. 개요 (Context &amp; Background)</h3>
+<p>회귀 분석(Regression Analysis)은 독립변수(X)가 종속변수(Y)에 미치는 영향을 추정하는 통계 기법입니다. 이 모델이 정상적으로 작동하려면 "독립변수들은 서로 독립적이어야 한다"는 기본 가정이 충족되어야 합니다. 그러나 실제 현실의 데이터, 특히 빅데이터 환경에서는 변수들끼리 얽혀 있는 경우가 많습니다. 예를 들어, 집값을 예측할 때 '방의 개수'와 '집의 평수'는 서로 매우 강한 양의 상관관계를 가집니다. 이렇게 X 변수들 간의 상관성이 너무 높아 회귀 모델의 계수 추정이 불안정해지고 해석이 불가능해지는 현상을 **다중 공선성(Multicollinearity)**이라고 합니다. 다중 공선성이 발생하면 모델의 R-squared(설명력)는 높게 나오지만, 정작 각 변수의 P-value는 유의미하지 않게 나오는 모순적인 결과가 도출되어 분석가를 혼란에 빠뜨립니다.</p>
+<hr />
+<h3 id="ii-akitegceo-mic-haegsim-weonri-deep-dive">Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)</h3>
+<p>다중 공선성은 수학적으로 회귀 계수의 분산(Variance)을 비정상적으로 팽창시킵니다. 이를 진단하는 VIF의 계산 원리는 특정 독립변수 $X_i$를 종속변수로 두고 나머지 독립변수들로 회귀 분석을 수행하여 얻은 $R^2_i$를 이용하는 것입니다.</p>
+<p>$$ VIF_i = \frac{1}{1 - R^2_i} $$</p>
+<p>$R^2_i$가 1에 가까울수록(즉, 다른 X 변수들로 완벽히 설명될수록) 분모가 0에 가까워져 VIF는 무한대로 폭발하게 됩니다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">+---------------------------------------------------------------+
+|         Multicollinearity &amp; VIF Diagnostic Mechanism          |
++---------------------------------------------------------------+
+| [Independent Variables X]                                     |
+|   X1: House Area (평수)  ------\  Strong Correlation (r &gt; 0.9)|
+|                                 x-----------------------\     |
+|   X2: Num of Rooms (방수) -----&#x2F;                         \    |
+|                                                           \   |
+| [VIF Calculation for X1]                                   |  |
+|   1. Regress X1 on X2, X3...                               v  |
+|   2. Calculate R-squared for X1 (e.g., R^2 = 0.95)   [Model]  |
+|   3. VIF_1 = 1 &#x2F; (1 - 0.95) = 20 (Danger!)          Regression|
+|                                                      Weights  |
+| [Resolution Strategies]                                (B1, B2|
+|   A. Feature Selection: Drop X1 or X2 (변수 제거)             |
+|   B. Dimensionality Reduction: PCA (주성분 분석)              |
+|   C. Regularization: Ridge&#x2F;Lasso Penalty (정규화)             |
++---------------------------------------------------------------+
+</code></pre>
+<hr />
+<h3 id="iii-yunghab-bigyo-mic-dagagdo-bunseog-comparison-synergy">Ⅲ. 융합 비교 및 다각도 분석 (Comparison &amp; Synergy)</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">변수 제거 (Feature Selection)</th><th style="text-align: left">정규화 (Regularization: Ridge/Lasso)</th><th style="text-align: left">차원 축소 (PCA)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>핵심 원리</strong></td><td style="text-align: left">VIF가 높은 변수 중 분석가가 판단하여 하나를 직접 삭제</td><td style="text-align: left">회귀 계수 크기에 페널티를 부여하여 계수 폭발을 수학적으로 억제</td><td style="text-align: left">상관성 높은 변수들을 선형 결합하여 직교하는 새로운 축(주성분) 생성</td></tr>
+<tr><td style="text-align: left"><strong>장점</strong></td><td style="text-align: left">모델 해석력이 완벽하게 유지됨 (단순하고 직관적)</td><td style="text-align: left">변수를 버리지 않고도 공선성 통제 가능, 예측 성능 우수</td><td style="text-align: left">정보 손실을 최소화하면서 완벽히 독립적인 변수 생성 가능</td></tr>
+<tr><td style="text-align: left"><strong>단점</strong></td><td style="text-align: left">삭제된 변수의 잠재적 정보가 완전히 손실됨</td><td style="text-align: left">하이퍼파라미터($\lambda$) 튜닝 필요, Lasso는 0으로 만듦</td><td style="text-align: left">새로 생성된 '주성분'이 현실에서 무엇을 의미하는지 해석 불가</td></tr>
+<tr><td style="text-align: left"><strong>적용 시기</strong></td><td style="text-align: left">의미가 완벽히 중복되는 변수가 명확할 때 (예: 생년월일, 나이)</td><td style="text-align: left">예측 성능이 최우선이고 변수가 많을 때</td><td style="text-align: left">변수 개수가 너무 많고 군집화된 특성이 강할 때</td></tr>
+</tbody></table>
+<hr />
+<h3 id="iv-silmu-jeogyong-mic-gisulsajeog-pandan-strategy-decision">Ⅳ. 실무 적용 및 기술사적 판단 (Strategy &amp; Decision)</h3>
+<p>실무에서 데이터 엔지니어와 분석가는 수백 개의 컬럼(Feature)을 다루게 됩니다. 이 때 VIF를 통한 다중 공선성 검증은 머신러닝 파이프라인의 필수 전처리 단계(Data Preprocessing)입니다.</p>
+<ol>
+<li>**상관 계수 행렬(Correlation Matrix)**을 먼저 확인하여 피어슨 상관 계수가 0.8~0.9 이상인 변수 쌍을 일차적으로 필터링합니다.</li>
+<li>이후 <strong>VIF 검정</strong>을 통해 VIF가 10을 넘는 변수들을 식별합니다. (엄격한 기준에서는 5를 기준으로 삼기도 합니다.)</li>
+<li>기술사적 관점에서는 단순히 VIF가 높다고 기계적으로 변수를 삭제해서는 안 됩니다. 도메인 지식(Domain Knowledge)을 바탕으로 해당 변수가 비즈니스적으로 핵심적인 원인 변수인지 확인해야 합니다. 만약 핵심 변수라면 삭제 대신 **Ridge 회귀(L2 정규화)**를 적용하여 모델의 안정성과 예측력을 동시에 확보하는 전략적 결정이 필요합니다.</li>
+</ol>
+<hr />
+<h3 id="v-gidaehyogwa-mic-gyeolron-future-standard">Ⅴ. 기대효과 및 결론 (Future &amp; Standard)</h3>
+<p>다중 공선성을 완벽히 통제하면 회귀 모델은 노이즈(Noise)에 흔들리지 않는 로버스트(Robust)한 성능을 발휘하게 됩니다. 이는 각 변수의 설명력을 명확하게 만들어 현업 부서에 "어떤 요인이 타겟 지표를 얼마나 상승시켰는가"에 대한 정확한 인과관계(Causality) 리포팅을 가능하게 합니다. AI와 머신러닝이 고도화될수록 Tree 기반 모델이나 딥러닝이 공선성에 강하다는 이유로 이러한 검증을 간과하는 경향이 있으나, XAI(설명 가능한 AI)의 관점에서 본다면 선형 모델의 다중 공선성 진단은 여전히 데이터 품질을 평가하는 가장 강력하고 투명한 표준(Standard)으로 기능할 것입니다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h3>
+<ul>
+<li><strong>상위 개념</strong>: 회귀 분석(Regression), 데이터 전처리(Preprocessing)</li>
+<li><strong>핵심 요소</strong>: 피어슨 상관 계수(Pearson Correlation), VIF(Variance Inflation Factor)</li>
+<li><strong>해결 기법</strong>: 변수 선택(Feature Selection), 능선/라쏘 정규화(Ridge/Lasso Regularization), 주성분 분석(PCA)</li>
+</ul>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>둥이가 달리기를 잘하는 이유를 알아보려고 "오른쪽 다리 근육"과 "왼쪽 다리 근육" 크기를 둘 다 재서 계산기에 넣었어요.</li>
+<li>그런데 오른쪽 다리가 크면 왼쪽 다리도 당연히 크기 때문에, 계산기가 "도대체 어느 쪽 다리 때문에 빠른 거야?!" 하고 헷갈려서 고장 나버려요. (이게 다중 공선성이에요)</li>
+<li>그래서 똑똑한 박사님(VIF 지수)은 "두 다리를 따로 재지 말고, 그냥 '하체 근육 전체'라는 하나의 점수로 묶어서 계산하자!"라고 해서 계산기를 고쳐준답니다.</li>
+</ol>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">다중 회귀 분석 (Multiple Regression)
+    │
+    ▼
+독립변수 간 상관관계 발견 (Pearson r &gt; 0.8)
+    │
+    ▼
+다중 공선성 진단
+    ├─► 상관계수 행렬 (Correlation Matrix) — 1차 필터링
+    └─► VIF (Variance Inflation Factor) — 정밀 진단
+         VIF &gt; 10 → 위험 &#x2F; VIF &gt; 5 → 주의
+    │
+    ▼
+해결 전략
+    ├─► 변수 제거 (Feature Selection) — 도메인 판단 기반
+    ├─► Ridge (L2) &#x2F; Lasso (L1) 정규화 — 계수 억제
+    └─► PCA (주성분 분석) — 직교 변환으로 상관성 제거
+    │
+    ▼
+XAI (설명 가능한 AI) — 투명한 변수 영향력 리포팅
+</code></pre>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

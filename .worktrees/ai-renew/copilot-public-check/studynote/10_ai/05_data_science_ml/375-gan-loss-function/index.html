@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>375. GAN 손실 함수 미니맥스 (Minimax Loss) - 판별자·생성자 목적 수식 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ai
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: GAN (Generative Adversarial Network)의 미니맥스 목적 함수는 판별자(Discriminator) D가 실제 데이터와 생성 데이터를 구별하려는 최대화 목표와, 생성자(Generator) G가 판별자를 속이려는 최소화 목표가 동시에 진행하는 제로섬 게임(Zero-Sum Game)이다.</li>
+<li><strong>가치</strong>: 이 적대적 학습(Adversarial Training)은 D와 G가 서로를 강화하며 G가 결국 실제 데이터 분포 p_data(x)를 모방하는 분포를 학습하도록 유도한다. 이론적 내쉬 균형(Nash Equilibrium)에서 D(x) = 1/2이 된다.</li>
+<li><strong>판단 포인트</strong>: 원래 GAN은 JS 발산(Jensen-Shannon Divergence) 최소화와 동치이지만, 분포 지지(Support)가 겹치지 않을 때 발산이 불연속적으로 나타나 학습 불안정과 모드 붕괴(Mode Collapse)가 발생한다. WGAN (Wasserstein GAN)은 Wasserstein 거리(Earth Mover's Distance)로 이를 해결한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>2014년 Ian Goodfellow가 제안한 GAN은 생성 모델(Generative Model)의 패러다임을 바꿨다. 기존 생성 모델(VAE, RBM)이 명시적 확률 밀도(Explicit Probability Density)를 최대화하는 방식이라면, GAN은 <strong>암묵적 생성(Implicit Generation)</strong> — 데이터 분포를 명시하지 않고 직접 샘플을 생성 — 을 달성한다.</p>
+<p>핵심 아이디어는 두 신경망의 경쟁이다:</p>
+<ul>
+<li><strong>생성자(Generator) G</strong>: 노이즈 z ~ p_z(z)를 입력받아 가짜 데이터 G(z)를 생성</li>
+<li><strong>판별자(Discriminator) D</strong>: 입력이 실제 데이터인지(1) 가짜 데이터인지(0)를 구별</li>
+</ul>
+<p>두 네트워크가 적대적으로 학습하면서 G의 생성 품질이 점점 향상된다. 경찰(D)과 위조지폐범(G)의 게임 비유로 유명하다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: GAN은 위조지폐범(G)과 경찰(D)의 쫓고 쫓기는 게임이다. 경찰은 진짜/가짜를 구별하는 눈을 키우고, 위조지폐범은 더 정교한 지폐를 만든다. 이 게임이 끝나면 위조지폐범은 진짜와 구별 불가능한 지폐를 만들 수 있게 된다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="minimaegseu-mogjeog-hamsu-minimax-objective">미니맥스 목적 함수 (Minimax Objective)</h3>
+<pre><code>min_G max_D V(D, G) = E_{x~p_data}[log D(x)] + E_{z~p_z}[log(1 - D(G(z)))]
+</code></pre>
+<p><strong>판별자 D의 목표 (최대화)</strong>:</p>
+<ul>
+<li>log D(x): 실제 데이터 x를 올바르게 1(실제)로 분류 → 높을수록 좋음</li>
+<li>log(1 - D(G(z))): 가짜 데이터 G(z)를 올바르게 0(가짜)으로 분류 → D(G(z))=0이면 log(1)=0 최대</li>
+</ul>
+<p><strong>생성자 G의 목표 (최소화)</strong>:</p>
+<ul>
+<li>log(1 - D(G(z))) 최소화 → D(G(z))=1이 되도록 D를 속임</li>
+<li>실용적 구현: log(D(G(z))) 최대화 (Non-saturating Loss) — 학습 초반 그래디언트 소실 방지</li>
+</ul>
+<pre><code>┌───────────────────────────────────────────────────────────┐
+│  z ~ p_z  →  [Generator G]  →  G(z) (가짜)               │
+│                                  │                        │
+│  x ~ p_data (실제)  ────────────►[Discriminator D]        │
+│                                  │                        │
+│              D(x) → 1 (실제)    D(G(z)) → 0 (가짜)        │
+│              ↑ D 학습 방향         ↑ G는 D(G(z)) → 1 목표   │
+└───────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="naeswi-gyunhyeong-nash-equilibrium-bunseog">내쉬 균형 (Nash Equilibrium) 분석</h3>
+<p>고정된 G에서 최적 D:</p>
+<pre><code>D*_G(x) = p_data(x) &#x2F; (p_data(x) + p_G(x))
+</code></pre>
+<p>G가 최적화되면 p_G = p_data → D*(x) = 1/2 (판별 불가능)</p>
+<p>목적 함수를 JS 발산(Jensen-Shannon Divergence)으로 표현:</p>
+<pre><code>min_G V(G, D*_G) = -log(4) + 2 · JSD(p_data || p_G)
+</code></pre>
+<p>JSD(p_data || p_G) ≥ 0이고 p_data = p_G일 때만 0이므로, G는 p_G → p_data를 학습한다.</p>
+<table><thead><tr><th style="text-align: left">손실 함수</th><th style="text-align: left">측도(Measure)</th><th style="text-align: left">장점</th><th style="text-align: left">단점</th></tr></thead><tbody>
+<tr><td style="text-align: left">원래 GAN</td><td style="text-align: left">JS 발산</td><td style="text-align: left">이론 명확</td><td style="text-align: left">불연속, 모드 붕괴</td></tr>
+<tr><td style="text-align: left">Non-saturating GAN</td><td style="text-align: left">KL 발산 변형</td><td style="text-align: left">초반 그래디언트 개선</td><td style="text-align: left">불안정</td></tr>
+<tr><td style="text-align: left">WGAN</td><td style="text-align: left">Wasserstein 거리</td><td style="text-align: left">안정적, 연속적</td><td style="text-align: left">Lipschitz 제약 필요</td></tr>
+<tr><td style="text-align: left">WGAN-GP</td><td style="text-align: left">Wasserstein + 그래디언트 패널티</td><td style="text-align: left">가장 안정적</td><td style="text-align: left">계산 비용 증가</td></tr>
+</tbody></table>
+<h3 id="modeu-bunggoe-mode-collapse">모드 붕괴 (Mode Collapse)</h3>
+<p>분포 p_data가 다양한 모드(Multi-modal)를 가질 때, G가 D를 속이는 데 충분한 일부 모드만 생성하고 나머지를 무시하는 현상:</p>
+<pre><code>┌────────────────────────────────────────────────────────┐
+│  p_data:  ●      ●        ●       ● (4개 군집)         │
+│                                                        │
+│  p_G:     ●                          (1개만 생성)      │
+└────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="wgan-wasserstein-gan-gaeseon">WGAN (Wasserstein GAN) 개선</h3>
+<p>Wasserstein 거리(Earth Mover's Distance):</p>
+<pre><code>W(p_data, p_G) = inf_{γ∈Π} E_{(x,y)~γ}[||x - y||]
+</code></pre>
+<p>WGAN 목적 함수 (D를 Critic으로 대체):</p>
+<pre><code>max_D (E[D(x)] - E[D(G(z))])   s.t. ||D||_L ≤ 1 (Lipschitz 제약)
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: JS 발산은 두 나라 언어가 완전히 다르면(분포 비겹침) 거리가 무한대라고 말하지만, Wasserstein 거리는 "한국어를 프랑스어로 번역하는 비용"처럼 항상 유한한 값을 계산한다. 그래서 분포가 겹치지 않아도 학습 신호가 생긴다.</p>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">GAN</th><th style="text-align: left">VAE</th><th style="text-align: left">Flow-based</th><th style="text-align: left">Diffusion</th></tr></thead><tbody>
+<tr><td style="text-align: left">생성 품질</td><td style="text-align: left">매우 선명</td><td style="text-align: left">블러리</td><td style="text-align: left">선명</td><td style="text-align: left">매우 선명</td></tr>
+<tr><td style="text-align: left">학습 안정성</td><td style="text-align: left">낮음</td><td style="text-align: left">높음</td><td style="text-align: left">높음</td><td style="text-align: left">높음</td></tr>
+<tr><td style="text-align: left">잠재 공간</td><td style="text-align: left">구조화 어려움</td><td style="text-align: left">구조화 가능</td><td style="text-align: left">역변환 가능</td><td style="text-align: left">노이즈 경로</td></tr>
+<tr><td style="text-align: left">추론 속도</td><td style="text-align: left">빠름</td><td style="text-align: left">빠름</td><td style="text-align: left">보통</td><td style="text-align: left">느림</td></tr>
+</tbody></table>
+<p><strong>현대 GAN 발전</strong>: StyleGAN, BigGAN, CycleGAN 등 수백 가지 변형이 등장했고, DALL-E, Stable Diffusion 등 디퓨전 모델이 이미지 생성 최전선으로 등장했다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: GAN 가족은 위조지폐범(G)의 기술이 계속 진화하는 가계도다. 원래 GAN은 흑백 지폐, StyleGAN은 초고화질 컬러 지폐, CycleGAN은 한국 원화를 미국 달러로 변환하는 양방향 위조 기술이다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p><strong>학습 안정화 기법</strong>:</p>
+<ol>
+<li>스펙트럼 정규화(Spectral Normalization): D의 가중치 스펙트럼 노름을 1로 제한 → Lipschitz 제약 만족</li>
+<li>그래디언트 패널티(Gradient Penalty, WGAN-GP): D의 그래디언트 노름 = 1 제약을 소프트하게 적용</li>
+<li>Feature Matching: D의 중간 레이어 통계를 실제/가짜 간 일치시키는 추가 손실</li>
+<li>Progressive Growing (ProGAN): 저해상도부터 시작해 점진적으로 해상도 증가</li>
+</ol>
+<p><strong>기술사 답안 포인트</strong>:</p>
+<ol>
+<li>미니맥스 목적 함수를 쓰고 D와 G 각각의 최대화/최소화 방향을 설명한다.</li>
+<li>모드 붕괴(Mode Collapse)의 정의, 발생 원인(JS 발산 불연속), 해결책(WGAN)을 설명한다.</li>
+<li>JS 발산 vs Wasserstein 거리의 차이를 "분포 비겹침 시 학습 신호" 관점에서 설명한다.</li>
+<li>Non-saturating Loss(log D(G(z)) 최대화)가 원래 목적 함수(log(1-D(G(z))) 최소화)보다 초반 학습에 유리한 이유를 설명한다.</li>
+</ol>
+<p>📢 <strong>섹션 요약 비유</strong>: GAN의 학습 불안정성은 경찰과 위조지폐범의 실력 차이가 너무 커서 한쪽이 포기할 때 발생한다. WGAN은 "위조지폐가 실제와 얼마나 다른지 거리를 재는" 공정한 심판(Wasserstein 거리)을 도입해 게임이 계속되도록 한다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>GAN과 미니맥스 손실 함수는 생성 AI(Generative AI) 혁명의 출발점이다. 적대적 학습이라는 아이디어는 이미지 생성을 넘어 데이터 증강(Data Augmentation), 도메인 적응(Domain Adaptation), 텍스트-이미지 변환, 음성 합성, 약물 분자 생성 등 다양한 분야에서 혁신을 가져왔다.</p>
+<p>현재는 디퓨전 모델이 이미지 생성 최전선이지만, GAN은 실시간 생성(Real-time Generation)이 중요한 비디오 게임 NPC, 실시간 이미지 편집 등에서 여전히 선호된다. 미니맥스 게임 이론적 관점은 AI 안전성(AI Alignment) 연구에도 새로운 시각을 제공한다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: GAN은 생성 AI의 "프로메테우스"다. 새로운 불(생성 능력)을 가져왔지만, 통제하기 어렵다는 위험도 함께 왔다. WGAN은 그 불을 더 안전하게 다루는 방법을 제공했다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연관 키워드</th><th style="text-align: left">관계</th></tr></thead><tbody>
+<tr><td style="text-align: left">GAN (Generative Adversarial Network)</td><td style="text-align: left">G, D, 적대적 학습</td><td style="text-align: left">미니맥스 게임 기반 생성 모델</td></tr>
+<tr><td style="text-align: left">미니맥스 목적 함수</td><td style="text-align: left">min_G max_D V(D,G)</td><td style="text-align: left">GAN의 핵심 수식</td></tr>
+<tr><td style="text-align: left">모드 붕괴 (Mode Collapse)</td><td style="text-align: left">다양성 부족, 특정 모드만 생성</td><td style="text-align: left">GAN의 핵심 문제</td></tr>
+<tr><td style="text-align: left">WGAN (Wasserstein GAN)</td><td style="text-align: left">Earth Mover's Distance, Lipschitz</td><td style="text-align: left">모드 붕괴 해결 방법</td></tr>
+<tr><td style="text-align: left">JS 발산 (Jensen-Shannon Divergence)</td><td style="text-align: left">분포 거리, 불연속</td><td style="text-align: left">원래 GAN의 측도</td></tr>
+<tr><td style="text-align: left">Wasserstein 거리</td><td style="text-align: left">지구 이동 비용, 연속</td><td style="text-align: left">WGAN의 측도</td></tr>
+</tbody></table>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>GAN은 경찰(판별자)과 위조지폐범(생성자)의 게임이야. 경찰은 진짜와 가짜를 더 잘 구별하려 하고, 위조지폐범은 더 정교한 가짜를 만들려 해.</li>
+<li>모드 붕괴는 위조지폐범이 "어차피 100원짜리만 잘 만들면 경찰을 속일 수 있으니 500원짜리는 포기"하는 현상이야.</li>
+<li>WGAN은 위조지폐가 진짜와 얼마나 다른지 거리를 재는 공정한 심판을 추가해서, 게임이 더 오래 지속되고 다양한 지폐를 만들 수 있게 해.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>262. K-NN (K-Nearest Neighbors) - 거리 기반 최근접 이웃 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ai
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: K-최근접 이웃(K-NN, K-Nearest Neighbors)은 "유사한 것은 유사한 레이블을 가진다"는 가정 아래, 예측 시점에 가장 가까운 K개 이웃의 다수결/평균으로 결과를 내는 게으른 학습기(Lazy Learner)다.</li>
+<li><strong>가치</strong>: 별도 훈련 없이 즉시 사용 가능하고 비선형 경계를 자연스럽게 표현하지만, 차원의 저주(Curse of Dimensionality)와 예측 시 높은 계산 비용이 단점이다.</li>
+<li><strong>판단 포인트</strong>: K값 선택(홀수 권장), 거리 척도 선택, 특성 스케일링이 K-NN 성능을 좌우하는 세 가지 핵심 요소다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>K-NN은 가장 단순하고 직관적인 지도 학습 알고리즘이다. "이 과일은 어떤 종류인가?"라는 질문에 "가장 비슷하게 생긴 K개의 과일을 보면 안다"는 논리다.</p>
+<p><strong>K-NN의 특이한 특성 — 게으른 학습기(Lazy Learner)</strong>:</p>
+<ul>
+<li>훈련(Training): 단순히 데이터를 메모리에 저장 (O(1))</li>
+<li>예측(Prediction): 쿼리와 모든 훈련 샘플 간 거리 계산 (O(n·d))</li>
+<li>대부분의 알고리즘과 반대로, 계산 비용이 예측 시점에 집중된다.</li>
+</ul>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">분류 (Classification)</th><th style="text-align: left">회귀 (Regression)</th></tr></thead><tbody>
+<tr><td style="text-align: left">집계 방법</td><td style="text-align: left">K개 이웃의 다수결</td><td style="text-align: left">K개 이웃의 평균/가중 평균</td></tr>
+<tr><td style="text-align: left">출력</td><td style="text-align: left">클래스 레이블</td><td style="text-align: left">연속값</td></tr>
+<tr><td style="text-align: left">K=1</td><td style="text-align: left">가장 가까운 1개 이웃 클래스</td><td style="text-align: left">가장 가까운 이웃 값 그대로</td></tr>
+<tr><td style="text-align: left">K=N</td><td style="text-align: left">전체 데이터 다수결</td><td style="text-align: left">전체 평균 (상수)</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: K-NN은 "처음 보는 식당에서 주변 테이블 손님들이 먹는 음식을 보고 주문"하는 것이다. 주변 사람들이 다 스테이크를 먹으면(K 이웃이 같은 클래스) 스테이크가 맛있다고 판단한다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="k-nn-yeceug-gwajeong">K-NN 예측 과정</h3>
+<pre><code>  쿼리 포인트 x_q (?) 에 대한 K-NN 분류 (K=5)
+  ┌──────────────────────────────────────────────┐
+  │                                              │
+  │  ○  ○    ←── 클래스 A (Circle)              │
+  │     ○                                        │
+  │         [x_q]  ← 쿼리 포인트               │
+  │        ╱ ↑ ╲                                │
+  │       ╱  │  ╲  K=5 최근접 이웃:            │
+  │      ●   ○   ●  ┌─────────────────────────┐ │
+  │       ╲     ╱   │ ○○○●● → A:3, B:2        │ │
+  │        ●───●    │ → 다수결: 클래스 A       │ │
+  │                 └─────────────────────────┘ │
+  │  ●  ●    ←── 클래스 B (Square)              │
+  └──────────────────────────────────────────────┘
+</code></pre>
+<h3 id="geori-ceogdo-distance-metric">거리 척도 (Distance Metric)</h3>
+<table><thead><tr><th style="text-align: left">거리</th><th style="text-align: left">수식</th><th style="text-align: left">특징</th></tr></thead><tbody>
+<tr><td style="text-align: left">유클리드 (Euclidean)</td><td style="text-align: left">√Σ(x_i - x_j)²</td><td style="text-align: left">직선 거리, 가장 일반적</td></tr>
+<tr><td style="text-align: left">맨해튼 (Manhattan)</td><td style="text-align: left">Σ|x_i - x_j|</td><td style="text-align: left">격자 이동 거리, 이상값 강건</td></tr>
+<tr><td style="text-align: left">민코프스키 (Minkowski)</td><td style="text-align: left">(Σ|x_i-x_j|^p)^(1/p)</td><td style="text-align: left">p=1:맨해튼, p=2:유클리드 일반화</td></tr>
+<tr><td style="text-align: left">코사인 유사도 (Cosine)</td><td style="text-align: left">1 - cos(θ)</td><td style="text-align: left">방향 유사성, 텍스트에 적합</td></tr>
+<tr><td style="text-align: left">해밍 (Hamming)</td><td style="text-align: left">다른 비트 수 / 전체</td><td style="text-align: left">범주형/이진 데이터</td></tr>
+</tbody></table>
+<h3 id="k-gabsyi-yeonghyang">K 값의 영향</h3>
+<pre><code>  K=1 (과적합 위험):         K=N (과소적합):
+  ┌────────────────────┐     ┌────────────────────┐
+  │  ● ●               │     │                    │
+  │ ● ●  ●●○          │     │  ──────────────    │
+  │ ● ●  ○●○○         │     │  (단일 경계선)     │
+  │      ○ ○ ○        │     │                    │
+  │  (복잡한 경계)     │     │                    │
+  └────────────────────┘     └────────────────────┘
+
+  최적 K 선택: 교차 검증(Cross Validation)으로 결정
+              일반적으로 홀수 권장 (동점 방지)
+              경험칙: K ≈ √n (n=훈련 샘플 수)
+</code></pre>
+<h3 id="caweonyi-jeoju-curse-of-dimensionality">차원의 저주 (Curse of Dimensionality)</h3>
+<p>고차원에서는 모든 포인트가 서로 비슷하게 멀어져, 거리 기반 판단이 무의미해진다.</p>
+<pre><code>  1D: 100개 점 중 10%를 커버 → 이웃 10개
+  2D: 같은 커버리지 → 한 면의 31.6% 필요
+  nD: n차원 → 전체의 10^(n&#x2F;2)% 필요 → 이웃 = 전체 데이터
+
+  → 고차원에서 K-NN은 사실상 모든 점이 이웃
+    → 거리 차이가 무의미 → 성능 급락
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: 차원의 저주는 "도시가 너무 커지면 가까운 이웃의 개념이 사라지는 것"이다. 서울에서 가장 가까운 집과 1km 떨어진 집의 차이가 무의미해지듯, 고차원에서는 모든 거리가 비슷해진다.</p>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="k-nn-vs-dareun-bunryugi-bigyo">K-NN vs 다른 분류기 비교</h3>
+<table><thead><tr><th style="text-align: left">특성</th><th style="text-align: left">K-NN</th><th style="text-align: left">SVM</th><th style="text-align: left">결정 트리</th><th style="text-align: left">신경망</th></tr></thead><tbody>
+<tr><td style="text-align: left">훈련 시간</td><td style="text-align: left">O(1)</td><td style="text-align: left">O(n²~n³)</td><td style="text-align: left">O(n log n)</td><td style="text-align: left">O(epoch × n)</td></tr>
+<tr><td style="text-align: left">예측 시간</td><td style="text-align: left">O(n·d)</td><td style="text-align: left">O(sv·d)</td><td style="text-align: left">O(depth)</td><td style="text-align: left">O(layers)</td></tr>
+<tr><td style="text-align: left">해석 가능성</td><td style="text-align: left">높음</td><td style="text-align: left">낮음</td><td style="text-align: left">높음</td><td style="text-align: left">낮음</td></tr>
+<tr><td style="text-align: left">고차원</td><td style="text-align: left">약함</td><td style="text-align: left">강함</td><td style="text-align: left">중간</td><td style="text-align: left">강함</td></tr>
+<tr><td style="text-align: left">스케일링 필요</td><td style="text-align: left">필수</td><td style="text-align: left">필수</td><td style="text-align: left">불필요</td><td style="text-align: left">권장</td></tr>
+</tbody></table>
+<h3 id="k-nnyi-byeonhyeongdeul">K-NN의 변형들</h3>
+<pre><code>  ┌────────────────────────────────────────────┐
+  │ K-NN 변형                                  │
+  ├────────────────┬───────────────────────────┤
+  │ 가중 K-NN      │ 가까운 이웃에 더 큰 가중치│
+  │ (Weighted)     │ w = 1&#x2F;distance²            │
+  ├────────────────┼───────────────────────────┤
+  │ 반경 이웃      │ K 고정 대신 반경 r 내 모든│
+  │ (Radius-based) │ 이웃 사용                  │
+  ├────────────────┼───────────────────────────┤
+  │ 근사 최근접    │ 정확도를 포기하고 속도를   │
+  │ (ANN, Approx.) │ 높임 (FAISS, HNSW)         │
+  └────────────────┴───────────────────────────┘
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: K-NN은 "실시간 여론조사"다. 매번 새로운 유권자(쿼리)가 나타날 때마다 모든 유권자의 의견(훈련 데이터)을 다시 집계한다. 의회(모델)를 구성하지 않고 매번 직접 민주주의를 실행하는 것이다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="k-nn-coejeoghwa-jeonryag">K-NN 최적화 전략</h3>
+<ol>
+<li><strong>전처리 필수</strong>: 특성 스케일링(StandardScaler 또는 MinMaxScaler) — 거리 계산에 스케일이 직접 영향</li>
+<li><strong>K 선택</strong>: 교차 검증으로 최적 K 탐색, 홀수 사용 (동점 방지)</li>
+<li><strong>차원 축소</strong>: PCA(Principal Component Analysis) 또는 특성 선택으로 차원 축소</li>
+<li><strong>인덱싱 구조</strong>: KD-Tree(낮은 차원), Ball-Tree(중간 차원), FAISS(고차원 근사)</li>
+</ol>
+<h3 id="daegyumo-deiteoeseoyi-k-nn-hwalyong">대규모 데이터에서의 K-NN 활용</h3>
+<p>현대에는 K-NN이 직접 분류기로 쓰이기보다 **벡터 데이터베이스(Vector DB)**와 결합하여 추천 시스템, 의미 검색(Semantic Search)에 활용된다.</p>
+<pre><code>  현대 K-NN 활용 패턴:
+  ┌────────────────────────────────────────────┐
+  │  임베딩 벡터 (Word2Vec, BERT 등) 생성      │
+  │              │                             │
+  │  FAISS&#x2F;HNSW 인덱스 구축 (ANN 근사)         │
+  │              │                             │
+  │  쿼리 벡터 → 유사 벡터 K개 검색           │
+  │              │                             │
+  │  추천&#x2F;검색 결과 반환                       │
+  └────────────────────────────────────────────┘
+</code></pre>
+<h3 id="gisulsa-daban-pointeu">기술사 답안 포인트</h3>
+<ul>
+<li><strong>"K-NN이 게으른 학습기인 이유"</strong>: 훈련 단계가 없음 → 데이터를 통째로 메모리에 유지 → 예측 시 O(n·d)</li>
+<li><strong>"차원의 저주 해결책"</strong>: 특성 선택, PCA, 임베딩으로 차원 축소 후 K-NN 적용</li>
+<li><strong>"K 값이 클수록 좋은가"</strong>: K가 크면 편향 증가, 작으면 분산 증가 → 트레이드오프</li>
+</ul>
+<p>📢 <strong>섹션 요약 비유</strong>: K-NN 스케일링은 키와 몸무게로 사람을 분류할 때, 키는 cm단위(수백), 몸무게는 kg단위(수십)면 키가 지배적이다. 같은 단위로 정규화해야 두 특성이 동등하게 거리에 반영된다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>K-NN을 올바르게 활용하면:</p>
+<ol>
+<li><strong>빠른 프로토타이핑</strong>: 훈련 없이 즉시 성능 확인 → 데이터 품질 빠른 검증</li>
+<li><strong>비모수적 유연성</strong>: 분포 가정 없이 임의 형태의 결정 경계 표현</li>
+<li><strong>이상값 탐지</strong>: 이웃 거리가 비정상적으로 먼 포인트 = 이상값</li>
+<li><strong>추천 시스템</strong>: 사용자 임베딩의 K-NN으로 협업 필터링(Collaborative Filtering) 구현</li>
+</ol>
+<p>딥러닝 시대에도 K-NN은 <strong>임베딩 기반 유사도 검색</strong>이라는 새로운 형태로 대규모 추천/검색 시스템의 핵심 구성요소로 살아있다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: K-NN은 "족보 없이 직관으로 판단하는 원로"다. 복잡한 이론(모델 구조)은 없지만, 과거 경험(훈련 데이터) 전체를 기억해서 비슷한 상황을 찾아내는 순수한 경험적 지혜다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연관 키워드</th><th style="text-align: left">관계</th></tr></thead><tbody>
+<tr><td style="text-align: left">K-NN (K-Nearest Neighbors)</td><td style="text-align: left">거리 기반, 게으른 학습기</td><td style="text-align: left">인스턴스 기반 분류/회귀</td></tr>
+<tr><td style="text-align: left">유클리드 거리 (Euclidean Distance)</td><td style="text-align: left">직선 거리, L2 노름</td><td style="text-align: left">K-NN 기본 거리 척도</td></tr>
+<tr><td style="text-align: left">맨해튼 거리 (Manhattan Distance)</td><td style="text-align: left">격자 이동, L1 노름</td><td style="text-align: left">이상값 강건 거리</td></tr>
+<tr><td style="text-align: left">차원의 저주 (Curse of Dimensionality)</td><td style="text-align: left">고차원, 거리 무의미화</td><td style="text-align: left">K-NN 최대 약점</td></tr>
+<tr><td style="text-align: left">게으른 학습기 (Lazy Learner)</td><td style="text-align: left">훈련 O(1), 예측 O(n)</td><td style="text-align: left">학습 비용 없는 알고리즘</td></tr>
+<tr><td style="text-align: left">특성 스케일링 (Feature Scaling)</td><td style="text-align: left">StandardScaler, 필수 전처리</td><td style="text-align: left">거리 왜곡 방지</td></tr>
+<tr><td style="text-align: left">KD-Tree / Ball-Tree</td><td style="text-align: left">공간 인덱싱, 검색 가속</td><td style="text-align: left">K-NN 예측 속도 향상</td></tr>
+<tr><td style="text-align: left">ANN (Approximate Nearest Neighbor)</td><td style="text-align: left">FAISS, HNSW</td><td style="text-align: left">대규모 고차원 근사 탐색</td></tr>
+</tbody></table>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>새로운 친구가 어떤 그룹인지 모를 때, "가장 친한 5명(K=5) 친구들이 다 운동을 좋아하면 이 친구도 운동을 좋아할 거야"라고 추측하는 게 K-NN이야!</li>
+<li>근데 친구가 1,000명이 있는 거대한 학교(고차원)에서는 "가장 가까운 친구"를 찾기 어려워지는 게 차원의 저주야.</li>
+<li>그리고 키는 cm, 몸무게는 kg으로 비교하면 키가 너무 크게 느껴지니까, 같은 단위로 맞춰주는 것(스케일링)이 꼭 필요해!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

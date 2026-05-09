@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>511. API Rate Limiting (비율 제한) 및 Throttling (스로틀링) - DDoS 및 크롤링 방어 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="511-api-rate-limiting-biyul-jehan-mic-throttling-seuroteulring-ddos-mic-keurolring-bangeo">511. API Rate Limiting (비율 제한) 및 Throttling (스로틀링) - DDoS 및 크롤링 방어</h1>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 비율 제한(Rate Limiting)과 스로틀링(Throttling)은 선량한 사용자로 위장하여 서버에 초당 1만 번의 무지성 API 폭격을 날려 서버를 질식시키는 해커(DDoS)나 봇(Bot)의 멱살을 잡고, <strong>"1초에 딱 10번까지만 허락한다!"라는 물리적 밸브를 강제로 채워버리는 인프라 레벨의 숨통 제어 아키텍처</strong>다.</li>
+<li><strong>가치</strong>: 코드가 아무리 완벽해도 트래픽(양)이 임계치를 넘으면 서버는 죽는다. 이를 막음으로써 OWASP Top 10의 치명적인 <strong>'가용성(Availability) 붕괴'를 원천 방어</strong>하며, 동시에 경쟁사가 우리 회사의 소중한 데이터를 매크로로 다 퍼가는 '무단 크롤링(Scraping)'과 크리덴셜 스터핑(무차별 비밀번호 대입)을 파산시키는 경제적 방패 역할을 한다.</li>
+<li><strong>융합</strong>: 과거처럼 애플리케이션(Spring) 내부에서 코드로 막지 않고, 앞단의 **API Gateway, Nginx, AWS WAF, 그리고 Redis(인메모리 카운터)**와 융합하여 토큰 버킷(Token Bucket), 누수 버킷(Leaky Bucket) 같은 0.001초 단위의 수학적 알고리즘으로 무장한 절대 수문장 체계를 완성한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: Rate Limiting은 '속도위반 딱지'다. 서버가 유저의 IP나 API 키(Token)를 쳐다보고 "어? 너 방금 1분 동안 API 100번 넘게 불렀어. 넌 인간이 아니야! 429 Too Many Requests 먹고 꺼져!" 라며 몽둥이로 때리는 기술이다. Throttling(스로틀링)은 목을 조른다는 뜻으로, 완전히 차단하는 대신 "원래 0.1초 만에 응답해 주던 걸, 넌 너무 많이 찌르니까 5초 뒤에 천천히 대답해 줄게" 라며 해커의 연산 속도를 늪으로 밀어 넣어버리는 기술이다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 쿠폰 이벤트 날이 왔다. 해커가 파이썬(Python)으로 스크립트를 짜서 0.1초 만에 쿠폰 발급 API를 10만 번 호출한다(L7 DDoS 공격). 서버의 DB 커넥션 풀이 다 터지고 사이트가 멈췄다. 정상 고객 수만 명은 접속조차 못 하고 욕을 한다. 혹은 크롤링 봇(Bot)이 매일 밤 쇼핑몰의 상품 가격을 초당 1천 번씩 긁어가서 서버 요금(AWS Billing)이 폭발한다. **"내 코드는 정상적으로 돌아가지만, 적군이 너무 많아서 칼질을 하다 내가 지쳐 죽는 현상"**을 막기 위해, 성문 입구에 병목(Bottle Neck)을 강제로 만들어 트래픽을 한 줄 서기로 찢어버리는 통제력이 절대적으로 필요하다.</p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: Rate Limiting은 뷔페식당의 **'고기 배급 룰'**과 똑같습니다. 식당(서버)에 고기(CPU/DB 자원)가 무한정 있는 게 아닙니다. 어떤 진상 손님(디도스 봇)이 뷔페에 오자마자 고기 100접시를 혼자 다 싹쓸이해 가면 다른 손님들은 굶어 죽습니다. 그래서 주방장(API Gateway)이 룰을 만듭니다. "손님 1명당 1분에 고기는 딱 2접시까지만 퍼갑니다!" 진상 손님이 3번째 접시를 푸려고 하면 몽둥이로 때려서 쫓아냅니다(429 에러). 이 룰 하나로 식당 안의 모든 손님이 평화롭게 밥을 먹을 수 있습니다.</p>
+</li>
+<li>
+<p><strong>등장 배경 및 발전 과정</strong>:</p>
+<ol>
+<li><strong>L3/L4 디도스 시대 (과거)</strong>: 2000년대 해커들은 무식하게 핑(Ping)이나 껍데기 네트워크 패킷(SYN Flood)만 미친 듯이 쏴서 인터넷 선 자체를 터뜨렸다. 이건 통신사가 막아줬다.</li>
+<li><strong>L7 애플리케이션 디도스 시대 (2010년대)</strong>: 해커들이 똑똑해졌다. 정상적인 사용자인 척 위장하여 HTTP <code>GET /search</code> 같은 '비즈니스 로직'을 초당 수만 번 호출하기 시작했다. 통신사는 이게 진짜 손님인지 해커인지 구분이 안 가 방어를 포기했다.</li>
+<li><strong>API 경제와 토큰 버킷의 융합 (현재)</strong>: MSA 생태계가 폭발하며 API 호출이 난무하게 되자, 서버 스스로가 "이 IP, 이 JWT 토큰의 호출 횟수가 비정상적이다"를 초당 100만 번의 속도로 계산해야만 했다. Redis 기반의 고속 카운팅 알고리즘(Token Bucket)이 API Gateway에 탑재되며 천하를 통일했다.</li>
+</ol>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 과거 방어망이 **'적군이 성문을 부수는 걸 막는 튼튼한 성벽'**이었다면, Rate Limiting은 **'정상인처럼 위장해 성문에 10만 명이 한꺼번에 몰려와 압사당하는 걸 막기 위한, 지하철 개찰구의 1명씩 통과하는 십자 회전문'**입니다. 미친 듯이 밀고 들어와도 개찰구의 톱니바퀴가 속도를 통제하여 성안의 평화를 완벽하게 수호합니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri-deep-dive">Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)</h2>
+<h3 id="1-cadan-algorijeumyi-3dae-suhagjeog-heugmabeob-myeonjeob-silmu-pilsu">1. 차단 알고리즘의 3대 수학적 흑마법 (면접/실무 필수)</h3>
+<p>"1분에 10번"을 막는 방법에도 스케일에 따라 천차만별의 알고리즘이 존재한다.</p>
+<ol>
+<li><strong>Fixed Window Counters (고정 윈도우 카운터) - 하수</strong>
+<ul>
+<li><strong>원리</strong>: 1시 00분~1시 01분 사이에 딱 10번만 허용한다. 1분이 넘어가면 카운터는 다시 0으로 초기화.</li>
+<li><strong>치명적 단점 (경계선 폭파)</strong>: 해커가 1시 00분 59초에 10번 쏘고, 1시 01분 00초에 초기화되자마자 다시 10번을 쏜다. 단 2초 만에 서버는 20번의 폭격을 고스란히 쳐맞는다(경계선 쏠림 현상).</li>
+</ul>
+</li>
+<li><strong>Token Bucket (토큰 버킷) 👑 절대 국룰 (아마존 AWS 방식)</strong>
+<ul>
+<li><strong>원리</strong>: 각 유저의 바구니에 1초마다 1개씩 토큰(동전)이 자동으로 쌓인다(최대 10개 한도). 유저가 API를 부를 때마다 동전을 1개씩 낸다. 동전이 0개가 되면 거부당한다.</li>
+<li><strong>특징</strong>: 일시적인 트래픽 폭주(Burst)를 부드럽게 허용해 주면서도, 장기적인 융단 폭격은 동전이 바닥나서 철저히 튕겨내는 최고의 가성비 알고리즘.</li>
+</ul>
+</li>
+<li><strong>Leaky Bucket (누수 버킷) - 트래픽 평탄화 (Nginx 방식)</strong>
+<ul>
+<li><strong>원리</strong>: 밑빠진 독에 물을 붓는다. 물(트래픽)이 한 번에 확 들어와도 독의 밑구멍(서버 처리 속도)은 똑같이 초당 1방울씩만 물을 흘려보낸다. 물이 꽉 차서 넘치면 그 패킷은 버려진다.</li>
+<li><strong>특징</strong>: 토큰 버킷과 달리 폭주(Burst)를 아예 허락하지 않는다. 들어오는 속도는 지 맘대로여도, 서버가 일하는 속도를 100% 무자비하게 일정하게(Constant Rate) 강제하는 '평탄화'의 끝판왕.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-akitegceo-bangeomang-eodiseo-magaya-haneunga">2. 아키텍처 방어망: 어디서 막아야 하는가?</h3>
+<p>서버 내부(Spring)에서 막으면 하수다. 무조건 <strong>인프라 앞단</strong>에서 썰어버려야 한다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[ 해커의 1초 1만 번 DDoS 폭격 ]
+        │
+[ 1차 방벽: 클라우드 L7 WAF (Cloudflare, AWS WAF) ]
+   - &quot;어? 똑같은 IP가 초당 1,000번 들어오네? 캡차(CAPTCHA) 띄워!&quot; (절반 차단)
+        ▼
+[ 2차 방벽: API Gateway (Spring Cloud Gateway, Nginx) + Redis ]
+   - &quot;WAF를 뚫고 들어온 놈이네. JWT 토큰을 보니 &#x27;무료 등급&#x27; 유저네.
+      무료 유저는 분당 10번 제한 룰(Token Bucket)이야! 초과했네? 429 에러 퉤!&quot;
+        ▼ (극도로 정제되고 평화로운 트래픽만 통과)
+[ 백엔드 비즈니스 로직 (Spring Boot 서버) ]
+   - &quot;음~ 오늘도 트래픽이 잔잔하고 평화롭군~&quot;
+</code></pre>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 이 과정은 클럽 입구의 **'2중 기도(바운서)'**와 같습니다. 1차 바운서(WAF)는 골목 어귀에서 미친 듯이 뛰어오는 폭주족 무리를 몽둥이로 때려눕힙니다. 2차 바운서(API Gateway)는 클럽 문 바로 앞에서, 손님의 등급(VIP인지 일반인지)을 명부(Redis)와 대조하며 "일반 손님은 10분에 1명씩만 입장합니다!"라고 정밀하게 인원수(트래픽)를 조절합니다. 클럽 안(백엔드)의 사람들은 밖에서 전쟁이 났는지도 모른 채 쾌적하게 춤을 춥니다.</li>
+</ul>
+<hr />
+<h2 id="iii-yunghab-bigyo-mic-dagagdo-bunseog">Ⅲ. 융합 비교 및 다각도 분석</h2>
+<h3 id="1-rate-limiting-biyul-jehan-vs-throttling-seuroteulring-mog-joreugi">1. Rate Limiting (비율 제한) vs Throttling (스로틀링/목 조르기)</h3>
+<p>목적은 같지만, 대처하는 '온도(Attitude)'가 완전히 다르다.</p>
+<table><thead><tr><th style="text-align: left">척도</th><th style="text-align: left">Rate Limiting (비율 제한)</th><th style="text-align: left">Throttling (스로틀링)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>동작 방식</strong></td><td style="text-align: left">임계치 넘으면 <strong>즉시 칼같이 <code>429 Error</code> 뱉고 요청 찢어버림 (Drop)</strong></td><td style="text-align: left">임계치 넘으면 에러 안 내고, <strong>처리를 5초, 10초 뒤로 미친 듯이 지연시킴 (Delay)</strong></td></tr>
+<tr><td style="text-align: left"><strong>개발자/해커의 빡침</strong></td><td style="text-align: left">"아 제한 걸렸네! 좀 이따 다시 쏴야지!" (깔끔함)</td><td style="text-align: left">"아 왜 이렇게 응답이 안 와!!" 화면이 빙글빙글 돌면서 <strong>스레드/커넥션이 다 물려있어 말라 죽음</strong></td></tr>
+<tr><td style="text-align: left"><strong>적용 타겟</strong></td><td style="text-align: left">B2C 대고객 API (쇼핑몰 검색, 결제)</td><td style="text-align: left">B2B 파트너 API, 무차별 대입 공격(Brute-force) 로그인 창</td></tr>
+<tr><td style="text-align: left"><strong>비유</strong></td><td style="text-align: left">클럽 인원 다 찼다고 즉시 <strong>"오늘 영업 끝! 돌아가세요!"</strong> 팻말 꽂음</td><td style="text-align: left">줄 서 있는 손님들을 <strong>일부러 1명당 5분씩 깐깐하게 민증 검사하며 입장 지연</strong>시킴</td></tr>
+</tbody></table>
+<h3 id="gwamog-yunghab-gwanjeom">과목 융합 관점</h3>
+<ul>
+<li>
+<p><strong>보안 (A07 인증 실패 및 크리덴셜 스터핑 방어)</strong>: 508장에서 본 패스워드리스 시대 전까지, 해커는 봇을 돌려 로그인 창에 1초에 1만 개의 비번을 때려 박는다. 아키텍트는 로그인 창에 **점진적 스로틀링(Exponential Backoff Throttling)**을 융합시킨다. 1번 틀리면 1초 대기, 2번 틀리면 5초 대기, 5번 틀리면 1시간 대기! 해커가 슈퍼컴퓨터를 들고 와도, 서버가 고의로 응답(Response)을 늦게 줘버리니 1만 개를 다 치려면 100년이 걸리게 되어 해킹 자체를 수학적으로 파산시켜 버린다.</p>
+</li>
+<li>
+<p><strong>클라우드 / 데브옵스 (Redis 기반 분산 카운팅)</strong>: MSA 환경에 서버가 5대다. 1번 서버 메모리에서 "이 놈 10번 들어왔다"고 차단해도, 해커가 로드밸런서를 타고 2번 서버로 들어가면 2번 서버는 얘를 처음 본다. 그래서 아키텍트는 5대 서버의 메모리에 카운팅을 하지 않고, 외부의 <strong>초광속 인메모리 DB인 Redis</strong> 1대에 5대 서버가 다 같이 붙어서 <code>INCR(증가)</code> 명령어를 때리게 융합한다. 해커가 1번 서버로 5번, 2번 서버로 5번 들어와도 레디스가 귀신같이 합산해서 "총 10번! 차단!"을 완벽하게 동기화해 낸다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: <strong>Rate Limiting</strong>은 과속 단속 카메라입니다. 100km 넘으면 얄짤없이 1초 만에 플래시가 터지고 벌금(429 에러)을 때립니다. <strong>Throttling</strong>은 과속 방지턱 100개 연속 깔기입니다. 차를 부수진 않지만, 속도를 시속 10km로 덜덜덜 강제로 낮춰버려 폭주족(해커) 스스로가 답답해서 운전을 포기하게 만드는 영악한 감속 전술입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsajeog-pandan">Ⅳ. 실무 적용 및 기술사적 판단</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li>
+<p><strong>시나리오 — 악질 크롤러의 데이터 싹쓸이와 트래픽 마비</strong>: 경쟁사에서 파이썬 크롤링 봇(BeautifulSoup)을 만들어 우리 쇼핑몰의 상품 가격 10만 개를 매일 밤 12시에 미친 듯이 긁어간다. DB CPU가 100%를 쳤고, 구글 SEO 랭킹도 엉망이 됐다. 보안팀이 IP 기반 Rate Limiting을 걸었다. 며칠 뒤 크롤러가 AWS IP 수만 개를 1초마다 바꿔타는 '프록시 로테이팅(IP Rotating)' 꼼수를 썼다. IP 차단이 완전히 무력화되고 다시 서버가 터졌다.</p>
+<ul>
+<li><strong>아키텍트의 해결책</strong>: <strong>1차원적인 IP 의존적 차단(IP-based Limiting)의 붕괴</strong>다. 해커는 IP를 무한대로 세탁한다. 아키텍트는 2차, 3차의 고도화된 타겟팅을 엮어야 한다. IP 대신 <strong>JWT 토큰(User ID) 기반, 디바이스 핑거프린트(User-Agent 짬뽕 지문), 그리고 X-Forwarded-For 헤더 추적</strong>을 결합하여 다차원 Rate Limiting 룰셋을 API Gateway에 박아 넣어야 한다. 그리고 비회원이 미친 듯이 긁어댈 경우, 트래픽을 차단하는 대신 클라우드플레어(Cloudflare)의 <strong>행동 기반 캡차(Turnstile/CAPTCHA)</strong> 화면을 강제로 띄워 봇(Bot)의 뇌를 마비시키는 능동형 방패로 전환해야 한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>시나리오 — Redis 병목과 Rate Limiting의 아이러니 (장애 전파)</strong>: 트래픽을 막으려고 야심 차게 Redis 토큰 버킷을 깔았다. 블랙프라이데이 날 100만 명이 몰렸다. API Gateway가 100만 명의 트래픽을 컷오프하려고 Redis에 <code>INCR</code> 쿼리를 1초에 100만 번 날렸다. 정작 비즈니스 서버는 멀쩡한데, 제한을 걸려던 Redis 서버의 CPU가 100%를 치고 먼저 기절해 버렸다. Redis가 죽으니 게이트웨이 전체가 타임아웃에 걸려 사이트가 멸망했다. (보안 솔루션이 장애의 단일 지점, SPOF가 됨)</p>
+<ul>
+<li><strong>아키텍트의 해결책</strong>: <strong>중앙 집중식 카운터(Redis)의 극단적 성능 병목 현상</strong>이다. 아무리 Redis가 빨라도 초당 100만 번의 네트워크 I/O는 물리학적으로 불가능하다. 아키텍트는 트래픽이 임계점을 넘는 순간, 중앙 Redis를 쳐다보는 짓을 포기하고 <strong>로컬 캐시(Local Cache) 기반의 어림짐작 차단</strong>으로 뼈대를 스위칭해야 한다. 각 API Gateway 메모리 내부에 <code>Caffeine Cache</code>를 두고 대충 자기한테 들어온 것만 카운팅해서 차단하는 **'오차를 10% 정도 허용하는 분산 토큰 버킷 아키텍처'**로 타협(Trade-off)해야만 시스템 전체가 뻗는 파국을 면할 수 있다. 정확도를 버리고 생존(가용성)을 쟁취하는 결단이다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="doib-cekeuriseuteu">도입 체크리스트</h3>
+<ul>
+<li><strong>비즈니스적</strong>: <strong>고객 등급별(Tier) 차등 밸브(Quota)가 설계되어 있는가?</strong> 돈을 낸 VIP 유저와 갓 가입한 무료 유저의 제한 스피드가 같으면 비즈니스는 망한다. 무료 유저는 "1분당 10회", VIP 유저는 "1분당 1,000회"라는 다중 밸브 시스템을 아키텍처에 구현해야 한다. Spring Cloud Gateway 설정 파일에 <code>KeyResolver</code>를 꽂아 넣어, 밖에서 들어오는 JWT 토큰 안의 <code>role: VIP</code> 글자를 파싱한 뒤 서로 다른 Redis 토큰 버킷 룰을 적용시키는 '비즈니스 지능형 라우팅'이 필수 역량이다.</li>
+<li><strong>기술적</strong>: <strong>HTTP 응답 헤더(Response Header)에 매너를 갖추고 있는가?</strong> Rate Limiting에 걸렸다고 그냥 화면을 하얗게 뻗게(500 에러) 만들면, 착한 프론트엔드 앱은 무한 재시도(Retry) 폭격을 날려 디도스를 부채질한다. 아키텍트는 차단 시 무조건 상태 코드 <code>429 Too Many Requests</code>를 예쁘게 뱉고, 헤더에 <code>X-RateLimit-Limit: 100</code> (너의 한도), <code>X-RateLimit-Remaining: 0</code> (남은 횟수), <code>Retry-After: 60</code> (60초 뒤에 다시 와라!) 이 3가지 글로벌 멘트를 친절하게 적어 튕겨내야 클라이언트 앱이 60초 동안 얌전히 숨죽이고 기다리는(Exponential Backoff) 우아한 생태계가 굴러간다.</li>
+</ul>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p><strong>"프론트엔드 버튼(UI) 비활성화로 막았어요!" (클라이언트 맹신 안티패턴)</strong>: 이벤트 쿠폰 받기 버튼을 누르면 자바스크립트로 버튼을 5초간 회색으로 비활성화(<code>disabled=true</code>) 시켜서 연타(광클)를 막았다고 뿌듯해하는 안티패턴. (A01 권한 통제 안티패턴과 100% 동일함). 해커는 브라우저를 쓰지 않고 Postman이나 Jmeter를 켜서 백엔드 API <code>/coupon/issue</code> 주소로 1초에 1,000방 직사포를 날린다. <strong>Rate Limiting의 절대 진실의 방(Source of Truth)은 무조건 백엔드 서버(API Gateway) 앞단의 인프라 콘크리트 벽뿐이다.</strong></p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 프론트엔드 버튼 비활성화는 지하철역 입구에 <strong>'1초에 1명만 들어가세요'라고 안내 방송만 트는 것</strong>과 같습니다. 착한 시민은 말을 듣겠지만, 깡패 무리(해커)는 안내 방송을 씹고 우르르 밀고 들어가 표 검사원을 밟고 지나갑니다. API Gateway의 Rate Limiting은 지하철 입구에 아예 **'쇠창살로 된 삼발이 개찰구(물리적 통제)'**를 설치해버리는 것입니다. 깡패가 100명이 와서 밀어도 개찰구는 기계적으로 딱 1명 분의 틈만 열어주고 찰칵! 잠겨버립니다. 룰을 물리력으로 강제하는 아키텍처만이 가용성을 지킵니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">제한 없이 모든 API 트래픽을 DB 끝까지 다 받아줌 (AS-IS)</th><th style="text-align: left">L7 게이트웨이 앞단 Rate Limiting &amp; Throttling 융합 (TO-BE)</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">L7 디도스 및 매크로 이벤트 광클 시 DB Connection 폭발 뻗음</td><td style="text-align: left">초과 트래픽 즉시 429 컷오프(Cut-off)로 DB 평온 유지</td><td style="text-align: left">트래픽 폭주로 인한 <strong>서비스 셧다운(Downtime) 사태 100% 방어</strong></td></tr>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">크롤러의 무지성 스크래핑으로 월 AWS 트래픽 요금 1천만 원 낭비</td><td style="text-align: left">비정상 봇(Bot) 접근 차단 및 Throttling(지연)으로 말라 죽임</td><td style="text-align: left">오용 트래픽(Abuse) 근절로 <strong>클라우드 인프라 청구 비용 30% 감축</strong></td></tr>
+<tr><td style="text-align: left"><strong>정성</strong></td><td style="text-align: left">"이벤트 날 또 서버 터지면 어쩌지?" 개발팀 철야 대기 공포</td><td style="text-align: left">"1초에 1천 개까지만 딱 받고 나머진 버린다"는 굳건한 룰</td><td style="text-align: left">시스템 가용성(Availability)에 대한 <strong>아키텍트의 압도적 런타임 통제력 획득</strong></td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang">미래 전망</h3>
+<ul>
+<li><strong>AI 기반 적응형 비율 제한 (Adaptive / Behavioral Rate Limiting)</strong>: 기존 방식은 "1분에 100번" 이라는 멍청한 산수였다. 미래의 API Gateway는 딥러닝(AI) 엔진을 장착한다. "어? 오늘 블랙프라이데이라 정상 고객들이 미친 듯이 클릭해서 평소보다 트래픽이 3배 많네? 이거 디도스 아니고 진짜 장사 잘되는 거니까 내가 알아서 밸브 한도를 300번으로 임시로 쫙 열어줄게!" 반대로 "어? 트래픽은 적은데, 저 놈 마우스 궤적이 딱 봇(Bot) 냄새가 나네? 쟤는 10번만 불렀어도 모가지 잘라!" 라며 인간의 설정(Hardcoding) 없이 기계가 런타임 맥락(Context)을 씹어 먹으며 밸브를 오르락내리락하는 초지능형 오토 파일럿 시대로 진입 중이다.</li>
+<li><strong>엣지 컴퓨팅(Edge Computing)으로의 타격 원점 이동</strong>: 지금은 트래픽을 우리 회사의 API Gateway(클라우드 본진)까지 끌고 와서 막는다. 너무 늦고 비효율적이다. 미래의 방어선은 <strong>클라우드플레어(Cloudflare) Worker나 AWS Lambda@Edge</strong>를 통해 유저가 위치한 전 세계 엣지(Edge) 노드(통신사 기지국 근처)로 최전진 배치된다. 해커가 미국에서 폭격을 쏘면, 우리 한국 본진 서버까지 오지도 못하고 미국 현지 앞바다(Edge) 방파제에서 Rate Limiting 코드가 돌아가 즉사해 버리는 '초근접 원점 타격' 방어망이 완전한 표준으로 굳어질 것이다.</li>
+</ul>
+<h3 id="camgo-pyojun">참고 표준</h3>
+<ul>
+<li><strong>IETF Draft: RateLimit Header Fields for HTTP</strong>: "429 에러 뱉을 때 개발자 맘대로 헤더 이름 짓지 말고, <code>RateLimit-Limit</code>, <code>RateLimit-Remaining</code> 이라는 전 세계 공통 표준 헤더 포맷을 써서 기계끼리 소통하게 만들자!"라는 인터넷 표준화 기구의 율법.</li>
+<li><strong>OWASP API Security Top 10 (API4: Unrestricted Resource Consumption)</strong>: 2023년 API 보안 10계명에서 무려 4위로 급상승한 괴물. "자원 소비 제한 없음". API를 열어두고 밸브(Rate Limit)를 안 달아놔서 해커가 1억 번 호출하게 내버려 둬 회사가 클라우드 요금 폭탄으로 파산하는 비극을 경고하는 족보.</li>
+</ul>
+<p>API Rate Limiting과 Throttling은 소프트웨어 아키텍트가 쥐어야 할 **'생사여탈(生死與奪)의 절대 밸브'**다. 낭만적인 프로그래머들은 "우리 서버는 고객이 원하면 언제든, 무한대로 100% 다 처리해 줘야 해"라는 허황된 유토피아를 꿈꾸며 모든 인프라 문을 활짝 열어둔다. 해커와 봇(Bot) 무리들은 그 순진함을 비웃으며 초당 수만 번의 융단폭격으로 시스템의 심장(DB)을 갈기갈기 찢어놓는다. 기술사는 이 무질서한 낭만주의를 끝장내야 한다. 자원(CPU/Memory)은 유한하며, 평화를 지키는 유일한 방법은 차갑고 수학적인 '수량 통제'뿐이다. 밀려드는 파도를 두 팔로 막으려 하지 말고, 토큰 버킷(Token Bucket)이라는 거대한 방파제 틈새를 정교하게 설계하여, 오직 시스템이 소화할 수 있는 만큼의 깨끗한 바닷물만 백엔드의 호수로 부드럽게 흘려보내는 잔혹하지만 위대한 통제의 마에스트로, 그것이 극한의 가용성(Availability)을 수호하는 인프라 아키텍트의 숙명이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 이 밸브 설계는 거대한 댐의 **'비상 수문 조절'**과 같습니다. 폭우(디도스, 트래픽 폭주)가 쏟아진다고 수문을 다 열어버리면 하류의 마을(백엔드 DB와 비즈니스 서버)은 1초 만에 싹 다 물에 잠겨 멸망합니다. 아키텍트(댐 관리소장)는 상류 댐(API 게이트웨이)의 수문을 딱 마을이 버틸 수 있는 '초당 10톤(Rate Limit 10/s)' 높이로만 고정시켜 놓고, 나머지 넘치는 물은 가차 없이 댐 밖의 하수구(429 Error)로 버려버려야 합니다. 버려지는 물(차단된 요청)은 아깝지만, 마을(시스템 전체)이 살아남기 위한 유일하고도 가장 차가운 생존 법칙입니다.</li>
+</ul>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>API Gateway / 서킷 브레이커</strong></td><td style="text-align: left">Rate Limiting 밸브가 설치되는 물리적 장소. 뒤에 있는 연약한 50개의 MSA 꼬맹이들을 대신해서 대문 앞에서 몽둥이를 들고 트래픽을 썰어주는 든든한 맏형.</td></tr>
+<tr><td style="text-align: left"><strong>인증 및 세션 관리 (A07)</strong></td><td style="text-align: left">해커가 크리덴셜 스터핑(비번 1만 번 대입) 공격을 때릴 때, 로그인 API에 Throttling(틀릴수록 지연 시간 5초씩 증가)을 걸어버리면 해커의 해킹 속도를 거북이로 만들어버려 완벽히 파산시킨다. (이전 장 484번)</td></tr>
+<tr><td style="text-align: left"><strong>토큰 버킷 (Token Bucket) 알고리즘</strong></td><td style="text-align: left">"1초에 10번만 와라!"를 가장 예쁘고 효율적으로 구현한 수학적 흑마법. AWS WAF, Spring Cloud Gateway 등 전 지구적 인프라 통제망의 90%를 장악한 절대 표준 로직.</td></tr>
+<tr><td style="text-align: left"><strong>가용성 (Availability - CIA 3요소)</strong></td><td style="text-align: left">기밀성, 무결성과 함께 보안의 3대장. Rate Limiting이 존재하는 유일한 철학적 이유. "정보 안 털리면 뭐해, 서버가 뻗어서 손님이 결제를 못 하는데!"라는 비즈니스 붕괴(DDoS)를 막는 방패.</td></tr>
+<tr><td style="text-align: left"><strong>CAP 캡차 (CAPTCHA) / Turnstile</strong></td><td style="text-align: left">밸브(Limit)를 너무 세게 조여 정상인까지 다 튕겨 나갈 위기일 때 켜는 보완재. "너 봇(Bot) 아니지? 신호등 골라봐!" 사람의 눈알을 확인하여 봇의 폭격만 우아하게 걸러내는 2차 방어선.</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>우리 동네 인기 만점 아이스크림 가게(서버)가 문을 열었는데, 나쁜 욕심쟁이 아저씨(해커/봇)가 혼자서 1초 만에 아이스크림 1만 개를 달라고 소리치며(디도스) 앞을 가로막았어요!</li>
+<li>아이스크림 기계(DB)가 펑 터질 뻔했고 뒤에 줄 선 진짜 꼬마 손님들은 아이스크림을 하나도 못 먹고 울고 있었죠.</li>
+<li>화가 난 사장님이 입구에 **"1사람당 1분에 딱 2개까지만 주문 가능! 더 달라고 떼쓰면 쫓아냄!"**이라는 깐깐한 규칙 기계(API 게이트웨이)를 달아서, 모두가 평화롭게 아이스크림을 먹게 지켜주는 훌륭한 방법을 **'비율 제한(Rate Limiting)'**이라고 부른답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

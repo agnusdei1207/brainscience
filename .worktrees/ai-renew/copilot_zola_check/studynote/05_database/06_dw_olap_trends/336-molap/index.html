@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>336. MOLAP (Multidimensional OLAP) - 다차원 큐브(Cube) 사전 생성 구조, 초고속 검색, 큐브 갱신 비용 큼 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <blockquote>
+<p><strong>💡 핵심 인사이트</strong>
+MOLAP(Multidimensional OLAP)은 <strong>"다차원 큐브(Multidimensional Cube)를 물리적으로 사전 생성하여 저장하는"</strong> OLAP 방식입니다.
+사용자가 "<em>2023년 3분기 서울 지역 카테고리별 매출</em>"이라는 질의를 던지면, MOLAP은 <strong>미리 계산된 큐브에서 바로 값을 추출</strong>합니다. 디스크에서 실시간 계산하는 것이 아니라, <strong>사전 계산된 결과를 메모리에서 빠르게 반환</strong>합니다. 그러나 <strong>큐브 갱신(Cube Refresh) 비용이 크고, 저장 공간이 많이 필요</strong>하다는 단점이 있습니다.</p>
+</blockquote>
+<hr />
+<h2 id="i-olapyi-se-gaji-yuhyeong-molap-rolap-holap">Ⅰ. OLAP의 세 가지 유형: MOLAP, ROLAP, HOLAP</h2>
+<p>OLAP(온라인 분석 처리)는 그 구현 방식에 따라 세 가지 유형으로 나뉩니다.</p>
+<p>**ROLAP(Relational OLAP)**은 관계형 데이터베이스의 테이블에 저장된 데이터를 <strong>그대로 SQL 질의로 분석</strong>합니다. 별도의 다차원 구조를 만들지 않고, 정규화된 테이블을 조인하여 결과를 계산합니다. "_대용량 데이터_에 적합하지만, _고속 응답_에는 불리"합니다.</p>
+<p>**MOLAP(Multidimensional OLAP)**은 **전용 다차원 데이터 구조(멀티다imensional 큐브)**를 생성합니다. 이 큐브는 디스크에 저장되기 전, <strong>메모리 내에서 미리 계산</strong>되어집니다. "_최고의 질의 성능_을 제공하지만, _데이터 갱신 시 전체 큐브 재계산_이 필요"합니다.</p>
+<p>**HOLAP(Hybrid OLAP)**은 두 방식의 <strong>장점만 취합</strong>합니다. 기본 데이터는 ROLAP처럼 관계형 테이블에 저장하고, <strong>자주 사용되는 집계만 MOLAP처럼 사전 계산</strong>합니다.</p>
+<pre><code>[세 가지 OLAP 방식의 비교]
+
+┌────────────────────────────────────────────────────────────────────┐
+│                        OLAP 아키텍처 비교                            │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  MOLAP:                                                            │
+│  ┌──────────────────────────────────────┐                          │
+│  │  [다차원 큐브 (사전 계산된 구조)]       │                          │
+│  │  ┌────┐ ┌────┐ ┌────┐                │                          │
+│  │  │Cube│ │Cube│ │Cube│  ← 메모리&#x2F;디스크 │                          │
+│  │  └────┘ └────┘ └────┘                │                          │
+│  │  → 초고속 읽기, 느린 갱신               │                          │
+│  └──────────────────────────────────────┘                          │
+│                                                                    │
+│  ROLAP:                                                            │
+│  ┌──────────────────────────────────────┐                          │
+│  │  [관계형 테이블 (정규화&#x2F;비정규화)]       │                          │
+│  │  ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐  │                          │
+│  │  │Table│ │Table│ │Table│ │Table│ │Table│ │                          │
+│  │  └────┘ └────┘ └────┘ └────┘ └────┘  │                          │
+│  │  → 실시간 데이터, 읽기 성능 저하         │                          │
+│  └──────────────────────────────────────┘                          │
+│                                                                    │
+│  HOLAP:                                                            │
+│  ┌──────────────────────────────────────┐                          │
+│  │  [ROLAP 기본 테이블] + [MOLAP 집계]     │                          │
+│  │  ┌────┐ ┌────┐      ┌────┐           │                          │
+│  │  │Table│ │Table│    │Aggre│ 게이트   │                          │
+│  │  └────┘ └────┘      │gate │           │                          │
+│  │  → 균형형, 복잡한 구현           │          │
+│  └──────────────────────────────────────┘                          │
+└────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h2 id="ii-molap-kyubeuyi-naebu-gujo-sel-cell-wa-caweon">Ⅱ. MOLAP 큐브의 내부 구조: 셀(Cell)와 차원</h2>
+<p>MOLAP 큐브의 기본 단위는 **셀(Cell)**입니다. 각 셀은 <strong>여러 차원의 교차점</strong>에 위치하며, 해당하는 측정값(Measure)을 저장합니다.</p>
+<pre><code>[3차원 판매 큐브의 구조]
+
+        제품 (노트북, 모니터, 키보드, 마우스)
+        │
+        │ 0   1   2   3   (셀 주소: 제품 인덱스)
+    ───┼────────────────────────────
+    0  │ 100  80  60  40   ← 시간=2024Q1
+시간  1  │ 110  90  65  45   ← 시간=2024Q2
+    2  │ 120  95  70  50   ← 시간=2024Q3
+    │
+    └──&gt; 지역 (서울, 부산, 대구)
+           │
+           │  메모리에 로드된 다차원 배열
+           │  [Time][Region][Product] = 매출액
+           │
+           │  예: Sales[0][0][1] = 80
+           │  (2024Q1, 서울, 모니터)의 매출액 = 80백만원
+
+디스크에는 압축된 희소 배열(Sparse Array) 형식으로 저장
+인덱스를 통해 해당 차원 좌표에 빠르게 접근
+</code></pre>
+<p><strong>MOLAP 저장 구조의 특징:</strong></p>
+<ol>
+<li>
+<p><strong>밀집 배열(Dense Array)</strong>: 모든 차원 좌표 조합에 대해 셀 값이 존재하는 경우 사용합니다. 메모리 효율이 좋지만, 실제 값이 없는 셀에도 공간을 할당해야 합니다.</p>
+</li>
+<li>
+<p><strong>희소 배열(Sparse Array)</strong>: 실제 값이 존재하는 셀만 인덱싱합니다. 데이터가 희소할 때(많은 조합에 값이 없는 경우) 공간을 크게 절약합니다. <strong>MOLAP 엔진은 주로 희소 배열을 사용</strong>합니다.</p>
+</li>
+<li>
+<p><strong>압축 기법</strong>: 반복되는 값을 압축하거나, 값의 리스트와 오프셋을管理等方法来减少存储空间.</p>
+</li>
+</ol>
+<hr />
+<h2 id="iii-molapyi-sajeon-gyesan-jibgyewa-kyubeu-ceori">Ⅲ. MOLAP의 사전 계산: 집계와 큐브 처리</h2>
+<p>MOLAP의 最大 강점은 **사전 계산된 집계(Aggregate)**입니다.</p>
+<p>"<em>2024년 전체 매출</em>, <em>2024년 분기별 매출</em>, <em>2024년 월별 매출</em>, <em>지역별 매출</em>, <em>제품 카테고리별 매출</em>, <em>분기×지역 매출</em>, <em>분기×제품 매출</em>, ..." 모든 조합의 합계, 평균, 카운트 등이 <strong>큐브 생성 시 한 번에 계산</strong>되어 저장됩니다.</p>
+<pre><code>[사전 계산된 집계 계층]
+
+Level 0 (기본): 일별&#x2F;매장별&#x2F;제품별 매출
+   Sales[2024-01-15][서울지점][노트북X] = 5,000,000원
+
+Level 1 (월 집계): 월별&#x2F;매장별&#x2F;제품별 매출
+   Sales[2024-01][서울지점][노트북X] = Σ(2024-01-xx)
+                                 = 150,000,000원
+
+Level 2 (분기 집계): 분기별&#x2F;매장별&#x2F;제품별 매출
+   Sales[2024Q1][서울지점][노트북X] = Σ(2024-01, 2024-02, 2024-03)
+                                   = 450,000,000원
+
+Level 3 (연도 집계): 연도별&#x2F;매장별&#x2F;제품별 매출
+   Sales[2024][서울지점][노트북X] = Σ(2024Q1, Q2, Q3, Q4)
+                                 = 1,800,000,000원
+
+사용자가 &quot;2024년 서울지점 노트북X 매출&quot; 조회 시
+→ Level 3의 미리 계산된 값을 즉시 반환 (추가 계산 불필요)
+</code></pre>
+<p><strong>집계 설계의Trade-off:</strong>
+모든 가능한 조합을 사전 계산하면 <strong>최고의 성능</strong>을 얻을 수 있지만, <strong>저장 공간이 폭발적으로 증가</strong>합니다. "<em>n개 차원에 대해 각 차원의 카디널리티가 k이면</em>, _ k^n개의 셀이 존재_"하게 됩니다. 따라서 MOLAP 시스템은 <strong>액세스 패턴과 사용 빈도를 분석하여</strong> 일부 집계만 사전 계산하는 것이 일반적입니다.</p>
+<hr />
+<h2 id="iv-molapyi-jangjeomgwa-danjeom-seongneunggwa-yuyeonseongyi-gyunhyeong">Ⅳ. MOLAP의 장점과 단점: 성능과 유연성의 균형</h2>
+<p><strong>장점:</strong></p>
+<p><strong>1. 비범위적인 질의 성능</strong>
+사전 계산된 집계 덕분에, 어떤 차원의 조합으로 분석하든 <strong>대부분의 질의가 수 밀리초 내외로 응답</strong>됩니다. 복잡한 다중 차원 분석도 빠르게 처리됩니다.</p>
+<p><strong>2. 다차원 연산의native 지원</strong>
+MOLAP은 설계부터 <strong>슬라이스, 다이스, 드릴다운, 롤업, 피벗</strong> 등의 OLAP 연산을 위해 만들어졌으므로,これらの 연산을 별도의 복잡한 SQL 없이 <strong>기본 기능으로 제공</strong>합니다.</p>
+<p><strong>3. 메모리 내 분석 가능</strong>
+미리 계산된 데이터 구조가 크지만, <strong>인메모리(In-Memory) 기술</strong>과 결합되면 디스크 I/O 없이 메모리 내에서만 분석이 가능합니다.</p>
+<p><strong>단점:</strong></p>
+<p><strong>1. 긴 큐브 처리 시간</strong>
+새로운 데이터가 추가되거나 변경되면 <strong>전체 또는 부분 큐브를 재계산</strong>해야 합니다. 데이터 규모가 크면 이 처리 시간이 수 시간에 달할 수 있습니다.</p>
+<p><strong>2. 저장 공간 요구</strong>
+사전 계산된 모든 집계는 <strong>별도의 저장 공간</strong>을 차지합니다. 차원이 많고 카디널리가 높을수록 필요한 공간이 기하급수적으로 증가합니다.</p>
+<p><strong>3. 데이터 Freshness</strong>
+갱신 주기가 길면 <strong>분석 데이터가 실시간에 가깝지 못할 수</strong> 있습니다. 이를 해결하기 위해 증분 처리(Incremental Processing) 기능을 지원하는 MOLAP 도구도 있습니다.</p>
+<p><strong>4. 데이터 모델 변경의 어려움</strong>
+새로운 차원 추가, 기존 차원의 새로운 속성 추가 등이 <strong>큐브 구조 자체를 변경</strong>해야 하므로, 유연성이 낮습니다.</p>
+<hr />
+<h2 id="v-molapyi-silje-jeogyonggwa-loudspeaker-biyu">Ⅴ. MOLAP의 실제 적용과 📢 비유</h2>
+<p><strong>주요 MOLAP 도구:</strong></p>
+<ul>
+<li><strong>Microsoft SQL Server Analysis Services (SSAS)</strong>: Microsoft's MOLAP 엔진</li>
+<li><strong>SAP BW/4HANA</strong>: SAP의エンタープ라이즈 MOLAP</li>
+<li><strong>Oracle OLAP</strong>: Oracle의 다차원 분석 옵티마이저</li>
+<li><strong>IBM Cognos Analytics</strong>: IBM의 엔터프라이즈 BI/OLAP</li>
+</ul>
+<p><strong>MOLAP 선택 시 고려사항:</strong></p>
+<ul>
+<li><strong>데이터 규모</strong>: 수천만 건 이하의 데이터에 적합. 그 이상은 처리 시간이 과도하게 길어짐</li>
+<li><strong>갱신 빈도</strong>: 일별/주별 배치로 충분한 환경에 적합. 실시간 분석이 필요하면 ROLAP 또는 HOLAP 고려</li>
+<li><strong>분석 패턴</strong>:事前 예측 가능한固定된 분석 패턴에 적합. Ad-hoc 분석이 많으면 유연성 부족</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유:</strong> MOLAP은 **"미리 조리된 식재료와 완제품 냉동食品에 비유"**할 수 있습니다. 새 레스토랑에서 고객이 주문할 때마다 식재료를 손질하고 조리하면(ROLAP) 시간이 오래 걸립니다. 그러나 <strong>완제품을 미리 조리해 냉동해 두면</strong>(MOLAP), 손님이 주문하면 전자레인지에 돌려几分钟 만에 제공할 수 있습니다.美味하지만, <strong>메뉴 변경(새로운 차원/속성 추가) 시에는 완제품을 다시 조리</strong>해야 하는 번거로움이 있습니다. 음식의鲜도유지 기간처럼, MOLAP도 데이터의新鲜도를 관리하는 것이 중요합니다.</p>
+</blockquote>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

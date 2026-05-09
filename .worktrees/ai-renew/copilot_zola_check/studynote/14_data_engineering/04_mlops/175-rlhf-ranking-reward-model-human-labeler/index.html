@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>175. Reinforcement Learning from Human Feedback (RLHF) 기반 랭킹 선호 모델과 인간 라벨러 루프 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote data engineering
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: Reinforcement Learning from Human Feedback (RLHF)는 인간 라벨러의 상대적 선호를 보상 신호로 바꿔, 언어모델이 "자연스러운 문장"을 넘어 "사람이 더 낫다고 느끼는 답"을 학습하게 만드는 정렬 기법이다.</li>
+<li><strong>가치</strong>: 절대 점수보다 쌍대 비교(pairwise ranking)가 일관된 데이터를 만들기 쉬워, 유용성·무해성·정직성 같은 인간 기준을 확률 모델 위에 추가로 얹을 수 있다.</li>
+<li><strong>판단 포인트</strong>: RLHF의 병목은 알고리즘보다 데이터 운영이다. 어떤 프롬프트를 뽑고, 후보 응답을 얼마나 다양하게 만들고, 라벨러 품질과 보상 해킹을 어떻게 관리하느냐가 성패를 가른다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>RLHF는 거대 언어 모델 (Large Language Model, LLM)이 "다음 토큰을 잘 맞히는 능력"과 "사람이 선호하는 응답을 만드는 능력"이 다르다는 문제에서 출발한다. Supervised Fine-Tuning (SFT)만으로도 모델은 그럴듯한 문장을 만들 수 있지만, 친절함·간결함·안전한 거절·맥락에 맞는 판단 같은 요소는 단순 정답 데이터만으로 충분히 표현되지 않는다. 특히 여러 답이 모두 문법적으로 맞는 상황에서는 어떤 답이 더 좋은지 사람의 상대적 선호가 따로 필요하다.</p>
+<p>예를 들어 같은 질문에 대해 두 개의 답이 모두 자연스러워 보여도, 하나는 장황하고 책임을 회피하고 다른 하나는 핵심과 대안을 함께 담을 수 있다. 언어모델 확률만 보면 둘 다 "가능한 문장"이지만, 사용자 입장에서는 분명 선호 순위가 갈린다. RLHF는 სწორედ 이 간극을 데이터로 수집해 모델 행동을 조정한다.</p>
+<p>아래 그림은 왜 랭킹 데이터가 필요한지를 직관적으로 보여준다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────────┐
+│                 Preference appears between good answers             │
+├──────────────────────────────────────────────────────────────────────┤
+│ Prompt: &quot;상사에게 일정 지연 사과 메일 초안을 써줘&quot;                 │
+│ A: 장황하고 책임 회피가 섞인 답변                                  │
+│ B: 사유, 영향, 보완 계획이 짧게 정리된 답변                        │
+│                                                                      │
+│ Language model likelihood: A and B can both look fluent             │
+│ Human preference: B &gt; A                                              │
+└──────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>즉 RLHF의 필요성은 모델이 틀린 문장을 고치는 데 있지 않다. 이미 맞는 문장들 사이에서 "어느 답이 더 사람다운가"를 고르게 하는 데 있다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 시험에서 오답 하나를 고르는 문제는 쉬워도, 정답 후보 두 개 중 더 모범답안을 고르는 일은 선생님의 채점 기준이 필요하다. RLHF는 그 채점 기준을 데이터로 만드는 과정이다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>RLHF 파이프라인은 보통 네 단계로 본다. 먼저 SFT 모델을 준비하고, 그 모델이 여러 후보 답안을 생성하게 만든다. 그다음 인간 라벨러가 후보들을 순위화하거나 최소한 <code>chosen</code>과 <code>rejected</code> 쌍으로 비교한다. 이 선호 데이터로 Reward Model (보상 모델)을 학습하거나, Direct Preference Optimization (DPO)처럼 선호 데이터에서 바로 정책을 최적화한다. PPO (Proximal Policy Optimization)를 쓰는 전통 RLHF는 마지막 단계에서 보상 최대화와 Kullback-Leibler Divergence (KL Divergence) 제약을 함께 둔다.</p>
+<p>아래 그림은 선호 랭킹 데이터가 정책 업데이트로 이어지는 루프를 요약한다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────────┐
+│                    RLHF preference-learning loop                    │
+├──────────────────────────────────────────────────────────────────────┤
+│ prompt sample                                                        │
+│     │                                                                │
+│     ├─&gt; policy generates N responses                                 │
+│     │                                                                │
+│     ├─&gt; human labeler ranks &#x2F; picks better answer                    │
+│     │                                                                │
+│     ├─&gt; (chosen, rejected) pairs                                     │
+│     │                                                                │
+│     ├─&gt; reward model r(x, y)  or  direct preference optimization     │
+│     │                                                                │
+│     └─&gt; updated policy -&gt; new responses -&gt; re-evaluation             │
+└──────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">구성 요소</th><th style="text-align: left">역할</th><th style="text-align: left">설계 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">Prompt Sampling</td><td style="text-align: left">어떤 질문군을 학습할지 결정</td><td style="text-align: left">실제 사용자 분포, 위험 질문, 장문/단문 균형</td></tr>
+<tr><td style="text-align: left">Candidate Generation</td><td style="text-align: left">비교할 후보 응답 생성</td><td style="text-align: left">온도, Best-of-N, 다양성 확보</td></tr>
+<tr><td style="text-align: left">Human Labeler Loop</td><td style="text-align: left">선호 쌍 또는 순위 부여</td><td style="text-align: left">가이드라인, 블라인드 평가, 품질 검수</td></tr>
+<tr><td style="text-align: left">Reward Model</td><td style="text-align: left">선호 순서를 스칼라 보상으로 근사</td><td style="text-align: left">과최적화 방지, 길이 편향 감시</td></tr>
+<tr><td style="text-align: left">Policy Optimization</td><td style="text-align: left">보상을 높이도록 정책 갱신</td><td style="text-align: left">PPO의 KL 제약 또는 DPO 사용</td></tr>
+<tr><td style="text-align: left">Evaluation</td><td style="text-align: left">오프라인·온라인 품질 검증</td><td style="text-align: left">Win Rate, 안전성, 사실성, 비용</td></tr>
+</tbody></table>
+<p>쌍대 비교가 자주 쓰이는 이유도 여기 있다. 인간은 "5점 만점에 몇 점인가"보다 "A와 B 중 무엇이 더 나은가"를 더 일관되게 판단하는 편이다. 보상 모델은 이를 바탕으로 <code>P(A ≻ B | x) = σ(r(x,A) - r(x,B))</code> 같은 Bradley-Terry 계열 구조로 학습할 수 있다. 이때 라벨링 지침이 모호하면 보상 모델은 사람 선호가 아니라 라벨러의 습관을 학습하게 된다.</p>
+<p>전통 RLHF에서 PPO를 쓰는 이유는 탐색을 허용하기 위해서다. 다만 보상만 무작정 높이면 모델이 지나치게 장황해지거나 보상 모델의 허점을 파고드는 Reward Hacking이 생길 수 있으므로, 기준 정책과 너무 멀어지지 않도록 KL 패널티를 둔다. 즉 RLHF는 강화학습이라기보다 <strong>인간 선호를 안전하게 증폭하는 제약된 최적화</strong>에 가깝다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: RLHF는 학생에게 모범답안 한 장만 주는 교육이 아니라, 답안 여러 개를 보여 주고 선생님이 무엇을 더 좋아하는지 반복해서 알려 주는 교육이다. 학생은 그 선호를 배우며 점점 더 "좋은 답" 쪽으로 습관을 바꾼다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>RLHF를 정확히 이해하려면 SFT, DPO, Reinforcement Learning from Artificial Intelligence (AI) Feedback (RLAIF)과의 차이를 함께 봐야 한다. SFT는 정답 예시를 모방하는 데 강하지만 선호의 미세한 차이를 반영하기 어렵고, RLHF는 보상 모델과 정책 최적화를 통해 선호를 더 적극적으로 반영한다. DPO는 선호 쌍만으로 더 단순하게 학습하며, RLAIF는 인간 대신 강한 모델의 판단을 보조 신호로 활용한다.</p>
+<table><thead><tr><th style="text-align: left">방식</th><th style="text-align: left">학습 신호</th><th style="text-align: left">장점</th><th style="text-align: left">약점</th><th style="text-align: left">적합 상황</th></tr></thead><tbody>
+<tr><td style="text-align: left">SFT</td><td style="text-align: left">정답 데모</td><td style="text-align: left">구현 단순, 안정적</td><td style="text-align: left">선호 미세 조정 한계</td><td style="text-align: left">기본 지시 수행, 초기 모델</td></tr>
+<tr><td style="text-align: left">RLHF (PPO)</td><td style="text-align: left">인간 선호 → 보상 모델 → 정책 최적화</td><td style="text-align: left">탐색 가능, 정렬 성능 높음</td><td style="text-align: left">구현 복잡, 비용 큼</td><td style="text-align: left">대화형 모델 정렬, 복합 보상</td></tr>
+<tr><td style="text-align: left">DPO</td><td style="text-align: left">선호 쌍에서 직접 최적화</td><td style="text-align: left">단순하고 안정적</td><td style="text-align: left">탐색/온라인 적응은 제한적</td><td style="text-align: left">선호 데이터가 충분한 후속 튜닝</td></tr>
+<tr><td style="text-align: left">RLAIF</td><td style="text-align: left">AI 판정 기반 선호</td><td style="text-align: left">확장성 좋음, 비용 절감</td><td style="text-align: left">모델 편향 전이 위험</td><td style="text-align: left">인간 평가 보강, 대규모 재평가</td></tr>
+</tbody></table>
+<p>또 하나의 비교 축은 <strong>평가 방식</strong>이다. 절대 점수형 레이블은 기준 편차가 크고 라벨러마다 3점·4점 사용 습관이 달라질 수 있다. 반면 Pairwise Ranking은 판단 기준을 상대화해 일관성을 높인다. 대신 후보 생성이 단조로우면 의미 있는 선호 정보가 적어지므로, 후보 다양성을 확보하는 샘플링 전략이 같이 필요하다.</p>
+<p>이 구조는 추천 시스템의 Learning to Rank와도 닮아 있다. 다만 RLHF는 클릭률만 보는 것이 아니라, 안전성·사실성·협조성처럼 다차원적 인간 가치를 함께 다뤄야 한다는 점이 더 어렵다. 그래서 보상 모델 하나가 모든 가치를 완벽히 대변한다고 보기보다, 정렬 파이프라인의 중간 근사치로 이해해야 한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: SFT는 모범답안 베껴 쓰기 연습이고, RLHF는 여러 답안 중 선생님이 더 좋아하는 답을 반복해서 배우는 과정이다. DPO는 채점표만 보고 바로 연습하는 지름길이고, RLAIF는 선배 조교가 대신 채점해 주는 방식에 가깝다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p>실무에서 RLHF의 난점은 모델보다 운영이다. 어떤 프롬프트를 샘플링할지 잘못 정하면, 모델은 자주 쓰는 질문이 아니라 평가하기 쉬운 질문만 잘하게 된다. 후보 응답이 지나치게 비슷하면 라벨러는 의미 있는 순위를 매기기 어렵고, 반대로 너무 품질이 낮으면 보상 모델이 미세한 선호를 배우지 못한다. 결국 데이터 수집, 라벨러 품질 관리, 안전성 통제가 핵심 운영 과제가 된다.</p>
+<table><thead><tr><th style="text-align: left">운영 체크포인트</th><th style="text-align: left">왜 중요한가</th><th style="text-align: left">권장 판단</th></tr></thead><tbody>
+<tr><td style="text-align: left">프롬프트 샘플링</td><td style="text-align: left">실제 서비스 분포를 반영해야 함</td><td style="text-align: left">운영 로그, 위험 질문, 장문 태스크를 함께 섞는다.</td></tr>
+<tr><td style="text-align: left">후보 다양성</td><td style="text-align: left">선호 신호의 정보량 결정</td><td style="text-align: left">Temperature, Best-of-N, 정책 버전 혼합으로 차이를 만든다.</td></tr>
+<tr><td style="text-align: left">라벨러 품질</td><td style="text-align: left">보상 모델의 기준선</td><td style="text-align: left">골든셋, 교차 검수, 불일치 분석을 정기 수행한다.</td></tr>
+<tr><td style="text-align: left">안전 콘텐츠 처리</td><td style="text-align: left">평가자 보호와 규정 준수</td><td style="text-align: left">민감 주제는 별도 가이드와 에스컬레이션 경로를 둔다.</td></tr>
+<tr><td style="text-align: left">보상 해킹 감시</td><td style="text-align: left">길이 편향, 아첨 편향 방지</td><td style="text-align: left">Win Rate와 응답 길이 상관관계, KL Drift를 함께 본다.</td></tr>
+</tbody></table>
+<p>아래 흐름은 어떤 선호 학습 방식을 선택할지 실무적으로 판단하는 기준이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────────┐
+│                 Preference optimization decision                    │
+├──────────────────────────────────────────────────────────────────────┤
+│ enough human preference pairs?                                       │
+│   ├─ no  -&gt; collect &#x2F; bootstrap with SFT or RLAIF                    │
+│   ├─ yes + simple pipeline wanted -&gt; DPO first                       │
+│   ├─ yes + reward shaping &#x2F; exploration needed -&gt; RLHF with PPO      │
+│   └─ label budget too small -&gt; AI assist + human audit               │
+└──────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>판단 포인트는 세 가지로 요약된다. 첫째, <strong>라벨링 기준의 명확성</strong>이 모델 구조보다 우선이다. "좋은 답"의 정의가 모호하면 RLHF는 편향만 증폭한다. 둘째, <strong>DPO와 RLHF를 구분해야 한다</strong>. 선호 쌍이 이미 충분하고 안정적이면 DPO가 더 단순할 수 있지만, 탐색과 복합 보상 설계가 필요하면 RLHF가 여전히 유리하다. 셋째, <strong>라벨러 운영 비용과 심리 부담</strong>을 설계 안에 포함해야 한다. 유해 콘텐츠 평가를 대규모로 다루는 조직은 보호 장치 없이는 지속 가능하지 않다.</p>
+<p>기술사 답안에서는 RLHF를 "인간 피드백으로 강화학습한다" 수준에서 멈추지 말고, <strong>프롬프트 샘플링, 후보 생성, Pairwise Ranking, Reward Model, KL 제약, 보상 해킹, 라벨러 품질 관리</strong>까지 연결해 설명해야 깊이가 생긴다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 학원을 운영할 때도 문제집만 좋다고 끝나지 않는다. 어떤 문제를 뽑고, 선생님이 어떻게 채점하고, 학생이 꼼수를 쓰지 못하게 어떤 규칙을 둘지가 성적을 좌우한다. RLHF도 바로 그런 운영 설계의 문제다.</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>RLHF가 잘 작동하면 모델은 단순히 자연스러운 문장을 넘어서, 사용자가 더 선호하는 응답 패턴을 안정적으로 낸다. 도움말의 밀도, 거절의 안전성, 대화의 친절함, 불확실성 표현 같은 영역에서 품질 차이가 뚜렷하게 나타난다. 특히 동일한 기반 모델이라도 선호 데이터와 보상 설계가 좋으면 체감 품질이 크게 달라질 수 있다.</p>
+<p>하지만 한계도 분명하다. 인간 선호는 문화와 맥락에 따라 달라지고, 라벨러 집단이 바뀌면 보상 모델의 성격도 달라진다. 또한 Reward Hacking, 길이 편향, 과도한 순응성, 사실성 저하 같은 부작용이 생길 수 있다. 따라서 RLHF는 "한 번 학습해 끝나는 기술"이 아니라, 지속적으로 평가·수정·재수집하는 데이터 운영 루프로 봐야 한다.</p>
+<p>결국 이 주제의 핵심은 강화학습 알고리즘 그 자체보다, 인간 선호를 신뢰할 수 있는 랭킹 데이터로 만들고 그 데이터를 안전하게 정책 개선에 연결하는 데 있다. RLHF는 모델 학습이면서 동시에 평가 체계와 라벨링 공정의 설계다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 좋은 코치를 둔 운동선수는 무작정 연습량만 늘리지 않는다. 어떤 동작이 더 좋은지 세밀한 피드백을 받고, 그 피드백이 쌓이면서 실력이 방향 있게 좋아진다. RLHF는 AI에게 그런 코치를 붙이는 일이다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">SFT (Supervised Fine-Tuning)</td><td style="text-align: left">RLHF 이전 단계에서 기본 지시 수행 능력을 만든다.</td></tr>
+<tr><td style="text-align: left">Pairwise Ranking</td><td style="text-align: left">인간이 절대 점수보다 일관되게 선호를 표현하기 쉬운 데이터 형식이다.</td></tr>
+<tr><td style="text-align: left">Reward Model</td><td style="text-align: left">선호 순서를 스칼라 보상으로 근사해 정책 최적화의 기준을 제공한다.</td></tr>
+<tr><td style="text-align: left">PPO (Proximal Policy Optimization)</td><td style="text-align: left">보상 최대화와 KL 제약을 함께 두는 전통 RLHF 최적화 방식이다.</td></tr>
+<tr><td style="text-align: left">DPO (Direct Preference Optimization)</td><td style="text-align: left">보상 모델 없이 선호 쌍으로 직접 정책을 조정하는 단순화 대안이다.</td></tr>
+<tr><td style="text-align: left">RLAIF (Reinforcement Learning from AI Feedback)</td><td style="text-align: left">인간 라벨 부족을 보완하기 위해 AI 평가를 활용하는 확장 방식이다.</td></tr>
+<tr><td style="text-align: left">Reward Hacking</td><td style="text-align: left">모델이 사람 선호가 아니라 보상 모델의 허점을 공략하는 현상이다.</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">Supervised fine-tuning
+    │
+    ▼
+Candidate response sampling
+    │
+    ▼
+Human preference ranking and gold-set validation
+    │
+    ▼
+Reward model or direct preference optimization
+    │
+    ▼
+Aligned LLM with continuous feedback loop
+</code></pre>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>RLHF는 AI에게 여러 답안을 보여 주고 사람 선생님이 "이 답이 더 좋아"라고 계속 알려 주는 공부법이에요.</li>
+<li>AI는 그 순서를 배우면서 그냥 말이 되는 답보다 사람이 더 좋아하는 답을 하려고 해요.</li>
+<li>그래서 선생님이 무엇을 좋은 답이라고 보는지 잘 정하는 것이 아주 중요해요.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

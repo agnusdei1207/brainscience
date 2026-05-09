@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>315. NoSQL BASE 결과적 일관성 CAP 정리 트레이드오프 (NoSQL BASE CAP Theorem) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote enterprise systems
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: CAP 정리는 분산 시스템이 Consistency(일관성), Availability(가용성), Partition Tolerance(분단 내성) 셋 중 둘만 동시에 완전히 보장할 수 있다는 이론이다.</li>
+<li><strong>가치</strong>: BASE (Basically Available, Soft state, Eventually consistent)는 CAP의 AP 선택 결과로, 높은 가용성과 수평 확장을 택하는 대신 일시적 불일관성을 허용한다.</li>
+<li><strong>판단 포인트</strong>: 금융 거래·재고 관리는 ACID/CP가 필수이고, 소셜 피드·장바구니는 BASE/AP로 가용성 우선이 적합하다.</li>
+</ol>
+</blockquote>
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>단일 서버 관계형 DB는 ACID (Atomicity, Consistency, Isolation, Durability) 트랜잭션으로 강한 일관성을 보장한다.
+그러나 수평 확장이 필요한 분산 시스템에서는 네트워크 분단(Partition)이 반드시 발생하므로, Eric Brewer가 2000년에 발표한 CAP 정리에 따라 C 또는 A 중 하나를 타협해야 한다.</p>
+<p>CAP 정리 3 속성:</p>
+<ul>
+<li><strong>Consistency (C)</strong>: 모든 노드가 동일 시점에 동일 데이터를 봄</li>
+<li><strong>Availability (A)</strong>: 모든 요청이 응답을 받음 (오류 없이)</li>
+<li><strong>Partition Tolerance (P)</strong>: 네트워크 분단 상황에서도 동작 지속</li>
+</ul>
+<p>실제 분산 시스템에서 P는 포기할 수 없으므로 CP 또는 AP를 선택한다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: CAP는 "맛있고, 빠르고, 저렴한" 식당의 삼각형이다. 세 가지를 동시에 모두 갖추기는 불가능하다.</p>
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="cp-vs-ap-siseutem-bunryu">CP vs AP 시스템 분류</h3>
+<table><thead><tr><th style="text-align: left">분류</th><th style="text-align: left">특징</th><th style="text-align: left">대표 DB</th></tr></thead><tbody>
+<tr><td style="text-align: left">CP (일관성+분단 내성)</td><td style="text-align: left">분단 시 응답 거부, 일관성 보장</td><td style="text-align: left">HBase, Zookeeper, MongoDB(w:majority)</td></tr>
+<tr><td style="text-align: left">AP (가용성+분단 내성)</td><td style="text-align: left">분단 시에도 응답, 일시적 불일관성</td><td style="text-align: left">Cassandra, DynamoDB, CouchDB</td></tr>
+<tr><td style="text-align: left">CA (이론적 구분)</td><td style="text-align: left">분산 아닌 단일 서버</td><td style="text-align: left">전통 RDBMS (MySQL, PostgreSQL)</td></tr>
+</tbody></table>
+<h3 id="base-vs-acid-bigyo">BASE vs ACID 비교</h3>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">ACID</th><th style="text-align: left">BASE</th></tr></thead><tbody>
+<tr><td style="text-align: left">Atomicity</td><td style="text-align: left">전체 성공 or 전체 롤백</td><td style="text-align: left">최선의 결과 시도</td></tr>
+<tr><td style="text-align: left">Consistency</td><td style="text-align: left">트랜잭션 후 항상 일관</td><td style="text-align: left">결과적 일관성 (Eventually)</td></tr>
+<tr><td style="text-align: left">Isolation</td><td style="text-align: left">트랜잭션 간 완전 격리</td><td style="text-align: left">약한 격리 (동시성 증가)</td></tr>
+<tr><td style="text-align: left">Durability vs Soft state</td><td style="text-align: left">영속 보장</td><td style="text-align: left">일시적 상태 허용</td></tr>
+<tr><td style="text-align: left">확장성</td><td style="text-align: left">수직 확장 한계</td><td style="text-align: left">수평 확장 용이</td></tr>
+</tbody></table>
+<h3 id="ascii-daieogeuraem-cap-samgaghyeonggwa-db-baeci">ASCII 다이어그램: CAP 삼각형과 DB 배치</h3>
+<pre><code>  ┌─────────────────────────────────────────────────────────────┐
+  │                  CAP 삼각형                                  │
+  │                                                             │
+  │                Consistency (C)                              │
+  │                      △                                      │
+  │                     &#x2F; \                                     │
+  │                    &#x2F;   \                                    │
+  │                   &#x2F;     \                                   │
+  │         CP 영역  &#x2F;       \  (불가능 영역)                    │
+  │                 &#x2F;         \                                 │
+  │        HBase   &#x2F;           \  MongoDB                      │
+  │     Zookeeper ●             ● (default)                    │
+  │               &#x2F;    ×전부     \                              │
+  │              &#x2F; (이론상 불가)  \                              │
+  │             &#x2F;─────────────────\                            │
+  │            &#x2F;                   \                           │
+  │ Partition ●                     ● Availability             │
+  │ Tolerance  \       AP 영역      &#x2F;  (A)                     │
+  │    (P)      \                  &#x2F;                           │
+  │              \ Cassandra      &#x2F;                            │
+  │               ● DynamoDB ●   &#x2F;                             │
+  │                \  CouchDB   &#x2F;                              │
+  │                 ●──────────●                               │
+  │                                                             │
+  │  RDBMS (MySQL, PostgreSQL): 단일 서버 → CA 영역 (P 포기)    │
+  └─────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="ilgwanseong-rebel-seupegteureom">일관성 레벨 스펙트럼</h3>
+<table><thead><tr><th style="text-align: left">레벨</th><th style="text-align: left">설명</th><th style="text-align: left">지연</th><th style="text-align: left">사용 예</th></tr></thead><tbody>
+<tr><td style="text-align: left">Strong (강한 일관성)</td><td style="text-align: left">모든 노드 즉시 동일</td><td style="text-align: left">높음</td><td style="text-align: left">금융 잔액</td></tr>
+<tr><td style="text-align: left">Bounded Staleness</td><td style="text-align: left">N초 이내 일관성 보장</td><td style="text-align: left">중간</td><td style="text-align: left">재고 조회</td></tr>
+<tr><td style="text-align: left">Session</td><td style="text-align: left">같은 세션 내 일관성</td><td style="text-align: left">낮음</td><td style="text-align: left">사용자 프로필</td></tr>
+<tr><td style="text-align: left">Eventual (결과적 일관성)</td><td style="text-align: left">언젠가 일관 (수ms~수초)</td><td style="text-align: left">매우 낮음</td><td style="text-align: left">소셜 피드, 장바구니</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 결과적 일관성은 소문이다. 처음엔 사람마다 다르게 알지만, 시간이 지나면 모두 같은 내용을 알게 된다.</p>
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="pacelc-hwagjang-jeongri">PACELC 확장 정리</h3>
+<p>CAP의 한계를 보완한 PACELC (Partition → AP or CP, Else → Latency or Consistency):</p>
+<ul>
+<li><strong>분단 시 (P)</strong>: A(가용성) vs C(일관성) 선택</li>
+<li><strong>정상 시 (E)</strong>: L(지연) vs C(일관성) 트레이드오프</li>
+</ul>
+<table><thead><tr><th style="text-align: left">DB</th><th style="text-align: left">분단 시</th><th style="text-align: left">정상 시</th></tr></thead><tbody>
+<tr><td style="text-align: left">Cassandra</td><td style="text-align: left">AP</td><td style="text-align: left">EL (지연 최소화)</td></tr>
+<tr><td style="text-align: left">DynamoDB</td><td style="text-align: left">AP</td><td style="text-align: left">EL</td></tr>
+<tr><td style="text-align: left">HBase</td><td style="text-align: left">CP</td><td style="text-align: left">EC (일관성 강조)</td></tr>
+<tr><td style="text-align: left">MongoDB</td><td style="text-align: left">CP (default)</td><td style="text-align: left">EC</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: PACELC는 CAP보다 현실적인 지도다. 평상시 운전 규칙(Else)과 사고 시 대응(Partition)을 모두 다룬다.</p>
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="ilgwanseong-model-seontaeg-cekeuriseuteu">일관성 모델 선택 체크리스트</h3>
+<ul>
+<li><input disabled="" type="checkbox"/>
+데이터의 금전적 가치가 있는가? (은행 잔액 → CP/ACID 필수)</li>
+<li><input disabled="" type="checkbox"/>
+일시적 불일관성이 비즈니스에 허용 가능한가? (좋아요 수 → AP/BASE OK)</li>
+<li><input disabled="" type="checkbox"/>
+지리적 분산 배포 필요 여부 (멀티 리전 → AP 선호)</li>
+<li><input disabled="" type="checkbox"/>
+99.99% 이상 가용성 요건 → AP 우선 고려</li>
+</ul>
+<h3 id="antipaeteon">안티패턴</h3>
+<table><thead><tr><th style="text-align: left">안티패턴</th><th style="text-align: left">문제</th><th style="text-align: left">해결 방법</th></tr></thead><tbody>
+<tr><td style="text-align: left">재고 차감에 Cassandra AP</td><td style="text-align: left">동시 구매 시 재고 초과 판매</td><td style="text-align: left">CP DB (HBase, Redis SETNX) 사용</td></tr>
+<tr><td style="text-align: left">모든 NoSQL에 ACID 기대</td><td style="text-align: left">Cassandra는 Eventual Consistency</td><td style="text-align: left">LWT (Light-weight Transaction) 사용</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 재고 차감에 AP DB를 쓰는 건 여러 계산대에서 동시에 마지막 상품을 판매하는 것이다. 손님 2명이 같은 물건을 사고 집에 가면 한 명은 빈손이다.</p>
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="base-seolgye-jeoghab-yeongyeog">BASE 설계 적합 영역</h3>
+<table><thead><tr><th style="text-align: left">도메인</th><th style="text-align: left">일관성 모델</th><th style="text-align: left">이유</th></tr></thead><tbody>
+<tr><td style="text-align: left">소셜 피드, 댓글</td><td style="text-align: left">BASE/AP</td><td style="text-align: left">좋아요 수 수초 차이 무방</td></tr>
+<tr><td style="text-align: left">장바구니</td><td style="text-align: left">BASE/AP</td><td style="text-align: left">임시 불일관성 허용</td></tr>
+<tr><td style="text-align: left">재고 관리</td><td style="text-align: left">ACID/CP</td><td style="text-align: left">초과 판매 불가</td></tr>
+<tr><td style="text-align: left">금융 이체</td><td style="text-align: left">ACID/CP</td><td style="text-align: left">원자성 필수</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 은행 계좌는 ACID(금고), 소셜 피드는 BASE(게시판)다. 금고는 느려도 확실해야 하고, 게시판은 빠르되 잠깐 틀려도 괜찮다.</p>
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">관계</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">CAP 정리</td><td style="text-align: left">이론 기반</td><td style="text-align: left">C/A/P 셋 중 둘만 보장</td></tr>
+<tr><td style="text-align: left">ACID</td><td style="text-align: left">트랜잭션 모델</td><td style="text-align: left">CP 계열 일관성 보장</td></tr>
+<tr><td style="text-align: left">BASE</td><td style="text-align: left">일관성 모델</td><td style="text-align: left">AP 계열 결과적 일관성</td></tr>
+<tr><td style="text-align: left">PACELC</td><td style="text-align: left">확장 이론</td><td style="text-align: left">정상 시 Latency vs Consistency</td></tr>
+<tr><td style="text-align: left">Eventual Consistency</td><td style="text-align: left">상태</td><td style="text-align: left">시간 경과 후 일관성 수렴</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>CAP는 "맛있고 빠르고 저렴한 식당"처럼 세 가지를 동시에 다 가질 수 없다는 법칙이에요.</li>
+<li>ACID는 은행 금고처럼 느리지만 확실한 것, BASE는 소문처럼 빠르지만 잠깐 틀릴 수 있는 것이에요.</li>
+<li>Eventual Consistency는 "나중엔 다 같아져요"라는 약속이에요. 지금 당장은 달라도 괜찮아요.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

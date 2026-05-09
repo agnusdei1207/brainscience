@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>스파크 구조적 스트리밍 (Spark Structured Streaming) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote bigdata
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<ol>
+<li>**구조적 스트리밍 (Structured Streaming)**은 Spark SQL 엔진 위에서 동작하는 확장 가능하고 결함 허용(Fault-tolerant)이 가능한 스트림 처리 엔진이다.</li>
+<li>실시간 데이터를 지속적으로 추가되는 **'무한 테이블(Unbounded Table)'**로 간주하여, 배치 처리와 동일한 DataFrame/Dataset API로 스트리밍 로직을 작성할 수 있다.</li>
+<li><strong>체크포인트와 Write-ahead Log</strong>를 통해 '정확히 한 번(Exactly-once)' 처리 보증을 제공하며, 이벤트 시간(Event-time) 처리 및 워터마크 기능을 완벽히 지원한다.</li>
+</ol>
+<hr />
+<h3 id="i-gaeyo-context-background">Ⅰ. 개요 (Context &amp; Background)</h3>
+<ul>
+<li><strong>정의</strong>: 정적 데이터에 대한 배치 쿼리를 실행하듯이 스트리밍 데이터를 처리할 수 있게 해주는 고수준 API 기반의 실시간 처리 프레임워크이다.</li>
+<li><strong>배경</strong>: 기존 DStream(마이크로 배치)의 복잡한 RDD 조작과 이벤트 시간 처리의 한계를 극복하고, 배치와 스트리밍 코드의 통합(Unified)을 실현하기 위해 등장했다.</li>
+<li><strong>주요 활용</strong>: 실시간 ETL 파이프라인, 실시간 대시보드 업데이트, IoT 센서 데이터의 이상 탐지, 실시간 개인화 추천 시스템 등에서 표준으로 사용된다.</li>
+</ul>
+<hr />
+<h3 id="ii-akitegceo-mic-haegsim-weonri-deep-dive">Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)</h3>
+<h4 id="1-muhan-teibeul-unbounded-table-model">1. 무한 테이블 (Unbounded Table) 모델</h4>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[ Data Stream ] (Incoming events)
+      |
+      V
+[ Input Table ] (Unbounded &#x2F; Append-only)
++-------+-------+-------+
+| Col 1 | Col 2 | Col 3 |  &lt;-- New data appended every trigger
++-------+-------+-------+
+      |
+      V [ Incremental Query ] (Spark SQL Engine)
+      |
+[ Result Table ] (Updated state)
+      |
+      V [ Output Sink ] (External Storage)
+</code></pre>
+<h4 id="2-haegsim-ceori-mekeonijeum">2. 핵심 처리 메커니즘</h4>
+<ul>
+<li><strong>Trigger</strong>: 데이터를 처리할 주기를 결정한다 (예: 1초마다, 혹은 데이터가 들어오는 즉시 처리하는 연속 모드).</li>
+<li><strong>Watermarking</strong>: 늦게 도착한 데이터(Late Data)를 얼마나 기다릴지 정의하여 상태 정보의 메모리 무한 증식을 방지한다.</li>
+<li><strong>State Store</strong>: 윈도우 합계나 조인 처리를 위해 필요한 중간 상태값을 인메모리 혹은 HDFS/S3에 안전하게 보관한다.</li>
+<li><strong>Fault Tolerance</strong>: Checkpointing을 통해 장애 발생 시 마지막 처리 지점부터 중단 없이 재시작할 수 있다.</li>
+</ul>
+<hr />
+<h3 id="iii-yunghab-bigyo-mic-dagagdo-bunseog-comparison-synergy">Ⅲ. 융합 비교 및 다각도 분석 (Comparison &amp; Synergy)</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">Spark Streaming (DStream)</th><th style="text-align: left">Structured Streaming</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>기반 추상화</strong></td><td style="text-align: left">RDD (Low-level)</td><td style="text-align: left">DataFrame / Dataset (High-level)</td></tr>
+<tr><td style="text-align: left"><strong>처리 모델</strong></td><td style="text-align: left">마이크로 배치 전용</td><td style="text-align: left">마이크로 배치 + 연속 처리(Continuous)</td></tr>
+<tr><td style="text-align: left"><strong>이벤트 시간 처리</strong></td><td style="text-align: left">지원 미흡 (Processing Time 위주)</td><td style="text-align: left">워터마크 기반 완벽 지원</td></tr>
+<tr><td style="text-align: left"><strong>코드 통합</strong></td><td style="text-align: left">배치 코드와 별도 작성 필요</td><td style="text-align: left">배치 쿼리와 90% 이상 동일 코드 사용</td></tr>
+<tr><td style="text-align: left"><strong>보증 수준</strong></td><td style="text-align: left">At-least-once (일부 상황)</td><td style="text-align: left">Exactly-once (엔드 투 엔드 보장)</td></tr>
+</tbody></table>
+<hr />
+<h3 id="iv-silmu-jeogyong-mic-gisulsajeog-pandan-strategy-decision">Ⅳ. 실무 적용 및 기술사적 판단 (Strategy &amp; Decision)</h3>
+<ul>
+<li><strong>배치-스트림 통합 아키텍처</strong>: 동일한 로직을 배치 데이터와 실시간 데이터에 모두 적용할 수 있어 유지보수 비용을 획기적으로 낮춘다 (Lambda/Kappa 아키텍처 구현 용이).</li>
+<li><strong>Sink 선택 전략</strong>: Kafka, HDFS, Console 외에도 Delta Lake와 결합하여 실시간 데이터 레이크하우스를 구축하는 것이 최신 기술 트렌드이다.</li>
+<li><strong>성능 최적화</strong>: 셔플링을 유도하는 윈도우 연산 시 파티션 개수(<code>spark.sql.shuffle.partitions</code>)를 데이터 규모에 맞게 조정하고, 로컬 상태 저장소의 성능(RocksDB 등)을 튜닝해야 한다.</li>
+</ul>
+<hr />
+<h3 id="v-gidaehyogwa-mic-gyeolron-future-standard">Ⅴ. 기대효과 및 결론 (Future &amp; Standard)</h3>
+<ul>
+<li><strong>기대효과</strong>: 데이터 엔지니어가 실시간 처리를 위해 특별한 기술을 새로 배울 필요 없이 기존 SQL/DataFrame 지식만으로 고성능 실시간 시스템을 구축할 수 있게 한다.</li>
+<li><strong>결론</strong>: 구조적 스트리밍은 '배치와 스트리밍의 경계'를 허문 혁신적인 도구이다. 향후 Apache Flink와의 경쟁 속에서도 Spark 생태계의 강력한 통합 이점을 바탕으로 실시간 데이터 처리의 중추 역할을 지속할 것으로 전망된다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h3>
+<ol>
+<li><strong>Micro-batching</strong>: 데이터를 아주 작은 단위로 묶어 처리하는 방식</li>
+<li><strong>Exactly-once Semantics</strong>: 데이터 손실이나 중복 없이 정확히 한 번 처리됨을 보장</li>
+<li><strong>Event Time</strong>: 데이터가 시스템에 입력된 시간이 아닌, 실제 발생한 시간</li>
+</ol>
+<hr />
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[배치 처리 (Batch Processing) — 정해진 주기 대규모 데이터 처리]
+    │
+    ▼
+[스트리밍 처리 (Streaming) — 실시간 연속 데이터 처리]
+    │
+    ▼
+[Spark Streaming (DStream) — RDD 기반 마이크로 배치]
+    │
+    ▼
+[Structured Streaming — DataFrame API 기반 연속 처리]
+    │
+    ▼
+[워터마크 (Watermark) — 지연 데이터 처리 기준 시간 설정]
+    │
+    ▼
+[Delta Live Tables — 선언형 스트리밍 파이프라인 자동화]
+</code></pre>
+<p>Structured Streaming은 DStream의 복잡성을 DataFrame API로 추상화하여, 배치와 스트리밍을 통합하는 현대 실시간 파이프라인의 표준이 되었다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>"수도꼭지에서 물이 계속 나오는 것처럼, 멈추지 않고 들어오는 데이터를 바로바로 정리하는 기계예요."</li>
+<li>"예전에는 바가지로 물을 퍼 날랐다면(배치), 이제는 호스를 연결해서 물이 흐르는 대로 분류하는 것과 같아요."</li>
+<li>"깜빡하고 늦게 들어온 데이터도 제자리에 쏙쏙 끼워 넣어주는 아주 똑똑한 정리 대장이랍니다!"</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>122. secp256k1 — Bitcoin에서 사용되는 곡선 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote security
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="122-secp256k1-biteukoinyi-taweongogseon">122. secp256k1 (비트코인의 타원곡선)</h1>
+<blockquote>
+<p>⚠️ 이 문서는 타원곡선 암호(ECC)를 실무에 적용할 때 "어떤 모양의 곡선을 그릴 것인가?"에 대한 수많은 선택지 중, 사토시 나카모토가 비트코인(Bitcoin)의 뼈대로 채택하여 전 세계 암호화폐 시장의 절대 표준이 된 전설적인 파라미터, secp256k1을 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: secp256k1은 국제 표준화 그룹(SEC)이 정의한 타원곡선 방정식 <strong>$y^2 = x^3 + 7$</strong> (즉, $a=0, b=7$)을 따르며, 256비트 길이의 소수(Prime) 장 안에서 그려지는 매우 희귀하고 특수한 <strong>코블리츠(Koblitz) 곡선</strong>이다.</li>
+<li><strong>가치</strong>: 대다수 기업이 쓰는 일반 곡선(NIST P-256)과 달리 예측 가능한 구조(Random Seed 부재)를 가져서 NSA(미국 국가안보국)의 <strong>'백도어(Backdoor)' 의혹에서 100% 자유로우며</strong>, 특수한 수학적 성질 덕분에 암호화 연산 속도가 일반 곡선보다 약 30% 이상 빠르다.</li>
+<li><strong>융합</strong>: 사토시 나카모토의 이 선구적인 곡선 채택 덕분에 비트코인은 국가 기관의 간섭이나 수학적 조작 의혹을 완벽하게 차단할 수 있었고, 현재 이더리움을 비롯한 거의 모든 메이저 블록체인의 지갑 주소 생성과 서명(ECDSA) 아키텍처로 융합되어 쓰이고 있다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-gaeyo-mic-tansaeng-baegyeong-context-necessity">Ⅰ. 개요 및 탄생 배경 (Context &amp; Necessity)</h3>
+<p>타원곡선 방정식 $y^2 = x^3 + ax + b$ 에서 암호학자가 상수 $a$와 $b$에 무슨 숫자를 넣느냐에 따라 곡선의 모양과 보안 강도가 천차만별로 바뀐다.</p>
+<p>1990년대 후반, 각자 아무 숫자나 넣어서 암호를 만들다 보니 서로 호환이 되지 않았다. 그래서 SEC(Standards for Efficient Cryptography)라는 기구가 모여 "우리가 안전하다고 검증한 곡선 번호판을 정해줄게. 여기서 골라 써!"라며 카탈로그를 만들었다.
+그중 가장 인기 있던 곡선은 미국 NSA가 추천한 <strong><code>secp256r1</code> (NIST P-256)</strong> 이었다. 전 세계 웹 브라우저와 은행들은 무비판적으로 이 곡선을 채택했다.</p>
+<p>하지만 2008년, 익명의 비트코인 창시자 사토시 나카모토는 모두가 쓰는 그 뻔한 곡선 대신, 카탈로그 구석에 처박혀 아무도 안 쓰던 괴짜 곡선 **<code>secp256k1</code>**을 선택해 비트코인의 코어에 박아버렸다. 당시 사람들은 의아해했지만, 몇 년 뒤 스노든 사태가 터지며 이 선택은 '신의 한 수'로 밝혀지게 된다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 정부(NSA)가 "우리가 검사해 보니 이 동그란 모양의 자물쇠(P-256)가 제일 안전해. 다들 이거 써!"라고 추천했습니다. 하지만 탈중앙화를 꿈꾸던 사토시는 정부를 믿지 않고, 혼자 구석에서 흙먼지를 뒤집어쓰고 있던 뾰족한 모양의 자물쇠(secp256k1)를 골라 비트코인 금고를 채웠습니다.</p>
+</blockquote>
+<hr />
+<h3 id="ii-paramiteo-haebu-wae-y2-x3-7-inga">Ⅱ. 파라미터 해부: 왜 y² = x³ + 7 인가?</h3>
+<p>이름이 복잡해 보이지만 규칙이 있다.</p>
+<ul>
+<li><strong>sec</strong>: 표준 그룹 이름 (Standards for Efficient Cryptography)</li>
+<li><strong>p</strong>: 소수 체계 (Prime field) 위에서 동작함</li>
+<li><strong>256</strong>: 키 길이가 256비트임 (강력한 방어력)</li>
+<li><strong>k</strong>: 코블리츠 곡선 (Koblitz Curve, 최적화 꼼수가 가능한 특수 곡선)</li>
+<li><strong>1</strong>: 그 카테고리의 1번째 곡선</li>
+</ul>
+<h4 id="suhagjeog-uahamgwa-baegdoeoyi-cadan">수학적 우아함과 백도어의 차단</h4>
+<p>보통 곡선(예: P-256)은 $a$나 $b$ 값을 정할 때, 난수 발생기를 돌려 이상한 해시 찌꺼기(Seed)를 억지로 끼워 맞춘다. (예: $b = 4105836...$)
+하지만 <strong>secp256k1의 방정식은 너무나 우아하고 투명하다. $y^2 = x^3 + 7$</strong> ($a=0, b=7$).</p>
+<ul>
+<li><strong>백도어 의혹 소멸</strong>: 7이라는 숫자는 너무 뻔하고 평범하다. 사토시는 "저렇게 복잡한 난수(P-256)를 쓴다는 건, 그 난수를 만든 놈(NSA)만이 아는 수학적 지름길(백도어)이 숨어있을 수 있다. 하지만 0과 7에는 아무런 함정을 숨길 수 없다!"고 판단했다.</li>
+<li>이 불신은 2013년 에드워드 스노든이 "NSA가 특정 암호 난수 생성기에 진짜로 백도어를 심었다(Dual_EC_DRBG 사건)"고 폭로하면서 소름 끼치는 사실로 판명 났다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────────────────┐
+│           P-256 (NIST) vs secp256k1 (Bitcoin) 곡선 철학 비교 시각화          │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ 🏛️ [ P-256 (secp256r1) - 국가 주도 표준 ]                                    │
+│   방정식: y^2 = x^3 - 3x + b                                                 │
+│   b 값: 4105836372515214... (알 수 없는 지저분한 난수 씨앗)                  │
+│   철학: &quot;복잡하게 무작위(Random)로 꼬았으니까 안전하다. 믿어라.&quot;             │
+│   의혹: &quot;저 난수 씨앗을 만든 NSA는 저걸 역산하는 마스터키가 있는 거 아냐?&quot;   │
+│                                                                              │
+│ 🚀 [ secp256k1 - 코블리츠의 우아함 ]                                         │
+│   방정식: y^2 = x^3 + 7                                                      │
+│   철학: &quot;어떤 속임수도 숨길 공간이 없는 완벽하고 순수한 상수를 쓴다.&quot;        │
+│   장점 1: 코블리츠 곡선의 특성을 이용해 당구공(점 덧셈)을 30% 더 빨리 튕김.  │
+│   장점 2: 백도어가 존재할 수 없는 투명함으로 완전한 탈중앙화 신뢰 획득!      │
+└──────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 사토시 나카모토의 천재성은 암호학을 코딩한 것이 아니라 '인간과 제도의 심리'를 꿰뚫어 본 것에 있다. 중앙 기관(NSA)이 "안전하다"고 보장하는 상수를 맹신하지 않고, 누구도 의심할 수 없는 가장 단순한 상수로 스스로의 무결성을 증명하는 아키텍처를 선택했다. 더불어 코블리츠(k) 곡선 특유의 '자기 동형 사상(Endomorphism)' 최적화 연산을 통해, 비트코인 노드들이 초당 수만 건의 전자서명을 척척 검증해 낼 수 있는 막대한 연산 이점까지 챙겼다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 국가에서 "우리가 만든 이 도어락(P-256)이 제일 안전합니다"라며 줬지만, 도어락 안의 설계도가 비공개라 국가가 마스터키를 숨겨놨는지 알 길이 없었습니다. 사토시는 구조가 투명한 아크릴로 만들어져서 누구나 속에 아무 함정도 없음을 두 눈으로 볼 수 있는 도어락(secp256k1)을 선택해 비트코인 금고에 달았습니다.</li>
+</ul>
+<hr />
+<h3 id="iii-silmu-jeogyong-sinario-biteukoin-jigab-saengseong">Ⅲ. 실무 적용 시나리오 (비트코인 지갑 생성)</h3>
+<p>우리가 비트코인 지갑을 만들 때 뒤에서 벌어지는 일은 전부 이 방정식($y^2 = x^3 + 7$) 위에서 일어난다.</p>
+<ol>
+<li><strong>개인키($d$) 생성</strong>: 우주에 있는 모래알보다 많은 256비트 무작위 숫자 하나를 내 폰에서 뽑는다. (이게 내 전 재산을 움직이는 절대 열쇠다.)</li>
+<li><strong>공개키($Q$) 굽기</strong>: secp256k1 그래프 위에 정해진 '출발점($G$)' 당구공을 놓고, 방금 뽑은 내 개인키($d$) 횟수만큼 미친 듯이 덧셈(튕기기)을 반복한다.
+<ul>
+<li>$Q = d \times G$</li>
+</ul>
+</li>
+<li><strong>지갑 주소 추출</strong>: 멈춰 선 공의 좌표(공개키 $Q$)를 SHA-256과 RIPEMD-160 해시 믹서기에 돌리고, 보기 좋게 Base58로 텍스트를 인코딩하면 <code>1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa</code> 같은 우리가 아는 뻔한 비트코인 지갑 주소가 툭 튀어나온다.</li>
+</ol>
+<hr />
+<h3 id="iv-gyeolron">Ⅳ. 결론</h3>
+<p>"권력(Authority)에 의존하지 않는 순수한 수학(Mathematics)의 승리."
+secp256k1은 비트코인 이전에는 이름조차 생소했던 마이너리티 곡선이었다. 하지만 국가 권력이 개입된 보안 표준(P-256)의 불투명성을 거부하고 완벽한 수학적 투명성과 연산 효율성을 무기로 채택됨으로써, 오늘날 수백 조 원이 넘는 블록체인 생태계를 단 하나의 오류나 백도어 의혹 없이 지탱하고 있는 시대의 아이콘이 되었다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>전체 범주</strong>: ECC (타원곡선 암호) 의 도메인 파라미터 (Domain Parameters)</li>
+<li><strong>대비되는 곡선</strong>: P-256 (secp256r1, NSA 권장, 일반적 웹 표준)</li>
+<li><strong>활용처</strong>: 비트코인, 이더리움 등 블록체인의 ECDSA 전자서명 엔진</li>
+<li><strong>특이점</strong>: 코블리츠(Koblitz) 곡선 최적화를 통한 검증 속도 30% 향상</li>
+</ul>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>타원곡선 당구대에서 게임을 하려면 당구대를 어떻게 깎을지(곡선 모양)를 정해야 해요.</li>
+<li>경찰 아저씨들이 "이 모양으로 깎은 당구대(P-256)가 제일 좋아"라고 줬지만, 비트코인을 만든 똑똑한 아저씨는 "경찰이 몰래 공이 쏙 빠지는 개구멍(백도어)을 뚫어놨을지도 몰라!"라며 거절했어요.</li>
+<li>대신 투명한 유리로 만들어져서 구멍이 1개도 없는지 누구나 눈으로 확인할 수 있고 공도 엄청 빨리 굴러가는 전용 당구대(secp256k1)를 골라서 썼고, 이게 지금의 대박을 쳤답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

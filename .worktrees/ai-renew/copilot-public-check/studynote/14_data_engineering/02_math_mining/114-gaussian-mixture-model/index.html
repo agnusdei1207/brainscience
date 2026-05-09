@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>114. 가우시안 혼합 모델 (GMM, Gaussian Mixture Model) - EM 알고리즘·소프트 클러스터링 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 19, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote dataengineering
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: GMM(Gaussian Mixture Model)은 데이터가 <strong>K개의 가우시안(정규) 분포의 가중 합</strong>으로 생성되었다고 가정하고, 각 데이터 포인트가 어느 가우시안에 속하는지 **확률적으로 추정(소프트 클러스터링)**하는 확률 생성 모델이다.</li>
+<li><strong>가치</strong>: K-Means가 각 데이터를 **하나의 클러스터에 확정(하드 할당)**하는 반면, GMM은 "이 데이터는 A 클러스터에 70%, B에 30%"처럼 <strong>소속 확률을 제공</strong>하여 경계 모호성을 표현할 수 있다.</li>
+<li><strong>판단 포인트</strong>: GMM의 파라미터(평균·공분산·혼합 계수)는 <strong>EM(Expectation-Maximization) 알고리즘</strong>으로 추정하며, 클러스터 수 K는 BIC(Bayesian Information Criterion)로 선택한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌───────────────────────────────────────────────────────┐
+│    K-Means (하드) vs GMM (소프트) 클러스터링           │
+├───────────────────────────────────────────────────────┤
+│  [K-Means]              [GMM]                         │
+│   ○○○ ●●●               ○○◐ ◐●●                     │
+│   확정 할당              확률적 할당                   │
+│   &quot;A 아니면 B&quot;           &quot;A에 70%, B에 30%&quot;           │
+│   원형 클러스터만         타원형 클러스터 가능          │
+└───────────────────────────────────────────────────────┘
+</code></pre>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: K-Means는 학생을 "반드시 A반 또는 B반"에 배정하는 것이고, GMM은 "A반에 70% 속하고 B반에도 30% 속한다"고 확률적으로 표현하는 것이다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="em-algorijeum-2dangye">EM 알고리즘 2단계</h3>
+<table><thead><tr><th style="text-align: left">단계</th><th style="text-align: left">작업</th><th style="text-align: left">비유</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>E-step (Expectation)</strong></td><td style="text-align: left">현재 파라미터로 각 데이터의 소속 확률(Responsibility) 계산</td><td style="text-align: left">학생이 각 반에 속할 확률 계산</td></tr>
+<tr><td style="text-align: left"><strong>M-step (Maximization)</strong></td><td style="text-align: left">소속 확률로 가중 평균·공분산·혼합 계수 재추정</td><td style="text-align: left">확률 기반으로 반 중심·크기 재조정</td></tr>
+<tr><td style="text-align: left"><strong>반복</strong></td><td style="text-align: left">E→M 반복 → 수렴</td><td style="text-align: left">최적의 반 배정 완성</td></tr>
+</tbody></table>
+<h3 id="gmm-paramiteo">GMM 파라미터</h3>
+<table><thead><tr><th style="text-align: left">파라미터</th><th style="text-align: left">의미</th></tr></thead><tbody>
+<tr><td style="text-align: left">$\mu_k$</td><td style="text-align: left">k번째 가우시안의 평균 (중심)</td></tr>
+<tr><td style="text-align: left">$\Sigma_k$</td><td style="text-align: left">k번째 가우시안의 공분산 (모양·방향)</td></tr>
+<tr><td style="text-align: left">$\pi_k$</td><td style="text-align: left">k번째 가우시안의 혼합 계수 (비중)</td></tr>
+</tbody></table>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: EM은 눈을 가리고 과녁을 맞추는 궁수가, 화살을 쏘고(E) → 눈가리개를 살짝 올려 위치를 조정(M)하는 반복 훈련이다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">비교</th><th style="text-align: left">K-Means</th><th style="text-align: left">GMM</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>할당</strong></td><td style="text-align: left">하드 (0 or 1)</td><td style="text-align: left"><strong>소프트 (확률)</strong></td></tr>
+<tr><td style="text-align: left"><strong>클러스터 형태</strong></td><td style="text-align: left">원형</td><td style="text-align: left"><strong>타원형 (공분산)</strong></td></tr>
+<tr><td style="text-align: left"><strong>알고리즘</strong></td><td style="text-align: left">거리 기반</td><td style="text-align: left"><strong>확률 기반 (EM)</strong></td></tr>
+<tr><td style="text-align: left"><strong>속도</strong></td><td style="text-align: left">빠름</td><td style="text-align: left">느림</td></tr>
+<tr><td style="text-align: left"><strong>이상치</strong></td><td style="text-align: left">민감</td><td style="text-align: left">확률로 흡수</td></tr>
+</tbody></table>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="hwalyong-sinario">활용 시나리오</h3>
+<ol>
+<li><strong>고객 세분화</strong>: 경계 모호한 고객 그룹 (VIP와 일반 사이) 확률적 분류.</li>
+<li><strong>이상 탐지</strong>: 정상 분포를 GMM으로 모델링 → 낮은 확률 데이터 = 이상치.</li>
+<li><strong>음성 인식</strong>: 음소별 확률 분포 모델링 (HMM-GMM).</li>
+</ol>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>GMM은 K-Means의 확률적 일반화이며, 클러스터 경계가 모호하거나 타원형 분포를 갖는 데이터에서 우수한 성능을 보인다. Variational Inference·Bayesian GMM으로 확장되어 자동 클러스터 수 결정도 가능하다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>K-Means</strong></td><td style="text-align: left">GMM의 하드 클러스터링 특수 케이스</td></tr>
+<tr><td style="text-align: left"><strong>EM 알고리즘</strong></td><td style="text-align: left">GMM 파라미터 추정 방법</td></tr>
+<tr><td style="text-align: left"><strong>BIC / AIC</strong></td><td style="text-align: left">최적 클러스터 수 K 선택 기준</td></tr>
+<tr><td style="text-align: left"><strong>HMM</strong></td><td style="text-align: left">GMM을 방출 확률로 사용하는 시퀀스 모델</td></tr>
+<tr><td style="text-align: left"><strong>Bayesian GMM</strong></td><td style="text-align: left">클러스터 수 자동 결정</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[K-Means (1957) — 하드 클러스터링]
+    │
+    ▼
+[EM 알고리즘 (1977, Dempster) — 불완전 데이터 MLE]
+    │
+    ▼
+[GMM + EM (1990s) — 소프트 클러스터링 표준]
+    │
+    ▼
+[Bayesian GMM (2000s) — 자동 K 결정]
+    │
+    ▼
+[현재: VAE·Flow — 심층 생성 모델이 GMM을 대체&#x2F;확장]
+</code></pre>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>K-Means는 학생을 **"반드시 A반!"**이라고 정하는 거예요.</li>
+<li>GMM은 **"A반에 70%, B반에 30%"**처럼 어느 반에 더 가까운지 확률로 말해줘요.</li>
+<li>세상에는 딱 나눌 수 없는 것이 많으니까, GMM처럼 <strong>확률로 표현</strong>하는 게 더 정확하답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>248. BERT 인코더 MLM vs GPT 디코더 자동 회귀 (Autoregressive) 심화 비교 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote data engineering
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: BERT(Bidirectional Encoder Representations from Transformers)는 양방향 문맥을 이해하는 인코더, GPT(Generative Pre-trained Transformer)는 왼쪽에서 오른쪽으로만 처리하는 자동 회귀(Autoregressive) 디코더로, 설계 목적이 근본적으로 다르다.</li>
+<li><strong>가치</strong>: BERT는 MLM(Masked Language Model)과 NSP(Next Sentence Prediction)로 문장 이해·분류에 특화되고, GPT는 자동 회귀 다음 토큰 예측으로 텍스트 생성에 탁월하다.</li>
+<li><strong>판단 포인트</strong>: T5·BART는 인코더-디코더 구조를 유지해 이해와 생성을 동시에 처리하며, 현재 실무에서는 GPT 계열 자동 회귀 모델이 생성 AI의 주류를 이룬다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>2018년은 NLP(Natural Language Processing) 혁명의 원년이다. BERT(Google, 2018)와 GPT(OpenAI, 2018)가 거의 동시에 등장하며 사전 학습-파인튜닝 패러다임을 확립했다. 두 모델은 같은 Transformer 기반이지만 어텐션 방향과 사전 학습 목표가 반대다.</p>
+<table><thead><tr><th style="text-align: left">특성</th><th style="text-align: left">BERT</th><th style="text-align: left">GPT</th></tr></thead><tbody>
+<tr><td style="text-align: left">구조</td><td style="text-align: left">인코더(Encoder)</td><td style="text-align: left">디코더(Decoder)</td></tr>
+<tr><td style="text-align: left">어텐션 방향</td><td style="text-align: left">양방향 (Bidirectional)</td><td style="text-align: left">단방향 (Left-to-Right)</td></tr>
+<tr><td style="text-align: left">사전 학습 목표</td><td style="text-align: left">MLM + NSP</td><td style="text-align: left">다음 토큰 예측</td></tr>
+<tr><td style="text-align: left">강점</td><td style="text-align: left">이해, 분류, NER</td><td style="text-align: left">생성, 대화, 완성</td></tr>
+<tr><td style="text-align: left">약점</td><td style="text-align: left">생성 불가</td><td style="text-align: left">양방향 문맥 부족</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: BERT는 시험 채점관이다. 문제와 답안을 동시에 보고 "이 답이 맞는지" 이해한다. GPT는 소설 작가다. 앞에서부터 순서대로 읽으면서 다음 문장을 창작한다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="bert-akitegceo-mic-sajeon-hagseub">BERT 아키텍처 및 사전 학습</h3>
+<pre><code>BERT 입력 구성
+[CLS] 나는 [MASK] 에 간다 [SEP] 공부가 재미있다 [SEP]
+  ↑                 ↑      ↑
+[CLS]: 문장 전체 표현    [SEP]: 문장 구분자
+        
+어텐션 패턴 (양방향):
+  나는 ←→ [MASK] ←→ 에 ←→ 간다
+  모든 토큰이 모든 토큰과 어텐션 가능
+</code></pre>
+<p><strong>BERT 두 가지 사전 학습 목표</strong></p>
+<table><thead><tr><th style="text-align: left">목표</th><th style="text-align: left">방법</th><th style="text-align: left">역할</th></tr></thead><tbody>
+<tr><td style="text-align: left">MLM (Masked Language Model)</td><td style="text-align: left">15% 토큰 마스킹 후 복원</td><td style="text-align: left">문맥 이해</td></tr>
+<tr><td style="text-align: left">NSP (Next Sentence Prediction)</td><td style="text-align: left">두 문장의 연속성 예측 (IsNext/NotNext)</td><td style="text-align: left">문장 관계 이해</td></tr>
+</tbody></table>
+<p><strong>MLM 마스킹 전략</strong> (15% 중):</p>
+<ul>
+<li>80%: [MASK] 토큰으로 교체</li>
+<li>10%: 랜덤 토큰으로 교체 (노이즈 강건성)</li>
+<li>10%: 원래 토큰 유지 (표현 학습)</li>
+</ul>
+<h3 id="gpt-akitegceo-mic-jadong-hoegwi-saengseong">GPT 아키텍처 및 자동 회귀 생성</h3>
+<pre><code>GPT 어텐션 패턴 (인과적 마스킹):
+                  미래 토큰 차단 (마스크)
+나 → 는 ───────────────────────────────→ ✗
+나 → 는 → 학교에 ──────────────────────→ ✗
+나 → 는 → 학교에 → 간다
+  각 위치는 이전 위치만 볼 수 있음
+
+자동 회귀 생성 과정:
+[START] → &quot;나&quot; → &quot;나는&quot; → &quot;나는 학교에&quot; → &quot;나는 학교에 간다&quot;
+  P(x_t | x_1, ..., x_{t-1}) 조건부 확률 연쇄 곱
+</code></pre>
+<p><strong>디코더 전용 구조의 특징</strong>:</p>
+<ul>
+<li>인과적 자기 회귀 마스킹(Causal Self-Attention Masking)</li>
+<li>훈련과 추론의 방향 일치</li>
+<li>KV 캐시(Key-Value Cache)로 추론 가속</li>
+</ul>
+<h3 id="model-gyumo-bigyo">모델 규모 비교</h3>
+<pre><code>BERT와 GPT 계열 발전
+────────────────────────────────────────────────
+BERT-Base  (2018): 12층, 110M 파라미터
+BERT-Large (2018): 24층, 340M 파라미터
+RoBERTa    (2019): BERT 개선 (더 많은 데이터, NSP 제거)
+
+GPT-1      (2018):  12층, 117M 파라미터
+GPT-2      (2019):  48층, 1.5B 파라미터  (처음엔 위험하다고 공개 지연)
+GPT-3      (2020):  96층, 175B 파라미터  (퓨샷 학습 창발)
+GPT-4      (2023):  비공개, ~1.8T 추정   (멀티모달)
+────────────────────────────────────────────────
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: BERT는 독서왕이다. 앞뒤 다 읽고 "이 단어의 의미가 뭔지" 파악한다. GPT는 즉흥 이야기꾼이다. 지금까지 말한 것만 기억하고 다음 이야기를 창작한다.</p>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="bert-vs-gpt-jeoghab-taeseukeu-maeping">BERT vs GPT 적합 태스크 매핑</h3>
+<table><thead><tr><th style="text-align: left">태스크</th><th style="text-align: left">적합 모델</th><th style="text-align: left">이유</th></tr></thead><tbody>
+<tr><td style="text-align: left">텍스트 분류</td><td style="text-align: left">BERT</td><td style="text-align: left">[CLS] 토큰으로 전체 문맥 분류</td></tr>
+<tr><td style="text-align: left">개체명 인식 (NER)</td><td style="text-align: left">BERT</td><td style="text-align: left">각 토큰의 양방향 문맥 필요</td></tr>
+<tr><td style="text-align: left">질문 응답 (QA)</td><td style="text-align: left">BERT</td><td style="text-align: left">지문+질문 동시 이해</td></tr>
+<tr><td style="text-align: left">자연어 추론 (NLI)</td><td style="text-align: left">BERT</td><td style="text-align: left">두 문장 관계 양방향 비교</td></tr>
+<tr><td style="text-align: left">텍스트 생성</td><td style="text-align: left">GPT</td><td style="text-align: left">자동 회귀 생성 구조</td></tr>
+<tr><td style="text-align: left">대화/챗봇</td><td style="text-align: left">GPT</td><td style="text-align: left">이전 발화 조건부 응답</td></tr>
+<tr><td style="text-align: left">코드 생성</td><td style="text-align: left">GPT/Codex</td><td style="text-align: left">순차적 코드 완성</td></tr>
+<tr><td style="text-align: left">번역/요약</td><td style="text-align: left">T5/BART</td><td style="text-align: left">이해+생성 동시 필요</td></tr>
+</tbody></table>
+<h3 id="t5-mic-bart-inkodeo-dikodeo-model">T5 및 BART — 인코더-디코더 모델</h3>
+<pre><code>T5 (Text-To-Text Transfer Transformer): Google 2019
+  모든 NLP 태스크를 텍스트→텍스트 변환으로 통일
+  입력: &quot;translate Korean to English: 나는 학교에 간다&quot;
+  출력: &quot;I go to school&quot;
+  
+  → 분류도 텍스트 생성으로 처리
+    입력: &quot;sentiment: 오늘 정말 행복해&quot;
+    출력: &quot;positive&quot;
+
+BART (Bidirectional and Auto-Regressive Transformers): Meta 2019
+  사전 학습: 노이즈 제거 (문장 셔플, 토큰 삭제, 마스킹)
+  인코더: BERT처럼 양방향 이해
+  디코더: GPT처럼 자동 회귀 생성
+  → 요약·생성·번역에 강점
+</code></pre>
+<pre><code>인코더-디코더 아키텍처 요약
+┌─────────────────────────────────────────────┐
+│ 모델 유형     │ 대표 모델 │ 주요 태스크       │
+├─────────────────────────────────────────────┤
+│ 인코더 전용   │ BERT      │ 분류, NER, QA     │
+│ 디코더 전용   │ GPT       │ 생성, 대화        │
+│ 인코더-디코더 │ T5, BART  │ 번역, 요약, 대화  │
+└─────────────────────────────────────────────┘
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: BERT는 의사, GPT는 소설가, T5/BART는 의사이면서 소설가다. 진단(이해)도 처방전(생성)도 동시에 잘 한다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="bert-paintyuning-gujo-yesi">BERT 파인튜닝 구조 예시</h3>
+<pre><code>BERT 문서 분류 파인튜닝
+입력: [CLS] 이 영화는 정말 재미있었다 [SEP]
+                ↓ (12층 Transformer 인코더)
+[CLS] 임베딩: [0.8, -0.3, ..., 0.5] ← 문장 전체 표현
+                ↓
+[Linear + Softmax] → 긍정(0.9) &#x2F; 부정(0.1)
+
+파인튜닝 전략:
+  1. 분류 헤드만 훈련 (BERT 동결) → 빠름, 정확도 낮음
+  2. 전체 파인튜닝 → 느림, 정확도 높음
+  3. 상위 몇 층만 파인튜닝 → 균형
+</code></pre>
+<h3 id="gpt-api-hwalyong-peurompeuteu-enjinieoring">GPT API 활용 — 프롬프트 엔지니어링</h3>
+<pre><code>시스템 프롬프트: &quot;당신은 친절한 한국어 고객 서비스 담당자입니다.&quot;
+사용자 입력:   &quot;배송이 3일이나 늦었어요&quot;
+                      ↓ GPT-4 자동 회귀 생성
+모델 출력:     &quot;불편을 드려서 정말 죄송합니다. 주문 번호를
+               알려주시면 즉시 확인하겠습니다.&quot;
+
+온도(Temperature):
+  T=0.0 → 결정적 (동일 프롬프트 → 동일 출력) → 사실 검색
+  T=1.0 → 다양성 → 창의적 글쓰기
+  T=2.0 → 무작위 → 비일관적 (잘 사용 안 함)
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: BERT 파인튜닝은 전문 학위를 가진 의사에게 특정 병원의 프로토콜을 가르치는 것이고, GPT API 사용은 그 의사에게 역할과 규칙을 알려주고 환자를 맡기는 것이다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="nlp-rideobodeu-seongneung-bigyo-glue-bencimakeu">NLP 리더보드 성능 비교 (GLUE 벤치마크)</h3>
+<pre><code>GLUE 점수 (이해 태스크 기준, 100점 만점)
+────────────────────────────────
+ELMo (2018):      68.7점
+BERT-Base:        79.6점  (+10.9점)
+BERT-Large:       82.1점
+RoBERTa:          86.4점
+T5-11B:           89.3점
+인간 성능:        87.1점  ← T5가 초월!
+────────────────────────────────
+</code></pre>
+<h3 id="gisulsa-siheom-haegsim-pointeu">기술사 시험 핵심 포인트</h3>
+<ol>
+<li><strong>BERT 사전 학습</strong>: MLM(15% 마스킹) + NSP(두 문장 연속성)</li>
+<li><strong>GPT 자동 회귀</strong>: 인과적 마스킹, <code>P(x_t|x_{&lt;t})</code> 조건부 확률</li>
+<li><strong>[CLS] 토큰</strong>: BERT에서 문장 전체 표현으로 분류에 활용</li>
+<li><strong>T5 통일 프레임워크</strong>: 모든 태스크를 텍스트→텍스트 변환</li>
+<li><strong>적합 태스크 매핑</strong>: 이해 → BERT, 생성 → GPT, 이해+생성 → T5/BART</li>
+</ol>
+<p>📢 <strong>섹션 요약 비유</strong>: BERT와 GPT는 같은 Transformer 엔진을 가진 다른 자동차다. BERT는 주변을 360도 보는 레이더 장착 이해 차량이고, GPT는 앞만 보고 달리는 고속 생성 차량이다. T5/BART는 두 기능을 모두 갖춘 SUV다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">관계</th><th style="text-align: left">개념</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">인코더 모델</td><td style="text-align: left">BERT</td><td style="text-align: left">양방향 이해, 분류 특화</td></tr>
+<tr><td style="text-align: left">사전 학습 목표</td><td style="text-align: left">MLM (Masked Language Model)</td><td style="text-align: left">마스킹된 토큰 복원</td></tr>
+<tr><td style="text-align: left">보조 목표</td><td style="text-align: left">NSP (Next Sentence Prediction)</td><td style="text-align: left">두 문장 연속성 예측</td></tr>
+<tr><td style="text-align: left">디코더 모델</td><td style="text-align: left">GPT</td><td style="text-align: left">단방향 자동 회귀 생성</td></tr>
+<tr><td style="text-align: left">생성 방식</td><td style="text-align: left">자동 회귀 (Autoregressive)</td><td style="text-align: left">이전 토큰 조건부 다음 토큰 예측</td></tr>
+<tr><td style="text-align: left">통합 모델</td><td style="text-align: left">T5</td><td style="text-align: left">모든 태스크 텍스트→텍스트 통일</td></tr>
+<tr><td style="text-align: left">통합 모델</td><td style="text-align: left">BART</td><td style="text-align: left">노이즈 제거 사전 학습</td></tr>
+<tr><td style="text-align: left">발전 모델</td><td style="text-align: left">RoBERTa</td><td style="text-align: left">BERT 개선 (더 많은 데이터)</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>BERT는 시험 문제를 풀 때 앞뒤 힌트를 모두 볼 수 있는 독자야. 빈칸 채우기를 할 때 앞 내용도, 뒤 내용도 동시에 참고할 수 있어.</li>
+</ol>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">BERT (Encoder): 양방향 MLM → 이해 · 분류 특화
+GPT (Decoder): 자기회귀 → 생성 특화
+    │
+    ▼
+T5 (Enc-Dec): 모든 NLP를 Text-to-Text로 통합
+    │
+    ▼
+GPT-3 → GPT-4 → 멀티모달 · 에이전트 시대
+</code></pre>
+<ol start="2">
+<li>GPT는 이야기를 이어가는 작가야. 지금까지 쓴 내용만 보면서 다음 문장을 계속 만들어 가는데, 뒷내용은 미리 볼 수 없어.</li>
+<li>T5는 만능 번역기야. 문제를 주면 어떤 종류든 답을 텍스트로 돌려주는데, 분류도 번역도 요약도 모두 "텍스트 → 텍스트" 방식으로 통일해서 처리해.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>256. 데이터베이스 OOM 킬 대비 메모리 아키텍처 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote cloud architecture
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: Linux OOM Killer는 메모리 부족 시 oom_score가 높은 프로세스를 강제 종료하는데, DB 프로세스가 대상이 되면 서비스 장애로 직결된다 — Huge Pages, vm.swappiness=0, Cgroup 격리로 DB 메모리를 보호해야 한다.</li>
+<li><strong>가치</strong>: DB는 자체 메모리 풀(Buffer Pool)로 성능을 최적화하므로, 커널이 메모리를 스왑하거나 강제 종료하면 캐시 무효화 + 예기치 않은 재시작으로 치명적 데이터 일관성 문제가 발생한다.</li>
+<li><strong>판단 포인트</strong>: K8s 환경에서 DB 파드의 메모리 Request = Limit으로 설정(Guaranteed QoS)하여 OOM 우선순위를 낮추고, Huge Pages를 활용하여 TLB 미스 감소와 메모리 단편화를 동시에 해결한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>DB 서버에서 새벽 4시에 갑자기 PostgreSQL이 종료되고, 에러 로그에 <code>Killed</code> 한 줄만 남아있는 상황. 이것이 <strong>Linux OOM(Out of Memory) Killer</strong>의 소행이다.</p>
+<p>Linux 커널은 물리 메모리가 부족하면 OOM Killer를 발동하여 특정 프로세스를 강제 종료(SIGKILL)한다. 대상은 <code>oom_score</code>가 높은 프로세스로, 메모리를 많이 쓰고 실행 시간이 짧은 프로세스가 높은 점수를 받는다.</p>
+<p>DB 프로세스는 의도적으로 메모리를 많이 사용(Buffer Pool)하므로 OOM Killer의 우선 타깃이 된다. 이를 방어하는 메모리 아키텍처 설계가 반드시 필요하다.</p>
+<pre><code>[OOM Killer 동작 원리]
+
+물리 메모리 100% 소진
+        │
+        ▼
+커널: OOM Killer 활성화
+        │
+        ▼
+프로세스별 oom_score 계산
+┌────────────────────────────────────┐
+│ nginx:     oom_score = 50          │
+│ app:       oom_score = 200         │
+│ postgresql:oom_score = 800 ← 타깃! │
+│ kernel:    oom_score = 0  (보호됨) │
+└────────────────────────────────────┘
+        │
+        ▼
+postgresql SIGKILL → 서비스 장애!
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: OOM Killer는 배가 침몰할 때 가장 무거운 짐을 바다에 던지는 선장이다. DB(버퍼 풀)는 크고 무거운 짐이라 가장 먼저 버려진다. 이 짐이 사실은 가장 소중한 화물임에도 불구하고.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="oom-bangeo-jeonryag">OOM 방어 전략</h3>
+<table><thead><tr><th style="text-align: left">전략</th><th style="text-align: left">설정</th><th style="text-align: left">효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>oom_score_adj 조정</strong></td><td style="text-align: left"><code>echo -1000 &gt; /proc/[pid]/oom_score_adj</code></td><td style="text-align: left">-1000 시 OOM Killer 완전 제외</td></tr>
+<tr><td style="text-align: left"><strong>vm.swappiness 조정</strong></td><td style="text-align: left"><code>sysctl -w vm.swappiness=0</code></td><td style="text-align: left">스왑 사용 최소화</td></tr>
+<tr><td style="text-align: left"><strong>vm.overcommit_memory</strong></td><td style="text-align: left"><code>sysctl -w vm.overcommit_memory=2</code></td><td style="text-align: left">과다 메모리 할당 방지</td></tr>
+<tr><td style="text-align: left"><strong>Huge Pages</strong></td><td style="text-align: left"><code>/sys/kernel/mm/hugepages/</code> 설정</td><td style="text-align: left">TLB 미스 감소, 단편화 방지</td></tr>
+<tr><td style="text-align: left"><strong>Cgroup Memory Limit</strong></td><td style="text-align: left">systemd 또는 K8s 설정</td><td style="text-align: left">DB 메모리 상한 제어</td></tr>
+</tbody></table>
+<h3 id="huge-pages-akitegceo">Huge Pages 아키텍처</h3>
+<pre><code>일반 페이지 (4KB)                  Huge Pages (2MB)
+┌─┬─┬─┬─┬─┬─┬─┬─┐               ┌──────────────────┐
+│4│4│4│4│4│4│4│4│KB × 512개     │    2MB × 1개      │
+└─┴─┴─┴─┴─┴─┴─┴─┘               └──────────────────┘
+
+TLB 엔트리: 512개 필요             TLB 엔트리: 1개 필요
+TLB 미스: 빈번                     TLB 미스: 거의 없음
+
+Oracle&#x2F;PostgreSQL&#x2F;MySQL에서
+1GB 이상 Buffer Pool 사용 시
+Huge Pages 설정이 필수
+</code></pre>
+<h3 id="k8s-hwangyeongyi-db-memori-boho">K8s 환경의 DB 메모리 보호</h3>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml"># PostgreSQL StatefulSet 메모리 설정
+apiVersion: apps&#x2F;v1
+kind: StatefulSet
+spec:
+  template:
+    spec:
+      containers:
+      - name: postgres
+        resources:
+          requests:
+            memory: &quot;8Gi&quot;   # Guaranteed QoS: request = limit
+            hugepages-2Mi: &quot;4Gi&quot;
+          limits:
+            memory: &quot;8Gi&quot;   # request = limit → Guaranteed QoS
+            hugepages-2Mi: &quot;4Gi&quot;
+        env:
+        - name: POSTGRES_SHARED_BUFFERS
+          value: &quot;2GB&quot;       # 물리 메모리의 25% 권장
+</code></pre>
+<h3 id="k8s-qos-keulraeseuwa-oom-useonsunwi">K8s QoS 클래스와 OOM 우선순위</h3>
+<pre><code>QoS 클래스           조건                    OOM 우선순위
+──────────────────────────────────────────────────────
+Guaranteed   request == limit (CPU+메모리)  가장 마지막에 종료
+Burstable    request &lt; limit 또는 일부만    중간 우선순위
+BestEffort   request, limit 없음            가장 먼저 종료
+
+→ DB 파드는 반드시 Guaranteed QoS 클래스!
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: K8s QoS는 비행기 좌석 등급이다. 이코노미(BestEffort)는 초과 예약 시 가장 먼저 내려야 한다. 비즈니스(Guaranteed)는 보장된 좌석이라 절대 내리지 않아도 된다. DB는 무조건 비즈니스석이어야 한다.</p>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="vm-swappiness-seoljeong-gabsbyeol-dongjag">vm.swappiness 설정 값별 동작</h3>
+<table><thead><tr><th style="text-align: left">값</th><th style="text-align: left">동작</th><th style="text-align: left">적합 환경</th></tr></thead><tbody>
+<tr><td style="text-align: left">0</td><td style="text-align: left">스왑 최대 회피 (물리 메모리 고갈 시에만 스왑)</td><td style="text-align: left">DB 서버 권장</td></tr>
+<tr><td style="text-align: left">1</td><td style="text-align: left">실질적으로 스왑 없음 (RHEL 7 권장)</td><td style="text-align: left">DB 서버 대안</td></tr>
+<tr><td style="text-align: left">10</td><td style="text-align: left">물리 메모리 90% 사용 후 스왑</td><td style="text-align: left">일반 서버</td></tr>
+<tr><td style="text-align: left">60</td><td style="text-align: left">기본값, 균형적 스왑</td><td style="text-align: left">일반 데스크톱</td></tr>
+<tr><td style="text-align: left">100</td><td style="text-align: left">스왑 최대 활용</td><td style="text-align: left">메모리 제한 환경</td></tr>
+</tbody></table>
+<h3 id="dbbyeol-memori-gwanryeon-haegsim-paramiteo">DB별 메모리 관련 핵심 파라미터</h3>
+<table><thead><tr><th style="text-align: left">DB</th><th style="text-align: left">핵심 파라미터</th><th style="text-align: left">권장값</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>PostgreSQL</strong></td><td style="text-align: left">shared_buffers</td><td style="text-align: left">물리 메모리의 25%</td></tr>
+<tr><td style="text-align: left"><strong>MySQL InnoDB</strong></td><td style="text-align: left">innodb_buffer_pool_size</td><td style="text-align: left">물리 메모리의 70~80%</td></tr>
+<tr><td style="text-align: left"><strong>Oracle</strong></td><td style="text-align: left">SGA_TARGET</td><td style="text-align: left">물리 메모리의 40~60%</td></tr>
+<tr><td style="text-align: left"><strong>Redis</strong></td><td style="text-align: left">maxmemory</td><td style="text-align: left">전체 물리 메모리의 80% 이하</td></tr>
+<tr><td style="text-align: left"><strong>MongoDB</strong></td><td style="text-align: left">wiredTigerCacheSizeGB</td><td style="text-align: left">(물리 메모리 - 1GB) × 50%</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: DB 메모리 설정은 냉장고 공간 배분이다. 전체 냉장고(물리 메모리)에서 DB 식재료(Buffer Pool)에 얼마를 할당할지 정하는데, 너무 많으면 OS가 쓸 공간이 없고 너무 적으면 DB가 자꾸 디스크(스왑)를 뒤진다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="linux-db-seobeo-memori-coejeoghwa-cekeuriseuteu">Linux DB 서버 메모리 최적화 체크리스트</h3>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash"># 1. Huge Pages 설정 확인
+grep HugePages &#x2F;proc&#x2F;meminfo
+
+# 2. vm.swappiness 설정 (영구 적용)
+echo &quot;vm.swappiness=0&quot; &gt;&gt; &#x2F;etc&#x2F;sysctl.conf
+sysctl -p
+
+# 3. DB 프로세스 OOM 보호 (PostgreSQL 예시)
+PID=$(pgrep postgres | head -1)
+echo -1000 &gt; &#x2F;proc&#x2F;$PID&#x2F;oom_score_adj
+
+# 4. 투명 Huge Pages 비활성화 (DB에서 권장)
+echo never &gt; &#x2F;sys&#x2F;kernel&#x2F;mm&#x2F;transparent_hugepage&#x2F;enabled
+
+# 5. Numa 설정 확인 (NUMA 아키텍처 서버)
+numactl --hardware
+</code></pre>
+<h3 id="memori-akitegceo-seolgye-weoncig">메모리 아키텍처 설계 원칙</h3>
+<pre><code>물리 메모리 32GB 서버 예시:
+
+┌──────────────────────────────────────────┐
+│ 물리 메모리 32GB                          │
+│                                          │
+│  OS 커널&#x2F;시스템 예비    ▒▒▒▒▒▒   4GB     │
+│  DB Buffer Pool (PG)  ▓▓▓▓▓▓▓▓   8GB    │
+│  DB Work Memory       ████████   8GB     │
+│  App&#x2F;JVM Heap         ░░░░░░░░   8GB     │
+│  스왑 사용             (0에 가깝게)         │
+└──────────────────────────────────────────┘
+</code></pre>
+<h3 id="gisulsa-siheom-pandan-pointeu">기술사 시험 판단 포인트</h3>
+<ul>
+<li><strong>OOM Killer 발동 원인</strong>: 메모리 오버커밋(Overcommit) + 실제 물리 메모리 부족</li>
+<li><strong>Huge Pages vs THP(Transparent Huge Pages)</strong>: DB에서는 THP 비활성화 권장 (성능 불안정)</li>
+<li><strong>K8s 환경</strong>: DB를 K8s에 올릴 때 Guaranteed QoS + Stateful + PVC 조합 필수</li>
+</ul>
+<p>📢 <strong>섹션 요약 비유</strong>: 메모리 아키텍처 설계는 사무실 자리 배치다. DB팀(버퍼 풀)은 이사와 계약한 자리(Guaranteed)라 아무도 뺏을 수 없고, 인턴(BestEffort 프로세스)은 빈자리 앉다가 자리가 부족하면 가장 먼저 쫓겨난다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="gidaehyogwa">기대효과</h3>
+<table><thead><tr><th style="text-align: left">영역</th><th style="text-align: left">효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>안정성</strong></td><td style="text-align: left">OOM Killer로 인한 DB 프로세스 강제 종료 방지</td></tr>
+<tr><td style="text-align: left"><strong>성능</strong></td><td style="text-align: left">Huge Pages로 TLB 미스 감소 → 쿼리 속도 향상</td></tr>
+<tr><td style="text-align: left"><strong>예측성</strong></td><td style="text-align: left">vm.swappiness=0으로 메모리 성능 일관성 유지</td></tr>
+<tr><td style="text-align: left"><strong>K8s 운영</strong></td><td style="text-align: left">Guaranteed QoS로 DB 파드 우선 보호</td></tr>
+</tbody></table>
+<h3 id="hangye-mic-juyisahang">한계 및 주의사항</h3>
+<ul>
+<li><strong>Huge Pages 유연성 부족</strong>: 정적 Huge Pages는 한번 할당하면 반환이 어려움 (메모리 과소 할당 문제)</li>
+<li><strong>oom_score_adj -1000</strong>: DB가 보호되는 대신 다른 프로세스가 종료될 수 있음 — 전체 메모리 계획 필요</li>
+<li><strong>K8s DB의 한계</strong>: K8s는 원래 무상태(Stateless) 서비스를 위해 설계 — DB는 VM 또는 Bare Metal이 더 적합한 경우도 있음</li>
+<li><strong>스왑 완전 비활성화 위험</strong>: 특수한 메모리 스파이크 상황에서 최악의 경우 시스템 전체 패닉 가능</li>
+</ul>
+<p>📢 <strong>섹션 요약 비유</strong>: DB 메모리 보호는 중요 정부 시설 경호와 같다. VIP(DB)를 보호하면 할수록 다른 곳의 경비가 약해진다. 전체 메모리 예산을 계획하고 균형을 맞추는 것이 진짜 해법이다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">Linux OOM Killer</td><td style="text-align: left">메모리 부족 시 프로세스 강제 종료 커널 메커니즘</td></tr>
+<tr><td style="text-align: left">Huge Pages</td><td style="text-align: left">메모리 페이지 크기를 4KB→2MB로 확대하여 TLB 효율화</td></tr>
+<tr><td style="text-align: left">K8s QoS</td><td style="text-align: left">Guaranteed/Burstable/BestEffort 클래스별 OOM 우선순위</td></tr>
+<tr><td style="text-align: left">Buffer Pool</td><td style="text-align: left">DB가 디스크 데이터를 캐시하는 메모리 영역</td></tr>
+<tr><td style="text-align: left">Cgroup</td><td style="text-align: left">프로세스 그룹별 리소스 제한 (K8s 기반 기술)</td></tr>
+<tr><td style="text-align: left">NUMA</td><td style="text-align: left">멀티소켓 서버에서 메모리 접근 비대칭 아키텍처</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>컴퓨터 메모리가 꽉 차면 리눅스가 몰래 프로그램을 강제로 끄는데, 이걸 OOM Killer라고 해.</li>
+<li>DB는 메모리를 많이 쓰니까 항상 1순위 대상이 돼 - 근데 DB가 꺼지면 데이터가 날아가서 큰일 나!</li>
+<li>그래서 미리 DB에 "이건 절대 끄지 마!"라는 보호 표시(oom_score_adj=-1000)를 붙여두는 거야.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

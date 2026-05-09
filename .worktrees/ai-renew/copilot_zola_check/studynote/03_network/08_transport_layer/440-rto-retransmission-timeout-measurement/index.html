@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>440. RTO (Retransmission TimeOut) 측정 방식 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: RTO(Retransmission TimeOut)는 내가 패킷을 쏘고 나서 <strong>"도대체 상대방의 영수증(ACK)이 올 때까지 몇 초를 기다렸다가, 안 오면 포기하고 재전송을 때려야 할까?"를 라우터가 혼자 끙끙 앓으며 계산해 내는 절대적인 대기 인내심 타이머 시간</strong>이다.</li>
+<li><strong>제이콥슨 알고리즘 (동적 측정의 핵심)</strong>: 핑(RTT)이 한국은 10ms고 미국은 200ms인데 타이머를 고정 3초로 퉁치면 비효율의 극치다. 그래서 TCP는 매번 쏠 때마다 핑 타임을 재고, 평균값(SRTT)과 들쭉날쭉한 정도(편차, RTTVAR)를 수학 공식에 넣어 <strong>"아, 이 목적지랑 통신할 땐 2.4초 정도 기다려주는 게 최적이네!"라고 매 순간 유동적으로 RTO를 갱신</strong>한다.</li>
+<li><strong>칸 알고리즘 (Karn's Algorithm)</strong>: 재전송을 갈겼을 때 치명적인 딜레마(재전송한 놈의 영수증인지, 원래 놈의 영수증이 지각한 건지 모름)를 해결하기 위해, <strong>"재전송한 패킷으로 돌아온 영수증은 핑 타임 계산(RTO 공식)에서 무조건 빼버려라!"라고 못을 박은 천재적인 오염 방지 기술</strong>이다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: TCP 송신 측이 세그먼트를 전송한 후, 수신 확인(ACK) 패킷이 도달할 때까지 기다리는 최대 허용 시간(Timeout). 이 시간이 경과하면 패킷 유실로 간주하고 재전송(Retransmission)을 수행한다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 내가 게임 아이템 구매 요청 패킷을 넥슨 서버에 쐈다. 응답이 안 온다. 0.1초 만에 "안 왔어! 재전송 쏴!" 하면 넥슨 서버는 똑같은 요청을 두 번 받아 결제가 2중으로 될 위험이 있고, 대역폭도 낭비된다. 반대로 10초나 기다리면 내 게임 화면은 10초 동안 프리징(렉) 걸린다. <strong>"기다리긴 기다려야 하는데, 너무 짧지도 않고 너무 길지도 않게, 딱 상대방과 나 사이의 도로 사정에 완벽히 들어맞는 '황금 타이머(RTO)'를 어떻게 수학적으로 구할 것인가?"</strong></p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: RTO는 짜장면 배달 주문의 **"독촉 전화 대기 시간"**과 같습니다.</p>
+<ul>
+<li>우리 집 옆 중국집은 보통 15분이면 배달이 옵니다. 나는 주문하고 **15분+여유 시간 5분 = 20분(RTO)**을 기다리다가 안 오면 "아저씨 언제 와요!(재전송)"라고 전화를 겁니다.</li>
+<li>그런데 저 멀리 30km 밖 맛집에 배달을 시키면 1시간이 걸립니다. 여기서 내가 20분 만에 독촉 전화를 걸면 미친놈 소리를 듣습니다. 이때는 내 인내심(RTO)을 자동으로 <strong>1시간 10분</strong>으로 늘려 잡아야 합니다. 이것이 동적 RTO 계산입니다.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유:</strong> RTO는 라면 물 끓이기 타이머입니다. 물의 양과 화력(네트워크 상태)이 매번 다르기 때문에, 고정된 시간 3분(고정 타이머)에 무조건 면을 넣는 바보짓을 버리고, 물이 끓는 속도를 실시간으로 눈으로 보며(RTT 측정) 면 넣는 타이밍(RTO)을 유동적으로 바꾸는 셰프의 감각입니다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-rtoyi-gyesan-mabeobgwa-kan-algorijeum-deep-dive">Ⅱ. RTO의 계산 마법과 칸 알고리즘 (Deep Dive)</h2>
+<p>네트워크의 지연율(RTT)은 수시로 변한다. TCP는 이를 3단계의 정밀한 수학 공식을 통해 추적한다.</p>
+<h3 id="1-srttwa-rttvar-jeikobseunyi-mabeob-gongsig">1. SRTT와 RTTVAR (제이콥슨의 마법 공식)</h3>
+<p>TCP는 영수증이 올 때마다 걸린 시간(RTT)을 초시계로 잰다.
+하지만 한 번 튀었다고 그 값을 맹신하면 안 된다. 과거의 기억을 부드럽게 섞어준다.</p>
+<ul>
+<li><strong>SRTT (평활화된 RTT)</strong>: <code>이전 평균값 87.5% + 방금 잰 시간 12.5%</code>. 이렇게 가중 평균을 내어 순간적으로 핑이 확 튀어도 부드러운 언덕(이동 평균)을 유지하게 한다.</li>
+<li><strong>RTTVAR (RTT 편차)</strong>: 핑이 안정적인지(계속 20ms 유지), 널뛰기하는지(10ms ~ 100ms 지랄 발광) 변동성을 측정한다.</li>
+<li><strong>최종 RTO 공식</strong>: <strong><code>RTO = SRTT + 4 × RTTVAR</code></strong>
+<ul>
+<li>해석: "평균 시간(SRTT)만큼 기다려주되, 만약 이 동네 네트워크가 널뛰기가 심한 양아치 망(RTTVAR가 높음)이라면, 여유 시간(×4)을 엄청 넉넉하게 더 줘서 섣부른 재전송(독촉 전화)을 막아라!"</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-kan-algorijeum-karn-s-algorithm-yi-oyeom-bangji-rul">2. 칸 알고리즘 (Karn's Algorithm)의 오염 방지 룰</h3>
+<p>엄청나게 유명한 시험 단골 출제 문제다. (재전송의 딜레마).</p>
+<ul>
+<li><strong>상황</strong>: 내가 1번 패킷을 쐈다. RTO(예: 3초)가 다 지났는데 답(ACK)이 안 와서, 눈물을 머금고 1번 패킷을 <strong>다시(재전송)</strong> 쐈다.</li>
+<li><strong>사건 발생</strong>: 재전송을 갈기고 0.1초 뒤에 띠링~ 하고 <strong>1번 ACK 영수증</strong>이 도착했다!</li>
+<li><strong>미쳐버린 딜레마</strong>: 내 PC의 뇌구조는 멘붕에 빠진다. "야, 방금 도착한 이 영수증... <strong>아까 3.1초 전에 보냈던 원본 패킷이 지각해서 이제 온 걸까? 아니면 내가 방금 0.1초 전에 재전송한 패킷이 빛의 속도로 튕겨서 온 걸까?</strong>"</li>
+<li>만약 지각한 놈(3.1초)인데 빛의 속도(0.1초)라고 착각해서 RTO 공식에 넣어버리면? 내 PC는 "오 핑 0.1초 짱 빠르네!" 착각하고 RTO 타이머를 0.1초로 확 줄여버린다. 결국 다음 패킷부터 0.1초마다 미친 듯이 재전송 폭풍을 갈겨대어 인터넷을 망가뜨린다.</li>
+<li><strong>칸의 해결책</strong>: <strong>"재전송한 패킷에 대해서 날아온 영수증은 출처가 불분명한 썩은 물이니까, 아예 RTO 측정 공식(타이머 갱신)에 한 방울도 섞지 마라! 무시해라!!"</strong> 이 한마디로 TCP의 계산 오염을 완벽히 차단했다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text"> ┌─────────────────────────────────────────────────────────────┐
+ │                칸 알고리즘(Karn&#x27;s Algorithm) 딜레마 시각화        │
+ ├─────────────────────────────────────────────────────────────┤
+ │                                                             │
+ │   [ 내 PC ]                                       [ 목적지 ]   │
+ │   1. 1번 패킷 (원본) ────────(엄청 늦게 기어감)────────▶        │
+ │                                                             │
+ │   2. (3초 타이머 만료!!)                                        │
+ │   3. 1번 패킷 (재전송) ────────(빛의 속도로 날아감)───▶        │
+ │                                                             │
+ │   4. 영수증(ACK) 도착!! ◀────────────────────────       │
+ │                                                             │
+ │   * 내 PC의 멘붕: &quot;저 영수증은 1번 원본이 3초 만에 만든 걸까,        │
+ │                  3번 재전송이 0.1초 만에 만든 걸까? 알 수가 없다!!&quot;  │
+ │                                                             │
+ │   * 칸의 철칙: &quot;출처가 헷갈리는 영수증은 평균 핑 타임 계산에서 무조건  │
+ │               제외(Ignore)시켜 계산 수질 오염을 막아라!!&quot;          │
+ └─────────────────────────────────────────────────────────────┘
+</code></pre>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유:</strong> RTO 계산 공식은 사장님의 **"납기일 산정법"**입니다. 직원(네트워크)의 평소 평균 작업 속도(SRTT)에다가, 이 직원이 평소에 얼마나 자주 지각하는지(RTTVAR 편차)를 곱해서 **아주 넉넉하고 합리적인 며칠짜리 데드라인(RTO)**을 세팅해, 쓸데없는 쪼쪼기(재전송)를 줄이는 고도의 인력 관리 스킬입니다.</p>
+</blockquote>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

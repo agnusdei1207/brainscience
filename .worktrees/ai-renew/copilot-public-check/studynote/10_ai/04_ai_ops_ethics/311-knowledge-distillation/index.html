@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>311. 지식 증류 (Knowledge Distillation) - 교사 학생 네트워크 압축망 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ai
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 지식 증류 (Knowledge Distillation)는 크고 복잡한 교사 모델(Teacher Model)의 지식을 작고 가벼운 학생 모델(Student Model)에게 전달하여, 학생이 교사에 근접한 성능을 작은 크기로 달성하게 하는 모델 압축 기법이다.</li>
+<li><strong>가치</strong>: 하드 레이블(Hard Label, 정답 클래스만 1)이 아닌 교사의 **소프트 레이블(Soft Label, 클래스별 확률 분포)**을 학습함으로써 클래스 간 유사성(다크 날리지, Dark Knowledge)까지 전달하여, 원래 정답 데이터만 훈련한 소형 모델보다 훨씬 뛰어난 일반화 성능을 달성한다.</li>
+<li><strong>판단 포인트</strong>: 증류 핵심은 <strong>온도(Temperature, T)</strong> 파라미터로 소프트맥스의 분포를 평활화하여 상위 확률뿐 아니라 하위 확률 간 상대적 관계(다크 날리지)가 학생에게 전달되도록 하는 것이다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>GPT-4(수천억 파라미터)를 스마트폰에서 돌릴 수 없다. 그러나 GPT-4가 학습한 지식과 판단 능력을 소형 모델에 "이식"할 수 있다면? 이것이 지식 증류(Knowledge Distillation)의 핵심 아이디어다.</p>
+<p>2015년 제프리 힌튼(Geoffrey Hinton)이 제안한 이 기법은 교사 모델의 **소프트 레이블(클래스별 확률 분포)**을 학생 모델의 학습 타겟으로 활용한다. 예를 들어, 고양이 이미지에 대해 교사 모델이 "고양이 0.90, 개 0.07, 토끼 0.03"을 출력한다면, 이 분포가 "고양이와 개가 토끼보다 더 유사하다"는 다크 날리지(Dark Knowledge)를 담고 있다. 학생이 이 풍부한 정보를 학습하면 단순히 "1(고양이), 0(나머지)"를 학습하는 것보다 훨씬 깊은 표현을 익힌다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 지식 증류는 박사 교수(교사 모델)가 직접 강의하는 대신, 교수의 사고 방식과 추론 과정(소프트 레이블)을 녹화한 영상으로 중학생(학생 모델)이 학습하는 것이다. 정답만 가르치는 것(하드 레이블)보다 "왜 이게 맞고 저건 왜 비슷한지"를 알려주는 것(소프트 레이블)이 훨씬 깊은 이해를 만든다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────┐
+│         지식 증류 (Knowledge Distillation) 학습 구조                │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  입력 데이터 x                                                     │
+│      │                        │                                  │
+│      ▼                        ▼                                  │
+│  [교사 모델 (Teacher)]      [학생 모델 (Student)]                   │
+│  크고 복잡한 모델             작고 가벼운 모델                        │
+│  (동결, 학습 안 함)           (학습 진행 중)                         │
+│      │                        │                                  │
+│  소프트맥스 T=T_high          소프트맥스 T=T_high                   │
+│      │                        │                                  │
+│  소프트 레이블 p_T            소프트 레이블 q_T                      │
+│  [고양이:0.90, 개:0.07, ...]  [고양이:0.85, 개:0.09, ...]          │
+│      │                        │                                  │
+│      └───────▶ KL Divergence 손실 ◀────────┘                    │
+│                  L_distill = KL(p_T || q_T)                     │
+│                                                                  │
+│  정답 레이블 y                                                     │
+│      │                        │                                  │
+│      └───────▶ Cross-Entropy 손실 ◀────────┘                    │
+│                  L_CE = CrossEntropy(y, q)                      │
+│                                                                  │
+│  최종 손실: L = α × L_CE + (1-α) × L_distill                     │
+│  (α: 하이퍼파라미터, 보통 0.1~0.5)                                  │
+│                                                                  │
+│  온도(T) 효과: T가 클수록 소프트맥스 분포가 평활화                    │
+│  T=1: 표준 소프트맥스 | T=10: 모든 클래스 확률이 비슷해짐 (다크 날리지 강화)│
+└──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">증류 유형</th><th style="text-align: left">방법</th><th style="text-align: left">특징</th></tr></thead><tbody>
+<tr><td style="text-align: left">응답 기반 (Response-based)</td><td style="text-align: left">교사의 최종 출력 소프트 레이블 사용</td><td style="text-align: left">가장 단순, DistilBERT</td></tr>
+<tr><td style="text-align: left">특징 기반 (Feature-based)</td><td style="text-align: left">중간 레이어 특징 맵 전달</td><td style="text-align: left">더 깊은 지식 전달</td></tr>
+<tr><td style="text-align: left">관계 기반 (Relation-based)</td><td style="text-align: left">인스턴스 간 관계 구조 전달</td><td style="text-align: left">복잡한 패턴 학습</td></tr>
+</tbody></table>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 온도(Temperature) 파라미터는 음식 비유로 이해한다. T=1(보통 온도)의 소프트맥스는 우승자가 압도적으로 높은 확률을 가진 "뜨거운" 분포다. T=10(높은 온도)은 모든 음식이 비슷한 온도로 식어 차이가 줄어든(평활화된) 분포다. 학생은 "뜨거운 정답"에서 배우는 것보다 "미지근한 분포"에서 클래스 간 미묘한 관계를 더 잘 배운다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p><strong>DistilBERT</strong>: BERT-Base(110M 파라미터)를 지식 증류로 40% 압축한 DistilBERT(66M)는 BERT 성능의 97%를 유지하면서 추론 속도가 60% 빠르다. 응답 기반 + 중간 레이어 증류를 결합한 대표 성공 사례다.</p>
+<p><strong>자기 증류 (Self-Distillation)</strong>: 교사와 학생이 같은 아키텍처이지만 깊이가 다른 경우, 또는 앙상블 교사로부터 단일 학생이 학습하는 방식. 모델 압축이 목적이 아닌 일반화 성능 향상에 초점.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: DistilBERT는 차량 경량화 성공 사례다. 원래 SUV(BERT, 110M 파라미터)를 가져다 불필요한 철판을 제거하고(증류 압축) 경량 소재로 교체해서 경차(DistilBERT, 66M) 수준으로 줄였는데, 놀랍게도 연료 효율(추론 속도)은 60% 좋아지고 주행 성능(NLP 성능)은 97%나 유지됐다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p><strong>지식 증류 vs 양자화 vs 프루닝 비교</strong>:</p>
+<table><thead><tr><th style="text-align: left">방법</th><th style="text-align: left">압축 원리</th><th style="text-align: left">장점</th><th style="text-align: left">단점</th></tr></thead><tbody>
+<tr><td style="text-align: left">지식 증류</td><td style="text-align: left">작은 모델을 큰 모델로 훈련</td><td style="text-align: left">성능 유지 우수</td><td style="text-align: left">증류 학습 시간 필요</td></tr>
+<tr><td style="text-align: left">양자화 (Quantization)</td><td style="text-align: left">가중치 정밀도 낮춤</td><td style="text-align: left">즉시 적용 가능</td><td style="text-align: left">일부 정밀도 손실</td></tr>
+<tr><td style="text-align: left">가지치기 (Pruning)</td><td style="text-align: left">중요도 낮은 가중치 제거</td><td style="text-align: left">구조적 압축</td><td style="text-align: left">성능 저하 가능</td></tr>
+</tbody></table>
+<p>실무에서는 세 기법을 조합하는 **복합 압축 파이프라인(Distillation → Pruning → Quantization)**이 최고 효율을 달성한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 지식 증류·양자화·프루닝 삼총사는 맞춤 다이어트 플랜이다. 증류는 "부모(큰 모델) 유전자를 물려받아 태어날 때부터 효율적인 아이" 전략이고, 양자화는 "성인이 된 후 덜 정밀하게 먹기"이고, 프루닝은 "군살 잘라내기"다. 세 가지를 순서대로 하면 최강의 몸매(성능/크기 비율) 달성이 가능하다.</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>지식 증류는 모델 경량화의 핵심 기법으로, 클라우드의 거대 AI(GPT-4급)를 스마트폰·IoT 기기·엣지 서버에서 실행 가능한 소형 AI로 변환하는 핵심 기술이다. GPT-4 → GPT-4o mini, BERT → DistilBERT처럼 초대형 모델의 지식이 소형 모델로 이식되어 AI의 접근성과 응용 범위를 극적으로 확장한다. 온디바이스 AI 시대에 지식 증류는 더욱 핵심적인 역할을 할 것이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 지식 증류는 AI 세계의 제다이 마스터 전수 의식이다. 오비완(GPT-4)의 강력한 포스(지식)를 루크(소형 모델)에게 전수하는 것. 루크는 오비완만큼 크지 않지만, 핵심 지혜(다크 날리지)를 물려받아 적절한 상황에서 거의 동등한 힘을 발휘한다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연관 키워드</th><th style="text-align: left">관계</th></tr></thead><tbody>
+<tr><td style="text-align: left">소프트 레이블 (Soft Label)</td><td style="text-align: left">확률 분포, 다크 날리지</td><td style="text-align: left">교사의 지식이 전달되는 핵심 매개체</td></tr>
+<tr><td style="text-align: left">온도 (Temperature)</td><td style="text-align: left">소프트맥스 평활화</td><td style="text-align: left">소프트 레이블의 정보 밀도 조절</td></tr>
+<tr><td style="text-align: left">DistilBERT</td><td style="text-align: left">BERT 압축, 66M</td><td style="text-align: left">지식 증류의 대표 성공 사례</td></tr>
+<tr><td style="text-align: left">양자화 (Quantization)</td><td style="text-align: left">INT8, 모델 경량화</td><td style="text-align: left">증류와 함께 사용하는 보완 압축 기법</td></tr>
+<tr><td style="text-align: left">온디바이스 AI</td><td style="text-align: left">엣지, 스마트폰, NPU</td><td style="text-align: left">지식 증류의 최종 배포 환경</td></tr>
+</tbody></table>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li><strong>지식 증류</strong>는 박사 교수(큰 AI)가 "고양이는 개와 비슷하고 자동차와는 달라"라는 <strong>세세한 지식</strong>을 작은 학생 AI에게 가르쳐주는 방법이에요!</li>
+<li>단순히 "정답은 고양이야"가 아니라 교수의 <strong>"고양이일 확률 90%, 개일 확률 7%"라는 분포</strong> 전체를 학생이 배우는 거예요.</li>
+<li>덕분에 스마트폰 같은 <strong>작은 기기에도 거대 AI의 지식을 담은</strong> 훨씬 가볍고 빠른 AI를 만들 수 있어요!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>272. 멀티 마스터 (Multi-Master &#x2F; Peer-to-Peer) 복제 - 양방향 쓰기 가능, 충돌 해결 매커니즘 필수 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="272-meolti-maseuteo-multi-master-bogje">272. 멀티 마스터 (Multi-Master) 복제</h1>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 멀티 마스터(Multi-Master) 복제는 두 개 이상의 노드가 모두 쓰기를 받을 수 있는 복제 아키텍처로, 각 마스터가 다른 마스터의 쓰기를 비동기적으로 복제한다.</li>
+<li><strong>가치</strong>: 쓰기 부하를 분산시키고, 특정 마스터 장애 시에도 다른 마스터가 쓰기를 受入れる어 가용성을 높이며, 쓰기 집중 환경에 효과적이다.</li>
+<li><strong>융합</strong>: 쓰기 충돌, 충돌 해결, 비동기식 복제, CAP 정리, 최종 일관성과 밀접하게 연관된다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<h3 id="gaenyeom-jeongyi">개념 정의</h3>
+<p>멀티 마스터(Multi-Master) 복제는 두 개 이상의 노드가 모두 쓰기 요청을 받을 수 있는 복제 아키텍처이다. 각 마스터 노드는 쓰기를 受入れて 로컬에 적용하고, 다른 마스터에게 비동기적으로 복제한다. 쓰기 충돌이 발생할 수 있으므로, 충돌 감지 및 해결 메커니즘이 필수적이다.</p>
+<h3 id="pilyoseong">필요성</h3>
+<p>마스터-슬레이브 복제에서는 마스터가 단일 쓰기 지점이므로 쓰기 확장성에 한계가 있다. 멀티 마스터 복제를 사용하면 여러 노드가 쓰기를 처리하므로 쓰기 부하를 분산시킬 수 있다. 또한 하나의 마스터가故障しても他のマターが書き込みを受け続ける어 가용성이 향상된다.</p>
+<h3 id="baegyeong">배경</h3>
+<p>멀티 마스터 복제는 Cassandra, CouchDB, MongoDB(레플리카셋 내), PostgreSQL(BDR), MySQL(멀티 소스 복제) 등에서 지원된다. 그러나 쓰기 충돌 관리가 복잡하므로, 충돌이 잘 발생하지 않는 워크로드에 적합하다.</p>
+<h3 id="biyu">비유</h3>
+<p>멀티 마스터 복제는각 지점에 창구가 있는 은행과 같다. 고객(클라이언트)은 가까운 창구(마스터 어디든)에서 거래할 수 있다. 그러나 두 창구에서 동시에 같은 계좌를 거래하면 충돌이 발생할 수 있어, 은행 중앙 시스템(충돌 해결 메커니즘)이 이를 조정한다.</p>
+<p>📢 섹션 요약: 멀티 마스터 복제는 여러 노드가 쓰기를受入れ어 쓰기 확장성과 가용성을 높이지만, 쓰기 충돌 관리가 핵심 과제이다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri-deep-dive">Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)</h2>
+<h3 id="meolti-maseuteo-dongjag-gujo">멀티 마스터 동작 구조</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                    멀티 마스터 복제 동작 구조                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  [쓰기 동작]                                                               │
+│                                                                             │
+│       Client A                    Client B                                   │
+│         │                            │                                      │
+│         ▼                            ▼                                      │
+│    ┌─────────────┐              ┌─────────────┐                           │
+│    │  Master A   │              │  Master B   │                           │
+│    │  (쓰기受入) │              │  (쓰기受入)  │                           │
+│    └──────┬──────┘              └──────┬──────┘                           │
+│           │                            │                                      │
+│           │ 복제                      │ 복제                                  │
+│           ▼                            ▼                                      │
+│    ┌─────────────┐              ┌─────────────┐                           │
+│    │  Master B   │              │  Master A   │                           │
+│    │  (비동기복제)│              │  (비동기복제)│                           │
+│    └─────────────┘              └─────────────┘                           │
+│                                                                             │
+│  [읽기 동작]                                                               │
+│                                                                             │
+│       Client A, B                                                           │
+│         │                                                                   │
+│         ├──▶ Master A (읽기) ──▶ 응답                                      │
+│         ├──▶ Master B (읽기) ──▶ 응답                                      │
+│         └──▶ ...                                                           │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="sseugi-cungdol-balsaeng">쓰기 충돌 발생</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                    멀티 마스터 쓰기 충돌 발생 예시                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  [동시 쓰기 충돌]                                                          │
+│                                                                             │
+│  Time T0: Master A와 Master B가 각각 쓰기 受入れ                             │
+│                                                                             │
+│  Master A에서: UPDATE users SET balance = 1500 WHERE id = 1;               │
+│  Master B에서: UPDATE users SET balance = 1800 WHERE id = 1;               │
+│                                                                             │
+│  ※ 네트워크 지연으로 인해 서로의 쓰기를 몰랐음                                │
+│                                                                             │
+│  결과:                                                                      │
+│  Master A: balance = 1500                                                 │
+│  Master B: balance = 1800                                                 │
+│                                                                             │
+│  ※ 복제 후: 어느 값이 적용될까? → 충돌!                                     │
+│                                                                             │
+│  [해결 방법]                                                               │
+│                                                                             │
+│  1. Last Writer Wins (LWW)                                                │
+│  ───────────────────────────                                              │
+│  • 가장 최신 타임스탬프(또는 Version)의 쓰기 적용                            │
+│  • 예: Master B의 쓰기가 더 최신 → balance = 1800                          │
+│  • Cassandra, DynamoDB에서 사용                                              │
+│                                                                             │
+│  2. Version vectors                                                        │
+│  ────────────────────                                                      │
+│  • 각 노드의 버전을 추적                                                    │
+│  • 충돌发生时 모든 버전을保持                                              │
+│  • 애플리케이션에서 해결策略 선택                                           │
+│  • Riak에서 사용                                                            │
+│                                                                             │
+│  3. 애플리케이션 수준 병합                                                  │
+│  ───────────────────────                                                    │
+│  • 비즈니스 로직에 따라 충돌 해결                                            │
+│  • 예: balance는 합산, 카운터는 증가                                       │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong>
+멀티 마스터 복제에서 가장 큰 문제는 쓰기 충돌이다. 두 마스터가 동시에 같은
+데이터를 수정하면, 복제 후 데이터 불일치가 발생한다. 이를 해결하기 위해
+Last Writer Wins, Version vectors, 애플리케이션 수준 병합 등의 방법이 사용된다.</p>
+<h3 id="cungdol-haegyeol-mekeonijeum-sangse">충돌 해결 메커니즘 상세</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                    멀티 마스터 충돌 해결 메커니즘                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  1. Last Writer Wins (LWW)                                                │
+│  ───────────────────────────                                              │
+│  • 타임스탬프 비교: 가장 최근 쓰기 적용                                      │
+│  • 문제: 시간 서버 오차로 인한 정확도 저하                                   │
+│  • 해결: 논리적 시계 (Lamport Clock 등) 사용                               │
+│  • 사용: Cassandra, DynamoDB                                               │
+│                                                                             │
+│  2. Version Vectors (VV)                                                 │
+│  ────────────────────────                                                  │
+│  • 각 노드의 操作 카운트를 추적                                             │
+│  • 충돌 감지 후 모든 버전을 보유                                             │
+│  • 애플리케이션에서 선택적 해결                                             │
+│  • 사용: Riak                                                              │
+│                                                                             │
+│  3. Operational Transformation (OT)                                        │
+│  ─────────────────────────────────                                         │
+│  • 조작 변환을 통해 충돌 해결                                              │
+│  • 예: 두 concurrent 편집 → 병합                                            │
+│  • 사용: Google Docs, Collaborative editing                                 │
+│                                                                             │
+│  4. CRDT (Conflict-free Replicated Data Types)                             │
+│  ─────────────────────────────────────────                                 │
+│  • 충돌 없이 자동으로 병합 가능한 자료구조                                    │
+│  • G-Counter, PN-Counter, LWW-Register, OR-Set 등                        │
+│  • 사용: Redis CRDT 모듈, Riak                                            │
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐  │
+│  │   충돌 최소화 전략                                                      │  │
+│  │                                                                        │  │
+│  │   • 쓰기 키 공간 분할: 각 마스터가管理하는 키 범위 지정                    │  │
+│  │     예: Master A: user_id 1-1000, Master B: user_id 1001-2000         │  │
+│  │   • 애플리케이션에서 특정 마스터로 쓰기 라우팅                           │  │
+│  │   • 이러한 분할은 완전한 멀티 마스터는 아니지만 충돌을 회피              │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong>
+멀티 마스터 충돌 해결에는 다양한 방법이 있다. LWW는 가장 간단하지만 시간 서버
+의존성이 있고, VV는 정확한 충돌 추적이 가능하지만 복잡하며, OT는协同 편집에
+특화되어 있다. CRDT는数学적으로 충돌 없는 병합을 보장하지만 모든 자료구조에
+적용 가능한 것은 아니다.</p>
+<p>📢 섹션 요약: 멀티 마스터 복제의 핵심 과제는 쓰기 충돌 해결이며, LWW, Version vectors, CRDT 등의 메커니즘을 활용한다.</p>
+<hr />
+<h2 id="iii-guhyeon-mic-silmu-eungyong-implementation-practice">Ⅲ. 구현 및 실무 응용 (Implementation &amp; Practice)</h2>
+<h3 id="cassandra-meolti-maseuteo">Cassandra 멀티 마스터</h3>
+<pre data-lang="sql" class="language-sql "><code class="language-sql" data-lang="sql">-- Cassandra: 기본적으로 멀티 마스터 아키텍처
+
+-- 키스페이스 생성
+CREATE KEYSPACE myapp
+WITH REPLICATION = {
+  &#x27;class&#x27;: &#x27;NetworkTopologyStrategy&#x27;,
+  &#x27;dc1&#x27;: 3,
+  &#x27;dc2&#x27;: 3
+};
+
+-- 쓰기 (어떤 노드에서든 쓰기 가능)
+INSERT INTO users (user_id, name, email)
+VALUES (1, &#x27;Kim&#x27;, &#x27;kim@test.com&#x27;)
+USING CONSISTENCY QUORUM;
+
+-- Consistency Level에 따른 동작
+-- • ANY: 가용성 최고, 일관성 가장 낮음
+-- • QUORUM: 균형점
+-- • ALL: 일관성 최고, 가용성 가장 낮음
+
+-- 충돌 해결: LWW (Timestamp 기반)
+-- 각 열에 마지막으로 기록된 값이 적용됨
+</code></pre>
+<h3 id="mysql-meolti-soseu-bogje">MySQL 멀티 소스 복제</h3>
+<pre data-lang="sql" class="language-sql "><code class="language-sql" data-lang="sql">-- MySQL: 멀티 소스 복제 (한 슬레이브가 여러 마스터에서 복제)
+
+-- 슬레이브 설정
+CHANGE MASTER TO
+    MASTER_HOST = &#x27;master1&#x27;
+    MASTER_USER = &#x27;repl&#x27;,
+    MASTER_PASSWORD = &#x27;password&#x27;,
+    MASTER_LOG_FILE = &#x27;mysql-bin.000001&#x27;,
+    MASTER_LOG_POS = 120
+    FOR CHANNEL &#x27;master-1&#x27;;
+
+ADD MASTER MASTER_HOST = &#x27;master2&#x27;
+    MASTER_USER = &#x27;repl&#x27;,
+    MASTER_PASSWORD = &#x27;password&#x27;,
+    MASTER_LOG_FILE = &#x27;mysql-bin.000001&#x27;,
+    MASTER_LOG_POS = 120
+    FOR CHANNEL &#x27;master-2&#x27;;
+
+START SLAVE FOR CHANNEL &#x27;master-1&#x27;;
+START SLAVE FOR CHANNEL &#x27;master-2&#x27;;
+</code></pre>
+<h3 id="postgresql-bdr">PostgreSQL BDR</h3>
+<pre data-lang="sql" class="language-sql "><code class="language-sql" data-lang="sql">-- PostgreSQL BDR (Bi-Directional Replication)
+
+-- BDR 확장 설치
+CREATE EXTENSION bdr;
+
+-- 첫 번째 노드 시작
+SELECT bdr.init_node(
+    local_node_name := &#x27;node1&#x27;,
+    local_dbname := &#x27;mydb&#x27;
+);
+
+-- 두 번째 노드 연결
+SELECT bdr.connect_node(
+    local_node_name := &#x27;node2&#x27;,
+    remote_node_name := &#x27;node1&#x27;,
+    remote_dbname := &#x27;mydb&#x27;
+);
+
+-- 이후 양방향 복제가 자동으로 설정됨
+
+-- 충돌 정책 설정
+ALTER TABLE users SET (
+    bdr.conflict_policy = &#x27;last_update_wins&#x27;
+    -- &#x27;first_update_wins&#x27;, &#x27;skip&#x27;, &#x27;error&#x27; 등
+);
+</code></pre>
+<p>📢 섹션 요약: 멀티 마스터 복제는 Cassandra처럼 기본 멀티 마스터인系统和 MySQL 멀티 소스 복제처럼 설정으로 가능하게 하는 시스템이 있다.</p>
+<hr />
+<h2 id="iv-gyeolron">Ⅳ. 결론</h2>
+<p>멀티 마스터 복제는 쓰기 확장성과 가용성을 높이지만, 쓰기 충돌 관리가 핵심 과제이다. 충돌 해결 메커니즘(LWW, Version vectors, CRDT 등)을 활용하고, 가능하다면 쓰기 키 공간을 분할하여 충돌을 최소화하는 것이 좋다. 충돌이 자주 발생하지 않는 워크로드(주로 다른 데이터를 修改하는 경우)에 적합하다.</p>
+<p>📢 섹션 요약: 멀티 마스터 복제는 쓰기 분산에 효과적이지만, 충돌 해결 메커니즘의 선택과 충돌 빈도 분석이 핵심 설계 요소이다.</p>
+<hr />
+<h2 id="haegsim-insaiteu-ascii-daieogeuraem-concept-map">핵심 인사이트 ASCII 다이어그램 (Concept Map)</h2>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│            Multi-Master Replication Concept Map                            │
+│                                                                             │
+│              ┌───────────────────────────┐                                   │
+│              │ Multi-Master Replication  │                                   │
+│              │   (멀티 마스터 복제)      │                                   │
+│              └───────────┬───────────────┘                                   │
+│                          │                                                  │
+│       ┌──────────────────┼──────────────────┐                             │
+│       ▼                  ▼                  ▼                              │
+│  ┌─────────┐       ┌─────────┐       ┌─────────┐                        │
+│  │  양방향  │       │  쓰기   │       │  충돌   │                        │
+│  │  복제   │       │  분산   │       │  해결  │                        │
+│  └────┬────┘       └────┬────┘       └────┬────┘                        │
+│       │                  │                  │                               │
+│       ▼                  ▼                  ▼                               │
+│  ┌─────────────────────────────────────────────────────┐                  │
+│  │  LWW | Version Vectors | CRDT | OT                  │                  │
+│  └─────────────────────────────────────────────────────┘                  │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h2 id="camgo">참고</h2>
+<ul>
+<li>멀티 마스터 복제는 여러 노드가 쓰기를受入れる 복제 아키텍처이다.</li>
+<li>쓰기 충돌이 발생할 수 있어 충돌 해결 메커니즘이 필수적이다.</li>
+<li>LWW, Version vectors, CRDT 등의 충돌 해결 방법이 있다.</li>
+<li>충돌이 드문 워크로드에 적합하다.</li>
+</ul>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

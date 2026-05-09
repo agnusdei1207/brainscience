@@ -1,102 +1,132 @@
 +++
 weight = 334
-title = "334. 정책 애즈 코드 OPA Gatekeeper Rego 검사"
-date = "2026-04-28"
+title = "334. Policy as Code OPA Gatekeeper Rego (OPA Open Policy Agent Gatekeeper Rego ConstraintTemplate Conftest Policy as Code)"
+date = "2026-05-09"
 [extra]
 categories = "studynote-devops-sre"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
 
-> 1. **본질**: 정책 애즈 코드 OPA Gatekeeper Rego 검사은 자동화와 안정성 관점에서 기준, 실행, 증거를 맞춰 보는 통제 점검 방식를 다루는 주제다.
-> 2. **가치**: 문서와 시스템, 절차와 결과의 불일치를 빨리 드러낼 수 있다..
-> 3. **판단 포인트**: 기준 문서가 있고, 실행 증거가 남으며, 조치가 끝까지 닫혔는지 본다..
+> 1. **본질**: Policy as Code는 보안·컴플라이언스 정책을 사람이 읽는 문서가 아닌 코드로 정의하고 자동으로 강제하는 접근 방식이다. OPA (Open Policy Agent, 오픈 정책 에이전트)는 CNCF 프로젝트로 Rego 언어로 정책을 작성하고 API, Kubernetes, Terraform 등 다양한 환경에서 정책을 평가한다.
+> 2. **Gatekeeper의 역할**: Gatekeeper는 OPA를 Kubernetes Admission Controller로 구현한 것이다. Pod 생성 요청이 들어오면 ConstraintTemplate에 정의된 정책을 검사하고, 위반 시 요청을 거부한다. "루트로 실행 금지", "특정 레지스트리만 허용" 같은 정책이 코드로 강제된다.
+> 3. **판단 포인트**: Conftest는 CI/CD 파이프라인에서 Kubernetes YAML, Dockerfile, Terraform 코드를 배포 전에 정책으로 검사한다. 배포 후 Gatekeeper가 런타임에 이중으로 강제해 Defense in Depth를 구현한다.
 
 ---
 
 ## Ⅰ. 개요 및 필요성
 
-정책 애즈 코드 OPA Gatekeeper Rego 검사은 자동화와 안정성을(를) 실제 문서, 시스템, 운영 흐름에 연결하는 문제를 다룬다. 이 주제가 중요한 이유는 기준이 없는 상태에서 작업이 늘어나면 사람마다 해석이 달라지고, 결과적으로 책임과 품질이 흔들리기 때문이다. 따라서 이 문서는 무엇을 기준으로 보고, 무엇을 증거로 남기며, 무엇을 조치로 닫을 것인지부터 정리한다.
+기업이 클라우드 환경을 운영하면서 보안 정책을 모든 팀에 일관되게 적용하는 것이 어려워졌다. 정책 문서는 무시되거나 잊혀지고, 새 팀원이 정책을 모르면 위반이 발생한다.
 
-반대로 이런 구조가 없으면 검토는 형식만 남고, 숫자와 문서와 현장이 서로 어긋난다. 그래서 기준, 실행, 증거를 맞춰 보는 통제 점검 방식은 단순 설명이 아니라, 실제 운영에서 판단선을 세우는 도구로 읽어야 한다.
+Policy as Code는 정책을 코드로 만들어 자동으로 적용한다. "모든 컨테이너는 비루트 사용자로 실행해야 한다"는 정책이 코드화되면, 위반 시 배포 자체가 차단된다. 정책 위반은 불가능한 것이 된다.
 
-```text
-┌──────────────┐   ┌──────────────┐   ┌──────────────┐
-│ 기준           │──▶│ 실행           │──▶│ 증거           │
-└──────────────┘   └──────────────┘   └──────────────┘
-```
-
-이 그림은 입력이 결과로 바로 가는 것이 아니라, 중간의 기준과 검증을 거치며 의미가 바뀐다는 점을 보여준다.
-
-- **📢 섹션 요약 비유**: 출입 검사대처럼, 시작부터 기준을 확인해야 뒤에서 다시 뒤엎지 않는다.
+> 📢 **섹션 요약 비유**: Policy as Code는 계산기다. 세금 계산 규칙을 사람이 기억하는 대신 계산기 프로그램에 넣으면 항상 정확하게 적용된다.
 
 ---
 
 ## Ⅱ. 아키텍처 및 핵심 원리
 
-이 주제의 핵심은 기준 → 실행 → 증거의 흐름을 끊김 없이 이어 주는 것이다. 정책 애즈 코드 OPA Gatekeeper Rego 검사에서 가장 먼저 봐야 할 것은 구성 요소가 아니라 경계다. 무엇을 입력으로 받고, 무엇을 처리하며, 무엇을 증거로 남기는지 정리해야 전체 구조가 보인다.
-
-| 요소 | 역할 | 포인트 |
-|:---|:---|:---|
-| 기준 | 최초 기준/입력 | 범위가 모호하면 뒤 단계도 흔들린다 |
-| 실행 | 처리/검증 | 절차와 자동화가 연결되어야 한다 |
-| 증거 | 결과/증거 | 기록이 남아야 재현과 추적이 된다 |
-
 ```text
-┌──────────────┐   ┌──────────────┐   ┌──────────────┐
-│ 기준           │──▶│ 실행           │──▶│ 증거           │
-└──────────────┘   └──────────────┘   └──────────────┘
++-------------------------------------------------------------+
+|              OPA/Gatekeeper 정책 흐름                        |
++-------------------------------------------------------------+
+|                                                             |
+|  개발자 kubectl apply ->                                     |
+|                         Kubernetes API Server               |
+|                                  |                          |
+|                                  v                          |
+|                    Admission Controller (Gatekeeper)        |
+|                                  |                          |
+|                    ConstraintTemplate 정책 검사              |
+|                    (Rego 언어로 작성된 정책)                 |
+|                                  |                          |
+|              +-------------------+-------------------+       |
+|              v                                       v       |
+|           허용 (Admitted)                     거부 (Denied)  |
+|           -> Pod 생성                         -> 에러 반환   |
++-------------------------------------------------------------+
 ```
 
-CI/CD (Continuous Integration/Continuous Delivery)과(와) IaC (Infrastructure as Code)은 이 흐름을 보강하는 대표 축이다. 하나는 기준을 넓히는 관점이고, 다른 하나는 실행을 좁히는 관점이다. 둘을 같이 봐야 과도한 단순화도, 과도한 복잡화도 피할 수 있다.
+Rego 정책 예시:
 
-- **📢 섹션 요약 비유**: 서류 심사 창구에서는 재료, 조리, 완성이 따로 놀면 안 된다. 중간 단계가 연결되어야 결과가 맛있다.
+```rego
+package kubernetes.admission
+
+deny[msg] {
+    input.request.kind.kind == "Pod"
+    container := input.request.object.spec.containers[_]
+    container.securityContext.runAsRoot == true
+    msg := "루트 사용자로 컨테이너를 실행할 수 없습니다"
+}
+```
+
+> 📢 **섹션 요약 비유**: Gatekeeper는 클럽 입구 보안요원이다. 드레스코드(정책)에 맞지 않으면 입장(배포)을 거부한다.
 
 ---
 
 ## Ⅲ. 비교 및 연결
 
-정책 애즈 코드 OPA Gatekeeper Rego 검사은(는) 단독으로 보기보다 대안과 비교할 때 경계가 선명해진다. 특히 SRE (Site Reliability Engineering)와의 비교는 구조를 이해하는 데 도움이 된다. 하나는 개별 조각의 정확성을 높이고, 다른 하나는 전체 흐름의 단절을 줄인다.
+| 항목 | OPA | Gatekeeper | Conftest |
+|:---|:---|:---|:---|
+| 역할 | 범용 정책 엔진 | K8s Admission Controller | CI/CD 정책 검사 |
+| 시점 | 런타임 | 런타임 (Admission) | 배포 전 (CI) |
+| 언어 | Rego | Rego + ConstraintTemplate | Rego |
+| 대상 | API, Terraform, K8s | Kubernetes 전용 | 코드/설정 파일 |
 
-| 항목 | 단계 1 | 단계 2 |
-|:---|:---|:---|
-| 문서 기준 | 운영 현실 | 판정 결과 |
-| 계획 | 실행 | 조치 |
+정책 계층 구조 (Defense in Depth):
+- CI 단계: Conftest로 코드 레벨 정책 검사
+- 배포 단계: Gatekeeper Admission Webhook 정책 강제
+- 런타임: CSPM/CWPP 정책 모니터링
 
-또한 이 개념은 observability와도 연결된다. 단일 기술을 아는 것보다, 그 기술이 어떤 운영 문맥에서 선택되는지 보는 것이 더 중요하다. 그래서 시험에서도 "무엇과 비교했는가"를 함께 써야 답안의 깊이가 생긴다.
-
-- **📢 섹션 요약 비유**: 공장 품질 게이트는 같은 모양처럼 보여도 용도에 따라 완전히 다르다. 비교해야 차이가 보인다.
+> 📢 **섹션 요약 비유**: Conftest는 공항 체크인 카운터(CI)이고, Gatekeeper는 탑승구(배포 시점)이다. 두 번 검사해서 잘못된 것이 비행기(프로덕션)에 탑승하지 못하게 한다.
 
 ---
 
 ## Ⅳ. 실무 적용 및 기술사 판단
 
-실무에서는 이 주제를 "도입 여부"보다 "어떤 조건에서 채택할 것인가"로 판단해야 한다. 다음 체크리스트는 그 기준을 압축한 것이다.
+### 정책 예시
 
-### 체크리스트
+- 모든 Pod은 리소스 제한(CPU/Memory limits)을 명시해야 한다
+- 승인된 컨테이너 레지스트리(gcr.io, company.registry)만 사용 가능
+- 프로덕션 네임스페이스에는 Ingress에 TLS가 필수
+- PersistentVolume은 암호화된 StorageClass만 사용 가능
 
-1. 증거가 실제 로그/서류로 남는가?
-2. 조치 항목이 종료 처리되었는가?
-3. 점검 기준이 사람마다 다르지 않은가?
+### ConstraintTemplate 구조
 
-### 안티패턴
+```yaml
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequiredlabels
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequiredLabels
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8srequiredlabels
+        deny[msg] {
+          provided := {label | input.review.object.metadata.labels[label]}
+          required := {label | label := input.parameters.labels[_]}
+          missing := required - provided
+          count(missing) > 0
+          msg := sprintf("필수 레이블 누락: %v", [missing])
+        }
+```
 
-- 체크리스트만 있고 증거가 없는 점검
-- 조치 이행 확인 없이 종료하는 관행
-
-정책 애즈 코드 OPA Gatekeeper Rego 검사을 잘 쓰려면 기술 자체보다 운영 조건을 봐야 한다. 성능, 비용, 보안, 유지보수성 중 무엇이 우선인지가 다르면 선택도 달라진다. 따라서 기술사 답안에서는 "무조건 채택"이 아니라 "이 조건에서는 채택, 저 조건에서는 회피"로 문장을 닫아야 한다.
-
-- **📢 섹션 요약 비유**: 검문소은 고장 나기 전에 멈추는 장치다. 멈출 기준이 없으면 안전보다 지연만 남는다.
+> 📢 **섹션 요약 비유**: ConstraintTemplate은 쿠키 틀이다. 틀(템플릿)을 한 번 만들면 여러 종류의 쿠키(Constraint)를 같은 모양으로 찍어낼 수 있다.
 
 ---
 
 ## Ⅴ. 기대효과 및 결론
 
-정책 애즈 코드 OPA Gatekeeper Rego 검사의 기대효과는 명확하다. 기준이 통일되고, 증거가 남고, 조치가 닫히면 의사결정 속도와 품질 모두 좋아진다. 다만 이 효과는 문서, 도구, 운영이 같은 방향을 볼 때만 유지된다.
+Policy as Code 도입으로 보안 정책이 자동으로 강제되어 인적 실수로 인한 정책 위반이 사라진다. 감사(Audit) 목적으로 정책 이력이 git에 보관되고, 정책 변경은 코드 리뷰를 통해 승인된다.
 
-결론적으로 이 주제는 단순 지식이 아니라, 복잡한 현장에서 판단선을 만드는 도구다. 핵심은 "무엇을 잘했는가"보다 "무엇을 기준으로 잘했다고 말할 수 있는가"에 있다. 이 관점을 유지하면 답안의 깊이도, 실무의 재현성도 같이 올라간다.
+Policy as Code의 핵심은 **"정책을 강제하는 것이 아니라 위반을 불가능하게 만드는 것"**이다. 정책 문서를 교육하는 것보다, 위반 시 자동 차단이 더 효과적인 보안을 달성한다.
 
-- **📢 섹션 요약 비유**: 품질 검사 라인처럼, 마지막엔 핵심만 남겨야 다음에 다시 꺼내 쓸 수 있다.
+> 📢 **섹션 요약 비유**: 속도위반 금지 표지판보다 과속방지턱이 더 효과적이다. Policy as Code는 정책을 과속방지턱으로 만든다.
 
 ---
 
@@ -104,13 +134,26 @@ CI/CD (Continuous Integration/Continuous Delivery)과(와) IaC (Infrastructure a
 
 | 개념 | 연결 포인트 |
 |:---|:---|
-| CI/CD (Continuous Integration/Continuous Delivery) | 자동화와 안정성과 연결되는 핵심 축 |
-| IaC (Infrastructure as Code) | 자동화와 안정성과 연결되는 핵심 축 |
-| SRE (Site Reliability Engineering) | 자동화와 안정성과 연결되는 핵심 축 |
-| observability | 자동화와 안정성과 연결되는 핵심 축 |
+| Policy as Code | 정책을 코드로 자동 강제 |
+| OPA (Open Policy Agent) | CNCF 범용 정책 엔진 |
+| Rego | OPA 정책 작성 언어 |
+| Gatekeeper | K8s Admission Controller OPA 구현체 |
+| ConstraintTemplate | Gatekeeper 정책 템플릿 |
+| Conftest | CI/CD 코드 정책 검사 도구 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+수동 정책 관리            Policy as Code 등장             현대 정책 자동화
+------------------   --------------------------   ------------------------
+정책 문서 관리       ->  OPA CNCF 프로젝트 등장    ->  GitOps 정책 관리
+이메일 교육              Gatekeeper K8s 통합           AI 기반 정책 추천
+감사 수작업              Conftest CI 통합               멀티클라우드 정책
+위반 사후 처리           Defense in Depth 구현           Crossplane + OPA
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
-1. 정책 애즈 코드 OPA Gatekeeper Rego 검사은 일을 하기 전에 "어떤 규칙으로 할지" 먼저 정하는 거예요.
-2. 중간에 확인표가 있어야 틀린 곳을 빨리 고칠 수 있어요.
-3. 그래서 끝까지 잘했다고 말하려면 증거와 순서가 같이 있어야 해요.
+1. Policy as Code는 규칙을 말로 설명하는 대신 컴퓨터가 자동으로 검사하게 만드는 거예요.
+2. Gatekeeper는 학교 입구에서 교복을 입었는지 확인하는 자동문이에요. 교복(정책)을 안 입으면 자동으로 문이 안 열려요.
+3. Rego는 그 자동문에게 무엇을 검사해야 하는지 알려주는 설명서예요.

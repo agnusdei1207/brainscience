@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>409. K-Means 최적 K 선택 - 엘보우 기법 &#x2F; 실루엣 스코어 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 24, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ai
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 엘보우 기법 (Elbow Method)과 실루엣 스코어 (Silhouette Score)는 K-Means에서 군집 수 K를 정할 때, 각각 <strong>군집 내 분산 감소 폭</strong>과 <strong>군집 응집도·분리도</strong>를 평가하는 대표적 모델 선택 기준이다.</li>
+<li><strong>가치</strong>: K를 감으로 정하면 고객 세분화, 이상 탐지, 추천 전처리 결과가 모두 흔들리지만, 두 지표를 함께 보면 "얼마나 더 나눌 가치가 있는가"와 "실제로 잘 나뉘었는가"를 동시에 점검할 수 있다.</li>
+<li><strong>판단 포인트</strong>: 엘보우는 빠르고 직관적이지만 주관성이 있고, 실루엣은 정량적이지만 계산 비용이 크므로 <strong>전처리·샘플링·도메인 해석</strong>을 함께 묶어 판단해야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>K-Means는 대표적인 비지도 학습 (Unsupervised Learning) 군집화 기법이지만, 치명적인 전제가 하나 있다. 바로 <strong>군집 수 K를 사람이 먼저 정해야 한다</strong>는 점이다. 데이터가 실제로 3개 집단인지 7개 집단인지 모르는 상태에서 K를 잘못 넣으면, 서로 다른 집단을 억지로 합치거나 하나의 집단을 불필요하게 쪼개는 과소분할·과대분할이 발생한다.</p>
+<p>이 문제 때문에 실무에서는 "K-Means를 돌리는 것"보다 "K를 합리적으로 고르는 것"이 더 중요하다. 엘보우 기법은 K를 늘릴수록 감소하는 이너시아 (Inertia)의 기울기 변화를 보고 적정 분할 지점을 찾고, 실루엣 스코어는 각 샘플이 자기 군집에 얼마나 잘 속하고 다른 군집과는 얼마나 잘 떨어졌는지를 수치화한다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│          K-Means의 핵심 질문: &quot;K를 몇으로 둘 것인가?&quot;        │
+├──────────────────────────────────────────────────────────────┤
+│ K가 너무 작음  ──▶ 서로 다른 집단이 한 군집에 섞임           │
+│ K가 너무 큼    ──▶ 의미 없는 작은 군집이 과도하게 생성됨     │
+│ 적정 K         ──▶ 비슷한 점은 잘 뭉치고, 다른 군집은 분리됨 │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>즉 두 지표는 단순 통계 기교가 아니라, 비지도 학습 결과를 <strong>설명 가능한 구조</strong>로 바꾸는 의사결정 도구다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 학생들을 반으로 나눌 때 반 수를 너무 적게 잡으면 한 반이 너무 시끄럽고, 너무 많이 잡으면 반마다 학생이 몇 명 안 남는다. 엘보우와 실루엣은 "반 수가 딱 적당한가?"를 보는 두 개의 다른 자이다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>엘보우와 실루엣은 둘 다 K-Means 결과를 평가하지만, 보는 관점이 다르다. 엘보우는 <strong>군집 내부 응집</strong>만 보고, 실루엣은 <strong>응집 + 분리</strong>를 함께 본다.</p>
+<table><thead><tr><th style="text-align: left">지표</th><th style="text-align: left">핵심 수식</th><th style="text-align: left">보는 대상</th><th style="text-align: left">해석 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">엘보우 기법</td><td style="text-align: left">`Inertia = ΣΣ</td><td style="text-align: left"></td><td style="text-align: left">x - μ_k</td></tr>
+<tr><td style="text-align: left">실루엣 스코어</td><td style="text-align: left"><code>s(i) = (b(i)-a(i))/max(a(i), b(i))</code></td><td style="text-align: left">응집도 + 분리도</td><td style="text-align: left">1에 가까울수록 좋은 분리, 0은 경계, 음수는 잘못 배정</td></tr>
+</tbody></table>
+<h3 id="1-elbou-gibeob">1. 엘보우 기법</h3>
+<p>K를 1, 2, 3, ... 순서로 늘려가며 이너시아를 계산하면, 보통 감소 곡선은 처음엔 급격히 떨어지다가 어느 순간 완만해진다. 이때 꺾이는 지점을 팔꿈치처럼 본 것이 엘보우다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">이너시아 (Inertia)
+    ▲
+    │ ●
+    │  ╲
+    │   ●
+    │    ╲
+    │     ●  ← 엘보우 지점
+    │      ╲────●────●
+    └────────────────────▶ K
+       1    2    3    4   5
+</code></pre>
+<p>엘보우의 장점은 빠르고 시각적이라는 점이다. 하지만 곡선이 부드럽게 감소하면 명확한 꺾임이 보이지 않을 수 있다. 따라서 엘보우만으로 K를 확정하는 것은 위험하다.</p>
+<h3 id="2-silrues-seukoeo">2. 실루엣 스코어</h3>
+<p>실루엣은 각 샘플에 대해 다음 두 거리를 비교한다.</p>
+<ol>
+<li><code>a(i)</code>: 같은 군집 내 다른 점들과의 평균 거리</li>
+<li><code>b(i)</code>: 가장 가까운 다른 군집 점들과의 평균 거리</li>
+</ol>
+<p>이때 <code>b(i)</code>가 크고 <code>a(i)</code>가 작을수록, 해당 샘플은 자기 군집에 잘 들어가 있다는 뜻이다.</p>
+<table><thead><tr><th style="text-align: center">실루엣 값</th><th style="text-align: left">의미</th></tr></thead><tbody>
+<tr><td style="text-align: center">0.7 ~ 1.0</td><td style="text-align: left">군집이 매우 잘 분리됨</td></tr>
+<tr><td style="text-align: center">0.5 ~ 0.7</td><td style="text-align: left">실무적으로 양호</td></tr>
+<tr><td style="text-align: center">0.25 ~ 0.5</td><td style="text-align: left">구조가 약함</td></tr>
+<tr><td style="text-align: center">&lt; 0.25</td><td style="text-align: left">군집화가 부자연스럽거나 K-Means 부적합</td></tr>
+<tr><td style="text-align: center">&lt; 0</td><td style="text-align: left">다른 군집에 들어가는 편이 더 자연스러움</td></tr>
+</tbody></table>
+<h3 id="3-hamgge-sseuneun-iyu">3. 함께 쓰는 이유</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│     K 탐색 절차: Elbow로 후보 압축 → Silhouette로 정량 검증   │
+├──────────────────────────────────────────────────────────────┤
+│ 1. K=2~10 반복 학습                                          │
+│ 2. Inertia 곡선 확인 → 꺾이는 후보 K 2~3개 선택              │
+│ 3. 후보 K들의 Silhouette 비교                                │
+│ 4. 가장 해석 가능하고 운영 가능한 K 최종 선택                │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>실무에서는 엘보우로 후보를 좁히고, 실루엣으로 정량 검증한 뒤, 마지막에는 비즈니스 해석 가능성까지 확인하는 방식이 가장 안정적이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 엘보우는 "더 방을 쪼갤수록 얼마나 이득이 줄어드는가"를 보는 집 평면도이고, 실루엣은 "같은 방 사람들끼리 정말 잘 어울리고 옆 방과 헷갈리지 않는가"를 보는 생활 만족도 조사다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>엘보우와 실루엣은 K-Means 내부 평가 지표이지만, 모든 데이터에 정답을 보장하지는 않는다. 데이터 분포와 목적에 따라 다른 기준과 함께 봐야 한다.</p>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">엘보우 기법</th><th style="text-align: left">실루엣 스코어</th><th style="text-align: left">AIC/BIC</th><th style="text-align: left">DBSCAN</th></tr></thead><tbody>
+<tr><td style="text-align: left">대상</td><td style="text-align: left">K-Means</td><td style="text-align: left">K-Means 외 다수 군집법</td><td style="text-align: left">확률 모델 (GMM 등)</td><td style="text-align: left">밀도 기반 군집</td></tr>
+<tr><td style="text-align: left">장점</td><td style="text-align: left">빠르고 직관적</td><td style="text-align: left">정량 비교 가능</td><td style="text-align: left">모델 복잡도 패널티 반영</td><td style="text-align: left">K 사전 지정 불필요</td></tr>
+<tr><td style="text-align: left">한계</td><td style="text-align: left">꺾임이 모호할 수 있음</td><td style="text-align: left">계산 비용 큼</td><td style="text-align: left">확률 가정 필요</td><td style="text-align: left">밀도 편차에 민감</td></tr>
+<tr><td style="text-align: left">적합 상황</td><td style="text-align: left">대략적 후보 탐색</td><td style="text-align: left">후보 K 비교</td><td style="text-align: left">가우시안 혼합 모델 선택</td><td style="text-align: left">비구형 군집·노이즈 존재</td></tr>
+</tbody></table>
+<p>K-Means는 본질적으로 구형 (Spherical) 군집과 평균 중심에 잘 맞는 알고리즘이다. 따라서 실루엣이 낮고 엘보우도 불분명하다면, "K를 잘못 골랐다"기보다 <strong>애초에 K-Means가 틀린 모델</strong>일 수 있다. 이 경우 DBSCAN, Gaussian Mixture Model (GMM), 계층적 군집화를 검토해야 한다.</p>
+<p>또한 이 주제는 바로 다음 410번의 AIC (Akaike Information Criterion), BIC (Bayesian Information Criterion)와 연결된다. 엘보우/실루엣이 거리 기반 군집화의 경험적 선택 도구라면, AIC/BIC는 확률 모델의 복잡도-적합도 균형을 수치화하는 모델 선택 기준이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 엘보우와 실루엣은 교실을 몇 반으로 나눌지 정하는 기준이고, AIC/BIC는 "반 수를 늘리면 성적이 정말 좋아진 건지, 그냥 쪼개서 좋아 보이는 건지"를 따지는 감사관이다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p>실무에서는 지표 계산보다 전처리와 해석이 더 중요하다. 특히 거리 기반 군집화는 입력 스케일에 매우 민감하므로, <strong>표준화 (Standardization)</strong> 없이 엘보우와 실루엣을 계산하면 결과 해석 자체가 왜곡된다.</p>
+<h3 id="cekeuriseuteu">체크리스트</h3>
+<ol>
+<li>연속형 변수는 StandardScaler 등으로 스케일을 맞췄는가?</li>
+<li>K 범위를 비즈니스 상식에 맞게 제한했는가? (예: 2~10)</li>
+<li>K-Means++ 초기화와 <code>n_init</code> 반복으로 지역 최적해 영향을 줄였는가?</li>
+<li>엘보우와 실루엣을 함께 봤는가?</li>
+<li>선택된 군집이 실제 운영 가능한 크기와 의미를 가지는가?</li>
+</ol>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>실루엣 점수 하나만 가장 높은 K를 기계적으로 채택</li>
+<li>이상값을 제거하지 않고 K-Means를 적용</li>
+<li>매출, 방문수, 나이처럼 단위가 다른 변수를 그대로 투입</li>
+<li>K를 정한 뒤 군집별 프로파일링 없이 바로 의사결정</li>
+</ul>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<p>전자상거래 고객을 세분화한다고 가정해 보자. 구매 금액, 구매 주기, 환불률, 앱 방문 빈도를 기준으로 군집화할 때, 엘보우에서 K=4가 유력하고 실루엣에서 K=3과 K=4가 비슷하게 나온다면, 마지막 결정은 마케팅 조직이 <strong>실제로 4개 고객군 전략을 운영할 수 있는지</strong>로 내려야 한다. 수학적으로 조금 좋아도 운영 조직이 감당 못 하면 좋은 K가 아니다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 반을 7개로 나누면 시험 감독은 편할 수 있어도 담임교사 수가 부족하면 학교 운영이 안 된다. 좋은 K는 수학 점수와 현실 운영 둘 다 통과해야 한다.</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>엘보우 기법과 실루엣 스코어를 올바르게 사용하면, K-Means 결과가 "그럴듯한 그림"이 아니라 <strong>설명 가능하고 재현 가능한 군집 구조</strong>가 된다. 고객 세분화, 이상 탐지, 추천 시스템 전처리, 문서 그룹핑 같은 업무에서 군집 수 결정의 일관성이 생기고, 후속 모델의 품질도 안정된다.</p>
+<p>다만 이 두 지표는 절대 정답 생성기가 아니다. 곡선이 모호하고 점수가 비슷하게 나오는 상황은 흔하며, 그럴수록 데이터 분포와 업무 목적을 함께 봐야 한다. 따라서 이 주제는 "최적 K를 찾는 기술"이라기보다 <strong>데이터 구조와 모델 가정을 점검하는 모델 선택 절차</strong>로 기억하는 것이 맞다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 엘보우와 실루엣은 맛집을 고르는 별점 앱이 아니라, 후보 식당을 줄여주는 안내판이다. 최종 선택은 결국 직접 먹어보고 목적에 맞는지를 확인해야 한다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">K-Means</td><td style="text-align: left">K를 미리 정해야 하는 군집화 알고리즘</td></tr>
+<tr><td style="text-align: left">Inertia (WCSS)</td><td style="text-align: left">엘보우 기법이 관찰하는 군집 내 제곱 오차</td></tr>
+<tr><td style="text-align: left">Silhouette Score</td><td style="text-align: left">응집도와 분리도를 동시에 반영하는 군집 품질 지표</td></tr>
+<tr><td style="text-align: left">K-Means++</td><td style="text-align: left">초기 중심점 선택을 개선해 평가 안정성을 높임</td></tr>
+<tr><td style="text-align: left">Standardization</td><td style="text-align: left">거리 기반 군집화 전 필수 전처리</td></tr>
+<tr><td style="text-align: left">AIC/BIC</td><td style="text-align: left">다음 단계의 모델 선택 기준</td></tr>
+<tr><td style="text-align: left">DBSCAN</td><td style="text-align: left">K 사전 지정 없이 대안이 되는 밀도 기반 군집화</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>친구들을 팀으로 나눌 때 팀 수를 너무 적게 하면 북적이고, 너무 많으면 한 팀에 사람이 너무 적어져요.</li>
+<li>엘보우는 "팀을 더 늘려도 얼마나 좋아지는지"를 보고, 실루엣은 "같은 팀끼리 정말 잘 어울리는지"를 봐요.</li>
+<li>그래서 둘을 같이 보면 친구들을 딱 알맞게 나누는 팀 수를 고를 수 있어요.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

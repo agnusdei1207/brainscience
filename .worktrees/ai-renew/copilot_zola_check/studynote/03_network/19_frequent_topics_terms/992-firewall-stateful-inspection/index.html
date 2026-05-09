@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>992. 방화벽 (Stateful Inspection) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>May 24, 2024</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="992-banghwabyeog-stateful-inspection">992. 방화벽 (Stateful Inspection)</h1>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 상태 기반 검사 (Stateful Inspection) 방화벽은 들어오고 나가는 네트워크 패킷을 독립적인 조각으로 보지 않고, 연결의 시작부터 종료까지 전체 세션의 '상태(State)'와 문맥을 메모리(State Table)에 기록하여 허용 여부를 결정하는 지능형(3세대) 보안 아키텍처다.</li>
+<li><strong>가치</strong>: 기존 1세대 패킷 필터링(Stateless)이 가졌던 규칙 복잡성(돌아오는 응답을 위해 포트를 무조건 열어둬야 하는 문제)을 해결했으며, 패킷 헤더 위조 공격(예: SYN 없이 들어오는 비정상 ACK 패킷)을 구조적으로 원천 차단하여 현대 엔터프라이즈 네트워크 방어의 사실상 표준(De facto standard)이 되었다.</li>
+<li><strong>융합</strong>: 연결의 맥락을 추적하는 이 L3/L4 계층의 세션 관리 기술은 애플리케이션 페이로드까지 분석하는 차세대 방화벽 (NGFW, Next-Generation Firewall)의 기반 엔진으로 융합되었으며, 최근에는 클라우드 인프라 내 마이크로서비스 간 트래픽(East-West)을 통제하는 분산 방화벽(Micro-segmentation)으로 패러다임이 진화하고 있다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: 상태 기반 검사 방화벽(Stateful Inspection Firewall)은 통과하는 모든 네트워크 연결(TCP, UDP 세션)의 상태 정보를 동적으로 추적하는 보안 장비다. 클라이언트가 내부에서 외부로 정상적인 요청을 보냈다면, 방화벽은 이 '요청 상태(State)'를 기억해 두고, 이후 외부에서 내부로 들어오는 응답 패킷이 방화벽 룰셋(Rule-set)에 명시되어 있지 않더라도 기존 세션에 속한 정상적인 응답임이 증명되면 동적으로 통과시킨다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 초기 1세대 패킷 필터링 라우터(Stateless Firewall)는 각 패킷을 과거의 기억 없이(Amnesia) 매번 규칙표와 대조하여 통과 여부를 결정했다. 사용자가 웹서핑(80 포트)을 하려면 내부에서 나가는 요청을 허용할 뿐 아니라, 돌아오는 응답 패킷(출발지 80, 목적지 랜덤 포트 1024~65535)을 받기 위해 인바운드 방화벽의 모든 상위 포트를 항상 열어두어야(Any-Open) 했다. 이는 대문(방화벽)을 달아놓고 자물쇠를 채우지 않은 것과 같아 극심한 보안 취약점(포트 스캔 등)을 야기했다. 상태 기반 검사는 "우리가 먼저 요청한 통신의 응답만 들여보내고, 밖에서 갑자기 먼저 말을 거는 패킷은 막는다"는 직관적이고 강력한 보안 원칙을 기술적으로 실현하여 이 난제를 해결했다.</p>
+</li>
+<li>
+<p><strong>💡 비유</strong>: 클럽의 기도(방화벽)가 손님(패킷)이 나갈 때 얼굴에 도장(State Table 기록)을 찍어주고, 잠시 후 돌아와서 도장을 보여주는 손님만 무사 통과시키며 처음 보는 수상한 사람이 무작정 클럽 안으로 들어가려 하면 단호하게 막아세우는 시스템과 같습니다.</p>
+</li>
+<li>
+<p><strong>등장 배경 및 발전 과정</strong>:</p>
+<ol>
+<li><strong>1세대 (Stateless Packet Filtering)</strong>: 1980년대 후반 등장. L3/L4 헤더(IP, Port)만 단순 비교. 돌아오는 응답 포트를 다 열어야 하는 치명적 약점 존재.</li>
+<li><strong>2세대 (Application Proxy / ALG)</strong>: 1990년대 초 등장. 보안성은 높으나 방화벽이 프록시 역할을 하며 7계층 데이터를 모두 조립/검사해 엄청난 성능 저하(병목) 발생.</li>
+<li><strong>3세대 (Stateful Inspection)</strong>: 1994년 Check Point Software에 의해 발명. 패킷의 상태(맥락)를 메모리에서 추적하여 프록시의 보안성과 패킷 필터링의 빠른 속도라는 두 마리 토끼를 잡음. 오늘날 모든 L4 방화벽의 기본 원리로 정착.</li>
+</ol>
+</li>
+</ul>
+<p>다음은 기존 1세대(Stateless) 방화벽의 근본적 취약점과 3세대(Stateful) 방화벽이 이를 어떻게 동적인 상태 추적으로 해결하는지를 극명하게 보여주는 구조도이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────┐
+│      방화벽 패러다임 비교: Stateless(1세대) vs Stateful(3세대)         │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│ [문제점: Stateless Packet Filtering (상태 미저장)]                   │
+│                                                                  │
+│  [내부 PC]                 [1세대 방화벽]                 [외부 웹서버]│
+│  IP: 10.0.0.2               Rule: OUT 80 허용          IP: 8.8.8.8 │
+│  Port: 50000                Rule: IN 1024~65535 허용     Port: 80    │
+│       │ ──── 요청 (Src:50000, Dst:80) ────▶ │ ────────────▶│       │
+│       │                                    │               │       │
+│       │ ◀──── 응답 (Src:80, Dst:50000) ──── │ ◀────────────│       │
+│                                            │                       │
+│ ⚠ 해커의 침투: 해커(외부)가 Src Port를 80으로 조작하여 내부의 아무 포트(예: │
+│ 22번 SSH)로 패킷을 쏘면, &quot;IN 1024~65535 허용&quot; 룰 때문에 방화벽이 뚫림!     │
+│                                                                  │
+│                                                                  │
+│ [해결책: Stateful Inspection (상태 기반 검사)]                       │
+│                                                                  │
+│  [내부 PC]                 [3세대 방화벽]                 [외부 웹서버]│
+│       │                    ┌──────────────────┐                │       │
+│       │ ──── 요청 ────▶ │ [State Table 메모리] │ ─────▶ │       │
+│       │   (SYN 패킷)        │ TCP, 10.0.0.2:50000│                │       │
+│       │                    │  ↔ 8.8.8.8:80      │                │       │
+│       │                    │ (상태: ESTABLISHED)  │                │       │
+│       │                    └──────────────────┘                │       │
+│       │                                    │                       │
+│       │ ◀──── 응답 ──── │ (State Table 조회!)  │ ◀───── │       │
+│       │   (SYN-ACK 패킷)    │ ➜ 장부에 있으니 통과! │                │       │
+│                                            │                       │
+│ ❌ 해커의 뜬금없는 패킷 (장부에 없는 조작된 ACK) ─ ⛔ 차단 (Drop)         │
+└──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 도식은 보안의 핵심인 '맥락(Context)'의 중요성을 명확히 짚어준다. 상단의 1세대 방화벽은 기억력이 없기 때문에 인터넷(외부)에서 들어오는 응답 패킷을 허용하려면 수만 개의 포트를 열어두는 위험한 규칙(Rule)을 작성해야만 했다. 해커는 단순히 출발지 포트를 80번으로 위장하여 이 허술한 문을 통과했다. 반면 하단의 Stateful 방화벽은 내부 PC가 '먼저' 외부로 SYN 요청을 보낼 때, 즉시 자신의 빠른 메모리 영역인 상태 테이블(State Table)에 세션 정보(출발지/목적지 IP와 Port, 프로토콜, TCP 상태)를 꼼꼼히 기록(세션 생성)한다. 이후 외부에서 응답 패킷이 들어오면, 무거운 방화벽 룰셋(수천 줄의 ACL)을 처음부터 끝까지 검색하지 않고, 단지 이 State Table 장부만 빠르게 조회(Lookup)하여 장부에 있으면 무조건 통과시킨다. 해커가 아무리 교묘하게 패킷을 조작해도, 내부에서 먼저 요청한 기록이 테이블에 없다면 즉각 폐기(Drop)되므로 보안성과 처리 성능이 동시에 극대화된다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 은행 창구에서 매번 방문할 때마다 신분증과 가족관계증명서를 떼오라고 요구하던 옛날 방식(1세대)에서, 첫 방문 시 신원 확인 후 'VIP 지문 등록'을 해두어 다음부터는 지문(State Table)만 대면 프리패스 시켜주는 효율적이고 안전한 최신 시스템(3세대)으로 바뀐 것과 같습니다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri-deep-dive">Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)</h2>
+<h3 id="guseong-yoso">구성 요소</h3>
+<table><thead><tr><th style="text-align: left">요소명</th><th style="text-align: left">역할</th><th style="text-align: left">내부 동작</th><th style="text-align: left">통신 프로토콜 관점</th><th style="text-align: left">비유</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>ACL (Access Control List)</strong></td><td style="text-align: left">방화벽의 허용/차단 규칙 집합</td><td style="text-align: left">첫 번째 패킷(세션 초기화) 인입 시 무거운 Top-Down 순차 검색 수행</td><td style="text-align: left">보안 정책의 기준 법전</td><td style="text-align: left">국경 통과 심사 매뉴얼</td></tr>
+<tr><td style="text-align: left"><strong>State Table (상태 테이블)</strong></td><td style="text-align: left">활성화된 통신 세션의 캐시 메모리</td><td style="text-align: left">5-Tuple (Src/Dst IP &amp; Port, Protocol) 및 연결 상태(TCP Flag) 저장 및 고속 해시 조회</td><td style="text-align: left">트래픽 고속 우회 경로(Fast Path)</td><td style="text-align: left">발급된 프리패스 여권</td></tr>
+<tr><td style="text-align: left"><strong>Connection Tracker</strong></td><td style="text-align: left">TCP 상태 전이 추적기</td><td style="text-align: left">3-Way Handshake (SYN→SYN+ACK→ACK) 및 FIN/RST 종료 추적</td><td style="text-align: left">통신 문맥 유지</td><td style="text-align: left">행동 관찰 카메라</td></tr>
+<tr><td style="text-align: left"><strong>Timeout Timer (타이머)</strong></td><td style="text-align: left">끊어진 세션 정리 장치</td><td style="text-align: left">트래픽이 없는 상태(Idle)가 일정 시간 지속되면 테이블에서 세션 강제 삭제</td><td style="text-align: left">메모리 자원 고갈(DoS) 방어</td><td style="text-align: left">도서관 대출 기한 시계</td></tr>
+<tr><td style="text-align: left"><strong>ALG (Application Layer Gateway)</strong></td><td style="text-align: left">다중 포트 프로토콜(FTP, SIP 등) 지원</td><td style="text-align: left">제어 채널을 분석해 동적으로 데이터 채널 포트(Pinhole)를 열어줌</td><td style="text-align: left">복잡한 앱의 방화벽 호환성 제공</td><td style="text-align: left">귀빈을 위한 비밀 통로 개방</td></tr>
+</tbody></table>
+<hr />
+<h3 id="paekis-geomsa-inspection-yi-2-track-raipeusaikeul">패킷 검사(Inspection)의 2-Track 라이프사이클</h3>
+<p>Stateful 방화벽이 고성능을 내는 이유는 내부적으로 패킷을 처리하는 경로가 느린 경로(Slow Path)와 빠른 경로(Fast Path)로 분리되어 있기 때문이다.</p>
+<ol>
+<li><strong>Slow Path (세션 초기화)</strong>: 내부에서 외부로 나가는 '첫 번째 패킷(TCP SYN)'이 방화벽에 도달하면, State Table에 해당 정보가 없다. 방화벽은 수천 줄의 방화벽 정책(ACL)을 첫 줄부터 순차적으로(Top-Down) 읽어가며 허용(Permit) 여부를 엄격히 검사한다. 허용 정책과 매치되면, State Table에 새로운 항목(Entry)을 생성한다.</li>
+<li><strong>Fast Path (세션 유지)</strong>: 이후 해당 세션에 속한 후속 패킷들(웹서버의 응답 패킷, 파일 다운로드 데이터 등)이 도달하면, 무겁고 느린 ACL 정책 검색 과정을 완전히 생략(Bypass)한다. 대신 초고속으로 State Table의 해시값만 조회하여 일치하면 즉각 통과시킨다. 패킷 처리 속도가 비약적으로 향상된다.</li>
+<li><strong>Session Teardown (세션 종료)</strong>: 통신이 끝나 TCP FIN 또는 RST 패킷이 오가면 테이블에서 해당 항목을 즉시 지워(Teardown) 외부의 접근을 차단한다. 정상 종료가 안 되더라도 타이머(예: TCP Idle 1시간)에 의해 자동 삭제된다.</li>
+</ol>
+<p>다음은 TCP 세션 전이 상태에 따라 방화벽 내부의 State Table과 룰셋(Rule-set) 엔진이 상호작용하는 메커니즘을 상세히 보여주는 구조 흐름도이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────┐
+│      Stateful Inspection 엔진의 내부 동작 라이프사이클 (2-Track)         │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  [새로운 패킷 인입] ─────────────────┐                             │
+│       │                            ▼                             │
+│       │            ┌────────────────────────────┐                │
+│       │            │ 1. State Table 조회 (캐시) │                │
+│       │            │  (Fast Path 해시 매칭)      │                │
+│       │            └─────────┬─────────┬────────┘                │
+│       │                      │         │                         │
+│       │                 [불일치]    [일치 (Match!)]               │
+│       │                      │         │                         │
+│       ▼                      ▼         └──────────┐              │
+│  [Slow Path]        ┌─────────────────┐           │              │
+│                  │ 2. ACL 정책 검사 │           │ [Fast Path]  │
+│  (TCP SYN의 경우)   │ (방화벽 룰셋)    │           │ (초고속 통과)  │
+│                  └────────┬────────┘           │              │
+│                           │                    │              │
+│                      [허용(Permit)]            │              │
+│                           │                    │              │
+│                           ▼                    │              │
+│                  ┌─────────────────┐           │              │
+│                  │ 3. 세션 기록 생성 │           │              │
+│                  │ (Table Entry)   │           │              │
+│                  └────────┬────────┘           │              │
+│                           │                    │              │
+│                           ▼                    ▼              │
+│                     [패킷 허용 및 인터페이스 전송 (Forwarding)]       │
+│                                                                  │
+│ ──────────────────────────────────────────────────────────────── │
+│  * 비정상 시나리오 (Drop)                                          │
+│  - 테이블에 없는 상태에서 TCP ACK 또는 RST 패킷만 들어올 경우 ──▶ [차단] │
+│  - 룰셋(ACL)에서 거부(Deny)된 첫 패킷 (예: 텔넷 접근) ───────▶ [차단] │
+└──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> 이 다이어그램은 성능과 보안이 어떻게 시스템 구조 속에서 타협점을 찾는지를 논리적으로 규명한다. 핵심은 가장 빈번하게 발생하는 후속 데이터 패킷들(동영상의 스트리밍 데이터 조각들 등)이 2번(무거운 ACL 검사)과 3번을 거치지 않고, 1번(State Table 조회)에서 바로 Fast Path를 타고 초고속으로 전송(Forwarding)된다는 점이다. 이 캐싱 아키텍처 덕분에 방화벽의 룰(Rule)이 수만 줄로 늘어나더라도 기존 세션의 처리량(Throughput)은 전혀 저하되지 않는다. 해커가 상태 테이블 생성을 우회하기 위해 처음부터 SYN이 아닌 조작된 ACK 패킷이나 은닉된 널(NULL) 스캔 패킷을 쏘더라도, State Table에 일치하는 기록이 없으므로 곧바로 Slow Path로 넘어가고, TCP 규격에 맞지 않는 "SYN 없는 ACK"는 룰셋 엔진에 의해 즉각 폐기(Drop)된다. 이것이 Stateful 장비가 포트 스캔이나 세션 하이재킹 시도에 대해 강건한 이유다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 놀이공원에서 처음 들어올 때만 매표소(ACL 검사)에서 줄을 서서 티켓을 끊고 손목에 팔찌(State Table 기록)를 채워주면, 화장실에 다녀와서 다시 입장할 때는 긴 줄을 서지 않고 팔찌만 보여준 뒤 전용 통로(Fast Path)로 즉시 들어갈 수 있는 시스템과 같습니다.</li>
+</ul>
+<hr />
+<h2 id="iii-yunghab-bigyo-mic-dagagdo-bunseog">Ⅲ. 융합 비교 및 다각도 분석</h2>
+<h3 id="bigyo-1-1sedae-2sedae-3sedae-banghwabyeog-gisul-bigyo">비교 1: 1세대, 2세대, 3세대 방화벽 기술 비교</h3>
+<p>각 세대의 방화벽 기술은 성능(속도)과 보안(검사 깊이) 사이의 트레이드오프를 해결하기 위해 발전했다.</p>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">1. 패킷 필터링 (Stateless)</th><th style="text-align: left">2. 애플리케이션 프록시 (ALG/WAF 조상)</th><th style="text-align: left">3. 상태 기반 검사 (Stateful Inspection)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>OSI 계층</strong></td><td style="text-align: left">L3 / L4 헤더</td><td style="text-align: left">L7 (Application 데이터) 전체</td><td style="text-align: left">L3 / L4 (+ 프로토콜 상태)</td></tr>
+<tr><td style="text-align: left"><strong>보안성</strong></td><td style="text-align: left">낮음 (IP 스푸핑, 비정상 TCP 플래그에 취약)</td><td style="text-align: left">매우 높음 (페이로드 내부 바이러스, 명령어 분석 가능)</td><td style="text-align: left">높음 (패킷 문맥 파악, 비정상 세션 차단)</td></tr>
+<tr><td style="text-align: left"><strong>처리 성능</strong></td><td style="text-align: left">빠름 (단순 룰 매칭)</td><td style="text-align: left">매우 느림 (데이터를 모두 재조립해야 함, 병목 심각)</td><td style="text-align: left"><strong>매우 빠름</strong> (State Table 기반 고속 패킷 바이패스)</td></tr>
+<tr><td style="text-align: left"><strong>투명성</strong></td><td style="text-align: left">투명함 (클라이언트-서버 직결)</td><td style="text-align: left">비투명 (방화벽이 2개의 세션으로 분리 개입)</td><td style="text-align: left">투명함 (클라이언트-서버 간 흐름 방해 없음)</td></tr>
+</tbody></table>
+<p>프록시 기반의 2세대는 보안성은 완벽했지만 엄청난 컴퓨팅 부하로 인해 대형 네트워크 백본(Backbone)에 배치할 수 없었다. Stateful 방화벽은 L4 헤더의 연결 문맥만 추적함으로써 속도를 잃지 않으면서도 보안성을 크게 끌어올려 사실상 엔터프라이즈 인프라 보안의 황금 표준이 되었다.</p>
+<h3 id="bigyo-2-stateful-banghwabyeoggwa-udp-icmp-tongsin-stateless-peurotokolyi-ceori">비교 2: Stateful 방화벽과 UDP/ICMP 통신 (Stateless 프로토콜의 처리)</h3>
+<p>TCP는 연결 지향(Connection-oriented)이므로 SYN, FIN 등의 플래그(Flag)로 상태를 명확히 추적할 수 있다. 하지만 상태(State) 개념 자체가 아예 없는 UDP (예: DNS)나 ICMP (예: Ping)는 어떻게 Stateful 방화벽이 처리할까? 방화벽은 '가상 상태 (Pseudo-state)'를 만들어 낸다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌───────────────┬────────────────────────────────────────────────────────┐
+│ 프로토콜      │ Stateful 방화벽의 가상 상태(Pseudo-state) 추적 방식          │
+├───────────────┼────────────────────────────────────────────────────────┤
+│ UDP (DNS 등)  │ 출발지&#x2F;목적지 IP와 포트를 기반으로 매핑 정보 생성. 응답 패킷이  │
+│               │ 돌아올 때까지만 매우 짧은 시간(예: 30초) 동안만 테이블 유지.  │
+├───────────────┼────────────────────────────────────────────────────────┤
+│ ICMP (Ping)   │ ICMP Type(Echo Request&#x2F;Reply)과 Sequence 번호를 조합    │
+│               │ 하여 세션 식별 아이디처럼 사용. 타이머(수 초) 초과 시 자동 삭제. │
+└───────────────┴────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[매트릭스 해설]</strong> UDP 쿼리(예: DNS 질의)가 내부에서 밖으로 나가면, 방화벽은 이를 위해 잠시 State Table에 임시 장부(Virtual Session)를 만든다. 그리고 외부 DNS 서버에서 응답이 되돌아오면, 이 응답을 통과시킨 직후 타이머에 의해 장부를 재빨리 파기해 버린다. 이는 UDP Flooding과 같은 DoS 공격 시 방화벽의 메모리가 고갈되는 것을 막기 위한 필수 융합 보안 기법이다. 상태가 없는 프로토콜조차 강제로 상태를 덧씌워 통제하는 것이 Stateful 철학의 핵심이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 우체국(TCP)처럼 등기 번호가 명확한 소포뿐만 아니라, 일반 우편(UDP)을 보낼 때도 임시 송장 번호를 강제로 붙여 답장이 올 때까지만 기억했다가 곧바로 지워버려 사서함(메모리)이 꽉 차는 것을 방지하는 현명한 물류 시스템과 같습니다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsajeog-pandan">Ⅳ. 실무 적용 및 기술사적 판단</h2>
+<h3 id="silmu-sinario">실무 시나리오</h3>
+<ol>
+<li>
+<p><strong>시나리오 — 동적 포트를 사용하는 FTP (File Transfer Protocol) 서비스 구축</strong>: 액티브(Active) 모드로 동작하는 FTP 서버를 사내에 구축했다. 외부 클라이언트가 21번 포트(Control)로 접속하는 것은 방화벽에서 허용(Permit)하여 연결이 잘 되었으나, 파일 목록을 보려고 <code>ls</code> 명령어를 치는 순간 FTP 서버가 클라이언트의 임의 포트(Data 채널)로 접속을 시도하다가 방화벽에 막혀 응답 불능에 빠지는 현상 발생.</p>
+<ul>
+<li><strong>의사결정</strong>: FTP는 제어 채널(21번)과 데이터 전송 채널(동적 할당 포트)을 별도로 열어야 하는 다중 연결 프로토콜이다. 단순히 Stateful 기능만으로는 서버가 외부로 여는 데이터 포트를 예측할 수 없다. 보안 엔지니어는 방화벽에서 <strong>FTP ALG (Application Layer Gateway) 기능</strong>을 활성화(Inspection)해야 한다. 방화벽이 21번 포트로 오가는 제어 명령(PORT 명령어 등)의 내용(L7 Payload)을 몰래 읽고 분석하여, 앞으로 열려야 할 동적 포트가 무엇인지 알아낸 뒤 State Table에 임시로 핀홀(Pinhole)을 동적으로 뚫어주어 데이터 전송을 허용한다.</li>
+</ul>
+</li>
+<li>
+<p><strong>시나리오 — 대규모 TCP SYN Flooding 공격에 의한 방화벽 다운</strong>: 방화벽 하단의 웹 서버를 향해 악의적인 봇넷이 초당 수만 개의 SYN 패킷을 쏘고 있다. 웹 서버는 무사하지만, 앞단에 있는 Stateful 방화벽 장비의 State Table(세션 맺기 위한 메모리)이 100% 꽉 차서 (Session Exhaustion) 더 이상 정상적인 사용자의 새 연결조차 받아주지 못하고 방화벽 펌웨어가 멈춰버린 상황.</p>
+<ul>
+<li><strong>의사결정</strong>: Stateful 아키텍처의 가장 큰 취약점인 <strong>State Table 고갈(Session Table Overflow) 공격</strong>이다. 대응을 위해 방화벽의 L4 방어 기능에서 <strong>SYN Cookie</strong> 메커니즘을 가동시키거나, <strong>초당 최대 연결 수(CPS, Connection Per Second) 제한</strong> (Rate Limiting) 정책을 타겟 IP별로 설정한다. 방화벽은 아직 3-Way Handshake가 완벽히 성립되지 않은 Half-open 세션을 State Table의 중요 공간에 즉시 할당하지 않고, 전용 임시 영역에서 격리 관리(TCP Intercept)하여 메인 메모리 고갈을 막아야 한다.</li>
+</ul>
+</li>
+</ol>
+<p>의사결정 과정에서 실무 네트워크 라우팅 및 보안 아키텍처를 설계할 때 자주 범하는 '비대칭 라우팅' 장애 해결 플로우는 아래와 같다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌───────────────────────────────────────────────────────────────────┐
+│         비대칭 라우팅(Asymmetric Routing)에 의한 Stateful 방화벽 장애 판단     │
+├───────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│   [클라이언트 통신 실패 보고 (접속 Timeout)]                              │
+│                │                                                  │
+│                ▼                                                  │
+│      [방화벽 로그 확인] &quot;TCP 패킷 차단: Out of State (상태 불일치)&quot; 로그 발생?│
+│          ├─ 예 ────▶ 비대칭 라우팅(Asymmetric Routing) 의심 장애         │
+│          │                     │                                  │
+│          │                     ▼                                  │
+│          │             [네트워크 토폴로지 분석]                       │
+│          │             패킷이 나가는 경로(FW 1)와 들어오는 경로(FW 2)가  │
+│          │             서로 다른 방화벽 장비로 구성되어 있는가?           │
+│          │             (또는 L3 스위치의 로드밸런싱이 활성화되었는가?)      │
+│          │                     │                                  │
+│          │                     ▼                                  │
+│          │             [해결 방안 결정]                             │
+│          │             A. 라우팅 프로토콜(OSPF&#x2F;BGP)을 조정하여 In&#x2F;Out   │
+│          │                트래픽이 반드시 같은 방화벽(동일 장비)을 타도록 강제 │
+│          │             B. 불가피할 경우, 두 방화벽을 액티브-액티브(A&#x2F;A)    │
+│          │                클러스터링으로 묶어 State Table 메모리를 실시간 동기화│
+│          │                                                        │
+│          └─ 아니오 ──▶ 단순 방화벽 포트 미개방(ACL 룰 누락) 또는 서버 장애  │
+└───────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> Stateful 방화벽을 운영할 때 네트워크 엔지니어가 가장 골머리를 앓는 것이 '비대칭 라우팅(Asymmetric Routing)'이다. 대형 인프라에서는 방화벽을 이중화하여 사용하는데, 내부 클라이언트의 SYN 요청이 1번 방화벽(FW1)을 타고 밖으로 나갔다면 State Table은 FW1에만 기록된다. 그런데 라우터가 경로를 효율적으로 쓰겠다고 응답 패킷(SYN-ACK)을 2번 방화벽(FW2) 쪽으로 보내면 어떻게 될까? FW2는 아무런 요청 기록(State)이 없으므로 이 패킷을 해킹 시도(위조된 응답)로 간주하고 가차 없이 폐기(Drop)해 버린다. 이는 Stateless 장비 시절에는 없었던 장애다. 이를 해결하기 위해 엔지니어는 라우팅 경로를 정교하게 튜닝하여 'In/Out 대칭 경로'를 맞추거나, 전용 동기화 케이블(HA Sync)로 두 방화벽의 State 장부를 밀리초(ms) 단위로 실시간 복사하게 만들어 어느 쪽으로 응답이 들어와도 통과되게 만들어야 한다.</p>
+<h3 id="doib-cekeuriseuteu">도입 체크리스트</h3>
+<ul>
+<li><strong>기술적</strong>: 대용량 트래픽 인입 시 State Table(세션 테이블)의 최대 수용량(Max Concurrent Sessions)을 고려하여 하드웨어 스펙이 산정되었는가? UDP 통신의 Timeout 값이 지나치게 길게 설정되어 악성 공격 시 테이블 메모리를 잠식할 위험은 없는가?</li>
+<li><strong>운영·보안적</strong>: 불필요한 ANY-ANY 허용 룰이 하단에 방치되어 있지 않은가? FTP, SIP, H.323 등 복잡한 프로토콜 사용 시 방화벽의 ALG(Application Layer Gateway) 모듈 검사로 인한 과도한 CPU 점유율 상승 리스크를 사전 테스트했는가?</li>
+</ul>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p><strong>UDP Flooding 에 대한 무방비</strong>: Stateful 방화벽은 TCP 세션 방어에는 철저하지만 대규모 UDP/ICMP 트래픽이 쏟아지면 이를 막기 위해 임시 세션을 무수히 생성하다가 메모리가 고갈되어 동반 다운된다. 룰셋에서 임계치(Rate Limiting)를 설정하거나 앞단에 안티-DDoS 장비를 두지 않고 방화벽 혼자 모든 볼륨 공격을 감당하게 두는 아키텍처는 치명적이다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 똑똑한 경비원(Stateful FW)이라 하더라도 수만 명의 폭주족(DDoS 트래픽)이 동시에 밀고 들어오며 방문자 명부(State Table)에 다 적어 넣으라고 강요하면, 장부 찢어지고 혼절하여 정작 VIP 손님도 클럽에 들어가지 못하는 마비 상태가 됩니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="jeongryang-jeongseong-gidaehyogwa">정량/정성 기대효과</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">1세대 Stateless 패킷 필터링 환경</th><th style="text-align: left">3세대 Stateful 방화벽 아키텍처 적용</th><th style="text-align: left">개선 효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">허용 룰(Rule) 증가 시 선형적인 성능 저하</td><td style="text-align: left">Fast Path 바이패스 적용으로 성능 저하 없음</td><td style="text-align: left">대규모 룰 환경에서 <strong>패킷 처리 지연(Latency) 수십 배 감소</strong></td></tr>
+<tr><td style="text-align: left"><strong>정량</strong></td><td style="text-align: left">외부 유입 응답을 위해 1024~65535 포트 상시 개방</td><td style="text-align: left">동적으로 포트 매핑 후 세션 종료 시 즉각 차단</td><td style="text-align: left">불필요한 포트 개방에 따른 잠재적 공격 표면 <strong>99% 축소</strong></td></tr>
+<tr><td style="text-align: left"><strong>정성</strong></td><td style="text-align: left">IP 스푸핑 및 TCP 비정상 플래그 스캔 공격에 취약</td><td style="text-align: left">연결 문맥 검증으로 세션 하이재킹 및 비정상 스캔 차단</td><td style="text-align: left">기업 경계망(Perimeter)의 무결성 확보 및 보안 가시성 증가</td></tr>
+</tbody></table>
+<h3 id="mirae-jeonmang">미래 전망</h3>
+<ul>
+<li><strong>차세대 방화벽 (NGFW)과의 완전한 융합</strong>: 오늘날 순수한 Stateful 방화벽 장비는 거의 단종되었다. L4 세션 추적 엔진은 기본 베이스로 깔리고, 그 위에 침입 방지 시스템(IPS), 안티바이러스(AV), 애플리케이션 가시성 식별(L7 DPI) 기능을 통합한 통합 위협 관리(UTM) 및 차세대 방화벽(NGFW)으로 진화하였다.</li>
+<li><strong>클라우드 분산 방화벽 (Micro-segmentation)</strong>: 과거에는 기업의 출입구(Perimeter)에만 거대한 방화벽 장비를 두었다면, 클라우드 가상화 시대에는 수백 개의 가상머신(VM)과 컨테이너 각각의 vNIC(가상 랜카드)마다 쪼개진 소프트웨어 기반 Stateful 방화벽이 내장된다(예: AWS Security Group, NSX). 이를 통해 해커가 내부망의 한 서버를 장악하더라도 옆 서버로 횡적 이동(Lateral Movement)을 하지 못하게 세밀하게 통제하는 마이크로 세그멘테이션 패러다임이 보안의 핵심이 되었다.</li>
+</ul>
+<h3 id="camgo-pyojun">참고 표준</h3>
+<ul>
+<li><strong>NIST SP 800-41 Rev. 1</strong>: 방화벽 기술 가이드라인 (Guidelines on Firewalls and Firewall Policy). Stateful Inspection의 작동 원리와 보안 통제 요구사항이 상세히 기술된 미국 연방 표준.</li>
+<li><strong>RFC 793</strong>: TCP 프로토콜 규격. Stateful 방화벽이 TCP 3-Way Handshake 및 세션 종료(FIN) 상태 전이를 추적하기 위해 기준으로 삼는 성경(Bible)과도 같은 기술 문서.</li>
+</ul>
+<p>Stateful Inspection 기술의 발명은 보안을 대하는 패러다임을 "점(Packet)"에서 "선(Session 흐름)"으로 바꾼 혁명적 전환이었다. 현재 쏟아지는 화려한 AI 딥러닝 보안 솔루션이나 제로 트러스트(Zero Trust) 아키텍처들도, 기저를 파고들면 연결의 맥락과 상태를 추적하여 '신뢰할 수 없는 동적인 통신'을 끊어낸다는 이 3세대 방화벽의 원초적 철학 위에 세워져 있다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 한 장의 티켓(패킷)만 검사하고 끝내던 과거에서, 승객이 여행을 시작해서 끝마칠 때까지의 전체 경로와 행동의 흐름(상태)을 지켜보고 에스코트하는 종합 항공 보안 관제 시스템으로 진화한 것과 같습니다.</li>
+</ul>
+<hr />
+<h2 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h2>
+<table><thead><tr><th style="text-align: left">개념 명칭</th><th style="text-align: left">관계 및 시너지 설명</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Packet Filtering (패킷 필터링)</strong></td><td style="text-align: left">OSI 3/4계층의 IP와 포트 번호만을 보고 정적으로 필터링하는 1세대 방화벽 기술로, Stateful 검사의 근간이 되는 기본 정책(ACL) 매칭 기능이다.</td></tr>
+<tr><td style="text-align: left"><strong>TCP 3-Way Handshake (3방향 핸드셰이크)</strong></td><td style="text-align: left">통신 연결 수립을 위한 SYN, SYN-ACK, ACK 과정으로, Stateful 방화벽이 세션(State Table)을 생성하고 상태를 ESTABLISHED로 전환하는 핵심 기준점이다.</td></tr>
+<tr><td style="text-align: left"><strong>NGFW (Next-Generation Firewall, 차세대 방화벽)</strong></td><td style="text-align: left">Stateful 기능에 IPS(침입방지), L7 애플리케이션 제어, 평판 분석 등을 단일 엔진으로 융합하여 보안 심도를 7계층까지 확장한 진화형 장비다.</td></tr>
+<tr><td style="text-align: left"><strong>ALG (Application Layer Gateway)</strong></td><td style="text-align: left">FTP, SIP 등 데이터 전송 포트가 동적으로 변하는 다중 포트 프로토콜을 Stateful 환경에서 무사히 통과시키기 위해 방화벽이 애플리케이션 페이로드를 엿보고 핀홀(Pinhole)을 열어주는 보조 모듈이다.</td></tr>
+<tr><td style="text-align: left"><strong>Asymmetric Routing (비대칭 라우팅)</strong></td><td style="text-align: left">패킷이 나가는 경로와 들어오는 경로가 다른 현상으로, 양방향 세션의 문맥을 모두 봐야 하는 Stateful 방화벽에서는 심각한 세션 차단 장애를 유발하는 운영상의 난제다.</td></tr>
+<tr><td style="text-align: left"><strong>Micro-segmentation (마이크로 세그멘테이션)</strong></td><td style="text-align: left">경계 방어에 집중된 하드웨어 방화벽 기능을 클라우드 내부의 개별 가상 머신(VM) 단위로 분산시켜 세밀한 동서(East-West) 트래픽 통제를 구현하는 최신 보안 아키텍처다.</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>상태 기반 검사(Stateful) 방화벽은 우리 집 대문을 지키는 아주 똑똑한 경비원 로봇이에요.</li>
+<li>예전 경비원(1세대)은 건망증이 심해서, 아빠가 치킨을 주문해도 배달원이 올 때마다 "누구세요? 문 열어줘도 됩니까?"라고 매번 복잡한 규칙 책을 뒤져봐야 했어요.</li>
+<li>하지만 이 똑똑한 경비원 로봇은 아빠가 치킨집에 전화하는 걸 미리 듣고 '치킨 배달 상태' 장부에 적어둔 뒤, 치킨이 도착하면 장부만 휙 보고 0.1초 만에 문을 열어주고 도둑의 엉뚱한 방문은 쫓아낸답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

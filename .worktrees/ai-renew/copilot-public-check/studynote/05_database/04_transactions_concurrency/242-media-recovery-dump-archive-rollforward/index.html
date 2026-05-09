@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>242. 미디어 회복 (Media Recovery) - 디스크 손상 시 백업(덤프) 아카이브와 로그를 이용해 롤포워드(Roll-forward) 복구 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="242-midieo-hoebog-media-recovery-diseukeu-sonsang-baegeob-deompeu-dump-akaibeu-rogeu-rolpoweodeu-roll-forward-deiteobeiseu-jaenan-boggu-jangae">242. 미디어 회복 (Media Recovery) - 디스크 손상 백업 덤프(Dump) 아카이브 로그 롤포워드(Roll-forward) 데이터베이스 재난 복구 장애</h1>
+<blockquote>
+<p><strong>핵심 인사이트</strong>: (232번 최악의 3번 장애 극복법) "야!! 234번 Redo, 235번 Undo, 241번 Checkpoint 다 필요 없어 ㅆㅂ!! 지진이 나서 우리 회사 은행 원본 엑셀이 저장된 '하드디스크(쇳덩어리)' 자체가 불타서 산산조각이 났어(미디어 장애)!! 로그 파일? 그것도 같은 쇳덩어리 안에 있어서 같이 타버렸어!! 우주 멸망이야!!" 사장님이 권총을 꺼낸다. DBA(관리자)가 덜덜 떨며 창고에서 낡은 카세트테이프 하나를 꺼내 든다. "사..사장님!! 제가 쫄보라서 매일 밤 12시에 은행 엑셀 원본 전체를 복사(Dump)해서 저기 강원도 비밀 벙커의 안전한 테이프에 몰래 백업해 뒀습니다!! 그리고 밤 12시부터 오늘 불타기 직전까지의 변경 기록(Archive Log)도 USB에 따로 빼놨어요!! <strong>당장 용산 가서 새 빈 하드디스크 하나 사 오십쇼!! 어젯밤 12시 백업본(Dump)을 새 하드에 콸콸 들이붓고!! 그 뒤에 오늘 낮까지의 USB 기록(Archive Log)을 처음부터 끝까지 미친 듯이 Redo(롤포워드) 때려버리면 10시간 뒤에 100% 완벽하게 부활합니다!!</strong>" 쇳덩어리의 죽음을 뛰어넘어 영혼을 부활시키는 DB 최후의 연금술, 미디어 회복이다.</p>
+</blockquote>
+<h2 id="i-redo-undoyi-muryeogham-midieo-jangaeyi-gongpo">Ⅰ. Redo/Undo의 무력함 (미디어 장애의 공포)</h2>
+<ul>
+<li>234번 <code>Redo(재실행)</code>와 235번 <code>Undo(취소)</code>는 어디까지나 <strong>"원본 하드디스크(Data File)와 로그 파일(Log File)은 흠집 하나 없이 멀쩡하게 살아있고, 메모리(RAM)만 뻗었을 때(시스템 장애)"</strong> 부리는 잔재주입니다.</li>
+<li><strong>미디어 장애 (Media Failure)</strong>: 불이 나거나, 디스크 헤드가 긁혀서 쇳덩어리(디스크) 원본 자체가 물리적으로 박살 나버리면, 로그 파일도 같이 잿더미가 되므로 Redo/Undo 흑마법을 부릴 주문서조차 사라집니다.</li>
+</ul>
+<h2 id="ii-midieo-hoebog-media-recovery-yi-gaenyeom">Ⅱ. 미디어 회복 (Media Recovery)의 개념 🌟</h2>
+<ul>
+<li><strong>Media (매체, 즉 디스크/테이프 등 하드웨어 저장소)</strong></li>
+<li><strong>개념</strong>: 데이터베이스가 저장된 비휘발성 저장 장치(디스크)가 물리적으로 손상되었을 때, <strong>물리적으로 다른 안전한 장소에 주기적으로 복사해 둔 '전체 백업(Dump)' 데이터와, 백업 이후의 변경 기록을 따로 빼둔 '아카이브 로그(Archived Log)'를 조합하여 새로운 빈 디스크에 시스템을 처음부터 재건축해 내는 최후의 재난 복구(DR) 기법</strong>입니다.</li>
+</ul>
+<h2 id="iii-midieo-hoebogeul-gulrineun-3dae-guweonyi-seongmul-haegsim-gicul">Ⅲ. 미디어 회복을 굴리는 3대 구원의 성물 🌟 핵심 기출 🌟</h2>
+<h3 id="1-deompeu-dump-jeonce-baegeob-gwageo-sajin-tongjjaero-gubgi">1. 덤프 (Dump / 전체 백업) - "과거 사진 통째로 굽기"</h3>
+<ul>
+<li>미디어 회복의 시작점입니다.</li>
+<li>관리자는 DB 트래픽이 가장 없는 새벽 3시에, 시스템을 잠깐 멈추거나 락을 걸고 <strong>그 시점의 DB 엑셀 원본(수백 GB) 전체를 통째로 복사해서 물리적으로 다른 건물(또는 테이프 장치)에 콸콸 쏟아버립니다(Dump).</strong></li>
+<li>이 덤프 파일 하나만 부으면 무조건 완벽한 '어제 새벽 3시'의 은행 상태로 돌아갑니다.</li>
+</ul>
+<h3 id="2-akaibeu-rogeu-archived-log-usbe-bbaedolrin-ilgijang">2. 아카이브 로그 (Archived Log) - "USB에 빼돌린 일기장"</h3>
+<ul>
+<li>어제 새벽 3시에 덤프(백업)를 떴고, 오늘 오후 3시에 디스크가 불탔습니다.</li>
+<li>덤프만 부으면 은행은 12시간 전인 어제 새벽 3시로 타임머신을 탑니다. 오늘 아침에 입금한 10만 명의 고객 돈이 허공으로 날아가(데이터 유실) 폭동이 터집니다.</li>
+<li><strong>방어책</strong>: 237번에서 배운 로그 파일(블랙박스)이 꽉 찰 때마다, 덮어쓰지 않고 <strong>USB나 다른 안전한 디스크로 로그 파일 자체를 복사해서 빼돌려 영구 보존</strong>합니다. 이것이 아카이브 로그입니다. 이 로그에는 어제 새벽 3시부터 오늘 오후 불타기 직전까지의 12시간 치 고객 입금 내역이 빼곡히 살아 숨 쉬고 있습니다.</li>
+</ul>
+<h3 id="3-boggu-rojig-rol-poweodeu-roll-forward-yi-micin-jilju">3. 복구 로직: 롤 포워드 (Roll-forward)의 미친 질주 🌟</h3>
+<p>새 하드디스크를 서버에 꽂았습니다.</p>
+<ol>
+<li><strong>덤프 들이붓기</strong>: 어젯밤 12시 덤프 파일을 붓습니다. DB가 어젯밤 상태로 부활했습니다.</li>
+<li><strong>롤포워드(Redo) 폭격</strong>: 아카이브 로그(USB)를 꽂습니다. 로그에 적힌 오늘 아침 9시의 "홍길동 1만 원 입금"부터 오후 2시 59분의 "이순신 출금"까지, <strong>수백만 개의 쿼리를 시간 순서대로 미친 듯이 Redo(재실행) 덮어쓰기하며 미래로 쫙쫙 진도를 밀고 나갑니다(Roll-forward).</strong></li>
+<li><strong>부활</strong>: 로그를 끝까지 다 밀고 나면, 기적처럼 오늘 오후 3시 불타기 0.1초 전의 완벽한 최신 상태로 DB가 100% 수복됩니다.</li>
+</ol>
+<h2 id="iv-cimyeongjeog-danjeom-dauntaim-pogbal">Ⅳ. 치명적 단점 (다운타임 폭발)</h2>
+<ul>
+<li><strong>속도</strong>: 100GB짜리 덤프를 디스크에 붓고, 12시간 치 로그를 앵무새처럼 처음부터 끝까지 다 다시 실행(Redo)해야 합니다.</li>
+<li>복구하는 데 짧게는 수십 분, 길게는 <strong>며칠이 걸립니다(Downtime 폭발).</strong> 이 며칠 동안 회사는 영업을 못 해 수십억을 날립니다. 그래서 현대 은행은 이 미디어 회복을 안 쓰려고 아예 똑같은 DB 기계 2대를 1,000km 떨어진 곳에 동시에 살려두는 <strong>'이중화(Active-Active 클러스터링, 213번 MSA)'</strong> 돈지랄을 필수적으로 해둡니다.</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: **미디어 회복(Media Recovery)**은 불에 타 잿더미가 된 소설가의 집(하드디스크 파괴)에서 **'외장하드와 복사본으로 소설 1,000페이지를 영혼까지 재건축하는 최후의 발악'**입니다. 소설가의 메인 노트북이 불탔습니다. 원본 파일 1,000페이지가 잿더미가 됐습니다(미디어 장애). 소설가가 오열할 때, 매니저(DBA)가 나타납니다. "어제 밤에 당신이 잔소리 듣고 짜증 내며 외장하드에 통째로 압축해서 복사해 둔 900페이지짜리 백업 파일(Dump)이 우리 집에 안전하게 있습니다! 그리고 당신이 오늘 아침 카페에서 100페이지를 더 쓰면서, 1장 쓸 때마다 카톡 내게쓰기(아카이브 로그 Archived Log)로 꼬박꼬박 문장을 백업해 뒀더군요!" 매니저는 하이마트에서 새 노트북을 사 옵니다. 일단 어젯밤의 900페이지 복사본을 바탕화면에 풉니다(Dump 복원). 그다음 카톡 내게쓰기 기록(로그)을 보면서, 오늘 아침에 쳤던 100페이지 분량의 글씨를 <strong>토시 하나 안 틀리고 미친 속도로 다시 타이핑(Redo / Roll-forward)해서 원고지에 쏟아붓습니다.</strong> 10시간의 피 터지는 타이핑 노가다(복구 시간 지연) 끝에, 불타기 1초 전의 완벽한 1,000페이지짜리 소설이 새 노트북에 100% 동일하게 부활하는 데이터베이스의 궁극적 기적입니다.</p>
+</blockquote>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

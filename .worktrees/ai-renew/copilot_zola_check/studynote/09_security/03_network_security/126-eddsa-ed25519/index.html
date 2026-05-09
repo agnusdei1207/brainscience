@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>126. EdDSA &#x2F; Ed25519 — Edwards 곡선, 결정론적 서명 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 05, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote security
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="126-eddsa-ed25519-gyeoljeongronjeog-taweongogseon-seomyeong">126. EdDSA / Ed25519 (결정론적 타원곡선 서명)</h1>
+<blockquote>
+<p>⚠️ 이 문서는 "서명을 할 때 난수를 잘못 쓰면 개인키가 털린다"는 ECDSA의 치명적인 시한폭탄(소니 PS3 해킹 사태 등)을 영구적으로 제거하기 위해, 개발자가 난수(Random) 생성기를 아예 건드리지 못하게 원천 차단하고 수학적으로 가장 빠르고 완벽하게 동작하는 뒤틀린 에드워즈 곡선을 채택한 현대 전자서명의 종결자, EdDSA를 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: EdDSA(Edwards-curve Digital Signature Algorithm)는 수학자 다니엘 번스타인(Dan Boneh/Bernstein)이 개발한 고속 전자서명 체계로, 그중 <strong>Ed25519</strong>는 Curve25519라는 매우 빠르고 안전한 맵(곡선) 위에서 구동되는 가장 널리 쓰이는 표준이다.</li>
+<li><strong>가치</strong>: 가장 큰 업적은 **'결정론적 서명(Deterministic Signature)'**의 기본 탑재다. 위험한 무작위 난수($k$)를 쓰지 않고, 원본 메시지와 비밀키를 해시(SHA-512)하여 나온 값을 난수처럼 쓰기 때문에 개발자가 멍청한 코딩을 해도 절대 개인키가 털리지 않는 완벽한 안전장치(Fool-proof)를 달았다.</li>
+<li><strong>융합</strong>: ECDSA(비트코인 등)의 찝찝한 난수 의혹과 성능 한계를 동시에 박살 냈으며, 현재 OpenSSH, TLS 1.3, 최신 블록체인(Solana 등), 그리고 아이폰의 보안 칩(Secure Enclave) 등 "빠르고 절대로 뚫려선 안 되는 차세대 통신망"에 폭풍처럼 융합되어 기존 표준을 전면 대체 중이다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-gaeyo-mic-tansaeng-baegyeong-context-necessity">Ⅰ. 개요 및 탄생 배경 (Context &amp; Necessity)</h3>
+<p>타원곡선 서명의 제왕이었던 ECDSA는 훌륭했지만 2가지 뼈아픈 불만(Pain Point)을 안고 있었다.</p>
+<ol>
+<li><strong>난수 생성기(RNG) 의존성</strong>: 서명할 때마다 무조건 안전한 주사위(난수 $k$)를 굴려야 하는데, 운영체제의 난수 함수 버그가 나거나, 개발자가 <code>k=4</code> 라고 고정해 버리면, 서명이 풀리는 게 아니라 아예 <strong>마스터 개인키가 증발해 버렸다.</strong> (개발자를 믿을 수 없게 됨)</li>
+<li><strong>연산 예외 처리의 끔찍함</strong>: 앞서 배운 타원곡선 덧셈($P+Q=R$)을 컴퓨터로 코딩할 때, 두 점이 수직으로 서 있거나 무한대(Infinity) 점으로 가면 컴퓨터가 분모가 0이 되는 에러(Division by Zero)를 뿜으며 다운된다. 그래서 수많은 <code>if/else</code> 예외 처리 코드를 짜넣다 보니 속도가 느려지고 사이드 채널 공격(해커가 연산 시간을 재어 키를 유추함)에 탈탈 털렸다.</li>
+</ol>
+<p>이 개판을 수습하기 위해 천재 수학자 번스타인이 칼을 빼 들었다. "난수(주사위)는 아예 쓰지 마! 그리고 덧셈할 때 예외 처리가 필요 없는 완벽하게 부드러운 새로운 타원곡선 맵(에드워즈 곡선)을 던져줄 테니 이거 써!" $\rightarrow$ 이 철학이 모여 탄생한 완전 무결한 옥새가 바로 **EdDSA (Ed25519)**다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 옛날 총(ECDSA)은 화약(난수 K)을 군인이 직접 재서 넣어야 했습니다. 화약을 덜 넣거나 불량 화약을 쓰면 총이 폭발해 군인이 죽었죠(개인키 털림). Ed25519는 군인이 화약을 만질 필요 없이 탄창(해시 기반 결정론적 K)만 끼우면, 비가 오나 눈이 오나 폭발 위험 제로(0%)로 초당 수백 발이 완벽히 나가는 최신예 자동 소총입니다.</p>
+</blockquote>
+<hr />
+<h3 id="ii-ed25519yi-2dae-jeoldae-mugi-gujojeog-uwi">Ⅱ. Ed25519의 2대 절대 무기 (구조적 우위)</h3>
+<h4 id="1-gyeoljeongronjeog-nansu-saengseong-no-more-randomness">1. 결정론적 난수 생성 (No More Randomness)</h4>
+<ul>
+<li><strong>ECDSA의 방식</strong>: <code>Sign(메시지, 개인키, 🎲랜덤 주사위 K) = 서명</code></li>
+<li><strong>Ed25519의 방식</strong>: <code>Sign(메시지, 개인키) = 서명</code></li>
+<li><strong>어떻게 주사위 없이 안전한가?</strong>: Ed25519는 서명할 때마다 $K$값을 랜덤하게 뽑지 않고, **<code>SHA-512(내 개인키의 앞부분 + 평문 메시지)</code>**를 돌려 튀어나온 쓰레기 난수를 $K$값으로 강제 지정한다.
+<ul>
+<li>효과 1: 똑같은 편지에 서명하면, 어제나 오늘이나 도장 모양이 100% 완벽하게 똑같이 나온다 (결정론적).</li>
+<li>효과 2: 편지 내용이 1글자만 달라지면, SHA-512 해시에 의해 완전히 새로운 안전한 난수 $K$가 자동 생성된다.</li>
+<li>결론: <strong>개발자가 난수 함수(<code>rand()</code>)를 잘못 짜서 시스템이 터지는 재앙(소니 PS3 해킹)이 원천적으로 소멸</strong>했다.</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-dwiteulrin-edeuweojeu-gogseon-twisted-edwards-curve">2. 뒤틀린 에드워즈 곡선 (Twisted Edwards Curve)</h4>
+<ul>
+<li>일반 타원곡선($y^2 = x^3 + ax + b$)은 수학 계산 중 수직선 예외 처리(<code>if x1 == x2</code>)가 필수로 들어가 속도를 갉아먹는다.</li>
+<li>번스타인은 <strong>$-x^2 + y^2 = 1 + dx^2y^2$</strong> 라는 기묘하게 꼬인 새로운 곡선 맵(에드워즈 곡선)을 도입했다.</li>
+<li>이 곡선의 미친 장점은, <strong>그래프의 어떤 점 두 개를 더하더라도 예외 조건 없이 하나의 똑같은 덧셈 공식으로 완벽하게 돌아간다</strong>는 것이다! (Complete addition formula)</li>
+<li>예외 코드(<code>if/else</code>)가 없으니 코드가 짧아지고 속도가 광폭으로 빨라지며, 해커가 연산 지연 시간을 재어 공격하는 '타이밍 공격(Timing Attack)'을 완벽하게 방어한다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────────────────┐
+│           ECDSA와 Ed25519(EdDSA)의 결정적 안전성 철학 비교 시각화            │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ 💣 [ 구형 ECDSA 서명 공장 ] - 인간(개발자)의 실수가 개입됨                   │
+│   [평문] ──┐                                                                 │
+│   [개인키] ─┼─▶ 🎲 난수 발생기(rand) 돌림 ──▶ 서명 알고리즘 ──▶ [서명 결과]  │
+│            │   (만약 OS 버그로 똑같은 난수가 2번 나오면?)                    │
+│            └──▶ 🚨 펑! 마스터 개인키 유출! 시스템 멸망!                      │
+│                                                                              │
+│ 🛡️ [ 최신 Ed25519 서명 공장 ] - 완벽한 자동화 (Fool-Proof)                   │
+│   [평문] ──┐                                                                 │
+│   [개인키] ─┼─▶ ⚙️ SHA-512(평문+키) 해시 자동 혼합 ──▶ [완벽한 서명]         │
+│            │   (주사위 따위 안 굴림. 평문과 키가 믹서기에서 자동 난수 생성)  │
+│            └──▶ 🟢 개발자가 술 취해서 코딩을 대충 해도 절대 안 털림!         │
+└──────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong> EdDSA(Ed25519)의 철학은 "개발자를 믿지 마라"다. 암호학은 수학적으로 우아해야 할 뿐만 아니라, 깃허브에서 복붙해서 코딩하는 평범한 프론트/백엔드 개발자가 아무렇게나 함수를 호출해도 보안 구멍이 안 뚫리게 막아주는 **방어적 공학(Fool-proof)**의 정수여야 한다. 이 구조 덕분에 Ed25519는 성능, 보안, 구현 편의성이라는 불가능의 트라이앵글을 모두 박살 냈다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: ECDSA는 수동 변속기(스틱) 스포츠카입니다. 드라이버가 변속 타이밍(난수 K)을 실수하면 엔진이 통째로 날아갑니다. Ed25519는 최첨단 자동 변속기(결정론적 K)를 단 테슬라 전기차입니다. 엑셀만 밟으면 기계가 알아서 가장 완벽한 타이밍에 기어를 변속해 주어 사고가 0%입니다.</li>
+</ul>
+<hr />
+<h3 id="iii-silmu-jeogyonggwa-sedae-gyoceyi-dolpung-migration-to-ed25519">Ⅲ. 실무 적용과 세대 교체의 돌풍 (Migration to Ed25519)</h3>
+<p>기존 RSA-2048이나 ECDSA(P-256)를 쓰던 IT 거인들은 2010년대 중반부터 미친 속도로 Ed25519 진영으로 갈아타고 있다.</p>
+<ol>
+<li><strong>SSH 원격 접속 (OpenSSH)</strong>: 리눅스 서버에 접속할 때 과거엔 <code>ssh-keygen -t rsa</code> 로 뚱뚱한 키를 만들었지만, 이제는 모든 고수들이 <code>ssh-keygen -t ed25519</code> 로 가장 짧고 강력하며 보안성이 보장된 키를 생성하여 접속한다.</li>
+<li><strong>차세대 블록체인 표준 (Solana 등)</strong>: 비트코인은 레거시 호환 때문에 ECDSA를 버리지 못하고 있지만, 솔라나(Solana), 스텔라(Stellar) 같은 1초에 수만 건을 결제하는 초고속 3세대 블록체인 네트워크들은 압도적인 서명 검증 속도를 내기 위해 무조건 코어 지갑 서명으로 <strong>Ed25519</strong>를 채택했다.</li>
+<li><strong>TLS 1.3과 HTTPS 표준</strong>: 웹 브라우저와 서버 간 인증서 서명에서도 이 가장 안전하고 빠른 에드워즈 곡선 서명 방식이 표준 스위트로 강력하게 권장되고 있다.</li>
+</ol>
+<hr />
+<h3 id="iv-gyeolron">Ⅳ. 결론</h3>
+<p>"보안 시스템의 최종 종착지는 '인간의 실수를 허용하지 않는 수학'이다."
+EdDSA (특히 Ed25519)는 난수 주입이라는 폭탄과 예외 처리라는 느림보 거북이를 동시에 걷어찬 타원곡선 암호학의 가장 눈부신 마스터피스다. 더 이상 암호화 라이브러리의 난수 버그에 벌벌 떨 필요가 없다. 256비트라는 손가락만 한 열쇠 길이로 우주 최강의 위조 방지 옥새를 찍어내는 이 마법의 맵(에드워즈 곡선)은, 앞으로 다가올 수십 년의 모바일과 클라우드 인터넷 세상에서 RSA를 박물관으로 보내버릴 완전한 무결점 제왕이다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><strong>전체 분류</strong>: ECC 기반 디지털 서명 (Digital Signature Algorithm)</li>
+<li><strong>기반 맵 (파라미터)</strong>: Curve25519 (뒤틀린 에드워즈 곡선 - Twisted Edwards Curve)</li>
+<li><strong>대체 및 극복 대상</strong>: ECDSA의 '고정된 k(Nonce) 사용 시 개인키 유출' 취약점 (소니 PS3 해킹 등)</li>
+<li><strong>핵심 구현 원칙</strong>: 결정론적 서명 (Deterministic Signature, RFC 8032 표준)</li>
+</ul>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>옛날 서명 도장(ECDSA)은 찍을 때마다 '랜덤 잉크(난수)'를 섞어야 했는데, 바보 개발자가 어제 쓴 잉크를 오늘 또 썼더니 도둑이 그 잉크 자국을 역추적해서 도장 원본을 통째로 훔쳐 가 버렸어요.</li>
+<li>빡친 학자들이 새로 만든 도장(Ed25519)은 아예 잉크통을 없애버리고, 도장을 꽉 누르면 편지 글씨와 내 비밀번호가 기계 안에서 자동으로 섞이면서 안전한 색깔 잉크가 툭 튀어나오게 만들었어요.</li>
+<li>그래서 사람이 아무리 실수를 하려고 해도 기계가 100% 알아서 잉크 배율을 맞춰주니까 절대 도둑한테 털리지 않는 완벽한 자동화 도장이 되었답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

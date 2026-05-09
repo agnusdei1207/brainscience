@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>741. mTLS 상호 인증 서비스 간 보안 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="741-mtls-sangho-injeung-seobiseu-gan-boan">741. mTLS 상호 인증 서비스 간 보안</h1>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: mTLS(Mutual TLS)는 양방향 TLS라는 뜻으로, 클라이언트만 서버의 신분을 확인하는 기존 HTTPS(단방향 TLS)와 달리, <strong>서버와 클라이언트가 서로의 인증서를 교환하여 양쪽 모두 상대방의 신분을 100% 확인하고 암호화 통신을 맺는 보안 프로토콜</strong>이다.</li>
+<li><strong>가치</strong>: 마이크로서비스(MSA) 환경에서 수백 대의 서버가 서로 통신(East-West Traffic)할 때, 해커가 내부망에 침투하여 가짜 서버 행세를 하거나 패킷을 훔쳐보는 것(Man-In-The-Middle 공격)을 원천 차단한다. 제로 트러스트(Zero Trust) 아키텍처의 가장 강력한 물리적 구현체다.</li>
+<li><strong>판단 포인트</strong>: mTLS를 개발자가 직접 Java나 Python 코드 안에서 인증서를 발급하고 갱신하도록 짜면 시스템이 무너진다. 반드시 <strong>Istio나 Linkerd 같은 '서비스 메시(Service Mesh)' 인프라를 도입하여, 코드를 고치지 않고 사이드카(Sidecar) 프록시 단에서 자동으로 mTLS를 맺어주도록 아키텍처를 분리</strong>해야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>우리가 네이버나 구글에 접속할 때 쓰는 <code>HTTPS</code>는 단방향 TLS 통신이다. 브라우저(클라이언트)는 네이버(서버)가 진짜 네이버인지 인증서를 확인하지만, 네이버는 내가 누구인지 인증서로 확인하지 않는다. (대신 아이디/비밀번호로 로그인할 뿐이다).</p>
+<p>과거의 IT 환경에서는 외부(인터넷)에서 내부망으로 들어올 때만 단방향 TLS를 쓰고, 일단 <strong>방화벽 안쪽(내부망)에 들어온 서버들끼리는 서로를 100% 믿고 암호화 없이 평문(HTTP)으로 통신</strong>했다.</p>
+<p>하지만 해커가 피싱 메일로 내부 직원의 PC 하나를 뚫는 순간, 이 PC는 내부망의 '신뢰받는 기기'가 되어 다른 서버들의 평문 통신을 모두 엿듣고 가짜 명령을 보낼 수 있었다. 이를 막기 위해 **"내부망에 있는 서버들끼리도 통신할 때마다 서로 진짜 맞는지 신분증을 확인하고 암호화해서 대화하자!"**는 사상이 대두되었고, 이것이 **mTLS (Mutual TLS)**다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 단방향 TLS는 클럽 입구에서 기도(클라이언트)가 손님(서버)의 신분증만 검사하는 것이다. mTLS는 클럽 안에 들어온 뒤에도 손님들끼리 대화할 때마다 서로 신분증을 까보고 "너 진짜 우리 클럽 회원 맞아?"라고 매번 확인하는 무시무시한 시스템이다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>mTLS의 핵심은 통신하는 양쪽이 모두 '자신의 신분을 증명할 인증서'를 가져야 한다는 것이다.</p>
+<h3 id="1-mtls-sangho-tls-yi-haendeusyeikeu-handshake-weonri">1. mTLS (상호 TLS)의 핸드셰이크(Handshake) 원리</h3>
+<ol>
+<li><strong>Client Hello</strong>: 클라이언트 $\rightarrow$ 서버로 통신 요청.</li>
+<li><strong>Server Certificate</strong>: 서버 $\rightarrow$ 클라이언트로 서버의 인증서 전송. (여기까지는 일반 HTTPS와 동일)</li>
+<li><strong>Certificate Request</strong>: 서버 $\rightarrow$ 클라이언트에게 **"네 인증서도 내놔!"**라고 요구함. (핵심)</li>
+<li><strong>Client Certificate</strong>: 클라이언트 $\rightarrow$ 서버로 클라이언트의 인증서 전송.</li>
+<li><strong>서로 검증 완료 후, 암호화 키를 교환하고 통신 시작.</strong></li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│                  서비스 메시 기반 mTLS 아키텍처              │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│ ┌───────────────┐                             ┌──────────────┐│
+│ │   [ 서버 A ]  │                             │   [ 서버 B ] ││
+│ │ (주문 서비스)   │                             │ (결제 서비스)  ││
+│ │               │                             │              ││
+│ │ ┌───────────┐ │                             │ ┌───────────┐││
+│ │ │ Proxy     │ │ ◀─────── mTLS 통신 ────────▶│ │ Proxy     │││
+│ │ │ (Envoy)   │ │  - A가 B의 인증서 검증      │ │ (Envoy)   │││
+│ │ │ ┌─인증서┐ │ │  - B도 A의 인증서 검증      │ │ ┌─인증서┐ │││
+│ │ └─┴───────┴─┘ │                             │ └─┴───────┴─┘││
+│ └───────────────┘                             └──────────────┘│
+│         ▲ (자동 인증서 발급 및 갱신)                 ▲         │
+│ ┌───────┴────────────────────────────────────────────┴───────┐│
+│ │        [ 컨트롤 플레인 (예: Istio Citadel) - 내부 CA ]        ││
+│ └────────────────────────────────────────────────────────────┘│
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="2-jadong-injeungseo-gaengsin-rotation">2. 자동 인증서 갱신 (Rotation)</h3>
+<p>인증서의 유효기간이 1년이면, 해커가 인증서를 훔쳤을 때 1년 동안 우리 서버 행세를 할 수 있다. 현대의 mTLS 인프라(Istio)는 <strong>인증서 유효기간을 1시간~하루 단위로 극단적으로 짧게</strong> 잡고, 만료되기 전에 사이드카 프록시가 자동으로 새 인증서를 발급받아 교체(Rotation)한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: mTLS는 군대에서 매일 바뀌는 '암구호(인증서)'와 같다. "화랑!" 했는데 상대방이 "담배!"라고 대답하지 않으면(인증서 검증 실패) 같은 아군 부대원이라도 즉시 총을 쏴버리는(통신 차단) 완벽한 방어 체계다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>데이터 암호화 계층에 따라 보안의 수준과 책임이 달라진다.</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">HTTP (평문 통신)</th><th style="text-align: left">단방향 TLS (HTTPS)</th><th style="text-align: left">상호 TLS (mTLS)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>통신 상태</strong></td><td style="text-align: left">누구나 엿볼 수 있음</td><td style="text-align: left">암호화됨</td><td style="text-align: left">암호화됨</td></tr>
+<tr><td style="text-align: left"><strong>신원 확인</strong></td><td style="text-align: left">서로 모름</td><td style="text-align: left">클라이언트만 서버를 신뢰함</td><td style="text-align: left"><strong>양쪽 모두 서로를 신뢰함</strong></td></tr>
+<tr><td style="text-align: left"><strong>주요 사용처</strong></td><td style="text-align: left">과거의 안전한 내부망</td><td style="text-align: left">외부 사용자 $\rightarrow$ 우리 회사 서버</td><td style="text-align: left"><strong>내부망의 MSA 서버 $\leftrightarrow$ 서버</strong></td></tr>
+<tr><td style="text-align: left"><strong>인증서 발급자</strong></td><td style="text-align: left">없음</td><td style="text-align: left">공인 CA (Verisign, Let's Encrypt 등)</td><td style="text-align: left"><strong>사내 자체 CA (Private CA)</strong></td></tr>
+</tbody></table>
+<p>mTLS에 쓰이는 인증서는 외부 공인 기관에서 돈 주고 살 필요가 없다. 외부 인터넷과 통신하는 게 아니기 때문에, 사내에 '자체 인증 기관(Private CA)'을 띄워놓고 우리 서버들끼리만 알아볼 수 있는 무료 인증서를 무한대로 찍어내면 된다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: HTTPS가 국가에서 발급한 '주민등록증'이라면, mTLS는 우리 회사 출입 통제기에서만 찍히는 '사원증'이다. 외부인은 이 사원증을 발급받을 수도 없고, 복사해도 쓸 수가 없다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p>mTLS는 보안 측면에서 완벽하지만, 도입 과정에서 개발팀과 인프라팀이 겪는 고통은 상상을 초월한다.</p>
+<h3 id="silmu-yisagyeoljeong-mic-pandan-pointeu">실무 의사결정 및 판단 포인트</h3>
+<ol>
+<li><strong>코드 레벨 구현 절대 금지</strong>: Java나 Node.js 코드 안에 mTLS 핸드셰이크 로직을 짜넣고 JKS(Java Keystore) 파일 경로를 하드코딩하면 지옥이 열린다. 인증서가 만료될 때마다 소스코드를 수정해서 재배포해야 하기 때문이다. **반드시 Istio, Linkerd 같은 서비스 메시(Service Mesh)**를 깔아서 앱 코드는 HTTP로 통신하게 놔두고, 밑단의 프록시가 알아서 mTLS로 바꿔서 날리도록 추상화해야 한다.</li>
+<li><strong>점진적 도입 (Permissive Mode)</strong>: 수백 개의 마이크로서비스가 도는 실운영망에 어느 날 갑자기 "오늘부터 무조건 mTLS(Strict Mode)만 허용!"이라고 켜면, 인증서가 없는 구형 서버나 배치가 다 죽어버려 대장애가 발생한다. 초기 3개월은 **Permissive Mode(mTLS와 일반 HTTP를 둘 다 허용)**로 켜두고, 평문 통신 로그를 찾아내어 모두 mTLS로 바꾼 뒤에 최종적으로 Strict Mode로 잠가야 한다.</li>
+<li><strong>L7 인가(Authorization)와의 결합</strong>: mTLS로 "저 녀석이 결제 서버가 맞군" 하고 신분을 확인(인증)했다면, 그다음엔 "근데 결제 서버가 주문 DB의 삭제(DELETE) API를 찌를 권한이 있나?"를 확인(인가)해야 한다. OPA(Open Policy Agent)를 결합하여 신분(mTLS)과 권한(RBAC)을 동시에 통제해야 진정한 제로 트러스트가 완성된다.</li>
+</ol>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p><strong>내부망은 안전하다는 착각</strong>: AWS VPC나 사내 프라이빗 망으로 묶여 있으니 해커가 못 들어온다고 믿고 서버 간 통신을 HTTP로 방치하는 것. 최근 해킹(랜섬웨어)의 80%는 내부 직원의 권한 탈취를 통한 측면 이동(Lateral Movement)에서 발생한다. 내부망은 이미 적군이 들어와 있는 전쟁터라고 가정해야 한다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 우리 집 대문을 튼튼하게 잠갔다고 해서(VPC), 거실에 금괴를 그냥 널어두면 안 된다(평문 통신). 집에 도둑이 들어왔을 때를 대비해, 방방마다 도어락(mTLS)을 채워두고 훔쳐 가도 못 열어보게 금고에 넣어야(암호화) 한다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>mTLS 아키텍처를 내재화하면, 해커가 운 좋게 내부망의 스토리지 서버 하나를 해킹했더라도 다른 결제 서버나 DB 서버로 공격을 확장(측면 이동)하는 것이 물리적으로 불가능해진다. 해커의 서버에는 '사내 사원증(인증서)'이 없기 때문에 어떤 API를 찔러도 즉시 차단당하기 때문이다.</p>
+<p>결론적으로 mTLS는 클라우드 네이티브 환경에서 <strong>'제로 트러스트(Zero Trust)' 철학을 실현하는 가장 완벽하고 궁극적인 기술적 해답</strong>이다. 기술 아키텍트는 서비스 메시를 단순한 트래픽 분배 도구를 넘어, 전사적 보안 인프라의 코어(Core)로 활용하여 보이지 않는 위협으로부터 시스템을 영구히 격리해야 한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: mTLS는 마이크로서비스들끼리 쓰는 '외계어'다. 해커가 옆에서 엿들어도 무슨 말인지 알 수 없고(암호화), 해커가 외계인 흉내를 내며 말을 걸어도 억양(인증서)이 달라서 단 1초 만에 가짜임을 들키고 쫓겨난다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<ul>
+<li><code>[서비스 메시 (Service Mesh / Istio)]</code>: mTLS 아키텍처를 개발자 코드 개입 없이 인프라 레벨(사이드카 프록시)에서 100% 자동화해 주는 필수 미들웨어.</li>
+<li><code>[제로 트러스트 아키텍처 (ZTA)]</code>: "내부망이라도 절대 믿지 않는다"는 원칙. mTLS는 이 원칙을 달성하기 위한 가장 강력한 인증/암호화 수단이다.</li>
+<li><code>[사이드카 패턴 (Sidecar Pattern)]</code>: mTLS의 복잡한 암호화/복호화 연산을 메인 앱 대신 처리해 주는 보조 컨테이너 설계 기법.</li>
+<li><code>[측면 이동 (Lateral Movement)]</code>: 해커가 보안이 약한 내부 서버 1대를 뚫은 뒤, 이를 거점 삼아 핵심 DB 등 다른 서버로 공격을 퍼뜨려 나가는 해킹 기법. (mTLS가 이를 막는다).</li>
+</ul>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>보통 사이트 접속은 내가 경찰 아저씨(네이버)의 경찰 배지를 보고 믿고 들어가는 거예요.</li>
+<li>하지만 mTLS는 경찰 아저씨도 내 신분증을 보고, 나도 경찰 아저씨의 배지를 보는 '쌍방향 검사'예요.</li>
+<li>이렇게 하면 해커가 가짜 경찰 흉내를 내거나, 가짜 손님 흉내를 내서 우리 집에 들어오려는 걸 완벽하게 막아낼 수 있답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

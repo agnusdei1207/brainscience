@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>334. GPU VRAM 부족과 ZeRO 옵티마이저 (Zero Redundancy Optimizer) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ai
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: VRAM (Video RAM) 부족은 대형 모델 학습의 핵심 병목이며, ZeRO (Zero Redundancy Optimizer) 는 옵티마이저 상태·그래디언트·파라미터를 GPU 간에 분할해 중복 저장을 제거함으로써 단일 GPU 한계를 돌파한다.</li>
+<li><strong>가치</strong>: ZeRO Stage 3 적용 시 N개 GPU 사용 시 메모리 소비를 이론적으로 1/N 수준으로 줄여, 수백억 파라미터 모델을 소규모 GPU 클러스터로 학습 가능하게 한다.</li>
+<li><strong>판단 포인트</strong>: 기술사 답안에서는 "Stage 1→2→3 순으로 분산 범위가 확대되고 통신 오버헤드도 증가한다"는 트레이드오프를 반드시 언급해야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<h3 id="vram-bujog-munjeyi-gujo">VRAM 부족 문제의 구조</h3>
+<p>GPT-3 (175B 파라미터) 를 FP32 (Float 32-bit Precision) 로 학습하면 파라미터만 700 GB 이상이 필요하다. 단일 A100 GPU 의 VRAM 은 80 GB 에 불과하므로, 파라미터 외에도 다음 요소가 메모리를 압박한다.</p>
+<table><thead><tr><th style="text-align: left">구성 요소</th><th style="text-align: center">메모리 비중</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">파라미터 (Parameters)</td><td style="text-align: center">~16%</td><td style="text-align: left">모델 가중치 자체</td></tr>
+<tr><td style="text-align: left">그래디언트 (Gradients)</td><td style="text-align: center">~16%</td><td style="text-align: left">역전파 결과값</td></tr>
+<tr><td style="text-align: left">옵티마이저 상태 (Optimizer States)</td><td style="text-align: center">~48%</td><td style="text-align: left">Adam: 모멘텀+분산 각 1copy</td></tr>
+<tr><td style="text-align: left">활성화 (Activations)</td><td style="text-align: center">~20%</td><td style="text-align: left">순전파 중간 결과</td></tr>
+</tbody></table>
+<p>Adam Optimizer 를 사용할 경우 파라미터 1개당 옵티마이저 상태 2개 (m, v) 가 추가되어 실질 메모리 소비는 파라미터 단독 대비 <strong>3배 이상</strong> 증가한다.</p>
+<h3 id="gijon-haebeobyi-hangye">기존 해법의 한계</h3>
+<ul>
+<li><strong>DDP (Distributed Data Parallel)</strong>: 각 GPU 가 전체 모델 사본을 보유 → VRAM 절감 없음</li>
+<li><strong>모델 병렬화 (Tensor/Pipeline Parallelism)</strong>: 구현 복잡도 높고 파이프라인 버블 발생</li>
+</ul>
+<p>📢 <strong>섹션 요약 비유</strong>: VRAM 부족 문제는 "10명이 같은 두꺼운 교재를 각자 다 사서 들고 다니는" DDP 방식의 낭비와 같다. ZeRO 는 "교재를 10등분해서 한 명이 한 챕터씩만 들고 다니되, 필요할 때 빌려 쓰는" 도서관 방식이다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="zero-stage-1-2-3-bunhal-beomwi">ZeRO Stage 1 / 2 / 3 분할 범위</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│           ZeRO (Zero Redundancy Optimizer) Stage 비교           │
+├────────────┬──────────────┬──────────────┬──────────────────────┤
+│  구성 요소  │   Stage 1    │   Stage 2    │       Stage 3        │
+├────────────┼──────────────┼──────────────┼──────────────────────┤
+│ 옵티마이저  │  분할(Shard) │  분할(Shard) │    분할(Shard)       │
+│   상태     │              │              │                      │
+├────────────┼──────────────┼──────────────┼──────────────────────┤
+│ 그래디언트  │    각 GPU    │  분할(Shard) │    분할(Shard)       │
+│            │   전체 보유  │              │                      │
+├────────────┼──────────────┼──────────────┼──────────────────────┤
+│  파라미터  │    각 GPU    │   각 GPU     │    분할(Shard)       │
+│            │   전체 보유  │  전체 보유   │                      │
+├────────────┼──────────────┼──────────────┼──────────────────────┤
+│ 메모리 절감 │    ~4x       │    ~8x       │    ~Nx (N=GPU수)     │
+├────────────┼──────────────┼──────────────┼──────────────────────┤
+│ 통신 비용  │   적음        │   보통        │    높음              │
+└────────────┴──────────────┴──────────────┴──────────────────────┘
+</code></pre>
+<h3 id="deepspeed-zero-dongjag-heureum">DeepSpeed ZeRO 동작 흐름</h3>
+<pre><code>  Forward Pass (순전파)
+  ┌──────────────────────────────────────────────┐
+  │  GPU-0      GPU-1      GPU-2      GPU-3      │
+  │  P[0..k]   P[k..2k]  P[2k..3k]  P[3k..N]  │  ← Stage 3: 파라미터 분할
+  │     │           │          │           │     │
+  │     └───────────┴──────────┴───────────┘     │
+  │          All-Gather (파라미터 수집)            │
+  └──────────────────────────────────────────────┘
+  Backward Pass (역전파)
+  ┌──────────────────────────────────────────────┐
+  │  각 GPU 에서 로컬 그래디언트 계산              │
+  │  Reduce-Scatter (그래디언트 집계 + 분산)       │
+  │  각 GPU 는 자신의 파라미터 샤드만 업데이트     │
+  └──────────────────────────────────────────────┘
+</code></pre>
+<h3 id="zero-offload-wa-zero-infinity">ZeRO-Offload 와 ZeRO-Infinity</h3>
+<ul>
+<li><strong>ZeRO-Offload</strong>: 옵티마이저 상태·그래디언트를 CPU RAM 으로 오프로드 → 단일 GPU 대형 모델 학습 가능</li>
+<li><strong>ZeRO-Infinity</strong>: NVMe SSD 까지 오프로드 확장, 수조 파라미터 모델 지원</li>
+</ul>
+<p>📢 <strong>섹션 요약 비유</strong>: ZeRO Stage 3 는 "각 팀원이 프로젝트 파일을 쪼개서 보관하고, 필요할 때 네트워크 드라이브에서 불러오는 협업 문서함" 같다. 파일이 중복 저장되지 않아 저장 공간이 절약되지만 불러오는 데 시간이 걸린다.</p>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="zero-vs-gijon-byeongryeolhwa-jeonryag">ZeRO vs 기존 병렬화 전략</h3>
+<table><thead><tr><th style="text-align: left">전략</th><th style="text-align: center">VRAM 절감</th><th style="text-align: center">구현 난이도</th><th style="text-align: left">통신 패턴</th><th style="text-align: center">적합 규모</th></tr></thead><tbody>
+<tr><td style="text-align: left">DDP (Distributed Data Parallel)</td><td style="text-align: center">❌</td><td style="text-align: center">낮음</td><td style="text-align: left">AllReduce</td><td style="text-align: center">소형~중형</td></tr>
+<tr><td style="text-align: left">텐서 병렬 (Tensor Parallelism)</td><td style="text-align: center">✅</td><td style="text-align: center">높음</td><td style="text-align: left">AllReduce (행/열)</td><td style="text-align: center">대형</td></tr>
+<tr><td style="text-align: left">파이프라인 병렬 (Pipeline Parallelism)</td><td style="text-align: center">✅</td><td style="text-align: center">높음</td><td style="text-align: left">P2P 마이크로배치</td><td style="text-align: center">대형</td></tr>
+<tr><td style="text-align: left">ZeRO Stage 1</td><td style="text-align: center">✅</td><td style="text-align: center">낮음</td><td style="text-align: left">AllGather+Scatter</td><td style="text-align: center">중형~대형</td></tr>
+<tr><td style="text-align: left">ZeRO Stage 3</td><td style="text-align: center">✅✅✅</td><td style="text-align: center">중간</td><td style="text-align: left">AllGather+Scatter</td><td style="text-align: center">초대형</td></tr>
+</tbody></table>
+<h3 id="deepspeed-seoljeong-pointeu-ds-config-json">DeepSpeed 설정 포인트 (ds_config.json)</h3>
+<pre data-lang="json" class="language-json "><code class="language-json" data-lang="json">{
+  &quot;zero_optimization&quot;: {
+    &quot;stage&quot;: 3,
+    &quot;offload_optimizer&quot;: { &quot;device&quot;: &quot;cpu&quot; },
+    &quot;offload_param&quot;:     { &quot;device&quot;: &quot;cpu&quot; },
+    &quot;overlap_comm&quot;: true,
+    &quot;contiguous_gradients&quot;: true
+  },
+  &quot;fp16&quot;: { &quot;enabled&quot;: true }
+}
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: ZeRO 와 Tensor Parallelism 은 "짐을 수평으로 쪼개느냐(ZeRO), 수직으로 쪼개느냐(TP)" 의 차이다. ZeRO 는 레이어 단위가 아닌 텐서 값 자체를 나누므로 구현이 상대적으로 단순하다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="silmu-seoljeong-cekeuriseuteu">실무 설정 체크리스트</h3>
+<ol>
+<li><strong>Stage 선택</strong>: 모델 크기와 GPU 수에 따라 Stage 1→2→3 순차 시도</li>
+<li><strong>Gradient Checkpointing 병행</strong>: 활성화 메모리를 추가 절감 (시간 ~30% 증가)</li>
+<li><strong>Mixed Precision (FP16/BF16)</strong>: VRAM 절반 수준으로 감소, Tensor Core 가속</li>
+<li><strong>overlap_comm</strong>: 통신과 연산을 파이프라인화해 레이턴시 숨기기</li>
+<li><strong>contiguous_gradients</strong>: 그래디언트를 연속 메모리에 할당해 AllReduce 효율 향상</li>
+</ol>
+<h3 id="gisulsa-culje-pointeu">기술사 출제 포인트</h3>
+<ul>
+<li>ZeRO 3단계 각각이 절약하는 메모리 구성 요소를 정확히 서술</li>
+<li>"중복 제거(Redundancy Elimination) vs 통신 오버헤드" 트레이드오프 명시</li>
+<li>DeepSpeed, Megatron-LM, FSDP (Fully Sharded Data Parallel) 비교 언급</li>
+</ul>
+<p>📢 <strong>섹션 요약 비유</strong>: ZeRO Stage 를 올릴수록 메모리 방은 넓어지지만, 팀원끼리 파일을 주고받는 채팅 트래픽이 늘어나는 것과 같다. 적절한 Stage 선택은 "방 크기 vs 소통 비용" 의 균형점 찾기다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<ul>
+<li><strong>비용 절감</strong>: 소규모 GPU 클러스터로 GPT-3 급 모델 학습 가능</li>
+<li><strong>확장성</strong>: GPU 수 증가에 비례한 메모리 분산 → 선형 확장</li>
+<li><strong>생태계</strong>: HuggingFace Accelerate, PyTorch FSDP 에 ZeRO 아이디어 통합</li>
+<li><strong>한계</strong>: All-Gather 통신이 빈번해 네트워크 대역폭이 병목 가능성 존재</li>
+</ul>
+<p>ZeRO 는 "메모리 중복을 제거한다" 는 단순한 아이디어로 대형 언어 모델 시대의 핵심 인프라 기술이 되었다. 기술사 시험에서는 Stage 별 분할 대상과 통신 패턴을 정확히 서술하고, DeepSpeed 와의 연동 방식을 언급하면 고득점이 가능하다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: ZeRO 는 "모든 팀원이 똑같은 보고서를 각자 출력해 들고 다니던" 낭비를 없애고, "한 장씩 나눠 가지되 언제든 복사 가능한" 공유 문서 시스템으로 전환한 혁신이다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연관 키워드</th><th style="text-align: left">관계</th></tr></thead><tbody>
+<tr><td style="text-align: left">ZeRO Stage 1</td><td style="text-align: left">옵티마이저 상태 분할</td><td style="text-align: left">최소 통신 오버헤드 분산</td></tr>
+<tr><td style="text-align: left">ZeRO Stage 3</td><td style="text-align: left">파라미터 분할, AllGather</td><td style="text-align: left">최대 메모리 절감</td></tr>
+<tr><td style="text-align: left">DeepSpeed</td><td style="text-align: left">ZeRO-Offload, ZeRO-Infinity</td><td style="text-align: left">Microsoft 오픈소스 구현체</td></tr>
+<tr><td style="text-align: left">FSDP</td><td style="text-align: left">PyTorch 내장 ZeRO-3 유사</td><td style="text-align: left">Meta/PyTorch 2.0 네이티브</td></tr>
+<tr><td style="text-align: left">Mixed Precision</td><td style="text-align: left">FP16, BF16, Tensor Core</td><td style="text-align: left">ZeRO 와 시너지 조합</td></tr>
+<tr><td style="text-align: left">Gradient Checkpointing</td><td style="text-align: left">활성화 재계산</td><td style="text-align: left">추가 메모리 절감 기법</td></tr>
+</tbody></table>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ul>
+<li>🎒 GPU 가 들고 다닐 수 있는 가방(VRAM)에 책(모델)이 너무 많아서 넘쳐요.</li>
+<li>✂️ ZeRO 는 책을 친구들끼리 한 챕터씩 나눠 들고, 필요할 때 빌려 보는 방법이에요.</li>
+<li>📈 친구가 많을수록(GPU 수) 더 두꺼운 책도 함께 들 수 있어요!</li>
+</ul>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

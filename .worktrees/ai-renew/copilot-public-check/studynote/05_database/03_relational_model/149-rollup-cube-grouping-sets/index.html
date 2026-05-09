@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>149. ROLLUP, CUBE, GROUPING SETS - 다차원 소계 및 총계 생성 (OLAP) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>May 03, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote database
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: <code>GROUP BY</code> 뒤에 붙는 3대 OLAP 확장 함수(<code>ROLLUP</code>, <code>CUBE</code>, <code>GROUPING SETS</code>)는 단순 그룹핑을 넘어, 서로 다른 차원(Dimension)의 조합으로 다중 그룹핑을 수행하여 소계와 총계를 세로로 한 방에 이어붙이는 다차원 집계 무기다.</li>
+<li><strong>가치</strong>: 과거 "부서별 합계 + 연도별 합계 + 전체 총합"을 구하기 위해 <code>UNION ALL</code>로 거대 테이블을 3번 훑던 악성 I/O 낭비를 타파하고, 테이블을 단 1번만 읽어(Single Pass) 메모리 안에서 모든 차원의 통계를 다이내믹하게 찍어내는 성능 혁명을 이루었다.</li>
+<li><strong>판단 포인트</strong>: <code>GROUPING()</code> 보조 함수와 융합하여, 롤업 연산이 남긴 빈칸(NULL)에 "총합계", "소계"라는 텍스트 레이블링 화장술을 DB 엔진 단에서 완벽히 처리함으로써 백엔드 서버의 데이터 가공 오버헤드를 0으로 소거해야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p><code>ROLLUP</code>, <code>CUBE</code>, <code>GROUPING SETS</code>는 ANSI SQL:1999 표준에서 데이터 웨어하우스(DW)와 OLAP(온라인 분석 처리) 환경의 대용량 통계 분석을 위해 도입된 확장 연산자들이다.</p>
+<p>기존의 <code>GROUP BY (연도, 지역)</code> 쿼리는 가장 디테일한 그룹 합계만 출력할 뿐이다. 경영진은 엑셀의 피벗 테이블처럼 하단에 요약된 "2026년 소계"와 "전사 총합계"가 붙어 있기를 원했다. 과거 개발자들은 이를 위해 세부 쿼리, 연도별 쿼리, 전체 쿼리를 각각 짠 뒤 <code>UNION ALL</code>로 무식하게 이어 붙였다. 하지만 10억 건의 테이블을 3번이나 전체 스캔(Full Scan)하면 디스크 I/O가 폭발해 야간 배치 작업이 뻗어버렸다. "거대 테이블 스캔 딱 1번 만에, 메모리 안에서 다차원 요약표를 뿜어낼 순 없을까?"라는 절박함이 OLAP 집계 마법의 탄생 배경이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 일반 <code>GROUP BY</code>는 햄버거, 콜라 단품만 줍니다. <code>UNION ALL</code> 떡칠은 단품, 세트, 가게 총매출을 구하려고 쓰레기통을 3번 뒤지는 생고생입니다. <code>ROLLUP</code>과 <code>CUBE</code>는 주문을 한 번만 스캔하면서 마법의 바구니 안에서 "이건 단품, 이건 세트, 아 이건 총합계!"라며 요약표 3장을 한 방에 복사해 건네주는 천재 비서입니다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>세 함수는 출력하는 '요약 레벨'의 스펙트럼과 연산 방식에서 명확한 차이를 갖는다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────┐
+│          OLAP 확장 3형제의 집계 레벨(Level) 창조 스펙트럼 비교         │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│ [ 원본 목표 ] &quot;연도별, 지역별 매출&quot; 에 대한 소계&#x2F;총계를 구하라!            │
+│                                                             │
+│ 1️⃣ ROLLUP ( 연도, 지역 ) ➔ 계층적(Hierarchical) 소계의 제왕          │
+│   - 그룹: (연도, 지역) + (연도) + ( )전체총계                         │
+│   - 특징: 우측에서 좌측으로 꼬리를 하나씩 자르며 1방향 상향 요약(N+1개 그룹).│
+│   - 🌟 롤업은 순서가 생명이다. 뒤에 쓴 지역 단독 소계는 나오지 않음.        │
+│                                                             │
+│ 2️⃣ CUBE ( 연도, 지역 ) ➔ 다차원 크로스 총계의 주사위 파괴자             │
+│   - 그룹: (연도, 지역) + (연도) + (지역) + ( )전체총계                │
+│   - 특징: 괄호 안 컬럼으로 묶을 수 있는 **&#x27;모든 경우의 수(2^n)&#x27;** 폭발!      │
+│   - 🌟 연도별 소계에 더해, 독립적인 &quot;지역별 전체 소계&quot;까지 싹 다 뱉어냄.     │
+│                                                             │
+│ 3️⃣ GROUPING SETS ( (연도), (지역) ) ➔ 맞춤형 핀셋 집계               │
+│   - 그룹: 괄호에 적은 딱 2개. (연도) 그룹과 (지역) 그룹만 출력.            │
+│   - 특징: 오지랖 넓게 묻지 않은 교차 집계나 전체 총합은 절대 안 줌.          │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>가장 널리 쓰이는 <code>ROLLUP</code>은 연도-월-일 등 위계 질서(Hierarchy)가 명확한 데이터에서 강력하다. <code>CUBE</code>는 주사위처럼 모든 다차원 면(2^N)을 계산하므로 성별-연령대 크로스 분석에 쓰인다. <code>GROUPING SETS</code>는 쓸데없는 연산을 막고 내가 지정한 엑기스 요약만 핀셋으로 뽑아 이어 붙이는 가장 효율적인 튜닝 툴이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: <code>ROLLUP</code>은 군대 보고망입니다. "소대 ➔ 중대 ➔ 대대" 순서대로 꼬리를 쳐가며 위로만 요약 보고합니다. <code>CUBE</code>는 모든 조합을 그리는 3D 입체 투시도입니다. <code>GROUPING SETS</code>는 뷔페에서 먹기 싫은 건 버리고 딱 "소고기랑 초밥 2접시만 깔끔하게 줘"라고 주문하는 맞춤형 식권입니다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>성능 측면에서 <code>UNION ALL</code>과 <code>ROLLUP/CUBE</code>의 I/O 병목 갭은 대용량 환경에서 수천 배 벌어진다.</p>
+<table><thead><tr><th style="text-align: left">비교 잣대</th><th style="text-align: left">전통적 쿼리: <code>UNION ALL</code> 3단 콤보</th><th style="text-align: left">최신 OLAP: <code>GROUP BY ROLLUP</code> 1방</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>작성 방식</strong></td><td style="text-align: left">각 그룹핑 쿼리를 3~4번 작성하고 <code>UNION ALL</code>로 접착</td><td style="text-align: left">단 한 줄의 <code>ROLLUP(A,B)</code> 옵션 추가로 쿼리 작성 끝</td></tr>
+<tr><td style="text-align: left"><strong>디스크 I/O 💥</strong></td><td style="text-align: left">1억 건 테이블을 <strong>3번 쌩으로 읽음 (Full Scan x 3)</strong></td><td style="text-align: left">1억 건 테이블을 <strong>단 1번만 쓱 읽음 (Single Pass Scan)</strong></td></tr>
+<tr><td style="text-align: left"><strong>버퍼 캐시 파국</strong></td><td style="text-align: left">무거운 디스크 블록 스캔으로 버퍼 캐시 생태계를 덮어쓰고 밀어내어 시스템 랙 유발</td><td style="text-align: left">한 번 읽어 메모리(PGA 해시 영역)에 올린 뒤 마법처럼 다차원 껍데기만 쑥쑥 복제해냄</td></tr>
+<tr><td style="text-align: left"><strong>코드 가독성</strong></td><td style="text-align: left">수백 줄짜리 스파게티 쓰레기 쿼리 탄생</td><td style="text-align: left">유지보수와 비즈니스 룰 파악이 1초 컷인 선언적 명세</td></tr>
+</tbody></table>
+<p><code>CUBE</code>의 경우 치명적인 <strong>카테시안 폭발(Cartesian Explosion)</strong> 딜레마가 있다. <code>CUBE(A,B,C,D,E)</code> 처럼 5개를 던지면 $2^5=32$가지의 피벗 덩어리가 메모리 안에서 폭발한다. DBA는 이를 막기 위해 "진짜 필요한 3가지 조합만 <code>GROUPING SETS</code>로 적어라"라고 아키텍처를 강압 통제해야 서버가 타 죽는 것을 막을 수 있다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: <code>UNION ALL</code>로 짜는 건 짬뽕, 짜장면, 볶음밥을 만들기 위해 마트를 3번 왔다 갔다(I/O 스캔) 하는 짓입니다. <code>ROLLUP</code>은 마트에 한 번만 가서 재료를 싹쓸이해 온 뒤, 주방(메모리)에서 웍질 한 번으로 3가지 요리를 동시에 뽑아내는 마스터 셰프의 환상적인 손놀림입니다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p>단순 데이터 추출을 넘어, 화면에 뿌려줄 UI 텍스트 화장(Makeup)까지 DB 엔진 단에서 끝내는 기술이 실무의 꽃이다.</p>
+<h3 id="silmu-pandan-sinario">실무 판단 시나리오</h3>
+<ol>
+<li><strong>화장술의 예술: <code>GROUPING()</code> 함수의 융합 렌더링</strong>: 롤업이 소계 줄을 만들 때 원래 컬럼 자리는 <code>NULL</code>로 비워진다. 사장님이 "이 NULL은 버그냐?"고 화를 낸다.
+<ul>
+<li><strong>판단</strong>: 백엔드 자바에서 if문 돌리며 NULL을 "합계" 글씨로 바꾸는 짓은 하수다. 아키텍트는 쿼리 <code>SELECT</code> 단에 <strong><code>CASE WHEN GROUPING(지역) = 1 THEN '★지역총합★' ELSE 지역 END</code></strong> 콤보를 꽂아 넣는다. <code>GROUPING()</code>은 롤업이 억지로 뚫은 깡통 NULL이면 1을 반환한다. 이 콤보 하나면 결과 데이터셋에 예쁜 텍스트 레이블 스티커가 완벽히 포매팅되어 떨어지며, 백엔드는 포장 뜯을 필요 없이 프론트에 직행 패스(Bypass) 치면 된다.</li>
+</ul>
+</li>
+<li><strong>머티리얼라이즈드 뷰(MView) 영구 박제 융합</strong>: 대시보드의 대용량 <code>CUBE</code> 쿼리를 사장님이 클릭할 때마다 쌩으로 돌리면 10초가 걸린다.
+<ul>
+<li><strong>판단</strong>: 실무 데이터 웨어하우스(DW) 아키텍트는 야간 새벽 3시에 이 엄청난 <code>CUBE</code> 통계 쿼리를 1방 돌려, 그 결과 텍스트 덩어리를 뷰(View) 콘크리트 테이블에 콱 굳혀버린다(Pre-aggregation MView). 낮에는 원본 10억 건을 보지 않고 굳혀둔 뷰 껍데기만 0.01초 컷으로 스치듯 읽고 응답하는 궁극의 캐싱 아키텍처로 튜닝한다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p><strong><code>ROLLUP</code> 컬럼 순서 붕괴 (방향성 파괴 💥)</strong>: 계층형 롤업은 순서가 생명이다. <code>ROLLUP(년, 월, 일)</code> 로 짜면 년도 소계, 연월 소계가 예쁘게 떨어진다. 하지만 멍청한 코더가 의미 없이 <code>ROLLUP(일, 월, 년)</code> 으로 거꾸로 적으면 "1일 전체 합계, 1일 1월 합계"라는 비즈니스적으로 아무 쓰레기 같은 소계 덩어리들만 잔뜩 튀어나와 쓸데없이 서버 메모리만 낭비하는 파국을 맞게 된다.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 롤업이 만든 가짜 NULL은 공장에서 빵꾸난 불량품이 아니라 "여러 개를 담은 큰 요약 상자"임을 뜻하는 투명한 유리창입니다. <code>GROUPING</code> 함수는 이 유리창을 0과 1로 판독해서 그 위에 "요약 상자"라는 이름표 스티커를 예쁘게 딱 붙여주는 자동 레이블링 기계입니다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>데이터베이스 엔진의 <code>ROLLUP</code>과 <code>CUBE</code> 확장은 단순 쿼리 문법을 넘어 하드웨어 대역폭과 디스크 I/O를 압살 튜닝하는 관계 대수학의 가장 우아한 진화다.</p>
+<p>10억 건을 3번 훑어야 했던 낡은 <code>UNION ALL</code> 떡칠 쿼리를 한 번의 훑음(Single Pass Scan)으로 격파함으로써, 거대한 야간 배치 작업 시간을 70% 이상 도끼로 썰어냈다. 클라이언트나 백엔드 서버(Java/Node)가 억지로 수행하던 피벗 테이블 계산과 텍스트 레이블링 스파게티 렌더링 로직(UI Logic)마저 초고속 C언어 DB 엔진 내부 해시 알고리즘(Off-loading)으로 완벽히 짬처리 흡수시켰다.</p>
+<p>오늘날 클릭하우스(ClickHouse)나 스노우플레이크(Snowflake) 같은 최신예 분산 클라우드 DW 엔진들 역시 이 OLAP 3대장 문법을 100% 수용하여 병렬로 갈아버리는 크로스 탭 쾌속 연산을 지원하고 있다. 아키텍트가 낡은 조인 떡칠 유혹을 버리고 이 다차원 괄호를 여는 순간, 쿼리는 단순한 로우 검색을 넘어 페타바이트급 시공간을 자유자재로 접었다 펴는 궁극의 데이터 스위칭 예술로 승화된다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 롤업과 큐브는 '마트료시카(러시아 목각 인형)' 마법입니다. 그냥 인형 한 개를 시켰는데 뚜껑을 열어보니 그 안에 더 큰 범주의 요약 인형(소계)이 있고, 또 까보니 전체 세상을 다 품은 거대한 왕 인형(총합계)이 끊임없이 한 몸속에서 튀어나오는 압도적인 다차원 요약 패키지 선물입니다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>GROUP BY (그룹화)</strong></td><td style="text-align: left">롤업과 큐브가 춤을 추기 위해 깔고 앉는 근본 멍석. 데이터를 1차적으로 뭉개는 역할을 하며 이 녀석 뒤에 롤업 옵션이 착 달라붙어 마법이 시작된다.</td></tr>
+<tr><td style="text-align: left"><strong>UNION ALL (합집합)</strong></td><td style="text-align: left">롤업을 모르는 옛날 개발자들이 소계 쿼리, 총합 쿼리를 따로 짜서 풀로 이어 붙일 때 쓰던 무식한 노가다 접착제. 서버의 디스크를 죽이는 I/O 폭탄이다.</td></tr>
+<tr><td style="text-align: left"><strong>GROUPING() 함수</strong></td><td style="text-align: left">롤업이 일부러 뚫어놓은 요약용 빈칸(NULL) 껍데기를 감지해서, 예쁜 "총합계"라는 한글 이름표(Label)로 화장을 시켜주는 영혼의 단짝 렌더링 함수다.</td></tr>
+<tr><td style="text-align: left"><strong>OLAP (온라인 분석 처리)</strong></td><td style="text-align: left">통장 입출금(OLTP) 1건 1건이 아니라, "10년 치 전국 지점 남녀별 총매출" 같은 다차원 큐브(Cube) 통계를 뽑아내는 데이터 웨어하우스(DW)의 궁극적 철학이다.</td></tr>
+<tr><td style="text-align: left"><strong>Materialized View (MView)</strong></td><td style="text-align: left">아무리 롤업이 빨라도 10억 건 뭉개는 건 힘드니까, 밤새 몰래 롤업을 쳐서 콘크리트 테이블 요약본으로 딱 굳혀 박제해두는 궁극의 조회 속도 사기 캐싱 뷰다.</td></tr>
+</tbody></table>
+<hr />
+<h2 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h2>
+<ol>
+<li>피자 가게 사장님이 알바생한테 "오늘 피자 단품 얼마 팔았어? 그리고 피자+콜라 세트(소계)는? 그리고 오늘 장사 전체 총합(총계)은 얼만데?" 라고 한 번에 엄청 많은 걸 물어봤어요!</li>
+<li>멍청한 알바생(<strong><code>UNION ALL</code></strong>)은 금고(데이터베이스)를 3번이나 열었다 닫으며 돈을 처음부터 다시 3번씩 셌어요. 너무 힘들고 밤을 새웠죠.</li>
+<li>하지만 천재 알바생(<strong><code>ROLLUP / CUBE</code></strong>)은 금고를 딱 한 번만 열고 돈을 쓱 세면서, 메모장(메모리)에 단품, 세트, 총합을 한 큐에 착착착 3줄로 접어서 0.1초 만에 사장님께 바치는 엄청난 마법 쿼리랍니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

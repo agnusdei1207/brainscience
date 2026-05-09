@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>226. 피어슨 상관 (Pearson Correlation) 회귀 R² 결정계수 다중공선성 VIF — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote data engineering
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 피어슨 상관계수(Pearson Correlation Coefficient)는 두 연속 변수 간 선형 관계 강도와 방향을 -1~+1로 나타내며, 단순선형회귀(Simple Linear Regression)는 이 관계를 예측 모델로 발전시킨다.</li>
+<li><strong>가치</strong>: R²(R-Squared, 결정계수)는 모델이 종속변수 분산의 몇 %를 설명하는지 알려주며, VIF(Variance Inflation Factor, 분산팽창지수)는 다중회귀에서 독립변수 간 다중공선성(Multicollinearity) 문제를 진단한다.</li>
+<li><strong>판단 포인트</strong>: 높은 R²가 좋은 모델을 보장하지 않는다. 과적합(Overfitting)·다중공선성·이분산성을 함께 진단해야 실용적인 회귀 모델이 된다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>회귀 분석(Regression Analysis)은 데이터 분석에서 가장 많이 쓰이는 예측 도구다. 마케팅 지출이 매출에 얼마나 기여하는지, 집 크기가 가격을 얼마나 설명하는지를 수치로 표현한다.</p>
+<h3 id="bunseog-heureum">분석 흐름</h3>
+<pre><code>① 상관 분석       → 두 변수가 관련 있는가? (피어슨 r)
+        ↓
+② 단순선형회귀    → X가 Y를 얼마나 설명하는가? (OLS)
+        ↓
+③ 다중회귀        → X₁, X₂, ..., Xₙ 복합 영향? (Multiple Regression)
+        ↓
+④ 모델 진단       → 다중공선성 VIF, 잔차 정규성, 이분산성 확인
+        ↓
+⑤ 해석 및 예측   → 계수 해석, 신뢰구간, 예측 구간
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: 피어슨 상관은 "두 댄서가 얼마나 같이 움직이는지 보는 것"이고, 회귀는 "한 댄서의 동작으로 다른 댄서의 동작을 예측하는 공식"을 만드는 것이다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="2-1-pieoseun-sanggwangyesu-pearson-correlation-coefficient">2-1. 피어슨 상관계수 (Pearson Correlation Coefficient)</h3>
+<pre><code>        Σ[(xᵢ - x̄)(yᵢ - ȳ)]
+r = ─────────────────────────────────────
+     √[Σ(xᵢ - x̄)²] × √[Σ(yᵢ - ȳ)²]
+
+범위: -1 ≤ r ≤ +1
+</code></pre>
+<table><thead><tr><th style="text-align: left">r 값 범위</th><th style="text-align: left">해석</th></tr></thead><tbody>
+<tr><td style="text-align: left">+0.9 ~ +1.0</td><td style="text-align: left">매우 강한 양의 선형 관계</td></tr>
+<tr><td style="text-align: left">+0.7 ~ +0.9</td><td style="text-align: left">강한 양의 선형 관계</td></tr>
+<tr><td style="text-align: left">+0.4 ~ +0.7</td><td style="text-align: left">중간 양의 선형 관계</td></tr>
+<tr><td style="text-align: left">-0.3 ~ +0.3</td><td style="text-align: left">관계 매우 약함 또는 없음</td></tr>
+<tr><td style="text-align: left">-0.7 ~ -0.4</td><td style="text-align: left">중간 음의 선형 관계</td></tr>
+<tr><td style="text-align: left">-1.0 ~ -0.7</td><td style="text-align: left">강한 음의 선형 관계</td></tr>
+</tbody></table>
+<p><strong>주의</strong>: 상관 ≠ 인과관계. 아이스크림 판매량과 익사 사고 수는 r ≈ 0.85이지만, 원인은 "더운 날씨"다.</p>
+<h3 id="2-2-dansunseonhyeonghoegwi-ols-ordinary-least-squares-coesojegobbeob">2-2. 단순선형회귀 &amp; OLS (Ordinary Least Squares, 최소제곱법)</h3>
+<pre><code>모델: ŷ = β₀ + β₁x + ε
+
+OLS 목표: Σ(yᵢ - ŷᵢ)² 를 최소화
+
+       Σ[(xᵢ - x̄)(yᵢ - ȳ)]
+β₁ = ──────────────────────  (기울기)
+           Σ(xᵢ - x̄)²
+
+β₀ = ȳ - β₁x̄               (절편)
+
+ε: 잔차 (Residual, 실제값 - 예측값)
+</code></pre>
+<h3 id="2-3-r2-r-squared-gyeoljeonggyesu-haeseog">2-3. R² (R-Squared, 결정계수) 해석</h3>
+<pre><code>       SSR (설명된 분산)         Σ(ŷᵢ - ȳ)²
+R² = ──────────────────── = ─────────────────────
+       SST (전체 분산)        Σ(yᵢ - ȳ)²
+
+R² = 1 - SSE&#x2F;SST  (SSE: 잔차 제곱합)
+
+범위: 0 ≤ R² ≤ 1
+</code></pre>
+<table><thead><tr><th style="text-align: left">R² 값</th><th style="text-align: left">해석</th><th style="text-align: left">주의사항</th></tr></thead><tbody>
+<tr><td style="text-align: left">0.9 이상</td><td style="text-align: left">모델이 90%+ 분산 설명</td><td style="text-align: left">과적합 가능성 확인 필요</td></tr>
+<tr><td style="text-align: left">0.7 ~ 0.9</td><td style="text-align: left">좋은 설명력</td><td style="text-align: left">잔차 패턴 분석 필요</td></tr>
+<tr><td style="text-align: left">0.5 ~ 0.7</td><td style="text-align: left">보통 수준</td><td style="text-align: left">변수 추가·변환 고려</td></tr>
+<tr><td style="text-align: left">0.5 미만</td><td style="text-align: left">설명력 낮음</td><td style="text-align: left">모델 재검토 필요</td></tr>
+</tbody></table>
+<p><strong>Adjusted R² (조정 결정계수)</strong>: 변수 추가로 인한 인위적 R² 상승을 방지. 변수 수 증가 페널티 적용.</p>
+<pre><code>           (1 - R²)(n - 1)
+Adj R² = 1 - ────────────────
+               (n - k - 1)
+
+n: 표본 크기, k: 독립변수 수
+</code></pre>
+<h3 id="2-4-dajunggongseonseong-multicollinearity-vif">2-4. 다중공선성 (Multicollinearity) &amp; VIF</h3>
+<p>다중회귀에서 독립변수들이 서로 강하게 상관될 때 발생. 계수 추정이 불안정해지고 해석이 왜곡된다.</p>
+<pre><code>VIF (Variance Inflation Factor, 분산팽창지수)
+──────────────────────────────────────────────
+          1
+VIFⱼ = ─────────
+         1 - Rⱼ²
+
+Rⱼ²: j번째 독립변수를 나머지 변수로 회귀했을 때의 R²
+
+VIF 판단 기준:
+VIF = 1        → 공선성 없음
+1 &lt; VIF &lt; 5    → 경미한 공선성 (허용 가능)
+5 ≤ VIF &lt; 10   → 중간 공선성 (주의 필요)
+VIF ≥ 10       → 심각한 공선성 (변수 제거·변환 필요)
+</code></pre>
+<table><thead><tr><th style="text-align: left">다중공선성 진단 도구</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">VIF (분산팽창지수)</td><td style="text-align: left">각 변수별 공선성 수치화</td></tr>
+<tr><td style="text-align: left">Condition Number (조건수)</td><td style="text-align: left">30 이상이면 심각</td></tr>
+<tr><td style="text-align: left">Correlation Matrix (상관 행렬)</td><td style="text-align: left">독립변수 간 상관계수 매트릭스</td></tr>
+<tr><td style="text-align: left">Tolerance (허용도)</td><td style="text-align: left">1/VIF, 0.1 미만이면 위험</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 다중공선성은 "두 사람이 똑같은 증언을 할 때 법원이 혼란스러운 것"과 같다. 변수 A와 B가 거의 같은 정보를 담고 있으면, 어느 쪽이 진짜 원인인지 모델이 구별하지 못한다.</p>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="3-1-hoegwi-jindan-cekeuriseuteu">3-1. 회귀 진단 체크리스트</h3>
+<pre><code>회귀 모델 진단 4대 가정 (LINE)
+─────────────────────────────
+L: Linearity         (선형성) → 산점도, 잔차 vs 적합값 플롯
+I: Independence      (독립성) → 잔차 자기상관 없음, DW 검정
+N: Normality         (정규성) → 잔차 QQ 플롯, Shapiro-Wilk 검정
+E: Equal Variance    (등분산성) → Scale-Location 플롯, BP 검정
+</code></pre>
+<h3 id="3-2-pieoseun-vs-seupieoman-sanggwan">3-2. 피어슨 vs 스피어만 상관</h3>
+<table><thead><tr><th style="text-align: left">구분</th><th style="text-align: left">피어슨 상관 (Pearson)</th><th style="text-align: left">스피어만 상관 (Spearman)</th></tr></thead><tbody>
+<tr><td style="text-align: left">데이터 유형</td><td style="text-align: left">연속형, 정규분포 가정</td><td style="text-align: left">순위형, 비정규 분포</td></tr>
+<tr><td style="text-align: left">측정 대상</td><td style="text-align: left">선형 관계</td><td style="text-align: left">단조 증가/감소 관계</td></tr>
+<tr><td style="text-align: left">이상값 민감도</td><td style="text-align: left">민감함</td><td style="text-align: left">강건(Robust)</td></tr>
+<tr><td style="text-align: left">사용 시점</td><td style="text-align: left">정규성 만족 시</td><td style="text-align: left">비정규 또는 순위 데이터</td></tr>
+</tbody></table>
+<h3 id="3-3-dajunggongseonseong-haegyeol-jeonryag">3-3. 다중공선성 해결 전략</h3>
+<table><thead><tr><th style="text-align: left">전략</th><th style="text-align: left">방법</th><th style="text-align: left">적용 시점</th></tr></thead><tbody>
+<tr><td style="text-align: left">변수 제거</td><td style="text-align: left">VIF 높은 변수 중 하나 제거</td><td style="text-align: left">이론적 근거 있을 때</td></tr>
+<tr><td style="text-align: left">Ridge 회귀</td><td style="text-align: left">L2 정규화로 계수 압축</td><td style="text-align: left">모든 변수 유지 필요 시</td></tr>
+<tr><td style="text-align: left">PCA (주성분분석)</td><td style="text-align: left">상관 변수를 독립 주성분으로 변환</td><td style="text-align: left">탐색적 분석</td></tr>
+<tr><td style="text-align: left">중심화</td><td style="text-align: left">변수를 평균 빼서 변환</td><td style="text-align: left">교호작용 항 포함 시</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: 다중공선성 해결은 "비슷한 역할을 하는 사원 중 한 명을 다른 팀으로 이동시키거나, 두 명을 합쳐 한 역할로 만드는 것"과 같다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="4-1-maketing-roi-return-on-investment-bunseog-sinario">4-1. 마케팅 ROI(Return on Investment) 분석 시나리오</h3>
+<pre><code>[목표] TV 광고비·SNS 광고비·할인율 → 매출 예측
+
+[데이터]
+TV 광고비(X₁), SNS 광고비(X₂), 할인율(X₃) → 매출(Y)
+
+[VIF 진단 결과]
+TV 광고비 VIF = 2.1    ← 문제없음
+SNS 광고비 VIF = 8.7   ← 주의 (TV 광고비와 r=0.81)
+할인율 VIF = 1.3       ← 문제없음
+
+[처리] SNS 광고비·TV 광고비 합계 변수 생성 또는 Ridge 회귀 적용
+
+[결과]
+R² = 0.84, Adj R² = 0.82
+계수 해석: TV 광고비 1억 원 증가 → 매출 3.2억 원 증가 (p &lt; 0.001)
+</code></pre>
+<h3 id="4-2-gisulsa-daban-jagseong-haegsim-pointeu">4-2. 기술사 답안 작성 핵심 포인트</h3>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">설명</th><th style="text-align: left">수식/기준</th></tr></thead><tbody>
+<tr><td style="text-align: left">피어슨 r</td><td style="text-align: left">선형 관계 강도</td><td style="text-align: left">-1 ≤ r ≤ +1</td></tr>
+<tr><td style="text-align: left">R²</td><td style="text-align: left">설명된 분산 비율</td><td style="text-align: left">0~1</td></tr>
+<tr><td style="text-align: left">Adj R²</td><td style="text-align: left">변수 수 보정 R²</td><td style="text-align: left">변수 추가 페널티</td></tr>
+<tr><td style="text-align: left">VIF</td><td style="text-align: left">다중공선성 진단</td><td style="text-align: left">≥ 10이면 심각</td></tr>
+<tr><td style="text-align: left">OLS</td><td style="text-align: left">최소제곱법</td><td style="text-align: left">잔차 제곱합 최소화</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: R²는 "기상 예보 정확도"다. R² = 0.85라면 "내일 날씨의 85%를 예측 모델로 설명할 수 있고, 15%는 우리가 모르는 요인"이라는 의미다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>피어슨 상관·회귀·R²·VIF는 통계적 데이터 분석의 기초이자, 머신러닝 모델 해석의 기반이다. 이 개념들을 정확히 이해하면 블랙박스 모델의 특성 중요도 해석도 더 깊어진다.</p>
+<h3 id="haegsim-yoyag">핵심 요약</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">목적</th><th style="text-align: left">주요 판단 기준</th></tr></thead><tbody>
+<tr><td style="text-align: left">피어슨 r</td><td style="text-align: left">선형 관계 탐색</td><td style="text-align: left">|r| &gt; 0.7 강한 관계</td></tr>
+<tr><td style="text-align: left">OLS 회귀</td><td style="text-align: left">예측 모델 수립</td><td style="text-align: left">잔차 정규성·등분산성 확인</td></tr>
+<tr><td style="text-align: left">R²</td><td style="text-align: left">모델 설명력</td><td style="text-align: left">목적에 따라 다름</td></tr>
+<tr><td style="text-align: left">Adj R²</td><td style="text-align: left">변수 수 보정 설명력</td><td style="text-align: left">R² 대신 다중회귀에서 사용</td></tr>
+<tr><td style="text-align: left">VIF</td><td style="text-align: left">다중공선성 진단</td><td style="text-align: left">VIF ≥ 10 경고</td></tr>
+</tbody></table>
+<p>기술사 시험에서 회귀 분석은 <strong>"가정 검토(LINE) + 다중공선성 VIF + R² 한계 + 인과관계 오해 주의"</strong> 를 4대 포인트로 서술해야 완성도 높은 답안이 된다.</p>
+<p>📢 <strong>섹션 요약 비유</strong>: 회귀 분석은 "과거 데이터로 미래를 예측하는 타임머신 설계도"다. 좋은 설계도(높은 R²)라도 설계 오류(다중공선성, 가정 위반)가 있으면 타임머신은 엉뚱한 곳으로 간다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">관계</th><th style="text-align: left">개념</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">핵심</td><td style="text-align: left">Pearson r (피어슨 상관계수)</td><td style="text-align: left">선형 관계 강도 -1~+1</td></tr>
+<tr><td style="text-align: left">핵심</td><td style="text-align: left">OLS (Ordinary Least Squares)</td><td style="text-align: left">최소제곱법 회귀</td></tr>
+<tr><td style="text-align: left">핵심</td><td style="text-align: left">R² (결정계수)</td><td style="text-align: left">모델 설명력</td></tr>
+<tr><td style="text-align: left">핵심</td><td style="text-align: left">Adjusted R² (조정 결정계수)</td><td style="text-align: left">변수 수 보정 설명력</td></tr>
+<tr><td style="text-align: left">진단</td><td style="text-align: left">VIF (Variance Inflation Factor)</td><td style="text-align: left">다중공선성 수치</td></tr>
+<tr><td style="text-align: left">진단</td><td style="text-align: left">Residual Analysis (잔차 분석)</td><td style="text-align: left">모델 가정 검토</td></tr>
+<tr><td style="text-align: left">비교</td><td style="text-align: left">Spearman Correlation (스피어만)</td><td style="text-align: left">비모수 단조 관계</td></tr>
+<tr><td style="text-align: left">해결</td><td style="text-align: left">Ridge Regression</td><td style="text-align: left">L2 정규화 다중공선성 대응</td></tr>
+<tr><td style="text-align: left">해결</td><td style="text-align: left">PCA (주성분분석)</td><td style="text-align: left">차원 축소로 공선성 제거</td></tr>
+<tr><td style="text-align: left">오류</td><td style="text-align: left">Correlation ≠ Causation</td><td style="text-align: left">상관관계 ≠ 인과관계</td></tr>
+</tbody></table>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>피어슨 상관계수는 "두 친구가 얼마나 같이 움직이는지" 보는 숫자인데, +1이면 항상 같이 올라가고 -1이면 한 명이 올라가면 다른 한 명은 내려간다.</li>
+</ol>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">상관 분석: Pearson r (-1 ~ +1)
+    │
+    ▼
+회귀 분석: 독립변수 → 종속변수 예측
+    ├─► 단순 선형 회귀: y = β₀ + β₁x
+    └─► 다중 회귀: y = β₀ + β₁x₁ + β₂x₂ + ...
+    │
+    ▼
+모델 평가: R² · VIF (다중공선성) · 잔차 분석
+</code></pre>
+<ol start="2">
+<li>R²는 "내 예측이 정답의 몇 %를 맞혔는지" 알려주는 점수표이고, VIF는 "두 선생님이 똑같은 내용을 가르쳐서 어느 선생님이 진짜 도움이 됐는지 모르겠다"는 문제를 찾아내는 것이다.</li>
+<li>회귀 분석은 과거 데이터로 미래를 예측하는 공식이지만, "아이스크림 잘 팔리면 익사 사고가 늘어나니 아이스크림 금지!"처럼 엉뚱한 인과관계로 착각하지 않도록 조심해야 한다.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

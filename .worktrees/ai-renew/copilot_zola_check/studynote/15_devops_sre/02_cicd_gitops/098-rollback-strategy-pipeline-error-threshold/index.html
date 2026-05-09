@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>98. 롤백 (Rollback) 전략 - 파이프라인 에러율 기반 자동 복구 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 04, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote devops sre, cicd gitops
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 롤백(Rollback)은 프로덕션 배포 직후 치명적 장애나 에러율 급증이 감지되었을 때, 트래픽을 즉시 이전의 안정적인 구버전으로 되돌려 서비스 연속성을 확보하는 자동화 방어선이다.</li>
+<li><strong>가치</strong>: 장애 감지부터 엔지니어의 수동 조치(코드 리버트, 재빌드)까지 걸리는 시간(MTTR)을 수 분에서 수 초로 단축시켜, 대규모 트래픽 환경에서 비즈니스 피해를 최소화한다.</li>
+<li><strong>판단 포인트</strong>: 카나리(Canary) 또는 블루/그린 배포 파이프라인과 결합하여, 실시간 메트릭(HTTP 5xx, 지연 시간)이 임계치를 초과하는 순간 라우팅 스위치를 전환하도록 옵저버빌리티와 배포 파이프라인을 연동해야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>DevOps와 지속적 통합/지속적 배포(CI/CD) 패러다임이 안착하면서 하루에도 수십 번씩 새로운 코드가 프로덕션 환경에 배포된다. 배포 빈도가 기하급수적으로 늘어남에 따라, "장애를 100% 막는 것"은 불가능해졌다. 테스트 코드를 통과했더라도 실운영 트래픽을 만나면 예상치 못한 병목이나 런타임 에러가 발생하기 때문이다.</p>
+<p>이제 시스템 신뢰성의 핵심은 장애 예방(MTBF 증가)에서 **빠른 장애 복구(MTTR 단축)**로 옮겨갔다. 배포 직후 치명적인 오류가 발생했을 때, 개발자가 당황하며 원인을 찾고 코드를 수정하여 다시 빌드하는 수동 과정은 고객의 이탈을 부른다. 따라서 파이프라인 자체가 스스로 에러율을 모니터링하다가 위험 수위를 넘으면 자동으로 과거의 안전지대로 도망치는 '에러율 기반 자동 롤백' 전략이 필수적인 아키텍처로 자리 잡았다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 롤백은 최신형 스포츠카(새 버전)를 타고 트랙에 나섰을 때, 브레이크에 조금이라도 이상 신호(에러율)가 감지되면 즉각 차를 차고로 강제 복귀시키는 스마트 안전 시스템이다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>자동 롤백 아키텍처는 **메트릭 수집, 이상 탐지(평가), 라우팅 차단(복구)**이라는 3단계의 폐쇄 루프(Closed Loop) 메커니즘으로 동작한다.</p>
+<ol>
+<li><strong>지속적 모니터링 (Observe)</strong>: 신규 버전(V2)이 배포되어 일부 트래픽을 받기 시작하면, Prometheus나 Datadog 같은 모니터링 도구가 HTTP 5xx 에러율, 레이턴시, CPU 사용량 등을 1초 단위로 수집한다.</li>
+<li><strong>임계치 평가 (Evaluate)</strong>: Spinnaker의 Kayenta나 Argo Rollouts의 Analysis 템플릿이 수집된 V2의 메트릭을 기존 V1과 비교한다. "에러율이 1%를 초과하는가?" 등의 사전에 정의된 임계치(Threshold) 조건을 실시간으로 평가한다.</li>
+<li><strong>자동 라우팅 롤백 (Act)</strong>: 임계치를 초과하여 '실패'로 판정되면, K8s Service 또는 Ingress의 트래픽 라우팅 비율을 신규 V2(0%)에서 구버전 V1(100%)으로 즉각 원복하고, 비정상적인 V2 파드를 폐기한다.</li>
+</ol>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌─────────────────────────────────────────────────────────────┐
+│          에러율 기반 자동 롤백 파이프라인 아키텍처        │
+├─────────────────────────────────────────────────────────────┤
+│   [ CD Pipeline ]                [ Observability ]          │
+│                                                             │
+│ 1. 신버전(V2) 배포 ─(카나리 10%)─▶ 실시간 트래픽 유입      │
+│          ▲                              │                   │
+│          │                              ▼ (5xx Error 폭증)  │
+│ 3. 롤백 트리거 ◀──(임계치 위반)── K8s Prometheus 메트릭 │
+│          │                              │                   │
+│          ▼                              ▼                   │
+│ 4. V1(100%) 원복 및 V2 폐기 ◀─── 라우팅 제어 (Ingress)   │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>이 구조의 핵심은 엔지니어의 <code>git revert</code> 명령어 입력이나 파이프라인 재실행 없이, 시스템이 지표를 근거로 스스로 의사결정을 내리고 물리적 복구까지 수행한다는 점이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 로켓(신규 배포)을 발사했는데, 관제탑(Prometheus) 센서에서 온도(에러율)가 빨간색을 넘어가면, 사람의 확인을 기다리지 않고 즉각 자동 낙하산(라우팅 롤백)을 펴서 캡슐(구버전)을 살려내는 원리다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>배포 장애에 대처하는 방식은 롤백(Rollback)과 롤포워드(Roll-forward)로 양분되며, 장애의 성격에 따라 선택해야 한다.</p>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">롤백 (Rollback)</th><th style="text-align: left">롤포워드 (Roll-forward)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>복구 방식</strong></td><td style="text-align: left">트래픽을 이전의 안정적인 버전(V1)으로 즉각 되돌림</td><td style="text-align: left">원인을 수정(Hotfix)하여 더 새로운 버전(V3)을 배포</td></tr>
+<tr><td style="text-align: left"><strong>복구 속도 (MTTR)</strong></td><td style="text-align: left"><strong>매우 빠름</strong> (수 초 ~ 수 분 내 라우팅 전환)</td><td style="text-align: left"><strong>상대적으로 느림</strong> (코드 수정, 빌드, 테스트 파이프라인 소요)</td></tr>
+<tr><td style="text-align: left"><strong>적합한 상황</strong></td><td style="text-align: left">일반적인 API/UI 버그, 스테이트리스(Stateless) 앱 장애</td><td style="text-align: left">롤백이 불가능한 구조적 변경(DB 스키마 파괴 등)</td></tr>
+<tr><td style="text-align: left"><strong>주요 리스크</strong></td><td style="text-align: left">데이터베이스 스키마와 이전 앱 버전 간의 호환성 충돌</td><td style="text-align: left">다급한 코딩으로 인한 2차 폭포수 장애 (Human Error)</td></tr>
+</tbody></table>
+<p>일반적인 상태 없는(Stateless) 웹 서버는 즉각적인 롤백이 가능하지만, 구조적 변경이 수반된 백엔드 로직 장애 시에는 섣부른 롤백이 더 큰 재앙을 부를 수 있으므로 롤포워드가 강제되기도 한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 바지에 구멍이 났을 때, 얼른 어제 입었던 바지로 갈아입는 것이 롤백이고, 시간이 걸리더라도 그 자리에서 헝겊을 덧대 꿰매는 것이 롤포워드다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p>성공적인 자동 롤백을 구현하기 위해 기술사는 데이터베이스의 비가역적(Irreversible) 변경 문제와 GitOps 철학의 충돌을 제어해야 판별한다.</p>
+<h3 id="cekeuriseuteu-mic-yisagyeoljeong">체크리스트 및 의사결정</h3>
+<ol>
+<li><strong>DB 마이그레이션 딜레마 (Expand and Contract)</strong>:
+<ul>
+<li>컬럼명을 변경하거나 삭제하는 DDL 배포 후 앱을 롤백하면, 구버전 앱은 없어진 컬럼을 찾다가 DB 에러를 일으킨다.</li>
+<li><strong>판단</strong>: DB 변경은 반드시 '추가(Expand) -&gt; 신구 앱 공존 배포 -&gt; 구버전 제거 후 삭제(Contract)'의 다단계 호환성 패턴을 거쳐야만 안전한 롤백이 보장된다.</li>
+</ul>
+</li>
+<li><strong>GitOps 환경의 편류 (Drift) 방지</strong>:
+<ul>
+<li>장애 발생 시 <code>kubectl rollout undo</code> 명령어로 K8s 상태만 강제 롤백하면, 클러스터 상태(V1)와 Git 저장소의 명세(V2)가 달라지는 편류 현상이 발생한다.</li>
+<li><strong>판단</strong>: ArgoCD 등 GitOps 툴체인을 쓴다면, 단순 명령어가 아니라 파이프라인 자체가 Git 저장소에 <code>git revert</code> 커밋을 푸시하여 롤백을 수행하는 방식으로 단일 진실 공급원(SSOT)을 유지해야 한다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p>에러율 임계치를 너무 낮게(예: 0.01%) 설정하여, 일시적인 네트워크 튀어오름(Spike)에도 하루에 수십 번씩 롤백이 발생하는 양치기 소년 파이프라인 구성.</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: 롤백은 기찻길(DB 스키마)을 바꾸는 작업에는 쓸 수 없다. 기차(앱)를 뒤로 후진시켰는데 옛날 철로가 끊겨 있으면 기차는 결국 탈선하고 만다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>파이프라인 에러율 기반의 자동 롤백은 개발 조직에 막대한 심리적 안전감(Psychological Safety)을 부여한다. "배포하다 터져도 시스템이 1분 안에 알아서 원복해 준다"는 믿음은 개발자들이 혁신적인 코드를 두려움 없이 더 자주 배포하게 만드는 원동력이 된다.</p>
+<p>향후 이 아키텍처는 단순한 임계치 초과 여부를 넘어, 머신러닝(AIOps)을 통해 과거의 장애 패턴과 미세한 성능 저하 징후를 결합 분석하여 인간이 알아채기 전에 선제적으로 롤백을 단행하는 자율 복구(Self-Healing) 시스템으로 고도화될 것이다. 롤백은 실패의 인정이 아니라, 속도전을 뒷받침하는 가장 강력한 무기다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 떨어져도 절대 다치지 않는 푹신한 자동 안전망(롤백)이 깔려 있어야, 서커스 단원(개발자)들은 공중그네에서 더 화려하고 어려운 묘기(잦은 배포)에 도전할 수 있다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>카나리 배포 (Canary Release)</strong></td><td style="text-align: left">소수의 트래픽으로 안전성을 검증하여 롤백 대상을 최소화하는 배포 전략</td></tr>
+<tr><td style="text-align: left"><strong>MTTR (Mean Time To Recovery)</strong></td><td style="text-align: left">장애 발생부터 복구까지 걸리는 시간으로, 롤백 전략의 핵심 성과 지표</td></tr>
+<tr><td style="text-align: left"><strong>옵저버빌리티 (Observability)</strong></td><td style="text-align: left">메트릭, 로그, 트레이스를 통해 에러를 감지하고 롤백의 트리거 역할을 하는 관찰 체계</td></tr>
+<tr><td style="text-align: left"><strong>GitOps</strong></td><td style="text-align: left">롤백 시에도 Git 저장소의 선언적 명세와 인프라의 실제 상태를 동일하게 동기화하는 철학</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">수동 롤백 (Manual Revert &amp; Deploy)
+    │ 인간의 개입으로 인한 긴 MTTR 문제
+    ▼
+블루&#x2F;그린 배포 라우팅 스위치 전환
+    │ 스위치 전환은 빠르나 에러 감지는 수동
+    ▼
+카나리 배포 + 메트릭 기반 자동 롤백 (Kayenta 등)
+    │ 임계치 설정의 한계 (정적 룰)
+    ▼
+AIOps 기반 예측형 자동 롤백 (자율 복구)
+</code></pre>
+<p>이 흐름도는 사람이 직접 개입하던 수동 복구에서 시작해, 배포 전략의 발전(블루/그린)을 거쳐 메트릭 기반의 자동화 파이프라인, 그리고 AI 기반의 자율 복구로 진화하는 신뢰성 엔지니어링의 궤적을 보여준다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>게임 하다가 실수로 독약 아이템을 먹으면 체력이 쭉쭉 깎여서 무섭죠?</li>
+<li>그럴 때 컴퓨터가 체력이 닳는 걸 스스로 보고 "어? 독이네!" 하면서 1초 만에 세이브 포인트로 시간을 돌려주는 거예요.</li>
+<li>이렇게 위험해지면 자동으로 옛날 안전한 상태로 도망가는 똑똑한 시스템을 '자동 롤백'이라고 불러요!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

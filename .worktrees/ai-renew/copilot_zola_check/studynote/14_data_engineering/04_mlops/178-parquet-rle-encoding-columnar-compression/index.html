@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>178. 파케이 (Parquet) 컬럼형 압축 포맷과 RLE (Run-Length Encoding) 최적화 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote data engineering
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: Parquet은 데이터를 행(Row)이 아니라 열(Column) 단위로 저장해, 분석 엔진이 필요한 컬럼만 읽고 같은 성질의 값을 더 강하게 압축하게 만드는 대표적인 컬럼형 저장 포맷이다.</li>
+<li><strong>가치</strong>: Dictionary Encoding과 RLE/Bit-Packing 하이브리드, Row Group 통계, Predicate Pushdown이 함께 작동하면 "적게 읽고 늦게 해제하는" 구조가 만들어져 스캔 비용과 쿼리 지연이 동시에 줄어든다.</li>
+<li><strong>판단 포인트</strong>: Parquet 성능은 포맷 이름만으로 결정되지 않으며, 파티셔닝·정렬 순서·Row Group 크기·코덱 선택이 쿼리 패턴과 맞아야 RLE 이점과 스킵 효과가 실제로 살아난다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>Parquet은 분석 워크로드를 위해 설계된 컬럼형 저장 포맷이다. 운영 데이터베이스(Database, DB)나 이벤트 수집 단계에서는 보통 한 행 전체를 자주 읽고 쓰므로 행 기반 저장이 자연스럽다. 하지만 데이터 레이크와 웨어하우스에서는 수억 행 중 몇 개 컬럼만 집계하거나 필터링하는 일이 훨씬 많다. 이때 행 기반 포맷은 필요 없는 컬럼까지 함께 읽어야 하므로, 저장 비용보다 스캔 비용이 더 큰 병목이 된다.</p>
+<p>아래 그림은 왜 분석 쿼리에서 컬럼형 저장이 유리한지 보여준다. 핵심은 "많은 행 전체"보다 "적은 컬럼 대량 스캔"이 분석의 기본 패턴이라는 점이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────┐
+│ 행 저장 vs 열 저장의 차이                                    │
+├──────────────────────────────────────────────────────────────┤
+│ 행 저장: [id region status amount] [id region status amount] │
+│         질의 시 불필요한 컬럼도 함께 읽음                    │
+│                                                              │
+│ 열 저장: id[] | region[] | status[] | amount[]              │
+│         sum(amount) where status=&#x27;PAID&#x27;                      │
+│         → status, amount 컬럼만 읽으면 됨                    │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>컬럼형 포맷이 압축에도 강한 이유는 같은 타입의 값이 연속으로 배치되기 때문이다. 예를 들어 <code>status</code>, <code>country</code>, <code>is_active</code>처럼 카디널리티가 낮은 컬럼은 같은 값이 길게 반복되기 쉬워 RLE과 Dictionary Encoding의 효과가 커진다. 반대로 행 기반 포맷에서는 문자열, 숫자, 날짜가 한 레코드 안에 섞여 있어 압축기는 일반 목적 알고리즘에 더 의존하게 된다.</p>
+<p>그래서 Parquet은 단순한 파일 형식이 아니라, "분석 쿼리의 I/O를 어떻게 줄일 것인가"에 대한 설계 답안으로 보는 편이 맞다. Delta Lake, Apache Iceberg, Apache Hudi 같은 레이크하우스 테이블 포맷도 실제 데이터 파일은 Parquet로 저장하는 경우가 많은데, 이는 개방성·압축 효율·다양한 엔진 호환성이 동시에 좋기 때문이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Parquet은 모든 서류를 한 봉투에 섞어 넣는 대신, 종류별 서랍으로 나누어 보관하는 문서함과 같다. 급여만 찾고 싶으면 급여 서랍만 열면 되니 훨씬 빠르고 정리도 잘 된다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>Parquet 파일의 성능은 단순 압축률보다 "어느 단계에서 얼마나 많이 건너뛸 수 있는가"에 의해 결정된다. 파일은 Row Group, Column Chunk, Page, Footer로 나뉘며, 쿼리 엔진은 가능한 한 뒤 단계로 갈수록 적은 바이트만 읽도록 설계된다.</p>
+<table><thead><tr><th style="text-align: left">계층</th><th style="text-align: left">역할</th><th style="text-align: left">성능에 미치는 영향</th></tr></thead><tbody>
+<tr><td style="text-align: left">Row Group</td><td style="text-align: left">여러 행을 묶은 큰 읽기 단위</td><td style="text-align: left">통계 기반 스킵과 병렬 읽기 기준이 됨</td></tr>
+<tr><td style="text-align: left">Column Chunk</td><td style="text-align: left">Row Group 안의 컬럼별 구간</td><td style="text-align: left">Column Pruning으로 필요한 컬럼만 읽음</td></tr>
+<tr><td style="text-align: left">Page</td><td style="text-align: left">실제 인코딩·압축이 적용되는 내부 블록</td><td style="text-align: left">디코딩 비용과 메모리 지역성에 영향</td></tr>
+<tr><td style="text-align: left">Footer</td><td style="text-align: left">스키마, 통계, 인코딩 메타데이터</td><td style="text-align: left">Predicate Pushdown과 파일 해석의 출발점</td></tr>
+</tbody></table>
+<p>아래 구조를 보면 Parquet이 "파일 하나"가 아니라, 컬럼별 청크와 통계 정보를 함께 가진 작은 저장 엔진처럼 동작한다는 점이 보인다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌───────────────────────── Parquet File ───────────────────────┐
+│ Row Group 0                                                  │
+│  ├─ status Column Chunk ─▶ Dictionary Page + Data Pages      │
+│  ├─ amount Column Chunk ─▶ Data Pages                        │
+│  └─ country Column Chunk ─▶ Dictionary Page + Data Pages     │
+│                                                              │
+│ Row Group 1                                                  │
+│  ├─ status Column Chunk                                      │
+│  ├─ amount Column Chunk                                      │
+│  └─ country Column Chunk                                     │
+│                                                              │
+│ Footer: schema · min&#x2F;max · null_count · encodings            │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>RLE (Run-Length Encoding)는 Parquet에서 특히 저카디널리티 컬럼과 중첩 데이터의 level 정보에 강하다. 문자열 자체를 바로 RLE 하는 것이 아니라, 먼저 Dictionary Encoding으로 값을 작은 정수 ID로 바꾸고, 그 뒤 반복되는 ID 구간을 RLE/Bit-Packing 하이브리드로 저장하는 경우가 많다. 반복이 길면 RLE가 이득이고, 값이 자주 바뀌면 Bit-Packing으로 촘촘히 묶어 손해를 줄인다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">원본 status 값:
+PAID PAID PAID PAID FAIL FAIL REFUND REFUND REFUND
+
+Dictionary ID:
+0    0    0    0    1    1    2      2      2
+
+RLE 표현:
+(0 × 4) (1 × 2) (2 × 3)
+</code></pre>
+<p>이 메커니즘이 중요한 이유는 디코딩 비용까지 줄이기 때문이다. 긴 반복 구간은 같은 값을 여러 번 복원하지 않고 횟수만 보고 처리할 수 있어 CPU 캐시 친화적이다. 또한 중첩 스키마에서 정의 수준(Definition Level), 반복 수준(Replication/Repetition Level)도 같은 하이브리드 방식으로 저장되기 때문에, <code>null</code>이 많거나 배열 구조가 규칙적인 데이터에서 효과가 특히 커진다.</p>
+<p>Parquet의 또 다른 핵심은 스킵 인코딩 관점의 Footer 통계다. 쿼리 엔진은 Footer의 <code>min/max/null_count</code>를 보고 Row Group 전체를 건너뛸 수 있다. 예를 들어 <code>event_date = '2026-04-21'</code> 조건인데 특정 Row Group의 날짜 범위가 <code>2026-04-01~2026-04-10</code>이면, 해당 구간은 디코딩조차 하지 않는다. 즉 Parquet 성능은 "강한 압축"보다도 "불필요한 해제를 최대한 늦추는 구조"에서 나온다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Parquet은 택배 상자를 무조건 꽉 누르는 기계가 아니라, 비슷한 물건은 묶음 포장하고, 상자 겉면에는 내용물 범위를 써 두어 필요 없는 상자는 아예 열지 않게 만드는 물류 시스템과 같다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>Parquet을 이해할 때는 ORC와 Avro를 함께 비교하는 편이 좋다. Parquet과 ORC는 둘 다 컬럼형 포맷이지만, Parquet은 Spark·Trino·Flink·Snowflake 외부 테이블처럼 멀티 엔진 호환성에서 강점을 보이는 반면, ORC는 Hive 계열 생태계와 세밀한 인덱스·통계 최적화에서 장점이 있었다. Avro는 행 기반 포맷이라 분석 스캔에는 불리하지만, 스키마 진화와 레코드 직렬화가 쉬워 메시징과 스트리밍 전송에 잘 맞는다.</p>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: left">Parquet</th><th style="text-align: left">ORC</th><th style="text-align: left">Avro</th></tr></thead><tbody>
+<tr><td style="text-align: left">저장 방식</td><td style="text-align: left">컬럼형</td><td style="text-align: left">컬럼형</td><td style="text-align: left">행 기반</td></tr>
+<tr><td style="text-align: left">대표 강점</td><td style="text-align: left">멀티 엔진 호환성, 범용성</td><td style="text-align: left">Hive 친화성, 풍부한 인덱싱</td><td style="text-align: left">직렬화·스키마 진화, 스트리밍</td></tr>
+<tr><td style="text-align: left">잘 맞는 작업</td><td style="text-align: left">대규모 분석, 레이크하우스</td><td style="text-align: left">Hive 중심 분석 환경</td><td style="text-align: left">이벤트 전송, 레코드 교환</td></tr>
+<tr><td style="text-align: left">약한 지점</td><td style="text-align: left">잦은 행 단위 수정</td><td style="text-align: left">생태계 범용성</td><td style="text-align: left">대량 컬럼 스캔 성능</td></tr>
+</tbody></table>
+<p>Parquet 내부에서도 스킵 전략은 여러 층으로 나뉜다. 가장 바깥쪽은 디렉터리 수준의 Partition Pruning이고, 다음은 Footer 기반 Row Group 스킵, 더 안쪽은 선택적 Page Index나 Bloom Filter, 마지막이 실제 컬럼 데이터 디코딩이다. 이 구조를 이해하면 "파티션만 잘 나누면 끝"이라는 오해를 줄일 수 있다. 실제로는 파티션, 정렬, 통계, 인코딩이 겹쳐야 읽기 비용이 크게 내려간다.</p>
+<p>Parquet은 레이크하우스와도 직접 연결된다. Delta Lake, Apache Iceberg, Apache Hudi는 메타데이터 계층과 트랜잭션 기능은 다르지만, 물리 저장 단위로는 Parquet을 즐겨 사용한다. 즉 Parquet은 단독 포맷인 동시에, 현대 데이터 플랫폼의 물리적 기반층 역할도 한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Parquet, ORC, Avro는 모두 짐을 담는 방식이지만, Parquet은 창고 보관과 검색에 강한 선반, ORC는 특정 물류센터에 최적화된 전용 랙, Avro는 이동 중 전달이 쉬운 운송 상자에 가깝다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p>실무에서 Parquet 최적화의 핵심은 "RLE이 잘 먹는 데이터 모양을 만들고, 스킵이 잘 되는 배치 순서를 만드는 것"이다. 같은 Parquet라도 정렬 없이 무작위로 적재된 데이터와, 필터 컬럼 기준으로 정렬·클러스터링된 데이터의 성능은 크게 다르다. 예를 들어 <code>country</code>, <code>status</code>, <code>event_date</code>로 자주 조회한다면, 너무 세밀한 파티션보다는 날짜 단위 파티셔닝 후 국가·상태 기준 정렬이 Row Group 통계와 RLE 둘 다에 유리할 수 있다.</p>
+<table><thead><tr><th style="text-align: left">상황</th><th style="text-align: left">권장 판단</th><th style="text-align: left">이유</th></tr></thead><tbody>
+<tr><td style="text-align: left">날짜 범위 분석이 많음</td><td style="text-align: left">날짜 파티셔닝 + Row Group 128~512MB</td><td style="text-align: left">Partition Pruning과 통계 스킵이 동시에 작동</td></tr>
+<tr><td style="text-align: left">저카디널리티 필터 컬럼이 중요</td><td style="text-align: left">정렬 또는 클러스터링으로 같은 값 묶기</td><td style="text-align: left">Dictionary ID 반복이 길어져 RLE 효과 증가</td></tr>
+<tr><td style="text-align: left">고카디널리티 ID 등치 검색</td><td style="text-align: left">Bloom Filter 또는 별도 인덱스 계층 고려</td><td style="text-align: left">RLE은 거의 이득이 없고 통계 범위도 넓어지기 쉬움</td></tr>
+<tr><td style="text-align: left">스트리밍 적재로 작은 파일이 많음</td><td style="text-align: left">주기적 Compaction 수행</td><td style="text-align: left">작은 파일은 Footer 오버헤드와 메타데이터 비용이 커짐</td></tr>
+<tr><td style="text-align: left">저장비 절감이 우선</td><td style="text-align: left">Zstandard (ZSTD) 중심 검토</td><td style="text-align: left">해제 속도와 압축률 균형이 좋음</td></tr>
+<tr><td style="text-align: left">대화형 분석 지연이 우선</td><td style="text-align: left">Snappy 또는 LZ4 우선</td><td style="text-align: left">CPU 해제 비용이 낮아 체감 응답이 빠름</td></tr>
+</tbody></table>
+<p>체크리스트는 다음과 같다.</p>
+<ol>
+<li>자주 필터링되는 컬럼이 파티션, 정렬, 통계에 반영되어 있는가?</li>
+<li><code>SELECT *</code> 남발 때문에 Column Pruning 이점을 스스로 죽이고 있지 않은가?</li>
+<li>Row Group 크기가 너무 작아 스킵보다 메타데이터 비용이 커지지 않는가?</li>
+<li>작은 파일 병합, 통계 수집, 코덱 선택이 함께 관리되는가?</li>
+<li>RLE 이점을 기대하는 컬럼이 실제로는 난수형 고카디널리티 값이 아닌가?</li>
+</ol>
+<p>흔한 안티패턴도 분명하다. <code>user_id</code>처럼 고카디널리티 컬럼으로 과도한 파티셔닝을 하면 디렉터리는 늘고 건너뛸 범위는 오히려 줄어든다. 또 Parquet을 쓴다고 자동으로 빨라지는 것도 아니다. 랜덤 정렬, 소형 파일 폭증, 쓸모없는 <code>SELECT *</code>, 의미 없는 압축 코덱 설정은 컬럼형 포맷의 장점을 쉽게 무력화한다.</p>
+<p>중요한 판단은 Parquet을 "업데이트 친화적 저장소"로 오해하지 않는 것이다. Parquet은 읽기 최적화 포맷이므로, 잦은 행 단위 수정이나 저지연 키 조회가 핵심인 온라인 트랜잭션 처리(Online Transaction Processing, OLTP)에는 맞지 않는다. 이런 경우는 레이크하우스 메타데이터 계층이나 별도 서빙 저장소가 함께 필요하다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Parquet 최적화는 옷장을 많이 사는 일이 아니라, 계절별로 나누고 색상 순으로 정리하며 자주 입는 옷은 앞에 두는 정리법과 같다. 정리 규칙이 맞아야 서랍 구조의 장점이 살아난다.</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>Parquet을 잘 설계하면 저장 크기 절감, 스캔 비용 축소, 대규모 분석 성능 향상이 동시에 가능하다. 특히 컬럼 선택 폭이 작은 집계 쿼리, 날짜 범위 필터, 저카디널리티 상태 코드 분석에서 효과가 크다. 데이터 레이크 관점에서는 같은 저장소 위에서 여러 엔진이 공통 포맷을 읽을 수 있어 상호 운용성이 좋아지고, 레이크하우스 계층과 결합하면 트랜잭션·버전 관리까지 확장할 수 있다.</p>
+<p>하지만 Parquet은 만능 압축 포맷이 아니다. 압축률과 읽기 성능은 데이터 분포, 정렬 상태, 파일 크기, 코덱 선택에 크게 좌우된다. 또한 소형 파일 문제, 잦은 업데이트, 운영계 조회처럼 읽기 패턴이 다르면 별도 전략이 필요하다. 즉 Parquet의 가치는 "파일을 압축한다"는 사실보다, 쿼리 패턴에 맞게 저장 구조를 조정할 수 있다는 데 있다.</p>
+<p>결론적으로 기억해야 할 핵심은 이렇다. Parquet 성능은 단일 기법에서 오지 않는다. Column Pruning, Dictionary Encoding, RLE/Bit-Packing, 통계 기반 스킵, 적절한 파일 설계가 겹쳐질 때 비로소 강력해진다. 그래서 Parquet은 포맷 이름보다 저장 레이아웃 설계 역량이 더 중요한 기술이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: Parquet은 진공 압축팩 하나가 아니라, 분류·라벨링·묶음 포장·보관 동선을 모두 갖춘 정리 시스템과 같다. 전체 흐름이 맞아야 진짜 공간 절약과 빠른 찾기가 동시에 된다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">Row Group</td><td style="text-align: left">통계 기반 스킵과 병렬 읽기의 기본 단위</td></tr>
+<tr><td style="text-align: left">Column Pruning</td><td style="text-align: left">필요한 컬럼만 읽어 I/O를 줄이는 컬럼형 포맷의 핵심 이점</td></tr>
+<tr><td style="text-align: left">Dictionary Encoding</td><td style="text-align: left">문자열·범주형 값을 작은 정수 ID로 바꾸는 전처리 인코딩</td></tr>
+<tr><td style="text-align: left">RLE (Run-Length Encoding) / Bit-Packing</td><td style="text-align: left">반복 구간은 길이로, 다양한 짧은 값은 촘촘한 비트로 저장하는 하이브리드 방식</td></tr>
+<tr><td style="text-align: left">Predicate Pushdown</td><td style="text-align: left">Footer 통계를 이용해 불필요한 Row Group을 읽기 전에 제외하는 최적화</td></tr>
+<tr><td style="text-align: left">Bloom Filter</td><td style="text-align: left">고카디널리티 등치 조건에서 추가 스킵을 돕는 선택적 보조 구조</td></tr>
+<tr><td style="text-align: left">Delta Lake / Apache Iceberg</td><td style="text-align: left">Parquet를 물리 저장 포맷으로 활용하는 상위 레이크하우스 계층</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">행 기반 파일 포맷
+    │
+    ▼
+컬럼형 저장 포맷 (Parquet · ORC)
+    │
+    ▼
+Dictionary Encoding · RLE&#x2F;Bit-Packing
+    │
+    ▼
+Row Group 통계 · Predicate Pushdown
+    │
+    ▼
+Bloom Filter · Page Index · Vectorized Read
+    │
+    ▼
+Lakehouse 물리 저장 계층
+</code></pre>
+<p>이 흐름은 압축의 초점이 "파일을 작게 만들기"에서 "필요 없는 데이터를 읽지 않기"로 발전하는 과정을 보여준다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>Parquet은 장난감을 종류별 상자에 나눠 담아 두는 정리법이라서, 자동차만 찾고 싶으면 자동차 상자만 열면 돼요.</li>
+<li>RLE 압축은 같은 블록이 여러 개 이어져 있으면 "빨간 블록 5개"처럼 묶어서 적는 방법이에요.</li>
+<li>그래서 상자도 덜 열고, 안에 무엇이 있는지도 더 빨리 알 수 있어요.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

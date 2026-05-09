@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>271. 마스터-슬레이브 (Master-Slave &#x2F; Primary-Replica) 복제 - 읽기&#x2F;쓰기 분산 아키텍처 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="271-maseuteo-seulreibeu-master-slave-bogje">271. 마스터-슬레이브 (Master-Slave) 복제</h1>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 마스터-슬레이브 복제는 하나의 마스터(Master/Primary) 노드가 모든 쓰기를 담당하고, 하나 이상의 슬레이브(Slave/Replica) 노드가 마스터의 데이터를 복제하여 읽기 분산이 가능하게 하는 복제 아키텍처이다.</li>
+<li><strong>가치</strong>: 읽기 성능을 분산시키고, 마스터 장애 시 슬레이브를 새 마스터로 승격하여 가용성을 높이며, 읽기 집중 워크로드에 효과적이다.</li>
+<li><strong>융합</strong>: 비동기식 복제, 동기식 복제, 장애 복구, 읽기 확장성, CAP 정리와 밀접하게 연관된다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<h3 id="gaenyeom-jeongyi">개념 정의</h3>
+<p>마스터-슬레이브 복제(Master-Slave Replication)는 하나의 마스터(Master 또는 Primary) 노드가 모든 쓰기를 담당하고, 하나 이상의 슬레이브(Slave 또는 Replica) 노드가 마스터의 데이터를 복제하는 아키텍처이다. 슬레이브는 읽기 요청을 처리하여 마스터의 부하를 분산시키고, 마스터 장애 시 슬레이브 중 하나가 새 마스터로 승격될 수 있다.</p>
+<h3 id="pilyoseong">필요성</h3>
+<p>단일 데이터베이스 서버는 处理능력의 한계가 있다. 읽기 요청이 쓰기 요청보다 훨씬 많은 경우, 마스터-슬레이브 복제를 통해 읽기 작업을 슬레이브로 분산시켜 성능을 향상시킬 수 있다. 또한 마스터 장애 시에도 슬레이브 중 하나가 서비스를 계속 제공한다.</p>
+<h3 id="baegyeong">배경</h3>
+<p>마스터-슬레이브 복제는 관계형 데이터베이스에서 가장 오래되고 널리 사용되는 복제 아키텍처이다. MySQL, PostgreSQL, Redis, MongoDB 등 대부분의 데이터베이스에서 지원된다.</p>
+<h3 id="biyu">비유</h3>
+<p>마스터-슬레이브 복제는음악厅과 같다. 지휘자(마스터)가 모든 연주를 제어하고, 연주자들(슬레이브)이 지휘자의 지시에 따라 같은 음악을 연주한다. 객원(읽기 요청)은 연주자들 중 아무에게나 들을 수 있다. 지휘자가 없을 때, 제1연주자(슬레이브 중 하나)가 지휘자 역할을引き受け公演을 계속한다.</p>
+<p>📢 섹션 요약: 마스터-슬레이브 복제는 쓰기는 마스터, 읽기는 슬레이브로 분산하여 성능과 가용성을 높이는 아키텍처이다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri-deep-dive">Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)</h2>
+<h3 id="maseuteo-seulreibeu-dongjag-gujo">마스터-슬레이브 동작 구조</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                    마스터-슬레이브 복제 동작 구조                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  [쓰기 동작]                                                               │
+│                                                                             │
+│       Client                                                                │
+│         │                                                                  │
+│         ▼                                                                  │
+│    ┌─────────────┐                                                         │
+│    │   Master   │                                                         │
+│    │  (쓰기만)  │                                                         │
+│    └──────┬──────┘                                                         │
+│           │                                                                  │
+│           │ 쓰기 (INSERT, UPDATE, DELETE)                                   │
+│           ▼                                                                  │
+│    ┌─────────────┐                                                         │
+│    │  로컬 기록   │  (Binlog&#x2F;Write-Ahead Log)                             │
+│    └─────────────┘                                                         │
+│                                                                             │
+│  [복제 동작]                                                               │
+│                                                                             │
+│    Master ──▶ Binlog ──▶ Slave1                                            │
+│              │       │                                                      │
+│              │       └──▶ Slave2                                            │
+│              │            │                                                  │
+│              │            └──▶ Slave3                                       │
+│                                                                             │
+│  [읽기 동작]                                                               │
+│                                                                             │
+│       Client                                                                │
+│         │                                                                  │
+│         ├──▶ Slave1 (읽기) ──▶ 응답                                       │
+│         │                                                                  │
+│         ├──▶ Slave2 (읽기) ──▶ 응답                                       │
+│         │                                                                  │
+│         └──▶ Slave3 (읽기) ──▶ 응답                                       │
+│                                                                             │
+│  [장애 및 복구]                                                            │
+│                                                                             │
+│    Master 장애                                                              │
+│         │                                                                  │
+│         ▼                                                                  │
+│   Slave 중 하나가 새 Master로 승격                                          │
+│    (예: Slave1 → New Master)                                              │
+│         │                                                                  │
+│         ▼                                                                  │
+│    나머지 Slave가 새 Master를Follow                                     │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong>
+마스터-슬레이브 복제에서 쓰기는 항상 마스터로만 전달된다. 마스터는 쓰기를
+로컬 로그(Binlog/WAL)에 기록하고, 슬레이브가 이 로그를 가져와서 자신의
+데이터에 적용한다. 읽기는 모든 슬레이브에서 가능하므로 부하가 분산된다.
+마스터 장애 시에는 슬레이브 중 하나가 새 마스터로 승격되어 서비스를 계속 제공한다.</p>
+<h3 id="bogje-yuhyeong">복제 유형</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                    마스터-슬레이브 복제 유형                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  1. 비동기식 복제 (Asynchronous)                                          │
+│  ─────────────────────────────────────────                                  │
+│  • 마스터가 쓰기를 로컬에만 기록하고 즉시 성공 반환                            │
+│  • 슬레이브가 백그라운드에서 로그를 가져와 적용                               │
+│  • 복제 지연이 발생할 수 있음                                                │
+│  • 예: MySQL 기본 복제                                                     │
+│                                                                             │
+│  2. 반동기식 복제 (Semi-Synchronous)                                       │
+│  ───────────────────────────────────────────                                │
+│  • 마스터가 슬레이브 중 하나 이상에 복제가 완료될 때까지 대기                    │
+│  • 적어도 하나의 슬레이브에 복제 보장 → 내구성 향상                           │
+│  • 예: MySQL Group Replication                                             │
+│                                                                             │
+│  3. 동기식 복제 (Synchronous)                                              │
+│  ─────────────────────────────────────                                      │
+│  • 마스터가 모든 슬레이브에 복제가 완료될 때까지 대기                          │
+│  • 가장 높은 일관성, 가장 낮은 성능                                          │
+│  • 모든 슬레이브 장애 시 복제 불가                                            │
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐  │
+│  │   복제 지연 (Replication Lag)                                        │  │
+│  │                                                                    │  │
+│  │   원인:                                                               │  │
+│  │   • 슬레이브의 처리 속도가 마스터보다 늦음                               │  │
+│  │   • 대량 쓰기&#x2F;쿼리에 의한 Binlog 축적                                  │  │
+│  │   • 네트워크 지연                                                     │  │
+│  │                                                                    │  │
+│  │   해결 방법:                                                          │  │
+│  │   • 슬레이브 사양 강화 (CPU, DISK)                                    │  │
+│  │   • 읽기 분산 최적화 (적합한 슬레이브 선택)                             │  │
+│  │   • 쓰기 분산 (샤딩 등)                                               │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="ilggi-bunsan-akitegceo">읽기 분산 아키텍처</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                    마스터-슬레이브 읽기 분산 아키텍처                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  [로드 밸런서 기반]                                                        │
+│                                                                             │
+│       Client                                                                │
+│         │                                                                  │
+│         ▼                                                                  │
+│    ┌─────────────┐                                                         │
+│    │ Load Balancer│                                                         │
+│    └──────┬──────┘                                                         │
+│           │                                                                  │
+│      ┌────┴────┬────────────┐                                          │
+│      ▼         ▼            ▼                                             │
+│  ┌────────┐ ┌────────┐ ┌────────┐                                   │
+│  │ Slave1 │ │ Slave2 │ │ Slave3 │                                   │
+│  │(읽기전용)│ │(읽기전용)│ │(읽기전용)│                                   │
+│  └────────┘ └────────┘ └────────┘                                   │
+│                                                                             │
+│  [읽기 분산 전략]                                                          │
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐  │
+│  │   Random: 랜덤하게 슬레이브 선택                                     │  │
+│  │   Round-Robin: 순서대로 슬레이브 선택                                 │  │
+│  │   Least Connections: 연결 수가 가장 적은 슬레이브 선택               │  │
+│  │   Latency-based: 응답 시간이 가장 짧은 슬레이브 선택                  │  │
+│  │   Application-level: 애플리케이션에서 특정 슬레이브 직접 선택          │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+│  ⚠️ 주의: 복제 지연으로 인한 일관성 문제                                    │
+│  ──────────────────────────────────────────────                           │
+│  • 쓰기 직후 읽기: 마스터에서 읽어야 최신 데이터 보장                        │
+│  • 해결: 쓰기 후 특정 시간 동안 마스터에서 읽기 (Read-after-Write)          │
+│  • 해결: 슬레이브 복제 상태 확인 후 선택 ( SHOW SLAVE STATUS )              │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>[다이어그램 해설]</strong>
+마스터-슬레이브 읽기 분산에서 중요한 점은 복제 지연으로 인한 일관성 문제이다.
+쓰기 직후 슬레이브에서 읽으면 최신 데이터가 아닐 수 있다. 이를 해결하기 위해
+애플리케이션에서 쓰기 후 일정 시간은 마스터에서 읽도록 하거나, 슬레이브의
+복제 상태를 확인하고 선택하는 방법이 있다.</p>
+<p>📢 섹션 요약: 마스터-슬레이브 복제는 비동기식, 반동기식, 동기식이 있으며, 읽기 분산 시 복제 지연으로 인한 일관성 문제를 고려해야 한다.</p>
+<hr />
+<h2 id="iii-guhyeon-mic-silmu-eungyong-implementation-practice">Ⅲ. 구현 및 실무 응용 (Implementation &amp; Practice)</h2>
+<h3 id="mysql-maseuteo-seulreibeu-bogje">MySQL 마스터-슬레이브 복제</h3>
+<pre data-lang="sql" class="language-sql "><code class="language-sql" data-lang="sql">-- MySQL: 마스터-슬레이브 복제 설정
+
+-- [Master 설정]
+[mysqld]
+server-id = 1
+log-bin = mysql-bin
+binlog_format = ROW
+sync_binlog = 1
+max_binlog_size = 1G
+
+-- 복제 계정 생성
+CREATE USER &#x27;repl&#x27;@&#x27;%&#x27; IDENTIFIED BY &#x27;password&#x27;;
+GRANT REPLICATION SLAVE ON *.* TO &#x27;repl&#x27;@&#x27;%&#x27;;
+
+-- [Slave 설정]
+[mysqld]
+server-id = 2
+relay-log = relay-bin
+read_only = 1
+log_slave_updates = 1
+
+-- 복제 연결 설정
+CHANGE MASTER TO
+    MASTER_HOST = &#x27;master_host&#x27;,
+    MASTER_USER = &#x27;repl&#x27;,
+    MASTER_PASSWORD = &#x27;password&#x27;,
+    MASTER_LOG_FILE = &#x27;mysql-bin.000001&#x27;,
+    MASTER_LOG_POS = 120;
+
+START SLAVE;
+
+-- 복제 상태 확인
+SHOW SLAVE STATUS\G
+-- Key fields: Slave_IO_Running, Slave_SQL_Running, Seconds_Behind_Master
+</code></pre>
+<h3 id="postgresql-seuteuriming-bogje">PostgreSQL 스트리밍 복제</h3>
+<pre data-lang="sql" class="language-sql "><code class="language-sql" data-lang="sql">-- PostgreSQL: 마스터-슬레이브 스트리밍 복제
+
+-- [Master 설정]
+ALTER USER postgres WITH REPLICATION;
+
+-- pg_hba.conf에 추가:
+host replication all 10.0.0.0&#x2F;8 md5
+
+-- [Slave 설정 (베이스 백업)]
+pg_basebackup -h master_host -U postgres -D &#x2F;var&#x2F;lib&#x2F;postgresql&#x2F;data -P -Xs
+
+-- recovery.conf 설정:
+standby_mode = &#x27;on&#x27;
+primary_conninfo = &#x27;host=master_host port=5432 user=repl password=password&#x27;
+
+-- 마스터에서 복제 상태 확인:
+SELECT * FROM pg_stat_replication;
+
+-- 슬레이브에서 복제 지연 확인:
+SELECT now() - pg_last_xact_replay_timestamp() AS replication_lag;
+</code></pre>
+<h3 id="jangae-boggu-sinario">장애 복구 시나리오</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                    마스터 장애 및 복구 시나리오                                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  [마스터 장애]                                                             │
+│                                                                             │
+│  1. 마스터 연결 불가 감지                                                   │
+│  2. 슬레이브 중 새 마스터 선출 (보통 priority最高的 슬레이브)                  │
+│  3. 나머지 슬레이브가 새 마스터를Follow                                     │
+│  4. 클라이언트가 새 마스터로 리다이렉션                                     │
+│                                                                             │
+│  [Automatic Failover - 예: MySQL MGR, PostgreSQL Patroni]                  │
+│                                                                             │
+│  1. 장애 감지                                                              │
+│  2. 새 마스터 선출                                                         │
+│  3. 리다이렉션 자동화                                                       │
+│                                                                             │
+│  [데이터 복구]                                                              │
+│                                                                             │
+│  ※ 주의: 비동기식 복제에서는 복제 지연으로 인해 일부 데이터 손실 가능          │
+│  → 손실량을 최소화하려면 반동기식 또는 동기식 복제 사용                         │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>📢 섹션 요약: 마스터-슬레이브 복제는 설정이 비교적 단순하고 널리 사용되며, 장애 시 자동 페일오버와 읽기 분산으로 성능과 가용성을 높일 수 있다.</p>
+<hr />
+<h2 id="iv-gyeolron">Ⅳ. 결론</h2>
+<p>마스터-슬레이브 복제는 가장 널리 사용되는 복제 아키텍처로, 쓰기는 마스터, 읽기는 슬레이브로 분산하여 성능과 가용성을 높인다. 그러나 복제 지연으로 인한 일관성 문제와 단일 마스터 쓰기 한계가 있으므로, 시스템 요구사항에 맞게 반동기식 복제, 읽기-after-쓰기 전략 등을 함께 고려해야 한다.</p>
+<p>📢 섹션 요약: 마스터-슬레이브 복제는 읽기 분산에 효과적이지만, 복제 지연과 단일 쓰기 마스터의 한계를 고려해야 한다.</p>
+<hr />
+<h2 id="haegsim-insaiteu-ascii-daieogeuraem-concept-map">핵심 인사이트 ASCII 다이어그램 (Concept Map)</h2>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│            Master-Slave Replication Concept Map                            │
+│                                                                             │
+│              ┌───────────────────────────┐                                   │
+│              │  Master-Slave Replication │                                  │
+│              │   (마스터-슬레이브 복제)   │                                   │
+│              └───────────┬───────────────┘                                   │
+│                          │                                                  │
+│       ┌──────────────────┼──────────────────┐                             │
+│       ▼                  ▼                  ▼                              │
+│  ┌─────────┐       ┌─────────┐       ┌─────────┐                        │
+│  │  Write  │       │  Read   │       │ Failover│                        │
+│  │(마스터만)│       │(슬레이브)│       │(자동복구)│                       │
+│  └────┬────┘       └────┬────┘       └────┬────┘                       │
+│       │                  │                  │                               │
+│       ▼                  ▼                  ▼                               │
+│  ┌─────────────────────────────────────────────────────┐                  │
+│  │     Binlog&#x2F;WAL → 복제 → 슬레이브에 적용            │                  │
+│  └─────────────────────────────────────────────────────┘                  │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h2 id="camgo">참고</h2>
+<ul>
+<li>마스터-슬레이브 복제는 쓰기는 마스터, 읽기는 슬레이브로 분산한다.</li>
+<li>비동기식, 반동기식, 동기식 복제가 있다.</li>
+<li>복제 지연으로 인한 일관성 문제를 고려해야 한다.</li>
+<li>마스터 장애 시 슬레이브 중 하나가 새 마스터로 승격된다.</li>
+</ul>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

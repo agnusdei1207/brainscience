@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>229. PEAP (Protected EAP) - TLS 터널 기반 인증 프로토콜 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote security
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="229-peap-protected-eap-tls-teoneol-boho-injeung">229. PEAP (Protected EAP) — TLS 터널 보호 인증</h1>
+<blockquote>
+<p>⚠️ 이 문서는 기업의 무선 랜(Wi-Fi)이나 802.1X 환경에서 로그인할 때, EAP-MD5처럼 평문 비밀번호가 털리는 것을 막고 싶지만, 그렇다고 직원 수만 명의 노트북에 일일이 공인인증서를 깔아줘야 하는 EAP-TLS의 극악의 돈/시간 낭비 딜레마를 해결하기 위해, **'인증 서버 딱 한 곳에만 인증서를 깔아서 안전한 장갑차(TLS 터널)를 뚫고, 직원들은 그 터널 안으로 편하게 평소 아이디/비밀번호만 던져 넣는' 가장 대중적이고 가성비 높은 하이브리드 무선 보안 규격인 'PEAP'**를 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 두 번의 문을 거치는 '이중 캡슐화' 기술이다. 1단계에서 서버만 신분증(인증서)을 까서 안전한 방탄유리 터널(TLS)을 만들고, 2단계에서 클라이언트가 그 터널 안으로 숨어 들어가 아이디/비번을 부르며 신원을 증명한다.</li>
+<li><strong>가치</strong>: 클라이언트(직원) 쪽에는 10원짜리 인증서 한 장 깔 필요가 없어 IT 인프라팀의 관리 고통(Ops)을 0으로 만들어주면서도, 해커의 가짜 Wi-Fi(Rogue AP) 유도 공격과 패킷 도청을 99.9% 완벽히 막아내는 엔터프라이즈 무선 보안의 사실상 표준(De facto)이다.</li>
+<li><strong>기술 체계</strong>: 마이크로소프트와 시스코(Cisco)가 주도해서 만든 프로토콜로, 윈도우 OS에 기본 내장된 MS-CHAPv2 (비밀번호 대조 프로토콜)와 결합하여 **<code>PEAP-MSCHAPv2</code>**라는 이름으로 전 세계 회사원의 윈도우 Wi-Fi 로그인 창을 10년 넘게 지배하고 있다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-eap-tlsyi-bissan-ceongguseowa-dilrema">Ⅰ. EAP-TLS의 비싼 청구서와 딜레마</h3>
+<p>완벽한 보안은 때로는 회사를 파산하게 만든다.</p>
+<ol>
+<li><strong>상호 인증의 이상(EAP-TLS)</strong>:
+<ul>
+<li>보안의 끝판왕은 양쪽이 모두 인증서(신분증)를 까는 것이다(Mutual Authentication). 서버도 공인인증서를 보여주고, 직원 노트북도 각자의 USB 공인인증서를 꽂아서 서로 "아군 맞네!" 하고 100% 확신한 뒤 통신하는 <code>EAP-TLS</code> 방식이다.</li>
+</ul>
+</li>
+<li><strong>관리자(Admin)의 악몽</strong>:
+<ul>
+<li>직원이 1만 명이면, 보안팀은 1만 개의 개인별 인증서를 발급해야 한다.</li>
+<li>직원이 퇴사하면 그 인증서를 폐기(CRL)해야 하고, 1년 지나 인증서 유효기간이 만료되면 1만 명에게 다시 갱신하라고 공지를 돌려야 한다. 직원이 핸드폰을 바꾸면? 무선 랜에 접속이 안 된다고 헬프데스크 전화통에 불이 난다. 이 짓을 유지하는 비용이 해킹당하는 비용보다 비싸졌다.</li>
+</ul>
+</li>
+<li><strong>PEAP (Protected EAP)의 타협안 등장</strong>:
+<ul>
+<li>시스코와 마이크로소프트가 머리를 맞댔다. "직원 1만 명한테 인증서 까는 짓(PKI)은 포기하자. 대신 튼튼한 금고(인증서)는 <strong>본사 인증 서버 딱 1대</strong>에만 설치해 둬! 그리고 직원들은 금고가 열리면 그 안에 아이디랑 비번만 편하게 던져 넣게 하자!"</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 완벽한 보안(EAP-TLS)은 백화점 출입 시 경비원도 경찰 신분증(인증서)을 까고, 1만 명의 손님도 각자 경찰청에서 발급한 특수 신분증(인증서)을 지참해야만 입장시켜 주는 제도입니다. 돈과 짜증이 폭발합니다. PEAP는 아주 현실적입니다. 손님은 신분증 필요 없이 늘 쓰던 '회원 번호(ID/PW)'만 부르면 됩니다. 대신, 입구를 지키는 경비원만 "나는 이 백화점 소속 정식 경비가 맞다"라는 경찰 신분증(서버 인증서)을 손님에게 먼저 보여줘서, 손님이 가짜 삐끼(해커)에게 속아 회원 번호를 털리는 일만 완벽하게 방지해 줍니다.</p>
+<hr />
+<h3 id="ii-peapyi-2dangye-ijung-kaebsyulhwa-teoneol-sogyi-daehwa">Ⅱ. PEAP의 2단계 이중 캡슐화 (터널 속의 대화)</h3>
+<p>방탄유리를 먼저 치고, 그 안에서 비밀 이야기를 나눈다.</p>
+<ol>
+<li><strong>Phase 1 (장갑차 터널 뚫기 / 서버 인증)</strong>:
+<ul>
+<li>직원이 회사 Wi-Fi를 잡는다. 본사의 인증 서버(RADIUS)가 튀어나와 "나 본사 서버 맞아"라며 자기의 **서버 인증서(Server Certificate)**를 노트북 화면에 던져준다.</li>
+<li>노트북은 그 인증서가 위조되지 않았는지 검사하고, 서버를 믿을 수 있다고 판단되면 서버와 노트북 사이에 절대 깨지지 않는 암호화된 방탄유리 터널(TLS Tunnel)을 쭈욱 연결한다. (해커의 Rogue AP 가짜 Wi-Fi 유도를 여기서 100% 컷트한다.)</li>
+</ul>
+</li>
+<li><strong>Phase 2 (안전한 터널 속 인증 / 클라이언트 인증)</strong>:
+<ul>
+<li>방탄 터널이 뚫렸으니 밖(공중 전파)에서 해커가 아무리 도청해도 데이터는 쓰레기값으로 보인다.</li>
+<li>이제 직원은 윈도우 창에 평소 사내망에서 쓰던 액티브 디렉토리(AD) <strong>아이디와 비밀번호</strong>를 편안하게 친다.</li>
+<li>이 비밀번호는 방탄 터널 내부의 안전한 튜브(주로 MS-CHAPv2 프로토콜)를 타고 서버까지 쭉 미끄러져 내려가 완벽한 로그인을 완성한다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 도청꾼(해커)이 바글거리는 길거리에서 비밀을 말해야 합니다. PEAP의 1단계는 하늘에서 강철로 된 두꺼운 파이프(TLS 터널) 하나를 내려서 길거리 한가운데 쾅! 하고 박는 작업입니다. 파이프가 외부와 완벽히 차단된 걸 확인하면, 2단계에서 직원은 그 파이프 안쪽 구멍에 대고 입을 댄 채 "내 비밀번호는 1234야!"라고 소리칩니다(Phase 2 인증). 밖의 도청꾼들은 파이프 두드리는 쇠 소리만 들릴 뿐, 안에서 무슨 비밀번호가 오갔는지 영원히 알 수 없는 2중 보호 구조입니다.</p>
+<hr />
+<h3 id="iii-gieobyong-wi-fiyi-sasilsang-pyojun-de-facto-standard">Ⅲ. 기업용 Wi-Fi의 사실상 표준 (De facto Standard)</h3>
+<p>싸고, 편하고, 윈도우에 깔려있다. 게임 끝.</p>
+<ol>
+<li><strong>뛰어난 호환성 (MS 윈도우 내장)</strong>:
+<ul>
+<li>기업 사무실 PC의 90%는 윈도우(Windows)를 쓴다.</li>
+<li>PEAP는 마이크로소프트가 만들었기 때문에, 윈도우 운영체제의 무선 랜 설정 창을 열어보면 아무것도 깔 필요 없이 <code>PEAP</code>와 짝꿍인 <code>MS-CHAPv2</code> 옵션이 기본으로 내장(Built-in)되어 있다. 관리자 입장에선 마우스 클릭 몇 번이면 1만 대의 PC 보안 세팅이 끝난다.</li>
+</ul>
+</li>
+<li><strong>EAP-TTLS와의 형제 관계</strong>:
+<ul>
+<li>PEAP와 거의 99% 똑같이 동작(서버만 인증서 사용, 2단계 터널)하는 쌍둥이 형제로 <code>EAP-TTLS</code>가 있다. PEAP가 MS와 시스코의 작품이라면, EAP-TTLS는 주니퍼(Juniper) 등 오픈 진영에서 만든 표준이다. (기능적 차이는 거의 없으며 둘 다 훌륭하다.)</li>
+</ul>
+</li>
+<li><strong>PEAP의 유일한 치명적 약점 (서버 인증서 무시)</strong>:
+<ul>
+<li>직원들이 가끔 무선 랜을 연결할 때 "이 서버의 인증서를 신뢰할 수 없습니다. 계속 연결하시겠습니까?"라는 팝업창이 뜬다.</li>
+<li>귀찮은 직원들이 경고문을 안 읽고 <strong>[예] 버튼을 눌러버리면(인증서 무시)</strong>, 아까 말한 1단계 방탄 터널이 해커의 가짜 Wi-Fi 서버와 뚫려버린다. 그러면 터널 안으로 던진 비밀번호가 고스란히 해커 서버의 DB로 들어가는 참사가 난다. 보안팀은 PC 설정에서 "서버 인증서 검증 무시 불가" 옵션을 레지스트리로 꽉 잠가버려야 한다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: PEAP는 기업의 구세주입니다. 1만 명의 직원 노트북에 특수 장비(인증서)를 달아주는 수억 원어치 공사를 안 해도, 공짜로 윈도우에 깔려있는 기능만으로 방탄 터널(TLS)을 쓸 수 있으니까요. 단 하나 조심할 점은, 멍청한 직원이 가짜 경호원(해커 서버)이 "나 본사 경호원 맞아"라고 들이민 조잡한 가짜 위조 신분증 경고창을 보고도 "어, 알았어 귀찮으니까 그냥 패스~" 해버리는 순간, 방탄 파이프가 해커의 차 트렁크와 연결되어 버리는 어이없는 실수를 막기 위해, PC의 클릭 버튼을 아예 보안팀에서 뽑아버려야(정책 강제화) 한다는 것입니다.</p>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

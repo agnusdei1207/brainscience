@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>357. OSPF (Open Shortest Path First) - 대표적 링크 상태 프로토콜 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: OSPF(Open Shortest Path First)는 전 세계 모든 대기업과 통신사의 사내망(IGP)을 사실상 100% 장악하고 있는 <strong>업계 표준(Open)의 제왕이자, 다익스트라(SPF) 알고리즘을 돌려 가장 빠르고 넓은 길(Cost)을 찾아내는 링크 상태(Link-State) 라우팅 프로토콜의 대명사</strong>다.</li>
+<li><strong>링크 상태의 똑똑함</strong>: RIP처럼 멍청하게 남의 소문(거리)만 듣고 지도를 그리지 않는다. OSPF 라우터들은 자기가 가진 선로(Link)의 상태 정보를 동네방네 퍼뜨려(LSA Flooding), 모든 라우터가 완벽하게 똑같은 **3D 입체 지형도(LSDB)**를 머릿속에 완성한 뒤 스스로 최적 경로를 깎아낸다.</li>
+<li><strong>대규모 망을 위한 Area 계층화</strong>: OSPF의 최대 단점은 수천 대의 라우터가 지도를 그리느라 CPU가 폭발한다는 것이다. 이를 막기 위해 OSPF는 전국 지도를 시/도 단위의 **'구역(Area)'**으로 쪼개어, 자기 동네 지도만 자세히 외우고 남의 동네 지도는 요약본만 보게 만드는 기막힌 계층 구조를 도입했다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong-context-necessity">Ⅰ. 개요 및 필요성 (Context &amp; Necessity)</h2>
+<ul>
+<li>
+<p><strong>개념</strong>: IP 데이터그램을 통해 라우터 간에 링크 상태 정보를 교환하고, SPF 알고리즘을 사용해 루프 없는 최단 경로 트리를 구성하는 동적 라우팅 프로토콜 (RFC 2328). IP 프로토콜 번호 89번을 사용한다.</p>
+</li>
+<li>
+<p><strong>필요성</strong>: 1980년대 후반, 인터넷이 폭발적으로 커지면서 RIP(최대 15대 라우터 제한)로는 거대해진 회사망을 도저히 커버할 수 없었다. 게다가 속도가 10Mbps든 1Gbps든 똑같이 1점(Hop)으로 치는 RIP의 멍청함 때문에 트래픽 병목이 심각했다. "라우터 대수 제한(Hop)을 없애고, 선로의 **'대역폭(속도)'**을 기준으로 가장 빵빵 뚫린 고속도로를 찾아내는, 특정 회사(Cisco)에 종속되지 않은 <strong>'개방형(Open)'</strong> 표준 프로토콜이 절실하다!"</p>
+</li>
+<li>
+<p><strong>💡 비유</strong>:</p>
+<ul>
+<li><strong>RIP</strong>: 동네 사람들이 모여 "내가 아는 맛집까지 세 걸음 걸림"이라고 <strong>입소문</strong>만 내는 방식입니다. (루머에 취약함).</li>
+<li><strong>OSPF</strong>: 동네 사람들이 각자 자기 집 앞 골목길의 사진(LSA)을 찍어 광장에 다 같이 쏟아붓고, 각자가 그 수천 장의 사진 조각을 조립해 **완벽한 위성 지도(LSDB)**를 완성한 뒤, 내비게이션 앱(SPF)을 켜서 내 집에서 맛집까지 가장 안 막히는 길을 스스로 찾아내는 방식입니다.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유:</strong> OSPF는 모든 시민이 참여하여 실시간 교통 정보(링크 상태)를 중앙 서버 없이 서로 100% 동기화해 나누는 **"오픈소스(Open) Waze 내비게이션"**입니다. 내 눈으로 도시 전체가 막히는지 뚫렸는지 직접 확인하고 운전대를 돌립니다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-ospfyi-haegsim-teugjinggwa-cost-meteurig-deep-dive">Ⅱ. OSPF의 핵심 특징과 Cost 메트릭 (Deep Dive)</h2>
+<h3 id="1-eobgye-pyojun-open-gwa-meoltikaeseuteuyi-hwalyong">1. 업계 표준(Open)과 멀티캐스트의 활용</h3>
+<ul>
+<li><strong>Open</strong>: 시스코 장비, 주니퍼 장비, HP 장비 등 제조사가 달라도 완벽하게 호환되어 대화를 나눌 수 있다. (반면 EIGRP는 시스코 장비끼리만 통한다).</li>
+<li><strong>멀티캐스트</strong>: RIPv1처럼 브로드캐스트(<code>255.255.255.255</code>)로 시끄럽게 떠들지 않는다. OSPF 라우터들만 듣는 조용한 단톡방인 **<code>224.0.0.5</code> (모든 OSPF 라우터)**와 <strong><code>224.0.0.6</code> (DR/BDR 전용)</strong> 멀티캐스트 주소를 사용하여 PC들의 CPU를 전혀 방해하지 않는다.</li>
+</ul>
+<h3 id="2-ospfyi-jasdae-cost-daeyeogpog-giban">2. OSPF의 잣대: Cost (대역폭 기반)</h3>
+<p>OSPF가 길의 1등과 2등을 가르는 점수(메트릭)는 **Cost(비용)**다.
+무조건 숫자가 낮을수록(싸야) 1등 길이다.</p>
+<p><strong>계산 공식</strong>: $\text{Cost} = \frac{10^8 (\text{기준 대역폭, 100Mbps})}{\text{해당 인터페이스의 대역폭(bps)}}$</p>
+<ul>
+<li><strong>10Mbps 이더넷</strong>: $100,000,000 / 10,000,000$ = <strong>Cost 10</strong></li>
+<li><strong>100Mbps 패스트이더넷</strong>: $100,000,000 / 100,000,000$ = <strong>Cost 1</strong></li>
+<li><strong>1Gbps 기가비트</strong>: 어? 공식대로면 $0.1$인데 소수점은 안 되므로 무조건 <strong>Cost 1</strong>이다.</li>
+<li><em>실무 팁</em>: 요즘은 1Gbps, 10Gbps 망이 흔한데 저 공식을 그대로 쓰면 전부 다 Cost 1로 동점이 되어 버린다(기가비트와 10기가비트를 구별 못 함). 그래서 실무에서는 기준 대역폭 $10^8$을 $10^{10}$ 등으로 강제로 높이는 명령어(<code>auto-cost reference-bandwidth</code>)를 반드시 박아 넣어야 최신 고속망을 제대로 라우팅한다.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text"> ┌─────────────────────────────────────────────────────────────┐
+ │                RIP (Hop) vs OSPF (Cost) 라우팅 판단 차이         │
+ ├─────────────────────────────────────────────────────────────┤
+ │                                                             │
+ │   [ 내 라우터 ] ──── (1.5Mbps T1 전용선) ───▶ [ 목적지 ]     │
+ │        │                                              ▲     │
+ │        └── (1Gbps 광랜) ──▶ [중간 라우터] ── (1Gbps) ──┘     │
+ │                                                             │
+ │   * RIP의 멍청함: &quot;윗길은 라우터 0대(1점), 아랫길은 라우터 1대(2점)네!&quot; │
+ │                 ──▶ 느려터진 윗길로 데이터 쏘다가 망함.          │
+ │                                                             │
+ │   * OSPF의 똑똑함: &quot;윗길 Cost=64, 아랫길 Cost=1+1=2 네!&quot;         │
+ │                 ──▶ 당연히 Cost가 싼 1Gbps 아랫길로 우회함.      │
+ └─────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="3-muhan-rupeuyi-wanbyeoghan-cadan">3. 무한 루프의 완벽한 차단</h3>
+<p>OSPF는 벨만-포드(거리 벡터)처럼 맹목적인 소문 덧셈을 하지 않고, 다익스트라(Dijkstra) 수학 공식을 써서 내 눈앞에 펼쳐진 전체 지형도(LSDB)에 직접 선을 긋기 때문에, 태생적으로 <strong>절대로 라우팅 루프(빙빙 도는 현상)에 빠지지 않는 구조적 완벽함</strong>을 자랑한다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유:</strong> OSPF의 Cost(비용) 개념은 고속도로의 **"통행 시간"**과 같습니다. 차가 꽉 막히는 시골길(1.5Mbps)은 통과하는 데 64분이 걸리고, 뻥 뚫린 8차선 고속도로(1Gbps)는 우회하더라도 2분밖에 안 걸리므로 당연히 후자를 선택하는 합리적인 내비게이션입니다.</p>
+</blockquote>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>111. 관측 가능성 (Observability) - Metrics·Logs·Traces 3대 신호와 SRE 실천 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 19, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote software engineering
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 관측 가능성(Observability)은 시스템의 <strong>외부 출력(Metrics·Logs·Traces)만으로 내부 상태를 추론</strong>할 수 있는 능력이며, 기존 모니터링(알려진 문제 감시)을 넘어 <strong>"몰랐던 문제(Unknown Unknowns)"까지 진단</strong>하는 패러다임이다.</li>
+<li><strong>가치</strong>: 3대 신호(Metrics=수치, Logs=이벤트, Traces=요청 경로)를 상호 연결(Correlation)하여, MSA 환경에서 <strong>장애의 근본 원인(Root Cause)을 수분 내 특정 서비스·함수·라인</strong>까지 추적한다.</li>
+<li><strong>판단 포인트</strong>: OpenTelemetry(OTel)가 CNCF 통합 표준으로 수렴하며, **벤더 종속 없는 계측(Instrumentation)**이 가능해졌다. SRE의 SLI/SLO 체계와 결합하여 장애 대응 자동화의 토대가 된다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>모놀리스 시대에는 서버 1대의 CPU·메모리만 보면 됐다. MSA에서는 100개 서비스가 그물망처럼 호출하므로, "어디가 느린지" 찾는 것 자체가 난제다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌───────────────────────────────────────────────────────┐
+│       Monitoring vs Observability                      │
+├───────────────────────────────────────────────────────┤
+│  [Monitoring]                [Observability]           │
+│   &quot;CPU 80% 넘으면 알림&quot;      &quot;왜 느린지 추론&quot;          │
+│   Known Unknowns 감시        Unknown Unknowns 진단    │
+│   대시보드 기반               탐색적 질의(Ad-hoc)      │
+│                                                       │
+│  3대 신호 (Three Pillars):                            │
+│   ┌─────────┐  ┌─────────┐  ┌─────────┐              │
+│   │ Metrics │  │  Logs   │  │ Traces  │              │
+│   │ (수치)  │  │(이벤트) │  │(경로)   │              │
+│   └────┬────┘  └────┬────┘  └────┬────┘              │
+│        └────────────┼────────────┘                    │
+│              Correlation (상관 연결)                   │
+└───────────────────────────────────────────────────────┘
+</code></pre>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 모니터링은 체온계(38도 넘으면 알림), 관측 가능성은 MRI(왜 열이 나는지 내부를 투시)다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="3dae-sinho-sangse">3대 신호 상세</h3>
+<table><thead><tr><th style="text-align: left">신호</th><th style="text-align: left">정의</th><th style="text-align: left">대표 도구</th><th style="text-align: left">질문</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Metrics</strong></td><td style="text-align: left">시계열 수치 (CPU, 레이턴시, 에러율)</td><td style="text-align: left">Prometheus, Datadog</td><td style="text-align: left">"얼마나 나쁜가?"</td></tr>
+<tr><td style="text-align: left"><strong>Logs</strong></td><td style="text-align: left">이벤트 텍스트 (에러 스택트레이스)</td><td style="text-align: left">Loki, ELK</td><td style="text-align: left">"무엇이 일어났는가?"</td></tr>
+<tr><td style="text-align: left"><strong>Traces</strong></td><td style="text-align: left">분산 요청 경로 (Span 트리)</td><td style="text-align: left">Jaeger, Tempo</td><td style="text-align: left">"어디서 병목인가?"</td></tr>
+</tbody></table>
+<h3 id="opentelemetry-otel">OpenTelemetry (OTel)</h3>
+<p>CNCF가 주도하는 <strong>벤더 중립 계측 표준</strong>. SDK 하나로 Metrics·Logs·Traces를 동시에 수집하고, 백엔드(Prometheus·Jaeger·Datadog)를 자유롭게 교체할 수 있다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: OTel은 USB-C 충전기다. 삼성이든 애플이든 같은 케이블(SDK)로 충전(계측)할 수 있다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<table><thead><tr><th style="text-align: left">비교</th><th style="text-align: left">Monitoring</th><th style="text-align: left">Observability</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>범위</strong></td><td style="text-align: left">알려진 문제 감시</td><td style="text-align: left">미지의 문제까지 진단</td></tr>
+<tr><td style="text-align: left"><strong>방식</strong></td><td style="text-align: left">사전 정의 대시보드</td><td style="text-align: left">탐색적 질의 (Ad-hoc)</td></tr>
+<tr><td style="text-align: left"><strong>MSA 대응</strong></td><td style="text-align: left">서비스별 개별 대시보드</td><td style="text-align: left">분산 트레이싱으로 전체 경로 추적</td></tr>
+<tr><td style="text-align: left"><strong>도구</strong></td><td style="text-align: left">Nagios, Zabbix</td><td style="text-align: left">Prometheus+Jaeger+Loki+OTel</td></tr>
+</tbody></table>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="gwanceug-ganeungseong-seongsugdo-cekeuriseuteu">관측 가능성 성숙도 체크리스트</h3>
+<ol>
+<li><strong>Level 1</strong>: 서비스별 Metrics 대시보드 (Grafana).</li>
+<li><strong>Level 2</strong>: 중앙 집중 Logs 수집 (ELK/Loki).</li>
+<li><strong>Level 3</strong>: 분산 Traces + Metrics 상관 연결.</li>
+<li><strong>Level 4</strong>: OTel 통합 + SLI/SLO 기반 자동 알림.</li>
+</ol>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li><strong>Logs만 수집하고 Traces 미도입</strong>: "에러가 났다"는 알지만 "어느 서비스에서 시작됐는지" 모름.</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<table><thead><tr><th style="text-align: left">지표</th><th style="text-align: left">모니터링만</th><th style="text-align: left">관측 가능성</th><th style="text-align: left">개선</th></tr></thead><tbody>
+<tr><td style="text-align: left">장애 원인 특정 시간</td><td style="text-align: left">수시간</td><td style="text-align: left"><strong>수분</strong></td><td style="text-align: left">90% 단축</td></tr>
+<tr><td style="text-align: left">Unknown Unknowns</td><td style="text-align: left">감지 불가</td><td style="text-align: left"><strong>탐색적 진단</strong></td><td style="text-align: left">신규 역량</td></tr>
+<tr><td style="text-align: left">벤더 종속</td><td style="text-align: left">높음 (전용 에이전트)</td><td style="text-align: left"><strong>OTel로 중립</strong></td><td style="text-align: left">자유도 확보</td></tr>
+</tbody></table>
+<p>Observability는 AI Ops와 결합하여 "이상 징후 자동 감지 → 근본 원인 자동 추론 → 자동 복구"의 자율 운영(Autonomous Operations) 시대를 여는 핵심 기반이다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Metrics</strong></td><td style="text-align: left">시계열 수치 데이터, Prometheus 수집</td></tr>
+<tr><td style="text-align: left"><strong>Logs</strong></td><td style="text-align: left">이벤트 텍스트, ELK/Loki 수집</td></tr>
+<tr><td style="text-align: left"><strong>Traces</strong></td><td style="text-align: left">분산 요청 경로, Jaeger/Tempo</td></tr>
+<tr><td style="text-align: left"><strong>OpenTelemetry</strong></td><td style="text-align: left">벤더 중립 계측 표준 (CNCF)</td></tr>
+<tr><td style="text-align: left"><strong>SLI/SLO (SRE)</strong></td><td style="text-align: left">관측 데이터를 기반으로 서비스 수준 관리</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[서버 모니터링 (Nagios, 2000s) — 단일 서버 CPU&#x2F;메모리 감시]
+    │
+    ▼
+[로그 중앙화 (ELK, 2010s) — 분산 로그 수집·검색]
+    │
+    ▼
+[분산 트레이싱 (Zipkin·Jaeger, 2015~) — MSA 요청 경로 추적]
+    │
+    ▼
+[OpenTelemetry 통합 (2019~) — Metrics·Logs·Traces 단일 SDK]
+    │
+    ▼
+[현재: AI Ops — 이상 탐지·근본 원인 자동 추론·자동 복구]
+</code></pre>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>**체온계(Monitoring)**는 "열이 났다!"만 알려주지만, **MRI(Observability)**는 "어디가 아픈지" 속까지 보여줘요.</li>
+<li>서버도 마찬가지로, 숫자(Metrics)·일기장(Logs)·발자국(Traces) 3가지를 모아야 "왜 느린지" 정확히 알 수 있어요.</li>
+<li>OpenTelemetry라는 마법 도구가 이 3가지를 한 번에 모아서, 의사 선생님(SRE)이 빨리 고칠 수 있게 도와준답니다!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

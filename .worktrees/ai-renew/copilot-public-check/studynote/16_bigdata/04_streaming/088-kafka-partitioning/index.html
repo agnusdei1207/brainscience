@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>13. Kafka 파티셔닝 전략 (Kafka Partitioning Strategy) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote bigdata
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<ul>
+<li><strong>본질</strong>: Apache Kafka (아파치 카프카)의 파티션(Partition)은 병렬 처리의 단위이자 순서 보장의 경계로, 파티셔닝 전략에 따라 "어느 파티션에 어떤 메시지가 들어가는지"가 결정되며 이는 소비자 그룹의 병렬성과 순서 보장에 직접 영향을 미친다.</li>
+<li><strong>가치</strong>: 키 기반(Key-Based) 파티셔닝은 같은 키의 메시지가 같은 파티션에 들어가 순서를 보장하고, 라운드로빈(Round-Robin)은 파티션 간 부하를 고르게 분산하며, 커스텀 파티셔너(Custom Partitioner)는 지역별·우선순위별 복잡한 라우팅을 가능하게 한다.</li>
+<li><strong>판단 포인트</strong>: 파티션 수 = 소비자 병렬 처리의 상한선이므로, 최대 예상 처리량을 초과 처리하는 파티션 수를 초기에 넉넉히 설계해야 한다. 파티션 수는 늘릴 수 있지만 줄일 수 없으며, 수를 늘리면 기존 키 기반 파티션 배정이 바뀌어 순서 보장이 깨질 수 있다.</li>
+</ul>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<h3 id="1-kafka-patisyeonyi-yeoghal">1. Kafka 파티션의 역할</h3>
+<p>파티션은 Kafka 토픽(Topic)을 나누는 물리적 단위다.</p>
+<ul>
+<li><strong>병렬 처리</strong>: 파티션 수 = 동시에 처리할 수 있는 최대 Consumer 수</li>
+<li><strong>순서 보장</strong>: 하나의 파티션 내에서는 메시지 순서 보장 (오프셋 순)</li>
+<li><strong>내구성</strong>: 파티션은 여러 브로커에 복제(Replication)되어 장애 내성 확보</li>
+</ul>
+<pre><code>토픽 &quot;orders&quot; (파티션 수 = 3):
+  파티션 0: [msg1] [msg4] [msg7] ...  → Consumer 1
+  파티션 1: [msg2] [msg5] [msg8] ...  → Consumer 2
+  파티션 2: [msg3] [msg6] [msg9] ...  → Consumer 3
+
+→ 3개 Consumer가 병렬 처리 가능
+→ 4번째 Consumer를 추가해도 파티션이 3개뿐이면 유휴 Consumer 발생
+</code></pre>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Kafka 파티션은 "슈퍼마켓 계산대"와 같다. 계산대(파티션) 수만큼 손님(소비자)이 병렬 처리 가능하다. 계산대가 3개인데 손님이 10명이면, 7명은 줄을 서야 한다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="1-se-gaji-patisyeoning-jeonryag">1. 세 가지 파티셔닝 전략</h3>
+<pre><code>[1. 키 기반 파티셔닝 (Key-Based)]
+Producer → hash(key) % 파티션수 = 파티션 인덱스
+
+key=&quot;user-001&quot; → hash(&quot;user-001&quot;) % 3 = 파티션 1
+key=&quot;user-001&quot; → 항상 파티션 1 → 순서 보장 ✓
+key=&quot;user-002&quot; → 파티션 0 → user-002 메시지 순서 보장 ✓
+
+[2. 라운드로빈 (Round-Robin, 키 없음)]
+msg1 → 파티션 0
+msg2 → 파티션 1
+msg3 → 파티션 2
+msg4 → 파티션 0 ...
+균등 분산 ✓, 순서 보장 ✗ (다른 파티션에 분산)
+
+[3. 커스텀 파티셔너 (Custom Partitioner)]
+if (msg.region == &quot;KR&quot;) → 파티션 0
+if (msg.region == &quot;US&quot;) → 파티션 1
+if (msg.priority == &quot;HIGH&quot;) → 파티션 2
+비즈니스 로직 기반 라우팅
+</code></pre>
+<h3 id="2-patisyeon-baejeong-mekeonijeum">2. 파티션 배정 메커니즘</h3>
+<table><thead><tr><th style="text-align: left">전략</th><th style="text-align: left">Java API</th><th style="text-align: left">키 유무</th><th style="text-align: left">균등 분산</th><th style="text-align: left">순서 보장</th></tr></thead><tbody>
+<tr><td style="text-align: left">키 기반</td><td style="text-align: left">기본 (키 지정 시)</td><td style="text-align: left">필요</td><td style="text-align: left">키 편중 가능</td><td style="text-align: left">동일 키 내 보장</td></tr>
+<tr><td style="text-align: left">라운드로빈</td><td style="text-align: left">기본 (키 null 시)</td><td style="text-align: left">불필요</td><td style="text-align: left">균등</td><td style="text-align: left">보장 안 됨</td></tr>
+<tr><td style="text-align: left">스티키 파티셔너</td><td style="text-align: left">기본 (Kafka 2.4+)</td><td style="text-align: left">불필요</td><td style="text-align: left">균등</td><td style="text-align: left">배치 내 보장</td></tr>
+<tr><td style="text-align: left">커스텀</td><td style="text-align: left"><code>Partitioner</code> 인터페이스 구현</td><td style="text-align: left">선택</td><td style="text-align: left">설계에 따라</td><td style="text-align: left">설계에 따라</td></tr>
+</tbody></table>
+<h3 id="3-patisyeon-su-seolgye">3. 파티션 수 설계</h3>
+<pre><code>파티션 수 설계 공식 (경험칙):
+  P = max(T_write &#x2F; T_single_partition, T_read &#x2F; T_single_consumer)
+
+  여기서:
+  T_write = 초당 프로듀서 처리량 (bytes&#x2F;s)
+  T_single_partition = 파티션 1개당 처리량 (~10MB&#x2F;s)
+  T_read = 초당 소비자 처리량 (bytes&#x2F;s)
+
+예시:
+  T_write = 1GB&#x2F;s, T_single = 10MB&#x2F;s
+  P = 1024MB &#x2F; 10MB = 102 → 파티션 128개 (2의 거듭제곱)
+</code></pre>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>파티션 수 설계는 "고속도로 차선 수 설계"와 같다. 차선이 적으면 정체, 차선이 너무 많으면 유지 비용 증가. 예상 최대 차량 수(처리량)를 기준으로 초기에 충분히 설계해야 한다.</p>
+</blockquote>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="1-keonsyumeo-geurub-ribaelreonsing-consumer-group-rebalancing">1. 컨슈머 그룹 리밸런싱(Consumer Group Rebalancing)</h3>
+<p>파티션 재배정이 발생하면 모든 Consumer가 일시 정지(STW: Stop-The-World)한다.</p>
+<pre><code>리밸런싱 발생 트리거:
+  - Consumer 그룹에 새 Consumer 합류
+  - Consumer 장애로 이탈
+  - 파티션 수 변경
+  - 파티션 재배정 타임아웃
+
+Incremental Cooperative Rebalancing (Kafka 2.4+):
+  - 전체 정지 없이 필요한 파티션만 재배정
+  - &quot;Cooperative&quot; 알고리즘으로 처리 중단 최소화
+</code></pre>
+<h3 id="2-seutiki-patisyeoneo-sticky-partitioner-kafka-2-4">2. 스티키 파티셔너 (Sticky Partitioner, Kafka 2.4+)</h3>
+<p>키 없는 메시지를 배치(Batch) 단위로 같은 파티션에 몰아서 처리 → I/O 효율 향상.</p>
+<pre><code>기존 라운드로빈: msg1→P0, msg2→P1, msg3→P2, msg4→P0 (배치 효율 낮음)
+스티키:         [msg1,msg2,msg3]→P0(배치 완성 후), [msg4,msg5]→P1
+→ 배치 크기 증가 → 처리량 향상
+</code></pre>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>리밸런싱은 "팀 재구성 시 전원 대기"와 같다. 새 팀원이 합류할 때마다 전 직원이 업무를 멈추고 역할 재분배를 해야 한다. Cooperative Rebalancing은 "바뀌는 역할만 이동하고 나머지는 계속 일하는 방식"이다.</p>
+</blockquote>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="1-patisyeoning-jeonryag-seontaeg-gaideu">1. 파티셔닝 전략 선택 가이드</h3>
+<table><thead><tr><th style="text-align: left">요구사항</th><th style="text-align: left">권장 전략</th></tr></thead><tbody>
+<tr><td style="text-align: left">주문별 처리 순서 보장</td><td style="text-align: left">키 기반 (order_id)</td></tr>
+<tr><td style="text-align: left">사용자별 이벤트 순서 보장</td><td style="text-align: left">키 기반 (user_id)</td></tr>
+<tr><td style="text-align: left">단순 처리량 극대화</td><td style="text-align: left">라운드로빈 (키 null)</td></tr>
+<tr><td style="text-align: left">지역/우선순위별 라우팅</td><td style="text-align: left">커스텀 파티셔너</td></tr>
+<tr><td style="text-align: left">키 스큐(Hot Partition) 해결</td><td style="text-align: left">복합 키 또는 솔팅</td></tr>
+</tbody></table>
+<h3 id="2-has-patisyeon-hot-partition-munje-haegyeol">2. 핫 파티션(Hot Partition) 문제 해결</h3>
+<p>특정 키에 메시지가 집중되면 해당 파티션이 병목이 된다.</p>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python"># 솔팅으로 핫 파티션 방지
+salt = random.randint(0, 9)
+composite_key = f&quot;user_001_{salt}&quot;   # 10개 파티션에 분산
+# → 나중에 집계 시 user_001_* 패턴으로 합산
+</code></pre>
+<h3 id="3-cekeuriseuteu">3. 체크리스트</h3>
+<ul>
+<li><input disabled="" type="checkbox"/>
+최대 처리량 기반 파티션 수 초기 설계 (부족하면 나중에 늘려야 함)</li>
+<li><input disabled="" type="checkbox"/>
+파티션 수 변경 시 키 기반 라우팅 재검토</li>
+<li><input disabled="" type="checkbox"/>
+<code>group.instance.id</code> 설정으로 Incremental Cooperative Rebalancing 활성화</li>
+<li><input disabled="" type="checkbox"/>
+핫 파티션 모니터링: 파티션별 오프셋 격차 확인</li>
+<li><input disabled="" type="checkbox"/>
+Retention 정책: 보관 기간 × 처리량 = 스토리지 계획</li>
+</ul>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>파티셔닝 전략 설계는 "물류 센터 창고 구획 설계"와 같다. 상품 종류별(키 기반)로 구역을 나눠 순서를 관리하거나, 용량 균등(라운드로빈)으로 배치하거나, 중요 상품 우선(커스텀)으로 전용 구역을 만들 수 있다.</p>
+</blockquote>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="1-gidaehyogwa">1. 기대효과</h3>
+<table><thead><tr><th style="text-align: left">효과</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">병렬 처리 확장</td><td style="text-align: left">파티션 수만큼 소비자 병렬화 가능</td></tr>
+<tr><td style="text-align: left">순서 보장</td><td style="text-align: left">키 기반으로 도메인 내 이벤트 순서 보장</td></tr>
+<tr><td style="text-align: left">처리량 선형 확장</td><td style="text-align: left">파티션 추가 = 처리량 비례 증가</td></tr>
+</tbody></table>
+<h3 id="2-gyeolron">2. 결론</h3>
+<p>Kafka 파티셔닝 전략은 <strong>처리량, 순서 보장, 부하 균등의 세 축을 균형 있게 설계</strong>하는 핵심 의사결정이다. 기술사 답안에서는 세 가지 전략의 차이, 파티션 수 설계 기준, 리밸런싱의 영향, 그리고 핫 파티션 방지 방법을 함께 서술하면 완성도 높은 답안이 된다.</p>
+<p><strong>📢 섹션 요약 비유</strong></p>
+<blockquote>
+<p>Kafka 파티셔닝은 "우체국 편지 분류 시스템"이다. 지역별 분류(키 기반)는 순서를 지키고, 무작위 분류(라운드로빈)는 처리량을 극대화하며, VIP 우선 처리(커스텀)는 비즈니스 규칙을 반영한다.</p>
+</blockquote>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">관계</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: left">Consumer Group</td><td style="text-align: left">파티션의 소비 단위</td><td style="text-align: left">파티션 수 = 최대 병렬 Consumer 수</td></tr>
+<tr><td style="text-align: left">리밸런싱</td><td style="text-align: left">파티션 재배정</td><td style="text-align: left">Consumer 변동 시 발생하는 재할당</td></tr>
+<tr><td style="text-align: left">Consumer Lag</td><td style="text-align: left">모니터링 지표</td><td style="text-align: left">파티션별 처리 지연 측정</td></tr>
+<tr><td style="text-align: left">Kafka Streams</td><td style="text-align: left">스트리밍 응용</td><td style="text-align: left">파티셔닝 전략이 상태 파티션에 영향</td></tr>
+<tr><td style="text-align: left">MirrorMaker 2</td><td style="text-align: left">복제 도구</td><td style="text-align: left">클러스터 간 파티션 토폴로지 복제</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[카프카 토픽 (Kafka Topic) — 메시지를 논리적으로 분류하는 단위]
+    │
+    ▼
+[파티션 (Partition) — 토픽을 병렬 처리 단위로 분할, 순서 보장은 파티션 내 한정]
+    │
+    ▼
+[파티션 키 (Partition Key) — 동일 키는 동일 파티션, 연관 메시지 순서 보장]
+    │
+    ▼
+[파티션 복제 (Replication) — 리더·팔로워 복제본으로 내결함성 확보]
+    │
+    ▼
+[파티션 재조정 (Rebalancing) — 컨슈머 그룹 변경 시 파티션 재분배]
+</code></pre>
+<p>이 흐름은 카프카 토픽이 병렬 처리를 위해 파티션으로 분할되고, 파티션 키로 순서가 보장되며, 복제와 재조정을 통해 고가용성 스트리밍 아키텍처가 완성되는 과정을 보여준다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<p>Kafka 파티션은 마트 계산대예요. 고객들을 어느 계산대로 보내느냐가 파티셔닝 전략이에요. "이름 순서로 줄 세우기(키 기반)"는 같은 이름 고객이 항상 같은 줄에 서서 순서가 지켜지고, "그냥 빈 줄로 보내기(라운드로빈)"는 모든 계산대가 바쁘게 돌아가요. 계산대 수(파티션 수)를 처음부터 충분히 만들어야 나중에 손님이 늘어도 줄이 막히지 않아요!</p>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

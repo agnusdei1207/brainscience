@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>186. 데이터 컴프레션 전략 (Data Compression Strategy) — Snappy&#x2F;Zstd&#x2F;Gzip — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote bigdata
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<ul>
+<li>압축 알고리즘 선택은 압축률(Compression Ratio)과 속도(Throughput)의 트레이드오프이며, 빅데이터 환경에서 I/O 비용이 CPU 비용보다 클 때 높은 압축률이 전체 성능을 향상시킨다.</li>
+<li>Snappy는 속도 우선(Hadoop 기본), Gzip은 압축률 우선(HTTP), LZ4는 초고속 실시간 스트리밍, Zstd는 속도와 압축률을 모두 잡는 현재 최선의 범용 선택이다.</li>
+<li>컬럼형 포맷(Parquet/ORC)에서 RLE (Run-Length Encoding)과 딕셔너리 인코딩이 데이터 특성 기반 고압축을 실현하며, 이는 일반 압축 코덱보다 훨씬 효율적이다.</li>
+</ul>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<h3 id="1-1-abcugi-bigdeiteoeseo-jungyohan-iyu">1-1. 압축이 빅데이터에서 중요한 이유</h3>
+<ul>
+<li><strong>스토리지 비용</strong>: S3/HDFS 저장 비용 직접 절감</li>
+<li><strong>I/O 처리량</strong>: 디스크 읽기·네트워크 전송 데이터 감소 → 쿼리 속도 향상</li>
+<li><strong>CPU vs I/O 균형</strong>: I/O 병목 환경에서 압축 CPU 비용 &lt; I/O 절감 효과</li>
+</ul>
+<h3 id="1-2-abcug-algorijeum-seontaeg-gijun">1-2. 압축 알고리즘 선택 기준</h3>
+<table><thead><tr><th style="text-align: left">기준</th><th style="text-align: left">우선 고려 알고리즘</th></tr></thead><tbody>
+<tr><td style="text-align: left">최고 속도 (실시간 스트리밍)</td><td style="text-align: left">LZ4</td></tr>
+<tr><td style="text-align: left">최고 압축률 (아카이빙)</td><td style="text-align: left">Gzip level 9, Brotli, LZMA</td></tr>
+<tr><td style="text-align: left">속도 + 압축률 균형 (범용)</td><td style="text-align: left">Zstd</td></tr>
+<tr><td style="text-align: left">Hadoop 전통 환경</td><td style="text-align: left">Snappy</td></tr>
+<tr><td style="text-align: left">HTTP 웹 압축</td><td style="text-align: left">Gzip, Brotli</td></tr>
+</tbody></table>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 압축 알고리즘 선택은 짐을 꾸릴 때의 전략과 같다. 빠른 출발(실시간)이 중요하면 대충 넣고, 장기 보관(아카이빙)이라면 꼼꼼히 압축한다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="2-1-abcug-algorijeum-seongneung-bigyo">2-1. 압축 알고리즘 성능 비교</h3>
+<pre><code>압축률      ┤                                    Brotli
+            │                                 ●
+높음        │                           Gzip ●
+            │                       Zstd ●
+            │               Snappy ●
+낮음        │       LZ4 ●
+            └────────────────────────────────────────▶
+                  빠름                           느림
+                         압축&#x2F;해제 속도
+</code></pre>
+<h3 id="2-2-juyo-algorijeum-sangse">2-2. 주요 알고리즘 상세</h3>
+<table><thead><tr><th style="text-align: left">알고리즘</th><th style="text-align: left">압축 속도</th><th style="text-align: left">해제 속도</th><th style="text-align: left">압축률</th><th style="text-align: left">특징</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>LZ4</strong></td><td style="text-align: left">500 MB/s</td><td style="text-align: left">1700 MB/s</td><td style="text-align: left">낮음</td><td style="text-align: left">초고속, 실시간 스트리밍</td></tr>
+<tr><td style="text-align: left"><strong>Snappy</strong></td><td style="text-align: left">250 MB/s</td><td style="text-align: left">500 MB/s</td><td style="text-align: left">중간</td><td style="text-align: left">Hadoop 기본, 속도 중시</td></tr>
+<tr><td style="text-align: left"><strong>Zstd</strong></td><td style="text-align: left">400 MB/s</td><td style="text-align: left">1600 MB/s</td><td style="text-align: left">높음</td><td style="text-align: left">속도+압축률 균형, 레벨 조절</td></tr>
+<tr><td style="text-align: left"><strong>Gzip</strong></td><td style="text-align: left">30 MB/s</td><td style="text-align: left">200 MB/s</td><td style="text-align: left">높음</td><td style="text-align: left">HTTP 표준, CPU 부하 큼</td></tr>
+<tr><td style="text-align: left"><strong>Brotli</strong></td><td style="text-align: left">5 MB/s</td><td style="text-align: left">300 MB/s</td><td style="text-align: left">매우 높음</td><td style="text-align: left">정적 웹 콘텐츠 아카이빙</td></tr>
+</tbody></table>
+<h3 id="2-3-keolreomhyeong-inkoding-columnar-encoding">2-3. 컬럼형 인코딩 (Columnar Encoding)</h3>
+<p>Parquet/ORC에서 사용하는 데이터 특성 기반 인코딩:</p>
+<table><thead><tr><th style="text-align: left">인코딩</th><th style="text-align: left">원리</th><th style="text-align: left">최적 데이터 특성</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Dictionary Encoding</strong></td><td style="text-align: left">반복 값을 정수 인덱스로 치환</td><td style="text-align: left">저카디널리티 (국가, 카테고리)</td></tr>
+<tr><td style="text-align: left"><strong>RLE (Run-Length Encoding)</strong></td><td style="text-align: left">연속 반복 값을 (값, 횟수) 쌍으로</td><td style="text-align: left">정렬된 컬럼, 연속 동일 값</td></tr>
+<tr><td style="text-align: left"><strong>Delta Encoding</strong></td><td style="text-align: left">연속 값의 차이를 저장</td><td style="text-align: left">단조 증가 (타임스탬프, ID)</td></tr>
+<tr><td style="text-align: left"><strong>Bit Packing</strong></td><td style="text-align: left">작은 정수를 최소 비트로 저장</td><td style="text-align: left">작은 숫자 범위</td></tr>
+</tbody></table>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: Dictionary Encoding은 반복되는 단어를 번호로 대체하는 속기술처럼, "대한민국"이 1000번 나오면 숫자 1로 저장해 공간을 절약한다.</p>
+</blockquote>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="parqueteseoyi-abcug-hyogwa">Parquet에서의 압축 효과</h3>
+<table><thead><tr><th style="text-align: left">원본 (CSV)</th><th style="text-align: left">Parquet (Snappy)</th><th style="text-align: left">Parquet (Zstd)</th><th style="text-align: left">Parquet (Gzip)</th></tr></thead><tbody>
+<tr><td style="text-align: left">100 GB</td><td style="text-align: left">~15 GB (85% 절감)</td><td style="text-align: left">~10 GB (90% 절감)</td><td style="text-align: left">~8 GB (92% 절감)</td></tr>
+<tr><td style="text-align: left">스캔 속도</td><td style="text-align: left">빠름</td><td style="text-align: left">빠름</td><td style="text-align: left">느림</td></tr>
+</tbody></table>
+<p>컬럼형 포맷 자체의 압축 효과 + 추가 코덱 압축의 시너지</p>
+<h3 id="seuteuriming-vs-baeci-abcug-seontaeg">스트리밍 vs 배치 압축 선택</h3>
+<ul>
+<li><strong>Kafka 메시지</strong>: LZ4 (Producer 압축, Broker 저장, Consumer 해제)</li>
+<li><strong>Spark 배치 처리</strong>: Snappy 또는 Zstd (중간 파일)</li>
+<li><strong>S3 아카이빙</strong>: Gzip 또는 Zstd (장기 보관)</li>
+<li><strong>데이터 이관</strong>: Zstd (속도+압축률 균형)</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 스트리밍에 LZ4를 쓰는 건 빠르게 서류를 파일에 꽂는 것이고, 아카이빙에 Gzip을 쓰는 건 진공포장기로 꼼꼼히 압축해 보관하는 것이다.</p>
+</blockquote>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="4-1-zstd-caetaeg-gaideu">4-1. Zstd 채택 가이드</h3>
+<pre><code>Zstd 레벨 1~22:
+Level 1: LZ4와 유사한 속도, Snappy보다 나은 압축률 (일반 스트리밍)
+Level 3: 기본값, 속도·압축률 균형 (범용 빅데이터)
+Level 10-19: Gzip과 유사한 압축률, 더 빠른 해제 (아카이빙)
+Level 20-22: 최고 압축률 (Cold Storage)
+</code></pre>
+<h3 id="4-2-splittability-bunhal-ganeungseong">4-2. Splittability (분할 가능성)</h3>
+<p>Hadoop/Spark에서 대용량 압축 파일이 여러 태스크로 병렬 처리되려면 분할 가능해야 한다.</p>
+<table><thead><tr><th style="text-align: left">알고리즘</th><th style="text-align: center">Splittable</th></tr></thead><tbody>
+<tr><td style="text-align: left">Snappy (raw)</td><td style="text-align: center">❌</td></tr>
+<tr><td style="text-align: left">Gzip</td><td style="text-align: center">❌</td></tr>
+<tr><td style="text-align: left"><strong>Snappy (within Parquet/ORC)</strong></td><td style="text-align: center">✅ (파일 포맷 레벨에서 분할)</td></tr>
+<tr><td style="text-align: left">bzip2</td><td style="text-align: center">✅</td></tr>
+<tr><td style="text-align: left">LZO + Index</td><td style="text-align: center">✅</td></tr>
+</tbody></table>
+<p>컬럼형 포맷(Parquet/ORC)을 사용하면 비분할 코덱(Snappy, Gzip)도 Row Group 단위로 병렬 처리 가능.</p>
+<h3 id="4-3-gisulsa-siheom-pointeu">4-3. 기술사 시험 포인트</h3>
+<ul>
+<li>압축 선택 근거: I/O 병목 환경 → 높은 압축률 우선, CPU 병목 → 빠른 코덱 우선</li>
+<li>Parquet + Zstd: 현재 빅데이터 표준 권장 조합</li>
+<li>Snappy가 여전히 사용되는 이유: Hadoop 레거시 환경, LZO 대안</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: Splittability는 긴 서류를 여러 사람이 동시에 읽을 수 있도록 챕터별로 분리된 것처럼, 압축 파일을 여러 서버가 동시에 처리할 수 있는 분할 능력이다.</p>
+</blockquote>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<table><thead><tr><th style="text-align: left">효과</th><th style="text-align: left">내용</th></tr></thead><tbody>
+<tr><td style="text-align: left">스토리지 비용</td><td style="text-align: left">Parquet + Zstd로 CSV 대비 85~92% 절감</td></tr>
+<tr><td style="text-align: left">쿼리 성능</td><td style="text-align: left">스캔 데이터 감소로 Athena/BigQuery 쿼리 속도 2~5배 향상</td></tr>
+<tr><td style="text-align: left">네트워크 비용</td><td style="text-align: left">이그레스 데이터 압축으로 클라우드 전송 비용 절감</td></tr>
+</tbody></table>
+<p>압축 전략은 비용·성능의 양면에서 큰 효과를 내는 고효율 최적화다. 기술사 관점에서 데이터 파이프라인 설계 시 파일 포맷과 압축 코덱을 함께 명시하고, 워크로드 유형별 최적 조합을 권장해야 한다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 올바른 압축 전략은 물건을 테트리스처럼 빈틈없이 쌓아 이사 트럭 횟수를 줄이는 것처럼, 같은 양의 데이터를 적은 비용으로 저장하고 전송한다.</p>
+</blockquote>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">관련 기술</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">RLE</td><td style="text-align: left">Parquet, ORC</td><td style="text-align: left">컬럼형 인코딩</td></tr>
+<tr><td style="text-align: left">Dictionary Encoding</td><td style="text-align: left">저카디널리티 데이터</td><td style="text-align: left">반복값 압축</td></tr>
+<tr><td style="text-align: left">Splittability</td><td style="text-align: left">Hadoop, Spark</td><td style="text-align: left">병렬 처리 가능성</td></tr>
+<tr><td style="text-align: left">I/O vs CPU 병목</td><td style="text-align: left">하드웨어 최적화</td><td style="text-align: left">코덱 선택 기준</td></tr>
+<tr><td style="text-align: left">Zstd Level</td><td style="text-align: left">압축 튜닝</td><td style="text-align: left">워크로드별 최적화</td></tr>
+</tbody></table>
+<hr />
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[무손실 압축 (Lossless Compression) — Huffman&#x2F;LZ77]
+    │
+    ▼
+[컬럼형 압축 (Columnar Compression) — Parquet&#x2F;ORC]
+    │
+    ▼
+[사전 인코딩 (Dictionary Encoding) — 반복값 치환]
+    │
+    ▼
+[런 길이 인코딩 (RLE, Run-Length Encoding) — 연속값 압축]
+    │
+    ▼
+[스노우플레이크 자동 압축 (Snowflake Auto-Compression) — 클라우드 최적화]
+</code></pre>
+<p>이 흐름은 손실 없이 데이터를 줄이는 기본 압축에서 시작해, 컬럼형·사전·RLE 기법을 거쳐 클라우드 자동 압축으로 발전하는 과정을 보여준다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>데이터 압축은 여행 가방 짐을 압축 봉투에 넣어 작게 만드는 것처럼, 같은 데이터를 더 작게 저장해서 공간을 아껴요.</li>
+<li>빨리 꺼내야 하면 LZ4처럼 느슨하게 넣고, 오래 보관할 거면 Gzip처럼 꼭꼭 눌러 넣어요.</li>
+<li>Parquet 파일은 같은 종류의 물건끼리 모아 넣어서 압축이 훨씬 잘 되는 특수한 가방이에요.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

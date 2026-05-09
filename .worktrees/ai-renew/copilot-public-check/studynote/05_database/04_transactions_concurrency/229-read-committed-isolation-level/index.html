@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>229. Read Committed (레벨 1) - 커밋된 데이터만 읽음 (Oracle 기본, Non-Repeatable Read 발생) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="229-read-committed-rebel-1-goribhwa-sujun-1dangye-oson-ilggi-bangji-deoti-rideu-cadan-orakeul-gibon-teuraenjaegsyeon-dongsiseong-mosunseong-balsaeng">229. Read Committed (레벨 1) - 고립화 수준 1단계 오손 읽기 방지 더티 리드 차단 오라클 기본 트랜잭션 동시성 모순성 발생</h1>
+<blockquote>
+<p><strong>핵심 인사이트</strong>: (228번 레벨 0의 끔찍한 배탈을 막은 구원자) 228번에서 손님들이 주방에 난입해 덜 익은 피투성이 고기(Uncommitted 찌끄러기 데이터)를 주워 먹고(Dirty Read) 단체로 식중독에 걸렸다. 식당 사장이 빡쳐서 몽둥이를 들었다. "야 ㅆㅂ!! 손님들한테 피 뚝뚝 떨어지는 쓰레기 고기 좀 주지 마!! 당장 주방 문에 '출입 통제선'을 하나 깔아라!! 앞으로 주방장(Write 트랜잭션)이 고기 굽는 수술을 끝내고 프라이팬에 완벽하게 플레이팅을 다 마친 뒤에 <strong>'요리 완성!(COMMIT 도장)'</strong> 종을 땡! 하고 치기 전까지는, 밖에 있는 그 어떤 손님(Read 트랜잭션) 놈들도 절대 그 고기에 포크를 댈 수 없게 철통 방어해!! 하지만 요리 완성(COMMIT) 도장만 딱 찍히면, 그 순간부터는 10만 명이 들어와서 고기를 다 같이 구경(Read)해도 합격이다!!" 쓰레기 가짜 데이터를 멸종시키며 오라클(Oracle)의 절대 심장이 된 가장 가성비 좋은 국민 방패, 레벨 1이다.</p>
+</blockquote>
+<h2 id="i-oson-ilggi-dirty-read-yi-wanjeonhan-ceoggyeol">Ⅰ. 오손 읽기(Dirty Read)의 완전한 척결</h2>
+<ul>
+<li><strong>Level 1 (Read Committed)</strong>: 이름 그대로 **"네가 확실하게 100% 확정(COMMIT) 도장을 찍어 영구 보존시킨 그 '안전한 진짜 데이터(Committed)'만 나는 믿고 읽겠다(Read)!"**는 룰입니다.</li>
+<li><strong>방어 메커니즘</strong>:
+<ul>
+<li><code>T1</code>이 10만 원을 5만 원으로 고칩니다. 하지만 아직 <code>COMMIT</code>을 치지 않았습니다 (피투성이 미확정 상태).</li>
+<li>이때 <code>T2</code>가 5만 원을 읽으러 달려옵니다. DB 엔진은 <code>T2</code>의 뺨을 때려 막습니다. "어딜 쓰레기를 처먹어! 멈춰!" (또는 224번 MVCC 흑마법을 써서, <code>T1</code>이 고치기 전의 과거 확정 사진인 '10만 원'을 던져주어 5만 원을 훔쳐보지 못하게 원천 차단합니다.)</li>
+<li><code>T1</code>이 드디어 <code>COMMIT</code>! 도장을 찍으면, 그제야 5만 원이 '진짜'로 승격되어 <code>T2</code>가 읽어갈 수 있습니다.</li>
+</ul>
+</li>
+<li><strong>대승리</strong>: 205번의 그 끔찍했던 **오손 읽기(Dirty Read)**와 206번 <strong>연쇄 복귀(Cascading Rollback)</strong> 현상이 우주에서 영원히 소멸합니다.</li>
+</ul>
+<h2 id="ii-geureona-ddulhryeoissneun-binteum-mosunseong-non-repeatable-read-haegsim-gicul">Ⅱ. 그러나 뚫려있는 빈틈: 모순성(Non-Repeatable Read) 🌟 핵심 기출 🌟</h2>
+<ul>
+<li>더러운 가짜 데이터를 먹는 병은 고쳤지만, 아직 방어막이 두껍지는 못합니다. (204번 복습)</li>
+<li><strong>모순성 시나리오 (에어팟 결제)</strong>:
+<ol>
+<li>내가 에어팟 가격을 읽었더니 확정된(Committed) 가격인 **'20만 원'**이 정상적으로 잘 읽혔습니다. (오케이!)</li>
+<li>내가 결제 비번을 누르는 5초의 틈바구니!</li>
+<li>애플 관리자가 불쑥 들어와 에어팟 가격을 **'25만 원'**으로 올리고 재빨리 <strong><code>COMMIT(확정)</code> 도장까지 완벽하게 찍어버리고</strong> 나갑니다.</li>
+<li>나는 결제 버튼 누르기 전 한 번 더 가격을 읽어봅니다.</li>
+<li>헉?! 가격이 **'25만 원'**으로 올랐습니다!!</li>
+</ol>
+</li>
+<li><strong>결론</strong>: 관리자가 25만 원을 확실히 다 익혀서 'COMMIT'까지 한 **'진짜(Committed) 데이터'**이기 때문에, 레벨 1의 룰("커밋된 건 읽어도 돼!")에 의해서 당당하게 프리패스 통과해버린 겁니다!</li>
+<li>결국 내가 하나의 방(트랜잭션) 안에서 두 번 읽었는데 앞뒤 값이 달라져서 멘탈이 박살 나는 <strong>모순성(반복할 수 없는 읽기, Non-Repeatable Read)</strong> 에러는 이 레벨 1 방패로는 막아낼 수가 없습니다(뚫림). + 207번 **유령 읽기(Phantom Read)**도 당연히 못 막고 뚫립니다.</li>
+</ul>
+<h2 id="iii-segyegugeub-1tieo-wae-orakeul-oracle-yi-gibongabsinga">Ⅲ. 세계구급 1티어, 왜 오라클(Oracle)의 기본값인가? 🌟</h2>
+<ul>
+<li>모순성이 뚫리는데 왜 전 세계 90%의 기업이 쓰는 비싼 오라클 DB는 이 Level 1을 디폴트(기본) 설정으로 깔아놓고 쓸까요?</li>
+<li><strong>트레이드오프의 황금비율 (가성비)</strong>:
+<ul>
+<li>레벨 0은 더티 리드가 터져서 은행 계좌가 썩어 문드러져 도저히 못 씁니다.</li>
+<li>다음 장의 레벨 2, 레벨 3처럼 자물쇠를 빡세게 걸어서 모순성과 유령을 완벽하게 막아버리면? 10만 명의 손님이 기다리다 서버가 뻗어서 회사가 망합니다.</li>
+<li>결국 <strong>"가짜 쓰레기 데이터(더티 리드)만 완벽하게 걸러내서 치명상은 피하고, 10만 명의 속도(동시성)를 빵빵하게 뚫어주는"</strong> 레벨 1이 대규모 쇼핑몰이나 기업 시스템을 돌리는 가장 완벽한 현실의 가성비 타협점이기 때문입니다.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: **Read Committed (레벨 1)**은 호텔 주방의 **'요리 완성의 종(땡!) 치기 전 절대 서빙 금지법'**입니다. 228번 레벨 0에선 서빙 알바가 피투성이 덜 익은 고기(Dirty Data)를 막 들고 손님(Read)한테 먹여서 식중독(에러)이 터졌습니다. 그래서 주방장(DB 엔진)이 룰을 세웠습니다. <strong>"주방장이 프라이팬에서 요리를 완벽하게 다 끝내고, 접시에 담은 뒤 '완성!(COMMIT)' 종을 땡! 치기 전까지는, 홀서빙 놈들아 절대 접시에 손대지 말고 뒤로 물러서서 대기해!!"</strong> 이 완벽한 통제 덕분에, 손님들은 무조건 100% 푹 익은 안전한 요리(Committed Data)만 먹게 되어 식중독(오손 읽기, Dirty Read) 대참사가 완전히 사라졌습니다(오라클의 기본값). 하지만 이 룰은 완벽하지 않습니다. 손님이 내일 또 와서 똑같은 '돈가스'를 시켰는데, 주방장이 그사이 요리법을 완전히 바꿔(새로 UPDATE 후 COMMIT 땡!), 어제랑 전혀 다른 끔찍한 맛의 완벽한 퓨전 돈가스를 내옵니다. 손님은 "어? 어제랑 맛이 완전 다르고 모순되잖아!(Non-Repeatable Read 모순성 터짐)" 하고 당황합니다. 주방장은 "어찌 됐든 100% 다 익혀서 종 쳤잖아!(룰 지킴)"라고 당당하게 나옵니다. 식중독(가짜 데이터)은 피했지만 맛의 변덕(모순성)은 허락해 버리며 식당의 회전율(성능)을 극대화한 가성비의 방패막이입니다.</p>
+</blockquote>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

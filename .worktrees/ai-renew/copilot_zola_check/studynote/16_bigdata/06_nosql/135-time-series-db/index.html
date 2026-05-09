@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>135. 시계열 데이터베이스 (Time Series DB) — InfluxDB&#x2F;TimescaleDB&#x2F;QuestDB — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote bigdata
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<ul>
+<li><strong>본질</strong>: 시계열 DB(TSDB, Time Series Database)는 타임스탬프를 기본 인덱스로 설계하여 시간 순 추가(Append) 전용 워크로드에서 범용 DB 대비 10~100배 높은 압축률과 쓰기 처리량을 달성한다.</li>
+<li><strong>가치</strong>: 자동 데이터 보존 정책(Retention Policy)과 다운샘플링(Downsampling)으로 수개월치 원시 데이터를 집계 데이터로 압축하여 무한정 증가하는 IoT·모니터링 데이터를 비용 효율적으로 관리한다.</li>
+<li><strong>판단 포인트</strong>: SQL 친숙도가 높으면 TimescaleDB, 성능·비용 최우선이면 InfluxDB, 초고속 삽입(수백만 rows/sec)이 필요하면 QuestDB를 선택하는 것이 실무 기준이다.</li>
+</ul>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<h3 id="sigyeyeol-deiteoyi-teugseong">시계열 데이터의 특성</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────┐
+│              시계열 데이터의 4가지 특성                     │
+│                                                          │
+│  1. 시간 순서 (Time-Ordered)                              │
+│     타임스탬프가 기본 식별자이자 정렬 기준                    │
+│                                                          │
+│  2. 추가 전용 (Append-Only)                               │
+│     과거 데이터 수정 거의 없음 → 쓰기 최적화                 │
+│                                                          │
+│  3. 고빈도 쓰기 (High Write Throughput)                   │
+│     초당 수천~수백만 개의 센서 포인트 동시 유입               │
+│                                                          │
+│  4. 시간 기반 쿼리 (Time-Range Query)                     │
+│     &quot;지난 1시간 평균 CPU&quot;, &quot;어제 최대 온도&quot; 등              │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="beomyong-db-vs-sigyeyeol-db-bigyo">범용 DB vs 시계열 DB 비교</h3>
+<table><thead><tr><th style="text-align: center">항목</th><th style="text-align: center">RDBMS/MongoDB</th><th style="text-align: center">시계열 DB</th></tr></thead><tbody>
+<tr><td style="text-align: center">기본 인덱스</td><td style="text-align: center">PK (임의 키)</td><td style="text-align: center">타임스탬프</td></tr>
+<tr><td style="text-align: center">쓰기 패턴</td><td style="text-align: center">CRUD</td><td style="text-align: center">주로 INSERT (Append)</td></tr>
+<tr><td style="text-align: center">삭제 방식</td><td style="text-align: center">개별 행 삭제</td><td style="text-align: center">TTL 기반 일괄 삭제</td></tr>
+<tr><td style="text-align: center">압축</td><td style="text-align: center">범용 압축</td><td style="text-align: center">델타 인코딩 + Gorilla 압축</td></tr>
+<tr><td style="text-align: center">쿼리 특화</td><td style="text-align: center">범용 SQL</td><td style="text-align: center">시간 집계 함수 (rollup, downsampling)</td></tr>
+<tr><td style="text-align: center">저장 효율</td><td style="text-align: center">기준</td><td style="text-align: center">5~30배 효율적</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong></p>
+<blockquote>
+<p>시계열 DB는 타임랩스 영상을 위한 카메라와 같다. 매 초 같은 각도로 찍는다는 사실(타임스탬프 순서)을 알기 때문에, 일반 카메라보다 훨씬 압축률이 높고 "어제 오전 8시부터 9시 사이"를 빠르게 되감아볼 수 있다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="influxdb-haegsim-gaenyeom-gujo">InfluxDB 핵심 개념 구조</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────────┐
+│                  InfluxDB 데이터 모델                        │
+│                                                            │
+│  Measurement (≈ 테이블):  &quot;cpu_usage&quot;                       │
+│  ┌──────────────┬───────────────────┬────────────────────┐ │
+│  │  Timestamp   │     Tags (인덱스)  │  Fields (값)       │ │
+│  │  (ns 정밀도) │  host | region    │  usage_user|idle   │ │
+│  ├──────────────┼──────┬────────────┼────────────────────┤ │
+│  │ 1714550400ns │ web1 │ ap-korea   │   45.2  |  54.8   │ │
+│  │ 1714550460ns │ web1 │ ap-korea   │   47.1  |  52.9   │ │
+│  │ 1714550400ns │ db1  │ ap-korea   │   12.3  |  87.7   │ │
+│  └──────────────┴──────┴────────────┴────────────────────┘ │
+│                                                            │
+│  Tags: 인덱싱, 그룹핑 기준 (low cardinality 권장)            │
+│  Fields: 실제 측정값, 집계 대상 (숫자&#x2F;문자열&#x2F;불리언)            │
+│  Series: Measurement + Tags의 고유 조합                      │
+└────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="influxdb-bojon-jeongcaeg-retention-policy-gwa-daunsaempeulring">InfluxDB 보존 정책 (Retention Policy)과 다운샘플링</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">원시 데이터 (1초 간격, 30일 보관)
+       │
+       ↓ Continuous Query &#x2F; Task
+1분 집계 (avg, min, max) → 1년 보관
+       │
+       ↓
+1시간 집계            → 5년 보관
+       │
+       ↓
+1일 집계              → 영구 보관
+
+결과: 스토리지 99% 절약 (1초 × 365일 → 1일 × 365일)
+</code></pre>
+<h3 id="timescaledb-gujo-postgresql-hwagjang">TimescaleDB 구조 (PostgreSQL 확장)</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────┐
+│                 TimescaleDB 아키텍처                       │
+│                                                          │
+│  Hypertable (논리적 단일 테이블)                           │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │  CREATE TABLE metrics (                          │   │
+│  │    time  TIMESTAMPTZ NOT NULL,                   │   │
+│  │    host  TEXT,                                   │   │
+│  │    cpu   DOUBLE PRECISION                        │   │
+│  │  );                                              │   │
+│  │  SELECT create_hypertable(&#x27;metrics&#x27;, &#x27;time&#x27;);    │   │
+│  └──────────────────────────────────────────────────┘   │
+│                        ↓                                 │
+│  Chunks (시간 기반 자동 파티션):                           │
+│  chunk_2026_04_01  |  chunk_2026_04_02  |  ...           │
+│                                                          │
+│  * 오래된 Chunk → 저비용 스토리지로 자동 이동(티어링)         │
+│  * 풀 SQL 지원: JOIN, Window Function, CTE 모두 가능       │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="questdb-goseongneung-injeseusyeon-gujo">QuestDB 고성능 인제스션 구조</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">QuestDB 성능 비결:
+  1. 열 기반 (Columnar) 저장 → 특정 필드 집계 시 I&#x2F;O 최소화
+  2. 메모리 매핑 파일 (Memory-Mapped Files) → 커널 I&#x2F;O 우회
+  3. SIMD (Single Instruction, Multiple Data) 활용
+  4. 파티션 병렬 처리
+
+성능: 단일 서버 기준 수백만 rows&#x2F;sec 삽입
+</code></pre>
+<table><thead><tr><th style="text-align: center">DB</th><th style="text-align: center">쿼리 언어</th><th style="text-align: left">특징</th><th style="text-align: center">최고 성능 지표</th></tr></thead><tbody>
+<tr><td style="text-align: center"><strong>InfluxDB</strong></td><td style="text-align: center">Flux / InfluxQL</td><td style="text-align: left">네이티브 TSDB, 클라우드 관리형</td><td style="text-align: center">쓰기 200K pts/sec</td></tr>
+<tr><td style="text-align: center"><strong>TimescaleDB</strong></td><td style="text-align: center">SQL (PostgreSQL)</td><td style="text-align: left">SQL 호환, Hypertable</td><td style="text-align: center">쓰기 100K rows/sec</td></tr>
+<tr><td style="text-align: center"><strong>QuestDB</strong></td><td style="text-align: center">SQL (방언)</td><td style="text-align: left">열 기반, SIMD</td><td style="text-align: center">쓰기 4M rows/sec</td></tr>
+<tr><td style="text-align: center"><strong>VictoriaMetrics</strong></td><td style="text-align: center">MetricsQL</td><td style="text-align: left">Prometheus 호환, 초경량</td><td style="text-align: center">쓰기 수십만 pts/sec</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong></p>
+<blockquote>
+<p>다운샘플링은 긴 회의 영상을 요약본으로 편집하는 것과 같다. 5시간 원본(1초 데이터)을 5분 요약본(1분 평균)으로 만들면 찾아보기는 오래 걸리지 않으면서 저장 공간을 95% 절약할 수 있다.</p>
+</blockquote>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="prometheus-vs-influxdb-bigyo">Prometheus vs InfluxDB 비교</h3>
+<table><thead><tr><th style="text-align: center">항목</th><th style="text-align: center">Prometheus</th><th style="text-align: center">InfluxDB</th></tr></thead><tbody>
+<tr><td style="text-align: center">수집 방식</td><td style="text-align: center">Pull (스크레이핑)</td><td style="text-align: center">Push (직접 삽입)</td></tr>
+<tr><td style="text-align: center">데이터 모델</td><td style="text-align: center">레이블 기반 시계열</td><td style="text-align: center">Measurement + Tags</td></tr>
+<tr><td style="text-align: center">장기 보관</td><td style="text-align: center">취약 (Thanos/Cortex 필요)</td><td style="text-align: center">내장 보존 정책</td></tr>
+<tr><td style="text-align: center">쿼리 언어</td><td style="text-align: center">PromQL</td><td style="text-align: center">Flux / InfluxQL</td></tr>
+<tr><td style="text-align: center">생태계</td><td style="text-align: center">Grafana 통합 강력</td><td style="text-align: center">InfluxDB Cloud</td></tr>
+<tr><td style="text-align: center">적합</td><td style="text-align: center">쿠버네티스 모니터링</td><td style="text-align: center">IoT, 범용 시계열</td></tr>
+</tbody></table>
+<h3 id="sigyeyeol-abcug-gisul-gorilla-algorijeum">시계열 압축 기술 (Gorilla 알고리즘)</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">페이스북 Gorilla 시계열 압축:
+  - XOR 기반 델타 인코딩
+  - 연속 타임스탬프: 각 시간 차이만 저장
+  - 연속 부동소수점: XOR 비트만 저장
+
+예시:
+  원시: 23.5, 23.7, 23.6, 23.8  (각 8바이트 = 32바이트)
+  압축: 23.5, +0.2, -0.1, +0.2  (델타 2비트 = 0.25바이트)
+  압축률: 128:1 까지 가능
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong></p>
+<blockquote>
+<p>Prometheus와 InfluxDB의 차이는 기자(Pull)와 제보자(Push)의 차이다. Prometheus는 정기적으로 각 서버에 찾아가 수치를 읽어오고(스크레이핑), InfluxDB는 각 센서가 직접 데이터를 보내준다(Push). 서버가 적으면 Pull이 간편하고, 서버가 수만 대면 Push가 확장성이 높다.</p>
+</blockquote>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="iot-peulraespom-akitegceo-seolgye">IoT 플랫폼 아키텍처 설계</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">센서 디바이스
+     │ MQTT&#x2F;HTTP
+     ↓
+IoT 브로커(Mosquitto&#x2F;AWS IoT)
+     │ 스트림 처리
+     ↓
+Kafka (버퍼 + 내결함성)
+     │
+     ↓
+시계열 DB (InfluxDB&#x2F;TimescaleDB)
+     │
+     ↓
+Grafana (시각화 대시보드)
+     │
+     ↓
+이상 감지 (ML 모델 → 알람)
+</code></pre>
+<h3 id="gisulsa-seolgye-cekeuriseuteu">기술사 설계 체크리스트</h3>
+<table><thead><tr><th style="text-align: left">항목</th><th style="text-align: center">결정 기준</th></tr></thead><tbody>
+<tr><td style="text-align: left">카디널리티 관리</td><td style="text-align: center">Tags 조합 수 &lt; 수백만 (InfluxDB High Cardinality 주의)</td></tr>
+<tr><td style="text-align: left">보존 정책 설계</td><td style="text-align: center">원시→1분→1시간 다운샘플링 계층 정의</td></tr>
+<tr><td style="text-align: left">쿼리 최적화</td><td style="text-align: center">시간 범위 WHERE 절 항상 포함</td></tr>
+<tr><td style="text-align: left">파티션 전략</td><td style="text-align: center">시간 기반 파티션으로 오래된 데이터 빠른 삭제</td></tr>
+<tr><td style="text-align: left">고가용성</td><td style="text-align: center">InfluxDB Enterprise 클러스터 or 관리형 클라우드</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong></p>
+<blockquote>
+<p>시계열 DB의 High Cardinality 문제는 도서관 분류 체계가 너무 세밀한 것과 같다. 책 한 권마다 고유한 선반 번호를 붙이면 목록 관리 비용이 도서관보다 더 커진다. Tags는 적당한 범주(호스트명, 리전)로 묶어야 인덱스 효율이 유지된다.</p>
+</blockquote>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="doib-hyogwa-bigyo-iot-peulraespom-silsarye">도입 효과 비교 (IoT 플랫폼 실사례)</h3>
+<table><thead><tr><th style="text-align: center">항목</th><th style="text-align: center">PostgreSQL</th><th style="text-align: center">TimescaleDB</th><th style="text-align: center">개선율</th></tr></thead><tbody>
+<tr><td style="text-align: center">1주일 데이터 쓰기</td><td style="text-align: center">55K rows/sec</td><td style="text-align: center">110K rows/sec</td><td style="text-align: center">2배</td></tr>
+<tr><td style="text-align: center">1개월 집계 쿼리</td><td style="text-align: center">45sec</td><td style="text-align: center">3sec</td><td style="text-align: center">15배</td></tr>
+<tr><td style="text-align: center">스토리지(압축 후)</td><td style="text-align: center">100GB</td><td style="text-align: center">12GB</td><td style="text-align: center">8.3배 절약</td></tr>
+<tr><td style="text-align: center">데이터 티어링</td><td style="text-align: center">수동</td><td style="text-align: center">자동</td><td style="text-align: center">—</td></tr>
+</tbody></table>
+<h3 id="gyeolron">결론</h3>
+<p>시계열 DB는 IoT·모니터링·금융 틱 데이터처럼 타임스탬프가 핵심이고 쓰기가 압도적으로 많은 워크로드의 표준 인프라로 자리잡았다. 기술사 시험에서는 <strong>TSDB의 4가지 특성</strong>, <strong>보존 정책+다운샘플링 설계</strong>, <strong>InfluxDB 데이터 모델(Tags/Fields/Measurement)</strong>, <strong>Gorilla 압축 알고리즘 원리</strong>가 핵심 논점이다.</p>
+<p>📢 <strong>섹션 요약 비유</strong></p>
+<blockquote>
+<p>시계열 DB 도입은 기상청이 기온 기록을 위한 전용 시스템을 도입하는 것과 같다. 일반 스프레드시트(RDBMS)에도 기록할 수 있지만, 매분 전국 수천 곳의 기온을 기록하고 "지난 10년 8월 평균"을 즉시 뽑으려면 기상 전용 시스템이 필요하다.</p>
+</blockquote>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: center">개념</th><th style="text-align: center">관계</th><th style="text-align: left">설명</th></tr></thead><tbody>
+<tr><td style="text-align: center">Gorilla 압축</td><td style="text-align: center">저장 최적화</td><td style="text-align: left">델타 XOR 인코딩, 시계열 전용</td></tr>
+<tr><td style="text-align: center">Retention Policy</td><td style="text-align: center">데이터 관리</td><td style="text-align: left">보존 기간 정책, 자동 삭제</td></tr>
+<tr><td style="text-align: center">Downsampling</td><td style="text-align: center">집계 최적화</td><td style="text-align: left">원시 → 집계 데이터 계층화</td></tr>
+<tr><td style="text-align: center">Hypertable</td><td style="text-align: center">TimescaleDB 구조</td><td style="text-align: left">시간 기반 자동 파티션 테이블</td></tr>
+<tr><td style="text-align: center">PromQL</td><td style="text-align: center">연관 기술</td><td style="text-align: left">Prometheus 시계열 쿼리 언어</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[관계형 DB (RDBMS) — 시계열 저장 시 인덱스 팽창·쓰기 병목 발생]
+    │
+    ▼
+[시계열 DB (TSDB) — 시간 스탬프 기반 압축·집계 최적화 전문 스토리지]
+    │
+    ▼
+[InfluxDB &#x2F; TimescaleDB — 대표 TSDB, 라인 프로토콜·SQL 인터페이스 제공]
+    │
+    ▼
+[다운샘플링·보존 정책 (Downsampling &amp; Retention) — 오래된 데이터 자동 집계·삭제]
+    │
+    ▼
+[스트리밍 연계 (Kafka → TSDB) — 실시간 지표 수집·저장·알림 파이프라인]
+</code></pre>
+<p>이 흐름은 RDBMS의 시계열 저장 한계를 전문 TSDB가 극복하고, 다운샘플링으로 장기 보관을 최적화하며, 실시간 스트리밍 파이프라인으로 통합되는 과정을 보여준다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>시계열 DB는 온도계 일지와 같아요. 매시간 온도를 기록하고, "이번 주 가장 더웠던 날"을 바로 찾아줘요.</li>
+<li>다운샘플링은 긴 노트를 요약본으로 줄이는 것 — 매분 기록 대신 하루 평균만 남겨도 큰 흐름은 보여요.</li>
+<li>시계열 DB가 없으면 수백만 개의 센서 신호가 쏟아질 때 일반 DB가 숨이 막혀버리는데, 시계열 DB는 이런 상황에 딱 맞게 만들어진 거예요.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

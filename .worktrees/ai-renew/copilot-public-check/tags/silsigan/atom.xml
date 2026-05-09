@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Brain Science - 실시간</title>
+    <subtitle>AI, Infra, DevSecOps, Cloud Native, Security</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://agnusdei1207.github.io/brainscience/tags/silsigan/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://agnusdei1207.github.io/brainscience"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2026-04-03T00:00:00+00:00</updated>
+    <id>https://agnusdei1207.github.io/brainscience/tags/silsigan/atom.xml</id>
+    <entry xml:lang="en">
+        <title>481. SSE (Server-Sent Events) - 단방향 서버 푸시 기술</title>
+        <published>2026-04-03T00:00:00+00:00</published>
+        <updated>2026-04-03T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://agnusdei1207.github.io/brainscience/studynote/03_network/09_application_layer_web_email/481-sse-server-sent-events/"/>
+        <id>https://agnusdei1207.github.io/brainscience/studynote/03_network/09_application_layer_web_email/481-sse-server-sent-events/</id>
+        
+        <content type="html" xml:base="https://agnusdei1207.github.io/brainscience/studynote/03_network/09_application_layer_web_email/481-sse-server-sent-events/">&lt;h2 id=&quot;haegsim-insaiteu-3jul-yoyag&quot;&gt;핵심 인사이트 (3줄 요약)&lt;&#x2F;h2&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;본질&lt;&#x2F;strong&gt;: SSE (Server-Sent Events)는 클라이언트의 최초 요청 이후 HTTP 연결을 닫지 않은 채 유지하며, 서버가 &lt;code&gt;Content-Type: text&#x2F;event-stream&lt;&#x2F;code&gt; 포맷으로 클라이언트를 향해 &lt;strong&gt;단방향으로 끝없이 텍스트 데이터를 밀어 넣는(Push)&lt;&#x2F;strong&gt; HTML5 표준 기술이다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;가치&lt;&#x2F;strong&gt;: 양방향 소켓 통신(WebSocket)의 무거운 오버헤드와 복잡성 없이, 오직 기존의 익숙하고 안전한 HTTP 인프라 위에서 실시간 알림, 주식 티커, 뉴스 피드 같은 단방향 스트리밍을 극도로 가볍게 구현할 수 있게 해준다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;융합&lt;&#x2F;strong&gt;: 네트워크 단절 시 클라이언트 브라우저 엔진이 **자동으로 재접속(Auto Reconnect)**을 수행하고 마지막 수신 ID(&lt;code&gt;Last-Event-ID&lt;&#x2F;code&gt;)로 유실된 데이터를 서버에 재요청하는 강력한 복구 메커니즘을 내장하고 있어 운영 안정성이 탁월하다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;i-gaeyo-mic-pilyoseong-context-necessity&quot;&gt;Ⅰ. 개요 및 필요성 (Context &amp;amp; Necessity)&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;개념&lt;&#x2F;strong&gt;: SSE(Server-Sent Events)는 웹 브라우저의 자바스크립트 API인 &lt;code&gt;EventSource&lt;&#x2F;code&gt; 객체를 이용하여 서버로부터 발생한 이벤트를 스트리밍 형태로 받아오는 기술이다. 통신이 양방향(Full-Duplex)인 웹소켓과 달리, 방향이 철저하게 서버에서 클라이언트로 향하는 **단방향(Half-Duplex, Push)**으로 제한된다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;필요성&lt;&#x2F;strong&gt;: 웹에서 &quot;실시간&quot;이 필요하다고 무조건 고가도로(웹소켓)를 뚫을 필요는 없다. 트위터 새 글 알림, 페이스북 좋아요 푸시, 넷플릭스 영화 인코딩 진행률 막대 같은 기능들은 클라이언트가 서버로 딱히 쏠 데이터가 없고, 오직 &quot;서버가 언제 나한테 변경사항을 내려줄지&quot;만 얌전히 기다리는 구조다. 이를 위해 복잡한 웹소켓 핸드셰이크를 거치거나 무식하게 1초마다 찌르는 폴링(Polling)을 쓰는 것은 소 잡는 칼로 닭을 잡는 낭비였다. HTTP라는 친숙한 길 위에서 일방통행으로 데이터를 쏟아내는 가벼운 수도관이 필요했다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;💡 비유&lt;&#x2F;strong&gt;: 웹소켓이 서로 말을 주고받을 수 있는 양방향 무전기라면, SSE는 라디오 방송국(서버)이 주파수만 맞춰둔 수많은 청취자(클라이언트) 라디오를 향해 계속해서 음악과 뉴스를 일방적으로 송출하는 **&#x27;단방향 라디오 생방송&#x27;**과 같습니다. 청취자는 방송국에 말을 걸 순 없지만, 새로운 뉴스는 0.1초 만에 즉각 들을 수 있습니다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;등장 배경&lt;&#x2F;strong&gt;:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Comet 꼼수의 한계&lt;&#x2F;strong&gt;: 과거 개발자들은 숨겨진 &lt;iframe&gt;이나 끊기지 않는 Long-Polling 등 갖가지 꼼수를 동원해 서버 푸시를 모방했지만, 표준이 없어 브라우저 파편화와 메모리 누수(Memory Leak)가 심했다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;가벼운 대안의 필요성&lt;&#x2F;strong&gt;: 2011년 HTML5 스펙과 함께 양방향 통신의 제왕으로 웹소켓이 등장했으나, 인프라 세팅(L4&#x2F;L7 로드밸런서 타임아웃, 방화벽 방어 로직)이 너무 까다로웠다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;W3C의 표준 제정&lt;&#x2F;strong&gt;: 별도의 프로토콜 없이 순수 HTTP GET 요청만으로도 텍스트 이벤트를 완벽히 스트리밍할 수 있는 가벼운 스펙, Server-Sent Events가 W3C HTML5 표준에 편입되었다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;┌─────────────────────────────────────────────────────────────┐
+│                 SSE (Server-Sent Events) 통신 흐름도            │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│ [Client (EventSource API)]                   [Origin Server]│
+│         │                                         │         │
+│         │ 1. GET &amp;#x2F;news-stream (최초 1회 HTTP 연결)  │         │
+│         │    Accept: text&amp;#x2F;event-stream            │         │
+│         │────────────────────────────────────────▶│         │
+│         │                                         │         │
+│         │ 2. HTTP&amp;#x2F;1.1 200 OK                      │         │
+│         │    Content-Type: text&amp;#x2F;event-stream      │         │
+│   ┌─────│    Transfer-Encoding: chunked           │         │
+│   │     │◀────────────────────────────────────────│         │
+│ 연결유지 │                                         │         │
+│ (파이프) │ 3. (10초 뒤) 데이터 밀어 넣기                │         │
+│   │     │◀── data: {&amp;quot;title&amp;quot;: &amp;quot;속보입니다!&amp;quot;} \n\n ──│         │
+│   │     │                                         │         │
+│   │     │ 4. (5초 뒤) 데이터 밀어 넣기                 │         │
+│   └─────│◀── id: 99 \n data: &amp;quot;주식 급등!&amp;quot; \n\n ────│         │
+│                                                             │
+│ 🌟 결과: 연결을 한 번만 맺고 끊지 않은 상태에서, 서버가 \n\n 으로       │
+│ 구분된 텍스트 덩어리를 무제한으로 일방통행(Push) 밀어 넣는다!          │
+└─────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; 클라이언트 자바스크립트는 단순하게 &lt;code&gt;new EventSource(&#x27;&#x2F;news-stream&#x27;)&lt;&#x2F;code&gt;를 호출한다. 서버는 일반적인 HTTP 응답을 내리되, &lt;code&gt;Content-Type&lt;&#x2F;code&gt;을 &lt;code&gt;text&#x2F;event-stream&lt;&#x2F;code&gt;으로, 응답을 잘게 쪼개 보내겠다는 &lt;code&gt;Transfer-Encoding: chunked&lt;&#x2F;code&gt;로 명시한다. 가장 중요한 점은 2번 응답을 보낸 직후 서버가 &lt;strong&gt;TCP 소켓을 닫지 않고 계속 열어둔다&lt;&#x2F;strong&gt;는 것이다. 이후 서버 백엔드 로직에 새로운 뉴스가 뜰 때마다, 열려있는 파이프에 &lt;code&gt;data: 메세지 \n\n&lt;&#x2F;code&gt; 형태의 특수 규격 텍스트를 던져 넣는다. 브라우저는 &lt;code&gt;\n\n&lt;&#x2F;code&gt; (개행 2번)을 만날 때마다 하나의 이벤트 블록이 끝난 것으로 파악하고 자바스크립트의 &lt;code&gt;onmessage&lt;&#x2F;code&gt; 콜백 함수를 즉시 터뜨려 화면에 실시간으로 뉴스를 그려낸다.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;📢 섹션 요약 비유&lt;&#x2F;strong&gt;: 호스(HTTP)를 한 번 수도꼭지에 연결해두면 물을 잠그지 않고 놔둡니다. 서버(수도꼭지) 쪽에 새로운 물(알림)이 찰 때마다 호스를 타고 클라이언트의 양동이에 콸콸콸 일방적으로 쏟아지는 구조입니다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;ii-akitegceo-mic-haegsim-weonri-deep-dive&quot;&gt;Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;guseong-yoso-mic-mesiji-gyugyeog-payload-format&quot;&gt;구성 요소 및 메시지 규격 (Payload Format)&lt;&#x2F;h3&gt;
+&lt;p&gt;SSE는 복잡한 이진 바이너리를 지원하지 않고, 오직 사람도 읽기 쉬운 UTF-8 텍스트 기반의 줄바꿈 구문을 파싱 규칙으로 삼는다. 메시지 덩어리 1개는 반드시 &lt;code&gt;\n\n&lt;&#x2F;code&gt; (빈 줄)으로 종료되어야 한다.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;필드명 (접두어)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;역할&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;데이터 예시&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;비유&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;&lt;code&gt;data:&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;실제 클라이언트에 전달될 핵심 데이터. (주로 JSON 문자열을 텍스트로 넣음)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;data: {&quot;price&quot;: 5000}&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;편지의 본문&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;&lt;code&gt;id:&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;해당 이벤트 스트림의 고유 번호. 나중에 연결 끊김 시 재개(Resume)의 핵심 키.&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;id: 12345&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;편지 봉투의 일련번호&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;&lt;code&gt;event:&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;브라우저가 이벤트를 구분해서 받을 수 있도록 이벤트 이름 지정. (미지정시 &#x27;message&#x27; 큐)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;event: stock_update&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;편지의 제목 (카테고리)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;&lt;code&gt;retry:&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;연결이 비정상적으로 끊겼을 때 브라우저가 몇 밀리초(ms) 뒤에 재접속 시도할지 지시.&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;retry: 5000&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&quot;끊기면 5초 뒤에 다시 전화해&quot;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;&lt;code&gt;: (콜론)&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;텍스트 줄 맨 앞에 콜론을 쓰면 주석(Comment). 브라우저가 무시함. (Ping 용도)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;: heartbeat&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;뼈대 유지를 위한 헛기침(Ping)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;hr &#x2F;&gt;
+&lt;h3 id=&quot;sseyi-abdojeog-mugi-jadong-jaejeobsog-auto-reconnect-gwa-yusil-boggu&quot;&gt;SSE의 압도적 무기: 자동 재접속(Auto Reconnect)과 유실 복구&lt;&#x2F;h3&gt;
+&lt;p&gt;웹소켓(WebSocket) 생태계에서 개발자들을 가장 미치게 만드는 것은 터널을 지나갈 때 모바일 네트워크가 끊겨 소켓이 죽었을 때, 직접 &lt;code&gt;setInterval&lt;&#x2F;code&gt; 로직을 짜서 소켓을 살려내고 잃어버린 데이터를 재요청해야 한다는 점이다. SSE는 이 지긋지긋한 복구 로직을 &lt;strong&gt;브라우저 엔진(C++) 레벨에서 자동으로, 100% 무료로 제공&lt;&#x2F;strong&gt;한다.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;┌───────────────────────────────────────────────────────────────┐
+│        SSE의 경이로운 [네트워크 단절 및 유실 복구] 메커니즘         │
+├───────────────────────────────────────────────────────────────┤
+│                                                               │
+│ [정상 스트리밍 상태]                                             │
+│ 서  버 ───( id: 100 \n data: &amp;quot;뉴스A&amp;quot; \n\n )───▶ 클라이언트        │
+│ 서  버 ───( id: 101 \n data: &amp;quot;뉴스B&amp;quot; \n\n )───▶ 클라이언트        │
+│                                                               │
+│ 💥 [터널 진입! 네트워크 강제 단절 💥]                              │
+│                                                               │
+│ 서  버 (클라이언트 죽은 줄 모르고 허공에 쏨)                        │
+│ 서  버 ───( id: 102 \n data: &amp;quot;뉴스C&amp;quot; \n\n )───▶ [ 💥 허공에 유실] │
+│ 서  버 ───( id: 103 \n data: &amp;quot;뉴스D&amp;quot; \n\n )───▶ [ 💥 허공에 유실] │
+│                                                               │
+│ 📶 [터널 탈출! 네트워크 복구 및 자동 재접속]                       │
+│ 클라이언트의 EventSource 객체가 알아서 3초 뒤 재접속을 시도함!         │
+│ (내가 마지막으로 잘 받았던 번호표(101)를 헤더에 당당히 꽂아 넣음)        │
+│                                                               │
+│ 클라이언트                                            서  버      │
+│   │ ── GET &amp;#x2F;news-stream                           │           │
+│   │    Last-Event-ID: 101   ◀─ &amp;quot;나 101번까진 받았어&amp;quot;  │           │
+│   │──────────────────────────────────────────────▶│           │
+│   │                                               │           │
+│   │          서버는 DB나 큐에서 101번 이후의 내역을 꺼내옴!│           │
+│   │◀──( id: 102 \n data: &amp;quot;뉴스C&amp;quot; \n\n )───────────│           │
+│   │◀──( id: 103 \n data: &amp;quot;뉴스D&amp;quot; \n\n )───────────│           │
+│ 🌟 결과: 자바스크립트 1줄 안 짰는데, 유실된 뉴스C와 D가 완벽 복원됨!    │
+└───────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; 브라우저는 서버가 내려주는 &lt;code&gt;id:&lt;&#x2F;code&gt; 필드를 항상 내부 캐시에 기억해 둔다. 만약 지하철 문이 닫혀 Wi-Fi가 끊기면 브라우저는 에러를 내뿜지 않고 &lt;code&gt;retry:&lt;&#x2F;code&gt; 시간에 맞춰 백그라운드에서 다시 HTTP GET 요청을 날린다. 이때 브라우저는 기특하게도 헤더에 &lt;code&gt;Last-Event-ID: 101&lt;&#x2F;code&gt;이라는 값을 알아서 박아 넣는다. 백엔드 개발자는 이 헤더가 들어오면 101번 이후로 생성된 메시지(102, 103번)를 Redis나 DB에서 찾아 다시 밀어주기만 하면, 클라이언트 화면에는 빈틈없이 실시간 알림이 이어지는 우아한 견고함(Resilience)을 자랑한다.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;📢 섹션 요약 비유&lt;&#x2F;strong&gt;: 책을 읽다가 잠이 들었을 때(연결 끊김), 브라우저라는 충실한 비서가 책갈피(Last-Event-ID)를 딱 끼워두었다가, 다음 날 일어나면 도서관 사서(서버)에게 &quot;어제 101페이지까지 읽었으니 102페이지부터 주세요&quot;라고 알아서 다시 챙겨오는 시스템입니다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;iii-yunghab-bigyo-mic-dagagdo-bunseog&quot;&gt;Ⅲ. 융합 비교 및 다각도 분석&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;bigyo-1-sse-vs-websocket-teureideuopeu&quot;&gt;비교 1: SSE vs WebSocket 트레이드오프&lt;&#x2F;h3&gt;
+&lt;p&gt;무조건 양방향 소켓을 트는 것이 최선이 아니다. 목적에 맞춰 날카롭게 아키텍처를 골라야 한다.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;비교 항목&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;SSE (Server-Sent Events)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;WebSocket (웹소켓)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;판단 포인트&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;통신 방향&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;단방향 (서버 ➔ 클라이언트)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;양방향 (클라이언트 ⟷ 서버)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;채팅인가? 단순 알림인가?&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;전송 포맷&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;UTF-8 텍스트 전용 (JSON 등)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;텍스트 + 이진 바이너리 데이터 가능&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;영상&#x2F;음성 스트리밍 필요 여부&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;자동 재접속&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;브라우저 네이티브 기본 지원 (초강점)&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;미지원. JS 라이브러리(Socket.io 등) 의존&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;모바일망 단절 대처의 편의성&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;인프라 호환성&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;HTTP&#x2F;1.1 및 HTTP&#x2F;2 위에서 완벽 동작&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;HTTP 헤더 파괴 및 전용 방화벽 룰&#x2F;L7 로드밸런서 설정 등 개조 필요&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;기존 인프라 수정 없이 얹을 수 있는가&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;최대 동시 연결&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;HTTP&#x2F;1.1 환경에선 브라우저당 6개 제한 (HTTP&#x2F;2에선 수백 개)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;포트 개수 한도 내 사실상 무제한&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;HTTP&#x2F;2가 적용된 백엔드인가&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;알림(Notification), 피드 업데이트, 주식 그래프 등 클라이언트가 굳이 서버에 쉴 새 없이 데이터를 올릴 필요가 없는 아키텍처의 80%는 웹소켓이 아니라 SSE가 압도적인 정답(Best Practice)이다.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;gwamog-yunghab-gwanjeom&quot;&gt;과목 융합 관점&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;클라우드 (Cloud) &amp;amp; MSA&lt;&#x2F;strong&gt;: 넷플릭스 헥사고날(Hexagonal) 아키텍처에서는 앞단 API 게이트웨이가 수백 개의 백엔드 마이크로서비스에서 발생하는 이벤트를 모아(Aggregation), 모바일 클라이언트에게 SSE 파이프라인 하나로 묶어서(Multiplexing) 쏴주는 BFF(Backend For Frontend) 패턴이 널리 쓰인다. HTTP의 범용성을 유지하면서 실시간성을 획득하는 가성비 끝판왕이다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;분산 시스템 (Redis Pub&#x2F;Sub)&lt;&#x2F;strong&gt;: SSE 역기 서버를 여러 대 띄울 때 로드밸런싱이 이루어지면(A가 1번 서버에, B가 2번 서버에 붙음), 시스템에서 알림이 발생했을 때 어느 서버에 쏴야 할지 모른다. 웹소켓과 동일하게 백엔드 서버들끼리는 Redis Pub&#x2F;Sub 메시지 브로커로 이벤트를 브로드캐스팅하는 뒷단 동기화 구조가 필수적으로 융합되어야 한다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;📢 섹션 요약 비유&lt;&#x2F;strong&gt;: 비싼 돈을 주고 양방향 마이크와 스피커를 전국에 설치하는 것(WebSocket)보다, 각 마을에 저렴하고 고장 나면 알아서 고쳐지는 라디오 스피커(SSE)만 하나 달아두고 방송국에서 일방적으로 소리치는 것이 알림 전달의 가장 현명한 가성비입니다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;iv-silmu-jeogyong-mic-gisulsajeog-pandan&quot;&gt;Ⅳ. 실무 적용 및 기술사적 판단&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;silmu-sinario&quot;&gt;실무 시나리오&lt;&#x2F;h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;시나리오 — HTTP&#x2F;1.1 환경에서의 브라우저 동시 연결 제한(6개 한도) 병목&lt;&#x2F;strong&gt;: 대규모 주식 거래소 앱을 만들며, 코스피 지수, 관심종목 A, B, C, 내 자산 변동 등을 각각 다른 SSE 엔드포인트(&lt;code&gt;&#x2F;sse&#x2F;kospi&lt;&#x2F;code&gt;, &lt;code&gt;&#x2F;sse&#x2F;stockA&lt;&#x2F;code&gt; 등) 7개로 쪼개어 브라우저에 띄웠다. 그러자 7번째 SSE 연결부터 무한 로딩이 걸리며 사이트의 모든 REST API 통신까지 완전히 먹통이 되는 참사가 터졌다.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;판단&lt;&#x2F;strong&gt;: 구형 HTTP&#x2F;1.1 스펙 브라우저는 동일 도메인(Origin)에 대해 최대 동시 TCP 커넥션을 6개로 빡빡하게 제한한다. SSE는 연결을 끊지 않고 영구적으로 점유하므로 6개를 다 물고 있으면 다른 HTTP 통신이 큐에서 블로킹된다. 아키텍트는 7개의 SSE를 1개의 엔드포인트(&lt;code&gt;&#x2F;sse&#x2F;dashboard&lt;&#x2F;code&gt;)로 합치고 &lt;code&gt;event: kospi&lt;&#x2F;code&gt;, &lt;code&gt;event: stockA&lt;&#x2F;code&gt; 형태로 이벤트 이름을 분기해서 내려주도록 백엔드를 재설계하거나, 백엔드 전체를 멀티플렉싱이 무제한으로 지원되는 HTTP&#x2F;2 인프라 위로 올려야 완벽하게 해결된다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;시나리오 — 프록시(Nginx, AWS ALB)의 버퍼링으로 인한 실시간 지연&lt;&#x2F;strong&gt;: 백엔드(Spring)에서 분명히 초당 1개씩 뉴스 알림을 SSE로 밀어내고 있는데, 프론트엔드 브라우저 화면에는 10초 동안 잠잠하다가 한방에 10개의 알림이 우르르 쏟아져 나오는 현상이 발생했다. 실시간(Real-time)이 무너진 것이다.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;판단&lt;&#x2F;strong&gt;: 중간에 껴있는 L7 로드밸런서(Nginx)가 범인이다. Nginx는 기본적으로 백엔드 서버의 응답 조각들을 램(Buffer)에 모아두었다가 일정 덩어리가 차야만 클라이언트로 한 번에 내보내는 압축 전송(Buffering) 정책을 쓴다. SSE 라우팅 블록에서는 반드시 &lt;code&gt;proxy_buffering off;&lt;&#x2F;code&gt;와 &lt;code&gt;X-Accel-Buffering: no&lt;&#x2F;code&gt; 헤더 설정을 강제 주입하여, Nginx가 패킷을 가로채지 않고 즉각 통과시키도록 바이패스(Bypass) 밸브를 열어두어야 한다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;pre data-lang=&quot;text&quot; class=&quot;language-text &quot;&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;  ┌─────────────────────────────────────────────────────────────┐
+  │         실무 아키텍처: SSE Nginx 프록시 버퍼링 파괴 (Bypass) 설정      │
+  ├─────────────────────────────────────────────────────────────┤
+  │                                                             │
+  │ [문제의 Buffering 아키텍처]                                   │
+  │ 백엔드 서버 (알림 1건 방출!) ──▶ [ Nginx Buffer 대기 💥 ]          │
+  │ 백엔드 서버 (알림 2건 방출!) ──▶ [ Nginx Buffer 대기 💥 ]          │
+  │ 백엔드 서버 (알림 3건 방출!) ──▶ [ Nginx 꽉 참! 한방에 발사! ] ───▶ 유저 │
+  │ ➔ 실시간이 아니라 3초 뒤에 알림이 뭉쳐서 도착함.                      │
+  │                                                             │
+  │ [해결된 Bypass 아키텍처 (Nginx 설정 고도화)]                    │
+  │ 1. Spring 백엔드 응답 헤더 추가:                              │
+  │    HttpHeaders.set(&amp;quot;X-Accel-Buffering&amp;quot;, &amp;quot;no&amp;quot;);              │
+  │                                                             │
+  │ 2. Nginx 설정 파일 (.conf):                                 │
+  │    location &amp;#x2F;stream&amp;#x2F; {                                      │
+  │       proxy_buffering off;             ◀─ 버퍼링 강제 차단!  │
+  │       proxy_cache off;                 ◀─ 캐싱 강제 차단!    │
+  │       proxy_read_timeout 86400s;       ◀─ 소켓 끊김 타임아웃 연장│
+  │       proxy_set_header Connection &amp;#x27;&amp;#x27;;                       │
+  │    }                                                        │
+  │                                                             │
+  │ 백엔드 서버 (알림 1건 방출!) ──▶ [ Nginx 무사통과 🚀 ] ───▶ 유저 0.1초 도착│
+└─────────────────────────────────────────────────────────────┘
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;[다이어그램 해설]&lt;&#x2F;strong&gt; SSE 개발자들이 인프라 배포 첫날 겪는 1순위 장애의 원인과 해답이다. 백엔드 코드를 완벽히 짰더라도 인프라(Nginx, ALB)의 기본 정책은 실시간 스트리밍이 아니라 &#x27;조각난 HTTP 응답 뭉쳐서 효율적으로 보내기&#x27;에 맞춰져 있다. 따라서 특정 라우팅 경로(&lt;code&gt;&#x2F;stream&lt;&#x2F;code&gt;)에 대해서는 모든 캐시와 버퍼링 족쇄를 풀어버려야 한다. 추가로 HTTP&#x2F;1.1의 경우 &lt;code&gt;Connection: keep-alive&lt;&#x2F;code&gt; 상태를 오래 유지해야 하므로 &lt;code&gt;proxy_read_timeout&lt;&#x2F;code&gt; 같은 세션 컷오프 한계치도 24시간급으로 대폭 연장해야 네트워크 인프라가 맘대로 사용자의 알림 소켓을 잘라먹지 않는다.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;doib-cekeuriseuteu&quot;&gt;도입 체크리스트&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;기술적&lt;&#x2F;strong&gt;: 클라이언트가 네트워크를 단절시켰을 때(브라우저 탭 닫기), 백엔드 스레드가 소켓 자원을 놓지 않고 무한정 대기하는 고스트 커넥션(Zombie Connection)이 서버 메모리를 갉아먹지 않도록 SseEmitter 객체의 타임아웃과 &lt;code&gt;onCompletion&lt;&#x2F;code&gt; 콜백 자원 반환 로직을 철저히 짰는가?&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;운영·보안적&lt;&#x2F;strong&gt;: 50초가량 서버에서 알림 이벤트가 없을 때, 일부 통신사 중간 프록시(NAT)가 &#x27;아 죽은 연결이구나&#x27; 하고 강제로 소켓을 끊어버리는 것을 막기 위해 백엔드에서 의미 없는 주석 텍스트(&lt;code&gt;: heartbeat \n\n&lt;&#x2F;code&gt;)를 30초마다 한 번씩 허공에 쏘아대어(Ping) 인프라를 속이고 있는가?&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;antipaeteon&quot;&gt;안티패턴&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;SSE 파이프에 거대한 파일 밀어 넣기&lt;&#x2F;strong&gt;: 알림 메시지를 보내는 용도의 얇은 파이프(텍스트 전용)에 1MB가 넘는 이미지를 Base64 텍스트로 인코딩해서 무식하게 쑤셔 넣는 행위. 파이프가 꽉 막혀버리며 브라우저의 렌더링 스레드(JS) 전체가 파싱 부하로 마비된다. SSE로는 &lt;code&gt;id&lt;&#x2F;code&gt;나 텍스트 힌트만 넘기고, 거대한 파일은 별도의 일반 &lt;code&gt;GET&lt;&#x2F;code&gt; AJAX로 받아오는 이원화 룰을 지켜야 한다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;📢 섹션 요약 비유&lt;&#x2F;strong&gt;: 알림(SSE)은 우체부 아저씨가 초인종을 눌러 &quot;택배 왔어요&quot;라고 짧게 알려주는 용도입니다. 우체부 아저씨에게 세탁기나 냉장고(대용량 파일)를 직접 짊어지고 들고 들어와 달라고 우기면 우체부가 쓰러져 다음 사람들의 우편까지 다 밀리게 됩니다.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;v-gidaehyogwa-mic-gyeolron&quot;&gt;Ⅴ. 기대효과 및 결론&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;jeongryang-jeongseong-gidaehyogwa&quot;&gt;정량&#x2F;정성 기대효과&lt;&#x2F;h3&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;구분&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;1초 주기의 HTTP 폴링 (구식)&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;SSE (Server-Sent Events) 도입 후&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;개선 효과&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;정량&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;1시간 대기 시 3,600번의 HTTP 요청 오버헤드&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;1시간 대기 시 1번의 HTTP 연결 유지&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;서버 요청 트래픽 처리 부하 &lt;strong&gt;99.9% 극단적 절감&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;정량&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;JS 단말에서 수동 타이머 오류 빈발&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;터널 통과 시 브라우저 자동 재접속(Resume)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;모바일 환경의 알림 유실률 &lt;strong&gt;0% 근접 달성&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;정성&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;복잡한 웹소켓 핸드셰이크&#x2F;보안 룰셋 적용&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;기존 HTTP 80&#x2F;443 포트 그대로 즉시 활용&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;개발&#x2F;인프라 공수(Time-To-Market) 대폭 감소&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h3 id=&quot;mirae-jeonmang&quot;&gt;미래 전망&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;HTTP&#x2F;2 위에서의 대통합&lt;&#x2F;strong&gt;: 과거 HTTP&#x2F;1.1 브라우저당 6개 연결 제한이라는 치명적 아킬레스건이 있었으나, 전 세계 웹이 HTTP&#x2F;2로 넘어가며 하나의 TCP 커넥션 안에서 수십 개의 독립 스트림이 흐를 수 있게(Multiplexing) 되어, SSE의 약점이 완벽하게 소멸했다.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;ChatGPT 등 생성형 AI의 전송 표준&lt;&#x2F;strong&gt;: 최근 ChatGPT나 Claude 같은 대형 언어 모델(LLM)이 문장을 한 글자씩 타자 치듯(Streaming) 화면에 뿌려주는 기술의 핵심 밑바탕 아키텍처가 바로 이 SSE 기술이다. 딥러닝 연산이 끝나는 대로 토큰(Token) 하나씩을 서버가 &lt;code&gt;data:&lt;&#x2F;code&gt; 조각으로 밀어 넣으면 프론트가 즉각 화면에 그린다. AI 스트리밍 시대에 가장 완벽하게 들어맞는 기술로 제2의 전성기를 맞고 있다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;camgo-pyojun&quot;&gt;참고 표준&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;W3C HTML5 Specification&lt;&#x2F;strong&gt;: Server-Sent Events (API 스펙 및 재접속 알고리즘 명세)&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;RFC 8895&lt;&#x2F;strong&gt;: Server-Sent Events Event Source (IETF 초안 검토)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;&quot;가장 단순한 것이 가장 훌륭한 아키텍처다.&quot; 웹소켓이라는 무겁고 거창한 장비가 모든 실시간 통신을 집어삼킬 줄 알았으나, 인프라의 복잡성과 유지보수의 피로도에 지친 아키텍트들은 &quot;서버가 일방적으로 밀어내기만 하면 충분한&quot; 영역의 80%를 SSE로 걷어냈다. 텍스트 몇 줄(\n\n)로 쪼개 보내는 이 원시적이고 투박한 설계가, 브라우저의 끈질긴 자동 재접속 철학과 만나 가장 우아하고 결함 없는 단방향 푸시 파이프라인을 현대 웹 공간에 완성해 낸 것이다.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;📢 섹션 요약 비유&lt;&#x2F;strong&gt;: 로켓 엔진(웹소켓)을 달고 매일 동네 마트에 갈 필요는 없습니다. 튼튼하고 연비 좋은 자전거(SSE) 한 대면 웬만한 마트 장보기(단방향 알림)는 완벽하고 고장 없이 해결할 수 있는 법입니다.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph&quot;&gt;📌 관련 개념 맵 (Knowledge Graph)&lt;&#x2F;h2&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;개념 명칭&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;관계 및 시너지 설명&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;WebSocket (웹소켓)&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;SSE가 단방향 스피커라면, 웹소켓은 양방향 무전기다. 실시간 통신 패러다임을 양분하는 쌍두마차다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;Polling &#x2F; Long-Polling&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;SSE가 태어나기 전, 서버의 알림을 기다리기 위해 클라이언트가 1초마다 무식하게 서버를 찔러대던 구식 낭비형 아키텍처다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;HTTP&#x2F;2 Multiplexing&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;HTTP&#x2F;1.1의 동시 접속 6개 한계를 부수고, 하나의 TCP 위에서 수십 개의 SSE 파이프를 무한정 열 수 있게 만들어준 구원자다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;L7 Load Balancer (Nginx)&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;SSE 트래픽이 통과할 때 패킷을 가로채서 묶어버리는 버퍼링(Buffering) 오지랖을 부려 실시간성을 부수는 주범이므로 반드시 바이패스 설정을 해줘야 한다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;Last-Event-ID&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;클라이언트가 터널에 들어가 네트워크가 끊겼다가 돌아왔을 때, &quot;나 이 번호까지 읽었으니 그다음부터 줘&quot;라고 복구를 보장하는 강력한 꼬리표다.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;hr &#x2F;&gt;
+&lt;h2 id=&quot;baby-eorinireul-wihan-3jul-biyu-seolmyeong&quot;&gt;👶 어린이를 위한 3줄 비유 설명&lt;&#x2F;h2&gt;
+&lt;ol&gt;
+&lt;li&gt;내가 말할 필요는 없고 뉴스 아나운서(서버)가 알려주는 속보만 들으면 될 때, 굳이 아나운서랑 양방향 통화(웹소켓)를 연결해서 통화료를 낭비할 필요는 없어요.&lt;&#x2F;li&gt;
+&lt;li&gt;SSE는 내 방에 라디오 방송국과 연결된 **&#x27;스피커(단방향 알림)&#x27;**만 딱 하나 켜두는 거예요. 방송국에서 긴급 뉴스가 터지면 스피커로 즉시 술술 흘러나옵니다!&lt;&#x2F;li&gt;
+&lt;li&gt;심지어 터널에 들어가서 전파가 끊겨도, 브라우저라는 똑똑한 비서가 &quot;우리 아까 뉴스 3번까지 들었지? 다시 붙으면 서버한테 4번부터 달라고 해야지!&quot; 하고 알아서 놓친 부분을 챙겨준답니다!&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+</content>
+        
+    </entry>
+</feed>

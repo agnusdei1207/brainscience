@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>177. SRTF (Shortest Remaining Time First) 스케줄링 - SJF의 선점형 버전 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 22, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote operating system
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: SRTF (Shortest Remaining Time First)는 현재 실행 중인 작업까지 포함해 <strong>남은 CPU (Central Processing Unit) 실행 시간이 가장 짧은 프로세스</strong>를 즉시 선택하는 선점형 스케줄링이다.</li>
+<li><strong>가치</strong>: 남은 시간이 정확히 알려진다는 이상 조건에서는 평균 대기 시간과 평균 반환 시간을 가장 작게 만들어, 짧은 상호작용 작업에 매우 빠른 응답을 제공한다.</li>
+<li><strong>판단 포인트</strong>: 실제 운영체제는 남은 시간을 예측해야 하고 긴 작업 기아 상태 (Starvation)와 문맥 교환 비용을 제어해야 하므로, 교과서적 SRTF를 그대로 쓰기보다 그 철학만 부분적으로 차용한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>SRTF는 SJF (Shortest Job First)의 선점형 버전이다. 비선점형 SJF는 "짧은 작업을 먼저 끝낸다"는 점에서는 훌륭하지만, 이미 긴 작업이 CPU를 잡고 있으면 그 뒤에 도착한 아주 짧은 작업도 끝날 때까지 기다려야 한다. SRTF는 이 약점을 바로 겨냥해, 더 짧은 작업이 Ready 큐에 들어오는 순간 현재 작업을 중단시키고 CPU를 넘겨준다.</p>
+<p>이 개념이 필요해진 배경은 시분할 시스템과 상호작용형 시스템의 등장이다. 사용자는 터미널 입력, 마우스 클릭, 짧은 I/O (Input/Output) 처리처럼 빨리 끝나는 일을 즉각 처리해 주길 원한다. 그런데 긴 계산 작업 하나가 CPU를 오래 점유하고 있으면, 이런 짧은 작업의 응답 시간이 급격히 나빠진다. SRTF는 바로 이 문제를 해결하기 위해 "이미 돌고 있더라도 더 짧은 일이 오면 비켜라"라는 강한 규칙을 도입했다.</p>
+<p>아래 그림은 비선점형 SJF와 SRTF의 차이가 왜 중요한지 보여 준다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────────────────┐
+│ Why SRTF exists                                                    │
+├────────────────────────────────────────────────────────────────────┤
+│ time 0       1                              8                      │
+│                                                                    │
+│ SJF  : [P1 running.........................][P2]                   │
+│        short P2 waits because P1 already owns CPU                  │
+│                                                                    │
+│ SRTF : [P1][P2][P1.........................]                       │
+│        at t=1, P2 arrives and preempts because 2 &lt; 7              │
+└────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>핵심은 SRTF가 단순히 "짧은 작업을 먼저 고른다"에서 끝나지 않고, <strong>상황이 바뀌는 순간 현재 선택을 뒤집을 수 있다</strong>는 데 있다. 그래서 이 알고리즘은 평균 성능을 줄이는 이론적 최적점으로 자주 등장한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: SRTF는 줄 서 있는 손님만 보는 계산대가 아니라, 지금 계산 중이어도 바로 끝날 손님이 오면 잠깐 먼저 처리해 주는 계산대와 같다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>SRTF의 판단식은 단순하다. Ready 상태 프로세스와 현재 Running 프로세스의 남은 실행 시간을 비교해 가장 작은 값을 선택하면 된다. 문제는 "남은 시간"이 정적 값이 아니라 실행하면서 계속 줄어든다는 점이다. 따라서 스케줄러는 프로세스 도착, CPU 버스트 종료, I/O 완료 후 Ready 복귀, 타이머 인터럽트 같은 시점마다 다시 비교해야 한다.</p>
+<table><thead><tr><th style="text-align: left">이벤트</th><th style="text-align: left">스케줄러가 하는 일</th><th style="text-align: left">의미</th></tr></thead><tbody>
+<tr><td style="text-align: left">새 프로세스 도착</td><td style="text-align: left">Running 프로세스와 남은 시간 비교</td><td style="text-align: left">더 짧으면 즉시 선점</td></tr>
+<tr><td style="text-align: left">현재 프로세스 종료</td><td style="text-align: left">Ready 큐에서 최단 남은 시간 선택</td><td style="text-align: left">자연스러운 다음 선택</td></tr>
+<tr><td style="text-align: left">I/O 완료 후 복귀</td><td style="text-align: left">Ready 큐 재정렬</td><td style="text-align: left">짧은 I/O 바운드 작업 우대</td></tr>
+<tr><td style="text-align: left">타이머 인터럽트</td><td style="text-align: left">예측값·남은 시간 재점검</td><td style="text-align: left">선점 시점 보장</td></tr>
+</tbody></table>
+<p>다음 예시는 SRTF가 평균 대기 시간을 어떻게 줄이는지 보여 준다.</p>
+<table><thead><tr><th style="text-align: left">프로세스</th><th style="text-align: center">도착 시간</th><th style="text-align: center">CPU 버스트</th></tr></thead><tbody>
+<tr><td style="text-align: left">P1</td><td style="text-align: center">0 ms</td><td style="text-align: center">8 ms</td></tr>
+<tr><td style="text-align: left">P2</td><td style="text-align: center">1 ms</td><td style="text-align: center">4 ms</td></tr>
+<tr><td style="text-align: left">P3</td><td style="text-align: center">2 ms</td><td style="text-align: center">2 ms</td></tr>
+</tbody></table>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────────────────┐
+│ SRTF timeline                                                      │
+├────────────────────────────────────────────────────────────────────┤
+│ time : 0    1    2      4        7                14              │
+│ run  : | P1 | P2 |  P3  |   P2   |       P1       |               │
+│                                                                    │
+│ at t=1 : P2(4) arrives, P1 has 7 left -&gt; preempt P1               │
+│ at t=2 : P3(2) arrives, P2 has 3 left -&gt; preempt P2               │
+│ finish : P3 first, then P2, then P1                               │
+└────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>이때 대기 시간은 <code>P1 = 14 - 0 - 8 = 6 ms</code>, <code>P2 = 7 - 1 - 4 = 2 ms</code>, <code>P3 = 4 - 2 - 2 = 0 ms</code>가 되어 평균 2.67 ms가 된다. 같은 입력을 비선점형 SJF로 처리하면 <code>P1</code>이 먼저 8 ms를 다 쓰고 난 뒤 <code>P3</code>, <code>P2</code>가 실행되어 평균 대기 시간이 5.0 ms까지 늘어난다. 즉 SRTF는 짧은 작업을 더 빨리 배출해 전체 평균을 줄인다.</p>
+<p>다만 이 원리가 실제로 성립하려면 남은 CPU 버스트를 알아야 한다. 현실의 운영체제는 이를 정확히 알 수 없으므로, 지수 평균법 (Exponential Averaging) 같은 예측 기법으로 다음 버스트를 추정해 근사 적용한다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: SRTF는 놀이기구 줄에서 "지금 가장 빨리 끝나고 나갈 사람"을 계속 다시 골라 먼저 태우는 규칙과 같다. 줄이 자주 바뀌지만 전체 줄 길이는 빨리 줄어든다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>SRTF를 이해할 때 가장 중요한 비교축은 SJF, 라운드 로빈 (Round Robin, RR), 그리고 현대 공정성 스케줄러다. SJF와 SRTF는 둘 다 "짧은 작업 우대" 철학을 공유하지만, SRTF는 상황 변화에 따라 현재 실행 중인 프로세스까지 빼앗을 수 있다. 반면 RR은 작업 길이를 모르더라도 공정하게 CPU를 나눠 주는 데 초점을 둔다.</p>
+<table><thead><tr><th style="text-align: left">정책</th><th style="text-align: center">선점 여부</th><th style="text-align: left">최우선 목표</th><th style="text-align: left">장점</th><th style="text-align: left">한계</th></tr></thead><tbody>
+<tr><td style="text-align: left">SJF (Shortest Job First)</td><td style="text-align: center">아니오</td><td style="text-align: left">평균 대기 시간 감소</td><td style="text-align: left">구조 단순</td><td style="text-align: left">짧은 작업이 뒤늦게 와도 기다림</td></tr>
+<tr><td style="text-align: left">SRTF (Shortest Remaining Time First)</td><td style="text-align: center">예</td><td style="text-align: left">평균 대기·반환 시간 최소화</td><td style="text-align: left">짧은 작업 응답 우수</td><td style="text-align: left">기아 상태, 예측 의존</td></tr>
+<tr><td style="text-align: left">RR (Round Robin)</td><td style="text-align: center">예</td><td style="text-align: left">공정한 시간 분할</td><td style="text-align: left">응답성·공정성 양호</td><td style="text-align: left">평균 대기 시간은 비효율 가능</td></tr>
+<tr><td style="text-align: left">CFS (Completely Fair Scheduler) 계열</td><td style="text-align: center">예</td><td style="text-align: left">장기 공정성</td><td style="text-align: left">기아 완화, 현실 적합</td><td style="text-align: left">이론적 최단 평균은 아님</td></tr>
+</tbody></table>
+<p>여기서 중요한 경계는 <strong>최적성 대 공정성</strong>이다. SRTF는 짧은 작업의 평균 지연을 극적으로 줄이지만, 긴 CPU 바운드 작업은 계속 뒤로 밀릴 수 있다. 반면 RR이나 CFS는 평균 대기 시간을 조금 희생해도 "아무도 영원히 굶지 않게" 만드는 쪽에 무게를 둔다.</p>
+<p>또한 SRTF는 단순 CPU 스케줄링 개념을 넘어, 데이터베이스 질의 처리나 서버 요청 스케줄링의 Shortest Remaining Processing Time (SRPT) 아이디어와도 연결된다. 즉 "남은 일이 적은 것을 빨리 비워 전체 평균을 낮춘다"는 철학은 여러 시스템 영역에서 반복된다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: SRTF가 빨리 끝나는 손님부터 먼저 계산해 전체 줄을 빨리 비우는 정책이라면, RR은 손님 모두에게 1분씩 차례를 주는 정책이고, CFS는 오래 못 받은 손님이 너무 손해 보지 않게 균형을 맞추는 정책이다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p>현실 시스템에서 교과서적 SRTF를 그대로 쓰기 어려운 이유는 세 가지다. 첫째, 남은 CPU 버스트를 정확히 알 수 없다. 둘째, 짧은 작업이 계속 유입되면 긴 작업은 사실상 무기한 대기할 수 있다. 셋째, 선점이 잦아질수록 문맥 교환 (Context Switch) 비용과 캐시 오염 비용이 커진다. 결국 실제 운영체제는 SRTF를 "정답"이 아니라 "성능 기준선"으로 활용한다.</p>
+<p>그럼에도 SRTF 철학은 여러 형태로 살아 있다. 짧은 상호작용 작업을 빠르게 반응시켜야 하는 시스템은 최근 CPU 사용량이 적은 작업을 우대하거나, 예측된 burst가 짧은 작업에 높은 우선순위를 주는 방식으로 SRTF에 가까운 효과를 낸다. 리눅스의 CFS는 남은 시간이 아니라 가상 실행 시간 (virtual runtime, vruntime)을 사용하지만, 결과적으로 I/O 바운드 작업이 빠르게 CPU를 다시 잡도록 유도한다.</p>
+<p>아래 흐름은 SRTF를 직접 쓰거나 유사 철학을 차용할지 판단하는 기준이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────────────────┐
+│ Should you use an SRTF-like policy?                               │
+├────────────────────────────────────────────────────────────────────┤
+│ can remaining service time be estimated reasonably well?          │
+│   ├─ yes                                                          │
+│   │   ├─ short-job latency is critical? -&gt; SRTF-like is useful    │
+│   │   └─ fairness is stricter? -&gt; add aging &#x2F; fair-share control  │
+│   └─ no -&gt; prefer CFS, MLFQ, or deadline-specific policies        │
+└────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="silmu-pandan-gijun">실무 판단 기준</h3>
+<ol>
+<li><strong>실행 시간 예측이 가능한가?</strong> 웹 요청 크기, 배치 작업 크기처럼 예측 가능한 환경이면 적용 가치가 높다.</li>
+<li><strong>짧은 작업 응답성이 핵심인가?</strong> 사용자 입력, I/O 복귀 작업이 많으면 SRTF 철학이 효과적이다.</li>
+<li><strong>기아 상태를 제어할 장치가 있는가?</strong> aging, 최대 대기 한도, fair-share 보완이 필요하다.</li>
+<li><strong>문맥 교환 비용이 작은가?</strong> 선점 빈도가 높으면 오히려 처리량이 떨어질 수 있다.</li>
+</ol>
+<h3 id="antipaeteon">안티패턴</h3>
+<ul>
+<li>
+<p>남은 시간을 예측할 방법이 없는데도 SRTF가 항상 최적이라고 단정하는 것</p>
+</li>
+<li>
+<p>평균 대기 시간만 보고 긴 작업의 기아 상태를 무시하는 것</p>
+</li>
+<li>
+<p>실시간 deadline 문제를 SRTF로 풀려는 것</p>
+</li>
+<li>
+<p><strong>📢 섹션 요약 비유</strong>: SRTF는 가장 빨리 끝나는 주문부터 먼저 조리해 전체 평균 대기 시간을 낮추는 주방과 같다. 하지만 작은 주문만 계속 들어오면 오래 걸리는 요리는 끝없이 뒤로 밀릴 수 있다.</p>
+</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>SRTF의 가장 큰 장점은 이론적으로 매우 강한 기준점을 제공한다는 점이다. 정확한 남은 시간을 안다는 가정 아래에서는 짧은 작업을 신속히 끝내 전체 평균 대기 시간과 반환 시간을 낮출 수 있다. 그래서 운영체제 교과서에서 SRTF는 "짧은 작업 우대 정책의 이상적 극한"으로 자주 등장한다.</p>
+<p>하지만 운영 환경은 이 가정을 쉽게 허용하지 않는다. 남은 시간을 틀리게 예측하면 잘못된 선점이 일어나고, 선점이 잦으면 CPU 캐시와 파이프라인의 지역성이 깨지며, 긴 작업은 공정성 측면에서 손해를 본다. 따라서 실무에서는 SRTF를 그대로 채택하기보다, 그 장점을 살리면서 공정성과 오버헤드를 보완한 현실형 정책으로 변형해 사용한다.</p>
+<p>정리하면 SRTF는 "항상 가장 빨리 끝날 일을 먼저 끝낸다"는 단순하지만 강력한 원리를 가진다. 기억할 핵심은 분명하다. <strong>평균 성능에는 매우 강하지만, 정확한 예측과 공정성 보완 없이는 운영체제의 기본 정책이 되기 어렵다</strong>는 점이다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: SRTF는 전체 줄을 가장 빨리 줄이는 계산 방식이지만, 맨 뒤에서 오래 기다리는 손님이 생기지 않도록 별도의 배려 규칙이 함께 있어야 진짜 좋은 가게가 된다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">SJF (Shortest Job First)</td><td style="text-align: left">SRTF의 비선점형 원형이다</td></tr>
+<tr><td style="text-align: left">선점형 스케줄링 (Preemptive Scheduling)</td><td style="text-align: left">더 짧은 작업이 오면 CPU를 강제로 회수하게 해 준다</td></tr>
+<tr><td style="text-align: left">지수 평균법 (Exponential Averaging)</td><td style="text-align: left">남은 버스트를 현실적으로 추정하는 대표 기법이다</td></tr>
+<tr><td style="text-align: left">문맥 교환 (Context Switch)</td><td style="text-align: left">잦은 선점이 불러오는 직접 비용이다</td></tr>
+<tr><td style="text-align: left">기아 상태 (Starvation)</td><td style="text-align: left">긴 작업이 계속 밀릴 수 있는 SRTF의 핵심 약점이다</td></tr>
+<tr><td style="text-align: left">CFS (Completely Fair Scheduler)</td><td style="text-align: left">SRTF의 응답성 장점을 공정성과 타협해 계승한 현실형 접근이다</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">unknown future CPU burst
+          │
+          ▼
+estimate service time
+          │
+          ▼
+compare remaining time continuously
+          │
+          ▼
+SRTF preemption
+          │
+          ├──────────────▶ fast response for short jobs
+          │
+          └──────────────▶ need starvation &#x2F; context-switch control
+</code></pre>
+<p>이 흐름도는 SRTF가 "실행 시간 예측"에서 출발해 "남은 시간 비교"로 이어지고, 결국 응답성 향상과 공정성 보완이라는 두 갈래 판단으로 연결된다는 점을 보여 준다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>SRTF는 놀이터에서 가장 빨리 끝낼 수 있는 친구부터 먼저 미끄럼틀을 타게 해 주는 규칙이에요.</li>
+<li>그래서 금방 끝나는 친구들은 빨리 놀 수 있지만, 오래 놀 친구는 계속 뒤로 밀릴 수 있어요.</li>
+<li>컴퓨터는 이 규칙 덕분에 짧은 일을 아주 빠르게 처리하지만, 오래 기다리는 친구가 없도록 다른 규칙도 함께 써야 해요.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

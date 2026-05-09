@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>175. 코드 정적 스캐닝 및 종속성 취약점 스캐닝 (Static Application Security Testing, Software Composition Analysis; SAST, SCA) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote cloud architecture
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: Static Application Security Testing (SAST)는 직접 작성한 코드의 취약한 흐름을, Software Composition Analysis (SCA)는 가져다 쓴 라이브러리와 전이 의존성의 알려진 위험을 추적하는 상보적 검사다.</li>
+<li><strong>가치</strong>: 두 검사를 Pull Request 단계에 배치하면 배포 직전이 아니라 변경 순간에 위험이 드러나므로 수정 비용, 릴리스 지연, 공급망 노출을 함께 줄일 수 있다.</li>
+<li><strong>판단 포인트</strong>: 모든 경고를 똑같이 막으면 개발이 멈추므로, 새 코드인지, 실제 실행 경로에 닿는지, 치명도가 어느 수준인지에 따라 차단 기준을 분리해야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>코드 보안 스캐닝은 출시 직전에 한 번 수행하는 점검이 아니라, 소스 변경과 의존성 변경이 일어날 때마다 위험을 다시 계산하는 조기 피드백 체계다. 현대 서비스는 직접 작성한 코드와 오픈소스 의존성이 뒤섞여 있으므로, 취약점의 유입 경로도 "내 코드의 실수"와 "가져다 쓴 부품의 결함"으로 나뉜다. SAST는 입력 검증 누락, 안전하지 않은 애플리케이션 프로그래밍 인터페이스 (Application Programming Interface, API) 호출, 하드코딩된 시크릿 같은 문제를 빠르게 드러내고, SCA는 <code>log4j</code>처럼 이미 공개된 Common Vulnerabilities and Exposures (CVE)와 위험한 버전을 연결해 준다.</p>
+<p>문제는 이 둘 중 하나만 봐서는 빈틈이 남는다는 점이다. 코드 리뷰만 잘해도 전이 의존성의 치명적 취약점은 놓칠 수 있고, 라이브러리 버전만 관리해도 직접 만든 인증 우회 로직은 보이지 않는다. 그래서 Development, Security, and Operations (DevSecOps)에서 코드 보안 스캐닝은 "도구 하나"가 아니라, 서로 다른 질문을 던지는 두 검사 축으로 이해해야 한다.</p>
+<p>아래 그림은 코드 보안 위험이 들어오는 두 경로를 보여준다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────────┐
+│                    Two entry points for code risk                   │
+├──────────────────────────────┬───────────────────────────────────────┤
+│ Own source code              │ 3rd-party components                 │
+│ controller -&gt; service -&gt; DB  │ manifest -&gt; dep A -&gt; dep B           │
+│ weak validation &#x2F; secrets    │ known CVE &#x2F; malicious package        │
+│ logic flaw lives in repo     │ risk travels through transitive deps │
+└──────────────────────────────┴───────────────────────────────────────┘
+</code></pre>
+<p>핵심은 애플리케이션 보안을 "내가 작성한 줄"과 "내가 가져온 줄"의 결합 문제로 보는 것이다. 둘 중 하나만 관리하면 나머지 절반의 공격면이 그대로 남는다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: SAST는 내가 직접 지은 집의 설계 결함을 찾는 검사이고, SCA는 집을 지을 때 쓴 철근과 자재 중 리콜 대상이 섞였는지 확인하는 검사다. 집 자체와 자재를 둘 다 봐야 안전해진다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>SAST의 핵심은 코드를 실행하지 않고 구조를 읽는 데 있다. 파서가 Abstract Syntax Tree (AST)를 만들고, 규칙 엔진이 데이터 흐름과 API 사용 패턴을 분석해 Injection, Cross-Site Scripting (XSS), Server-Side Request Forgery (SSRF), 하드코딩 키 같은 취약 패턴을 찾는다. 정교한 도구는 단순 문자열 검색을 넘어 Taint Analysis로 "사용자 입력이 검증 없이 위험한 함수까지 도달하는가"를 추적한다.</p>
+<p>SCA의 핵심은 의존성 그래프다. <code>pom.xml</code>, <code>package-lock.json</code>, <code>go.sum</code>, <code>requirements.txt</code> 같은 파일에서 직접·전이 의존성을 펼쳐 보고, National Vulnerability Database (NVD)나 벤더 Advisory와 대조해 어느 패키지 버전이 알려진 취약점과 연결되는지 계산한다. 최근에는 Software Bill of Materials (SBOM)와 Reachability Analysis를 함께 써서 "취약 패키지가 있긴 한데 실제 코드 경로에서 호출되는가"까지 줄여 본다.</p>
+<p>아래 그림은 Pull Request 기준으로 두 검사가 어떻게 합쳐지는지 보여준다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────────┐
+│                    PR-centered security scan flow                   │
+├──────────────────────────────────────────────────────────────────────┤
+│ Git diff                                                             │
+│   ├─ source files ----------&gt; parser &#x2F; AST &#x2F; data-flow -&gt; SAST       │
+│   │                                                   └-&gt; code path  │
+│   └─ lockfile &#x2F; manifest ---&gt; dependency graph ------&gt; SCA           │
+│                                                       ├-&gt; CVE match  │
+│                                                       └-&gt; fix path   │
+│                                                                      │
+│ Findings -&gt; dedupe -&gt; reachability &#x2F; severity tuning -&gt; policy gate  │
+│          -&gt; PR comment &#x2F; build fail &#x2F; ticket &#x2F; baseline record       │
+└──────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<table><thead><tr><th style="text-align: left">관점</th><th style="text-align: left">SAST</th><th style="text-align: left">SCA</th></tr></thead><tbody>
+<tr><td style="text-align: left">분석 입력</td><td style="text-align: left">소스 코드, 변경된 파일, 데이터 흐름</td><td style="text-align: left">Manifest, Lockfile, SBOM, 패키지 메타데이터</td></tr>
+<tr><td style="text-align: left">탐지 방식</td><td style="text-align: left">규칙 기반, Taint Analysis, 패턴/흐름 분석</td><td style="text-align: left">의존성 그래프 + CVE/Advisory 매칭</td></tr>
+<tr><td style="text-align: left">강한 영역</td><td style="text-align: left">Injection, 인증 우회, 시크릿 하드코딩, 안전하지 않은 API 사용</td><td style="text-align: left">취약 라이브러리, 전이 의존성, 라이선스 정책, 공급망 노출</td></tr>
+<tr><td style="text-align: left">약한 영역</td><td style="text-align: left">런타임 설정, 외부 바이너리, 환경 의존 취약점</td><td style="text-align: left">직접 작성한 로직 버그, 미공개 Zero-day</td></tr>
+<tr><td style="text-align: left">출력 형태</td><td style="text-align: left">코드 위치, 취약 흐름, 수정 가이드</td><td style="text-align: left">패키지명, 버전, 전이 경로, 권장 업그레이드 버전</td></tr>
+</tbody></table>
+<p>실무적으로 중요한 차이는 "탐지 단위"다. SAST는 파일과 함수 수준으로 내려가며, SCA는 컴포넌트와 버전 수준으로 올라간다. 따라서 둘을 함께 보면 "어디서 위험이 생겼는지"와 "무엇을 바꿔야 닫히는지"를 동시에 볼 수 있다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: SAST는 도시 지도에서 사고가 난 교차로를 찾는 일이고, SCA는 그 도시에 깔린 부품 중 결함 부품이 어느 공장에서 왔는지 역추적하는 일이다. 한쪽은 위치를, 다른 한쪽은 부품 계보를 보여준다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>SAST와 SCA를 이해하려면 다른 보안 검사와의 경계도 분명히 봐야 한다. Dynamic Application Security Testing (DAST)는 실행 중인 서비스를 공격자 관점에서 시험하고, 컨테이너 이미지 스캐닝은 운영체제 패키지와 베이스 이미지 계층을 본다. 즉 질문이 서로 다르므로 대체재가 아니라 계층적 보완재다.</p>
+<table><thead><tr><th style="text-align: left">검사 기법</th><th style="text-align: left">주된 질문</th><th style="text-align: left">잘 찾는 것</th><th style="text-align: left">놓치기 쉬운 것</th><th style="text-align: left">적합 시점</th></tr></thead><tbody>
+<tr><td style="text-align: left">SAST</td><td style="text-align: left">코드가 위험하게 작성됐는가</td><td style="text-align: left">Injection, 인증 실수, 하드코딩 키</td><td style="text-align: left">런타임 설정 문제, 실제 배포 환경</td><td style="text-align: left">PR, 빌드 초기</td></tr>
+<tr><td style="text-align: left">SCA</td><td style="text-align: left">가져온 부품이 위험한가</td><td style="text-align: left">취약 라이브러리, 전이 의존성, 라이선스</td><td style="text-align: left">직접 코드 로직 버그, 미공개 취약점</td><td style="text-align: left">의존성 변경 시, 주기적 재평가</td></tr>
+<tr><td style="text-align: left">DAST</td><td style="text-align: left">실행된 서비스가 실제로 뚫리는가</td><td style="text-align: left">인증 흐름, 헤더 설정, 실제 공격면</td><td style="text-align: left">코드 내부 위치, 사용하지 않는 라이브러리</td><td style="text-align: left">스테이징, 릴리스 전후</td></tr>
+<tr><td style="text-align: left">이미지 스캔</td><td style="text-align: left">배포 단위에 위험 패키지가 있는가</td><td style="text-align: left">OS 패키지, 베이스 이미지 취약점</td><td style="text-align: left">애플리케이션 코드 결함</td><td style="text-align: left">패키징, 배포 직전</td></tr>
+</tbody></table>
+<p>예를 들어 <code>log4j 2.14.1</code>은 SCA가 빠르게 찾지만, 직접 작성한 SQL 문자열 연결은 SAST가 훨씬 잘 찾는다. 반대로 잘못 열린 디버그 엔드포인트는 실행 후 DAST가 더 명확하게 잡는다. 결국 좋은 파이프라인은 "가장 싼 시점에 가장 잘 잡는 검사"를 앞단에 배치하고, 후단 검사는 남는 사각지대를 메우는 구조가 된다.</p>
+<p>이 연결은 공급망 보안으로 더 확장된다. SCA 결과를 SBOM으로 남기면 새 CVE가 공개됐을 때 이미 배포된 서비스 중 어떤 시스템이 영향을 받는지 빠르게 역조회할 수 있다. 여기에 SAST 결과까지 묶으면 "취약 라이브러리가 있으며, 그 라이브러리의 위험 기능이 실제 호출되는 코드도 존재한다" 같은 우선순위 판단이 가능해진다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 병원 진단에서도 문진, 혈액검사, CT가 서로 다른 질문을 던진다. SAST와 SCA도 마찬가지로 서로 다른 검사실이며, 둘을 묶어야 전체 진단이 완성된다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p>실무에서는 "도구를 붙였는가"보다 "어떤 경고를 언제 차단할 것인가"가 더 중요하다. SonarQube, Semgrep, Checkmarx 같은 SAST 도구와 Snyk, Open Worldwide Application Security Project (OWASP) Dependency-Check, Trivy, Dependabot 같은 SCA 도구를 모두 넣더라도, 모든 경고를 동일하게 빌드 실패로 처리하면 개발 조직은 곧 우회한다. 현실적인 게이트 설계는 신규 위험과 레거시 부채를 분리하고, 치명도와 신뢰도를 함께 봐야 한다.</p>
+<table><thead><tr><th style="text-align: left">운영 지점</th><th style="text-align: left">권장 검사</th><th style="text-align: left">즉시 차단 예시</th><th style="text-align: left">추적 관리 예시</th></tr></thead><tbody>
+<tr><td style="text-align: left">IDE / Pre-commit</td><td style="text-align: left">빠른 SAST, 시크릿 탐지</td><td style="text-align: left">노출된 API 키, 인증서, 토큰</td><td style="text-align: left">스타일성 경고, 낮은 확신의 코드 스멜</td></tr>
+<tr><td style="text-align: left">Pull Request</td><td style="text-align: left">SAST + SCA</td><td style="text-align: left">신규 High 확신 Injection, Reachable Critical CVE, 공개 Exploit 존재</td><td style="text-align: left">신규 Medium 경고, 수정 버전 없는 취약점</td></tr>
+<tr><td style="text-align: left">Nightly / 주기 재평가</td><td style="text-align: left">전체 SCA 재스캔, 풀 리포지토리 SAST</td><td style="text-align: left">새로 공개된 Critical CVE</td><td style="text-align: left">장기 부채, 만료 임박 예외</td></tr>
+<tr><td style="text-align: left">Release Gate</td><td style="text-align: left">SBOM, 정책 게이트, 서명 검증</td><td style="text-align: left">승인되지 않은 라이선스, 미해결 치명 취약점</td><td style="text-align: left">예외 승인 이력 검토</td></tr>
+</tbody></table>
+<p>아래 흐름은 실제로 자주 쓰는 triage 기준이다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌──────────────────────────────────────────────────────────────────────┐
+│                     Practical finding triage                        │
+├──────────────────────────────────────────────────────────────────────┤
+│ finding detected?                                                    │
+│   ├─ secret leak &#x2F; internet remote code execution -&gt; block now       │
+│   ├─ new code + high confidence issue             -&gt; block PR         │
+│   ├─ transitive CVE but no reachable path         -&gt; ticket + watch   │
+│   └─ legacy medium&#x2F;low debt                       -&gt; baseline + due    │
+└──────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>판단 포인트는 네 가지다. 첫째, <strong>새로운 위험 유입을 멈추는 것</strong>이 기존 부채를 한 번에 모두 없애는 것보다 우선이다. 둘째, Reachability와 Exploit Maturity를 반영해야 오탐에 묻히지 않는다. 셋째, 예외 승인은 영구 면제가 아니라 만료일이 있는 정책 객체여야 한다. 넷째, SCA는 주기 재평가가 필수다. 코드가 바뀌지 않아도 어제 공개된 CVE 때문에 오늘 위험해질 수 있기 때문이다.</p>
+<p>기술사 답안에서는 SAST와 SCA를 단순 정의로 끝내지 말고, <strong>분석 대상 차이, 게이트 정책, SBOM 연계, Reachability 기반 우선순위화, DevSecOps 내 배치 위치</strong>까지 써야 실무 판단력이 드러난다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 공항 보안도 칼을 들고 들어오는 사람은 바로 막고, 규정이 애매한 물품은 별도 확인대로 보낸다. 중요한 것은 모든 물건을 똑같이 다루는 것이 아니라 위험이 큰 것을 먼저 정확하게 막는 운영 기준이다.</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>SAST와 SCA를 함께 운영하면 개발 초기의 코드 취약점과 배포 전 공급망 위험을 동시에 줄일 수 있다. 특히 SCA는 새 CVE 공개 시점마다 기존 시스템을 역추적하는 능력을 주고, SAST는 코드 변경 순간에 안전하지 않은 흐름을 바로 수정하게 만든다. 그 결과 취약점 수정 시점이 앞당겨지고, 릴리스 막판 보안 이슈로 인한 재작업도 줄어든다.</p>
+<p>다만 한계도 분명하다. SAST는 오탐과 런타임 맥락 부족이 문제이고, SCA는 공개되지 않은 Zero-day와 실제 호출 여부 판단에서 제약이 있다. 그래서 이 둘을 만능 해결책으로 보기보다, DAST, 이미지 스캐닝, Policy as Code, 런타임 탐지와 이어지는 조기 경보 계층으로 이해하는 편이 정확하다.</p>
+<p>결국 기억해야 할 핵심은 간단하다. SAST는 "내 코드가 안전한가", SCA는 "내가 가져온 부품이 안전한가"를 묻는다. 둘을 묶어야 코드 보안이 소스 수준과 공급망 수준에서 동시에 닫힌다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 식당 위생을 지키려면 조리법도 점검해야 하고, 납품 재료도 추적해야 한다. 조리대만 깨끗해도 상한 재료가 들어오면 문제고, 재료만 좋아도 조리 과정이 위험하면 사고가 난다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">DevSecOps</td><td style="text-align: left">SAST/SCA를 CI/CD 안으로 끌어들여 조기 피드백 루프를 만든다.</td></tr>
+<tr><td style="text-align: left">CVE / NVD</td><td style="text-align: left">SCA가 취약 버전을 판별할 때 참조하는 대표 공개 취약점 데이터 소스다.</td></tr>
+<tr><td style="text-align: left">SBOM (Software Bill of Materials)</td><td style="text-align: left">배포 산출물에 어떤 라이브러리가 포함됐는지 명시해 사후 영향 분석을 가능하게 한다.</td></tr>
+<tr><td style="text-align: left">Reachability Analysis</td><td style="text-align: left">취약 패키지가 실제 실행 경로에 닿는지 줄여서 우선순위를 높인다.</td></tr>
+<tr><td style="text-align: left">DAST (Dynamic Application Security Testing)</td><td style="text-align: left">실행 환경에서 보이는 공격면을 확인해 SAST/SCA의 사각지대를 보완한다.</td></tr>
+<tr><td style="text-align: left">Container Image Scanning</td><td style="text-align: left">애플리케이션 코드 밖의 OS 패키지와 베이스 이미지 위험을 추가로 점검한다.</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">Manual code review
+    │
+    ▼
+SAST on source-code structure
+    │
+    ▼
+SCA on dependency graph and transitive packages
+    │
+    ▼
+SBOM + reachability + policy gate
+    │
+    ▼
+Continuous supply-chain security and runtime re-evaluation
+</code></pre>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>SAST는 내가 직접 만든 장난감에서 날카로운 부분이 없는지 살펴보는 검사예요.</li>
+<li>SCA는 친구에게 빌린 부품 중에 이미 고장 난 부품이 섞여 있는지 확인하는 검사예요.</li>
+<li>두 검사를 함께 해야 위험한 장난감이 완성되기 전에 미리 고칠 수 있어요.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

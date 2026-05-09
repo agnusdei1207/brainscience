@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>729. 크로스 사이트 요청 위조 (CSRF 원리 및 방어 토큰 방식 SameSite 설정) — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="729-csrf-bangeoyong-synchronizer-token-pattern-mic-samesite-kuki-jeeo">729. CSRF 방어용 Synchronizer Token Pattern 및 SameSite 쿠키 제어</h1>
+<blockquote>
+<p><strong>핵심 인사이트</strong>: 앞서 배운 CSRF 사기극의 원인은, 서버가 "쿠키(로그인) 도장만 묻어있으면 무조건 통과!"시켜줬기 때문이다. 이를 막는 가장 기발한 방법은? 진짜 은행 화면에 폼(Form)을 띄워줄 때 눈에 안 보이는 '1회용 비밀 암호(Token)'를 하나 껴서 주는 것이다. 해커는 내 쿠키는 자동으로 이용할 수 있어도, 은행이 내 화면에만 뿌려준 이 1회용 암호의 정체는 절대 알지 못한다. 이것이 완벽한 CSRF 방어막 토큰의 비밀이다.</p>
+</blockquote>
+<h2 id="i-bangeoyi-hangye-wae-dansun-pilteoringeuro-an-doena">Ⅰ. 방어의 한계 (왜 단순 필터링으로 안 되나?)</h2>
+<ul>
+<li>해커의 요청이 정상적인 나의 IP와 나의 정상적인 쿠키를 달고 날아오기 때문에, 서버의 방화벽이나 입력값 필터링만으로는 이게 해커의 짓인지 구분할 수가 없습니다.</li>
+</ul>
+<h2 id="ii-bangeo-gisul-1-synchronizer-token-pattern-csrf-token">Ⅱ. 방어 기술 1: Synchronizer Token Pattern (CSRF Token) 🌟</h2>
+<p>가장 확실하고 전 세계 웹 프레임워크(Spring, Django, Laravel)에서 기본적으로 강제 탑재해 놓은 표준 방어 기술입니다.</p>
+<h3 id="1-dongjag-weonri-sumgyeojin-nansu-majcugi">1. 동작 원리 (숨겨진 난수 맞추기)</h3>
+<ol>
+<li>앨리스가 A 은행의 <code>[송금 화면]</code>에 정상적으로 찰칵 접속합니다.</li>
+<li>은행 서버는 앨리스에게 화면을 뿌려줄 때, 화면 속 HTML 폼(Form) 깊숙한 곳에 눈에 안 보이는 입력칸(Hidden)으로 <strong><code>CSRF_TOKEN: x9f@8zk</code>라는 일회용 무작위 난수</strong>를 쏙 끼워 넣어 줍니다. (서버도 이 난수를 기억해 둡니다.)</li>
+<li>앨리스가 송금 버튼을 누르면, 쿠키와 함께 이 <code>x9f@8zk</code> 토큰이 같이 은행 서버로 날아가고, 은행은 "음, 아까 내가 준 토큰표 가져왔네. 정상 처리!" 통과시킵니다.</li>
+</ol>
+<h3 id="2-haekeoyi-jeolmang">2. 해커의 절망</h3>
+<ul>
+<li>해커의 '고양이 낚시 사이트'에서 앨리스가 클릭하면, 앨리스의 브라우저가 은행 쿠키는 자동으로 붙여서 쏩니다.</li>
+<li><strong>하지만!</strong> 해커는 은행이 방금 앨리스의 진짜 화면 안에 몰래 뿌려준 <strong>일회용 토큰 <code>x9f@8zk</code>가 무엇인지 절대 알 방법이 없습니다</strong> (동일 출처 정책, SOP 탓에 해커가 남의 화면을 훔쳐볼 수 없음).</li>
+<li>결국 해커가 억지로 날린 송금 요청 패킷 안에는 CSRF 토큰표가 텅 비어있거나 가짜 값이 들어있게 됩니다. 서버는 "쿠키는 맞는데, 토큰표가 없잖아! 너 해커 낚시 사이트에서 왔지!"라며 즉시 걷어차 버립니다. (방어 100% 성공)</li>
+</ul>
+<h2 id="iii-bangeo-gisul-2-samesite-kuki-jeeo-sogseong">Ⅲ. 방어 기술 2: <code>SameSite</code> 쿠키 제어 속성 🌟</h2>
+<p>서버 개발자가 일일이 토큰을 만들기 귀찮을 때, 최신 웹 브라우저(크롬 등)가 아예 자체적으로 지원하기 시작한 가장 강력하고 우아한 방어막입니다.</p>
+<h3 id="1-beuraujeoyi-ddogddoghan-banran">1. 브라우저의 똑똑한 반란</h3>
+<ul>
+<li><strong>기존의 바보 브라우저</strong>: 내가 '고양이.com(A 사이트)'에서 버튼을 눌러도, 요청 목적지가 '은행.com(B 사이트)'이면 무조건 은행 쿠키를 친절하게 다 붙여서 날려줬습니다(Third-party 쿠키 허용).</li>
+<li><strong><code>SameSite</code> 속성의 등장</strong>: 서버가 로그인 쿠키를 구워줄 때 <code>SameSite=Lax</code> 나 <code>SameSite=Strict</code> 라는 꼬리표를 하나 딱 달아줍니다.
+<ul>
+<li>이 꼬리표를 본 브라우저는 선언합니다. <strong>"앞으로는 내가 현재 보고 있는 주소창의 사이트 이름(A)과, 데이터가 날아갈 목적지 사이트 이름(B)이 다르면(크로스 사이트), 보안을 위해 아예 이 쿠키를 꺼내서 붙여주지 않겠다!"</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="2-haekeoyi-myeolmang">2. 해커의 멸망</h3>
+<ul>
+<li>이제 앨리스가 '고양이 사이트'에서 낚시 버튼을 아무리 클릭해 봐야, 앨리스의 크롬 브라우저가 "목적지는 은행인데 넌 왜 고양이 사이트에서 누르냐? 쿠키 안 줄래!" 하고 쿠키를 떼버리고 그냥 알맹이 없는 빈 껍데기 요청만 은행으로 쏩니다. 은행은 당연히 로그인이 안 된 비회원 쓰레기 요청으로 간주하고 폐기합니다.</li>
+</ul>
+<h2 id="iv-bangeo-gisul-3-referer-geomjeung-gaseongbi-coego">Ⅳ. 방어 기술 3: Referer 검증 (가성비 최고)</h2>
+<ul>
+<li>토큰을 만들기 귀찮을 때 서버가 쓰는 단순한 꼼수입니다. 모든 HTTP 요청 헤더에는 <code>Referer</code> (이 요청을 쏜 직전 사이트 주소)가 적혀 날아옵니다.</li>
+<li>은행 서버는 딱 한 줄만 짭니다. <strong>"내게 온 송금 요청의 <code>Referer</code> 주소가 <code>http://A은행.com</code>으로 시작하지 않으면 모조리 버려라!"</strong> 해커의 고양이 사이트에서 온 요청은 <code>Referer</code>가 고양이 주소이므로 가차 없이 차단됩니다.</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: CSRF 사기를 막는 두 가지 철벽. 'CSRF 토큰'은 은행이 진짜 창구에 온 손님에게만 1분 뒤에 폭발하는 '비밀 일회용 도장'을 쥐여주고, 송금 서류에 인감도장(쿠키)과 이 비밀 도장(토큰) 두 개가 동시에 찍혀야만 돈을 주는 시스템입니다. 해커가 멀리서 강제로 사장님 팔을 조종해 인감을 찍게 만들어도 비밀 도장이 없어 사기가 불가능합니다. 'SameSite 쿠키'는 아예 내 지갑(브라우저) 자체가 똑똑해져서, "내가 지금 진짜 은행 건물 안에 들어가 있는 게 아니라면, 절대 주머니에서 내 인감도장(쿠키)을 꺼내주지 않겠다!"라고 철벽을 치는 인공지능 보안 지갑 기술입니다.</p>
+</blockquote>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

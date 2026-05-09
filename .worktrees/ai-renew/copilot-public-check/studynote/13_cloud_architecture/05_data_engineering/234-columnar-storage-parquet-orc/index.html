@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>234. 컬럼 지향 스토리지 (Columnar Storage) - Parquet &#x2F; ORC — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote cloud architecture
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 컬럼 지향 스토리지(Columnar Storage)는 데이터를 <strong>행(Row) 단위가 아닌 열(Column) 단위로 압축 저장</strong>하여 OLAP 분석 쿼리 시 필요한 열만 읽어 I/O를 극적으로 절감한다.</li>
+<li><strong>가치</strong>: 동일 열의 데이터는 타입이 동일하므로 <strong>압축률이 5~10배 높고</strong>, 특정 열만 선택적으로 읽는 OLAP 쿼리에서 로우 기반 대비 수십 배 빠른 스캔 성능을 발휘한다.</li>
+<li><strong>판단 포인트</strong>: Apache Parquet은 범용 컬럼 포맷, Apache ORC는 Hive/Spark 최적화 포맷으로, 데이터 레이크·레이크하우스의 <strong>표준 저장 포맷</strong>으로 반드시 이해해야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>전통 RDBMS는 한 행의 모든 컬럼을 디스크에 연속 저장한다(Row-oriented). INSERT/UPDATE 트랜잭션에는 효율적이지만, "전체 주문 중 매출 금액 합계"처럼 특정 컬럼만 읽는 OLAP 쿼리에서는 불필요한 컬럼까지 전부 읽어야 하는 I/O 낭비가 발생한다.</p>
+<pre><code>[Row-oriented 저장]
+Row 1: [order_id=1][customer_id=C001][product=&quot;책&quot;][amount=30000][date=2024-01-01]
+Row 2: [order_id=2][customer_id=C002][product=&quot;노트북&quot;][amount=1500000][date=2024-01-02]
+...
+
+SELECT SUM(amount) FROM orders;  → 모든 행의 모든 컬럼을 읽어야 함
+
+[Column-oriented 저장]
+order_id: [1][2][3][4]...
+customer_id: [C001][C002][C003]...
+product: [책][노트북][마우스]...
+amount: [30000][1500000][25000]...  ← 이것만 읽음!
+date: [2024-01-01][2024-01-02]...
+
+SELECT SUM(amount) FROM orders;  → amount 컬럼 파일만 읽음 (I&#x2F;O 95% 절감)
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: Row-oriented는 엑셀 시트를 행 단위로 저장하는 것이고, Column-oriented는 같은 항목(열)끼리 묶어서 저장하는 것이다. "전체 직원 연봉 합계"를 구할 때, 연봉 열 하나만 꺼내면 되니 훨씬 빠르다.</p>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="apache-parquet-pail-gujo">Apache Parquet 파일 구조</h3>
+<pre><code>┌────────────────────────────────────────────────────────┐
+│                 Parquet 파일 구조                        │
+│                                                        │
+│  Magic Number (4 bytes)                                │
+│  ┌─────────────────────────────────────────────────┐  │
+│  │ Row Group 1 (행 그룹, 예: 128MB)                 │  │
+│  │  ┌─────────────────────────────────────────┐    │  │
+│  │  │ Column Chunk 1 (order_id)               │    │  │
+│  │  │  - Data Pages (RLE+Dictionary 인코딩)   │    │  │
+│  │  │  - Column Statistics (min&#x2F;max&#x2F;null cnt) │    │  │
+│  │  ├─────────────────────────────────────────┤    │  │
+│  │  │ Column Chunk 2 (amount)                 │    │  │
+│  │  │  - Data Pages                           │    │  │
+│  │  │  - Column Statistics                    │    │  │
+│  │  └─────────────────────────────────────────┘    │  │
+│  ├─────────────────────────────────────────────────┤  │
+│  │ Row Group 2 ...                                  │  │
+│  └─────────────────────────────────────────────────┘  │
+│  File Footer (스키마, Row Group 위치, 통계)              │
+│  Magic Number (4 bytes)                                │
+└────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="parquet-abcug-mic-inkoding-coejeoghwa">Parquet 압축 및 인코딩 최적화</h3>
+<table><thead><tr><th style="text-align: left">최적화 기법</th><th style="text-align: left">설명</th><th style="text-align: left">효과</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Dictionary Encoding</strong></td><td style="text-align: left">반복 값을 정수 ID로 치환</td><td style="text-align: left">문자열 컬럼 압축 우수</td></tr>
+<tr><td style="text-align: left"><strong>RLE (Run-Length Encoding)</strong></td><td style="text-align: left">연속 동일 값 압축</td><td style="text-align: left">정렬된 컬럼 효율적</td></tr>
+<tr><td style="text-align: left"><strong>Delta Encoding</strong></td><td style="text-align: left">이전 값과의 차이만 저장</td><td style="text-align: left">타임스탬프, 순차 ID</td></tr>
+<tr><td style="text-align: left"><strong>Bit Packing</strong></td><td style="text-align: left">필요 최소 비트 수로 저장</td><td style="text-align: left">정수 범위 최적화</td></tr>
+<tr><td style="text-align: left"><strong>압축 코덱</strong></td><td style="text-align: left">Snappy, Zstd, Gzip</td><td style="text-align: left">Snappy: 속도↑, Zstd: 압축률↑</td></tr>
+</tbody></table>
+<h3 id="predicate-pushdown-jogeon-pusidaun">Predicate Pushdown (조건 푸시다운)</h3>
+<pre><code>SELECT * FROM orders WHERE amount &gt; 1000000
+
+Parquet 엔진 동작:
+1. File Footer에서 Row Group 통계 확인
+2. Row Group 2: amount max=500000 → amount &gt; 1000000 없음 → 스킵!
+3. Row Group 5: amount max=3000000 → 조건 가능성 → 읽기
+
+효과: 전체 파일의 70~90% 읽지 않고 건너뜀
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: Predicate Pushdown은 책 목차(Footer 통계)를 먼저 보고, 관련 없는 챕터는 넘기는 것이다. "200페이지 이후 내용만 필요하다"면 목차에서 바로 200페이지로 이동하듯, 통계로 불필요한 Row Group을 건너뛴다.</p>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="parquet-vs-orc-vs-avro-vs-csv">Parquet vs ORC vs Avro vs CSV</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">Parquet</th><th style="text-align: left">ORC</th><th style="text-align: left">Avro</th><th style="text-align: left">CSV</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>저장 방식</strong></td><td style="text-align: left">컬럼 지향</td><td style="text-align: left">컬럼 지향</td><td style="text-align: left">행 지향</td><td style="text-align: left">행 지향</td></tr>
+<tr><td style="text-align: left"><strong>압축률</strong></td><td style="text-align: left">높음</td><td style="text-align: left">높음</td><td style="text-align: left">중간</td><td style="text-align: left">낮음</td></tr>
+<tr><td style="text-align: left"><strong>OLAP 쿼리</strong></td><td style="text-align: left">우수</td><td style="text-align: left">우수</td><td style="text-align: left">보통</td><td style="text-align: left">나쁨</td></tr>
+<tr><td style="text-align: left"><strong>쓰기 성능</strong></td><td style="text-align: left">보통</td><td style="text-align: left">보통</td><td style="text-align: left">우수</td><td style="text-align: left">우수</td></tr>
+<tr><td style="text-align: left"><strong>스트리밍</strong></td><td style="text-align: left">제한</td><td style="text-align: left">제한</td><td style="text-align: left">우수</td><td style="text-align: left">우수</td></tr>
+<tr><td style="text-align: left"><strong>스키마 진화</strong></td><td style="text-align: left">제한</td><td style="text-align: left">제한</td><td style="text-align: left">우수</td><td style="text-align: left">없음</td></tr>
+<tr><td style="text-align: left"><strong>생태계</strong></td><td style="text-align: left">범용 (Spark, Hive, Presto)</td><td style="text-align: left">Hive/ORC 최적</td><td style="text-align: left">Kafka 스키마</td><td style="text-align: left">범용</td></tr>
+<tr><td style="text-align: left"><strong>적합 사례</strong></td><td style="text-align: left">데이터 레이크 OLAP</td><td style="text-align: left">Hive DW</td><td style="text-align: left">스트리밍 직렬화</td><td style="text-align: left">소규모 교환</td></tr>
+</tbody></table>
+<h3 id="pail-pomaes-seontaeg-gijun">파일 포맷 선택 기준</h3>
+<pre><code>[워크로드별 포맷 선택]
+OLAP 분석 (읽기 중심):  Parquet &gt; ORC &gt;&gt; Avro &gt; CSV
+스트리밍 이벤트 직렬화: Avro (Protobuf) &gt;&gt; Parquet
+레이크하우스 테이블:    Parquet (Delta Lake &#x2F; Iceberg)
+Hive DW:               ORC (Hive 네이티브 최적화)
+데이터 교환:            Parquet &gt; CSV
+ML 피처 스토어:         Parquet (Feast 등)
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: 포맷 선택은 짐을 싸는 방식이다. 여행 캐리어(Parquet/ORC)는 체계적으로 정리해 공간 절약, 긴급 배낭(Avro)은 빠르게 넣고 빼기, 비닐백(CSV)은 단순하지만 비효율이다. 분석 여행(OLAP)엔 캐리어, 마라톤(스트리밍)엔 배낭이 맞다.</p>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="parquet-coejeoghwa-silmu-gaideu">Parquet 최적화 실무 가이드</h3>
+<pre data-lang="python" class="language-python "><code class="language-python" data-lang="python"># Spark에서 Parquet 최적화 저장
+df.write \
+  .partitionBy(&quot;date&quot;, &quot;region&quot;)  # 파티션 분할 (쿼리 범위 축소)
+  .option(&quot;compression&quot;, &quot;zstd&quot;)  # Zstandard 압축 (압축률+속도 균형)
+  .option(&quot;maxRecordsPerFile&quot;, 1000000)  # Row Group 크기 조절
+  .mode(&quot;overwrite&quot;) \
+  .parquet(&quot;s3:&#x2F;&#x2F;bucket&#x2F;silver&#x2F;orders&#x2F;&quot;)
+
+# 읽기 최적화
+spark.conf.set(&quot;spark.sql.parquet.filterPushdown&quot;, &quot;true&quot;)
+spark.conf.set(&quot;spark.sql.parquet.mergeSchema&quot;, &quot;false&quot;)
+df = spark.read.parquet(&quot;s3:&#x2F;&#x2F;bucket&#x2F;silver&#x2F;orders&#x2F;&quot;) \
+     .filter(col(&quot;date&quot;) &gt;= &quot;2024-01-01&quot;) \  # Predicate Pushdown
+     .select(&quot;order_id&quot;, &quot;amount&quot;, &quot;status&quot;)  # Column Pruning
+</code></pre>
+<h3 id="patisyeoning-jeonryag">파티셔닝 전략</h3>
+<pre><code>[파티셔닝 설계 예시]
+s3:&#x2F;&#x2F;bucket&#x2F;orders&#x2F;
+├── year=2024&#x2F;month=01&#x2F;day=01&#x2F;part-00000.parquet
+├── year=2024&#x2F;month=01&#x2F;day=02&#x2F;part-00000.parquet
+...
+
+쿼리: WHERE date = &#x27;2024-01-15&#x27;
+→ year=2024&#x2F;month=01&#x2F;day=15&#x2F; 폴더만 읽음 (나머지 99% 스킵)
+
+주의: 파티션 과세분화 (너무 많은 소형 파일) 방지
+     적정 파일 크기: 128MB ~ 512MB
+</code></pre>
+<p>📢 <strong>섹션 요약 비유</strong>: 파티셔닝은 서류함에 날짜별로 구분자(탭)를 꽂아두는 것이다. 1월 15일 서류만 필요하면 전체를 뒤지지 않고 "1월 탭" 안에서 "15일 탭"을 바로 꺼낼 수 있다.</p>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="gidaehyogwa">기대효과</h3>
+<table><thead><tr><th style="text-align: left">효과</th><th style="text-align: left">정량 기준</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>압축률</strong></td><td style="text-align: left">CSV 대비 5~10배 저장 공간 절감</td></tr>
+<tr><td style="text-align: left"><strong>쿼리 속도</strong></td><td style="text-align: left">Row 기반 대비 OLAP 쿼리 5~50배 빠름</td></tr>
+<tr><td style="text-align: left"><strong>I/O 절감</strong></td><td style="text-align: left">Column Pruning + Predicate Pushdown으로 90%+ I/O 절감</td></tr>
+<tr><td style="text-align: left"><strong>스토리지 비용</strong></td><td style="text-align: left">S3 비용 50~80% 절감 (CSV → Parquet 전환)</td></tr>
+</tbody></table>
+<h3 id="hangye-mic-juyijeom">한계 및 주의점</h3>
+<table><thead><tr><th style="text-align: left">한계</th><th style="text-align: left">내용</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>쓰기 성능</strong></td><td style="text-align: left">Row 기반 대비 쓰기 속도 느림 (컬럼 재조합 비용)</td></tr>
+<tr><td style="text-align: left"><strong>소형 파일 문제</strong></td><td style="text-align: left">소규모 배치 쓰기 시 파일 수 폭발 (OPTIMIZE 필요)</td></tr>
+<tr><td style="text-align: left"><strong>스트리밍 직렬화 불리</strong></td><td style="text-align: left">이벤트 단위 쓰기에는 Avro/Protobuf 선호</td></tr>
+<tr><td style="text-align: left"><strong>실시간 행 업데이트 어려움</strong></td><td style="text-align: left">컬럼 지향 특성 상 단건 UPDATE 비효율</td></tr>
+</tbody></table>
+<p>📢 <strong>섹션 요약 비유</strong>: Parquet은 연필 케이스다. 연필(데이터)을 종류별(컬럼별)로 정렬해 넣으면 꺼낼 때 빠르고 공간도 절약된다. 단, 처음 정리하는 시간(쓰기 비용)이 필요하고, 연필 한 자루씩 추가하는 것(단건 업데이트)은 번거롭다.</p>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">OLAP</td><td style="text-align: left">컬럼 지향 스토리지가 가장 큰 성능 이점을 발휘하는 쿼리 패턴</td></tr>
+<tr><td style="text-align: left">데이터 레이크</td><td style="text-align: left">Parquet/ORC가 표준 파일 포맷으로 사용되는 저장소</td></tr>
+<tr><td style="text-align: left">Delta Lake / Iceberg</td><td style="text-align: left">Parquet 위에 트랜잭션 레이어를 추가한 테이블 포맷</td></tr>
+<tr><td style="text-align: left">Predicate Pushdown</td><td style="text-align: left">컬럼 통계 기반 읽기 스킵으로 쿼리 최적화</td></tr>
+<tr><td style="text-align: left">Apache Spark</td><td style="text-align: left">Parquet 읽기·쓰기 최적화의 핵심 엔진</td></tr>
+<tr><td style="text-align: left">파티셔닝</td><td style="text-align: left">컬럼 지향 포맷과 결합하여 쿼리 범위 최소화</td></tr>
+<tr><td style="text-align: left">Avro</td><td style="text-align: left">스트리밍 직렬화용 행 지향 포맷, Kafka 스키마 레지스트리</td></tr>
+</tbody></table>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>컬럼 지향 저장은 학용품을 종류별로 보관하는 것이다. 연필통에는 연필만, 자 통에는 자만 넣으면, "연필 몇 개야?"라고 물을 때 연필통만 열면 된다.</li>
+</ol>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">행 지향 (Row): OLTP 최적화 (INSERT&#x2F;UPDATE 빠름)
+    │
+    ▼
+컬럼 지향 (Columnar): OLAP 최적화 (집계 쿼리 빠름)
+    ├─► Parquet · ORC: 파일 포맷
+    └─► 압축률 ↑: 같은 타입 데이터 연속 저장
+    │
+    ▼
+벡터화 실행: SIMD · Arrow 인메모리 포맷
+</code></pre>
+<ol start="2">
+<li>Parquet은 잘 정리된 서랍장이다. 각 서랍에 같은 종류의 물건이 빽빽이 정리되어(압축), 필요한 서랍만 열어도(컬럼 선택) 원하는 걸 빠르게 찾을 수 있다.</li>
+<li>CSV는 모든 물건을 큰 상자에 섞어 넣은 것이다. 단순하지만, 연필을 찾으려면 상자 전체를 뒤져야 해서 시간이 오래 걸린다.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

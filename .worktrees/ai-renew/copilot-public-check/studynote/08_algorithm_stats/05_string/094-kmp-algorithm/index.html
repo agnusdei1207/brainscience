@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KMP (Knuth-Morris-Pratt) 알고리즘 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>March 21, 2024</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote algorithm
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<ol>
+<li><strong>불필요한 비교 제거</strong>: 문자열 매칭 실패 시 이미 비교한 정보를 활용하여 패턴의 시작점을 효율적으로 건너뛰는 알고리즘임.</li>
+<li><strong>실패 함수 (LPS) 활용</strong>: 접두사와 접미사가 일치하는 최대 길이를 미리 계산하여(Failure Function) $O(N+M)$의 시간 복잡도를 달성함.</li>
+<li><strong>결정적 유한 오토마타 (DFA) 원리</strong>: 문자열 탐색을 상태 전이로 최적화하여 최악의 경우에도 선형 시간을 보장하는 기술사적 핵심 알고리즘임.</li>
+</ol>
+<h3 id="i-gaeyo-context-background">Ⅰ. 개요 (Context &amp; Background)</h3>
+<ul>
+<li><strong>개념</strong>: 텍스트(Text)에서 패턴(Pattern)을 찾을 때, 매칭이 실패한 지점까지의 정보를 재사용하여 탐색 효율을 극대화한 알고리즘임.</li>
+<li><strong>배경</strong>: 단순 비교(Brute-force) 방식은 최악의 경우 $O(N \times M)$이 소요되어 대규모 데이터 처리에 부적합함. 이를 해결하기 위해 Knuth, Morris, Pratt가 공동 개발함.</li>
+</ul>
+<h3 id="ii-akitegceo-mic-haegsim-weonri-deep-dive">Ⅱ. 아키텍처 및 핵심 원리 (Deep Dive)</h3>
+<h4 id="1-kmp-algorijeumyi-mekeonijeum">1. KMP 알고리즘의 메커니즘</h4>
+<ul>
+<li><strong>LPS (Longest Proper Prefix which is also Suffix) 배열</strong>: 패턴 내부에서 중복되는 하위 패턴을 찾아 매칭 실패 시 되돌아갈 위치를 지정함.</li>
+</ul>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[ KMP Matching Logic &amp; LPS Table ]
+Text:    A B A B C A B A B A B D
+Pattern: A B A B A B D
+         | | | | | x (Mismatch at index 4)
+         
+[ LPS Array Construction ]
+Pattern: A B A B A B D
+Index:   0 1 2 3 4 5 6
+LPS:     0 0 1 2 3 4 0  &lt;-- Prefix matching suffix lengths
+
+[ State Transition Logic ]
+(State) ---[Match]--&gt; (Next State)
+   |
+[Mismatch]
+   |
+   V
+(Backtrack to LPS[index-1])
+</code></pre>
+<h4 id="2-sigan-bogjabdo-bunseog">2. 시간 복잡도 분석</h4>
+<ul>
+<li><strong>LPS 계산</strong>: 패턴 길이 $M$에 대해 $O(M)$ 소요.</li>
+<li><strong>매칭 과정</strong>: 텍스트 길이 $N$에 대해 포인터를 뒤로 돌리지 않고 전진하므로 $O(N)$ 소요.</li>
+<li><strong>최종</strong>: $O(N+M)$.</li>
+</ul>
+<h3 id="iii-yunghab-bigyo-mic-dagagdo-bunseog-comparison-synergy">Ⅲ. 융합 비교 및 다각도 분석 (Comparison &amp; Synergy)</h3>
+<table><thead><tr><th style="text-align: left">비교 항목</th><th style="text-align: left">단순 비교 (Naive)</th><th style="text-align: left">KMP 알고리즘</th><th style="text-align: left">보이어-무어 (Boyer-Moore)</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>시간 복잡도</strong></td><td style="text-align: left">$O(N \times M)$</td><td style="text-align: left">$O(N + M)$</td><td style="text-align: left">$O(N/M) \sim O(N \times M)$</td></tr>
+<tr><td style="text-align: left"><strong>탐색 방향</strong></td><td style="text-align: left">왼쪽 → 오른쪽</td><td style="text-align: left">왼쪽 → 오른쪽</td><td style="text-align: left">오른쪽 → 왼쪽 (Backwards)</td></tr>
+<tr><td style="text-align: left"><strong>주요 특징</strong></td><td style="text-align: left">구현이 단순함</td><td style="text-align: left">최악의 경우에도 선형 시간 보장</td><td style="text-align: left">실제 성능이 가장 우수함 (스킵 큼)</td></tr>
+<tr><td style="text-align: left"><strong>추가 공간</strong></td><td style="text-align: left">$O(1)$</td><td style="text-align: left">$O(M)$ - LPS 배열</td><td style="text-align: left">$O(\Sigma + M)$ - Skip Tables</td></tr>
+</tbody></table>
+<h3 id="iv-silmu-jeogyong-mic-gisulsajeog-pandan-strategy-decision">Ⅳ. 실무 적용 및 기술사적 판단 (Strategy &amp; Decision)</h3>
+<ul>
+<li><strong>실무 적용</strong>: 검색 엔진의 키워드 매칭, DNA 염기 서열 분석, 바이러스 패턴 탐지(Signature Matching) 등에서 핵심적으로 활용됨.</li>
+<li><strong>기술사적 판단</strong>: KMP는 이론적으로 선형 시간을 보장한다는 점에서 안정적이지만, 실제 문자열의 집합이 크고 패턴이 긴 경우 보이어-무어 알고리즘이 더 선호될 수 있음. 그러나 하드웨어 레벨의 스트리밍 데이터 처리 시에는 포인터를 되돌리지 않는 KMP가 더 효율적임.</li>
+</ul>
+<h3 id="v-gidaehyogwa-mic-gyeolron-future-standard">Ⅴ. 기대효과 및 결론 (Future &amp; Standard)</h3>
+<ul>
+<li><strong>기대효과</strong>: 대규모 텍스트 로그 분석 시 처리 속도를 비약적으로 향상시키며, 실시간 탐색 시스템의 응답 성능(Latency)을 보장함.</li>
+<li><strong>결론</strong>: KMP는 정보이론과 오토마타 이론이 결합된 우아한 알고리즘으로, 알고리즘 최적화의 기본 소양이며 표준 라이브러리 구현의 기반이 됨.</li>
+</ul>
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb-knowledge-graph">📌 관련 개념 맵 (Knowledge Graph)</h3>
+<ul>
+<li><strong>상위 개념</strong>: 문자열 탐색 (String Searching), 동적 프로그래밍 (LPS 계산 시 활용)</li>
+<li><strong>유사 개념</strong>: Aho-Corasick (다중 패턴 KMP), Rabin-Karp (해싱 활용)</li>
+<li><strong>응용 분야</strong>: NLP(자연어 처리), 생물정보학, 침입 탐지 시스템(IDS)</li>
+</ul>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">[Naive 문자열 매칭]
+    │
+    ▼
+[부분 일치 테이블]
+    │
+    ▼
+[KMP 알고리즘]
+    │
+    ▼
+[선형 시간 검색]
+</code></pre>
+<p>이 흐름도는 선행 개념이 현재 개념으로 응축되고, 다시 확장 개념으로 이어지는 순서를 보여준다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>숨바꼭질을 할 때, 틀린 곳을 다시 찾아보지 않고 "아까 여기까지는 맞았지!"라고 기억해두는 영리한 방법이에요.</li>
+<li>노래 가사에서 "사랑"이라는 글자를 찾을 때, "사" 다음이 "람"이면 다시 처음부터 안 찾고 다음 "사"를 바로 찾아가는 거예요.</li>
+<li>똑같은 실수를 반복하지 않게 미리 '실패할 때 어디로 갈지' 지도를 그려놓는 것과 같아요.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

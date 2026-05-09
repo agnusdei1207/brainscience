@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>180. 이벤트 소싱 (Event Sourcing) - 상태 변경 이벤트를 불변 로그 (Append-Only Log) 로 저장 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>May 06, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote enterprise
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 이벤트 소싱 (Event Sourcing)은 현재 상태 한 줄을 계속 덮어쓰는 대신, 상태를 바꾼 사건들을 시간 순서대로 불변 로그 (Append-Only Log) 에 쌓고 그 합으로 현재를 계산하는 저장 모델이다.</li>
+<li><strong>가치</strong>: 왜 이런 상태가 되었는지, 어제와 오늘 사이에 무엇이 달라졌는지, 특정 시점 상태를 다시 만들 수 있는지를 정확히 추적할 수 있어 감사·복구·재현에 강하다.</li>
+<li><strong>판단 포인트</strong>: 이벤트를 진실 원천으로 삼는 대신 버전 관리, 스냅샷, 프로젝션 재생, 최종 일관성까지 감당해야 한다. 따라서 이력의 의미가 큰 도메인에 선택적으로 적용해야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<p>전통적인 CRUD (Create, Read, Update, Delete) 저장 방식은 보통 "현재 값"을 기준으로 시스템을 표현한다. 예를 들어 계좌 잔액이 7만 원이면 데이터베이스에는 <code>balance = 70000</code>만 남는다. 이 방식은 단순하고 직관적이지만, 왜 7만 원이 되었는지, 어떤 순서로 상태가 바뀌었는지는 별도 감사 로그가 없으면 잃어버리기 쉽다.</p>
+<p>이벤트 소싱은 이 지점에서 출발한다. 시스템의 핵심 진실을 현재 상태가 아니라 <strong>상태를 변화시킨 사건의 연속</strong>으로 본다. 즉 <code>DepositMade</code>, <code>WithdrawalMade</code>, <code>TransferCancelled</code> 같은 도메인 이벤트를 과거형 사실로 저장하고, 현재 상태는 그 이벤트들을 순서대로 적용한 결과로 계산한다. 그래서 이벤트 소싱에서는 현재 상태가 "원본"이 아니라 <strong>투영된 결과</strong>가 된다.</p>
+<p>이 방식이 필요한 이유는 상태 그 자체보다 "변화의 과정"이 중요한 업무가 분명히 존재하기 때문이다. 금융 원장, 주문 수명주기, 포인트 적립·차감, 규제 감사, 장기 보상 처리처럼 과거 사건의 맥락이 비즈니스 의미를 가지는 영역에서는 단순 덮어쓰기만으로는 설명력이 부족하다. 장애 분석이나 재현 테스트 관점에서도 "결과"만 있는 시스템보다 "발생 순서"가 남는 시스템이 훨씬 강하다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────────────────┐
+│ State overwrite vs event history                                   │
+├────────────────────────────────────────────────────────────────────┤
+│ State-based storage                                                │
+│   balance = 70000                                                  │
+│   └─ current value is visible, path to it is mostly lost           │
+│                                                                    │
+│ Event-sourced storage                                              │
+│   +100000  DepositMade                                             │
+│   -20000   PurchaseApproved                                        │
+│   -10000   FeeCharged                                              │
+│   = 70000   current balance by replay                              │
+│                                                                    │
+│ same current state, much richer history                            │
+└────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>중요한 포인트는 이벤트가 단순한 행 변경 이력이 아니라는 점이다. 좋은 이벤트는 <code>status_changed_to_3</code>보다 <code>OrderShipped</code>처럼 <strong>비즈니스에서 이해 가능한 사실</strong>이어야 한다. 그래야 이벤트 로그가 단순 기술 기록이 아니라 도메인 언어가 된다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 현재 상태만 저장하는 방식은 통장 잔액 숫자만 적어 두는 것과 같고, 이벤트 소싱은 입금·출금 내역이 시간순으로 남는 가계부와 같다. 같은 잔액이라도 이해할 수 있는 정보량이 전혀 다르다.</li>
+</ul>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<p>이벤트 소싱의 쓰기 경로는 보통 명령 처리기, 애그리게이트 (Aggregate), 이벤트 저장소, 프로젝션으로 이어진다. 사용자의 명령이 들어오면 애그리게이트는 과거 이벤트 스트림을 읽어 현재 상태를 재구성하고, 규칙 위반 여부를 검사한 뒤 새 이벤트를 만든다. 그 이벤트는 기존 이벤트를 수정하지 않고 <strong>맨 뒤에 추가</strong>된다.</p>
+<p>여기서 중요한 기술 요소는 순서와 동시성이다. 같은 주문이나 같은 계좌에 대해 두 명령이 동시에 들어오면, 어떤 이벤트가 먼저 기록되는지가 결과를 바꿀 수 있다. 그래서 이벤트 저장소는 보통 스트림 버전이나 예상 버전 검사를 사용해 낙관적 동시성 제어 (Optimistic Concurrency Control) 를 수행한다. 즉 "내가 본 마지막 버전 다음에 이어 붙인다"는 조건이 깨지면 다시 읽고 재판단하게 만든다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────────────────┐
+│ Event sourcing write and rebuild flow                              │
+├────────────────────────────────────────────────────────────────────┤
+│ Command                                                            │
+│   │                                                                │
+│   ▼                                                                │
+│ load snapshot + past events                                        │
+│   │                                                                │
+│   ▼                                                                │
+│ Aggregate validates business rules                                 │
+│   │                                                                │
+│   ├─ invalid -&gt; reject command                                     │
+│   ▼                                                                │
+│ append new event(s) with expected stream version                   │
+│   │                                                                │
+│   ├──────────────► projector updates read model                    │
+│   │                                                                │
+│   └──────────────► replay later to rebuild current state           │
+└────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>구성 요소를 요약하면 다음과 같다.</p>
+<table><thead><tr><th style="text-align: left">요소</th><th style="text-align: left">역할</th><th style="text-align: left">설계 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">명령 처리기 (Command Handler)</td><td style="text-align: left">입력 명령 수신 및 권한·형식 검증</td><td style="text-align: left">중복 명령 처리와 에러 모델 분리</td></tr>
+<tr><td style="text-align: left">애그리게이트 (Aggregate)</td><td style="text-align: left">과거 이벤트를 접어 현재 규칙 판단</td><td style="text-align: left">불변식 보장, 명령 허용 여부 판단</td></tr>
+<tr><td style="text-align: left">이벤트 저장소 (Event Store)</td><td style="text-align: left">이벤트 스트림의 원본 보관</td><td style="text-align: left">append-only, 순서, 버전 충돌 처리</td></tr>
+<tr><td style="text-align: left">스냅샷 (Snapshot)</td><td style="text-align: left">긴 스트림의 중간 상태 저장</td><td style="text-align: left">재생 비용 절감, 저장 주기 설계</td></tr>
+<tr><td style="text-align: left">프로젝션 (Projection)</td><td style="text-align: left">이벤트를 조회 모델로 변환</td><td style="text-align: left">멱등성, 재생 가능성, 버전 대응</td></tr>
+<tr><td style="text-align: left">읽기 모델 (Read Model)</td><td style="text-align: left">화면·검색용 현재 뷰</td><td style="text-align: left">CQRS와 결합 시 별도 저장소 사용 가능</td></tr>
+</tbody></table>
+<p>스냅샷은 자주 오해되는 요소다. 스냅샷은 이벤트를 대체하는 원본이 아니라, 재생 시간을 줄이기 위한 중간 체크포인트다. 예를 들어 한 계좌에 10만 건 이벤트가 쌓였다면, 최근 스냅샷 이후의 이벤트만 다시 적용해 현재 상태를 빠르게 계산할 수 있다. 따라서 이벤트 소싱의 핵심 공식은 <strong>이벤트가 원본, 스냅샷은 캐시</strong>라고 정리하는 편이 맞다.</p>
+<p>또한 읽기 모델은 언제든 다시 만들 수 있어야 한다. 이벤트 로그가 진실 원천이라면, 화면용 테이블이나 검색용 인덱스는 깨져도 다시 투영하면 된다. 이 점 때문에 이벤트 소싱은 CQRS (Command Query Responsibility Segregation) 와 자주 짝을 이룬다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 레고 작품 사진 한 장만 남겨 두는 것이 아니라, 조립 설명서의 모든 단계를 보관하는 셈이다. 중간 완성 사진은 스냅샷이고, 진짜 원본은 블록을 어떤 순서로 끼웠는지에 대한 기록이다.</li>
+</ul>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<p>이벤트 소싱은 종종 감사 로그, 변경 데이터 캡처, 메시지 브로커와 혼동된다. 하지만 핵심 차이는 <strong>무엇을 시스템의 진실 원천으로 삼느냐</strong>다. 감사 로그는 보통 현재 상태 저장이 먼저 있고, 그 뒤에 참고용 흔적을 남긴다. 반면 이벤트 소싱은 이벤트 스트림 자체가 먼저이고, 현재 상태는 그로부터 계산된다.</p>
+<table><thead><tr><th style="text-align: left">방식</th><th style="text-align: left">진실 원천</th><th style="text-align: left">장점</th><th style="text-align: left">한계</th><th style="text-align: left">잘 맞는 상황</th></tr></thead><tbody>
+<tr><td style="text-align: left">CRUD 현재 상태 저장</td><td style="text-align: left">현재 테이블</td><td style="text-align: left">단순함, 학습 비용 낮음</td><td style="text-align: left">과거 맥락과 재생 능력 약함</td><td style="text-align: left">일반 관리 시스템</td></tr>
+<tr><td style="text-align: left">CRUD + 감사 로그</td><td style="text-align: left">현재 테이블 + 보조 로그</td><td style="text-align: left">추적성 일부 확보</td><td style="text-align: left">로그와 현재 상태가 분리됨</td><td style="text-align: left">기본 감사 요구</td></tr>
+<tr><td style="text-align: left">이벤트 소싱</td><td style="text-align: left">이벤트 스트림</td><td style="text-align: left">완전한 이력, 재생, 시점 복원</td><td style="text-align: left">모델링·운영 복잡도 큼</td><td style="text-align: left">금융, 주문 수명주기, 규제 도메인</td></tr>
+<tr><td style="text-align: left">트랜잭셔널 아웃박스 (Transactional Outbox)</td><td style="text-align: left">현재 상태 + 발행용 기록</td><td style="text-align: left">외부 이벤트 전달 안정화</td><td style="text-align: left">저장 원천 자체는 바뀌지 않음</td><td style="text-align: left">분산 이벤트 발행</td></tr>
+</tbody></table>
+<p>이 차이는 CQRS와 연결될 때 더 중요해진다. CQRS는 읽기 모델과 쓰기 모델을 분리하는 패턴이고, 이벤트 소싱은 쓰기 모델의 저장 방식을 바꾸는 패턴이다. 둘은 자주 함께 쓰이지만 동일 개념은 아니다. CQRS 없이 이벤트 소싱을 적용할 수도 있고, 이벤트 소싱 없이 CQRS만 적용할 수도 있다.</p>
+<p>또 하나의 오해는 "Kafka 같은 메시지 브로커가 있으면 곧 이벤트 소싱"이라는 생각이다. 브로커는 이벤트를 전달하는 인프라일 수는 있지만, 이벤트 재생 가능성, 스트림 버전 관리, 애그리게이트 단위 순서 보장, 장기 보존 정책이 설계되지 않았다면 그 자체로 이벤트 저장소가 되지는 않는다. 이벤트 소싱은 단순 발행이 아니라 <strong>도메인 이벤트를 저장 모델의 중심에 놓는 설계</strong>다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: CCTV 영상은 흔적을 보는 용도이고, 경기 공식 기록지는 경기 결과를 인정하는 원본이다. 이벤트 소싱은 후자가 되는 것이지, 단순히 흔적을 더 남기는 수준이 아니다.</li>
+</ul>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<p>이벤트 소싱은 감사 요구가 크고, 상태 변화의 순서 자체가 업무 의미를 갖고, 나중에 새로운 읽기 모델을 다시 만들 가능성이 높은 시스템에서 빛난다. 예를 들어 결제 승인·취소·환불 흐름, 포인트 적립·차감, 주문 생성·결제·출고·반품 같은 도메인은 사건의 흐름이 곧 비즈니스 설명이다. 반대로 단순 게시판 설정값처럼 "현재 값만 맞으면 되는" 영역에 적용하면 복잡도만 늘어날 수 있다.</p>
+<p>기술사 관점에서는 특히 이벤트 설계 품질이 중요하다. 이벤트는 <code>row_updated</code>처럼 기술적인 차분보다 <code>PaymentAuthorized</code>, <code>InventoryReserved</code>처럼 도메인 언어로 표현되어야 한다. 그래야 시간이 지나도 이벤트 의미를 이해할 수 있고, 다른 읽기 모델이나 다른 서비스가 재사용하기 쉽다.</p>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">┌────────────────────────────────────────────────────────────────────┐
+│ When event sourcing is worth the cost                              │
+├────────────────────────────────────────────────────────────────────┤
+│ Need full audit &#x2F; replay &#x2F; temporal reconstruction?                │
+│   ├─ Yes -&gt; event sourcing candidate                               │
+│   └─ No  -&gt; current-state model may be enough                      │
+│                                                                    │
+│ Need separate read models and eventual consistency is acceptable?  │
+│   ├─ Yes -&gt; pair with CQRS                                         │
+│   └─ No  -&gt; keep simpler projection strategy                       │
+│                                                                    │
+│ Can the team operate versioning, snapshot, reprocessing?           │
+│   ├─ Yes -&gt; adopt selectively                                      │
+│   └─ No  -&gt; complexity may outweigh benefit                        │
+└────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="gisulsa-pandan-cekeuriseuteu">기술사 판단 체크리스트</h3>
+<ol>
+<li>상태 변화 순서와 근거가 비즈니스적으로 중요한 도메인인가?</li>
+<li>이벤트 이름이 기술 용어가 아니라 도메인 사실로 정의되어 있는가?</li>
+<li>스트림 버전 충돌, 중복 명령, 프로젝션 재처리를 감당할 운영 절차가 있는가?</li>
+<li>스냅샷 주기와 전체 재생 시간이 현실적인가?</li>
+<li>이벤트 스키마 변경 시 업캐스팅 (Upcasting) 또는 버전 공존 전략이 준비되어 있는가?</li>
+<li>개인정보 삭제 요구가 있을 때 불변 로그를 어떻게 처리할지 정책이 있는가?</li>
+</ol>
+<h3 id="jaju-naoneun-antipaeteon">자주 나오는 안티패턴</h3>
+<ul>
+<li>현재 테이블 변경 전후 값을 그대로 덤프하고 그것을 이벤트라 부르는 경우</li>
+<li>이미 기록된 이벤트를 수정해 "조용히 정정"하는 경우</li>
+<li>프로젝션은 실시간만 믿고 전체 재생 절차를 만들지 않은 경우</li>
+<li>간단한 CRUD 화면에도 유행처럼 이벤트 소싱을 도입하는 경우</li>
+</ul>
+<p>특히 불변 로그와 개인정보 삭제 요구는 함께 고민해야 한다. 이벤트를 절대 물리 삭제하지 않는 구조라면, 민감 정보는 이벤트 본문에 직접 넣기보다 참조 키로 분리하거나 암호화 키 폐기 전략을 함께 준비해야 한다. 즉 이벤트 소싱은 개발 패턴이면서 동시에 <strong>데이터 거버넌스 설계</strong>이기도 하다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 박물관에 모든 전시 교체 기록을 남기면 역사 연구에는 좋지만, 기록 체계를 제대로 관리하지 않으면 나중에 오히려 창고가 더 복잡해진다. 좋은 기록은 많이 남기는 것만이 아니라, 나중에 다시 읽고 재구성할 수 있게 남기는 것이다.</li>
+</ul>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<p>이벤트 소싱이 잘 맞는 시스템에서는 감사 추적, 장애 재현, 시점 복원, 새 조회 모델 생성, 외부 이벤트 연계가 훨씬 강력해진다. 현재 화면이 잘못되어도 이벤트 로그만 살아 있으면 읽기 모델을 다시 만들 수 있고, 특정 시점 상태를 재생해 문제를 분석할 수 있다. 그래서 이벤트 소싱은 "현재 상태를 잘 저장하는 기술"보다 <strong>시간 위에서 시스템을 설명하는 기술</strong>에 가깝다.</p>
+<p>하지만 그만큼 비용도 분명하다. 이벤트 설계 품질이 낮으면 오히려 이해하기 어려운 로그만 남고, 스냅샷·프로젝션·스키마 진화·관측 체계를 잘못 설계하면 운영 부담이 커진다. 또한 단순 업무에는 얻는 가치보다 학습 비용과 복잡도가 더 클 수 있다. 따라서 이벤트 소싱은 전면 도입보다, 이력과 재현 가치가 큰 핵심 도메인에 선택적으로 적용하는 편이 현실적이다.</p>
+<p>결론적으로 기억해야 할 문장은 이것이다. <strong>이벤트 소싱에서 현재 상태는 버려도 다시 만들 수 있지만, 이벤트 로그는 버리면 안 되는 원본이다.</strong> 이 관점을 이해하면 이벤트 소싱은 단순 저장 방식이 아니라, 시스템의 시간을 설계하는 아키텍처로 남는다.</p>
+<ul>
+<li><strong>📢 섹션 요약 비유</strong>: 오늘의 날씨 한 줄만 적는 달력보다, 매일 어떤 날씨였는지 일기를 쓰는 편이 시간이 지나도 더 많은 답을 준다. 이벤트 소싱은 시스템의 일기를 원본으로 삼는 방식이다.</li>
+</ul>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연결 포인트</th></tr></thead><tbody>
+<tr><td style="text-align: left">도메인 이벤트 (Domain Event)</td><td style="text-align: left">비즈니스에서 실제로 일어난 사실을 과거형으로 표현한 기본 단위</td></tr>
+<tr><td style="text-align: left">이벤트 저장소 (Event Store)</td><td style="text-align: left">이벤트 스트림의 원본을 append-only로 보관하는 저장소</td></tr>
+<tr><td style="text-align: left">애그리게이트 스트림 (Aggregate Stream)</td><td style="text-align: left">한 업무 개체에 대한 이벤트 순서를 유지하는 단위</td></tr>
+<tr><td style="text-align: left">스냅샷 (Snapshot)</td><td style="text-align: left">긴 이벤트 스트림의 재생 비용을 줄이는 중간 상태</td></tr>
+<tr><td style="text-align: left">프로젝션 (Projection)</td><td style="text-align: left">이벤트를 현재 조회 형태로 변환하는 과정</td></tr>
+<tr><td style="text-align: left">CQRS (Command Query Responsibility Segregation)</td><td style="text-align: left">이벤트 기반 쓰기 모델과 읽기 모델 분리를 자주 결합하는 패턴</td></tr>
+<tr><td style="text-align: left">낙관적 동시성 제어 (Optimistic Concurrency Control)</td><td style="text-align: left">스트림 버전 충돌을 감지해 이벤트 순서를 보호하는 방법</td></tr>
+<tr><td style="text-align: left">업캐스팅 (Upcasting)</td><td style="text-align: left">오래된 이벤트를 새 스키마 의미로 해석하게 돕는 진화 전략</td></tr>
+</tbody></table>
+<h3 id="chart-with-upwards-trend-gwanryeon-kiweodeu-mic-baljeon-heureumdo">📈 관련 키워드 및 발전 흐름도</h3>
+<pre data-lang="text" class="language-text "><code class="language-text" data-lang="text">비즈니스 명령
+        │
+        ▼
+과거 이벤트 재생 + 규칙 검증
+        │
+        ▼
+새 이벤트 append
+        │
+        ├──────────────► 스냅샷 생성으로 재생 비용 절감
+        │
+        ├──────────────► 프로젝션으로 읽기 모델 생성
+        │
+        └──────────────► 감사 추적 · 시점 복원 · 외부 연계
+</code></pre>
+<p>이 흐름도는 "명령 → 이벤트 기록 → 재생/투영 → 운영 가치"로 이어지는 이벤트 소싱의 핵심 구조를 압축한다.</p>
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<ol>
+<li>이벤트 소싱은 지금 점수가 몇 점인지 한 줄만 적는 대신, 점수가 올라가고 내려간 모든 일을 차례대로 적는 거예요.</li>
+<li>그래서 나중에 "왜 이렇게 됐지?" 하고 물어보면 처음부터 다시 따라가며 알 수 있어요.</li>
+<li>대신 기록이 많아지니, 중간 정리표와 규칙을 잘 만들어 두어야 헷갈리지 않아요.</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>575. Slowly Changing Dimension (SCD Type 1, 2, 3) 이력 관리 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 10, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote database
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h1 id="575-slowly-changing-dimension-scd-type-1-2-3-sigyeyeol-iryeog-gwanri-model">575. Slowly Changing Dimension (SCD Type 1, 2, 3) 시계열 이력 관리 모델</h1>
+<blockquote>
+<p>⚠️ 이 문서는 데이터 웨어하우스(DW)에서 고객의 주소나 부서처럼 '아주 가끔씩(Slowly) 변하는' 기준 정보(차원 데이터)를 관리할 때, <strong>과거의 정보가 지워짐으로써 과거 매출 통계가 엉뚱하게 왜곡되는 대참사를 막기 위해, 데이터의 변경 이력(History)을 덮어쓸 것인가(Type 1), 새로운 줄을 추가할 것인가(Type 2), 아니면 컬럼을 늘릴 것인가(Type 3)를 결정하는 데이터 엔지니어링의 핵심 원칙인 'SCD(서서히 변하는 차원)' 전략</strong>을 다룹니다.</p>
+</blockquote>
+<h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: 운영 DB는 고객이 이사 가면 주소를 '부산'으로 덮어치면 끝이다. 하지만 DW는 통계용이므로 옛날에 '서울'에 살았다는 역사를 버리면, 1년 전 서울 지역 매출 통계를 낼 때 그 고객의 매출이 부산으로 잡히는(Data Corruption) 치명적 왜곡이 일어난다.</li>
+<li><strong>가치</strong>: 데이터의 성격(과거 통계가 중요한가, 현재 상태만 중요한가)에 따라 저장 방식의 보험료(Storage/Compute)를 타협하여, 데이터의 10년 치 시계열적 정합성(Single Version of Truth)을 지켜낸다.</li>
+<li><strong>기술 체계</strong>: 과거를 쿨하게 덮어버리는 무식한 <strong>Type 1</strong>, 과거 데이터 줄(Row)은 살려두고 현재 데이터 줄을 새로 추가하는 완벽한 이력 관리 <strong>Type 2</strong>(가장 많이 쓰임), 그리고 새 컬럼을 옆으로 파서 최신/과거 2개만 기억하는 가성비갑 <strong>Type 3</strong>가 대표적이다.</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="i-deiteo-weeohauseu-dw-yi-sigan-waegoggwa-scdyi-tansaeng">Ⅰ. 데이터 웨어하우스(DW)의 시간 왜곡과 SCD의 탄생</h3>
+<p>운영 DB처럼 덮어쓰기(UPDATE)를 하면 통계 부서에서 난리가 난다.</p>
+<ol>
+<li><strong>덮어쓰기(UPDATE)의 재앙</strong>:
+<ul>
+<li>홍길동이 2022년에 '서울'에서 냉장고(100만 원)를 샀다.</li>
+<li>2023년, 홍길동이 '부산'으로 이사했다. 운영 DB는 주소를 <code>UPDATE</code>로 덮어쳤고, 이 정보가 밤새 DW로 넘어왔다.</li>
+<li>2024년 사장님이 묻는다. "2022년 '서울' 지역 냉장고 매출이 얼마인가?"</li>
+<li>DW를 쿼리해보니, 2022년에 홍길동이 산 냉장고 매출이 '부산' 매출로 잡혀버린다! 2022년 서울 매출 100만 원이 증발(왜곡)해버린 것이다.</li>
+</ul>
+</li>
+<li><strong>SCD (Slowly Changing Dimension)</strong>:
+<ul>
+<li>고객, 제품, 부서 같은 기준 데이터(차원 테이블)는 나이, 주소, 가격 등이 '아주 가끔씩(Slowly)' 변한다.</li>
+<li>이 변화를 어떻게 DB 테이블에 욱여넣어 '과거의 사실'과 '현재의 사실'을 모두 온전히 지켜낼 것인가에 대한 랄프 킴볼(Ralph Kimball)의 해결책이 바로 SCD 전략이다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 직원이 개명을 했습니다. 운영 DB(주민센터)는 옛날 이름을 지우고 새 이름으로 주민등록증을 바꿔주면 끝입니다. 하지만 DW(회고록)를 쓸 때, 그 직원의 작년 표창장에 새 이름을 적어버리면 역사 왜곡이 됩니다. 작년 일은 옛날 이름으로, 오늘 일은 새 이름으로 찰떡같이 기록을 유지해 주는 역사학자의 기록법이 SCD입니다.</p>
+<hr />
+<h3 id="ii-scd-type-1gwa-type-2-deopeosseugi-vs-jul-row-cuga">Ⅱ. SCD Type 1과 Type 2: 덮어쓰기 vs 줄(Row) 추가</h3>
+<p>가장 극단적인 두 가지 방식. 현재만 볼 것인가, 영원히 기억할 것인가.</p>
+<ol>
+<li><strong>SCD Type 1 (덮어쓰기 - Overwrite)</strong>:
+<ul>
+<li><strong>방식</strong>: 옛날 값을 아예 지워버리고(DELETE), 새로운 값으로 그 자리를 덮어버린다.</li>
+<li><strong>적용</strong>: '오타 수정(이름 오타)'이나, '고객의 전화번호'처럼 과거 번호가 통계적으로 1원도 쓸모없는 데이터일 때 쓴다.</li>
+<li><strong>장점/단점</strong>: 용량을 차지하지 않아 가볍지만, 과거 이력이 100% 날아가는 무자비한 방식이다.</li>
+</ul>
+</li>
+<li><strong>SCD Type 2 (새 로우 추가 - Add new row) $\star$</strong>:
+<ul>
+<li><strong>방식</strong>: 홍길동이 서울에서 부산으로 이사하면, 기존 '서울' 행(Row)은 건드리지 않는다. 대신 **'부산'이라고 적힌 새로운 줄(Row)을 아래에 하나 더 추가(INSERT)**해 버린다.</li>
+<li><strong>Surrogate Key (대체 키)의 마법</strong>: 똑같은 사람(주민번호)인데 DB에 줄이 2개가 생겼다. 헷갈림을 막기 위해 DB 맨 앞에 1, 2, 3 번호표(Surrogate Key)를 새로 달고, <code>시작일(Start_Date)</code>과 <code>종료일(End_Date)</code>, 그리고 <code>현재 상태 여부(Is_Current=Y/N)</code> 컬럼을 추가한다.</li>
+<li><strong>장점</strong>: 2022년 매출은 '서울(N)' 줄에 조인되고, 2023년 매출은 '부산(Y)' 줄에 조인된다. 시계열(Time-series) 데이터의 무결성이 100% 완벽하게 지켜진다. 전 세계 DW 설계의 가장 완벽한 국룰 방식이다.</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: 휴대폰 번호가 바뀌었을 때, 다이어리에 옛날 번호를 화이트로 지우고 새 번호를 적어버리는 것이 Type 1입니다(과거 흔적 삭제). Type 2는 옛날 번호는 그대로 두고 그 옆에 '2022년 종료'라고 적은 뒤, 밑에 새 줄을 파서 '새 번호, 2023년 시작'이라고 적는 완벽한 이력서 작성법입니다.</p>
+<hr />
+<h3 id="iii-scd-type-3-yeopeuro-keolreom-column-neulrigi">Ⅲ. SCD Type 3: 옆으로 컬럼(Column) 늘리기</h3>
+<p>줄(Row)을 무한정 늘리기 부담스러울 때 쓰는 절충안.</p>
+<ol>
+<li><strong>SCD Type 3 (새 컬럼 추가 - Add new column)</strong>:
+<ul>
+<li><strong>방식</strong>: 행(Row)을 아래로 무식하게 추가하지 않는다. 대신 테이블 옆구리에 빵꾸를 뚫어 **<code>[이전_주소]</code>와 <code>[현재_주소]</code>라는 두 개의 컬럼(Column)**을 만든다.</li>
+<li>홍길동이 서울에서 부산으로 이사 가면, 원래 <code>[현재_주소]</code>에 있던 '서울'을 <code>[이전_주소]</code> 칸으로 쓱 밀어내고, <code>[현재_주소]</code> 칸에 '부산'을 쓴다.</li>
+</ul>
+</li>
+<li><strong>한계와 적합한 용도</strong>:
+<ul>
+<li>홍길동이 대전으로 한 번 더 이사를 가면? '서울' 기록은 지워져 버린다(최근 2개만 기억 가능).</li>
+<li>"작년 소속 부서와 올해 소속 부서의 매출 차이"처럼, 딱 <strong>최근의 과거 1번</strong>과 <strong>현재</strong>만을 양옆에 띄워두고(Drill-across) 비교 분석하고 싶을 때 주로 쓰는 아주 특수한 가성비 기법이다. (줄을 안 늘려서 DB 덩치가 커지지 않는다.)</li>
+</ul>
+</li>
+</ol>
+<p>📢 섹션 요약 비유: Type 3는 직원의 이름표에 '과거 소속'과 '현재 소속' 두 칸만 만들어 둔 것입니다. 부서가 바뀔 때마다 옛날 부서를 과거 소속 칸으로 밀어내고 새 부서를 현재 칸에 적습니다. 딱 작년과 올해의 실적을 1:1로 비교하긴 좋지만, 3번 이상 이사 다닌 10년 치 족보(Type 2)를 그려낼 수는 없는 얄팍한 타협안입니다.</p>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>

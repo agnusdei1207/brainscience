@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ko-KR" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>269. ReLU (Rectified Linear Unit) - 기울기 보호 연산 속도 향상 — Brain Science</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://agnusdei1207.github.io/brainscience/assets/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', t);
+        }());
+    </script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="https://agnusdei1207.github.io/brainscience" class="site-logo"><img
+                    src="https://api.iconify.design/lucide:brain-circuit.svg?color=%2310b981" width="26" height="26"
+                    alt=""
+                    style="vertical-align:middle;margin-right:8px;position:relative;top:-1px;">Brain<span>Science</span></a>
+
+            <div class="header-search" id="header-search-wrap">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+</svg>
+
+                <input type="text" id="pagefind-search" placeholder="Search anything..." autocomplete="off">
+                <div id="pagefind-dropdown"></div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://github.com/agnusdei1207" target="_blank" rel="noopener"
+                    title="GitHub">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    </svg>
+                </a>
+                <button id="theme-btn" title="Toggle theme">
+                    <svg id="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+                    <svg id="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            
+<div class="post-header">
+    <a href="javascript:history.back()" class="post-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back
+    </a>
+    <div class="pc-meta">
+        
+        <span>April 21, 2026</span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <span>
+            
+                studynote ai
+            
+        </span>
+        
+        <span style="opacity: 0.5;">•</span>
+        <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
+            <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+</svg>
+
+            <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="20 6 9 17 4 12"/>
+</svg>
+
+            <span class="copy-text">Copy</span>
+        </button>
+        
+    </div>
+</div>
+
+<article class="post-content">
+    <h2 id="haegsim-insaiteu-3jul-yoyag">핵심 인사이트 (3줄 요약)</h2>
+<blockquote>
+<ol>
+<li><strong>본질</strong>: ReLU(Rectified Linear Unit)는 f(x)=max(0,x)로 정의되며, 양수 구간에서 기울기=1을 유지해 기울기 소실 문제(Vanishing Gradient Problem)를 해결하고, 연산이 단순해 Sigmoid 대비 6배 빠른 학습을 가능하게 한다.</li>
+<li><strong>가치</strong>: 2012년 AlexNet이 ReLU를 표준 활성화 함수로 채택한 후 딥러닝 혁명이 시작되었으며, 현재 대부분의 CNN·MLP 은닉층에서 사용되는 사실상의 표준이다.</li>
+<li><strong>판단 포인트</strong>: 죽은 ReLU(Dying ReLU) 문제 — 음수 입력에서 기울기=0이 되어 뉴런이 영구히 비활성화될 수 있으므로, Leaky ReLU·PReLU·ELU 등 변형을 적재적소에 사용해야 한다.</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="i-gaeyo-mic-pilyoseong">Ⅰ. 개요 및 필요성</h2>
+<h3 id="relu-jeongyi">ReLU 정의</h3>
+<pre><code>ReLU: f(x) = max(0, x)
+
+도함수: f&#x27;(x) = 1  (x &gt; 0)
+               0  (x &lt; 0)
+               미정의 (x = 0, 실제로는 0 또는 1 중 하나 선택)
+</code></pre>
+<h3 id="sigmoid-daebi-reluyi-hyeogsin">Sigmoid 대비 ReLU의 혁신</h3>
+<table><thead><tr><th style="text-align: left">측면</th><th style="text-align: left">Sigmoid</th><th style="text-align: left">ReLU</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>연산</strong></td><td style="text-align: left">e^(-x) 지수 함수 (비쌈)</td><td style="text-align: left">max(0,x) 단순 비교 (매우 빠름)</td></tr>
+<tr><td style="text-align: left"><strong>기울기</strong></td><td style="text-align: left">최대 0.25, 포화 시 ≈0</td><td style="text-align: left">양수 구간 항상 1</td></tr>
+<tr><td style="text-align: left"><strong>기울기 소실</strong></td><td style="text-align: left">심각</td><td style="text-align: left">양수 구간에서 없음</td></tr>
+<tr><td style="text-align: left"><strong>희소 활성화</strong></td><td style="text-align: left">항상 비영(Non-zero)</td><td style="text-align: left">~50% 뉴런 비활성화 → 희소성</td></tr>
+<tr><td style="text-align: left"><strong>역전파 속도</strong></td><td style="text-align: left">느림</td><td style="text-align: left">빠름 (곱셈 없이 마스킹)</td></tr>
+</tbody></table>
+<h3 id="deungjang-baegyeong">등장 배경</h3>
+<p>2010년 전후 딥러닝 연구자들은 Sigmoid의 기울기 소실로 인해 4층 이상의 신경망을 학습시키기 어려웠다. 나이어(Nair)와 힌튼(Hinton)이 2010년 ReLU를 제안하고, 2012년 AlexNet이 ImageNet에서 압도적 성능을 보이며 ReLU를 딥러닝 표준으로 확립했다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: ReLU는 신경망의 "전류 차단기" — 양수 신호는 그대로 통과시키고(기울기=1), 음수 신호는 차단한다(기울기=0). Sigmoid는 모든 신호를 약하게 만들었지만, ReLU는 통과 신호의 강도를 유지한다.</p>
+</blockquote>
+<hr />
+<h2 id="ii-akitegceo-mic-haegsim-weonri">Ⅱ. 아키텍처 및 핵심 원리</h2>
+<h3 id="relu-gyeyeol-hwalseonghwa-hamsu-bigyo-gujo">ReLU 계열 활성화 함수 비교 구조</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│              ReLU 계열 활성화 함수 그래프 비교                    │
+│                                                                 │
+│  y                                                              │
+│  ↑   Leaky ReLU           ReLU              ELU                 │
+│  │  &#x2F;                   &#x2F;                  &#x2F;                    │
+│  │ &#x2F;  (기울기=1)        &#x2F;  (기울기=1)       &#x2F;  (기울기=1)         │
+│  │&#x2F;                   &#x2F;                  &#x2F;                     │
+│──┼────────────     ──┼────────────    ──┼────────────  → x     │
+│  │\  (기울기=α)      │  (기울기=0)      │~  (지수 감소)          │
+│  │ \                │                  │                        │
+│                                                                 │
+│  Leaky ReLU:          ReLU:             ELU:                    │
+│  f(x)=max(αx, x)     f(x)=max(0,x)     f(x)=x       (x≥0)     │
+│  α≈0.01              죽은 ReLU 문제    f(x)=α(eˣ-1) (x&lt;0)     │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="relu-gyeyeol-byeonhyeong-sangse-bigyo">ReLU 계열 변형 상세 비교</h3>
+<table><thead><tr><th style="text-align: left">종류</th><th style="text-align: left">수식</th><th style="text-align: center">x&lt;0 기울기</th><th style="text-align: left">장점</th><th style="text-align: left">단점</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>ReLU</strong></td><td style="text-align: left">max(0, x)</td><td style="text-align: center">0</td><td style="text-align: left">빠름, 기울기 보존</td><td style="text-align: left">죽은 ReLU</td></tr>
+<tr><td style="text-align: left"><strong>Leaky ReLU</strong></td><td style="text-align: left">max(αx, x), α=0.01</td><td style="text-align: center">α(작은 양수)</td><td style="text-align: left">죽은 ReLU 완화</td><td style="text-align: left">α 고정</td></tr>
+<tr><td style="text-align: left"><strong>PReLU</strong> (Parametric ReLU)</td><td style="text-align: left">max(αx, x), α 학습</td><td style="text-align: center">α (학습됨)</td><td style="text-align: left">최적 α 학습</td><td style="text-align: left">파라미터 추가</td></tr>
+<tr><td style="text-align: left"><strong>ELU</strong> (Exponential Linear Unit)</td><td style="text-align: left">x(x≥0), α(eˣ-1)(x&lt;0)</td><td style="text-align: center">지수 감소</td><td style="text-align: left">출력 중심화, 노이즈 강건</td><td style="text-align: left">지수 연산 비용</td></tr>
+<tr><td style="text-align: left"><strong>SELU</strong> (Scaled ELU)</td><td style="text-align: left">λ × ELU(x)</td><td style="text-align: center">스케일된 지수</td><td style="text-align: left">자기 정규화</td><td style="text-align: left">특정 초기화 필요</td></tr>
+<tr><td style="text-align: left"><strong>Swish</strong></td><td style="text-align: left">x × σ(x)</td><td style="text-align: center">부드러운 전환</td><td style="text-align: left">성능 우수</td><td style="text-align: left">복잡한 연산</td></tr>
+<tr><td style="text-align: left"><strong>GELU</strong> (Gaussian Error Linear Unit)</td><td style="text-align: left">x × Φ(x)</td><td style="text-align: center">확률적</td><td style="text-align: left">Transformer 표준</td><td style="text-align: left">복잡</td></tr>
+</tbody></table>
+<h3 id="jugeun-relu-dying-relu-munje">죽은 ReLU (Dying ReLU) 문제</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                  죽은 ReLU 발생 메커니즘                          │
+│                                                                 │
+│  뉴런 입력이 음수가 되면:                                         │
+│                                                                 │
+│  1. ReLU 출력 = 0                                               │
+│  2. 역전파 기울기 = 0                                            │
+│  3. 가중치 갱신 없음 (∂L&#x2F;∂W = 0)                                │
+│  4. 다음 배치에서도 같은 음수 입력                                │
+│  5. 영구적으로 비활성화 → &quot;죽은 뉴런&quot;                             │
+│                                                                 │
+│  원인: 큰 학습률 → 가중치 크게 갱신 → 뉴런 입력이 항상 음수         │
+│  예방: 적절한 학습률, He 초기화, Leaky ReLU 사용                   │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="hyiso-hwalseonghwa-sparse-activation">희소 활성화 (Sparse Activation)</h3>
+<p>ReLU는 약 50%의 뉴런을 비활성화한다(출력=0). 이는 **희소 표현(Sparse Representation)**을 만들어:</p>
+<ul>
+<li>계산 효율 향상 (0 곱셈 스킵 가능)</li>
+<li>과적합(Overfitting) 자연스러운 억제</li>
+<li>뇌의 실제 뉴런 발화 패턴과 유사</li>
+</ul>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: 죽은 ReLU는 불량 전구 — 한 번 꺼지면(음수 구간 고착) 다시는 켜지지 않아요. Leaky ReLU는 희미하게라도 빛나는(작은 기울기) 전구로, 완전히 죽지는 않아요.</p>
+</blockquote>
+<hr />
+<h2 id="iii-bigyo-mic-yeongyeol">Ⅲ. 비교 및 연결</h2>
+<h3 id="hwalseonghwa-hamsu-seontaeg-gaideu">활성화 함수 선택 가이드</h3>
+<table><thead><tr><th style="text-align: left">상황</th><th style="text-align: left">권장 활성화 함수</th><th style="text-align: left">이유</th></tr></thead><tbody>
+<tr><td style="text-align: left">일반 CNN/MLP 은닉층</td><td style="text-align: left">ReLU</td><td style="text-align: left">빠름, 기울기 소실 없음</td></tr>
+<tr><td style="text-align: left">죽은 ReLU 문제 우려</td><td style="text-align: left">Leaky ReLU 또는 ELU</td><td style="text-align: left">음수 기울기 유지</td></tr>
+<tr><td style="text-align: left">최고 성능 추구</td><td style="text-align: left">Swish 또는 GELU</td><td style="text-align: left">부드러운 전환, 실험적 우위</td></tr>
+<tr><td style="text-align: left">Transformer 계열</td><td style="text-align: left">GELU</td><td style="text-align: left">BERT, GPT 표준</td></tr>
+<tr><td style="text-align: left">자기 정규화 MLP</td><td style="text-align: left">SELU</td><td style="text-align: left">배치 정규화 없이 정규화</td></tr>
+<tr><td style="text-align: left">이진 분류 출력</td><td style="text-align: left">Sigmoid</td><td style="text-align: left">(0,1) 확률</td></tr>
+<tr><td style="text-align: left">다중 분류 출력</td><td style="text-align: left">Softmax</td><td style="text-align: left">확률 분포</td></tr>
+</tbody></table>
+<h3 id="reluwa-baeci-jeonggyuhwa-batch-normalization-yi-johab">ReLU와 배치 정규화(Batch Normalization)의 조합</h3>
+<pre><code>Linear → BatchNorm → ReLU  (권장 순서)
+
+이유: BatchNorm이 입력을 정규화해 ReLU가 음수 구간으로
+     쏠리는 현상 방지 → 죽은 ReLU 예방 효과
+</code></pre>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: ReLU는 도로의 일방통행 게이트 — 앞으로 가는 차(양수 신호)는 속도 그대로 통과, 역주행 차(음수 신호)는 차단한다. Leaky ReLU는 역주행을 완전히 막지 않고 서행으로 통과시켜 도로 전체가 마비되는 것을 방지한다.</p>
+</blockquote>
+<hr />
+<h2 id="iv-silmu-jeogyong-mic-gisulsa-pandan">Ⅳ. 실무 적용 및 기술사 판단</h2>
+<h3 id="gisulsa-siheom-haegsim-nonjeom">기술사 시험 핵심 논점</h3>
+<ol>
+<li><strong>ReLU 기울기 소실 해결 원리</strong>: f'(x)=1 (x&gt;0) → 역전파 시 기울기가 감쇠 없이 통과 → 깊은 신경망 학습 가능</li>
+<li><strong>죽은 ReLU 원인과 대책</strong>: 큰 학습률 → 가중치 갱신 → 항상 음수 입력 → Leaky ReLU / 학습률 조정</li>
+<li><strong>희소 활성화의 장점</strong>: ~50% 뉴런 비활성화 → 계산 효율 + 자연스러운 정규화 효과</li>
+<li><strong>Swish/GELU 등장 배경</strong>: 단순 ReLU보다 부드러운 전환 → 대규모 모델에서 성능 향상</li>
+</ol>
+<h3 id="paramiteo-su-bigyo-sinario">파라미터 수 비교 시나리오</h3>
+<pre><code>ReLU:  파라미터 없음 (단순 max 연산)
+PReLU: 층당 노드 수만큼 α 파라미터 추가
+ELU:   파라미터 없음 (α는 하이퍼파라미터)
+GELU:  파라미터 없음
+</code></pre>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: ReLU를 쓰는 것은 고속도로 요금소를 없애는 것 — Sigmoid(요금소에서 모든 차를 느리게 통과)와 달리, ReLU는 그냥 직진(기울기=1)이라 전체 흐름이 빨라진다.</p>
+</blockquote>
+<hr />
+<h2 id="v-gidaehyogwa-mic-gyeolron">Ⅴ. 기대효과 및 결론</h2>
+<h3 id="relu-doib-hyogwa-alexnet-gijun">ReLU 도입 효과 (AlexNet 기준)</h3>
+<table><thead><tr><th style="text-align: left">효과</th><th style="text-align: left">구체적 내용</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>학습 속도</strong></td><td style="text-align: left">Sigmoid 대비 약 6배 빠른 수렴</td></tr>
+<tr><td style="text-align: left"><strong>기울기 소실 방지</strong></td><td style="text-align: left">20층 이상 신경망 학습 가능</td></tr>
+<tr><td style="text-align: left"><strong>계산 비용</strong></td><td style="text-align: left">단순 max 연산 → GPU 병렬 처리 최적화</td></tr>
+<tr><td style="text-align: left"><strong>일반화 성능</strong></td><td style="text-align: left">희소 활성화로 자연스러운 정규화</td></tr>
+<tr><td style="text-align: left"><strong>딥러닝 혁명</strong></td><td style="text-align: left">AlexNet → VGG → ResNet으로 이어진 딥러닝 르네상스</td></tr>
+</tbody></table>
+<h3 id="gyeolron">결론</h3>
+<p>ReLU는 딥러닝의 실용화를 가능하게 한 핵심 기술 중 하나다. 단순한 수식 max(0,x)이지만 기울기 소실 해결, 연산 효율, 희소 활성화라는 세 가지 장점을 동시에 제공한다. 죽은 ReLU 문제라는 단점은 Leaky ReLU·ELU·GELU 등의 변형으로 극복되고 있으며, GELU는 최신 대규모 언어 모델(LLM, Large Language Model)의 표준이 되었다. 기술사 시험에서는 ReLU의 장단점, 죽은 ReLU 문제, 계열 변형 비교가 핵심이다.</p>
+<blockquote>
+<p>📢 <strong>섹션 요약 비유</strong>: ReLU는 딥러닝의 "아스피린" — 간단하고 싸지만 기울기 소실이라는 고질병을 효과적으로 치료했고, 이후 더 좋은 약(Swish, GELU)이 나왔지만 기본 처방은 여전히 ReLU다.</p>
+</blockquote>
+<hr />
+<h3 id="pushpin-gwanryeon-gaenyeom-maeb">📌 관련 개념 맵</h3>
+<table><thead><tr><th style="text-align: left">개념</th><th style="text-align: left">연관 키워드</th><th style="text-align: left">관계</th></tr></thead><tbody>
+<tr><td style="text-align: left">죽은 ReLU (Dying ReLU)</td><td style="text-align: left">음수 구간 기울기=0, 뉴런 비활성화</td><td style="text-align: left">ReLU의 핵심 단점</td></tr>
+<tr><td style="text-align: left">Leaky ReLU</td><td style="text-align: left">α=0.01, 음수 기울기 유지</td><td style="text-align: left">죽은 ReLU 방지 변형</td></tr>
+<tr><td style="text-align: left">PReLU (Parametric ReLU)</td><td style="text-align: left">α 학습 가능 파라미터</td><td style="text-align: left">Leaky ReLU의 학습형 변형</td></tr>
+<tr><td style="text-align: left">ELU (Exponential Linear Unit)</td><td style="text-align: left">지수 감소, 출력 중심화</td><td style="text-align: left">노이즈 강건성 향상 변형</td></tr>
+<tr><td style="text-align: left">GELU (Gaussian Error Linear Unit)</td><td style="text-align: left">Transformer, BERT, GPT</td><td style="text-align: left">최신 LLM 표준 활성화 함수</td></tr>
+<tr><td style="text-align: left">희소 활성화 (Sparse Activation)</td><td style="text-align: left">50% 비활성화, 정규화 효과</td><td style="text-align: left">ReLU의 부수적 장점</td></tr>
+<tr><td style="text-align: left">AlexNet</td><td style="text-align: left">ImageNet 2012, 딥러닝 혁명</td><td style="text-align: left">ReLU 표준화의 역사적 사건</td></tr>
+</tbody></table>
+<hr />
+<h3 id="baby-eorinireul-wihan-3jul-biyu-seolmyeong">👶 어린이를 위한 3줄 비유 설명</h3>
+<p>🚦 <strong>"신호등 없는 고속도로"</strong></p>
+<ol>
+<li>Sigmoid는 신호등이 있는 좁은 도로 — 모든 차가 느리게 통과하고 점점 더 느려져요(기울기 소실).</li>
+<li>ReLU는 고속도로 — 앞으로 가는 차(양수)는 그대로 빠르게 달리고, 역주행 차(음수)는 멈춰요(기울기=0).</li>
+<li>Leaky ReLU는 역주행 차를 완전히 막지 않고 서행으로 통과시켜요 — 도로가 완전히 막히는(죽은 ReLU) 것을 방지하는 거예요!</li>
+</ol>
+
+</article>
+
+<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
+    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m15 18-6-6 6-6"/>
+</svg>
+
+        Back to List
+    </a>
+</div>
+
+<script>
+    function copyDetail() {
+        var article = document.querySelector('.post-content');
+        var text = article.innerText || article.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+            var btn = document.querySelector('.copy-btn:last-child');
+            if (btn) btn.classList.add('copied');
+            var textSpan = btn.querySelector('.copy-text');
+            textSpan.textContent = 'Copied!';
+            setTimeout(function () {
+                textSpan.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+
+        localStorage.setItem('lastReadPost', JSON.stringify({
+            url: window.location.pathname,
+            updatedAt: new Date().toISOString()
+        }));
+    });
+</script>
+
+        </div>
+    </main>
+
+    <script>
+        /* Theme */
+        var tBtn = document.getElementById('theme-btn'), iS = document.getElementById('i-sun'), iM = document.getElementById('i-moon');
+        function apply(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            iS.style.display = t === 'dark' ? 'none' : ''; iM.style.display = t === 'dark' ? '' : 'none';
+        }
+        apply(document.documentElement.getAttribute('data-theme') || 'light');
+        tBtn.onclick = function () {
+            var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', n); apply(n);
+        };
+
+        /* Pagefind Search */
+        var sInput = document.getElementById('pagefind-search');
+        var sDrop = document.getElementById('pagefind-dropdown');
+        var sWrap = document.getElementById('header-search-wrap');
+        var pagefind = null;
+        var searchCache = {};
+        var pagefindLoading = false;
+        var activeIdx = -1;
+
+        async function initPagefind() {
+            if (pagefind || pagefindLoading) return;
+            pagefindLoading = true;
+            try {
+                pagefind = await import('https://agnusdei1207.github.io/brainscience/pagefind/pagefind.js');
+            } catch (e) {
+                console.log('Pagefind not available');
+            }
+            pagefindLoading = false;
+        }
+
+        async function search(query) {
+            if (!query) {
+                sDrop.classList.remove('open');
+                sDrop.textContent = '';
+                return;
+            }
+            if (pagefindLoading) {
+                sDrop.innerHTML = '<div class="pf-empty">Searching...</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (!pagefind) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+                sDrop.classList.add('open');
+                return;
+            }
+            if (searchCache[query]) {
+                renderResults(searchCache[query], query);
+                return;
+            }
+            var result = await pagefind.search(query);
+            var results = await Promise.all(result.results.slice(0, 5).map(function (r) { return r.data(); }));
+            searchCache[query] = results;
+            renderResults(results, query);
+        }
+
+        function renderResults(results, query) {
+            if (results.length === 0) {
+                sDrop.innerHTML = '<div class="pf-empty">No results</div>';
+            } else {
+                var frag = document.createDocumentFragment();
+                results.forEach(function (r) {
+                    var a = document.createElement('a');
+                    a.className = 'pf-result';
+                    a.href = r.url;
+                    a.innerHTML = highlight(r.meta.title || 'Untitled', query);
+                    frag.appendChild(a);
+                });
+                sDrop.textContent = '';
+                sDrop.appendChild(frag);
+            }
+            sDrop.classList.add('open');
+        }
+
+        function highlight(text, query) {
+            if (!query) return esc(text);
+            var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return esc(text).replace(re, '<mark>$1</mark>');
+        }
+
+        function esc(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function getItems() {
+            return Array.from(sDrop.querySelectorAll('.pf-result'));
+        }
+
+        function setActive(idx) {
+            var items = getItems();
+            items.forEach(function (el) { el.classList.remove('pf-active'); });
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('pf-active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            }
+            activeIdx = idx;
+        }
+
+        var debounceTimer;
+        sInput.addEventListener('focus', function () {
+            initPagefind();
+            if (this.value.trim()) sDrop.classList.add('open');
+        });
+
+        sInput.addEventListener('input', function () {
+            activeIdx = -1;
+            var q = this.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { search(q); }, 200);
+        });
+
+        sInput.addEventListener('keydown', function (e) {
+            var items = getItems();
+            if (!sDrop.classList.contains('open') || items.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIdx + 1, items.length - 1));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIdx - 1, 0));
+            } else if (e.key === 'Enter') {
+                if (activeIdx >= 0 && items[activeIdx]) {
+                    e.preventDefault();
+                    window.location.href = items[activeIdx].href;
+                }
+            }
+        });
+
+        window.onclick = function (e) {
+            if (!sWrap.contains(e.target)) sDrop.classList.remove('open');
+        };
+
+        window.onkeydown = function (e) {
+            if (e.key === '/' && document.activeElement !== sInput) {
+                e.preventDefault();
+                sInput.focus();
+            }
+            if (e.key === 'Escape') {
+                sDrop.classList.remove('open');
+                sInput.blur();
+            }
+        };
+    </script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () { hljs.highlightAll(); });</script>
+</body>
+
+</html>
