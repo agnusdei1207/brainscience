@@ -146,6 +146,26 @@ CAP의 한계를 보완한 PACELC (Partition → AP or CP, Else → Latency or C
 | PACELC | 확장 이론 | 정상 시 Latency vs Consistency |
 | Eventual Consistency | 상태 | 시간 경과 후 일관성 수렴 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+RDB ACID 트랜잭션 - 분산 환경 확장 한계
+    │
+    ▼
+CAP 정리 - 일관성·가용성·분할내성 동시 불가
+    │
+    ▼
+NoSQL BASE - 결과적 일관성으로 가용성 극대화
+    │
+    ▼
+CP 계열 (HBase, ZooKeeper) vs AP 계열 (Cassandra)
+    │
+    ▼
+NewSQL (CockroachDB, Spanner) - ACID + 수평 확장
+```
+
+> **키워드**: CAP Theorem, BASE, ACID, NoSQL, Eventual Consistency, Partition Tolerance, NewSQL, CockroachDB
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. CAP는 "맛있고 빠르고 저렴한 식당"처럼 세 가지를 동시에 다 가질 수 없다는 법칙이에요.

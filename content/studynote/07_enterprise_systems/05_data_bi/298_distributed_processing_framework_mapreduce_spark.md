@@ -97,6 +97,26 @@ categories = "studynote-enterprise"
 | RDD (Resilient Distributed Dataset) | 스파크의 핵심 데이터 구조, 장애 시 다시 계산하는 논리적 계보 |
 | YARN / Kubernetes | 분산 처리 프레임워크에 자원을 할당해주는 관리자 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+단일 서버 배치 처리 한계 (TB급 데이터)
+    │
+    ▼
+Google MapReduce 논문 (2004) - 분산 처리 패러다임
+    │
+    ▼
+Hadoop MapReduce 오픈소스 구현 (디스크 I/O 병목)
+    │
+    ▼
+Apache Spark - 인메모리 DAG 실행 엔진 (100x 빠름)
+    │
+    ▼
+Spark Structured Streaming + Delta Lake 통합
+```
+
+> **키워드**: MapReduce, Apache Spark, DAG, In-Memory Processing, HDFS, RDD, DataFrame, Hadoop
+
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 엄청나게 많은 사탕을 혼자 세려면 하루 종일 걸려요.
 2. 그래서 친구 10명에게 사탕을 나누어 주고 각자 몇 개인지 세게 했어요.

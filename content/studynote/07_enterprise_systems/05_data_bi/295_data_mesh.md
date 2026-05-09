@@ -99,6 +99,26 @@ categories = "studynote-enterprise"
 | 데이터 레이크하우스 | 데이터 메시를 기술적으로 구현할 수 있는 하이브리드 저장 기술 |
 | 데이터 카탈로그 | 분산된 데이터 제품들을 사용자가 쉽게 찾을 수 있게 돕는 도구 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+중앙 집중형 데이터 레이크 - 병목·소유권 혼란
+    │
+    ▼
+데이터 플랫폼 팀 단독 관리 → 확장성 한계
+    │
+    ▼
+Data Mesh 패러다임 - 도메인 소유권 분산
+    │
+    ▼
+Data Product + 셀프서브 플랫폼 + 연합 거버넌스
+    │
+    ▼
+Federated Computational Governance 표준화
+```
+
+> **키워드**: Data Mesh, Domain Ownership, Data Product, Self-Serve Platform, Federated Governance, Zhamak Dehghani
+
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 엄마 혼자서 집 안의 모든 물건을 다 정리하면 너무 힘들고 어디 있는지 다 몰라요.
 2. 그래서 장난감은 아이가, 책은 아빠가 각자 책임지고 정리해서 보여주기로 했어요.

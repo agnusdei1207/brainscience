@@ -95,6 +95,26 @@ categories = "studynote-enterprise"
 | Schema Registry | 스트리밍되는 데이터의 형식을 관리하여 호환성을 보장하는 도구 |
 | 람다/카파 아키텍처 | 배치와 스트리밍을 어떻게 조합할지에 대한 아키텍처 설계 패턴 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+배치 ETL - 야간 처리, T+1 데이터 지연
+    │
+    ▼
+메시지 큐 (RabbitMQ) - 실시간 이벤트 전달
+    │
+    ▼
+Apache Kafka - 분산 로그 스트리밍 플랫폼
+    │
+    ▼
+CDC (Change Data Capture) - DB 변경 이벤트 캡처
+    │
+    ▼
+Kafka + Debezium + Flink 실시간 스트리밍 파이프라인
+```
+
+> **키워드**: Kafka, CDC, Change Data Capture, Debezium, Stream Processing, Real-Time ETL, Flink
+
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 장난감 가게에 새 장난감이 들어올 때까지 기다리는 건 너무 지루해요.
 2. 그래서 장난감이 상자에 담기자마자 나에게 바로 알려주는 마법 벨을 달았어요.

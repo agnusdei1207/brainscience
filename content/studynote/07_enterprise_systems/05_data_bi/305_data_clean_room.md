@@ -136,6 +136,26 @@ Data Clean Room은 이 딜레마를 해결한다. 원시 데이터(Raw PII)를 �
 | k-anonymity | 보호 기준 | 최소 그룹 크기 보장 |
 | Privacy Budget | 제어 매개변수 | DP 쿼리 횟수 한도 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+쿠키 기반 광고 타겟팅 (서드파티 데이터)
+    │
+    ▼
+개인정보 규제 강화 (GDPR, 쿠키리스 시대)
+    │
+    ▼
+Data Clean Room - 원시 데이터 비공개 협업 분석
+    │
+    ▼
+MPC/차분 프라이버시/동형암호 프라이버시 기술 통합
+    │
+    ▼
+Snowflake/Google Ads DCR 플랫폼 상용화
+```
+
+> **키워드**: Data Clean Room, Privacy-Preserving Analytics, MPC, Differential Privacy, Cookieless, First-Party Data
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 클린 룸은 두 친구가 서로의 일기를 직접 보여주지 않고, 공통 내용만 알려주는 비밀 규칙이에요.

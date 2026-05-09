@@ -144,6 +144,26 @@ CDP는 식별된 고객 데이터를 중심으로 Unified Customer Profile (통�
 | Unified Profile | 산출물 | 고객 1인의 모든 행동 통합 뷰 |
 | 1st Party Data | 원료 | 직접 수집한 고객 데이터 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+채널별 고객 데이터 사일로 (CRM·웹·앱 분리)
+    │
+    ▼
+DMP (Data Management Platform) - 쿠키 기반 익명
+    │
+    ▼
+CDP (Customer Data Platform) - ID 통합 실명 프로파일
+    │
+    ▼
+실시간 CDP - 스트리밍 이벤트 즉각 프로파일 갱신
+    │
+    ▼
+Real-Time Personalization + 동의 관리 통합
+```
+
+> **키워드**: CDP, Customer Data Platform, Real-Time CDP, Identity Resolution, DMP, 360° Profile, Consent Management
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. CDP는 동네 단골 가게 주인이 손님 얼굴을 기억하는 것처럼, 어떤 기기로 방문해도 같은 사람으로 알아보는 시스템이에요.

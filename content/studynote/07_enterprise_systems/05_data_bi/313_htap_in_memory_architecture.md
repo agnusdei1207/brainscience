@@ -156,6 +156,26 @@ NUMA Node 0              NUMA Node 1
 | SAP HANA | 제품 | 엔터프라이즈 HTAP 선두 |
 | TiDB | 제품 | 오픈소스 HTAP (TiKV+TiFlash) |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+OLTP/OLAP 완전 분리 - ETL 지연 (T+1 분석)
+    │
+    ▼
+인메모리 DB (SAP HANA) - 단일 엔진 HTAP 시도
+    │
+    ▼
+행·열 혼합 스토리지 + 분리된 워크로드 격리
+    │
+    ▼
+TiDB/SingleStore - 분산 HTAP 클라우드 네이티브
+    │
+    ▼
+실시간 OLAP 분석 (Freshness < 1s) 달성
+```
+
+> **키워드**: HTAP, In-Memory Database, SAP HANA, TiDB, Row Store, Column Store, Real-Time Analytics
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. HTAP은 주문을 받으면서 동시에 "오늘 어떤 음식이 많이 팔렸는지" 바로 알 수 있는 스마트 식당이에요.

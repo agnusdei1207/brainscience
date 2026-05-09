@@ -97,6 +97,26 @@ categories = "studynote-enterprise"
 | 데이터 마스킹 (Data Masking) | 클론 생성 후 민감 정보를 가리는 후처리 보안 작업 |
 | 타임 트래블 (Time Travel) | 과거 특정 시점으로 데이터를 조회하거나 클론을 만드는 기능 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+전통 DW 데이터 복사 - 시간·비용 비효율
+    │
+    ▼
+백업/스냅샷 방식 (물리적 복사 오버헤드)
+    │
+    ▼
+Copy-on-Write 메타데이터 포인터 기법 등장
+    │
+    ▼
+Snowflake Zero-Copy Clone - 즉각·비용 제로
+    │
+    ▼
+개발/테스트/프로덕션 격리 환경 즉시 생성
+```
+
+> **키워드**: Zero-Copy Cloning, Copy-on-Write, Snowflake, Metadata Pointer, Data Isolation, Time Travel
+
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 친구랑 똑같은 그림을 그리고 싶은데, 시간이 너무 오래 걸려요.
 2. 그래서 마술 거울을 써서 친구 그림을 그대로 비춰서 보는 거예요.

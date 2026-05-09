@@ -135,6 +135,26 @@ InfluxDB는 LSM (Log-Structured Merge Tree) 변형인 TSM 엔진을 사용한다
 | TSM Engine | 저장 엔진 | 시계열 최적화 저장 구조 |
 | Tag vs Field | 설계 원칙 | 인덱스 폭발 방지 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+RDB 시계열 저장 - 쓰기 병목·스토리지 폭증
+    │
+    ▼
+시계열 DB 전용 (InfluxDB, Prometheus) 등장
+    │
+    ▼
+고해상도 실시간 데이터 → 시간 경과 후 용량 문제
+    │
+    ▼
+Downsampling - 집계 함수로 해상도 단계적 축소
+    │
+    ▼
+Retention Policy + CQ (Continuous Query) 자동화
+```
+
+> **키워드**: InfluxDB, Time Series DB, Downsampling, Retention Policy, Continuous Query, Prometheus, Telegraf, Flux
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 시계열 DB는 매초 사진을 찍는 카메라예요. 오래된 사진은 자동으로 작은 썸네일로 압축돼요.

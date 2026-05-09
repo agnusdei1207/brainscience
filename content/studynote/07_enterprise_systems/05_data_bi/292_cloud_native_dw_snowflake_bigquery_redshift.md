@@ -118,6 +118,26 @@ categories = "studynote-enterprise-systems"
 | HTAP | 관련 개념 | 트랜잭션+분석 동시 처리 |
 | Columnar Storage | 기반 기술 | 분석 쿼리 최적화 컬럼 기반 저장 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+온프레미스 MPP DW (Teradata, Netezza)
+    │
+    ▼
+Hadoop 기반 분산 처리 (HDFS + Hive)
+    │
+    ▼
+클라우드 DW 1세대 (Redshift - 컬럼 스토어)
+    │
+    ▼
+스토리지·컴퓨팅 분리 DW (Snowflake, BigQuery)
+    │
+    ▼
+서버리스·멀티클러스터·Zero-Copy Clone 진화
+```
+
+> **키워드**: Cloud Native DW, Snowflake, BigQuery, Redshift, MPP, Storage-Compute Separation, Serverless
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 클라우드 DW는 구름 위에 있는 초고속 도서관이에요—책(데이터)은 엄청나게 많이 보관하면서, 필요할 때만 독서실 자리(컴퓨팅)를 빌려 써요.

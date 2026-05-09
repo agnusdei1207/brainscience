@@ -159,6 +159,26 @@ Lag > 10,000건 → 알람 → 컨슈머 추가 or 처리 로직 최적화
 | Rebalancing | 재배분 이벤트 | 컨슈머 수 변경 시 파티션 재할당 |
 | Consumer Lag | 처리 지연 지표 | Log End Offset - 커밋 Offset |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+단일 큐 메시지 브로커 - 처리량 병목
+    │
+    ▼
+Kafka Topic - 논리적 데이터 채널 추상화
+    │
+    ▼
+Partition - 물리적 분산·병렬 처리 단위
+    │
+    ▼
+Consumer Group - 파티션별 독립 소비자 배정
+    │
+    ▼
+Replication Factor + ISR = 고가용성 보장
+```
+
+> **키워드**: Kafka Topic, Partition, Consumer Group, Offset, Replication Factor, ISR, Producer, Broker
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 토픽은 학교 알림판이고, 파티션은 알림판을 반별로 나눈 구역이에요.

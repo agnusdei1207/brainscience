@@ -137,6 +137,26 @@ categories = "studynote-enterprise-systems"
 | DAMA-DMBOK | 표준 프레임워크 | 데이터 관리 지식 체계 |
 | MDM | 연관 영역 | 마스터 데이터 단일 진실 원천 관리 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+데이터 품질 문제 인식 - 임시방편 대응
+    │
+    ▼
+데이터 관리 정책 수립 (조직·프로세스·IT 3요소)
+    │
+    ▼
+Data Catalog + Data Steward 체계화
+    │
+    ▼
+DAMA-DMBOK 기반 거버넌스 성숙도 모델 적용
+    │
+    ▼
+능동적 거버넌스 (Active Metadata + AI 자동화)
+```
+
+> **키워드**: Data Governance, Data Steward, Data Catalog, CDO, DAMA-DMBOK, MDM, Data Quality, Active Metadata
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 데이터 거버넌스는 도서관 운영 규칙이에요. 어떤 책이 어디 있는지, 누가 관리하는지, 빌리는 규칙은 뭔지 정해두는 거예요.

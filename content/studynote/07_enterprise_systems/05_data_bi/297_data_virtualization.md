@@ -102,6 +102,26 @@ categories = "studynote-enterprise"
 | 푸시다운 (Push-down) | 연산을 최대한 원천 DB에서 수행하게 하여 데이터 이동을 줄이는 기술 |
 | 데이터 추상화 | 복잡한 물리 구조를 사용자에게 쉬운 논리 구조로 변환하는 과정 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+물리적 ETL 복사 - 지연·중복 스토리지 문제
+    │
+    ▼
+연합 쿼리 (Federated Query) 초기 방식
+    │
+    ▼
+데이터 가상화 레이어 - 논리적 단일 뷰 제공
+    │
+    ▼
+Denodo/Dremio - 실시간 쿼리 푸시다운 최적화
+    │
+    ▼
+Data Fabric 구성 요소로 편입·진화
+```
+
+> **키워드**: Data Virtualization, Logical Data Warehouse, Federated Query, Denodo, Dremio, Query Pushdown
+
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 전 세계 친구들의 일기장을 내가 다 가지고 있으려면 가방이 너무 무거워요.
 2. 대신 마법 거울을 통해서 친구들의 일기장을 바로 비춰보기로 했어요.

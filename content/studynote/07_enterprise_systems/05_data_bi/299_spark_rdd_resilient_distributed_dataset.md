@@ -96,6 +96,26 @@ RDD는 빅데이터 처리의 패러다임을 '기록'에서 '계산'으로 바�
 | 액션 (Action) | `count`, `collect` 등 실제 계산을 수행하고 결과를 반환하는 연산 |
 | DAG (Directed Acyclic Graph) | RDD 간의 의존 관계를 나타내는 실행 계획 지도 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+Hadoop MapReduce - 디스크 기반 중간 결과 저장
+    │
+    ▼
+Spark RDD - 인메모리 분산 데이터셋 추상화
+    │
+    ▼
+Transformation (지연 평가) + Action (실행 트리거)
+    │
+    ▼
+DataFrame/Dataset API - 스키마 기반 최적화
+    │
+    ▼
+Catalyst Optimizer + Tungsten 메모리 관리
+```
+
+> **키워드**: RDD, Resilient Distributed Dataset, Spark, Lazy Evaluation, Lineage, DataFrame, Catalyst
+
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 거대한 퍼즐을 친구들이 나누어서 맞추고 있어요.
 2. 조각 하나를 잃어버려도, "어디서 온 조각인지" 적힌 설명서가 있어서 금방 새로 만들 수 있어요.

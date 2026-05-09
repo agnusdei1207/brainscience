@@ -123,6 +123,26 @@ MDX (Multidimensional Expressions)는 OLAP 큐브 쿼리 언어다.
 | MDX | 쿼리 언어 | 큐브 조회 전용 언어 |
 | Cube Partition | 최적화 | 증분 빌드로 빌드 시간 단축 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+평면 2D 리포트 한계 - 다차원 분석 필요성
+    │
+    ▼
+MOLAP - 전용 큐브 스토리지 (빠른 쿼리, 공간 비용)
+    │
+    ▼
+ROLAP - RDB 기반 스타 스키마 (확장성, 느린 쿼리)
+    │
+    ▼
+HOLAP - MOLAP+ROLAP 하이브리드 계층화
+    │
+    ▼
+현대 OLAP (Druid, ClickHouse) - 실시간 집계 진화
+```
+
+> **키워드**: MOLAP, ROLAP, HOLAP, OLAP Cube, Star Schema, Snowflake Schema, Drill-Down, ClickHouse
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. OLAP 큐브는 미리 잘라 포장해 둔 음식 세트예요. 주문이 오면 바로 꺼내주면 돼요.

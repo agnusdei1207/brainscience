@@ -113,6 +113,26 @@ categories = "studynote-enterprise-systems"
 | Data Quality | 연관 | 품질 오류 발생 시 리니지로 근본 원인 추적 |
 | DAG | 구조 | 리니지는 방향성 비순환 그래프로 표현 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+소스 시스템 데이터 생성 (DB, API, 파일)
+    │
+    ▼
+ETL/ELT 파이프라인 (수집·변환·적재)
+    │
+    ▼
+테이블 수준 리니지 → 컬럼 수준 리니지 진화
+    │
+    ▼
+OpenLineage 표준 + dbt·Airflow 자동 수집
+    │
+    ▼
+Data Catalog 통합 → 규제 감사·품질 근본 원인 분석
+```
+
+> **키워드**: Data Lineage, Column-level Lineage, OpenLineage, Data Catalog, DAG, Data Provenance
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 데이터 리니지는 데이터의 '족보'예요—이 숫자가 어느 할아버지(소스)에서 태어나서 어떤 과정을 거쳐 지금의 모습이 됐는지 알려줘요.

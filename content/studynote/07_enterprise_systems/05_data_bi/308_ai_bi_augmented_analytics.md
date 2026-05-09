@@ -139,6 +139,26 @@ Gartner는 2017년 Augmented Analytics를 "AI와 ML이 데이터 준비·인사�
 | Data Storytelling | 출력 형태 | 분석 결과 자동 내러티브화 |
 | Augmented Analytics | 패러다임 | AI 강화 셀프서비스 BI |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+전통 BI - 수작업 SQL 쿼리 + 정적 대시보드
+    │
+    ▼
+셀프서비스 BI (Power BI, Tableau) - 드래그앤드롭
+    │
+    ▼
+Augmented Analytics - AI/ML 자동 인사이트 발굴
+    │
+    ▼
+NLQ (자연어 쿼리) + Auto-Narrative 리포트
+    │
+    ▼
+GenAI BI - LLM 기반 대화형 데이터 분석
+```
+
+> **키워드**: Augmented Analytics, NLQ, AutoML BI, Self-Service BI, Power BI, Tableau, GenAI BI, Smart Insight
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 증강 분석은 "지난달 어느 과자가 제일 많이 팔렸어?"라고 말만 해도 그래프를 그려주는 컴퓨터예요.

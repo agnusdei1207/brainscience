@@ -135,6 +135,26 @@ RLE:  [(A,4), (B,2), (C,5)]              (3 pairs → 73% 압축)
 | Column Pruning | 최적화 | 필요 컬럼만 I/O |
 | Row Group | 구조 단위 | Parquet 데이터 블록 128MB |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+행 기반 저장 (CSV, JSON) - 분석 쿼리 불필요 I/O
+    │
+    ▼
+컬럼 기반 저장 (Parquet, ORC) - 컬럼 선택 I/O 최소화
+    │
+    ▼
+RLE (Run-Length Encoding) + Dictionary 압축
+    │
+    ▼
+Predicate Pushdown + Column Pruning 쿼리 최적화
+    │
+    ▼
+Delta Lake/Iceberg - 오픈 테이블 포맷으로 진화
+```
+
+> **키워드**: Parquet, ORC, RLE, Columnar Storage, Predicate Pushdown, Snappy, Zstandard, Data Lakehouse
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. Parquet는 색깔별로 구슬을 통에 모아 담은 것이에요. 빨간 구슬만 필요하면 빨간 통만 열어요.

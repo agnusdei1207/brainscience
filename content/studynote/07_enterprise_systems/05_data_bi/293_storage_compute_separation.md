@@ -100,6 +100,26 @@ categories = "studynote-enterprise"
 | 스노우플레이크 (Snowflake) | 스토리지/컴퓨팅 분리 아키텍처를 대중화시킨 선두 주자 |
 | 오토스케일링 (Auto-scaling) | 분리된 컴퓨팅 노드를 부하에 따라 자동 증감시키는 기술 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+온프레미스 공유 스토리지 (SAN/NAS) 병목
+    │
+    ▼
+Hadoop HDFS - 데이터 로컬리티 강제 결합
+    │
+    ▼
+S3/GCS/ADLS 오브젝트 스토리지 분리 등장
+    │
+    ▼
+Snowflake/BigQuery 스토리지·컴퓨팅 독립 확장
+    │
+    ▼
+Data Lakehouse (Delta Lake, Iceberg) - 통합 계층
+```
+
+> **키워드**: Storage-Compute Separation, Object Storage, S3, Data Lakehouse, Snowflake, Elasticity
+
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 가방에 장난감을 다 넣고 다니면 너무 무겁고 힘들어요.
 2. 그래서 장난감은 집에 두고, 놀고 싶을 때만 필요한 것만 꺼내서 노는 거예요.

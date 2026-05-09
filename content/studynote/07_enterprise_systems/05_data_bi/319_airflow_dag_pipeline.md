@@ -1,166 +1,137 @@
 +++
 weight = 319
-title = "319. 데이터 파이프라인 오케스트레이터 Airflow DAG (Airflow DAG Pipeline)"
-date = "2026-04-21"
+title = "319. Apache Airflow DAG 파이프라인 오케스트레이션"
+date = "2026-05-09"
 [extra]
-categories = "studynote-enterprise-systems"
+categories = "studynote-enterprise"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
 
-> 1. **본질**: Airflow DAG (Directed Acyclic Graph)는 데이터 파이프라인을 코드로 정의하고, 의존성을 방향성 비순환 그래프로 표현해 스케줄·모니터링·재실행을 자동화한다.
-> 2. **가치**: CeleryExecutor나 KubernetesExecutor로 수천 개의 태스크를 병렬 실행하고, SLA Miss 알람과 Backfill로 데이터 신뢰성을 운영 수준에서 보장한다.
-> 3. **판단 포인트**: Airflow는 스케줄 기반 배치 오케스트레이션에 강하지만, 실시간 스트리밍 파이프라인은 Kafka/Flink가 적합하며 두 도구는 상호 보완 관계다.
+> 1. **본질**: Apache Airflow (에어플로우)는 DAG (Directed Acyclic Graph, 방향성 비순환 그래프)로 데이터 파이프라인을 코드로 정의하고 스케줄·의존성 관리·모니터링을 제공하는 오픈소스 워크플로우 오케스트레이터다.
+> 2. **가치**: 파이프라인을 코드 (Python DAG)로 관리하면 버전 관리 (Git), 테스트, 재사용이 가능해지며, 태스크 간 의존성과 실패 재시도 (Retry)를 선언적으로 정의하여 복잡한 데이터 파이프라인을 신뢰성 있게 운영할 수 있다.
+> 3. **판단 포인트**: Airflow는 배치 오케스트레이션에 강점이 있지만 실시간 스트리밍 처리에는 적합하지 않으며, 수백 개 이상의 DAG를 운영할 때는 스케줄러 성능과 메타DB 부하를 고려한 아키텍처 설계가 필요하다.
+
+---
 
 ## Ⅰ. 개요 및 필요성
 
-데이터 파이프라인은 수십~수백 개의 태스크(ETL, 데이터 품질 검사, ML 학습, 리포트 생성)가 특정 순서와 조건으로 실행되어야 한다.
-수작업 스크립트로 관리하면 의존성 파악 불가, 실패 시 재실행 어려움, 스케줄 충돌 등의 문제가 발생한다.
+데이터 파이프라인은 일반적으로 데이터 수집 → 변환 → 검증 → 적재 → 리포팅의 여러 단계로 구성된다. 각 단계는 이전 단계 완료 후 실행되어야 하는 의존성이 있고, 실패 시 재시도·알림이 필요하다. 이를 cron 스크립트로 관리하면 의존성 처리, 실패 감지, 재실행이 수작업이 된다.
 
-Airflow (Apache Airflow, Airbnb 개발)는 Python으로 DAG를 정의해:
-- 태스크 간 의존성을 `>>` 연산자로 선언
-- 스케줄을 cron 표현식으로 정의 (`0 2 * * *` = 매일 새벽 2시)
-- Web UI에서 실행 현황·로그·재실행을 시각적으로 관리
+Airflow는 Airbnb가 2014년 개발하고 2016년 Apache 인큐베이터에 기증했다. 파이프라인을 Python DAG로 정의하면 의존성·스케줄·재시도를 선언적으로 관리하고, 웹 UI로 실행 상태를 실시간 모니터링할 수 있다.
 
-주요 개념:
-- **DAG**: Directed Acyclic Graph, 파이프라인 전체 정의
-- **Task**: 개별 작업 단위 (Operator로 구현)
-- **Operator**: PythonOperator, BashOperator, SparkSubmitOperator 등
-- **Sensor**: 외부 조건 대기 (S3FileSensor, ExternalTaskSensor)
+- **📢 섹션 요약 비유**: Airflow는 공장 조립 라인 관제탑이다. 부품 A가 완성되면 부품 B 조립을 시작하고, 문제가 생기면 자동으로 재작업하며, 전체 라인 상태를 대시보드로 보여준다.
 
-📢 **섹션 요약 비유**: Airflow DAG는 복잡한 공사 공정표다. 어떤 공정이 먼저 끝나야 다음 공정을 시작할 수 있는지, 언제 시작할지를 모두 코드로 관리한다.
+---
 
 ## Ⅱ. 아키텍처 및 핵심 원리
 
-### Executor 유형 비교
-
-| Executor | 특징 | 병렬성 | 사용 환경 |
-|:---|:---|:---|:---|
-| LocalExecutor | 단일 서버 프로세스 병렬 | 수십 태스크 | 개발, 소규모 |
-| CeleryExecutor | Redis/RabbitMQ 큐 기반 분산 | 수백 태스크 | 중형 프로덕션 |
-| KubernetesExecutor | 태스크당 Pod 생성 | 수천 태스크 | 클라우드 네이티브 |
-
-### XCom (Cross-Communication)
-
-태스크 간 데이터 전달:
-```python
-# 업스트림 태스크가 값 push
-def extract_data(**context):
-    result = {"row_count": 1000}
-    context['task_instance'].xcom_push(key='result', value=result)
-
-# 다운스트림 태스크가 값 pull
-def validate_data(**context):
-    result = context['task_instance'].xcom_pull(
-        task_ids='extract_task', key='result'
-    )
-    assert result['row_count'] > 0
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                Airflow 아키텍처와 DAG 구성                          │
+├──────────────────────────────────────────────────────────────────┤
+│  Airflow 컴포넌트:                                                 │
+│  웹 서버 (Web Server) → UI · REST API 제공                         │
+│  스케줄러 (Scheduler) → DAG 파싱 · 태스크 스케줄링                  │
+│  실행자 (Executor) → 태스크 실행 방식 결정                           │
+│    SequentialExecutor: 순차 실행 (개발용)                           │
+│    CeleryExecutor: 분산 실행 (Worker 노드 추가 가능)                │
+│    KubernetesExecutor: K8s Pod로 격리 실행                         │
+│  워커 (Worker) → 실제 태스크 실행 프로세스                          │
+│  메타 DB (Metadata DB) → DAG·실행 기록·상태 저장 (PostgreSQL 권장) │
+│                                                                  │
+│  DAG 예시 (Python):                                               │
+│  extract → transform → validate → load                           │
+│  (t1)  →    (t2)    →   (t3)   → (t4)                           │
+│                                                                  │
+│  t1 >> t2 >> t3 >> t4  ← 의존성 선언 (Python 코드)                │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
-주의: XCom은 소규모 메타데이터용 (대용량 데이터는 S3에 저장 후 경로 전달)
+| 개념               | 설명                              | 역할                      |
+|:----------------|:---------------------------------|:------------------------|
+| DAG              | 태스크 의존성 그래프                | 파이프라인 전체 정의        |
+| Operator         | 태스크 실행 단위 (PythonOperator 등)| 각 단계 작업 실행          |
+| Task Instance    | 특정 날짜의 태스크 실행 인스턴스    | 실행 상태·로그 추적         |
+| DAG Run          | 특정 날짜의 전체 DAG 실행 인스턴스 | 파이프라인 실행 단위        |
+| XCom             | 태스크 간 소규모 데이터 전달 메커니즘| 태스크 결과 공유           |
 
-### ASCII 다이어그램: DAG 태스크 의존성 그래프
+- **📢 섹션 요약 비유**: DAG는 요리 레시피다. 재료 손질(t1) → 볶기(t2) → 간 맞추기(t3) 순서가 정해져 있고, 이전 단계가 완료되어야 다음 단계가 시작된다.
 
-```
-  DAG: daily_etl_pipeline  (cron: 0 2 * * *)
-  ┌─────────────────────────────────────────────────────────────┐
-  │                                                             │
-  │  [extract_raw_data]                                         │
-  │         │                                                   │
-  │         ▼                                                   │
-  │  [validate_schema] ──── [check_row_count]                   │
-  │         │                       │                           │
-  │         └───────────┬───────────┘                           │
-  │                     ▼                                       │
-  │           [transform_to_staging]                            │
-  │                     │                                       │
-  │          ┌──────────┼──────────┐                            │
-  │          ▼          ▼          ▼                            │
-  │    [load_dim_A] [load_dim_B] [load_dim_C]                   │
-  │          │          │          │                            │
-  │          └──────────┼──────────┘                            │
-  │                     ▼                                       │
-  │              [build_fact_table]                             │
-  │                     │                                       │
-  │                     ▼                                       │
-  │              [refresh_BI_cache]                             │
-  │                     │                                       │
-  │                     ▼                                       │
-  │              [send_completion_alert]                        │
-  └─────────────────────────────────────────────────────────────┘
-```
-
-### Backfill과 Catchup
-
-```bash
-# 과거 날짜 데이터 소급 실행
-airflow dags backfill -s 2024-01-01 -e 2024-01-31 my_dag
-
-# Catchup: DAG 비활성화 기간 동안의 실행을 재처리 (기본 True)
-# 프로덕션에서는 catchup=False 권장 (의도치 않은 대량 실행 방지)
-```
-
-📢 **섹션 요약 비유**: DAG 의존성은 도미노 게임이다. 앞 도미노(태스크)가 넘어져야 다음 도미노가 넘어지고, 어느 하나가 넘어지지 않으면 뒤도 멈춘다.
+---
 
 ## Ⅲ. 비교 및 연결
 
-### 오케스트레이터 비교
+Airflow vs 대안 오케스트레이터 비교:
 
-| 항목 | Airflow | Prefect | Dagster | Luigi |
-|:---|:---|:---|:---|:---|
-| 스케줄링 | 강력 (cron, sensor) | 강력 | 강력 | 제한적 |
-| UI | 성숙 | 현대적 | 현대적 | 기본 |
-| 코드 방식 | Python DAG (선언적) | Python Flow | Python Job | Python Task |
-| 데이터 관측성 | 제한 (로그 중심) | 강함 | 매우 강함 | 없음 |
-| 클라우드 관리형 | Astronomer, MWAA | Prefect Cloud | Dagster Cloud | - |
+| 도구            | 특성                         | 강점                          | 약점                    |
+|:-------------|:----------------------------|:-----------------------------|:-----------------------|
+| Airflow       | Python DAG, 풍부한 생태계    | 유연성, 커뮤니티 생태계          | 스케줄러 복잡도, 학습 곡선|
+| Prefect       | 파이썬 함수 기반, 현대적 UI  | 코드 친화적, 동적 DAG           | 상대적으로 작은 생태계   |
+| Dagster       | 데이터 자산 중심, 타입 시스템 | 데이터 품질 통합, 테스트 용이     | 더 가파른 학습 곡선      |
+| dbt (+ 오케스트레이터) | SQL 변환 특화          | 분석 엔지니어 친화적             | 오케스트레이션만으로 불완전|
 
-📢 **섹션 요약 비유**: Airflow는 믿을 수 있는 베테랑 공정 관리자다. Dagster와 Prefect는 현대적 UI와 관측성을 강조하는 신입이다.
+- **📢 섹션 요약 비유**: Airflow는 범용 공장 자동화 시스템, Dagster는 품질 관리 특화 시스템, dbt는 완제품 포장 전용 기계다. 목적에 맞는 도구 선택이 중요하다.
+
+---
 
 ## Ⅳ. 실무 적용 및 기술사 판단
 
-### Airflow 운영 체크리스트
+**DAG 설계 모범 사례**:
+1. 멱등성 (Idempotency): 같은 DAG Run을 여러 번 실행해도 결과가 동일해야 함 → 덮어쓰기(UPSERT) 기반 설계
+2. 태스크 원자성: 각 태스크는 독립적으로 성공/실패 판단 가능해야 함
+3. 적절한 태스크 크기: 너무 세분화 (오버헤드) vs 너무 큰 단위 (재시도 시 전체 재실행)
+4. 환경 변수 관리: Airflow Variables, Connections로 환경별 설정 분리
 
-- [ ] DAG 파일 Git 버전 관리 (DAG 변경 이력 추적)
-- [ ] SLA Miss 알람 설정: `sla=timedelta(hours=2)` 태스크 단위
-- [ ] KubernetesExecutor 사용 시 태스크별 리소스 제한 (CPU, 메모리)
-- [ ] catchup=False 설정 (재활성화 시 대량 소급 실행 방지)
-- [ ] DB 연결 풀 관리: Worker 수 × 평균 병렬 태스크 × 커넥션 = 커넥션 풀 크기
+**성능 튜닝**:
+- 스케줄러 파싱 부하: DAG 파일 수 최소화, `min_file_process_interval` 조정
+- 동시 실행 제한: `max_active_runs_per_dag`, `concurrency` 설정
+- CeleryExecutor 워커 스케일: 작업량에 따른 워커 수 동적 조정
 
-### 안티패턴
+- **📢 섹션 요약 비유**: 멱등성은 같은 주문서를 두 번 넣어도 같은 물건이 한 번만 배송되게 하는 것이다. 재처리 시 중복 문제가 없어야 한다.
 
-| 안티패턴 | 문제 | 해결 방법 |
-|:---|:---|:---|
-| DAG 내 무거운 Python 코드 직접 실행 | Scheduler 스레드 블로킹 | SparkSubmitOperator 또는 K8s Pod 위임 |
-| XCom으로 대용량 데이터 전달 | Metadata DB 용량 폭발 | S3 경로만 XCom으로 전달 |
-| 모든 태스크에 동일 retry=3 | 지연 3배 증가 | 태스크별 retry 전략 다르게 |
-| MAX_ACTIVE_RUNS 무제한 | DAG 중복 실행, DB 과부하 | max_active_runs=1~3 제한 |
-
-📢 **섹션 요약 비유**: DAG 내 무거운 작업 직접 실행은 지휘자(Scheduler)가 직접 악기를 연주하는 것이다. 지휘자는 지휘만 해야 한다.
+---
 
 ## Ⅴ. 기대효과 및 결론
 
-| 항목 | 수작업 스크립트 | Airflow DAG |
-|:---|:---|:---|
-| 파이프라인 가시성 | 없음 (로그만) | Web UI 전체 상태 시각화 |
-| 실패 시 재실행 | 수동 (어떤 태스크부터?) | 실패 태스크부터 자동 재실행 |
-| SLA 모니터링 | 없음 | SLA Miss 자동 알람 |
-| 백필 (소급 실행) | 스크립트 수동 수정 | `airflow dags backfill` 한 줄 |
+Airflow 도입으로 데이터 파이프라인이 코드로 관리되어 변경 이력 추적, 코드 리뷰, 자동화 테스트가 가능해진다. 실패 태스크의 자동 재시도와 알림으로 데이터 신뢰성이 높아지고, 시각적 DAG 모니터링으로 운영 효율성이 향상된다.
 
-📢 **섹션 요약 비유**: Airflow는 공항 관제탑이다. 모든 항공편(태스크)의 출발·도착을 실시간으로 모니터링하고, 지연이 생기면 즉시 알려준다.
+한계는 실시간 스트리밍 처리에 부적합하다는 점이다. Airflow는 배치 스케줄 기반이므로, 이벤트 드리븐 실시간 처리는 Kafka+Flink 같은 스트리밍 프레임워크가 필요하다. 배치(Airflow)와 스트리밍(Flink)을 병행하는 Lambda Architecture 또는 Kappa Architecture가 실무에서 많이 사용된다.
+
+- **📢 섹션 요약 비유**: Airflow는 정기 배송 서비스다. 매일 정해진 시간에 물건을 배달하는 데는 최적이지만, 즉시 배달(실시간 스트리밍)은 다른 서비스(Flink)가 필요하다.
+
+---
 
 ### 📌 관련 개념 맵
 
-| 개념 | 관계 | 설명 |
-|:---|:---|:---|
-| DAG | 핵심 구조 | 방향성 비순환 그래프 파이프라인 |
-| Operator | 태스크 구현체 | Python/Bash/Spark/S3 등 |
-| Sensor | 대기 태스크 | 외부 조건 충족까지 폴링 |
-| XCom | 데이터 전달 | 태스크 간 소규모 데이터 공유 |
-| Executor | 실행 엔진 | Local/Celery/Kubernetes |
-| Backfill | 소급 실행 | 과거 날짜 데이터 재처리 |
+| 개념                          | 연결 포인트                              |
+|:-----------------------------|:----------------------------------------|
+| DAG (Directed Acyclic Graph)  | Airflow 파이프라인 정의 핵심 구조        |
+| KubernetesExecutor            | 태스크별 K8s Pod 격리 실행               |
+| 멱등성 (Idempotency)          | 파이프라인 재실행 안전성 핵심 원칙       |
+| dbt + Airflow                 | SQL 변환 + 오케스트레이션 결합 패턴      |
+| Lambda / Kappa Architecture   | 배치+스트리밍 파이프라인 아키텍처 패턴   |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+cron 기반 스크립트 (의존성·재시도 관리 어려움)
+    │
+    ▼
+Airflow DAG (Python으로 파이프라인 코드화)
+    │
+    ▼
+CeleryExecutor → KubernetesExecutor (분산·격리 실행)
+    │
+    ▼
+DataOps: dbt + Airflow + 데이터 품질 테스트 통합
+    │
+    ▼
+Prefect · Dagster (현대적 데이터 자산 중심 오케스트레이터)
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
-1. Airflow DAG는 청소 순서표예요. "방 청소가 끝나야 욕실 청소를 시작할 수 있어요"처럼 순서가 정해져 있어요.
-2. Operator는 각 청소 도구예요. 진공청소기(PythonOperator), 걸레(BashOperator), 소독약(SparkOperator) 등이 있어요.
-3. SLA Miss 알람은 "약속한 시간까지 청소를 못 끝냈어요!"라고 알려주는 타이머예요.
+1. Airflow는 레시피 관리 앱이에요. 요리 순서(DAG)를 정해두면 각 단계를 정시에 자동으로 실행해줘요.
+2. 한 단계가 실패하면 자동으로 다시 시도하고, 계속 실패하면 요리사(운영자)에게 알림을 보내요.
+3. 모든 요리 기록(실행 로그)이 남아서 "어제 몇 시에 어떤 요리가 실패했는지" 바로 확인할 수 있어요!

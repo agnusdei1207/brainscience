@@ -102,6 +102,26 @@ categories = "studynote-enterprise"
 | 지식 그래프 (Knowledge Graph) | 데이터 간 관계를 지능적으로 연결하는 핵심 도구 |
 | 액티브 메타데이터 | 정적 정의를 넘어 활용 로그를 분석하는 동적 메타데이터 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+사일로화된 이기종 데이터 소스 난립
+    │
+    ▼
+데이터 통합 미들웨어 (ETL 허브) 한계
+    │
+    ▼
+Active Metadata + AI 기반 데이터 패브릭 등장
+    │
+    ▼
+Knowledge Graph + 자동 발견·추천·거버넌스
+    │
+    ▼
+하이브리드/멀티클라우드 통합 지능형 데이터 계층
+```
+
+> **키워드**: Data Fabric, Active Metadata, Knowledge Graph, AI-Driven Integration, Hybrid Cloud, Data Virtualization
+
 ### 👶 어린이를 위한 3줄 비유 설명
 1. 온 집안에 장난감이 여기저기 흩어져 있어서 찾기가 너무 힘들어요.
 2. 그래서 장난감을 한곳에 모으는 대신, "장난감 찾아줘!" 하면 위치를 바로 알려주는 마법 안경을 썼어요.

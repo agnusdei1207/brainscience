@@ -135,6 +135,26 @@ Feature Store (피처 스토어)는 이 문제를 해결하기 위한 중앙화�
 | Training-Serving Skew | 해결 대상 | 학습/서빙 피처 불일치 문제 |
 | Point-in-Time Join | 핵심 기능 | 과거 시점 기준 피처 조인 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+실험실 ML 모델 - 프로덕션 배포 단절 문제
+    │
+    ▼
+수작업 피처 엔지니어링 반복 - 일관성 부재
+    │
+    ▼
+Feature Store 등장 - 피처 재사용·공유 플랫폼
+    │
+    ▼
+온라인(Redis)/오프라인(Hive) 이중 저장 구조
+    │
+    ▼
+MLOps 통합 - 피처→모델→서빙 자동화 파이프라인
+```
+
+> **키워드**: Feature Store, MLOps, Feature Engineering, Online Store, Offline Store, Feast, Training-Serving Skew
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 피처 스토어는 마트 진열대예요. 여러 요리사(모델)가 같은 재료(피처)를 진열대에서 가져다 쓰니 항상 같은 재료를 써요.

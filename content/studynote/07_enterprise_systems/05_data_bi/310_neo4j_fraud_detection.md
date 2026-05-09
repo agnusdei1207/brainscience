@@ -141,6 +141,26 @@ LIMIT 100
 | Fraud Ring | 적용 사례 | 사기 링 탐지 |
 | Super Node | 성능 문제 | 수백만 관계 단일 노드 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+RDB 조인 기반 사기 탐지 - 복잡한 관계에서 성능 한계
+    │
+    ▼
+그래프 DB (Neo4j) - 노드·엣지 네이티브 저장
+    │
+    ▼
+실시간 그래프 트래버설 - 연결 관계 패턴 탐지
+    │
+    ▼
+GDS (Graph Data Science) - PageRank·커뮤니티 탐지
+    │
+    ▼
+GNN + Neo4j 하이브리드 - AI 기반 사기 예측
+```
+
+> **키워드**: Neo4j, Graph Database, Cypher Query, Fraud Detection, GDS, Graph Traversal, Community Detection, GNN
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 그래프 DB는 친구 관계 지도예요. "나→친구→친구의 친구"를 줄을 따라 즉시 찾을 수 있어요.

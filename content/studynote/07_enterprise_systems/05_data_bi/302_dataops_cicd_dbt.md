@@ -147,6 +147,26 @@ raw_orders → stg_orders → int_order_items → fct_orders → dim_customer_lt
 | CI/CD | 자동화 파이프라인 | Git Push → 자동 테스트 → 배포 |
 | Data Lineage | 계보 추적 | 데이터 흐름 시각화 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+수작업 SQL 쿼리 관리 - 버전관리 부재
+    │
+    ▼
+ETL 도구 GUI 기반 파이프라인 (Informatica 등)
+    │
+    ▼
+dbt - SQL 변환 코드화 + Git 버전관리
+    │
+    ▼
+DataOps - CI/CD + 테스트 + 모니터링 통합
+    │
+    ▼
+DataOps 플랫폼 (데이터 파이프라인 자동화 표준화)
+```
+
+> **키워드**: DataOps, dbt, CI/CD, Data Pipeline, Data Testing, Git-based Workflow, Data Quality
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. dbt는 요리 레시피북이에요. 재료(원천 데이터)를 어떻게 손질하고(staging) 조합해서(intermediate) 요리(mart)를 만드는지 단계별로 적혀 있어요.

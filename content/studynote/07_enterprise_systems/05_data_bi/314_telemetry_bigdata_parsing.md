@@ -162,6 +162,26 @@ Observability 3 기둥 (Three Pillars):
 | 4 Golden Signals | 핵심 지표 | 지연·트래픽·오류·포화도 |
 | Tail Sampling | 최적화 | 중요 트레이스 선택 보존 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+O-RAN 네트워크 장비 지표 수동 수집 한계
+    │
+    ▼
+스트리밍 텔레메트리 (gRPC/gNMI) - 실시간 전송
+    │
+    ▼
+Kafka + Flink - 대용량 텔레메트리 스트리밍 파싱
+    │
+    ▼
+시계열 DB (InfluxDB, OpenTSDB) 저장·분석
+    │
+    ▼
+ML 기반 네트워크 이상 탐지 자동화
+```
+
+> **키워드**: Telemetry, O-RAN, gNMI, gRPC, Kafka, Flink, Time Series, Network Analytics, Streaming Parsing
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. OTel은 모든 선생님이 같은 양식의 출석부를 쓰는 것이에요. 어느 반이든 같은 방식으로 기록해요.

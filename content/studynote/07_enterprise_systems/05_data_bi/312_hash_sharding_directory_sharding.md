@@ -153,6 +153,26 @@ DynamoDB: 내부 가상 노드 자동 관리
 | Hotspot | 문제 | 특정 샤드 쏠림 |
 | Directory Sharding | 전략 | 룩업 테이블 기반 유연 매핑 |
 
+### 📈 관련 키워드 및 발전 흐름도
+
+```
+단일 DB 서버 한계 - 수평 분할(Sharding) 필요
+    │
+    ▼
+Range Sharding - 핫스팟 문제 발생
+    │
+    ▼
+Hash Sharding - 균등 분산, 범위 조회 불리
+    │
+    ▼
+Directory Sharding - 룩업 테이블 기반 유연한 재분배
+    │
+    ▼
+Consistent Hashing + Virtual Node - 확장성 극대화
+```
+
+> **키워드**: Sharding, Hash Sharding, Directory Sharding, Consistent Hashing, Virtual Node, Horizontal Scaling, Hotspot
+
 ### 👶 어린이를 위한 3줄 비유 설명
 
 1. 샤딩은 반을 나눠 각 반에 선생님을 배정하는 것이에요. 학생이 늘면 반을 더 만들어요.
