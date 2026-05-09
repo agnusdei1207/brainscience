@@ -1,12 +1,13 @@
 +++
 weight = 410
 title = "410. AIC/BIC 모델 선택 (Akaike Information Criterion / Bayesian Information Criterion)"
-date = "2026-04-24"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ai"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
+
 > 1. **본질**: AIC (Akaike Information Criterion)와 BIC (Bayesian Information Criterion)는 모델의 적합도와 복잡도 사이의 균형을 수치화하는 정보 기준이다.
 > 2. **가치**: 우도 (Likelihood)만 보면 파라미터가 많은 모델이 항상 유리해지므로, 복잡도 패널티를 추가해 과적합을 억제한다.
 > 3. **판단 포인트**: AIC는 예측 성능 중심, BIC는 더 강한 패널티로 간결한 모델을 선호하므로 목적에 따라 다르게 써야 한다.
@@ -117,6 +118,12 @@ AIC/BIC를 쓰면 모델 선택이 감이 아니라 기준이 된다. 특히 시
 | BIC | 간결성 중심 정보 기준 |
 | GMM (Gaussian Mixture Model) | AIC/BIC로 컴포넌트 수 선택 |
 | ARIMA | 시계열 모형 선택에 활용 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[데이터 전처리] → [AIC/BIC 모델 선택 (Akaike Information Criterion / Bayesian Information Criterion)] → [최적화·운영 자동화]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 

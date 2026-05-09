@@ -1,12 +1,13 @@
 +++
 weight = 414
 title = "414. 지식 증류 (Knowledge Distillation)"
-date = "2026-04-24"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ai"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
+
 > 1. **본질**: 지식 증류 (Knowledge Distillation)는 큰 교사 모델 (Teacher Model)의 출력을 작은 학생 모델 (Student Model)에 전달해 압축하면서 성능을 유지하게 하는 모델 압축 기법이다.
 > 2. **가치**: 하드 레이블만 쓰는 것보다 소프트 타깃(Soft Target)과 로짓(Logit) 정보를 함께 쓰면 클래스 간 유사성까지 배울 수 있다.
 > 3. **판단 포인트**: 온도 (Temperature) 조절과 손실 가중치 `α` 설정이 핵심이며, 학생 모델 용량이 너무 작으면 증류 효과가 제한된다.
@@ -116,6 +117,12 @@ categories = "studynote-ai"
 | Temperature Scaling | 소프트 타깃을 부드럽게 만드는 핵심 |
 | KL Divergence | 분포 차이를 줄이는 손실 |
 | Logit Matching | 출력 점수 자체를 맞추는 방식 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[손실 함수·기울기 계산] → [지식 증류 (Knowledge Distillation)] → [대규모 분산 학습·서빙 최적화]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 

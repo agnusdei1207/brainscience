@@ -1,12 +1,13 @@
 +++
 weight = 411
 title = "411. 편자기상관함수 (PACF, Partial Autocorrelation Function)"
-date = "2026-04-24"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ai"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
+
 > 1. **본질**: PACF (Partial Autocorrelation Function)는 각 시차(lag)의 직접 영향만 남기고 중간 시차의 간접 효과를 제거한 자기상관이다.
 > 2. **가치**: 시계열에서 AR (Autoregressive) 차수 `p`를 고를 때 가장 중요한 힌트를 준다.
 > 3. **판단 포인트**: ACF (Autocorrelation Function)와 혼동하지 말고, 유의구간 밖의 스파이크가 어디까지 이어지는지를 봐야 한다.
@@ -115,6 +116,12 @@ PACF를 올바르게 쓰면 ARIMA, SARIMA 같은 시계열 모델의 차수 선�
 | Stationarity | 시계열 분석의 전제 |
 | ARIMA | PACF/ACF를 이용한 차수 설계 |
 | Yule-Walker | AR 계수 추정과 연결 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[데이터 전처리] → [편자기상관함수 (PACF, Partial Autocorrelation Function)] → [최적화·운영 자동화]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
