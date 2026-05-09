@@ -1,7 +1,7 @@
 +++
 weight = 501
 title = "501. 도커 컨테이너 경량 OS 격리 (Docker Container Lightweight OS Isolation)"
-date = "2026-04-21"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ict-convergence"
 +++
@@ -23,7 +23,7 @@ categories = "studynote-ict-convergence"
 - 밀집 배포: 동일 서버에 수십~수백 개의 컨테이너 동시 실행 → 자원 활용률 향상
 - 불변 인프라(Immutable Infrastructure)의 기반 단위
 
-📢 **섹션 요약 비유**: VM은 방을 통째로 빌리는 것이고, 컨테이너는 칸막이로 공간을 나눠 쓰는 코워킹 스페이스다. 칸막이가 벽보다 빨리 설치되고 비용도 저렴하지만, 방음은 덜하다.
+- **📢 섹션 요약 비유**: VM은 방을 통째로 빌리는 것이고, 컨테이너는 칸막이로 공간을 나눠 쓰는 코워킹 스페이스다. 칸막이가 벽보다 빨리 설치되고 비용도 저렴하지만, 방음은 덜하다.
 
 ---
 
@@ -58,7 +58,7 @@ categories = "studynote-ict-convergence"
 
 **OCI(Open Container Initiative)**: 컨테이너 이미지 포맷과 런타임 표준 정의. Docker 외 containerd, CRI-O 등 다양한 런타임이 OCI를 준수하여 상호 운용 가능.
 
-📢 **섹션 요약 비유**: 이미지 레이어는 빌딩 블록처럼 쌓인다. 공통 블록(Base Image)은 여럿이 공유하고, 내 앱 코드 블록만 따로 올린다. 공통 블록은 한 번만 저장하면 여러 앱이 나눠 쓴다.
+- **📢 섹션 요약 비유**: 이미지 레이어는 빌딩 블록처럼 쌓인다. 공통 블록(Base Image)은 여럿이 공유하고, 내 앱 코드 블록만 따로 올린다. 공통 블록은 한 번만 저장하면 여러 앱이 나눠 쓴다.
 
 ---
 
@@ -72,7 +72,7 @@ categories = "studynote-ict-convergence"
 **컨테이너 vs 마이크로VM(Firecracker)**:
 AWS Lambda와 Fargate는 각 함수 실행을 Firecracker 마이크로VM으로 격리 → 컨테이너 수준 속도 + VM 수준 보안 경계 달성.
 
-📢 **섹션 요약 비유**: 컨테이너 보안은 아파트 현관문 잠금장치다. 기본 잠금(Namespace 격리)만으론 부족할 수 있으니, CCTV(이미지 스캐닝)와 방문자 인증(이미지 서명)도 함께 갖춰야 한다.
+- **📢 섹션 요약 비유**: 컨테이너 보안은 아파트 현관문 잠금장치다. 기본 잠금(Namespace 격리)만으론 부족할 수 있으니, CCTV(이미지 스캐닝)와 방문자 인증(이미지 서명)도 함께 갖춰야 한다.
 
 ---
 
@@ -85,7 +85,7 @@ AWS Lambda와 Fargate는 각 함수 실행을 Firecracker 마이크로VM으로 �
 
 **실무 시나리오**: CI/CD 파이프라인에서 Dockerfile로 이미지를 빌드할 때, 멀티 스테이지 빌드(Multi-Stage Build)를 적용하면 최종 이미지에 컴파일러나 빌드 도구가 포함되지 않아 이미지 크기와 공격 표면(Attack Surface)을 동시에 줄인다. 예: Go 앱 빌드 이미지 1.2GB → 최종 실행 이미지 15MB.
 
-📢 **섹션 요약 비유**: 멀티 스테이지 빌드는 케이크 만들기와 같다 — 오븐(빌드 환경)과 그릇(실행 환경)을 분리하면, 오븐은 손님 테이블에 올리지 않아도 된다.
+- **📢 섹션 요약 비유**: 멀티 스테이지 빌드는 케이크 만들기와 같다 — 오븐(빌드 환경)과 그릇(실행 환경)을 분리하면, 오븐은 손님 테이블에 올리지 않아도 된다.
 
 ---
 
@@ -99,21 +99,25 @@ AWS Lambda와 Fargate는 각 함수 실행을 Firecracker 마이크로VM으로 �
 
 컨테이너는 현대 클라우드 네이티브(Cloud Native) 아키텍처의 기본 단위이며, Kubernetes, 서비스 메시, CI/CD 파이프라인 모두 컨테이너를 전제로 설계된다.
 
-📢 **섹션 요약 비유**: 컨테이너는 표준화된 화물 컨테이너(ISO 컨테이너)와 같다. 어떤 배, 트럭, 기차에 실어도 동일하게 운반된다 — 클라우드가 바뀌어도 앱은 동일하게 동작한다.
+- **📢 섹션 요약 비유**: 컨테이너는 표준화된 화물 컨테이너(ISO 컨테이너)와 같다. 어떤 배, 트럭, 기차에 실어도 동일하게 운반된다 — 클라우드가 바뀌어도 앱은 동일하게 동작한다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 개념 | 연결 키워드 | 참조 번호 |
-|:---|:---|:---:|
-| Kubernetes | Pod, 오케스트레이션, 클러스터 | 502 |
-| OCI (Open Container Initiative) | 컨테이너 표준, containerd, CRI-O | 502 |
-| 불변 인프라 (Immutable Infrastructure) | 이미지 교체, Configuration Drift | 504 |
-| 서버리스 (Serverless) / FaaS | Firecracker, 마이크로VM | 503 |
-| cgroups (Control Groups) | 자원 제한, Linux 커널 | 502 |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| Kubernetes | Pod, 오케스트레이션, 클러스터 · 502 |
+| OCI (Open Container Initiative) | 컨테이너 표준, containerd, CRI-O · 502 |
+| 불변 인프라 (Immutable Infrastructure) | 이미지 교체, Configuration Drift · 504 |
+| 서버리스 (Serverless) / FaaS | Firecracker, 마이크로VM · 503 |
+| cgroups (Control Groups) | 자원 제한, Linux 커널 · 502 |
 
----
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[Pod · 오케스트레이션] → [도커 컨테이너 경량 OS 격리] → [자원 제한 · Linux 커널]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 

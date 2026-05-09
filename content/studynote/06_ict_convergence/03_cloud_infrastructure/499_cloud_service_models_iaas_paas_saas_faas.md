@@ -1,7 +1,7 @@
 +++
 weight = 499
 title = "499. 클라우드 서비스 모델 통합: IaaS~FaaS (Cloud Service Models IaaS PaaS SaaS FaaS)"
-date = "2026-04-21"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ict-convergence"
 +++
@@ -27,7 +27,7 @@ categories = "studynote-ict-convergence"
 
 기업이 클라우드를 도입할 때 서비스 모델 선택은 아키텍처, 비용, 보안 책임 범위를 결정짓는 핵심 판단이다.
 
-📢 **섹션 요약 비유**: 레스토랑 선택과 같다 — 식재료만 받는 밀키트(IaaS), 반조리 음식(PaaS), 완성 도시락(SaaS), 한 입짜리 스낵(FaaS). 더 편할수록 내 취향은 덜 반영된다.
+- **📢 섹션 요약 비유**: 레스토랑 선택과 같다 — 식재료만 받는 밀키트(IaaS), 반조리 음식(PaaS), 완성 도시락(SaaS), 한 입짜리 스낵(FaaS). 더 편할수록 내 취향은 덜 반영된다.
 
 ---
 
@@ -60,7 +60,7 @@ categories = "studynote-ict-convergence"
 
 FaaS는 요청이 없을 때 비용이 발생하지 않는 **이벤트 드리븐(Event-Driven)** 모델로, 트래픽 패턴이 불규칙한 서비스에 최적이다. 단, 콜드 스타트(Cold Start) 지연이 존재한다.
 
-📢 **섹션 요약 비유**: IaaS는 빈 땅에 건물 짓기, PaaS는 인테리어만 하면 되는 분양 아파트, SaaS는 호텔 체크인, FaaS는 픽업 서비스 — 편하지만 경로는 서비스가 정한다.
+- **📢 섹션 요약 비유**: IaaS는 빈 땅에 건물 짓기, PaaS는 인테리어만 하면 되는 분양 아파트, SaaS는 호텔 체크인, FaaS는 픽업 서비스 — 편하지만 경로는 서비스가 정한다.
 
 ---
 
@@ -72,7 +72,7 @@ FaaS는 요청이 없을 때 비용이 발생하지 않는 **이벤트 드리븐
 
 **BaaS와 FaaS 결합** = 서버리스 풀스택: 프론트엔드는 CDN, 백엔드는 Lambda + DynamoDB + Cognito 조합으로 서버 관리 없이 완전한 앱 구성 가능.
 
-📢 **섹션 요약 비유**: FaaS와 PaaS의 차이는 대리운전(호출 시만 요금)과 전속 기사(월 고정급) 차이다.
+- **📢 섹션 요약 비유**: FaaS와 PaaS의 차이는 대리운전(호출 시만 요금)과 전속 기사(월 고정급) 차이다.
 
 ---
 
@@ -85,7 +85,7 @@ FaaS는 요청이 없을 때 비용이 발생하지 않는 **이벤트 드리븐
 
 **실무 시나리오**: 금융사 시스템 클라우드 전환 시 — 핵심 OLTP는 IaaS(제어권 확보), 개발/테스트 환경은 PaaS(속도), 이메일/협업은 SaaS, 배치 리포트는 FaaS(야간 5분 실행)로 혼합 적용.
 
-📢 **섹션 요약 비유**: 올바른 서비스 모델 선택은 음식점 선택과 같다 — 데이트엔 레스토랑(PaaS), 혼밥엔 편의점(SaaS), 파티엔 케이터링(IaaS), 출출할 때 자판기(FaaS).
+- **📢 섹션 요약 비유**: 올바른 서비스 모델 선택은 음식점 선택과 같다 — 데이트엔 레스토랑(PaaS), 혼밥엔 편의점(SaaS), 파티엔 케이터링(IaaS), 출출할 때 자판기(FaaS).
 
 ---
 
@@ -99,21 +99,25 @@ FaaS는 요청이 없을 때 비용이 발생하지 않는 **이벤트 드리븐
 
 결국 클라우드 서비스 모델 선택은 **기술 문제가 아닌 비즈니스 전략 결정**이다.
 
-📢 **섹션 요약 비유**: 서비스 모델은 도구 선택이다. 못 박기에 드릴을 쓰지 않듯, 워크로드에 맞는 모델을 골라야 비용과 복잡성을 동시에 잡는다.
+- **📢 섹션 요약 비유**: 서비스 모델은 도구 선택이다. 못 박기에 드릴을 쓰지 않듯, 워크로드에 맞는 모델을 골라야 비용과 복잡성을 동시에 잡는다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 개념 | 연결 키워드 | 참조 번호 |
-|:---|:---|:---:|
-| IaaS (Infrastructure as a Service) | VM, 가상화, Hypervisor | 503 |
-| FaaS (Function as a Service) | Cold Start, Serverless, Lambda | 503 |
-| 책임 공유 모델 (Shared Responsibility Model) | 보안, 컴플라이언스, OS 패치 | 500 |
-| BaaS (Backend as a Service) | Firebase, Cognito, 모바일 백엔드 | 505 |
-| 서버리스 (Serverless) | 이벤트 드리븐, 스케일 투 제로 | 503 |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| IaaS (Infrastructure as a Service) | VM, 가상화, Hypervisor · 503 |
+| FaaS (Function as a Service) | Cold Start, Serverless, Lambda · 503 |
+| 책임 공유 모델 (Shared Responsibility Model) | 보안, 컴플라이언스, OS 패치 · 500 |
+| BaaS (Backend as a Service) | Firebase, Cognito, 모바일 백엔드 · 505 |
+| 서버리스 (Serverless) | 이벤트 드리븐, 스케일 투 제로 · 503 |
 
----
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[VM · 가상화] → [클라우드 서비스 모델 통합: IaaS~FaaS] → [이벤트 드리븐 · 스케일 투 제로]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
