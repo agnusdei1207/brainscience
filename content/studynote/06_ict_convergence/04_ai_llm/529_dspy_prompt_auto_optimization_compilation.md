@@ -1,7 +1,7 @@
 +++
 weight = 529
 title = "529. DSPy 프롬프트 자동 최적화와 컴파일 (DSPy Prompt Auto-Optimization Compilation)"
-date = "2026-04-21"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ict-convergence"
 +++
@@ -24,7 +24,7 @@ categories = "studynote-ict-convergence"
 
 DSPy(Stanford NLP, 2023)는 이 문제를 컴파일러 패러다임으로 해결한다: **프로그램 = 선언(Signature) + 논리(Module)**, 최적화는 Teleprompter(최적화기)가 담당.
 
-📢 **섹션 요약 비유**: DSPy는 어셈블리(프롬프트)를 직접 짜는 대신 고수준 언어(Signature)로 의도를 선언하면 컴파일러가 최적 어셈블리를 생성하는 방식이다.
+- **📢 섹션 요약 비유**: DSPy는 어셈블리(프롬프트)를 직접 짜는 대신 고수준 언어(Signature)로 의도를 선언하면 컴파일러가 최적 어셈블리를 생성하는 방식이다.
 
 ---
 
@@ -76,7 +76,7 @@ class QA(dspy.Signature):
 | MIPRO | 베이지안 최적화로 명령어+예제 탐색 | 고품질, 대규모 |
 | BootstrapFineTune | 최적 예제로 모델 파인튜닝 | 소형 모델 특화 |
 
-📢 **섹션 요약 비유**: Teleprompter는 연기 선생님 — 배우(LLM)에게 대사(프롬프트)를 직접 알려주는 대신, 가장 잘 연기할 수 있는 대사를 자동으로 찾아준다.
+- **📢 섹션 요약 비유**: Teleprompter는 연기 선생님 — 배우(LLM)에게 대사(프롬프트)를 직접 알려주는 대신, 가장 잘 연기할 수 있는 대사를 자동으로 찾아준다.
 
 ---
 
@@ -109,7 +109,7 @@ teleprompter = dspy.MIPROv2(metric=my_metric)
 compiled_rag = teleprompter.compile(RAG(), trainset=trainset)
 ```
 
-📢 **섹션 요약 비유**: LangChain은 레고 조립 설명서를 따라 만드는 것, DSPy는 "자동차를 만들어줘"라고 하면 설계까지 자동으로 해주는 것이다.
+- **📢 섹션 요약 비유**: LangChain은 레고 조립 설명서를 따라 만드는 것, DSPy는 "자동차를 만들어줘"라고 하면 설계까지 자동으로 해주는 것이다.
 
 ---
 
@@ -129,7 +129,7 @@ compiled_rag = teleprompter.compile(RAG(), trainset=trainset)
 3. **모델 교체 대응**: LLM 버전 업그레이드 시 동일 Trainset으로 재컴파일 → 수동 재작업 불필요
 4. **연구/프로덕션 갭**: DSPy는 연구 환경에서 검증됨 → 대규모 트래픽 환경은 추가 엔지니어링 필요
 
-📢 **섹션 요약 비유**: DSPy 컴파일은 한 번 투자해 영구 자산(최적 프롬프트)을 만드는 것 — 매번 수동으로 고치는 소모전을 끝낸다.
+- **📢 섹션 요약 비유**: DSPy 컴파일은 한 번 투자해 영구 자산(최적 프롬프트)을 만드는 것 — 매번 수동으로 고치는 소모전을 끝낸다.
 
 ---
 
@@ -137,22 +137,25 @@ compiled_rag = teleprompter.compile(RAG(), trainset=trainset)
 
 DSPy는 프롬프트 엔지니어링을 수동 예술에서 자동화된 엔지니어링으로 전환한다. 선언형 프로그래밍 모델과 자동 최적화 컴파일러의 결합은 LLM 애플리케이션의 개발 속도와 이식성을 크게 향상시킨다. 향후 자동 파인튜닝과의 통합으로 소형 모델의 성능을 대형 모델 수준으로 끌어올리는 방향으로 발전할 전망이다.
 
-📢 **섹션 요약 비유**: DSPy는 AI에게 "어떻게 말할지"를 직접 가르치는 대신, 스스로 가장 효과적인 말투를 찾게 하는 자동 트레이너다.
+- **📢 섹션 요약 비유**: DSPy는 AI에게 "어떻게 말할지"를 직접 가르치는 대신, 스스로 가장 효과적인 말투를 찾게 하는 자동 트레이너다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 개념 | 연결 | 설명 |
-|:---|:---:|:---|
-| Signature | DSPy 핵심 | 입출력 스키마 선언 |
-| Teleprompter | DSPy 최적화기 | 프롬프트 자동 최적화 |
-| MIPRO | 최적화 알고리즘 | 베이지안 명령어+예제 탐색 |
-| BootstrapFewShot | 최적화 알고리즘 | 자동 퓨샷 예제 선택 |
-| ChainOfThought | DSPy Module | 단계별 추론 |
-| LLMOps | 적용 분야 | LLM 운영 자동화 |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| Signature | DSPy 핵심 · 입출력 스키마 선언 |
+| Teleprompter | DSPy 최적화기 · 프롬프트 자동 최적화 |
+| MIPRO | 최적화 알고리즘 · 베이지안 명령어+예제 탐색 |
+| BootstrapFewShot | 최적화 알고리즘 · 자동 퓨샷 예제 선택 |
+| ChainOfThought | DSPy Module · 단계별 추론 |
 
----
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[DSPy 핵심 · 입출력 스키마 선언] → [DSPy 프롬프트 자동 최적화 · 컴파일] → [DSPy Module · 단계별 추론]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 

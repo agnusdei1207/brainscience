@@ -1,7 +1,7 @@
 +++
 weight = 528
 title = "528. vLLM과 PagedAttention KV 캐시 최적화 (vLLM PagedAttention KV Cache Optimization)"
-date = "2026-04-21"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ict-convergence"
 +++
@@ -20,7 +20,7 @@ LLM 서빙의 전통적 문제: 각 요청의 KV 캐시 크기는 생성 완료 
 
 vLLM은 UC Berkeley 연구팀이 2023년 발표한 오픈소스 추론 엔진으로, PagedAttention으로 이 문제를 근본적으로 해결했다.
 
-📢 **섹션 요약 비유**: 호텔에서 투숙 기간을 모르는 손님에게 무조건 최대 일수분 방을 통째로 예약하던 방식에서, 필요한 만큼만 날마다 배정하는 방식으로 전환한 것이다.
+- **📢 섹션 요약 비유**: 호텔에서 투숙 기간을 모르는 손님에게 무조건 최대 일수분 방을 통째로 예약하던 방식에서, 필요한 만큼만 날마다 배정하는 방식으로 전환한 것이다.
 
 ---
 
@@ -65,7 +65,7 @@ vLLM은 UC Berkeley 연구팀이 2023년 발표한 오픈소스 추론 엔진으
 | TGI(HuggingFace) | 5~10× | Flash Attention 활용 |
 | TensorRT-LLM | 10~20× | NVIDIA 최적화, 높은 복잡도 |
 
-📢 **섹션 요약 비유**: 연속 배치는 버스가 종점까지 기다리지 않고 내리는 승객 즉시 새 승객을 태우는 방식 — GPU가 한순간도 쉬지 않는다.
+- **📢 섹션 요약 비유**: 연속 배치는 버스가 종점까지 기다리지 않고 내리는 승객 즉시 새 승객을 태우는 방식 — GPU가 한순간도 쉬지 않는다.
 
 ---
 
@@ -87,7 +87,7 @@ vLLM은 UC Berkeley 연구팀이 2023년 발표한 오픈소스 추론 엔진으
 | Pipeline Parallelism | 다중 노드 확장 | 파이프라인 버블 |
 | 혼합(Megatron-LM) | 대규모 모델 최적 | 설계 복잡도 높음 |
 
-📢 **섹션 요약 비유**: 텐서 병렬은 주방 조리대를 여러 명이 나눠 쓰는 것, 파이프라인 병렬은 냉채→메인→디저트 순서대로 다른 요리사가 담당하는 것이다.
+- **📢 섹션 요약 비유**: 텐서 병렬은 주방 조리대를 여러 명이 나눠 쓰는 것, 파이프라인 병렬은 냉채→메인→디저트 순서대로 다른 요리사가 담당하는 것이다.
 
 ---
 
@@ -109,7 +109,7 @@ vllm serve meta-llama/Llama-3-70B-Instruct \
 3. **Speculative Decoding**: 소형 Draft 모델로 토큰 후보 생성 → 대형 모델 검증 → Decode 처리량 2~3배 향상
 4. **LoRA 서빙**: vLLM의 Punica 확장으로 다중 LoRA 어댑터 동시 서빙 가능
 
-📢 **섹션 요약 비유**: vLLM은 GPU라는 주방을 낭비 없이 24시간 풀가동하는 최고 효율 주방 관리 시스템이다.
+- **📢 섹션 요약 비유**: vLLM은 GPU라는 주방을 낭비 없이 24시간 풀가동하는 최고 효율 주방 관리 시스템이다.
 
 ---
 
@@ -117,22 +117,25 @@ vllm serve meta-llama/Llama-3-70B-Instruct \
 
 vLLM의 PagedAttention과 연속 배치는 LLM 서빙 인프라의 패러다임을 바꿨다. 동일한 GPU로 최대 24배 많은 요청을 처리할 수 있어 클라우드 서빙 비용이 획기적으로 절감됐다. OpenAI·Anthropic·Google 등 주요 서빙 인프라도 유사 최적화 기법을 채택했다. 향후 Speculative Decoding과 프리픽스 캐싱의 결합이 TTFT를 더욱 단축할 전망이다.
 
-📢 **섹션 요약 비유**: vLLM 이전 GPU 서빙은 방 하나에 손님 하나만 받던 호텔, 이후는 빈 방 없이 효율적으로 운영하는 비즈니스 호텔이다.
+- **📢 섹션 요약 비유**: vLLM 이전 GPU 서빙은 방 하나에 손님 하나만 받던 호텔, 이후는 빈 방 없이 효율적으로 운영하는 비즈니스 호텔이다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 개념 | 연결 | 설명 |
-|:---|:---:|:---|
-| PagedAttention | vLLM 핵심 | OS 페이징 기반 KV 캐시 |
-| 연속 배치 | 처리량 최적화 | 동적 요청 스케줄링 |
-| Tensor Parallelism | 모델 병렬화 | 행렬 분할 GPU 분산 |
-| Pipeline Parallelism | 모델 병렬화 | 레이어 분할 GPU 분산 |
-| KV 캐시 | LLM 추론 | 어텐션 Key-Value 저장 |
-| TTFT | 성능 지표 | 첫 토큰 생성까지 시간 |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| PagedAttention | vLLM 핵심 · OS 페이징 기반 KV 캐시 |
+| 연속 배치 | 처리량 최적화 · 동적 요청 스케줄링 |
+| Tensor Parallelism | 모델 병렬화 · 행렬 분할 GPU 분산 |
+| Pipeline Parallelism | 모델 병렬화 · 레이어 분할 GPU 분산 |
+| KV 캐시 | LLM 추론 · 어텐션 Key-Value 저장 |
 
----
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[vLLM 핵심 · OS 페이징 기반 KV 캐시] → [vLLM과 PagedAttention KV 캐시 최적화] → [LLM 추론 · 어텐션 Key-Value 저장]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
