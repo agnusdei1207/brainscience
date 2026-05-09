@@ -1,7 +1,7 @@
 +++
 weight = 420
 title = "420. ISO/IEC 42001 AI 경영시스템 (AI Management System, AIMS)"
-date = "2026-04-25"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ai"
 +++
@@ -122,13 +122,19 @@ ISO/IEC 42001을 적용하면 AI 운영이 개인 역량이나 임시 문서에 
 
 ### 📌 관련 개념 맵
 
-| 개념                        | 연결 포인트                             |
-| :-------------------------- | :-------------------------------------- |
+| 개념 | 연결 포인트 |
+|:---|:---|
 | AIMS (AI Management System) | ISO/IEC 42001이 정의하는 핵심 관리 체계 |
-| ISO/IEC 27001               | 보안 통제와 결합되는 기반 경영시스템    |
-| ISO/IEC 23894               | AI 위험 평가를 보완하는 연계 표준       |
-| EU AI Act                   | 법규 관점의 외부 준수 요구              |
-| Human in the Loop           | 고위험 AI에서 핵심 운영 통제            |
+| ISO/IEC 27001 | 보안 통제와 결합되는 기반 경영시스템 |
+| ISO/IEC 23894 | AI 위험 평가를 보완하는 연계 표준 |
+| EU AI Act | 법규 관점의 외부 준수 요구 |
+| Human in the Loop | 고위험 AI에서 핵심 운영 통제 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[데이터 수집·평가] → [ISO/IEC 42001 AI 경영시스템 (AI Management System, AIMS)] → [감사·규제 대응·지속 개선]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 

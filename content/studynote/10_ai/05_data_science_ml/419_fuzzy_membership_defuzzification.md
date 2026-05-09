@@ -1,7 +1,7 @@
 +++
 weight = 419
 title = "419. 퍼지 소속 함수·퍼지 추론·디퍼지피케이션 (Fuzzy Membership, Inference, Defuzzification)"
-date = "2026-04-25"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ai"
 +++
@@ -126,13 +126,19 @@ $$
 
 ### 📌 관련 개념 맵
 
-| 개념                | 연결 포인트                       |
-| :------------------ | :-------------------------------- |
-| Membership Function | 퍼지 집합 소속 정도를 수치화      |
-| Mamdani Inference   | 직관적 규칙 기반 퍼지 추론        |
-| Sugeno Model        | 계산 효율이 높은 함수형 퍼지 추론 |
-| Defuzzification     | 퍼지 결과를 실제 제어값으로 변환  |
-| Neuro-Fuzzy         | 퍼지 규칙과 신경망 결합 구조      |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| Membership Function | 퍼지 집합 소속 정도를 수치화 |
+| Mamdani Inference | 직관적 규칙 기반 퍼지 추론 |
+| Sugeno Model | 계산 효율이 높은 함수형 퍼지 추론 |
+| Defuzzification | 퍼지 결과를 실제 제어값으로 변환 |
+| Neuro-Fuzzy | 퍼지 규칙과 신경망 결합 구조 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[문제 표현] → [퍼지 소속 함수·퍼지 추론·디퍼지피케이션 (Fuzzy Membership, Inference, Defuzzification)] → [학습 기반 지능과 결합]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 

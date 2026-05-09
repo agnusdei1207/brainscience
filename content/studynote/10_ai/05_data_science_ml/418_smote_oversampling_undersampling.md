@@ -1,7 +1,7 @@
 +++
 weight = 418
 title = "418. 오버샘플링·언더샘플링·SMOTE (Synthetic Minority Over-sampling Technique)"
-date = "2026-04-25"
+date = "2026-05-09"
 [extra]
 categories = "studynote-ai"
 +++
@@ -129,13 +129,19 @@ SMOTE는 ADASYN, Borderline-SMOTE 같은 파생 기법으로 확장된다. 특�
 
 ### 📌 관련 개념 맵
 
-| 개념                    | 연결 포인트                       |
-| :---------------------- | :-------------------------------- |
-| Class Imbalance         | 재표본화가 필요한 출발 문제       |
-| Precision / Recall / F1 | 불균형 데이터의 핵심 평가지표     |
-| K-NN                    | SMOTE가 이웃을 찾는 기반 알고리즘 |
-| ADASYN                  | SMOTE의 난이도 가중 확장판        |
-| Class Weight            | 데이터 대신 손실을 조정하는 대안  |
+| 개념 | 연결 포인트 |
+|:---|:---|
+| Class Imbalance | 재표본화가 필요한 출발 문제 |
+| Precision / Recall / F1 | 불균형 데이터의 핵심 평가지표 |
+| K-NN | SMOTE가 이웃을 찾는 기반 알고리즘 |
+| ADASYN | SMOTE의 난이도 가중 확장판 |
+| Class Weight | 데이터 대신 손실을 조정하는 대안 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+```text
+[데이터 전처리] → [오버샘플링·언더샘플링·SMOTE (Synthetic Minority Over-sampling Technique)] → [최적화·운영 자동화]
+```
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
