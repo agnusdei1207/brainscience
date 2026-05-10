@@ -1,271 +1,134 @@
 +++
 weight = 201
-title = "201. 중재자 패턴 (Mediator Pattern)"
-date = "2026-04-21"
+title = "201. 미디에이터 패턴 (Mediator Pattern)"
+date = "2026-05-10"
 [extra]
 categories = "studynote-design-supervision"
 +++
 
 ## 핵심 인사이트 (3줄 요약)
 
-> 1. **본질**: Mediator (중재자) 패턴은 객체 간 M:N 복잡한 직접 통신망을 1:N 구조로 단순화하여, 모든 통신이 중앙 중재자 객체를 통해서만 이루어지도록 강제한다.
-> 2. **가치**: 각 Colleague (동료) 객체가 서로를 직접 참조하는 대신 중재자만 알면 되므로, 새로운 객체 추가나 기존 로직 변경이 다른 객체에 영향을 주지 않는다.
-> 3. **판단 포인트**: 객체 수 증가에 따라 통신 경로가 O(n²)으로 폭발하는 문제가 있을 때 Mediator 패턴을 적용하여 O(n)으로 줄인다.
+> 1. **본질**: 미디에이터 패턴 (Mediator Pattern)은 GoF 행위 패턴으로, 객체들이 직접 참조하며 복잡하게 상호작용하는 대신, 중재자(Mediator) 객체를 통해 통신하게 하여 객체 간 N:N 결합을 N:1+1:N으로 단순화하는 패턴이다.
+> 2. **가치**: 컴포넌트 간 직접 참조를 제거하여 결합도를 낮추고, 상호작용 로직을 미디에이터에 집중시켜 각 컴포넌트를 독립적으로 재사용·테스트할 수 있게 한다. 채팅방, 항공 관제, MVC의 Controller, CQRS의 MediatR가 대표 사례다.
+> 3. **판단 포인트**: 미디에이터 패턴은 미디에이터 자체가 '신(God) 객체'가 되어 비대해지는 위험이 있다. 미디에이터가 너무 많은 책임을 가지면 오히려 유지보수가 어려워진다. 도메인별로 미디에이터를 분리하거나, 이벤트 버스(EventBus)로 대체하는 것을 고려해야 한다.
 
 ---
 
 ## Ⅰ. 개요 및 필요성
 
-### 1-1. M:N 통신의 문제
+GUI 애플리케이션에서 버튼·체크박스·텍스트필드가 서로 직접 참조하면 N(N-1) 관계가 형성되어 컴포넌트 재사용·교체가 어렵다. 미디에이터(다이얼로그 클래스)가 모든 상호작용을 중재하면 각 컴포넌트는 미디에이터만 알면 된다.
 
-UI 컴포넌트가 5개 있고 서로 직접 통신한다면, 통신 경로는 최대 n(n-1)/2 = 10개다. 컴포넌트가 10개가 되면 45개의 의존성이 생긴다. 이를 Spaghetti Communication (스파게티 통신)이라 한다.
+실세계 예시: ① 항공 관제탑(Mediator)이 모든 항공기(컴포넌트)의 통신을 중재, ② 채팅방(Mediator)이 모든 참여자(컴포넌트)의 메시지를 중계, ③ MVC의 Controller가 View와 Model 간의 중재자, ④ .NET MediatR 라이브러리가 커맨드·쿼리 처리를 중재.
 
-```
-  [ M:N 직접 통신 - 5개 컴포넌트 ]
-  
-  A ──────── B
-  │\        /│
-  │  \    /  │
-  │    \  /  │
-  │     \/   │
-  │     /\   │
-  │   /    \ │
-  │ /        \│
-  C ──────── D
-        │
-        E
-  
-  통신 경로: 10개 (= 5×4÷2)
-  → 컴포넌트 하나 변경 시 연결된 모든 객체 영향
-```
-
-### 1-2. Mediator 적용 후
-
-```
-  [ 1:N 중재 통신 - Mediator 적용 ]
-  
-  A ──────┐
-  B ──────┤
-  C ──────┼───► Mediator ◄──── 모든 통신 집중
-  D ──────┤
-  E ──────┘
-  
-  통신 경로: 5개 (= n개)
-  → 새 컴포넌트 추가 시 Mediator만 수정
+```text
+┌─────────────────────────────────────────────────────────────┐
+│          미디에이터 패턴 구조                                  │
+├─────────────────────────────────────────────────────────────┤
+│  Before (N:N 결합)          After (미디에이터)               │
+│  A ←──→ B                   A → Mediator → B               │
+│  A ←──→ C                   B → Mediator → C               │
+│  B ←──→ C                   C → Mediator → A               │
+│  (모두 직접 참조)            (미디에이터만 참조)              │
+│                                                             │
+│  Mediator (인터페이스)                                       │
+│  + notify(sender: Colleague, event: String): void           │
+│       ▲                                                     │
+│  ConcreteMediator                                           │
+│  - colleagues: List<Colleague>                              │
+│  + notify(sender, event) { // 중재 로직 }                   │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### 1-3. 현실 세계의 사례
-
-| 사례 | Mediator 역할 | Colleague 역할 |
-|:---|:---|:---|
-| ATC (Air Traffic Control, 항공 교통 관제탑) | 관제탑 | 항공기들 |
-| 채팅방 | 채팅 서버 | 사용자들 |
-| Spring MVC DispatcherServlet | DispatcherServlet | Controller, ViewResolver, HandlerMapping |
-| 증권 거래소 | 거래 매칭 엔진 | 매수자·매도자 |
-| 이벤트 버스 (Event Bus) | 버스 | 구독자·발행자 |
-
-📢 **섹션 요약 비유**: 항공기들이 서로 직접 교신하면 충돌 위험이 있다. 관제탑(Mediator)이 모든 교신을 중계하기 때문에 안전한 비행이 가능하다.
+- **📢 섹션 요약 비유**: 항공 관제탑(Mediator)이 모든 항공기(컴포넌트)의 통신을 중재한다. 항공기들이 서로 직접 통신하면 충돌 위험이 있다.
 
 ---
 
 ## Ⅱ. 아키텍처 및 핵심 원리
 
-### 2-1. 구조 (UML 요약)
+.NET의 MediatR 라이브러리가 CQRS 패턴에서 미디에이터를 구현한다. `IMediator.Send(command)`를 호출하면 등록된 `IRequestHandler<TCommand>`가 처리한다. 이를 통해 Controller가 직접 서비스를 호출하는 대신 미디에이터를 통해 느슨하게 통신한다.
 
-```
-  «interface»                    «interface»
-  Mediator                       Colleague
-  ─────────────                  ────────────────
-  + notify(sender, event)        + setMediator(m)
-        ▲                              ▲
-        │                    ┌─────────┴──────────┐
-  ConcreteMediator         ColleagueA          ColleagueB
-  ─────────────────
-  - colleagueA: ColleagueA
-  - colleagueB: ColleagueB
-  + notify(sender, event)
-    → 이벤트 라우팅 로직
-```
+| 미디에이터 적용 예시 | 설명 | 기술 |
+|:---|:---|:---|
+| MVC Controller | View ↔ Model 중재 | Spring MVC |
+| CQRS Mediator | Command/Query 라우팅 | MediatR (.NET) |
+| 채팅방 | 참여자 간 메시지 중계 | ChatRoom 객체 |
+| EventBus | 느슨한 이벤트 중재 | Spring ApplicationEventPublisher |
 
-### 2-2. 채팅방 예시 구현 구조
-
-```
-  ┌─────────────────────────────────────────────────────────┐
-  │                   ChatRoom (Mediator)                   │
-  │                                                         │
-  │  participants: List<User>                               │
-  │                                                         │
-  │  sendMessage(from, message)                             │
-  │    → participants.forEach(u →                          │
-  │        if (u != from) u.receive(message))               │
-  └─────────────────────────────────────────────────────────┘
-        ▲              ▲              ▲
-        │              │              │
-  ┌──────────┐  ┌──────────┐  ┌──────────┐
-  │  Alice   │  │   Bob    │  │ Charlie  │
-  │ (User)   │  │  (User)  │  │  (User)  │
-  │          │  │          │  │          │
-  │ send()   │  │ send()   │  │ send()   │
-  │ receive()│  │ receive()│  │ receive()│
-  └──────────┘  └──────────┘  └──────────┘
-  
-  Alice가 Bob에게 메시지: Alice → ChatRoom → Bob
-  (Alice는 Bob을 직접 참조하지 않음)
+```text
+┌─────────────────────────────────────────────────────────────┐
+│       MediatR CQRS 미디에이터 동작                           │
+├─────────────────────────────────────────────────────────────┤
+│  Controller → IMediator.Send(CreateOrderCommand)            │
+│       ↓                                                     │
+│  Mediator → CreateOrderCommandHandler.Handle(command)       │
+│       ↓                                                     │
+│  Result → Controller (Handler가 처리 결과 반환)             │
+│                                                             │
+│  Controller는 Handler를 직접 알지 못함                       │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### 2-3. Spring MVC DispatcherServlet 분석
-
-```
-  HTTP Request
-       │
-       ▼
-  DispatcherServlet (Mediator)
-       │
-       ├──► HandlerMapping → 어느 Controller?
-       │
-       ├──► HandlerAdapter → Controller 실행
-       │
-       ├──► Controller (Colleague) → ModelAndView
-       │
-       ├──► ViewResolver → View 선택
-       │
-       └──► View → 응답 렌더링
-
-  Controller는 ViewResolver를 모른다.
-  ViewResolver는 HandlerMapping을 모른다.
-  DispatcherServlet이 모든 컴포넌트를 조율한다.
-```
-
-📢 **섹션 요약 비유**: 오케스트라 지휘자(Mediator)가 없다면 각 악기 연주자들이 서로 눈치 보며 박자를 맞춰야 한다. 지휘자가 있어야 웅장한 교향곡이 나온다.
+- **📢 섹션 요약 비유**: 부동산 중개사(Mediator)가 매수자(Controller)와 매도자(Handler)를 중재한다. 매수자는 매도자를 직접 알 필요 없다.
 
 ---
 
 ## Ⅲ. 비교 및 연결
 
-### 3-1. Mediator vs Observer vs Facade 비교
+미디에이터 패턴과 옵저버 패턴의 비교: 옵저버는 Subject가 Observer에게 1:N으로 통지하고, 미디에이터는 N:N 통신을 N:1+1:N으로 중재한다.
 
-| 비교 항목 | Mediator | Observer | Facade |
-|:---|:---|:---|:---|
-| **통신 방향** | 양방향 | 단방향 (pub→sub) | 단방향 |
-| **객체 인식** | 중재자만 인식 | 이벤트 채널만 인식 | 서브시스템 몰라도 됨 |
-| **사용 목적** | 객체 간 통신 조율 | 상태 변화 알림 | 복잡한 API 단순화 |
-| **Coupling 감소** | Colleague 간 | Subject-Observer 간 | 클라이언트-서브시스템 간 |
-| **핵심 역할** | 라우터·조율자 | 알림 발송 | 인터페이스 단순화 |
+| 비교 축 | 미디에이터 | 옵저버 |
+|:---|:---|:---|
+| 통신 방향 | N:N → Mediator 중재 | 1:N (Subject → Observer) |
+| 결합 제거 | 모든 참여자 간 결합 | Subject-Observer 결합 |
+| 중앙화 | O (미디에이터 비대화 위험) | Subject 분산 |
+| 대표 사례 | 채팅방, CQRS Mediator | 이벤트 시스템, MVC |
 
-### 3-2. Message Bus (메시지 버스)와의 관계
-
-```
-  Mediator Pattern           Message Bus (Enterprise 패턴)
-  ──────────────────         ──────────────────────────────
-  - 단일 Mediator 객체       - 분산 시스템의 Mediator
-  - 단일 프로세스 내부        - 서비스 간 비동기 통신
-  - 직접 메서드 호출          - 메시지 브로커(Kafka, RabbitMQ)
-  - 동기(Synchronous)        - 비동기(Asynchronous)
-  
-  메시지 버스 = Mediator 패턴의 분산 버전
-```
-
-📢 **섹션 요약 비유**: Mediator는 "회사 내부 메신저 서버", Message Bus는 "국제 전신 네트워크". 규모가 다를 뿐 중재 원리는 같다.
+- **📢 섹션 요약 비유**: 미디에이터는 채팅방(모든 참여자 간 통신 중재)이고, 옵저버는 방송국(1개 Subject가 N개 Observer에게 일방적 통지)이다.
 
 ---
 
 ## Ⅳ. 실무 적용 및 기술사 판단
 
-### 4-1. MediatR 패턴 (CQRS 연계)
+스프링에서 미디에이터 패턴은 `ApplicationEventPublisher` 기반 이벤트 시스템으로 구현된다. 서비스가 이벤트를 발행하면 미디에이터(이벤트 버스)가 적절한 핸들러로 라우팅한다. 이벤트 기반 마이크로서비스에서 Kafka가 서비스 간 미디에이터 역할을 한다.
 
-.NET의 MediatR 라이브러리는 Mediator 패턴을 CQRS (Command Query Responsibility Segregation)와 결합한다:
+### 판단 체크리스트
+1. 컴포넌트 간 N:N 직접 참조를 미디에이터를 통해 N:1+1:N으로 단순화했는가?
+2. 미디에이터가 너무 많은 책임을 갖지 않도록(God 객체 방지) 적절히 분리했는가?
+3. MVC의 Controller, CQRS의 Mediator가 미디에이터 패턴의 구현임을 이해하는가?
+4. 옵저버 패턴과 미디에이터 패턴의 차이(1:N vs N:N 중재)를 구분하는가?
+5. Kafka, RabbitMQ 등 메시지 브로커를 분산 시스템에서의 미디에이터로 이해하는가?
 
-```
-  [ CQRS + Mediator ]
-  
-  Controller
-      │
-      ├──► mediator.Send(CreateOrderCommand)
-      │         │
-      │         ▼
-      │    CreateOrderHandler.Handle()
-      │
-      └──► mediator.Send(GetOrderQuery)
-                │
-                ▼
-          GetOrderHandler.Handle()
-  
-  Controller는 Handler를 직접 모름 → 완전한 분리
-```
-
-### 4-2. God Object (갓 오브젝트) 위험
-
-Mediator의 가장 큰 위험은 **중재자 자체가 거대해지는 것**이다:
-
-```
-  ❌ 안티패턴: 비대한 Mediator
-  
-  ConcreteMediator {
-      비즈니스 로직 A
-      비즈니스 로직 B
-      비즈니스 로직 C
-      UI 렌더링 로직
-      데이터 검증 로직
-      네트워크 통신 로직
-  }
-  → God Object! 유지보수 불가능
-
-  ✅ 개선: Mediator는 라우팅만
-  ConcreteMediator {
-      notify(sender, event) {
-          // 라우팅만 담당, 로직은 각 Handler로 위임
-      }
-  }
-```
-
-### 4-3. 기술사 서술 포인트
-
-- Mediator 패턴을 설명할 때 **O(n²) → O(n) 복잡도 감소**를 수치로 표현하면 고득점
-- ATC (Air Traffic Control) 비유는 시험에서도 자주 사용되는 표준 예시
-- God Object 위험과 대응 방법을 함께 서술하면 심화 이해를 증명
-
-📢 **섹션 요약 비유**: 좋은 Mediator는 "전화 교환원"처럼 연결만 해주고, 나쁜 Mediator는 "모든 결정을 혼자 내리는 독재자"처럼 된다.
+- **📢 섹션 요약 비유**: 항공 관제탑이 항공기 수가 늘어도 직접 통신 없이 안전하게 관리하듯, 미디에이터는 참여자 수에 관계없이 복잡성을 일정하게 유지한다.
 
 ---
 
 ## Ⅴ. 기대효과 및 결론
 
-### 5-1. 기대 효과
+미디에이터 패턴을 적용하면 컴포넌트 간 복잡한 N:N 결합이 N:1로 단순화되어 각 컴포넌트를 독립적으로 개발·테스트·재사용할 수 있다. CQRS·MVC·이벤트 주도 아키텍처에서 핵심 패턴으로 활용된다.
 
-| 효과 | 설명 |
-|:---|:---|
-| 복잡도 감소 | 통신 경로 O(n²) → O(n) |
-| 재사용성 향상 | Colleague가 독립적 → 다른 시스템에서 재사용 가능 |
-| 변경 용이성 | 통신 규칙 변경 시 Mediator만 수정 |
-| 테스트 용이 | Mediator와 Colleague 독립 단위 테스트 |
+한계는 미디에이터가 비대해지면 단일 실패 지점(SPOF)이 되고, 복잡한 중재 로직이 미디에이터에 집중되어 God 객체가 될 수 있다. 도메인별 미디에이터 분리 또는 이벤트 버스 활용으로 이를 방지한다.
 
-### 5-2. 주의사항
-
-- Mediator가 God Object로 비대화되지 않도록 **라우팅 전용**으로 제한
-- Mediator 자체가 단일 장애점(SPOF, Single Point of Failure)이 될 수 있음 → 고가용성 설계 필요
-- 동기 방식의 단일 Mediator는 **병목(Bottleneck)** 우려 → 비동기 이벤트 버스로 확장 검토
-
-### 5-3. 결론
-
-Mediator (중재자) 패턴은 복잡한 객체 협력 구조를 단순화하는 강력한 도구다. Spring MVC의 DispatcherServlet, 채팅 시스템, ATC 등 현실 세계와 소프트웨어 전반에 걸쳐 광범위하게 적용된다. 단, Mediator 자체의 비대화를 방지하는 설계 절제가 필수다.
-
-📢 **섹션 요약 비유**: 훌륭한 관제탑은 항공기들이 안전하게 날 수 있도록 최소한의 지시만 한다. 너무 많은 것을 관제탑이 결정하면 관제탑 자체가 병목이 된다.
+- **📢 섹션 요약 비유**: 미디에이터 패턴은 오케스트라 지휘자(Mediator)가 각 단원(컴포넌트)을 조율하는 것이다. 지휘자가 없으면 단원들이 서로 박자를 맞추기 어렵다.
 
 ---
 
 ### 📌 관련 개념 맵
 
-| 관계 | 개념 | 설명 |
-|:---|:---|:---|
-| 상위 개념 | GoF Behavioral Pattern | 행동 패턴 그룹 |
-| 하위 개념 | ConcreteMediator | 실제 통신 조율 구현체 |
-| 연관 개념 | Observer Pattern | Mediator와 조합 가능 |
-| 연관 개념 | ATC (Air Traffic Control) | 대표적 현실 세계 비유 |
-| 연관 개념 | DispatcherServlet | Spring MVC 적용 사례 |
-| 연관 개념 | Message Bus | 분산 시스템에서의 Mediator |
+[N:N 결합 문제] → [미디에이터 패턴] → [MVC Controller] → [CQRS MediatR] → [분산 메시지 브로커]
+
+| 개념 | 연결 포인트 |
+|:---|:---|
+| 옵저버 패턴 | 미디에이터와 대비되는 1:N 통지 패턴 |
+| CQRS | MediatR 라이브러리가 미디에이터 역할 |
+| 메시지 브로커 (Kafka) | 분산 시스템에서의 미디에이터 |
+| MVC Controller | 가장 익숙한 미디에이터 패턴 구현 |
+
+### 📈 관련 키워드 및 발전 흐름도
+
+[GoF Mediator(1994)] → [MVC Controller] → [CQRS MediatR] → [이벤트 버스] → [Kafka 분산 미디에이터]
 
 ### 👶 어린이를 위한 3줄 비유 설명
 
-- 학교에서 친구들이 서로 직접 편지를 주고받으면 너무 복잡해요.
-- 우체통(Mediator) 하나에 편지를 넣으면, 선생님이 알아서 전달해 줘요.
-- 이렇게 모든 소통이 한 곳을 통하는 게 중재자 패턴이에요!
+1. 미디에이터 패턴은 채팅방처럼, 모든 참여자가 채팅방(미디에이터)을 통해 소통해요.
+2. 참여자들이 서로 직접 연락처를 알 필요가 없어요.
+3. 항공 관제탑, MVC Controller, CQRS MediatR이 모두 이 패턴이에요!
