@@ -1,7 +1,7 @@
 +++
 weight = 221
 title = "221. Promise/Future 비동기 패턴 (Promise/Future Async Pattern)"
-date = "2026-04-21"
+date = "2026-05-10"
 [extra]
 categories = "studynote-design-supervision"
 +++
@@ -15,9 +15,6 @@ categories = "studynote-design-supervision"
 ---
 
 ## Ⅰ. 개요 및 필요성
-
-### 콜백 지옥에서 Promise로
-
 ```javascript
 // 콜백 지옥 (Before)
 getUser(id, (err, user) => {
@@ -38,8 +35,6 @@ getUser(id)
     .then(product => console.log(product))
     .catch(err => handleErr(err)); // 에러 중앙 처리
 ```
-
-### Promise 상태 기계 (State Machine)
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -62,14 +57,11 @@ getUser(id)
 └──────────────────────────────────────────────────────────┘
 ```
 
-📢 **섹션 요약 비유**: Promise는 식당 예약 확인서 — "아직 확정 안 됨(Pending)", "예약 확정(Fulfilled)", "예약 불가(Rejected)" 세 가지 상태가 있고, 한번 결정되면 다시 바꿀 수 없다.
+- **📢 섹션 요약 비유**: Promise는 식당 예약 확인서 — "아직 확정 안 됨(Pending)", "예약 확정(Fulfilled)", "예약 불가(Rejected)" 세 가지 상태가 있고, 한번 결정되면 다시 바꿀 수 없다.
 
 ---
 
 ## Ⅱ. 아키텍처 및 핵심 원리
-
-### Promise API 전체 구조
-
 ```
 Promise 생성:
   new Promise((resolve, reject) => {
@@ -89,8 +81,6 @@ Promise 생성:
   Promise.race([p1, p2])       → 첫 번째 완료/실패된 것 반환
   Promise.any([p1, p2])        → 첫 번째 성공한 것 반환
 ```
-
-### async/await — Promise의 문법적 설탕
 
 ```javascript
 // Promise 체이닝
@@ -113,8 +103,6 @@ async function fetchUserData(id) {
 }
 ```
 
-### Java CompletableFuture 비교
-
 | JavaScript Promise | Java CompletableFuture | 설명 |
 |:---|:---|:---|
 | `.then(fn)` | `.thenApply(fn)` | 값 변환 (map) |
@@ -123,14 +111,17 @@ async function fetchUserData(id) {
 | `.finally(fn)` | `.whenComplete(fn)` | 항상 실행 |
 | `Promise.all([...])` | `CompletableFuture.allOf(...)` | 모두 완료 대기 |
 
-📢 **섹션 요약 비유**: async/await는 마법 안경 — 비동기 코드(구불구불한 실)를 쓰면 마치 직선처럼 보여주는 착시 안경이다. 실제 실행은 여전히 비동기(구불구불)지만, 읽기는 동기처럼 자연스럽다.
+```text
+┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│ Input/State  │──▶│ Control Point │──▶│ Output/Action │
+└──────────────┘    └──────────────┘    └──────────────┘
+```
+
+- **📢 섹션 요약 비유**: async/await는 마법 안경 — 비동기 코드(구불구불한 실)를 쓰면 마치 직선처럼 보여주는 착시 안경이다. 실제 실행은 여전히 비동기(구불구불)지만, 읽기는 동기처럼 자연스럽다.
 
 ---
 
 ## Ⅲ. 비교 및 연결
-
-### Promise.all vs Promise.race vs Promise.allSettled vs Promise.any
-
 ```
 Promise.all([A, B, C]):
   A: ──────✓──
@@ -151,8 +142,6 @@ Promise.any([A, B, C]):
   첫 번째 성공한 결과 반환 (모두 실패 시 AggregateError)
 ```
 
-### 언어별 비동기 패턴 비교
-
 | 언어/플랫폼 | Promise 유사체 | async/await | 비고 |
 |:---|:---|:---|:---|
 | JavaScript | `Promise` | `async/await` (ES2017) | 표준 |
@@ -162,14 +151,11 @@ Promise.any([A, B, C]):
 | Python | `asyncio.Future` | `async/await` (Python 3.5) | — |
 | Rust | `Future` | `async/await` (Rust 1.39) | Zero-cost 추상화 |
 
-📢 **섹션 요약 비유**: Promise.all은 모든 주문이 나올 때까지 기다리는 단체 식사, Promise.race는 가장 빨리 나오는 음식 먼저 먹기, Promise.allSettled는 누군가 주문 실수해도 다 나올 때까지 기다려서 결과 확인하기이다.
+- **📢 섹션 요약 비유**: Promise.all은 모든 주문이 나올 때까지 기다리는 단체 식사, Promise.race는 가장 빨리 나오는 음식 먼저 먹기, Promise.allSettled는 누군가 주문 실수해도 다 나올 때까지 기다려서 결과 확인하기이다.
 
 ---
 
 ## Ⅳ. 실무 적용 및 기술사 판단
-
-### 병렬 vs 순차 비동기 처리
-
 ```javascript
 // 순차 처리 (비효율적 — 직렬로 기다림)
 async function sequential() {
@@ -187,8 +173,6 @@ async function parallel() {
 }
 ```
 
-### Java CompletableFuture 실무 패턴
-
 ```java
 // 비동기 체인 + 스레드 풀 지정
 CompletableFuture<String> result =
@@ -202,8 +186,6 @@ result.orTimeout(5, TimeUnit.SECONDS)
       .exceptionally(ex -> "타임아웃");
 ```
 
-### 흔한 실수와 해결책
-
 | 실수 | 문제 | 해결 |
 |:---|:---|:---|
 | `await`를 반복문 내부에서 순차 사용 | 직렬 실행 → 느림 | `Promise.all()` 병렬화 |
@@ -211,12 +193,17 @@ result.orTimeout(5, TimeUnit.SECONDS)
 | `async` 없이 `await` 사용 | SyntaxError | 함수에 `async` 명시 |
 | CompletableFuture에서 blocking 호출 | 스레드 풀 고갈 | `thenComposeAsync` 사용 |
 
-📢 **섹션 요약 비유**: `await`를 반복문 안에서 쓰는 것은 식당에서 메뉴 하나 시키고 먹고, 또 시키고 먹는 것 — `Promise.all()`은 메뉴를 한번에 다 시켜서 동시에 나오게 하는 것이다.
+### 판단 체크리스트
+1. 해결하려는 변화 축이 분명한가?
+2. 추상화 비용보다 변경 절감 효과가 큰가?
+3. 테스트·로그·운영 가시성이 확보되는가?
+4. 팀이 이 구조를 일관되게 유지할 수 있는가?
+
+- **📢 섹션 요약 비유**: `await`를 반복문 안에서 쓰는 것은 식당에서 메뉴 하나 시키고 먹고, 또 시키고 먹는 것 — `Promise.all()`은 메뉴를 한번에 다 시켜서 동시에 나오게 하는 것이다.
 
 ---
 
 ## Ⅴ. 기대효과 및 결론
-
 Promise/Future 패턴은 콜백 지옥을 해결하고 비동기 코드의 가독성을 혁신적으로 개선했다:
 
 **핵심 기대효과**:
@@ -232,12 +219,13 @@ Promise/Future 패턴은 콜백 지옥을 해결하고 비동기 코드의 가�
 
 기술사 시험에서는 **Promise 상태 기계(Pending/Fulfilled/Rejected)**, **async/await가 Promise의 문법적 설탕임**, **Promise.all vs Promise.race 차이**를 명확히 서술하는 것이 핵심이다.
 
-📢 **섹션 요약 비유**: Promise는 은행 대기번호표 — 번호를 받고(Pending), 창구에서 처리되면(Fulfilled) 호출, 처리 불가하면(Rejected) 다른 창구(catch) 안내. async/await는 창구 앞에 직접 서서 기다리는 것처럼 쓰지만 실제로는 번호표 시스템이 돌아가고 있다.
+확장 방향은 ① 선언형 API와의 결합, ② 관측 가능성(Observability) 내장, ③ 분산 환경에 맞는 변형 패턴 적용이다.
+
+- **📢 섹션 요약 비유**: Promise는 은행 대기번호표 — 번호를 받고(Pending), 창구에서 처리되면(Fulfilled) 호출, 처리 불가하면(Rejected) 다른 창구(catch) 안내. async/await는 창구 앞에 직접 서서 기다리는 것처럼 쓰지만 실제로는 번호표 시스템이 돌아가고 있다.
 
 ---
 
 ### 📌 관련 개념 맵
-
 | 관계 | 개념 | 설명 |
 |:---|:---|:---|
 | 상위 개념 | 비동기 프로그래밍 (Async Programming) | Promise가 해결하는 근본 문제 영역 |
@@ -248,8 +236,10 @@ Promise/Future 패턴은 콜백 지옥을 해결하고 비동기 코드의 가�
 | 발전 패턴 | Observable (RxJS/Reactor) | 다중 비동기 이벤트 스트림 처리 |
 | 연관 패턴 | Monad Pattern | CompletableFuture는 모나드 |
 
-### 👶 어린이를 위한 3줄 비유 설명
+### 📈 관련 키워드 및 발전 흐름도
+콜백 비동기 → Promise/Future 비동기 패턴 → structured concurrency
 
-- Promise는 은행 대기표 — "아직 처리 중(Pending)", "처리 완료(Fulfilled)", "처리 불가(Rejected)" 세 가지 상태가 있고, 완료되면 다음 할 일(.then())을 알아서 실행해줘.
-- async/await는 마법 일시정지 버튼 — `await` 앞에서 잠깐 멈추고 결과를 받을 때까지 기다리지만, 다른 친구들(다른 코드)은 계속 놀게 해줘.
-- `Promise.all()`은 모든 친구가 준비될 때까지 기다렸다가 같이 출발하는 것이고, `Promise.race()`는 제일 빨리 준비된 친구를 따라가는 것이야.
+### 👶 어린이를 위한 3줄 비유 설명
+1. Promise는 은행 대기표 — "아직 처리 중(Pending)", "처리 완료(Fulfilled)", "처리 불가(Rejected)" 세 가지 상태가 있고, 완료되면 다음 할 일(.then())을 알아서 실행해줘.
+2. async/await는 마법 일시정지 버튼 — `await` 앞에서 잠깐 멈추고 결과를 받을 때까지 기다리지만, 다른 친구들(다른 코드)은 계속 놀게 해줘.
+3. `Promise.all()`은 모든 친구가 준비될 때까지 기다렸다가 같이 출발하는 것이고, `Promise.race()`는 제일 빨리 준비된 친구를 따라가는 것이야.
