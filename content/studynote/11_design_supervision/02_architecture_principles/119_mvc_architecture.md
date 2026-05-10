@@ -50,11 +50,11 @@ Model은 옵저버 패턴(Observer Pattern)을 통해 상태 변화를 View에 �
 
 MVC의 세 요소는 명확한 역할 경계를 가진다. Model은 데이터·비즈니스 로직·상태를 소유하며 View나 Controller를 전혀 알지 못한다. View는 Model의 데이터를 화면으로 표현하되 비즈니스 로직이 없다. Controller는 사용자 입력을 받아 Model을 업데이트하고 적절한 View를 선택하는 교통 정리자다.
 
-| 구성 요소 | 역할 | 알아야 할 것 | 몰라야 할 것 |
-|:---|:---|:---|:---|
-| Model | 데이터·비즈니스 로직 | 자신의 상태와 규칙 | View, Controller |
-| View | 화면 표현·렌더링 | Model 데이터 | 비즈니스 로직, DB |
-| Controller | 입력 처리·흐름 제어 | Model, View | 비즈니스 로직 세부 사항 |
+| 항목 | 설명 | 포인트 |
+|:---|:---|:---|
+| Model | 데이터·비즈니스 로직 / 자신의 상태와 규칙 | View, Controller |
+| View | 화면 표현·렌더링 / Model 데이터 | 비즈니스 로직, DB |
+| Controller | 입력 처리·흐름 제어 / Model, View | 비즈니스 로직 세부 사항 |
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -76,24 +76,22 @@ Spring MVC의 DispatcherServlet은 Front Controller 패턴을 구현한다. 모�
 - **📢 섹션 요약 비유**: 교통 신호등(Controller)은 차량(요청)이 어느 차선(View)으로 갈지 지시하고, 도로 규칙(Model)은 속도 제한·우선순위를 정한다. 신호등이 직접 차를 만들거나 도로를 포장하지 않는다.
 
 ---
-
 ## Ⅲ. 비교 및 연결
 
 MVC는 다양한 파생 패턴(MVP, MVVM, MVI)의 기원이다. 각 파생 패턴은 MVC의 특정 약점을 보완하기 위해 등장했다.
 
-| 비교 축 | MVC | MVP (Model-View-Presenter) | MVVM (Model-View-ViewModel) |
-|:---|:---|:---|:---|
-| **View 역할** | 직접 Model 참조 가능 | Presenter를 통해서만 | 데이터 바인딩으로 ViewModel 연결 |
-| **테스트 용이성** | Controller 테스트 용이 | Presenter 단위 테스트 용이 | ViewModel 단위 테스트 최적 |
-| **사용 환경** | 웹 서버 사이드 | Android, iOS | WPF, Angular, Vue, React |
-| **View-Model 결합** | 중간 | 낮음 | 가장 낮음 (데이터 바인딩) |
+| 비교 축 | A | B |
+|:---|:---|:---|
+| **View 역할** | 직접 Model 참조 가능 | Presenter를 통해서만 / 데이터 바인딩으로 ViewModel 연결 |
+| **테스트 용이성** | Controller 테스트 용이 | Presenter 단위 테스트 용이 / ViewModel 단위 테스트 최적 |
+| **사용 환경** | 웹 서버 사이드 | Android, iOS / WPF, Angular, Vue, React |
+| **View-Model 결합** | 중간 | 낮음 / 가장 낮음 (데이터 바인딩) |
 
 MVC는 계층형 아키텍처의 프레젠테이션 계층에서 사용되는 패턴이다. 계층형 아키텍처가 시스템 전체 구조를 정의한다면, MVC는 프레젠테이션 계층 내부 구조를 정의한다.
 
 - **📢 섹션 요약 비유**: MVC는 출판사(전체 계층형 시스템) 안에서 편집팀(컨텐츠 조직)이 내용 담당·디자인 담당·마케팅 담당으로 나뉜 것과 같다. 출판사 구조(계층형)가 있고 그 안에서 편집팀 역할 분담(MVC)이 이루어진다.
 
 ---
-
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 Spring MVC 기반 프로젝트에서 MVC 위반의 가장 흔한 형태는 Controller에 비즈니스 로직이 직접 구현되거나, View(JSP, Thymeleaf 템플릿)에 SQL 쿼리나 복잡한 계산 로직이 들어가는 것이다. 감리 관점에서는 이런 구조가 유지보수 비용 증가의 직접 원인이 된다.

@@ -45,12 +45,12 @@ categories = "studynote-design-supervision"
 
 스프링의 `ApplicationEvent` 시스템이 두 패턴의 통합 구현이다. `ApplicationEventPublisher`(미디에이터+Subject)가 이벤트를 발행하면, `@EventListener`(옵저버)가 해당 이벤트를 처리한다.
 
-| 아키텍처 패턴 | 미디에이터 역할 | 옵저버 역할 | 통신 방식 |
-|:---|:---|:---|:---|
-| 스프링 ApplicationEvent | ApplicationEventPublisher | @EventListener | 동기 (기본) |
-| Guava EventBus | EventBus | @Subscribe | 동기 |
-| 스프링 @Async 이벤트 | ApplicationEventPublisher | @Async @EventListener | 비동기 |
-| Kafka 기반 EDA | Kafka Broker | Consumer | 비동기·분산 |
+| 항목 | 설명 | 포인트 |
+|:---|:---|:---|
+| 스프링 ApplicationEvent | ApplicationEventPublisher / @EventListener | 동기 (기본) |
+| Guava EventBus | EventBus / @Subscribe | 동기 |
+| 스프링 @Async 이벤트 | ApplicationEventPublisher / @Async @EventListener | 비동기 |
+| Kafka 기반 EDA | Kafka Broker / Consumer | 비동기·분산 |
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -78,12 +78,11 @@ categories = "studynote-design-supervision"
 - **📢 섹션 요약 비유**: 쇼핑몰(OrderService)이 주문 완료(이벤트)를 방송하면, 이메일 서비스와 재고 서비스(옵저버)가 각자의 방식으로 처리한다. 쇼핑몰은 두 서비스를 직접 알 필요 없다.
 
 ---
-
 ## Ⅲ. 비교 및 연결
 
 두 패턴 조합의 발전: 단일 앱 내 이벤트 버스(스프링 ApplicationEvent) → 분산 이벤트 버스(Kafka, RabbitMQ) → 이벤트 소싱(Event Sourcing) + 두 패턴 통합.
 
-| 수준 | 미디에이터+옵저버 구현 | 특징 |
+| 비교 축 | A | B |
 |:---|:---|:---|
 | 단일 앱 (인프로세스) | 스프링 ApplicationEvent | 동기, 트랜잭션 공유 |
 | 분산 (비동기) | Kafka, RabbitMQ | 비동기, 느슨한 결합 |
@@ -92,7 +91,6 @@ categories = "studynote-design-supervision"
 - **📢 섹션 요약 비유**: 사내 이메일(인프로세스 이벤트)이 회사 내부 소통이라면, 분산 메시지 브로커(Kafka)는 다른 회사(서비스)와의 공식 우편 시스템이다.
 
 ---
-
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 설계사 시험에서 두 패턴의 통합 설계를 서술할 때 핵심 포인트: ① 단일 앱 내에서 서비스 간 결합도를 낮추기 위해 스프링 ApplicationEvent 사용, ② 마이크로서비스 간 통신에서 Kafka가 분산 미디에이터+Subject 역할, ③ 이벤트 소싱에서 이벤트 스토어가 모든 상태 변경의 옵저버-미디에이터 조합.

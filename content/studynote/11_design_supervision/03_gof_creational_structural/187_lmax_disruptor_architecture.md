@@ -46,7 +46,7 @@ LMAX(London Multi-Asset Exchange)는 2011년 마틴 파울러·마틴 톰슨이 
 
 디스럽터의 핵심 설계 원칙: ① 링 버퍼(Ring Buffer): 고정 크기의 순환 배열로 메모리 재사용·GC 제거, ② 시퀀서(Sequencer): 단일 생산자(SPSC) 또는 다중 생산자(MPSC) 시퀀스를 CAS로 원자적 업데이트, ③ 이벤트 프로세서(Event Processor): 소비자 스레드가 이벤트를 순서대로 처리, ④ 장벽(Barrier): 생산자·소비자 간 의존성 정의.
 
-| 구성 요소 | 역할 | 성능 특성 |
+| 항목 | 설명 | 포인트 |
 |:---|:---|:---|
 | Ring Buffer | 이벤트 저장 순환 배열 | GC 없음, 캐시 친화 |
 | Sequencer | Lock-free 시퀀스 관리 | CAS, 메모리 배리어 |
@@ -72,12 +72,11 @@ LMAX(London Multi-Asset Exchange)는 2011년 마틴 파울러·마틴 톰슨이 
 - **📢 섹션 요약 비유**: 공항 수하물 컨베이어 벨트(링 버퍼)에서 수하물(이벤트)이 순환하며, 각 승객(소비자)이 자신의 수하물 번호(시퀀스)를 확인하고 바로 가져간다. 줄(잠금) 없이 빠르게 처리된다.
 
 ---
-
 ## Ⅲ. 비교 및 연결
 
 디스럽터와 BlockingQueue의 성능 차이는 벤치마크에서 수십 배에 달한다. 주요 차이는 잠금 경쟁 제거, GC 부담 감소, 배치 처리(Batching)다.
 
-| 비교 축 | BlockingQueue | Disruptor |
+| 비교 축 | A | B |
 |:---|:---|:---|
 | 동기화 | synchronized/Lock | Lock-free CAS |
 | 메모리 | 동적 할당 (GC 부담) | 고정 링 버퍼 (GC 없음) |
@@ -88,7 +87,6 @@ LMAX(London Multi-Asset Exchange)는 2011년 마틴 파울러·마틴 톰슨이 
 - **📢 섹션 요약 비유**: BlockingQueue는 신호등(잠금)이 있는 교차로이고, 디스럽터는 회전교차로(Roundabout)처럼 신호 없이 흐름이 지속된다.
 
 ---
-
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 디스럽터의 적합한 사용 사례: ① HFT(High-Frequency Trading) 시스템, ② 게임 서버 실시간 이벤트 처리, ③ 로그 집계 시스템(Log4j2가 비동기 로깅에 디스럽터 사용), ④ 금융 거래 이벤트 스트리밍.

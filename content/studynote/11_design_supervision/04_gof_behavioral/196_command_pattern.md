@@ -48,7 +48,7 @@ GUI 애플리케이션에서 버튼 클릭, 메뉴 선택, 키보드 단축키 �
 
 Undo/Redo 구현: 실행된 커맨드를 스택(undoStack)에 쌓고, Undo 시 스택에서 커맨드를 꺼내 `undo()`를 호출하며 redoStack에 이동한다. Redo 시 redoStack에서 꺼내 `execute()`를 다시 호출한다.
 
-| 커맨드 패턴 활용 | 설명 | 예시 |
+| 항목 | 설명 | 포인트 |
 |:---|:---|:---|
 | 기본 실행 | command.execute() 호출 | 버튼 클릭, 메뉴 선택 |
 | Undo 스택 | 실행 커맨드를 스택에 저장 | Ctrl+Z |
@@ -73,12 +73,11 @@ Undo/Redo 구현: 실행된 커맨드를 스택(undoStack)에 쌓고, Undo 시 �
 - **📢 섹션 요약 비유**: 요리 레시피(커맨드 스택)에서 잘못된 단계를 되돌리려면 역순으로 취소(undo)하면 된다. 레시피에 각 단계의 취소 방법이 기록되어 있어야 한다.
 
 ---
-
 ## Ⅲ. 비교 및 연결
 
 CQRS(Command Query Responsibility Segregation)와 커맨드 패턴의 관계: CQRS의 'Command'는 커맨드 패턴의 아키텍처 수준 확장이다. CQRS에서 Command 객체는 시스템 상태를 변경하는 요청을 표현하고, Command Handler가 Receiver 역할을 한다.
 
-| 비교 축 | 커맨드 패턴 | CQRS Command |
+| 비교 축 | A | B |
 |:---|:---|:---|
 | 수준 | 객체 수준 | 아키텍처 수준 |
 | 핵심 | Undo/Redo, 큐 | 쓰기 모델 분리 |
@@ -88,7 +87,6 @@ CQRS(Command Query Responsibility Segregation)와 커맨드 패턴의 관계: CQ
 - **📢 섹션 요약 비유**: 커맨드 패턴은 레스토랑 주문서(단일 앱), CQRS는 주문 관리 시스템(분산 아키텍처)이다. 둘 다 '요청을 객체로 캡슐화'하는 원칙을 공유한다.
 
 ---
-
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 스프링 MVC에서 `@RequestMapping` 핸들러가 Invoker, Controller 메서드가 ConcreteCommand 역할을 한다. 스프링 배치(Spring Batch)의 `Step` 인터페이스도 커맨드 패턴을 구현하여 배치 단계의 실행·건너뛰기·재시작을 지원한다.

@@ -46,7 +46,7 @@ categories = "studynote-design-supervision"
 
 서블릿 필터 체인이 책임 연쇄 패턴의 대표 구현이다. 각 필터(`AuthFilter`, `LogFilter`, `CorsFilter`)가 `doFilter(request, response, filterChain)` 메서드에서 처리 후 `filterChain.doFilter()`를 호출해 다음 필터로 전달한다. 전달하지 않으면 체인이 끊긴다(요청 차단).
 
-| 구현 방식 | 특징 | 예시 |
+| 항목 | 설명 | 포인트 |
 |:---|:---|:---|
 | 선형 체인 | 순서대로 전달, 처리하면 중단 | 고객 지원 에스컬레이션 |
 | 파이프라인 | 모든 핸들러를 통과, 각각 처리 | 서블릿 필터 체인 |
@@ -70,12 +70,11 @@ categories = "studynote-design-supervision"
 - **📢 섹션 요약 비유**: 공항 보안 검색(Authentication Filter) → 신분증 확인(Authorization Filter) → 짐 검사(CORS Filter)를 모두 통과해야 탑승(Servlet)할 수 있다.
 
 ---
-
 ## Ⅲ. 비교 및 연결
 
 책임 연쇄 패턴과 데코레이터 패턴의 비교: 데코레이터는 기능을 추가하고 항상 다음으로 전달하지만, 책임 연쇄는 처리 여부에 따라 전달 여부를 결정한다.
 
-| 비교 축 | 책임 연쇄 | 데코레이터 |
+| 비교 축 | A | B |
 |:---|:---|:---|
 | 전달 여부 | 조건부 (처리하면 중단 가능) | 항상 다음으로 전달 |
 | 목적 | 요청 처리자 탐색 | 기능 추가 |
@@ -85,7 +84,6 @@ categories = "studynote-design-supervision"
 - **📢 섹션 요약 비유**: 책임 연쇄는 고객 상담 에스컬레이션(처리 가능하면 중단), 데코레이터는 피자에 토핑 추가(모두 통과, 기능 누적)다.
 
 ---
-
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 스프링 Security는 `SecurityFilterChain`으로 인증·인가를 처리한다. 각 필터가 JWT 검증, 세션 관리, CSRF 보호 등 독립적인 보안 처리를 담당하고, 인증 실패 시 체인을 끊어 요청을 차단한다.

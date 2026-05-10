@@ -46,7 +46,7 @@ categories = "studynote-design-supervision"
 
 옵저버 패턴의 두 가지 통지 방식: ① Push 방식: Subject가 데이터를 Observer에게 직접 전달(`update(data)`), ② Pull 방식: Subject가 변경만 통지하고 Observer가 필요한 데이터를 Subject에서 요청. Pull 방식이 Observer와 Subject 간 결합도가 더 낮다.
 
-| 구현 방식 | 특징 | 결합도 |
+| 항목 | 설명 | 포인트 |
 |:---|:---|:---|
 | Push (데이터 전달) | 단순, Observer가 모든 데이터 수신 | 중간 |
 | Pull (변경 통지만) | Observer가 필요 데이터만 요청 | 낮음 |
@@ -72,12 +72,11 @@ categories = "studynote-design-supervision"
 - **📢 섹션 요약 비유**: 알림 시스템(Subject)이 이벤트를 발생시키면 이메일 서비스·SMS 서비스·푸시 알림 서비스(Observer)가 각자의 방식으로 처리한다. 알림 시스템은 각 서비스 내부를 알 필요 없다.
 
 ---
-
 ## Ⅲ. 비교 및 연결
 
 옵저버 패턴과 미디에이터 패턴의 차이: 옵저버는 Subject가 Observer에게 통지하는 1:N 관계이고, 미디에이터는 모든 객체가 미디에이터를 통해 N:N으로 통신한다.
 
-| 비교 축 | 옵저버 | 미디에이터 |
+| 비교 축 | A | B |
 |:---|:---|:---|
 | 통신 방향 | 1:N (Subject → Observers) | N:N (모두 ↔ Mediator) |
 | 결합도 | Subject ↔ Observer 낮음 | 모든 객체 ↔ Mediator |
@@ -86,7 +85,6 @@ categories = "studynote-design-supervision"
 - **📢 섹션 요약 비유**: 옵저버는 방송국(Subject)이 시청자(Observer)에게 일방적으로 방송하는 것이고, 미디에이터는 채팅방(Mediator)에서 모든 참여자가 소통하는 것이다.
 
 ---
-
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 리액티브 프로그래밍(RxJava, Project Reactor)은 옵저버 패턴의 함수형·비동기 확장이다. `Observable`(Subject)과 `Observer`를 함수형 스트림으로 표현하여, 비동기·비블로킹 이벤트 처리를 우아하게 구현한다.

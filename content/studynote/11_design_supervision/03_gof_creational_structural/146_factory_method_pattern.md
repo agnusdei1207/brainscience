@@ -48,7 +48,7 @@ categories = "studynote-design-supervision"
 
 팩터리 메서드 패턴의 4개 구성 요소: ① Product(제품): 팩터리 메서드가 생성하는 객체의 인터페이스, ② ConcreteProduct(구체 제품): Product를 구현하는 클래스, ③ Creator(생성자): 팩터리 메서드를 선언하는 추상 클래스, ④ ConcreteCreator(구체 생성자): 팩터리 메서드를 오버라이드하여 특정 Product를 생성.
 
-| 구성 요소 | 역할 | 예시 |
+| 항목 | 설명 | 포인트 |
 |:---|:---|:---|
 | Product | 생성 객체 인터페이스 | Iterator, Button, Logger |
 | ConcreteProduct | Product 구현체 | ArrayListIterator, WindowsButton |
@@ -70,22 +70,20 @@ categories = "studynote-design-supervision"
 - **📢 섹션 요약 비유**: 출판사(Creator)가 책(Product) 제작 방식을 규정하지만, 각 편집팀(ConcreteCreator)이 자신의 방식으로 특정 책(ConcreteProduct)을 제작한다.
 
 ---
-
 ## Ⅲ. 비교 및 연결
 
 팩터리 메서드 패턴과 단순 팩터리(Simple Factory)의 차이를 명확히 해야 한다. 단순 팩터리는 GoF 패턴이 아니며, 단순히 if-else로 어떤 클래스를 생성할지 결정하는 유틸리티 메서드다. 팩터리 메서드는 상속을 통해 서브클래스가 생성 결정을 내린다.
 
-| 비교 축 | 단순 팩터리 | 팩터리 메서드 | 추상 팩터리 |
-|:---|:---|:---|:---|
-| 메커니즘 | if-else 분기 | 상속·오버라이드 | 인터페이스·구성 |
-| OCP 준수 | X (새 타입마다 수정) | O (새 서브클래스 추가) | O |
-| 복잡성 | 낮음 | 중간 | 높음 |
-| 적용 범위 | 단일 클래스 내 | 클래스 계층 구조 | 관련 제품군 |
+| 비교 축 | A | B |
+|:---|:---|:---|
+| 메커니즘 | if-else 분기 | 상속·오버라이드 / 인터페이스·구성 |
+| OCP 준수 | X (새 타입마다 수정) | O (새 서브클래스 추가) / O |
+| 복잡성 | 낮음 | 중간 / 높음 |
+| 적용 범위 | 단일 클래스 내 | 클래스 계층 구조 / 관련 제품군 |
 
 - **📢 섹션 요약 비유**: 단순 팩터리는 한 요리사가 메뉴판(if-else)을 보고 어떤 요리를 할지 결정한다. 팩터리 메서드는 각 지점(서브클래스)이 자신만의 특제 메뉴(제품)를 만드는 방식이다.
 
 ---
-
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 스프링에서 팩터리 메서드 패턴의 대표 예시는 `@Bean` 메서드다. `@Configuration` 클래스의 `@Bean` 메서드가 팩터리 메서드 역할을 하며, 스프링 컨테이너(Creator)가 이를 호출하여 Bean(Product)을 생성한다. `BeanFactory`와 `ApplicationContext`도 팩터리 메서드 패턴의 구현이다.

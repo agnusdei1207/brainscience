@@ -47,7 +47,7 @@ categories = "studynote-design-supervision"
 
 스프링의 `JdbcTemplate`은 템플릿 메서드 패턴의 대표 구현이다. `JdbcTemplate.query()` 메서드가 DB 연결·SQL 실행·결과 처리·연결 반환의 골격을 정의하고, 개발자가 `RowMapper` 인터페이스로 결과 매핑 단계만 구현한다.
 
-| 구성 요소 | 역할 | 스프링 예시 |
+| 항목 | 설명 | 포인트 |
 |:---|:---|:---|
 | 템플릿 메서드 | 알고리즘 골격 정의 | JdbcTemplate.query() |
 | 추상 메서드 | 서브클래스 필수 구현 | RowMapper.mapRow() |
@@ -72,12 +72,11 @@ categories = "studynote-design-supervision"
 - **📢 섹션 요약 비유**: 햄버거 조리 매뉴얼(템플릿 메서드)이 굽기·조립·포장 단계를 정의하고, 패티 굽기 방식(추상 메서드)만 각 지점(서브클래스)이 결정한다.
 
 ---
-
 ## Ⅲ. 비교 및 연결
 
 템플릿 메서드(상속 기반)와 전략 패턴(구성 기반)의 차이가 핵심이다.
 
-| 비교 축 | 템플릿 메서드 | 전략 패턴 |
+| 비교 축 | A | B |
 |:---|:---|:---|
 | 메커니즘 | 상속 (서브클래스 오버라이드) | 구성 (인터페이스 구현 주입) |
 | 알고리즘 교체 | 컴파일 타임 고정 | 런타임 교체 가능 |
@@ -87,7 +86,6 @@ categories = "studynote-design-supervision"
 - **📢 섹션 요약 비유**: 템플릿 메서드는 부모님(상위 클래스)이 규칙을 정하고 자녀(서브클래스)가 세부를 결정하는 것이고, 전략 패턴은 팀장(Context)이 팀원(Strategy)을 자유롭게 교체하는 것이다.
 
 ---
-
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 JUnit의 `TestCase` 클래스도 템플릿 메서드 패턴 구현이다. `setUp()` → `testXxx()` → `tearDown()` 순서로 테스트 생명주기가 고정되고, 개발자는 `testXxx()`만 구현한다. 스프링의 `AbstractController`, `AbstractFetchableItemsReader` 등 다양한 Template 클래스가 같은 방식으로 구현된다.

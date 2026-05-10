@@ -47,7 +47,7 @@ GUI 애플리케이션에서 버튼·체크박스·텍스트필드가 서로 직
 
 .NET의 MediatR 라이브러리가 CQRS 패턴에서 미디에이터를 구현한다. `IMediator.Send(command)`를 호출하면 등록된 `IRequestHandler<TCommand>`가 처리한다. 이를 통해 Controller가 직접 서비스를 호출하는 대신 미디에이터를 통해 느슨하게 통신한다.
 
-| 미디에이터 적용 예시 | 설명 | 기술 |
+| 항목 | 설명 | 포인트 |
 |:---|:---|:---|
 | MVC Controller | View ↔ Model 중재 | Spring MVC |
 | CQRS Mediator | Command/Query 라우팅 | MediatR (.NET) |
@@ -71,12 +71,11 @@ GUI 애플리케이션에서 버튼·체크박스·텍스트필드가 서로 직
 - **📢 섹션 요약 비유**: 부동산 중개사(Mediator)가 매수자(Controller)와 매도자(Handler)를 중재한다. 매수자는 매도자를 직접 알 필요 없다.
 
 ---
-
 ## Ⅲ. 비교 및 연결
 
 미디에이터 패턴과 옵저버 패턴의 비교: 옵저버는 Subject가 Observer에게 1:N으로 통지하고, 미디에이터는 N:N 통신을 N:1+1:N으로 중재한다.
 
-| 비교 축 | 미디에이터 | 옵저버 |
+| 비교 축 | A | B |
 |:---|:---|:---|
 | 통신 방향 | N:N → Mediator 중재 | 1:N (Subject → Observer) |
 | 결합 제거 | 모든 참여자 간 결합 | Subject-Observer 결합 |
@@ -86,7 +85,6 @@ GUI 애플리케이션에서 버튼·체크박스·텍스트필드가 서로 직
 - **📢 섹션 요약 비유**: 미디에이터는 채팅방(모든 참여자 간 통신 중재)이고, 옵저버는 방송국(1개 Subject가 N개 Observer에게 일방적 통지)이다.
 
 ---
-
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 스프링에서 미디에이터 패턴은 `ApplicationEventPublisher` 기반 이벤트 시스템으로 구현된다. 서비스가 이벤트를 발행하면 미디에이터(이벤트 버스)가 적절한 핸들러로 라우팅한다. 이벤트 기반 마이크로서비스에서 Kafka가 서비스 간 미디에이터 역할을 한다.

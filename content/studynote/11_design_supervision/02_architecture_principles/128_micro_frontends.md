@@ -46,12 +46,12 @@ categories = "studynote-design-supervision"
 
 마이크로 프론트엔드의 통합 방식은 빌드 타임과 런타임으로 나뉜다. 빌드 타임 통합은 npm 패키지로 배포하고 메인 앱에서 설치하는 방식이며 런타임 통합의 독립 배포 이점이 없다. 런타임 통합은 각 MFE를 별도 URL로 배포하고 런타임에 로드하는 방식으로, Webpack 5의 Module Federation이 대표 구현 기술이다.
 
-| 통합 방식 | 특징 | 독립 배포 | 대표 기술 |
+| 항목 | 설명 | 포인트 |
 |:---|:---|:---|
-| 빌드 타임 통합 | npm 패키지로 통합 | 불가 | npm publish |
-| iframe 통합 | 완전 격리, UX 제약 | 가능 | iframe |
-| Web Components | 표준 기반 캡슐화 | 가능 | Custom Elements |
-| Module Federation | Webpack 5 런타임 공유 | 가능 | Webpack 5 MF |
+| 빌드 타임 통합 | npm 패키지로 통합 / 불가 | npm publish |
+| iframe 통합 | 완전 격리, UX 제약 / 가능 | iframe |
+| Web Components | 표준 기반 캡슐화 / 가능 | Custom Elements |
+| Module Federation | Webpack 5 런타임 공유 / 가능 | Webpack 5 MF |
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -69,12 +69,11 @@ categories = "studynote-design-supervision"
 - **📢 섹션 요약 비유**: 레고 세트에서 여러 종류의 블록(MFE 조각)을 각 제조사(팀)가 독립적으로 만들고, 설계도(Shell)에 따라 완성된 레고(앱)를 조립하는 것과 같다.
 
 ---
-
 ## Ⅲ. 비교 및 연결
 
 마이크로 프론트엔드의 최대 도전은 각 MFE의 스타일 격리와 일관된 사용자 경험 유지다. CSS 충돌 방지를 위해 CSS Modules, Shadow DOM, BEM(Block Element Modifier) 방법론이 사용된다.
 
-| 비교 축 | 모놀리식 SPA | 마이크로 프론트엔드 |
+| 비교 축 | A | B |
 |:---|:---|:---|
 | 팀 자율성 | 낮음 (단일 팀 의존) | 높음 (팀별 독립) |
 | 배포 독립성 | 없음 | 있음 |
@@ -85,7 +84,6 @@ categories = "studynote-design-supervision"
 - **📢 섹션 요약 비유**: 아파트 단지에서 각 집(MFE)이 독립적으로 인테리어(기술 스택)를 꾸미지만, 외관(UX)은 단지 규정(디자인 시스템)을 따라 통일성을 유지한다.
 
 ---
-
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 마이크로 프론트엔드 도입의 가장 큰 함정은 '조각 수가 늘어날수록 공유 의존성 관리가 어려워진다'는 점이다. React·Vue 등 공통 라이브러리가 각 MFE에 중복 번들되면 페이지 로딩 성능이 저하된다. Module Federation의 'shared' 설정으로 공통 라이브러리를 싱글턴으로 공유하는 전략이 핵심이다.

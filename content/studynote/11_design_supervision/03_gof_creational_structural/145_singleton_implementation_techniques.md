@@ -41,13 +41,13 @@ categories = "studynote-design-supervision"
 
 다섯 가지 주요 싱글턴 구현 기법을 비교한다. Bill Pugh 방식과 Enum 방식이 현대 Java 환경에서 권장된다.
 
-| 구현 기법 | 지연 초기화 | 스레드 안전 | 직렬화 안전 | 리플렉션 방어 |
-|:---|:---|:---|:---|:---|
-| Lazy (기본) | O | X | X | X |
-| Synchronized | O | O | X | X |
-| DCL (volatile) | O | O | X | X |
-| Bill Pugh (Static Holder) | O | O | X | X |
-| Enum Singleton | X (즉시) | O | O | O |
+| 항목 | 설명 | 포인트 |
+|:---|:---|:---|
+| Lazy (기본) | O / X / X | X |
+| Synchronized | O / O / X | X |
+| DCL (volatile) | O / O / X | X |
+| Bill Pugh (Static Holder) | O / O / X | X |
+| Enum Singleton | X (즉시) / O / O | O |
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -75,12 +75,11 @@ categories = "studynote-design-supervision"
 - **📢 섹션 요약 비유**: 자물쇠(synchronized)는 누군가 잠그면 다른 사람이 기다려야 하므로 느리다. Enum은 법(JVM 명세)이 복제를 금지하므로 자물쇠 없이도 안전하다.
 
 ---
-
 ## Ⅲ. 비교 및 연결
 
 DCL(Double-Checked Locking)은 Java 1.4 이전에는 버그가 있었다(JVM 메모리 모델의 가시성 문제). Java 5부터 `volatile` 키워드로 메모리 가시성이 보장되어 DCL이 안전해졌다. `volatile` 없이 DCL을 사용하면 최적화로 인해 완전히 초기화되지 않은 인스턴스가 반환될 수 있다.
 
-| 비교 축 | Bill Pugh | Enum Singleton |
+| 비교 축 | A | B |
 |:---|:---|:---|
 | 지연 초기화 | O (클래스 로드 시 초기화) | X (즉시 초기화) |
 | 직렬화 안전 | X (readResolve() 추가 필요) | O (JVM 보장) |
@@ -90,7 +89,6 @@ DCL(Double-Checked Locking)은 Java 1.4 이전에는 버그가 있었다(JVM 메
 - **📢 섹션 요약 비유**: Bill Pugh는 특수 금고(정적 홀더 클래스)에 보관하는 방식이고, Enum은 법적으로 유일무이한 것으로 공인(JVM 명세)된 방식이다.
 
 ---
-
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 스프링 환경에서는 싱글턴 구현 기법보다 `@Bean` + DI를 사용하는 것이 권장된다. 직접 싱글턴을 구현해야 하는 경우는 프레임워크 없이 순수 Java/Kotlin으로 구현할 때 주로 발생한다. 이때 Java는 Enum, Kotlin은 `object` 키워드가 가장 간단하고 안전한 선택이다.

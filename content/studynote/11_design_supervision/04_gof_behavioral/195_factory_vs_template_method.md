@@ -50,7 +50,7 @@ categories = "studynote-design-supervision"
 
 두 패턴이 함께 사용되는 예: 스프링의 `AbstractRefreshableApplicationContext`는 `createBeanFactory()`(팩터리 메서드)와 `refresh()`(템플릿 메서드)를 조합한다. `refresh()`가 알고리즘 골격이고, 그 안에서 `createBeanFactory()`가 적절한 BeanFactory를 생성한다.
 
-| 비교 축 | 팩터리 메서드 | 템플릿 메서드 |
+| 항목 | 설명 | 포인트 |
 |:---|:---|:---|
 | 위임 대상 | 객체 생성 | 알고리즘 단계 |
 | 패턴 분류 | 생성 패턴 | 행위 패턴 |
@@ -74,12 +74,11 @@ categories = "studynote-design-supervision"
 - **📢 섹션 요약 비유**: 식당(AbstractApplicationContext)이 개장(refresh 템플릿 메서드) 시 주방 도구(BeanFactory, 팩터리 메서드)를 준비하고, 음식 조리법(행위 단계)을 따라 운영을 시작한다.
 
 ---
-
 ## Ⅲ. 비교 및 연결
 
 두 패턴을 혼동하는 가장 흔한 실수: 팩터리 메서드 패턴을 '단순한 객체 생성 메서드'로 오해하는 것이다. 팩터리 메서드의 핵심은 '서브클래스가 생성할 클래스를 결정한다'는 것이며, 상속 없는 static 팩터리 메서드(`LocalDate.of()`)는 다른 패턴이다.
 
-| 구분 | 팩터리 메서드 패턴 | static 팩터리 메서드 |
+| 비교 축 | A | B |
 |:---|:---|:---|
 | 상속 | O (서브클래스에 위임) | X |
 | 다형성 | O | X |
@@ -88,7 +87,6 @@ categories = "studynote-design-supervision"
 - **📢 섹션 요약 비유**: 팩터리 메서드 패턴은 각 지점(서브클래스)이 자신의 특산물(제품)을 결정하는 것이고, static 팩터리는 단순히 물건을 만들어 주는 공장 기계다.
 
 ---
-
 ## Ⅳ. 실무 적용 및 기술사 판단
 
 기술사 시험에서 두 패턴의 차이를 명확히 서술해야 한다. 핵심 키워드: ① 팩터리 메서드: "생성", "어떤 클래스의 인스턴스", "Creator-Product 계층", ② 템플릿 메서드: "알고리즘 골격", "공통 흐름", "가변 단계 서브클래스 위임", "할리우드 원칙".
