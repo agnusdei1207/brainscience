@@ -1,5 +1,5 @@
 +++
-weight = 9
+weight = 11
 title = "09. 인공지능 — Agentic AI"
 date = "2026-05-17"
 [extra]

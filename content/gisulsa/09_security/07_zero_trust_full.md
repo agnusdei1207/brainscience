@@ -1,5 +1,5 @@
 +++
-weight = 8
+weight = 7
 title = "08. Zero Trust (제로 트러스트)"
 date = "2026-05-17"
 [extra]

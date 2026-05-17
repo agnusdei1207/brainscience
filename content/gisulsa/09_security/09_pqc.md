@@ -1,5 +1,5 @@
 +++
-weight = 5
+weight = 9
 title = "05. PQC (양자내성암호, Post-Quantum Cryptography)"
 date = "2026-05-17"
 [extra]

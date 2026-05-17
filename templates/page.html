@@ -57,9 +57,26 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        if (window.location.pathname.indexOf('/studynote/') === -1) return;
+        var p = window.location.pathname;
+        if (p.indexOf('/studynote/') === -1 && p.indexOf('/gisulsa/') === -1) return;
 
-        var normalizedPath = window.location.pathname.replace(/\/+$/, '') || '/';
+        var normalizedPath = p.replace(/\/+$/, '') || '/';
+
+        // 과목(섹션)별 lastRead 저장
+        var parts = normalizedPath.split('/');
+        // e.g. /brainscience/gisulsa/01_computer_architecture/01_cache_pipeline
+        var sectionKey = '';
+        for (var i = 0; i < parts.length - 1; i++) {
+            sectionKey += parts[i] + '/';
+        }
+        sectionKey = sectionKey.replace(/\/+$/, '');
+
+        var readMap = {};
+        try { readMap = JSON.parse(localStorage.getItem('lastReadMap') || '{}'); } catch(e) {}
+        readMap[sectionKey] = { path: normalizedPath, updatedAt: new Date().toISOString() };
+        localStorage.setItem('lastReadMap', JSON.stringify(readMap));
+
+        // 전역 lastReadPost도 유지 (기존 호환)
         localStorage.setItem('lastReadPost', JSON.stringify({
             path: normalizedPath,
             updatedAt: new Date().toISOString()

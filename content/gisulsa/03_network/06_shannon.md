@@ -1,5 +1,5 @@
 +++
-weight = 7
+weight = 6
 title = "07. 채널 용량 & 샤논의 정리"
 date = "2026-05-17"
 [extra]

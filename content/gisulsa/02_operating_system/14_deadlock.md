@@ -1,5 +1,5 @@
 +++
-weight = 11
+weight = 14
 title = "11. 교착상태 (Deadlock)"
 date = "2026-05-17"
 [extra]

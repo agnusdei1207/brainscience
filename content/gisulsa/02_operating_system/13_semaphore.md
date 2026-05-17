@@ -1,5 +1,5 @@
 +++
-weight = 10
+weight = 13
 title = "10. 세마포어 & 뮤텍스 (Semaphore & Mutex)"
 date = "2026-05-17"
 [extra]

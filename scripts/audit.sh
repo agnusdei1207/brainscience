@@ -1,26 +1,31 @@
 #!/bin/bash
-# Final audit script for gisulsa keyword files
+# Final comprehensive audit for gisulsa keyword files
 BASE="/home/ubuntu/workspace/brainscience/content/gisulsa"
 
-for d in 01_computer_architecture 02_operating_system 03_network 04_software_engineering \
-         05_database 06_ict_convergence 07_enterprise 08_algorithm 09_security 10_ai \
-         11_design 12_it_management 13_cloud 14_data_engineering 15_devops 16_bigdata; do
-    idx="${BASE}/${d}/_index.md"
+echo "=== 전수조사 최종 결과 ==="
+total_idx=0
+total_act=0
+
+for d in $(ls -d ${BASE}/*/); do
+    name=$(basename "$d")
+    idx="${d}/_index.md"
     
-    # Get referenced files from _index.md
-    refs=$(grep -oP '\(\d+_[a-z_]+\.md\)' "$idx" 2>/dev/null | tr -d '()' | sort -u)
+    # Get referenced files from _index.md (improved regex to handle numbers in names)
+    refs=$(grep -oP '\([0-9]+_[a-z0-9_]+\.md\)' "$idx" 2>/dev/null | tr -d '()' | sort -u)
     
     # Get actual files
-    actual=$(find "${BASE}/${d}" -name '*.md' ! -name '_index.md' -printf '%f\n' | sort)
+    actual=$(find "$d" -maxdepth 1 -name '*.md' ! -name '_index.md' -printf '%f\n' | sort)
     
-    idx_count=$(echo "$refs" | grep -c .)
-    act_count=$(echo "$actual" | grep -c .)
+    ic=$(echo "$refs" | grep -c . 2>/dev/null)
+    ac=$(echo "$actual" | grep -c . 2>/dev/null)
+    total_idx=$((total_idx + ic))
+    total_act=$((total_act + ac))
     
     # Find missing (referenced but not exists)
-    missing=""
+    miss=""
     for f in $refs; do
         if ! echo "$actual" | grep -qx "$f"; then
-            missing="$missing $f"
+            miss="$miss $f"
         fi
     done
     
@@ -32,23 +37,27 @@ for d in 01_computer_architecture 02_operating_system 03_network 04_software_eng
         fi
     done
     
-    echo "=== ${d}: index_refs=${idx_count} actual_files=${act_count}"
-    if [ -n "$missing" ]; then
-        echo "  MISSING (in index but no file):$missing"
-    fi
-    if [ -n "$extra" ]; then
-        echo "  EXTRA (file exists, not in index):$extra"
-    fi
-    if [ -z "$missing" ] && [ -z "$extra" ]; then
-        echo "  ✅ PERFECT MATCH"
+    if [ -z "$miss" ] && [ -z "$extra" ]; then
+        printf "OK  %-35s idx=%2d act=%2d\n" "$name" "$ic" "$ac"
+    else
+        printf "ERR %-35s idx=%2d act=%2d\n" "$name" "$ic" "$ac"
+        [ -n "$miss" ] && echo "   MISS:$miss"
+        [ -n "$extra" ] && echo "   EXTRA:$extra"
     fi
 done
 
-# Check for duplicate filenames across all subjects
 echo ""
-echo "=== DUPLICATE CHECK ==="
-find "$BASE" -name '*.md' ! -name '_index.md' -printf '%f\n' | sort | uniq -d | while read dup; do
-    echo "  DUP: $dup found in:"
-    find "$BASE" -name "$dup" ! -name '_index.md' -printf "    %P\n"
-done
+echo "TOTAL: index_refs=$total_idx actual_files=$total_act"
+echo ""
+
+echo "=== DUPLICATE FILENAMES ACROSS SUBJECTS ==="
+dups=$(find "$BASE" -name '*.md' ! -name '_index.md' -printf '%f\n' | sort | uniq -d)
+if [ -z "$dups" ]; then
+    echo "No duplicates found."
+else
+    echo "$dups" | while read dup; do
+        echo "  DUP: $dup found in:"
+        find "$BASE" -name "$dup" ! -name '_index.md' -printf "    %P\n"
+    done
+fi
 echo "Done."

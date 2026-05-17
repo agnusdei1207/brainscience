@@ -1,5 +1,5 @@
 +++
-weight = 23
+weight = 24
 title = "23. eBPF (Extended Berkeley Packet Filter)"
 date = "2026-05-17"
 [extra]

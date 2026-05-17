@@ -1,5 +1,5 @@
 +++
-weight = 4
+weight = 8
 title = "04. 동형암호 (Homomorphic Encryption)"
 date = "2026-05-17"
 [extra]

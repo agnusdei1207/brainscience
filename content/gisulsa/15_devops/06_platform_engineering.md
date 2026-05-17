@@ -1,5 +1,5 @@
 +++
-weight = 12
+weight = 6
 title = "12. 차원의 저주 (Curse of Dimensionality)"
 date = "2026-05-17"
 [extra]

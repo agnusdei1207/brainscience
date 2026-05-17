@@ -1,5 +1,5 @@
 +++
-weight = 6
+weight = 11
 title = "06. MCTS & 몬테카를로 (Monte Carlo Tree Search)"
 date = "2026-05-17"
 [extra]

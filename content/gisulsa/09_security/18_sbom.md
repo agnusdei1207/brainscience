@@ -1,5 +1,5 @@
 +++
-weight = 17
+weight = 18
 title = "17. SBOM (Software Bill of Materials)"
 date = "2026-05-17"
 [extra]
