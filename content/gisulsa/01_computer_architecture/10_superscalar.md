@@ -1,74 +1,45 @@
 +++
 weight = 10
-title = "10. 슈퍼스칼라 & 비순차 실행"
-date = "2026-05-17"
+title = "10. 슈퍼스칼라·비순차 실행"
+date = "2026-05-18"
 [extra]
 categories = "gisulsa-computer-architecture"
 +++
 
-# 🎯 슈퍼스칼라 & 비순차 실행 (OoO)
+# 슈퍼스칼라, 비순차 실행 (OoO)
 
-> **별점**: ★★★★☆ | 기본 필수
+> 출제 빈도: ★★★★☆ | 기본
 
-## 1. 슈퍼스칼라 (Superscalar)
+---
 
-```
-정의: 한 사이클에 여러 명령어를 동시에 발행(Issue)·실행
+## 답안.
 
-vs 단순 파이프라인: 1사이클 = 1명령어 진행
-슈퍼스칼라: 1사이클 = N명령어 동시 (IPC > 1)
+### Ⅰ. 개요
 
-[구성 요소]
-다중 이슈 큐: 여러 명령어를 동시 디코드
-실행 유닛 다중화:
-  정수 ALU × 2~4개
-  부동소수점 FPU
-  로드/스토어 유닛
-  분기 예측기
-```
+슈퍼스칼라(Superscalar)란 한 클럭 사이클에 다수의 명령어를 동시에 발행(Issue)하여 IPC(Instructions Per Cycle)를 1 이상으로 높이는 프로세서 구조이다. 비순차 실행(Out-of-Order Execution, OoO)은 명령어 간 의존성이 없는 경우 프로그램 순서와 무관하게 실행하여 파이프라인 공백(Bubble)을 최소화하는 기법이다.
 
-## 2. 비순차 실행 (OoO, Out-of-Order)
+### Ⅱ. 슈퍼스칼라 구조
 
 ```
-정의: 준비된 명령어를 프로그램 순서와 관계없이 실행
+Fetch → Decode → Rename → Issue → Execute → Commit
+  (다중)  (다중)   (RAT)   (RS)    (FU)     (ROB)
 
-[OoO 파이프라인]
-Fetch → Decode → 명령어 재정렬 버퍼(ROB)
-  → 예약 스테이션 (RS) → 실행 유닛 → 완료(Commit)
-
-[핵심 구성]
-ROB (ReOrder Buffer):
-  완료 순서를 프로그램 순서로 정렬 (보장)
-  예외·분기 오예측 시 롤백
-
-Tomasulo 알고리즘:
-  레지스터 이름 바꾸기 (RAW/WAW/WAR 해저드 해결)
-
-[해저드 해결]
-RAW (Read After Write): 데이터 해저드 → 포워딩
-WAR (Write After Read): 이름 바꾸기로 해결
-WAW (Write After Write): 이름 바꾸기로 해결
+RAT: Register Alias Table (레지스터 재명명)
+RS : Reservation Station (실행 대기)
+FU : Functional Unit (ALU, FPU, Load/Store)
+ROB: Reorder Buffer (순서 복원)
 ```
 
-## 3. 분기 예측 (Branch Prediction)
+슈퍼스칼라 프로세서는 클럭당 4~8개 명령어를 디코드하고, 실행 유닛(ALU, FPU, 분기, 로드/스토어)에 분배한다. 비순차 실행을 위해 레지스터 재명명(Register Renaming)으로 WAW/WAR 해저드를 제거하고, ROB(Reorder Buffer)로 커밋 순서를 보장한다.
 
-```
-동적 분기 예측:
-  2-bit 예측기: 4가지 상태 (강/약 taken/not-taken)
-  BTB (Branch Target Buffer): 분기 목적지 캐시
-  
-분기 오예측 페널티:
-  최신 CPU: 15~20사이클 낭비
-  → 중요한 성능 요소
-  
-스펙터 취약점:
-  분기 예측을 이용한 투기적 실행 → 정보 누출
-```
+### Ⅲ. 투기적 실행
 
-## 4. 답안 포인트
+분기 예측기(Branch Predictor)를 통해 분기 결과를 미리 예측하고 해당 경로를 미리 실행한다. 예측이 맞으면 결과를 커밋하고, 틀리면 롤백(Flush)한다. 현대 CPU는 TAGE(Tagged Geometric) 등 정교한 예측기로 97%+ 적중률을 달성한다. Spectre/Meltdown은 이 투기적 실행의 부채널 취약점이다.
 
-**3단락**: ① 슈퍼스칼라 정의 & 다중 이슈 구조 → ② OoO 실행 & ROB/Tomasulo → ③ 분기 예측 & 스펙터 취약점
+### Ⅳ. 성능 한계
 
-## 5. 관련 개념
+ILP(Instruction-Level Parallelism)의 이론적 한계(보통 2~5 IPC)에 의해 슈퍼스칼라 확장에는 수확 체감이 존재한다. 이에 따라 SMT(Simultaneous Multi-Threading, 하이퍼스레딩)로 스레드 수준 병렬성을 추가 활용하는 전략이 병행된다.
 
-`파이프라이닝(09번)` → 슈퍼스칼라의 기반 | `캐시 일관성(14번)` → OoO + 멀티코어 동시성 | `스펙터/멜트다운(54번)` → 투기적 실행 취약점
+---
+
+**관련**: 파이프라인(01번) · 병렬/멀티코어(05번) · 폴락의 법칙(08번)
