@@ -1,37 +1,145 @@
 +++
 weight = 1
-title = "1. 컴퓨터 구조 (Computer Architecture)"
+title = "01. 컴퓨터구조 — 키워드 마스터 리스트"
+date = "2026-05-17"
 [extra]
 categories = "gisulsa-computer-architecture"
 +++
-# 01. 컴퓨터 구조 (Computer Architecture)
 
-> **섹션 목표**: CPU 성능 향상 원리와 병목 제어를 구조적으로 설명하는 훈련에 초점을 둔다.
+# 01. 컴퓨터구조 (Computer Architecture)
+
+> **출제기준 대분류**: 하드웨어 시스템 (처리장치 / 저장장치 / 입출력장치 설계)
+> ★ = 131~136회 직접 기출 확인 / ☆ = 2026~2027 출제 예측 / ※ = 전통 기본토픽
+
+---
 
 ## 학습 전략
 
-- **30초 훈련**: 정의 1문장, 비교축 1개, 적용사례 1개를 말로 바로 꺼내는 연습을 한다.
-- **5분 훈련**: 개요-구성요소-비교-사례의 4단 구조로 압축 답안을 손으로 써본다.
-- **25분 훈련**: 비교표를 먼저 그린 뒤, 장단점과 실무 판단을 연결하는 기술사형 서술을 완성한다.
+- **기출 우선**: ★ 표시된 키워드를 1순위로 완전히 숙지
+- **3단락 구조**: 개념 정의 → 구조/원리 → 최신 트렌드(AI/클라우드/보안 연계)
+- **컴시응 특화**: "어떻게 설계·구현하는가" 관점으로 답안 작성
 
-## 과목 공략 포인트
-
-- 성능 향상 기술은 항상 지연 시간, 전력, 비용의 트레이드오프로 답안을 마무리한다.
-- ISA, 메모리 계층, 병렬성은 각각 독립 주제가 아니라 하나의 성능 사슬로 연결해 쓴다.
-- 실무 사례는 서버 CPU, 모바일 SoC, AI 가속기처럼 워크로드별 선택 기준을 넣어야 점수가 오른다.
+---
 
 ## 키워드 마스터 리스트
 
-| 번호 | 파일 | 키워드 클러스터 | 훈련 포인트 |
-|------|------|----------------|-------------|
-| 01 | [캐시·파이프라인·해저드](/gisulsa/01_computer_architecture/01_cache_pipeline/) | 캐시 메모리 (Cache Memory), 파이프라인 (Pipeline), 해저드 (Hazard) | 지역성-중첩-해저드 제어의 3축을 한 문단 안에서 연결하는 연습 |
-| 02 | [메모리 계층·가상메모리·TLB](/gisulsa/01_computer_architecture/02_memory_hierarchy/) | 메모리 계층 (Memory Hierarchy), 가상 메모리 (Virtual Memory), TLB (Translation Lookaside Buffer) | 가상주소→TLB→페이지테이블→물리주소 순서로 주소 변환을 복기하는 연습 |
-| 03 | [명령어 집합·RISC·CISC](/gisulsa/01_computer_architecture/03_instruction_set/) | 명령어 집합 구조 (ISA), RISC (Reduced Instruction Set Computer), CISC (Complex Instruction Set Computer) | 명령어 길이, 디코딩 난이도, 전력 특성을 한 세트로 비교하는 연습 |
-| 04 | [I/O·DMA·인터럽트](/gisulsa/01_computer_architecture/04_io_dma_interrupt/) | 입출력 (I/O), DMA (Direct Memory Access), 인터럽트 (Interrupt) | Programmed I/O→Interrupt→DMA 진화 순서를 사례와 함께 말하는 연습 |
-| 05 | [병렬처리·멀티코어·NUMA](/gisulsa/01_computer_architecture/05_parallel_multicore/) | 병렬 처리 (Parallel Processing), 멀티코어 (Multicore), NUMA (Non-Uniform Memory Access) | 암달의 법칙과 NUMA locality를 연결해 병렬화 한계를 설명하는 연습 |
+### A. 데이터 표현 & 연산
 
-## 실전 사용법
+| # | 파일 | 키워드 | 출제 비고 |
+|---|------|--------|----------|
+| 01 | [부동소수점 IEEE 754](01_ieee754.md) | 정밀도, 오버플로우, 언더플로우 | ※기본 |
+| 02 | [2의 보수](02_twos_complement.md) | 음수 표현, 오버플로우 판별 | ※기본 |
+| 03 | [해밍 코드](03_hamming_code.md) | ECC 원리, SEC-DED | ※기본 |
+| 04 | [엔디안](04_endian.md) | Big/Little, 네트워크 바이트 오더 | ※기본 |
 
-1. 가장 자주 출제되는 파일부터 3일 주기로 회독한다.
-2. 비교표는 소리 내어 암기하고, 목차 템플릿은 빈 종이에 재현한다.
-3. 실무 사례는 자신이 경험한 프로젝트로 치환해 1분 면접 답변까지 연결한다.
+### B. 컴퓨터 아키텍처 & 성능
+
+| # | 파일 | 키워드 | 출제 비고 |
+|---|------|--------|----------|
+| 05 | [폰 노이만 vs 하버드](05_von_neumann.md) | 병목현상, 수정된 하버드 | ※기본 |
+| 06 | [CISC vs RISC](03_instruction_set.md) | 명령어 복잡도, 파이프라인 효율 | ※기본 |
+| 07 | [암달의 법칙](07_amdahls_law.md) | 병렬 처리 한계, 스피드업 | ※기본 |
+| **08** | **[폴락의 법칙](08_pollacks_rule.md)** | **성능 ∝ √복잡도, 멀티코어 근거** | **★132회** |
+| 09 | [명령어 파이프라이닝](01_cache_pipeline.md) | 해저드(구조/데이터/제어), 포워딩 | ※기본 (최근 직접기출 미확인) |
+| 10 | [슈퍼스칼라](10_superscalar.md) | 다중 이슈, 비순차 실행(OoO) | ※기본 |
+
+### C. 메모리 계층 & 캐시
+
+| # | 파일 | 키워드 | 출제 비고 |
+|---|------|--------|----------|
+| 11 | [메모리 계층 구조](02_memory_hierarchy.md) | 레지스터→캐시→메모리→디스크, 지역성 | ※기본 |
+| 12 | [캐시 매핑](12_cache_mapping.md) | 직접/연관/집합 연관 사상 | ※기본 |
+| 13 | [캐시 교체 정책](13_cache_replacement.md) | LRU, LFU, FIFO, 최적 교체 | ※기본 |
+| 14 | [캐시 일관성 MESI](14_cache_coherence.md) | MESI, MOESI 프로토콜 | ※기본 |
+| 15 | [쓰기 정책](15_write_policy.md) | Write-Through, Write-Back | ※기본 |
+| 16 | [TLB](02_memory_hierarchy.md) | 주소 변환 캐시, 히트율 | ★135회 연계 |
+| **17** | **[MMU](02_memory_hierarchy.md)** | **주소 변환, 보호** | **★135회** |
+| 18 | [HBM](18_hbm.md) | 3D 적층, AI 가속기 연계 | ☆예측 |
+| **19** | **[CXL](19_cxl.md)** | **메모리 풀링, Type 1/2/3** | **☆2026 예측** |
+
+### D. 가상 메모리
+
+| # | 파일 | 키워드 | 출제 비고 |
+|---|------|--------|----------|
+| 20 | [가상 메모리](02_memory_hierarchy.md) | 페이징, 세그먼테이션, 혼합 | ※매회 필출 |
+| 21 | [페이지 교체 알고리즘](21_page_replacement.md) | OPT, LRU, Clock, Working Set | ※매회 필출 |
+| **22** | **[스래싱](22_thrashing.md)** | **워킹셋 모델, PFF, CPU이용률 역U자** | **★132회** |
+| 23 | [요구 페이징](23_demand_paging.md) | 페이지 폴트, 유효 접근 시간 | ※기본 |
+
+### E. I/O & 스토리지
+
+| # | 파일 | 키워드 | 출제 비고 |
+|---|------|--------|----------|
+| 24 | [DMA](04_io_dma_interrupt.md) | 사이클 스틸링, 버스트 모드 | ※기본 |
+| 25 | [인터럽트 처리](04_io_dma_interrupt.md) | 벡터 인터럽트, 우선순위 | ※기본 |
+| 26 | [RAID](26_raid.md) | Level 0/1/5/6/10, 패리티 | ※기출 빈출 |
+| 27 | [SSD vs HDD](27_ssd_hdd.md) | NAND 플래시, 웨어레벨링 | ※기본 |
+| 28 | [NVMe](28_nvme.md) | PCIe 직결, 큐 페어 | ※기본 |
+| 29 | [스토리지 가상화](29_storage_virtualization.md) | SAN/NAS, 씬 프로비저닝 | ★기출 |
+| 30 | [오브젝트 스토리지](30_object_storage.md) | S3 호환, 블록/파일/오브젝트 비교 | ★기출 |
+| **31** | **[HW 규모산정 지침](31_hw_sizing.md)** | **국내 고시, 서버/스토리지 산정** | **★135회** |
+
+### F. 병렬 처리 & 멀티코어
+
+| # | 파일 | 키워드 | 출제 비고 |
+|---|------|--------|----------|
+| 32 | [플린 분류](05_parallel_multicore.md) | SISD/SIMD/MISD/MIMD | ※기본 |
+| 33 | [SMP vs NUMA](05_parallel_multicore.md) | 대칭/비대칭, 메모리 접근 지연 | ※기본 |
+| 34 | [GPU 컴퓨팅](34_gpu.md) | CUDA, GPGPU, 병렬 처리 | ※기본 |
+| 35 | [멀티코어 동기화](35_sync.md) | 뮤텍스, 세마포어, 메모리 배리어 | ※기본 |
+| **36** | **[칩렛 (Chiplet)](36_chiplet.md)** | **이종집적, UCIe, 다이 연결** | **★131회** |
+
+### G. 가속기 & AI 하드웨어 ★★★ 최신 핵심
+
+| # | 파일 | 키워드 | 출제 비고 |
+|---|------|--------|----------|
+| **37** | **[NPU](37_npu.md)** | **MAC 어레이, 시스톨릭, TOPS/W** | **★134회** |
+| 38 | [TPU](38_tpu.md) | 구글, 시스톨릭 어레이 | ※기본 |
+| 39 | [FPGA](39_fpga.md) | 재프로그래밍, HLS | ※기본 |
+| **40** | **[온디바이스 AI](40_on_device_ai.md)** | **엣지 추론, TinyML, SLM** | **★134회** |
+| **41** | **[PNM (Processing Near Memory)](41_pnm.md)** | **근메모리 연산, HBM-PIM** | **★131회** |
+| 42 | [DPU](42_dpu.md) | SmartNIC, 인프라 오프로딩 | ☆예측 |
+
+### H. 가상화 & 인프라
+
+| # | 파일 | 키워드 | 출제 비고 |
+|---|------|--------|----------|
+| 43 | [하이퍼바이저](43_hypervisor.md) | Type 1/2, 전가상화/반가상화 | ※기본 |
+| **44** | **[TCAM](44_tcam.md)** | **3진 CAM, O(1) 패킷 분류** | **★132회** |
+| 45 | [HCI](45_hci.md) | 컴퓨팅+스토리지 통합 | ※기본 |
+
+### I. 신뢰성 & 고가용성
+
+| # | 파일 | 키워드 | 출제 비고 |
+|---|------|--------|----------|
+| 46 | [고가용성 HA](46_ha.md) | Active-Active, 페일오버 | ※기출 빈출 |
+| 47 | [RPO / RTO](47_rpo_rto.md) | 복구 목표, DR 설계 | ※기출 빈출 |
+| 48 | [MTBF / MTTR](48_mtbf_mttr.md) | 신뢰성 지표, 가용성 계산 | ※기본 |
+| 49 | [카오스 엔지니어링](49_chaos_engineering.md) | 결함 주입, 복원력 검증 | ☆예측 |
+
+### J. 하드웨어 보안
+
+| # | 파일 | 키워드 | 출제 비고 |
+|---|------|--------|----------|
+| 50 | [TPM](50_tpm.md) | 하드웨어 신뢰 루트 | ★기출 |
+| 51 | [Secure Boot](51_secure_boot.md) | UEFI, 부팅 체인 검증 | ※기본 |
+| 52 | [TEE](52_tee.md) | ARM TrustZone, Intel SGX | ※기본 |
+| **53** | **[Confidential Computing](53_confidential_computing.md)** | **사용 중 데이터 보호** | **☆2026 예측** |
+| 54 | [스펙터/멜트다운](54_spectre_meltdown.md) | 부채널, 추측 실행 취약점 | ※기본 |
+| 55 | [PUF](55_puf.md) | 하드웨어 지문, 인증 | ※기본 |
+
+### K. 임베디드 & 실시간 ★ 컴시응 특화
+
+| # | 파일 | 키워드 | 출제 비고 |
+|---|------|--------|----------|
+| 56 | [RTOS](56_rtos.md) | 경성/연성 실시간, 스케줄링 보장 | ※컴시응 특화 |
+| **57** | **[ISO 26262](57_iso26262.md)** | **자동차 기능안전, ASIL 등급** | **★134회** |
+| 58 | [임베디드 시스템 설계](58_embedded.md) | 크로스 컴파일, BSP | ※컴시응 특화 |
+| **59** | **[촉각 인터넷 (Tactile Internet)](59_tactile_internet.md)** | **초저지연 1ms, 햅틱 피드백** | **★134회** |
+
+---
+
+> [!NOTE]
+> **굵게 강조된 항목** = ★기출 또는 ☆2026 예측 최우선 학습
+> 기존 파일: `01_cache_pipeline.md`, `02_memory_hierarchy.md`, `03_instruction_set.md`, `04_io_dma_interrupt.md`, `05_parallel_multicore.md`
+> 신규 작성: `08_pollacks_rule.md`(★), `22_thrashing.md`(★), `37_npu.md`(★), `44_tcam.md`(★)

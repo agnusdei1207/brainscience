@@ -1,37 +1,81 @@
 +++
-weight = 9
-title = "9. 보안 (Security)"
+weight = 1
+title = "09. 보안 — 키워드 마스터 리스트"
+date = "2026-05-17"
 [extra]
 categories = "gisulsa-security"
 +++
+
 # 09. 보안 (Security)
 
-> **섹션 목표**: 기밀성·무결성·가용성을 축으로 위협, 통제, 거버넌스를 한 답안에 묶는 보안 서술 훈련이다.
+> **출제기준**: 시스템 보안 / 정보 보안
+> ★ = 131~136회 기출 확인 / ☆ = 2026~2027 예측
 
-## 학습 전략
-
-- **30초 훈련**: 정의 1문장, 비교축 1개, 적용사례 1개를 말로 바로 꺼내는 연습을 한다.
-- **5분 훈련**: 개요-구성요소-비교-사례의 4단 구조로 압축 답안을 손으로 써본다.
-- **25분 훈련**: 비교표를 먼저 그린 뒤, 장단점과 실무 판단을 연결하는 기술사형 서술을 완성한다.
-
-## 과목 공략 포인트
-
-- 보안 답안은 공격 이름 나열보다 자산-위협-통제 구조로 설명할수록 논리성이 높다.
-- 제로트러스트와 클라우드 보안은 기술뿐 아니라 정책, 운영, 인증 체계까지 포함해야 한다.
-- 실무 사례는 침해사고 대응, 규제 준수, 클라우드 운영 리스크로 나눠 정리하면 좋다.
+---
 
 ## 키워드 마스터 리스트
 
-| 번호 | 파일 | 키워드 클러스터 | 훈련 포인트 |
-|------|------|----------------|-------------|
-| 01 | [암호기술·PKI·해시](/gisulsa/09_security/01_crypto/) | 대칭키 암호 (Symmetric Encryption), 공개키 암호 (Asymmetric Encryption), 해시 (Hash), PKI (Public Key Infrastructure) | 암호화, 서명, 해시의 역할을 분리해 설명하는 연습 |
-| 02 | [네트워크 공격·웹 공격](/gisulsa/09_security/02_network_attack/) | DDoS (Distributed Denial of Service), SQL Injection, XSS (Cross Site Scripting) | 공격 목표가 기밀성/무결성/가용성 중 무엇인지 먼저 분류하는 연습 |
-| 03 | [제로 트러스트·ZTNA·SASE](/gisulsa/09_security/03_zero_trust/) | 제로 트러스트 (Zero Trust), ZTNA (Zero Trust Network Access), SASE (Secure Access Service Edge) | 접속 후 신뢰와 지속 검증의 차이를 사례로 설명하는 연습 |
-| 04 | [ISMS·ISO27001·GDPR](/gisulsa/09_security/04_isms_compliance/) | ISMS (Information Security Management System), ISO/IEC 27001, GDPR (General Data Protection Regulation) | 관리체계와 법규를 혼동하지 않도록 분리해 설명하는 연습 |
-| 05 | [클라우드 보안·CSPM·CWPP·DevSecOps](/gisulsa/09_security/05_cloud_security/) | 클라우드 보안 (Cloud Security), CSPM (Cloud Security Posture Management), CWPP (Cloud Workload Protection Platform), DevSecOps | 공유 책임 모델과 도구 적용 시점을 함께 연결하는 연습 |
+### A. 암호학
 
-## 실전 사용법
+| # | 파일 | 키워드 | 별점 | 출제비고 |
+|---|------|--------|:---:|---------|
+| 01 | [대칭/비대칭 암호](01_crypto.md) | AES, RSA, ECC, 키 교환 | ★★★★★ | ※매회 기본 |
+| 02 | [해시 & MAC](06_hash_mac.md) | SHA-3, HMAC, 무결성 | ★★★★★ | ※기본 |
+| 03 | [전자서명 & PKI](07_pki.md) | X.509, CA, 인증서 체인 | ★★★★★ | ※기본 |
+| 04 | [동형암호](08_homomorphic.md) | 암호화 상태 연산, HE | ★★★★★ | ★133회 |
+| 05 | [PQC (양자내성암호)](09_pqc.md) | NIST PQC, Kyber, Dilithium | ★★★★★ | ☆2026 확실예측 |
+| 06 | [전자봉투](10_digital_envelope.md) | 대칭키+비대칭키 혼합, 기밀성 | ★★★★☆ | ★133회 |
 
-1. 가장 자주 출제되는 파일부터 3일 주기로 회독한다.
-2. 비교표는 소리 내어 암기하고, 목차 템플릿은 빈 종이에 재현한다.
-3. 실무 사례는 자신이 경험한 프로젝트로 치환해 1분 면접 답변까지 연결한다.
+### B. 네트워크 보안
+
+| # | 파일 | 키워드 | 별점 | 출제비고 |
+|---|------|--------|:---:|---------|
+| 07 | [TLS 1.3](11_tls13.md) | 0-RTT, AEAD, 인증서 | ★★★★★ | ★136회 |
+| 08 | [Zero Trust](03_zero_trust.md) | NIST SP 800-207, Never Trust | ★★★★★ | ★131,134,136회 |
+| 09 | [네트워크 공격](02_network_attack.md) | DDoS, MITM, SQL인젝션, XSS, CSRF | ★★★★★ | ※매회 기본 |
+| 10 | [WAF & IDS/IPS](12_waf_ids.md) | 탐지 vs 차단, 시그니처/이상 | ★★★★☆ | ※기본 |
+| 11 | [스푸핑 공격](13_spoofing.md) | ARP/IP/DNS 스푸핑, 대응 | ★★★★☆ | ★134회 |
+
+### C. 접근제어 & 인증
+
+| # | 파일 | 키워드 | 별점 | 출제비고 |
+|---|------|--------|:---:|---------|
+| 12 | [접근통제 모델](14_access_control.md) | MAC/DAC/RBAC/ABAC | ★★★★★ | ★135회 |
+| 13 | [사용자 인증](15_authentication.md) | 지식/소유/존재/행동(지소존행), MFA | ★★★★★ | ★132회 |
+| 14 | [OAuth 2.0 & OIDC](16_oauth.md) | 위임 인증, 토큰, SSO | ★★★★☆ | ※기본 |
+| 15 | [제로지식 증명](17_zkp.md) | 프라이버시 보존 인증 | ★★★☆☆ | ☆예측 |
+
+### D. 보안 관리 & 컴플라이언스
+
+| # | 파일 | 키워드 | 별점 | 출제비고 |
+|---|------|--------|:---:|---------|
+| 16 | [ISMS-P](04_isms_compliance.md) | 인증 기준, PDCA, 보호조치 | ★★★★★ | ★131회 |
+| 17 | [SBOM](18_sbom.md) | 소프트웨어 재료명세서, 취약점 | ★★★★★ | ★134회 |
+| 18 | [공급망 보안](19_supply_chain.md) | SLSA 프레임워크, 빌드 무결성 | ★★★★★ | ★136회 |
+| 19 | [ISA/IEC 62443](20_isa62443.md) | OT/ICS 보안, IACS | ★★★★☆ | ★132회 |
+| 20 | [CBPR](21_cbpr.md) | 개인정보 국경간 이전, APEC | ★★★☆☆ | ★131회 |
+
+### E. 최신 보안 위협
+
+| # | 파일 | 키워드 | 별점 | 출제비고 |
+|---|------|--------|:---:|---------|
+| 21 | [딥페이크 & AI 위협](22_deepfake.md) | GAN, 탐지 기술, 법적 이슈 | ★★★★★ | ★133회 |
+| 22 | [랜섬웨어](23_ransomware.md) | 공격 단계, 대응, 백업 전략 | ★★★★☆ | ※기본 |
+| 23 | [제로데이](24_zero_day.md) | 취약점 공개 전 공격, 패치 관리 | ★★★★☆ | ★134회 |
+| 24 | [안티포렌식](25_anti_forensics.md) | 증거 은닉, 타임스탬프 조작 | ★★★☆☆ | ★133회 |
+
+### F. 클라우드 & AI 보안
+
+| # | 파일 | 키워드 | 별점 | 출제비고 |
+|---|------|--------|:---:|---------|
+| 25 | [클라우드 보안](05_cloud_security.md) | CNAPP, CSPM, CWPP | ★★★★★ | ※기본 |
+| 26 | [Agentic AI 보안](26_agentic_ai_security.md) | 프롬프트 인젝션, AI 레드팀 | ★★★★★ | ★136회 연계 ☆2026 |
+| 27 | [AI 감사 & 거버넌스](27_ai_audit.md) | AI 기본법, 고위험 AI, 감사 | ★★★★☆ | ☆2026 예측 |
+| 28 | [Confidential Computing](28_cc_security.md) | TEE, 사용 중 암호화 | ★★★★★ | ☆2026 예측 |
+
+---
+
+> [!NOTE]
+> **★★★★★** = 최우선 학습
+> TLS 1.3(★136), Zero Trust(★131·134·136), 동형암호(★133), 접근통제(★135), SBOM(★134)
+> PQC·Agentic AI보안·Confidential Computing = **2026 최우선 예측**

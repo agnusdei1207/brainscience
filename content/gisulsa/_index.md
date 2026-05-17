@@ -1,51 +1,59 @@
 +++
-weight = 1
-title = "기술사 (Professional Engineer)"
+weight = 0
+title = "컴퓨터시스템응용기술사 — 실전 키워드 마스터"
+date = "2026-05-17"
 [extra]
 categories = "gisulsa"
 +++
-# 기술사 (Professional Engineer)
 
-> **출력 훈련 증폭기**: 읽고 끝내는 자료가 아니라, 30초-5분-25분 답안 생산성을 끌어올리는 기술사 전용 실전 섹션입니다.
+# 컴퓨터시스템응용기술사 — 실전 키워드 마스터
 
-## 학습 철학
+> 출제기준 적용: 2023.1.1 ~ 2026.12.31
+> 기출 검증: 131회(2023) ~ 136회(2025.05)
+> ★ = 직접 기출 확인 / ☆ = 2026~2027 예측
 
-- **정의 암기보다 구조화**: 모든 페이지는 정의 → 비교 → 적용사례까지 한 번에 말하고 쓰도록 설계했습니다.
-- **비교표 우선 학습**: 채점자는 차이와 선택 기준이 드러나는 답안을 선호하므로, 각 페이지에 즉시 써먹는 비교표를 배치했습니다.
-- **면접/서술 연동**: 단답형, 서술형, 면접 질문을 함께 배치하여 필기와 구술을 동시에 대비합니다.
+---
 
-## 16과목 학습 지도
+## 과목별 키워드 폴더
 
-| 과목 | 링크 | 핵심 훈련 주제 |
-|------|------|----------------|
-| 01 | [컴퓨터 구조](/gisulsa/01_computer_architecture/) | 정의-비교-사례 3단 답안 훈련 |
-| 02 | [운영체제](/gisulsa/02_operating_system/) | 정의-비교-사례 3단 답안 훈련 |
-| 03 | [네트워크](/gisulsa/03_network/) | 정의-비교-사례 3단 답안 훈련 |
-| 04 | [소프트웨어공학](/gisulsa/04_software_engineering/) | 정의-비교-사례 3단 답안 훈련 |
-| 05 | [데이터베이스](/gisulsa/05_database/) | 정의-비교-사례 3단 답안 훈련 |
-| 06 | [ICT 융합](/gisulsa/06_ict_convergence/) | 정의-비교-사례 3단 답안 훈련 |
-| 07 | [엔터프라이즈](/gisulsa/07_enterprise/) | 정의-비교-사례 3단 답안 훈련 |
-| 08 | [알고리즘/통계](/gisulsa/08_algorithm/) | 정의-비교-사례 3단 답안 훈련 |
-| 09 | [보안](/gisulsa/09_security/) | 정의-비교-사례 3단 답안 훈련 |
-| 10 | [인공지능](/gisulsa/10_ai/) | 정의-비교-사례 3단 답안 훈련 |
-| 11 | [설계/감리](/gisulsa/11_design/) | 정의-비교-사례 3단 답안 훈련 |
-| 12 | [IT 관리](/gisulsa/12_it_management/) | 정의-비교-사례 3단 답안 훈련 |
-| 13 | [클라우드](/gisulsa/13_cloud/) | 정의-비교-사례 3단 답안 훈련 |
-| 14 | [데이터 엔지니어링](/gisulsa/14_data_engineering/) | 정의-비교-사례 3단 답안 훈련 |
-| 15 | [DevOps/SRE](/gisulsa/15_devops/) | 정의-비교-사례 3단 답안 훈련 |
-| 16 | [빅데이터](/gisulsa/16_bigdata/) | 정의-비교-사례 3단 답안 훈련 |
+| # | 과목 | 출제기준 | 비중 | 링크 |
+|---|------|---------|:---:|------|
+| 01 | 컴퓨터구조 | 하드웨어 시스템 | ★★★★★ | [→ 01_computer_architecture](@/gisulsa/01_computer_architecture/_index.md) |
+| 02 | 운영체제 | 시스템/응용 SW | ★★★★★ | [→ 02_operating_system](@/gisulsa/02_operating_system/_index.md) |
+| 03 | 네트워크 | 컴퓨터 통신/네트워크 | ★★★★☆ | [→ 03_network](@/gisulsa/03_network/_index.md) |
+| 04 | 소프트웨어공학 | 시스템/응용 SW | ★★★☆☆ | [→ 04_software_engineering](@/gisulsa/04_software_engineering/_index.md) |
+| 05 | 데이터베이스 | 시스템/응용 SW | ★★★☆☆ | [→ 05_database](@/gisulsa/05_database/_index.md) |
+| 06 | ICT융합 | 법규/정책/표준 | ★★★★☆ | [→ 06_ict_convergence](@/gisulsa/06_ict_convergence/_index.md) |
+| 07 | 엔터프라이즈 | 법규/정책/표준 | ★★☆☆☆ | [→ 07_enterprise](@/gisulsa/07_enterprise/_index.md) |
+| 08 | 알고리즘/통계 | 컴퓨터 기초이론 | ★★★☆☆ | [→ 08_algorithm](@/gisulsa/08_algorithm/_index.md) |
+| 09 | 보안 | 시스템 보안 | ★★★★☆ | [→ 09_security](@/gisulsa/09_security/_index.md) |
+| 10 | 인공지능 | 시스템/응용 SW | ★★★★☆ | [→ 10_ai](@/gisulsa/10_ai/_index.md) |
+| 11 | 감리/설계 | 법규/정책/표준 | ★★★☆☆ | [→ 11_design](@/gisulsa/11_design/_index.md) |
+| 12 | IT경영 | 법규/정책/표준 | ★★☆☆☆ | [→ 12_it_management](@/gisulsa/12_it_management/_index.md) |
+| 13 | 클라우드 | HW+SW 융합 | ★★★★☆ | [→ 13_cloud](@/gisulsa/13_cloud/_index.md) |
+| 14 | 데이터엔지니어링 | 시스템/응용 SW | ★★★☆☆ | [→ 14_data_engineering](@/gisulsa/14_data_engineering/_index.md) |
+| 15 | DevOps/SRE | 시스템/응용 SW | ★★★★☆ | [→ 15_devops](@/gisulsa/15_devops/_index.md) |
+| 16 | 빅데이터 | 시스템/응용 SW | ★★★☆☆ | [→ 16_bigdata](@/gisulsa/16_bigdata/_index.md) |
 
+---
 
-## 공통 사용 루틴
+## 2026~2027 최우선 키워드 TOP 10
 
-1. **30초**: 정의 1문장과 비교 키워드 2개를 말한다.
-2. **5분**: 답안 목차 템플릿만 보고 개요-구성요소-장단점-사례를 손으로 적는다.
-3. **25분**: 실제 기술사 답안지처럼 서론·본론·결론 흐름을 갖춘 완성 답안을 작성한다.
-4. **면접 연계**: 같은 키워드를 1분 스피치로 바꿔 말해보며 구술 대응력을 높인다.
+| 순위 | 키워드 | 근거 | 과목 |
+|------|--------|------|------|
+| 1 | **Agentic AI 시스템 설계** | 136회 기출 → 심화 | AI, 보안 |
+| 2 | **RAG 아키텍처** | 135회 기출 → 설계 레벨 | AI, DB |
+| 3 | **Zero Trust 성숙도** | 131·134·136회 연속 | 보안 |
+| 4 | **PQC (양자내성암호)** | NIST 표준화 완료 | 보안 |
+| 5 | **NPU / 온디바이스 AI** | 134회 기출 심화 | 컴퓨터구조 |
+| 6 | **SBOM + 공급망 보안** | 134·136회 연속 | 보안, DevOps |
+| 7 | **CXL 메모리 풀링** | AI 인프라 핵심 | 컴퓨터구조 |
+| 8 | **LLMOps** | AI 운영 체계 | AI, DevOps |
+| 9 | **AX (AI Transformation)** | 136회 기출 | SW공학 |
+| 10 | **ISO 26262 기능안전** | 134회 기출 | ICT융합, HW |
 
-## 추천 학습 순서
+---
 
-- 1주차: CA, OS, NW로 기반 기술 서술 프레임 확보
-- 2주차: SE, DB, Security로 비교형 답안 강화
-- 3주차: Cloud, AI, DevOps로 최신 기술 적용사례 확장
-- 4주차: Design, IT Management, Enterprise로 관리형 문제 대응력 보강
+## 기출 분석
+
+상세 회차별 기출: [_exam_analysis.md](_exam_analysis.md)
