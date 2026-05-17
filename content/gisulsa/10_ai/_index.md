@@ -1,7 +1,6 @@
 +++
 weight = 1
 title = "10. 인공지능 — 키워드 마스터 리스트"
-date = "2026-05-17"
 [extra]
 categories = "gisulsa-ai"
 +++

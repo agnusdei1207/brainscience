@@ -1,7 +1,6 @@
 +++
 weight = 0
 title = "컴퓨터시스템응용기술사 — 실전 키워드 마스터"
-date = "2026-05-17"
 [extra]
 categories = "gisulsa"
 +++
