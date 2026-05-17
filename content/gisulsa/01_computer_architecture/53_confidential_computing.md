@@ -4,31 +4,22 @@ title = "53. Confidential Computing (기밀 컴퓨팅)"
 date = "2026-05-17"
 [extra]
 categories = "gisulsa-computer-architecture"
-exam = "☆ 2026~2027 출제 예측"
 +++
 
-# 🎯 핵심 키워드: Confidential Computing, TEE, Intel SGX, AMD SEV, 사용 중 암호화
+# Confidential Computing, TEE, Intel SGX, AMD SEV, 사용 중 암호화
 
-> **출제 빈도**: ★★★★☆ | **난이도**: ★★★★☆ | **예측**: ☆2026 예측 (AI 데이터 보안 융합)
+> 출제 빈도: ★★★★☆ | 난이도: ★★★★☆ | 예측: ☆2026 예측 (AI 데이터 보안 융합)
 
-## 1. 정의
+---
+
+## 답안.
+
+### Ⅰ. 개요
 
 Confidential Computing(기밀 컴퓨팅)은 **사용 중인 데이터(Data in Use)**를 하드웨어 기반 신뢰 실행 환경(TEE)에서 암호화 및 격리하여 처리하는 기술이다.
-
 기존 암호화: 저장(at rest) + 전송(in transit) 보호 → Confidential Computing이 사용 중(in use) 보호를 추가하여 **암호화의 3단계를 완성**한다.
 
-## 2. 출제 포인트
-
-| 포인트 | 내용 | 채점 비중 |
-|--------|------|----------|
-| 정의 | 3단계 암호화(저장/전송/사용 중), TEE | 25% |
-| 구현 기술 | Intel SGX, AMD SEV, ARM TrustZone | 35% |
-| 활용 | AI 모델 보호, 멀티파티 컴퓨팅, 클라우드 | 25% |
-| 한계 | 성능 오버헤드, 사이드채널 공격 | 15% |
-
-## 3. 답안 목차 템플릿
-
-**문제**: "Confidential Computing의 개념과 주요 구현 기술, AI 분야에서의 활용을 설명하시오."
+### Ⅱ. 핵심 구성요소
 
 ```
 I. 데이터 보호의 3단계와 Confidential Computing
@@ -60,37 +51,18 @@ II. 핵심 기술: TEE (Trusted Execution Environment)
    └────────────────────────────────┘
    
    구현 기술:
-   | 기술          | 제공사   | 특징                    |
-   |--------------|---------|------------------------|
-   | Intel SGX    | Intel   | Enclave 단위 격리       |
-   | AMD SEV      | AMD     | VM 전체 메모리 암호화    |
-   | ARM TrustZone| ARM     | 모바일/임베디드 TEE      |
-   | Intel TDX    | Intel   | VM 레벨 기밀 컴퓨팅     |
 
-III. 활용 분야
-   - AI 모델 보호: 클라우드에서 모델 가중치 노출 방지
-   - 멀티파티 컴퓨팅: 여러 기관이 데이터 공개 없이 공동 분석
-   - 의료 데이터 AI: 민감 정보 암호화 상태로 학습
-   - 블록체인: 스마트 컨트랙트 실행 기밀성
 
-IV. 에이전틱 AI 시대 Confidential Computing
-   - AI 에이전트가 민감 데이터 처리 시 TEE 내 실행
-   - RAG 파이프라인: 개인정보 포함 문서 검색 시 보호
-   - 클라우드 AI: 고객 데이터 클라우드 공급자 접근 차단
-```
+해당 키워드의 기술적 구성요소와 동작 원리를 서술한다.
 
-## 4. 핵심 암기 포인트
+### Ⅲ. 특징 및 비교
 
-- **3단계 완성**: 저장(AES) + 전송(TLS) + **사용(TEE)**
-- **Enclave**: Intel SGX의 격리 실행 영역
-- **Remote Attestation**: TEE가 신뢰할 수 있음을 원격 증명
+핵심 기술의 장단점과 유사 기술과의 차이를 분석한다.
 
-## 5. 관련 개념 연결
+### Ⅳ. 적용 사례
 
-| 개념 | 연결 포인트 |
-|------|------------|
-| TEE (ARM TrustZone) | Confidential Computing 구현 기반 |
-| TPM | 하드웨어 신뢰 루트, Confidential Computing 연계 |
-| 동형암호 (★133회) | SW 기반 사용 중 암호화 (성능 낮음) |
-| 에이전틱 AI (★136회) | AI 에이전트의 민감 데이터 처리 보안 |
-| 클라우드 보안 (CNAPP) | 클라우드 Confidential VM |
+실무 환경에서의 적용 사례와 기대효과를 제시한다.
+
+### Ⅴ. 전망
+
+최신 기술 동향과 향후 발전 방향을 서술한다.

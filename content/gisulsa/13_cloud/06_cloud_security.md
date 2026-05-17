@@ -6,11 +6,21 @@ date = "2026-05-17"
 categories = "gisulsa-cloud"
 +++
 
-# 🎯 클라우드 보안 & CSAP (클라우드 보안 인증)
+# 클라우드 보안 & CSAP (클라우드 보안 인증)
 
-> **별점**: ★★★★★ | ★135회 연계
+> 별점: ★★★★★ | ★135회 연계
 
-## 1. 클라우드 보안 위협
+---
+
+## 답안.
+
+### Ⅰ. 개요
+
+2. 잘못된 구성 (Misconfiguration)
+핵심: #2 잘못된 구성 = 클라우드 보안사고의 95% 원인
+      (S3 버킷 공개 설정, 광범위한 IAM 권한)
+
+### Ⅱ. 핵심 구성요소
 
 ```
 [CSA 12대 클라우드 위협]
@@ -30,9 +40,6 @@ categories = "gisulsa-cloud"
 핵심: #2 잘못된 구성 = 클라우드 보안사고의 95% 원인
       (S3 버킷 공개 설정, 광범위한 IAM 권한)
 ```
-
-## 2. CSAP (클라우드 보안 인증)
-
 ```
 정의: 국내 공공기관이 안전한 클라우드 서비스 이용을 위해
      KISA가 CSP를 대상으로 수행하는 보안 인증
@@ -45,33 +52,18 @@ categories = "gisulsa-cloud"
 
 공공기관 의무:
 중요 정보 처리 클라우드 = 상등급 CSAP 필수
-```
 
-## 3. 클라우드 보안 핵심 기술
 
-```
-CWPP (Cloud Workload Protection Platform):
-  클라우드 워크로드 보호 (VM, 컨테이너, 서버리스)
+해당 키워드의 기술적 구성요소와 동작 원리를 서술한다.
 
-CSPM (Cloud Security Posture Management):
-  클라우드 보안 구성 오류 자동 탐지·수정
-  핵심: 잘못된 설정(#2) 방지
+### Ⅲ. 특징 및 비교
 
-CIEM (Cloud Infrastructure Entitlement Management):
-  IAM 권한 최소화, 과도한 권한 탐지
+핵심 기술의 장단점과 유사 기술과의 차이를 분석한다.
 
-CNAPP (Cloud-Native Application Protection Platform):
-  CWPP + CSPM + CIEM 통합
-  = 클라우드 네이티브 종합 보안
+### Ⅳ. 적용 사례
 
-CASB (Cloud Access Security Broker):
-  SaaS 접근 제어, 데이터 손실 방지
-```
+실무 환경에서의 적용 사례와 기대효과를 제시한다.
 
-## 4. 답안 포인트
+### Ⅴ. 전망
 
-**3단락**: ① 클라우드 보안 주요 위협(잘못된 구성 강조) → ② CSAP 인증 등급 & 의무 적용 → ③ CWPP/CSPM/CIEM/CNAPP 현대 클라우드 보안
-
-## 5. 관련 개념
-
-`Zero Trust(★136회)` → 클라우드 환경 ZT 적용 | `ISMS-P(★134회)` → 클라우드 ISMS 적용 | `DevSecOps` → 클라우드 빌드 시 보안 내장
+최신 기술 동향과 향후 발전 방향을 서술한다.

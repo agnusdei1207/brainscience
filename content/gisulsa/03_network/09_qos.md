@@ -6,11 +6,21 @@ date = "2026-05-17"
 categories = "gisulsa-network"
 +++
 
-# 🎯 네트워크 QoS & TCP 혼잡제어
+# 네트워크 QoS & TCP 혼잡제어
 
-> **별점**: ★★★★★ | 기본 필수
+> 별점: ★★★★★ | 기본 필수
 
-## 1. QoS (Quality of Service)
+---
+
+## 답안.
+
+### Ⅰ. 개요
+
+정의: 네트워크 트래픽에 우선순위를 부여하여
+     중요 트래픽의 품질을 보장하는 기술
+대역폭 (Bandwidth): 최대 전송 속도
+
+### Ⅱ. 핵심 구성요소
 
 ```
 정의: 네트워크 트래픽에 우선순위를 부여하여
@@ -32,9 +42,6 @@ categories = "gisulsa-network"
   WFQ (Weighted Fair Queuing): 가중치 공정 분배
   CBWFQ: 클래스 기반 WFQ
 ```
-
-## 2. TCP 혼잡 제어
-
 ```
 [4가지 알고리즘]
 슬로우 스타트 (Slow Start):
@@ -45,42 +52,18 @@ categories = "gisulsa-network"
   cwnd += 1/cwnd per ACK (선형 증가)
   
 빠른 재전송 (Fast Retransmit):
-  타임아웃 대기 없이 3 중복 ACK → 즉시 재전송
 
-빠른 복구 (Fast Recovery):
-  손실 패킷 재전송 후 슬로우 스타트 건너뜀
-  cwnd = SSThresh + 3
 
-[TCP 혼잡 제어 알고리즘 진화]
-Tahoe: 슬로우 스타트 + 혼잡 회피
-Reno: + 빠른 재전송/복구
-CUBIC: 함수 기반 (Linux 기본)
-BBR: 대역폭+RTT 기반 (Google)
-QUIC: UDP 기반 신세대 (HTTP/3)
-```
+해당 키워드의 기술적 구성요소와 동작 원리를 서술한다.
 
-## 3. HTTP/3 & QUIC
+### Ⅲ. 특징 및 비교
 
-```
-[QUIC (Quick UDP Internet Connections)]
-Google 개발 → IETF 표준화
-UDP 기반 (TLS 1.3 내장)
+핵심 기술의 장단점과 유사 기술과의 차이를 분석한다.
 
-[HTTP/3 = HTTP/2 over QUIC]
-HTTP/1.1: TCP, Head-of-Line 블로킹
-HTTP/2: 멀티플렉싱, 단 TCP HoL 블로킹
-HTTP/3: QUIC 스트림 독립 → HoL 해결
+### Ⅳ. 적용 사례
 
-이점:
-연결 수립: TLS 1.3 + 0-RTT 재연결
-패킷 손실: 스트림 독립적 재전송
-이동성: IP 변경 시 연결 유지 (Connection ID)
-```
+실무 환경에서의 적용 사례와 기대효과를 제시한다.
 
-## 4. 답안 포인트
+### Ⅴ. 전망
 
-**3단락**: ① QoS 지표 & 폴리싱/셰이핑/스케줄링 → ② TCP 혼잡 제어 4단계 & CUBIC/BBR → ③ QUIC/HTTP/3 & HoL 블로킹 해결
-
-## 5. 관련 개념
-
-`5G(★133회)` → URLLC = 저지연 QoS 보장 | `CDN(클라우드)` → QoS + HTTP/3 최적화 | `SDN(05번)` → 소프트웨어 QoS 정책
+최신 기술 동향과 향후 발전 방향을 서술한다.

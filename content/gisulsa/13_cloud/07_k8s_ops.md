@@ -6,11 +6,21 @@ date = "2026-05-17"
 categories = "gisulsa-cloud"
 +++
 
-# 🎯 K8s 클러스터 운영 & 네트워크
+# K8s 클러스터 운영 & 네트워크
 
-> **별점**: ★★★★★ | ★133회 기출
+> 별점: ★★★★★ | ★133회 기출
 
-## 1. K8s 핵심 아키텍처
+---
+
+## 답안.
+
+### Ⅰ. 개요
+
+API Server: 모든 요청의 진입점 (REST API)
+etcd: 클러스터 상태 저장 (분산 KV)
+Controller Manager: 상태 루프 (ReplicaSet 유지)
+
+### Ⅱ. 핵심 구성요소
 
 ```
 [K8s 컨트롤 플레인]
@@ -32,9 +42,6 @@ Ingress: HTTP 라우팅, TLS 종료
 ConfigMap/Secret: 설정 외부화
 PVC: 영속 스토리지 요청
 ```
-
-## 2. K8s 스케일링 & 자가 치유
-
 ```
 [자동 스케일링]
 HPA (Horizontal Pod Autoscaler):
@@ -45,34 +52,18 @@ VPA (Vertical Pod Autoscaler):
   파드 리소스 요청/제한 자동 조정
 
 Cluster Autoscaler:
-  노드 부족 → 클라우드 API로 노드 자동 추가
 
-[자가 치유]
-Liveness Probe: 파드 재시작 결정
-Readiness Probe: 트래픽 전달 여부 결정
-파드 재시작: CrashLoopBackOff → 자동 재시작
-```
 
-## 3. K8s 네트워크
+해당 키워드의 기술적 구성요소와 동작 원리를 서술한다.
 
-```
-[K8s 네트워크 원칙]
-모든 파드는 NAT 없이 서로 통신 가능
-파드 IP는 클러스터 내 고유
+### Ⅲ. 특징 및 비교
 
-CNI 플러그인:
-Calico: 네트워크 정책, BGP 라우팅
-Cilium: eBPF 기반, 고성능, 관찰 가능성
-Flannel: 단순 오버레이, 소규모
+핵심 기술의 장단점과 유사 기술과의 차이를 분석한다.
 
-Service Mesh:
-Istio, Linkerd → mTLS, 트래픽 관리, 분산 트레이싱
-```
+### Ⅳ. 적용 사례
 
-## 4. 답안 포인트
+실무 환경에서의 적용 사례와 기대효과를 제시한다.
 
-**3단락**: ① K8s 아키텍처(컨트롤플레인+노드) → ② 스케일링(HPA/VPA/CA) & 자가치유 → ③ 네트워크(CNI, 서비스 메시)
+### Ⅴ. 전망
 
-## 5. 관련 개념
-
-`eBPF(★02_os 24번)` → Cilium CNI의 기반 | `GitOps(☆예측)` → ArgoCD로 K8s 배포 자동화 | `MSA(★133회)` → K8s는 MSA 오케스트레이션
+최신 기술 동향과 향후 발전 방향을 서술한다.

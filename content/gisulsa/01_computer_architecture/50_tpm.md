@@ -6,11 +6,21 @@ date = "2026-05-17"
 categories = "gisulsa-computer-architecture"
 +++
 
-# 🎯 TPM & 하드웨어 신뢰 루트
+# TPM & 하드웨어 신뢰 루트
 
-> **별점**: ★★★★★ | 기본 필수
+> 별점: ★★★★★ | 기본 필수
 
-## 1. TPM (Trusted Platform Module)
+---
+
+## 답안.
+
+### Ⅰ. 개요
+
+정의: 암호화 키, 인증서, 해시 값을 안전하게 저장하는
+     보안 전용 하드웨어 칩 (ISO/IEC 11889)
+키 생성·저장: 개인키가 TPM 밖으로 나가지 않음
+
+### Ⅱ. 핵심 구성요소
 
 ```
 정의: 암호화 키, 인증서, 해시 값을 안전하게 저장하는
@@ -34,9 +44,6 @@ BitLocker: 디스크 암호화 키를 TPM에 저장
 원격 증명: TPM이 서버에 부팅 무결성 증명
 Device Identity: 디바이스 고유 인증서
 ```
-
-## 2. Secure Boot & UEFI
-
 ```
 [Secure Boot]
 부팅 소프트웨어의 디지털 서명 검증
@@ -45,36 +52,18 @@ Device Identity: 디바이스 고유 인증서
 [Secure Boot 체인]
 UEFI 펌웨어(Secure Boot On)
   → 부트로더 서명 검증 (Microsoft 서명)
-  → 커널 서명 검증
-  → 모듈 서명 검증 (Linux DKMS)
 
-[Windows Secure Boot DB]
-db: 신뢰할 수 있는 인증서 목록
-dbx: 차단 목록 (취약한 부트로더 해시)
-KEK: 데이터베이스 업데이트 키
-PK: 플랫폼 마스터 키
-```
 
-## 3. 신뢰 체인 (Chain of Trust)
+해당 키워드의 기술적 구성요소와 동작 원리를 서술한다.
 
-```
-RTM (Root of Trust for Measurement):
-  측정의 시작점 (TPM = CRTM)
+### Ⅲ. 특징 및 비교
 
-[전체 부팅 신뢰 체인]
-CRTM (TPM) → BIOS/UEFI → MBR/부트로더
-→ OS 커널 → OS 모듈
-각 단계가 다음 단계를 검증
+핵심 기술의 장단점과 유사 기술과의 차이를 분석한다.
 
-= Remote Attestation:
-클라우드 VM이 TPM으로 부팅 무결성 증명
-Confidential Computing의 기반
-```
+### Ⅳ. 적용 사례
 
-## 4. 답안 포인트
+실무 환경에서의 적용 사례와 기대효과를 제시한다.
 
-**3단락**: ① TPM 기능(PCR/Sealing/Attestation) → ② Secure Boot UEFI 체인 → ③ 신뢰 체인 & Confidential Computing 연계
+### Ⅴ. 전망
 
-## 5. 관련 개념
-
-`Secure Boot(51번)` → TPM이 기반 | `TEE(52번)` → TPM + TEE = 하드웨어 보안 스택 | `Confidential Computing(53번)` → TPM 기반 원격 증명
+최신 기술 동향과 향후 발전 방향을 서술한다.

@@ -6,11 +6,21 @@ date = "2026-05-17"
 categories = "gisulsa-computer-architecture"
 +++
 
-# 🎯 멀티코어 동기화 & 메모리 모델
+# 멀티코어 동기화 & 메모리 모델
 
-> **별점**: ★★★★★ | 기본 필수
+> 별점: ★★★★★ | 기본 필수
 
-## 1. 하드웨어 동기화 지원
+---
+
+## 답안.
+
+### Ⅰ. 개요
+
+Test-and-Set: 읽기+쓰기 원자적 수행
+Compare-and-Swap (CAS):
+  CAS(addr, expected, new):
+
+### Ⅱ. 핵심 구성요소
 
 ```
 [원자적 연산 (Atomic Operations)]
@@ -30,9 +40,6 @@ LL/SC (Load-Link/Store-Conditional): ARM 방식
 LOCK CMPXCHG: CAS 구현
 XCHG: Test-and-Set 구현
 ```
-
-## 2. 메모리 일관성 모델
-
 ```
 [메모리 순서 보장 레벨]
 Relaxed: 재정렬 마음대로 (성능 최대)
@@ -45,36 +52,18 @@ ARM/RISC-V: 약한 모델, 재정렬 많음 → 배리어 필요
 
 [프로그래밍 언어 원자 연산]
 C++ std::atomic<int> x{0};
-  x.fetch_add(1, std::memory_order_relaxed)
-Java AtomicInteger: incrementAndGet()
-Go sync/atomic: AddInt64()
-```
 
-## 3. 락 구현 & 성능
 
-```
-[Spinlock]
-CAS 기반 바쁜 대기 (busy-wait)
-적합: 짧은 임계 구역, 멀티코어
-부적합: 단일 코어 (CPU 낭비), 긴 대기
+해당 키워드의 기술적 구성요소와 동작 원리를 서술한다.
 
-[MCS Lock (Mellor-Crummey & Scott)]
-공정한 스핀락, 지역 변수 스핀
-NUMA 환경에서 캐시 효율적
+### Ⅲ. 특징 및 비교
 
-[Ticket Lock]
-선착순 보장 (공정성)
-인터넷 번호표 방식
+핵심 기술의 장단점과 유사 기술과의 차이를 분석한다.
 
-[적응형 락]
-짧게 스핀 후 블록 전환
-Linux futex (Fast Userspace Mutex)
-```
+### Ⅳ. 적용 사례
 
-## 4. 답안 포인트
+실무 환경에서의 적용 사례와 기대효과를 제시한다.
 
-**3단락**: ① CAS 원자 연산 & 락프리 기반 → ② 메모리 일관성 모델(TSO/Relaxed) & 배리어 → ③ Spinlock/MCS/Ticket 락 비교
+### Ⅴ. 전망
 
-## 5. 관련 개념
-
-`캐시 일관성(14번)` → HW MESI + SW 동기화 | `OS 동기화(02_os)` → 커널 뮤텍스 구현 | `데드락(04번)` → 락 획득 실패 시
+최신 기술 동향과 향후 발전 방향을 서술한다.

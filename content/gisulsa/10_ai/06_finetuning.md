@@ -6,11 +6,21 @@ date = "2026-05-17"
 categories = "gisulsa-ai"
 +++
 
-# 🎯 LLM 파인튜닝 & PEFT (효율적 학습)
+# LLM 파인튜닝 & PEFT (효율적 학습)
 
-> **별점**: ★★★★★ | ★136회 기출
+> 별점: ★★★★★ | ★136회 기출
 
-## 1. LLM 파인튜닝 개요
+---
+
+## 답안.
+
+### Ⅰ. 개요
+
+파운데이션 모델: 범용 지식 (GPT-4, Claude)
+파인튜닝: 특정 태스크/도메인에 최적화
+  모든 가중치 업데이트 (비용 최고)
+
+### Ⅱ. 핵심 구성요소
 
 ```
 [파인튜닝 필요성]
@@ -26,9 +36,6 @@ PEFT (Parameter Efficient Fine-Tuning):
   소수 파라미터만 업데이트
   전체 성능 유지, 비용 대폭 절감
 ```
-
-## 2. PEFT 핵심 기법
-
 ```
 [LoRA (Low-Rank Adaptation)]
 가중치 행렬을 저랭크 분해로 근사
@@ -45,36 +52,18 @@ QLoRA:
   70B 모델을 48GB GPU에서 학습 가능
 
 [Prefix Tuning]
-입력 앞에 학습 가능한 프리픽스 토큰 추가
-모델 가중치 고정, 프리픽스만 학습
 
-[Prompt Tuning]
-프리픽스 최소화, 소프트 프롬프트 학습
-```
 
-## 3. 정렬 (Alignment) 기법
+해당 키워드의 기술적 구성요소와 동작 원리를 서술한다.
 
-```
-[RLHF (Reinforcement Learning from Human Feedback)]
-사람 피드백으로 LLM 정렬
-1. 지도 학습 파인튜닝 (SFT)
-2. 보상 모델 학습 (인간 선호도 반영)
-3. PPO 강화학습으로 최적화
-→ ChatGPT 핵심 기법
+### Ⅲ. 특징 및 비교
 
-[DPO (Direct Preference Optimization)]
-RLHF 단순화: 보상 모델 없이 직접 최적화
-선호/비선호 쌍으로 학습
-더 안정적, 학습 효율적
+핵심 기술의 장단점과 유사 기술과의 차이를 분석한다.
 
-[Constitutional AI (CAI, Anthropic)]
-AI 스스로 원칙 적용 → 출력 비판·개선
-```
+### Ⅳ. 적용 사례
 
-## 4. 답안 포인트
+실무 환경에서의 적용 사례와 기대효과를 제시한다.
 
-**3단락**: ① LLM 파인튜닝 필요성 & Full vs PEFT → ② LoRA/QLoRA 저랭크 분해 원리 → ③ RLHF/DPO 정렬 기법 & ChatGPT 적용
+### Ⅴ. 전망
 
-## 5. 관련 개념
-
-`LLM(★★02번)` → 파인튜닝의 대상 | `MLOps(04번)` → LoRA 모델 배포 관리 | `Agentic AI(★136회 11번)` → 정렬된 에이전트 설계
+최신 기술 동향과 향후 발전 방향을 서술한다.

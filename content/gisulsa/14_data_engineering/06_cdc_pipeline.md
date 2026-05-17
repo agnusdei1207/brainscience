@@ -6,11 +6,21 @@ date = "2026-05-17"
 categories = "gisulsa-data-engineering"
 +++
 
-# 🎯 데이터 파이프라인 고도화 & CDC
+# 데이터 파이프라인 고도화 & CDC
 
-> **별점**: ★★★★★ | 기본 필수
+> 별점: ★★★★★ | 기본 필수
 
-## 1. CDC (Change Data Capture)
+---
+
+## 답안.
+
+### Ⅰ. 개요
+
+정의: 데이터베이스 변경 사항을 실시간으로 캡처하여
+로그 기반 (Log-Based) — 권장:
+  DB 트랜잭션 로그 (binlog) 읽기
+
+### Ⅱ. 핵심 구성요소
 
 ```
 정의: 데이터베이스 변경 사항을 실시간으로 캡처하여
@@ -35,9 +45,6 @@ categories = "gisulsa-data-engineering"
 MySQL/PostgreSQL/MongoDB binlog → Kafka
 Kafka Connect 기반 커넥터
 ```
-
-## 2. 데이터 파이프라인 설계 원칙
-
 ```
 [멱등성 (Idempotency)]
 같은 데이터를 여러 번 처리해도 같은 결과
@@ -45,40 +52,18 @@ Kafka Connect 기반 커넥터
 
 [순서 보장]
 파티션 내 순서 보장 (Kafka)
-글로벌 순서 보장은 어려움 → 이벤트 타임스탬프
 
-[지연 허용 (Late Data)]
-이벤트 시간 vs 처리 시간 차이
-워터마크로 허용 지연 설정 (Flink)
 
-[데이터 계보 (Lineage)]
-원본 데이터 → 변환 → 목적지 추적
-Apache Atlas, DataHub로 자동 추적
-```
+해당 키워드의 기술적 구성요소와 동작 원리를 서술한다.
 
-## 3. ELT 현대화 (dbt)
+### Ⅲ. 특징 및 비교
 
-```
-[dbt (data build tool)]
-SQL로 데이터 변환 코드 작성
-  - SELECT 기반 변환 모델
-  - 테스트 자동화 (not null, unique)
-  - 문서 자동 생성
-  - 의존성 그래프 (DAG)
+핵심 기술의 장단점과 유사 기술과의 차이를 분석한다.
 
-[dbt 워크플로우]
-소스 → Raw → Staging → Intermediate → Mart
-각 레이어에서 dbt 모델 실행
+### Ⅳ. 적용 사례
 
-[dbt Cloud vs Core]
-dbt Core: 오픈소스, CLI
-dbt Cloud: 관리형 서비스, 스케줄러, IDE
-```
+실무 환경에서의 적용 사례와 기대효과를 제시한다.
 
-## 4. 답안 포인트
+### Ⅴ. 전망
 
-**3단락**: ① CDC 정의 & 로그 기반(Debezium+Kafka) → ② 파이프라인 설계 원칙(멱등성/순서/지연허용) → ③ dbt ELT 현대화 & 레이어 구조
-
-## 5. 관련 개념
-
-`Kafka(16_bigdata)` → CDC 전달 플랫폼 | `데이터 메시(05번)` → 도메인 CDC 파이프라인 | `레이크하우스(05_db)` → ELT + dbt 통합
+최신 기술 동향과 향후 발전 방향을 서술한다.

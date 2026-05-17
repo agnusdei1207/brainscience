@@ -6,11 +6,21 @@ date = "2026-05-17"
 categories = "gisulsa-cloud"
 +++
 
-# 🎯 클라우드 네트워킹 (VPC & SD-WAN)
+# 클라우드 네트워킹 (VPC & SD-WAN)
 
-> **별점**: ★★★★☆ | 기본 필수
+> 별점: ★★★★☆ | 기본 필수
 
-## 1. VPC (Virtual Private Cloud)
+---
+
+## 답안.
+
+### Ⅰ. 개요
+
+정의: 클라우드 내 논리적으로 격리된 가상 네트워크
+CIDR 블록: VPC 주소 범위 (예: 10.0.0.0/16)
+  퍼블릭 서브넷: 인터넷 게이트웨이 연결 (웹 서버)
+
+### Ⅱ. 핵심 구성요소
 
 ```
 정의: 클라우드 내 논리적으로 격리된 가상 네트워크
@@ -34,9 +44,6 @@ CIDR 블록: VPC 주소 범위 (예: 10.0.0.0/16)
 두 VPC 간 직접 통신 (같은 리전)
 Transit Gateway: 다수 VPC 허브 연결
 ```
-
-## 2. SD-WAN & SASE
-
 ```
 SD-WAN (Software Defined WAN):
   소프트웨어로 WAN 연결 제어
@@ -45,18 +52,18 @@ SD-WAN (Software Defined WAN):
 
 SASE (Secure Access Service Edge):
   SD-WAN + 클라우드 보안 통합
-  기능: CASB, FWaaS, SWG, ZTNA
-  적합: 분산 근무, 멀티클라우드
 
-Zero Trust Network Access (ZTNA):
-  VPN 대체, 위치 무관 인증·권한
-  애플리케이션별 세밀한 접근 제어
-```
 
-## 3. 답안 포인트
+해당 키워드의 기술적 구성요소와 동작 원리를 서술한다.
 
-**3단락**: ① VPC 구성(퍼블릭/프라이빗 서브넷, 보안 그룹) → ② Transit Gateway & 하이브리드 연결 → ③ SD-WAN/SASE 현대 WAN 트렌드
+### Ⅲ. 특징 및 비교
 
-## 4. 관련 개념
+핵심 기술의 장단점과 유사 기술과의 차이를 분석한다.
 
-`멀티클라우드(10번)` → Transit Gateway & VPC 피어링 | `Zero Trust(09_security)` → ZTNA = ZT 네트워크 구현 | `클라우드 보안(06번)` → VPC 보안 아키텍처
+### Ⅳ. 적용 사례
+
+실무 환경에서의 적용 사례와 기대효과를 제시한다.
+
+### Ⅴ. 전망
+
+최신 기술 동향과 향후 발전 방향을 서술한다.

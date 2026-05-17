@@ -6,11 +6,21 @@ date = "2026-05-17"
 categories = "gisulsa-computer-architecture"
 +++
 
-# 🎯 RTOS (실시간 운영체제)
+# RTOS (실시간 운영체제)
 
-> **별점**: ★★★★★ | 컴시응 특화
+> 별점: ★★★★★ | 컴시응 특화
 
-## 1. 실시간 시스템 분류
+---
+
+## 답안.
+
+### Ⅰ. 개요
+
+경성 실시간 (Hard Real-Time):
+  예) 항공기 비행 제어, 의료 장비, 원자로
+연성 실시간 (Soft Real-Time):
+
+### Ⅱ. 핵심 구성요소
 
 ```
 경성 실시간 (Hard Real-Time):
@@ -26,9 +36,6 @@ categories = "gisulsa-computer-architecture"
   경성+연성 사이: 초과 시 무효 처리
   예) 금융 거래, 화폐 결제
 ```
-
-## 2. RTOS 스케줄링
-
 ```
 [선점 스케줄링 (Preemptive)]
 높은 우선순위 태스크가 낮은 태스크를 선점
@@ -45,37 +52,18 @@ RTOS 필수: 언제든 높은 우선순위 즉시 실행
 이론적으로 최적, 구현 복잡
 
 [우선순위 역전 문제]
-낮은 우선순위 태스크가 자원 점유
-→ 높은 우선순위 태스크 대기
 
-해결: 우선순위 상속 (Priority Inheritance)
-      우선순위 상한 (Priority Ceiling Protocol)
 
-화성 탐사선(패스파인더) 실제 사고 사례
-```
+해당 키워드의 기술적 구성요소와 동작 원리를 서술한다.
 
-## 3. 주요 RTOS
+### Ⅲ. 특징 및 비교
 
-```
-FreeRTOS: 오픈소스, 소규모 MCU
-  AWS FreeRTOS: IoT 연결 확장
-VxWorks: 항공/방어 산업 표준
-QNX: 자동차 IVI, 높은 신뢰성
-Zephyr: Linux Foundation, IoT
-AUTOSAR OS: 차량 전장 표준
+핵심 기술의 장단점과 유사 기술과의 차이를 분석한다.
 
-[RTOS vs GPOS (범용 OS)]
-항목         RTOS          GPOS (Linux)
-지연보장      O (경성)       X (최선)
-인터럽트 처리  초저지연       최선
-선점          모든 상황       커널 섹션 예외
-용도          임베디드        서버/PC
-```
+### Ⅳ. 적용 사례
 
-## 4. 답안 포인트
+실무 환경에서의 적용 사례와 기대효과를 제시한다.
 
-**3단락**: ① 경성/연성/확정적 실시간 분류 → ② RM/EDF 스케줄링 & 우선순위 역전 → ③ FreeRTOS/VxWorks/QNX/AUTOSAR
+### Ⅴ. 전망
 
-## 5. 관련 개념
-
-`ISO 26262(★134회, 57번)` → RTOS = 기능안전 요소 | `임베디드(58번)` → RTOS 기반 임베디드 설계 | `IIoT(06_ict)` → RTOS + 스마트팩토리
+최신 기술 동향과 향후 발전 방향을 서술한다.

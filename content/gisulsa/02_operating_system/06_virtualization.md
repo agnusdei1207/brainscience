@@ -6,11 +6,21 @@ date = "2026-05-17"
 categories = "gisulsa-os"
 +++
 
-# 🎯 가상화 심화 — 하이퍼바이저 & 컨테이너
+# 가상화 심화 — 하이퍼바이저 & 컨테이너
 
-> **별점**: ★★★★★ | 기본 필수
+> 별점: ★★★★★ | 기본 필수
 
-## 1. 하이퍼바이저 유형
+---
+
+## 답안.
+
+### Ⅰ. 개요
+
+예) VMware ESXi, KVM, Hyper-V, Xen
+HW → Host OS → 하이퍼바이저 → VM
+예) VirtualBox, VMware Workstation
+
+### Ⅱ. 핵심 구성요소
 
 ```
 [Type 1 (Bare Metal)]
@@ -35,9 +45,6 @@ Host OS 위에 동작
   오버헤드 적음, 성능 우수
   예) Xen 반가상화 드라이버
 ```
-
-## 2. 컨테이너 vs VM
-
 ```
 VM (Virtual Machine):
   OS 전체 가상화
@@ -45,40 +52,18 @@ VM (Virtual Machine):
   강한 격리 (커널 분리)
 
 컨테이너 (Container):
-  OS 커널 공유, 프로세스 격리
-  가볍고 빠른 부팅 (수초~ms)
-  낮은 격리 (커널 취약점 공유 위험)
 
-[Linux 컨테이너 기반 기술]
-Namespace: PID/네트워크/파일시스템/IPC 격리
-cgroups: CPU/메모리/I/O 자원 제한
-Union FS: 이미지 레이어 (overlay2)
-seccomp: 시스템 콜 필터링 (보안)
 
-Docker → OCI 표준화 → containerd/CRI-O
-```
+해당 키워드의 기술적 구성요소와 동작 원리를 서술한다.
 
-## 3. 가상화 보안
+### Ⅲ. 특징 및 비교
 
-```
-[VM 탈출 (VM Escape)]
-VM에서 하이퍼바이저·Host 접근 취약점
-예) VMware 취약점, 가상화 소프트웨어 버그
+핵심 기술의 장단점과 유사 기술과의 차이를 분석한다.
 
-[컨테이너 탈출]
-privileged 컨테이너 → host 마운트 접근
-커널 취약점 악용
+### Ⅳ. 적용 사례
 
-[보안 강화]
-gVisor: 사용자 공간 커널 (Google)
-Kata Containers: VM 기반 컨테이너 (강한 격리)
-Confidential Containers: TEE + 컨테이너
-```
+실무 환경에서의 적용 사례와 기대효과를 제시한다.
 
-## 4. 답안 포인트
+### Ⅴ. 전망
 
-**3단락**: ① 하이퍼바이저 Type1/2 & 전/반가상화 → ② VM vs 컨테이너(Namespace/cgroups) → ③ 가상화 보안 위협 & gVisor/Kata
-
-## 5. 관련 개념
-
-`K8s(13_cloud 07번)` → 컨테이너 오케스트레이션 | `Confidential Computing(53번)` → 가상화 + 기밀 컴퓨팅 | `DevSecOps(15번)` → 컨테이너 이미지 보안
+최신 기술 동향과 향후 발전 방향을 서술한다.

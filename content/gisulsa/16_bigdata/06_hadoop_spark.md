@@ -6,11 +6,21 @@ date = "2026-05-17"
 categories = "gisulsa-bigdata"
 +++
 
-# 🎯 Hadoop & Apache Spark
+# Hadoop & Apache Spark
 
-> **별점**: ★★★★★ | 기본 필수
+> 별점: ★★★★★ | 기본 필수
 
-## 1. Hadoop 생태계
+---
+
+## 답안.
+
+### Ⅰ. 개요
+
+  블록 단위 분산 저장 (기본 128MB)
+  NameNode (메타데이터) + DataNode (실제 데이터)
+YARN (Yet Another Resource Negotiator):
+
+### Ⅱ. 핵심 구성요소
 
 ```
 [Hadoop 핵심 구성]
@@ -33,9 +43,6 @@ HBase: Hadoop 위의 NoSQL (실시간 조회)
 Pig: 데이터 흐름 스크립트
 Zookeeper: 분산 코디네이션
 ```
-
-## 2. Apache Spark
-
 ```
 [Spark vs Hadoop MapReduce]
 MapReduce: 디스크 기반 → 느림 (I/O 반복)
@@ -46,25 +53,17 @@ RDD (Resilient Distributed Dataset):
   불변 분산 데이터셋, 결함 허용
   Transformation (lazy) + Action (실행)
 
-DataFrame & Dataset:
-  스키마 있는 분산 데이터
-  Catalyst 옵티마이저로 자동 최적화
 
-[Spark 처리 유형]
-Spark SQL: 구조적 데이터 SQL 분석
-Spark Streaming: 실시간 스트림 (마이크로배치)
-Structured Streaming: 진정한 실시간
-MLlib: 분산 머신러닝
-GraphX: 그래프 처리
+해당 키워드의 기술적 구성요소와 동작 원리를 서술한다.
 
-[배포 모드]
-Standalone, YARN, Kubernetes
-```
+### Ⅲ. 특징 및 비교
 
-## 3. 답안 포인트
+핵심 기술의 장단점과 유사 기술과의 차이를 분석한다.
 
-**3단락**: ① Hadoop 생태계 (HDFS+YARN+MapReduce) → ② Spark 인메모리 처리 & RDD/DataFrame → ③ Spark vs Hadoop 사용 시나리오
+### Ⅳ. 적용 사례
 
-## 4. 관련 개념
+실무 환경에서의 적용 사례와 기대효과를 제시한다.
 
-`레이크하우스(05_db 11번)` → Spark가 핵심 처리 엔진 | `실시간 처리(07번)` → Spark Streaming | `데이터 파이프라인(14_data_eng)` → Spark 기반 ETL
+### Ⅴ. 전망
+
+최신 기술 동향과 향후 발전 방향을 서술한다.

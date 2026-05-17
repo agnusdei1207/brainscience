@@ -6,11 +6,21 @@ date = "2026-05-17"
 categories = "gisulsa-computer-architecture"
 +++
 
-# 🎯 하이퍼바이저 심화 & KVM
+# 하이퍼바이저 심화 & KVM
 
-> **별점**: ★★★★★ | 기본 필수
+> 별점: ★★★★★ | 기본 필수
 
-## 1. KVM & QEMU
+---
+
+## 답안.
+
+### Ⅰ. 개요
+
+KVM (Kernel-based Virtual Machine):
+  리눅스 커널 내장 하이퍼바이저 (Type 1 성능)
+  인텔 VT-x, AMD-V 하드웨어 가속 활용
+
+### Ⅱ. 핵심 구성요소
 
 ```
 KVM (Kernel-based Virtual Machine):
@@ -27,9 +37,6 @@ QEMU:
 반가상화 드라이버: 게스트-하이퍼바이저 효율적 I/O
   virtio-net, virtio-blk, virtio-gpu
 ```
-
-## 2. 중첩 가상화 (Nested Virtualization)
-
 ```
 VM 안에서 또 다른 VM 실행
   물리 HW → L0 하이퍼바이저 → L1 VM(하이퍼바이저) → L2 VM
@@ -41,29 +48,21 @@ VM 안에서 또 다른 VM 실행
 성능: 2계층 에뮬레이션 → 성능 저하 있음
 지원: Intel VT-x VMCS 하드웨어 지원
 ```
-
-## 3. 마이크로VM & Firecracker
-
 ```
 [기존 VM 문제]
 완전한 VM = 부팅 수십 초, 수백MB 메모리
 
-[마이크로VM]
-최소 보안 격리 유지 + 컨테이너 수준 가벼움
-Firecracker (AWS Lambda 기반):
-  KVM 기반 경량 VMM
-  125ms 부팅, 5MB 메모리
-  → Lambda, Fargate의 보안 격리 기반
 
-gVisor (Google):
-  사용자 공간 커널 → 시스템 콜 인터셉트
-  완전한 VM보다 가볍고 컨테이너보다 격리 강함
-```
+해당 키워드의 기술적 구성요소와 동작 원리를 서술한다.
 
-## 4. 답안 포인트
+### Ⅲ. 특징 및 비교
 
-**3단락**: ① KVM+QEMU 구조 & VirtIO 반가상화 → ② 중첩 가상화 활용 사례 → ③ 마이크로VM(Firecracker) & 서버리스 연계
+핵심 기술의 장단점과 유사 기술과의 차이를 분석한다.
 
-## 5. 관련 개념
+### Ⅳ. 적용 사례
 
-`컨테이너(02_os)` → VM vs 컨테이너 비교 | `서버리스(13_cloud)` → Firecracker가 Lambda 기반 | `K8s` → VMs on K8s (Virtual Kubelet)
+실무 환경에서의 적용 사례와 기대효과를 제시한다.
+
+### Ⅴ. 전망
+
+최신 기술 동향과 향후 발전 방향을 서술한다.
