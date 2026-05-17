@@ -55,4 +55,4 @@ categories = "gisulsa"
 
 ## 기출 분석
 
-상세 회차별 기출: [_exam_analysis.md](_exam_analysis.md)
+상세 회차별 기출: [기출 분석 및 예측](@/gisulsa/exam_analysis.md)
