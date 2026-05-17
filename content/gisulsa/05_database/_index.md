@@ -1,5 +1,5 @@
 +++
-weight = 1
+weight = 5
 title = "05. 데이터베이스 — 키워드 마스터 리스트"
 [extra]
 categories = "gisulsa-database"
@@ -18,53 +18,45 @@ categories = "gisulsa-database"
 
 | # | 파일 | 키워드 | 별점 | 출제비고 |
 |---|------|--------|:---:|---------|
-| 01 | [정규화](01_normalization.md) | 1NF~5NF, 이상현상, 함수적 종속 | ★★★★★ | ※매회 기본 |
-| 02 | [반정규화](02_denormalization.md) | 성능 향상, 중복 허용, 트레이드오프 | ★★★★★ | ※매회 기본 |
-| 03 | [관계 대수 & SQL](03_relational_algebra.md) | 셀렉트/프로젝트/조인, 윈도우함수 | ★★★★★ | ※기본 |
-| 04 | [인덱스](04_index.md) | B+-트리, 해시, 비트맵 | ★★★★★ | ★135회 |
-| 05 | [Clustered vs Non-Clustered 인덱스](05_clustered_index.md) | 저장방식, 스캔 범위 | ★★★★★ | ★136회 |
-| 06 | [CRUD 매트릭스](06_crud_matrix.md) | 기능-엔티티 연관 분석 | ★★★★★ | ★133회 |
+| 01 | [정규화 & 관계모델](01_relational_normalization.md) | 1NF~5NF, 이상현상, 함수적 종속 | ★★★★★ | ※매회 기본 |
+| 02 | [인덱스 최적화](03_index_optimization.md) | B+-트리, 해시, 실행계획 | ★★★★★ | ★135회 |
+| 03 | [Clustered vs Non-Clustered 인덱스](05_clustered_index.md) | 저장방식, 스캔 범위 | ★★★★★ | ★136회 |
 
 ### B. 트랜잭션 & 동시성
 
 | # | 파일 | 키워드 | 별점 | 출제비고 |
 |---|------|--------|:---:|---------|
-| 07 | [트랜잭션 ACID](07_transaction_acid.md) | 원자성/일관성/격리성/지속성 | ★★★★★ | ※매회 기본 |
-| 08 | [동시성 제어](08_concurrency.md) | 로킹, 2PL, MVCC, 격리수준 | ★★★★★ | ※매회 기본 |
-| 09 | [교착상태 (DB)](09_db_deadlock.md) | 예방, 탐지, Wait-Die | ★★★★☆ | ※기본 |
-| 10 | [회복 기법](10_recovery.md) | UNDO/REDO, WAL, ARIES | ★★★★☆ | ※기본 |
-| 11 | [분산 트랜잭션](11_distributed_tx.md) | 2PC, 3PC, 사가 패턴 | ★★★★★ | ★132회 |
+| 04 | [트랜잭션 ACID](02_transaction_acid.md) | 원자성/일관성/격리성/지속성 | ★★★★★ | ※매회 기본 |
+| 05 | [동시성 제어](06_transaction_concurrency.md) | 로킹, 2PL, MVCC, 격리수준 | ★★★★★ | ※매회 기본 |
+| 06 | [분산 트랜잭션](07_distributed_tx.md) | 2PC, 3PC, 사가 패턴 | ★★★★★ | ★132회 |
 
 ### C. 분산 DB & NoSQL
 
 | # | 파일 | 키워드 | 별점 | 출제비고 |
 |---|------|--------|:---:|---------|
-| 12 | [분산 데이터베이스](12_distributed_db.md) | 투명성(위치/분할/복제/장애) | ★★★★★ | ★131회 |
-| 13 | [CAP 정리 & PACELC](13_cap_pacelc.md) | 일관성/가용성/분할, 지연 | ★★★★★ | ★134회 |
-| 14 | [NoSQL](14_nosql.md) | Key-Value/Document/Column/Graph | ★★★★★ | ★133회 |
-| 15 | [데이터 샤딩 & 복제](15_sharding.md) | 수평분할, 파티션키, 쿼럼 | ★★★★☆ | ※기본 |
-| 16 | [NewSQL](16_newsql.md) | CockroachDB, TiDB, ACID+분산 | ★★★☆☆ | ☆예측 |
+| 07 | [NoSQL & NewSQL](04_nosql_newsql.md) | Key-Value/Document/Column/Graph | ★★★★★ | ★133회 |
+| 08 | [분산 데이터베이스](05_distributed_db.md) | 투명성(위치/분할/복제/장애) | ★★★★★ | ★131회 |
+| 09 | [분산 DB 심화](15_distributed_db.md) | 분산 설계, 레플리케이션, 파티셔닝 | ★★★★☆ | ※기본 |
+| 10 | [CAP 정리 & PACELC](08_cap_pacelc.md) | 일관성/가용성/분할, 지연 | ★★★★★ | ★134회 |
+| 11 | [데이터 샤딩 & 복제](12_sharding.md) | 수평분할, 파티션키, 쿼럼 | ★★★★☆ | ※기본 |
 
 ### D. 최신 DB 기술
 
 | # | 파일 | 키워드 | 별점 | 출제비고 |
 |---|------|--------|:---:|---------|
-| 17 | [벡터 데이터베이스](17_vector_db.md) | 임베딩, 유사도검색, RAG 연계 | ★★★★★ | ★135회 |
-| 18 | [RAG 파이프라인](18_rag_db.md) | 벡터DB+LLM, 환각 감소 | ★★★★★ | ★135회 |
-| 19 | [데이터레이크하우스](19_lakehouse.md) | Delta Lake/Iceberg, ACID+분석 | ★★★★★ | ☆2026 확실예측 |
-| 20 | [그래프 데이터베이스](20_graph_db.md) | Neo4j, 지식그래프, 관계쿼리 | ★★★★☆ | ☆예측 |
-| 21 | [시계열 DB](21_timeseries_db.md) | InfluxDB, IoT, 이상탐지 | ★★★☆☆ | ☆예측 |
+| 12 | [벡터 데이터베이스](09_vector_db.md) | 임베딩, 유사도검색, RAG 연계 | ★★★★★ | ★135회 |
+| 13 | [데이터레이크하우스](11_lakehouse.md) | Delta Lake/Iceberg, ACID+분석 | ★★★★★ | ☆2026 확실예측 |
+| 14 | [DW & OLAP](16_dw_olap.md) | 스타/스노우플레이크, 큐브 연산 | ★★★★☆ | ※기본 |
 
 ### E. 데이터 거버넌스 & 보안
 
 | # | 파일 | 키워드 | 별점 | 출제비고 |
 |---|------|--------|:---:|---------|
-| 22 | [데이터 거버넌스](22_data_governance.md) | MDM, 데이터 계보, 카탈로그 | ★★★★★ | ※기본 |
-| 23 | [DB 암호화 (TDE)](23_db_encryption.md) | TDE, 컬럼레벨, 동형암호 | ★★★★★ | ★133회 |
-| 24 | [개인정보 비식별화](24_anonymization.md) | 가명처리, k-익명성, l-다양성 | ★★★★★ | ※기본 |
-| 25 | [데이터 품질 관리](25_data_quality.md) | 완전성/정확성/일관성/적시성 | ★★★★☆ | ※기본 |
+| 15 | [DB 거버넌스 & 암호화](10_governance_encryption.md) | TDE, MDM, 데이터 분류 | ★★★★★ | ★133회 |
+| 16 | [개인정보 비식별화](13_anonymization.md) | 가명처리, k-익명성, l-다양성 | ★★★★★ | ※기본 |
+| 17 | [데이터 품질 & NewSQL](14_quality_newsql.md) | 완전성/정확성, CockroachDB | ★★★★☆ | ※기본 |
 
 ---
 
 > [!NOTE]
-> **★★★★★** 최우선: 정규화(★매회), ACID(★매회), Clustered인덱스(★136), 벡터DB+RAG(★135), CRUD매트릭스(★133)
+> **★★★★★** 최우선: 정규화(★매회), ACID(★매회), Clustered인덱스(★136), 벡터DB(★135)
