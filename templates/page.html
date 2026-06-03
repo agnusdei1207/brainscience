@@ -1,31 +1,56 @@
 {% extends "base.html" %}
 
+{% block right_sidebar %}
+<div class="toc">
+    <p class="sidebar-title">Table of contents</p>
+    {% if page.toc %}
+    <ul>
+        {% for h1 in page.toc %}
+        <li class="toc-depth-{{ h1.level }}">
+            <a href="{{ h1.permalink | safe }}">{{ h1.title }}</a>
+            {% if h1.children %}
+            <ul>
+                {% for h2 in h1.children %}
+                <li class="toc-depth-{{ h2.level }}">
+                    <a href="{{ h2.permalink | safe }}">{{ h2.title }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="sidebar-muted">No headings</p>
+    {% endif %}
+</div>
+{% endblock right_sidebar %}
+
 {% block content %}
 <div class="post-header">
     <a href="javascript:history.back()" class="post-back">
         {% include "icons/chevron-left.html" %}
         Back
     </a>
-    <div class="pc-meta">
+    <div class="post-meta">
         {% if page.date %}
         <span>{{ page.date | date(format="%B %d, %Y") }}</span>
+        {% endif %}
         {% if page.extra.categories %}
-        <span style="opacity: 0.5;">•</span>
+        <span aria-hidden="true">/</span>
         <span>
             {% if page.extra.categories is string %}
-                {{ page.extra.categories | replace(from="-", to=" ") }}
+            {{ page.extra.categories | replace(from="-", to=" ") }}
             {% else %}
-                {{ page.extra.categories | join(sep=", ") | replace(from="-", to=" ") }}
+            {{ page.extra.categories | join(sep=", ") | replace(from="-", to=" ") }}
             {% endif %}
         </span>
         {% endif %}
-        <span style="opacity: 0.5;">•</span>
         <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
             {% include "icons/copy.html" %}
             {% include "icons/check.html" %}
             <span class="copy-text">Copy</span>
         </button>
-        {% endif %}
     </div>
 </div>
 
@@ -33,22 +58,16 @@
     {{ page.content | safe }}
 </article>
 
-<div class="post-footer" style="margin-top: 1rem; padding-top: 1rem; padding-bottom: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: center;">
-    <a href="javascript:history.back()" class="post-back" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.2s ease;">
-        {% include "icons/chevron-left.html" %}
-        Back to List
-    </a>
-</div>
-
 <script>
     function copyDetail() {
         var article = document.querySelector('.post-content');
         var text = article.innerText || article.textContent;
         navigator.clipboard.writeText(text).then(function () {
-            var btn = document.querySelector('.copy-btn:last-child');
-            if (btn) btn.classList.add('copied');
+            var btn = document.querySelector('.copy-btn');
+            if (!btn) return;
             var textSpan = btn.querySelector('.copy-text');
-            textSpan.textContent = 'Copied!';
+            btn.classList.add('copied');
+            textSpan.textContent = 'Copied';
             setTimeout(function () {
                 textSpan.textContent = 'Copy';
                 btn.classList.remove('copied');
@@ -61,10 +80,7 @@
         if (p.indexOf('/studynote/') === -1 && p.indexOf('/gisulsa/') === -1) return;
 
         var normalizedPath = p.replace(/\/+$/, '') || '/';
-
-        // 과목(섹션)별 lastRead 저장
         var parts = normalizedPath.split('/');
-        // e.g. /brainscience/gisulsa/01_computer_architecture/01_cache_pipeline
         var sectionKey = '';
         for (var i = 0; i < parts.length - 1; i++) {
             sectionKey += parts[i] + '/';
@@ -75,8 +91,6 @@
         try { readMap = JSON.parse(localStorage.getItem('lastReadMap') || '{}'); } catch(e) {}
         readMap[sectionKey] = { path: normalizedPath, updatedAt: new Date().toISOString() };
         localStorage.setItem('lastReadMap', JSON.stringify(readMap));
-
-        // 전역 lastReadPost도 유지 (기존 호환)
         localStorage.setItem('lastReadPost', JSON.stringify({
             path: normalizedPath,
             updatedAt: new Date().toISOString()
