@@ -2,7 +2,7 @@
 
 {% block right_sidebar %}
 <div class="toc">
-    <p class="sidebar-title">Table of contents</p>
+    <p class="sidebar-title">이 페이지</p>
     {% if page.toc %}
     <ul>
         {% for h1 in page.toc %}
@@ -21,16 +21,26 @@
         {% endfor %}
     </ul>
     {% else %}
-    <p class="sidebar-muted">No headings</p>
+    <p class="sidebar-muted">표시할 목차가 없습니다.</p>
     {% endif %}
 </div>
 {% endblock right_sidebar %}
 
 {% block content %}
 <div class="post-header">
+    <div class="breadcrumb" aria-label="현재 위치">
+        <a href="{{ get_url(path='/') }}">홈</a>
+        {% for ancestor in page.ancestors %}
+        {% set anc = get_section(path=ancestor) %}
+        {% if anc.relative_path != "_index.md" %}
+        <span class="breadcrumb-sep">/</span><a href="{{ anc.permalink }}">{{ anc.title }}</a>
+        {% endif %}
+        {% endfor %}
+        <span class="breadcrumb-sep">/</span><span class="breadcrumb-current">{{ page.title }}</span>
+    </div>
     <a href="javascript:history.back()" class="post-back">
         {% include "icons/chevron-left.html" %}
-        Back
+        이전 화면
     </a>
     <div class="post-meta">
         {% if page.date %}
@@ -49,10 +59,24 @@
         <button class="copy-btn" onclick="copyDetail()" title="Copy all content">
             {% include "icons/copy.html" %}
             {% include "icons/check.html" %}
-            <span class="copy-text">Copy</span>
+            <span class="copy-text">본문 복사</span>
         </button>
     </div>
 </div>
+
+{% if page.toc %}
+<details class="mobile-toc">
+    <summary>이 페이지의 목차</summary>
+    <ul>
+        {% for heading in page.toc %}
+        <li><a href="{{ heading.permalink | safe }}">{{ heading.title }}</a></li>
+        {% for child in heading.children %}
+        <li><a href="{{ child.permalink | safe }}">{{ child.title }}</a></li>
+        {% endfor %}
+        {% endfor %}
+    </ul>
+</details>
+{% endif %}
 
 <article class="post-content">
     {{ page.content | safe }}
@@ -67,9 +91,9 @@
             if (!btn) return;
             var textSpan = btn.querySelector('.copy-text');
             btn.classList.add('copied');
-            textSpan.textContent = 'Copied';
+            textSpan.textContent = '복사됨';
             setTimeout(function () {
-                textSpan.textContent = 'Copy';
+                textSpan.textContent = '본문 복사';
                 btn.classList.remove('copied');
             }, 2000);
         });

@@ -48,30 +48,33 @@ fi
 # ── 2.5. front matter 구분자 단독 라인 검사 ──────────────
 echo ""
 echo "▶ [2.5/4] front matter 형식 검사..."
-BAD_FM=$(while IFS= read -r -d '' file; do
-  first_line=$(sed -n '1p' "$file" | tr -d '\r')
-  fm_delim=""
-  if [ "$first_line" = "+++" ]; then
-    fm_delim="+++"
-  elif [ "$first_line" = "---" ]; then
-    fm_delim="---"
-  elif [[ "$first_line" == +++* || "$first_line" == ---* ]]; then
-    printf '%s (delimiter)\n' "$file"
-    continue
-  else
-    continue
-  fi
-  fm_body=$(awk 'NR==1 {delim=$0; sub(/\r$/, "", delim); next} {line=$0; sub(/\r$/, "", line); if (line==delim) exit; if (NR>1) print line}' "$file")
-  if [ "$fm_delim" = "+++" ]; then
-    if printf '%s\n' "$fm_body" | grep -qE '^[[:space:]]*[A-Za-z_][A-Za-z0-9_]*:[[:space:]]*'; then
-      printf '%s (TOML-style mismatch)\n' "$file"
-    fi
-  else
-    if printf '%s\n' "$fm_body" | grep -qE '^[[:space:]]*[A-Za-z_][A-Za-z0-9_]* =[[:space:]]*'; then
-      printf '%s (YAML-style mismatch)\n' "$file"
-    fi
-  fi
-done < <(find "$CONTENT_DIR" -name "*.md" -type f -print0 | sort -z))
+BAD_FM=$(find "$CONTENT_DIR" -name "*.md" -type f -print0 | sort -z | xargs -0 -r awk '
+  FNR == 1 {
+    delimiter = $0
+    sub(/\r$/, "", delimiter)
+    reported = 0
+    if (delimiter == "+++" || delimiter == "---") {
+      in_frontmatter = 1
+    } else {
+      in_frontmatter = 0
+      if (delimiter ~ /^(\+\+\+|---)/) print FILENAME " (delimiter)"
+    }
+    next
+  }
+  in_frontmatter {
+    line = $0
+    sub(/\r$/, "", line)
+    if (line == delimiter) { in_frontmatter = 0; next }
+    if (!reported && delimiter == "+++" && line ~ /^[[:space:]]*[A-Za-z_][A-Za-z0-9_]*:[[:space:]]*/) {
+      print FILENAME " (TOML-style mismatch)"
+      reported = 1
+    }
+    if (!reported && delimiter == "---" && line ~ /^[[:space:]]*[A-Za-z_][A-Za-z0-9_]* =[[:space:]]*/) {
+      print FILENAME " (YAML-style mismatch)"
+      reported = 1
+    }
+  }
+')
 if [ -n "$BAD_FM" ]; then
   fail "front matter 형식이 섞이거나 구분자가 깨진 파일:"
   printf '%s\n' "$BAD_FM" | sed 's/^/      /'

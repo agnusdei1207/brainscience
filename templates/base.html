@@ -13,7 +13,8 @@
         rel="stylesheet">
 
     <link rel="stylesheet" href="{{ get_url(path='assets/css/style.css') }}">
-    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:brain-circuit.svg?color=%23A65B32">
+    <link rel="stylesheet" href="{{ get_url(path='assets/css/study-ui.css') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ get_url(path='assets/img/favicon.svg') }}">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <link rel="stylesheet"
@@ -31,37 +32,72 @@
     </script>
 </head>
 
-<body>
+<body{% if section and section.relative_path == "studynote/_index.md" %} class="subject-index"{% endif %}>
     <div class="navigation-progress" id="navigation-progress"></div>
     {% set root = get_section(path="_index.md") %}
+    {% set study_root = get_section(path="studynote/_index.md") %}
+
+    <header class="site-header">
+        <div class="site-header-inner">
+            <button class="mobile-menu-button" id="mobile-menu-button" type="button" aria-label="학습 목차 열기" aria-controls="site-sidebar" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <a href="{{ get_url(path='/') }}" class="header-brand">
+                <span class="brand-mark">B<span>·</span></span>
+                <span>Brain Science</span>
+            </a>
+            <nav class="header-nav" aria-label="주요 메뉴">
+                <a href="{{ get_url(path='@/studynote/_index.md') }}">학습 노트</a>
+                <a href="{{ get_url(path='@/gisulsa/_index.md') }}">기술사 스터디</a>
+            </nav>
+            <div class="header-actions">
+                <button class="header-search-button" id="header-search-button" type="button" aria-label="검색 열기">
+                    {% include "icons/search.html" %}<span>검색</span><kbd>/</kbd>
+                </button>
+                <button class="header-theme-button" id="theme-btn" type="button" aria-label="색상 테마 바꾸기">
+                    {% include "icons/sun.html" %}{% include "icons/moon.html" %}
+                </button>
+            </div>
+        </div>
+    </header>
+    <div class="sidebar-scrim" id="sidebar-scrim"></div>
 
     <div class="page" data-frame="default">
         <div id="quartz-body">
-            <aside class="left sidebar">
-                <a href="{{ get_url(path='/') }}" class="site-title">
-                    <img src="https://api.iconify.design/lucide:brain-circuit.svg?color=%23A65B32" width="24"
-                        height="24" alt="">
-                    <span>Brain Science</span>
-                </a>
+            <aside class="left sidebar" id="site-sidebar" aria-label="학습 목차">
+                <div class="sidebar-heading">
+                    <span class="sidebar-eyebrow">STUDY LIBRARY</span>
+                    <strong>학습 목차</strong>
+                    <button class="sidebar-close" id="sidebar-close" type="button" aria-label="학습 목차 닫기">×</button>
+                </div>
 
                 <div class="search" id="header-search-wrap">
                     {% include "icons/search.html" %}
-                    <input type="text" id="pagefind-search" placeholder="Search" autocomplete="off">
+                    <input type="search" id="pagefind-search" placeholder="9,414개 노트 검색" aria-label="학습 노트 검색" autocomplete="off">
                     <div id="pagefind-dropdown"></div>
                 </div>
 
                 <nav class="explorer" aria-label="Site navigation">
-                    <p class="sidebar-title">Explorer</p>
-                    <ul>
-                        <li><a href="{{ get_url(path='/') }}">Home</a></li>
-                        {% for sub_path in root.subsections %}
-                        {% set sub = get_section(path=sub_path) %}
-                        <li><a href="{{ sub.permalink }}">{{ sub.title }}</a></li>
+                    <a class="nav-home" href="{{ get_url(path='/') }}">⌂ <span>홈</span></a>
+                    <a class="nav-home" href="{{ study_root.permalink }}">▦ <span>전체 학습 노트</span></a>
+                    <p class="sidebar-title">16개 과목</p>
+                    <div class="subject-nav">
+                        {% for subject_path in study_root.subsections %}
+                        {% set subject = get_section(path=subject_path) %}
+                        <details class="nav-subject">
+                            <summary>{{ subject.title }}</summary>
+                            <div class="nav-subject-children">
+                                <a href="{{ subject.permalink }}">과목 개요</a>
+                                {% for chapter_path in subject.subsections %}
+                                {% set chapter = get_section(path=chapter_path) %}
+                                <a href="{{ chapter.permalink }}">{{ chapter.title }}</a>
+                                {% endfor %}
+                            </div>
+                        </details>
                         {% endfor %}
-                        {% for p in root.pages | sort(attribute="title") %}
-                        <li><a href="{{ p.permalink }}">{{ p.title }}</a></li>
-                        {% endfor %}
-                    </ul>
+                    </div>
+                    <p class="sidebar-title sidebar-title-secondary">더 보기</p>
+                    <a class="nav-home" href="{{ get_url(path='@/gisulsa/_index.md') }}">◇ <span>기술사 스터디</span></a>
                 </nav>
 
                 <div class="sidebar-actions">
@@ -72,10 +108,6 @@
                                 d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
                         </svg>
                     </a>
-                    <button id="theme-btn" title="Toggle theme" aria-label="Toggle theme">
-                        {% include "icons/sun.html" %}
-                        {% include "icons/moon.html" %}
-                    </button>
                 </div>
             </aside>
 
@@ -99,8 +131,8 @@
             <aside class="right sidebar">
                 {% block right_sidebar %}
                 <div class="toc">
-                    <p class="sidebar-title">On this page</p>
-                    <p class="sidebar-muted">Select a note to see its outline.</p>
+                    <p class="sidebar-title">이 페이지</p>
+                    <p class="sidebar-muted">노트를 선택하면 목차가 표시됩니다.</p>
                 </div>
                 {% endblock right_sidebar %}
             </aside>
@@ -132,6 +164,35 @@
         var searchCache = {};
         var pagefindLoading = false;
         var activeIdx = -1;
+        var menuButton = document.getElementById('mobile-menu-button');
+        var sidebar = document.getElementById('site-sidebar');
+        function setMenuOpen(open) {
+            document.body.classList.toggle('menu-open', open);
+            menuButton.setAttribute('aria-expanded', String(open));
+            menuButton.setAttribute('aria-label', open ? '학습 목차 닫기' : '학습 목차 열기');
+            if (open) sidebar.querySelector('a, input, summary').focus();
+            else menuButton.focus();
+        }
+        menuButton.addEventListener('click', function () { setMenuOpen(!document.body.classList.contains('menu-open')); });
+        document.getElementById('sidebar-close').addEventListener('click', function () { setMenuOpen(false); });
+        document.getElementById('sidebar-scrim').addEventListener('click', function () { setMenuOpen(false); });
+        document.getElementById('header-search-button').addEventListener('click', function () {
+            if (window.matchMedia('(max-width: 860px)').matches) setMenuOpen(true);
+            sInput.focus();
+        });
+        var currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
+        document.querySelectorAll('.explorer a').forEach(function (link) {
+            var linkPath = new URL(link.href).pathname.replace(/\/+$/, '') || '/';
+            if (linkPath === currentPath) {
+                link.setAttribute('aria-current', 'page');
+                var details = link.closest('details');
+                if (details) details.open = true;
+            }
+        });
+        document.querySelectorAll('.nav-subject').forEach(function (details) {
+            var overview = details.querySelector('.nav-subject-children a');
+            if (overview && currentPath.startsWith(new URL(overview.href).pathname)) details.open = true;
+        });
 
         async function initPagefind() {
             if (pagefind || pagefindLoading) return;
@@ -142,6 +203,7 @@
                 console.log('Pagefind not available');
             }
             pagefindLoading = false;
+            if (pagefind && sInput.value.trim()) search(sInput.value.trim());
         }
 
         async function search(query) {
@@ -249,11 +311,13 @@
         window.onkeydown = function (e) {
             if (e.key === '/' && document.activeElement !== sInput) {
                 e.preventDefault();
+                if (window.matchMedia('(max-width: 860px)').matches) setMenuOpen(true);
                 sInput.focus();
             }
             if (e.key === 'Escape') {
                 sDrop.classList.remove('open');
                 sInput.blur();
+                if (document.body.classList.contains('menu-open')) setMenuOpen(false);
             }
         };
 
